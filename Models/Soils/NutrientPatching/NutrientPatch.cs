@@ -50,7 +50,7 @@ namespace Models.Soils.NutrientPatching
             Nutrient = simulations.Children[0] as Nutrient;
             Nutrient.IsHidden = true;
 
-            var soil = (patchManager as IModel).FindAncestor<Soil>();
+            var soil = structure.FindChild<Soil>(relativeTo: patchManager, recurse: true);
             CreateSolutes(Nutrient, structure.FindChildren<Solute>(relativeTo: soil));
 
             // Find all solutes.

@@ -186,7 +186,7 @@ namespace Models.CLEM.Activities
             // reset the simulation subscriptions to correct the new order before running the simulation.
             if (IsHidden)
             {
-                Events events = new Events(FindAncestor<Simulation>());
+                Events events = new Events(Structure.FindParent<Simulation>(recurse: true));
                 //events.DisconnectEvents();
                 events.ReconnectEvents("Models.Clock", "CLEMGetResourcesRequired");
             }

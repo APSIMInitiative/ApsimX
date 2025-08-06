@@ -134,7 +134,7 @@ namespace Models.PMF.Organs
             WaterBalance = Structure.FindChild<ISoilWater>(relativeTo: soil);
             IsWeirdoPresent = Structure.FindChild<IModel>("Weirdo", relativeTo:soil) != null;
 
-            zone = soil.FindAncestor<Zone>();
+            zone = Structure.FindParent<Zone>(relativeTo: soil, recurse: true);
             if (zone == null)
                 throw new Exception("Soil " + soil + " is not in a zone.");
 

@@ -56,7 +56,7 @@ namespace UserInterface.Presenters
             intellisense = new IntellisensePresenter(seriesView as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
 
-            Graph parentGraph = series.FindAncestor<Graph>();
+            Graph parentGraph = series.Node.FindParent<Graph>(recurse: true);
             if (parentGraph != null)
             {
                 try

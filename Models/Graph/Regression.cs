@@ -66,11 +66,11 @@ namespace Models
                                                                   List<SimulationDescription> simDescriptions,
                                                                   List<string> simulationsFilter = null)
         {
-            Series seriesAncestor = FindAncestor<Series>();
+            Series seriesAncestor = Structure.FindParent<Series>(recurse: true);
             IEnumerable<SeriesDefinition> definitions;
             if (seriesAncestor == null)
             {
-                Graph graph = FindAncestor<Graph>();
+                Graph graph = Structure.FindParent<Graph>(recurse: true);
                 if (graph == null)
                     throw new Exception("Regression model must be a descendant of a series");
                 definitions = Structure.FindChildren<Series>(relativeTo: graph).SelectMany(s => s.CreateSeriesDefinitions(storage, simDescriptions, simulationsFilter));

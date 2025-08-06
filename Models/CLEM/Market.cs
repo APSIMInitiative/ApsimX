@@ -128,7 +128,7 @@ namespace Models.CLEM
                 results.Add(new ValidationResult("A market place must contain only one (1) Activities Holder to manage activities", memberNames));
             }
             // only one market
-            holderCount = Structure.FindChildren<Market>(relativeTo: FindAncestor<Simulation>()).Count();
+            holderCount = Structure.FindChildren<Market>(relativeTo: Structure.FindParent<Simulation>(recurse: true)).Count();
             if (holderCount > 1)
             {
                 string[] memberNames = new string[] { "CLEM.Markets" };

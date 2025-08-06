@@ -331,7 +331,7 @@ namespace UserInterface.Presenters
             using (StringWriter markdownString = new StringWriter())
             {
                 // Start building table
-                IModel clem = model.FindAncestor<ZoneCLEM>() as IModel;
+                IModel clem = model.Node.FindParent<ZoneCLEM>(recurse: true) as IModel;
 
                 // Get Labour resources
                 labour = clem.Node.FindChildren<Labour>(recurse: true).FirstOrDefault();

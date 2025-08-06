@@ -217,7 +217,7 @@ namespace UserInterface.Presenters
         {
             if (currentNode is Folder && currentNode.Node.FindChild<ISimulationDescriptionGenerator>(recurse: true) != null)
                 return currentNode;
-            IEnumerable<ISimulationDescriptionGenerator> runnableModels = currentNode.FindAllAncestors<ISimulationDescriptionGenerator>();
+            IEnumerable<ISimulationDescriptionGenerator> runnableModels = currentNode.Node.FindParents<ISimulationDescriptionGenerator>();
             if (currentNode is ISimulationDescriptionGenerator runnable)
                 runnableModels = runnableModels.Prepend(runnable);
             if (runnableModels.Any())
@@ -227,7 +227,7 @@ namespace UserInterface.Presenters
                 return topLevel;
             if (currentNode is Playlist)
                 return currentNode;
-            return currentNode.FindAncestor<Simulations>();
+            return currentNode.Node.FindParent<Simulations>(recurse: true);
         }
     }
 }

@@ -3229,7 +3229,7 @@ namespace Models.GrazPlan
         public void SetActualWaterUptake(List<ZoneWaterAndN> zones)
         {
             // These lines are just for logging purposes.
-            Zone parentZone = FindAncestor<Zone>();
+            Zone parentZone = Structure.FindParent<Zone>(recurse: true);
 
             Array.Clear(mySoilWaterUptakeAvail);
 
@@ -3326,7 +3326,7 @@ namespace Models.GrazPlan
                 }
 
                 // 2. get the amount of soil water demanded NOTE: This is in L, not mm,
-                Zone parentZone = FindAncestor<Zone>();
+                Zone parentZone = Structure.FindParent<Zone>(recurse: true);
                 double waterDemand = CalculateWaterDemand() * parentZone.Area;
 
 

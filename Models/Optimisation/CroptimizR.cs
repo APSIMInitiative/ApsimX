@@ -267,7 +267,7 @@ namespace Models.Optimisation
         /// </summary>
         private string GenerateApsimXFile()
         {
-            Simulations rootNode = FindAncestor<Simulations>();
+            Simulations rootNode = Structure.FindParent<Simulations>(recurse: true);
             string apsimxFileName = GetTempFileName("input_file.apsimx");
 
             Simulations sims = new Simulations();
@@ -463,9 +463,9 @@ namespace Models.Optimisation
             // Copy output files into appropriate output directory, if one is specified. Otherwise, delete them.
             Status = "Reading Output";
             DataTable output = null;
-            string apsimxFileDir = FindAncestor<Simulations>()?.FileName;
+            string apsimxFileDir = Structure.FindParent<Simulations>(recurse: true)?.FileName;
             if (string.IsNullOrEmpty(apsimxFileDir))
-                apsimxFileDir = FindAncestor<Simulation>()?.FileName;
+                apsimxFileDir = Structure.FindParent<Simulation>(recurse: true)?.FileName;
             if (!string.IsNullOrEmpty(apsimxFileDir))
                 apsimxFileDir = Path.GetDirectoryName(apsimxFileDir);
 

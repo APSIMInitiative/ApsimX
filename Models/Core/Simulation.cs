@@ -140,7 +140,7 @@ namespace Models.Core
             var simulationDescription = new SimulationDescription(this);
 
             // Add a folderName descriptor.
-            var folderNode = FindAncestor<Folder>();
+            var folderNode = Structure.FindParent<Folder>(recurse: true);
             if (folderNode != null)
                 simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor("FolderName", folderNode.Name));
 
@@ -177,7 +177,7 @@ namespace Models.Core
 
                 if (ModelServices == null || ModelServices.Count < 1)
                 {
-                    var simulations = FindAncestor<Simulations>();
+                    var simulations = Structure.FindParent<Simulations>(recurse: true);
                     if (simulations != null)
                         ModelServices = simulations.GetServices();
                     else

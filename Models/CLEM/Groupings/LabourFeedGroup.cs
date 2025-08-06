@@ -59,7 +59,7 @@ namespace Models.CLEM.Groupings
                         break;
                 }
 
-                ZoneCLEM zoneCLEM = FindAncestor<ZoneCLEM>();
+                ZoneCLEM zoneCLEM = Structure.FindParent<ZoneCLEM>(recurse: true);
                 ResourcesHolder resHolder = Structure.FindChild<ResourcesHolder>(relativeTo: zoneCLEM);
                 HumanFoodStoreType food = resHolder.FindResourceType<HumanFoodStore, HumanFoodStoreType>(this, (this.Parent as LabourActivityFeed).FeedTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
                 if (food != null)

@@ -89,7 +89,7 @@ namespace Models.PreSimulationTools
             }
             set
             {
-                Simulations simulations = FindAncestor<Simulations>();
+                Simulations simulations = Structure.FindParent<Simulations>(recurse: true);
                 if (simulations != null && simulations.FileName != null && value != null)
                     this.filenames = value.Select(v => PathUtilities.GetRelativePath(v, simulations.FileName)).ToArray();
                 else
@@ -308,7 +308,7 @@ namespace Models.PreSimulationTools
         /// <summary>From the list of columns read in, get a list of columns that match apsim variables.</summary>
         public void GetDerivedColumnsFromObserved()
         {
-            Simulations sims = this.FindAncestor<Simulations>();
+            Simulations sims = Structure.FindParent<Simulations>(recurse: true);
 
             List<string> tableNames = SheetNames.ToList();
 
@@ -356,7 +356,7 @@ namespace Models.PreSimulationTools
         /// <summary>From the list of columns read in, get a list of columns that match apsim variables.</summary>
         public void GetAPSIMColumnsFromObserved()
         {
-            Simulations sims = this.FindAncestor<Simulations>();
+            Simulations sims = Structure.FindParent<Simulations>(recurse: true);
 
             storage?.Writer.Stop();
             storage?.Reader.Refresh();

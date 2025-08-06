@@ -97,7 +97,7 @@ namespace Models.AgPasture
         /// </summary>
         public void OnPreLink()
         {
-            var simulation = simpleGrazing.FindAncestor<Simulation>() as Simulation;
+            var simulation = simpleGrazing.Node.FindParent<Simulation>(recurse: true) as Simulation;
             var zone = simulation.Node.FindChild<Zone>();
 
             if (zoneCount == 0)
@@ -159,7 +159,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Invoked at start of simulation.</summary>
-        public void OnStartOfSimulation()
+        public void OnStartOfSimulation(IStructure structure)
         {
             if (!pseudoPatches)
                 summary.WriteMessage(simpleGrazing, "Created " + zoneCount + " identical zones, each of area " + (1.0 / zoneCount) + " ha", MessageType.Diagnostic);
@@ -186,7 +186,7 @@ namespace Models.AgPasture
             }
             else
             {
-                var simulation = simpleGrazing.FindAncestor<Simulation>();
+                var simulation = structure.FindParent<Simulation>(relativeTo: simpleGrazing, recurse: true);
                 var physical = structure.Find<IPhysical>(relativeTo: simpleGrazing);
                 double[] arrayForMaxEffConc = Enumerable.Repeat(maxEffectiveNConcentration, physical.Thickness.Length).ToArray();
                 foreach (Zone zone in structure.FindAll<Zone>(relativeTo: simulation))

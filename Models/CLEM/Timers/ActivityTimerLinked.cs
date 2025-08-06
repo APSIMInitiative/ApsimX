@@ -70,7 +70,7 @@ namespace Models.CLEM.Timers
 
         private void GetAllTimersAvailable()
         {
-            var zone = FindAncestor<Zone>();
+            var zone = Structure.FindParent<Zone>(recurse: true);
             timersAvailable = Structure.FindChildren<IActivityTimer>(relativeTo: zone, recurse: true).Where(a => (a as IModel).Enabled);
         }
 

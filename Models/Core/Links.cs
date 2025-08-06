@@ -124,7 +124,7 @@ namespace Models.Core
                     matches = services.FindAll(s => fieldType.IsAssignableFrom(s.GetType()));
                     if (matches.Count == 0 && obj is IModel)
                     {
-                        Simulation parentSimulation = (obj as IModel).FindAncestor<Simulation>();
+                        Simulation parentSimulation = (obj as IModel).Node.FindParent<Simulation>(recurse: true);
                         if (typeof(IEvent).IsAssignableFrom(fieldType) && parentSimulation != null)
                             matches.Add(new Events(obj as IModel));
                     }
@@ -186,7 +186,7 @@ namespace Models.Core
                     {
                         string errorMsg = "Cannot find a match for link " + field.Name + " in model " + GetFullName(obj);
                         if (obj is IScript)
-                            if ((obj as Model).FindAncestor<Folder>() != null)
+                            if ((obj as Model).Node.FindParent<Folder>(recurse: true) != null)
                                 errorMsg += "\nIf the manager script is within a folder, it's linking scope will be limited to that folder.";
 
                         if (throwOnFail && !link.IsOptional)
@@ -208,7 +208,7 @@ namespace Models.Core
         /// <returns>The matching parent</returns>
         private IModel GetParent(IModel model, Type type)
         {
-            return model.FindAllAncestors().FirstOrDefault(m => type.IsAssignableFrom(m.GetType()));
+            return model.Node.FindParents<IModel>().FirstOrDefault(m => type.IsAssignableFrom(m.GetType()));
         }
 
         /// <summary>

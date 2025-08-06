@@ -81,7 +81,7 @@ namespace UserInterface.Presenters
             playlistView.SetLabelText(instructions);
 
             //load in all the simulation and experiment names
-            Simulations sims = playlistModel.FindAncestor<Simulations>();
+            Simulations sims = playlistModel.Node.FindParent<Simulations>(recurse: true);
             simNameCache = sims.Node.FindChildren<Simulation>(recurse: true).ToList();
             expNameCache = sims.Node.FindChildren<Experiment>(recurse: true).ToList();
 

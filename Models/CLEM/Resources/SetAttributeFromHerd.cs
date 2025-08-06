@@ -73,7 +73,7 @@ namespace Models.CLEM.Resources
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             filterGroups = Structure.FindChildren<RuminantGroup>();
-            ruminantActivity = FindAllAncestors<CLEMRuminantActivityBase>().FirstOrDefault();
+            ruminantActivity = Structure.FindParents<CLEMRuminantActivityBase>().FirstOrDefault();
         }
 
         /// <inheritdoc/>

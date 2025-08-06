@@ -246,7 +246,7 @@ namespace Models.CLEM.Resources
             if (!(FindResource(parent.GetType()) is ResourceBaseWithTransactions resourceGroupInMarket))
             {
                 // add warning the market is not currently trading in this resource
-                string zoneName = FindAncestor<Zone>().Name;
+                string zoneName = Structure.FindParent<Zone>(recurse: true).Name;
                 string warn = $"[{zoneName}] is currently not accepting resources of type [r={parent.GetType().Name}]\r\nOnly resources groups provided in the [r=ResourceHolder] in the CLEM component will be traded.";
                 Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
                 return null;
@@ -283,7 +283,7 @@ namespace Models.CLEM.Resources
             // if this isn't a marketplace try find a shared market
             if (!(this.Parent is Market))
             {
-                IModel parentSim = FindAncestor<Simulation>();
+                IModel parentSim = Structure.FindParent<Simulation>(recurse: true);
                 FoundMarket = Structure.FindChildren<Market>().FirstOrDefault();
             }
             else

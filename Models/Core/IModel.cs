@@ -53,49 +53,6 @@ namespace Models.Core
         string FullPath { get; }
 
         /// <summary>
-        /// Find an ancestor with a given name.
-        /// </summary>
-        /// <param name="name">Name of the ancestor.</param>
-        IModel FindAncestor(string name);
-
-        /// <summary>
-        /// Find an ancestor with a given type.
-        /// </summary>
-        /// <typeparam name="T">Type of the ancestor.</typeparam>
-        T FindAncestor<T>();
-
-        /// <summary>
-        /// Find an ancestor with a given type and name.
-        /// </summary>
-        /// <param name="name">Name of the ancestor.</param>
-        /// <typeparam name="T">Type of the ancestor.</typeparam>
-        T FindAncestor<T>(string name);
-
-        /// <summary>
-        /// Find all ancestors with a given name.
-        /// </summary>
-        /// <param name="name">Name of the ancestors.</param>
-        IEnumerable<IModel> FindAllAncestors(string name);
-
-        /// <summary>
-        /// Find all ancestors of the given type.
-        /// </summary>
-        /// <typeparam name="T">Type of siblings to return.</typeparam>
-        IEnumerable<T> FindAllAncestors<T>();
-
-        /// <summary>
-        /// Find all ancestors with the given type and name.
-        /// </summary>
-        /// <typeparam name="T">Type of ancestors to return.</typeparam>
-        /// <param name="name">Name of the ancestors.</param>
-        IEnumerable<T> FindAllAncestors<T>(string name);
-
-        /// <summary>
-        /// Returns all ancestor models.
-        /// </summary>
-        IEnumerable<IModel> FindAllAncestors();
-
-        /// <summary>
         /// Return true iff a model with the given type can be added to the model.
         /// </summary>
         /// <param name="type">The child type.</param>

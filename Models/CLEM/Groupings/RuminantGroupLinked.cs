@@ -51,7 +51,7 @@ namespace Models.CLEM.Groupings
 
         private void GetAllRuminantGroupsAvailable()
         {
-            var zone = FindAncestor<Zone>();
+            var zone = Structure.FindParent<Zone>(recurse: true);
             groupsAvailable = Structure.FindChildren<RuminantGroup>(relativeTo: zone, recurse: true).Where(a => a.Enabled);
         }
 
@@ -147,7 +147,7 @@ namespace Models.CLEM.Groupings
                     htmlWriter.Write($" - applies to {Identifier} and");
                 htmlWriter.Write($" linked to </div>");
 
-                var zone = FindAncestor<Zone>();
+                var zone = Structure.FindParent<Zone>(recurse: true);
                 var foundGroup = Structure.FindChildren<RuminantGroup>(relativeTo: zone, recurse: true).Where(a => a.Enabled).Cast<Model>().Where(a => $"{a.Parent.Name}.{a.Name}" == ExistingGroupName).FirstOrDefault() as RuminantGroup;
                 if (foundGroup != null)
                     htmlWriter.Write(foundGroup.GetFullSummary(foundGroup, new List<string>(), ""));

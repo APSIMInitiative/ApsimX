@@ -79,7 +79,7 @@ namespace Models.Core.Run
                 }
                 //need to set the relative back to simulations so the runner can find all the simulations
                 //when it comes time to run.
-                this.relativeTo = relativeTo.FindAncestor<Simulations>();
+                this.relativeTo = relativeTo.Node.FindParent<Simulations>(recurse: true);
             }
 
             if (simulationNamePatternMatch != null)
@@ -374,7 +374,7 @@ namespace Models.Core.Run
         private IEnumerable<IPreSimulationTool> FindPreSimulationTools()
         {
             return relativeTo.Node.FindAll<IPreSimulationTool>()
-                            .Where(t => t.FindAllAncestors()
+                            .Where(t => t.Node.FindParents<IModel>()
                                          .All(a => !(a is ParallelPostSimulationTool || a is SerialPostSimulationTool)));
         }
 
@@ -411,7 +411,7 @@ namespace Models.Core.Run
         private IEnumerable<IPostSimulationTool> FindPostSimulationTools()
         {
             return relativeTo.Node.FindAll<IPostSimulationTool>()
-                            .Where(t => t.FindAllAncestors()
+                            .Where(t => t.Node.FindParents<IModel>()
                                          .All(a => !(a is ParallelPostSimulationTool || a is SerialPostSimulationTool)));
         }
 

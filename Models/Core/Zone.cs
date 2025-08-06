@@ -52,7 +52,7 @@ namespace Models.Core
         {
             get
             {
-                Simulation parentSim = this.FindAllAncestors<Simulation>().FirstOrDefault();
+                Simulation parentSim = Structure.FindParents<Simulation>().FirstOrDefault();
                 double radn = (double)parentSim.Node.Get("[Weather].Radn");
                 return radn * Area * 10000;
             }

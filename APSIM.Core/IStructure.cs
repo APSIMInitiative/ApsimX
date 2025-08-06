@@ -59,6 +59,15 @@ public interface IStructure
     /// <returns>Parent or null if not found.</returns>
     T FindParent<T>(string name = null, bool recurse = false, INodeModel relativeTo = null);
 
+    /// <summary>
+    /// Find a parent
+    /// </summary>
+    /// <typeparam name="T">Type of parent to find.</typeparam>
+    /// <param name="name">Optional name of parent.</param>
+    /// <param name="relativeTo">The node to make the find relative to.</param>
+    /// <returns>Parent or null if not found.</returns>
+    IEnumerable<T> FindParents<T>(string name = null, INodeModel relativeTo = null);
+
     void Rename(string name);
     void AddChild(INodeModel childModel);
     void InsertChild(int index, INodeModel childModel);

@@ -67,7 +67,7 @@ namespace APSIM.Documentation.Models.Types
                 // Write page of graphs.
                 foreach(ModelsGraph graph in childGraphs)
                 {
-                    bool hide = graph.FindAllAncestors<Folder>().Where(a => !a.ShowInDocs).Any();
+                    bool hide = graph.Node.FindParents<Folder>().Where(a => !a.ShowInDocs).Any();
                     if (!hide)
                         section.Add(AutoDocumentation.Document(graph));
                 }
@@ -84,7 +84,7 @@ namespace APSIM.Documentation.Models.Types
                     childGraphs = exp.Node.FindChildren<ModelsGraph>(recurse: true).Where(f => f.Enabled).ToList();
                     foreach(ModelsGraph graph in childGraphs)
                     {
-                        bool hide = graph.FindAllAncestors<Folder>().Where(a => !a.ShowInDocs).Any();
+                        bool hide = graph.Node.FindParents<Folder>().Where(a => !a.ShowInDocs).Any();
                         if (!hide)
                             section.Add(AutoDocumentation.Document(graph));
                     }
@@ -102,7 +102,7 @@ namespace APSIM.Documentation.Models.Types
                     childGraphs = sim.Node.FindChildren<ModelsGraph>(recurse: true).Where(f => f.Enabled).ToList();
                     foreach(ModelsGraph graph in childGraphs)
                     {
-                        bool hide = graph.FindAllAncestors<Folder>().Where(a => !a.ShowInDocs).Any();
+                        bool hide = graph.Node.FindParents<Folder>().Where(a => !a.ShowInDocs).Any();
                         if (!hide)
                             section.Add(AutoDocumentation.Document(graph));
                     }

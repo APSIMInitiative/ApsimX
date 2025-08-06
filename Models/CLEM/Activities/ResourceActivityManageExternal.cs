@@ -101,7 +101,7 @@ namespace Models.CLEM.Activities
                 bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
 
             // get reader
-            Model parentZone = this.FindAllAncestors<Zone>().FirstOrDefault();
+            Model parentZone = Structure.FindParents<Zone>().FirstOrDefault();
             if(parentZone != null)
                 fileResource = Structure.FindChild<FileResource>(ResourceDataReader, recurse: true);
 

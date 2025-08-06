@@ -121,7 +121,7 @@ namespace Models.CLEM
             IResourceType parentResource = null;
             if (ResourceGroup is null)
             {
-                parentResource = FindAncestor<CLEMResourceTypeBase>() as IResourceType;
+                parentResource = Structure.FindParent<CLEMResourceTypeBase>(recurse: true) as IResourceType;
                 string[] memberNames = new string[] { "Labour resource" };
                 results.Add(new ValidationResult($"No [r=Labour] resource was found for a labour-based transmutation [{this.Name}] of [{parentResource.Name}]", memberNames));
             }
@@ -129,7 +129,7 @@ namespace Models.CLEM
             if (TransmuteStyle == TransmuteStyle.UsePricing)
             {
                 if(parentResource is null )
-                    parentResource = FindAncestor<CLEMResourceTypeBase>() as IResourceType;
+                    parentResource = Structure.FindParent<CLEMResourceTypeBase>(recurse: true) as IResourceType;
                 string[] memberNames = new string[] { "Transmte pricing" };
                 results.Add(new ValidationResult($"The UsePricing Transmute style is not supported in the [{this.Name}] of [{parentResource.Name}]", memberNames));
 

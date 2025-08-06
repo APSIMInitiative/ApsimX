@@ -225,7 +225,7 @@ namespace Models.CLEM.Activities
             }
 
             // look up tree until we find a parent to allow nested crop products for rotate vs mixed cropping/products
-            parentManagementActivity = FindAncestor<CropActivityManageCrop>();
+            parentManagementActivity = Structure.FindParent<CropActivityManageCrop>(recurse: true);
 
             // Retrieve harvest data from the forage file for the entire run.
             // only get entries where a harvest happened (Amtkg > 0)
@@ -621,7 +621,7 @@ namespace Models.CLEM.Activities
             // ensure we don't try and change the crop area planeted when using unallocated land
             if (PlantedMultiplier != 1)
             {
-                var parentManageCrop = this.FindAncestor<CropActivityManageCrop>();
+                var parentManageCrop = Structure.FindParent<CropActivityManageCrop>(recurse: true);
                 if (parentManageCrop != null && parentManageCrop.UseAreaAvailable)
                 {
                     string[] memberNames = new string[] { "Invalid crop area" };

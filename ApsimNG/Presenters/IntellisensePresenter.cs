@@ -221,7 +221,7 @@
         {
             var events = new List<NeedContextItemsArgs.ContextItem>();
 
-            IEnumerable<IModel> allModels = model.FindAncestor<Simulations>().Node.FindChildren<IModel>(recurse: true);
+            IEnumerable<IModel> allModels = model.Node.FindParent<Simulations>(recurse: true).Node.FindChildren<IModel>(recurse: true);
             foreach (var publisher in Events.Publisher.FindAll(allModels))
             {
                 string description = NeedContextItemsArgs.GetDescription(publisher.EventInfo);

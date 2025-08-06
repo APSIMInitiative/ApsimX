@@ -396,7 +396,7 @@ namespace Models.CLEM
         {
             get
             {
-                Simulation sim = FindAncestor<Simulation>();
+                Simulation sim = Structure.FindParent<Simulation>(recurse: true);
                 if (sim?.FileName != null)
                 {
                     return PathUtilities.GetAbsolutePath(this.FileName, sim.FileName);

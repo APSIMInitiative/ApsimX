@@ -261,7 +261,7 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("\r\n<div class=\"activityentry\">This crop uses ");
 
                 Land parentLand = null;
-                Model clemParent = FindAncestor<ZoneCLEM>();
+                Model clemParent = Structure.FindParent<ZoneCLEM>(relativeTo: this, recurse: true);
                 if (LandItemNameToUse != null && LandItemNameToUse != "")
                     if (clemParent != null && clemParent.Enabled)
                         parentLand = Structure.Find<Land>(LandItemNameToUse.Split('.')[0], relativeTo: clemParent);

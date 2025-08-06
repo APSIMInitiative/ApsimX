@@ -460,7 +460,7 @@ namespace Models.Soils
             IEnumerable<SoilCrop> ancestorSoilCropLists = new List<SoilCrop>();
             // LL15 is here as this is the default value.
             List<string> newSoilCropNames = new List<string> { "LL15" };
-            Soil ancestorSoil = FindAncestor<Soil>();
+            Soil ancestorSoil = Structure.FindParent<Soil>(recurse: true);
             if (ancestorSoil != null)
             {
                 ancestorSoilCropLists = Structure.FindChildren<SoilCrop>(relativeTo: ancestorSoil, recurse: true);

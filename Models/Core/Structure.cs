@@ -52,7 +52,7 @@ namespace Models.Core.ApsimFile
         /// <param name="modelToAdd"></param>
         public static void ReconnectLinksAndEvents(IModel modelToAdd)
         {
-            Simulation parentSimulation = modelToAdd.Parent.FindAncestor<Simulation>();
+            Simulation parentSimulation = modelToAdd.Parent.Node.FindParent<Simulation>(recurse: true);
             if (parentSimulation != null && parentSimulation.IsRunning)
             {
                 var links = new Links(parentSimulation.ModelServices);
@@ -147,7 +147,7 @@ namespace Models.Core.ApsimFile
                 newName = originalName + counter.ToString();
                 siblingWithSameName = modelToCheck.Node.FindSibling<IModel>(newName);
             }
-            Simulations sims = modelToCheck.FindAncestor<Simulations>();
+            Simulations sims = modelToCheck.Node.FindParent<Simulations>(recurse: true);
             if (sims != null)
             {
                 bool stop = false;

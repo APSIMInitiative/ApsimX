@@ -39,7 +39,7 @@ namespace Models.CLEM.Groupings
 
         private void GetAllLabourGroupsAvailable()
         {
-            var zone = FindAncestor<Zone>();
+            var zone = Structure.FindParent<Zone>(recurse: true);
             groupsAvailable = Structure.FindChildren<LabourGroup>(relativeTo: zone, recurse: true).Where(a => a.Enabled);
         }
 
@@ -130,7 +130,7 @@ namespace Models.CLEM.Groupings
             {
                 htmlWriter.Write($"<div class=\"filtername\">{Name} is linked to </div>");
 
-                var zone = FindAncestor<Zone>();
+                var zone = Structure.FindParent<Zone>(recurse: true);
                 var foundGroup = Structure.FindChildren<LabourGroup>(relativeTo: zone, recurse: true).Where(a => a.Enabled).Cast<Model>().Where(a => $"{a.Parent.Name}.{a.Name}" == ExistingGroupName).FirstOrDefault() as LabourGroup;
                 if (foundGroup != null)
                     htmlWriter.Write(foundGroup.GetFullSummary(foundGroup, new List<string>(), ""));

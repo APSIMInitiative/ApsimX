@@ -140,7 +140,7 @@ namespace Models.CLEM.Resources
             {
                 RuminantType parent = ruminantType;
                 if (parent is null)
-                    parent = FindAncestor<RuminantType>();
+                    parent = Structure.FindParent<RuminantType>(recurse: true);
 
                 // get Ruminant Herd resource for unique ids
                 RuminantHerd ruminantHerd = parent.Parent as RuminantHerd; // Resources.FindResourceGroup<RuminantHerd>();
@@ -233,14 +233,14 @@ namespace Models.CLEM.Resources
             {
                 if (!FormatForParentControl)
                 {
-                    rumType = FindAncestor<RuminantType>();
+                    rumType = Structure.FindParent<RuminantType>(recurse: true);
                     if (rumType is null)
                     {
                         // look for rum type in SpecifyRuminant
-                        var specParent = this.FindAllAncestors<SpecifyRuminant>().FirstOrDefault();
+                        var specParent = Structure.FindParents<SpecifyRuminant>().FirstOrDefault();
                         if (specParent != null)
                         {
-                            var zoneClem = this.FindAncestor<ZoneCLEM>();
+                            var zoneClem = Structure.FindParent<ZoneCLEM>(recurse: true);
                             var resHolder = Structure.FindChild<ResourcesHolder>(relativeTo: zoneClem, recurse: true);
                             rumType = resHolder.FindResourceType<RuminantHerd, RuminantType>(this, specParent.RuminantTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
                             specifyRuminantParent = true;
@@ -364,7 +364,7 @@ namespace Models.CLEM.Resources
                 {
                     if (!(CurrentAncestorList.Count >= 3 && CurrentAncestorList[CurrentAncestorList.Count - 1] == typeof(RuminantInitialCohorts).Name))
                     {
-                        RuminantType rumtype = FindAncestor<RuminantType>();
+                        RuminantType rumtype = Structure.FindParent<RuminantType>(recurse: true);
                         if (rumtype != null)
                         {
                             var newInd = Ruminant.Create(Sex, rumtype, Age);

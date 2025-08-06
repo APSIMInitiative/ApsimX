@@ -76,7 +76,7 @@ namespace Models
         {
             // Find a parent that heads the scope that we're going to graph
 
-            IModel simulation = model.FindAncestor<Simulation>();
+            IModel simulation = model.Node.FindParent<Simulation>(recurse: true);
             if (simulation != null && simulation.Parent is Experiment)
                 throw new Exception("Graph scope is incorrect if placed under a Simulation in an Experiment. It should be a child of the Experiment instead.");
 

@@ -105,7 +105,7 @@ namespace Models.CLEM.Activities
             get
             {
                 if(parentZone is null)
-                    parentZone = FindAncestor<ZoneCLEM>();
+                    parentZone = Structure.FindParent<ZoneCLEM>(recurse: true);
 
                 if(parentZone is null)
                     return 1;
@@ -266,11 +266,11 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Method to create Transaction category based on settings in ZoneCLEM
         /// </summary>
-        public static string UpdateTransactionCategory(CLEMActivityBase model, string relatesToValue = "")
+        public static string UpdateTransactionCategory(CLEMActivityBase model, IStructure structure, string relatesToValue = "")
         {
             List<string> transCatsList = new List<string>();
             if (model.parentZone is null)
-                model.parentZone = model.FindAncestor<ZoneCLEM>();
+                model.parentZone = structure.FindParent<ZoneCLEM>(relativeTo: model, recurse: true);
 
             if (model.parentZone.BuildTransactionCategoryFromTree && model.Parent is CLEMActivityBase)
             {
@@ -295,7 +295,7 @@ namespace Models.CLEM.Activities
         protected virtual void OnStartOfSimulation(object sender, EventArgs e)
         {
             // create Transaction category based on Zone settings
-            TransactionCategory = UpdateTransactionCategory(this);
+            TransactionCategory = UpdateTransactionCategory(this, Structure);
             Status = ActivityStatus.Ignored;
         }
 
@@ -919,7 +919,7 @@ namespace Models.CLEM.Activities
 
                 ResourceRequestEventArgs rrEventArgs = new ResourceRequestEventArgs() { Request = item };
 
-                if (item.Resource != null && (item.Resource as Model).FindAncestor<Market>() != null)
+                if (item.Resource != null && Structure.FindParent<Market>(relativeTo: item.Resource as Model, recurse: true) != null)
                 {
                     ActivitiesHolder marketActivities = Structure.FindChild<ActivitiesHolder>(relativeTo: Resources.FoundMarket);
                     if (marketActivities != null)

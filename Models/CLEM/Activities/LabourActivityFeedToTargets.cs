@@ -93,7 +93,7 @@ namespace Models.CLEM.Activities
             food = Resources.FindResourceGroup<HumanFoodStore>();
             bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
 
-            Market = food.FindAncestor<ResourcesHolder>().FoundMarket;
+            Market = Structure.FindParent<ResourcesHolder>(relativeTo: food, recurse: true).FoundMarket;
 
             resourcesHolder = base.Resources;
             // if market is present point to market to find the resource
@@ -705,7 +705,7 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("</div>");
 
                 // find a market place if present
-                Simulation sim = FindAncestor<Simulation>();
+                Simulation sim = Structure.FindParent<Simulation>(recurse: true);
                 if (sim != null)
                 {
                     Market marketPlace = Structure.FindChild<Market>(relativeTo: sim);

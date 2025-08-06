@@ -218,7 +218,7 @@ namespace Models.Soils
                     waterNode = Structure.Find<Water>();
                 if (waterNode == null)
                 {
-                    var experiment = FindAncestor<Experiment>();
+                    var experiment = Structure.FindParent<Experiment>(recurse: true);
                     var baseSimulation = Structure.FindChildren<Simulation>(relativeTo: experiment).First();
                     waterNode = Structure.FindChild<Water>(relativeTo: baseSimulation, recurse: true);
                 }

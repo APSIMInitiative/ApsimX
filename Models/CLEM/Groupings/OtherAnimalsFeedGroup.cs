@@ -69,7 +69,7 @@ namespace Models.CLEM.Groupings
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            feedActivityParent = FindAncestor<OtherAnimalsActivityFeed>();
+            feedActivityParent = Structure.FindParent<OtherAnimalsActivityFeed>(recurse: true);
             SelectedOtherAnimalsType = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, AnimalTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as OtherAnimalsType;
 
             currentFeedRequest = new ResourceRequest()

@@ -218,7 +218,7 @@ namespace Models.CLEM.Activities
             if (filePasture != null)
             {
                 // check that database has region id and land id
-                ZoneCLEM clem = FindAncestor<ZoneCLEM>();
+                ZoneCLEM clem = Structure.FindParent<ZoneCLEM>(recurse: true);
                 int recs = filePasture.RecordsFound((filePasture as FileSQLitePasture).RegionColumnName, clem.ClimateRegion);
                 if (recs == 0)
                     throw new ApsimXException(this, $"No pasture production records were located by [x={(filePasture as Model).Name}] for [a={this.Name}] given [Region id] = [{clem.ClimateRegion}] as specified in [{clem.Name}]");

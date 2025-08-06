@@ -81,7 +81,7 @@ namespace Models.CLEM.Groupings
         public ResourcePriceChangeDetails LastPriceChange { get; set; }
 
         /// <inheritdoc/>
-        public IResourceType Resource { get { return FindAncestor<IResourceType>(); } }
+        public IResourceType Resource { get { return Structure.FindParent<IResourceType>(recurse: true); } }
 
         /// <summary>
         /// Constructor

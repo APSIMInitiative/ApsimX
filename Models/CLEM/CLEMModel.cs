@@ -149,7 +149,7 @@ namespace Models.CLEM
         public IEnumerable<string> GetResourcesAvailableByName(object[] typesToFind)
         {
             List<string> results = new List<string>();
-            Zone zone = FindAncestor<Zone>();
+            Zone zone = Structure.FindParent<Zone>(recurse: true);
             if (!(zone is null))
             {
                 ResourcesHolder resources = Structure.FindChild<ResourcesHolder>(relativeTo: zone);
@@ -182,7 +182,7 @@ namespace Models.CLEM
         /// <returns>A list of model names</returns>
         public IEnumerable<string> GetNameOfModelsByType(Type[] typesToFind)
         {
-            Simulation simulation = FindAncestor<Simulation>();
+            Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
             if (simulation is null)
                 return new List<string>().AsEnumerable();
             else
@@ -706,7 +706,7 @@ namespace Models.CLEM
 
                     if (this is CLEMActivityBase)
                     {
-                        string transCat = CLEMActivityBase.UpdateTransactionCategory(this as CLEMActivityBase);
+                        string transCat = CLEMActivityBase.UpdateTransactionCategory(this as CLEMActivityBase, Structure);
                         if (transCat != "")
                             htmlWriter.Write($"<div class=\"partialdiv\">tag: {transCat}</div>");
                     }
@@ -719,12 +719,13 @@ namespace Models.CLEM
         /// Create the HTML for the descriptive summary display of a supplied component
         /// </summary>
         /// <param name="modelToSummarise">Model to create summary fpr</param>
+        /// <param name="structure">Structure instance</param>
         /// <param name="darkTheme">Boolean representing if in dark mode</param>
         /// <param name="markdown2Html">Method to convert markdown to html</param>
         /// <param name="bodyOnly">Only produve the body html</param>
         /// <param name="apsimFilename">Create master simulation summary header</param>
         /// <returns></returns>
-        public static string CreateDescriptiveSummaryHTML(Model modelToSummarise, bool darkTheme = false, bool bodyOnly = false, string apsimFilename = "", Func<string, string> markdown2Html = null)
+        public static string CreateDescriptiveSummaryHTML(Model modelToSummarise, IStructure structure, bool darkTheme = false, bool bodyOnly = false, string apsimFilename = "", Func<string, string> markdown2Html = null)
         {
             // currently includes autoupdate script for display of summary information in browser
             // give APSIM Next Gen no longer has access to WebKit HTMLView in GTK for .Net core
@@ -931,7 +932,7 @@ namespace Models.CLEM
                 if (apsimFilename != "")
                 {
                     htmlWriter.Write($"\r\n<div class=\"activityentry\">Filename: {apsimFilename}</div>");
-                    Model sim = (modelToSummarise as Model).FindAncestor<Simulation>();
+                    Model sim = structure.FindParent<Simulation>(relativeTo: modelToSummarise as Model, recurse: true);
                     htmlWriter.Write($"\r\n<div class=\"activityentry\">Simulation: {sim.Name}</div>");
                 }
 

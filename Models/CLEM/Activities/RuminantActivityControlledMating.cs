@@ -318,7 +318,7 @@ namespace Models.CLEM.Activities
                 else
                 {
                     // need to check for mandatory attributes
-                    var zone = this.FindAncestor<Zone>();
+                    var zone = Structure.FindParent<Zone>(recurse: true);
                     var mandatoryAttributes = Structure.FindChildren<SetAttributeWithValue>(relativeTo: zone, recurse: true).Where(a => a.Mandatory).Select(a => a.AttributeName).Distinct();
                     if (mandatoryAttributes.Any())
                     {

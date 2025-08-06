@@ -66,7 +66,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             //relatesToResourceName = this.FindAncestor<CropActivityManageProduct>().StoreItemName;
-            parentManagementActivity = FindAncestor<CropActivityManageCrop>();
+            parentManagementActivity = Structure.FindParent<CropActivityManageCrop>(recurse: true);
             parentManageProductActivity = (Parent as CropActivityManageProduct);
         }
 
@@ -76,7 +76,7 @@ namespace Models.CLEM.Activities
             amountToSkip = 0;
             if (TimingOK)
             {
-                if (FindAncestor<CropActivityManageProduct>().CurrentlyManaged)
+                if (Structure.FindParent<CropActivityManageProduct>(recurse: true).CurrentlyManaged)
                     Status = ActivityStatus.Success;
                 else
                 {

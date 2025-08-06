@@ -107,7 +107,7 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                ZoneCLEM clemParent = FindAncestor<ZoneCLEM>();
+                ZoneCLEM clemParent = Structure.FindParent<ZoneCLEM>(recurse: true);
                 ResourcesHolder resHolder;
                 Finance finance = null;
                 if (clemParent != null)

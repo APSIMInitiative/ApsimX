@@ -172,7 +172,7 @@
             [EventSubscribe("StartOfSimulation")]
             private void StartOfSim(object sender, EventArgs args)
             {
-                IModel parent = FindAncestor<Zone>();
+                IModel parent = Node.FindParent<Zone>(recurse: true);
                 Structure.Add(new Model1(), parent);
             }
         }

@@ -45,12 +45,12 @@ namespace Models.PMF.SimplePlantModels
         {
             get
             {
-                Simulation simulation = FindAncestor<Simulation>();
+                Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
                 if (simulation != null)
                     return PathUtilities.GetAbsolutePath(this.CoefficientFile, simulation.FileName);
                 else
                 {
-                    Simulations simulations = FindAncestor<Simulations>();
+                    Simulations simulations = Structure.FindParent<Simulations>(recurse: true);
                     if (simulations != null)
                         return PathUtilities.GetAbsolutePath(this.CoefficientFile, simulations.FileName);
                     else
@@ -59,7 +59,7 @@ namespace Models.PMF.SimplePlantModels
             }
             set
             {
-                Simulations simulations = FindAncestor<Simulations>();
+                Simulations simulations = Structure.FindParent<Simulations>(recurse: true);
                 if (simulations != null)
                     this.CoefficientFile = PathUtilities.GetRelativePath(value, simulations.FileName);
                 else

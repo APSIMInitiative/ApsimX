@@ -95,7 +95,7 @@ namespace Models.CLEM.Groupings
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            feedActivityParent = FindAncestor<RuminantActivityFeed>();
+            feedActivityParent = Structure.FindParent<RuminantActivityFeed>(recurse: true);
 
             RuminantActivityFeed feedParent = Parent as RuminantActivityFeed;
             switch (feedParent.FeedStyle)

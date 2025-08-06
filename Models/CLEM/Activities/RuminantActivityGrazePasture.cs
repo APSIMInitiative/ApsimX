@@ -76,7 +76,7 @@ namespace Models.CLEM.Activities
             Guid currentUid = UniqueID;
             List<IModel> grazePastureList = new List<IModel>();
 
-            bool buildTransactionFromTree = FindAncestor<ZoneCLEM>().BuildTransactionCategoryFromTree;
+            bool buildTransactionFromTree = Structure.FindParent<ZoneCLEM>(recurse: true).BuildTransactionCategoryFromTree;
             string transCat = "";
             if (!buildTransactionFromTree)
                 transCat = TransactionCategory;

@@ -157,7 +157,7 @@ namespace Models.Factorial
             // Must be a model replacement.
             // Need to find a child value of the correct type.
 
-            Experiment experiment = FindAncestor<Experiment>();
+            Experiment experiment = Structure.FindParent<Experiment>(recurse: true);
             if (experiment != null)
             {
                 var baseSimulation = Structure.FindChild<Simulation>(relativeTo: experiment);

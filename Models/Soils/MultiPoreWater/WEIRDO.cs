@@ -152,7 +152,7 @@ namespace Models.Soils
                 IPhysical physical = soilPhysical;
                 if (physical == null) //So that the GUI can find physical when calling this
                 {
-                    var soil = FindAncestor<Soil>();
+                    var soil = Structure.FindParent<Soil>(recurse: true);
                     if (soil != null)
                         physical = Structure.FindChild<IPhysical>(relativeTo: soil, recurse: true)
                             ?? Structure.Find<IPhysical>();
@@ -186,7 +186,7 @@ namespace Models.Soils
                 IPhysical physical = soilPhysical;
                 if (physical == null) //So that the GUI can find physical when calling this
                 {
-                    var soil = FindAncestor<Soil>();
+                    var soil = Structure.FindParent<Soil>(recurse: true);
                     if (soil != null)
                         physical = Structure.FindChild<IPhysical>(relativeTo: soil, recurse: true)
                             ?? Structure.Find<IPhysical>();

@@ -154,7 +154,7 @@ namespace Models.Functions
             }
             else
             {
-                parentPhenology = FindAllAncestors<Plant>().FirstOrDefault()?.Phenology;
+                parentPhenology = Structure.FindParents<Plant>().FirstOrDefault()?.Phenology;
             }
 
             if ((!String.IsNullOrEmpty(StartEventName))||(!String.IsNullOrEmpty(StartDate))||(!String.IsNullOrEmpty(StartStageName)))

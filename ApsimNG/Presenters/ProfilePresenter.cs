@@ -56,7 +56,7 @@ namespace UserInterface.Presenters
             view = v as ViewBase;
             this.explorerPresenter = explorerPresenter;
 
-            Soil soilNode = this.model.FindAncestor<Soil>();
+            Soil soilNode = this.model.Node.FindParent<Soil>(recurse: true);
             if (soilNode != null)
             {
                 physical = soilNode.Node.FindChild<Physical>();

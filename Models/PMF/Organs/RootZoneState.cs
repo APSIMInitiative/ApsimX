@@ -183,7 +183,7 @@ namespace Models.PMF.Organs
                 throw new Exception($"Cannot find a soil crop parameterisation called {plant.Name + "Soil"}");
 
             Clear();
-            Zone zone = soil.FindAncestor<Zone>();
+            Zone zone = structure.FindParent<Zone>(relativeTo: soil, recurse: true);
             if (zone == null)
                 throw new Exception("Soil " + soil + " is not in a zone.");
             NO3 = structure.Find<ISolute>("NO3", relativeTo: zone);

@@ -55,7 +55,7 @@ namespace UserInterface.Presenters
             {
                 int terminatedCount = 0;
                 // find IStorageReader of simulation
-                IModel simulation = model.FindAncestor<Simulation>();
+                IModel simulation = model.Node.FindParent<Simulation>(recurse: true);
                 IDataStore ds = model.Node.Find<IDataStore>();
                 if (ds == null)
                     return markdownWriter.ToString();
@@ -63,7 +63,7 @@ namespace UserInterface.Presenters
                 DataTable dataTable = null;
                 string noSimulationMessage = "No simulation has been performed for this farm";
 
-                bool expSim = model.FindAllAncestors<Experiment>().Any();
+                bool expSim = model.Node.FindParents<Experiment>().Any();
                 if (expSim)
                 {
                     markdownWriter.Write("### Multiple simulation experiment performed");
@@ -261,8 +261,8 @@ namespace UserInterface.Presenters
                 htmlWriter.WriteLine(htmlString);
 
                 // find IStorageReader of simulation
-                IModel simulation = model.FindAncestor<Simulation>();
-                IModel simulations = simulation.FindAncestor<Simulations>();
+                IModel simulation = model.Node.FindParent<Simulation>(recurse: true);
+                IModel simulations = simulation.Node.FindParent<Simulations>(recurse: true);
                 IDataStore ds = simulations.Node.FindChildren<IDataStore>().FirstOrDefault();
                 if (ds == null)
                     return htmlWriter.ToString();

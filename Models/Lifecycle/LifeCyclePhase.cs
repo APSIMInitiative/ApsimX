@@ -238,7 +238,7 @@ namespace Models.LifeCycle
                             throw new Exception(FullPath + " is predicting values for migration but has not MigrantDestinationPhase specified");
                         if (destEmigrants > 0)
                         {
-                            var zone = Parent.FindAncestor<Zone>();
+                            var zone = Structure.FindParent<Zone>(relativeTo: Parent as INodeModel, recurse: true);
                             LifeCycle mDestinationCycle = Structure.Find<LifeCycle>(mdest.NameOfLifeCycleForMigrants, relativeTo: zone);
                             if (mDestinationCycle == null)
                                 throw new Exception(FullPath + " could not find a destination LifeCycle for migrants called " + mdest.NameOfLifeCycleForMigrants);
@@ -273,7 +273,7 @@ namespace Models.LifeCycle
 
                         if (arrivals > 0)
                         {
-                            var zone = Parent.FindAncestor<Zone>();
+                            var zone = Structure.FindParent<Zone>(relativeTo: Parent as INodeModel, recurse: true);
                             LifeCycle pDestinationCylce = Structure.Find<LifeCycle>(pdest.NameOfLifeCycleForProgeny, relativeTo: zone);
                             if (pDestinationCylce == null)
                                 throw new Exception(FullPath + " could not find a destination LifeCycle for progeny called " + pdest.NameOfLifeCycleForProgeny);

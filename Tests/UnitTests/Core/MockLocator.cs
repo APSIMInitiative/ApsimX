@@ -60,6 +60,11 @@ namespace UnitTests.Core
             throw new NotImplementedException();
         }
 
+        public IEnumerable<T> FindParents<T>(string name = null, INodeModel relativeTo = null)
+        {
+            throw new NotImplementedException();
+        }
+
         public T FindSibling<T>(string name = null, INodeModel relativeTo = null)
         {
             throw new NotImplementedException();

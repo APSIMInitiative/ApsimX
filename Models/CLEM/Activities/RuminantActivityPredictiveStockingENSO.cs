@@ -186,7 +186,7 @@ namespace Models.CLEM.Activities
         {
             ForecastSequence = new Dictionary<DateTime, double>();
 
-            Simulation simulation = FindAncestor<Simulation>();
+            Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
             if (simulation != null)
                 fullFilename = PathUtilities.GetAbsolutePath(this.MonthlySOIFile, simulation.FileName);
             else

@@ -149,7 +149,7 @@ namespace Models.Factorial
             else
             {
                 // Find the model that we are to replace.
-                var experiment = FindAncestor<Experiment>();
+                var experiment = Structure.FindParent<Experiment>(recurse: true);
                 var baseSimulation = Structure.FindChild<Simulation>(relativeTo: experiment);
                 var modelToReplace = baseSimulation.Node.Get(path) as IModel;
 
@@ -175,7 +175,7 @@ namespace Models.Factorial
         {
             ParseAllSpecifications(out List<string> paths, out List<object> values);
 
-            Simulations sims = FindAncestor<Simulations>();
+            Simulations sims = Structure.FindParent<Simulations>(recurse: true);
             IEnumerable<string> result = values.OfType<string>().Where(str => File.Exists(PathUtilities.GetAbsolutePath(str, sims.FileName)));
             return result;
         }

@@ -65,7 +65,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Commencing")]
         protected void OnSetupTypeBase(object sender, EventArgs e)
         {
-            parent = FindAncestor<ResourceBaseWithTransactions>();
+            parent = Structure.FindParent<ResourceBaseWithTransactions>(recurse: true);
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace Models.CLEM.Resources
             if (price == null)
             {
                 // does simulation have finance
-                if (FindAncestor<ResourcesHolder>().FindResourceGroup<Finance>() != null)
+                if (Structure.FindParent<ResourcesHolder>(recurse: true).FindResourceGroup<Finance>() != null)
                 {
                     string market = "";
                     if((Parent.Parent as ResourcesHolder).MarketPresent)
@@ -165,7 +165,7 @@ namespace Models.CLEM.Resources
                 }
                 else
                 {
-                    if (FindAncestor<ResourcesHolder>().FindResourceGroup<Finance>() != null && amount != 0)
+                    if (Structure.FindParent<ResourcesHolder>(recurse: true).FindResourceGroup<Finance>() != null && amount != 0)
                     {
                         string market = "";
                         if ((Parent.Parent as ResourcesHolder).MarketPresent)
@@ -256,7 +256,7 @@ namespace Models.CLEM.Resources
                 // haven't already found a market store
                 if (EquivalentMarketStore is null)
                 {
-                    ResourcesHolder holder = FindAncestor<ResourcesHolder>();
+                    ResourcesHolder holder = Structure.FindParent<ResourcesHolder>(recurse: true);
                     // is there a market
                     if (holder != null && holder.FoundMarket != null)
                     {

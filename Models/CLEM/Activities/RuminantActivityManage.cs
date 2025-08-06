@@ -664,7 +664,8 @@ namespace Models.CLEM.Activities
                         }
                         if(information.Any())
                         {
-                            information.Insert(0, $"The numbers in initial cohorts for [{cohorts.FirstOrDefault().FindAncestor<RuminantType>().Breed}] were adjusted by [a={this.Name}] at start of the simulation.");
+                            var firstCohort = cohorts.FirstOrDefault();
+                            information.Insert(0, $"The numbers in initial cohorts for [{Structure.FindParent<RuminantType>(relativeTo: firstCohort, recurse: true).Breed}] were adjusted by [a={this.Name}] at start of the simulation.");
                             Warnings.CheckAndWrite(string.Join(Environment.NewLine, information), Summary, this, MessageType.Information);
                         }
                     }
@@ -1844,7 +1845,7 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("\r\n<div class=\"activitycontentlight\">");
 
                 // does controlled mating exist in simulation
-                var zone = this.FindAncestor<Zone>();
+                var zone = Structure.FindParent<Zone>(recurse: true);
                 bool cmate = false;
                 if (zone != null)
                     cmate = Structure.FindChild<RuminantActivityControlledMating>(relativeTo: zone, recurse: true) != null;

@@ -300,18 +300,32 @@ public class Node : IStructure
     /// <returns>Parent or null if not found.</returns>
     public T FindParent<T>(string name = null, bool recurse = false, INodeModel relativeTo = null)
     {
+        if (recurse)
+            return FindParents<T>(name, relativeTo).FirstOrDefault();
+        else if (Parent.Model is T && (name == null || Parent.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
+            return (T)Parent.Model;
+        else
+            return default;
+    }
+
+    /// <summary>
+    /// Find a parent
+    /// </summary>
+    /// <typeparam name="T">Type of parent to find.</typeparam>
+    /// <param name="name">Optional name of parent.</param>
+    /// <param name="relativeTo">The node to make the find relative to.</param>
+    /// <returns>Parent or null if not found.</returns>
+    public IEnumerable<T> FindParents<T>(string name = null, INodeModel relativeTo = null)
+    {
         Node relativeToNode = this;
         if (relativeTo != null)
             relativeToNode = relativeTo.Node;
-        if (recurse)
+        if (relativeToNode.Parent != null)
         {
-            foreach (var node in relativeToNode.Parent?.Walk())
+            foreach (var node in relativeToNode.WalkParents())
                 if (node.Model is T && (name == null || node.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
-                    return (T)node.Model;
+                    yield return (T)node.Model;
         }
-        else
-            return (T)relativeToNode.Parent.Model;
-        return default;
     }
 
 
@@ -344,6 +358,7 @@ public class Node : IStructure
 
         // remove child node.
         children.Remove(nodeToRemove);
+        nodeToRemove.Parent = null;
 
         scope?.Clear();
         locator?.Clear();

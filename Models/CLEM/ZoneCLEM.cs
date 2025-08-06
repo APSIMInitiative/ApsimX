@@ -149,10 +149,10 @@ namespace Models.CLEM
         private void OnCompleted(object sender, EventArgs e)
         {
             // if auto create summary
-            if (AutoCreateDescriptiveSummary && !FindAllAncestors<Experiment>().Any())
+            if (AutoCreateDescriptiveSummary && !Structure.FindParents<Experiment>().Any())
             {
                 if (!File.Exists(wholeSimulationSummaryFile))
-                    File.WriteAllText(wholeSimulationSummaryFile, CLEMModel.CreateDescriptiveSummaryHTML(this, false, false, (sender as Simulation).FileName));
+                    File.WriteAllText(wholeSimulationSummaryFile, CLEMModel.CreateDescriptiveSummaryHTML(this, Structure, false, false, (sender as Simulation).FileName));
                 else
                 {
                     string html = File.ReadAllText(wholeSimulationSummaryFile);
@@ -162,7 +162,7 @@ namespace Models.CLEM
                         if (index > 0)
                         {
                             htmlWriter.Write(html[..(index - 1)]);
-                            htmlWriter.Write(CLEMModel.CreateDescriptiveSummaryHTML(this, false, true));
+                            htmlWriter.Write(CLEMModel.CreateDescriptiveSummaryHTML(this, Structure, false, true));
                             htmlWriter.Write(html[index..]);
                             File.WriteAllText(wholeSimulationSummaryFile, htmlWriter.ToString());
                         }
@@ -285,7 +285,7 @@ namespace Models.CLEM
         /// <exception cref="ApsimXException"></exception>
         public static void ReportInvalidParameters(IModel model, IStructure structure)
         {
-            var simulation = model.FindAncestor<Simulation>();
+            var simulation = structure.FindParent<Simulation>(relativeTo: model as INodeModel, recurse: true);
             var summary = structure.FindChild<Summary>(relativeTo: simulation, recurse: true);
 
             // force summary to write messages
@@ -428,7 +428,7 @@ namespace Models.CLEM
                 CurrentAncestorList.Add(model.GetType().Name);
 
                 // get clock
-                var parentSim = FindAncestor<Simulation>();
+                var parentSim = Structure.FindParent<Simulation>(recurse: true);
 
                 htmlWriter.Write(CLEMModel.AddMemosToSummary(parentSim, Structure, markdown2Html));
 

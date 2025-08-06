@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using APSIM.Core;
 using Models.Core;
 using Models.Factorial;
 using Newtonsoft.Json;
@@ -16,8 +17,12 @@ namespace Models
     [ViewName("UserInterface.Views.TextAndCodeView")]
     [PresenterName("UserInterface.Presenters.PlaylistPresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
-    public class Playlist : Model
+    public class Playlist : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         [Serializable]
         private class PlaylistPrevSearch
         {
@@ -71,7 +76,7 @@ namespace Models
         public string[] GenerateListOfSimulations(List<Simulation> allSimulations = null, List<Experiment> allExperiments = null)
         {
             if (Simulations == null)
-                Simulations = this.FindAncestor<Simulations>();
+                Simulations = Structure.FindParent<Simulations>(relativeTo: this, recurse: true);
 
             if (allSimulations == null)
                 allSimulations = Simulations.Node.FindChildren<Simulation>(recurse: true).ToList();
@@ -130,7 +135,7 @@ namespace Models
                         {
                             if (regex.IsMatch(sim.Name.ToLower()))
                             {
-                                if (sim.FindAncestor<Experiment>() == null)//don't add if under experiment
+                                if (Structure.FindParent<Experiment>(relativeTo: sim, recurse: true) == null)//don't add if under experiment
                                 {
                                     if (names.Contains(sim.Name) == false)
                                     {

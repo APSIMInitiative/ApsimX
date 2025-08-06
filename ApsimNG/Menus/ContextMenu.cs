@@ -565,7 +565,7 @@ namespace UserInterface.Presenters
                 Soil currentSoil = this.explorerPresenter.ApsimXFile.Node.Get(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly) as Soil;
                 if (currentSoil != null)
                 {
-                    Simulation simulation = currentSoil.FindAncestor<Simulation>();
+                    Simulation simulation = currentSoil.Node.FindParent<Simulation>(recurse: true);
                     if (simulation != null)
                     {
                         // Remove nutrient
@@ -617,7 +617,7 @@ namespace UserInterface.Presenters
             Soil currentSoil = this.explorerPresenter.ApsimXFile.Node.Get(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly) as Soil;
             if (currentSoil != null)
             {
-                Simulation simulation = currentSoil.FindAncestor<Simulation>();
+                Simulation simulation = currentSoil.Node.FindParent<Simulation>(recurse: true);
                 if (simulation != null)
                 {
                     var nutrient = currentSoil.Node.FindChild<Models.Soils.Nutrients.Nutrient>();
