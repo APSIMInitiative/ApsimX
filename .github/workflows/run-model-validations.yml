@@ -131,7 +131,7 @@ jobs:
         author=${{ github.actor }}
         echo "commitsha variable: ${commitsha}"
         echo "author variable: ${author}"
-        pr_number="10261"
+        pr_number="10271"
         response=$(curl "https://postats2.apsim.info/api/open?pullrequestnumber=${pr_number}&commitid=${commitsha}&author=${author}&count=0") # count needs to be a proper number later
         echo "POStats2 open response: ${response}"
         
