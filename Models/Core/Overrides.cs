@@ -184,6 +184,12 @@ namespace Models.Core
             }
         }
 
+        /// <summary>Evaluates whether or not a prospective override path matches up with anything.</summary>
+        /// <param name="relativeTo">The model to check relative to.</param>
+        /// <param name="path">The path to be checked against relativeTo.</param>
+        /// <returns>True if there is at least one hit.</returns>
+        public static bool PathHasMatches(IModel relativeTo, string path) => FindAllByPath(relativeTo, path).Any();
+
         /// <summary>
         /// Change the value of the property.
         /// </summary>

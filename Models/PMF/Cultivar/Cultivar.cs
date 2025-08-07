@@ -88,8 +88,15 @@ namespace Models.PMF
         public void Apply(IModel model)
         {
             relativeToModel = model;
-            if (Command != null)
-                undos = Overrides.Apply(model, Overrides.ParseStrings(Command));
+            if (Command == null)
+                return;
+            var incomingOverrides = Overrides.ParseStrings(Command);
+            foreach (var incoming in incomingOverrides)
+            {
+                if (!Overrides.PathHasMatches(model, incoming.Path))
+                    throw new Exception($"Can't find {incoming.Path} in cultivar {Name}.");
+            }
+            undos = Overrides.Apply(model, incomingOverrides);
         }
 
         /// <summary>Undoes cultivar changes, if any.</summary>
