@@ -6,6 +6,7 @@ using Models.Core;
 using Models.Functions;
 using Models.PMF.Organs;
 using Newtonsoft.Json;
+using Models.Interfaces;
 
 namespace Models.PMF.Struct
 {
@@ -16,6 +17,7 @@ namespace Models.PMF.Struct
     [Serializable]
     [ValidParent(ParentType = typeof(SimpleLeaf))]
     [ValidParent(ParentType = typeof(Structure))]
+    [ValidParent(ParentType = typeof(ICanopy))]
     public class HeightFunction : Model, IFunction
     {
         /// <summary>The potential height</summary>
