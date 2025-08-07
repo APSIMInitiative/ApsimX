@@ -173,11 +173,11 @@ namespace APSIM.Core.Tests
             Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for modelC
-            ILocator locatorForC = sim.Children[2].Children[0].Node;
+            IStructure locatorForC = sim.Children[2].Children[0].Node;
             Assert.That(locatorForC.Get("[ModelA].A1"), Is.EqualTo(1));
 
             // locator for modelD
-            ILocator locatorForD = sim.Children[2].Children[1].Node;
+            IStructure locatorForD = sim.Children[2].Children[1].Node;
             Assert.That(locatorForD.Get("[ModelD].D2.Year"), Is.EqualTo(2000));
         }
 
@@ -211,7 +211,7 @@ namespace APSIM.Core.Tests
             Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for modelD
-            ILocator locatorForD = sim.Children[2].Children[1].Node;
+            IStructure locatorForD = sim.Children[2].Children[1].Node;
             Assert.That(locatorForD.Get("[ModelC].C2[1]"), Is.EqualTo(6.0));
             Assert.That(locatorForD.Get("[ModelC].C2[2]"), Is.EqualTo(6.1));
             Assert.That(locatorForD.Get("[ModelC].C2[3]"), Is.EqualTo(6.2));
@@ -247,11 +247,11 @@ namespace APSIM.Core.Tests
             Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for modelC
-            ILocator locatorForC = sim.Children[2].Children[0].Node;
+            IStructure locatorForC = sim.Children[2].Children[0].Node;
             Assert.That(locatorForC.Get(".Simulations.Simulation.ModelA.A1"), Is.EqualTo(1));
 
             // locator for modelD
-            ILocator locatorForD = sim.Children[2].Children[1].Node;
+            IStructure locatorForD = sim.Children[2].Children[1].Node;
             Assert.That(locatorForD.Get(".Simulations.Simulation.Zone.ModelD.D2.Year"), Is.EqualTo(2000));
         }
 
@@ -285,7 +285,7 @@ namespace APSIM.Core.Tests
             Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for zone
-            ILocator locatorForZone = sim.Children[2].Node;
+            IStructure locatorForZone = sim.Children[2].Node;
             Assert.That(locatorForZone.Get("ModelC.C1"), Is.EqualTo(5));
         }
 
@@ -319,7 +319,7 @@ namespace APSIM.Core.Tests
             Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for modelC
-            ILocator locatorForC = sim.Children[2].Children[0].Node;
+            IStructure locatorForC = sim.Children[2].Children[0].Node;
             Assert.That(locatorForC.Get("[ModelA].A1+[ModelD].D2.Year"), Is.EqualTo(2001));
         }
 
@@ -353,7 +353,7 @@ namespace APSIM.Core.Tests
             Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for modelC
-            ILocator locatorForC = sim.Children[2].Children[0].Node;
+            IStructure locatorForC = sim.Children[2].Children[0].Node;
             Assert.That(locatorForC.Get("[ModelA]"), Is.EqualTo(sim.Children[0]));
         }
 
@@ -387,7 +387,7 @@ namespace APSIM.Core.Tests
             Simulation sim = simulations.Children.First() as Simulation;
 
             // locator for modelC
-            ILocator locatorForC = sim.Children[2].Children[0].Node;
+            IStructure locatorForC = sim.Children[2].Children[0].Node;
             Assert.That(locatorForC.Get("[ModelE].E1[1].F"), Is.EqualTo(20));
             Assert.That(locatorForC.Get("[ModelE].E1[2].F"), Is.EqualTo(21));
         }
@@ -432,7 +432,7 @@ namespace APSIM.Core.Tests
             Simulation sim = simulations.Children.First() as Simulation;
 
             // Check that the A1 property is referenced and not the child constant
-            ILocator locator = sim.Node;
+            IStructure locator = sim.Node;
             Assert.That(locator.Get("[ModelA].A1"), Is.EqualTo((sim.Children[0] as ModelA).A1));
 
             //Check that if given the modelsOnly flag, that the child is returned
@@ -465,7 +465,7 @@ namespace APSIM.Core.Tests
 
             // Check that the CNRF property is referenced and not the child model
             Nutrient nutrient = sims.Children[0] as Nutrient;
-            ILocator locator = sims.Node;
+            IStructure locator = sims.Node;
             Assert.That(nutrient.CNRF, Is.EqualTo(locator.Get("[Nutrient].CNRF")));
 
             //check that the child still exists as well
@@ -575,7 +575,7 @@ namespace APSIM.Core.Tests
         [Test]
         public void GetObjectTests()
         {
-            ILocator loc = MakeTestSimulation().Node;
+            IStructure loc = MakeTestSimulation().Node;
             //should return the IVaraible instead of the value of a property
             int val = (int)loc.Get("[ModelA].A1");
             var v = loc.GetObject("[ModelA].A1");
@@ -594,7 +594,7 @@ namespace APSIM.Core.Tests
         public void GetObjectProperties()
         {
             Simulations sims = MakeTestSimulation();
-            ILocator loc = sims.Node;
+            IStructure loc = sims.Node;
             //should only be able to get the property, not the function
             int val = (int)loc.Get("[ModelH].H");
             Assert.That((sims.Children[0].Children[2] as ModelH).H, Is.EqualTo(val));
@@ -612,7 +612,7 @@ namespace APSIM.Core.Tests
         public void GetPropertyOfListOFInstances()
         {
             Simulations sims = MakeTestSimulation();
-            ILocator loc = sims.Node;
+            IStructure loc = sims.Node;
             // should be return an array of A's.
             int[] val = (int[])loc.Get("[ModelI].I.A1");
 
@@ -628,7 +628,7 @@ namespace APSIM.Core.Tests
         public void SetTests()
         {
             Simulations sims = MakeTestSimulation();
-            ILocator loc = sims.Node;
+            IStructure loc = sims.Node;
 
             //set a read only property
             Assert.Throws<Exception>(() => loc.Set("[ModelA].A1", 10));

@@ -14,9 +14,12 @@ namespace Models.Zones
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [Description("This model agregates variablse across multiple zones for reporting")]
-    public class ZoneAgregate : Model, ILocatorDependency
+    public class ZoneAgregate : Model, IStructureDependency
     {
-        [NonSerialized] private ILocator locator;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
 
         /// <summary>
         /// Zones in simulation
@@ -85,9 +88,6 @@ namespace Models.Zones
         /// <summary> The proportion of radiation intercepted by the dead leaf of the understory </summary>
         public double FintUnderstoryDead { get { return Rid.AmountByZone[1] / Ro.Amount; } }
 
-        /// <summary>Locator supplied by APSIM kernel.</summary>
-        public void SetLocator(ILocator locator) => this.locator = locator;
-
         PlantWaterOrNDelta UpdateValues(string varName, bool VarPerM2 = false)
         {
             return new PlantWaterOrNDelta(ZoneAreas, amountByZone(varName, VarPerM2));
@@ -100,8 +100,8 @@ namespace Models.Zones
             {
                 double areaAdjustment = 1.0;
                 if (VarPerM2)
-                    areaAdjustment = (double)locator.Get("Area", relativeTo: z) * 10000;
-                ret.Add((locator.Get(varName, relativeTo: z) != null)? (double)locator.Get(varName, relativeTo: z) * areaAdjustment : 0.0 );
+                    areaAdjustment = (double)Structure.Get("Area", relativeTo: z) * 10000;
+                ret.Add((Structure.Get(varName, relativeTo: z) != null)? (double)Structure.Get(varName, relativeTo: z) * areaAdjustment : 0.0 );
             }
             return ret;
         }

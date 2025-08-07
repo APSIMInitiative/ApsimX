@@ -20,9 +20,12 @@ namespace Models.PMF.SimplePlantModels
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class StrumTreeInstance : Model, ILocatorDependency
+    public class StrumTreeInstance : Model, IStructureDependency
     {
-        [NonSerialized] private ILocator locator;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
 
         private double _RowSpacing = 6;
         private double _InterRowSpacing = 1.0;
@@ -119,7 +122,7 @@ namespace Models.PMF.SimplePlantModels
             get { return _AlleyZoneWidthFrac; }
             set { _AlleyZoneWidthFrac = constrain(value, 0, 0.99); }
         }
-    
+
         /// <summary>Width of the alley zone between tree rows (0-1)</summary>
         [Units("m")]
         public double AlleyZoneWidth
@@ -147,7 +150,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Tree population density (/ha)</summary>
         [Units("/ha)")]
         public double TreePopulation
-        { 
+        {
             get
             {
                 return 10000 / (RowSpacing * InterRowSpacing);
@@ -160,7 +163,7 @@ namespace Models.PMF.SimplePlantModels
         [Units("m2")]
         public double TreeCanopyArea
         {
-            get 
+            get
             {
                 return MaxWidth/1000 * InterRowSpacing;
             }
@@ -204,7 +207,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Date for Start Full Canopy</summary>
         [Description("Date for Start Full Canopy")]
         public string StartFullCanopyDate { get; set; }
-        
+
         /// <summary>Date for Start of leaf fall</summary>
         [Description("Date for Start of leaf fall")]
         public string StartLeafFallDate { get; set; }
@@ -212,7 +215,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Date for End of Leaf fall</summary>
         [Description("Date for End of Leaf fall")]
         public string EndLeafFallDate { get; set; }
-        
+
         /// <summary>Grow roots into Alley zone (yes or no)</summary>
         [Separator("Tree Dimnesions")]
         [Description("Grow roots into Alley zone (yes or no)")]
@@ -342,10 +345,10 @@ namespace Models.PMF.SimplePlantModels
         [Description("Fruit Nitrogen concentration at maturity (g/g)")]
         [Bounds(Lower = 0.001, Upper = 0.1)]
         [Units("g/g")]
-        public double FruitNConc 
-        { 
-            get{return _FruitNConc; } 
-            set{ _FruitNConc = constrain(value,0.001, 0.1); } 
+        public double FruitNConc
+        {
+            get{return _FruitNConc; }
+            set{ _FruitNConc = constrain(value,0.001, 0.1); }
         }
 
         /// <summary>Extinction coefficient (0.1-1)</summary>
@@ -353,20 +356,20 @@ namespace Models.PMF.SimplePlantModels
         [Description("Extinction coefficient (0.1-1)")]
         [Bounds(Lower = 0.1, Upper = 1.0)]
         [Units("0-1")]
-        public double ExtinctCoeff 
-        { 
-            get{return _ExtinctCoeff; } 
-            set{ _ExtinctCoeff = constrain(value,0.1,1); } 
+        public double ExtinctCoeff
+        {
+            get{return _ExtinctCoeff; }
+            set{ _ExtinctCoeff = constrain(value,0.1,1); }
         }
 
         /// <summary>Winter cover of tree canopy (0-0.98).  Zero for dicidious trees, >0 for evergreens </summary>
         [Description("Winter cover of tree canopy (0-0.98). Zero for dicidious trees, >0 for evergreens")]
         [Bounds(Lower = 0, Upper = 0.98)]
         [Units("0-1")]
-        public double BaseCover 
-        { 
-            get{return _BaseCover; } 
-            set{ _BaseCover = constrain(value,0,0.98); } 
+        public double BaseCover
+        {
+            get{return _BaseCover; }
+            set{ _BaseCover = constrain(value,0,0.98); }
         }
 
         /// <summary>Maximum cover of tree canopy (0.01-0.98).  This is the fraction of radiation that the tree canopy intercepts within its canopy area, not for the entire zone.</summary>
@@ -643,9 +646,6 @@ namespace Models.PMF.SimplePlantModels
             {"InterRowSpacing","[STRUM].InterRowSpacing.FixedValue = " }
         };
 
-        /// <summary>Locator supplied by APSIM kernel.</summary>
-        public void SetLocator(ILocator locator) => this.locator = locator;
-
 
         /// <summary>
         /// Method that sets scurm running
@@ -653,7 +653,7 @@ namespace Models.PMF.SimplePlantModels
         public void Establish()
         {
             double soilDepthMax = 0;
-            
+
             var soilCrop = soil.FindDescendant<SoilCrop>(strum.Name + "Soil");
             var physical = soil.FindDescendant<Physical>("Physical");
             if (soilCrop == null)
@@ -672,7 +672,7 @@ namespace Models.PMF.SimplePlantModels
 
             // STRUM sets soil KL to 1 and uses the KL modifier to determine appropriate kl based on root depth
             for (int d = 0; d < soilCrop.KL.Length; d++)
-                soilCrop.KL[d] = 1.0; 
+                soilCrop.KL[d] = 1.0;
 
 
             double rootDepth = Math.Min(MaxRD, soilDepthMax);
@@ -716,7 +716,7 @@ namespace Models.PMF.SimplePlantModels
             phenology.SetAge(AgeAtSimulationStart);
             summary.WriteMessage(this,"Some of the message above is not relevent as STRUM has no notion of population, bud number or row spacing." +
                 " Additional info that may be useful.  " + this.Name + " is established as " + this.AgeAtSimulationStart.ToString() + " Year old plant "
-                ,MessageType.Information); 
+                ,MessageType.Information);
         }
 
         /// <summary>
@@ -730,7 +730,7 @@ namespace Models.PMF.SimplePlantModels
             {
                 treeParams["WaterStressPhoto"] += "0.0";
                 treeParams["WaterStressPhoto2"] += "0.2";
-                treeParams["WaterStressExtinct"] += "0.2"; 
+                treeParams["WaterStressExtinct"] += "0.2";
                 treeParams["WaterStressNUptake"] += "0.0";
                 treeParams["FRGRMaxTY"] += "0.0";
             }
@@ -800,7 +800,7 @@ namespace Models.PMF.SimplePlantModels
                 treeParams["RowWidth"] += RowZoneWidth.ToString();
                 treeParams["InterRowSpacing"] += InterRowSpacing.ToString();
             }
-            
+
 
 
             if (AgeAtSimulationStart <= 0)
@@ -813,7 +813,7 @@ namespace Models.PMF.SimplePlantModels
             treeParams["InitialRootWt"] += (initialTrunkWt * Proot * 0.5).ToString();
             treeParams["InitialFruitWt"] += (0).ToString();
             treeParams["InitialLeafWt"] += ((initialTrunkWt * Pleaf) * (Decidious ? 0 : 1 )).ToString();
-                
+
             string[] commands = new string[treeParams.Count];
             treeParams.Values.CopyTo(commands, 0);
 
@@ -838,23 +838,23 @@ namespace Models.PMF.SimplePlantModels
             {
                 if (AlleyZoneWidth == 0)
                     throw new Exception("Alley Zone must have width > zero.  Either increase AlleyZoneWidthFrac to a positive value or remove alley zone is single zone simulation is required");
-                locator.Set("[Row].Width", (object)RowZoneWidth);
-                locator.Set("[Row].Length", (object)InterRowSpacing);
-                locator.Set("[Row].CanopyType", (object)"TreeRow");
-                locator.Set("[Alley].Width", (object)AlleyZoneWidth);
-                locator.Set("[Alley].Length", (object)InterRowSpacing);
-                locator.Set("[Alley].CanopyType", (object)"TreeRow");
+                Structure.Set("[Row].Width", (object)RowZoneWidth);
+                Structure.Set("[Row].Length", (object)InterRowSpacing);
+                Structure.Set("[Row].CanopyType", (object)"TreeRow");
+                Structure.Set("[Alley].Width", (object)AlleyZoneWidth);
+                Structure.Set("[Alley].Length", (object)InterRowSpacing);
+                Structure.Set("[Alley].CanopyType", (object)"TreeRow");
             }
             else
             {
-                locator.Set("[Row].Width", (object)RowZoneWidth);
-                locator.Set("[Row].Length", (object)InterRowSpacing);
-                locator.Set("[Row].CanopyType", (object)"TreeRow");
+                Structure.Set("[Row].Width", (object)RowZoneWidth);
+                Structure.Set("[Row].Length", (object)InterRowSpacing);
+                Structure.Set("[Row].CanopyType", (object)"TreeRow");
             }
 
 
         }
-        
+
         [EventSubscribe("StartOfSimulation")]
         private void OnStartSimulation(object sender, EventArgs e)
         {
