@@ -127,7 +127,7 @@ jobs:
         echo "Commit SHA: ${{ github.sha }}"
         # NOTE: Enable once the workflow is ready for production.
         # commitsha=${{ github.sha }}
-        commitsha=205b6d519bf7d21a4c32a0e1ae9f80cb5ecccc7c
+        commitsha=9ef60f11dd6ceb95c141f00f027637057b2dd0f5
         author=${{ github.actor }}
         echo "commitsha variable: ${commitsha}"
         echo "author variable: ${author}"
