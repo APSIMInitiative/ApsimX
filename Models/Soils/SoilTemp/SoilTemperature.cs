@@ -1009,6 +1009,7 @@ namespace Models.Soils.SoilTemp
         {
             waterBalance.SW.CopyTo(soilWater, 1);
             soilWater[numNodes] = soilWater[numLayers];
+
             if (microClimate != null)
             {
                 canopyHeight = Math.Max(microClimate.CanopyHeight, soilRoughnessHeight) / 1000.0;
