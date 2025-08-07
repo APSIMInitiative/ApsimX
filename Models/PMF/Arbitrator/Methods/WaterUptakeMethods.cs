@@ -14,11 +14,12 @@ namespace Models.PMF.Arbitrator
     /// <summary>The method used to do WaterUptake</summary>
     [Serializable]
     [ValidParent(ParentType = typeof(IArbitrator))]
-    public class WaterUptakeMethod : Model, IUptakeMethod, IScopeDependency
+    public class WaterUptakeMethod : Model, IUptakeMethod, IStructureDependency
     {
-        /// <summary>Scope supplied by APSIM.core.</summary>
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IScope Scope { private get; set; }
+        public IStructure Structure { private get; set; }
+
 
         /// <summary>Reference to Plant to find WaterDemands</summary>
         [Link(Type = LinkType.Ancestor)]
@@ -55,7 +56,7 @@ namespace Models.PMF.Arbitrator
         {
             List<IHasWaterDemand> Waterdemands = new List<IHasWaterDemand>();
 
-            foreach (Model Can in Scope.FindAll<IHasWaterDemand>(relativeTo: plant))
+            foreach (Model Can in Structure.FindAll<IHasWaterDemand>(relativeTo: plant))
                 Waterdemands.Add(Can as IHasWaterDemand);
 
             WaterDemands = Waterdemands;

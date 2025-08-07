@@ -9,7 +9,7 @@ namespace APSIM.Core;
 /// contains the child nodes and a _Parent_ property that links to the parent node.
 /// There are also methods for adding, removing and replace child nodes and for walking the node tree.
 /// </summary>
-public class Node : ILocator, IScope
+public class Node : IStructure
 {
     private readonly List<Node> children = [];
     private ScopingRules scope;
@@ -269,10 +269,8 @@ public class Node : ILocator, IScope
     /// <param name="node">Node to resolve dependencies in.</param>
     private static void ResolvesDependencies(Node node)
     {
-        if (node.Model is ILocatorDependency locatorDependency)
-            locatorDependency.SetLocator(node);
-        if (node.Model is IScopeDependency scopeDependency)
-            scopeDependency.Scope = node;
+        if (node.Model is IStructureDependency structureDependency)
+            structureDependency.Structure = node;
     }
 
     /// <summary>Remove a child model.</summary>

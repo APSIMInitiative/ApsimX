@@ -77,7 +77,7 @@ namespace Models
     public class ReportColumn : IReportColumn
     {
         /// <summary>An instance of a locator service.</summary>
-        private readonly ILocator locator;
+        private readonly IStructure structure;
 
         /// <summary>Are we in the capture window?</summary>
         private bool inCaptureWindow;
@@ -124,19 +124,19 @@ namespace Models
         /// </summary>
         /// <param name="reportLine">The entire line directory from report.</param>
         /// <param name="clock">An instance of a clock model</param>
-        /// <param name="locator">An instance of a locator service</param>
+        /// <param name="structure">An instance of a locator service</param>
         /// <param name="events">An instance of an events service</param>
         /// <param name="groupByVariableName">Group by variable name.</param>
         /// <param name="from">From clause to use.</param>
         /// <param name="to">To clause to use.</param>
         /// <returns>The newly created ReportColumn</returns>
         public ReportColumn(string reportLine,
-                                      IClock clock, ILocator locator, IEvent events,
+                                      IClock clock, IStructure structure, IEvent events,
                                       string groupByVariableName,
                                       string from, string to)
         {
             this.clock = clock;
-            this.locator = locator;
+            this.structure = structure;
             this.events = events;
             if (!string.IsNullOrEmpty(groupByVariableName))
                 this.groupByName = groupByVariableName;
@@ -179,12 +179,12 @@ namespace Models
         public virtual object GetValue(int groupNumber)
         {
             if (groupNumber >= groups.Count)
-                groups.Add(new VariableGroup(locator, null, variableName, aggregationFunction));
+                groups.Add(new VariableGroup(structure, null, variableName, aggregationFunction));
 
             if (!possibleRecursion)
             {
                 possibleRecursion = true;
-                var var = locator.GetObject(variableName, LocatorFlags.IncludeReportVars | LocatorFlags.ThrowOnError);
+                var var = structure.GetObject(variableName, LocatorFlags.IncludeReportVars | LocatorFlags.ThrowOnError);
                 if (var == null)
                 {
                     possibleRecursion = false;
@@ -212,7 +212,7 @@ namespace Models
             VariableGroup group = null;
             if (!string.IsNullOrEmpty(groupByName))
             {
-                value = locator.Get(groupByName);
+                value = structure.Get(groupByName);
                 if (value == null)
                     throw new Exception($"Unable to locate group by variable: {groupByName}");
 
@@ -223,7 +223,7 @@ namespace Models
 
             if (group == null)
             {
-                group = new VariableGroup(locator, value, variableName, aggregationFunction);
+                group = new VariableGroup(structure, value, variableName, aggregationFunction);
                 groups.Add(group);
             }
             group.StoreValue();
@@ -337,7 +337,7 @@ namespace Models
             // Try and get units.
             try
             {
-                var var = locator.GetObject(variableName, LocatorFlags.PropertiesOnly);
+                var var = structure.GetObject(variableName, LocatorFlags.PropertiesOnly);
                 if (var != null)
                 {
                     Units = var.GetUnitsLabel();
@@ -363,8 +363,8 @@ namespace Models
                 // subscribe to the start of day event so that we can determine if we're in the capture window.
                 events.Subscribe("[Clock].DoDailyInitialisation", OnStartOfDay);
                 events.Subscribe("[Simulation].UnsubscribeFromEvents", OnUnsubscribeFromEvents);
-                fromVariable = locator.GetObject(fromString, relativeTo: clock as Model);
-                toVariable = locator.GetObject(toString, relativeTo: clock as Model);
+                fromVariable = structure.GetObject(fromString, relativeTo: clock as Model);
+                toVariable = structure.GetObject(toString, relativeTo: clock as Model);
                 if (fromVariable != null)
                 {
                     // A from variable name  was specified.
