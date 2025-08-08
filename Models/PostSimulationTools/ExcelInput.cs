@@ -51,17 +51,7 @@ namespace Models.PostSimulationTools
             }
             set
             {
-                //remove any null or blank filenames that could be passed in
-                List<string> filtered = new List<string>();
-                foreach(string line in value)
-                        if (line != null && line.Length > 0)
-                            filtered.Add(line);
-
-                Simulations simulations = Structure.FindParent<Simulations>(recurse: true);
-                if (simulations != null && simulations.FileName != null && value != null)
-                    this.filenames = filtered.Select(v => PathUtilities.GetRelativePath(v, simulations.FileName)).ToArray();
-                else
-                    this.filenames = filtered.ToArray();
+                filenames = value;
             }
         }
 
@@ -116,6 +106,18 @@ namespace Models.PostSimulationTools
         /// </summary>
         public void Run()
         {
+            //remove any null or blank filenames that could be passed in
+            List<string> filtered = new List<string>();
+            foreach(string line in filenames)
+                if (!string.IsNullOrEmpty(line))
+                    filtered.Add(line);
+
+            Simulations simulations = Structure.FindParent<Simulations>(recurse: true);
+            if (simulations != null && simulations.FileName != null)
+                this.filenames = filtered.Select(v => PathUtilities.GetRelativePath(v, simulations.FileName)).ToArray();
+            else
+                this.filenames = filtered.ToArray();
+
             foreach (string sheet in SheetNames)
                 if (storage.Reader.TableNames.Contains(sheet))
                     storage.Writer.DeleteTable(sheet);

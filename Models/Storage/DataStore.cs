@@ -49,9 +49,6 @@ namespace Models.Storage
             set
             {
                 useInMemoryDB = value;
-                Close();
-                UpdateFileName();
-                Open();
             }
         }
 
@@ -179,6 +176,9 @@ namespace Models.Storage
         public override void OnCreated()
         {
             base.OnCreated();
+            Close();
+            UpdateFileName();
+            Open();
             if (connection == null)
                 Open();
         }

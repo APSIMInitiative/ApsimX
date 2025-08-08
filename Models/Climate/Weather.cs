@@ -150,10 +150,6 @@ namespace Models.Climate
             }
             set
             {
-                Simulations simulations = Structure.FindParent<Simulations>(recurse: true);
-                if (simulations != null)
-                    this.constantsFile = PathUtilities.GetRelativePath(value, simulations.FileName);
-                else
                     this.constantsFile = value;
             }
         }
@@ -642,6 +638,11 @@ namespace Models.Climate
                 this.AirPressure = 1010;
             if (DiffuseFraction == 0)
                 this.DiffuseFraction = -1;
+
+            Simulations simulations = Structure.FindParent<Simulations>(recurse: true);
+            if (simulations != null)
+                this.constantsFile = PathUtilities.GetRelativePath(constantsFile, simulations.FileName);
+
             if (reader != null)
             {
                 reader.Close();

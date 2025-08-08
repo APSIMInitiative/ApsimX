@@ -699,6 +699,18 @@ internal class ManagerConverter
         int posCloseComment = code.LastIndexOf("*/", pos);
         return posOpenComment > posCloseComment;
     }
+
+    /// <summary>
+    /// The the value of a manager line.
+    /// </summary>
+    /// <param name="lineIndex">The index of the line to set</param>
+    /// <param name="contents">The contents of the new line.</param>
+    public void SetLineContents(int lineIndex, string contents)
+    {
+        if (lineIndex < 0 || lineIndex >= lines.Count)
+            throw new Exception($"Cannot set the contents of a manager line. Index out of bounds. Index={lineIndex}");
+        lines[lineIndex] = contents;
+    }
 }
 
 /// <summary>A manager declaration</summary>
