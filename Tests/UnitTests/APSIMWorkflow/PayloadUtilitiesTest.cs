@@ -436,15 +436,5 @@ public class PayloadUtilitiesTest
             Directory.Delete(testDirectory, true);
         }
     }
-    
-    [Test]
-    public void RemoveRSimsDirsFromValidationDirs_RemovesRSimPaths_CaseInsensitive()
-    {
-        // Act
-        var result = typeof(PayloadUtilities)
-            .GetMethod("RemoveRSimsDirsFromValidationDirs", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)
-            .Invoke(null, new object[] { VAL_FILE_PATHS }) as string[];
-        // Assert: only the non-R paths remain
-        Assert.That(result, Does.Not.Contain(PayloadUtilities.R_SIMS_FILEPATHS));
-    }
+
 }

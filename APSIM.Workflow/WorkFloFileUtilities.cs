@@ -42,35 +42,17 @@ public static class WorkFloFileUtilities
             - grid.csv
             - r-sims-grid.csv
             tasks:
-            - name: non-r-sims
+            - name:sim
               inputfiles:
               - .env
               - workflow.yml
               grid: grid.csv
               steps:
-                - uses: ric394/apsimx:{options.DockerImageTag}
-                  args: "$Path"
-
-                - uses: apsiminitiative/postats2-collector:latest
-                  args: upload {currentBuildNumber} {options.CommitSHA} {options.GitHubAuthorID} {brisbaneDatetimeNow.ToString(timeFormat)} "$Path"
+                - uses: "$DockerImage"{options.DockerImageTag}
+                  args: ""$Path""
               finally:
                 - uses: apsiminitiative/postats2-collector:latest
-                  args: upload {currentBuildNumber} {options.CommitSHA} {options.GitHubAuthorID} {brisbaneDatetimeNow.ToString(timeFormat)} "$Path"
-            - name: r-sims
-              inputfiles:
-                - .env
-                - workflow.yml
-              grid: r-sims-grid.csv
-              steps:
-                - uses: ric394/apsimplusr:{options.DockerImageTag}
-                  args: "$Path"
-
-                - uses: apsiminitiative/postats2-collector:latest
-                  args: upload {currentBuildNumber} {options.CommitSHA} {options.GitHubAuthorID} {brisbaneDatetimeNow.ToString(timeFormat)} "$Path"
-              finally:
-                - uses: apsiminitiative/postats2-collector:latest
-                  args: upload {currentBuildNumber} {options.CommitSHA} {options.GitHubAuthorID} {brisbaneDatetimeNow.ToString(timeFormat)} "$Path"
-                
+                  args: upload {currentBuildNumber} {options.CommitSHA} {options.GitHubAuthorID} {brisbaneDatetimeNow.ToString(timeFormat)} ""$Path""
             """;
             File.WriteAllText(Path.Combine(options.DirectoryPath, workFloFileName), workFloFileContents);
             Console.WriteLine($"Workflow.yml contents:\n{workFloFileContents}");
