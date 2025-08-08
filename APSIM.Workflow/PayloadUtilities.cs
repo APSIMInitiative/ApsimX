@@ -34,6 +34,18 @@ public static class PayloadUtilities
     /// </summary>
     public static string WORKFLO_API_SUBMIT_AZURE_URL = "https://digitalag.csiro.au/workflo/submit-azure";
 
+    /// <summary>
+    /// List of R simulation files paths
+    /// </summary>
+    public static string[] R_SIMS_FILEPATHS = {
+                "/Prototypes/CroptimizR/template.apsimx",
+                "/Examples/Optimisation/CroptimizRExample.apsimx",
+                "/Examples/Tutorials/Sensitivity_SobolMethod.apsimx",
+                "/Examples/Tutorials/Sensitivity_MorrisMethod.apsimx",
+                "/Examples/Sensitivity/Sobol.apsimx",
+                "/Examples/Sensitivity/Morris.apsimx"
+            };
+
     // // Development submit azure URL
     // public static string WORKFLO_API_SUBMIT_AZURE_URL = "http://localhost:8040/submit-azure";
 
@@ -217,8 +229,9 @@ public static class PayloadUtilities
 
         RemoveUnusedFilesFromArchive(zipFilePath);
         AddGridCSVToZip(zipFilePath, directoryPath, isVerbose);
+        AddRSimCSVToZip(zipFilePath, directoryPath, isVerbose);
         CheckZipFileList(zipFilePath, isVerbose);
-        
+
         if (!File.Exists(zipFilePath))
             throw new Exception("Error: Failed to create zip file.");
 
@@ -263,7 +276,7 @@ public static class PayloadUtilities
         string gridCsvPath = Path.Combine(directoryPath, "grid.csv");
         if (!File.Exists(gridCsvPath))
             throw new Exception($"Error: Grid CSV file does not exist at {gridCsvPath}");
-        
+
         if (isVerbose)
         {
             Console.WriteLine("grid.csv contents:");
@@ -298,6 +311,7 @@ public static class PayloadUtilities
         if (File.Exists(gridCsvPath) == false)
         {
             string[] validationDirs = ValidationLocationUtility.GetDirectoryPaths();
+            validationDirs = RemoveRSimsDirsFromValidationDirs(validationDirs);
             // string[] validationDirs = ["/Prototypes/CroptimizR"]; // Temporary test directory list
             // string[] validationDirs = ["/Tests/Validation/Chickpea/", "/Tests/Validation/Maize/"]; // Temporary test directory list
 
@@ -312,7 +326,7 @@ public static class PayloadUtilities
                 writer.WriteLine($"/wd{dir}/");
 
             if (isVerbose)
-                    Console.WriteLine("Grid CSV file created at " + gridCsvPath);
+                Console.WriteLine("Grid CSV file created at " + gridCsvPath);
         }
     }
 
@@ -439,5 +453,81 @@ public static class PayloadUtilities
             else throw new Exception("Failed to copy .env file to payload zip.");
 
         }
+    }
+
+    /// <summary>
+    /// Adds a csv containing file paths for sims requiring R language.
+    /// </summary>
+    /// <param name="zipFilePath"></param>
+    /// <param name="directoryPath"></param>
+    /// <param name="isVerbose"></param>
+    /// <exception cref="Exception"></exception>
+    public static void AddRSimCSVToZip(string zipFilePath, string directoryPath, bool isVerbose)
+    {
+        CreateRSimsCSVFile(directoryPath, isVerbose);
+        string rSimCsvPath = Path.Combine(directoryPath, "r-sims-grid.csv");
+        if (!File.Exists(rSimCsvPath))
+            throw new Exception($"Error: R-Sim CSV file does not exist at {rSimCsvPath}");
+
+        if (isVerbose)
+        {
+            Console.WriteLine("r-sims-grid.csv contents:");
+            using (StreamReader reader = new StreamReader(rSimCsvPath))
+            {
+                string line;
+                int lineNumber = 0;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    Console.WriteLine($"  {lineNumber++}: {line}");
+                }
+            }
+        }
+
+        using ZipArchive archive = ZipFile.Open(zipFilePath, ZipArchiveMode.Update);
+        archive.CreateEntryFromFile(rSimCsvPath, "r-sims-grid.csv");
+
+        if (isVerbose)
+            Console.WriteLine("R-Sim CSV file added to zip archive.");
+    }
+
+    /// <summary>
+    /// Creates a CSV file containing only the simulations that require R language to run.
+    /// </summary>
+    /// <param name="directoryPath">The directory path where the r-sims-grid CSV file will be created.</param>
+    /// <param name="isVerbose">Whether to print verbose output.</param>
+    public static void CreateRSimsCSVFile(string directoryPath, bool isVerbose)
+    {
+        string rSimCsvPath = Path.Combine(directoryPath, "r-sims-grid.csv");
+
+        if (File.Exists(rSimCsvPath) == false)
+        {
+
+            using StreamWriter writer = new(rSimCsvPath);
+            writer.NewLine = "\n"; // Ensure new lines are consistent
+            writer.WriteLine("Path");
+
+            if (isVerbose)
+                Console.WriteLine($"Creating {R_SIMS_FILEPATHS.Length} R Sim tasks in r-sims-grid.csv");
+
+            foreach (string path in R_SIMS_FILEPATHS)
+                writer.WriteLine($"/wd{path}");
+
+            if (isVerbose)
+                Console.WriteLine("r-sims-grid CSV file created at " + rSimCsvPath);
+        }
+    }
+    
+    /// <summary>
+    /// Returns the validation directories without the sims requiring R language paths.
+    /// This is useful to avoid running R sim tasks in the validation workflow.
+    /// </summary>
+    /// <param name="validationDirs"></param>
+    /// <returns></returns>
+    private static string[] RemoveRSimsDirsFromValidationDirs(string[] validationDirs)
+    {
+        // Remove directories
+        List<string> validationDirsList = validationDirs.ToList();
+        validationDirsList.RemoveAll(dir => R_SIMS_FILEPATHS.Contains(dir, StringComparer.OrdinalIgnoreCase));
+        return validationDirsList.ToArray();
     }
 }
