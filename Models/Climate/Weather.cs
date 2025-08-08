@@ -154,11 +154,20 @@ namespace Models.Climate
         }
 
         /// <summary>
+        /// Filename for the weather file.
+        /// </summary>
+        private string fileName;
+
+        /// <summary>
         /// Gets or sets the file name. Should be relative filename where possible.
         /// </summary>
         [Summary]
         [Description("Weather file name")]
-        public string FileName { get; set; }
+        public string FileName
+        {
+            get { return fileName; }
+            set { fileName = value.Replace("\\", "/"); }
+        }
 
         /// <summary>
         /// Gets or sets the full file name (with path). The user interface uses this.
