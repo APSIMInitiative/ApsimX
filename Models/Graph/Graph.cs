@@ -112,6 +112,27 @@ namespace Models
                         .Where(g => g.Enabled)
                         .SelectMany(g => g.GetAnnotations());
         }
+        
+        
+        /// <summary>
+        /// Get the axis for the position
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        /// 
+
+        public Axis GetAxis(AxisPosition position)
+        {
+            foreach (Axis axis in Axis)
+            {
+                if (axis.Position == position)
+                    return axis;
+
+            }
+
+            throw new Exception("Axis position not valid");
+        }
 
         /// <summary>
         /// Ensure that we have all necessary axis objects.

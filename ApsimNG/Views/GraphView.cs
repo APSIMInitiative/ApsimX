@@ -1900,7 +1900,6 @@ namespace UserInterface.Views
             try
             {
                 OnPlotClick?.Invoke(this, EventArgs.Empty);
-                OnAxisClick?.Invoke(APSIM.Shared.Graphing.AxisPosition.Bottom);
                 OnLegendClick?.Invoke(this, new LegendClickArgs());
                 OnTitleClick?.Invoke(this, EventArgs.Empty);
                 OnAnnotationClick?.Invoke(this, EventArgs.Empty);
@@ -1985,6 +1984,7 @@ namespace UserInterface.Views
                         else if (bottomAxisArea.Contains(location) && GetAxis(APSIM.Shared.Graphing.AxisPosition.Bottom) != null)
                         {
                             this.OnAxisClick.Invoke(APSIM.Shared.Graphing.AxisPosition.Bottom);
+                            
                         }
                     }
                 }
