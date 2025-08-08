@@ -34,9 +34,7 @@ public static class PayloadUtilities
     /// </summary>
     public static string WORKFLO_API_SUBMIT_AZURE_URL = "https://digitalag.csiro.au/workflo/submit-azure";
 
-    /// <summary>
-    /// List of R simulation files paths
-    /// </summary>
+    /// <summary> List of R simulation files paths</summary>
     public static string[] R_SIMS_FILEPATHS = {
                 "/Prototypes/CroptimizR/template.apsimx",
                 "/Examples/Optimisation/CroptimizRExample.apsimx",
@@ -323,7 +321,7 @@ public static class PayloadUtilities
                 Console.WriteLine($"Creating {validationDirs.Length} validation tasks in grid.csv");
 
             foreach (string dir in validationDirs)
-                writer.WriteLine($"/wd{dir}/");
+                writer.WriteLine($"/wd{dir}");
 
             if (isVerbose)
                 Console.WriteLine("Grid CSV file created at " + gridCsvPath);

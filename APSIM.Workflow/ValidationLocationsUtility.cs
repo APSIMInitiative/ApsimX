@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -43,7 +44,9 @@ namespace APSIM.Workflow
                             if (full_path_normalized.Contains(validation_location_normalized))
                             {
                                 var reduced_path = full_path_normalized.Substring(full_path_normalized.IndexOf(validation_location_normalized));
-                                validation_directories.Add("/" + reduced_path); // for linux compatibility
+                                var dirApsimFiles = Directory.GetFiles(reduced_path, "*.apsimx", SearchOption.AllDirectories);
+                                foreach (var apsimFile in dirApsimFiles)
+                                    validation_directories.Add("/" + apsimFile.Replace("\\", "/")); // for linux compatibility
                             }
                         }
                     }

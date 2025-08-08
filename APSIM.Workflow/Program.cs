@@ -65,7 +65,7 @@ public class Program
 
                 foreach (string dir in ValidationLocationUtility.GetDirectoryPaths())
                 {
-                    Console.WriteLine(dir + "/");
+                    Console.WriteLine(dir);
                 }
             }
             if (!string.IsNullOrEmpty(options.DirectoryPath))

@@ -49,7 +49,7 @@ public static class WorkFloFileUtilities
               grid: grid.csv
               steps:
                 - uses: ric394/apsimx:{options.DockerImageTag}
-                  args: --recursive "$Path*.apsimx"
+                  args: "$Path"
 
                 - uses: apsiminitiative/postats2-collector:latest
                   args: upload {currentBuildNumber} {options.CommitSHA} {options.GitHubAuthorID} {brisbaneDatetimeNow.ToString(timeFormat)} "$Path"
