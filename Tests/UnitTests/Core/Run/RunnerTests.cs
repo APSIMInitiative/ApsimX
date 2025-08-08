@@ -34,18 +34,6 @@
         {
             database = new SQLite();
             database.OpenDatabase(":memory:", readOnly: false);
-
-            if (ProcessUtilities.CurrentOS.IsWindows)
-            {
-                string sqliteSourceFileName = DataStoreWriterTests.FindSqlite3DLL();
-                Directory.SetCurrentDirectory(Path.GetDirectoryName(sqliteSourceFileName));
-
-                var sqliteFileName = Path.Combine(Directory.GetCurrentDirectory(), "sqlite3.dll");
-                if (!File.Exists(sqliteFileName))
-                {
-                    File.Copy(sqliteSourceFileName, sqliteFileName, overwrite: true);
-                }
-            }
         }
 
         /// <summary>Ensure that runner can run a single simulation.</summary>
