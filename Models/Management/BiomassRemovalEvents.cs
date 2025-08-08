@@ -65,7 +65,7 @@ namespace Models.Management
         public string[] RemovalDates { get; set; }
 
         /// <summary>List of all biomass removal fractions, per organ.</summary>
-        [Display(Type = DisplayType.SubModel)]
+        [Display(Type = DisplayType.None)]
         public List<BiomassRemovalOfPlantOrganType> BiomassRemovalFractions { get; set; }
 
         /// <summary>Cutting Event.</summary>

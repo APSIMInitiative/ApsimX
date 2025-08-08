@@ -2,6 +2,7 @@ using System;
 using Models.Core;
 using APSIM.Shared.Utilities;
 using Newtonsoft.Json;
+using APSIM.Core;
 
 namespace Models.AgPasture;
 
@@ -13,8 +14,13 @@ namespace Models.AgPasture;
 [PresenterName("UserInterface.Presenters.PropertyPresenter")]
 [ValidParent(ParentType = typeof(Zone))]
 [ValidParent(ParentType = typeof(Simulation))]
-public class SimpleCow : Model
+public class SimpleCow : Model, IStructureDependency
 {
+    /// <summary>Structure instance supplied by APSIM.core.</summary>
+    [field: NonSerialized]
+    public IStructure Structure { private get; set; }
+
+
     [Link] IClock clock = null;
 
     // Farm context
@@ -175,7 +181,7 @@ public class SimpleCow : Model
         if (CowN2Exported[1] + CowN2UrinePerc[1] + CowN2DungPerc[1] != 100.0)
             throw new Exception("Disposition of N intake when the cow is dry must add up to 100");
 
-        if (FindInScope<SimpleGrazing>() == null)
+        if (Structure.Find<SimpleGrazing>(relativeTo: this) == null)
             throw new Exception("SimpleCow needs SimpleGrazing. Please add it to your simulation");
 
         DateTime tempdate = DateUtilities.GetDate(CowDateCalving, clock.Today.Year);
@@ -228,7 +234,7 @@ public class SimpleCow : Model
         CowMSPerDay = 0.0;
         WeeksBeforeCalving = 0.0;
         LactationWeek = 0.0;
-        
+
         // just were are the cows at right now?
         CowPhysiologicalState();
     }
@@ -270,7 +276,7 @@ public class SimpleCow : Model
         else  // the unlikely event that there is a great match between pasture available and herd demand
             HerdNIntake = grazedN;
 
-        HerdDMIntake = grazedDM + SilageFed - SilageMade;  
+        HerdDMIntake = grazedDM + SilageFed - SilageMade;
 
         // N considerations - urine N info to be sent to SimplePatches
         int Index;

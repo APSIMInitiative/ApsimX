@@ -25,7 +25,7 @@ namespace APSIM.Documentation.Models.Types
         public override List<ITag> Document(int none = 0)
         {
             List<ITag> tags = new List<ITag>();
-            IEnumerable<PastureSpecies> models = model.FindAllInScope<PastureSpecies>();
+            IEnumerable<PastureSpecies> models = model.Node.FindAll<PastureSpecies>();
 
             DataTable table = new DataTable();
             table.Columns.Add("Parameter name");

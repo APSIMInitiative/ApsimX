@@ -33,7 +33,7 @@ namespace APSIM.Documentation.Models.Types
             // Remove summary, summary is superfluous.
             if (section.Children.Count >= 2)
                 section.Children.RemoveAt(0);
-            
+
             foreach(ModelsMap map in model.FindAllChildren<ModelsMap>().Where(map => map.Enabled))
             {
                 section.Add(AutoDocumentation.DocumentModel(map));
@@ -108,11 +108,11 @@ namespace APSIM.Documentation.Models.Types
                     }
                 }
             }
-           
+
             // Document child folders.
             foreach (Folder folder in model.FindAllChildren<Folder>().Where(f => f.Enabled))
                 section.Add(AutoDocumentation.DocumentModel(folder));
-            
+
             return new List<ITag>() {section};
         }
 
@@ -125,7 +125,7 @@ namespace APSIM.Documentation.Models.Types
             var graphs = new List<APSIM.Shared.Documentation.Graph>();
             var page = new ModelsGraphPage();
             page.Graphs.AddRange(model.FindAllChildren<ModelsGraph>().Where(g => g.Enabled));
-            var storage = model.FindInScope<IDataStore>();
+            var storage = model.Node.Find<IDataStore>();
             List<ModelsGraphPage.GraphDefinitionMap> definitionMaps = new();
             if (storage != null)
                 definitionMaps.AddRange(page.GetAllSeriesDefinitions(model, storage.Reader));
