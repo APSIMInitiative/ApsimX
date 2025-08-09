@@ -27,25 +27,13 @@ public class AtmosphericPotentialEvaporation : Model, ICalculateEo
     /// <param name="zone">The microclimate zone to calculate eo for.</param>
     public double Calculate(MicroClimateZone zone)
     {
-
-        double coverGreen = 0;
-        for (int j = 0; j <= zone.Canopies.Count - 1; j++)
-            if (zone.Canopies[j].Canopy != null)
-                coverGreen += (1 - coverGreen) * zone.Canopies[j].Canopy.CoverGreen;
-
         if (zone.SoilWater == null)
-            throw new Exception("Cannot calculate atmospheric potential evaporation rate. Missing water balance or surface organic matter models.");
-
-        double residueCover = 0;
-        if (zone.SurfaceOM != null)
-            residueCover = zone.SurfaceOM.Cover;
+            throw new Exception("Cannot calculate atmospheric potential evaporation rate. Missing water balance model.");
 
         return AtmosphericPotentialEvaporationRate(weather.Radn,
                                                    weather.MaxT,
                                                    weather.MinT,
-                                                   zone.SoilWater.Salb,
-                                                   residueCover,
-                                                   coverGreen);
+                                                   zone.Albedo);
     }
 
     /// <summary>
@@ -54,13 +42,9 @@ public class AtmosphericPotentialEvaporation : Model, ICalculateEo
     /// <param name="radn">Solar radiation (MJ/m2/day)</param>
     /// <param name="maxT">Maximum temperature (oC)</param>
     /// <param name="minT">Minimum temperature (oC)</param>
-    /// <param name="surfaceAlbedo">Soil surface albedo</param>
-    /// <param name="residueCover">Surface residue cover</param>
-    /// <param name="coverGreen">Green canopy cover</param>
-    private static double AtmosphericPotentialEvaporationRate(double radn, double maxT, double minT, double surfaceAlbedo, double residueCover, double coverGreen)
+    /// <param name="albedo">Zone albedo</param>
+    private static double AtmosphericPotentialEvaporationRate(double radn, double maxT, double minT, double albedo)
     {
-        double albedo = maxAlbedo - (maxAlbedo - surfaceAlbedo) * (1.0 - coverGreen);
-
         // wt_ave_temp is mean temp, weighted towards max.
         double wtMeanTemp = 0.6 * maxT + 0.4 * minT;
 
