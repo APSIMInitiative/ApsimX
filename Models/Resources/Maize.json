@@ -919,62 +919,6 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.PhaseLookup, Models",
-              "Name": "Phyllochron",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Functions.PhaseLookupValue, Models",
-                  "Start": "Emergence",
-                  "End": "FlagLeaf",
-                  "Name": "Phyllochron",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "Phyllochron",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            1.0,
-                            3.4,
-                            4.0
-                          ],
-                          "Y": [
-                            30.0,
-                            30.0,
-                            42.0
-                          ],
-                          "Name": "XYPairs",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Structure].LeafTipsAppeared",
-                          "Name": "XValue",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
               "$type": "Models.PMF.Struct.HeightFunction, Models",
               "Name": "HeightModel",
               "ResourceName": null,
@@ -1288,6 +1232,107 @@
               ],
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.MultiplyFunction, Models",
+              "Name": "Phyllochron",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.PhaseLookup, Models",
+                  "Name": "BasePhyllochron",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "Emergence",
+                      "End": "FlagLeaf",
+                      "Name": "Phyllochron",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "Name": "Phyllochron",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                1.0,
+                                3.4,
+                                4.0
+                              ],
+                              "Y": [
+                                30.0,
+                                30.0,
+                                42.0
+                              ],
+                              "Name": "XYPairs",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Structure].LeafTipsAppeared",
+                              "Name": "XValue",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "FOXphyllo",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        5.0,
+                        10.0
+                      ],
+                      "Y": [
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "Name": "XYPairs",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[CumulativeExcessWaterStress]",
+                      "Name": "XValue",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "Enabled": true,
@@ -1359,22 +1404,112 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.3,
-              "Units": "g",
+              "$type": "Models.Functions.MultiplyFunction, Models",
               "Name": "MaximumPotentialGrainSize",
               "ResourceName": null,
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.3,
+                  "Units": "g",
+                  "Name": "PotentialGrainSize",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "FOXgs",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        5.0,
+                        10.0
+                      ],
+                      "Y": [
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "Name": "XYPairs",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[CumulativeExcessWaterStress]",
+                      "Name": "XValue",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 700.0,
-              "Units": "number",
+              "$type": "Models.Functions.MultiplyFunction, Models",
               "Name": "MaximumGrainsPerCob",
               "ResourceName": null,
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 700.0,
+                  "Units": "number",
+                  "Name": "PotentialMaximumGrainsPerCob",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "FOXgn",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        5.0,
+                        10.0
+                      ],
+                      "Y": [
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "Name": "XYPairs",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[CumulativeExcessWaterStress]",
+                      "Name": "XValue",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1784,6 +1919,42 @@
                   "Name": "Population",
                   "ResourceName": null,
                   "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "FOXnum",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        5.0,
+                        10.0
+                      ],
+                      "Y": [
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "Name": "XYPairs",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[CumulativeExcessWaterStress]",
+                      "Name": "XValue",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -3396,6 +3567,42 @@
                       ],
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "FOXToday",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            0.5,
+                            1.0
+                          ],
+                          "Y": [
+                            1.0,
+                            1.0,
+                            1.0
+                          ],
+                          "Name": "XYPairs",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Root].WetRootFraction",
+                          "Name": "XValue",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "Enabled": true,
@@ -4092,32 +4299,232 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "$type": "Models.Functions.MinimumFunction, Models",
                   "Name": "FW",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        0.0,
-                        0.3
-                      ],
-                      "Y": [
-                        0.0,
-                        1.0
-                      ],
-                      "Name": "XYPairs",
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "Deficient",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            0.3
+                          ],
+                          "Y": [
+                            0.0,
+                            1.0
+                          ],
+                          "Name": "XYPairs",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Fw",
+                          "Name": "XValue",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Fw",
-                      "Name": "XValue",
+                      "$type": "Models.Functions.MinimumFunction, Models",
+                      "Name": "Excess",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.PhaseLookup, Models",
+                          "Name": "Today",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.PhaseLookupValue, Models",
+                              "Start": "Sowing",
+                              "End": "FloralInitiation",
+                              "Name": "SowToFloralInitiation",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                  "Name": "EarlySeason",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.XYPairs, Models",
+                                      "X": [
+                                        0.0,
+                                        0.9,
+                                        1.0
+                                      ],
+                                      "Y": [
+                                        1.0,
+                                        1.0,
+                                        1.0
+                                      ],
+                                      "Name": "XYPairs",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Root].WetRootFraction",
+                                      "Name": "XValue",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.PhaseLookupValue, Models",
+                              "Start": "FloralInitiation",
+                              "End": "StartGrainFill",
+                              "Name": "FloralInitiationToStartGrainFill",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                  "Name": "MidSeason",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.XYPairs, Models",
+                                      "X": [
+                                        0.0,
+                                        0.9,
+                                        1.0
+                                      ],
+                                      "Y": [
+                                        1.0,
+                                        1.0,
+                                        1.0
+                                      ],
+                                      "Name": "XYPairs",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Root].WetRootFraction",
+                                      "Name": "XValue",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.PhaseLookupValue, Models",
+                              "Start": "StartGrainFill",
+                              "End": "Unused",
+                              "Name": "StartGFToEndCrop",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                  "Name": "LateSeason",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.XYPairs, Models",
+                                      "X": [
+                                        0.0,
+                                        0.9,
+                                        1.0
+                                      ],
+                                      "Y": [
+                                        1.0,
+                                        1.0,
+                                        1.0
+                                      ],
+                                      "Name": "XYPairs",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Root].WetRootFraction",
+                                      "Name": "XValue",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.ExponentialFunction, Models",
+                          "A": 0.0,
+                          "B": 1.0,
+                          "C": -0.1,
+                          "Name": "PersistentReduction",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.MovingSumFunction, Models",
+                              "NumberOfDays": 25,
+                              "Name": "MovingSumFunction",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "Units": null,
+                                  "Expression": "1 - [Leaf].Photosynthesis.FW.Excess.Today",
+                                  "Name": "ExpressionFunction",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -4221,6 +4628,42 @@
                     {
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Maize].Leaf.Fw",
+                      "Name": "XValue",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "FOXk",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        5.0,
+                        10.0
+                      ],
+                      "Y": [
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "Name": "XYPairs",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[CumulativeExcessWaterStress]",
                       "Name": "XValue",
                       "ResourceName": null,
                       "Children": [],
@@ -7753,88 +8196,6 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                "[Phenology].Juvenile.Target.FixedValue = 350",
-                "[Phenology].Photosensitive.Target.XYPairs.Y = 0,0,0",
-                "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
-                "[Phenology].FloweringToGrainFilling.Target.FixedValue = 95",
-                "[Phenology].GrainFilling.Target.FixedValue = 450",
-                "[Phenology].Maturing.Target.FixedValue = 1",
-                "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
-                "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36",
-                "[Leaf].Photosynthesis.RUE.FixedValue = 2.4",
-                "[Grain].MaximumGrainsPerCob.FixedValue =  637 // PotentialMaximumGrainsPerCob",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.34 // PotentialGrainSize",
-                "[Phenology].Emerging.Target.ShootLag.FixedValue = 250",
-                "[Phenology].Emerging.Target.DepthxRate.ShootRate.FixedValue = 0.7",
-                "",
-                "// WL params",
-                "[Root].RootFrontVelocity.AFPSFactor.XYPairs.Y = 0, 1, 1",
-                "",
-                "// [Leaf].Photosynthesis.FW.Excess.Today.SowToFloralInitiation.EarlySeason.XYPairs.X = 0, 0.25, 1",
-                "// [Leaf].Photosynthesis.FW.Excess.Today.SowToFloralInitiation.EarlySeason.XYPairs.Y = 1, 1, 0.15",
-                "",
-                "// [Leaf].Photosynthesis.FW.Excess.Today.FloralInitiationToStartGrainFill.MidSeason.XYPairs.X = 0, 0.75, 1",
-                "// [Leaf].Photosynthesis.FW.Excess.Today.FloralInitiationToStartGrainFill.MidSeason.XYPairs.Y = 1, 1, 0.5",
-                "",
-                "// [Leaf].Photosynthesis.FW.Excess.Today.StartGFToEndCrop.LateSeason.XYPairs.X = 0, 0.95, 1",
-                "// [Leaf].Photosynthesis.FW.Excess.Today.StartGFToEndCrop.LateSeason.XYPairs.Y = 1, 1, 0.9",
-                "",
-                "// [Grain].MaximumGrainsPerCob.FOXgn.XYPairs.X = 0, 1, 5, 16, 20",
-                "// [Grain].MaximumGrainsPerCob.FOXgn.XYPairs.Y = 1, 1, 0.95, 0.9, 0.85",
-                "",
-                "// [Leaf].Photosynthesis.FW.Excess.PersistentReduction.C = -0.18"
-              ],
-              "Name": "DMY1",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                "[Phenology].Juvenile.Target.FixedValue = 270",
-                "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0 ,0",
-                "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
-                "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
-                "[Phenology].GrainFilling.Target.FixedValue = 640",
-                "[Phenology].Maturing.Target.FixedValue = 50",
-                "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 50",
-                "[Leaf].Photosynthesis.RUE.FixedValue = 2.25",
-                "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y = 0.1, 1, 1, 1,0",
-                "[Leaf].CohortParameters.SenescenceDuration.XYPairs.Y = 200, 300, 1100",
-                "[Leaf].CohortParameters.DMRetranslocationFactor.FixedValue = 0.025",
-                "[Maize].Grain.MaximumGrainsPerCob.FixedValue = 640 // PotentialMaximumGrainsPerCob",
-                "[Maize].Grain.MaximumPotentialGrainSize.FixedValue = 0.32 // PotentialMaximumGrainsPerCob",
-                "[Maize].Root.SpecificRootLength.FixedValue = 135",
-                "[Maize].Root.RootFrontVelocity.PotentialRootFrontVelocity.PreFlowering.RootFrontVelocity.FixedValue = 25",
-                "[Grain].MaximumNConc.InitialPhase.InitialNconc.FixedValue = 0.025",
-                "[Root].RootFrontVelocity.AFPSFactor.XYPairs.X = 0, 0.05, 1",
-                "",
-                "//    WL_params",
-                "",
-                "[Root].RootFrontVelocity.AFPSFactor.XYPairs.Y = 0, 1, 1",
-                "",
-                "// [Leaf].Photosynthesis.FW.Excess.Today.SowToFloralInitiation.EarlySeason.XYPairs.X = 0, 0.5, 1",
-                "// [Leaf].Photosynthesis.FW.Excess.Today.SowToFloralInitiation.EarlySeason.XYPairs.Y = 1, 1, 0.2",
-                "",
-                "// [Leaf].Photosynthesis.FW.Excess.Today.FloralInitiationToStartGrainFill.MidSeason.XYPairs.X = 0, 0.5, 1",
-                "// [Leaf].Photosynthesis.FW.Excess.Today.FloralInitiationToStartGrainFill.MidSeason.XYPairs.Y = 1, 1, 0.2",
-                "",
-                "// [Leaf].Photosynthesis.FW.Excess.Today.StartGFToEndCrop.LateSeason.XYPairs.X = 0, 0.5, 1",
-                "// [Leaf].Photosynthesis.FW.Excess.Today.StartGFToEndCrop.LateSeason.XYPairs.Y = 1, 1, 0.2",
-                "",
-                "// [Leaf].Photosynthesis.FW.Excess.PersistentReduction.C = -0.04"
-              ],
-              "Name": "DeKalb_62_97VT3_Kaur",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
               "Name": "Generic",
@@ -8365,6 +8726,135 @@
               ],
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].Juvenile.Target.FixedValue = 210",
+                "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
+                "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 0",
+                "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                "[Phenology].GrainFilling.Target.FixedValue = 730",
+                "[Phenology].Maturing.Target.FixedValue = 1",
+                "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36",
+                "",
+                "//---   WL  suggested changes --- ",
+                "[Root].RootFrontVelocity.AFPSFactor.XYPairs.Y = 0, 1, 1",
+                "",
+                "[Leaf].Photosynthesis.FW.Excess.Today.SowToFloralInitiation.EarlySeason.XYPairs.X = 0, 0.5, 1",
+                "[Leaf].Photosynthesis.FW.Excess.Today.SowToFloralInitiation.EarlySeason.XYPairs.Y = 1, 1, 0.5",
+                "",
+                "[Leaf].Photosynthesis.FW.Excess.Today.FloralInitiationToStartGrainFill.MidSeason.XYPairs.X = 0, 0.75, 1",
+                "[Leaf].Photosynthesis.FW.Excess.Today.FloralInitiationToStartGrainFill.MidSeason.XYPairs.Y = 1, 1, 0.75",
+                "",
+                "[Leaf].Photosynthesis.FW.Excess.Today.StartGFToEndCrop.LateSeason.XYPairs.X = 0, 0.95, 1",
+                "[Leaf].Photosynthesis.FW.Excess.Today.StartGFToEndCrop.LateSeason.XYPairs.Y = 1, 1, 0.95",
+                "",
+                "",
+                "//------  WL optional changes ---- ",
+                "//   [Structure].Phyllochron.FOXphyllo.XYPairs.Y = 1, 1.2, 1.4",
+                "",
+                "//   [Grain].MaximumGrainsPerCob.FOXgn.XYPairs.X = 0, 1, 5, 16, 20",
+                "//   [Grain].MaximumGrainsPerCob.FOXgn.XYPairs.Y = 1, 1, 0.95, 0.9, 0.85",
+                "",
+                "//   [Grain].MaximumPotentialGrainSize.FOXgs.XYPairs.X = 0, 1, 3, 5, 10, 20",
+                "//   [Grain].MaximumPotentialGrainSize.FOXgs.XYPairs.Y = 1, 1, 1, 1, 0.97, 0.90",
+                "",
+                "//   [Leaf].Photosynthesis.FW.Excess.PersistentReduction.C = -0.1",
+                "//   [Leaf].Photosynthesis.FW.Excess.PersistentReduction.MovingSumFunction.NumberOfDays = 25",
+                "",
+                "//   [Leaf].ExtinctionCoeff.FOXk.XYPairs.Y = 1, 0.9, 0.88",
+                "//   [Leaf].CohortParameters.ExpansionStress.FOXToday.XYPairs.Y = 1, 1, 0"
+              ],
+              "Name": "Example_Oxdef_cultivar",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].Juvenile.Target.FixedValue = 270",
+                "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0 ,0",
+                "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                "[Phenology].GrainFilling.Target.FixedValue = 640",
+                "[Phenology].Maturing.Target.FixedValue = 50",
+                "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 50",
+                "[Leaf].Photosynthesis.RUE.FixedValue = 2.25",
+                "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y = 0.1, 1, 1, 1,0",
+                "[Leaf].CohortParameters.SenescenceDuration.XYPairs.Y = 200, 300, 1100",
+                "[Leaf].CohortParameters.DMRetranslocationFactor.FixedValue = 0.025",
+                "[Maize].Grain.MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 640",
+                "[Maize].Grain.MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.32",
+                "[Maize].Root.SpecificRootLength.FixedValue = 135",
+                "[Maize].Root.RootFrontVelocity.PotentialRootFrontVelocity.PreFlowering.RootFrontVelocity.FixedValue = 25",
+                "[Grain].MaximumNConc.InitialPhase.InitialNconc.FixedValue = 0.025",
+                "[Root].RootFrontVelocity.AFPSFactor.XYPairs.X = 0, 0.05, 1",
+                "",
+                "//    WL_params",
+                "",
+                "[Root].RootFrontVelocity.AFPSFactor.XYPairs.Y = 0, 1, 1",
+                "",
+                "[Leaf].Photosynthesis.FW.Excess.Today.SowToFloralInitiation.EarlySeason.XYPairs.X = 0, 0.5, 1",
+                "[Leaf].Photosynthesis.FW.Excess.Today.SowToFloralInitiation.EarlySeason.XYPairs.Y = 1, 1, 0.2",
+                "",
+                "[Leaf].Photosynthesis.FW.Excess.Today.FloralInitiationToStartGrainFill.MidSeason.XYPairs.X = 0, 0.5, 1",
+                "[Leaf].Photosynthesis.FW.Excess.Today.FloralInitiationToStartGrainFill.MidSeason.XYPairs.Y = 1, 1, 0.2",
+                "",
+                "[Leaf].Photosynthesis.FW.Excess.Today.StartGFToEndCrop.LateSeason.XYPairs.X = 0, 0.5, 1",
+                "[Leaf].Photosynthesis.FW.Excess.Today.StartGFToEndCrop.LateSeason.XYPairs.Y = 1, 1, 0.2",
+                "",
+                "[Leaf].Photosynthesis.FW.Excess.PersistentReduction.C = -0.04"
+              ],
+              "Name": "DeKalb_62_97VT3_Kaur",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].Juvenile.Target.FixedValue = 350",
+                "[Phenology].Photosensitive.Target.XYPairs.Y = 0,0,0",
+                "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                "[Phenology].FloweringToGrainFilling.Target.FixedValue = 95",
+                "[Phenology].GrainFilling.Target.FixedValue = 450",
+                "[Phenology].Maturing.Target.FixedValue = 1",
+                "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36",
+                "[Leaf].Photosynthesis.RUE.FixedValue = 2.4",
+                "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue =  637",
+                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.34",
+                "[Phenology].Emerging.Target.ShootLag.FixedValue = 250",
+                "[Phenology].Emerging.Target.DepthxRate.ShootRate.FixedValue = 0.7",
+                "",
+                "// WL params",
+                "[Root].RootFrontVelocity.AFPSFactor.XYPairs.Y = 0, 1, 1",
+                "",
+                "[Leaf].Photosynthesis.FW.Excess.Today.SowToFloralInitiation.EarlySeason.XYPairs.X = 0, 0.25, 1",
+                "[Leaf].Photosynthesis.FW.Excess.Today.SowToFloralInitiation.EarlySeason.XYPairs.Y = 1, 1, 0.15",
+                "",
+                "[Leaf].Photosynthesis.FW.Excess.Today.FloralInitiationToStartGrainFill.MidSeason.XYPairs.X = 0, 0.75, 1",
+                "[Leaf].Photosynthesis.FW.Excess.Today.FloralInitiationToStartGrainFill.MidSeason.XYPairs.Y = 1, 1, 0.5",
+                "",
+                "[Leaf].Photosynthesis.FW.Excess.Today.StartGFToEndCrop.LateSeason.XYPairs.X = 0, 0.95, 1",
+                "[Leaf].Photosynthesis.FW.Excess.Today.StartGFToEndCrop.LateSeason.XYPairs.Y = 1, 1, 0.9",
+                "",
+                "[Grain].MaximumGrainsPerCob.FOXgn.XYPairs.X = 0, 1, 5, 16, 20",
+                "[Grain].MaximumGrainsPerCob.FOXgn.XYPairs.Y = 1, 1, 0.95, 0.9, 0.85",
+                "",
+                "[Leaf].Photosynthesis.FW.Excess.PersistentReduction.C = -0.18"
+              ],
+              "Name": "DMY1",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "Enabled": true,
@@ -8411,6 +8901,50 @@
           "Name": "SeedMortalityRate",
           "ResourceName": null,
           "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.AccumulateFunction, Models",
+          "StartStageName": "Emergence",
+          "EndStageName": "Maturity",
+          "ResetStageName": "",
+          "FractionRemovedOnCut": 0.0,
+          "FractionRemovedOnHarvest": 1.0,
+          "FractionRemovedOnGraze": 0.0,
+          "FractionRemovedOnPrune": 0.0,
+          "Name": "CumulativeExcessWaterStress",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Functions.SubtractFunction, Models",
+              "Name": "SubtractFunction",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "Constant",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].Photosynthesis.FW.Excess.Today",
+                  "Name": "VariableReference",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
           "Enabled": true,
           "ReadOnly": false
         }
