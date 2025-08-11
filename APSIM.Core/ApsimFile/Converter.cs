@@ -15,7 +15,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 199; } }
+    public static int LatestVersion { get { return 200; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -6819,6 +6819,53 @@ internal class Converter
                 });
                 manager.SetDeclarations(declarations);
                 manager.Save();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Convert pre-existing Maize cultivars to use new paths. Should ignore cultivars that are a part of a replacement
+    /// model not using the Maize resource.
+    /// </summary>
+    /// <param name="root">Json object</param>
+    /// <param name="name">filename</param>
+    private static void UpgradeToVersion200(JObject root, string name)
+    {
+        // only do the conversion if the cultivar is the decendant of a plant with resourcename Maize or is maize.json
+        // want to leave people's replacements untouched.
+        var weAreMaizeResourceFile = name != null && name.EndsWith("Maize.json");
+        foreach (var plant in JsonUtilities.ChildrenOfType(root, "Plant"))
+        {
+            if (plant["Name"].Value<string>() == "Maize" &&
+                (plant["ResourceName"].Value<string>() == "Maize" || weAreMaizeResourceFile))
+            {
+                foreach (var cultivar in JsonUtilities.ChildrenOfType(plant, "Cultivar"))
+                {
+                    UpdatePathsForMaizeCultivar(cultivar);
+                }
+            }
+        }
+
+        static void UpdatePathsForMaizeCultivar(JObject cultivar)
+        {
+            if (!cultivar["Command"].HasValues)
+                return;
+            List<(string, string)> pathUpdates =
+            [
+                ("[Grain].MaximumPotentialGrainSize.FixedValue", "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue"),
+                ("[Grain].MaximumGrainsPerCob.FixedValue", "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue"),
+                ("[Structure].Phyllochron.Phyllochron", "[Structure].Phyllochron.BasePhyllochron.Phyllochron"),
+                ("[Leaf].Photosynthesis.FW.XYPairs", "[Leaf].Photosynthesis.FW.Deficient.XYPairs")
+            ];
+
+            foreach (JValue line in cultivar["Command"].Children())
+            {
+                var linestr = line.Value.ToString();
+                foreach (var (original, replacement) in pathUpdates)
+                {
+                    linestr = linestr.Replace(original, replacement);
+                }
+                line.Value = linestr;
             }
         }
     }

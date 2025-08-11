@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 199,
+  "Version": 200,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -7415,7 +7415,7 @@
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
                 "[Phenology].GrainFilling.Target.FixedValue = 520",
                 "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 25",
-                "[Grain].MaximumGrainsPerCob.FixedValue =  550"
+                "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue =  550"
               ],
               "Name": "Hycorn_53",
               "ResourceName": null,
@@ -7475,8 +7475,8 @@
                 "[Phenology].Juvenile.Target.FixedValue = 100",
                 "[Phenology].GrainFilling.Target.FixedValue = 500",
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
-                "[Structure].Phyllochron.Phyllochron.Phyllochron.XYPairs.X = 1, 4, 4.2, 10.5, 11",
-                "[Structure].Phyllochron.Phyllochron.Phyllochron.XYPairs.Y = 26, 26, 46, 46, 70",
+                "[Structure].Phyllochron.BasePhyllochron.Phyllochron.Phyllochron.XYPairs.X = 1, 4, 4.2, 10.5, 11",
+                "[Structure].Phyllochron.BasePhyllochron.Phyllochron.Phyllochron.XYPairs.Y = 26, 26, 46, 46, 70",
                 "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 18",
                 "[Structure].HeightModel.PotentialHeight.XYPairs.X = 3, 4, 5, 6",
                 "[Structure].HeightModel.PotentialHeight.XYPairs.Y = 20, 40, 50, 1300"
@@ -7503,8 +7503,8 @@
                 "[Phenology].Juvenile.Target.FixedValue = 150",
                 "[Phenology].GrainFilling.Target.FixedValue = 500",
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
-                "[Structure].Phyllochron.Phyllochron.Phyllochron.XYPairs.X = 1, 4, 4.2, 10.5, 11",
-                "[Structure].Phyllochron.Phyllochron.Phyllochron.XYPairs.Y = 26, 26, 46, 46, 70",
+                "[Structure].Phyllochron.BasePhyllochron.Phyllochron.Phyllochron.XYPairs.X = 1, 4, 4.2, 10.5, 11",
+                "[Structure].Phyllochron.BasePhyllochron.Phyllochron.Phyllochron.XYPairs.Y = 26, 26, 46, 46, 70",
                 "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 18",
                 "[Structure].HeightModel.PotentialHeight.XYPairs.X = 3, 4, 5, 6",
                 "[Structure].HeightModel.PotentialHeight.XYPairs.Y = 20, 40, 50, 2370"
@@ -7537,7 +7537,7 @@
                 "[Phenology].Maturing.Target.FixedValue = 1",
                 "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 1",
                 "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36",
-                "[Grain].MaximumGrainsPerCob.FixedValue =  720"
+                "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue =  720"
               ],
               "Name": "Laila",
               "ResourceName": null,
@@ -7555,7 +7555,7 @@
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
                 "[Phenology].GrainFilling.Target.FixedValue = 694",
                 "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 25",
-                "[Grain].MaximumGrainsPerCob.FixedValue = 550"
+                "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 550"
               ],
               "Name": "GH_5019WX",
               "ResourceName": null,
@@ -7573,7 +7573,7 @@
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
                 "[Phenology].GrainFilling.Target.FixedValue = 713",
                 "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 25",
-                "[Grain].MaximumGrainsPerCob.FixedValue =  550"
+                "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue =  550"
               ],
               "Name": "Hycorn_40",
               "ResourceName": null,
@@ -7591,7 +7591,7 @@
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
                 "[Phenology].GrainFilling.Target.FixedValue = 713",
                 "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 25",
-                "[Grain].MaximumGrainsPerCob.FixedValue =  550"
+                "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue =  550"
               ],
               "Name": "GH_5009",
               "ResourceName": null,
@@ -7609,7 +7609,7 @@
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
                 "[Phenology].GrainFilling.Target.FixedValue = 813",
                 "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 25",
-                "[Grain].MaximumGrainsPerCob.FixedValue = 550"
+                "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 550"
               ],
               "Name": "Dekalb_XL82",
               "ResourceName": null,
@@ -7627,8 +7627,8 @@
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
                 "[Phenology].GrainFilling.Target.FixedValue = 600",
                 "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
-                "[Grain].MaximumGrainsPerCob.FixedValue = 360",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.217"
+                "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 360",
+                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.217"
               ],
               "Name": "malawi_local",
               "ResourceName": null,
@@ -7656,8 +7656,8 @@
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
                 "[Phenology].GrainFilling.Target.FixedValue = 570",
                 "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
-                "[Grain].MaximumGrainsPerCob.FixedValue = 504",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.361"
+                "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 504",
+                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.361"
               ],
               "Name": "mh19",
               "ResourceName": null,
@@ -7685,8 +7685,8 @@
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
                 "[Phenology].GrainFilling.Target.FixedValue = 570",
                 "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
-                "[Grain].MaximumGrainsPerCob.FixedValue = 504",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.361"
+                "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 504",
+                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.361"
               ],
               "Name": "mh17",
               "ResourceName": null,
@@ -7714,8 +7714,8 @@
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
                 "[Phenology].GrainFilling.Target.FixedValue = 570",
                 "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
-                "[Grain].MaximumGrainsPerCob.FixedValue = 504",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.361"
+                "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 504",
+                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.361"
               ],
               "Name": "mh16",
               "ResourceName": null,
@@ -7743,8 +7743,8 @@
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
                 "[Phenology].GrainFilling.Target.FixedValue = 570",
                 "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
-                "[Grain].MaximumGrainsPerCob.FixedValue = 504",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.361"
+                "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 504",
+                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.361"
               ],
               "Name": "mh12",
               "ResourceName": null,
@@ -7772,8 +7772,8 @@
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
                 "[Phenology].GrainFilling.Target.FixedValue = 550",
                 "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
-                "[Grain].MaximumGrainsPerCob.FixedValue = 504",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.361"
+                "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 504",
+                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.361"
               ],
               "Name": "sc623",
               "ResourceName": null,
@@ -7801,8 +7801,8 @@
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
                 "[Phenology].GrainFilling.Target.FixedValue = 570",
                 "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
-                "[Grain].MaximumGrainsPerCob.FixedValue = 504",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.361"
+                "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 504",
+                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.361"
               ],
               "Name": "sc625",
               "ResourceName": null,
@@ -7830,8 +7830,8 @@
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
                 "[Phenology].GrainFilling.Target.FixedValue = 560",
                 "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
-                "[Grain].MaximumGrainsPerCob.FixedValue = 495",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.361"
+                "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 495",
+                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.361"
               ],
               "Name": "sc601",
               "ResourceName": null,
@@ -7859,8 +7859,8 @@
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
                 "[Phenology].GrainFilling.Target.FixedValue = 550",
                 "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
-                "[Grain].MaximumGrainsPerCob.FixedValue = 468",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.361"
+                "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 468",
+                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.361"
               ],
               "Name": "CG4141",
               "ResourceName": null,
@@ -7888,8 +7888,8 @@
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
                 "[Phenology].GrainFilling.Target.FixedValue = 550",
                 "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
-                "[Grain].MaximumGrainsPerCob.FixedValue = 486",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.361"
+                "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 486",
+                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.361"
               ],
               "Name": "mh18",
               "ResourceName": null,
@@ -7917,8 +7917,8 @@
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
                 "[Phenology].GrainFilling.Target.FixedValue = 550",
                 "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
-                "[Grain].MaximumGrainsPerCob.FixedValue = 468",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.361"
+                "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 468",
+                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.361"
               ],
               "Name": "r215",
               "ResourceName": null,
@@ -7946,8 +7946,8 @@
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 160",
                 "[Phenology].GrainFilling.Target.FixedValue = 550",
                 "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
-                "[Grain].MaximumGrainsPerCob.FixedValue = 387",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.33"
+                "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 387",
+                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.33"
               ],
               "Name": "Melkassa",
               "ResourceName": null,
@@ -7975,8 +7975,8 @@
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
                 "[Phenology].GrainFilling.Target.FixedValue = 550",
                 "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
-                "[Grain].MaximumGrainsPerCob.FixedValue = 468",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.361"
+                "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 468",
+                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.361"
               ],
               "Name": "sr52",
               "ResourceName": null,
@@ -8004,8 +8004,8 @@
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
                 "[Phenology].GrainFilling.Target.FixedValue = 550",
                 "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
-                "[Grain].MaximumGrainsPerCob.FixedValue = 468",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.361"
+                "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 468",
+                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.361"
               ],
               "Name": "sc501",
               "ResourceName": null,
@@ -8033,8 +8033,8 @@
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
                 "[Phenology].GrainFilling.Target.FixedValue = 550",
                 "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
-                "[Grain].MaximumGrainsPerCob.FixedValue = 450",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.375"
+                "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 450",
+                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.375"
               ],
               "Name": "r201",
               "ResourceName": null,
@@ -8062,8 +8062,8 @@
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
                 "[Phenology].GrainFilling.Target.FixedValue = 550",
                 "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
-                "[Grain].MaximumGrainsPerCob.FixedValue = 450",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.375"
+                "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 450",
+                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.375"
               ],
               "Name": "sc401",
               "ResourceName": null,
@@ -8091,8 +8091,8 @@
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
                 "[Phenology].GrainFilling.Target.FixedValue = 550",
                 "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
-                "[Grain].MaximumGrainsPerCob.FixedValue = 450",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.375"
+                "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 450",
+                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.375"
               ],
               "Name": "NSCM_41",
               "ResourceName": null,
@@ -8120,8 +8120,8 @@
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 120",
                 "[Phenology].GrainFilling.Target.FixedValue = 530",
                 "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
-                "[Grain].MaximumGrainsPerCob.FixedValue = 432",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.375"
+                "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 432",
+                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.375"
               ],
               "Name": "Makueni",
               "ResourceName": null,
@@ -8149,8 +8149,8 @@
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 120",
                 "[Phenology].GrainFilling.Target.FixedValue = 530",
                 "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
-                "[Grain].MaximumGrainsPerCob.FixedValue = 405",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.375"
+                "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 405",
+                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.375"
               ],
               "Name": "Katumani",
               "ResourceName": null,
@@ -8184,10 +8184,10 @@
               "Command": [
                 "[Phenology].Juvenile.Target.FixedValue = 180",
                 "[Phenology].GrainFilling.Target.FixedValue = 500",
-                "[Grain].MaximumGrainsPerCob.FixedValue = 550",
+                "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 550",
                 "[Grain].NumberFunction.GrowthRateFactor.XYPairs.X = 0.2,2,4,10",
                 "[Grain].NumberFunction.GrowthRateFactor.XYPairs.Y = 0,0.6,1,1",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.25"
+                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.25"
               ],
               "Name": "Pioneer_39G12",
               "ResourceName": null,
@@ -8670,8 +8670,8 @@
                     "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
                     "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36",
                     "[Leaf].Photosynthesis.RUE.FixedValue = 2.2",
-                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.36",
-                    "[Grain].MaximumGrainsPerCob.FixedValue = 850"
+                    "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.36",
+                    "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 850"
                   ],
                   "Name": "HY_110",
                   "ResourceName": null,
@@ -8692,8 +8692,8 @@
                     "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
                     "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36",
                     "[Leaf].Photosynthesis.RUE.FixedValue = 1.7",
-                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.25",
-                    "[Grain].MaximumGrainsPerCob.FixedValue = 550"
+                    "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.25",
+                    "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 550"
                   ],
                   "Name": "LY_110",
                   "ResourceName": null,
