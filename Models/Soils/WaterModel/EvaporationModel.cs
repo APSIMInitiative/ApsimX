@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using APSIM.Numerics;
+﻿using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
 using Models.Soils;
 using Newtonsoft.Json;
+using StdUnits;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using static APSIM.Shared.Utilities.ProcessUtilities;
 
 namespace Models.WaterModel
 {
@@ -70,9 +72,6 @@ namespace Models.WaterModel
         /// <summary>time after 2nd-stage soil evaporation begins (d)</summary>
         public double t;
 
-        /// <summary>Is simulation in summer?</summary>
-        private bool isInSummer;
-
         /// <summary>The value of U yesterday. Used to detect a change in U.</summary>
         private double UYesterday;
 
@@ -97,26 +96,16 @@ namespace Models.WaterModel
         /// <summary>CONA that was used.</summary>
         public double CONA
         {
-            get
-            {
-                if (IsSummer)
-                    return waterBalance.SummerCona;
-                else
-                    return waterBalance.WinterCona;
-            }
+            get { return cona; }
         }
+        private double cona;
 
         /// <summary>U that was used.</summary>
         public double U
         {
-            get
-            {
-                if (IsSummer)
-                    return waterBalance.SummerU;
-                else
-                    return waterBalance.WinterU;
-            }
+            get { return u; }
         }
+        private double u;
 
         /// <summary>Reset the evaporation model.</summary>
         public void Initialise()
@@ -124,24 +113,16 @@ namespace Models.WaterModel
             double sw_top_crit = 0.9;
             double sumes1_max = 100;
             double sumes2_max = 25;
-            double u = waterBalance.WinterU;
-            double cona = waterBalance.WinterCona;
+
             summerStartDate = DateUtilities.GetDate(waterBalance.SummerDate, 1900).AddDays(1); // AddDays(1) - to reproduce behaviour of DateUtilities.WithinDate
             winterStartDate = DateUtilities.GetDate(waterBalance.WinterDate, 1900);
             var today = clock.Today == DateTime.MinValue ? clock.StartDate : clock.Today;
-            isInSummer = !DateUtilities.WithinDates(waterBalance.WinterDate, today, waterBalance.SummerDate);
 
-            if (IsSummer)
-            {
-                u = waterBalance.SummerU;
-                cona = waterBalance.SummerCona;
-            }
+            CalculateUandCona();
             UYesterday = u;
 
             //! set up evaporation stage
-            var swr_top = MathUtilities.Divide((waterBalance.Water[0] - soilPhysical.LL15mm[0]),
-                                            (soilPhysical.DULmm[0] - soilPhysical.LL15mm[0]),
-                                            0.0);
+            var swr_top = MathUtilities.Divide((waterBalance.Water[0] - soilPhysical.LL15mm[0]), (soilPhysical.DULmm[0] - soilPhysical.LL15mm[0]), 0.0);
             swr_top = MathUtilities.Constrain(swr_top, 0.0, 1.0);
 
             //! are we in stage1 or stage2 evap?
@@ -165,21 +146,13 @@ namespace Models.WaterModel
         /// <returns></returns>
         public double Calculate()
         {
-            // Done like this to speed up runtime. Using DateUtilities.WithinDates is slow.
-            if (clock.Today.Day == summerStartDate.Day && clock.Today.Month == summerStartDate.Month)
-                isInSummer = true;
-            else if (clock.Today.Day == winterStartDate.Day && clock.Today.Month == winterStartDate.Month)
-                isInSummer = false;
-
             //CalcEo();  // Use EO from MicroClimate
+            CalculateUandCona();
             CalcEoReducedDueToShading();
             CalcEs();
             UYesterday = U;
             return Es;
         }
-
-        /// <summary>Return true if simulation is in summer.</summary>
-        private bool IsSummer => isInSummer;
 
         /// <summary>Calculate potential soil evap after modification for crop cover and residue weight.</summary>
         public void CalcEoReducedDueToShading()
@@ -347,5 +320,81 @@ namespace Models.WaterModel
             Es = MathUtilities.Bound(Es, 0.0, avail_sw_top);
         }
 
+        // Half-cosine easing in [0,1]
+        private double CosineEase(double t)
+        {
+            if (t < 0) t = 0;
+            else if (t > 1) t = 1;
+            return 0.5 * (1 - Math.Cos(Math.PI * t));
+        }
+
+        private double Clamp01(double x) => x < 0 ? 0 : (x > 1 ? 1 : x);
+
+        // Interpolates between two seasonal anchors (month/day only matter)
+        // summerStartDate and winterStartDate can be any year; only Month/Day are used.
+        private double InterpolateSeasonalUCona(DateTime current, double valSummer, double valWinter, DateTime summerStartDate, DateTime winterStartDate)
+        {
+            // Ensure firstDate is the earlier anchor in the calendar year
+            DateTime firstTemplate, secondTemplate;
+            double valFirst, valSecond;
+
+            bool summerBeforeWinter =
+                (summerStartDate.Month < winterStartDate.Month) ||
+                (summerStartDate.Month == winterStartDate.Month && summerStartDate.Day <= winterStartDate.Day);
+
+            if (summerBeforeWinter)
+            {
+                firstTemplate = summerStartDate; valFirst = valSummer;
+                secondTemplate = winterStartDate; valSecond = valWinter;
+            }
+            else
+            {
+                firstTemplate = winterStartDate; valFirst = valWinter;
+                secondTemplate = summerStartDate; valSecond = valSummer;
+            }
+
+            // Project anchors into the current year (preserve Kind)
+            DateTime firstDate = new DateTime(current.Year, firstTemplate.Month, firstTemplate.Day, 0, 0, 0, current.Kind);
+            DateTime secondDate = new DateTime(current.Year, secondTemplate.Month, secondTemplate.Day, 0, 0, 0, current.Kind);
+
+            double outVal = 0;
+
+            if (current < firstDate)
+            {
+                // Jan–Mar case: from last year's secondDate -> this year's firstDate
+                DateTime prevSecond = secondDate.AddYears(-1);
+                double total = (firstDate - prevSecond).TotalDays;
+                double elapsed = (current - prevSecond).TotalDays;
+                double t = Clamp01(elapsed / total);
+                // second -> first
+                outVal = valSecond + (valFirst - valSecond) * CosineEase(t);
+            }
+            else if (current <= secondDate)
+            {
+                // first half: firstDate -> secondDate (first -> second)
+                double total = (secondDate - firstDate).TotalDays;
+                double elapsed = (current - firstDate).TotalDays;
+                double t = Clamp01(elapsed / total);
+                outVal = valFirst + (valSecond - valFirst) * CosineEase(t);
+            }
+            else
+            {
+                // second half: secondDate -> next year's firstDate (second -> first)
+                DateTime nextFirst = firstDate.AddYears(1);
+                double total = (nextFirst - secondDate).TotalDays;
+                double elapsed = (current - secondDate).TotalDays;
+                double t = Clamp01(elapsed / total);
+                outVal = valSecond + (valFirst - valSecond) * CosineEase(t);
+            }
+
+            return outVal;
+        }
+
+        // Calculate U and Cona for Today
+        private void CalculateUandCona()
+        {
+            u = InterpolateSeasonalUCona(clock.Today, waterBalance.SummerU, waterBalance.WinterU, summerStartDate, winterStartDate);
+            cona = InterpolateSeasonalUCona(clock.Today, waterBalance.SummerCona, waterBalance.WinterCona, summerStartDate, winterStartDate);
+        }
     }
 }
