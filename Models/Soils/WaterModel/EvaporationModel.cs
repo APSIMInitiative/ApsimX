@@ -361,17 +361,16 @@ namespace Models.WaterModel
 
             if (current < firstDate)
             {
-                // Jan–Mar case: from last year's secondDate -> this year's firstDate
+                // From last year's secondDate -> this year's firstDate
                 DateTime prevSecond = secondDate.AddYears(-1);
                 double total = (firstDate - prevSecond).TotalDays;
                 double elapsed = (current - prevSecond).TotalDays;
                 double t = Clamp01(elapsed / total);
-                // second -> first
                 outVal = valSecond + (valFirst - valSecond) * CosineEase(t);
             }
             else if (current <= secondDate)
             {
-                // first half: firstDate -> secondDate (first -> second)
+                // From this year's firstDate -> this year's secondDate
                 double total = (secondDate - firstDate).TotalDays;
                 double elapsed = (current - firstDate).TotalDays;
                 double t = Clamp01(elapsed / total);
@@ -379,7 +378,7 @@ namespace Models.WaterModel
             }
             else
             {
-                // second half: secondDate -> next year's firstDate (second -> first)
+                // From this year's secondDate -> next year's firstDate
                 DateTime nextFirst = firstDate.AddYears(1);
                 double total = (nextFirst - secondDate).TotalDays;
                 double elapsed = (current - secondDate).TotalDays;
