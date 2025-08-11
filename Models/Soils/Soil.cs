@@ -209,8 +209,10 @@ namespace Models.Soils
                     double max_sw = MathUtilities.Round(1.0 - physical.BD[layer] / specific_bd, 3);
                     int layerNumber = layer + 1;
 
-                    if (MathUtilities.GreaterThan(physical.ParticleSizeClay[layer] + physical.ParticleSizeSilt[layer] + physical.ParticleSizeSand[layer], 100, 2))
+                    if (MathUtilities.GreaterThan(physical.ParticleSizeClay[layer] + physical.ParticleSizeSilt[layer] + physical.ParticleSizeSand[layer] - 100, 0, 1))
                         message.AppendLine($"Clay, silt and sand percentages in layer {layerNumber} add up to more than 100%");
+                    else if (MathUtilities.LessThan(physical.ParticleSizeClay[layer] + physical.ParticleSizeSilt[layer] + physical.ParticleSizeSand[layer] - 100, 0, 1))
+                        message.AppendLine($"Clay, silt and sand percentages in layer {layerNumber} add up to less than 100%");
 
                     if (physical.AirDry[layer] == MathUtilities.MissingValue || double.IsNaN(physical.AirDry[layer]))
                         message.AppendLine($"Air dry value missing in layer {layerNumber}");
