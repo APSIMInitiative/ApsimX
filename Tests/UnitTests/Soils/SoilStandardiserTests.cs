@@ -4,6 +4,8 @@
     using Models.Core;
     using Models.Soils;
     using Models.Soils.Nutrients;
+    using Models.Soils.SoilTemp;
+    using Models.WaterModel;
     using NUnit.Framework;
     using System;
     using System.Collections.Generic;
@@ -205,6 +207,37 @@
             var runner = new Models.Core.Run.Runner(tree.Model as IModel);
             List<Exception> errors = runner.Run();
             Assert.That(errors.Count, Is.EqualTo(0), "There should be no errors - the faulty soil is disabled");
+        }
+
+        [Test]
+        public void EnsureSoilStandardiserAddsMissingNodes()
+        {
+            Soil soil = new()
+            {
+                Children =
+                [
+                    new Physical()
+                    {
+                        Thickness = [100, 200],
+                        BD = [1.36, 1.216],
+                        AirDry = [0.135, 0.214],
+                        LL15 = [0.27, 0.267],
+                        DUL = [0.365, 0.461],
+                        SAT = [0.400, 0.481],
+                    },
+                ]
+            };
+            Node.Create(soil);
+            SoilSanitise.InitialiseSoil(soil);
+            Assert.That(soil.FindChild<SoilTemperature>(), Is.Not.Null);
+            Assert.That(soil.FindChild<Solute>("NO3"), Is.Not.Null);
+            Assert.That(soil.FindChild<Solute>("NH4"), Is.Not.Null);
+            Assert.That(soil.FindChild<Solute>("Urea"), Is.Not.Null);
+            Assert.That(soil.FindChild<Water>(), Is.Not.Null);
+            Assert.That(soil.FindChild<WaterBalance>(), Is.Not.Null);
+            Assert.That(soil.FindChild<Organic>(), Is.Not.Null);
+            Assert.That(soil.FindChild<Chemical>(), Is.Not.Null);
+            Assert.That(soil.FindChild<Nutrient>(), Is.Not.Null);
         }
 
         private Soil CreateSimpleSoil()

@@ -55,6 +55,10 @@ namespace Models
         /// Only != 1 if TreeRow radiation mode is used as it needs to adjust radiation interception for zone overlaps etc)
         public double AreaM2 { get; set; } = 1.0;
 
+        /// <summary>The area of the Zone in m2 </summary>
+        /// Only != 1 if TreeRow radiation mode is used Canopy area can exceed zone area because of overlap)
+        public double SimulationAreaM2 { get; set; } = 1.0;
+
         /// <summary>The surface organic matter model.</summary>
         public ISurfaceOrganicMatter SurfaceOM { get; private set; }
 
@@ -121,6 +125,9 @@ namespace Models
         /// <summary>weights vpd towards vpd at maximum temperature</summary>
         private const double svp_fract = 0.66;
 
+        /// <summary>The radiation model used for partitioning light</summary>
+        public string RadiationModel { get; set; } = "BroadAcre";
+
         /// <summary>The Albedo of the combined soil-plant system for this zone</summary>
         public double Albedo;
 
@@ -167,16 +174,16 @@ namespace Models
         /// <param name="clockModel">The clock model.</param>
         /// <param name="zoneModel">The zone model.</param>
         /// <param name="minHeightDiffForNewLayer">Minimum canopy height diff for new layer.</param>
-        /// <param name="scope">Scope instance</param>
-        public MicroClimateZone(IClock clockModel, Zone zoneModel, IScope scope, double minHeightDiffForNewLayer)
+        /// <param name="structure">Structure instance</param>
+        public MicroClimateZone(IClock clockModel, Zone zoneModel, IStructure structure, double minHeightDiffForNewLayer)
         {
             clock = clockModel;
             Zone = zoneModel;
             MinimumHeightDiffForNewLayer = minHeightDiffForNewLayer;
             canopyModels = Zone.FindAllDescendants<ICanopy>().ToList();
             modelsThatHaveCanopies = Zone.FindAllDescendants<IHaveCanopy>().ToList();
-            SoilWater = scope.Find<ISoilWater>(relativeTo: Zone);
-            SurfaceOM = scope.Find<ISurfaceOrganicMatter>(relativeTo: Zone);
+            SoilWater = structure.Find<ISoilWater>(relativeTo: Zone);
+            SurfaceOM = structure.Find<ISurfaceOrganicMatter>(relativeTo: Zone);
         }
 
         /// <summary>Constructor. for blank zone</summary>
@@ -318,7 +325,7 @@ namespace Models
             // There are two ways to finding canopies in the simulation.
             // 1. Some models ARE canopies e.g. Leaf, SimpleLeaf.
             foreach (ICanopy canopy in canopyModels)
-                if (canopy.Height > 0)
+                if (MathUtilities.IsGreaterThan(canopy.Height, 0))
                     Canopies.Add(new MicroClimateCanopy(canopy));
 
             // 2. Some models HAVE canopies e.g. SurfaceOM.
@@ -356,11 +363,20 @@ namespace Models
                 {
                     Albedo += Canopies[j].FRs[i] * Canopies[j].Canopy.Albedo;
                     Emissivity += Canopies[j].FRs[i] * canopyEmissivity;
-                    sumRs += Canopies[j].Rs[i]/AreaM2;
+                    sumRs += Canopies[j].Rs[i];
                 }
             }
-            Albedo += (1.0 - MathUtilities.Divide(sumRs, Radn, 0.0)) * soilAlbedo;
-            Emissivity += (1.0 - MathUtilities.Divide(sumRs, Radn, 0.0)) * soilEmissivity;
+
+            if (RadiationModel != "TreeRow")
+            {
+                Albedo += (1.0 - MathUtilities.Divide(sumRs, Radn, 0.0)) * soilAlbedo;
+                Emissivity += (1.0 - MathUtilities.Divide(sumRs, Radn, 0.0)) * soilEmissivity;
+            }
+            else
+            {
+                Albedo += MathUtilities.Divide(SurfaceRs, Radn, 0.0) * soilAlbedo;
+                Emissivity += MathUtilities.Divide(SurfaceRs, Radn, 0.0) * soilEmissivity;
+            }
             //if((Albedo <0)||(Albedo>1))
             //    throw new Exception("Bad Albedo");
         }
@@ -527,8 +543,8 @@ namespace Models
                     {
                         lightProfile[i] = new CanopyEnergyBalanceInterceptionlayerType();
                         lightProfile[i].thickness = DeltaZ[i];
-                        lightProfile[i].AmountOnGreen = Canopies[j].Rs[i] * AreaM2 * RadnGreenFraction(j);
-                        lightProfile[i].AmountOnDead = Canopies[j].Rs[i] * AreaM2 * (1 - RadnGreenFraction(j));
+                        lightProfile[i].AmountOnGreen = Canopies[j].Rs[i] * SimulationAreaM2 * RadnGreenFraction(j);
+                        lightProfile[i].AmountOnDead = Canopies[j].Rs[i] * SimulationAreaM2 * (1 - RadnGreenFraction(j));
                         totalPETa += Canopies[j].PETa[i];
                         totalPETr += Canopies[j].PETr[i];
                         totalPotentialEp += Canopies[j].PET[i];

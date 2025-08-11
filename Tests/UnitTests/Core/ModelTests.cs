@@ -573,7 +573,7 @@ namespace UnitTests.Core
 
             // Child exists with correct name but incorrect type.
             Assert.That(container.FindChild<MockModel2>("folder2"), Is.Null);
-            Assert.That(simpleModel.FindChild<ILocator>("folder2"), Is.Null);
+            Assert.That(simpleModel.FindChild<IStructure>("folder2"), Is.Null);
 
             // Child exists with correct type but incorrect name.
             Assert.That(container.FindChild<Folder>("*"), Is.Null);
