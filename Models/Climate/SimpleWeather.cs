@@ -175,14 +175,7 @@ namespace Models.Climate
             }
             set
             {
-                Simulations simulations = Structure.FindParent<Simulations>(recurse: true);
-                if (simulations != null)
-                    this._fileName = PathUtilities.GetRelativePath(value, simulations.FileName);
-                else
-                    this._fileName = value;
-                if (this.reader != null)
-                   this.reader.Close();
-                this.reader = null;
+                this._fileName = value;
             }
         }
 
@@ -400,6 +393,19 @@ namespace Models.Climate
         /// <summary>Met Data from yesterday</summary>
         [JsonIgnore]
         public DailyMetDataFromFile TomorrowsMetData { get ; set; }
+
+        /// <summary>Invoked when the model has been created.</summary>
+        public override void OnCreated()
+        {
+            base.OnCreated();
+
+            Simulations simulations = Structure.FindParent<Simulations>(recurse: true);
+            if (simulations != null)
+                this._fileName = PathUtilities.GetRelativePath(_fileName, simulations.FileName);
+            if (this.reader != null)
+                this.reader.Close();
+            this.reader = null;
+        }
 
         /// <summary>Return our input filenames</summary>
         public IEnumerable<string> GetReferencedFileNames()

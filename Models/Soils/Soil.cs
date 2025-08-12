@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;

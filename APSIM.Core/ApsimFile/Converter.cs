@@ -6841,16 +6841,18 @@ internal class Converter
         //      foreach (IOrgan organ in species.FindAllChildren<IOrgan>().OfType<IModel>().ToList())
         //      ScrumCropInstance currentCrop = zone.FindDescendant<ScrumCropInstance>(CropName);
         //      AgPSpecies = myZone.FindAllChildren<AgPasture.PastureSpecies>().ToList();
+        //      MonthlyHarvestedWt = (Crop.FindChild(\"Grain\") as ReproductiveOrgan).Wt;
+        //      FindDescendant<ScrumCropInstance>(CropName);
 
         foreach (var manager in JsonUtilities.ChildManagers(root))
         {
             List<Declaration> declarations = null;
-            string pattern = @"(?<prefix>=|in)+\w*(?<relativeTo>[\w\d\[\]\(\). ]*)\.*(?<methodName>FindChild|FindSibling|FindDescendant|FindAncestor|FindAllSiblings|FindAllChildren|FindAllDescendants|FindAllAncestors)(?<type>\<[\w\d\.]+\>)*\((?<remainder>.+)";
+            string pattern = @"(?<relativeTo>[\w\d\[\].]*)\.*(?<methodName>FindChild|FindSibling|FindDescendant|FindAncestor|FindAllSiblings|FindAllChildren|FindAllDescendants|FindAllAncestors)(?<type>\<[\w\d\.]+\>)*\((?<remainder>.+)";
             bool changed = false;
             manager.ReplaceRegex(pattern, match =>
             {
                 changed = true;
-                 // convert remainder to args.
+                // convert remainder to args.
                 string remainder = "(" + match.Groups["remainder"].ToString();
                 int posCloseBracket = StringUtilities.FindMatchingClosingBracket(remainder, 0, '(', ')');
                 if (posCloseBracket == -1)

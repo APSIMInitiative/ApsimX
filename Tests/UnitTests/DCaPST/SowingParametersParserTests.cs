@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using APSIM.Core;
+using Models.Core;
 using Models.DCAPST;
 using Models.PMF;
 using NUnit.Framework;
@@ -30,7 +31,9 @@ namespace UnitTests.DCaPST
 
         private static DCaPSTModelNG CreateModel()
         {
-            return new DCaPSTModelNG();
+            var dcapst = new DCaPSTModelNG();
+            Node.Create(dcapst);
+            return dcapst;
         }
 
         private static DCaPSTModelNG CreateModel(
@@ -46,13 +49,16 @@ namespace UnitTests.DCaPST
             plantFolder.Children.Add(cultivar);
             cultivarFolder.Children.Add(plantFolder);
 
-            return new DCaPSTModelNG()
+            var dcapst = new DCaPSTModelNG()
             {
                 Children = new List<IModel>()
                 {
                     cultivarFolder
                 }
             };
+            Node.Create(dcapst);
+
+            return dcapst;
         }
 
         private static SowingParameters CreateSowingParameters(

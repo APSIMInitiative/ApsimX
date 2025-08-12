@@ -192,11 +192,7 @@ namespace Models.Climate
             }
             set
             {
-                Simulations simulations = Structure.FindParent<Simulations>(recurse: true);
-                if (simulations != null)
-                    this.FileName = PathUtilities.GetRelativePathAndRootExamples(value, simulations.FileName);
-                else
-                    this.FileName = value;
+                this.FileName = value;
             }
         }
 
@@ -642,6 +638,9 @@ namespace Models.Climate
             Simulations simulations = Structure.FindParent<Simulations>(recurse: true);
             if (simulations != null)
                 this.constantsFile = PathUtilities.GetRelativePath(constantsFile, simulations.FileName);
+
+            if (simulations != null)
+                FileName = PathUtilities.GetRelativePathAndRootExamples(FileName, simulations.FileName);
 
             if (reader != null)
             {

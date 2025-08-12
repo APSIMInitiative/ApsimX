@@ -25,7 +25,7 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(Sugarcane))]
     [ValidParent(ParentType = typeof(OilPalm.OilPalm))]
     [ValidParent(ParentType = typeof(AgPasture.PastureSpecies))]
-    public class Cultivar : Model, ILineEditor
+    public class Cultivar : Model, ILineEditor, IStructureDependency
     {
         /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]

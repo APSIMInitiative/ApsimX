@@ -49,6 +49,9 @@ namespace Models.Storage
             set
             {
                 useInMemoryDB = value;
+                Close();
+                UpdateFileName();
+                Open();
             }
         }
 
@@ -176,9 +179,6 @@ namespace Models.Storage
         public override void OnCreated()
         {
             base.OnCreated();
-            Close();
-            UpdateFileName();
-            Open();
             if (connection == null)
                 Open();
         }
@@ -191,12 +191,12 @@ namespace Models.Storage
         {
             string extension = ".db";
 
-            Simulations simulations = Structure.FindParent<Simulations>(recurse: true);
+            Simulations simulations = Structure?.FindParent<Simulations>(recurse: true);
 
             // If we have been cloned prior to a run, then we won't be able to locate
             // the simulations object. In this situation we can fallback to using the
             // parent simulation's filename (which should be the same anyway).
-            Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
+            Simulation simulation = Structure?.FindParent<Simulation>(recurse: true);
 
             if (useInMemoryDB)
                 FileName = ":memory:";

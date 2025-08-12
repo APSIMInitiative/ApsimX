@@ -77,6 +77,7 @@ namespace UnitTests.Weather
                 FullFileName = weatherFilePath,
                 ExcelWorkSheetName = "Sheet1"
             };
+            Node.Create(weather);
 
             Assert.That(weather.StartDate, Is.EqualTo(new DateTime(1987, 5, 30)));
             Assert.That(weather.EndDate, Is.EqualTo(new DateTime(1987, 6, 26)));
@@ -334,7 +335,6 @@ namespace UnitTests.Weather
                         new MockSummary()
                     }
             };
-
             Models.Climate.SimpleWeather weather = baseSim.Children[0] as Models.Climate.SimpleWeather;
             Clock clock = baseSim.Children[1] as Clock;
 

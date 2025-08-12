@@ -54,7 +54,7 @@ namespace Models.Core
             // probably an expensive thing to do.
             Links links = null;
 
-            Simulation simulation = model as Simulation ?? model.Node.FindParent<Simulation>(recurse: true);
+            Simulation simulation = model as Simulation ?? model.Node?.FindParent<Simulation>(recurse: true);
             if (simulation != null && simulation.IsRunning)
             {
                 links = new Links();

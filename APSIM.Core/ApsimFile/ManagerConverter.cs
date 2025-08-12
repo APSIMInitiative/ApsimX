@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
 using Newtonsoft.Json.Linq;
 
 [assembly: InternalsVisibleTo("UnitTests")]
@@ -210,7 +211,8 @@ internal class ManagerConverter
                 break;
 
             Match match = Regex.Match(line, pattern);
-            if (match.Groups["TypeName"].Value != string.Empty &&
+            if (!lines[i].Contains("[Description") &&
+                match.Groups["TypeName"].Value != string.Empty &&
                 match.Groups["TypeName"].Value != "as" &&
                 match.Groups["TypeName"].Value != "return" &&
                 match.Groups["TypeName"].Value != "namespace" &&
