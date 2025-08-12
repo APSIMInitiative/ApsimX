@@ -1,15 +1,18 @@
-﻿using Models.Core;
+﻿using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Wordprocessing;
+using MathNet.Numerics;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
+using Models.Core;
+using Models.Core.Attributes;
+using Newtonsoft.Json;
+using StdUnits;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json;
-using Models.Core.Attributes;
-using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Wordprocessing;
 using System.ComponentModel.DataAnnotations;
-using StdUnits;
-using Models.CLEM.Interfaces;
+using System.Linq;
 
 namespace Models.CLEM.Activities
 {
@@ -145,7 +148,7 @@ namespace Models.CLEM.Activities
         {
             ind.Intake.SolidsDaily.Reset();
             ind.Intake.MilkDaily.Reset(ind.IsSuckling);
-            ind.Weight.Protein.TimeStepReset();
+            ind.Weight.Protein?.TimeStepReset();
 
             CalculatePotentialIntake(ind);
 
@@ -616,8 +619,9 @@ namespace Models.CLEM.Activities
             // Do check against NBal gain to TFP and TUP
             if (Math.Abs(ind.Output.NitrogenBalance - TFP - TUP) / ind.Output.NitrogenBalance > 0.05)
             {
-                string warningString = $"Cross-check: Ruminant [{ind.Breed}] nitrogen balance differs from TFP plus TUP by more then 5%.{Environment.NewLine}[a={NameWithParent}], TimeStep:[{events.IntervalIndex},{events.Clock.Today}], Individual:[{ind.ID}].{Environment.NewLine}This advice is for advanced users and breed developers. Seek advice from CLEM developers.";
-                Warnings.CheckAndWrite(warningString, Summary, this, MessageType.Warning);
+                string warn = $"Cross-check: Ruminant [{ind.Breed}] nitrogen balance differs from TFP plus TUP by more then 5%.{Environment.NewLine}[a={NameWithParent}], TimeStep:[{events.IntervalIndex},{events.Clock.Today:yyyy-MM-dd}]";
+                string warningString = $"Cross-check: Ruminant [{ind.Breed}] nitrogen balance differs from TFP plus TUP by more then 5%.{Environment.NewLine}[a={NameWithParent}], TimeStep:[{events.IntervalIndex},{events.Clock.Today:yyyy-MM-dd}], Individual:[{ind.ID}].{Environment.NewLine}This advice is for advanced users and breed developers. Seek advice from CLEM developers.";
+                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warningString);
             }
 
             // manure per time step
@@ -1103,6 +1107,16 @@ namespace Models.CLEM.Activities
             {
                 yield return new ValidationResult($"No [RuminantParametersGrowPF] parameters are provided for [{item.NameWithParent}]", new string[] { "RuminantParametersGrowPF5" });
             }
+
+            // Todo: Now performed in the RuminantTypeCohort and called by CohortList and SpecifyRuminant validation 
+            //var indsWithoutProtein = CurrentHerd(false).Where(a => a.Weight.Protein is null).GroupBy(a => a.HerdName);
+            //foreach (var herd in indsWithoutProtein)
+            //{
+            //    Ruminant firstIndividual = herd.First();
+            //    string warn = $"Individual protein and fat stores required for [a={this.NameWithParent}] growth component";
+            //    string warnfull = $"{warn}{Environment.NewLine}Some individuals of [r={herd.Key}] did not have protein and fat stores created during initialisation (e.g. sex:{firstIndividual.Sex}, age:{firstIndividual.AgeInDays} days).{Environment.NewLine}Check all protein and fat allocation settings in the [r=RuminantCohort] of [r={herd.Key}]";
+            //    Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error, warnfull);
+            //}
         }
 
         #endregion

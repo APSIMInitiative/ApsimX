@@ -114,6 +114,13 @@ namespace Models.CLEM.Resources
             // get conception parameters and rate calculation method
             ConceptionModel = this.FindAllChildren<Model>().Where(a => typeof(IConceptionModel).IsAssignableFrom(a.GetType())).Cast<IConceptionModel>().FirstOrDefault();
 
+
+            if (ParentHerd.RuminantGrowActivity.IncludeFatAndProtein && this.FindAllDescendants<RuminantTypeCohort>().Any(a => a.Validate(null).Any()))
+            {
+                // found issues with setting fat and protein so abort and allow the user to fix.
+                return;
+            }
+
             foreach (RuminantInitialCohorts ruminantCohorts in FindAllChildren<RuminantInitialCohorts>())
                 foreach (var ind in ruminantCohorts.CreateIndividuals(events?.Clock.Start ?? default))
                 {

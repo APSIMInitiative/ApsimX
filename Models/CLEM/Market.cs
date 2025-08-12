@@ -30,6 +30,8 @@ namespace Models.CLEM
         [Link]
         private Summary summary = null;
         [Link]
+        private Simulation simulation = null;
+        [Link]
         private readonly DataStore dataStore = null;
 
         private ResourcesHolder resources;
@@ -98,7 +100,7 @@ namespace Models.CLEM
             CLEMEvents events = FindInScope<CLEMEvents>();
 
             if (!ZoneCLEM.Validate(this, "", this, summary, events))
-                ZoneCLEM.ReportInvalidParameters(this, dataStore);
+                ZoneCLEM.ReportInvalidParameters(this, dataStore, summary, simulation.Name);
         }
 
         /// <summary>An event handler to catch file association errors before moving to initialisation of resources and activities</summary>
@@ -108,7 +110,7 @@ namespace Models.CLEM
         private void OnCLEMInitialise(object sender, EventArgs e)
         {
             // The tests of model associations (Attribute) now fire in Commencing and this section is designed to fire errors if issues found prior to any resource or activity initialisation.
-            ZoneCLEM.ReportInvalidParameters(this, dataStore);
+            ZoneCLEM.ReportInvalidParameters(this, dataStore, summary, simulation.Name);
         }
 
         #region validation

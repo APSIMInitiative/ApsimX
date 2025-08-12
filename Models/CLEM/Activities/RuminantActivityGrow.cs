@@ -364,8 +364,8 @@ namespace Models.CLEM.Activities
                 // alert user to unfed animals in the month as this should not happen
                 if (unfed > 0)
                 {
-                    string warn = $"individuals of [r={breed.Key}] not fed";
-                    string warnfull = $"Some individuals of [r={breed.Key}] were not fed in some months (e.g. [{unfed}] individuals in interval [{events.IntervalIndex}])\r\nFix: Check feeding strategy and ensure animals are moved to pasture or fed in yards";
+                    string warn = $"individuals of [r={breed.FirstOrDefault().HerdName}] not fed";
+                    string warnfull = $"Some individuals of [r={breed.FirstOrDefault().HerdName}] were not fed in some months (e.g. [{unfed}] individuals in interval [{events.IntervalIndex}])\r\nFix: Check feeding strategy and ensure animals are moved to pasture or fed in yards";
                     Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
                     AddStatusMessage($"[{unfed}] individuals of [r={breed.Key}] not fed");
                     Status = ActivityStatus.Warning;
@@ -373,8 +373,8 @@ namespace Models.CLEM.Activities
                 }
                 if (unfedcalves > 0)
                 {
-                    string warn = $"calves of [r={breed.Key}] not fed";
-                    string warnfull = $"Some calves of [r={breed.Key}] were not fed in some months (e.g. [{unfedcalves}] individuals in interval [{events.IntervalIndex}])\r\nFix: Check calves are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
+                    string warn = $"calves of [r={breed.FirstOrDefault().HerdName}] not fed";
+                    string warnfull = $"Some calves of [r={breed.FirstOrDefault().HerdName}] were not fed in some months (e.g. [{unfedcalves}] individuals in interval [{events.IntervalIndex}])\r\nFix: Check calves are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
                     Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
                     AddStatusMessage($"[{unfed}] sucklings of [r={breed}] not fed");
                     Status = ActivityStatus.Warning;

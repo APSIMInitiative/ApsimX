@@ -39,6 +39,8 @@ namespace Models.CLEM
         [Link]
         private readonly Summary summary = null;
         [Link]
+        private readonly Simulation simulation = null;
+        [Link]
         private readonly DataStore dataStore = null;
 
         private string wholeSimulationSummaryFile = "";
@@ -156,11 +158,13 @@ namespace Models.CLEM
         /// <summary>An event handler to catch file association errors before moving to initialisation of resources and activities</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMInitialise")]
+        [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialise(object sender, EventArgs e)
         {
+            // Performed in CLEMInitialiseResource to catch any errors thrown in previous early CLEMInitialise and checksof RuminantHerd
             // The tests of model associations (Attribute) now fire in Commencing and this section is designed to fire errors if issues found prior to any resource or activity initialisation.
-            ReportInvalidParameters(this, dataStore);
+
+            ReportInvalidParameters(this, dataStore, summary, simulation.Name);
         }
 
         /// <summary>An event handler to allow us to validate properties and setup</summary>
@@ -180,7 +184,7 @@ namespace Models.CLEM
             // not all errors will be reported in validation so perform in two steps
             Validate(FindInScope<CLEMEvents>(), "", this, summary, FindInScope<CLEMEvents>());
             Validate(this, "", this, summary, FindInScope<CLEMEvents>());
-            ReportInvalidParameters(this, dataStore);
+            ReportInvalidParameters(this, dataStore, summary, simulation.Name);
         }
 
         /// <summary>
@@ -188,25 +192,21 @@ namespace Models.CLEM
         /// </summary>
         /// <param name="model">The model calling this method</param>
         /// <param name="dataStore">the datastore where messages are written</param>
+        /// <param name="summary"></param>
+        /// <param name="simulationId"></param>
         /// <exception cref="ApsimXException"></exception>
-        public static void ReportInvalidParameters(IModel model, DataStore dataStore)
+        public static void ReportInvalidParameters(IModel model, DataStore dataStore, Summary summary, string simulationId)
         {
-            Simulation simulation = model.FindAncestor<Simulation>();
-            var summary = simulation.FindDescendant<Summary>();
-
-            // get simulation id from simulations using simulation name
-            string simId = simulation.Name;
-
             // force summary to write messages
             // if not included the messages table isn't propogated to exit model on errors detected.
             summary.WriteMessagesToDataStore();
             dataStore .Writer.WaitForIdle();
 
             // get all validations
-            ReportErrors(model, summary.GetMessages(simId)?.Where(a => a.Severity == MessageType.Error && a.Text.StartsWith("Invalid parameter ")));
+            ReportErrors(model, summary.GetMessages(simulationId)?.Where(a => a.Severity == MessageType.Error && a.Text.StartsWith("Invalid parameter ")));
 
             // get all other errors
-            ReportErrors(model, summary.GetMessages(simId)?.Where(a => a.Severity == MessageType.Error && !a.Text.StartsWith("Invalid parameter ")));
+            ReportErrors(model, summary.GetMessages(simulationId)?.Where(a => a.Severity == MessageType.Error && !a.Text.StartsWith("Invalid parameter ")));
         }
 
         /// <summary>

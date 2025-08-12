@@ -533,6 +533,7 @@ namespace Models.CLEM.Activities
         private void AdjustHerdCohorts(object sender, EventArgs e)
         {
             // called in onInitialise as needs to be before OnInitialiseResources when the herd is created as this may adjust initial chohort sizes.
+            // no access to the herd in this method as it is yet to be created in CLEMInitialiseResources but this method may need to adjust initial cohort numbers before building the herd.
 
             grazeStoreBreeders = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, GrazeFoodStoreNameBreeders, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
             grazeStoreSires = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, GrazeFoodStoreNameSires, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
@@ -653,7 +654,7 @@ namespace Models.CLEM.Activities
             }
             if(information.Count > 0)
             {
-                information.Insert(0, $"The numbers in initial cohorts for [{cohorts.FirstOrDefault().FindAncestor<RuminantType>().Parameters.General.Breed}] were adjusted by [a={Name}] at start of the simulation.");
+                information.Insert(0, $"The numbers in initial cohorts for [r={cohorts.FirstOrDefault().FindAncestor<RuminantType>().Name}] were adjusted by [a={Name}] at start of the simulation.");
                 Warnings.CheckAndWrite(string.Join(Environment.NewLine, information), Summary, this, MessageType.Information);
             }
         }

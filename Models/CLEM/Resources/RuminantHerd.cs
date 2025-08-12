@@ -28,7 +28,7 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantHerd.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGeneral) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType })]
-    public class RuminantHerd : ResourceBaseWithTransactions, IValidatableObject
+    public class RuminantHerd : ResourceBaseWithTransactions
     {
         private int id = 1;
 
@@ -89,10 +89,31 @@ namespace Models.CLEM.Resources
             id = 1;
             Herd = new List<Ruminant>();
             PurchaseIndividuals = new List<Ruminant>();
-            RuminantGrowActivity = FindInScope<IRuminantActivityGrow>();
+            RuminantGrowActivity = FindAllInScope<IRuminantActivityGrow>().Where(a => (a as CLEMActivityBase).ActivityEnabled).FirstOrDefault();
 
             foreach (RuminantType rType in this.FindAllChildren<RuminantType>())
                 rType.Parameters.Initialise(rType);
+
+            // check for big erros and stop after initialisation
+            if (RuminantGrowActivity is null)
+            {
+                // check that a grow activity is present for the herd if ruminant types are present.
+                string warn = $"[r={Name}] requires at least one [a=RuminantActivityGrow_____] to manage growth and aging of individuals.";
+                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
+            }
+            if (FindAllInScope<IRuminantActivityGrow>().Where(a => (a as CLEMActivityBase).ActivityEnabled).Count() > 1)
+            {
+                string warn = $"Only one [a=RuminantActivityGrow_____] activity is permitted in the simulation";
+                string warnfull = $"{warn}{Environment.NewLine}CLEM does not support using different growth models in a simulation even if filtered by herds or breeds. Ensure a single growth component is enabled (ActivityEnabled property or Disable in UI tree)";
+                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error, warnfull);
+            }
+
+            if (!FindAllInScope<RuminantActivityDeath>().Any())
+            {
+                // check that a death activity is present for the herd if ruminant types are present.
+                string warn = $"[r={Name}] requires at least one [a=RuminantActivityDeath] to manage death and remove individuals that died.{Environment.NewLine}No individuals will be removed from this simulation even if they have beed identified to have died.";
+                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
+            }
         }
 
         /// <summary>An event handler to allow us to perform final initialise after RuminantTypes have intialised.</summary>
@@ -440,35 +461,6 @@ namespace Models.CLEM.Resources
             }
             html += "</div>";
             return html;
-        }
-
-        #endregion
-
-        #region validation
-
-        /// <inheritdoc/>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            if (!FindAllChildren<RuminantType>().Any())
-                yield break;
-
-            if(RuminantGrowActivity is null)
-            {
-                // check that a grow activity is present for the herd if ruminant types are present.
-                string warn = $"[r={Name}] requires at least one [a=RuminantActivityGrow_____] to manage growth and aging of individuals.";
-                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
-            }
-            else if (FindAllAncestors<IRuminantActivityGrow>().Count() > 1)
-            {
-                // error if more than one
-                yield return new ValidationResult("Only one [a=RuminantActivityGrow_____] activity is permitted in the simulation", new string[] { "Ruminant Herd" });
-            }
-            if (!FindAllInScope<RuminantActivityDeath>().Any())
-            {
-                // check that a death activity is present for the herd if ruminant types are present.
-                string warn = $"[r={Name}] requires at least one [a=RuminantActivityDeath] to manage death and remove individuals that died.{Environment.NewLine}No individuals will be removed from this simulation even if they have beed identified to have died.";
-                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
-            }
         }
 
         #endregion

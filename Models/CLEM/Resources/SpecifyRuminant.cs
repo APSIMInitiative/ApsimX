@@ -112,6 +112,17 @@ namespace Models.CLEM.Resources
             {
                 yield return new ValidationResult("A single [r=RuminantTypeCohort] must be present under each [f=SpecifyRuminant] component", new string[] { "Specify ruminant" });
             }
+
+            // bubble through to check status of any cohorts as children of in SepcifyRuminant
+            foreach (RuminantTypeCohort cohort in FindAllChildren<RuminantTypeCohort>())
+            {
+                foreach (var val in cohort.Validate(validationContext))
+                {
+                    yield return val;
+                }
+            }
+
+
         }
         #endregion
 
