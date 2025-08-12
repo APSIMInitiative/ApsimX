@@ -2,10 +2,7 @@
 # Runtime stage
 # FROM mcr.microsoft.com/dotnet/runtime:8.0 AS build
 # The R sensitivity package seems to have a dependency on shiny - not sure why
-FROM rocker/shiny:4.3.1 AS r-base
- 
-# Install R package dependencies
-RUN R -q -e 'install.packages(c("sensitivity"), repos = "https://cran.csiro.au/")'
+FROM apsiminitiative/rsensitivity AS base
 
 COPY entrypoint.sh /entrypoint.sh
 COPY ./app /app
