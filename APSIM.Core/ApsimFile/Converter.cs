@@ -6831,8 +6831,6 @@ internal class Converter
     /// <param name="name">filename</param>
     private static void UpgradeToVersion200(JObject root, string name)
     {
-        // only do the conversion if the cultivar is the decendant of a plant with resourcename Maize or is maize.json
-        // want to leave people's replacements untouched.
         var weAreMaizeResourceFile = name != null && name.EndsWith("Maize.json");
         foreach (var plant in JsonUtilities.ChildrenOfType(root, "Plant"))
         {
@@ -6853,9 +6851,13 @@ internal class Converter
             List<(string, string)> pathUpdates =
             [
                 ("[Grain].MaximumPotentialGrainSize.FixedValue", "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue"),
+                ("[Maize].Grain.MaximumPotentialGrainSize.FixedValue", "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue"),
                 ("[Grain].MaximumGrainsPerCob.FixedValue", "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue"),
+                ("[Maize].Grain.MaximumGrainsPerCob.FixedValue", "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue"),
                 ("[Structure].Phyllochron.Phyllochron", "[Structure].Phyllochron.BasePhyllochron.Phyllochron"),
-                ("[Leaf].Photosynthesis.FW.XYPairs", "[Leaf].Photosynthesis.FW.Deficient.XYPairs")
+                ("[Maize].Structure.Phyllochron.Phyllochron", "[Structure].Phyllochron.BasePhyllochron.Phyllochron"),
+                ("[Leaf].Photosynthesis.FW.XYPairs", "[Leaf].Photosynthesis.FW.Deficient.XYPairs"),
+                ("[Maize].Leaf.Photosynthesis.FW.XYPairs", "[Leaf].Photosynthesis.FW.Deficient.XYPairs")
             ];
 
             foreach (JValue line in cultivar["Command"].Children())
