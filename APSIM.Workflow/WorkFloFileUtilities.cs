@@ -47,7 +47,7 @@ public static class WorkFloFileUtilities
               - workflow.yml
               grid: grid.csv
               steps:
-                - uses: "$DockerImage{options.DockerImageTag}"
+                - uses: ric394/apsimplusr:{options.DockerImageTag}
                   args: '"$Path"'
               finally:
                 - uses: apsiminitiative/postats2-collector:latest

@@ -309,7 +309,7 @@ public static class PayloadUtilities
         if (File.Exists(gridCsvPath) == false)
         {
             string docker_user = "ric394";
-            string non_r_apsim_image = docker_user + "/apsimx:";
+            // string non_r_apsim_image = docker_user + "/apsimx:";
             string r_sims_apsim_image = docker_user + "/apsimplusr:";
             string[] validationDirs = ValidationLocationUtility.GetDirectoryPaths();
             // string[] validationDirs = ["/Prototypes/CroptimizR"]; // Temporary test directory list
@@ -324,10 +324,10 @@ public static class PayloadUtilities
 
             foreach (string dir in validationDirs)
             {
-                if (R_SIMS_FILEPATHS.Contains(dir))
+                // if (R_SIMS_FILEPATHS.Contains(dir))
                     writer.WriteLine($"/wd{dir},{r_sims_apsim_image}");
-                else
-                    writer.WriteLine($"/wd{dir},{non_r_apsim_image}");
+                // else
+                    // writer.WriteLine($"/wd{dir},{non_r_apsim_image}");
             }
 
             if (isVerbose)
