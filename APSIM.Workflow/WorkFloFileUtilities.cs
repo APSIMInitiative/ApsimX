@@ -47,8 +47,8 @@ public static class WorkFloFileUtilities
               - workflow.yml
               grid: grid.csv
               steps:
-                - uses: "$DockerImage"{options.DockerImageTag}
-                  args: ""$Path""
+                - uses: "$DockerImage{options.DockerImageTag}"
+                  args: '"$Path"'
               finally:
                 - uses: apsiminitiative/postats2-collector:latest
                   args: upload {currentBuildNumber} {options.CommitSHA} {options.GitHubAuthorID} {brisbaneDatetimeNow.ToString(timeFormat)} ""$Path""
