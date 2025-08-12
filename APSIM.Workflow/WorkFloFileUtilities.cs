@@ -40,9 +40,8 @@ public static class WorkFloFileUtilities
             - .env
             - workflow.yml
             - grid.csv
-            - r-sims-grid.csv
             tasks:
-            - name:sim
+            - name: sim
               inputfiles:
               - .env
               - workflow.yml
