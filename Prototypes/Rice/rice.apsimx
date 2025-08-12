@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 195,
+  "Version": 199,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -12,6 +12,12 @@
       "Children": [
         {
           "$type": "Models.PMF.Plant, Models",
+          "Phenology": null,
+          "Arbitrator": null,
+          "structure": null,
+          "Leaf": null,
+          "Root": null,
+          "AboveGround": null,
           "PlantType": "Rice",
           "Name": "Rice",
           "ResourceName": null,
@@ -224,6 +230,7 @@
             },
             {
               "$type": "Models.PMF.Phen.Phenology, Models",
+              "thermalTime": null,
               "Name": "Phenology",
               "ResourceName": null,
               "Children": [
@@ -238,6 +245,7 @@
                 },
                 {
                   "$type": "Models.Functions.SubDailyInterpolation, Models",
+                  "InterpolationMethod": null,
                   "agregationMethod": 0,
                   "Name": "ThermalTime",
                   "ResourceName": null,
@@ -614,6 +622,7 @@
                     },
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Units": null,
                       "Expression": "[Leaf].ExpandedCohortNo + [Leaf].NextExpandingLeafProportion",
                       "Name": "LeafNumber",
                       "ResourceName": null,
@@ -1056,6 +1065,10 @@
             },
             {
               "$type": "Models.PMF.Struct.Structure, Models",
+              "thermalTime": null,
+              "finalLeafNumber": null,
+              "branchingRate": null,
+              "branchMortality": null,
               "CohortInitialisationStage": "Germination",
               "LeafInitialisationStage": "Emergence",
               "Name": "Structure",
@@ -1789,6 +1802,7 @@
                 },
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Units": null,
                   "Expression": "[Structure].FinalLeafNumber-4",
                   "Name": "HaunStagePanicleInitiation",
                   "ResourceName": null,
@@ -1849,6 +1863,12 @@
             },
             {
               "$type": "Models.PMF.Organs.ReproductiveOrgan, Models",
+              "SurfaceOrganicMatter": null,
+              "Summary": null,
+              "biomassRemovalModel": null,
+              "DMConversionEfficiency": null,
+              "MaintenanceRespirationFunction": null,
+              "RemobilisationCost": null,
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
               "DMDemand": null,
@@ -2287,6 +2307,7 @@
                 },
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Units": null,
                   "Expression": "([Grain].Live.N + [Grain].Dead.N)/([Grain].Live.Wt + [Grain].Dead.Wt) * 100 * 6.25",
                   "Name": "Protein",
                   "ResourceName": null,
@@ -2338,6 +2359,9 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientPoolFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
                   "Name": "DMDemandPriorityFactors",
                   "ResourceName": null,
                   "Children": [
@@ -2377,6 +2401,9 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientPoolFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
                   "Name": "NDemandPriorityFactors",
                   "ResourceName": null,
                   "Children": [
@@ -2420,11 +2447,18 @@
             },
             {
               "$type": "Models.PMF.Organs.Root, Models",
+              "SurfaceOrganicMatter": null,
+              "RootShape": null,
+              "InitialWt": null,
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
               "NDemand": null,
               "potentialDMAllocation": null,
+              "WaterUptakeSupply": null,
+              "NitrogenUptakeSupply": null,
+              "WaterTakenUp": null,
+              "NitrogenTakenUp": null,
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
               "Name": "Root",
@@ -2800,6 +2834,12 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
+                  "QStructuralPriority": null,
+                  "QMetabolicPriority": null,
+                  "QStoragePriority": null,
                   "Name": "DMDemands",
                   "ResourceName": null,
                   "Children": [
@@ -3019,6 +3059,12 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
+                  "QStructuralPriority": null,
+                  "QMetabolicPriority": null,
+                  "QStoragePriority": null,
                   "Name": "NDemands",
                   "ResourceName": null,
                   "Children": [
@@ -3166,6 +3212,9 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientPoolFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
                   "Name": "InitialWt",
                   "ResourceName": null,
                   "Children": [
@@ -3219,6 +3268,12 @@
             },
             {
               "$type": "Models.PMF.Organs.Leaf, Models",
+              "SurfaceOrganicMatter": null,
+              "Summary": null,
+              "MetData": null,
+              "Structure": null,
+              "ThermalTime": null,
+              "biomassRemovalModel": null,
               "Leaves": [],
               "CurrentExpandingLeaf": 0.0,
               "StartFractionExpanded": 0.0,
@@ -3250,7 +3305,9 @@
               "Children": [
                 {
                   "$type": "Models.PMF.Organs.LeafCohort, Models",
+                  "Apex": null,
                   "ApexCohort": null,
+                  "Clock": null,
                   "LiveStart": null,
                   "NReallocationFactor": 0.0,
                   "DMReallocationFactor": 0.0,
@@ -3283,7 +3340,9 @@
                 },
                 {
                   "$type": "Models.PMF.Organs.LeafCohort, Models",
+                  "Apex": null,
                   "ApexCohort": null,
+                  "Clock": null,
                   "LiveStart": null,
                   "NReallocationFactor": 0.0,
                   "DMReallocationFactor": 0.0,
@@ -3316,6 +3375,36 @@
                 },
                 {
                   "$type": "Models.PMF.Organs.LeafCohortParameters, Models",
+                  "MaxArea": null,
+                  "GrowthDuration": null,
+                  "LagDuration": null,
+                  "SenescenceDuration": null,
+                  "DetachmentLagDuration": null,
+                  "DetachmentDuration": null,
+                  "SpecificLeafAreaMax": null,
+                  "SpecificLeafAreaMin": null,
+                  "StructuralFraction": null,
+                  "MaximumNConc": null,
+                  "MinimumNConc": null,
+                  "InitialNConc": null,
+                  "NReallocationFactor": null,
+                  "DMReallocationFactor": null,
+                  "NRetranslocationFactor": null,
+                  "ExpansionStress": null,
+                  "CriticalNConc": null,
+                  "DMRetranslocationFactor": null,
+                  "ShadeInducedSenescenceRate": null,
+                  "LagAcceleration": null,
+                  "SenescenceAcceleration": null,
+                  "StorageFraction": null,
+                  "CellDivisionStress": null,
+                  "LeafSizeShapeParameter": null,
+                  "SenessingLeafRelativeSize": null,
+                  "MaintenanceRespirationFunction": null,
+                  "LeafSizeAgeMultiplier": null,
+                  "LagDurationAgeMultiplier": null,
+                  "SenescenceDurationAgeMultiplier": null,
+                  "RemobilisationCost": null,
                   "ExpansionStressValue": 0.0,
                   "CellDivisionStressValue": 0.0,
                   "LagAccelerationValue": 0.0,
@@ -4364,6 +4453,9 @@
                 },
                 {
                   "$type": "Models.Functions.SupplyFunctions.RUEModel, Models",
+                  "FT": null,
+                  "FVPD": null,
+                  "RadnInt": null,
                   "Name": "Photosynthesis",
                   "ResourceName": null,
                   "Children": [
@@ -4710,6 +4802,7 @@
                     },
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Units": null,
                       "Expression": "([IWeather].CO2 - [Leaf].CO2internal)/(350 - [Leaf].CO2internal)",
                       "Name": "RelativeCO2Gradient",
                       "ResourceName": null,
@@ -4723,6 +4816,7 @@
                 },
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Units": null,
                   "Expression": "(163 - [IWeather].MeanT)/(5 - 0.1*[IWeather].MeanT)",
                   "Name": "CO2internal",
                   "ResourceName": null,
@@ -4751,6 +4845,9 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientPoolFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
                   "Name": "DMDemandPriorityFactors",
                   "ResourceName": null,
                   "Children": [
@@ -4790,6 +4887,9 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientPoolFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
                   "Name": "NDemandPriorityFactors",
                   "ResourceName": null,
                   "Children": [
@@ -4833,6 +4933,13 @@
             },
             {
               "$type": "Models.PMF.Organs.GenericOrgan, Models",
+              "SenescenceRate": null,
+              "NRetranslocationFactor": null,
+              "DMRetranslocationFactor": null,
+              "InitialWt": null,
+              "DMConversionEfficiency": null,
+              "CarbonConcentration": null,
+              "RetranslocateNitrogen": null,
               "StartLive": null,
               "DMSupply": null,
               "NSupply": null,
@@ -5057,6 +5164,12 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
+                  "QStructuralPriority": null,
+                  "QMetabolicPriority": null,
+                  "QStoragePriority": null,
                   "Name": "DMDemands",
                   "ResourceName": null,
                   "Children": [
@@ -5246,6 +5359,12 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
+                  "QStructuralPriority": null,
+                  "QMetabolicPriority": null,
+                  "QStoragePriority": null,
                   "Name": "NDemands",
                   "ResourceName": null,
                   "Children": [
@@ -5392,6 +5511,9 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientPoolFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
                   "Name": "InitialWt",
                   "ResourceName": null,
                   "Children": [
@@ -5454,6 +5576,13 @@
             },
             {
               "$type": "Models.PMF.Organs.GenericOrgan, Models",
+              "SenescenceRate": null,
+              "NRetranslocationFactor": null,
+              "DMRetranslocationFactor": null,
+              "InitialWt": null,
+              "DMConversionEfficiency": null,
+              "CarbonConcentration": null,
+              "RetranslocateNitrogen": null,
               "StartLive": null,
               "DMSupply": null,
               "NSupply": null,
@@ -5737,6 +5866,12 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
+                  "QStructuralPriority": null,
+                  "QMetabolicPriority": null,
+                  "QStoragePriority": null,
                   "Name": "DMDemands",
                   "ResourceName": null,
                   "Children": [
@@ -5973,6 +6108,12 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
+                  "QStructuralPriority": null,
+                  "QMetabolicPriority": null,
+                  "QStoragePriority": null,
                   "Name": "NDemands",
                   "ResourceName": null,
                   "Children": [
@@ -6119,6 +6260,9 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientPoolFunctions, Models",
+                  "Structural": null,
+                  "Metabolic": null,
+                  "Storage": null,
                   "Name": "InitialWt",
                   "ResourceName": null,
                   "Children": [
@@ -6404,7 +6548,6 @@
     },
     {
       "$type": "Models.Storage.DataStore, Models",
-      "useFirebird": false,
       "CustomFileName": null,
       "Name": "DataStore",
       "ResourceName": null,
@@ -6852,6 +6995,7 @@
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 50.0,
+              "CanopyType": null,
               "Name": "Field",
               "ResourceName": null,
               "Children": [
@@ -6905,10 +7049,42 @@
                         100.0,
                         100.0
                       ],
-                      "ParticleSizeSand": null,
-                      "ParticleSizeSilt": null,
-                      "ParticleSizeClay": null,
-                      "Rocks": null,
+                      "ParticleSizeSand": [
+                        5.0,
+                        5.0,
+                        5.0,
+                        5.0,
+                        5.0,
+                        5.0,
+                        5.0
+                      ],
+                      "ParticleSizeSilt": [
+                        65.0,
+                        65.0,
+                        65.0,
+                        65.0,
+                        65.0,
+                        65.0,
+                        65.0
+                      ],
+                      "ParticleSizeClay": [
+                        30.0,
+                        30.0,
+                        30.0,
+                        30.0,
+                        30.0,
+                        30.0,
+                        30.0
+                      ],
+                      "Rocks": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.1910586707079457,
+                        0.21551838576928184
+                      ],
                       "Texture": null,
                       "BD": [
                         1.1,
@@ -6970,11 +7146,43 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
-                      "RocksMetadata": null,
+                      "RocksMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
                       "TextureMetadata": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClayMetadata": null,
+                      "ParticleSizeSandMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
+                      "ParticleSizeSiltMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
+                      "ParticleSizeClayMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
                       "Name": "Physical",
                       "ResourceName": null,
                       "Children": [
@@ -7007,9 +7215,33 @@
                             0.8,
                             0.8
                           ],
-                          "LLMetadata": null,
-                          "KLMetadata": null,
-                          "XFMetadata": null,
+                          "LLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "KLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "XFMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
                           "Name": "RiceSoil",
                           "ResourceName": null,
                           "Children": [],
@@ -7151,10 +7383,26 @@
                       "PHUnits": 0,
                       "EC": null,
                       "ESP": null,
-                      "CEC": null,
+                      "CEC": [
+                        9.9875,
+                        9.47,
+                        9.245000000000001,
+                        9.020000000000001,
+                        9.020000000000001,
+                        9.020000000000001,
+                        9.020000000000001
+                      ],
                       "ECMetadata": null,
                       "CLMetadata": null,
-                      "CECMetadata": null,
+                      "CECMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
@@ -7183,8 +7431,6 @@
                         0.403,
                         0.425
                       ],
-                      "InitialPAWmm": 146.70000000000005,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -7501,16 +7747,16 @@
                   ],
                   "Parameters": [
                     {
-                      "Key": "CultivarName",
-                      "Value": "YRL39"
+                      "Key": "Crop",
+                      "Value": "[Rice]"
                     },
                     {
                       "Key": "SowDate",
                       "Value": "22-Jan"
                     },
                     {
-                      "Key": "Crop",
-                      "Value": "[Rice]"
+                      "Key": "CultivarName",
+                      "Value": "YRL39"
                     },
                     {
                       "Key": "SowingDepth",
@@ -7699,6 +7945,12 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "Phenology": null,
+                  "Arbitrator": null,
+                  "structure": null,
+                  "Leaf": null,
+                  "Root": null,
+                  "AboveGround": null,
                   "Name": "Rice",
                   "ResourceName": "Barley",
                   "Children": [],
@@ -8128,6 +8380,7 @@
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 50.0,
+              "CanopyType": null,
               "Name": "Field",
               "ResourceName": null,
               "Children": [
@@ -8181,10 +8434,42 @@
                         100.0,
                         100.0
                       ],
-                      "ParticleSizeSand": null,
-                      "ParticleSizeSilt": null,
-                      "ParticleSizeClay": null,
-                      "Rocks": null,
+                      "ParticleSizeSand": [
+                        5.0,
+                        5.0,
+                        5.0,
+                        5.0,
+                        5.0,
+                        5.0,
+                        5.0
+                      ],
+                      "ParticleSizeSilt": [
+                        65.0,
+                        65.0,
+                        65.0,
+                        65.0,
+                        65.0,
+                        65.0,
+                        65.0
+                      ],
+                      "ParticleSizeClay": [
+                        30.0,
+                        30.0,
+                        30.0,
+                        30.0,
+                        30.0,
+                        30.0,
+                        30.0
+                      ],
+                      "Rocks": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.1910586707079457,
+                        0.21551838576928184
+                      ],
                       "Texture": null,
                       "BD": [
                         1.1,
@@ -8246,11 +8531,43 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
-                      "RocksMetadata": null,
+                      "RocksMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
                       "TextureMetadata": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClayMetadata": null,
+                      "ParticleSizeSandMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
+                      "ParticleSizeSiltMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
+                      "ParticleSizeClayMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
                       "Name": "Physical",
                       "ResourceName": null,
                       "Children": [
@@ -8283,9 +8600,33 @@
                             0.8,
                             0.8
                           ],
-                          "LLMetadata": null,
-                          "KLMetadata": null,
-                          "XFMetadata": null,
+                          "LLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "KLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "XFMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
                           "Name": "RiceSoil",
                           "ResourceName": null,
                           "Children": [],
@@ -8427,10 +8768,26 @@
                       "PHUnits": 0,
                       "EC": null,
                       "ESP": null,
-                      "CEC": null,
+                      "CEC": [
+                        9.9875,
+                        9.47,
+                        9.245000000000001,
+                        9.020000000000001,
+                        9.020000000000001,
+                        9.020000000000001,
+                        9.020000000000001
+                      ],
                       "ECMetadata": null,
                       "CLMetadata": null,
-                      "CECMetadata": null,
+                      "CECMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
@@ -8459,8 +8816,6 @@
                         0.403,
                         0.425
                       ],
-                      "InitialPAWmm": 146.70000000000005,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -8684,16 +9039,16 @@
                   ],
                   "Parameters": [
                     {
-                      "Key": "CultivarName",
-                      "Value": "YRL39"
+                      "Key": "Crop",
+                      "Value": "[Rice]"
                     },
                     {
                       "Key": "SowDate",
                       "Value": "22-Jan"
                     },
                     {
-                      "Key": "Crop",
-                      "Value": "[Rice]"
+                      "Key": "CultivarName",
+                      "Value": "YRL39"
                     },
                     {
                       "Key": "SowingDepth",
@@ -9003,6 +9358,12 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "Phenology": null,
+                  "Arbitrator": null,
+                  "structure": null,
+                  "Leaf": null,
+                  "Root": null,
+                  "AboveGround": null,
                   "Name": "Rice",
                   "ResourceName": "Barley",
                   "Children": [],
@@ -9747,6 +10108,7 @@
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 50.0,
+              "CanopyType": null,
               "Name": "Field",
               "ResourceName": null,
               "Children": [
@@ -9813,13 +10175,19 @@
                         7.0
                       ],
                       "ParticleSizeClay": [
-                        45.0,
-                        58.0,
+                        44.0,
+                        59.0,
                         65.0,
                         63.0,
                         64.0
                       ],
-                      "Rocks": null,
+                      "Rocks": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
                       "Texture": null,
                       "BD": [
                         1.4,
@@ -9857,11 +10225,11 @@
                         0.526
                       ],
                       "KS": [
-                        "NaN",
-                        "NaN",
-                        "NaN",
-                        "NaN",
-                        "NaN"
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
                       ],
                       "BDMetadata": null,
                       "AirDryMetadata": null,
@@ -9869,11 +10237,35 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
-                      "RocksMetadata": null,
+                      "RocksMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
                       "TextureMetadata": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClayMetadata": null,
+                      "ParticleSizeSandMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "ParticleSizeSiltMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "ParticleSizeClayMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
                       "Name": "Physical",
                       "ResourceName": null,
                       "Children": [
@@ -9900,9 +10292,27 @@
                             1.0,
                             1.0
                           ],
-                          "LLMetadata": null,
-                          "KLMetadata": null,
-                          "XFMetadata": null,
+                          "LLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "KLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "XFMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
                           "Name": "RiceSoil",
                           "ResourceName": null,
                           "Children": [],
@@ -10048,10 +10458,22 @@
                         4.7,
                         4.5
                       ],
-                      "CEC": null,
+                      "CEC": [
+                        18.587,
+                        21.522,
+                        20.490000000000002,
+                        20.023000000000003,
+                        20.156000000000002
+                      ],
                       "ECMetadata": null,
                       "CLMetadata": null,
-                      "CECMetadata": null,
+                      "CECMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
@@ -10076,8 +10498,6 @@
                         0.494,
                         0.499
                       ],
-                      "InitialPAWmm": 148.2,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -10382,16 +10802,16 @@
                   ],
                   "Parameters": [
                     {
-                      "Key": "CultivarName",
-                      "Value": "YRL39"
+                      "Key": "Crop",
+                      "Value": "[Rice]"
                     },
                     {
                       "Key": "SowDate",
                       "Value": "2-Jan"
                     },
                     {
-                      "Key": "Crop",
-                      "Value": "[Rice]"
+                      "Key": "CultivarName",
+                      "Value": "YRL39"
                     },
                     {
                       "Key": "SowingDepth",
@@ -10699,6 +11119,12 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "Phenology": null,
+                  "Arbitrator": null,
+                  "structure": null,
+                  "Leaf": null,
+                  "Root": null,
+                  "AboveGround": null,
                   "Name": "Rice",
                   "ResourceName": "Barley",
                   "Children": [],
@@ -11128,6 +11554,7 @@
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 50.0,
+              "CanopyType": null,
               "Name": "Field",
               "ResourceName": null,
               "Children": [
@@ -11194,13 +11621,19 @@
                         7.0
                       ],
                       "ParticleSizeClay": [
-                        45.0,
-                        58.0,
+                        44.0,
+                        59.0,
                         65.0,
                         63.0,
                         64.0
                       ],
-                      "Rocks": null,
+                      "Rocks": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
                       "Texture": null,
                       "BD": [
                         1.4,
@@ -11238,11 +11671,11 @@
                         0.526
                       ],
                       "KS": [
-                        "NaN",
-                        "NaN",
-                        "NaN",
-                        "NaN",
-                        "NaN"
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
                       ],
                       "BDMetadata": null,
                       "AirDryMetadata": null,
@@ -11250,11 +11683,35 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
-                      "RocksMetadata": null,
+                      "RocksMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
                       "TextureMetadata": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClayMetadata": null,
+                      "ParticleSizeSandMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "ParticleSizeSiltMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "ParticleSizeClayMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
                       "Name": "Physical",
                       "ResourceName": null,
                       "Children": [
@@ -11281,9 +11738,27 @@
                             1.0,
                             1.0
                           ],
-                          "LLMetadata": null,
-                          "KLMetadata": null,
-                          "XFMetadata": null,
+                          "LLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "KLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "XFMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
                           "Name": "RiceSoil",
                           "ResourceName": null,
                           "Children": [],
@@ -11429,10 +11904,22 @@
                         4.7,
                         4.5
                       ],
-                      "CEC": null,
+                      "CEC": [
+                        18.587,
+                        21.522,
+                        20.490000000000002,
+                        20.023000000000003,
+                        20.156000000000002
+                      ],
                       "ECMetadata": null,
                       "CLMetadata": null,
-                      "CECMetadata": null,
+                      "CECMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
@@ -11457,8 +11944,6 @@
                         0.494,
                         0.499
                       ],
-                      "InitialPAWmm": 148.2,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -11763,16 +12248,16 @@
                   ],
                   "Parameters": [
                     {
-                      "Key": "CultivarName",
-                      "Value": "YRL39"
+                      "Key": "Crop",
+                      "Value": "[Rice]"
                     },
                     {
                       "Key": "SowDate",
                       "Value": "2-Jan"
                     },
                     {
-                      "Key": "Crop",
-                      "Value": "[Rice]"
+                      "Key": "CultivarName",
+                      "Value": "YRL39"
                     },
                     {
                       "Key": "SowingDepth",
@@ -12080,6 +12565,12 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "Phenology": null,
+                  "Arbitrator": null,
+                  "structure": null,
+                  "Leaf": null,
+                  "Root": null,
+                  "AboveGround": null,
                   "Name": "Rice",
                   "ResourceName": "Barley",
                   "Children": [],
@@ -12871,6 +13362,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "Field",
                       "ResourceName": null,
                       "Children": [
@@ -12900,6 +13392,12 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
+                          "Phenology": null,
+                          "Arbitrator": null,
+                          "structure": null,
+                          "Leaf": null,
+                          "Root": null,
+                          "AboveGround": null,
                           "Name": "Wheat",
                           "ResourceName": "Wheat",
                           "Children": [],
@@ -12956,10 +13454,42 @@
                                 300.0,
                                 300.0
                               ],
-                              "ParticleSizeSand": null,
-                              "ParticleSizeSilt": null,
-                              "ParticleSizeClay": null,
-                              "Rocks": null,
+                              "ParticleSizeSand": [
+                                5.0,
+                                5.0,
+                                5.0,
+                                5.0,
+                                5.0,
+                                5.0,
+                                5.0
+                              ],
+                              "ParticleSizeSilt": [
+                                65.0,
+                                65.0,
+                                65.0,
+                                65.0,
+                                65.0,
+                                65.0,
+                                65.0
+                              ],
+                              "ParticleSizeClay": [
+                                30.0,
+                                30.0,
+                                30.0,
+                                30.0,
+                                30.0,
+                                30.0,
+                                30.0
+                              ],
+                              "Rocks": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0
+                              ],
                               "Texture": null,
                               "BD": [
                                 1.0106,
@@ -13021,11 +13551,43 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
-                              "RocksMetadata": null,
+                              "RocksMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
                               "TextureMetadata": null,
-                              "ParticleSizeSandMetadata": null,
-                              "ParticleSizeSiltMetadata": null,
-                              "ParticleSizeClayMetadata": null,
+                              "ParticleSizeSandMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
+                              "ParticleSizeSiltMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
+                              "ParticleSizeClayMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
                               "Name": "Physical",
                               "ResourceName": null,
                               "Children": [
@@ -13058,9 +13620,33 @@
                                     1.0,
                                     1.0
                                   ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
                                   "Name": "WheatSoil",
                                   "ResourceName": null,
                                   "Children": [],
@@ -13202,10 +13788,26 @@
                               "PHUnits": 0,
                               "EC": null,
                               "ESP": null,
-                              "CEC": null,
+                              "CEC": [
+                                11.045,
+                                10.505,
+                                9.695,
+                                9.020000000000001,
+                                8.75,
+                                8.615,
+                                8.615
+                              ],
                               "ECMetadata": null,
                               "CLMetadata": null,
-                              "CECMetadata": null,
+                              "CECMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
@@ -13234,8 +13836,6 @@
                                 0.4571,
                                 0.4523
                               ],
-                              "InitialPAWmm": 361.22999999999996,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
                               "ResourceName": null,
@@ -13394,35 +13994,40 @@
                         {
                           "$type": "Models.Manager, Models",
                           "CodeArray": [
-                            "using Models.Soils;",
-                            "using System.Xml.Serialization;",
-                            "using Models;",
-                            "using Models.PMF;",
-                            "using System.Text;",
-                            "using System.Collections.Generic;",
-                            "using APSIM.Shared.Utilities;",
-                            "using Models.Core;",
-                            "using System;",
+                            "using APSIM.Core;",
                             "using Models.Climate;",
+                            "using System;",
+                            "using Models.Core;",
+                            "using APSIM.Shared.Utilities;",
+                            "using System.Collections.Generic;",
+                            "using System.Text;",
+                            "using Models.PMF;",
+                            "using Models;",
+                            "using System.Xml.Serialization;",
+                            "using Models.Soils;",
                             "",
                             "namespace Models",
                             "{",
                             "    [Serializable] ",
                             "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
-                            "    public class Script : Model",
+                            "    public class Script : Model, IStructureDependency",
                             "    {",
-                            "        [Link] Weather Met;",
-                            "        [Link] Clock Clock;",
-                            "        [Link] Zone zone;",
+                            "        [Link] private Weather Met;",
+                            "        [Link] private Clock Clock;",
+                            "        [Link] private Zone zone;",
+                            "        public IStructure Structure { private get; set; }",
                             "    ",
                             "        [Description(\"CO2 conc\")]",
                             "        public double CO2 { get; set; }",
                             "    ",
                             "        ",
+                            "",
+                            "        ",
+                            "",
                             "        [EventSubscribe(\"PreparingNewWeatherData\")]",
                             "        private void OnPreparingNewWeatherData(object sender, EventArgs e)",
                             "        {",
-                            "            zone.Set(\"Weather.CO2\", CO2);",
+                            "            Structure.Set(\"Weather.CO2\", CO2, relativeTo: zone);",
                             "        }",
                             "    }",
                             "}"
