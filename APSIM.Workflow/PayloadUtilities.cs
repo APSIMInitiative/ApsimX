@@ -40,6 +40,7 @@ public static class PayloadUtilities
                 "/Examples/Optimisation/CroptimizRExample.apsimx",
                 "/Examples/Tutorials/Sensitivity_SobolMethod.apsimx",
                 "/Examples/Tutorials/Sensitivity_MorrisMethod.apsimx",
+                "/Examples/Tutorials/Sensitivity_FactorialANOVA.apsimx",
                 "/Examples/Sensitivity/Sobol.apsimx",
                 "/Examples/Sensitivity/Morris.apsimx"
             };
