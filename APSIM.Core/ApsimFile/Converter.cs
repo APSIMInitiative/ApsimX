@@ -6969,6 +6969,17 @@ internal class Converter
                 manager.Save();
             }
         }
+
+        // Due to a previous defect (https://github.com/APSIMInitiative/ApsimX/issues/10298), we need
+        // to remove any Structure and Leaf components under Plant. They are [Links] and shouldn't have
+        // been serialised to the .apsimx file. NOTE: The child models won't be deleted.
+        // Because Plant and Leaf now have a 'Structure' and a 'structure' member, the deserialisation tries
+        // to deserialise a PMF.Structure into a APSIM.Core.Structure.
+        foreach (var plant in JsonUtilities.ChildrenOfType(root, "Plant"))
+        {
+            plant.Remove("structure");
+            plant.Remove("Leaf");
+        }
     }
 
 }
