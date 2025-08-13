@@ -165,7 +165,11 @@ namespace Models.Factorial
                 if (modelToReplace == null)
                     throw new ApsimXException(this, "Cannot find model: " + specification);
                 foreach (IModel newModel in Children.Where(c => c.Enabled))
-                    values.Add(new CompositeFactor(this, specification, newModel));
+                {
+                    var compositeFactor = new CompositeFactor(this, specification, newModel);
+                    Node.Create(compositeFactor);
+                    values.Add(compositeFactor);
+                }
             }
             return values;
         }

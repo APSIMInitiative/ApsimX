@@ -32,7 +32,7 @@ namespace Models.Core
         [Link]
         private ISummary summary = null;
 
-        [Link]
+        [Link(IsOptional = true)]
         private IClock clock = null;
 
         private IReportsStatus reportStatus = null;

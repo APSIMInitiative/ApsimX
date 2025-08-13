@@ -147,6 +147,7 @@
                         new ModelThatDeletesAModel("MockModelThatThrows")
                     }
             };
+            Node.Create(simulation);
 
             simulation.Run();
 
