@@ -11,7 +11,7 @@ on:
   push:
   pull_request_target:
     branches: [ master ]
-    types: [ opened]
+    types: [ opened, edited, reopened ]
     # branches: [ master ]
     # types: [ opened ]
 
