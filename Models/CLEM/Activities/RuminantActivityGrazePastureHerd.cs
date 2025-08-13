@@ -162,7 +162,7 @@ namespace Models.CLEM.Activities
                     Value = RuminantTypeName
                 }
             );
-            this.Children.Add(herdGroup);
+            Structure.AddChild(herdGroup);
 
             this.InitialiseHerd(false, false);
 

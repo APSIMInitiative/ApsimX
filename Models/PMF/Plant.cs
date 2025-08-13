@@ -313,7 +313,7 @@ namespace Models.PMF
             if (SowingData.TilleringMethod < -1 || SowingData.TilleringMethod > 1)
                 throw new Exception("Invalid TilleringMethod set in sowingData.");
 
-           // if (SowingData.TilleringMethod != 0 && SowingData.FTN > 0.0)
+            // if (SowingData.TilleringMethod != 0 && SowingData.FTN > 0.0)
             //    throw new Exception("Cannot set a FertileTillerNumber when TilleringMethod is not set to FixedTillering.");
 
             if (rowConfig == 0)
@@ -375,7 +375,7 @@ namespace Models.PMF
             //Phenology.SetToEndStage();
             Harvesting?.Invoke(this, EventArgs.Empty);
 
-            PostHarvesting?.Invoke(this, new HarvestingParameters() {RemoveBiomass = removeBiomassFromOrgans});
+            PostHarvesting?.Invoke(this, new HarvestingParameters() { RemoveBiomass = removeBiomassFromOrgans });
         }
 
         /// <summary>End the crop.</summary>
@@ -422,6 +422,15 @@ namespace Models.PMF
                     structure.ProportionPlantMortality = 1 - (newPlantPopulation / InitialPopn);
                 }
             }
+        }
+
+        /// <summary>
+        /// Add a cultivar.
+        /// </summary>
+        /// <param name="cultivar">The cultivar to add</param>
+        public void AddCultivar(Cultivar cultivar)
+        {
+            Structure.AddChild(cultivar);
         }
     }
 }

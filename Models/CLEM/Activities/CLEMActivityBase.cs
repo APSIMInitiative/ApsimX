@@ -382,7 +382,16 @@ namespace Models.CLEM.Activities
             else
             {
                 if (addNewIfEmpty)
-                    return new List<T>() { new T() };
+                {
+                    // This is a bit of a hack because I don't understand what this method does. It creates RuminantGroup instances
+                    // but doesn't seem to add them to any parent model. The problem with this is that the 'Node' property in
+                    // 'Model' will be null, which in turn means any Find... method calls will through an 'object not set...' error.
+                    // For now, I have called Node.Create which it shouldn't do.
+                    T newObj = new T();
+                    if (newObj is INodeModel nodeModel)
+                        Node.Create(nodeModel);
+                    return new List<T>() { newObj };
+                }
             }
             return null;
         }

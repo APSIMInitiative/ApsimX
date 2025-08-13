@@ -128,6 +128,7 @@ namespace Models.PMF.Organs
         {
             this.Soil = soil;
             this.plant = Plant;
+            this.Structure = structure;
             this.parentNetwork = Structure.FindChild<RootNetwork>(relativeTo: Plant, recurse: true);
             nutrient = Structure.FindChild<INutrient>(relativeTo: soil);
             Physical = Structure.FindChild<IPhysical>(relativeTo: soil);

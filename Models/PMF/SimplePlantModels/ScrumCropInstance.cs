@@ -586,7 +586,7 @@ namespace Models.PMF.SimplePlantModels
             }
 
             // initialise this crop instance in SCRUM
-            scrum.Children.Add(currentCrop);
+            scrum.AddCultivar(currentCrop);
             double cropPopulation = 1.0;
             double rowWidth = 0.0;
             scrum.Sow(cultivar: CropName, population: cropPopulation, depth: PlantingDepth, rowSpacing: rowWidth, maxCover: MaxCover);

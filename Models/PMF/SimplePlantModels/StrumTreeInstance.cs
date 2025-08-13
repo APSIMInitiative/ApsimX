@@ -654,8 +654,8 @@ namespace Models.PMF.SimplePlantModels
         {
             double soilDepthMax = 0;
 
-            var soilCrop = Structure.FindChild<SoilCrop>(strum.Name + "Soil", relativeTo: soil);
-            var physical = Structure.FindChild<Physical>("Physical", relativeTo: soil);
+            var soilCrop = Structure.FindChild<SoilCrop>(strum.Name + "Soil", relativeTo: soil, recurse: true);
+            var physical = Structure.FindChild<Physical>("Physical", relativeTo: soil, recurse: true);
             if (soilCrop == null)
                 throw new Exception($"Cannot find a soil crop parameterisation called {strum.Name}Soil");
 
@@ -711,7 +711,7 @@ namespace Models.PMF.SimplePlantModels
             double rowWidth = 0.0;
 
             tree = CoeffCalc();
-            strum.Children.Add(tree);
+            strum.AddCultivar(tree);
             strum.Sow(cropName, population, depth, rowWidth);
             phenology.SetAge(AgeAtSimulationStart);
             summary.WriteMessage(this,"Some of the message above is not relevent as STRUM has no notion of population, bud number or row spacing." +

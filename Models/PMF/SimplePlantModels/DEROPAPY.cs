@@ -266,7 +266,7 @@ namespace Models.PMF.SimplePlantModels
             double rowWidth = 0.0;
 
             derochild = coeffCalc();
-            deropapy.Children.Add(derochild);
+            deropapy.AddCultivar(derochild);
             deropapy.Sow(cropName, population, depth, rowWidth);
             phenology.SetAge(AgeAtSimulationStart);
             summary.WriteMessage(this, "Some of the message above is not relevent as DEROPAPY has no notion of population, bud number or row spacing." +

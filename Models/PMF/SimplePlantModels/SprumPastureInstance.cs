@@ -496,7 +496,7 @@ namespace Models.PMF.SimplePlantModels
             double rowWidth = 0.0;
 
             pasture = CoeffCalc();
-            sprum.Children.Add(pasture);
+            sprum.AddCultivar(pasture);
             sprum.Sow(cropName, population, depth, rowWidth);
             phenology.SetAge(AgeAtSimulationStart);
             summary.WriteMessage(this,"Some of the message above is not relevent as SPRUM has no notion of population, bud number or row spacing." +

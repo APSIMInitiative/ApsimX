@@ -283,6 +283,15 @@ namespace Models.Soils.Nutrients
         }
 
         /// <summary>
+        /// Add a solute.
+        /// </summary>
+        /// <param name="solute">The solute to add.</param>
+        public void AddSolute(Solute solute)
+        {
+            Structure.AddChild(solute);
+        }
+
+        /// <summary>
         /// Perform initialisation so that instance is valid.
         /// </summary>
         /// <param name="sender">The sender.</param>

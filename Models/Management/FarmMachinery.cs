@@ -37,9 +37,8 @@ namespace Models.Management
         /// <summary> </summary>
         [Display]
         public List<string> TractorNames
-         {
+        {
             get {
-               CollectMachineryAndImplements();
                return _tractorNames;
             }
             set {
@@ -61,6 +60,15 @@ namespace Models.Management
 
         /// <summary> The daily amount of fuel consumed (litres) </summary>
         public double FuelConsumption {get; set;}
+
+        /// <summary>
+        /// Invoked immediately following object creation. Do initialisation.
+        /// </summary>
+        public override void OnCreated()
+        {
+           base.OnCreated();
+           CollectMachineryAndImplements();
+        }
 
         /// <summary> Machinery is available today (ie not in use) </summary>
         /// <param name="tractor" />

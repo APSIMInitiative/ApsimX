@@ -6843,6 +6843,7 @@ internal class Converter
         //      AgPSpecies = myZone.FindAllChildren<AgPasture.PastureSpecies>().ToList();
         //      MonthlyHarvestedWt = (Crop.FindChild(\"Grain\") as ReproductiveOrgan).Wt;
         //      FindDescendant<ScrumCropInstance>(CropName);
+        //      myPhysicals[ paddock ] = myWaterBalances[paddock].FindSibling(\"Physical\") as Physical;
 
         foreach (var manager in JsonUtilities.ChildManagers(root))
         {
@@ -6910,7 +6911,7 @@ internal class Converter
                     typeName = "<IModel>";
 
                 // Extract a method name and map to new name.
-                string[] recursiveMethods = ["FindDescendant", "FindAncestor", "FindAllDescendants", "FindAllAncestors"];
+                string[] recursiveMethods = ["FindDescendant", "FindAncestor", "FindAllDescendants", "FindAllAncestors", "FindAllChildren"];
                 string methodName = match.Groups["methodName"].ToString();
                 bool addRecurseArgument = recursiveMethods.Contains(methodName);
                 if (methodName == "FindDescendant")

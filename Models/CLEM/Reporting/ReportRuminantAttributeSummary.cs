@@ -96,7 +96,7 @@ namespace Models.CLEM.Reporting
             if (report is null)
             {
                 report = new Report();
-                this.Children.Add(report);
+                Structure.AddChild(report);
             }
             report.Name = Name;
             report.VariableNames = new string[] {

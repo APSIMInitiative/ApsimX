@@ -32,6 +32,11 @@ namespace Models.Core
         [Link]
         private ISummary summary = null;
 
+        [Link]
+        private IClock clock = null;
+
+        private IReportsStatus reportStatus = null;
+
         /// <summary>Invoked when simulation is about to commence.</summary>
         public event EventHandler Commencing;
 
@@ -85,11 +90,10 @@ namespace Models.Core
         {
             get
             {
-                Clock c = Structure.FindChild<Clock>();
-                if (c == null)
+                if (clock == null)
                     return 0;
                 else
-                    return c.FractionComplete;
+                    return clock.FractionComplete;
             }
         }
 
@@ -117,7 +121,7 @@ namespace Models.Core
         public List<object> ModelServices { get; set; } = new List<object>();
 
         /// <summary>Status message.</summary>
-        public string Status => Structure.FindChildren<IReportsStatus>(recurse: true).FirstOrDefault(s => !string.IsNullOrEmpty(s.Status))?.Status;
+        public string Status => reportStatus?.Status;
 
         /// <summary>
         /// Called when models should disconnect from events to which they've
@@ -224,6 +228,9 @@ namespace Models.Core
             // when called from the unit tests.
             if (cancelToken == null)
                 cancelToken = new CancellationTokenSource();
+
+            // Find a report status model if it exists.
+            reportStatus = Structure.FindChildren<IReportsStatus>(recurse: true).FirstOrDefault();
 
             try
             {
