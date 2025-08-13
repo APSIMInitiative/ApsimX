@@ -45,6 +45,15 @@ public static class PayloadUtilities
                 "/Examples/Sensitivity/Morris.apsimx"
             };
 
+    /// <summary> List of excluded simulation file paths. Excluded due to Azure runtimes exceeding 16 mins.</summary>
+    public static string[] EXCLUDED_SIMS_FILEPATHS = {
+                "/Prototypes/CroptimizR/template.apsimx",
+                "/Examples/Optimisation/CroptimizRExample.apsimx",
+                "/Tests/Validation/Wheat/Wheat.apsimx",
+                "/Tests/Validation/System/FACTS_CornSoy/FACTS_Ames.apsimx",
+                "/Tests/Validation/Pinus/Pinus.apsimx"
+            };
+
     // // Development submit azure URL
     // public static string WORKFLO_API_SUBMIT_AZURE_URL = "http://localhost:8040/submit-azure";
 
@@ -308,12 +317,10 @@ public static class PayloadUtilities
 
         if (File.Exists(gridCsvPath) == false)
         {
-            string docker_user = "ric394";
-            // string non_r_apsim_image = docker_user + "/apsimx:";
+            string docker_user = "apsiminitiative"; 
             string r_sims_apsim_image = docker_user + "/apsimplusr:";
             string[] validationDirs = ValidationLocationUtility.GetDirectoryPaths();
-            // string[] validationDirs = ["/Prototypes/CroptimizR"]; // Temporary test directory list
-            // string[] validationDirs = ["/Tests/Validation/Chickpea/", "/Tests/Validation/Maize/"]; // Temporary test directory list
+            // string[] validationDirs = ["/Prototypes/CroptimizR"]; // Example Temporary test directory list
 
             using StreamWriter writer = new(gridCsvPath);
             writer.NewLine = "\n"; // Ensure new lines are consistent
@@ -324,10 +331,8 @@ public static class PayloadUtilities
 
             foreach (string dir in validationDirs)
             {
-                // if (R_SIMS_FILEPATHS.Contains(dir))
+                if (!EXCLUDED_SIMS_FILEPATHS.Contains(dir))
                     writer.WriteLine($"/wd{dir},{r_sims_apsim_image}");
-                // else
-                    // writer.WriteLine($"/wd{dir},{non_r_apsim_image}");
             }
 
             if (isVerbose)

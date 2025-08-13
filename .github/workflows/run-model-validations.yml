@@ -1,4 +1,4 @@
-name: Run model validations
+name: Model validations
 permissions:
   contents: read # access to check out code and install dependencies
 
@@ -26,7 +26,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v4
     
-    - name: Get PR number from github API
+    - name: Get PR number from GitHub API
       id: fetch_pr_number
       run: |
         echo "URL: https://api.github.com/repos/${{ github.repository }}/commits/${{ github.sha }}/pulls"
@@ -73,30 +73,6 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    # - name: Extract metadata (tags, labels) for Docker
-    #   id: meta
-    #   uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
-    #   with:
-    #     images: ric394/apsimx
-    #     flavor: latest=true
-    #     tags: |
-    #       type=ref,event=branch
-    #       type=ref,event=pr
-
-    # - name: Build and push Models Docker image
-    #   id: push
-    #   uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
-    #   with:
-    #     context: .
-    #     file: ./Dockerfile
-    #     target: build
-    #     push: true
-    #     tags: ${{ steps.meta.outputs.tags }}
-    #     labels: ${{ steps.meta.outputs.labels }}
-
-    # NOTE: this section is commented out because it is not currently used. 
-    # Will be used once the workflow file includes a section that explicitly runs simulation
-    # files that require r or docker to run.
     - name: Extract metadata (tags, labels) for Docker for apsimplusr
       id: meta_apsimplusr
       uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
@@ -118,7 +94,7 @@ jobs:
         tags: ${{ steps.meta_apsimplusr.outputs.tags }}
         labels: ${{ steps.meta_apsimplusr.outputs.labels }}       
 
-    - name: Create azure jobs for all validation directories
+    - name: Create Azure Validation Jobs
       id: submit_azure_jobs
       run: |
 
@@ -130,14 +106,6 @@ jobs:
           mkdir -p "${PAYLOAD_FOLDER_PATH}"
         fi
 
-        # # Actual validation directories to run
-        # mapfile -t validation_dirs_array < <( dotnet ./bin/Release/net8.0/APSIM.Workflow.dll --locations)
-        # printf '%s\n' "${validation_dirs_array[@]}"
-
-        # Temp test directory list
-        # validation_dirs_array=("/Prototypes/CroptimizR" )  
-        validation_dirs_array=("Tests/Validation/Chickpea/" "Tests/Validation/Maize/" )  
-
         # Add .env to payload directory
         echo "Adding .env file to ${PAYLOAD_FOLDER_PATH}"
         echo "${{ secrets.AZURE_ENV_CONTENTS }}" > "${PAYLOAD_FOLDER_PATH}/.env"
@@ -147,51 +115,28 @@ jobs:
 
         # Tell POStats2 to open and get ready to accept data
         echo "Opening POStats2 to accept data..."
-        echo "Pull Request Number: ${{ steps.fetch_pr_number.outputs.pr_number }}" # use this later
+        echo "Pull Request Number: ${{ steps.fetch_pr_number.outputs.pr_number }}" 
         echo "Commit SHA: ${{ github.sha }}"
         # NOTE: Enable once the workflow is ready for production.
-        # commitsha=${{ github.sha }}
-        commitsha=9ef60f11dd6ceb95c141f00f027637057b2dd0f5
+        commitsha=${{ github.sha }}
+        # commitsha=9ef60f11dd6ceb95c141f00f027637057b2dd0f5
         author=${{ github.actor }}
         echo "commitsha variable: ${commitsha}"
         echo "author variable: ${author}"
-        pr_number="10271"
+        # pr_number="10271"
+        pr_number=${{ steps.fetch_pr_number.outputs.pr_number }}
         response=$(curl "https://postats2.apsim.info/api/open?pullrequestnumber=${pr_number}&commitid=${commitsha}&author=${author}&count=0") # count needs to be a proper number later
         echo "POStats2 open response: ${response}"
-        
         echo "Start creating payload..."
         dotnet ./bin/Release/net8.0/APSIM.Workflow.dll --payload-directory "${PAYLOAD_FOLDER_PATH}" -g "$author" -t $DOCKER_METADATA_OUTPUT_VERSION --commit-sha "$commitsha" --pr-number ${pr_number} -v
-
-    
-    # NOTE: this section is commented out because it is not currently used. 
-    # Will be used once the workflow file includes a section that explicitly runs simulation
-    # files that require r or docker to run.
-    # - name: Extract metadata (tags, labels) for Docker for apsimplusr
-    #   id: meta_apsimplusr
-    #   uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
-    #   with:
-    #     images: ric394/apsimplusr
-    #     flavor: latest=true
-    #     tags: |
-    #       type=ref,event=branch
-    #       type=ref,event=pr
-
-    # - name: Build and push apsimplusr Docker image
-    #   id: apsimplusr_push
-    #   uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
-    #   with:
-    #     context: .
-    #     file: ./models_r_dockerfile
-    #     target: r-base
-    #     push: true
-    #     tags: ${{ steps.meta_apsimplusr.outputs.tags }}
-    #     labels: ${{ steps.meta_apsimplusr.outputs.labels }}        
 
     - name: Print workflow submit success summary markdown
       if: success()
       run: |
         echo "## Workflow submit success summary :tada:" >> $GITHUB_STEP_SUMMARY
         echo 'All jobs submitted to Azure successfully!' >> $GITHUB_STEP_SUMMARY
+        echo 'Run logs and predicted/observed metrics for this validation run can be viewed at [POStats2](https://postats2.apsim.info/${{ steps.fetch_pr_number.outputs.pr_number }})' >> $GITHUB_STEP_SUMMARY
+        echo 'Note: The validation results may take some time to appear.' >> $GITHUB_STEP_SUMMARY
 
     - name: Print workflow submit failure summary markdown
       if: failure()
@@ -199,4 +144,4 @@ jobs:
         echo "## Workflow submit failure summary :sob:" >> $GITHUB_STEP_SUMMARY
         echo "The workflow failed to submit all jobs to Azure." >> $GITHUB_STEP_SUMMARY
         echo "Reason: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
-        echo "Please check the logs for more information." >> $GITHUB_STEP_SUMMARY
+        echo "Please check the logs for more information: [POStats2](https://postats2.apsim.info/${{ steps.fetch_pr_number.outputs.pr_number }}) " >> $GITHUB_STEP_SUMMARY

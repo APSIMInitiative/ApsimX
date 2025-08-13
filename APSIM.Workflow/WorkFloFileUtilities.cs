@@ -22,7 +22,6 @@ public static class WorkFloFileUtilities
     {
         try
         {
-            // string currentBuildNumber = Task.Run(GetCurrentBuildNumberAsync).Result; // TODO: Uncomment currentBuildNumber once development is complete
             string currentBuildNumber = options.PullRequestNumber; // Placeholder for development, replace with actual call to GetCurrentBuildNumberAsync
             string timeFormat = "yyyy.M.d-HH:mm";
             TimeZoneInfo brisbaneTZ = TimeZoneInfo.FindSystemTimeZoneById("E. Australia Standard Time");
@@ -47,7 +46,7 @@ public static class WorkFloFileUtilities
               - workflow.yml
               grid: grid.csv
               steps:
-                - uses: ric394/apsimplusr:{options.DockerImageTag}
+                - uses: apsiminitiative/apsimplusr:{options.DockerImageTag}
                   args: '"$Path"'
               finally:
                 - uses: apsiminitiative/postats2-collector:latest
