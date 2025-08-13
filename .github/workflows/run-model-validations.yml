@@ -10,7 +10,7 @@ env:
 on:
   push:
   pull_request_target:
-    branches: [ master ]
+    # branches: [ master ]
     types: [ opened, edited, reopened ]
     # branches: [ master ]
     # types: [ opened ]
