@@ -8,9 +8,9 @@ env:
   
 # Determines when this workflow is triggered. 
 on:
-  push:
   pull_request_target:
     branches: [ master ]
+    types: [ opened, edited, reopened, synchronize ]
 
 jobs:
   run-model-validations:
