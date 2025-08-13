@@ -586,10 +586,15 @@ namespace Models.PMF.SimplePlantModels
             }
 
             // initialise this crop instance in SCRUM
+            // NOTE: I (Dean) had to change the cultivar name to avoid two models with the same name in scope
+            // i.e. SCRUM_Pakchoi (cultivar) and SCRUM_Pakchoi (ScrumCropInstance). This caused problems with
+            // report: [SCRUM_Pakchoi].ProductHarvested.Wt would fail because [SCRUM_Pakchoi] would find the
+            // cultivar, not the ScrumCropInstance leading to ProductHarvested not found.
+            currentCrop.Name += "Cultivar";
             scrum.AddCultivar(currentCrop);
             double cropPopulation = 1.0;
             double rowWidth = 0.0;
-            scrum.Sow(cultivar: CropName, population: cropPopulation, depth: PlantingDepth, rowSpacing: rowWidth, maxCover: MaxCover);
+            scrum.Sow(cultivar: currentCrop.Name, population: cropPopulation, depth: PlantingDepth, rowSpacing: rowWidth, maxCover: MaxCover);
             if (management.EstablishStage.ToString() != "Seed")
             {
                 phenology.SetToStage(StageNumbers[management.EstablishStage.ToString()]);
