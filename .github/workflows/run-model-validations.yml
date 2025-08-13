@@ -10,10 +10,7 @@ env:
 on:
   push:
   pull_request_target:
-    # branches: [ master ]
-    # types: [ opened, edited, reopened, synchronize]
-    # branches: [ master ]
-    # types: [ opened ]
+    branches: [ master ]
 
 jobs:
   run-model-validations:
@@ -22,8 +19,11 @@ jobs:
     env:
       ALL_APSIM_FILES: ""
     steps:
-
-    - uses: actions/checkout@v4
+    - name: Checkout PR branch code
+      uses: actions/checkout@v4
+      with:
+        repository: ${{github.event.pull_request.head.repo.full_name}}
+        ref: ${{github.event.pull_request.head.ref}}
 
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v4
