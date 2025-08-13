@@ -65,7 +65,7 @@ namespace UserInterface.Presenters
 
             // Populate the graph.
             this.graph = Utility.Graph.CreateGraphFromResource("ApsimNG.Resources.XYPairsGraph.xml");
-            this.xYPairs.Children.Add(this.graph);
+            this.xYPairs.Node.AddChild(this.graph);
             this.graph.Parent = this.xYPairs;
             (this.graph.Series[0] as Series).XFieldName = graph.Parent.FullPath + ".X";
             (this.graph.Series[0] as Series).YFieldName = graph.Parent.FullPath + ".Y";

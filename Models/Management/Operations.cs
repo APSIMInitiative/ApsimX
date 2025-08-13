@@ -142,9 +142,11 @@ namespace Models
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Factorial.CompositeFactor))]
     [ValidParent(ParentType = typeof(Factorial.Factor))]
-    public class Operations : Model, ILocatorDependency
+    public class Operations : Model, IStructureDependency
     {
-        [NonSerialized] private ILocator locator;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
         /// <summary>The clock</summary>
         [Link] IClock Clock = null;
@@ -153,8 +155,6 @@ namespace Models
         /// <value>The schedule.</value>
         public List<Operation> OperationsList { get; set; }
 
-        /// <summary>Locator supplied by APSIM kernel.</summary>
-        public void SetLocator(ILocator locator) => this.locator = locator;
 
         /// <summary>
         /// Invoked at start of simulation.
@@ -263,7 +263,7 @@ namespace Models
                         string variableName = st;
                         string value = StringUtilities.SplitOffAfterDelimiter(ref variableName, "=").Trim();
                         variableName = variableName.Trim();
-                        var ivariable = locator.GetObject(variableName);
+                        var ivariable = Structure.GetObject(variableName);
                         if (ivariable.Writable)
                             ivariable.Value = value;
                         else
@@ -280,7 +280,7 @@ namespace Models
                         string modelName = st.Substring(0, posPeriod);
                         string methodName = st.Substring(posPeriod + 1).Replace(";", "").Trim();
 
-                        Model model = locator.GetObject(modelName)?.Value as Model;
+                        Model model = Structure.GetObject(modelName)?.Value as Model;
                         if (model == null)
                             throw new ApsimXException(this, "Cannot find model: " + modelName);
 

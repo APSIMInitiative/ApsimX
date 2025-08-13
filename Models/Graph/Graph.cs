@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Graphing;
 using Models.Core;
@@ -27,8 +28,12 @@ namespace Models
     [ValidParent(ParentType = typeof(Sobol))]
     [ValidParent(ParentType = typeof(Folder))]
     [ValidParent(ParentType = typeof(GraphPanel))]
-    public class Graph : Model
+    public class Graph : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>The data tables on the graph.</summary>
         [NonSerialized]
         private Dictionary<string, DataTable> tables = new Dictionary<string, DataTable>();
@@ -107,6 +112,27 @@ namespace Models
                         .Where(g => g.Enabled)
                         .SelectMany(g => g.GetAnnotations());
         }
+        
+        
+        /// <summary>
+        /// Get the axis for the position
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        /// 
+
+        public Axis GetAxis(AxisPosition position)
+        {
+            foreach (Axis axis in Axis)
+            {
+                if (axis.Position == position)
+                    return axis;
+
+            }
+
+            throw new Exception("Axis position not valid");
+        }
 
         /// <summary>
         /// Ensure that we have all necessary axis objects.
@@ -168,7 +194,7 @@ namespace Models
             // Using the graphpage API - this will load each series' data in parallel.
             GraphPage page = new GraphPage();
             page.Graphs.Add(this);
-            return page.GetAllSeriesDefinitions(Parent, FindInScope<IDataStore>()?.Reader).FirstOrDefault()?.SeriesDefinitions;
+            return page.GetAllSeriesDefinitions(Parent, Structure.Find<IDataStore>()?.Reader).FirstOrDefault()?.SeriesDefinitions;
         }
 
         /// <summary>

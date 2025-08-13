@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Climate;
@@ -20,8 +21,13 @@ namespace Models
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
-    public class MicroClimate : Model
+    public class MicroClimate : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
+
         /// <summary>The clock</summary>
         [Link]
         private IClock clock = null;
@@ -237,9 +243,9 @@ namespace Models
                 throw new Exception($"Error in microclimate: reference height must be between 1 and 10. Actual value is {ReferenceHeight}");
             microClimatesZones = new List<MicroClimateZone>();
             foreach (Zone newZone in this.Parent.FindAllDescendants<Zone>())
-                microClimatesZones.Add(new MicroClimateZone(clock, newZone, MinimumHeightDiffForNewLayer));
+                microClimatesZones.Add(new MicroClimateZone(clock, newZone, Structure, MinimumHeightDiffForNewLayer));
             if (microClimatesZones.Count == 0)
-                microClimatesZones.Add(new MicroClimateZone(clock, this.Parent as Zone, MinimumHeightDiffForNewLayer));
+                microClimatesZones.Add(new MicroClimateZone(clock, this.Parent as Zone, Structure, MinimumHeightDiffForNewLayer));
         }
 
         /// <summary>Called when the canopy energy balance needs to be calculated.</summary>
@@ -263,6 +269,7 @@ namespace Models
                 if ((ZoneMC.Zone.CanopyType != "BroadAcre")&&(ZoneMC.Zone.CanopyType != null))
                 {
                     canopyType = ZoneMC.Zone.CanopyType;
+                    ZoneMC.RadiationModel = canopyType;
                 }
             }
 
@@ -277,15 +284,22 @@ namespace Models
             {
                 MicroClimateZone tallest = new MicroClimateZone(new RectangularZone((microClimatesZones[0].Zone as RectangularZone).Length, 0));
                 MicroClimateZone shortest = new MicroClimateZone(new RectangularZone((microClimatesZones[0].Zone as RectangularZone).Length, 0));
-                if (microClimatesZones[0].DeltaZ.Sum() > microClimatesZones[1].DeltaZ.Sum())
+                if (microClimatesZones.Count == 1)
                 {
                     tallest = microClimatesZones[0];
-                    shortest = microClimatesZones[1];
                 }
                 else
                 {
-                    tallest = microClimatesZones[1];
-                    shortest = microClimatesZones[0];
+                    if (microClimatesZones[0].DeltaZ.Sum() > microClimatesZones[1].DeltaZ.Sum())
+                    {
+                        tallest = microClimatesZones[0];
+                        shortest = microClimatesZones[1];
+                    }
+                    else
+                    {
+                        tallest = microClimatesZones[1];
+                        shortest = microClimatesZones[0];
+                    }
                 }
 
                 if (canopyType == "TreeRow")
@@ -336,8 +350,11 @@ namespace Models
                 throw new Exception("tree zone radiation interception requires zone and alley lengths to be the same.");
 
             double TreeZoneArea = (treeZone.Zone as Zones.RectangularZone).Area * 10000;
+            treeZone.AreaM2 = TreeZoneArea;
             double AlleyZoneArea = (alleyZone.Zone as Zones.RectangularZone).Area * 10000;
-            double SimulatoinArea = TreeZoneArea + AlleyZoneArea;
+            alleyZone.AreaM2 = AlleyZoneArea;
+            double SimulationArea = TreeZoneArea + AlleyZoneArea;
+
             treeZone.IncomingRs = TreeZoneArea * weather.Radn; //Overwrite base value with area adjusted value
             alleyZone.IncomingRs = AlleyZoneArea * weather.Radn; //Overwrite base value with area adjusted value
 
@@ -362,6 +379,8 @@ namespace Models
                     TreeCanopyWidth = Math.Min(TreeCanopyWidth, TreeZoneWidth + AlleyZoneWidth);
                 double TreeCanopyArea = TreeCanopyWidth * Math.Min(TreeCanopyWidth, TreeZoneLength); //Cap width of the canopy in the length dirrection to the inter row spacing (which sets Tree zone length) so the canopy widght can't exceed the inter row spacing
                 double TreeCanopyBaseHeight = TreeCanopyHeight - TreeCanopyDepth;
+                treeZone.SimulationAreaM2 = SimulationArea;
+                alleyZone.SimulationAreaM2 = SimulationArea;
                 double AlleyCropCanopyHeight = alleyZone.DeltaZ.Sum();
                 if ((AlleyCropCanopyHeight > TreeCanopyBaseHeight) & (treeZone.DeltaZ.Length > 1))
                     throw (new Exception("Height of the alley canopy must not exceed the base height of the tree canopy"));
@@ -383,31 +402,30 @@ namespace Models
                 double FradCrop = 1 - FTransCrop; //Fraction of radiation reaching the alley surface that is intercepted by the understory crop
 
                 //First tree canopy intercepts radiation
-                double IncidentRadn = Math.Max(SimulatoinArea, TreeCanopyArea) * weather.Radn;
-                double TreeCanopyTopRadInt = IncidentRadn * TreeCanopyArea / SimulatoinArea * (1 - FtransTree); //Radiation that strikes the top of the tree canpy and is intercepted
-                double TreeCanopySideRadInt = IncidentRadn * TreeCanopyGap / SimulationWidth * (1-FpassingTreeBB); //Radiation that is in the gap at the top of the canopy but is intercepted by the sides of the canopy in the gap.
+                double IncidentRadn = Math.Max(SimulationArea, TreeCanopyArea) * weather.Radn;
+                double TreeCanopyTopRadInt = IncidentRadn * Math.Min(1,TreeCanopyArea / SimulationArea) * (1 - FtransTree); //Radiation that strikes the top of the tree canpy and is intercepted
+                double TreeCanopySideRadInt = IncidentRadn * TreeCanopyGap / SimulationWidth * (1-FpassingTreeBB) * (1 - FtransTree); //Radiation that is in the gap at the top of the canopy but is intercepted by the sides of the canopy in the gap.
                 double TreeCanopyRadInt = TreeCanopyTopRadInt + TreeCanopySideRadInt; //Radiation (MJ) intercepted by the tree canopy
                 for (int j = 0; j <= treeZone.Canopies.Count - 1; j++)
                 {
-                    treeZone.Canopies[j].Rs[1] = TreeCanopyRadInt * treeZone.Canopies[j].Canopy.CoverTotal;
-                    treeZone.Canopies[j].AreaM2 = TreeCanopyArea;
+                    treeZone.Canopies[j].Rs[1] = TreeCanopyRadInt/ SimulationArea * treeZone.Canopies[j].Ftot[1]; //Normalise back to m2 so it gells with the rest of micro climate
                 }
                 double RadnRemaining = IncidentRadn - TreeCanopyRadInt;
 
-                //The we partition transmitted radiation between the row and alley understory
+                //Then we partition transmitted radiation between the row and alley understory
                 //Understory soil in row zone gets its share based on relative area
-                double RowZoneUnderStorySoilRad = RadnRemaining * TreeZoneWidth/SimulationWidth*FpassingCropBB;
-                treeZone.SurfaceRs = RowZoneUnderStorySoilRad;
+                double RowZoneUnderStorySoilRad = RadnRemaining * TreeZoneWidth/Math.Max(SimulationWidth,TreeCanopyWidth)*FpassingCropBB;
+                treeZone.SurfaceRs = RowZoneUnderStorySoilRad/TreeZoneArea;
                 RadnRemaining -= RowZoneUnderStorySoilRad;
 
-                //Then do top down radiation partitioning in the alley with the remaining radiation 
-                CalculateLayeredShortWaveRadiation(alleyZone, RadnRemaining);
+                //Then do top down radiation partitioning in the alley with the remaining radiation
+                CalculateLayeredShortWaveRadiation(alleyZone, RadnRemaining/AlleyZoneArea);
 
             }
             else
             {
-                treeZone.SurfaceRs = treeZone.IncomingRs;
-                CalculateLayeredShortWaveRadiation(alleyZone, alleyZone.IncomingRs);
+                treeZone.SurfaceRs = weather.Radn;
+                CalculateLayeredShortWaveRadiation(alleyZone, weather.Radn);
             }
         }
 

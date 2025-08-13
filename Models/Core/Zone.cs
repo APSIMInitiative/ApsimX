@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using APSIM.Core;
+using DocumentFormat.OpenXml.Office.CustomXsn;
 using Models.Interfaces;
 using Newtonsoft.Json;
 
@@ -17,8 +18,12 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Agroforestry.AgroforestrySystem))]
-    public class Zone : Model, IZone, IScopedModel
+    public class Zone : Model, IZone, IScopedModel, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>
         /// Link to summary, for error/warning reporting.
         /// </summary>
@@ -97,7 +102,7 @@ namespace Models.Core
         /// </summary>
         private void CheckSensibility()
         {
-            if (FindInScope<MicroClimate>() == null)
+            if (Structure.Find<MicroClimate>() == null)
                 summary.WriteMessage(this, "MicroClimate not found", MessageType.Warning);
         }
 

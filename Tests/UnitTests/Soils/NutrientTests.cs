@@ -35,7 +35,7 @@ namespace UnitTests.SurfaceOrganicMatterTests
             Runner.Run();
 
             // Get the output data table.
-            var storage = file.FindInScope<IDataStore>();
+            var storage = file.Node.Find<IDataStore>();
             List<string> fieldNames = new() { "sum(Nutrient.TotalC)" };
             DataTable data = storage.Reader.GetData("Report", fieldNames: fieldNames);
 

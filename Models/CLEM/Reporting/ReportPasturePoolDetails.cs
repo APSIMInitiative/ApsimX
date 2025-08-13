@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Resources;
+﻿using APSIM.Core;
+using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
@@ -132,7 +133,7 @@ namespace Models.CLEM.Reporting
 
             // for each grazefoodstore
 
-            ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
+            ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
             if (resHolder is null)
                 return;
 
@@ -152,7 +153,7 @@ namespace Models.CLEM.Reporting
             if (ReportPoolsNitrogen) poolEntries.Add("Nitrogen");
             if (ReportPoolsDMD) poolEntries.Add("DMD");
 
-            foreach (GrazeFoodStoreType pasture in FindAllInScope<GrazeFoodStoreType>())
+            foreach (GrazeFoodStoreType pasture in Structure.FindAll<GrazeFoodStoreType>())
             {
                 // pasture based measures
                 foreach (string pastureVariable in pastureEntries)

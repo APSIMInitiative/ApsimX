@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 197,
+  "Version": 199,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -2261,6 +2261,10 @@
           "DMDemand": null,
           "NDemand": null,
           "potentialDMAllocation": null,
+          "WaterUptakeSupply": null,
+          "NitrogenUptakeSupply": null,
+          "WaterTakenUp": null,
+          "NitrogenTakenUp": null,
           "GrowthRespiration": 0.0,
           "MaintenanceRespiration": 0.0,
           "Name": "Root",
@@ -2665,12 +2669,14 @@
                                       "X": [
                                         3.0,
                                         5.0,
-                                        6.0
+                                        6.0,
+                                        9.0
                                       ],
                                       "Y": [
                                         0.5,
                                         0.2,
-                                        0.2
+                                        0.2,
+                                        0.0
                                       ],
                                       "Name": "XYPairs",
                                       "ResourceName": null,
@@ -3502,7 +3508,7 @@
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.5,
                   "Units": null,
-                  "Name": "BaseValue",
+                  "Name": "VegetativePhase",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -3566,7 +3572,7 @@
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.5,
                   "Units": null,
-                  "Name": "BaseValue",
+                  "Name": "VegetativePhase",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -3629,8 +3635,8 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].ExtinctionCoefficient.BaseValue",
-                          "Name": "BaseValue",
+                          "VariableName": "[Leaf].ExtinctionCoefficient.VegetativePhase",
+                          "Name": "VegetativePhase",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -6528,38 +6534,147 @@
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "$type": "Models.Functions.PhaseLookup, Models",
                   "Name": "PartitionFraction",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        5.0,
-                        5.5,
-                        6.0,
-                        8.5,
-                        9.0
-                      ],
-                      "Y": [
-                        0.0,
-                        0.0,
-                        0.5,
-                        0.5,
-                        0.0
-                      ],
-                      "Name": "XYPairs",
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "FlagLeafAppearance",
+                      "End": "MaximumGrainLength",
+                      "Name": "SpikeGrowthPhase",
                       "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].Stage",
-                      "Name": "XValue",
-                      "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.BoundFunction, Models",
+                          "Name": "Fraction",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 1.0,
+                              "Units": null,
+                              "Name": "Upper",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Lower",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.SubtractFunction, Models",
+                              "Name": "Fraction",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 1.0,
+                                  "Units": null,
+                                  "Name": "One",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.DivideFunction, Models",
+                                  "Name": "GrainFraction",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Grain].DMDemand.Total",
+                                      "Name": "GrainDemand",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Arbitrator].TotalDMFixationSupply",
+                                      "Name": "TotalSupply",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.DivideFunction, Models",
+                                  "Name": "StemFraction",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Stem].DMDemand.Total",
+                                      "Name": "StemDemand",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Arbitrator].TotalDMFixationSupply",
+                                      "Name": "TotalSupply",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.DivideFunction, Models",
+                                  "Name": "RootFraction",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Root].DMDemand.Total",
+                                      "Name": "RootDemand",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Arbitrator].TotalDMFixationSupply",
+                                      "Name": "TotalSupply",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -7552,7 +7667,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.3,
+                          "FixedValue": 0.5,
                           "Units": null,
                           "Name": "StemFraction",
                           "ResourceName": null,

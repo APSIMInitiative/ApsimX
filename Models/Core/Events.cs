@@ -33,7 +33,7 @@ namespace Models.Core
             modelsToInspectForSubscribers.AddRange(relativeTo.FindAllDescendants());
 
             // Get a list of models in scope that publish events.
-            var modelsToInspectForPublishers = relativeTo.Node.WalkScopedModels<IModel>().ToList();
+            var modelsToInspectForPublishers = relativeTo.Node.FindAll<IModel>().ToList();
 
             // Get a complete list of all models in scope
             var publishers = Publisher.FindAll(modelsToInspectForPublishers);
@@ -222,7 +222,7 @@ namespace Models.Core
         private List<Subscriber> FindAllSubscribers(string name, IModel relativeTo)
         {
             List<Subscriber> subscribers = new List<Subscriber>();
-            foreach (IModel modelNode in relativeTo.Node.WalkScopedModels<IModel>())
+            foreach (IModel modelNode in relativeTo.Node.FindAll<IModel>())
             {
                 List<(MethodInfo, string)> eventHandlers = GetEventHandlersForModel(modelNode);
                 foreach (var method in eventHandlers)

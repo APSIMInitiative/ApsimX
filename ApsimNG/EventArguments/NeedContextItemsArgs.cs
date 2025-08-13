@@ -85,7 +85,7 @@
         /// <param name="publishedEvents">If true, published events will be returned.</param>
         /// <param name="subscribedEvents">If true, subscribed events will be returned.</param>
         /// <returns>List of completion options.</returns>
-        public static List<ContextItem> ExamineTypeForContextItems(Type atype, bool properties, bool methods, bool publishedEvents, bool subscribedEvents)
+        private static List<ContextItem> ExamineTypeForContextItems(Type atype, bool properties, bool methods, bool publishedEvents, bool subscribedEvents)
         {
             List<ContextItem> allItems = new List<ContextItem>();
 
@@ -104,7 +104,7 @@
                             IsWriteable = property.CanWrite,
                             TypeName = GetTypeName(property.PropertyType),
                             Descr = GetDescription(property),
-                            Units = ReflectionUtilities.GetAttribute(property, typeof(UnitsAttribute), false).ToString()
+                            Units = ReflectionUtilities.GetAttribute(property, typeof(UnitsAttribute), false)?.ToString()
                         };
                         allItems.Add(item);
                     }
@@ -206,6 +206,9 @@
         /// <returns>List of completion options.</returns>
         private static List<ContextItem> ExamineObjectForContextItems(object o, bool properties, bool methods, bool publishedEvents, bool subscribedEvents)
         {
+            if (o is Node)
+                o = (o as Node).Model;
+
             List<ContextItem> allItems;
             Type objectType = o is Type ? o as Type : o.GetType();
             allItems = ExamineTypeForContextItems(objectType, properties, methods, publishedEvents, subscribedEvents);
@@ -230,61 +233,6 @@
                 allItems.Sort(delegate (ContextItem c1, ContextItem c2) { return c1.Name.CompareTo(c2.Name); });
             }
             return allItems;
-        }
-
-        /// <summary>
-        /// The view is asking for variable names.
-        /// </summary>
-        /// <param name="relativeTo">Model in the simulations tree which owns the editor.</param>
-        /// <param name="objectName">Fully- or partially-qualified object name for which we want completion options.</param>
-        /// <param name="properties">If true, property suggestions will be generated.</param>
-        /// <param name="methods">If true, method suggestions will be generated.</param>
-        /// <param name="events">If true, event suggestions will be generated.</param>
-        /// <returns>List of completion options.</returns>
-        public static List<ContextItem> ExamineModelForNames(IModel relativeTo, string objectName, bool properties, bool methods, bool events)
-        {
-            // TODO : refactor cultivar and report activity ledger presenters so they use the intellisense presenter.
-            // These are the only two presenters which still use this intellisense method.
-            if (objectName == string.Empty)
-                objectName = ".";
-
-            object o = null;
-            IModel replacementModel = relativeTo.Node.Get(".Simulations.Replacements") as IModel;
-            if (replacementModel != null)
-            {
-                try
-                {
-                    o = replacementModel.Node.Get(objectName) as IModel;
-                }
-                catch (Exception) { }
-            }
-
-            if (o == null)
-            {
-                try
-                {
-                    o = relativeTo.Node.Get(objectName);
-                }
-                catch (Exception) { }
-            }
-
-            if (o == null && Folder.IsModelReplacementsFolder(relativeTo.Parent))
-            {
-                // Model 'relativeTo' could be under replacements. Look for the first simulation and try that.
-                IModel simulation = relativeTo.Parent.Parent.FindInScope<Simulation>();
-                try
-                {
-                    o = simulation.Node.Get(objectName) as IModel;
-                }
-                catch (Exception) { }
-            }
-
-            if (o != null)
-            {
-                return ExamineObjectForContextItems(o, properties, methods, events, false);
-            }
-
-            return new List<ContextItem>();
         }
 
         /// <summary>
@@ -340,7 +288,7 @@
                         textBeforeFirstDot = textBeforeFirstDot.Substring(1, textBeforeFirstDot.Length - 1);
                     else
                         textBeforeFirstDot = textBeforeFirstDot.Substring(0, textBeforeFirstDot.IndexOf('.'));
-                node = relativeTo.FindInScope(textBeforeFirstDot);
+                node = relativeTo.Node.FindInScope(textBeforeFirstDot);
                 if (node == null)
                     node = relativeTo.Node.Get(objectName);
             }
@@ -350,7 +298,7 @@
                 string modelName = matches[0].Value.Replace("[", "").Replace("]", "");
 
                 // Get the node in the simulations tree corresponding to the model name which was surrounded by square brackets.
-                node = relativeTo.FindInScope(modelName);
+                node = relativeTo.Node.FindInScope(modelName);
 
                 // If we're under replacements we won't be able to find some simulation-
                 // related nodes such as weather/soil/etc. In this scenario, we should
@@ -369,7 +317,7 @@
                     relativeTo = relativeTo.FindAncestor<Experiment>();
                     if (relativeTo != null)
                     {
-                        node = relativeTo.FindInScope(modelName);
+                        node = relativeTo.Node.FindInScope(modelName);
                         if (node == null)
                             node = relativeTo.FindAllDescendants().FirstOrDefault(x => x.GetType().Name == modelName);
                     }

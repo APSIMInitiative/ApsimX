@@ -29,9 +29,12 @@ namespace Models.Utilities
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SetModelParamsBySimulation : Model, ILocatorDependency
+    public class SetModelParamsBySimulation : Model, IStructureDependency
     {
-        [NonSerialized] private ILocator locator;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
 
         /// <summary>Location of file with crop specific coefficients</summary>
         [Core.Description("File path for parameter file")]
@@ -94,8 +97,6 @@ namespace Models.Utilities
         [Link(Type = LinkType.Ancestor)]
         private Simulation simulation = null;
 
-        /// <summary>Locator supplied by APSIM kernel.</summary>
-        public void SetLocator(ILocator locator) => this.locator = locator;
 
         ////// This secton contains the components that get values from the csv coefficient file to    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ////// display in the grid view and set them back to the csv when they are changed in the grid !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -204,7 +205,7 @@ namespace Models.Utilities
                                                  CurrentSimulationName + " is not present in the SimulationName column in " + FullFileName);
                     }
                     if (Pval.ToString() != "")
-                        locator.Set(varName, Pval);
+                        Structure.Set(varName, Pval);
                 }
             }
         }

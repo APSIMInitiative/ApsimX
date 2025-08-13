@@ -20,12 +20,12 @@ namespace Models.PMF
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
 
-    public class Organ : Model, IOrgan, IHasDamageableBiomass, ILocatorDependency
+    public class Organ : Model, IOrgan, IHasDamageableBiomass, IStructureDependency
     {
-        [NonSerialized] private ILocator locator;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
-        /// <summary>Locator supplied by APSIM kernel.</summary>
-        public void SetLocator(ILocator locator) => this.locator = locator;
 
         /// <summary>Harvest the organ.</summary>
         /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
@@ -56,7 +56,7 @@ namespace Models.PMF
         ///--------------------------------------------------------------------------------------------------
 
         /// <summary>The parent plant</summary>
-        [Link]
+        [Link(Type = LinkType.Ancestor)]
         public Plant parentPlant = null;
 
         /// <summary>The surface organic matter model</summary>
@@ -103,7 +103,7 @@ namespace Models.PMF
         /// -------------------------------------------------------------------------------------------------
 
         /// <summary>Tolerance for biomass comparisons</summary>
-        protected double tolerence = 3e-12;
+        protected double tolerence = 3e-11;
 
         private double startLiveC { get; set; }
         private double startDeadC { get; set; }
@@ -233,9 +233,9 @@ namespace Models.PMF
         [Units("g/g")]
         public double CritNConc { get; private set; }
 
-        /// <summary>Gets the total (live + dead) dry matter weight (g/m2)</summary>
+        /// <summary>Gets the total (live + dead) dry matter weight (g)</summary>
         [JsonIgnore]
-        [Units("g/m^2")]
+        [Units("g")]
         public double Wt
         {
             get
@@ -244,9 +244,9 @@ namespace Models.PMF
             }
         }
 
-        /// <summary>Gets the total (live + dead) carbon weight (g/m2)</summary>
+        /// <summary>Gets the total (live + dead) carbon weight (g)</summary>
         [JsonIgnore]
-        [Units("g/m^2")]
+        [Units("g")]
         public double C
         {
             get
@@ -255,9 +255,9 @@ namespace Models.PMF
             }
         }
 
-        /// <summary>Gets the total (live + dead) N amount (g/m2)</summary>
+        /// <summary>Gets the total (live + dead) N amount (g)</summary>
         [JsonIgnore]
-        [Units("g/m^2")]
+        [Units("g")]
         public double N
         {
             get
@@ -546,16 +546,16 @@ namespace Models.PMF
 
         private void checkMassBalance(double startLive, double startDead, string element)
         {
-            double live = (double)(locator.GetObject("Live." + element).Value);
-            double dead = (double)(locator.GetObject("Dead." + element).Value);
-            double allocated = (double)(locator.GetObject("Allocated." + element).Value);
-            double senesced = (double)(locator.GetObject("Senesced." + element).Value);
-            double reAllocated = (double)(locator.GetObject("ReAllocated." + element).Value);
-            double reTranslocated = (double)(locator.GetObject("ReTranslocated." + element).Value);
-            double liveRemoved = (double)(locator.GetObject("LiveRemoved." + element).Value);
-            double deadRemoved = (double)(locator.GetObject("DeadRemoved." + element).Value);
-            double respired = (double)(locator.GetObject("Respired." + element).Value);
-            double detached = (double)(locator.GetObject("Detached." + element).Value);
+            double live = (double)(Structure.GetObject("Live." + element).Value);
+            double dead = (double)(Structure.GetObject("Dead." + element).Value);
+            double allocated = (double)(Structure.GetObject("Allocated." + element).Value);
+            double senesced = (double)(Structure.GetObject("Senesced." + element).Value);
+            double reAllocated = (double)(Structure.GetObject("ReAllocated." + element).Value);
+            double reTranslocated = (double)(Structure.GetObject("ReTranslocated." + element).Value);
+            double liveRemoved = (double)(Structure.GetObject("LiveRemoved." + element).Value);
+            double deadRemoved = (double)(Structure.GetObject("DeadRemoved." + element).Value);
+            double respired = (double)(Structure.GetObject("Respired." + element).Value);
+            double detached = (double)(Structure.GetObject("Detached." + element).Value);
 
             double liveBal = Math.Abs(live - (startLive + allocated - senesced - reAllocated
                                                         - reTranslocated - liveRemoved - respired));

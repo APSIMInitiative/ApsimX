@@ -23,6 +23,7 @@ namespace APSIM.Documentation.Models
         /// <summary>Properties to exclude from the doc.</summary>
         private static string[] propertiesToExclude = new string[] { "Name", "Children", "IsHidden", "IncludeInDocumentation", "Enabled", "ReadOnly" };
 
+
         /// <summary>The maximum length of a type name.</summary>
         private const int maxTypeLength = 30;
 
@@ -97,7 +98,8 @@ namespace APSIM.Documentation.Models
             foreach (FieldInfo field in fields)
             {
                 Type propertyType = field.FieldType;
-                if (propertyType.IsClass && propertyType.Namespace != null && propertyType.Namespace.StartsWith(namespaceToDocument))
+                if (propertyType.IsClass && propertyType.Namespace != null && propertyType.Namespace.StartsWith(namespaceToDocument) &&
+                    propertyType.Name != "Structure")
                 {
                     if (propertyType != modelType && !types.Contains(propertyType))
                         types.Add(propertyType);

@@ -74,7 +74,7 @@ namespace UnitTests.Core
             // Get the tree proxy model instance and initialise it.1
             Utilities.CallEvent(treeProxy, "SimulationCommencing", null);
 
-            SoilState soilState = new(topZone.FindAllChildren<Zone>().Take(1));
+            SoilState soilState = new(topZone.FindAllChildren<Zone>().Take(1), topZone.Node);
             soilState.Zones[0].Water = new double[] { 0.3, 0.3, 0.3 };
             soilState.Zones[0].NO3N = new double[] { 1, 1, 1 };
             treeProxy.GetNitrogenUptakeEstimates(soilState);

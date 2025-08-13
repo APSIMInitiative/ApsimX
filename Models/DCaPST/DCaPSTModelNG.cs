@@ -27,15 +27,14 @@ namespace Models.DCAPST
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(typeof(Zone))]
-    public class DCaPSTModelNG : Model, ILocatorDependency
+    public class DCaPSTModelNG : Model, IStructureDependency
     {
-        [NonSerialized] private ILocator locator;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
-        /// <summary>
-        /// Clock object reference (dcapst needs to know day of year).
-        /// </summary>
         [Link]
-        private readonly IClock clock = null;
+        IClock clock = null;
 
         /// <summary>
         /// Weather provider.
@@ -188,9 +187,6 @@ namespace Models.DCAPST
         /// A static crop parameter generation object.
         /// </summary>
         public static ICropParameterGenerator ParameterGenerator { get; set; } = new CropParameterGenerator();
-
-        /// <summary>Locator supplied by APSIM kernel.</summary>
-        public void SetLocator(ILocator locator) => this.locator = locator;
 
         /// <summary>
         /// Model has been fully created. Initialise.
@@ -435,7 +431,7 @@ namespace Models.DCAPST
             if (string.IsNullOrEmpty(cropName)) return;
             if (plant != null) return;
 
-            plant = FindInScope<IPlant>(CropName);
+            plant = Structure.Find<IPlant>(CropName);
             rootShootRatioFunction = GetRootShootRatioFunction();
             leaf = GetLeaf();
         }
@@ -452,7 +448,7 @@ namespace Models.DCAPST
         {
             if (plant is null) return null;
 
-            var variable = locator.GetObject("[ratioRootShoot]", relativeTo:plant as INodeModel);
+            var variable = Structure.GetObject("[ratioRootShoot]", relativeTo:plant as INodeModel);
             if (variable is null) return null;
             if (variable.Value is not IFunction function) return null;
 
@@ -523,7 +519,7 @@ namespace Models.DCAPST
         /// </summary>
         private IEnumerable<string> GetPlantNames()
         {
-            var plants = FindAllInScope<IPlant>()
+            var plants = Structure.FindAll<IPlant>()
                 .Select(p => p.Name)
                 .Where(name => !string.IsNullOrEmpty(name))
                 .Distinct();

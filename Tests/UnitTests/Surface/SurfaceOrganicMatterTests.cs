@@ -29,7 +29,7 @@ namespace UnitTests.SurfaceOrganicMatterTests
 
             // This simulation needs a weather node, but using a legit
             // met component will just slow down the test.
-            IModel sim = file.FindInScope<Simulation>();
+            IModel sim = file.Node.Find<Simulation>();
             Model weather = new MockWeather();
             sim.Children.Add(weather);
             weather.Parent = sim;
@@ -39,7 +39,7 @@ namespace UnitTests.SurfaceOrganicMatterTests
             Runner.Run();
 
             // Check that the report reported on the correct dates.
-            var storage = file.FindInScope<IDataStore>();
+            var storage = file.Node.Find<IDataStore>();
             List<string> fieldNames = new List<string>() { "doy", "lyingwt" };
 
             DataTable data = storage.Reader.GetData("ReportOnTilled", fieldNames: fieldNames);
