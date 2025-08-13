@@ -1367,7 +1367,7 @@
                 "//[Phenology].PhyllochronPpSensitivity.FixedValue = 2",
                 "//[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
                 "",
-                "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue=0.6"
+                "// [Leaf].ExtinctionCoeff.VegetativePhase.FixedValue=0.6"
               ],
               "Name": "Omaka",
               "ResourceName": null,
