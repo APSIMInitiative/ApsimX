@@ -119,7 +119,7 @@ public class FileFormat
             property.ShouldSerialize = instance =>
             {
                 var attributes = member.GetCustomAttributes();
-                bool propertyHasLinkOrJsonIgnore = attributes.Any(a => a.GetType().Name == "Link" || a.GetType().Name == "JsonIgnore");
+                bool propertyHasLinkOrJsonIgnore = attributes.Any(a => a.GetType().Name == "LinkAttribute" || a.GetType().Name == "JsonIgnoreAttribute");
                 if (propertyHasLinkOrJsonIgnore)
                     return false;
 
@@ -137,7 +137,7 @@ public class FileFormat
                     return false;
 
                 // If a memberinfo has a description attribute serialise it.
-                bool propertyHasDescription = attributes.Any(a => a.GetType().Name == "Description");
+                bool propertyHasDescription = attributes.Any(a => a.GetType().Name == "DescriptionAttribute");
                 if (propertyHasDescription)
                     return true;
 
