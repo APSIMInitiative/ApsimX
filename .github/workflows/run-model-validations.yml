@@ -1,0 +1,148 @@
+name: Model validations
+permissions:
+  contents: read # access to check out code and install dependencies
+
+env:
+  ALL_APSIM_FILES: ""
+  PAYLOAD_FOLDER_PATH: "/home/runner/work/ApsimX/ApsimX/Payload/"
+  
+# Determines when this workflow is triggered. 
+on:
+  pull_request_target:
+    branches: [ master ]
+
+jobs:
+  run-model-validations:
+    name: run-model-validations
+    runs-on: ubuntu-latest
+    env:
+      ALL_APSIM_FILES: ""
+    steps:
+    - name: Checkout PR branch code
+      uses: actions/checkout@v4
+      with:
+        repository: ${{github.event.pull_request.head.repo.full_name}}
+        ref: ${{github.event.pull_request.head.ref}}
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v4
+    
+    - name: Get PR number from GitHub API
+      id: fetch_pr_number
+      run: |
+        echo "URL: https://api.github.com/repos/${{ github.repository }}/commits/${{ github.sha }}/pulls"
+        response=$(curl -L \
+                    -H "Accept: application/vnd.github+json" \
+                    -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+                    -H "X-GitHub-Api-Version: 2022-11-28" \
+                    https://api.github.com/repos/${{ github.repository }}/commits/${{ github.sha }}/pulls)
+        echo "pr_number=$(echo $response | jq -r '.[0].number')" >> "$GITHUB_OUTPUT"
+
+    - name: Extract password protected datasets
+      id: extract_password_protected_datasets
+      env:
+        SOYBEAN_PASSWORD: ${{ secrets.SOYBEAN_PASSWORD }}
+        CORNSOY_PASSWORD: ${{ secrets.CORNSOY_PASSWORD }}
+        SWIM_PASSWORD: ${{ secrets.SWIM_PASSWORD }}
+      run: |
+        echo "Extracting password protected datasets..."
+        test -z "$SOYBEAN_PASSWORD" && echo "SOYBEAN_PASSWORD is empty" || echo "SOYBEAN_PASSWORD is set"
+        test -z "$CORNSOY_PASSWORD" && echo "CORNSOY_PASSWORD is empty" || echo "CORNSOY_PASSWORD is set"
+        test -z "$SWIM_PASSWORD" && echo "SWIM_PASSWORD is empty" || echo "SWIM_PASSWORD is set"
+
+        soybean=/home/runner/work/ApsimX/ApsimX/Tests/Validation/Soybean
+        cornsoy=/home/runner/work/ApsimX/ApsimX/Tests/Validation/System/FACTS_CornSoy
+        swim=/home/runner/work/ApsimX/ApsimX/Tests/Validation/SWIM
+
+        7z -p"$SOYBEAN_PASSWORD" x $soybean/ObservedFACTS.7z -o$soybean
+        7z -p"$CORNSOY_PASSWORD" x $cornsoy/FACTS_CornSoy.7z -o$cornsoy
+        7z -p"$SWIM_PASSWORD" x $swim/WaterTableSWIM_ISU_tests_May2022.7z -o$swim
+
+    - name: Build Models
+      run: |
+        cd Models
+        dotnet publish -f net8.0 -o ../app
+
+    - name: Build APSIM.Workflow
+      run: |
+        cd APSIM.Workflow
+        dotnet publish -f net8.0
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Extract metadata (tags, labels) for Docker for apsimplusr
+      id: meta_apsimplusr
+      uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+      with:
+        images: ric394/apsimplusr
+        flavor: latest=true
+        tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+
+    - name: Build and push apsimplusr Docker image
+      id: apsimplusr_push
+      uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+      with:
+        context: .
+        file: ./Dockerfiles/models_r_dockerfile
+        target: base
+        push: true
+        tags: ${{ steps.meta_apsimplusr.outputs.tags }}
+        labels: ${{ steps.meta_apsimplusr.outputs.labels }}       
+
+    - name: Create Azure Validation Jobs
+      id: submit_azure_jobs
+      run: |
+
+        # Check payload directory exists and create it if not
+        if test -d "${PAYLOAD_FOLDER_PATH}"; then
+          echo "Directory exists."
+        else
+          echo "Directory does not exist. Making directory..."
+          mkdir -p "${PAYLOAD_FOLDER_PATH}"
+        fi
+
+        # Add .env to payload directory
+        echo "Adding .env file to ${PAYLOAD_FOLDER_PATH}"
+        echo "${{ secrets.AZURE_ENV_CONTENTS }}" > "${PAYLOAD_FOLDER_PATH}/.env"
+        if test -f "${PAYLOAD_FOLDER_PATH}/.env"; then
+          echo ".env successfully added to ${PAYLOAD_FOLDER_PATH}"
+        fi
+
+        # Tell POStats2 to open and get ready to accept data
+        echo "Opening POStats2 to accept data..."
+        echo "Pull Request Number: ${{ steps.fetch_pr_number.outputs.pr_number }}" 
+        echo "Commit SHA: ${{ github.sha }}"
+        # NOTE: Enable once the workflow is ready for production.
+        commitsha=${{ github.sha }}
+        # commitsha=9ef60f11dd6ceb95c141f00f027637057b2dd0f5
+        author=${{ github.actor }}
+        echo "commitsha variable: ${commitsha}"
+        echo "author variable: ${author}"
+        # pr_number="10271"
+        pr_number=${{ steps.fetch_pr_number.outputs.pr_number }}
+        response=$(curl "https://postats2.apsim.info/api/open?pullrequestnumber=${pr_number}&commitid=${commitsha}&author=${author}&count=0") # count needs to be a proper number later
+        echo "POStats2 open response: ${response}"
+        echo "Start creating payload..."
+        dotnet ./bin/Release/net8.0/APSIM.Workflow.dll --payload-directory "${PAYLOAD_FOLDER_PATH}" -g "$author" -t $DOCKER_METADATA_OUTPUT_VERSION --commit-sha "$commitsha" --pr-number ${pr_number} -v
+
+    - name: Print workflow submit success summary markdown
+      if: success()
+      run: |
+        echo "## Workflow submit success summary :tada:" >> $GITHUB_STEP_SUMMARY
+        echo 'All jobs submitted to Azure successfully!' >> $GITHUB_STEP_SUMMARY
+        echo 'Run logs and predicted/observed metrics for this validation run can be viewed at [POStats2](https://postats2.apsim.info/${{ steps.fetch_pr_number.outputs.pr_number }})' >> $GITHUB_STEP_SUMMARY
+        echo 'Note: The validation results may take some time to appear.' >> $GITHUB_STEP_SUMMARY
+
+    - name: Print workflow submit failure summary markdown
+      if: failure()
+      run: |
+        echo "## Workflow submit failure summary :sob:" >> $GITHUB_STEP_SUMMARY
+        echo "The workflow failed to submit all jobs to Azure." >> $GITHUB_STEP_SUMMARY
+        echo "Reason: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+        echo "Please check the logs for more information: [POStats2](https://postats2.apsim.info/${{ steps.fetch_pr_number.outputs.pr_number }}) " >> $GITHUB_STEP_SUMMARY
