@@ -64,19 +64,24 @@ public class ModelToSheetDataProvider
         var chemical = properties.First().Obj as Chemical;
 
         int insertIndex = 1;  // Assumes depth is the first column.
-        foreach (var solute in Chemical.GetStandardisedSolutes(chemical))
+        Soil standardisedSoil = chemical.Parent as Soil;
+        if (standardisedSoil != null)
         {
-            DataProviderFactory.Create(solute, (soluteProperties) =>
+            standardisedSoil = standardisedSoil.CloneAndSanitise(chemical.Thickness);
+            foreach (var solute in standardisedSoil.FindAllChildren<Solute>())
             {
-                var initialValues = soluteProperties.Find(p => p.Alias == "InitialValues");
-                if (initialValues != null)
+                DataProviderFactory.Create(solute, (soluteProperties) =>
                 {
-                    initialValues.Alias = solute.Name;
-                    initialValues.Metadata = Enumerable.Repeat(SheetCellState.ReadOnly, solute.Thickness.Length).ToList();
-                    properties.Insert(insertIndex, initialValues);
-                    insertIndex++;
-                }
-            });
+                    var initialValues = soluteProperties.Find(p => p.Alias == "InitialValues");
+                    if (initialValues != null)
+                    {
+                        initialValues.Alias = solute.Name;
+                        initialValues.Metadata = Enumerable.Repeat(SheetCellState.ReadOnly, solute.Thickness.Length).ToList();
+                        properties.Insert(insertIndex, initialValues);
+                        insertIndex++;
+                    }
+                });
+            }
         }
     }
 
