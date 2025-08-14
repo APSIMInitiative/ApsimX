@@ -116,7 +116,6 @@ jobs:
 
         # Tell POStats2 to open and get ready to accept data
         echo "Opening POStats2 to accept data..."
-        echo "Pull Request Number: ${{ steps.fetch_pr_number.outputs.pr_number }}" 
         echo "Commit SHA: ${{ github.sha }}"
         # NOTE: Enable once the workflow is ready for production.
         commitsha=${{ github.sha }}
@@ -124,8 +123,11 @@ jobs:
         author=${{ github.actor }}
         echo "commitsha variable: ${commitsha}"
         echo "author variable: ${author}"
-        # pr_number="10271"
-        pr_number=${{ steps.fetch_pr_number.outputs.pr_number }}
+        # substrings the variable so we get the number only after the 'pr-' part.
+        pr_number="${{ steps.meta_apsimplusr.outputs.labels['org.opencontainers.image.version']}}:3"
+        echo "pr_number variable: ${pr_number}"
+        # makes the variable available in subsequent steps.
+        echo "pr_number=${pr_number}" >> "$GITHUB_OUTPUT"
         response=$(curl "https://postats2.apsim.info/api/open?pullrequestnumber=${pr_number}&commitid=${commitsha}&author=${author}&count=0") # count needs to be a proper number later
         echo "POStats2 open response: ${response}"
         echo "Start creating payload..."
@@ -136,7 +138,7 @@ jobs:
       run: |
         echo "## Workflow submit success summary :tada:" >> $GITHUB_STEP_SUMMARY
         echo 'All jobs submitted to Azure successfully!' >> $GITHUB_STEP_SUMMARY
-        echo 'Run logs and predicted/observed metrics for this validation run can be viewed at [POStats2](https://postats2.apsim.info/${{ steps.fetch_pr_number.outputs.pr_number }})' >> $GITHUB_STEP_SUMMARY
+        echo 'Run logs and predicted/observed metrics for this validation run can be viewed at [POStats2](https://postats2.apsim.info/${{ steps.submit_azure_jobs.outputs.pr_number }})' >> $GITHUB_STEP_SUMMARY
         echo 'Note: The validation results may take some time to appear.' >> $GITHUB_STEP_SUMMARY
 
     - name: Print workflow submit failure summary markdown
@@ -145,4 +147,4 @@ jobs:
         echo "## Workflow submit failure summary :sob:" >> $GITHUB_STEP_SUMMARY
         echo "The workflow failed to submit all jobs to Azure." >> $GITHUB_STEP_SUMMARY
         echo "Reason: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
-        echo "Please check the logs for more information: [POStats2](https://postats2.apsim.info/${{ steps.fetch_pr_number.outputs.pr_number }}) " >> $GITHUB_STEP_SUMMARY
+        echo "Please check the logs for more information: [POStats2](https://postats2.apsim.info/${{ steps.submit_azure_jobs.outputs.pr_number }}) " >> $GITHUB_STEP_SUMMARY
