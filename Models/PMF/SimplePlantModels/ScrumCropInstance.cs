@@ -800,7 +800,7 @@ namespace Models.PMF.SimplePlantModels
             scrum.EndCrop();
 
             // remove this crop instance from SCRUM and reset parameters
-            scrum.Children.Remove(currentCrop);
+            scrum.Node.RemoveChild(currentCrop);
             cropEstablished = false;
             cropTerminating = true;
         }
