@@ -1,15 +1,11 @@
 ﻿using APSIM.Core;
 using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Drawing.Diagrams;
-using Gtk;
 using Models;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Models.Core.Run;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Abstractions;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
