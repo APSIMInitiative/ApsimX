@@ -144,12 +144,15 @@ namespace APSIM.Shared.Utilities
                 if (cell.DataType == null)
                     // NOTE: Default is a number.
                     return cell?.CellValue?.Text;
-                return cell.DataType.Value switch
-                {
-                    CellValues.SharedString => sharedStrings[Convert.ToInt32(cell.CellValue.Text)],
-                    CellValues.InlineString => cell.InlineString.Text.Text,
-                    _ => cell.CellValue.Text,
-                };
+                    
+                if (cell.DataType.Value == CellValues.SharedString)
+                    return sharedStrings[Convert.ToInt32(cell.CellValue.Text)];
+
+                if (cell.DataType.Value == CellValues.InlineString)
+                    return cell.InlineString.Text.Text;
+
+                return cell.CellValue.Text;
+
             }
 
             int CellToColumnIndex(Cell cell)
