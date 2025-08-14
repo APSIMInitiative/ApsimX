@@ -78,7 +78,7 @@ jobs:
       id: meta_apsimplusr
       uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
       with:
-        images: ric394/apsimplusr
+        images: apsiminitiative/apsimplusr
         flavor: latest=true
         tags: |
           type=ref,event=branch
