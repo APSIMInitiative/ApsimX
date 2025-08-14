@@ -254,8 +254,8 @@ namespace UserInterface.Presenters
 
             if (this.watcher != null)
             {
-                this.watcher.Changed -= Watcher_Changed;
-                this.watcher.Created -= Watcher_Changed;
+                this.watcher.Changed -= OnWatcherSignal;
+                this.watcher.Created -= OnWatcherSignal;
                 this.watcher.Dispose();
                 this.watcher = null;
             }
@@ -1235,16 +1235,16 @@ namespace UserInterface.Presenters
             // If we already have a watcher, clean it up and dispose of it.
             if (this.watcher != null)
             {
-                this.watcher.Changed -= Watcher_Changed;
-                this.watcher.Created -= Watcher_Changed;
+                this.watcher.Changed -= OnWatcherSignal;
+                this.watcher.Created -= OnWatcherSignal;
                 this.watcher.Dispose();
                 this.watcher = null;
             }
             if (!string.IsNullOrEmpty(ApsimXFile?.FileName))
             {
                 this.watcher = new FileSystemWatcher(Path.GetDirectoryName(ApsimXFile.FileName), Path.GetFileName(ApsimXFile.FileName));
-                watcher.Changed += Watcher_Changed;
-                watcher.Created += Watcher_Changed;
+                watcher.Changed += OnWatcherSignal;
+                watcher.Created += OnWatcherSignal;
                 watcher.EnableRaisingEvents = true;
             }
         }
@@ -1258,23 +1258,17 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Watcher_Changed(object sender, FileSystemEventArgs e)
+        private void OnWatcherSignal(object sender, FileSystemEventArgs e)
         {
             if (DateTime.Now.Subtract(_lastTimeFileWatcherEventRaised).TotalMilliseconds < 100)
                 return;
             _lastTimeFileWatcherEventRaised = DateTime.Now;
             Gtk.Application.Invoke(delegate
             {
-                int result;
-                string message = $"The file {StringUtilities.PangoString(this.ApsimXFile.FileName)} has been modifed by another application."
-                                + "\n \nClick \"Yes\" to reload the file or \"No\" to continue."
-                                + "\n\nWARNING: Any changes you have made here may be lost!";
-                using (MessageDialog md = new MessageDialog((view as ExplorerView).MainWidget.Toplevel as Window, DialogFlags.Modal, Gtk.MessageType.Question, ButtonsType.YesNo, message))
-                {
-                    md.Title = "File changed";
-                    result = md.Run();
-                }
-                if ((ResponseType)result == ResponseType.Yes)
+                QuestionResponseEnum response = MainPresenter.AskQuestion($"The file {StringUtilities.PangoString(this.ApsimXFile.FileName)} has been modifed by another application."
+                   + "\n \nClick \"Yes\" to reload the file or \"No\" to continue."
+                   + "\n\nWARNING: Any changes you have made here may be lost!");
+                if (response == QuestionResponseEnum.Yes)
                     ReloadFile();
             });
         }
