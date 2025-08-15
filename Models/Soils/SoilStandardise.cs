@@ -107,8 +107,10 @@ public static class SoilSanitise
             // Ensure soil has a WaterBalance node.
             var waterBalance = soil.FindChild<WaterBalance>();
             if (waterBalance == null)
-                soil.Node.AddChild(new WaterBalance()
+            {
+                waterBalance = new WaterBalance()
                 {
+                    ResourceName = "WaterBalance",
                     SummerDate = "1-Nov",
                     SummerU = 5.0,
                     SummerCona = 5.0,
@@ -123,10 +125,13 @@ public static class SoilSanitise
                     CNCov = 0.8,
                     Thickness = physical.Thickness,
                     SWCON = MathUtilities.CreateArrayOfValues(0.3, physical.Thickness.Length)
-                });
+                };
+                Node.Create(waterBalance);
+                soil.Node.AddChild(waterBalance);
+            }
 
             // Ensure soil has an Organic node.
-            var organic = soil.FindChild<Organic>();
+                var organic = soil.FindChild<Organic>();
             if (organic == null)
                 soil.Node.AddChild(new Organic()
                 {
@@ -150,16 +155,23 @@ public static class SoilSanitise
             // Ensure soil has an Nutrient node.
             var nutrient = soil.FindChild<Nutrient>();
             if (nutrient == null)
-                soil.Node.AddChild(new Nutrient() { });
+            {
+                nutrient = new Nutrient()
+                {
+                    ResourceName = "Nutrient"
+                };
+                Node.Create(nutrient);
+                soil.Node.AddChild(nutrient);
+            }
 
             // Ensure solutes exist in soil.
-            if (soil.FindChild<Solute>("NO3") == null)
-                soil.Node.AddChild(new Solute()
-                {
-                    Name = "NO3",
-                    Thickness = physical.Thickness,
-                    InitialValues = MathUtilities.CreateArrayOfValues(1.0, physical.Thickness.Length)
-                });
+                if (soil.FindChild<Solute>("NO3") == null)
+                    soil.Node.AddChild(new Solute()
+                    {
+                        Name = "NO3",
+                        Thickness = physical.Thickness,
+                        InitialValues = MathUtilities.CreateArrayOfValues(1.0, physical.Thickness.Length)
+                    });
             if (soil.FindChild<Solute>("NH4") == null)
                 soil.Node.AddChild(new Solute()
                 {
