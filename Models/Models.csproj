@@ -26,7 +26,7 @@
     <ProjectReference Include="..\APSIM.Core\APSIM.Core.csproj" />
     <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj" />
     <PackageReference Include="System.Windows.Extensions" Version="6.0.0.0" />
-    <PackageReference Include="ExcelDataReader.DataSet" Version="3.6.0" />
+    <PackageReference Include="ExcelDataReader.DataSet" Version="3.7.0" />
     <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />

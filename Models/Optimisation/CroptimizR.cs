@@ -449,7 +449,7 @@ namespace Models.Optimisation
                 Status = "Installing R Packages";
                 R r = new R(cancelToken.Token);
                 r.InstallPackages("remotes", "dplyr", "nloptr", "DiceDesign", "DBI", "cli");
-                r.InstallFromGithub("hol430/ApsimOnR", "SticsRPacks/CroptimizR");
+                r.InstallFromGithub("APSIMInitiative/ApsimOnR", "SticsRPacks/CroptimizR");
 
                 Status = "Running Parameter Optimization";
 
