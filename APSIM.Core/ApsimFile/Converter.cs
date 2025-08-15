@@ -6836,15 +6836,6 @@ internal class Converter
         //      FindSibling, FindChild, FindChildren, FindDescendent, FindAncestor
         // is called. Then change the calls to their Structure equivalent.
 
-        // Examples for regex testing:
-        //      var Stem = Tree.FindChild<IHasDamageableBiomass>(\"Stem\");
-        //      foreach (IOrgan organ in species.FindAllChildren<IOrgan>().OfType<IModel>().ToList())
-        //      ScrumCropInstance currentCrop = zone.FindDescendant<ScrumCropInstance>(CropName);
-        //      AgPSpecies = myZone.FindAllChildren<AgPasture.PastureSpecies>().ToList();
-        //      MonthlyHarvestedWt = (Crop.FindChild(\"Grain\") as ReproductiveOrgan).Wt;
-        //      FindDescendant<ScrumCropInstance>(CropName);
-        //      myPhysicals[ paddock ] = myWaterBalances[paddock].FindSibling(\"Physical\") as Physical;
-
         foreach (var manager in JsonUtilities.ChildManagers(root))
         {
             List<Declaration> declarations = null;

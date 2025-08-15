@@ -1,15 +1,14 @@
-﻿using System;
+﻿using APSIM.Core;
+using APSIM.Shared.Utilities;
+using Models;
+using Models.Core;
+using Models.Core.Run;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using APSIM.Core;
-using APSIM.Shared.Utilities;
-using Models;
-using Models.Core;
-using Models.Core.ApsimFile;
-using Models.Core.Run;
 using UserInterface.Commands;
 using UserInterface.Interfaces;
 using UserInterface.Views;
@@ -134,6 +133,24 @@ namespace UserInterface.Presenters
             }
         }
 
+        /// <summary>
+        /// Monitors our associated .apsimx file to detect any changes made by other applications
+        /// </summary>
+        private FileSystemWatcher watcher;
+
+        /// <summary>
+        /// When another application modifies our .apsimx file, multiple notifications may occur 
+        /// (for example, multiple writes to the file) in a short time frame. This variable stores
+        /// the time a notification was received so that subsequent notifications a few milliseconds
+        /// later can be ignored.
+        /// </summary>
+        private DateTime _lastTimeFileWatcherEventRaised;
+
+        /// <summary>
+        /// Set to "true" when an .apsimx file is being re-loaded from disk
+        /// </summary>
+        private bool reloadingFile = false;
+
         private string GetPathToNode(IModel model)
         {
             if (model is Simulations)
@@ -173,6 +190,7 @@ namespace UserInterface.Presenters
                 this.view.Tree.ExpandNodes(file.ExpandedNodes);
 
             this.PopulateMainMenu();
+            this.CreateWatcher();
 
             // After opening a file, ensure that the root node is selected.
             SelectNode(ApsimXFile, false);
@@ -230,6 +248,13 @@ namespace UserInterface.Presenters
                 // Don't rethrow - this is not a critical operation.
             }
 
+            if (this.watcher != null)
+            {
+                this.watcher.Changed -= OnWatcherSignal;
+                this.watcher.Created -= OnWatcherSignal;
+                this.watcher.Dispose();
+                this.watcher = null;
+            }
             this.view.Tree.SelectedNodeChanged -= this.OnNodeSelected;
             this.view.Tree.DragStarted -= this.OnDragStart;
             this.view.Tree.AllowDrop -= this.OnAllowDrop;
@@ -349,6 +374,7 @@ namespace UserInterface.Presenters
                     Configuration.Settings.Save();
                     MainPresenter.UpdateMRUDisplay();
                     MainPresenter.ShowMessage(string.Format("Successfully saved to {0}", newFileName), Simulation.MessageType.Information);
+                    CreateWatcher();
                     return true;
                 }
                 catch (Exception err)
@@ -363,9 +389,19 @@ namespace UserInterface.Presenters
         /// <summary>Do the actual write to the file</summary>
         /// <param name="fileName">Path to which the file will be saved.</param>
         public void WriteSimulation(string fileName)
-        {
-            ApsimXFile.Write(fileName);
-            CommandHistory.Save();
+        {  
+            if (watcher != null) 
+                watcher.EnableRaisingEvents = false;
+            try
+            {
+                ApsimXFile.Write(fileName);
+                CommandHistory.Save();
+            }
+            finally
+            {
+                if (watcher != null)
+                    watcher.EnableRaisingEvents = true;
+            }
         }
 
         /// <summary>Select a node in the view.</summary>
@@ -916,19 +952,22 @@ namespace UserInterface.Presenters
         /// <param name="e">Node arguments</param>
         private void OnNodeSelected(object sender, NodeSelectedArgs e)
         {
-            try
+            if (!reloadingFile)
             {
-                this.HideRightHandPanel();
-                this.ShowRightHandPanel();
-            }
-            catch (Exception err)
-            {
-                MainPresenter.ShowError(err);
-            }
+                try
+                {
+                    this.HideRightHandPanel();
+                    this.ShowRightHandPanel();
+                }
+                catch (Exception err)
+                {
+                    MainPresenter.ShowError(err);
+                }
 
-            // If an exception is thrown while loding the view, this
-            // shouldn't interfere with the context menu.
-            this.PopulateContextMenu(e.NewNodePath);
+                // If an exception is thrown while loding the view, this
+                // shouldn't interfere with the context menu.
+                this.PopulateContextMenu(e.NewNodePath);
+            }
         }
 
         /// <summary>A node has begun to be dragged.</summary>
@@ -1080,10 +1119,6 @@ namespace UserInterface.Presenters
             }
         }
 
-        #endregion
-
-        #region Privates
-
         /// <summary>
         /// A helper function for creating a node description object for the specified model.
         /// </summary>
@@ -1178,9 +1213,102 @@ namespace UserInterface.Presenters
             return (false, null);
         }
 
+        #endregion
+
+        #region Privates
+
         private static string GetResourceName(string name, string extension)
         {
             return $"ApsimNG.Resources.TreeViewImages.{name}{extension}";
+        }
+
+
+        /// <summary>
+        /// Set up a watcher to detect when another application has modified the file
+        /// </summary>
+        private void CreateWatcher()
+        {
+            // If we already have a watcher, clean it up and dispose of it.
+            if (this.watcher != null)
+            {
+                this.watcher.Changed -= OnWatcherSignal;
+                this.watcher.Created -= OnWatcherSignal;
+                this.watcher.Dispose();
+                this.watcher = null;
+            }
+            if (!string.IsNullOrEmpty(ApsimXFile?.FileName))
+            {
+                this.watcher = new FileSystemWatcher(Path.GetDirectoryName(ApsimXFile.FileName), Path.GetFileName(ApsimXFile.FileName));
+                watcher.Changed += OnWatcherSignal;
+                watcher.Created += OnWatcherSignal;
+                watcher.EnableRaisingEvents = true;
+            }
+        }
+
+        /// <summary>
+        /// Received if and when our associated file has been changed by another application.
+        /// There is an oddity here in that some editors (such as Notepad++) save a file in
+        /// several steps, and we get notified each time, but we only want to give the user a single
+        /// dialog, not several. Hence we ignore any notifications that come within 1/10 second of
+        /// the first.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnWatcherSignal(object sender, FileSystemEventArgs e)
+        {
+            if (DateTime.Now.Subtract(_lastTimeFileWatcherEventRaised).TotalMilliseconds < 100)
+                return;
+            _lastTimeFileWatcherEventRaised = DateTime.Now;
+            Gtk.Application.Invoke(delegate
+            {
+                QuestionResponseEnum response = MainPresenter.AskQuestion($"The file {StringUtilities.PangoString(this.ApsimXFile.FileName)} has been modifed by another application."
+                   + "\n \nClick \"Yes\" to reload the file or \"No\" to continue."
+                   + "\n\nWARNING: Any changes you have made here may be lost!");
+                if (response == QuestionResponseEnum.Yes)
+                    ReloadFile();
+            });
+        }
+
+        /// <summary>
+        /// Reload the simulation file. The "reloadingFile" flag is used to prevents us 
+        /// from trying to update the right-hand panel as the tree is dismantled. 
+        /// </summary>
+        private void ReloadFile()
+        {
+            MainPresenter.ShowWaitCursor(true);
+            reloadingFile = true;
+            try
+            {
+                // Clear simulation messages.
+                MainPresenter.ShowMessage("", Simulation.MessageType.Information, true);
+                var response = FileFormat.ReadFromFileAndReturnConvertState<Simulations>(this.ApsimXFile.FileName, e => MainPresenter.ShowError(e), true);
+                if (response.didConvert)
+                    MainPresenter.ShowMessage($"Simulation has been converted to the latest version: {(response.head.Model as Simulations).Version}", Simulation.MessageType.Information, true);
+                this.ApsimXFile.ClearSimulationReferences();
+                this.ApsimXFile = response.head.Model as Simulations;
+                this.CommandHistory.Clear();
+                this.view.Tree.ContextMenu.Destroy();
+                this.view.Tree.ContextMenu = null;
+                this.mainMenu = new MainMenu(MainPresenter);
+                this.ContextMenu = new ContextMenu(this);
+                this.ApsimXFile.Links.Resolve(ContextMenu);
+                Populate();
+                PopulateMainMenu();
+                SelectNode(ApsimXFile, false);
+                this.PopulateContextMenu(ApsimXFile.FullPath);
+                this.ShowRightHandPanel();
+                MainPresenter.ShowMessage($"File {this.ApsimXFile.FileName} successfully reloaded.", Simulation.MessageType.Information, false);
+            }
+            catch (Exception err)
+            {
+                MainPresenter.ShowError(err);
+                MainPresenter.ShowMessage($"File {this.ApsimXFile.FileName} could not be reloaded.", Simulation.MessageType.Warning, false);
+            }
+            finally
+            {
+                reloadingFile = false;
+                MainPresenter.ShowWaitCursor(false);
+            }
         }
 
         #endregion

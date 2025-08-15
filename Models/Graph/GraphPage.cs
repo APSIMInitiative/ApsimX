@@ -80,8 +80,6 @@ namespace Models
             if (simulation != null && simulation.Parent is Experiment)
                 throw new Exception("Graph scope is incorrect if placed under a Simulation in an Experiment. It should be a child of the Experiment instead.");
 
-
-
             IModel parent = FindParent(model);
             List<SimulationDescription> simulationDescriptions = new List<SimulationDescription>();
             while (simulationDescriptions.Count == 0 && parent != null) {

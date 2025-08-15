@@ -388,15 +388,17 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Finds the 'Soil' node. Try parent first, then a soil in scope.</summary>
+        public Soil Soil => Node?.FindParent<Soil>() ??
+                            Node?.WalkScoped()
+                                ?.FirstOrDefault(n => n.Model is Soil)
+                                ?.Model as Soil;
+
         /// <summary>Finds the 'Physical' node.</summary>
-        public IPhysical Physical => Node?.WalkScoped()
-                                         ?.FirstOrDefault(n => n.Model is IPhysical)
-                                         ?.Model as IPhysical;
+        public IPhysical Physical => Soil?.Node.FindChild<IPhysical>();
 
         /// <summary>Finds the 'SoilWater' node.</summary>
-        public ISoilWater WaterModel => Node?.WalkScoped()
-                                            ?.FirstOrDefault(n => n.Model is ISoilWater)
-                                            ?.Model as ISoilWater;
+        public ISoilWater WaterModel => Soil?.Node.FindChild<ISoilWater>();
 
         /// <summary>Find LL values (mm) for the RelativeTo property.</summary>
         public double[] RelativeToLL
@@ -491,9 +493,9 @@ namespace Models.Soils
                 double airDry = Physical.AirDry[i];
                 double sat = Physical.SAT[i];
                 if (!MathUtilities.FloatsAreEqual(water, airDry) && water < airDry)
-                    throw new Exception($"A water initial value of {water} on layer {i} was less than AirDry of {airDry}. Initial water could not be set.");
+                    throw new Exception($"A water initial value of {water} on layer {i+1} was less than AirDry of {airDry}.");
                 else if (!MathUtilities.FloatsAreEqual(water, sat) && water > sat)
-                    throw new Exception($"A water initial value of {water} on layer {i} was more than Saturation of {sat}. Initial water could not be set.");
+                    throw new Exception($"A water initial value of {water} on layer {i+1} was more than Saturation of {sat}.");
             }
 
             return true;

@@ -27,11 +27,6 @@ namespace Models.DCAPST
             if (sowingParameters.Plant is null) return null;
             if (string.IsNullOrEmpty(sowingParameters.Cultivar)) return null;
 
-            //var cultivar =
-            //    model.FindChild(CULTIVAR_PARAMETERS_FOLDER_NAME)?.
-            //    FindChild(sowingParameters.Plant.Name)?.
-            //    FindChild<Cultivar>(sowingParameters.Cultivar);
-
             var folder = model.Structure.FindChild<Folder>(CULTIVAR_PARAMETERS_FOLDER_NAME);
             if (folder != null)
                 folder = model.Structure.FindChild<Folder>(sowingParameters.Plant.Name, relativeTo: folder);

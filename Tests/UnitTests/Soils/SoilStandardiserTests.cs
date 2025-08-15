@@ -229,15 +229,22 @@
             };
             Node.Create(soil);
             SoilSanitise.InitialiseSoil(soil);
+
+            var waterBalance = soil.Node.FindChild<WaterBalance>();
+            var nutrient = soil.Node.FindChild<Nutrient>();
             Assert.That(soil.Node.FindChild<SoilTemperature>(), Is.Not.Null);
             Assert.That(soil.Node.FindChild<Solute>("NO3"), Is.Not.Null);
             Assert.That(soil.Node.FindChild<Solute>("NH4"), Is.Not.Null);
             Assert.That(soil.Node.FindChild<Solute>("Urea"), Is.Not.Null);
             Assert.That(soil.Node.FindChild<Water>(), Is.Not.Null);
-            Assert.That(soil.Node.FindChild<WaterBalance>(), Is.Not.Null);
+            Assert.That(waterBalance, Is.Not.Null);
             Assert.That(soil.Node.FindChild<Organic>(), Is.Not.Null);
             Assert.That(soil.Node.FindChild<Chemical>(), Is.Not.Null);
-            Assert.That(soil.Node.FindChild<Nutrient>(), Is.Not.Null);
+            Assert.That(nutrient, Is.Not.Null);
+
+            // Ensure that waterbalance and nutrient models have their child models from resource.
+            Assert.That(waterBalance.Children.Count, Is.GreaterThan(0));
+            Assert.That(nutrient.Children.Count, Is.GreaterThan(0));
         }
 
         private Soil CreateSimpleSoil()

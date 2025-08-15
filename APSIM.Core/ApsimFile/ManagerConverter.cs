@@ -703,7 +703,7 @@ internal class ManagerConverter
     }
 
     /// <summary>
-    /// The the value of a manager line.
+    /// The value of a manager line.
     /// </summary>
     /// <param name="lineIndex">The index of the line to set</param>
     /// <param name="contents">The contents of the new line.</param>
