@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.PMF.Interfaces;
@@ -9,7 +10,7 @@ namespace Models.PMF
 {
     /// <summary>
     /// Relative allocation rules used to determine partitioning.
-    /// 
+    ///
     /// Arbitration is performed in two passes for each of the supply sources.
     /// On the first pass, biomass or nutrient supply is allocated to
     /// structural and metabolic pools of each organ based on their demand
@@ -64,13 +65,13 @@ namespace Models.PMF
             var leaf = Organs[leafIndex] as SorghumLeaf;
             var leafAdjustment = leaf.CalculateClassicDemandDelta();
 
-            //var totalPlantNDemand = BAT.TotalPlantDemand + leafAdjustment - grainDemand; // to replicate calcNDemand in old sorghum 
+            //var totalPlantNDemand = BAT.TotalPlantDemand + leafAdjustment - grainDemand; // to replicate calcNDemand in old sorghum
 
             // dh - Old apsim calls organ->calcNDemand() to get demands. This is equivalent to metabolic NDemand in new apsim.
             //      Root and grain had no separation of structural/metabolic N in old apsim. New apsim is similar, except it's all in
             //      structural demand, so we need to remember to take that into account as well.
             double totalDemand = BAT.TotalMetabolicDemand + BAT.StructuralDemand[rootIndex] + BAT.StructuralDemand[grainIndex];
-            double plantNDemand = Math.Max(0, totalDemand - grainDemand); // to replicate calcNDemand in old sorghum 
+            double plantNDemand = Math.Max(0, totalDemand - grainDemand); // to replicate calcNDemand in old sorghum
             if (MathUtilities.IsPositive(plantNDemand))
             {
                 BAT.SupplyDemandRatioN = MathUtilities.Divide(BAT.TotalUptakeSupply, plantNDemand, 0);

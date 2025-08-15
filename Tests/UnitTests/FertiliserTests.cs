@@ -1,4 +1,6 @@
-﻿using APSIM.Shared.Utilities;
+﻿using APSIM.Core;
+using APSIM.Numerics;
+using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
 using Models.Soils;
@@ -40,6 +42,11 @@ namespace UnitTests
             {
                 kgha = MathUtilities.Add(kgha, delta);
             }
+
+            public void AddToLayer(double amount, int layerIndex)
+            {
+                kgha[layerIndex] += amount;
+            }
         }
 
 
@@ -76,7 +83,7 @@ namespace UnitTests
                 ]
             };
             // set up the simulation and all models.
-            simulation.ParentAllDescendants();
+            var tree = Node.Create(simulation);
             var links = new Links();
             links.Resolve(simulation, true);
 
@@ -129,7 +136,7 @@ namespace UnitTests
             };
 
             // set up the simulation and all models.
-            simulation.ParentAllDescendants();
+            Node.Create(simulation);
             var links = new Links();
             links.Resolve(simulation, true);
 
@@ -186,7 +193,7 @@ namespace UnitTests
             };
 
             // set up the simulation and all models.
-            simulation.ParentAllDescendants();
+            Node.Create(simulation);
             var links = new Links();
             links.Resolve(simulation, true);
 
@@ -287,7 +294,7 @@ namespace UnitTests
             };
 
             // set up the simulation and all models.
-            simulation.ParentAllDescendants();
+            Node.Create(simulation);
             var links = new Links();
             links.Resolve(simulation, true);
 

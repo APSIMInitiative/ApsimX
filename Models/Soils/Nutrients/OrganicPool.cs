@@ -1,4 +1,5 @@
-﻿using APSIM.Shared.Extensions.Collections;
+﻿using APSIM.Core;
+using APSIM.Shared.Extensions.Collections;
 using Models.Core;
 using Models.Functions;
 using Newtonsoft.Json;

@@ -24,5 +24,39 @@ namespace Models.Surface
             N = 0;
             P = 0;
         }
+
+        /// <summary>Remove a fraction of the material.</summary>
+        public OMFractionType Remove(double fraction)
+        {
+            OMFractionType removed = new();
+
+            removed.amount = amount * fraction;
+            amount -= removed.amount;
+
+            removed.C = C * fraction;
+            C -= removed.C;
+
+            removed.N = N * fraction;
+            N -= removed.N;
+
+            removed.P = P * fraction;
+            P -= removed.P;
+
+            return removed;
+        }
+
+        internal void Add(OMFractionType pool)
+        {
+            C += pool.C;
+            N += pool.N;
+            P += pool.P;
+        }
+
+        internal void Add(FOMType fomType)
+        {
+            C += fomType.C;
+            N += fomType.N;
+            P += fomType.P;
+        }
     }
 }

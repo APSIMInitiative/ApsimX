@@ -22,7 +22,8 @@ Do **NOT** install the Arm64 version. The x64 version will work on an Arm M1/M2/
 
 ![.NET Version](/images/netversion.png)
 
-Download the SDK MacOS x64 library and run the installer it gives you. Afterwards, open up a terminal and run:
+Download the SDK MacOS x64 library and run the installer it gives you. Please only use the installer.
+Afterwards, open up a terminal and run:
 
 ```bash
 dotnet --list-sdks
@@ -33,6 +34,10 @@ It should respond with the version of .NET that you have installed. If it does n
 ```bash
 sudo ln -s /usr/local/share/dotnet/x64/dotnet /usr/local/bin/
 ```
+
+If after doing the above step you are still unable to execute dotnet commands, modify your `/etc/paths` file to include the path `/usr/local/share/dotnet/x64/` as a separate line underneath the existing lines in the file. Doing this may require super user permissions.
+
+Once you have done this save the file and retry the `dotnet --list-sdks` command in a new terminal.
 
 Once you can get the dotnet versions showing in the terminal, dotnet should be correctly installed:
 

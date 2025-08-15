@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using APSIM.Core;
+using APSIM.Shared.Utilities;
+using DeepCloner.Core;
 using Models.Core;
+using Models.Utilities;
 
 namespace Models
 {
@@ -73,7 +77,7 @@ namespace Models
     public class ReportColumn : IReportColumn
     {
         /// <summary>An instance of a locator service.</summary>
-        private readonly ILocator locator;
+        private readonly IStructure structure;
 
         /// <summary>Are we in the capture window?</summary>
         private bool inCaptureWindow;
@@ -106,10 +110,10 @@ namespace Models
         private string toString = null;
 
         /// <summary>Variable containing a reference to the aggregation start date.</summary>
-        private IVariable fromVariable = null;
+        private VariableComposite fromVariable = null;
 
         /// <summary>Variable containing a reference to the aggregation end date.</summary>
-        private IVariable toVariable = null;
+        private VariableComposite toVariable = null;
         private string collectionEventName;
 
         /// <summary>The variable groups containing the variable values.</summary>
@@ -120,19 +124,19 @@ namespace Models
         /// </summary>
         /// <param name="reportLine">The entire line directory from report.</param>
         /// <param name="clock">An instance of a clock model</param>
-        /// <param name="locator">An instance of a locator service</param>
+        /// <param name="structure">An instance of a locator service</param>
         /// <param name="events">An instance of an events service</param>
         /// <param name="groupByVariableName">Group by variable name.</param>
         /// <param name="from">From clause to use.</param>
         /// <param name="to">To clause to use.</param>
         /// <returns>The newly created ReportColumn</returns>
         public ReportColumn(string reportLine,
-                                      IClock clock, ILocator locator, IEvent events,
+                                      IClock clock, IStructure structure, IEvent events,
                                       string groupByVariableName,
                                       string from, string to)
         {
             this.clock = clock;
-            this.locator = locator;
+            this.structure = structure;
             this.events = events;
             if (!string.IsNullOrEmpty(groupByVariableName))
                 this.groupByName = groupByVariableName;
@@ -175,22 +179,28 @@ namespace Models
         public virtual object GetValue(int groupNumber)
         {
             if (groupNumber >= groups.Count)
-                groups.Add(new VariableGroup(locator, null, variableName, aggregationFunction));
+                groups.Add(new VariableGroup(structure, null, variableName, aggregationFunction));
 
-            if (possibleRecursion)
+            if (!possibleRecursion)
             {
-                IVariable var = locator.GetObjectProperties(variableName, LocatorFlags.IncludeReportVars | LocatorFlags.ThrowOnError);
+                possibleRecursion = true;
+                var var = structure.GetObject(variableName, LocatorFlags.IncludeReportVars | LocatorFlags.ThrowOnError);
                 if (var == null)
-                    return null;
-                else
+                {
                     possibleRecursion = false;
+                    return null;
+                }
             }
+            else
+                throw new Exception($"Infinite recursion found for report variable {Name}");
+
             if (string.IsNullOrEmpty(aggregationFunction) && string.IsNullOrEmpty(groupByName))
             {
                 // This instance is NOT a temporarily aggregated variable and so hasn't
                 // collected a value yet. Do it now.
                 groups[groupNumber].StoreValue();
             }
+            possibleRecursion = false;
 
             return groups[groupNumber].GetValue();
         }
@@ -202,7 +212,7 @@ namespace Models
             VariableGroup group = null;
             if (!string.IsNullOrEmpty(groupByName))
             {
-                value = locator.Get(groupByName);
+                value = structure.Get(groupByName);
                 if (value == null)
                     throw new Exception($"Unable to locate group by variable: {groupByName}");
 
@@ -213,7 +223,7 @@ namespace Models
 
             if (group == null)
             {
-                group = new VariableGroup(locator, value, variableName, aggregationFunction);
+                group = new VariableGroup(structure, value, variableName, aggregationFunction);
                 groups.Add(group);
             }
             group.StoreValue();
@@ -295,6 +305,7 @@ namespace Models
             fromString = from;
             toString = to;
             Name = alias;
+            bool isExpression = ExpressionEvaluator.IsExpression(varName);
 
             // specify a column heading if alias was not specified.
             if (string.IsNullOrEmpty(Name))
@@ -305,9 +316,19 @@ namespace Models
                 // for a variableName of [3:], columnName = [3]
                 // for a variableName of [:5], columnNamne = [0]
 
-                Regex regex = new Regex("\\[([0-9]+):*[0-9]*\\]");
+                string pattern = @"\[([0-9]+(?:mm)*):*[0-9]*(?:mm)*\]";
 
-                Name = regex.Replace(variableName.Replace("[:", "[1:"), "($1)");
+                Name = Regex.Replace(variableName.Replace("[:", "[1:"), pattern, match =>
+                {
+                    string returnString;
+                    if (match.Groups[1].ToString().Contains("mm") || isExpression)
+                        returnString = match.Groups[0].ToString()
+                                            .Replace("[", string.Empty)
+                                            .Replace("]", string.Empty); // return whole array spec.
+                    else
+                        returnString = match.Groups[1].ToString(); // return just the first index.
+                    return $"({returnString})";
+                });
 
                 // strip off square brackets.
                 Name = Name.Replace("[", string.Empty).Replace("]", string.Empty);
@@ -316,15 +337,13 @@ namespace Models
             // Try and get units.
             try
             {
-                IVariable var = locator.GetObjectProperties(variableName, LocatorFlags.IncludeReportVars);
+                var var = structure.GetObject(variableName, LocatorFlags.PropertiesOnly);
                 if (var != null)
                 {
-                    Units = var.UnitsLabel;
+                    Units = var.GetUnitsLabel();
                     if (Units != null && Units.StartsWith("(") && Units.EndsWith(")"))
                         Units = Units.Substring(1, Units.Length - 2);
                 }
-                else
-                    possibleRecursion = true;
             }
             catch (Exception)
             {
@@ -344,8 +363,8 @@ namespace Models
                 // subscribe to the start of day event so that we can determine if we're in the capture window.
                 events.Subscribe("[Clock].DoDailyInitialisation", OnStartOfDay);
                 events.Subscribe("[Simulation].UnsubscribeFromEvents", OnUnsubscribeFromEvents);
-                fromVariable = (clock as IModel).FindByPath(fromString);
-                toVariable = (clock as IModel).FindByPath(toString);
+                fromVariable = structure.GetObject(fromString, relativeTo: clock as Model);
+                toVariable = structure.GetObject(toString, relativeTo: clock as Model);
                 if (fromVariable != null)
                 {
                     // A from variable name  was specified.
@@ -354,7 +373,8 @@ namespace Models
                       || DateTime.TryParse(fromString, out date))
                 {
                     // The from date is a static, hardcoded date string. ie 1-Jan, 1/1/2012, etc.
-                    fromVariable = new VariableObject(date);
+                    fromVariable = new VariableComposite("date");
+                    fromVariable.AddInstance(date);
 
                     // If the date string does not contain a year (ie 1-Jan), we ignore year and
                     fromHasNoYear = !fromString.Contains(date.Year.ToString());
@@ -374,7 +394,8 @@ namespace Models
                       || DateTime.TryParse(toString, out date))
                 {
                     // The from date is a static, hardcoded date string. ie 1-Jan, 1/1/2012, etc.
-                    toVariable = new VariableObject(date);
+                    toVariable = new VariableComposite("date");
+                    toVariable.AddInstance(date);
 
                     // If the date string does not contain a year (ie 1-Jan), we ignore year and
                     toHasNoYear = !toString.Contains(date.Year.ToString());

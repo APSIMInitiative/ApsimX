@@ -10,6 +10,8 @@ using System.IO;
 using APSIM.Shared.Utilities;
 using Models.Core.ApsimFile;
 using Models.CLEM.Groupings;
+using APSIM.Numerics;
+using APSIM.Core;
 
 namespace Models.CLEM.Activities
 {
@@ -27,8 +29,12 @@ namespace Models.CLEM.Activities
     [Description("Perform grazing of all herds within a specified pasture (paddock)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGraze.htm")]
-    public class RuminantActivityGrazePasture : CLEMRuminantActivityBase, IValidatableObject
+    public class RuminantActivityGrazePasture : CLEMRuminantActivityBase, IValidatableObject, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>
         /// Link to clock
         /// Public so children can be dynamically created after links defined
@@ -210,7 +216,7 @@ namespace Models.CLEM.Activities
         {
             if (GrazeFoodStoreTypeName.Contains("."))
             {
-                ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
+                ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
                 if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreTypeName) is null)
                 {
                     yield return new ValidationResult($"The location defined for grazing [r={GrazeFoodStoreTypeName}] in [a={Name}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", new string[] { "Location is not valid" });

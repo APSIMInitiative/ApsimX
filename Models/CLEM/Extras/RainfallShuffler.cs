@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Newtonsoft.Json;
 using System.IO;
+using APSIM.Core;
 
 namespace Models.CLEM
 {
@@ -22,8 +23,12 @@ namespace Models.CLEM
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/DataReaders/RainfallShuffler.htm")]
 
-    public class RainfallShuffler: CLEMModel, IValidatableObject
+    public class RainfallShuffler: CLEMModel, IValidatableObject, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         [Link]
         private IClock clock = null;
 
@@ -100,7 +105,7 @@ namespace Models.CLEM
         /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (FindInScope<RandomNumberGenerator>() is null)
+            if (Structure.Find<RandomNumberGenerator>() is null)
             {
                 yield return new ValidationResult($"The [RainfallShiffler] component [{NameWithParent}] requires access to a [RandomNumberGenerator] component in the simulation tree", new string[] { "Missing random number generator" });
             }

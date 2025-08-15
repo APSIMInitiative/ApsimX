@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using APSIM.Core;
 using APSIM.Shared.Containers;
 using APSIM.Shared.Interfaces;
 using APSIM.Shared.JobRunning;
@@ -54,8 +55,13 @@ namespace Models.Optimisation
     [ViewName("UserInterface.Views.PropertyAndGridView")]
     [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
-    public class CroptimizR : Model, IRunnable, IReportsStatus
+    public class CroptimizR : Model, IRunnable, IReportsStatus, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
+
         /// <summary>
         /// File name of the generated csv file containing croptimizR
         /// outputs.
@@ -268,18 +274,18 @@ namespace Models.Optimisation
             sims.Children.AddRange(Children.Select(c => Apsim.Clone(c)));
             sims.Children.RemoveAll(c => c is IDataStore);
 
-            IModel replacements = this.FindInScope<Folder>("Replacements");
-            if (replacements != null && !sims.Children.Any(c => c is Folder && c.Name == "Replacements"))
+            IModel replacements = Folder.FindReplacementsFolder(this);
+            if (replacements != null && !sims.Children.Any(c => Folder.IsModelReplacementsFolder(c)))
                 sims.Children.Add(Apsim.Clone(replacements));
 
             // Search for IDataStore, not DataStore - to allow for StorageViaSockets.
-            IDataStore storage = this.FindInScope<IDataStore>();
+            IDataStore storage = Structure.Find<IDataStore>();
             IModel newDataStore = new DataStore();
             if (storage != null && storage is IModel m)
                 newDataStore.Children.AddRange(m.Children.Select(c => Apsim.Clone(c)));
 
             sims.Children.Add(newDataStore);
-            sims.ParentAllDescendants();
+            Node.Create(sims);
 
             sims.Write(apsimxFileName);
 
@@ -308,7 +314,7 @@ namespace Models.Optimisation
         /// <param name="message">Message to be written.</param>
         private void WriteMessage(string message)
         {
-            IDataStore storage = this.FindInScope<IDataStore>();
+            IDataStore storage = Structure.Find<IDataStore>();
             if (storage == null)
                 throw new ApsimXException(this, "No datastore is available!");
 
@@ -443,7 +449,7 @@ namespace Models.Optimisation
                 Status = "Installing R Packages";
                 R r = new R(cancelToken.Token);
                 r.InstallPackages("remotes", "dplyr", "nloptr", "DiceDesign", "DBI", "cli");
-                r.InstallFromGithub("hol430/ApsimOnR", "SticsRPacks/CroptimizR");
+                r.InstallFromGithub("APSIMInitiative/ApsimOnR", "SticsRPacks/CroptimizR");
 
                 Status = "Running Parameter Optimization";
 
@@ -463,7 +469,7 @@ namespace Models.Optimisation
             if (!string.IsNullOrEmpty(apsimxFileDir))
                 apsimxFileDir = Path.GetDirectoryName(apsimxFileDir);
 
-            IDataStore storage = FindInScope<IDataStore>();
+            IDataStore storage = Structure.Find<IDataStore>();
             bool firstFile = true;
             foreach (string file in Directory.EnumerateFiles(outputPath))
             {
@@ -484,7 +490,7 @@ namespace Models.Optimisation
             // Now, we run the simulations with the optimal values, and store
             // the results in a checkpoint called 'After'. Checkpointing has
             // not been implemented on the sockets storage implementation.
-            if (output != null && FindInScope<IDataStore>().Writer is DataStoreWriter)
+            if (output != null && Structure.Find<IDataStore>().Writer is DataStoreWriter)
             {
                 Status = "Running simulations with optimised parameters";
                 var optimalValues = GetOptimalValues(output);
@@ -519,11 +525,11 @@ namespace Models.Optimisation
         /// <param name="fileName">Name of the apsimx file run by the optimiser.</param>
         private void RunSimsWithOptimalValues(string fileName, string checkpointName, IEnumerable<Override> optimalValues)
         {
-            IDataStore storage = FindInScope<IDataStore>();
+            IDataStore storage = Structure.Find<IDataStore>();
 
             // First, clone the simulations (we don't want to change the values
             // of the parameters in the original file).
-            Simulations clonedSims = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, false).NewModel as Simulations;
+            Simulations clonedSims = FileFormat.ReadFromFile<Simulations>(fileName).Model as Simulations;
 
             // Apply the optimal values to the cloned simulations.
             Overrides.Apply(clonedSims, optimalValues);

@@ -11,12 +11,6 @@
         public const string CROP_NAME = "sorghum";
 
         /// <summary>
-        /// The default value used for the extra ATP cost.
-        /// Constant as it is also used in other initial calculations and never changes.
-        /// </summary>
-        private const double DEFAULT_EXTRA_ATP_COST = 2;
-
-        /// <summary>
         /// Handles generating a DCaPSTParameters object, constructed with the defaults for this crop type.
         /// </summary>
         /// <returns>A populated DCaPSTParameters object.</returns>
@@ -24,7 +18,6 @@
         {
             return new DCaPSTParameters()
             {
-                Rpar = 0.5,
                 Canopy = GenerateCanopyParameters(),
                 Pathway = GeneratePathwayParameters()
             };
@@ -39,7 +32,6 @@
             return new CanopyParameters()
             {
                 Type = CanopyType.C4,
-                AirO2 = 210000,
                 LeafAngle = 60,
                 LeafWidth = 0.09,
                 LeafScatteringCoeff = 0.15,
@@ -50,9 +42,7 @@
                 DiffuseExtCoeffNIR = 0.8,
                 DiffuseReflectionCoeff = 0.036,
                 DiffuseReflectionCoeffNIR = 0.389,
-                Windspeed = 1.5,
                 WindSpeedExtinction = 1.5,
-                CurvatureFactor = 0.675,
                 DiffusivitySolubilityRatio = 0.047,
                 MinimumN = 28.6,
                 SLNRatioTop = 1.3
@@ -70,13 +60,13 @@
                 IntercellularToAirCO2Ratio = 0.45,
                 FractionOfCyclicElectronFlow = 0.5,
                 RespirationSLNRatio = 0.0,
-                MaxRubiscoActivitySLNRatio = 0.349,
-                MaxElectronTransportSLNRatio = 3.0,
-                MaxPEPcActivitySLNRatio = 1.165,
-                MesophyllCO2ConductanceSLNRatio = 0.011,
+                MaxRubiscoActivitySLNRatio = 0.49,
+                MaxElectronTransportSLNRatio = 3.14,
+                MaxPEPcActivitySLNRatio = 1.12,
+                MesophyllCO2ConductanceSLNRatio = 0.0108,
                 MesophyllElectronTransportFraction = 0.4,
                 ATPProductionElectronTransportFactor = 1.25,
-                ExtraATPCost = DEFAULT_EXTRA_ATP_COST,
+                ExtraATPCost = 2.0,
                 RubiscoCarboxylation = new TemperatureResponseValues
                 {
                     At25 = 1210,
@@ -112,23 +102,56 @@
                     At25 = 0,
                     Factor = 46390
                 },
+                RubiscoActivityParams = new LeafTemperatureParameters
+                {
+                    TMin = 0,
+                    TOpt = 39.241,
+                    TMax = 50,
+                    C = 0.744604,
+                    Beta = 0.396
+                },
+                PEPcActivityParams = new LeafTemperatureParameters
+                {
+                    TMin = 0,
+                    TOpt = 45.964,
+                    TMax = 50,
+                    C = 0.304367,
+                    Beta = 0.275
+                },
                 ElectronTransportRateParams = new LeafTemperatureParameters
                 {
                     TMin = 0,
-                    TOpt = 37.8649150880407,
-                    TMax = 55,
-                    C = 0.711229539802063,
-                    Beta = 1
+                    TOpt = 38.406,
+                    TMax = 50,
+                    C = 0.634886,
+                    Beta = 0.743
+                },
+                RespirationParams = new LeafTemperatureParameters
+                {
+                    TMin = 0,
+                    TOpt = 38.888,
+                    TMax = 50,
+                    C = 0.626654,
+                    Beta = 0.682
+                },
+                EpsilonParams = new LeafTemperatureParameters
+                {
+                    TMin = 0,
+                    TOpt = 32.561,
+                    TMax = 50,
+                    C = 0.973578,
+                    Beta = 0.208
                 },
                 MesophyllCO2ConductanceParams = new TemperatureResponseValues
                 {
                     At25 = 0,
                     Factor = 40600
                 },
-                SpectralCorrectionFactor = 0.39609236234459,
+                EpsilonAt25 = 0.2,
                 PS2ActivityFraction = 0.1,
                 PEPRegeneration = 1000,
-                BundleSheathConductance = 0.003
+                BundleSheathConductance = 0.003,
+                CurvatureFactor = 0.3
             };
         }
     }

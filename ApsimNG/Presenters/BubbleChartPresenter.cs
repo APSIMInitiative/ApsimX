@@ -162,7 +162,7 @@ namespace UserInterface.Presenters
                         }
                     }
                     if (currentObject != null)
-                    {                        
+                    {
                         objectPropertiesPresenter.RefreshView(currentObject);
                     }
                 }
@@ -178,7 +178,7 @@ namespace UserInterface.Presenters
                 conditionsEditor.ContextItemsNeeded -= OnNeedVariableNames;
                 conditionsEditor = null;
             }
-                
+
             if (actionsEditor != null)
             {
                 actionsEditor.ContextItemsNeeded -= OnNeedVariableNames;
@@ -207,7 +207,7 @@ namespace UserInterface.Presenters
             changes.Add(new ChangeProperty.Property(model, nameof(model.Nodes), e.Nodes));
 
             // Check for multiple nodes or arcs with the same name.
-            IEnumerable<IGrouping<int, Node>> duplicateNodes = e.Nodes.GroupBy(n => n.ID).Where(g => g.Count() > 1);
+            IEnumerable<IGrouping<int, APSIM.Shared.Graphing.Node>> duplicateNodes = e.Nodes.GroupBy(n => n.ID).Where(g => g.Count() > 1);
             if (duplicateNodes.Any())
                 throw new Exception($"Unable to apply changes - duplicate node name found: {duplicateNodes.First().Key}");
             IEnumerable<IGrouping<int, Arc>> duplicateArcs = e.Arcs.GroupBy(a => a.ID).Where(g => g.Count() > 1);
@@ -225,7 +225,7 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments.</param>
         private void OnAddNode(object sender, AddNodeEventArgs e)
         {
-            List<Node> newNodes = new List<Node>();
+            List<APSIM.Shared.Graphing.Node> newNodes = new List<APSIM.Shared.Graphing.Node>();
             newNodes.AddRange(model.Nodes);
             newNodes.Add(e.Node);
             ICommand addNode = new ChangeProperty(model, nameof(model.Nodes), newNodes);
@@ -241,7 +241,7 @@ namespace UserInterface.Presenters
         {
             List<ChangeProperty.Property> changes = new List<ChangeProperty.Property>();
             List<Arc> newArcs = new List<Arc>(model.Arcs);
-            List<Node> newNodes = new List<Node>(model.Nodes);
+            List<APSIM.Shared.Graphing.Node> newNodes = new List<APSIM.Shared.Graphing.Node>(model.Nodes);
             foreach (var obj in e.Objects)
             {
                 int idToDelete = obj.ID;
@@ -252,7 +252,7 @@ namespace UserInterface.Presenters
 
                 for (int i = newArcs.Count-1; i >= 0; i--)
                     if (newArcs[i].ID == idToDelete || newArcs[i].SourceID == idToDelete || newArcs[i].DestinationID == idToDelete)
-                        newArcs.Remove(newArcs[i]);               
+                        newArcs.Remove(newArcs[i]);
             }
             changes.Add(new ChangeProperty.Property(model, nameof(model.Nodes), newNodes));
             changes.Add(new ChangeProperty.Property(model, nameof(model.Arcs), newArcs));
@@ -349,7 +349,7 @@ namespace UserInterface.Presenters
 
                     if (gridCompletions)
                         intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
-                }               
+                }
             }
             catch (Exception err)
             {
@@ -381,7 +381,7 @@ namespace UserInterface.Presenters
                     view.Location = editorCursor;
                     view.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
                 }
-                    
+
             }
             catch (Exception err)
             {
@@ -392,7 +392,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// A wrapper for the currently selected node in rotation manager so that
         /// it can be used with a PropertyPresenter view.
-        /// 
+        ///
         /// Although this uses the model class, it should not be added as a model
         /// within a simulation file, as by itself it does nothing.
         /// </summary>
@@ -400,7 +400,7 @@ namespace UserInterface.Presenters
         public class NodePropertyWrapper : Model
         {
             /// <summary>Currently selected node in the Rotation Manager</summary>
-            public Node node = null;
+            public APSIM.Shared.Graphing.Node node = null;
 
             /// <summary>Property wrapper for name</summary>
             [Description("Name")]
@@ -464,7 +464,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// A wrapper for the currently selected node in rotation manager so that
         /// it can be used with a PropertyPresenter view.
-        /// 
+        ///
         /// Although this uses the model class, it should not be added as a model
         /// within a simulation file, as by itself it does nothing.
         /// </summary>

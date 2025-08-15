@@ -8,6 +8,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;
+using APSIM.Core;
 
 namespace Models.CLEM.Activities
 {
@@ -25,8 +26,13 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Crop/ManageCrop.htm")]
     [ModelAssociations(associatedModels: new Type[] { typeof(CropActivityManageProduct) },
         associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Child })]
-    public class CropActivityManageCrop: CLEMActivityBase, IValidatableObject, IPastureManager
+    public class CropActivityManageCrop: CLEMActivityBase, IValidatableObject, IPastureManager, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
+
         private int currentCropIndex = 0;
         private int numberOfCrops = 0;
 
@@ -50,7 +56,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Use unallocated land")]
         public bool UseAreaAvailable { get; set; }
-        
+
         /// <summary>
         /// Area of land actually received (maybe less than requested)
         /// </summary>
@@ -168,7 +174,7 @@ namespace Models.CLEM.Activities
                         {
                             CheckResources(ResourceRequestList, Guid.NewGuid());
                             TakeResources(ResourceRequestList, false);
-                            //Now the Land has been allocated we have an Area 
+                            //Now the Land has been allocated we have an Area
                             //Assign the area actually got after taking it. It might be less than AreaRequested (if partial)
                             Area += ResourceRequestList.FirstOrDefault().Provided;
                         }
@@ -199,7 +205,7 @@ namespace Models.CLEM.Activities
                 LinkedLandItem.TransactionOccurred -= LinkedLandItem_TransactionOccurred;
         }
 
-        // Method to listen for land use transactions 
+        // Method to listen for land use transactions
         // This allows this activity to dynamically respond when use available area is selected
         // only listens when use available is set for parent
         private void LinkedLandItem_TransactionOccurred(object sender, EventArgs e)
@@ -246,11 +252,11 @@ namespace Models.CLEM.Activities
             using StringWriter htmlWriter = new();
             htmlWriter.Write("\r\n<div class=\"activityentry\">This crop uses ");
 
-            Land parentLand = null;
-            IModel clemParent = FindAncestor<ZoneCLEM>();
-            if (LandItemNameToUse != null && LandItemNameToUse != "")
-                if (clemParent != null && clemParent.Enabled)
-                    parentLand = clemParent.FindInScope(LandItemNameToUse.Split('.')[0]) as Land;
+                Land parentLand = null;
+                Model clemParent = FindAncestor<ZoneCLEM>();
+                if (LandItemNameToUse != null && LandItemNameToUse != "")
+                    if (clemParent != null && clemParent.Enabled)
+                        parentLand = Structure.Find<Land>(LandItemNameToUse.Split('.')[0], relativeTo: clemParent);
 
             if (UseAreaAvailable)
                 htmlWriter.Write("the unallocated portion of ");

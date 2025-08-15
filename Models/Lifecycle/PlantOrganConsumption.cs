@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using APSIM.Core;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
@@ -9,7 +11,7 @@ using Models.PMF.Interfaces;
 namespace Models.LifeCycle
 {
     /// <summary>
-    /// Specifies the removal of organ biomass by Pest/Disease.  If organs implement ICanopy this will remove LAI in 
+    /// Specifies the removal of organ biomass by Pest/Disease.  If organs implement ICanopy this will remove LAI in
     /// proportion to the amount of biomass removed.  If organ implements IRoot RLD will be decreased in proportion
     /// biomass removed
     /// </summary>
@@ -17,8 +19,13 @@ namespace Models.LifeCycle
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LifeCyclePhase))]
-    public class PlantOrganConsumption : Model
+    public class PlantOrganConsumption : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
+
         [Link]
         Zone zone = null;
 
@@ -35,6 +42,7 @@ namespace Models.LifeCycle
         [Display(Type = DisplayType.PlantOrganList)]
         public string HostOrganName { get; set; }
 
+
         [EventSubscribe("DoPestDiseaseDamage")]
         private void DoPestDiseaseDamage(object sender, EventArgs e)
         {
@@ -42,7 +50,7 @@ namespace Models.LifeCycle
             double organWtConsumed = 0;
             if (ParentPhase.Cohorts != null)
             {
-                var hostOrgan = zone.Get(HostOrganName) as IHasDamageableBiomass;
+                var hostOrgan = Structure.Get(HostOrganName, relativeTo: zone) as IHasDamageableBiomass;
                 if (hostOrgan == null)
                     throw new Exception($"Cannot find host organ: {HostOrganName}");
 

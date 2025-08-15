@@ -368,7 +368,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private IStorageReader GetStorage()
         {
-            return (panel.FindInScope<IDataStore>()).Reader;
+            return (panel.Node.Find<IDataStore>()).Reader;
         }
 
         /// <summary>

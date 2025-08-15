@@ -182,7 +182,7 @@ namespace Utility
                     if (String.IsNullOrWhiteSpace(entryFilePath.Text))
                         proceed = false;
                 }
-                
+
                 if (proceed)
                 {
                     string newWeatherPath = null;
@@ -263,7 +263,7 @@ namespace Utility
                 }
                 if (validEntries || !proceed)
                     dialog1.Dispose();
-                
+
             }
             catch (Exception err)
             {
@@ -444,7 +444,7 @@ namespace Utility
             dialog1.Parent = view.MainWidget.Toplevel;
             dialog1.WindowPosition = WindowPosition.CenterOnParent;
             // Attempt to find an initial latitude and longitude from a Weather model
-            IModel weather = dest.FindInScope<Models.Interfaces.IWeather>() as IModel;
+            IModel weather = dest.Node.Find<Models.Interfaces.IWeather>() as IModel;
             double latitude, longitude;
             if (weather != null && weather is Weather)
             {
@@ -507,7 +507,7 @@ namespace Utility
         {
             bool proceed = true;
             DateTime startDate = calendarStart.Date;
-            DateTime endDate = calendarEnd.Date; 
+            DateTime endDate = calendarEnd.Date;
             if (startDate.Year < 1889)
             {
                 ShowMessage(MessageType.Warning, "SILO data is not available before 1889", "Invalid start date");
@@ -541,7 +541,7 @@ namespace Utility
             string dest = PathUtilities.GetAbsolutePath(entryFilePath.Text, this.explorerPresenter.ApsimXFile.FileName);
             DateTime startDate = calendarStart.Date;
             DateTime endDate = calendarEnd.Date;
-            
+
             string url = String.Format("https://www.longpaddock.qld.gov.au/cgi-bin/silo/DataDrillDataset.php?start={0:yyyyMMdd}&finish={1:yyyyMMdd}&lat={2}&lon={3}&format=apsim&username={4}&password=silo",
                             startDate, endDate, entryLatitude.Text, entryLongitude.Text, System.Net.WebUtility.UrlEncode(entryEmail.Text));
 
@@ -588,7 +588,7 @@ namespace Utility
         {
             bool proceed = true;
             DateTime startDate = calendarStart.Date;
-            DateTime endDate = calendarEnd.Date; 
+            DateTime endDate = calendarEnd.Date;
             if (startDate.Year < 1889)
             {
                 ShowMessage(MessageType.Warning, "SILO data is not available before 1889", "Invalid start date");
@@ -859,7 +859,7 @@ namespace Utility
             string dest = PathUtilities.GetAbsolutePath(entryFilePath.Text, this.explorerPresenter.ApsimXFile.FileName);
             DateTime startDate = calendarStart.Date;
             DateTime endDate = calendarEnd.Date;
-            
+
             double latitude = double.Parse(entryLatitude.Text, CultureInfo.CurrentCulture);
             double longitude = double.Parse(entryLongitude.Text, CultureInfo.CurrentCulture);
 

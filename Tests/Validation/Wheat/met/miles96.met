@@ -3,8 +3,13 @@
 !station number = 042023
 !rainfall station = MILES POST OFFICE                
 !temperature station = MILES (MILES POST OFFICE)        
-latitude = -26.67  (DEG.MIN)
-longitude =  150.18  (DEG.MIN)
+latitude  = -26.67  (DECIMAL DEGREES)
+longitude =  150.18 (DECIMAL DEGREES)
+
+!Tav and Amp used from nearby 042023 MILES POST OFFICE LongPaddock met file.
+tav = 19.97 (oC) ! Annual average ambient temperature. Based on 1 Jan 1957 to current.
+amp = 15.30 (oC) ! Annual amplitude in mean monthly temperature. Based on 1 Jan 1957 to current.
+
 year  day radn  maxt  mint   rain  code
 ()    () (mj/m2) (oC) (oC)   (mm)  ()
 1996   1 28.77 31.70  21.50   0.0  wrrn

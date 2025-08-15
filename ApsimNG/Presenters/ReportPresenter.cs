@@ -146,7 +146,7 @@ namespace UserInterface.Presenters
             this.view.VariableList.Lines = report.VariableNames;
             this.view.EventList.Lines = report.EventNames;
             InScopeModelNames = GetModelScopeNames();//explorerPresenter.ApsimXFile.FindAllInScope<IModel>().Select(m => m.Name).ToList<string>();
-            SimulationPlantModelNames = explorerPresenter.ApsimXFile.FindAllInScope<Plant>().Select(m => m.Name).ToList<string>();
+            SimulationPlantModelNames = explorerPresenter.ApsimXFile.Node.FindAll<Plant>().Select(m => m.Name).ToList<string>();
             CommonReportVariablesList = GetCommonVariables(commonReportVariablesFileName, reportVariablesDirectoryPath);
             CommonFrequencyVariablesList = GetCommonVariables(commonReportFrequencyVariablesFileName, reportVariablesDirectoryPath);
             FillModelsImplementingSpecificInterfaceDictionary();
@@ -647,7 +647,7 @@ namespace UserInterface.Presenters
         {
             if (!string.IsNullOrWhiteSpace(interfaceName))
             {
-                List<IModel> implementingModels = explorerPresenter.ApsimXFile.FindAllInScope()
+                List<IModel> implementingModels = explorerPresenter.ApsimXFile.Node.FindAll<IModel>()
                     .Where(model => model.GetType().GetInterfaces().ToList().Any(type => type.Name == interfaceName)).ToList();
                 List<string> implementingModelNames = implementingModels.Select(model => model.Name).ToList();
                 return implementingModelNames;
@@ -663,7 +663,7 @@ namespace UserInterface.Presenters
         {
             List<string> modelNamesInScope = new();
             Simulations simulations = explorerPresenter.ApsimXFile;
-            List<IModel> modelInScope = simulations.FindAllInScope<IModel>().ToList();
+            List<IModel> modelInScope = simulations.Node.FindAll<IModel>().ToList();
             modelNamesInScope = modelInScope.Select(x => x.GetType().GetFriendlyName()).Distinct<string>().ToList();
             return modelNamesInScope;
         }
@@ -871,7 +871,7 @@ namespace UserInterface.Presenters
             List<string> plantCodeLines = new();
             List<IPlant> areaPlants = new();
             if (report.FindAncestor<Folder>() != null)
-                areaPlants = explorerPresenter.ApsimXFile.FindAllInScope<IPlant>().ToList();
+                areaPlants = explorerPresenter.ApsimXFile.Node.FindAll<IPlant>().ToList();
             else areaPlants = report.FindAncestor<Zone>().Plants;
             // Make sure plantsNames only has unique names. If under replacements you'll may have many many plants of the same name.
             areaPlants = areaPlants.GroupBy(plant => plant.Name).Select(plant => plant.First()).ToList();

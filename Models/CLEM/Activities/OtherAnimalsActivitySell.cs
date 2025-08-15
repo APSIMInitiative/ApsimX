@@ -10,7 +10,7 @@ using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
 using Microsoft.VisualBasic.FileIO;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using Models.LifeCycle;
 using Models.PMF.Organs;
 using Microsoft.CodeAnalysis.CSharp;

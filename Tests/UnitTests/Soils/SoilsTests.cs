@@ -1,6 +1,9 @@
 ﻿namespace UnitTests.Soils
 {
+    using APSIM.Core;
     using APSIM.Shared.Utilities;
+    using ExCSS;
+    using Gtk;
     using Models;
     using Models.Core;
     using Models.Core.ApsimFile;
@@ -84,17 +87,17 @@
         public void TestSoilWithNullProperties()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.NullSample.apsimx");
-            Simulations file = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as Simulations;
+            var node = FileFormat.ReadFromString<Simulations>(json, e => throw e, false);
 
             // This simulation needs a weather node, but using a legit
             // met component will just slow down the test.
-            IModel sim = file.FindInScope<Simulation>();
-            Model weather = new MockWeather();
-            sim.Children.Add(weather);
-            weather.Parent = sim;
+            var simNode = node.Walk().First(n => n.Model is Simulation);
+            var oldWeather = node.Walk().First(n => n.Model is Models.Climate.Weather).Model;
+            Model newWeather = new MockWeather();
+            simNode.ReplaceChild(oldWeather, newWeather);
 
             // Run the file.
-            var runner = new Runner(file);
+            var runner = new Runner(node.Model as IModel);
             List<Exception> errors = runner.Run();
             if (errors != null && errors.Count > 0)
                 throw errors[0];

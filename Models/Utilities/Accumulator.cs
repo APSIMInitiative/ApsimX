@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 
@@ -42,7 +43,7 @@ namespace Models.Utilities
 
             try
             {
-                double value = (double)parentModel.FindByPath(variableName)?.Value;
+                double value = (double)parentModel.Node.Get(variableName);
                 Values.Add(value);
             }
             catch (Exception err)
@@ -52,7 +53,7 @@ namespace Models.Utilities
         }
 
         /// <summary>
-        /// Return the sum 
+        /// Return the sum
         /// </summary>
         public double Sum { get { return MathUtilities.Sum(Values); } }
 

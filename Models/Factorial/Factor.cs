@@ -21,7 +21,7 @@ namespace Models.Factorial
     ///     to indicate a path to a model that will be replaced by the child
     ///     nodes.
     /// or
-    ///     left null to indicate there are child FactorValues. 
+    ///     left null to indicate there are child FactorValues.
     /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.FactorView")]
@@ -156,7 +156,7 @@ namespace Models.Factorial
             if (experiment != null)
             {
                 var baseSimulation = experiment.FindChild<Simulation>();
-                IModel modelToReplace = baseSimulation.FindByPath(specification)?.Value as IModel;
+                IModel modelToReplace = baseSimulation.Node.GetObject(specification)?.Value as IModel;
                 if (modelToReplace == null)
                     throw new ApsimXException(this, "Cannot find model: " + specification);
                 foreach (IModel newModel in Children.Where(c => c.Enabled))

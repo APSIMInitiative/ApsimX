@@ -78,6 +78,14 @@ namespace Utility
         public bool Muted { get; set; } = true;
 
         /// <summary>
+        /// If true, clicking on an .apsimx file in Explorer will open that file in a new tab of the
+        /// current ApsimNG instance rather than staring a new instance of the GUI.
+        /// </summary>
+        [Input("Open files in new tabs")]
+        [Tooltip("Should double-clicking an .apsimx file open it in a new tab rather than a new instance of the user interface? (Requires restart)")]
+        public bool UseExistingInstance { get; set; } = true;
+
+        /// <summary>
         /// In theory, if there are any commands in the command history,
         /// then the file has been modified. In practice, there may be
         /// some faulty presenters which make changes to the model without
@@ -225,7 +233,7 @@ namespace Utility
             {
                 if (MruList.Count > 0)
                 {
-                    int index = MruList.FindIndex(f => f.FileName == file.FileName);
+                    int index = MruList.FindIndex(f => f.FileName.Equals(file.FileName, ProcessUtilities.CurrentOS.IsUnix ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase));
                     if (index < 0)
                     {
                         // First time that filename has been added 

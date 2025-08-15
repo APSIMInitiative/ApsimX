@@ -22,7 +22,7 @@ namespace UnitTests
         public void TestDisabledSummary()
         {
             Simulations sims = Utilities.GetRunnableSim();
-            Summary summary = sims.FindInScope<Summary>();
+            Summary summary = sims.Node.Find<Summary>();
             summary.Verbosity = MessageType.Error;
 
             var runner = new Runner(sims);
@@ -33,7 +33,7 @@ namespace UnitTests
 
 
         /// <summary>
-        /// This test ensures that data is written immediately following calls to 
+        /// This test ensures that data is written immediately following calls to
         /// </summary>
         [Test]
         public void EnsureDataIsNotWrittenTwice()

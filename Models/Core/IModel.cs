@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Core;
 
 namespace Models.Core
 {
 
     /// <summary>
     /// The IModel interface specifies the properties and methods that all
-    /// models must have. 
+    /// models must have.
     /// </summary>
     public interface IModel
     {
@@ -17,6 +18,9 @@ namespace Models.Core
 
         /// <summary>The name of the resource.</summary>
         string ResourceName { get; set; }
+
+        /// <summary>The associated node for the model.</summary>
+        Node Node { get; }
 
         /// <summary>
         /// Gets or sets the parent model. Can be null if model has no parent.
@@ -73,12 +77,6 @@ namespace Models.Core
         IModel FindAncestor(string name);
 
         /// <summary>
-        /// Find a model in scope with a given name.
-        /// </summary>
-        /// <param name="name">Name of the model.</param>
-        IModel FindInScope(string name);
-
-        /// <summary>
         /// Find a sibling with a given type.
         /// </summary>
         /// <typeparam name="T">Type of the sibling.</typeparam>
@@ -101,12 +99,6 @@ namespace Models.Core
         /// </summary>
         /// <typeparam name="T">Type of the ancestor.</typeparam>
         T FindAncestor<T>();
-
-        /// <summary>
-        /// Find a model in scope with a given type in scope.
-        /// </summary>
-        /// <typeparam name="T">Type of model to find.</typeparam>
-        T FindInScope<T>();
 
         /// <summary>
         /// Find a sibling with a given type and name.
@@ -137,13 +129,6 @@ namespace Models.Core
         T FindAncestor<T>(string name);
 
         /// <summary>
-        /// Find a model in scope with a given type and name.
-        /// </summary>
-        /// <param name="name">Name of the model.</param>
-        /// <typeparam name="T">Type of model to find.</typeparam>
-        T FindInScope<T>(string name);
-
-        /// <summary>
         /// Find all siblings with a given name.
         /// </summary>
         /// <param name="name">Name of the siblings.</param>
@@ -168,12 +153,6 @@ namespace Models.Core
         IEnumerable<IModel> FindAllAncestors(string name);
 
         /// <summary>
-        /// Find all models in scope with a given name.
-        /// </summary>
-        /// <param name="name">Name of the models.</param>
-        IEnumerable<IModel> FindAllInScope(string name);
-
-        /// <summary>
         /// Find all siblings of the given type.
         /// </summary>
         /// <typeparam name="T">Type of siblings to return.</typeparam>
@@ -196,12 +175,6 @@ namespace Models.Core
         /// </summary>
         /// <typeparam name="T">Type of siblings to return.</typeparam>
         IEnumerable<T> FindAllAncestors<T>();
-
-        /// <summary>
-        /// Find all models of the given type in scope.
-        /// </summary>
-        /// <typeparam name="T">Type of siblings to return.</typeparam>
-        IEnumerable<T> FindAllInScope<T>();
 
         /// <summary>
         /// Find all siblings with the given type and name.
@@ -232,13 +205,6 @@ namespace Models.Core
         IEnumerable<T> FindAllAncestors<T>(string name);
 
         /// <summary>
-        /// Find all models with the given type and name in scope.
-        /// </summary>
-        /// <typeparam name="T">Type of models to find.</typeparam>
-        /// <param name="name">Name of the models.</param>
-        IEnumerable<T> FindAllInScope<T>(string name);
-
-        /// <summary>
         /// Returns all ancestor models.
         /// </summary>
         IEnumerable<IModel> FindAllAncestors();
@@ -259,11 +225,6 @@ namespace Models.Core
         IEnumerable<IModel> FindAllChildren();
 
         /// <summary>
-        /// Returns all models which are in scope.
-        /// </summary>
-        IEnumerable<IModel> FindAllInScope();
-
-        /// <summary>
         /// Return true iff a model with the given type can be added to the model.
         /// </summary>
         /// <param name="type">The child type.</param>
@@ -275,31 +236,14 @@ namespace Models.Core
         void ParentAllDescendants();
 
         /// <summary>
-        /// Get the underlying variable object for the given path.
-        /// Note that this can be a variable/property or a model.
-        /// Returns null if not found.
-        /// </summary>
-        /// <param name="path">The path of the variable/model.</param>
-        /// <param name="flags">LocatorFlags controlling the search</param>
-        IVariable FindByPath(string path, LocatorFlags flags = LocatorFlags.None);
-
-        /// <summary>
-        /// Find and return multiple matches (e.g. a soil in multiple zones) for a given path.
-        /// Note that this can be a variable/property or a model.
-        /// Returns null if not found.
-        /// </summary>
-        /// <param name="path">The path of the variable/model.</param>
-        IEnumerable<IVariable> FindAllByPath(string path);
-
-        /// <summary>
-        /// Called when the model has been newly created in memory whether from 
+        /// Called when the model has been newly created in memory whether from
         /// cloning or deserialisation.
         /// </summary>
         void OnCreated();
 
         /// <summary>
         /// Called immediately before a simulation has its links resolved and is run.
-        /// It provides an opportunity for a simulation to restructure itself 
+        /// It provides an opportunity for a simulation to restructure itself
         /// e.g. add / remove models.
         /// </summary>
         void OnPreLink();

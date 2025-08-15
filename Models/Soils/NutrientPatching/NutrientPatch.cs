@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.ApsimFile;
@@ -37,11 +39,12 @@ namespace Models.Soils.NutrientPatching
         /// <summary>Constructor.</summary>
         /// <param name="soilThicknesses">Soil thicknesses (mm).</param>
         /// <param name="nutrientPatchManager">The nutrient patch manager.</param>
-        public NutrientPatch(double[] soilThicknesses, NutrientPatchManager nutrientPatchManager)
+        /// <param name="structure">Structure instance</param>
+        public NutrientPatch(double[] soilThicknesses, NutrientPatchManager nutrientPatchManager, IStructure structure)
         {
             soilThickness = soilThicknesses;
             patchManager = nutrientPatchManager;
-            var simulations = FileFormat.ReadFromString<Simulations>(ReflectionUtilities.GetResourceAsString("Models.Resources.Nutrient.json"), e => throw e, false).NewModel as Simulations;
+            var simulations = FileFormat.ReadFromString<Simulations>(ReflectionUtilities.GetResourceAsString("Models.Resources.Nutrient.json")).Model as Simulations;
             if (simulations.Children.Count != 1 || !(simulations.Children[0] is Nutrient))
                 throw new Exception("Cannot create nutrient model in NutrientPatchManager");
             Nutrient = simulations.Children[0] as Nutrient;
@@ -52,13 +55,13 @@ namespace Models.Soils.NutrientPatching
             // Find all solutes.
             foreach (ISolute solute in Nutrient.FindAllChildren<ISolute>())
                 solutes.Add(solute.Name, solute);
-            lignin = Nutrient.FindInScope<OrganicPool>("FOMLignin");
+            lignin = structure.Find<OrganicPool>("FOMLignin", relativeTo: Nutrient);
             if (lignin == null)
                 throw new Exception("Cannot find lignin pool in the nutrient model.");
-            cellulose = Nutrient.FindInScope<OrganicPool>("FOMCellulose");
+            cellulose = structure.Find<OrganicPool>("FOMCellulose", relativeTo: Nutrient);
             if (cellulose == null)
                 throw new Exception("Cannot find cellulose pool in the nutrient model.");
-            carbohydrate = Nutrient.FindInScope<OrganicPool>("FOMCarbohydrate");
+            carbohydrate = structure.Find<OrganicPool>("FOMCarbohydrate", relativeTo: Nutrient);
             if (carbohydrate == null)
                 throw new Exception("Cannot find carbohydrate pool in the nutrient model.");
         }

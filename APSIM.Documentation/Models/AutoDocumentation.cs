@@ -19,6 +19,7 @@ using Models.AgPasture;
 using Models.Soils.Nutrients;
 using APSIM.Documentation.Bibliography;
 using ModelsMap = Models.Map;
+using APSIM.Core;
 
 namespace APSIM.Documentation.Models
 {
@@ -69,7 +70,6 @@ namespace APSIM.Documentation.Models
                 {typeof(NodeNumberPhase), typeof(DocPhase)},
                 {typeof(LeafDeathPhase), typeof(DocPhase)},
                 {typeof(LeafAppearancePhase), typeof(DocPhase)},
-                {typeof(GrazeAndRewind), typeof(DocPhase)},
                 {typeof(GotoPhase), typeof(DocPhase)},
                 {typeof(GerminatingPhase), typeof(DocPhase)},
                 {typeof(GenericPhase), typeof(DocPhase)},
@@ -131,7 +131,7 @@ namespace APSIM.Documentation.Models
 
             DefineFunctions().TryGetValue(model.GetType(), out Type docType);
 
-            if (docType != null) 
+            if (docType != null)
             {
                 object documentClass = Activator.CreateInstance(docType, new object[]{model});
                 newTags = (documentClass as DocGeneric).Document(0);
@@ -147,5 +147,5 @@ namespace APSIM.Documentation.Models
             return newTags;
         }
     }
-    
+
 }

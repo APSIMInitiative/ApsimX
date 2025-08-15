@@ -5,6 +5,7 @@ using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
+using APSIM.Core;
 
 namespace Models.LifeCycle
 {
@@ -16,8 +17,13 @@ namespace Models.LifeCycle
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LifeCyclePhase))]
-    public class PlantOrganFunctionalDimensionReduction : Model
+    public class PlantOrganFunctionalDimensionReduction : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
+
         [Link]
         Zone zone = null;
 
@@ -34,12 +40,13 @@ namespace Models.LifeCycle
         [Link(Type = LinkType.Ancestor)]
         private LifeCyclePhase ParentPhase = null;
 
+
         [EventSubscribe("DoPestDiseaseDamage")]
         private void DoPestDiseaseDamage(object sender, EventArgs e)
         {
             if (ParentPhase.Cohorts != null)
             {
-                var hostOrgan = zone.Get(HostOrganName) as IHasDamageableBiomass;
+                var hostOrgan = Structure.Get(HostOrganName, relativeTo: zone) as IHasDamageableBiomass;
                 if (hostOrgan == null)
                     throw new Exception($"Cannot find host organ: {HostOrganName}");
 

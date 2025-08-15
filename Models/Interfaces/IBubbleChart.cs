@@ -13,7 +13,7 @@ namespace Models.Interfaces
         /// <summary>
         /// The nodes of the graph.
         /// </summary>
-        List<Node> Nodes { get; set; }
+        List<APSIM.Shared.Graphing.Node> Nodes { get; set; }
 
         /// <summary>
         /// The arcs of the graph.

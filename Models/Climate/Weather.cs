@@ -1,4 +1,5 @@
-﻿using APSIM.Shared.Utilities;
+﻿using APSIM.Numerics;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
 using Newtonsoft.Json;
@@ -153,11 +154,20 @@ namespace Models.Climate
         }
 
         /// <summary>
+        /// Filename for the weather file.
+        /// </summary>
+        private string fileName;
+
+        /// <summary>
         /// Gets or sets the file name. Should be relative filename where possible.
         /// </summary>
         [Summary]
         [Description("Weather file name")]
-        public string FileName { get; set; }
+        public string FileName
+        {
+            get { return fileName; }
+            set { fileName = value.Replace("\\", "/"); }
+        }
 
         /// <summary>
         /// Gets or sets the full file name (with path). The user interface uses this.
@@ -397,6 +407,7 @@ namespace Models.Climate
         /// <summary>
         /// Gets the latitude
         /// </summary>
+        [JsonIgnore]
         public double Latitude
         {
             get
@@ -416,6 +427,7 @@ namespace Models.Climate
         /// <summary>
         /// Gets the longitude
         /// </summary>
+        [JsonIgnore]
         public double Longitude
         {
             get
@@ -431,6 +443,7 @@ namespace Models.Climate
         /// Gets the average temperature
         /// </summary>
         [Units("°C")]
+        [JsonIgnore]
         public double Tav
         {
             get
@@ -452,6 +465,7 @@ namespace Models.Climate
         /// <summary>
         /// Gets the temperature amplitude.
         /// </summary>
+        [JsonIgnore]
         public double Amp
         {
             get
@@ -764,7 +778,7 @@ namespace Models.Climate
 
             if (this.reader == null)
                 if (!this.OpenDataFile())
-                    throw new ApsimXException(this, "Cannot find weather file '" + this.FileName + "'");
+                    throw new ApsimXException(this, "Cannot find weather file '" + this.FullFileName + "'");
 
             //get weather for that date
             DailyMetDataFromFile readMetData = new DailyMetDataFromFile();
@@ -988,6 +1002,7 @@ namespace Models.Climate
             }
             else
             {
+
                 return false;
             }
         }
@@ -1052,7 +1067,15 @@ namespace Models.Climate
             // get dataset size
             DateTime start = this.reader.FirstDate;
             DateTime last = this.reader.LastDate;
+
             int nyears = last.Year - start.Year + 1;
+
+            DateTime endDate = new DateTime(last.Year, start.Month, start.Day); //get same day of year as start date
+            if (endDate > last)
+                endDate = new DateTime(last.Year-1, start.Month, start.Day);
+
+            if ((endDate - start).TotalDays < 730)
+                throw new Exception("Tav and Amp cannot be calculated from less than two years of met data.");
 
             // temp storage arrays
             double[,] monthlyMeans = new double[12, nyears];
@@ -1085,7 +1108,7 @@ namespace Models.Climate
                 monthlySums[curMonth - 1, yearIndex] = monthlySums[curMonth - 1, yearIndex] + ((maxt + mint) * 0.5);
                 monthlyDays[curMonth - 1, yearIndex]++;
 
-                if (curDate >= last)
+                if (curDate >= endDate)
                     moreData = false;
             }
 

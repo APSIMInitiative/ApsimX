@@ -199,49 +199,47 @@ public class PropertyMetadata
             newValues = DateTime.ParseExact(values.First(), "yyyy/MM/dd", CultureInfo.InvariantCulture);
         else if (Property.PropertyType == typeof(string[]))
             newValues = values.ToArray();
-        else if (Property.PropertyType == typeof(double[]))
+        else if (Property.PropertyType == typeof(double[]) || Property.PropertyType == typeof(List<double>))
         {
-            newValues = values.Select(v => 
+            newValues = values.Select(v =>
             {
-                if (Double.TryParse(v, out double d))
+                if (v.Length == 0)
+                    return double.NaN;
+                else if (Double.TryParse(v, out double d))
                     return d;
-                return double.NaN;
-            }).ToArray();
+                else
+                    throw new Exception($"Cannot convert {v} to Double");
+            });
+            if (Property.PropertyType == typeof(double[]))
+                newValues = (newValues as IEnumerable<double>).ToArray();
+            else if (Property.PropertyType == typeof(List<double>))
+                newValues = (newValues as IEnumerable<double>).ToList();
         }
-        else if (Property.PropertyType == typeof(int[]))
-            newValues = values.Select(v => 
+        else if (Property.PropertyType == typeof(int[]) || Property.PropertyType == typeof(List<int>))
+        {
+            newValues = values.Select(v =>
             {
-                if (Int32.TryParse(v, out int i))
+                if (v.Length == 0)
+                    return Int32.MaxValue;
+                else if (Int32.TryParse(v, out int i))
                     return i;
-                return Int32.MaxValue;
-
-            }).ToArray();
+                else
+                    throw new Exception($"Cannot convert {v} to Int");
+            });
+            if (Property.PropertyType == typeof(int[]))
+                newValues = (newValues as IEnumerable<int>).ToArray();
+            else if (Property.PropertyType == typeof(List<int>))
+                newValues = (newValues as IEnumerable<int>).ToList();
+        }
         else if (Property.PropertyType == typeof(bool[]))
-            newValues = values.Select(v => v == "X" || v == "x").ToList();
+            newValues = values.Select(v => v == "X" || v == "x").ToArray();
         else if (Property.PropertyType == typeof(DateTime[]))
             newValues = values.Select(v => DateTime.ParseExact(v, "yyyy/MM/dd", CultureInfo.InvariantCulture)).ToArray();
         else if (Property.PropertyType == typeof(List<string>))
             newValues = values.ToList();
-        else if (Property.PropertyType == typeof(List<double>))
-        {
-            newValues = values.Select(v => 
-            {
-                if (Double.TryParse(v, out double d))
-                    return d;
-                return double.NaN;
-            }).ToList();
-        }
-        else if (Property.PropertyType == typeof(List<int>))
-            newValues = values.Select(v => 
-            {
-                if (Int32.TryParse(v, out int i))
-                    return i;
-                return Int32.MaxValue;
-
-            }).ToList();
         else if (Property.PropertyType == typeof(List<bool>))
             newValues = values.Select(v => v == "X" || v == "x").ToList();
-        else if (Property.PropertyType == typeof(DateTime[]) || Property.PropertyType == typeof(List<DateTime>))
+        else if (Property.PropertyType == typeof(List<DateTime>))
             newValues = values.Select(v => DateTime.ParseExact(v, "yyyy/MM/dd", CultureInfo.InvariantCulture)).ToList();
         else
             throw new Exception($"Unknown property data type found while trying to set values from grid. Data type: {Property.PropertyType}");

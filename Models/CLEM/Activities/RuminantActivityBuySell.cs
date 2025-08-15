@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;
 using APSIM.Shared.Utilities;
+using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
@@ -434,7 +435,7 @@ namespace Models.CLEM.Activities
                     var pricing = ind.Parameters.Details.GetPriceGroupOfIndividual(ind, PurchaseOrSalePricingStyleType.Sale);
                     if (pricing != null)
                         saleValue += pricing.CalculateValue(ind);
-                   
+
                     taskIndividuals.Add(ind);
                     HerdResource.RemoveRuminant(ind, this);
                     head++;
@@ -495,7 +496,7 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("</div>");
                 return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
     }
 }

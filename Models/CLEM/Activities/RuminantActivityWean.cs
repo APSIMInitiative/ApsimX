@@ -9,6 +9,7 @@ using Models.Core.Attributes;
 using Models.CLEM.Reporting;
 using System.IO;
 using Models.CLEM.Interfaces;
+using APSIM.Core;
 
 namespace Models.CLEM.Activities
 {
@@ -26,8 +27,12 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantWean.htm")]
     [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGeneral) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType })]
-    public class RuminantActivityWean: CLEMRuminantActivityBase, IHandlesActivityCompanionModels, IValidatableObject
+    public class RuminantActivityWean: CLEMRuminantActivityBase, IHandlesActivityCompanionModels, IValidatableObject, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         [Link]
         private readonly IClock clock = null;
 
@@ -127,8 +132,8 @@ namespace Models.CLEM.Activities
                     if (GrazeFoodStoreName == "Not specified - general yards")
                     {
                         grazeStore = "";
-                        ActivitiesHolder ah = FindInScope<ActivitiesHolder>();
-                        if (ah.FindAllDescendants<PastureActivityManage>().Any())
+                        ActivitiesHolder ah = Structure.Find<ActivitiesHolder>();
+                        if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
                             Summary.WriteMessage(this, $"Individuals weaned by [a={NameWithParent}] will be placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place weaners in] located in the properties.", MessageType.Warning);
                     }
                 }
@@ -257,7 +262,7 @@ namespace Models.CLEM.Activities
         {
             if (GrazeFoodStoreName.Contains('.'))
             {
-                ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
+                ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
                 if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreName) is null)
                 {
                     yield return new ValidationResult($"The location where ruminants are to be moved [r={GrazeFoodStoreName}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", new string[] { "Location is not valid" });

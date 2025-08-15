@@ -1,11 +1,12 @@
 [weather.met.weather]
 
 
-latitude=                             -34.97(DECIMAL       DEGREES)
-longitud=                             138.63(DECIMAL       DEGREES)
+latitude  = -34.97 (DECIMAL DEGREES)
+longitude = 138.63 (DECIMAL DEGREES)
 
-
-
+!Tav and Amp used from nearby 023005 ADELAIDE (GLEN OSMOND) LongPaddock met file.
+tav = 16.07 (oC) ! Annual average ambient temperature. Based on 1 Jan 1957 to current.
+amp = 12.30 (oC) ! Annual amplitude in mean monthly temperature. Based on 1 Jan 1957 to current.
 
 
 

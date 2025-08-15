@@ -5,6 +5,7 @@ using Models.Soils;
 using Models.Soils.Nutrients;
 using APSIM.Shared.Utilities;
 using Models.Surface;
+using APSIM.Numerics;
 
 namespace Models.AgPasture
 {

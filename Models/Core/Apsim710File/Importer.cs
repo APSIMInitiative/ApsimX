@@ -6,10 +6,10 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Xml;
+using APSIM.Core;
 using APSIM.Shared.OldAPSIM;
 using APSIM.Shared.Utilities;
 using Microsoft.CSharp;
-using Models.Core.ApsimFile;
 
 namespace Models.Core.Apsim710File
 {
@@ -187,7 +187,7 @@ namespace Models.Core.Apsim710File
             XmlNode xdocNode = xdoc.CreateElement("Simulations");
             xdoc.AppendChild(xdocNode);
             newNode = xdocNode.AppendChild(xdoc.CreateElement("Name"));
-            XmlUtilities.SetAttribute(xdoc.DocumentElement, "Version", XmlConverters.LastVersion.ToString());
+            XmlUtilities.SetAttribute(xdoc.DocumentElement, "Version", FileFormat.JSONVersion.ToString());
             newNode.InnerText = "Simulations";
 
             XmlNode rootNode = doc.DocumentElement;     // get first folder
@@ -199,7 +199,7 @@ namespace Models.Core.Apsim710File
             xmlWriter.Write(XmlUtilities.FormattedXML(xdoc.OuterXml));
             xmlWriter.Close();
 
-            newSimulations = FileFormat.ReadFromFile<Simulations>(xfile, errorHandler, false).NewModel as Simulations;
+            newSimulations = FileFormat.ReadFromFile<Simulations>(xfile, errorHandler).Model as Simulations;
             File.Delete(xfile);
             return newSimulations;
         }

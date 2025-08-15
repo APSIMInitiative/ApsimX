@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Core;
 using Models.Core;
 
 namespace Models.Functions

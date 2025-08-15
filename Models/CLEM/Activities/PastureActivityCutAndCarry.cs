@@ -244,7 +244,7 @@ namespace Models.CLEM.Activities
                 };
 
                 foodstore.Add(packet, this, null, TransactionCategory);
-                limiter.AddWeightCarried(amountToDo - amountToSkip);
+                limiter?.AddWeightCarried(amountToDo - amountToSkip);
                 SetStatusSuccessOrPartial(amountToSkip > 0);
             }
         }

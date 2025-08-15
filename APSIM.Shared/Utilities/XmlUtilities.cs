@@ -8,6 +8,7 @@ namespace APSIM.Shared.Utilities
     using System.Text;
     using System.Xml;
     using System.Xml.Serialization;
+    using APSIM.Numerics;
 
     /// <summary>
     /// XML utility routines
@@ -56,7 +57,7 @@ namespace APSIM.Shared.Utilities
         public static string NameAttr(XmlNode node)
         {
             // --------------------------------------
-            // Return the name attribute or if not 
+            // Return the name attribute or if not
             // found then the element name
             // i.e. 'Type'
             // --------------------------------------
@@ -181,7 +182,7 @@ namespace APSIM.Shared.Utilities
         public static string FullPath(XmlNode node)
         {
             // --------------------------------------------------------
-            // Return a full path for the specified node. Paths are 
+            // Return a full path for the specified node. Paths are
             // of the form: /RootNode/ChildNode/SubChildNode
             // --------------------------------------------------------
             XmlNode LocalData = node;
@@ -224,7 +225,7 @@ namespace APSIM.Shared.Utilities
             // Find a child with the specified NamePath. NamePath
             // can be a single child name or a path delimited with
             // '/' characters e.g. ChildNode/SubChildNode or /RootNode/ChildNode
-            // Returns null if no child found. 
+            // Returns null if no child found.
             // ----------------------------------------------------
             if (node == null)
                 return null;
@@ -296,7 +297,7 @@ namespace APSIM.Shared.Utilities
             // Find a child with the specified TypePath. TypePath
             // can be a single child type or a path delimited with
             // '/' characters e.g. ChildNode/SubChildNode or /RootNode/ChildNode
-            // Returns null if no child found. 
+            // Returns null if no child found.
             // ----------------------------------------------------
             if (node == null)
                 return null;
@@ -419,11 +420,11 @@ namespace APSIM.Shared.Utilities
         {
             // ----------------------------------------------------
             // Find a child with the specified name and type
-            // Returns null if no child found. 
+            // Returns null if no child found.
             // ----------------------------------------------------
             foreach (XmlNode Child in node.ChildNodes)
             {
-                if (String.Equals(NameAttr(Child), nameFilter, StringComparison.CurrentCultureIgnoreCase) && 
+                if (String.Equals(NameAttr(Child), nameFilter, StringComparison.CurrentCultureIgnoreCase) &&
                     String.Equals(Type(Child), typeFilter, StringComparison.CurrentCultureIgnoreCase))
                     return Child;
             }
@@ -438,8 +439,8 @@ namespace APSIM.Shared.Utilities
         public static XmlNode ChildByTypeAndValue(XmlNode node, string typeFilter, string valueFilter)
         {
             // ----------------------------------------------------
-            // Find a child with the specified Type and value. 
-            // Returns null if no child found. 
+            // Find a child with the specified Type and value.
+            // Returns null if no child found.
             // ----------------------------------------------------
             foreach (XmlNode Child in node.ChildNodes)
             {
@@ -769,7 +770,7 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         private class XmlNodeComparer : System.Collections.IComparer
         {
@@ -1004,10 +1005,10 @@ namespace APSIM.Shared.Utilities
                 reader = new XmlNodeReader(doc);
             }
             // Try using the pre built serialization assembly first.
-            string deserializerFileName = Path.ChangeExtension(assembly.Location, 
+            string deserializerFileName = Path.ChangeExtension(assembly.Location,
                                                                ".XmlSerializers.dll");
 
-            // Under MONO it seems that if a class is not in the serialization assembly then exception will 
+            // Under MONO it seems that if a class is not in the serialization assembly then exception will
             // be thrown. Under windows this doesn't happen. For now, only use the prebuilt serialisation
             // dll if on windows.
             if (File.Exists(deserializerFileName))
@@ -1112,7 +1113,7 @@ namespace APSIM.Shared.Utilities
             else
                 ns.Add("", "");
 
-            // Under MONO it seems that if a class is not in the serialization assembly then exception will 
+            // Under MONO it seems that if a class is not in the serialization assembly then exception will
             // be thrown. Under windows this doesn't happen. For now, only use the prebuilt serialisation
             // dll if on windows.
             object Serialiser = null;

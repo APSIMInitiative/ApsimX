@@ -19,15 +19,12 @@
 
     <EmbeddedResource Include="./Resources/*.css" />
     <EmbeddedResource Include="./Resources/*.bib" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Markdig" Version="0.38.0" />
   </ItemGroup>
-  
+
   <PropertyGroup>
    <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
-  </PropertyGroup>  
+  </PropertyGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="./Resources/*.png" />

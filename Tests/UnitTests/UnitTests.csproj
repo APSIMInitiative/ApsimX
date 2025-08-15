@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net8.0</TargetFrameworks>
     <BaseOutputPath>../../bin</BaseOutputPath>
@@ -21,7 +21,7 @@
     <EmbeddedResource Include="**\*.json" />
     <EmbeddedResource Include="**\*.apsim" />
     <EmbeddedResource Include="**\*.apsimx" />
-    <EmbeddedResource Include="Weather\WeatherTestsExcelFile.xlsx" />
+    <EmbeddedResource Include="Weather\*.xlsx" />
     <EmbeddedResource Include="**\*.met" />
     <EmbeddedResource Include="**\*.Expected.txt" />
     <EmbeddedResource Include="APSIMShared/Resources/*.csv" />
@@ -44,8 +44,8 @@
     <ProjectReference Include="..\..\APSIM.Workflow\APSIM.Workflow.csproj" />
 
     <!-- nuget -->
-    <PackageReference Include="NUnit" Version="4.1.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+    <PackageReference Include="NUnit" Version="4.3.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="5.0.0" />
     <PackageReference Include="System.Resources.Extensions" Version="6.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
     <PackageReference Include="Moq" Version="4.20.70" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Core;
 using Models.Core;
 using Models.Functions;
 
@@ -18,11 +19,11 @@ namespace Models.PMF.Organs
         public string ResetStageName { get; set; }
         /// <summary>
         /// NodeNumber for basial buds
-        /// </summary> 
+        /// </summary>
         public double NodeNumber { get; set; }
         /// <summary>
         /// Leaf Area for basial buds
-        /// </summary> 
+        /// </summary>
         public double LAI { get; set; }
         /// <summary>
         /// Nodenumber Function

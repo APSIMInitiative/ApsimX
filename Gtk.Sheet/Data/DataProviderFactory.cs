@@ -20,7 +20,7 @@ public class DataProviderFactory
     public static IDataProvider Create(object obj, Action<List<PropertyMetadata>> callback = null)
     {
         // Discover a list of potential class properties.
-        var properties = DiscoverProperties(obj);
+        var properties = DiscoverProperties(obj, null);
 
         var dataTableProperty = properties.Where(p => p.Property.PropertyType == typeof(DataTable));
         if (dataTableProperty.Any())
@@ -44,23 +44,50 @@ public class DataProviderFactory
     }
 
     /// <summary>
+    /// Convert a DataTable property within a model to an ISheetDataProvider so that it can be represented in a grid control.
+    /// </summary>
+    /// <param name="obj">The class instance.</param>
+    /// <param name="callback">A callback allowing the caller to manipulate the list of properties</param>
+    /// <returns>A DataProvider instance.</returns>
+    public static IDataProvider CreateUsingDataTableName(object obj, string propertyName = null, Action<List<PropertyMetadata>> callback = null)
+    {
+        // Discover a list of potential class properties.
+        var properties = DiscoverProperties(obj, propertyName);
+
+        var dataTableProperty = properties.Where(p => p.Property.PropertyType == typeof(DataTable));
+        if (dataTableProperty.Any())
+            return new DataTableProvider(dataTableProperty.First().Property.GetValue(obj) as DataTable);
+        else
+            throw new Exception($"{propertyName} is not a DataTable property within {obj}");
+    }
+
+    /// <summary>
     /// Discover all properties in a model that should be shown in a grid control.
     /// </summary>
     /// <param name="tuples">A list of property tuples to process.</param>
-    private static List<PropertyMetadata> DiscoverProperties(object obj)
+    private static List<PropertyMetadata> DiscoverProperties(object obj, string name)
     {
         List<PropertyMetadata> returnProperties = new();
 
         // Discover a list of potential class properties.
-        var properties = obj.GetType()
+        IEnumerable<PropertyInfo> properties = null;
+        if (string.IsNullOrEmpty(name)) {
+            properties = obj.GetType()
                             .GetProperties(BindingFlags.Instance | BindingFlags.Public)
                             .Where(p => p.GetCustomAttribute<DisplayAttribute>() != null);
+        }
+        else
+        {
+            properties = obj.GetType()
+                            .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                            .Where(p => p.Name == name);
+        }
 
         foreach (var property in properties)
         {
             DisplayAttribute displayAttribute = property.GetCustomAttribute<DisplayAttribute>();
             UnitsAttribute unitsAttribute = property.GetCustomAttribute<UnitsAttribute>();
-            if (displayAttribute != null)
+            if (displayAttribute != null && displayAttribute.Type == DisplayType.None)
             {
                 string units;
                 string[] validUnits = null;

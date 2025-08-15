@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Core;
 using Models.Core;
 using Models.Functions;
 using Models.PMF.Interfaces;
@@ -7,7 +8,7 @@ namespace Models.PMF
 {
 
     /// <summary>
-    /// This class holds the functions for calculating values for each Nutrient component. 
+    /// This class holds the functions for calculating values for each Nutrient component.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]

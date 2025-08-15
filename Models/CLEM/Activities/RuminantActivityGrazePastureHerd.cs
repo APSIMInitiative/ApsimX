@@ -27,8 +27,12 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGraze.htm")]
     [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGrazing) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType })]
-    class RuminantActivityGrazePastureHerd : CLEMRuminantActivityBase, IValidatableObject
+    class RuminantActivityGrazePastureHerd : CLEMRuminantActivityBase, IValidatableObject, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>
         /// Link to clock
         /// Public so children can be dynamically created after links defined
@@ -215,7 +219,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMValidate")]
         private void OnFinalInitialise(object sender, EventArgs e)
         {
-            shortfallReportingCutoff = FindInScope<ReportResourceShortfalls>()?.PropPastureShortfallOfDesiredIntake??0.02;
+            shortfallReportingCutoff = Structure.Find<ReportResourceShortfalls>()?.PropPastureShortfallOfDesiredIntake??0.02;
 
             // if this is the last of newly added models that will be set to hidden
             // reset the simulation subscriptions to correct the new order before running the simulation.
@@ -488,7 +492,7 @@ namespace Models.CLEM.Activities
         {
             if (GrazeFoodStoreTypeName.Contains("."))
             {
-                ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
+                ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
                 if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreTypeName) is null)
                 {
                     yield return new ValidationResult($"The location defined for grazing [r={GrazeFoodStoreTypeName}] in [a={Name}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", new string[] { "Location is not valid" });

@@ -12,6 +12,8 @@ using APSIM.Shared.Utilities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
 using Models.CLEM.Groupings;
+using System.Xml;
+using APSIM.Numerics;
 using DocumentFormat.OpenXml.Bibliography;
 
 namespace Models.CLEM.Activities
@@ -50,7 +52,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Artificial insemination in use (defined by presence of add-on component)
         /// </summary>
-        private bool useControlledMating { get { return (controlledMating != null); }  }
+        private bool useControlledMating { get { return (controlledMating != null && controlledMating.ActivityEnabled); }  }
 
         /// <summary>
         /// Records the number of individuals that conceived in the BreedingEvent for sub-components to work with.

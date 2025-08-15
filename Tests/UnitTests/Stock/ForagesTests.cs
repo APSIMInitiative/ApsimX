@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using APSIM.Core;
+using Models.Core;
 using Models.ForageDigestibility;
 using Models.PMF;
 using Models.PMF.Interfaces;
@@ -64,7 +65,7 @@ namespace UnitTests.Stock
                     }
                 }
             };
-
+            Node.Create(simulation);
             Utilities.ResolveLinks(simulation);
 
             var forages = simulation.FindChild<Forages>();
@@ -139,7 +140,7 @@ namespace UnitTests.Stock
                     }
                 }
             };
-
+            Node.Create(simulation);
             Utilities.ResolveLinks(simulation);
 
             var forages = simulation.FindChild<Forages>();
@@ -193,7 +194,7 @@ namespace UnitTests.Stock
                     }
                 }
             };
-
+            Node.Create(simulation);
             Utilities.ResolveLinks(simulation);
 
             var forages = simulation.FindChild<Forages>();
@@ -240,7 +241,7 @@ namespace UnitTests.Stock
                     }
                 }
             };
-
+            Node.Create(simulation);
             Utilities.ResolveLinks(simulation);
 
             var forages = simulation.FindChild<Forages>();

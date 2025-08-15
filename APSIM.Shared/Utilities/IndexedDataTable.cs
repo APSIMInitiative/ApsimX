@@ -4,11 +4,12 @@
     using System.Collections.Generic;
     using System.Data;
     using System.Linq;
+    using APSIM.Numerics;
 
     /// <summary>
     /// An indexed DataTable. An index (column name / value pairs) is applied
-    /// to the datatable. Thereafter, scalars or a vector of values can then be 'set' into 
-    /// the table for the applied index. Rows and columns will be automatically added as 
+    /// to the datatable. Thereafter, scalars or a vector of values can then be 'set' into
+    /// the table for the applied index. Rows and columns will be automatically added as
     /// required when data is 'set' into the table.
     /// </summary>
     public class IndexedDataTable
@@ -108,7 +109,7 @@
             return values;
         }
 
-        /// <summary>Return a enumerable collection of groups where a group is 
+        /// <summary>Return a enumerable collection of groups where a group is
         /// defined by the current index.</summary>
         public IEnumerable<IndexedDataTableGroupEnumerator> Groups()
         {
@@ -164,7 +165,7 @@
                 }
                 else
                     view.Table.ImportRow(view[view.Count-1].Row);
-                
+
             }
         }
 

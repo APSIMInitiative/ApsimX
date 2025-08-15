@@ -557,7 +557,7 @@ namespace Models.Storage
                     if (commandRunner == null)
                     {
                         stopping = false;
-                        commandRunner = new JobRunner(numProcessors: (Connection is Firebird && (Connection as Firebird).fbDBServerType == FirebirdSql.Data.FirebirdClient.FbServerType.Default) ? -1 : 1);
+                        commandRunner = new JobRunner(numProcessors: 1);
                         commandRunner.Add(this);
                         commandRunner.Run();
                         ReadExistingDatabase(Connection);

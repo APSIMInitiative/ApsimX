@@ -1,8 +1,10 @@
 [weather.met.weather]
-latitude = -43.65
+latitude  = -43.65
 longitude = 172.48333
-tav (oC)
-amp(oC)
+
+!Tav and Amp used from lincoln.met in APSIM Wheat Validation
+tav = 11.4 (oC) ! annual  average  ambient  temperature        
+amp = 11.5 (oC) ! annual  amplitud  in  mean  monthly  temperature  
 
 year                 day             rain            maxt         mint           radn
 ()                   ()              (mm)            (oC)         (oC)           (MJ/m2/d)

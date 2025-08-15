@@ -1,19 +1,12 @@
 [weather.met.weather]
 !stationnumber  =                                            86131
 !stationname    =                     YAN                         YEAN
-latitude=                       -37.56(DECIMAL                    DEGREES)
-longitude=                       145.13(DECIMAL                    DEGREES)
+latitude  = -37.55 (DECIMAL DEGREES)
+longitude = 145.13 (DECIMAL DEGREES)
 
-
-
-
-
-
-
-
-
-
-
+!Tav and Amp used from nearby 086131 YAN YEAN LongPaddock met file.
+tav = 14.13 (oC) ! Annual average ambient temperature. Based on 1 Jan 1957 to current.
+amp = 12.37 (oC) ! Annual amplitude in mean monthly temperature. Based on 1 Jan 1957 to current.
 
 
 year    day     radn                  maxt                        mint                                     rain

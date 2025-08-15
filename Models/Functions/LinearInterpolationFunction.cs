@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Core;
 using Models.Core;
 
 namespace Models.Functions
 {
     /// <summary>
-    /// A linear interpolation model, where an 
+    /// A linear interpolation model, where an
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]

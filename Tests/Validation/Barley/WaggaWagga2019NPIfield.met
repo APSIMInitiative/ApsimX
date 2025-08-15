@@ -1,8 +1,12 @@
 [weather.met.weather]
 !stationnumber  =          73127
 !stationname    =       WAGGA   WAGGA   AGRICULTINSTITUTE
-latitude =  -35.05 (DECIMALDEGREES)
-longitude =  147.35 (DECIMALDEGREES)
+latitude  = -35.05 (DECIMAL DEGREES)
+longitude = 147.35 (DECIMAL DEGREES)
+
+!Tav and Amp used from nearby 072150 WAGGA WAGGA AMO LongPaddock met file.
+tav = 15.77 (oC) ! Annual average ambient temperature. Based on 1 Jan 1957 to current.
+amp = 17.13 (oC) ! Annual amplitude in mean monthly temperature. Based on 1 Jan 1957 to current.
 
 year    day     radn    maxt    mint    rain    pan     vp      code
 ()      ()      (MJ/m^2) (oC)    (oC)    (mm)    (mm)    (hPa)   ()

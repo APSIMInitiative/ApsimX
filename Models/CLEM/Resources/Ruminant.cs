@@ -1,3 +1,4 @@
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using DocumentFormat.OpenXml.Bibliography;
 using Models.CLEM.Groupings;

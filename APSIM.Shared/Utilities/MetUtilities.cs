@@ -3,6 +3,7 @@
     using System;
     using System.Data;
     using System.Globalization;
+    using APSIM.Numerics;
 
     /// <summary>
     /// A collection of weather utility functions
@@ -545,13 +546,13 @@
             return functionReturnValue;
 
         }
-         
+
         /// <summary>
         /// This routine calculates the distance between two points (given the
-        /// latitude/longitude of those points). 
+        /// latitude/longitude of those points).
         /// </summary>
         /// <remarks>
-        /// South latitudes are negative, east longitudes are positive 
+        /// South latitudes are negative, east longitudes are positive
         /// </remarks>
         /// <param name="lat1">First latitude.</param>
         /// <param name="lon1">First longitude.</param>

@@ -14,13 +14,6 @@ namespace Models.DCAPST
         public CanopyType Type { get; set; }
 
         /// <summary>
-        /// Partial pressure of O2 in air.
-        /// </summary>
-        [Description("Partial pressure of O2 in air")]
-        [Units("μbar")]
-        public double AirO2 { get; set; }
-
-        /// <summary>
         /// Canopy average leaf inclination relative to the horizontal (degrees)
         /// </summary>
         [Description("Average leaf angle (relative to horizontal)")]
@@ -54,7 +47,6 @@ namespace Models.DCAPST
         [Description("Diffuse radiation extinction coefficient")]
         [Units("")]
         public double DiffuseExtCoeff { get; set; }
-
 
         /// <summary>
         /// Used to reduce the ExtCoeff based on LAI
@@ -92,25 +84,11 @@ namespace Models.DCAPST
         public double DiffuseReflectionCoeffNIR { get; set; }
 
         /// <summary>
-        /// Local wind speed
-        /// </summary>
-        [Description("Local wind speed")]
-        [Units("")]
-        public double Windspeed { get; set; }
-
-        /// <summary>
         /// Extinction coefficient for local wind speed
         /// </summary>
         [Description("Wind speed extinction coefficient")]
         [Units("")]
         public double WindSpeedExtinction { get; set; }
-
-        /// <summary>
-        /// Empirical curvature factor
-        /// </summary>
-        [Description("Empirical curvature factor")]
-        [Units("")]
-        public double CurvatureFactor { get; set; }
 
         /// <inheritdoc />
         [Description("Diffusivity solubility ratio")]

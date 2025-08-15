@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Interfaces;
+﻿using APSIM.Core;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
 using Models.Core.Run;
@@ -22,8 +23,12 @@ namespace Models.CLEM.Reporting
     [Description("Generates a pivot table from a Report")]
     [Version(1, 0, 0, "")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    public class ReportPivot : Model, ICLEMUI, IValidatableObject, IPostSimulationTool
+    public class ReportPivot : Model, ICLEMUI, IValidatableObject, IPostSimulationTool, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         [Link]
         private IDataStore datastore = null;
 
@@ -108,7 +113,7 @@ namespace Models.CLEM.Reporting
         public string[] GetColumnPivotOptions(bool value)
         {
             // Find the data from the parent report
-            var storage = FindInScope<IDataStore>();
+            var storage = Structure.Find<IDataStore>();
             var report = storage.Reader.GetData(Parent.Name);
 
             if (report is null)
@@ -129,7 +134,7 @@ namespace Models.CLEM.Reporting
         /// <param name="col">The column being tested</param>
         /// <returns>
         /// <see langword="true"/> if the column contains data values,
-        /// <see langword="false"/> otherwise 
+        /// <see langword="false"/> otherwise
         /// </returns>
         private bool HasDataValues(DataColumn col)
         {
@@ -150,7 +155,7 @@ namespace Models.CLEM.Reporting
         /// </summary>
         public DataTable GenerateTable()
         {
-            var storage = FindInScope<IDataStore>() ?? datastore;
+            var storage = Structure.Find<IDataStore>() ?? datastore;
             string viewSQL = storage.GetViewSQL(Name);
             if (viewSQL != "")
                 return storage.Reader.GetData(Name);
@@ -163,7 +168,7 @@ namespace Models.CLEM.Reporting
                 throw new ApsimXException(this, $"Invalid name: {Name}\nNames cannot contain spaces.");
 
             // Find the data
-            var storage = FindInScope<IDataStore>() ?? datastore;
+            var storage = Structure.Find<IDataStore>() ?? datastore;
             var report = storage.Reader.GetData(Parent.Name);
 
             if (report is null)
@@ -220,7 +225,7 @@ namespace Models.CLEM.Reporting
         /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (FindAllInScope<ReportPivot>().Where(a => a.Name == Name).Skip(1).Any())
+            if (Structure.FindAll<ReportPivot>().Where(a => a.Name == Name).Skip(1).Any())
             {
                 yield return new ValidationResult("This report cannot have the same name as another [PivotReport] as the component name is used as the View name in the database", new string[] { "Duplicate report name" });
             }

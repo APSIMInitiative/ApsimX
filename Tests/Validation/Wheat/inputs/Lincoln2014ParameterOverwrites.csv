@@ -1,0 +1,7 @@
+SimulationName,[Wheat].Phenology.CAMP.FLNparams.MinLN,[Wheat].Phenology.Phyllochron.BasePhyllochron.FixedValue,[Wheat].Phenology.PhyllochronPpSensitivity.FixedValue,[Wheat].Phenology.HeadEmergenceLongDayBase.FixedValue,[Wheat].Phenology.HeadEmergencePpSensitivity.FixedValue,[Wheat].Phenology.CAMP.FLNparams.PpLN,[Wheat].Phenology.CAMP.FLNparams.VrnLN,[Wheat].Phenology.CAMP.FLNparams.VxPLN,[Wheat].Phenology.Flowering.Target.FixedValue
+Lincoln2014IrrigFull,16,90,.6,150,0,0,0,0,130
+Lincoln2014IrrigNil,16,90,.6,150,0,0,0,0,130
+Lincoln2014IrrigVeryEarly,16,90,.6,150,0,0,0,0,130
+Lincoln2014IrrigEarly,16,90,.6,150,0,0,0,0,130
+Lincoln2014IrrigMiddle,16,90,.6,150,0,0,0,0,130
+Lincoln2014IrrigLate,16,90,.6,150,0,0,0,0,130

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Globalization;
+using APSIM.Core;
 using Models.Core;
 using Models.Functions;
 using Newtonsoft.Json;
@@ -11,8 +12,13 @@ namespace Models.PMF
     /// This class encapsulates an array of biomass objects
     /// </summary>
     [Serializable]
-    public class ArrayBiomass : Model
+    public class ArrayBiomass : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
+
         /// <summary>The propertys</summary>
         public string[] Propertys = null;
 
@@ -158,7 +164,6 @@ namespace Models.PMF
             }
         }
 
-
         /// <summary>Adds the values to list.</summary>
         /// <param name="SubPropertyName">Name of the sub property.</param>
         /// <returns></returns>
@@ -166,13 +171,13 @@ namespace Models.PMF
         private double[] AddValuesToList(string SubPropertyName)
         {
             if (ArraySizeNumber == -1)
-                ArraySizeNumber = Convert.ToInt32(ExpressionFunction.Evaluate(ArraySize, this), CultureInfo.InvariantCulture);
+                ArraySizeNumber = Convert.ToInt32(ExpressionFunction.Evaluate(ArraySize, this, Structure), CultureInfo.InvariantCulture);
 
             double[] Values = new double[ArraySizeNumber];
             int i = 0;
             foreach (string PropertyName in Propertys)
             {
-                object Obj = this.FindByPath(PropertyName + SubPropertyName)?.Value;
+                object Obj = Structure.GetObject(PropertyName + SubPropertyName)?.Value;
                 if (Obj == null)
                     throw new Exception("Cannot find: " + PropertyName + " in ArrayBiomass: " + this.Name);
 

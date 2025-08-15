@@ -9,6 +9,9 @@ using System.Globalization;
 using System.IO;
 using Models.CLEM.Interfaces;
 using APSIM.Shared.Utilities;
+using APSIM.Numerics;
+using DocumentFormat.OpenXml.Office.CustomXsn;
+using APSIM.Core;
 
 namespace Models.CLEM.Activities
 {
@@ -23,10 +26,17 @@ namespace Models.CLEM.Activities
     [Version(1, 1, 0, "Replaces old Trade herd approach")]
     [Version(1, 0, 2, "Includes improvements such as a relationship to define numbers purchased based on pasture biomass and allows placement of purchased individuals in a specified paddock")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantPurchase.htm")]
-    public class RuminantActivityPurchase : CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels
+    public class RuminantActivityPurchase : CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels, IStructureDependency
     {
         [Link]
         private readonly Clock clock = null;
+
+        /// <summary>
+        /// Structure instance supplied by APSIM.core.
+        /// </summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         private string grazeStore = "";
         private Relationship numberToStock;
         private GrazeFoodStoreType foodStore;
@@ -105,7 +115,6 @@ namespace Models.CLEM.Activities
         {
             InitialiseHerd(false, false);
 
-            // get herd to add to 
             rumTypeToUse = Resources.FindResourceType<RuminantHerd, RuminantType>(this, PredictedHerdName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             // check GrazeFoodStoreExists
@@ -116,9 +125,9 @@ namespace Models.CLEM.Activities
             // check for managed paddocks and warn if animals placed in yards.
             if (grazeStore == "")
             {
-                var ah = FindInScope<ActivitiesHolder>();
-                if (ah.FindAllDescendants<PastureActivityManage>().Any())
-                {
+                var ah = Structure.Find<ActivitiesHolder>();
+                if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
+                { 
                     Summary.WriteMessage(this, String.Format("Trade animals purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name), MessageType.Warning);
                 }
             }
@@ -258,7 +267,7 @@ namespace Models.CLEM.Activities
 
             if (GrazeFoodStoreName.Contains("."))
             {
-                ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
+                ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
                 if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreName) is null)
                 {
                     string[] memberNames = new string[] { "Location is not valid" };
@@ -285,7 +294,6 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write("The relationship <span class=\"activitylink\">" + numberRelationship.Name + "</span> will be used to calculate numbers purchased based on pasture biomass (t\\ha)");
                 else
                     htmlWriter.Write("The number of individuals in the Ruminant Cohort supplied will be used as no paddock has been supplied for the relationship <span class=\"resourcelink\">" + numberRelationship.Name + "</span> will be used to calulate numbers purchased based on pasture biomass (t//ha)");
-
                 htmlWriter.Write("</div>");
             }
             return htmlWriter.ToString();

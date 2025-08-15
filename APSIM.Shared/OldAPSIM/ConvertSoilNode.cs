@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Xml;
+    using APSIM.Numerics;
     using APSIM.Shared.Utilities;
 
     /// <summary>
@@ -186,7 +187,7 @@
                     Node.RemoveChild(ProfileNode);
                 }
 
-                // Turn the <InitNitrogen> element into a sample node.  
+                // Turn the <InitNitrogen> element into a sample node.
                 XmlNode InitNitrogenNode = XmlUtilities.Find(Node, "InitNitrogen");
                 if (InitNitrogenNode != null)
                     ConvertSampleNode(Node, InitNitrogenNode, "Initial nitrogen");
@@ -487,7 +488,7 @@
                         AllCropsShortcutted = false;
                 }
                 // If the <water> node has a shortcut and there are <SoilCrop> children that
-                // are not shortcutted then we need to remove all shortcuts on <Water> and the 
+                // are not shortcutted then we need to remove all shortcuts on <Water> and the
                 // <SoilCrop> children.
                 if (WaterNodeIsShortcutted && AllCropsShortcutted)
                 {
@@ -833,7 +834,7 @@
         }
 
         /// <summary>
-        /// Fix the order of the properties of the specified parent xml node to that 
+        /// Fix the order of the properties of the specified parent xml node to that
         /// giveen in ChildNodeNames
         /// </summary>
         private static void SetPropertiesOrder(XmlNode ParentNode, string[] ChildNodeNames, string[] Units, bool CheckUnits)
@@ -853,7 +854,7 @@
             }
         }
         /// <summary>
-        /// Fix the order of the layered variables of the specified parent xml node to that 
+        /// Fix the order of the layered variables of the specified parent xml node to that
         /// giveen in ChildNodeNames
         /// </summary>
         private static void SetLayeredOrder(XmlNode ProfileNode, string[] ChildNodeNames, string[] Units)
@@ -926,7 +927,7 @@
         ///  <Layer>
         ///    <Thickness>150</Thickness>
         ///  </Layer>
-        ///  
+        ///
         /// to:
         /// <Thickness>
         ///     <double>150</double>

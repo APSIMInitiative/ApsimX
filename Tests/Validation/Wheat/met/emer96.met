@@ -1,6 +1,10 @@
 [weather.input.weather]
-latitude = -23.52 ()
-longitude = 148.16
+latitude  = -23.52 (DECIMAL DEGREES)
+longitude = 148.16 (DECIMAL DEGREES)
+
+!Tav and Amp used from nearby 010515 JUANITA LongPaddock met file.
+tav = 22.22 (oC) ! Annual average ambient temperature. Based on 1 Jan 1957 to current.
+amp = 13.56 (oC) ! Annual amplitude in mean monthly temperature. Based on 1 Jan 1957 to current.
 
 site = emerald
 year  day   maxt   mint   rain   radn

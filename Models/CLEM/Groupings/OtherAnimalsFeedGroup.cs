@@ -7,16 +7,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Models.CLEM.Resources;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using Models.CLEM.Interfaces;
 using System.ComponentModel.DataAnnotations;
-using static Models.Core.ScriptCompiler;
 
 namespace Models.CLEM.Groupings
 {
     ///<summary>
     /// Contains a group of filters to identify individual other animals to feed
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]

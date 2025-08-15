@@ -1,0 +1,901 @@
+﻿using APSIM.Shared.Utilities;
+using Models.CLEM.Interfaces;
+using Models.CLEM.Reporting;
+using Models.Core;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json.Serialization;
+
+namespace Models.CLEM.Resources
+{
+    /// <summary>
+    /// Object for an individual female Ruminant.
+    /// </summary>
+    [Serializable]
+    public class RuminantFemale : Ruminant
+    {
+        private List<(DateTime InHeatDate, DateTime OestrusDate)> inHeatDetails = [];
+        private DateTime nextOestrusDate = default;
+        private int daysInTimeStepPregnant = 0;
+        private int daysInTimeStepLactating = 0;
+
+        /// <summary>
+        /// The number of days lactating in the time-step
+        /// </summary>
+        public int DaysLactatingInTimeStep { get { return daysInTimeStepLactating; } set { daysInTimeStepLactating = value; } }
+
+        /// <summary>
+        /// The number of days pregnant in the time-step
+        /// </summary>
+        [FilterByProperty]
+        public int DaysPregnantInTimeStep { get { return daysInTimeStepPregnant; } }
+
+        /// <summary>
+        /// Is female mature and cycling?
+        /// </summary>
+        public bool IsOestrusCycling { get { return nextOestrusDate != default; } }
+
+        /// <summary>
+        /// Next Oestrus date
+        /// </summary>
+        public DateTime? NextOestrusDate { get { return (nextOestrusDate == default) ? null : nextOestrusDate; } }
+
+
+        /// <summary>
+        /// A list off all dates the female is inheat for the current time step
+        /// </summary>
+        public List<(DateTime inHeatDate, DateTime OestrusDate)> InHeatDetails { get { return inHeatDetails; } }
+
+        /// <inheritdoc/>
+        public override Sex Sex { get { return Sex.Female; } }
+
+        /// <inheritdoc/>
+        public override string ClassStatus
+        {
+            get
+            {
+                if (IsSterilised == false)
+                {
+                    return "";
+                }
+
+                // report type of sterilized
+                if (IsSpayed)
+                {
+                    return "Sterile_Spayed";
+                }
+                if (Attributes.Exists("Freemartin"))
+                {
+                    return "Sterile_Freemartin";
+                }
+                return "Sterile_Webbed";
+            }
+        }
+
+        /// <inheritdoc/>
+        [FilterByProperty]
+        public override string BreedingStatus
+        {
+            get
+            {
+                if (IsPregnant)
+                    return "Pregnant";
+                else if (IsLactating)
+                    return "Lactating";
+                else if (IsBreeder)
+                {
+                    if (IsAbleToBreed)
+                    {
+                        switch (LastConceptionStatus)
+                        {
+                            case ConceptionStatus.Failed:
+                            case ConceptionStatus.Unsuccessful:
+                            case ConceptionStatus.NotMated:
+                            case ConceptionStatus.NotAvailable:
+                                return LastConceptionStatus.ToString();
+                            default:
+                                break;
+                        }
+                    }
+                }
+                return "NotReady";
+            }
+        }
+
+        /// <summary>
+        /// Is the female webbed
+        /// </summary>
+        [FilterByProperty]
+        public bool IsWebbed { get { return IsSterilised && Attributes.Exists("Webbed"); } }
+
+        /// <summary>
+        /// Is the female spayed
+        /// </summary>
+        [FilterByProperty]
+        public bool IsSpayed { get { return IsSterilised && Attributes.Exists("Spayed"); } }
+
+        /// <summary>
+        /// Is female weaned and of minimum breeding age and weight and not sterilised 
+        /// </summary>
+        [FilterByProperty]
+        public bool IsBreeder
+        {
+            get
+            {
+                return IsWeaned && !IsSterilised && IsMature;
+            }
+        }
+
+        /// <summary>
+        /// Is this individual a valid breeder and in heat
+        /// </summary>
+        public override bool IsAbleToBreed
+        {
+            get
+            {
+                return (IsOestrusCycling && InHeatDetails.Count > 0);
+            }
+        }
+
+        /// <summary>
+        /// Indicates if this female is a heifer
+        /// Heifer equals less than min breed age and no offspring
+        /// </summary>
+        [FilterByProperty]
+        public bool IsHeifer
+        {
+            get
+            {
+                // wiki - weaned, no calf, <3 years. We use the ageAtFirstMating
+                // AL updated 28/10/2020. Removed ( && Age < MinimumAge1stMating ) as a heifer can be more than this age if first preganancy failed or missed.
+                // this was a misunderstanding opn my part.
+                return (IsWeaned && NumberOfBirths == 0);
+            }
+        }
+
+        /// <summary>
+        /// Indicates if this female is a weaned but less than age at first mating 
+        /// </summary>
+        [FilterByProperty]
+        public bool IsPreBreeder
+        {
+            get
+            {
+                return (IsWeaned && !IsMature);
+            }
+        }
+
+        private DateTime dateOfLastBirth = default;
+        private DateTime dateOfLastConception = default;
+
+        /// <summary>
+        /// Date of last birth
+        /// </summary>
+        public DateTime DateOfLastBirth { get { return dateOfLastBirth; } }
+
+        /// <summary>
+        /// Set date of last birth
+        /// </summary>
+        public void SetDateOfLastBirth(DateTime date)
+        {
+            dateOfLastBirth = date;
+        }
+
+        /// <summary>
+        /// Date of last conception
+        /// </summary>
+        public DateTime DateOfLastConception { get { return dateOfLastConception; } }
+
+        /// <summary>
+        /// Set date of last conception
+        /// </summary>
+        public void SetDateOfLastConception(DateTime date)
+        {
+            dateOfLastConception = date;
+        }
+
+
+        /// <summary>
+        /// Number of births for the female (twins = 1 birth)
+        /// </summary>
+        [FilterByProperty]
+        public int NumberOfBirths { get; set; }
+
+        /// <summary>
+        /// Number of fetuses conceived in last conception
+        /// </summary>
+        [FilterByProperty]
+        public int NumberOfFetuses { get; set; }
+
+        /// <summary>
+        /// Number of current sucklings
+        /// </summary>
+        [FilterByProperty]
+        public int NumberOfSucklings { get { return SucklingOffspringList.Count; } }
+
+        /// <summary>
+        /// Number of offspring for the female
+        /// </summary>
+        [FilterByProperty]
+        public int NumberOfOffspring { get; set; }
+
+        /// <summary>
+        /// Number of weaned offspring for the female
+        /// </summary>
+        [FilterByProperty]
+        public int NumberOfWeaned { get; set; }
+
+        /// <summary>
+        /// Number of conceptions for the female
+        /// </summary>
+        [FilterByProperty]
+        public int NumberOfConceptions { get; set; }
+
+        /// <summary>
+        /// Births this timestep
+        /// </summary>
+        public int NumberOfBirthsThisTimestep { get; set; }
+
+        /// <summary>
+        /// Weight at time of conception
+        /// </summary>
+        public double WeightAtConception { get; set; }
+
+        /// <summary>
+        /// Live weight at parturition
+        /// </summary>
+        public double WeightAtParturition { get; set; }
+
+        /// <summary>
+        /// Highest weight achieved when not pregnant
+        /// </summary>
+        public double HighWeightWhenNotPregnant { get; private set; }
+
+        /// <summary>
+        /// Weight at 70% of pregnancy
+        /// </summary>
+        public double WeightAt70PctPregnant { get; set; }
+
+        /// <summary>
+        /// Previous conception rate
+        /// </summary>
+        public double PreviousConceptionRate { get; set; }
+
+        /// <summary>
+        /// Store for the style of mating
+        /// </summary>
+        [FilterByProperty]
+        public MatingStyle LastMatingStyle { get; set; } = MatingStyle.NotMated;
+
+        /// <summary>
+        /// Store for the style of mating
+        /// </summary>
+        [FilterByProperty]
+        public ConceptionStatus LastConceptionStatus { get; set; } = ConceptionStatus.NotAvailable;
+
+        /// <summary>
+        /// The number of days from conception to the start of the current time-step
+        /// </summary>
+        public double DaysPregnant
+        {
+            get
+            {
+                if (IsPregnant)
+                    return DaysSince(RuminantTimeSpanTypes.Conceived, 0.0);
+                else
+                    return 0;
+            }
+        }
+
+        /// <summary>
+        /// Indicates if birth is due this time-step. 
+        /// Knows whether the fetus(es) have survived
+        /// </summary>
+        public bool IsBirthDue { get; private set; }
+        //{
+        //    get
+        //    {
+        //        if (IsPregnant)
+        //            return Parameters.Details.CurrentTimeStep.IsDateInTimeStep(BirthDueDate ?? default);
+        //        return false;
+        //    }
+        //}
+
+        /// <summary>
+        /// The date births are due or null if not pregnant. 
+        /// </summary>
+        public DateTime? BirthDueDate { get; private set; }
+        //{
+        //    get
+        //    {
+        //        if (DaysPregnantInTimeStep == 0)
+        //            return null;
+        //        return DateLastConceived.AddDays(Parameters.General.GestationLength.InDays);
+        //    }
+        //}
+
+        /// <summary>
+        /// Proportion of pregnancy achieved
+        /// </summary>
+        public double ProportionOfPregnancy(double offset = 0)
+        {
+            if (IsPregnant)
+                return Math.Min(1.0, (DaysSince(RuminantTimeSpanTypes.Conceived, 0.0) + offset) / Parameters.General.GestationLength.InDays);
+            return 0;
+        }
+
+        /// <summary>
+        /// Days since last birth
+        /// </summary>
+        public double? DaysSinceLastBirth
+        {
+            get
+            {
+                return DaysSince(RuminantTimeSpanTypes.GaveBirth, double.PositiveInfinity);
+            }
+        }
+
+        /// <summary>
+        /// Days since last birth
+        /// </summary>
+        public double DaysSinceLastConceived
+        {
+            get
+            {
+                return DaysSince(RuminantTimeSpanTypes.Conceived, double.NegativeInfinity);
+            }
+        }
+
+        /// <summary>
+        /// Allows an activity to pre calculate conception rate
+        /// </summary>
+        public double? ActivityDeterminedConceptionRate { get; set; }
+
+        /// <summary>
+        /// Indicates if the individual is pregnant
+        /// </summary>
+        [FilterByProperty]
+        public bool IsPregnant
+        {
+            get
+            {
+                return daysInTimeStepPregnant > 0;
+            }
+        }
+
+        /// <summary>
+        /// Current birth scalar based on number of fetus carried
+        /// </summary>
+        [FilterByProperty]
+        public double CurrentBirthScalar
+        {
+            get
+            {
+                if (NumberOfFetuses > 0)
+                    return Parameters.General.BirthScalar[NumberOfFetuses - 1];
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// The sex of each fetus
+        /// </summary>
+        private List<Sex> Fetuses { get; set; } = new();
+
+        /// <summary>
+        /// Add fetus to female conception
+        /// </summary>
+        /// <param name="sex"></param>
+        public void AddFetus(Sex sex)
+        {
+            Fetuses.Add(sex);
+            if (Fetuses.Count == 1)
+            {
+                NumberOfFetuses = 1;
+                MixedSexMultipleFetuses = false;
+                return;
+            }
+            MixedSexMultipleFetuses = Fetuses.Distinct().Count() > 1;
+            NumberOfFetuses = Fetuses.Count;
+        }
+
+        /// <summary>
+        /// Are the fetuses of a multiple birth mixed sex
+        /// </summary>
+        public bool MixedSexMultipleFetuses { get; private set; }
+
+        /// <summary>
+        /// The number of fetuses being carryied
+        /// </summary>
+        public int CarryingCount { get { return Fetuses.Count; } }
+
+        /// <summary>
+        /// Was the last pregnancy successful
+        /// </summary>
+        public bool SuccessfulPregnancy
+        {
+            get
+            {
+                return TimeSince(RuminantTimeSpanTypes.Conceived, DateOfLastBirth).Days == Parameters.General.GestationLength.InDays;
+            }
+        }
+
+        /// <summary>
+        /// Predicted birth weight of offspring scaled by mother's relative weight
+        /// </summary>
+        public double ScaledBirthWeight
+        {
+            get
+            {
+                // 0.33 is CP4
+                if (NumberOfFetuses > 0)
+                    return (1 - 0.33 + 0.33 * Weight.RelativeSize) * CurrentBirthScalar * Weight.StandardReferenceWeight;
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Indicates if the individual is lactating
+        /// </summary>
+        [FilterByProperty]
+        public bool IsLactating
+        {
+            get
+            {
+                //(a)Has at least one suckling offspring(i.e.unweaned offspring)
+                //Or
+                //(b) Is being milked
+                //and
+                //(c) Less than Milking days since last birth
+                //return ((SucklingOffspringList.Count != 0 | Milk.MilkingPerformed) && DaysSince(RuminantTimeSpanTypes.GaveBirth, double.PositiveInfinity) <= Parameters.Lactation.MilkingDays);
+
+                return daysInTimeStepLactating > 0;
+            }
+        }
+
+        /// <summary>
+        /// Lactation information
+        /// </summary>
+        [JsonIgnore]
+        [FilterByProperty]
+        public RuminantInfoLactation Milk { get; set; } = new RuminantInfoLactation();
+
+        /// <summary>
+        /// Report protein required for maintenance pregnancy and lactation saved from reduced lactation (kg)
+        /// </summary>
+        public override double ProteinRequiredBeforeGrowth { get { return Weight.Protein.ForMaintenence + Weight.Protein.ForPregnancy + Milk.Protein; } }
+
+        /// <summary>
+        /// The body condition score at birth.
+        /// </summary>
+        public double RelativeConditionAtParturition { get; set; }
+
+        /// <summary>
+        /// A list of individuals currently suckling this female
+        /// </summary>
+        public List<Ruminant> SucklingOffspringList { get; set; }
+
+
+
+
+        /// <summary>
+        /// Method to clear all breeding details
+        /// </summary>
+        public void DisableBreeding()
+        {
+            nextOestrusDate = default;
+            daysInTimeStepPregnant = 0;
+            daysInTimeStepLactating = 0;
+        }
+
+        /// <summary>
+        /// Method to clear all breeding details
+        /// </summary>
+        public void MatingFailed()
+        {
+            daysInTimeStepLactating = 0;
+        }
+
+        /// <inheritdoc/>
+        public override void UpdateBreedingDetails()
+        {
+            // This method is called on any update to age
+            // This will occur at the start of each time-step called by the RuminanTType resource before any activities.
+            // Mother's will always be processed before offstring due to the order of creation in the herd, so we can be assured mothers details are known when considering sucklings.
+
+            if (IsSterilised)
+            {
+                return;
+            }
+
+            IsBirthDue = false;
+            int daysAgo;
+
+            // check for re-start of oestrus cycle after pregnancy
+            if (IsMature)
+            {
+                // reset partial timestep trackers that will be applied when a birth occurs
+                daysInTimeStepLactating = 0;
+
+                // calculate number of days in time-step pregnant
+                if (BirthDueDate >= Parameters.Details.CurrentTimeStep.TimeStepStart)
+                {
+                    daysInTimeStepPregnant = Parameters.Details.CurrentTimeStep.Interval;
+                    if (BirthDueDate <= Parameters.Details.CurrentTimeStep.TimeStepEnd)
+                    {
+                        daysInTimeStepPregnant = (int)((BirthDueDate ?? Parameters.Details.CurrentTimeStep.TimeStepStart) - Parameters.Details.CurrentTimeStep.TimeStepStart).TotalDays;
+                        daysInTimeStepLactating = Parameters.Details.CurrentTimeStep.Interval - daysInTimeStepPregnant;
+                        IsBirthDue = true;
+                    }
+                }
+                else
+                {
+                    daysInTimeStepPregnant = 0;
+                }
+
+                // calculate number of days in time-step lactating
+                if (NumberOfSucklings > 0 || Milk.MilkingPerformed)
+                {
+                    daysInTimeStepLactating = 0;
+                    DateTime endOfMilking = DateOfLastBirth.AddDays(Parameters.Lactation.MilkingDays);
+
+                    if (endOfMilking >= Parameters.Details.CurrentTimeStep.TimeStepEnd)
+                    {
+                        daysInTimeStepLactating = Parameters.Details.CurrentTimeStep.Interval;
+                    }
+                    else if (endOfMilking >= Parameters.Details.CurrentTimeStep.TimeStepStart)
+                    {
+                        daysInTimeStepLactating = (int)(endOfMilking - Parameters.Details.CurrentTimeStep.TimeStepStart).TotalDays + 1;
+                    }
+                }
+
+                // check for start of oestrus cycling after births
+                if (nextOestrusDate == default && !IsBirthDue && !IsPregnant)
+                {
+                    daysAgo = Convert.ToInt32(DaysSince(RuminantTimeSpanTypes.GaveBirth, 0) - (Parameters.Breeding.DaysLastBirthToStartOestrus - (Parameters.Breeding.OestrusCycleLength - Parameters.Breeding.DaysInHeat)));
+                    if (daysAgo >= 0)
+                    {
+                        nextOestrusDate = Parameters.Details.CurrentTimeStep.TimeStepStart.AddDays(daysAgo);
+                    }
+                }
+
+                if (IsOestrusCycling)
+                {
+                    UpdateInHeatDetailsForTimeStep();
+                }
+                else
+                {
+                    if (InHeatDetails.Count > 0 && Parameters.Details.CurrentTimeStep.TimeStepStart > DateOfLastConception)
+                    {
+                        InHeatDetails.Clear();
+                    }
+                }
+                return;
+            }
+            else
+            {
+                // check if natural weaning occurs and updtate suckling days and mother's lactation days accordlingly.
+                CheckWeanedStatus();
+            }
+
+            // check for maturity conditions being met and start oestrus cycle
+            daysAgo = 0;
+            // check size
+            if (IsWeaned && Weight.Live >= Parameters.General.MinimumSizeForMaturityFemale * Weight.StandardReferenceWeight)
+            {
+                // calculate days ago for weight attained
+                // calculate proportion of timestep where weight was below minimum size
+                if (Weight.Previous > 0 && Weight.Previous < Parameters.General.MinimumSizeForMaturityFemale * Weight.StandardReferenceWeight)
+                {
+                    daysAgo = Math.Min(daysAgo, (int)Math.Floor((Weight.Live - (Parameters.General.MinimumSizeForMaturityFemale * Weight.StandardReferenceWeight)) / (Weight.Live - Weight.Previous) * Parameters.Details.CurrentTimeStep.Interval));
+                }
+                SetMature();
+                if (!IsPregnant)
+                {
+                    nextOestrusDate = Parameters.Details.CurrentTimeStep.TimeStepStart.AddDays((Parameters.Breeding.OestrusCycleLength - 1) - Parameters.Breeding.DaysInHeat - daysAgo);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Calculate the dates and cycle id for oestrus cycle within the current time step.
+        /// </summary>
+        public void UpdateInHeatDetailsForTimeStep()
+        {
+            // move cycle formward by length across or later than start of current time-step
+            while (nextOestrusDate.AddDays(Parameters.Breeding.DaysInHeat - 1) < Parameters.Details.CurrentTimeStep.TimeStepStart)
+            {
+                nextOestrusDate = nextOestrusDate.AddDays(Parameters.Breeding.OestrusCycleLength);
+            }
+
+            // remove entries expired
+            inHeatDetails.RemoveAll(x => x.InHeatDate < Parameters.Details.CurrentTimeStep.TimeStepStart);
+
+            // add next entries
+            for (int day = 0; day < Parameters.Details.CurrentTimeStep.Interval; day++)
+            {
+                DateTime timeStepDate = Parameters.Details.CurrentTimeStep.TimeStepStart.AddDays(day);
+                if (timeStepDate >= nextOestrusDate & timeStepDate <= nextOestrusDate.AddDays(Parameters.Breeding.DaysInHeat-1))
+                {
+                    inHeatDetails.Add((timeStepDate, nextOestrusDate));
+                }
+
+                if (timeStepDate >= nextOestrusDate.AddDays(Parameters.Breeding.DaysInHeat - 1))
+                {
+                    nextOestrusDate = nextOestrusDate.AddDays(Parameters.Breeding.OestrusCycleLength);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Cancel the current oestrus cycle based on an unsuccessful mating
+        /// </summary>
+        public void CancelOestrusCycle()
+        {
+            DateTime currentCycleDate = InHeatDetails.FirstOrDefault().OestrusDate;
+            InHeatDetails.RemoveAll(a => a.OestrusDate == currentCycleDate);
+        }
+
+
+        /// <summary>
+        /// Track the highest weight of a female when not pregnant
+        /// </summary>
+        /// <param name="weight"></param>
+        public void UpdateHighWeightWhenNotPregnant(double weight)
+        {
+            if(!IsPregnant)
+            {
+                HighWeightWhenNotPregnant = Math.Max(HighWeightWhenNotPregnant, weight);
+            }
+        }
+
+        /// <summary>
+        /// Calculate the number of offspring this preganacy given multiple offspring rates
+        /// </summary>
+        /// <returns></returns>
+        public int CalulateNumberOfOffspringThisPregnancy()
+        {
+            int birthCount = 1;
+            if (Parameters.General.MultipleBirthRate != null)
+            {
+                double rnd = RandomNumberGenerator.Generator.NextDouble();
+                double birthProb = 0;
+                foreach (double i in Parameters.General.MultipleBirthRate)
+                {
+                    birthCount++;
+                    birthProb += i;
+                    if (rnd <= birthProb)
+                    {
+                        return birthCount;
+                    }
+                }
+                birthCount = 1;
+            }
+            return birthCount;
+        }
+
+        /// <summary>
+        /// Predict how many individuals were in the birth for a random individual
+        /// </summary>
+        /// <returns>Number of individuals from birth</returns>
+        public static int PredictNumberOfSiblingsFromBirthOfIndividual(double[] mutibirthrates)
+        {
+            int[] number = new int[mutibirthrates.Length + 1];
+            number[0] = Convert.ToInt32((1- mutibirthrates.Sum())*1000);
+            for (int i = 0; i < mutibirthrates.Length; i++)
+                number[i+1] = number[i] + Convert.ToInt32(1000 * mutibirthrates[i]*(i+2));
+
+            int rnd = RandomNumberGenerator.Generator.Next(1, number.Last());
+
+            int j = 0;
+            while (j < number.Length && rnd > number[j])
+                j++;
+            return j + 1;
+        }
+
+
+        /// <summary>
+        /// Method to remove one offspring that dies between conception and death
+        /// </summary>
+        public void OneFetusDies(DateTime date)
+        {
+            Fetuses.RemoveAt(0);
+            NumberOfFetuses = Fetuses.Count;
+            if (Fetuses.Count == 0)
+                dateOfLastBirth = date;
+        }
+
+        /// <summary>
+        /// Method to handle conception changes
+        /// </summary>
+        public void UpdateConceptionDetails(int number, double rate, int ageOffset, DateTime date)
+        {
+            // if she was dry breeder remove flag as she has become pregnant.
+            if (SaleFlag == HerdChangeReason.DryBreederSale)
+                SaleFlag = HerdChangeReason.None;
+
+            PreviousConceptionRate = rate;
+
+            for (int i = 0; i < number; i++)
+            {
+                AddFetus((RandomNumberGenerator.Generator.NextDouble() <= Parameters.Breeding.ProportionOffspringMale) ? Sex.Male : Sex.Female);
+                WeightAt70PctPregnant = 0;
+            }
+
+            //ToDo: Check this is correct
+            dateOfLastConception = date.AddDays(ageOffset);
+            BirthDueDate = DateOfLastConception.AddDays(Parameters.General.GestationLength.InDays);
+            // use normalised weight for age if offset provided for pre simulation allocation
+            WeightAtConception = (ageOffset < 0) ? CalculateNormalisedWeight(Convert.ToInt32(TimeSince(RuminantTimeSpanTypes.Birth, DateOfLastConception).TotalDays), true, false) : this.Weight.Base.Amount;
+            NumberOfConceptions++;
+            IsReplacementBreeder = false;
+            // turn off oestrus cycle until after births
+            nextOestrusDate = default;
+            daysInTimeStepPregnant = (int)TimeSince(RuminantTimeSpanTypes.Conceived, Parameters.Details.CurrentTimeStep.TimeStepEnd).TotalDays + 1; // from conception date to end of time-step
+        }
+
+        ///// <summary>
+        ///// Determine any fetus mortality including new born
+        ///// </summary>
+        ///// <param name="events">A link to the CLEM event timer model</param>
+        ///// <param name="conceptionArgs">A link to standard conception args to use for reportinh</param>
+        ///// <returns>True if pregnacny is lost</returns>
+        //public bool FetusNewBornMortality(CLEMEvents events, ConceptionStatusChangedEventArgs conceptionArgs)
+        //{
+        //    for (int i = 0; i < CarryingCount; i++)
+        //    {
+        //        if (MathUtilities.IsLessThan(RandomNumberGenerator.Generator.NextDouble(), Parameters.Breeding.PrenatalMortality / Parameters.General.GestationLength.InDays / ((events.TimeStep == TimeStepTypes.Monthly) ? 30.4 : events.Interval) + 1))  // ToDo: CLOCK adjust prenatal mortality to per time step..... divide timestep by interval..
+        //        {
+        //            OneFetusDies(events.Clock.Today);
+        //            if (CarryingCount == 0)
+        //            {
+        //                // report conception status changed when last multiple birth dies.
+        //                conceptionArgs.Update(ConceptionStatus.Failed, this, events.Clock.Today);
+        //                Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
+        //                return true;
+        //            }
+        //        }
+        //    }
+        //    return false;
+        //}
+
+        /// <summary>
+        /// Give birth to all fetuses
+        /// </summary>
+        /// <param name="herd">A link to the ruminant herd to place newborn</param>
+        /// <param name="events">A link to the CLEM event timer model</param>
+        /// <param name="conceptionArgs">A link to standard conception args to use for reporting</param>
+        /// <param name="activity">A link to the activity model calling this method for reporting</param>
+        public bool GiveBirth(RuminantHerd herd, CLEMEvents events, ConceptionStatusChangedEventArgs conceptionArgs, IModel activity)
+        {
+            if (!IsBirthDue)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < CarryingCount; i++)
+            {
+                // Determine the best birth weight to use. This is now passed to each RuminantActivityGrow to decide how to set protein and fat at birth
+                // RuminantGrow 
+                //   * calculate birth weigth (Freer) Parameters.General.BirthScalar[NumberOfFetuses-1] * Weight.StandardReferenceWeight * (1 - 0.33 * (1 - Weight.Live / Weight.StandardReferenceWeight));
+                // RuminantGrowPF
+                //   * use the weight of fetus at birth as calculated during pregnancy
+                // RuminantGrowSCA
+                // RuminantGrowOddy
+
+                Ruminant newSuckling = Ruminant.Create(Fetuses[i], BirthDueDate ?? events.Clock.Today, herd.NextUniqueID, this, herd.RuminantGrowActivity);
+
+                herd.AddRuminant(newSuckling, activity);
+
+                // add to sucklings
+                SucklingOffspringList.Add(newSuckling);
+
+                // this now reports for each individual born not a birth event as individual wean events are reported
+                conceptionArgs.Update(ConceptionStatus.Birth, this, BirthDueDate ?? events.Clock.Today);
+                Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
+            }
+            UpdateBirthDetails(BirthDueDate ?? events.Clock.Today);
+            return true;
+        }
+
+        /// <summary>
+        /// Method to handle birth changes
+        /// </summary>
+        public void UpdateBirthDetails(DateTime date)
+        {
+            if (Fetuses.Count != 0)
+            {
+                NumberOfBirths++;
+                NumberOfOffspring += CarryingCount;
+                NumberOfBirthsThisTimestep = CarryingCount;
+            }
+            base.Weight.Conceptus.Reset();
+            base.Weight.Fetus.Reset();
+            base.Weight.ConceptusFat.Reset();
+            base.Weight.ConceptusProtein.Reset();
+            WeightAtParturition = Weight.Live;
+            dateOfLastBirth = date;
+            Milk.Lag = 1;
+            Milk.PotentialRate = 0;
+            Milk.ProductionRate = 0;
+            Milk.ProductionRatePrevious = 0;
+            Milk.MaximumRate = 0;
+            Fetuses.Clear();
+            Milk.MilkingPerformed = false;
+            RelativeConditionAtParturition = Weight.RelativeCondition;
+
+            daysInTimeStepPregnant = (int)(Parameters.Details.CurrentTimeStep.TimeStepStart - (BirthDueDate ?? Parameters.Details.CurrentTimeStep.TimeStepStart)).TotalDays;
+            daysInTimeStepLactating = Parameters.Details.CurrentTimeStep.Interval - daysInTimeStepPregnant;
+            BirthDueDate = null;
+        }
+
+
+        /// <summary>
+        /// Calculate the the number of days lacating for the individual
+        /// </summary>
+        /// <param name="useTimeStepMidPoint">Calculate days based on mid point of current time-step</param>
+        public double DaysLactating(bool useTimeStepMidPoint = false)
+        {
+            if (IsLactating)
+            {
+                // must be at least 1 to get milk production on day of birth. 
+                double milkdays = Math.Max(0.0, TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays);
+                if (useTimeStepMidPoint)
+                {
+                    milkdays += Math.Min(daysInTimeStepLactating, Parameters.Details.CurrentTimeStep.Interval) / 2.0;
+                }
+                if (milkdays <= Parameters.Lactation.MilkingDays)
+                {
+                    return milkdays;
+                }
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Constructor based on cohort details
+        /// </summary>
+        public RuminantFemale(DateTime date, RuminantParameters setParams, int setAge, double setWeight, int? id, RuminantTypeCohort cohortDetails, IEnumerable<ISetAttribute> initialAttributes = null, SetPreviousConception conception = null)
+            : base(date, setParams, setAge, setWeight, id, cohortDetails, initialAttributes)
+        {
+            SucklingOffspringList = new List<Ruminant>();
+
+            //ruminantFemale.WeightAtConception = ruminant.Weight.Live;
+            //ruminantFemale.NumberOfBirths = 0;
+
+            conception?.SetConceptionDetails(this);
+
+            if (cohortDetails.Sire)
+            {
+                string warn = $"Breeding sire switch is not valid for individual females [r={cohortDetails.NameWithParent}]{Environment.NewLine}These individuals have not been assigned sires. Change Sex to Male to create sires in initial herd.";
+                cohortDetails.Warnings.CheckAndWrite(warn, cohortDetails.Summary, cohortDetails, MessageType.Warning);
+            }
+
+            UpdateBreedingDetails();
+
+            //ToDo: Set conceptus weight if pregnant. Do this where fetus are added
+        }
+
+        /// <summary>
+        /// Constructor for new born female ruminant
+        /// </summary>
+        public RuminantFemale(DateTime date, int id, RuminantFemale mother, IRuminantActivityGrow growActivity)
+            : base(date, id, mother, growActivity)
+        {
+            // needed for female specific actions
+            SucklingOffspringList = new();
+        }
+
+        /// <summary>
+        /// Constructor for blank female ruminant with specificed id.
+        /// </summary>
+        public RuminantFemale(int id)
+            : base(id)
+        {
+        }
+
+
+    }
+
+}

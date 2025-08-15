@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using UserInterface.Views;
 using Models.PMF.Phen;
 using APSIM.Shared.Documentation;
+using APSIM.Core;
 
 namespace UserInterface.Presenters
 {
@@ -40,7 +41,7 @@ namespace UserInterface.Presenters
         }
 
         private async void PopulateView()
-        {  
+        {
             try
             {
                 //Default text while loading
@@ -110,7 +111,7 @@ namespace UserInterface.Presenters
         private StringBuilder DocumentModelDependencies(IModel model)
         {
             StringBuilder markdown = new StringBuilder();
-            
+
             DataTable functionTable = GetDependencies(model, m => typeof(IFunction).IsAssignableFrom(GetMemberType(m)));
             DataTable depsTable = GetDependencies(model, m => !typeof(IFunction).IsAssignableFrom(GetMemberType(m)));
 
@@ -150,7 +151,7 @@ namespace UserInterface.Presenters
                 markdown.AppendLine(DataTableUtilities.ToMarkdown(publicMethods, true));
                 markdown.AppendLine();
             }
-            
+
             return markdown;
         }
 
@@ -173,7 +174,7 @@ namespace UserInterface.Presenters
         private StringBuilder DocumentModelOutputs(IModel model)
         {
             StringBuilder markdown = new StringBuilder();
-            
+
             DataTable outputs = GetOutputs(model);
             if (outputs.Rows.Count > 0)
             {
@@ -295,7 +296,7 @@ namespace UserInterface.Presenters
                 if (link != null && filter(member))
                 {
                     DataRow row = result.NewRow();
-                    
+
                     row[0] = member.Name;
                     row[1] = GetMemberType(member).Name;
                     row[2] = link.Type.ToString();

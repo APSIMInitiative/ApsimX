@@ -10,6 +10,7 @@ using System.IO;
 using APSIM.Shared.Utilities;
 using System.Xml.Serialization;
 using Models.CLEM.Resources;
+using APSIM.Numerics;
 
 namespace Models.CLEM
 {
@@ -183,7 +184,7 @@ namespace Models.CLEM
                     htmlWriter.Write(@"],
                         pointBackgroundColor: '[GraphPointColour]',
                         pointBorderColor: '[GraphPointColour]',
-                        borderColor: '[GraphLineColour]', 
+                        borderColor: '[GraphLineColour]',
                         pointRadius: 5,
                         pointHoverRadius: 5,
                         fill: false,

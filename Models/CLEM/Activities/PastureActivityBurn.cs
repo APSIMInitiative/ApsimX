@@ -9,6 +9,7 @@ using Models.Core.Attributes;
 using System.IO;
 using Models.CLEM.Interfaces;
 using APSIM.Shared.Utilities;
+using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using APSIM.Core;
 using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.Functions;
@@ -22,7 +23,7 @@ namespace APSIM.Documentation.Models.Types
         public override List<ITag> Document(int none = 0)
         {
             Section section = GetSummaryAndRemarksSection(model);
-            
+
             FrostSenescenceFunction frost = model as FrostSenescenceFunction;
             IFunction frostKill = model.FindChild<IFunction>("frostKill");
             IFunction frostKillSevere = model.FindChild<IFunction>("frostKillSevere");

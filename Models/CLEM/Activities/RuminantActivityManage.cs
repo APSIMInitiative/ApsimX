@@ -11,7 +11,8 @@ using System.Globalization;
 using System.IO;
 using Models.CLEM.Interfaces;
 using APSIM.Shared.Utilities;
-using Docker.DotNet.Models;
+using APSIM.Numerics;
+using APSIM.Core;
 
 namespace Models.CLEM.Activities
 {
@@ -38,12 +39,12 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Implements minimum breeders kept to define breeder purchase limits")]
     [Version(1, 0, 1, "First implementation of this activity using IAT/NABSA processes")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantManage.htm")]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGeneral) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType })]
-    public class RuminantActivityManage : CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels
+    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGeneral) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Child })]
+    public class RuminantActivityManage : CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels, IStructureDependency
     {
-        [Link]
-        private readonly Clock clock = null;
-
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
         private int maxBreeders;
         private int minBreeders;
         private int femaleBreedersRequired = 0;
@@ -106,7 +107,7 @@ namespace Models.CLEM.Activities
         [Description("Maximum number of female breeders to be kept")]
         [Core.Display(EnabledCallback = "EnableFemaleNumberProperties")]
         [Required, GreaterThanEqualValue(0)]
-        public int MaximumBreedersKept { get; set; } 
+        public int MaximumBreedersKept { get; set; }
 
         /// <summary>
         /// Minimum number of breeders that can be kept
@@ -682,7 +683,7 @@ namespace Models.CLEM.Activities
             // get list of replacement individuals
             purchaseDetails = this.FindAllChildren<SpecifyRuminant>().Cast<SpecifyRuminant>().Select((a, index) => new SpecifiedRuminantListItem() { Index = index, ExampleRuminant = a.ExampleIndividual, SpecifyRuminantComponent = a }).Cast<SpecifiedRuminantListItem>().ToList();
 
-            var ah = this.FindInScope<ActivitiesHolder>();
+            var ah = Structure.Find<ActivitiesHolder>();
             // check for managed paddocks and warn if breeders placed in yards.
             if ((ManageFemaleBreederNumbers & PerformFemaleStocking) && MaximumProportionBreedersPerPurchase > 0)
             {
@@ -1689,7 +1690,7 @@ namespace Models.CLEM.Activities
         {
             if (femaleBreedersRequired > 0)
             {
-                // any suitable females for sale will be flagged as a prebreeder 
+                // any suitable females for sale will be flagged as a prebreeder
                 // female, readyForSale, not maxAgeSale, notDryBreeder
                 foreach (var individual in GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.MarkedForSale, new List<HerdChangeReason>() { HerdChangeReason.MaxAgeSale, HerdChangeReason.DryBreederSale }).Take(femaleBreedersRequired).ToList())
                 {
@@ -1743,7 +1744,7 @@ namespace Models.CLEM.Activities
                         yield return sires;
                     if (GrazeFoodStoreNameSires.Contains("."))
                     {
-                        ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
+                        ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
                         if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameSires) is null)
                         {
                             string[] memberNames = new string[] { "GrazeStoreType (paddock) to place purchased sires in" };
@@ -1758,7 +1759,7 @@ namespace Models.CLEM.Activities
                         yield return breeders;
                     if (GrazeFoodStoreNameBreeders.Contains("."))
                     {
-                        ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
+                        ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
                         if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameBreeders) is null)
                         {
                             string[] memberNames = new string[] { "GrazeStoreType (paddock) to place purchased breeders in" };
@@ -1782,7 +1783,7 @@ namespace Models.CLEM.Activities
             {
                 if (GrazeFoodStoreNameGrowOutMales.Contains("."))
                 {
-                    ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
+                    ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
                     if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameGrowOutMales) is null)
                     {
                         string[] memberNames = new string[] { "GrazeStoreType (paddock) to place grow out males in" };
@@ -1794,7 +1795,7 @@ namespace Models.CLEM.Activities
             {
                 if (GrazeFoodStoreNameGrowOutFemales.Contains("."))
                 {
-                    ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
+                    ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
                     if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameGrowOutFemales) is null)
                     {
                         string[] memberNames = new string[] { "GrazeStoreType (paddock) to place purchased sires in" };
@@ -2161,7 +2162,7 @@ namespace Models.CLEM.Activities
                 childList.Add((FindAllChildren<RuminantGroup>().Where(a => a.Identifier == identifier), true, "activitygroupsborder", $"Individuals selected for {identifier} will be futher refined by:", ""));
             }
             childList.Add((FindAllChildren<SpecifyRuminant>(), true, "childgroupactivityborder", "The following SpecifyRuminant components will define the individuals to be purchased (Breeding males and females):", ""));
-            return childList;   
+            return childList;
         }
 
         /// <inheritdoc/>
@@ -2174,7 +2175,7 @@ namespace Models.CLEM.Activities
         public override string ModelSummaryInnerOpeningTags()
         {
             return "";
-        } 
+        }
         #endregion
 
     }

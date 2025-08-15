@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.Run;
@@ -169,7 +170,7 @@ namespace Models.PostSimulationTools
         }
 
         /// <summary>
-        /// Get a list of row filters that define the blocks of data that we have 
+        /// Get a list of row filters that define the blocks of data that we have
         /// to calculate stats for.
         /// </summary>
         /// <returns></returns>

@@ -13,6 +13,7 @@ using Models.Core;
 using UserInterface.Views;
 using System.Linq;
 using Gtk.Sheet;
+using APSIM.Numerics;
 
 namespace UserInterface.Presenters
 {
@@ -551,8 +552,8 @@ namespace UserInterface.Presenters
                         double[] avgMonthlyRainfall = DataTableUtilities.AverageMonthlyTotals(table, "rain", this.dataFirstDate, this.dataLastDate);
                         this.PopulateMonthlyRainfallGraph(
                                                        "Monthly Rainfall",
-                                                        this.monthsToDisplay, 
-                                                        monthlyRainfall, 
+                                                        this.monthsToDisplay,
+                                                        monthlyRainfall,
                                                         avgMonthlyRainfall);
                     }
                 }
@@ -640,7 +641,7 @@ namespace UserInterface.Presenters
                 this.weatherDataView.GraphStartYearMinValue = this.dataStartDate.Year;
                 this.weatherDataView.GraphStartYearValue = this.dataStartDate.Year;
             }
-            else  
+            else
             {
                 // we are between our original range
                 if (this.weatherDataView.GraphStartYearMinValue < this.dataStartDate.Year)
@@ -757,7 +758,7 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Displays the Monthly rainfall chart, which shows the current years rain (by month), and the long term average monthly rainfall, 
+        /// Displays the Monthly rainfall chart, which shows the current years rain (by month), and the long term average monthly rainfall,
         /// based on all data in metfile
         /// </summary>
         /// <param name="title">The title</param>

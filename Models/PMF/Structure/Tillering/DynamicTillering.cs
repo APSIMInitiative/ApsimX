@@ -1,4 +1,6 @@
-﻿using APSIM.Shared.Utilities;
+﻿using APSIM.Core;
+using APSIM.Numerics;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
@@ -277,7 +279,7 @@ namespace Models.PMF.Struct
             if (CalculatedTillerNumber <= 0) return;
 
             // Lafarge et al. (2002) reported a common hierarchy of tiller emergence of T3>T4>T2>T1>T5>T6 across diverse density treatments
-            // 1 tiller  = T3 
+            // 1 tiller  = T3
             // 2 tillers = T3 + T4
             // 3 tillers = T2 + T3 + T4
             // 4 tillers = T1 + T2 + T3 + T4
@@ -316,7 +318,7 @@ namespace Models.PMF.Struct
         {
             // Each time a leaf becomes fully expanded starting at 5 see if a tiller should be initiated.
             // When a leaf is fully expanded a tiller can be initiated at the axil 3 leaves less
-            // So at L5 FE (newLeaf = 6, currentLeaf = 5) a Tiller might be at axil 2. i.e. a T2 
+            // So at L5 FE (newLeaf = 6, currentLeaf = 5) a Tiller might be at axil 2. i.e. a T2
 
             // Add any new tillers and then calc each tiller in turn. Add a tiller if:
             // 1. There are more tillers to add.

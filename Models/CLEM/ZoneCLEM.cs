@@ -16,6 +16,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
+using APSIM.Core;
 
 namespace Models.CLEM
 {
@@ -33,8 +34,7 @@ namespace Models.CLEM
     [Version(1, 0, 2, "New ResourceUnitConverter functionality added that changes some reporting.\r\nThis change will cause errors for all previous custom resource ledger reports created using the APSIM Report component.\r\nTo fix errors add \".Name\" to all LastTransaction.ResourceType and LastTransaction.Activity entries in custom ledgers (i.e. LastTransaction.ResourceType.Name as Resource). The CLEM ReportResourceLedger component has been updated to automatically handle the changes")]
     [Version(1, 0, 1, "")]
     [ModelAssociations( associatedModels: new Type[] { typeof(CLEMEvents), typeof(ResourcesHolder), typeof(ActivitiesHolder) }, AssociationStyles = new ModelAssociationStyle[] { ModelAssociationStyle.InScope, ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent })]
-    [ScopedModel]
-    public class ZoneCLEM : Zone, ICLEMUI, ICLEMDescriptiveSummary
+    public class ZoneCLEM : Zone, ICLEMUI, ICLEMDescriptiveSummary, IScopedModel
     {
         [Link]
         private readonly Summary summary = null;

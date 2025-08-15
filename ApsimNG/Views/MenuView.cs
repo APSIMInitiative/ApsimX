@@ -1,17 +1,17 @@
-﻿namespace UserInterface.Views
-{
-    using Extensions;
-    using Gtk;
-    using Interfaces;
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using Utility;
+﻿using UserInterface.Extensions;
+using Gtk;
+using UserInterface.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using Utility;
 
+namespace UserInterface.Views
+{
     /// <summary>
     /// Encapsulates a menu
     /// </summary>
-    public class MenuView : IMenuView
+    public class MenuView
     {
         private Menu menu = new Menu();
 

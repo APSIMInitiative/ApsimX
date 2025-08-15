@@ -12,6 +12,7 @@ using Models.CLEM.Interfaces;
 using System.Globalization;
 using System.Linq;
 using DocumentFormat.OpenXml.Bibliography;
+using APSIM.Core;
 
 namespace Models.CLEM
 {
@@ -30,8 +31,12 @@ namespace Models.CLEM
     [Version(1, 0, 3, "Includes access to ecological indicators from database")]
     [Version(1, 0, 4, "Allow more categories of land condition and grass basal area in datacube lookup")]
     [HelpUri(@"Content/Features/DataReaders/PastureDataReaderSQL.htm")]
-    public class FileSQLitePasture : CLEMModel, IFilePasture, IValidatableObject
+    public class FileSQLitePasture : CLEMModel, IFilePasture, IValidatableObject, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         [Link]
         private readonly IClock clock = null;
 
@@ -211,7 +216,7 @@ namespace Models.CLEM
             // look for a shuffler
             shuffler = FindAllChildren<RainfallShuffler>().FirstOrDefault();
             if (shuffler != null)
-                rndClem = FindInScope<RandomNumberGenerator>();
+                rndClem = Structure.Find<RandomNumberGenerator>();
         }
 
         /// <summary>

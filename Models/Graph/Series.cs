@@ -4,6 +4,7 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using APSIM.Numerics;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -176,7 +177,7 @@ namespace Models
                         if (seriesDefinitions.Count == 0)
                             seriesDefinitions = CreateDefinitionsFromFieldInTable(reader, checkpointName, colourModifier, markerModifier, varyByFieldNames, inScopeSimulationNames);
 
-                        // Paint all definitions. 
+                        // Paint all definitions.
                         var painter = GetSeriesPainter();
                         foreach (var seriesDefinition in seriesDefinitions)
                             painter.Paint(seriesDefinition);
@@ -189,7 +190,7 @@ namespace Models
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="reader">A storage reader.</param>
         /// <param name="simulationDescriptions">A list of simulation descriptions.</param>
@@ -460,7 +461,7 @@ namespace Models
             {
                 painter = new SequentialPainter
                    (this, FactorToVaryLines,
-                    Enum.GetValues(typeof(LineType)).Length - 1, // minus 1 to avoid None type   
+                    Enum.GetValues(typeof(LineType)).Length - 1, // minus 1 to avoid None type
                     SeriesDefinition.SetLineType);
             }
             else if (FactorToVaryMarkers != null)

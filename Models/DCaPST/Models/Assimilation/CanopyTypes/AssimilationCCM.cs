@@ -12,14 +12,17 @@ namespace Models.DCAPST
         /// </summary>
         public override int Iterations { get; set; } = 10;
 
+
         /// <summary>
-        /// 
+        /// Constructor.
         /// </summary>
-        /// <param name="canopy"></param>
-        /// <param name="parameters"></param>
-        /// <param name="ambientCO2"></param>
-        /// <returns></returns>
-        public AssimilationCCM(CanopyParameters canopy, PathwayParameters parameters, double ambientCO2) : base(canopy, parameters, ambientCO2)
+        public AssimilationCCM(
+            DCaPSTParameters dcapstParameters,
+            CanopyParameters canopy, 
+            PathwayParameters parameters, 
+            double ambientCO2
+        ) : 
+            base(dcapstParameters, canopy, parameters, ambientCO2)
         {
         }
 
@@ -39,7 +42,7 @@ namespace Models.DCAPST
         protected override void UpdateChloroplasticO2(AssimilationPathway pathway)
         {
             pathway.ChloroplasticO2 = 
-                parameters.PS2ActivityFraction * pathway.CO2Rate / (canopy.DiffusivitySolubilityRatio * pathway.Gbs) + canopy.AirO2;
+                parameters.PS2ActivityFraction * pathway.CO2Rate / (canopy.DiffusivitySolubilityRatio * pathway.Gbs) + dcapstParameters.AirO2;
         }
 
         /// <inheritdoc/>
@@ -66,7 +69,7 @@ namespace Models.DCAPST
             var oc = pathway.ChloroplasticO2;
             var leafGamma = leaf.Gamma;
             var leafVcMaxT = leaf.VcMaxT;
-            var canopyAirO2 = canopy.AirO2;
+            var canopyAirO2 = dcapstParameters.AirO2;
 
             var x = new Terms()
             {
@@ -101,7 +104,7 @@ namespace Models.DCAPST
             var leafGamma = leaf.Gamma;
             var leafKc = leaf.Kc;
             var leafVcMaxT = leaf.VcMaxT;
-            var canopyAirO2 = canopy.AirO2;
+            var canopyAirO2 = dcapstParameters.AirO2;
             var leafKo = leaf.Ko;
 
             var x = new Terms()
@@ -139,7 +142,7 @@ namespace Models.DCAPST
             var oc = pathway.ChloroplasticO2;
             var leafGamma = leaf.Gamma;
             var leafJ = leaf.J;
-            var canopyAirO2 = canopy.AirO2;
+            var canopyAirO2 = dcapstParameters.AirO2;
 
             var x = new Terms()
             {

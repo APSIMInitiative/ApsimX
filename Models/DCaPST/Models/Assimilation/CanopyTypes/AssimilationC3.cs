@@ -1,5 +1,4 @@
 ﻿using System;
-using Models.DCAPST.Interfaces;
 
 namespace Models.DCAPST
 {
@@ -9,19 +8,22 @@ namespace Models.DCAPST
     public class AssimilationC3 : Assimilation
     {
         /// <summary>
-        /// 
+        /// Constructor
         /// </summary>
-        /// <param name="canopy"></param>
-        /// <param name="parameters"></param>
-        /// <param name="ambientCO2"></param>
-        /// <returns></returns>
-        public AssimilationC3(CanopyParameters canopy, PathwayParameters parameters, double ambientCO2) : base(canopy, parameters, ambientCO2)
-        { }
+        public AssimilationC3(
+            DCaPSTParameters dcapstParameters,
+            CanopyParameters canopy, 
+            PathwayParameters parameters, 
+            double ambientCO2
+        ) : 
+            base(dcapstParameters, canopy, parameters, ambientCO2)
+        { 
+        }
 
         /// <inheritdoc/>
         protected override AssimilationFunction GetAc1Function(AssimilationPathway pathway, TemperatureResponse leaf)
         {
-            var canopyAirO2 = canopy.AirO2;
+            var canopyAirO2 = dcapstParameters.AirO2;
             var leafKc = leaf.Kc;
 
             var x = new Terms()
@@ -58,7 +60,7 @@ namespace Models.DCAPST
         protected override AssimilationFunction GetAjFunction(AssimilationPathway pathway, TemperatureResponse leaf)
         {
             var leafGamma = leaf.Gamma;
-            var canopyAirO2 = canopy.AirO2;
+            var canopyAirO2 = dcapstParameters.AirO2;
 
             var x = new Terms()
             {

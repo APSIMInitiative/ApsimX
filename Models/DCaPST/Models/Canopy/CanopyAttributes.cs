@@ -1,4 +1,5 @@
-﻿using Models.DCAPST.Interfaces;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using Models.DCAPST.Interfaces;
 using System;
 
 namespace Models.DCAPST.Canopy
@@ -26,6 +27,7 @@ namespace Models.DCAPST.Canopy
         private const double KG_TO_G = 1000.0;
         private const double MOLAR_MASS_NITROGEN = 14.0;
 
+        private readonly DCaPSTParameters _dcapstParameters;
         private readonly CanopyParameters _canopyParameters;
         private readonly PathwayParameters _pathwayParameters;
 
@@ -38,14 +40,14 @@ namespace Models.DCAPST.Canopy
         /// Constructor
         /// </summary>
         public CanopyAttributes(
-            CanopyParameters canopyParameters,
-            PathwayParameters pathwayParameters,
+            DCaPSTParameters dcapstParameters,
             IAssimilationArea sunlit,
             IAssimilationArea shaded
         )
         {
-            _canopyParameters = canopyParameters;
-            _pathwayParameters = pathwayParameters;
+            _dcapstParameters = dcapstParameters;
+            _pathwayParameters = dcapstParameters.Pathway;
+            _canopyParameters = dcapstParameters.Canopy;
             Sunlit = sunlit;
             Shaded = shaded;
         }
@@ -97,8 +99,9 @@ namespace Models.DCAPST.Canopy
         /// </summary>
         public double CalcBoundaryHeatConductance()
         {
-            var a = 0.5 * _canopyParameters.Windspeed;
-            var b = 0.01 * Math.Pow(_canopyParameters.Windspeed / _canopyParameters.LeafWidth, 0.5);
+            var windspeed = _dcapstParameters.Windspeed;
+            var a = 0.5 * windspeed;
+            var b = 0.01 * Math.Pow(windspeed / _canopyParameters.LeafWidth, 0.5);
             var c = 1 - Math.Exp(-a * _lai);
 
             return b * c / a;
@@ -109,8 +112,9 @@ namespace Models.DCAPST.Canopy
         /// </summary>
         public double CalcSunlitBoundaryHeatConductance()
         {
-            var a = 0.5 * _canopyParameters.Windspeed + _absorbed.DirectExtinction;
-            var b = 0.01 * Math.Pow(_canopyParameters.Windspeed / _canopyParameters.LeafWidth, 0.5);
+            var windspeed = _dcapstParameters.Windspeed;
+            var a = 0.5 * windspeed + _absorbed.DirectExtinction;
+            var b = 0.01 * Math.Pow(windspeed / _canopyParameters.LeafWidth, 0.5);
             var c = 1 - Math.Exp(-a * _lai);
 
             return b * c / a;

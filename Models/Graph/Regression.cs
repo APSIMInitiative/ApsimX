@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using APSIM.Numerics;
 using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;

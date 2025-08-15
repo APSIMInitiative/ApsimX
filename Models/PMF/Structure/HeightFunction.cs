@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using APSIM.Core;
 using Models.Core;
 using Models.Functions;
+using Models.PMF.Organs;
 using Newtonsoft.Json;
 
 namespace Models.PMF.Struct
@@ -11,6 +14,7 @@ namespace Models.PMF.Struct
     /// Calculates the potential height increment and then multiplies it by the smallest of any childern functions (Child functions represent stress).
     /// </summary>
     [Serializable]
+    [ValidParent(ParentType = typeof(SimpleLeaf))]
     [ValidParent(ParentType = typeof(Structure))]
     public class HeightFunction : Model, IFunction
     {
@@ -40,7 +44,7 @@ namespace Models.PMF.Struct
             double PotentialHeightIncrement = PotentialHeight.Value(arrayIndex) - PotentialHeightYesterday;
             double StressValue = 1.0;
             //This function is counting potential height as a stress.
-            foreach (IFunction F in ChildFunctions)
+            foreach (IFunction F in ChildFunctions.Where(f => f != PotentialHeight))
             {
                 StressValue = Math.Min(StressValue, F.Value(arrayIndex));
             }

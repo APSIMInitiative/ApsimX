@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -6,7 +7,7 @@ using Models.Interfaces;
 namespace Models.Functions
 {
     /// <summary>
-    /// This Function calculates a mean daily VPD from Max and Min weighted toward Max according to the specified MaximumVPDWeight factor.  
+    /// This Function calculates a mean daily VPD from Max and Min weighted toward Max according to the specified MaximumVPDWeight factor.
     /// This is then passed into the XY matrix as the x property and the function returns the y value
     /// A value equal to 1.0 means it will use VPD at max temperature, a value of 0.5 means average VPD.
     /// </summary>

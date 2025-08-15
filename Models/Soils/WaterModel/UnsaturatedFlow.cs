@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Soils;
@@ -10,13 +11,13 @@ namespace Models.WaterModel
     /// For water contents below DUL, movement depends upon the water content gradient between adjacent layers and the diffusivity,
     /// which is a function of the average water contents of the two layers.
     ///
-    /// Unsaturated flow may occur both towards the surface and downwards, but cannot move water out of the bottom of 
-    /// the deepest layer in the profile. Flow between adjacent layers ceases at a soil water gradient (gravity_gradient) 
+    /// Unsaturated flow may occur both towards the surface and downwards, but cannot move water out of the bottom of
+    /// the deepest layer in the profile. Flow between adjacent layers ceases at a soil water gradient (gravity_gradient)
     /// specified in the SoilWater ini file.
     ///
-    /// The diffusivity is defined by two parameters set by the user (diffus_const, diffus_slope) in the SoilWater 
-    /// parameter set (Default values, from CERES, are 88 and 35.4, but 40 and 16 have been found to be more appropriate 
-    /// for describing water movement in cracking clay soils). 
+    /// The diffusivity is defined by two parameters set by the user (diffus_const, diffus_slope) in the SoilWater
+    /// parameter set (Default values, from CERES, are 88 and 35.4, but 40 and 16 have been found to be more appropriate
+    /// for describing water movement in cracking clay soils).
     ///
     /// Diffusivity = diffus_const x exp(diffus_slope x thet_av)
     ///
