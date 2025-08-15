@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using StdUnits;
 using static Models.GrazPlan.GrazType;
 
@@ -28,6 +31,61 @@ namespace Models.GrazPlan
 
         /// <summary></summary>
         private double[,] FPotRootTransloc = new double[GrazType.OLDR + 1, GrazType.MaxSoilLayers + 1];         // [EFFR..OLDR,1..MaxSoilLayers]
+
+        /// <summary>
+        ///
+        /// </summary>
+        public void CheckNaN()
+        {
+            PastureUtil.CheckNaN(FNewSpecificArea);
+            PastureUtil.CheckNaN(FPotRootTransloc);
+            PastureUtil.CheckNaN(FPotRootTranslocSum);
+            PastureUtil.CheckNaN(FRootTransloc);
+            PastureUtil.CheckNaN(FPotStemTransloc);
+            PastureUtil.CheckNaN(FPotStemTranslocSum);
+            PastureUtil.CheckNaN(FPotPartNetGrowth);
+            PastureUtil.CheckNaN(FStemTransloc);
+            PastureUtil.CheckNaN(FMaintRespRate);
+            PastureUtil.CheckNaN(FShootMaintResp);
+            PastureUtil.CheckNaN(FRootMaintResp);
+            PastureUtil.CheckNaN(FGrowthRespRate);
+            PastureUtil.CheckNaN(FPartNetGrowth);
+            foreach (var s in FShootNetGrowth)
+                s.CheckNaN();
+            foreach (var r in FRootNetGrowth)
+                r.CheckNaN();
+            FSeedNetGrowth.CheckNaN();
+            PastureUtil.CheckNaN(FRootExtension);
+            PastureUtil.CheckNaN(FNewShootDistn);
+            PastureUtil.CheckNaN(FNewRootDistn);
+            PastureUtil.CheckNaN(FShootLossRate);
+            PastureUtil.CheckNaN(FBiomassExitGM2);
+            PastureUtil.CheckNaN(FBiomassRespireGM2);
+            PastureUtil.CheckNaN(FRootAgingRate);
+            PastureUtil.CheckNaN(FRootLossRate);
+            PastureUtil.CheckNaN(FRootRelocRate);
+            PastureUtil.CheckNaN(FDMDDecline);
+            PastureUtil.CheckNaN(FDeltaFrost);
+            PastureUtil.CheckNaN(FDelta_SI);
+            PastureUtil.CheckNaN(SpecificArea);
+            foreach (var root in Roots)
+                root.CheckNaN();
+            PastureUtil.CheckNaN(StemReserve);
+            PastureUtil.CheckNaN(RootDepth);
+            PastureUtil.CheckNaN(FrostFactor);
+            PastureUtil.CheckNaN(SeedlStress);
+            PastureUtil.CheckNaN(EstabIndex);
+            PastureUtil.CheckNaN(DeadMoisture);
+            PastureUtil.CheckNaN(RelMoisture);
+            PastureUtil.CheckNaN(LimitFactors);
+            PastureUtil.CheckNaN(Assimilation);
+            PastureUtil.CheckNaN(RootTranslocSum);
+            PastureUtil.CheckNaN(StemTranslocSum);
+            PastureUtil.CheckNaN(fMaintRespiration);
+            PastureUtil.CheckNaN(fGrowthRespiration);
+            PastureUtil.CheckNaN(fR2S_Target);
+            PastureUtil.CheckNaN(Allocation);
+        }
 
         /// <summary></summary>
         private double FPotRootTranslocSum;
@@ -448,6 +506,8 @@ namespace Models.GrazPlan
         public void SetRootNutr(int age, int layer, TPlantElement elem, double value)
         {
             this.Roots[age, layer].Nu[(int)elem] = value;
+            if (double.IsNaN(value))
+                throw new Exception("NaN detected in SetRootNutr");
         }
 
         /// <summary>
@@ -1488,6 +1548,11 @@ namespace Models.GrazPlan
             int part, DMD;
             int age, layer;
 
+                for (age = EFFR; age <= OLDR; age++)
+                    for (layer = 1; layer <= this.Owner.FSoilLayerCount; layer++)
+                        if (double.IsNaN(this.FRootNetGrowth[age, layer].Nu[layer]))
+                            throw new Exception("NaN detected ComputeNetGrowth");
+
             if (this.Status == stSEEDL || this.Status == stESTAB || this.Status == stSENC)
             {
                 if (dormant)
@@ -1516,6 +1581,11 @@ namespace Models.GrazPlan
                 {
                     sink_Assim = VERYLARGE;
                 }
+
+                for (age = EFFR; age <= OLDR; age++)
+                    for (layer = 1; layer <= this.Owner.FSoilLayerCount; layer++)
+                        if (double.IsNaN(this.FRootNetGrowth[age, layer].Nu[layer]))
+                            throw new Exception("NaN detected ComputeNetGrowth");
 
                 limitNu = 1.0;
                 var values = Enum.GetValues(typeof(TPlantElement)).Cast<TPlantElement>().ToArray();
@@ -1588,6 +1658,11 @@ namespace Models.GrazPlan
                     }
                 }
 
+                for (age = EFFR; age <= OLDR; age++)
+                    for (layer = 1; layer <= this.Owner.FSoilLayerCount; layer++)
+                        if (double.IsNaN(this.FRootNetGrowth[age, layer].Nu[layer]))
+                            throw new Exception("NaN detected ComputeNetGrowth");
+
                 for (part = ptLEAF; part <= ptSEED; part++)
                 {
                     if (remainingAssim > 0.0)
@@ -1627,6 +1702,11 @@ namespace Models.GrazPlan
                 }
 
                 for (age = EFFR; age <= OLDR; age++)
+                    for (layer = 1; layer <= this.Owner.FSoilLayerCount; layer++)
+                        if (double.IsNaN(this.FRootNetGrowth[age, layer].Nu[layer]))
+                            throw new Exception("NaN detected ComputeNetGrowth");
+
+                for (age = EFFR; age <= OLDR; age++)
                 {
                     for (layer = 1; layer <= this.Owner.FSoilLayerCount; layer++)
                     {
@@ -1637,6 +1717,8 @@ namespace Models.GrazPlan
                         else
                         {
                             this.FRootNetGrowth[age, layer].DM = this.FPartNetGrowth[ptROOT] * this.PartFraction(ptROOT, age, layer);
+                            if (double.IsNaN(this.FRootNetGrowth[age, layer].Nu[layer]))
+                                throw new Exception("NaN detected ComputeNetGrowth");
                         }
                     }
                 }
@@ -3128,6 +3210,8 @@ namespace Models.GrazPlan
                                 if ((this.Roots[iAge, iLayer].Nu[(int)elem] > 1.0E-5) || (estabCohort.Roots[iAge, iLayer].DM > 0.0))
                                 {
                                     estabCohort.Roots[iAge, iLayer].Nu[(int)elem] = estabCohort.Roots[iAge, iLayer].Nu[(int)elem] + this.Roots[iAge, iLayer].Nu[(int)elem];
+                                    if (double.IsNaN(estabCohort.Roots[iAge, iLayer].Nu[(int)elem]))
+                                        throw new Exception("NaN detected in TransferSenescedNutrients");
                                 }
 
                                 this.Roots[iAge, iLayer].Nu[(int)elem] = 0.0;

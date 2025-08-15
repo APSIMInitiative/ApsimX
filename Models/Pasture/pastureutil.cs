@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using static Models.GrazPlan.GrazType;
 
 namespace Models.GrazPlan
@@ -166,7 +167,10 @@ namespace Models.GrazPlan
             }
             else
             {
-                return X / Y;
+                var value = X / Y;
+                if (double.IsNaN(value))
+                    throw new Exception("Divide by zero");
+                return value;
             }
         }
 
@@ -672,7 +676,31 @@ namespace Models.GrazPlan
                 amount = Math.Min(amount, srcPool.Nu[(int)Elem]);
                 srcPool.Nu[(int)Elem] = srcPool.Nu[(int)Elem] - amount;
                 dstPool.Nu[(int)Elem] = dstPool.Nu[(int)Elem] + amount;
+                if (double.IsNaN(srcPool.Nu[(int)Elem]) || double.IsNaN(dstPool.Nu[(int)Elem]))
+                    throw new Exception("NaN detected in MoveNutrient");
             }
+        }
+
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="v"></param>
+        public static void CheckNaN(IEnumerable v)
+        {
+            foreach (var value in v)
+                CheckNaN((double)value);
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="v"></param>
+        /// <exception cref="Exception"></exception>
+        public static void CheckNaN(double v)
+        {
+            if (double.IsNaN(v))
+                throw new Exception("NaN detected");
         }
     }
 }
