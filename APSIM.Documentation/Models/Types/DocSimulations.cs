@@ -70,7 +70,7 @@ namespace APSIM.Documentation.Models.Types
             List<ITag> tags = new List<ITag>();
             List<ITag> modelTags = new List<ITag>();
 
-            List<Memo> memos = m.FindAllChildren<Memo>().ToList();
+            List<Memo> memos = m.Node.FindChildren<Memo>().ToList();
             List<ITag> memoTags = new List<ITag>();
             if (name.ToLower() != "wheat")          //Wheat has the memo in both the validation and resource, so don't do it for that.
                     foreach (IModel child in memos)
@@ -82,8 +82,8 @@ namespace APSIM.Documentation.Models.Types
             List<IModel> modelsToDocument = new();
             if(name == "AgPasture")
             {
-                IModel agpRyegrassModel = m.FindDescendant("AGPRyegrass");
-                IModel agpWhiteCloverModel = m.FindDescendant("AGPWhiteClover");
+                IModel agpRyegrassModel = m.Node.FindChild<IModel>("AGPRyegrass", recurse: true);
+                IModel agpWhiteCloverModel = m.Node.FindChild<IModel>("AGPWhiteClover", recurse: true);
                 modelsToDocument.Add(agpRyegrassModel);
                 modelsToDocument.Add(agpWhiteCloverModel);
                 modelTags.AddRange(AutoDocumentation.DocumentModel(agpRyegrassModel));
@@ -92,7 +92,7 @@ namespace APSIM.Documentation.Models.Types
             else
             {
                 // Find a single instance of all unique Plant models.
-                modelToDocument = m.FindDescendant(name);
+                modelToDocument = m.Node.FindChild<IModel>(name, recurse: true);
                 if (modelToDocument != null)
                 {
                     modelTags.AddRange(AutoDocumentation.DocumentModel(modelToDocument));
@@ -117,7 +117,7 @@ namespace APSIM.Documentation.Models.Types
             tags.Add(firstSection);
 
             //Then just document the folders that aren't replacements
-            foreach (IModel child in m.FindAllChildren<Folder>())
+            foreach (IModel child in m.Node.FindChildren<Folder>())
             {
                 if(!Folder.IsModelReplacementsFolder(child))
                     tags.AddRange(AutoDocumentation.DocumentModel(child));
@@ -154,7 +154,7 @@ namespace APSIM.Documentation.Models.Types
                 tags.Add(firstSection);
             }
 
-            foreach(IModel child in m.FindAllChildren())
+            foreach(IModel child in m.Node.FindChildren<IModel>())
             {
                 if (child is Simulation)
                 {

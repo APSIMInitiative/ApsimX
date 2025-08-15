@@ -60,7 +60,7 @@ namespace UserInterface.Presenters
             playlistView = view as TextAndCodeView;
             playlistView.editorView.Text = playlistModel.Text;
             playlistView.editorView.TextHasChangedByUser += this.OnTextHasChangedByUser;
-            
+
             //This is the instructions at the top of the page.
             string instructions = "";
             instructions += "<b><big>Playlist</big></b>\n";
@@ -81,9 +81,9 @@ namespace UserInterface.Presenters
             playlistView.SetLabelText(instructions);
 
             //load in all the simulation and experiment names
-            Simulations sims = playlistModel.FindAncestor<Simulations>();
-            simNameCache = sims.FindAllDescendants<Simulation>().ToList();
-            expNameCache = sims.FindAllDescendants<Experiment>().ToList();
+            Simulations sims = playlistModel.Node.FindParent<Simulations>(recurse: true);
+            simNameCache = sims.Node.FindChildren<Simulation>(recurse: true).ToList();
+            expNameCache = sims.Node.FindChildren<Experiment>(recurse: true).ToList();
 
             //search our search timer to 0
             searchCounter = 0;
@@ -136,7 +136,7 @@ namespace UserInterface.Presenters
             {
                 searchCounter = 2;
                 return;
-            } 
+            }
             else
             {
                 searchCounter = 1;

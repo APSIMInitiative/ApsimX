@@ -13,8 +13,12 @@ namespace Models.Functions.RootShape
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Root))]
-    public class RootShapeSemiEllipse : Model, IRootShape
+    public class RootShapeSemiEllipse : Model, IRootShape, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>The Root Angle</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("Degree")]
@@ -28,7 +32,7 @@ namespace Models.Functions.RootShape
         /// <summary>Calculates the root area for a layer of soil</summary>
         public void CalcRootProportionInLayers(IRootGeometryData zone)
         {
-            var physical = zone.Soil.FindChild<Soils.IPhysical>();
+            var physical = Structure.FindChild<Soils.IPhysical>(relativeTo: zone.Soil);
 
             zone.RootArea = 0;
             for (int layer = 0; layer < physical.Thickness.Length; layer++)

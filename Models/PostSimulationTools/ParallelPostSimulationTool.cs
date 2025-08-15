@@ -26,7 +26,7 @@ namespace Models.PostSimulationTools
         /// </summary>
         public void Run()
         {
-            Parallel.ForEach(FindAllChildren<IPostSimulationTool>(), tool =>
+            Parallel.ForEach(Structure.FindChildren<IPostSimulationTool>(), tool =>
             {
                 new Links(new object[1] { Structure.Find<IDataStore>() }).Resolve(tool);
                 tool.Run();

@@ -36,7 +36,7 @@ namespace APSIM.Documentation.Models
                 if (variable != null && variable.Value is IModel value)
                     model = value;
                 else
-                    model = model.FindDescendant(path);
+                    model = model.Node.FindChild<IModel>(path, recurse: true);
             }
             else if (model is Simulations && model.Children.Any())
                 model = model.Children[0];

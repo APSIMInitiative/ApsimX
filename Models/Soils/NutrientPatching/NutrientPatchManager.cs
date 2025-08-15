@@ -914,7 +914,7 @@ namespace Models.Soils.NutrientPatching
         private void ClonePatch(int j)
         {
             // create new patch
-            var newPatch = new NutrientPatch(patches[j]);
+            var newPatch = new NutrientPatch(patches[j], Structure);
             patches.Add(newPatch);
             //int k = patches.Count - 1;
 

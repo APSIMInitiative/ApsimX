@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
+using JetBrains.Annotations;
 using Models.Core;
+using Models.Core.ApsimFile;
 using Models.Interfaces;
 using Models.Soils;
 using Newtonsoft.Json;
@@ -11,16 +14,16 @@ namespace Models.LifeCycle
 {
 
     /// <summary>
-    /// The LifeCycle model represents a population of organisms within a zone.  It assembles 
+    /// The LifeCycle model represents a population of organisms within a zone.  It assembles
     /// an arbitry number of LifeCyclePhases that cohorts of individuals (of the same developmental
     /// stage) pass through during their life.
     /// Each LifeCyclePhase assembles an arbitary number of cohorts.
-    /// LifeCyclePhases have a set of parameters controlling the Development, Mortality 
+    /// LifeCyclePhases have a set of parameters controlling the Development, Mortality
     /// and Reproduction of each cohort.  LifeCyclePhases may also contain plant damage functions
-    /// which specifiy how each phase damages its host plants.  
+    /// which specifiy how each phase damages its host plants.
     /// Upon the DoLifecycle event the LifeCycle class loops through a list of each of its LifeCyclePhases
-    /// The LifeCycle model is initialised with no members in any phase and the Infest() method must 
-    /// be called to insert members into a phase.  
+    /// The LifeCycle model is initialised with no members in any phase and the Infest() method must
+    /// be called to insert members into a phase.
     /// </summary>
 
     [Serializable]
@@ -31,8 +34,13 @@ namespace Models.LifeCycle
     [ValidParent(ParentType = typeof(IPlant))]
     [ValidParent(ParentType = typeof(Soil))]
     [ValidParent(ParentType = typeof(ISurfaceOrganicMatter))]
-    public class LifeCycle : Model
+    public class LifeCycle : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
+
         [Link]
         ISummary mySummary = null;
 
@@ -49,7 +57,7 @@ namespace Models.LifeCycle
         {
             get
             {
-                return FindAllChildren<LifeCyclePhase>().Select(p => p.Name).ToArray();
+                return Structure.FindChildren<LifeCyclePhase>().Select(p => p.Name).ToArray();
             }
         }
 
@@ -75,7 +83,7 @@ namespace Models.LifeCycle
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             LifeCyclePhases = new List<LifeCyclePhase>();
-            foreach (LifeCyclePhase stage in this.FindAllChildren<LifeCyclePhase>())
+            foreach (LifeCyclePhase stage in Structure.FindChildren<LifeCyclePhase>())
             {
                 LifeCyclePhases.Add(stage);
             }
@@ -112,7 +120,7 @@ namespace Models.LifeCycle
         /// <param name="InfestationInfo"></param>
         public void Infest(SourceInfo InfestationInfo)
         {
-            LifeCyclePhase InfestingPhase = FindChild<LifeCyclePhase>(InfestationInfo.LifeCyclePhase);
+            LifeCyclePhase InfestingPhase = Structure.FindChild<LifeCyclePhase>(InfestationInfo.LifeCyclePhase);
             InfestingPhase.NewCohort(InfestationInfo);
             mySummary.WriteMessage(this, "An infestation of  " + InfestationInfo.Population + " " + FullPath + " " + InfestationInfo.LifeCyclePhase + "'s occured today, just now :-)", MessageType.Diagnostic);
         }

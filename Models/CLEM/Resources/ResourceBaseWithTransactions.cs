@@ -8,7 +8,7 @@ namespace Models.CLEM.Resources
 {
     ///<summary>
     /// Base resource model to implement transaction tracking
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -56,7 +56,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
-            foreach (IResourceWithTransactionType childModel in this.FindAllChildren<IResourceWithTransactionType>())
+            foreach (IResourceWithTransactionType childModel in Structure.FindChildren<IResourceWithTransactionType>())
                 childModel.TransactionOccurred += Resource_TransactionOccurred;
         }
 
@@ -66,12 +66,12 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Completed")]
         protected void OnSimulationCompleted(object sender, EventArgs e)
         {
-            foreach (IResourceWithTransactionType childModel in this.FindAllChildren<IResourceWithTransactionType>())
+            foreach (IResourceWithTransactionType childModel in Structure.FindChildren<IResourceWithTransactionType>())
                 childModel.TransactionOccurred -= Resource_TransactionOccurred;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

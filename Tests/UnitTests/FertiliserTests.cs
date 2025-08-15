@@ -88,9 +88,9 @@ namespace UnitTests
             links.Resolve(simulation, true);
 
             // get instances.
-            var summary = simulation.FindDescendant<MockSummary>();
-            var fertiliser = simulation.FindDescendant<Fertiliser>();
-            var no3 = simulation.FindDescendant<ISolute>();
+            var summary = simulation.Node.FindChild<MockSummary>(recurse: true);
+            var fertiliser = simulation.Node.FindChild<Fertiliser>(recurse: true);
+            var no3 = simulation.Node.FindChild<ISolute>(recurse: true);
 
             // apply fertiliser
             fertiliser.Apply(amount:100, "NO3N", depth: 200);
@@ -141,8 +141,8 @@ namespace UnitTests
             links.Resolve(simulation, true);
 
             // get instances.
-            var fertiliser = simulation.FindDescendant<Fertiliser>();
-            var no3 = simulation.FindDescendant<ISolute>();
+            var fertiliser = simulation.Node.FindChild<Fertiliser>(recurse: true);
+            var no3 = simulation.Node.FindChild<ISolute>(recurse: true);
 
             // apply fertiliser
             fertiliser.Apply(amount:50, "NO3N", depth: 75, depthBottom: 300);
@@ -198,9 +198,9 @@ namespace UnitTests
             links.Resolve(simulation, true);
 
             // get instances.
-            var fertiliser = simulation.FindDescendant<Fertiliser>();
-            var no3 = simulation.FindDescendant<ISolute>("NO3");
-            var nh4 = simulation.FindDescendant<ISolute>("NH4");
+            var fertiliser = simulation.Node.FindChild<Fertiliser>(recurse: true);
+            var no3 = simulation.Node.FindChild<ISolute>("NO3", recurse: true);
+            var nh4 = simulation.Node.FindChild<ISolute>("NH4", recurse: true);
 
             // apply fertiliser
             fertiliser.Apply(amount:10, "SlowRelease", depth: 0);
@@ -299,8 +299,8 @@ namespace UnitTests
             links.Resolve(simulation, true);
 
             // get instances.
-            var fertiliser = simulation.FindDescendant<Fertiliser>();
-            var no3 = simulation.FindDescendant<ISolute>("NO3");
+            var fertiliser = simulation.Node.FindChild<Fertiliser>(recurse: true);
+            var no3 = simulation.Node.FindChild<ISolute>("NO3", recurse: true);
 
             // apply fertiliser
             fertiliser.Apply(amount:10, "SlowRelease", depth: 0);

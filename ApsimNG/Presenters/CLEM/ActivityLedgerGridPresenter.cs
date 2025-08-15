@@ -54,13 +54,13 @@
 
                 Model report = clemPresenter.Model as Model;
 
-                Simulations simulations = report.FindAncestor<Simulations>();
+                Simulations simulations = report.Node.FindParent<Simulations>(recurse: true);
                 if (simulations != null)
-                    dataStore = simulations.FindChild<IDataStore>();
+                    dataStore = simulations.Node.FindChild<IDataStore>();
 
                 DataStorePresenter dataStorePresenter = new DataStorePresenter();
-                Simulation simulation = report.FindAncestor<Simulation>();
-                Zone paddock = report.FindAncestor<Zone>();
+                Simulation simulation = report.Node.FindParent<Simulation>(recurse: true);
+                Zone paddock = report.Node.FindParent<Zone>(recurse: true);
 
                 if (paddock != null)
                     dataStorePresenter.ZoneFilter = paddock;

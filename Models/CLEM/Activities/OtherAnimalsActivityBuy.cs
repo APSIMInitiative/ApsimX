@@ -43,7 +43,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            cohorts = FindAllChildren<OtherAnimalsTypeCohort>();
+            cohorts = Structure.FindChildren<OtherAnimalsTypeCohort>();
             foreach (var cohort in cohorts)
             {
                 cohort.AdjustedNumber = cohort.Number;

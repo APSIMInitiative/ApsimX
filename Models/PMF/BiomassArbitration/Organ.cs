@@ -136,7 +136,7 @@ namespace Models.PMF
         {
             get
             {
-                return this.FindChild<IWaterNitrogenUptake>();
+                return Structure.FindChild<IWaterNitrogenUptake>();
             }
         }
 
@@ -145,7 +145,7 @@ namespace Models.PMF
         {
             get
             {
-                return this.FindChild<IHasWaterDemand>();
+                return Structure.FindChild<IHasWaterDemand>();
             }
         }
 
@@ -374,7 +374,7 @@ namespace Models.PMF
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
-            RootNetworkObject = this.FindChild<RootNetwork>();
+            RootNetworkObject = Structure.FindChild<RootNetwork>();
         }
 
         /// <summary>Called when [do daily initialisation].</summary>

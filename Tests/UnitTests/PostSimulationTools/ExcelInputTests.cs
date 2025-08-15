@@ -1,4 +1,5 @@
-﻿using APSIM.Shared.Utilities;
+﻿using APSIM.Core;
+using APSIM.Shared.Utilities;
 using Models.PostSimulationTools;
 using Models.Storage;
 using NUnit.Framework;
@@ -41,16 +42,19 @@ namespace UnitTests
             var dataStore = new DataStore(database);
             dataStore.Writer.TablesModified.Add("Observed");
 
-            ExcelInput excelInput = new ExcelInput();
-            excelInput.FileNames = new string[] {"%root%/Tests/UnitTests/PostSimulationTools/Input.xlsx"};
-            excelInput.SheetNames = new string[] {"Sheet1"};
+            ExcelInput excelInput = new ExcelInput()
+            {
+                FileNames = ["%root%/Tests/UnitTests/PostSimulationTools/Input.xlsx"],
+                SheetNames = ["Sheet1"]
+            };
+            Node.Create(excelInput);
 
             Utilities.InjectLink(excelInput, "storage", dataStore);
 
             excelInput.Run();
             dataStore.Writer.Stop();
             dataStore.Reader.Refresh();
-            
+
             DataTable dt = dataStore.Reader.GetData("Sheet1");
 
             Assert.That(dt.Columns[4].DataType, Is.EqualTo(typeof(DateTime)));

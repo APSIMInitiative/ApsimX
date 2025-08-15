@@ -101,7 +101,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            setPreviousConception = this.FindChild<SetPreviousConception>();
+            setPreviousConception = Structure.FindChild<SetPreviousConception>();
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace Models.CLEM.Resources
             if (initialAttributes != null)
                 localAttributes.AddRange(initialAttributes);
             // Add any attributes defined at the cohort level
-            localAttributes.AddRange(this.FindAllChildren<ISetAttribute>().ToList());
+            localAttributes.AddRange(Structure.FindChildren<ISetAttribute>().ToList());
 
             return CreateIndividuals(Convert.ToInt32(this.Number, CultureInfo.InvariantCulture), localAttributes, ruminantType);
         }
@@ -140,7 +140,7 @@ namespace Models.CLEM.Resources
             {
                 RuminantType parent = ruminantType;
                 if (parent is null)
-                    parent = FindAncestor<RuminantType>();
+                    parent = Structure.FindParent<RuminantType>(recurse: true);
 
                 // get Ruminant Herd resource for unique ids
                 RuminantHerd ruminantHerd = parent.Parent as RuminantHerd; // Resources.FindResourceGroup<RuminantHerd>();
@@ -221,7 +221,7 @@ namespace Models.CLEM.Resources
             return individuals;
         }
 
-        #region descriptive summary 
+        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -233,14 +233,15 @@ namespace Models.CLEM.Resources
             {
                 if (!FormatForParentControl)
                 {
-                    rumType = FindAncestor<RuminantType>();
+                    rumType = Structure.FindParent<RuminantType>(recurse: true);
                     if (rumType is null)
                     {
                         // look for rum type in SpecifyRuminant
-                        var specParent = this.FindAllAncestors<SpecifyRuminant>().FirstOrDefault();
+                        var specParent = Structure.FindParents<SpecifyRuminant>().FirstOrDefault();
                         if (specParent != null)
                         {
-                            var resHolder = this.FindAncestor<ZoneCLEM>().FindDescendant<ResourcesHolder>();
+                            var zoneClem = Structure.FindParent<ZoneCLEM>(recurse: true);
+                            var resHolder = Structure.FindChild<ResourcesHolder>(relativeTo: zoneClem, recurse: true);
                             rumType = resHolder.FindResourceType<RuminantHerd, RuminantType>(this, specParent.RuminantTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
                             specifyRuminantParent = true;
                         }
@@ -291,7 +292,7 @@ namespace Models.CLEM.Resources
                     {
                         bool parentIsSpecify = (Parent is SpecifyRuminant);
 
-                        // when formatted for parent control. i.e. child fo trade 
+                        // when formatted for parent control. i.e. child fo trade
                         htmlWriter.Write("\r\n<div class=\"resourcebanneralone clearfix\">");
                         if (!parentIsSpecify)
                         {
@@ -363,7 +364,7 @@ namespace Models.CLEM.Resources
                 {
                     if (!(CurrentAncestorList.Count >= 3 && CurrentAncestorList[CurrentAncestorList.Count - 1] == typeof(RuminantInitialCohorts).Name))
                     {
-                        RuminantType rumtype = FindAncestor<RuminantType>();
+                        RuminantType rumtype = Structure.FindParent<RuminantType>(recurse: true);
                         if (rumtype != null)
                         {
                             var newInd = Ruminant.Create(Sex, rumtype, Age);
@@ -382,7 +383,7 @@ namespace Models.CLEM.Resources
 
                             if ((Parent as RuminantInitialCohorts).ConceptionsFound)
                             {
-                                var setConceptionFound = this.FindChild<SetPreviousConception>();
+                                var setConceptionFound = Structure.FindChild<SetPreviousConception>();
                                 if (setConceptionFound != null)
                                     htmlWriter.Write($"<td class=\"fill\"><span class=\"setvalue\">{setConceptionFound.NumberMonthsPregnant}</span> mths</td>");
                                 else
@@ -391,7 +392,7 @@ namespace Models.CLEM.Resources
 
                             if ((Parent as RuminantInitialCohorts).AttributesFound)
                             {
-                                var setAttributesFound = this.FindAllChildren<SetAttributeWithValue>();
+                                var setAttributesFound = Structure.FindChildren<SetAttributeWithValue>();
                                 if (setAttributesFound.Any())
                                 {
                                     htmlWriter.Write($"<td class=\"fill\">");

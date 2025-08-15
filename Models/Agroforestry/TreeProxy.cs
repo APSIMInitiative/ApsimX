@@ -441,11 +441,11 @@ namespace Models.Agroforestry
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            ZoneList = Parent.FindAllChildren<Zone>().ToList();
+            ZoneList = Structure.FindChildren<Zone>(relativeTo: Parent as INodeModel).ToList();
             SetupTreeProperties();
 
             //pre-fetch static information
-            forestryZones = Parent.FindAllDescendants<Zone>().ToList();
+            forestryZones = Structure.FindChildren<Zone>(relativeTo: Parent as INodeModel, recurse: true).ToList();
             treeZone = ZoneList.FirstOrDefault();
             treeZoneWater = Structure.Find<ISoilWater>(relativeTo: treeZone);
 
@@ -486,7 +486,7 @@ namespace Models.Agroforestry
                             if (SearchZ.Name == Z.Zone.Name)
                             {
                                 ThisSoil = Structure.Find<Soil>(relativeTo: SearchZ);
-                                soilPhysical = ThisSoil.FindChild<Soils.IPhysical>();
+                                soilPhysical = Structure.FindChild<Soils.IPhysical>(relativeTo: ThisSoil);
                                 break;
                             }
 
@@ -560,7 +560,7 @@ namespace Models.Agroforestry
                             if (SearchZ.Name == Z.Zone.Name)
                             {
                                 ThisSoil = Structure.Find<Soil>(relativeTo: SearchZ);
-                                soilPhysical = ThisSoil.FindChild<Soils.IPhysical>();
+                                soilPhysical = Structure.FindChild<Soils.IPhysical>(relativeTo: ThisSoil);
                                 break;
                             }
 

@@ -486,7 +486,7 @@ namespace Models.AgPasture
           );
         }
 
-        urineDungPatches?.OnStartOfSimulation();
+        urineDungPatches?.OnStartOfSimulation(Structure);
     }
 
         /// <summary>This method is invoked at the beginning of each day to perform management actions.</summary>

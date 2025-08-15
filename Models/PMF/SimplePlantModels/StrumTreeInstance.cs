@@ -654,8 +654,8 @@ namespace Models.PMF.SimplePlantModels
         {
             double soilDepthMax = 0;
 
-            var soilCrop = soil.FindDescendant<SoilCrop>(strum.Name + "Soil");
-            var physical = soil.FindDescendant<Physical>("Physical");
+            var soilCrop = Structure.FindChild<SoilCrop>(strum.Name + "Soil", relativeTo: soil, recurse: true);
+            var physical = Structure.FindChild<Physical>("Physical", relativeTo: soil, recurse: true);
             if (soilCrop == null)
                 throw new Exception($"Cannot find a soil crop parameterisation called {strum.Name}Soil");
 
@@ -679,7 +679,7 @@ namespace Models.PMF.SimplePlantModels
             if (GRINZ)
             {  //Must add root zone prior to sowing the crop.  For some reason they (silently) dont add if you try to do so after the crop is established
                 string neighbour = "";
-                List<Zone> zones = simulation.FindAllChildren<Zone>().ToList();
+                List<Zone> zones = Structure.FindChildren<Zone>(relativeTo: simulation).ToList();
                 if (zones.Count > 2)
                     throw new Exception("Strip crop logic only set up for 2 zones, your simulation has more than this");
                 if (zones.Count > 1)
@@ -711,7 +711,7 @@ namespace Models.PMF.SimplePlantModels
             double rowWidth = 0.0;
 
             tree = CoeffCalc();
-            strum.Children.Add(tree);
+            strum.AddCultivar(tree);
             strum.Sow(cropName, population, depth, rowWidth);
             phenology.SetAge(AgeAtSimulationStart);
             summary.WriteMessage(this,"Some of the message above is not relevent as STRUM has no notion of population, bud number or row spacing." +
@@ -823,7 +823,7 @@ namespace Models.PMF.SimplePlantModels
 
         private void SetUpZones()
         {
-            List<Zone> zones = simulation.FindAllChildren<Zone>().ToList();
+            List<Zone> zones = Structure.FindChildren<Zone>(relativeTo: simulation).ToList();
             foreach (Zone z in zones)
             {
                 if (z.Name == "Row")

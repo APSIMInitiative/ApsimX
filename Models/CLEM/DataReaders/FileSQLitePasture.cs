@@ -32,10 +32,6 @@ namespace Models.CLEM
     [HelpUri(@"Content/Features/DataReaders/PastureDataReaderSQL.htm")]
     public class FileSQLitePasture : CLEMModel, IFilePasture, IValidatableObject, IStructureDependency
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
         [Link]
         private IClock clock = null;
 
@@ -228,7 +224,7 @@ namespace Models.CLEM
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
             // look for a shuffler
-            shuffler = this.FindAllChildren<RainfallShuffler>().FirstOrDefault();
+            shuffler = Structure.FindChildren<RainfallShuffler>().FirstOrDefault();
             if (shuffler != null)
                 rndClem = Structure.Find<RandomNumberGenerator>();
         }
@@ -400,7 +396,7 @@ namespace Models.CLEM
         {
             get
             {
-                Simulation sim = FindAncestor<Simulation>();
+                Simulation sim = Structure.FindParent<Simulation>(recurse: true);
                 if (sim?.FileName != null)
                 {
                     return PathUtilities.GetAbsolutePath(this.FileName, sim.FileName);

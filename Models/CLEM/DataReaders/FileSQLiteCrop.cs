@@ -26,8 +26,8 @@ namespace Models.CLEM
     ///<remarks>
     ///</remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")] 
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")] 
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("Access to a crop data file as a table in an SQLite database")]
@@ -116,7 +116,7 @@ namespace Models.CLEM
         public string HarvestTypeColumnName { get; set; }
 
         /// <summary>
-        /// Gets or sets the full file name (with path). 
+        /// Gets or sets the full file name (with path).
         /// The Commands.ChangeProperty() uses this property to change the model.
         /// This is done after the user changes the file using the browse button in the View.
         /// </summary>
@@ -129,7 +129,7 @@ namespace Models.CLEM
                     return "";
                 else
                 {
-                    Simulation simulation = FindAncestor<Simulation>();
+                    Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
                     if (simulation != null)
                         return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
                     else
@@ -206,7 +206,7 @@ namespace Models.CLEM
         /// <summary>
         /// Provides an error message to display if something is wrong.
         /// Used by the UserInterface to give a warning of what is wrong
-        /// When the user selects a file using the browse button in the UserInterface 
+        /// When the user selects a file using the browse button in the UserInterface
         /// and the file can not be displayed for some reason in the UserInterface.
         /// </summary>
         [JsonIgnore]
@@ -230,7 +230,7 @@ namespace Models.CLEM
         /// <param name="startDate">Start date of the simulation</param>
         /// <param name="endDate">End date of the simulation</param>
         /// <returns>A struct called CropDataType containing the crop data for this month.
-        /// This struct can be null. 
+        /// This struct can be null.
         /// </returns>
         public List<CropDataType> GetCropDataForEntireRun(string soilId, string cropName,
                                         DateTime startDate, DateTime endDate)
@@ -394,10 +394,10 @@ namespace Models.CLEM
                         htmlWriter.Write("\r\n</div>");
                     }
                 }
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
 
-        } 
+        }
         #endregion
     }
 

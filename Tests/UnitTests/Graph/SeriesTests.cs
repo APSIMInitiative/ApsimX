@@ -42,7 +42,7 @@
                     }
                 }
             };
-            sim.ParentAllDescendants();
+            APSIM.Core.Node.Create(sim);
 
             string data =
                 "CheckpointName  SimulationID  Col1  Col2\r\n" +
@@ -110,7 +110,7 @@
                     })
                 }
             };
-            folder.ParentAllDescendants();
+            APSIM.Core.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID   Exp Col1  Col2\r\n" +
@@ -197,7 +197,7 @@
                     }
                 }
             };
-            folder.ParentAllDescendants();
+            APSIM.Core.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID     Irr  Fert   Col1  Col2\r\n" +
@@ -265,7 +265,7 @@
             Assert.That(definitions[0].SeriesDefinitions[3].Line, Is.EqualTo(LineType.Dash));
             Assert.That(definitions[0].SeriesDefinitions[3].Title, Is.EqualTo("Wet10"));
             Assert.That(definitions[0].SeriesDefinitions[3].X as double[], Is.EqualTo(new double[] { 1, 2 }));
-            Assert.That(definitions[0].SeriesDefinitions[3].Y as double[], Is.EqualTo(new int[] { 70, 80 }));   
+            Assert.That(definitions[0].SeriesDefinitions[3].Y as double[], Is.EqualTo(new int[] { 70, 80 }));
         }
 
         /// <summary>Create six series definitions due to a three 'VaryBy' groupings.</summary>
@@ -326,7 +326,7 @@
                     }
                 }
             };
-            folder.ParentAllDescendants();
+            APSIM.Core.Node.Create(folder);
 
             var graph = folder.Children[1] as Graph;
             var series = graph.Children[0] as Series;
@@ -400,7 +400,7 @@
         }
 
         /// <summary>
-        /// Create series definitions where it works its way though the colours sequentially and 
+        /// Create series definitions where it works its way though the colours sequentially and
         /// when it runs out of colours it works through the marker types. Useful when there
         /// are a lot of descriptor values.
         /// </summary>
@@ -473,7 +473,7 @@
                     }
                 }
             };
-            folder.ParentAllDescendants();
+            APSIM.Core.Node.Create(folder);
 
             var graph = folder.Children[1] as Graph;
             var series = graph.Children[0] as Series;
@@ -508,7 +508,7 @@
             Assert.That(definitions[0].SeriesDefinitions[3].Title, Is.EqualTo("D"));
 
             Assert.That(definitions[0].SeriesDefinitions[4].Colour, Is.EqualTo(ColourUtilities.Colours[4]));
-            Assert.That(definitions[0].SeriesDefinitions[4].Marker, Is.EqualTo(MarkerType.FilledCircle));   
+            Assert.That(definitions[0].SeriesDefinitions[4].Marker, Is.EqualTo(MarkerType.FilledCircle));
             Assert.That(definitions[0].SeriesDefinitions[4].Line, Is.EqualTo(LineType.Solid));
             Assert.That(definitions[0].SeriesDefinitions[4].Title, Is.EqualTo("E"));
 
@@ -529,7 +529,7 @@
 
             // Run out of colours, go back to first colour but increment markertype.
 
-            Assert.That(definitions[0].SeriesDefinitions[8].Colour, Is.EqualTo(ColourUtilities.Colours[0])); 
+            Assert.That(definitions[0].SeriesDefinitions[8].Colour, Is.EqualTo(ColourUtilities.Colours[0]));
             Assert.That(definitions[0].SeriesDefinitions[8].Marker, Is.EqualTo(MarkerType.FilledDiamond));
             Assert.That(definitions[0].SeriesDefinitions[8].Line, Is.EqualTo(LineType.Solid));
             Assert.That(definitions[0].SeriesDefinitions[8].Title, Is.EqualTo("I"));
@@ -584,7 +584,7 @@
                     }
                 }
             };
-            sim.ParentAllDescendants();
+            APSIM.Core.Node.Create(sim);
 
             string data =
                 "CheckpointName    SimulationID  Col1  Col2\r\n" +
@@ -665,7 +665,7 @@
                     }
                 }
             };
-            folder.ParentAllDescendants();
+            APSIM.Core.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID     Exp Col1  Col2  Col3\r\n" +
@@ -721,7 +721,7 @@
                     }
                 }
             };
-            folder.ParentAllDescendants();
+            APSIM.Core.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID    Exp Col1  Col2\r\n" +
@@ -782,7 +782,7 @@
                     }
                 }
             };
-            folder.ParentAllDescendants();
+            APSIM.Core.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID   Zone Col1  Col2\r\n" +
@@ -861,7 +861,7 @@
                     }
                 }
             };
-            folder.ParentAllDescendants();
+            APSIM.Core.Node.Create(folder);
 
             string data =
                 "CheckpointName   SimulationID Col1  Col2\r\n" +
@@ -923,7 +923,7 @@
                     }
                 }
             };
-            folder.ParentAllDescendants();
+            APSIM.Core.Node.Create(folder);
 
             string data =
                 " CheckpointName ABC  DEF Col1  Col2\r\n" +
@@ -967,7 +967,7 @@
             Assert.That(definitions[0].SeriesDefinitions[2].Title, Is.EqualTo("Bd"));
             Assert.That(definitions[0].SeriesDefinitions[2].X as double[], Is.EqualTo(new double[] { 1, 2 }));
             Assert.That(definitions[0].SeriesDefinitions[2].Y as double[], Is.EqualTo(new double[] { 50, 60 }));
-                
+
             Assert.That(definitions[0].SeriesDefinitions[3].Colour, Is.EqualTo(ColourUtilities.Colours[1]));
             Assert.That(definitions[0].SeriesDefinitions[3].Marker, Is.EqualTo(MarkerType.FilledDiamond));
             Assert.That(definitions[0].SeriesDefinitions[3].Title, Is.EqualTo("Be"));
@@ -1006,7 +1006,7 @@
                     }
                 }
             };
-            folder.ParentAllDescendants();
+            APSIM.Core.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID     Exp   A  Col1  Col2\r\n" +
@@ -1064,7 +1064,7 @@
                     }
                 }
             };
-            folder.ParentAllDescendants();
+            APSIM.Core.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID     Exp   A  Col1  Col2\r\n" +
@@ -1120,7 +1120,7 @@
                 }
             }
             };
-            folder.ParentAllDescendants();
+            APSIM.Core.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID     Exp   A  Col1  Col2\r\n" +
@@ -1202,7 +1202,7 @@
             };
 
 
-            simulations.ParentAllDescendants();
+            APSIM.Core.Node.Create(simulations);
 
             string data =
                 "CheckpointName    SimulationID    Exp Col1  Col2\r\n" +
@@ -1287,7 +1287,7 @@
             };
 
 
-            simulations.ParentAllDescendants();
+            APSIM.Core.Node.Create(simulations);
 
             string data =
                 "CheckpointName    SimulationID Col1  Col2\r\n" +
@@ -1348,7 +1348,7 @@
                 }
             };
 
-            simulations.ParentAllDescendants();
+            APSIM.Core.Node.Create(simulations);
 
             List<string> checkpoints = new List<string>() { "Current" };
 
@@ -1367,7 +1367,7 @@
 
             IStorageReader reader = new MockStorageReader(report, obs);
 
-            Graph graph = simulations.FindDescendant<Graph>();
+            Graph graph = simulations.Node.FindChild<Graph>(recurse: true);
             GraphPage page = new GraphPage();
             page.Graphs.Add(graph);
             List<GraphPage.GraphDefinitionMap> definitions = page.GetAllSeriesDefinitions(graph, reader, null);
@@ -1427,7 +1427,7 @@
                 }
             };
 
-            simulations.ParentAllDescendants();
+            APSIM.Core.Node.Create(simulations);
 
             string data =
                 "CheckpointName    SimulationID   A  Col1  Col2\r\n" +
@@ -1483,7 +1483,7 @@
                     }
                 }
             };
-            folder.ParentAllDescendants();
+            APSIM.Core.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID Predicted.Grain.Wt  Observed.Grain.Wt\r\n" +
@@ -1547,7 +1547,7 @@
                     }
                 }
             };
-            folder.ParentAllDescendants();
+            APSIM.Core.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID Predicted.Grain.Wt  Observed.Grain.Wt\r\n" +
@@ -1606,7 +1606,7 @@
                     }
                 }
             };
-            folder.ParentAllDescendants();
+            APSIM.Core.Node.Create(folder);
 
             string data =
                 "CheckpointName SimulationName SimulationID Predicted.Grain.Wt  Observed.Grain.Wt Experiment\r\n" +
@@ -1671,7 +1671,7 @@
                     }
                 }
             };
-            folder.ParentAllDescendants();
+            APSIM.Core.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID Predicted.Grain.Wt  Observed.Grain.Wt  Observed.Grain.WtError\r\n" +
@@ -1735,7 +1735,7 @@
                     })
                 }
             };
-            folder.ParentAllDescendants();
+            APSIM.Core.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID   Exp Col1  Col2\r\n" +

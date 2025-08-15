@@ -39,12 +39,12 @@ namespace Models.CLEM.Resources
         {
             var results = new List<ValidationResult>();
 
-            if (this.FindAllChildren<AnimalPriceGroup>().Count() == 0)
+            if (Structure.FindChildren<AnimalPriceGroup>().Count() == 0)
             {
                 string[] memberNames = new string[] { "Animal pricing" };
                 results.Add(new ValidationResult("No [AnimalPriceGroups] have been provided for [r=" + this.Name + "].\r\nAdd [AnimalPriceGroups] to include animal pricing.", memberNames));
             }
-            else if (this.FindAllChildren<AnimalPriceGroup>().Cast<AnimalPriceGroup>().Where(a => a.Value == 0).Count() > 0)
+            else if (Structure.FindChildren<AnimalPriceGroup>().Cast<AnimalPriceGroup>().Where(a => a.Value == 0).Count() > 0)
             {
                 string[] memberNames = new string[] { "Animal pricing" };
                 results.Add(new ValidationResult("No price [Value] has been set for some of the [AnimalPriceGroup] in [r=" + this.Name + "]\r\nThese will not result in price calculations and can be deleted.", memberNames));
@@ -66,7 +66,7 @@ namespace Models.CLEM.Resources
         public override string ModelSummaryInnerClosingTags()
         {
             string html = "";
-            if (this.FindAllChildren<AnimalPriceGroup>().Count() >= 1)
+            if (Structure.FindChildren<AnimalPriceGroup>().Count() >= 1)
                 html += "</table></div>";
 
             return html;
@@ -76,7 +76,7 @@ namespace Models.CLEM.Resources
         public override string ModelSummaryInnerOpeningTags()
         {
             string html = "";
-            if (this.FindAllChildren<AnimalPriceGroup>().Count() >= 1)
+            if (Structure.FindChildren<AnimalPriceGroup>().Count() >= 1)
                 html += "<div class=\"topspacing\"><table><tr><th>Name</th><th>Filter</th><th>Value</th><th>Style</th><th>Type</th></tr>";
             else
                 html += "<span class=\"errorlink\">No Animal Price Groups defined!</span>";

@@ -9,8 +9,12 @@ namespace Models.Functions
     /// <summary>This class calculates the minimum of all child functions.</summary>
     [Serializable]
     [Description("Returns the maximum value of all childern functions")]
-    public class MaximumFunction : Model, IFunction
+    public class MaximumFunction : Model, IFunction, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>The child functions</summary>
         private IEnumerable<IFunction> ChildFunctions;
 
@@ -19,7 +23,7 @@ namespace Models.Functions
         public double Value(int arrayIndex = -1)
         {
             if (ChildFunctions == null)
-                ChildFunctions = FindAllChildren<IFunction>().ToList();
+                ChildFunctions = Structure.FindChildren<IFunction>().ToList();
 
             double ReturnValue = -999999999;
             foreach (IFunction F in ChildFunctions)

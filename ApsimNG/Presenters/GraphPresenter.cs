@@ -629,7 +629,7 @@ namespace UserInterface.Presenters
         /// <param name="model">The model.</param>
         private void OnGraphModelChanged(object model)
         {
-            if (model == graph || graph.FindAllDescendants().Contains(model) || graph.Axis.Contains(model))
+            if (model == graph || graph.Node.FindChildren<IModel>(recurse: true).Contains(model) || graph.Axis.Contains(model))
                 DrawGraph();
         }
 

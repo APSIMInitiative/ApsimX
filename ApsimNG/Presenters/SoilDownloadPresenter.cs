@@ -274,7 +274,7 @@ namespace UserInterface.Presenters
         {
             double[] pawcmappingLayerStructure = { 300, 300, 900 };
 
-            var soilPhysical = soilInfo.Soil.FindChild<Physical>();
+            var soilPhysical = soilInfo.Soil.Node.FindChild<Physical>();
             var row = soilData.NewRow();
             row["Name"] = soilInfo.Soil.Name;
             row["Data source"] = soilInfo.DataSource;

@@ -67,7 +67,7 @@ namespace Models.CLEM.Timers
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            sequenceTimerList = FindAllChildren<ActivityTimerSequence>();
+            sequenceTimerList = Structure.FindChildren<ActivityTimerSequence>();
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace Models.CLEM.Timers
                 {
                     seqStart = harvestOffsets.current - OffsetMonthHarvestStart;
                 }
-                // if withing the period after the previous 
+                // if withing the period after the previous
                 if (harvestOffsets.previous >= OffsetMonthHarvestStart && harvestOffsets.previous <= OffsetMonthHarvestStop)
                 {
                     seqStart = harvestOffsets.first - OffsetMonthHarvestStart;

@@ -17,8 +17,12 @@ namespace Models.PMF.Arbitrator
     /// <summary>The method used to do WaterUptake</summary>
     [Serializable]
     [ValidParent(ParentType = typeof(IArbitrator))]
-    public class C4NitrogenUptakeMethod : Model, IUptakeMethod
+    public class C4NitrogenUptakeMethod : Model, IUptakeMethod, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>Reference to Plant to find WaterDemands</summary>
         [Link(Type = LinkType.Ancestor)]
         protected Plant plant = null;
@@ -188,7 +192,7 @@ namespace Models.PMF.Arbitrator
 
         private void CalculateNitrogenSupply(ZoneState myZone, ZoneWaterAndN zone)
         {
-            var soilPhysical = myZone.Soil.FindChild<Soils.IPhysical>();
+            var soilPhysical = Structure.FindChild<Soils.IPhysical>(relativeTo: myZone.Soil);
 
             myZone.MassFlow = new double[soilPhysical.Thickness.Length];
             myZone.Diffusion = new double[soilPhysical.Thickness.Length];

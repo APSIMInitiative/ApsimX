@@ -42,7 +42,7 @@ namespace Models.PMF.Phen
             {
                 if (phenology == null)
                     phenology = Structure.Find<Phenology>();
-                return phenology.FindChild<IPhase>(PhaseNameToGoto)?.Start;
+                return Structure.FindChild<IPhase>(PhaseNameToGoto, relativeTo: phenology)?.Start;
             }
         }
         /// <summary>Is the phase emerged from the

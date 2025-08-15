@@ -54,7 +54,7 @@ namespace Models.CLEM.Reporting
         }
 
         /// <summary>
-        /// Report item generated and ready for reporting 
+        /// Report item generated and ready for reporting
         /// </summary>
         /// <param name="e"></param>
         protected virtual void ReportItemGenerated(RuminantReportItemEventArgs e)
@@ -91,7 +91,7 @@ namespace Models.CLEM.Reporting
                 string[] memberNames = new string[] { "Missing resource" };
                 results.Add(new ValidationResult($"No ruminant herd resource could be found for [ReportRuminantHerd] [{this.Name}]", memberNames));
             }
-            if (!this.FindAllChildren<RuminantGroup>().Any())
+            if (!Structure.FindChildren<RuminantGroup>().Any())
             {
                 string[] memberNames = new string[] { "Missing ruminant filter group" };
                 results.Add(new ValidationResult($"The [ReportRuminantHerd] [{this.Name}] requires at least one filter group to identify individuals to report", memberNames));
@@ -122,7 +122,7 @@ namespace Models.CLEM.Reporting
             // warning if the same individual is in multiple filter groups it will be entered more than once
 
             // get all filter groups below.
-            foreach (var fgroup in this.FindAllChildren<RuminantGroup>())
+            foreach (var fgroup in Structure.FindChildren<RuminantGroup>())
             {
                 foreach (Ruminant item in fgroup.Filter(ruminantHerd?.Herd))
                 {

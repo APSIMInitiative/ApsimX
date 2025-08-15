@@ -98,13 +98,13 @@ namespace UnitTests.Core
         {
             path = PathUtilities.GetAbsolutePath(path, null);
             Simulations sims = FileFormat.ReadFromFile<Simulations>(path).Model as Simulations;
-            foreach (Soil soil in sims.FindAllDescendants<Soil>())
+            foreach (Soil soil in sims.Node.FindChildren<Soil>(recurse: true))
                 soil.Sanitise();
-            DataStore storage = sims.FindDescendant<DataStore>();
+            DataStore storage = sims.Node.FindChild<DataStore>(recurse: true);
             storage.UseInMemoryDB = true;
-            IClock clock = sims.FindDescendant<Clock>();
+            IClock clock = sims.Node.FindChild<Clock>(recurse: true);
             clock.EndDate = clock.StartDate.AddYears(1);
-            return sims.FindDescendant<Simulation>();
+            return sims.Node.FindChild<Simulation>(recurse: true);
         }
     }
 }

@@ -87,7 +87,7 @@ namespace Models.Soils.Arbitrator
             WaterBalance = structure.Find<ISoilWater>(relativeTo: soilInZone);
             NO3Solute = structure.Find<ISolute>("NO3", relativeTo: soilInZone);
             NH4Solute = structure.Find<ISolute>("NH4", relativeTo: soilInZone);
-            patchManager = soilInZone.FindChild<NutrientPatchManager>();
+            patchManager = structure.FindChild<NutrientPatchManager>(relativeTo: soilInZone);
         }
 
         /// <summary>Initialises this instance.</summary>

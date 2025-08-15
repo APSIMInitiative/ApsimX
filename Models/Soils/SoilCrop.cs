@@ -44,7 +44,7 @@ namespace Models.Soils
         {
             get
             {
-                var soilPhysical = FindAncestor<IPhysical>();
+                var soilPhysical = Structure.FindParent<IPhysical>(relativeTo: this, recurse: true);
                 if (soilPhysical == null)
                     return null;
                 return MathUtilities.Multiply(LL, soilPhysical.Thickness);
@@ -78,7 +78,7 @@ namespace Models.Soils
         {
             get
             {
-                var soilPhysical = FindAncestor<IPhysical>();
+                var soilPhysical = Structure.FindParent<IPhysical>(recurse: true);
                 if (soilPhysical == null)
                     return null;
                 return SoilUtilities.CalcPAWC(soilPhysical.Thickness, LL, soilPhysical.DUL, XF);
@@ -92,7 +92,7 @@ namespace Models.Soils
         {
             get
             {
-                var soilPhysical = FindAncestor<IPhysical>();
+                var soilPhysical = Structure.FindParent<IPhysical>(recurse: true);
                 if (soilPhysical == null)
                     return null;
                 return MathUtilities.Multiply(PAWC, soilPhysical.Thickness);
@@ -105,7 +105,7 @@ namespace Models.Soils
         {
             get
             {
-                var soilPhysical = FindAncestor<IPhysical>();
+                var soilPhysical = Structure.FindParent<IPhysical>(recurse: true);
                 if (soilPhysical == null)
                     return null;
                 var water = Structure.Find<Water>();
@@ -121,7 +121,7 @@ namespace Models.Soils
         {
             get
             {
-                var soilPhysical = FindAncestor<IPhysical>();
+                var soilPhysical = Structure.FindParent<IPhysical>(recurse: true);
                 if (soilPhysical == null)
                     return null;
 

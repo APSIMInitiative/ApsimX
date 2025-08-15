@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
@@ -364,8 +365,9 @@ namespace Models
         /// Return a list of field names that this definition will read from the data table.
         /// </summary>
         /// <param name="fieldsThatExist"></param>
+        /// <param name="structure">Structure instance</param>
         /// <returns></returns>
-        public List<string> GetFieldNames(List<string> fieldsThatExist)
+        public List<string> GetFieldNames(List<string> fieldsThatExist, IStructure structure)
         {
             var filter = GetFilter(fieldsThatExist);
             var fieldsToRead = new List<string>();
@@ -387,7 +389,7 @@ namespace Models
             fieldsToRead.AddRange(ExtractFieldNamesFromFilter(filter));
 
             // Add any fields from child graphable models.
-            foreach (IGraphable series in Series.FindAllChildren<IGraphable>())
+            foreach (IGraphable series in structure.FindChildren<IGraphable>(relativeTo: Series))
                 fieldsToRead.AddRange(series.GetExtraFieldsToRead(this));
             return fieldsToRead;
         }

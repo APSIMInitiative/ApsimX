@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using Models.Core;
 using Models.PMF.Arbitrator;
 using Models.PMF.Interfaces;
@@ -12,8 +13,13 @@ namespace Models.PMF
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(IArbitrator))]
-    public class BiomassTypeArbitrator : Model
+    public class BiomassTypeArbitrator : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
+
         private List<IPartitionMethod> potentialPartitioningMethods = null;
         private List<IPartitionMethod> actualPartitioningMethods = null;
         private List<IAllocationMethod> allocationMethods = null;
@@ -58,9 +64,15 @@ namespace Models.PMF
         [EventSubscribe("Commencing")]
         virtual protected void OnSimulationCommencing(object sender, EventArgs e)
         {
-            potentialPartitioningMethods = FindChild<Folder>("PotentialPartitioningMethods")?.FindAllChildren<IPartitionMethod>().ToList();
-            actualPartitioningMethods = FindChild<Folder>("ActualPartitioningMethods")?.FindAllChildren<IPartitionMethod>().ToList();
-            allocationMethods = FindChild<Folder>("AllocationMethods")?.FindAllChildren<IAllocationMethod>().ToList();
+            var potential = Structure.FindChild<Folder>("PotentialPartitioningMethods");
+            if (potential != null)
+                potentialPartitioningMethods = Structure.FindChildren<IPartitionMethod>(relativeTo: potential).ToList();
+            var actual = Structure.FindChild<Folder>("ActualPartitioningMethods");
+            if (actual != null)
+                actualPartitioningMethods = Structure.FindChildren<IPartitionMethod>(relativeTo: actual).ToList();
+            var allocMethodsFolder = Structure.FindChild<Folder>("AllocationMethods");
+            if (allocMethodsFolder != null)
+                allocationMethods = Structure.FindChildren<IAllocationMethod>(relativeTo:  allocMethodsFolder).ToList();
         }
     }
 }

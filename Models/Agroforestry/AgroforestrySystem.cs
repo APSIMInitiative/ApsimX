@@ -8,9 +8,9 @@ namespace Models.Agroforestry
 {
     /// <summary>
     /// The APSIM AgroforestrySystem model calculates interactions between trees and neighbouring crop or pasture zones.  The model is therefore derived from the Zone class within APSIM and includes child zones to simulate soil and plant processes within the system.  It obtains information from a tree model within its scope (ie a child) and uses information about the tree structure (such as height and canopy dimensions) to calculate microclimate impacts on its child zones.  Below-ground interactions between trees and crops or pastures are calculated by the APSIM SoilArbitrator model.
-    /// 
+    ///
     /// Windbreaks are simulated using an approach [Huthetal2002] that calculates windspeeds in the lee of windbreaks as a function distance (described in terms of multiples of tree heights) and windbreak optical porosity.
-    /// 
+    ///
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -54,7 +54,7 @@ namespace Models.Agroforestry
             get
             {
                 double A = 0;
-                foreach (Zone Z in this.FindAllChildren<Zone>())
+                foreach (Zone Z in this.Node.FindChildren<Zone>())
                     A += Z.Area;
                 return A;
             }
@@ -75,8 +75,8 @@ namespace Models.Agroforestry
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            tree = FindChild<TreeProxy>();
-            ZoneList = FindAllChildren<Zone>().ToList();
+            tree = Structure.FindChild<TreeProxy>();
+            ZoneList = Structure.FindChildren<Zone>().ToList();
         }
 
         /// <summary>

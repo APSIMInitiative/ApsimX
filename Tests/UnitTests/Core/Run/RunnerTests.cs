@@ -410,7 +410,7 @@
                 Assert.That(errors.Count, Is.EqualTo(0));
 
                 // Make sure an exception is returned.
-                var summary = simulations.FindDescendant<MockSummary>();
+                var summary = simulations.Node.FindChild<MockSummary>(recurse: true);
                 Assert.That(summary.messages.Find(m => m.Contains("Passed Test")), Is.Not.Null);
 
                 database.CloseDatabase();
@@ -702,7 +702,7 @@
 
                 // Simulation shouldn't have run. Check the summary messages to make
                 // sure there is NOT a 'Simulation completed' message.
-                var summary = simulation.FindDescendant<MockSummary>();
+                var summary = simulation.Node.FindChild<MockSummary>(recurse: true);
                 Assert.That(summary.messages.Count, Is.EqualTo(0));
 
                 Assert.That(runner.Progress, Is.EqualTo(1));

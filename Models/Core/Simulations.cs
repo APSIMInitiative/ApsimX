@@ -172,7 +172,7 @@ namespace Models.Core
         /// <summary>Look through all models. For each simulation found set the filename.</summary>
         private void SetFileNameInAllSimulations()
         {
-            foreach (Model child in this.FindAllDescendants().ToList())
+            foreach (Model child in Structure.FindChildren<IModel>(recurse: true).ToList())
             {
                 if (child is Simulation)
                 {
@@ -231,7 +231,7 @@ namespace Models.Core
         public IEnumerable<string> FindAllReferencedFiles(bool isAbsolute = true)
         {
             SortedSet<string> fileNames = new SortedSet<string>();
-            foreach (IReferenceExternalFiles model in this.FindAllDescendants<IReferenceExternalFiles>().Where(m => m.Enabled))
+            foreach (IReferenceExternalFiles model in Structure.FindChildren<IReferenceExternalFiles>(recurse: true).Where(m => m.Enabled))
                 foreach (string fileName in model.GetReferencedFileNames())
                     if (isAbsolute == true)
                     {

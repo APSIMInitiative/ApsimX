@@ -10,6 +10,8 @@ using Models.Core.Run;
 using Models.Factorial;
 using Models.Storage;
 using APSIM.Numerics;
+using System.Collections;
+using APSIM.Core;
 
 namespace Models
 {
@@ -49,14 +51,14 @@ namespace Models
             }
 
             // Read data for all definitions.
-            ReadAllData(storage, allDefinitions.SelectMany(d => d.SeriesDefinitions), simulationDescriptions);
+            ReadAllData(storage, allDefinitions.SelectMany(d => d.SeriesDefinitions), simulationDescriptions, parent.Node);
 
             // Get each series to add child definitions.
             for (int g = 0; g < allDefinitions.Count; g++)
             {
-                foreach (var s in allDefinitions[g].Graph.FindAllChildren<Series>())
+                foreach (var s in allDefinitions[g].Graph.Node.FindChildren<Series>())
                     allDefinitions[g].SeriesDefinitions.AddRange(s.CreateChildSeriesDefinitions(storage, simulationDescriptions, allDefinitions[g].SeriesDefinitions.Where(sd => sd.Series == s), simulationFilter));
-                foreach (var regression in allDefinitions[g].Graph.FindAllChildren<Regression>())
+                foreach (var regression in allDefinitions[g].Graph.Node.FindChildren<Regression>())
                     allDefinitions[g].SeriesDefinitions.AddRange(regression.GetSeriesToPutOnGraph(storage, allDefinitions[g].SeriesDefinitions, simulationFilter));
             }
 
@@ -73,13 +75,11 @@ namespace Models
         public static List<SimulationDescription> FindSimulationDescriptions(IModel model)
         {
             // Find a parent that heads the scope that we're going to graph
-            
-            IModel simulation = model.FindAncestor<Simulation>();
+
+            IModel simulation = model.Node.FindParent<Simulation>(recurse: true);
             if (simulation != null && simulation.Parent is Experiment)
                 throw new Exception("Graph scope is incorrect if placed under a Simulation in an Experiment. It should be a child of the Experiment instead.");
-           
-            
-           
+
             IModel parent = FindParent(model);
             List<SimulationDescription> simulationDescriptions = new List<SimulationDescription>();
             while (simulationDescriptions.Count == 0 && parent != null) {
@@ -135,9 +135,11 @@ namespace Models
         /// <param name="storage">A data store reader.</param>
         /// <param name="series">A list of series definitions.</param>
         /// <param name="simulationDescriptions">A list of simulation descriptions.</param>
+        /// <param name="structure">Structure instance</param>
         /// <returns></returns>
         private static void ReadAllData(IStorageReader storage, IEnumerable<SeriesDefinition> series,
-                                        List<SimulationDescription> simulationDescriptions)
+                                        List<SimulationDescription> simulationDescriptions,
+                                        IStructure structure)
         {
             var definitionsToProcess = series.ToList();
 
@@ -170,7 +172,7 @@ namespace Models
                                                                .Distinct();
                 var fieldsThatExist = storage.ColumnNames(tableName);
 
-                var fieldNames = definitionsUsingThisTable.SelectMany(d => d.GetFieldNames(fieldsThatExist))
+                var fieldNames = definitionsUsingThisTable.SelectMany(d => d.GetFieldNames(fieldsThatExist, structure))
                                                           .Distinct();
 
                 // Only attempt to read simulation names if this table actually contains

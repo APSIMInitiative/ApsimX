@@ -233,7 +233,7 @@ public class Program
                     throw new Exception("Error: Failed to read simulations from APSIMX file.");
                 }
 
-                List<Weather> weatherModels = simulations.FindAllDescendants<Weather>().ToList();
+                List<Weather> weatherModels = simulations.Node.FindChildren<Weather>(recurse: true).ToList();
 
                 if (weatherModels.Count != 0)
                 {

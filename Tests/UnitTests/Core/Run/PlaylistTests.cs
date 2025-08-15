@@ -108,7 +108,7 @@ namespace UnitTests.Core
             {
                 Simulations sims = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
 
-                Playlist playlist = sims.FindChild<Playlist>();
+                Playlist playlist = sims.Node.FindChild<Playlist>();
                 playlist.Text = playlistText[i];
 
                 if (expectedSimulations[i].Length > 0)
@@ -118,7 +118,7 @@ namespace UnitTests.Core
                     // Check that no errors were thrown
                     Assert.That(errors.Count, Is.EqualTo(0));
 
-                    DataStore dataStore = sims.FindChild<DataStore>();
+                    DataStore dataStore = sims.Node.FindChild<DataStore>();
                     List<String> dataStoreNames = dataStore.Reader.SimulationNames;
 
                     //check that the datastore and expected simulations have the same amount of entries
@@ -149,14 +149,14 @@ namespace UnitTests.Core
             //read in our base test that we'll use for this
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.Run.PlaylistTests.apsimx");
             Simulations sims = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
-            Playlist playlist = sims.FindChild<Playlist>();
+            Playlist playlist = sims.Node.FindChild<Playlist>();
             playlist.Text = "Sim*\n";
 
             Assert.That(playlist.GenerateListOfSimulations(), Is.EqualTo(expectedSimulations1));
 
             //now change the name of one of the simulations without clearing the cache,
             //should give the same 4 names if reading from cache correctly.
-            sims.FindChild("Sim3").Name = "DifferentName";
+            sims.Node.FindChild<IModel>("Sim3").Name = "DifferentName";
             Assert.That(playlist.GenerateListOfSimulations(), Is.EqualTo(expectedSimulations1));
 
             //now clear the cache and run again, should only get 3 sims this time.

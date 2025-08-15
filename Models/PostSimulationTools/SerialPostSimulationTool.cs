@@ -28,7 +28,7 @@ namespace Models.PostSimulationTools
         {
             IDataStore storage = Structure.Find<IDataStore>();
             Links links = new Links(new object[1] { storage });
-            foreach (IPostSimulationTool tool in FindAllChildren<IPostSimulationTool>())
+            foreach (IPostSimulationTool tool in Structure.FindChildren<IPostSimulationTool>())
             {
                 links.Resolve(tool);
                 tool.Run();

@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 165,
+  "Version": 200,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -49,7 +49,7 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "%root%\\Examples\\WeatherFiles\\lincoln.met",
+          "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln",
           "ExcelWorkSheetName": null,
           "Name": "Weather",
           "ResourceName": null,
@@ -71,7 +71,148 @@
         },
         {
           "$type": "Models.ForageDigestibility.Forages, Models",
-          "Parameters": null,
+          "Parameters": [
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "SurfaceOrganicMatter.Residue",
+              "LiveDigestibility": "0.7",
+              "DeadDigestibility": "0.3",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPRyegrass.Leaf",
+              "LiveDigestibility": "FromModel",
+              "DeadDigestibility": "FromModel",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPRyegrass.Stem",
+              "LiveDigestibility": "FromModel",
+              "DeadDigestibility": "FromModel",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPRyegrass.Stolon",
+              "LiveDigestibility": "FromModel",
+              "DeadDigestibility": "FromModel",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPWhiteClover.Leaf",
+              "LiveDigestibility": "FromModel",
+              "DeadDigestibility": "FromModel",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPWhiteClover.Stem",
+              "LiveDigestibility": "FromModel",
+              "DeadDigestibility": "FromModel",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPWhiteClover.Stolon",
+              "LiveDigestibility": "FromModel",
+              "DeadDigestibility": "FromModel",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "SurfaceOrganicMatter.Residue",
+              "LiveDigestibility": "0.7",
+              "DeadDigestibility": "0.3",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPRyegrass.Leaf",
+              "LiveDigestibility": "FromModel",
+              "DeadDigestibility": "FromModel",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPRyegrass.Stem",
+              "LiveDigestibility": "FromModel",
+              "DeadDigestibility": "FromModel",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPRyegrass.Stolon",
+              "LiveDigestibility": "FromModel",
+              "DeadDigestibility": "FromModel",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPWhiteClover.Leaf",
+              "LiveDigestibility": "FromModel",
+              "DeadDigestibility": "FromModel",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPWhiteClover.Stem",
+              "LiveDigestibility": "FromModel",
+              "DeadDigestibility": "FromModel",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPWhiteClover.Stolon",
+              "LiveDigestibility": "FromModel",
+              "DeadDigestibility": "FromModel",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
+              "LiveMinimumBiomass": 100.0,
+              "DeadMinimumBiomass": 0.0
+            }
+          ],
           "Name": "Forages",
           "ResourceName": null,
           "Children": [],
@@ -127,29 +268,32 @@
         {
           "$type": "Models.Manager, Models",
           "CodeArray": [
-            "using System.Linq;",
-            "using System;",
-            "using Models.Core;",
-            "using Models.Utilities;",
-            "using Models.GrazPlan;",
-            "using APSIM.Shared.Utilities;",
-            "using System.Xml.Serialization;",
-            "using Models.PMF;",
-            "using Models.Soils;",
-            "using System.Collections;",
-            "using System.Collections.Generic;",
-            "using Models.AgPasture;",
+            "using APSIM.Core;",
             "using System.Diagnostics;",
+            "using Models.AgPasture;",
+            "using System.Collections.Generic;",
+            "using System.Collections;",
+            "using Models.Soils;",
+            "using Models.PMF;",
+            "using System.Xml.Serialization;",
+            "using APSIM.Shared.Utilities;",
+            "using Models.GrazPlan;",
+            "using Models.Utilities;",
+            "using Models.Core;",
+            "using System;",
+            "using System.Linq;",
             "",
             "namespace Models",
             "{",
             "",
             "    [Serializable]",
-            "    public class Script : Model",
+            "    public class Script : Model, IStructureDependency",
             "    {",
             "        [Link] Clock Clock;",
             "        [Link] Stock Cows;",
             "        [Link] Supplement Supplement;",
+            "        [field:NonSerialized]",
+            "        public IStructure Structure { private get; set; }",
             "        [Link] Zone[] Paddocks;",
             "        [Link] ISummary summary = null;",
             "        [Link] Simulation Farm;",
@@ -282,11 +426,11 @@
             "                        if (paddock.Name == pastLocationName)",
             "                        {",
             "                            double pastPaddockBiomass = 0.0;",
-            "                            foreach (PastureSpecies plant in paddock.FindAllChildren<PastureSpecies>().OfType<IModel>().ToList())",
+            "                            foreach (PastureSpecies plant in   Structure.FindChildren<PastureSpecies>(relativeTo: (INodeModel)paddock).OfType<IModel>().ToList())",
             "                                pastPaddockBiomass += plant.AboveGroundWt;",
             "                            if (pastPaddockBiomass > PostGrazingResidual)  //why the 250? Because don't harvest very small amounts ...",
             "                            {",
-            "                                foreach (PastureSpecies plant in paddock.FindAllChildren<PastureSpecies>().OfType<IModel>().ToList())",
+            "                                foreach (PastureSpecies plant in   Structure.FindChildren<PastureSpecies>(relativeTo: (INodeModel)paddock).OfType<IModel>().ToList())",
             "                                    plant.RemoveBiomass(amount: (plant.AboveGroundWt / pastPaddockBiomass * PostCuttingResidual), type: \"SetResidueAmount\");  ",
             "",
             "                            }",
@@ -403,7 +547,7 @@
             "                paddockInfo.paddockNum = NumPaddocks - 1;",
             "                paddockInfo.paddockArea = paddock.Area;",
             "",
-            "                foreach (PastureSpecies plant in paddock.FindAllChildren<PastureSpecies>().OfType<IModel>().ToList())",
+            "                foreach (PastureSpecies plant in   Structure.FindChildren<PastureSpecies>(relativeTo: (INodeModel)paddock).OfType<IModel>().ToList())",
             "                {",
             "                    paddockInfo.harvestableBiomass += plant.Harvestable.Wt;",
             "                    paddockInfo.totalBiomass += plant.AboveGroundWt;",
@@ -429,7 +573,7 @@
             "            {",
             "                ii += 1;",
             "                listOfPaddockInfo[ii].harvestableBiomass = 0.0;",
-            "                foreach (PastureSpecies plant in paddock.FindAllChildren<PastureSpecies>().OfType<IModel>().ToList())",
+            "                foreach (PastureSpecies plant in   Structure.FindChildren<PastureSpecies>(relativeTo: (INodeModel)paddock).OfType<IModel>().ToList())",
             "                {",
             "                    listOfPaddockInfo[ii].harvestableBiomass += plant.Harvestable.Wt;",
             "                    listOfPaddockInfo[ii].totalBiomass += plant.AboveGroundWt;",
@@ -483,30 +627,6 @@
             {
               "Key": "TriggerPastureMass",
               "Value": "2000"
-            },
-            {
-              "Key": "NumCows",
-              "Value": "3"
-            },
-            {
-              "Key": "pastLocationName",
-              "Value": ""
-            },
-            {
-              "Key": "newLocationName",
-              "Value": ""
-            },
-            {
-              "Key": "CurrentLocationNum",
-              "Value": "0"
-            },
-            {
-              "Key": "NumPaddocks",
-              "Value": "0"
-            },
-            {
-              "Key": "listOfPaddockInfo",
-              "Value": ""
             }
           ],
           "Name": "TargetRotationLength",
@@ -545,7 +665,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "Stock Plots",
           "ResourceName": null,
           "Children": [
@@ -559,6 +678,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -569,6 +689,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -579,6 +700,7 @@
                   "Position": 2,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -664,6 +786,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -674,6 +797,7 @@
                   "Position": 2,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -684,6 +808,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -766,7 +891,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "Biomass and Intake",
           "ResourceName": null,
           "Children": [
@@ -780,6 +904,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -790,6 +915,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -846,6 +972,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -856,6 +983,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -941,6 +1069,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -951,6 +1080,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -1036,6 +1166,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -1046,6 +1177,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -1102,6 +1234,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -1112,6 +1245,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -1168,13 +1302,13 @@
           "Slope": 0.0,
           "AspectAngle": 0.0,
           "Altitude": 50.0,
+          "CanopyType": null,
           "Name": "Paddock00",
           "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Managers",
               "ResourceName": null,
               "Children": [
@@ -1226,7 +1360,7 @@
                     "        public double FertNAmount { get; set; }",
                     "",
                     "        [Description(\"Type of N fertiliser to apply: \")]",
-                    "        public Fertiliser.Types FertType { get; set; }",
+                    "        [Display(Type = DisplayType.FertiliserType)]public string FertType { get; set; }",
                     "",
                     "        [Description(\"Depth at which to apply the fertiliser (mm): \")]",
                     "        public double FertApplicationDepth { get; set; }",
@@ -1546,7 +1680,7 @@
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
-              "ResourceName": null,
+              "ResourceName": "MicroClimate",
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -1599,6 +1733,7 @@
                 "Enabled": true,
                 "ReadOnly": false
               },
+              "CanopyType": "PastureSpecies",
               "LightProfile": null,
               "InitialShootDM": 1500.0,
               "InitialRootDM": 450.0,
@@ -1660,6 +1795,9 @@
               "TurnoverDefoliationEffectMin": 0.025,
               "MinimumGreenLeafProp": 0.8,
               "MinimumGreenRootProp": 0.5,
+              "Leaf": null,
+              "Stem": null,
+              "Stolon": null,
               "Name": "AGPRyegrass",
               "ResourceName": "AGPRyegrass",
               "Children": [],
@@ -1682,6 +1820,7 @@
                 "Enabled": true,
                 "ReadOnly": false
               },
+              "CanopyType": "PastureSpecies",
               "LightProfile": null,
               "InitialShootDM": 500.0,
               "InitialRootDM": 150.0,
@@ -1743,6 +1882,9 @@
               "TurnoverDefoliationEffectMin": 0.025,
               "MinimumGreenLeafProp": 0.8,
               "MinimumGreenRootProp": 0.5,
+              "Leaf": null,
+              "Stem": null,
+              "Stolon": null,
               "Name": "AGPWhiteClover",
               "ResourceName": "AGPWhiteClover",
               "Children": [],
@@ -1798,6 +1940,7 @@
                   "CEC": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
+                  "CECMetadata": null,
                   "ESPMetadata": null,
                   "PHMetadata": null,
                   "Name": "Chemical",
@@ -1817,6 +1960,8 @@
                     300.0,
                     300.0
                   ],
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
                   "ParticleSizeClay": [
                     20.0,
                     15.0,
@@ -1826,8 +1971,6 @@
                     5.0,
                     5.0
                   ],
-                  "ParticleSizeSand": null,
-                  "ParticleSizeSilt": null,
                   "Rocks": null,
                   "Texture": null,
                   "BD": [
@@ -2160,18 +2303,8 @@
                     0.028999999999999998,
                     0.028999999999999998
                   ],
-                  "InitialPAWmm": 109.725,
-                  "RelativeTo": "LL15",
                   "FilledFromTop": false,
                   "Name": "Water",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Soils.CERESSoilTemperature, Models",
-                  "Name": "Temperature",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -2206,6 +2339,7 @@
                   "MaxDepthSoluteAccessible": 0.0,
                   "RunoffEffectivenessAtMovingSolute": 0.0,
                   "MaxEffectiveRunoff": 0.0,
+                  "ConcInSolution": null,
                   "Name": "NO3",
                   "ResourceName": null,
                   "Children": [],
@@ -2241,6 +2375,7 @@
                   "MaxDepthSoluteAccessible": 0.0,
                   "RunoffEffectivenessAtMovingSolute": 0.0,
                   "MaxEffectiveRunoff": 0.0,
+                  "ConcInSolution": null,
                   "Name": "NH4",
                   "ResourceName": null,
                   "Children": [],
@@ -2276,7 +2411,18 @@
                   "MaxDepthSoluteAccessible": 0.0,
                   "RunoffEffectivenessAtMovingSolute": 0.0,
                   "MaxEffectiveRunoff": 0.0,
+                  "ConcInSolution": null,
                   "Name": "Urea",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                  "Thickness": null,
+                  "InitialValues": null,
+                  "Name": "Temperature",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -2318,6 +2464,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -2328,6 +2475,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -2413,13 +2561,13 @@
           "Slope": 0.0,
           "AspectAngle": 0.0,
           "Altitude": 50.0,
+          "CanopyType": null,
           "Name": "Paddock01",
           "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Managers",
               "ResourceName": null,
               "Children": [
@@ -2471,7 +2619,7 @@
                     "        public double FertNAmount { get; set; }",
                     "",
                     "        [Description(\"Type of N fertiliser to apply: \")]",
-                    "        public Fertiliser.Types FertType { get; set; }",
+                    "        [Display(Type = DisplayType.FertiliserType)]public string FertType { get; set; }",
                     "",
                     "        [Description(\"Depth at which to apply the fertiliser (mm): \")]",
                     "        public double FertApplicationDepth { get; set; }",
@@ -2791,7 +2939,7 @@
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
-              "ResourceName": null,
+              "ResourceName": "MicroClimate",
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -2844,6 +2992,7 @@
                 "Enabled": true,
                 "ReadOnly": false
               },
+              "CanopyType": "PastureSpecies",
               "LightProfile": null,
               "InitialShootDM": 1500.0,
               "InitialRootDM": 450.0,
@@ -2905,6 +3054,9 @@
               "TurnoverDefoliationEffectMin": 0.025,
               "MinimumGreenLeafProp": 0.8,
               "MinimumGreenRootProp": 0.5,
+              "Leaf": null,
+              "Stem": null,
+              "Stolon": null,
               "Name": "AGPRyegrass",
               "ResourceName": "AGPRyegrass",
               "Children": [],
@@ -2927,6 +3079,7 @@
                 "Enabled": true,
                 "ReadOnly": false
               },
+              "CanopyType": "PastureSpecies",
               "LightProfile": null,
               "InitialShootDM": 500.0,
               "InitialRootDM": 150.0,
@@ -2988,6 +3141,9 @@
               "TurnoverDefoliationEffectMin": 0.025,
               "MinimumGreenLeafProp": 0.8,
               "MinimumGreenRootProp": 0.5,
+              "Leaf": null,
+              "Stem": null,
+              "Stolon": null,
               "Name": "AGPWhiteClover",
               "ResourceName": "AGPWhiteClover",
               "Children": [],
@@ -3043,6 +3199,7 @@
                   "CEC": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
+                  "CECMetadata": null,
                   "ESPMetadata": null,
                   "PHMetadata": null,
                   "Name": "Chemical",
@@ -3062,6 +3219,8 @@
                     300.0,
                     300.0
                   ],
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
                   "ParticleSizeClay": [
                     20.0,
                     15.0,
@@ -3071,8 +3230,6 @@
                     5.0,
                     5.0
                   ],
-                  "ParticleSizeSand": null,
-                  "ParticleSizeSilt": null,
                   "Rocks": null,
                   "Texture": null,
                   "BD": [
@@ -3405,18 +3562,8 @@
                     0.028999999999999998,
                     0.028999999999999998
                   ],
-                  "InitialPAWmm": 109.725,
-                  "RelativeTo": "LL15",
                   "FilledFromTop": false,
                   "Name": "Water",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Soils.CERESSoilTemperature, Models",
-                  "Name": "Temperature",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -3451,6 +3598,7 @@
                   "MaxDepthSoluteAccessible": 0.0,
                   "RunoffEffectivenessAtMovingSolute": 0.0,
                   "MaxEffectiveRunoff": 0.0,
+                  "ConcInSolution": null,
                   "Name": "NO3",
                   "ResourceName": null,
                   "Children": [],
@@ -3486,6 +3634,7 @@
                   "MaxDepthSoluteAccessible": 0.0,
                   "RunoffEffectivenessAtMovingSolute": 0.0,
                   "MaxEffectiveRunoff": 0.0,
+                  "ConcInSolution": null,
                   "Name": "NH4",
                   "ResourceName": null,
                   "Children": [],
@@ -3521,7 +3670,18 @@
                   "MaxDepthSoluteAccessible": 0.0,
                   "RunoffEffectivenessAtMovingSolute": 0.0,
                   "MaxEffectiveRunoff": 0.0,
+                  "ConcInSolution": null,
                   "Name": "Urea",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                  "Thickness": null,
+                  "InitialValues": null,
+                  "Name": "Temperature",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -3563,6 +3723,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -3573,6 +3734,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -3658,13 +3820,13 @@
           "Slope": 0.0,
           "AspectAngle": 0.0,
           "Altitude": 50.0,
+          "CanopyType": null,
           "Name": "Paddock02",
           "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Managers",
               "ResourceName": null,
               "Children": [
@@ -3716,7 +3878,7 @@
                     "        public double FertNAmount { get; set; }",
                     "",
                     "        [Description(\"Type of N fertiliser to apply: \")]",
-                    "        public Fertiliser.Types FertType { get; set; }",
+                    "        [Display(Type = DisplayType.FertiliserType)]public string FertType { get; set; }",
                     "",
                     "        [Description(\"Depth at which to apply the fertiliser (mm): \")]",
                     "        public double FertApplicationDepth { get; set; }",
@@ -4036,7 +4198,7 @@
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
-              "ResourceName": null,
+              "ResourceName": "MicroClimate",
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -4089,6 +4251,7 @@
                 "Enabled": true,
                 "ReadOnly": false
               },
+              "CanopyType": "PastureSpecies",
               "LightProfile": null,
               "InitialShootDM": 1500.0,
               "InitialRootDM": 450.0,
@@ -4150,6 +4313,9 @@
               "TurnoverDefoliationEffectMin": 0.025,
               "MinimumGreenLeafProp": 0.8,
               "MinimumGreenRootProp": 0.5,
+              "Leaf": null,
+              "Stem": null,
+              "Stolon": null,
               "Name": "AGPRyegrass",
               "ResourceName": "AGPRyegrass",
               "Children": [],
@@ -4172,6 +4338,7 @@
                 "Enabled": true,
                 "ReadOnly": false
               },
+              "CanopyType": "PastureSpecies",
               "LightProfile": null,
               "InitialShootDM": 500.0,
               "InitialRootDM": 150.0,
@@ -4233,6 +4400,9 @@
               "TurnoverDefoliationEffectMin": 0.025,
               "MinimumGreenLeafProp": 0.8,
               "MinimumGreenRootProp": 0.5,
+              "Leaf": null,
+              "Stem": null,
+              "Stolon": null,
               "Name": "AGPWhiteClover",
               "ResourceName": "AGPWhiteClover",
               "Children": [],
@@ -4288,6 +4458,7 @@
                   "CEC": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
+                  "CECMetadata": null,
                   "ESPMetadata": null,
                   "PHMetadata": null,
                   "Name": "Chemical",
@@ -4307,6 +4478,8 @@
                     300.0,
                     300.0
                   ],
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
                   "ParticleSizeClay": [
                     20.0,
                     15.0,
@@ -4316,8 +4489,6 @@
                     5.0,
                     5.0
                   ],
-                  "ParticleSizeSand": null,
-                  "ParticleSizeSilt": null,
                   "Rocks": null,
                   "Texture": null,
                   "BD": [
@@ -4650,18 +4821,8 @@
                     0.028999999999999998,
                     0.028999999999999998
                   ],
-                  "InitialPAWmm": 109.725,
-                  "RelativeTo": "LL15",
                   "FilledFromTop": false,
                   "Name": "Water",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Soils.CERESSoilTemperature, Models",
-                  "Name": "Temperature",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -4696,6 +4857,7 @@
                   "MaxDepthSoluteAccessible": 0.0,
                   "RunoffEffectivenessAtMovingSolute": 0.0,
                   "MaxEffectiveRunoff": 0.0,
+                  "ConcInSolution": null,
                   "Name": "NO3",
                   "ResourceName": null,
                   "Children": [],
@@ -4731,6 +4893,7 @@
                   "MaxDepthSoluteAccessible": 0.0,
                   "RunoffEffectivenessAtMovingSolute": 0.0,
                   "MaxEffectiveRunoff": 0.0,
+                  "ConcInSolution": null,
                   "Name": "NH4",
                   "ResourceName": null,
                   "Children": [],
@@ -4766,7 +4929,18 @@
                   "MaxDepthSoluteAccessible": 0.0,
                   "RunoffEffectivenessAtMovingSolute": 0.0,
                   "MaxEffectiveRunoff": 0.0,
+                  "ConcInSolution": null,
                   "Name": "Urea",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                  "Thickness": null,
+                  "InitialValues": null,
+                  "Name": "Temperature",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -4808,6 +4982,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -4818,6 +4993,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": null,
                   "Maximum": null,
                   "Interval": null
@@ -4903,7 +5079,6 @@
     },
     {
       "$type": "Models.Storage.DataStore, Models",
-      "useFirebird": false,
       "CustomFileName": null,
       "Name": "DataStore",
       "ResourceName": null,

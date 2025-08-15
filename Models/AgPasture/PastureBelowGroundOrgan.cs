@@ -258,7 +258,7 @@ namespace Models.AgPasture
                 throw new Exception($"Cannot find a water balance model in soil {soil.Name}");
             }
 
-            soilCropData = soil.FindDescendant<SoilCrop>(species.Name + "Soil");
+            soilCropData = Structure.FindChild<SoilCrop>(species.Name + "Soil", relativeTo: soil, recurse: true);
             if (soilCropData == null)
             {
                 throw new Exception($"Cannot find a soil crop parameterisation called {species.Name + "Soil"}");

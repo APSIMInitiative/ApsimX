@@ -80,7 +80,7 @@ namespace UnitTests
         public static void CallEventAll(IModel model, string eventName, object[] arguments = null)
         {
             CallEvent(model, eventName, arguments);
-            foreach (IModel descendant in model.FindAllDescendants())
+            foreach (IModel descendant in model.Node.FindChildren<IModel>(recurse: true))
                 CallEvent(descendant, eventName, arguments);
         }
 

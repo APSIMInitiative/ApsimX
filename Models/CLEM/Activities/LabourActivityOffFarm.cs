@@ -102,7 +102,7 @@ namespace Models.CLEM.Activities
             if (bankType == null && Resources.FindResource<Finance>() != null)
                 Summary.WriteMessage(this, "No bank account has been specified for [a=" + this.Name + "]. No funds will be earned!", MessageType.Warning);
 
-            var labour = FindAllChildren<LabourRequirement>();
+            var labour = Structure.FindChildren<LabourRequirement>();
             // get check labour required
             if (labour == null)
             {
@@ -132,9 +132,9 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(BankAccountName, "Account not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write(" based on <span class=\"resourcelink\">Labour Pricing</span> set in the <span class=\"resourcelink\">Labour</span>");
                 htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
 
     }

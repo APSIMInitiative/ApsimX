@@ -15,8 +15,12 @@ namespace Models.PMF
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(NutrientDemandFunctions))]
     [ValidParent(ParentType = typeof(IFunction))]
-    public class DeficitDemandFunction : Model, IFunction
+    public class DeficitDemandFunction : Model, IFunction, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>Value to multiply demand for.  Use to switch demand on and off</summary>
         [Link(IsOptional = true, Type = LinkType.Child, ByName = true)]
         [Description("Multiplies calculated demand.  Use to switch demand on and off")]
@@ -112,13 +116,13 @@ namespace Models.PMF
 
         private double calcStructuralNitrogenDemand()
         {
-            OrganNutrientDelta Carbon = parentOrgan.FindChild("Carbon") as OrganNutrientDelta;
+            OrganNutrientDelta Carbon = Structure.FindChild<OrganNutrientDelta>("Carbon", relativeTo: parentOrgan);
             return Carbon.DemandsAllocated.Total / parentOrgan.Cconc * organNutrientDelta.ConcentrationOrFraction.Structural;
         }
 
         private double calcDeficitForNitrogenPool(double currentAmount, double upperConc, double LowerConc)
         {
-            OrganNutrientDelta Carbon = parentOrgan.FindChild("Carbon") as OrganNutrientDelta;
+            OrganNutrientDelta Carbon = Structure.FindChild<OrganNutrientDelta>("Carbon", relativeTo: parentOrgan);
             double PotentialWt = (parentOrgan.Live.Carbon.Total + Carbon.DemandsAllocated.Total) / parentOrgan.Cconc;
             double targetAmount = (PotentialWt * upperConc) - (PotentialWt * LowerConc);
             return targetAmount - currentAmount;

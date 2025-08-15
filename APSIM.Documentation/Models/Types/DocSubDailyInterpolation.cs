@@ -25,8 +25,8 @@ namespace APSIM.Documentation.Models.Types
             Section section = GetSummaryAndRemarksSection(model);
 
             SubDailyInterpolation sub = model as SubDailyInterpolation;
-            IIndexedFunction Response = sub.FindChild<IIndexedFunction>("Response");
-            IInterpolationMethod InterpolationMethod = sub.FindChild<IInterpolationMethod>("InterpolationMethod");
+            IIndexedFunction Response = sub.Node.FindChild<IIndexedFunction>("Response");
+            IInterpolationMethod InterpolationMethod = sub.Node.FindChild<IInterpolationMethod>("InterpolationMethod");
 
             if (Response != null)
             {
