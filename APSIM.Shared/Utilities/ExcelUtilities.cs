@@ -6,6 +6,7 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using System.IO;
 using ExcelDataReader;
 using System.Linq;
+using System.Text;
 
 namespace APSIM.Shared.Utilities
 {
@@ -70,6 +71,9 @@ namespace APSIM.Shared.Utilities
         /// <returns>a DataTable</returns>
         public static DataTable ReadExcelFileData(string fileName, string sheetName, bool headerRow = false)
         {
+            // Required for encoding support
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
             using (FileStream stream = File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 string fileExtension = Path.GetExtension(fileName);
@@ -84,8 +88,8 @@ namespace APSIM.Shared.Utilities
                     // Reading from a OpenXml Excel file (2007 format; *.xlsx)
                     System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
                     excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream);
-                var worksheets = GetWorkSheetNames(fileName);
-                var sheetIndex = worksheets.FindIndex((s) => s == sheetName);
+                List<string> worksheets = GetWorkSheetNames(fileName);
+                int sheetIndex = worksheets.FindIndex((s) => s == sheetName);
                 if (sheetIndex < 0)
                     return null;
                 ExcelDataSetConfiguration cfg = new() { FilterSheet = (_, ind) => ind == sheetIndex };
@@ -140,12 +144,15 @@ namespace APSIM.Shared.Utilities
                 if (cell.DataType == null)
                     // NOTE: Default is a number.
                     return cell?.CellValue?.Text;
-                return cell.DataType.Value switch
-                {
-                    CellValues.SharedString => sharedStrings[Convert.ToInt32(cell.CellValue.Text)],
-                    CellValues.InlineString => cell.InlineString.Text.Text,
-                    _ => cell.CellValue.Text,
-                };
+                    
+                if (cell.DataType.Value == CellValues.SharedString)
+                    return sharedStrings[Convert.ToInt32(cell.CellValue.Text)];
+
+                if (cell.DataType.Value == CellValues.InlineString)
+                    return cell.InlineString.Text.Text;
+
+                return cell.CellValue.Text;
+
             }
 
             int CellToColumnIndex(Cell cell)
