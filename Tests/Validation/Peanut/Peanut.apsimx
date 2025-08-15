@@ -1,12 +1,11 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 189,
+  "Version": 199,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Storage.DataStore, Models",
-      "useFirebird": false,
       "CustomFileName": null,
       "Name": "DataStore",
       "ResourceName": null,
@@ -32,7 +31,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Replacements",
       "ResourceName": null,
       "Children": [
@@ -160,7 +158,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": true,
-      "GraphsPerPage": 6,
       "Name": "Validation",
       "ResourceName": null,
       "Children": [
@@ -326,7 +323,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "Combined Results",
           "ResourceName": null,
           "Children": [
@@ -906,7 +902,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "Australia",
           "ResourceName": null,
           "Children": [
@@ -1126,9 +1121,6 @@
                       "ConstantsFile": null,
                       "FileName": "Kingaroy.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -26.5544,
-                      "Tav": 18.29,
-                      "Amp": 13.08,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -1165,6 +1157,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "paddock",
                       "ResourceName": null,
                       "Children": [
@@ -1179,17 +1172,18 @@
                         {
                           "$type": "Models.Manager, Models",
                           "CodeArray": [
-                            "using Models.Interfaces;",
-                            "using APSIM.Shared.Utilities;",
-                            "using System.Xml.Serialization;",
-                            "using Models;",
-                            "using Models.PMF;",
-                            "using Models.Soils;",
-                            "using System.Text;",
-                            "using System.Collections.Generic;",
-                            "using Models.Core;",
-                            "using System;",
+                            "using APSIM.Numerics;",
                             "using Models.Soils.Nutrients;",
+                            "using System;",
+                            "using Models.Core;",
+                            "using System.Collections.Generic;",
+                            "using System.Text;",
+                            "using Models.Soils;",
+                            "using Models.PMF;",
+                            "using Models;",
+                            "using System.Xml.Serialization;",
+                            "using APSIM.Shared.Utilities;",
+                            "using Models.Interfaces;",
                             "",
                             "namespace Models",
                             "{",
@@ -1273,14 +1267,6 @@
                             "       "
                           ],
                           "Parameters": [
-                            {
-                              "Key": "FASW",
-                              "Value": "0"
-                            },
-                            {
-                              "Key": "WaterDeficit",
-                              "Value": "0"
-                            },
                             {
                               "Key": "AutoIrrigationOn",
                               "Value": "True"
@@ -1478,24 +1464,24 @@
                           ],
                           "Parameters": [
                             {
-                              "Key": "SowingDate",
-                              "Value": "06/10/2001 00:00:00"
-                            },
-                            {
-                              "Key": "CultivarName",
-                              "Value": "EarlyBunch"
-                            },
-                            {
-                              "Key": "SowingRate",
-                              "Value": "30"
-                            },
-                            {
                               "Key": "RowSpacing",
                               "Value": "760"
                             },
                             {
                               "Key": "SowingDepth",
                               "Value": "50"
+                            },
+                            {
+                              "Key": "SowingRate",
+                              "Value": "30"
+                            },
+                            {
+                              "Key": "CultivarName",
+                              "Value": "EarlyBunch"
+                            },
+                            {
+                              "Key": "SowingDate",
+                              "Value": "06/10/2001 00:00:00"
                             }
                           ],
                           "Name": "SowingRule",
@@ -1524,6 +1510,12 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
+                          "Phenology": null,
+                          "Arbitrator": null,
+                          "structure": null,
+                          "Leaf": null,
+                          "Root": null,
+                          "AboveGround": null,
                           "Name": "Peanut",
                           "ResourceName": "Peanut",
                           "Children": [],
@@ -1577,8 +1569,6 @@
                                 0.337,
                                 0.35
                               ],
-                              "InitialPAWmm": 193.05000000000004,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
                               "ResourceName": null,
@@ -1864,17 +1854,10 @@
                               "CEC": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
+                              "CECMetadata": null,
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -1915,6 +1898,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
@@ -1948,6 +1932,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
@@ -1981,7 +1966,18 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "Urea",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Thickness": null,
+                              "InitialValues": null,
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -2042,7 +2038,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Phenology",
                   "ResourceName": null,
                   "Children": [
@@ -2591,9 +2586,6 @@
                       "ConstantsFile": null,
                       "FileName": "Kingaroy.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -26.5544,
-                      "Tav": 18.29,
-                      "Amp": 13.08,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -2630,6 +2622,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "paddock",
                       "ResourceName": null,
                       "Children": [
@@ -2644,17 +2637,18 @@
                         {
                           "$type": "Models.Manager, Models",
                           "CodeArray": [
-                            "using Models.Interfaces;",
-                            "using APSIM.Shared.Utilities;",
-                            "using System.Xml.Serialization;",
-                            "using Models;",
-                            "using Models.PMF;",
-                            "using Models.Soils;",
-                            "using System.Text;",
-                            "using System.Collections.Generic;",
-                            "using Models.Core;",
-                            "using System;",
+                            "using APSIM.Numerics;",
                             "using Models.Soils.Nutrients;",
+                            "using System;",
+                            "using Models.Core;",
+                            "using System.Collections.Generic;",
+                            "using System.Text;",
+                            "using Models.Soils;",
+                            "using Models.PMF;",
+                            "using Models;",
+                            "using System.Xml.Serialization;",
+                            "using APSIM.Shared.Utilities;",
+                            "using Models.Interfaces;",
                             "",
                             "namespace Models",
                             "{",
@@ -2738,14 +2732,6 @@
                             "       "
                           ],
                           "Parameters": [
-                            {
-                              "Key": "FASW",
-                              "Value": "0"
-                            },
-                            {
-                              "Key": "WaterDeficit",
-                              "Value": "0"
-                            },
                             {
                               "Key": "AutoIrrigationOn",
                               "Value": "True"
@@ -2943,14 +2929,6 @@
                           ],
                           "Parameters": [
                             {
-                              "Key": "SowingDate",
-                              "Value": "06/10/2001 00:00:00"
-                            },
-                            {
-                              "Key": "CultivarName",
-                              "Value": "EarlyBunch"
-                            },
-                            {
                               "Key": "RowSpacing",
                               "Value": "760"
                             },
@@ -2961,6 +2939,14 @@
                             {
                               "Key": "SowingRate",
                               "Value": "30"
+                            },
+                            {
+                              "Key": "CultivarName",
+                              "Value": "EarlyBunch"
+                            },
+                            {
+                              "Key": "SowingDate",
+                              "Value": "06/10/2001 00:00:00"
                             }
                           ],
                           "Name": "SowingRule",
@@ -2989,6 +2975,12 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
+                          "Phenology": null,
+                          "Arbitrator": null,
+                          "structure": null,
+                          "Leaf": null,
+                          "Root": null,
+                          "AboveGround": null,
                           "Name": "Peanut",
                           "ResourceName": "Peanut",
                           "Children": [],
@@ -3036,8 +3028,6 @@
                                 0.38,
                                 0.398
                               ],
-                              "InitialPAWmm": 108.00000000000001,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
                               "ResourceName": null,
@@ -3278,17 +3268,10 @@
                               "CEC": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
+                              "CECMetadata": null,
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -3329,6 +3312,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
@@ -3362,6 +3346,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
@@ -3395,7 +3380,18 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "Urea",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Thickness": null,
+                              "InitialValues": null,
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -3474,7 +3470,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "TimeSeries",
                   "ResourceName": null,
                   "Children": [
@@ -3970,7 +3965,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Harvest",
                   "ResourceName": null,
                   "Children": [
@@ -4205,9 +4199,6 @@
                       "ConstantsFile": null,
                       "FileName": "Kingaroy.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -26.5544,
-                      "Tav": 18.29,
-                      "Amp": 13.08,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -4244,6 +4235,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "paddock",
                       "ResourceName": null,
                       "Children": [
@@ -4433,14 +4425,6 @@
                           ],
                           "Parameters": [
                             {
-                              "Key": "SowingDate",
-                              "Value": "11/24/1989 00:00:00"
-                            },
-                            {
-                              "Key": "CultivarName",
-                              "Value": "EarlyBunch"
-                            },
-                            {
                               "Key": "RowSpacing",
                               "Value": "900"
                             },
@@ -4451,6 +4435,14 @@
                             {
                               "Key": "SowingRate",
                               "Value": "8.8"
+                            },
+                            {
+                              "Key": "CultivarName",
+                              "Value": "EarlyBunch"
+                            },
+                            {
+                              "Key": "SowingDate",
+                              "Value": "11/24/1989 00:00:00"
                             }
                           ],
                           "Name": "SowingRule",
@@ -4479,6 +4471,12 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
+                          "Phenology": null,
+                          "Arbitrator": null,
+                          "structure": null,
+                          "Leaf": null,
+                          "Root": null,
+                          "AboveGround": null,
                           "Name": "Peanut",
                           "ResourceName": "Peanut",
                           "Children": [],
@@ -4526,8 +4524,6 @@
                                 0.38,
                                 0.398
                               ],
-                              "InitialPAWmm": 108.00000000000001,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
                               "ResourceName": null,
@@ -4768,17 +4764,10 @@
                               "CEC": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
+                              "CECMetadata": null,
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -4819,6 +4808,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
@@ -4852,6 +4842,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
@@ -4885,7 +4876,18 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "Urea",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Thickness": null,
+                              "InitialValues": null,
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -4898,17 +4900,18 @@
                         {
                           "$type": "Models.Manager, Models",
                           "CodeArray": [
-                            "using Models.Interfaces;",
-                            "using APSIM.Shared.Utilities;",
-                            "using System.Xml.Serialization;",
-                            "using Models;",
-                            "using Models.PMF;",
-                            "using Models.Soils;",
-                            "using System.Text;",
-                            "using System.Collections.Generic;",
-                            "using Models.Core;",
-                            "using System;",
+                            "using APSIM.Numerics;",
                             "using Models.Soils.Nutrients;",
+                            "using System;",
+                            "using Models.Core;",
+                            "using System.Collections.Generic;",
+                            "using System.Text;",
+                            "using Models.Soils;",
+                            "using Models.PMF;",
+                            "using Models;",
+                            "using System.Xml.Serialization;",
+                            "using APSIM.Shared.Utilities;",
+                            "using Models.Interfaces;",
                             "",
                             "namespace Models",
                             "{",
@@ -4992,14 +4995,6 @@
                             "       "
                           ],
                           "Parameters": [
-                            {
-                              "Key": "FASW",
-                              "Value": "0"
-                            },
-                            {
-                              "Key": "WaterDeficit",
-                              "Value": "0"
-                            },
                             {
                               "Key": "AutoIrrigationOn",
                               "Value": "True"
@@ -5088,7 +5083,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "Biomass",
                   "ResourceName": null,
                   "Children": [
@@ -5296,7 +5290,7 @@
             },
             {
               "$type": "Models.Factorial.Experiment, Models",
-              "DisabledSimNames": null,
+              "DisabledSimNames": [],
               "Name": "Kingaroy1819",
               "ResourceName": null,
               "Children": [
@@ -5436,9 +5430,6 @@
                       "ConstantsFile": null,
                       "FileName": "Kingaroy1819.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -26.5737,
-                      "Tav": 18.32,
-                      "Amp": 13.12,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -5475,6 +5466,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "paddock",
                       "ResourceName": null,
                       "Children": [
@@ -5710,6 +5702,12 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
+                          "Phenology": null,
+                          "Arbitrator": null,
+                          "structure": null,
+                          "Leaf": null,
+                          "Root": null,
+                          "AboveGround": null,
                           "Name": "Peanut",
                           "ResourceName": "Peanut",
                           "Children": [],
@@ -5759,10 +5757,42 @@
                                 300.0,
                                 300.0
                               ],
-                              "ParticleSizeSand": null,
-                              "ParticleSizeSilt": null,
-                              "ParticleSizeClay": null,
-                              "Rocks": null,
+                              "ParticleSizeSand": [
+                                5.0,
+                                5.0,
+                                5.0,
+                                5.0,
+                                5.0,
+                                5.0,
+                                5.0
+                              ],
+                              "ParticleSizeSilt": [
+                                65.0,
+                                65.0,
+                                65.0,
+                                65.0,
+                                65.0,
+                                65.0,
+                                65.0
+                              ],
+                              "ParticleSizeClay": [
+                                30.0,
+                                30.0,
+                                30.0,
+                                30.0,
+                                30.0,
+                                30.0,
+                                30.0
+                              ],
+                              "Rocks": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0
+                              ],
                               "Texture": null,
                               "BD": [
                                 1.349,
@@ -5816,11 +5846,43 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
-                              "RocksMetadata": null,
+                              "RocksMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
                               "TextureMetadata": null,
-                              "ParticleSizeSandMetadata": null,
-                              "ParticleSizeSiltMetadata": null,
-                              "ParticleSizeClayMetadata": null,
+                              "ParticleSizeSandMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
+                              "ParticleSizeSiltMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
+                              "ParticleSizeClayMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
                               "Name": "Physical",
                               "ResourceName": null,
                               "Children": [
@@ -5853,9 +5915,33 @@
                                     1.0,
                                     1.0
                                   ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
                                   "Name": "PeanutSoil",
                                   "ResourceName": null,
                                   "Children": [],
@@ -5997,9 +6083,26 @@
                               "PHUnits": 0,
                               "EC": null,
                               "ESP": null,
-                              "CEC": null,
+                              "CEC": [
+                                11.036000000000001,
+                                10.6265,
+                                9.36875,
+                                9.017750000000001,
+                                8.783750000000001,
+                                8.696000000000002,
+                                8.696000000000002
+                              ],
                               "ECMetadata": null,
                               "CLMetadata": null,
+                              "CECMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
                               "ESPMetadata": null,
                               "PHMetadata": [
                                 "Unknown source or quality of data",
@@ -6036,8 +6139,6 @@
                                 0.307,
                                 0.307
                               ],
-                              "InitialPAWmm": 59.696999999999996,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": true,
                               "Name": "Water",
                               "ResourceName": null,
@@ -6049,14 +6150,6 @@
                               "$type": "Models.Soils.Nutrients.Nutrient, Models",
                               "Name": "Nutrient",
                               "ResourceName": "Nutrient",
-                              "Children": [],
-                              "Enabled": false,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "Temperature",
-                              "ResourceName": null,
                               "Children": [],
                               "Enabled": false,
                               "ReadOnly": false
@@ -6074,6 +6167,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
@@ -6097,6 +6191,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
@@ -6132,7 +6227,18 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "Urea",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Thickness": null,
+                              "InitialValues": null,
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -6185,8 +6291,6 @@
                                 0.37,
                                 0.37
                               ],
-                              "InitialPAWmm": 39.269999999999996,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": true,
                               "Name": "Water",
                               "ResourceName": null,
@@ -6228,7 +6332,7 @@
                                 60.0,
                                 60.0,
                                 60.0,
-                                80.0,
+                                60.0,
                                 60.0,
                                 60.0
                               ],
@@ -6531,9 +6635,26 @@
                               "PHUnits": 0,
                               "EC": null,
                               "ESP": null,
-                              "CEC": null,
+                              "CEC": [
+                                19.3675,
+                                18.962500000000002,
+                                17.7025,
+                                17.365000000000002,
+                                22.48,
+                                17.05,
+                                17.05
+                              ],
                               "ECMetadata": null,
                               "CLMetadata": null,
+                              "CECMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
@@ -6546,14 +6667,6 @@
                               "$type": "Models.Soils.Nutrients.Nutrient, Models",
                               "Name": "Nutrient",
                               "ResourceName": "Nutrient",
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "Temperature",
-                              "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -6587,6 +6700,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
@@ -6622,6 +6736,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
@@ -6657,7 +6772,18 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "Urea",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Thickness": null,
+                              "InitialValues": null,
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -6736,7 +6862,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "Biomass",
                   "ResourceName": null,
                   "Children": [
@@ -6963,7 +7088,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "SoilWater",
                   "ResourceName": null,
                   "Children": [
@@ -7556,7 +7680,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "Canopy",
                   "ResourceName": null,
                   "Children": [
@@ -7853,16 +7976,16 @@
                           ],
                           "Parameters": [
                             {
-                              "Key": "SowingRate",
-                              "Value": "8.8"
-                            },
-                            {
                               "Key": "SpacingRatio",
                               "Value": "1"
                             },
                             {
                               "Key": "SowingDepth",
                               "Value": "50"
+                            },
+                            {
+                              "Key": "SowingRate",
+                              "Value": "8.8"
                             },
                             {
                               "Key": "CultivarName",
@@ -7935,16 +8058,16 @@
                           ],
                           "Parameters": [
                             {
-                              "Key": "SowingRate",
-                              "Value": "27.3"
-                            },
-                            {
                               "Key": "SpacingRatio",
                               "Value": "2.15"
                             },
                             {
                               "Key": "SowingDepth",
                               "Value": "50"
+                            },
+                            {
+                              "Key": "SowingRate",
+                              "Value": "27.3"
                             },
                             {
                               "Key": "CultivarName",
@@ -8003,9 +8126,6 @@
                       "ConstantsFile": null,
                       "FileName": "Kunnunura.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -15.7,
-                      "Tav": 28.01426719683482,
-                      "Amp": 9.572968369487844,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -8042,6 +8162,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "paddock",
                       "ResourceName": null,
                       "Children": [
@@ -8056,17 +8177,18 @@
                         {
                           "$type": "Models.Manager, Models",
                           "CodeArray": [
-                            "using Models.Interfaces;",
-                            "using APSIM.Shared.Utilities;",
-                            "using System.Xml.Serialization;",
-                            "using Models;",
-                            "using Models.PMF;",
-                            "using Models.Soils;",
-                            "using System.Text;",
-                            "using System.Collections.Generic;",
-                            "using Models.Core;",
-                            "using System;",
+                            "using APSIM.Numerics;",
                             "using Models.Soils.Nutrients;",
+                            "using System;",
+                            "using Models.Core;",
+                            "using System.Collections.Generic;",
+                            "using System.Text;",
+                            "using Models.Soils;",
+                            "using Models.PMF;",
+                            "using Models;",
+                            "using System.Xml.Serialization;",
+                            "using APSIM.Shared.Utilities;",
+                            "using Models.Interfaces;",
                             "",
                             "namespace Models",
                             "{",
@@ -8150,14 +8272,6 @@
                             "       "
                           ],
                           "Parameters": [
-                            {
-                              "Key": "FASW",
-                              "Value": "0"
-                            },
-                            {
-                              "Key": "WaterDeficit",
-                              "Value": "0"
-                            },
                             {
                               "Key": "AutoIrrigationOn",
                               "Value": "True"
@@ -8332,6 +8446,12 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
+                          "Phenology": null,
+                          "Arbitrator": null,
+                          "structure": null,
+                          "Leaf": null,
+                          "Root": null,
+                          "AboveGround": null,
                           "Name": "Peanut",
                           "ResourceName": "Peanut",
                           "Children": [],
@@ -8385,8 +8505,6 @@
                                 0.337,
                                 0.35
                               ],
-                              "InitialPAWmm": 193.05000000000004,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
                               "ResourceName": null,
@@ -8672,17 +8790,10 @@
                               "CEC": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
+                              "CECMetadata": null,
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -8723,6 +8834,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
@@ -8756,6 +8868,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
@@ -8789,7 +8902,18 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "Urea",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Thickness": null,
+                              "InitialValues": null,
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -8844,16 +8968,16 @@
                           ],
                           "Parameters": [
                             {
-                              "Key": "SowingRate",
-                              "Value": "8.8"
-                            },
-                            {
                               "Key": "SpacingRatio",
                               "Value": "1"
                             },
                             {
                               "Key": "SowingDepth",
                               "Value": "50"
+                            },
+                            {
+                              "Key": "SowingRate",
+                              "Value": "8.8"
                             },
                             {
                               "Key": "CultivarName",
@@ -8939,7 +9063,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "TimeSeries",
                   "ResourceName": null,
                   "Children": [
@@ -9155,7 +9278,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Harvest",
                   "ResourceName": null,
                   "Children": [
@@ -9756,9 +9878,6 @@
                       "ConstantsFile": null,
                       "FileName": "Kunnunura.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -15.7,
-                      "Tav": 28.01426719683482,
-                      "Amp": 9.572968369487844,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -9795,6 +9914,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "paddock",
                       "ResourceName": null,
                       "Children": [
@@ -9809,17 +9929,18 @@
                         {
                           "$type": "Models.Manager, Models",
                           "CodeArray": [
-                            "using Models.Interfaces;",
-                            "using APSIM.Shared.Utilities;",
-                            "using System.Xml.Serialization;",
-                            "using Models;",
-                            "using Models.PMF;",
-                            "using Models.Soils;",
-                            "using System.Text;",
-                            "using System.Collections.Generic;",
-                            "using Models.Core;",
-                            "using System;",
+                            "using APSIM.Numerics;",
                             "using Models.Soils.Nutrients;",
+                            "using System;",
+                            "using Models.Core;",
+                            "using System.Collections.Generic;",
+                            "using System.Text;",
+                            "using Models.Soils;",
+                            "using Models.PMF;",
+                            "using Models;",
+                            "using System.Xml.Serialization;",
+                            "using APSIM.Shared.Utilities;",
+                            "using Models.Interfaces;",
                             "",
                             "namespace Models",
                             "{",
@@ -9903,14 +10024,6 @@
                             "       "
                           ],
                           "Parameters": [
-                            {
-                              "Key": "FASW",
-                              "Value": "0"
-                            },
-                            {
-                              "Key": "WaterDeficit",
-                              "Value": "0"
-                            },
                             {
                               "Key": "AutoIrrigationOn",
                               "Value": "True"
@@ -10108,14 +10221,6 @@
                           ],
                           "Parameters": [
                             {
-                              "Key": "SowingDate",
-                              "Value": "06/10/2001 00:00:00"
-                            },
-                            {
-                              "Key": "CultivarName",
-                              "Value": "EarlyBunch"
-                            },
-                            {
                               "Key": "RowSpacing",
                               "Value": "91"
                             },
@@ -10126,6 +10231,14 @@
                             {
                               "Key": "SowingRate",
                               "Value": "9"
+                            },
+                            {
+                              "Key": "CultivarName",
+                              "Value": "EarlyBunch"
+                            },
+                            {
+                              "Key": "SowingDate",
+                              "Value": "06/10/2001 00:00:00"
                             }
                           ],
                           "Name": "SowingRule",
@@ -10154,6 +10267,12 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
+                          "Phenology": null,
+                          "Arbitrator": null,
+                          "structure": null,
+                          "Leaf": null,
+                          "Root": null,
+                          "AboveGround": null,
                           "Name": "Peanut",
                           "ResourceName": "Peanut",
                           "Children": [],
@@ -10207,8 +10326,6 @@
                                 0.337,
                                 0.35
                               ],
-                              "InitialPAWmm": 193.05000000000004,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
                               "ResourceName": null,
@@ -10494,17 +10611,10 @@
                               "CEC": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
+                              "CECMetadata": null,
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -10545,6 +10655,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
@@ -10578,6 +10689,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
@@ -10611,7 +10723,18 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "Urea",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Thickness": null,
+                              "InitialValues": null,
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -10894,7 +11017,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Phenology",
                   "ResourceName": null,
                   "Children": [
@@ -11065,7 +11187,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "TimeSeries",
                   "ResourceName": null,
                   "Children": [
@@ -11835,7 +11956,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Harvest",
                   "ResourceName": null,
                   "Children": [
@@ -12070,9 +12190,6 @@
                       "ConstantsFile": null,
                       "FileName": "Bundaberg.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -24.9,
-                      "Tav": 21.032638345353785,
-                      "Amp": 10.518950929554352,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -12109,6 +12226,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "paddock",
                       "ResourceName": null,
                       "Children": [
@@ -12298,14 +12416,6 @@
                           ],
                           "Parameters": [
                             {
-                              "Key": "SowingDate",
-                              "Value": "12/12/1989 00:00:00"
-                            },
-                            {
-                              "Key": "CultivarName",
-                              "Value": "EarlyBunch"
-                            },
-                            {
                               "Key": "RowSpacing",
                               "Value": "600"
                             },
@@ -12316,6 +12426,14 @@
                             {
                               "Key": "SowingRate",
                               "Value": "8.8"
+                            },
+                            {
+                              "Key": "CultivarName",
+                              "Value": "EarlyBunch"
+                            },
+                            {
+                              "Key": "SowingDate",
+                              "Value": "12/12/1989 00:00:00"
                             }
                           ],
                           "Name": "SowingRule",
@@ -12344,6 +12462,12 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
+                          "Phenology": null,
+                          "Arbitrator": null,
+                          "structure": null,
+                          "Leaf": null,
+                          "Root": null,
+                          "AboveGround": null,
                           "Name": "Peanut",
                           "ResourceName": "Peanut",
                           "Children": [],
@@ -12391,8 +12515,6 @@
                                 0.38,
                                 0.398
                               ],
-                              "InitialPAWmm": 108.00000000000001,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
                               "ResourceName": null,
@@ -12633,17 +12755,10 @@
                               "CEC": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
+                              "CECMetadata": null,
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -12684,6 +12799,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
@@ -12717,6 +12833,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
@@ -12750,7 +12867,18 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "Urea",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Thickness": null,
+                              "InitialValues": null,
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -12803,17 +12931,18 @@
                         {
                           "$type": "Models.Manager, Models",
                           "CodeArray": [
-                            "using Models.Interfaces;",
-                            "using APSIM.Shared.Utilities;",
-                            "using System.Xml.Serialization;",
-                            "using Models;",
-                            "using Models.PMF;",
-                            "using Models.Soils;",
-                            "using System.Text;",
-                            "using System.Collections.Generic;",
-                            "using Models.Core;",
-                            "using System;",
+                            "using APSIM.Numerics;",
                             "using Models.Soils.Nutrients;",
+                            "using System;",
+                            "using Models.Core;",
+                            "using System.Collections.Generic;",
+                            "using System.Text;",
+                            "using Models.Soils;",
+                            "using Models.PMF;",
+                            "using Models;",
+                            "using System.Xml.Serialization;",
+                            "using APSIM.Shared.Utilities;",
+                            "using Models.Interfaces;",
                             "",
                             "namespace Models",
                             "{",
@@ -12897,14 +13026,6 @@
                             "       "
                           ],
                           "Parameters": [
-                            {
-                              "Key": "FASW",
-                              "Value": "0"
-                            },
-                            {
-                              "Key": "WaterDeficit",
-                              "Value": "0"
-                            },
                             {
                               "Key": "AutoIrrigationOn",
                               "Value": "True"
@@ -13003,7 +13124,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "Biomass",
                   "ResourceName": null,
                   "Children": [
@@ -13230,7 +13350,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "Nitrogen",
                   "ResourceName": null,
                   "Children": [
@@ -13505,14 +13624,6 @@
                           ],
                           "Parameters": [
                             {
-                              "Key": "SowingDate",
-                              "Value": "11/14/1996 00:00:00"
-                            },
-                            {
-                              "Key": "CultivarName",
-                              "Value": "VB97"
-                            },
-                            {
                               "Key": "RowSpacing",
                               "Value": "900"
                             },
@@ -13523,6 +13634,14 @@
                             {
                               "Key": "SowingRate",
                               "Value": "5"
+                            },
+                            {
+                              "Key": "CultivarName",
+                              "Value": "VB97"
+                            },
+                            {
+                              "Key": "SowingDate",
+                              "Value": "11/14/1996 00:00:00"
                             }
                           ],
                           "Name": "5",
@@ -13574,14 +13693,6 @@
                           ],
                           "Parameters": [
                             {
-                              "Key": "SowingDate",
-                              "Value": "11/14/1996 00:00:00"
-                            },
-                            {
-                              "Key": "CultivarName",
-                              "Value": "VB97"
-                            },
-                            {
                               "Key": "RowSpacing",
                               "Value": "900"
                             },
@@ -13592,6 +13703,14 @@
                             {
                               "Key": "SowingRate",
                               "Value": "10"
+                            },
+                            {
+                              "Key": "CultivarName",
+                              "Value": "VB97"
+                            },
+                            {
+                              "Key": "SowingDate",
+                              "Value": "11/14/1996 00:00:00"
                             }
                           ],
                           "Name": "10",
@@ -13643,14 +13762,6 @@
                           ],
                           "Parameters": [
                             {
-                              "Key": "SowingDate",
-                              "Value": "11/14/1996 00:00:00"
-                            },
-                            {
-                              "Key": "CultivarName",
-                              "Value": "VB97"
-                            },
-                            {
                               "Key": "RowSpacing",
                               "Value": "900"
                             },
@@ -13661,6 +13772,14 @@
                             {
                               "Key": "SowingRate",
                               "Value": "15"
+                            },
+                            {
+                              "Key": "CultivarName",
+                              "Value": "VB97"
+                            },
+                            {
+                              "Key": "SowingDate",
+                              "Value": "11/14/1996 00:00:00"
                             }
                           ],
                           "Name": "15",
@@ -13712,14 +13831,6 @@
                           ],
                           "Parameters": [
                             {
-                              "Key": "SowingDate",
-                              "Value": "11/14/1996 00:00:00"
-                            },
-                            {
-                              "Key": "CultivarName",
-                              "Value": "VB97"
-                            },
-                            {
                               "Key": "RowSpacing",
                               "Value": "450"
                             },
@@ -13730,6 +13841,14 @@
                             {
                               "Key": "SowingRate",
                               "Value": "20"
+                            },
+                            {
+                              "Key": "CultivarName",
+                              "Value": "VB97"
+                            },
+                            {
+                              "Key": "SowingDate",
+                              "Value": "11/14/1996 00:00:00"
                             }
                           ],
                           "Name": "20",
@@ -13781,14 +13900,6 @@
                           ],
                           "Parameters": [
                             {
-                              "Key": "SowingDate",
-                              "Value": "11/14/1996 00:00:00"
-                            },
-                            {
-                              "Key": "CultivarName",
-                              "Value": "VB97"
-                            },
-                            {
                               "Key": "RowSpacing",
                               "Value": "450"
                             },
@@ -13799,6 +13910,14 @@
                             {
                               "Key": "SowingRate",
                               "Value": "25"
+                            },
+                            {
+                              "Key": "CultivarName",
+                              "Value": "VB97"
+                            },
+                            {
+                              "Key": "SowingDate",
+                              "Value": "11/14/1996 00:00:00"
                             }
                           ],
                           "Name": "25",
@@ -13850,14 +13969,6 @@
                           ],
                           "Parameters": [
                             {
-                              "Key": "SowingDate",
-                              "Value": "11/14/1996 00:00:00"
-                            },
-                            {
-                              "Key": "CultivarName",
-                              "Value": "VB97"
-                            },
-                            {
                               "Key": "RowSpacing",
                               "Value": "450"
                             },
@@ -13868,6 +13979,14 @@
                             {
                               "Key": "SowingRate",
                               "Value": "30"
+                            },
+                            {
+                              "Key": "CultivarName",
+                              "Value": "VB97"
+                            },
+                            {
+                              "Key": "SowingDate",
+                              "Value": "11/14/1996 00:00:00"
                             }
                           ],
                           "Name": "30",
@@ -13914,9 +14033,6 @@
                       "ConstantsFile": null,
                       "FileName": "Loxton.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -34.4333,
-                      "Tav": 16.63,
-                      "Amp": 14.46,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -13953,6 +14069,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "paddock",
                       "ResourceName": null,
                       "Children": [
@@ -14142,14 +14259,6 @@
                           ],
                           "Parameters": [
                             {
-                              "Key": "SowingDate",
-                              "Value": "12/12/1989 00:00:00"
-                            },
-                            {
-                              "Key": "CultivarName",
-                              "Value": "VB97"
-                            },
-                            {
                               "Key": "RowSpacing",
                               "Value": "600"
                             },
@@ -14160,6 +14269,14 @@
                             {
                               "Key": "SowingRate",
                               "Value": "8.8"
+                            },
+                            {
+                              "Key": "CultivarName",
+                              "Value": "VB97"
+                            },
+                            {
+                              "Key": "SowingDate",
+                              "Value": "12/12/1989 00:00:00"
                             }
                           ],
                           "Name": "SowingRule",
@@ -14188,6 +14305,12 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
+                          "Phenology": null,
+                          "Arbitrator": null,
+                          "structure": null,
+                          "Leaf": null,
+                          "Root": null,
+                          "AboveGround": null,
                           "Name": "Peanut",
                           "ResourceName": "Peanut",
                           "Children": [],
@@ -14235,8 +14358,6 @@
                                 0.38,
                                 0.398
                               ],
-                              "InitialPAWmm": 108.00000000000001,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
                               "ResourceName": null,
@@ -14477,17 +14598,10 @@
                               "CEC": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
+                              "CECMetadata": null,
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -14528,6 +14642,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
@@ -14561,6 +14676,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
@@ -14594,7 +14710,18 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "Urea",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Thickness": null,
+                              "InitialValues": null,
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -14607,17 +14734,18 @@
                         {
                           "$type": "Models.Manager, Models",
                           "CodeArray": [
-                            "using Models.Interfaces;",
-                            "using APSIM.Shared.Utilities;",
-                            "using System.Xml.Serialization;",
-                            "using Models;",
-                            "using Models.PMF;",
-                            "using Models.Soils;",
-                            "using System.Text;",
-                            "using System.Collections.Generic;",
-                            "using Models.Core;",
-                            "using System;",
+                            "using APSIM.Numerics;",
                             "using Models.Soils.Nutrients;",
+                            "using System;",
+                            "using Models.Core;",
+                            "using System.Collections.Generic;",
+                            "using System.Text;",
+                            "using Models.Soils;",
+                            "using Models.PMF;",
+                            "using Models;",
+                            "using System.Xml.Serialization;",
+                            "using APSIM.Shared.Utilities;",
+                            "using Models.Interfaces;",
                             "",
                             "namespace Models",
                             "{",
@@ -14701,14 +14829,6 @@
                             "       "
                           ],
                           "Parameters": [
-                            {
-                              "Key": "FASW",
-                              "Value": "0"
-                            },
-                            {
-                              "Key": "WaterDeficit",
-                              "Value": "0"
-                            },
                             {
                               "Key": "AutoIrrigationOn",
                               "Value": "True"
@@ -14951,7 +15071,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "Biomass",
                   "ResourceName": null,
                   "Children": [
@@ -15156,7 +15275,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "Canopy",
                   "ResourceName": null,
                   "Children": [
@@ -15354,7 +15472,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "TimeSeries",
                   "ResourceName": null,
                   "Children": [
@@ -16102,9 +16219,6 @@
                       "ConstantsFile": null,
                       "FileName": "Roseworthy.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -34.5106,
-                      "Tav": 16.56,
-                      "Amp": 13.5,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -16141,6 +16255,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "paddock",
                       "ResourceName": null,
                       "Children": [
@@ -16155,17 +16270,18 @@
                         {
                           "$type": "Models.Manager, Models",
                           "CodeArray": [
-                            "using Models.Interfaces;",
-                            "using APSIM.Shared.Utilities;",
-                            "using System.Xml.Serialization;",
-                            "using Models;",
-                            "using Models.PMF;",
-                            "using Models.Soils;",
-                            "using System.Text;",
-                            "using System.Collections.Generic;",
-                            "using Models.Core;",
-                            "using System;",
+                            "using APSIM.Numerics;",
                             "using Models.Soils.Nutrients;",
+                            "using System;",
+                            "using Models.Core;",
+                            "using System.Collections.Generic;",
+                            "using System.Text;",
+                            "using Models.Soils;",
+                            "using Models.PMF;",
+                            "using Models;",
+                            "using System.Xml.Serialization;",
+                            "using APSIM.Shared.Utilities;",
+                            "using Models.Interfaces;",
                             "",
                             "namespace Models",
                             "{",
@@ -16249,14 +16365,6 @@
                             "       "
                           ],
                           "Parameters": [
-                            {
-                              "Key": "FASW",
-                              "Value": "0"
-                            },
-                            {
-                              "Key": "WaterDeficit",
-                              "Value": "0"
-                            },
                             {
                               "Key": "AutoIrrigationOn",
                               "Value": "True"
@@ -16454,24 +16562,24 @@
                           ],
                           "Parameters": [
                             {
-                              "Key": "SowingDate",
-                              "Value": "06/10/2001 00:00:00"
-                            },
-                            {
-                              "Key": "CultivarName",
-                              "Value": "EarlyBunch"
-                            },
-                            {
-                              "Key": "SowingRate",
-                              "Value": "30"
-                            },
-                            {
                               "Key": "RowSpacing",
                               "Value": "760"
                             },
                             {
                               "Key": "SowingDepth",
                               "Value": "50"
+                            },
+                            {
+                              "Key": "SowingRate",
+                              "Value": "30"
+                            },
+                            {
+                              "Key": "CultivarName",
+                              "Value": "EarlyBunch"
+                            },
+                            {
+                              "Key": "SowingDate",
+                              "Value": "06/10/2001 00:00:00"
                             }
                           ],
                           "Name": "SowingRule",
@@ -16500,6 +16608,12 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
+                          "Phenology": null,
+                          "Arbitrator": null,
+                          "structure": null,
+                          "Leaf": null,
+                          "Root": null,
+                          "AboveGround": null,
                           "Name": "Peanut",
                           "ResourceName": "Peanut",
                           "Children": [],
@@ -16553,8 +16667,6 @@
                                 0.337,
                                 0.35
                               ],
-                              "InitialPAWmm": 193.05000000000004,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
                               "ResourceName": null,
@@ -16840,17 +16952,10 @@
                               "CEC": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
+                              "CECMetadata": null,
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -16891,6 +16996,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
@@ -16924,6 +17030,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
@@ -16957,7 +17064,18 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "Urea",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Thickness": null,
+                              "InitialValues": null,
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -17018,7 +17136,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "Phenology",
                   "ResourceName": null,
                   "Children": [
@@ -17282,14 +17399,12 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "USA",
           "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Headland Florunner",
               "ResourceName": null,
               "Children": [
@@ -17424,9 +17539,6 @@
                           "ConstantsFile": null,
                           "FileName": "Headland.met",
                           "ExcelWorkSheetName": "",
-                          "Latitude": 31.35,
-                          "Tav": 18.99,
-                          "Amp": 20.0,
                           "Name": "Weather",
                           "ResourceName": null,
                           "Children": [],
@@ -17463,6 +17575,7 @@
                           "Slope": 0.0,
                           "AspectAngle": 0.0,
                           "Altitude": 50.0,
+                          "CanopyType": null,
                           "Name": "paddock",
                           "ResourceName": null,
                           "Children": [
@@ -17477,17 +17590,18 @@
                             {
                               "$type": "Models.Manager, Models",
                               "CodeArray": [
-                                "using Models.Interfaces;",
-                                "using APSIM.Shared.Utilities;",
-                                "using System.Xml.Serialization;",
-                                "using Models;",
-                                "using Models.PMF;",
-                                "using Models.Soils;",
-                                "using System.Text;",
-                                "using System.Collections.Generic;",
-                                "using Models.Core;",
-                                "using System;",
+                                "using APSIM.Numerics;",
                                 "using Models.Soils.Nutrients;",
+                                "using System;",
+                                "using Models.Core;",
+                                "using System.Collections.Generic;",
+                                "using System.Text;",
+                                "using Models.Soils;",
+                                "using Models.PMF;",
+                                "using Models;",
+                                "using System.Xml.Serialization;",
+                                "using APSIM.Shared.Utilities;",
+                                "using Models.Interfaces;",
                                 "",
                                 "namespace Models",
                                 "{",
@@ -17571,14 +17685,6 @@
                                 "       "
                               ],
                               "Parameters": [
-                                {
-                                  "Key": "FASW",
-                                  "Value": "0"
-                                },
-                                {
-                                  "Key": "WaterDeficit",
-                                  "Value": "0"
-                                },
                                 {
                                   "Key": "AutoIrrigationOn",
                                   "Value": "True"
@@ -17776,14 +17882,6 @@
                               ],
                               "Parameters": [
                                 {
-                                  "Key": "SowingDate",
-                                  "Value": "04/28/1988 00:00:00"
-                                },
-                                {
-                                  "Key": "CultivarName",
-                                  "Value": "EarlyBunch"
-                                },
-                                {
                                   "Key": "RowSpacing",
                                   "Value": "910"
                                 },
@@ -17794,6 +17892,14 @@
                                 {
                                   "Key": "SowingRate",
                                   "Value": "16"
+                                },
+                                {
+                                  "Key": "CultivarName",
+                                  "Value": "EarlyBunch"
+                                },
+                                {
+                                  "Key": "SowingDate",
+                                  "Value": "04/28/1988 00:00:00"
                                 }
                               ],
                               "Name": "SowingRule",
@@ -17822,6 +17928,12 @@
                             },
                             {
                               "$type": "Models.PMF.Plant, Models",
+                              "Phenology": null,
+                              "Arbitrator": null,
+                              "structure": null,
+                              "Leaf": null,
+                              "Root": null,
+                              "AboveGround": null,
                               "Name": "Peanut",
                               "ResourceName": "Peanut",
                               "Children": [],
@@ -17875,8 +17987,6 @@
                                     0.337,
                                     0.35
                                   ],
-                                  "InitialPAWmm": 193.05000000000004,
-                                  "RelativeTo": "LL15",
                                   "FilledFromTop": false,
                                   "Name": "Water",
                                   "ResourceName": null,
@@ -18162,17 +18272,10 @@
                                   "CEC": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
+                                  "CECMetadata": null,
                                   "ESPMetadata": null,
                                   "PHMetadata": null,
                                   "Name": "Chemical",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.CERESSoilTemperature, Models",
-                                  "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
@@ -18213,6 +18316,7 @@
                                   "MaxDepthSoluteAccessible": 0.0,
                                   "RunoffEffectivenessAtMovingSolute": 0.0,
                                   "MaxEffectiveRunoff": 0.0,
+                                  "ConcInSolution": null,
                                   "Name": "NO3",
                                   "ResourceName": null,
                                   "Children": [],
@@ -18246,6 +18350,7 @@
                                   "MaxDepthSoluteAccessible": 0.0,
                                   "RunoffEffectivenessAtMovingSolute": 0.0,
                                   "MaxEffectiveRunoff": 0.0,
+                                  "ConcInSolution": null,
                                   "Name": "NH4",
                                   "ResourceName": null,
                                   "Children": [],
@@ -18279,7 +18384,18 @@
                                   "MaxDepthSoluteAccessible": 0.0,
                                   "RunoffEffectivenessAtMovingSolute": 0.0,
                                   "MaxEffectiveRunoff": 0.0,
+                                  "ConcInSolution": null,
                                   "Name": "Urea",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                                  "Thickness": null,
+                                  "InitialValues": null,
+                                  "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
@@ -18344,7 +18460,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "TimeSeries",
                   "ResourceName": null,
                   "Children": [
@@ -19567,7 +19682,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Gainsville EarlyBunch",
               "ResourceName": null,
               "Children": [
@@ -19770,9 +19884,6 @@
                           "ConstantsFile": null,
                           "FileName": "Gainsville.met",
                           "ExcelWorkSheetName": "",
-                          "Latitude": 29.6516,
-                          "Tav": 19.77762302547363,
-                          "Amp": 11.722262903225804,
                           "Name": "Weather",
                           "ResourceName": null,
                           "Children": [],
@@ -19809,6 +19920,7 @@
                           "Slope": 0.0,
                           "AspectAngle": 0.0,
                           "Altitude": 50.0,
+                          "CanopyType": null,
                           "Name": "paddock",
                           "ResourceName": null,
                           "Children": [
@@ -19823,17 +19935,18 @@
                             {
                               "$type": "Models.Manager, Models",
                               "CodeArray": [
-                                "using Models.Interfaces;",
-                                "using APSIM.Shared.Utilities;",
-                                "using System.Xml.Serialization;",
-                                "using Models;",
-                                "using Models.PMF;",
-                                "using Models.Soils;",
-                                "using System.Text;",
-                                "using System.Collections.Generic;",
-                                "using Models.Core;",
-                                "using System;",
+                                "using APSIM.Numerics;",
                                 "using Models.Soils.Nutrients;",
+                                "using System;",
+                                "using Models.Core;",
+                                "using System.Collections.Generic;",
+                                "using System.Text;",
+                                "using Models.Soils;",
+                                "using Models.PMF;",
+                                "using Models;",
+                                "using System.Xml.Serialization;",
+                                "using APSIM.Shared.Utilities;",
+                                "using Models.Interfaces;",
                                 "",
                                 "namespace Models",
                                 "{",
@@ -19917,14 +20030,6 @@
                                 "       "
                               ],
                               "Parameters": [
-                                {
-                                  "Key": "FASW",
-                                  "Value": "0"
-                                },
-                                {
-                                  "Key": "WaterDeficit",
-                                  "Value": "0"
-                                },
                                 {
                                   "Key": "AutoIrrigationOn",
                                   "Value": "True"
@@ -20122,14 +20227,6 @@
                               ],
                               "Parameters": [
                                 {
-                                  "Key": "SowingDate",
-                                  "Value": "05/15/1990 00:00:00"
-                                },
-                                {
-                                  "Key": "CultivarName",
-                                  "Value": "EarlyBunch"
-                                },
-                                {
                                   "Key": "RowSpacing",
                                   "Value": "910"
                                 },
@@ -20140,6 +20237,14 @@
                                 {
                                   "Key": "SowingRate",
                                   "Value": "13.7"
+                                },
+                                {
+                                  "Key": "CultivarName",
+                                  "Value": "EarlyBunch"
+                                },
+                                {
+                                  "Key": "SowingDate",
+                                  "Value": "05/15/1990 00:00:00"
                                 }
                               ],
                               "Name": "SowingRule",
@@ -20168,6 +20273,12 @@
                             },
                             {
                               "$type": "Models.PMF.Plant, Models",
+                              "Phenology": null,
+                              "Arbitrator": null,
+                              "structure": null,
+                              "Leaf": null,
+                              "Root": null,
+                              "AboveGround": null,
                               "Name": "Peanut",
                               "ResourceName": "Peanut",
                               "Children": [],
@@ -20221,8 +20332,6 @@
                                     0.337,
                                     0.35
                                   ],
-                                  "InitialPAWmm": 193.05000000000004,
-                                  "RelativeTo": "LL15",
                                   "FilledFromTop": false,
                                   "Name": "Water",
                                   "ResourceName": null,
@@ -20508,17 +20617,10 @@
                                   "CEC": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
+                                  "CECMetadata": null,
                                   "ESPMetadata": null,
                                   "PHMetadata": null,
                                   "Name": "Chemical",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.CERESSoilTemperature, Models",
-                                  "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
@@ -20559,6 +20661,7 @@
                                   "MaxDepthSoluteAccessible": 0.0,
                                   "RunoffEffectivenessAtMovingSolute": 0.0,
                                   "MaxEffectiveRunoff": 0.0,
+                                  "ConcInSolution": null,
                                   "Name": "NO3",
                                   "ResourceName": null,
                                   "Children": [],
@@ -20592,6 +20695,7 @@
                                   "MaxDepthSoluteAccessible": 0.0,
                                   "RunoffEffectivenessAtMovingSolute": 0.0,
                                   "MaxEffectiveRunoff": 0.0,
+                                  "ConcInSolution": null,
                                   "Name": "NH4",
                                   "ResourceName": null,
                                   "Children": [],
@@ -20625,7 +20729,18 @@
                                   "MaxDepthSoluteAccessible": 0.0,
                                   "RunoffEffectivenessAtMovingSolute": 0.0,
                                   "MaxEffectiveRunoff": 0.0,
+                                  "ConcInSolution": null,
                                   "Name": "Urea",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                                  "Thickness": null,
+                                  "InitialValues": null,
+                                  "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
@@ -20674,7 +20789,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "TimeSeries",
                   "ResourceName": null,
                   "Children": [
@@ -21799,14 +21913,12 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": true,
-      "GraphsPerPage": 6,
       "Name": "Sensibility",
       "ResourceName": null,
       "Children": [
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "DetailedDynamics",
           "ResourceName": null,
           "Children": [
@@ -21878,9 +21990,6 @@
                       "ConstantsFile": null,
                       "FileName": "Kingaroy1819.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -26.5737,
-                      "Tav": 18.32,
-                      "Amp": 13.12,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -21917,6 +22026,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "paddock",
                       "ResourceName": null,
                       "Children": [
@@ -21931,17 +22041,18 @@
                         {
                           "$type": "Models.Manager, Models",
                           "CodeArray": [
-                            "using Models.Interfaces;",
-                            "using APSIM.Shared.Utilities;",
-                            "using System.Xml.Serialization;",
-                            "using Models;",
-                            "using Models.PMF;",
-                            "using Models.Soils;",
-                            "using System.Text;",
-                            "using System.Collections.Generic;",
-                            "using Models.Core;",
-                            "using System;",
+                            "using APSIM.Numerics;",
                             "using Models.Soils.Nutrients;",
+                            "using System;",
+                            "using Models.Core;",
+                            "using System.Collections.Generic;",
+                            "using System.Text;",
+                            "using Models.Soils;",
+                            "using Models.PMF;",
+                            "using Models;",
+                            "using System.Xml.Serialization;",
+                            "using APSIM.Shared.Utilities;",
+                            "using Models.Interfaces;",
                             "",
                             "namespace Models",
                             "{",
@@ -22025,14 +22136,6 @@
                             "       "
                           ],
                           "Parameters": [
-                            {
-                              "Key": "FASW",
-                              "Value": "0"
-                            },
-                            {
-                              "Key": "WaterDeficit",
-                              "Value": "0"
-                            },
                             {
                               "Key": "AutoIrrigationOn",
                               "Value": "True"
@@ -22189,10 +22292,6 @@
                           ],
                           "Parameters": [
                             {
-                              "Key": "CultivarName",
-                              "Value": "Taabinga"
-                            },
-                            {
                               "Key": "RowSpacing",
                               "Value": "900"
                             },
@@ -22203,6 +22302,10 @@
                             {
                               "Key": "SowingRate",
                               "Value": "15"
+                            },
+                            {
+                              "Key": "CultivarName",
+                              "Value": "Taabinga"
                             },
                             {
                               "Key": "SowingDate",
@@ -22217,6 +22320,12 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
+                          "Phenology": null,
+                          "Arbitrator": null,
+                          "structure": null,
+                          "Leaf": null,
+                          "Root": null,
+                          "AboveGround": null,
                           "Name": "Peanut",
                           "ResourceName": "Peanut",
                           "Children": [],
@@ -22547,6 +22656,7 @@
                               "CEC": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
+                              "CECMetadata": null,
                               "ESPMetadata": null,
                               "PHMetadata": [
                                 "Unknown source or quality of data",
@@ -22583,8 +22693,6 @@
                                 0.409,
                                 0.4069999999999999
                               ],
-                              "InitialPAWmm": 180.89999999999998,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": true,
                               "Name": "Water",
                               "ResourceName": null,
@@ -22596,14 +22704,6 @@
                               "$type": "Models.Soils.Nutrients.Nutrient, Models",
                               "Name": "Nutrient",
                               "ResourceName": "Nutrient",
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "Temperature",
-                              "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -22621,6 +22721,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
@@ -22644,6 +22745,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
@@ -22679,7 +22781,18 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "Urea",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Thickness": null,
+                              "InitialValues": null,
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -22700,7 +22813,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "ArbitratorDM",
                   "ResourceName": null,
                   "Children": [
@@ -23014,7 +23126,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Leaf",
                   "ResourceName": null,
                   "Children": [
@@ -23523,7 +23634,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Shell",
                   "ResourceName": null,
                   "Children": [
@@ -24032,7 +24142,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Stem",
                   "ResourceName": null,
                   "Children": [
@@ -24549,7 +24658,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Sugar Systems",
           "ResourceName": null,
           "Children": [
@@ -24952,9 +25060,6 @@
                       "ConstantsFile": null,
                       "FileName": "Bundaberg.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -24.9,
-                      "Tav": 21.032638345353785,
-                      "Amp": 10.518950929554352,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -25010,6 +25115,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "Field",
                       "ResourceName": null,
                       "Children": [
@@ -25396,6 +25502,7 @@
                               "CEC": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
+                              "CECMetadata": null,
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
@@ -25424,18 +25531,8 @@
                                 0.337,
                                 0.337
                               ],
-                              "InitialPAWmm": 63.20000000000001,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": false,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": false,
@@ -25478,6 +25575,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
@@ -25513,6 +25611,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
@@ -25548,7 +25647,18 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "Urea",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Thickness": null,
+                              "InitialValues": null,
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -25654,6 +25764,12 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
+                          "Phenology": null,
+                          "Arbitrator": null,
+                          "structure": null,
+                          "Leaf": null,
+                          "Root": null,
+                          "AboveGround": null,
                           "Name": "Peanut",
                           "ResourceName": "Peanut",
                           "Children": [],
@@ -25671,7 +25787,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Graphs",
                   "ResourceName": null,
                   "Children": [
@@ -25758,7 +25873,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "Aflotoxin Risk",
           "ResourceName": null,
           "Children": [
@@ -25870,9 +25984,6 @@
                       "ConstantsFile": null,
                       "FileName": "Kingaroy.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -26.5544,
-                      "Tav": 18.29,
-                      "Amp": 13.08,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -25909,6 +26020,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "paddock",
                       "ResourceName": null,
                       "Children": [
@@ -25923,17 +26035,18 @@
                         {
                           "$type": "Models.Manager, Models",
                           "CodeArray": [
-                            "using Models.Interfaces;",
-                            "using APSIM.Shared.Utilities;",
-                            "using System.Xml.Serialization;",
-                            "using Models;",
-                            "using Models.PMF;",
-                            "using Models.Soils;",
-                            "using System.Text;",
-                            "using System.Collections.Generic;",
-                            "using Models.Core;",
-                            "using System;",
+                            "using APSIM.Numerics;",
                             "using Models.Soils.Nutrients;",
+                            "using System;",
+                            "using Models.Core;",
+                            "using System.Collections.Generic;",
+                            "using System.Text;",
+                            "using Models.Soils;",
+                            "using Models.PMF;",
+                            "using Models;",
+                            "using System.Xml.Serialization;",
+                            "using APSIM.Shared.Utilities;",
+                            "using Models.Interfaces;",
                             "",
                             "namespace Models",
                             "{",
@@ -26018,14 +26131,6 @@
                           ],
                           "Parameters": [
                             {
-                              "Key": "FASW",
-                              "Value": "0"
-                            },
-                            {
-                              "Key": "WaterDeficit",
-                              "Value": "0"
-                            },
-                            {
                               "Key": "AutoIrrigationOn",
                               "Value": "False"
                             },
@@ -26087,6 +26192,12 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
+                          "Phenology": null,
+                          "Arbitrator": null,
+                          "structure": null,
+                          "Leaf": null,
+                          "Root": null,
+                          "AboveGround": null,
                           "Name": "Peanut",
                           "ResourceName": "Peanut",
                           "Children": [],
@@ -26499,6 +26610,7 @@
                               "CEC": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
+                              "CECMetadata": null,
                               "ESPMetadata": null,
                               "PHMetadata": [
                                 "Unknown source or quality of data",
@@ -26535,8 +26647,6 @@
                                 0.409,
                                 0.4069999999999999
                               ],
-                              "InitialPAWmm": 180.89999999999998,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": true,
                               "Name": "Water",
                               "ResourceName": null,
@@ -26548,14 +26658,6 @@
                               "$type": "Models.Soils.Nutrients.Nutrient, Models",
                               "Name": "Nutrient",
                               "ResourceName": "Nutrient",
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "Temperature",
-                              "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -26573,6 +26675,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
@@ -26596,6 +26699,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
@@ -26631,7 +26735,18 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "Urea",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Thickness": null,
+                              "InitialValues": null,
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -26652,7 +26767,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "Graphs",
                   "ResourceName": null,
                   "Children": [
@@ -26807,7 +26921,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "NewZealand",
           "ResourceName": null,
           "Children": [
@@ -26903,9 +27016,6 @@
                       "ConstantsFile": null,
                       "FileName": "VCS_Waiotu.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -35.525,
-                      "Tav": 15.3,
-                      "Amp": 8.5,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -26942,6 +27052,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "paddock",
                       "ResourceName": null,
                       "Children": [
@@ -26956,17 +27067,18 @@
                         {
                           "$type": "Models.Manager, Models",
                           "CodeArray": [
-                            "using Models.Interfaces;",
-                            "using APSIM.Shared.Utilities;",
-                            "using System.Xml.Serialization;",
-                            "using Models;",
-                            "using Models.PMF;",
-                            "using Models.Soils;",
-                            "using System.Text;",
-                            "using System.Collections.Generic;",
-                            "using Models.Core;",
-                            "using System;",
+                            "using APSIM.Numerics;",
                             "using Models.Soils.Nutrients;",
+                            "using System;",
+                            "using Models.Core;",
+                            "using System.Collections.Generic;",
+                            "using System.Text;",
+                            "using Models.Soils;",
+                            "using Models.PMF;",
+                            "using Models;",
+                            "using System.Xml.Serialization;",
+                            "using APSIM.Shared.Utilities;",
+                            "using Models.Interfaces;",
                             "",
                             "namespace Models",
                             "{",
@@ -27112,6 +27224,12 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
+                          "Phenology": null,
+                          "Arbitrator": null,
+                          "structure": null,
+                          "Leaf": null,
+                          "Root": null,
+                          "AboveGround": null,
                           "Name": "Peanut",
                           "ResourceName": "Peanut",
                           "Children": [],
@@ -27170,10 +27288,6 @@
                           ],
                           "Parameters": [
                             {
-                              "Key": "Population",
-                              "Value": "18"
-                            },
-                            {
                               "Key": "Crop",
                               "Value": "[Peanut]"
                             },
@@ -27192,6 +27306,10 @@
                             {
                               "Key": "RowSpacing",
                               "Value": "900"
+                            },
+                            {
+                              "Key": "Population",
+                              "Value": "18"
                             }
                           ],
                           "Name": "SowingRule",
@@ -27559,6 +27677,7 @@
                               "CEC": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
+                              "CECMetadata": null,
                               "ESPMetadata": null,
                               "PHMetadata": [
                                 "Estimated based on local knowledge",
@@ -27592,8 +27711,6 @@
                                 0.454,
                                 0.45399999999999996
                               ],
-                              "InitialPAWmm": 195.83,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": true,
                               "Name": "Water",
                               "ResourceName": null,
@@ -27605,14 +27722,6 @@
                               "$type": "Models.Soils.Nutrients.Nutrient, Models",
                               "Name": "Nutrient",
                               "ResourceName": "Nutrient",
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "Temperature",
-                              "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -27630,6 +27739,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
@@ -27653,6 +27763,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
@@ -27686,7 +27797,18 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "Urea",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Thickness": null,
+                              "InitialValues": null,
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -27707,7 +27829,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "Graphs",
                   "ResourceName": null,
                   "Children": [
@@ -27866,7 +27987,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "UnderDevelopment",
       "ResourceName": null,
       "Children": [
@@ -27951,9 +28071,6 @@
                   "ConstantsFile": null,
                   "FileName": "Roseworthy.met",
                   "ExcelWorkSheetName": "",
-                  "Latitude": -34.5106,
-                  "Tav": 16.56,
-                  "Amp": 13.5,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -27990,6 +28107,7 @@
                   "Slope": 0.0,
                   "AspectAngle": 0.0,
                   "Altitude": 50.0,
+                  "CanopyType": null,
                   "Name": "paddock",
                   "ResourceName": null,
                   "Children": [
@@ -28185,16 +28303,16 @@
                       ],
                       "Parameters": [
                         {
-                          "Key": "SowingRate",
-                          "Value": "8.8"
-                        },
-                        {
                           "Key": "SpacingRatio",
                           "Value": "1"
                         },
                         {
                           "Key": "SowingDepth",
                           "Value": "50"
+                        },
+                        {
+                          "Key": "SowingRate",
+                          "Value": "8.8"
                         },
                         {
                           "Key": "CultivarName",
@@ -28235,6 +28353,12 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
+                      "Phenology": null,
+                      "Arbitrator": null,
+                      "structure": null,
+                      "Leaf": null,
+                      "Root": null,
+                      "AboveGround": null,
                       "Name": "Peanut",
                       "ResourceName": "Peanut",
                       "Children": [],
@@ -28282,8 +28406,6 @@
                             0.38,
                             0.398
                           ],
-                          "InitialPAWmm": 108.00000000000001,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
                           "ResourceName": null,
@@ -28524,17 +28646,10 @@
                           "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
+                          "CECMetadata": null,
                           "ESPMetadata": null,
                           "PHMetadata": null,
                           "Name": "Chemical",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -28575,6 +28690,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
@@ -28608,6 +28724,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
@@ -28641,7 +28758,18 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "Urea",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "Thickness": null,
+                          "InitialValues": null,
+                          "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -28701,17 +28829,18 @@
                     {
                       "$type": "Models.Manager, Models",
                       "CodeArray": [
-                        "using Models.Interfaces;",
-                        "using APSIM.Shared.Utilities;",
-                        "using System.Xml.Serialization;",
-                        "using Models;",
-                        "using Models.PMF;",
-                        "using Models.Soils;",
-                        "using System.Text;",
-                        "using System.Collections.Generic;",
-                        "using Models.Core;",
-                        "using System;",
+                        "using APSIM.Numerics;",
                         "using Models.Soils.Nutrients;",
+                        "using System;",
+                        "using Models.Core;",
+                        "using System.Collections.Generic;",
+                        "using System.Text;",
+                        "using Models.Soils;",
+                        "using Models.PMF;",
+                        "using Models;",
+                        "using System.Xml.Serialization;",
+                        "using APSIM.Shared.Utilities;",
+                        "using Models.Interfaces;",
                         "",
                         "namespace Models",
                         "{",
@@ -28796,14 +28925,6 @@
                       ],
                       "Parameters": [
                         {
-                          "Key": "FASW",
-                          "Value": "0"
-                        },
-                        {
-                          "Key": "WaterDeficit",
-                          "Value": "0"
-                        },
-                        {
                           "Key": "AutoIrrigationOn",
                           "Value": "True"
                         },
@@ -28833,7 +28954,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Biomass",
               "ResourceName": null,
               "Children": [
@@ -29038,7 +29158,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Canopy",
               "ResourceName": null,
               "Children": [
