@@ -783,7 +783,7 @@ namespace Models.Climate
 
             if (this.reader == null)
                 if (!this.OpenDataFile())
-                    throw new ApsimXException(this, "Cannot find weather file '" + this.FileName + "'");
+                    throw new ApsimXException(this, "Cannot find weather file '" + this.FullFileName + "'");
 
             //get weather for that date
             DailyMetDataFromFile readMetData = new DailyMetDataFromFile();
@@ -1007,6 +1007,7 @@ namespace Models.Climate
             }
             else
             {
+
                 return false;
             }
         }
