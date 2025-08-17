@@ -19,8 +19,13 @@ namespace Models.Sensor
     [ViewName("UserInterface.Views.PropertyView")]
     [ValidParent(ParentType = typeof(Zone))]
     [Serializable]
-    public class Spectral : Model, IScopedModel
+    public class Spectral : Model, IScopedModel, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
+
         /// <summary> link to the canopy model</summary>
         /// <summary>Models in the simulation that implement ICanopy.</summary>
         private List<ICanopy> canopyModels = null;
@@ -49,7 +54,7 @@ namespace Models.Sensor
         private void DoStartOfSimulation(object sender, EventArgs e)
         {
             Zone zone = this.Parent as Zone;
-            canopyModels = zone.FindAllDescendants<ICanopy>().ToList();
+            canopyModels = Structure.FindChildren<ICanopy>(relativeTo: zone, recurse: true).ToList();
 
             SurfaceDUlmm = soilPhysical.DUL[0] * SurfaceLayerDepth;
             SurfaceAirDrymm = soilPhysical.AirDry[0] * SurfaceLayerDepth;
