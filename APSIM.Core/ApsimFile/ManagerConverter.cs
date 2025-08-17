@@ -409,7 +409,10 @@ internal class ManagerConverter
                 lines[i] = lines[i].Remove(pos, searchPattern.Length);
                 lines[i] = lines[i].Insert(pos, replacePattern);
                 replacementDone = true;
-                pos = lines[i].IndexOf(searchPattern, pos + 1);
+                if (pos + 1 >= lines[i].Length)
+                    pos = -1;
+                else
+                    pos = lines[i].IndexOf(searchPattern, pos + 1);
             }
         }
         return replacementDone;

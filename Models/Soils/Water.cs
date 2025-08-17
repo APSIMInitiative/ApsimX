@@ -20,11 +20,12 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Water : Model, IScopeDependency
+    public class Water : Model, IStructureDependency
     {
-        /// <summary>Scope supplied by APSIM.core.</summary>
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IScope Scope { private get; set; }
+        public IStructure Structure { private get; set; }
+
 
         private double[] volumetric;
         private double initialFractionFull = double.NaN;
@@ -388,8 +389,15 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Finds the 'Soil' node.</summary>
+        public Soil Soil => (Soil)this.Parent ??
+                                     Node?.WalkScoped()
+                                         ?.FirstOrDefault(n => n.Model is Soil)
+                                         ?.Model as Soil;
+
         /// <summary>Finds the 'Physical' node.</summary>
-        public IPhysical Physical => Node?.WalkScoped()
+        public IPhysical Physical => Soil?.FindChild<IPhysical>() ??
+                                     Node?.WalkScoped()
                                          ?.FirstOrDefault(n => n.Model is IPhysical)
                                          ?.Model as IPhysical;
 
@@ -491,9 +499,9 @@ namespace Models.Soils
                 double airDry = Physical.AirDry[i];
                 double sat = Physical.SAT[i];
                 if (!MathUtilities.FloatsAreEqual(water, airDry) && water < airDry)
-                    throw new Exception($"A water initial value of {water} on layer {i} was less than AirDry of {airDry}. Initial water could not be set.");
+                    throw new Exception($"A water initial value of {water} on layer {i+1} was less than AirDry of {airDry}.");
                 else if (!MathUtilities.FloatsAreEqual(water, sat) && water > sat)
-                    throw new Exception($"A water initial value of {water} on layer {i} was more than Saturation of {sat}. Initial water could not be set.");
+                    throw new Exception($"A water initial value of {water} on layer {i+1} was more than Saturation of {sat}.");
             }
 
             return true;
@@ -507,7 +515,7 @@ namespace Models.Soils
         {
             var physical = FindSibling<Physical>();
             if (physical == null)
-                physical = Scope.Find<Physical>();
+                physical = Structure.Find<Physical>();
                 if (physical == null)
                     throw new Exception($"Unable to locate a Physical node when updating {this.Name}.");
             var plantCrop = physical.FindChild<SoilCrop>(RelativeTo + "Soil");

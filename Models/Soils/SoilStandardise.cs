@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.ApsimFile;
 using Models.Interfaces;
 using Models.Soils;
+using Models.Soils.Nutrients;
 using Models.Soils.SoilTemp;
 using Models.WaterModel;
 using static Models.Soils.Chemical;
@@ -19,10 +21,24 @@ namespace Models.Soils;
 public static class SoilSanitise
 {
     /// <summary>
+    /// Clone and sanitise a soil.
+    /// </summary>
+    /// <param name="soil">The soil</param>
+    /// <param name="targetThickness">The layer thickness to change the soil to. Leave null for physical thickness</param>
+    public static Soil CloneAndSanitise(this Soil soil, double[] targetThickness = null)
+    {
+        Soil clonedSoil = soil.Clone();
+        Node.Create(clonedSoil);
+        Sanitise(clonedSoil, targetThickness);
+        return clonedSoil;
+    }
+
+    /// <summary>
     /// Sanitise a soil.
     /// </summary>
     /// <param name="soil"></param>
-    public static void Sanitise(this Soil soil)
+    /// <param name="targetThickness">The layer thickness to change the soil to. Leave null for physical thickness</param>
+    public static void Sanitise(this Soil soil, double[] targetThickness = null)
     {
         var physical = soil.FindChild<Physical>();
         var chemical = soil.FindChild<Chemical>();
@@ -33,12 +49,15 @@ public static class SoilSanitise
         var temperature = soil.FindChild<Models.Soils.SoilTemp.SoilTemperature>();
 
         // Determine the target layer structure.
-        var targetThickness = physical.Thickness;
-        if (layerStructure != null)
+        if (targetThickness == null)
         {
-            targetThickness = layerStructure.Thickness;
-            if (targetThickness.Sum() > physical.Thickness.Sum())
-                throw new Exception("The LayerStructure profile is deeper than the physical profile. This is not allowed.");
+            targetThickness = physical.Thickness;
+            if (layerStructure != null)
+            {
+                targetThickness = layerStructure.Thickness;
+                if (targetThickness.Sum() > physical.Thickness.Sum())
+                    throw new Exception("The LayerStructure profile is deeper than the physical profile. This is not allowed.");
+            }
         }
 
         if (physical != null)
@@ -62,6 +81,138 @@ public static class SoilSanitise
         foreach (var solute in soil.FindAllChildren<Solute>())
             SanitiseSolute(solute, targetThickness);
     }
+
+
+    /// <summary>
+    /// Initialise soil and add in missing children.
+    /// </summary>
+    /// <param name="soil">The soil to repair.</param>
+    public static void InitialiseSoil(Soil soil)
+    {
+        var physical = soil.FindChild<Physical>();
+        if (physical != null)
+        {
+            // Ensure soil has a water noe.
+            var water = soil.FindChild<Water>();
+            if (water == null)
+            {
+                water = new();
+                soil.Node.AddChild(water);
+            }
+            if (water.Thickness == null)
+                water.Thickness = physical.Thickness;
+            if (water.InitialValues == null)
+                water.InitialValues = physical.DUL;
+
+            // Ensure soil has a WaterBalance node.
+            var waterBalance = soil.FindChild<WaterBalance>();
+            if (waterBalance == null)
+            {
+                waterBalance = new WaterBalance()
+                {
+                    ResourceName = "WaterBalance",
+                    SummerDate = "1-Nov",
+                    SummerU = 5.0,
+                    SummerCona = 5.0,
+                    WinterDate = "1-Apr",
+                    WinterU = 5.0,
+                    WinterCona = 5.0,
+                    DiffusConst = 40.0,
+                    DiffusSlope = 16.0,
+                    Salb = 0.12,
+                    CN2Bare = 73.0,
+                    CNRed = 20.0,
+                    CNCov = 0.8,
+                    Thickness = physical.Thickness,
+                    SWCON = MathUtilities.CreateArrayOfValues(0.3, physical.Thickness.Length)
+                };
+                Node.Create(waterBalance);
+                soil.Node.AddChild(waterBalance);
+            }
+
+            // Ensure soil has an Organic node.
+                var organic = soil.FindChild<Organic>();
+            if (organic == null)
+                soil.Node.AddChild(new Organic()
+                {
+                    Thickness = physical.Thickness,
+                    Carbon = MathUtilities.CreateArrayOfValues(0.2, physical.Thickness.Length),
+                    SoilCNRatio = MathUtilities.CreateArrayOfValues(12, physical.Thickness.Length),
+                    FBiom = MathUtilities.CreateArrayOfValues(0.2, physical.Thickness.Length),
+                    FInert = MathUtilities.CreateArrayOfValues(0.8, physical.Thickness.Length),
+                    FOM = MathUtilities.CreateArrayOfValues(100, physical.Thickness.Length),
+                });
+
+            // Ensure soil has an Chemical node.
+            var chemical = soil.FindChild<Chemical>();
+            if (chemical == null)
+                soil.Node.AddChild(new Chemical()
+                {
+                    Thickness = physical.Thickness,
+                    PH = MathUtilities.CreateArrayOfValues(7, physical.Thickness.Length)
+                });
+
+            // Ensure soil has an Nutrient node.
+            var nutrient = soil.FindChild<Nutrient>();
+            if (nutrient == null)
+            {
+                nutrient = new Nutrient()
+                {
+                    ResourceName = "Nutrient"
+                };
+                Node.Create(nutrient);
+                soil.Node.AddChild(nutrient);
+            }
+
+            // Ensure solutes exist in soil.
+                if (soil.FindChild<Solute>("NO3") == null)
+                    soil.Node.AddChild(new Solute()
+                    {
+                        Name = "NO3",
+                        Thickness = physical.Thickness,
+                        InitialValues = MathUtilities.CreateArrayOfValues(1.0, physical.Thickness.Length)
+                    });
+            if (soil.FindChild<Solute>("NH4") == null)
+                soil.Node.AddChild(new Solute()
+                {
+                    Name = "NH4",
+                    Thickness = physical.Thickness,
+                    InitialValues = MathUtilities.CreateArrayOfValues(0.1, physical.Thickness.Length)
+                });
+            if (soil.FindChild<Solute>("Urea") == null)
+                soil.Node.AddChild(new Solute()
+                {
+                    Name = "Urea",
+                    Thickness = physical.Thickness,
+                    InitialValues = MathUtilities.CreateArrayOfValues(0, physical.Thickness.Length)
+                });
+
+            // Ensure soil has a soil temperature node.
+            var soilTemperature = soil.FindChild<SoilTemperature>();
+            if (soilTemperature == null)
+                soil.Node.AddChild(new SoilTemperature() { Name = "Temperature" });
+            else
+                soilTemperature.Name = "Temperature";
+
+            var euc = physical.FindChild<SoilCrop>("EucalyptusSoil");
+            var pinus = physical.FindChild<SoilCrop>("PinusSoil");
+            if (euc != null && pinus == null)
+            {
+                pinus = euc.Clone();
+                pinus.Name = "PinusSoil";
+                physical.Node.AddChild(pinus);
+            }
+            var scrum = physical.FindChild<SoilCrop>("SCRUMSoil");
+            var firstSoilCrop = physical.FindChild<SoilCrop>();
+            if (scrum == null && firstSoilCrop != null)
+            {
+                scrum = firstSoilCrop.Clone();
+                scrum.Name = "SCRUMSoil";
+                physical.Node.AddChild(scrum);
+            }
+        }
+    }
+
 
     /// <summary>Sanitises the chemical model ready for running in a simulation.</summary>
     /// <param name="chemical">The chemical node</param>

@@ -25,9 +25,12 @@ namespace Models.PMF.SimplePlantModels
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class ScrumCropInstance : Model, ILocatorDependency
+    public class ScrumCropInstance : Model, IStructureDependency
     {
-        [NonSerialized] private ILocator locator;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
 
         /// <summary>Harvesting Event.</summary>
         public event EventHandler<EventArgs> Harvesting;
@@ -387,9 +390,6 @@ namespace Models.PMF.SimplePlantModels
 
         /// <summary>Publicises the Nitrogen demand for this crop instance. Occurs when a plant is sown.</summary>
         public event EventHandler<ScrumFertDemandData> SCRUMTotalNDemand;
-
-        /// <summary>Locator supplied by APSIM kernel.</summary>
-        public void SetLocator(ILocator locator) => this.locator = locator;
 
         /// <summary>Calculates the amount of N required to grow the expected yield.</summary>
         /// <param name="yieldExpected">Fresh yield expected at harvest (t/ha)</param>
@@ -768,20 +768,20 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Triggers the removal of biomass from various organs.</summary>
         public void HarvestScrumCrop()
         {
-            Biomass initialCropBiomass = (Biomass)locator.Get("[SCRUM].Product.Total");
+            Biomass initialCropBiomass = (Biomass)Structure.Get("[SCRUM].Product.Total");
             product.RemoveBiomass(liveToRemove: 1.0 - FieldLoss,
                                   deadToRemove: 1.0 - FieldLoss,
                                   liveToResidue: FieldLoss,
                                   deadToResidue: FieldLoss);
-            Biomass finalCropBiomass = (Biomass)locator.Get("[SCRUM].Product.Total");
+            Biomass finalCropBiomass = (Biomass)Structure.Get("[SCRUM].Product.Total");
             ProductHarvested = initialCropBiomass - finalCropBiomass;
 
-            initialCropBiomass = (Biomass)locator.Get("[SCRUM].Stover.Total");
+            initialCropBiomass = (Biomass)Structure.Get("[SCRUM].Stover.Total");
             stover.RemoveBiomass(liveToRemove: ResidueRemoval,
                                  deadToRemove: ResidueRemoval,
                                  liveToResidue: 1.0 - ResidueRemoval,
                                  deadToResidue: 1.0 - ResidueRemoval);
-            finalCropBiomass = (Biomass)locator.Get("[SCRUM].Stover.Total");
+            finalCropBiomass = (Biomass)Structure.Get("[SCRUM].Stover.Total");
             StoverRemoved = initialCropBiomass - finalCropBiomass;
             if (Harvesting != null)
             { Harvesting.Invoke(this, new EventArgs()); }
