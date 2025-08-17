@@ -28,10 +28,6 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantPurchase.htm")]
     public class RuminantActivityPurchase : CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels, IStructureDependency
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
         private string grazeStore = "";
         private Relationship numberToStock;
         private GrazeFoodStoreType foodStore;
@@ -124,11 +120,11 @@ namespace Models.CLEM.Activities
             if (grazeStore == "")
             {
                 var ah = Structure.Find<ActivitiesHolder>();
-                if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
+                if (Structure.FindChildren<PastureActivityManage>(relativeTo: ah, recurse: true).Count() != 0)
                     Summary.WriteMessage(this, String.Format("Trade animals purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name), MessageType.Warning);
             }
 
-            numberToStock = FindAllChildren<Relationship>().Where(a => a.Identifier == "Number to stock vs pasture").FirstOrDefault();
+            numberToStock = Structure.FindChildren<Relationship>().Where(a => a.Identifier == "Number to stock vs pasture").FirstOrDefault();
             if(numberToStock != null)
             {
                 if (grazeStore != "")
@@ -196,13 +192,13 @@ namespace Models.CLEM.Activities
             {
                 int purchased = 0;
 
-                foreach (SpecifyRuminant purchaseSpecific in FindAllChildren<SpecifyRuminant>())
+                foreach (SpecifyRuminant purchaseSpecific in Structure.FindChildren<SpecifyRuminant>())
                 {
                     int number = Convert.ToInt32(Math.Ceiling(numberToDo - numberToSkip * purchaseSpecific.Proportion));
                     if (number > 0)
                     {
-                        RuminantTypeCohort purchasetype = purchaseSpecific.FindChild<RuminantTypeCohort>();
-                        var purchaseIndividuals = purchasetype.CreateIndividuals(number, purchasetype.FindAllChildren<ISetAttribute>().ToList(), rumTypeToUse, false);
+                        RuminantTypeCohort purchasetype = Structure.FindChild<RuminantTypeCohort>(relativeTo: purchaseSpecific);
+                        var purchaseIndividuals = purchasetype.CreateIndividuals(number, Structure.FindChildren<ISetAttribute>(relativeTo: purchasetype).ToList(), rumTypeToUse, false);
 
                         foreach (var ind in purchaseIndividuals)
                         {
@@ -232,7 +228,7 @@ namespace Models.CLEM.Activities
         {
             var results = new List<ValidationResult>();
             // check that a RuminantTypeCohort is supplied to identify trade individuals.
-            var specifyRuminants = FindAllChildren<SpecifyRuminant>();
+            var specifyRuminants = Structure.FindChildren<SpecifyRuminant>();
             if (specifyRuminants.Count() == 0)
             {
                 string[] memberNames = new string[] { "PurchaseDetails" };
@@ -243,7 +239,7 @@ namespace Models.CLEM.Activities
                 foreach (SpecifyRuminant specRumItem in specifyRuminants)
                 {
                     // get Cohort
-                    var items = specRumItem.FindAllChildren<RuminantTypeCohort>();
+                    var items = Structure.FindChildren<RuminantTypeCohort>(relativeTo: specRumItem);
                     if (items.Count() > 1)
                     {
                         string[] memberNames = new string[] { "SpecifyRuminant cohort" };
@@ -256,7 +252,7 @@ namespace Models.CLEM.Activities
                     }
                 }
             }
-            if (FindAllChildren<Relationship>().Where(a => a.Identifier == "Number to stock vs pasture").Any())
+            if (Structure.FindChildren<Relationship>().Where(a => a.Identifier == "Number to stock vs pasture").Any())
             {
                 double cumulativeProp = specifyRuminants.Select(a => a.Proportion).Sum();
                 if(MathUtilities.FloatsAreEqual(cumulativeProp, 1.0) == false)
@@ -290,7 +286,7 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 htmlWriter.Write($"Purchased individuals will be placed in {DisplaySummaryResourceTypeSnippet(GrazeFoodStoreName, nullGeneralYards: true)}</div>");
 
-                Relationship numberRelationship = FindAllChildren<Relationship>().Where(a => a.Identifier == "Number to stock vs pasture").FirstOrDefault();
+                Relationship numberRelationship = Structure.FindChildren<Relationship>().Where(a => a.Identifier == "Number to stock vs pasture").FirstOrDefault();
                 if (numberRelationship != null)
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");

@@ -16,8 +16,11 @@ namespace Models.PMF.Phen
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]
-    public class Phenology : Model, IPhenology
+    public class Phenology : Model, IPhenology, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
         ///1. Links
         ///------------------------------------------------------------------------------------------------
@@ -485,7 +488,7 @@ namespace Models.PMF.Phen
         /// <param name="overRideFLNParams"></param>
         public void ResetCampVernParams(FinalLeafNumberSet overRideFLNParams)
         {
-            CAMP camp = this.FindChild("CAMP") as CAMP;
+            CAMP camp = Structure.FindChild<CAMP>("CAMP");
             camp.ResetVernParams(overRideFLNParams);
         }
 
@@ -502,7 +505,7 @@ namespace Models.PMF.Phen
                 phases = new List<IPhase>();
             else
                 phases.Clear();
-            foreach (IPhase phase in this.FindAllChildren<IPhase>())
+            foreach (IPhase phase in Structure.FindChildren<IPhase>())
                 phases.Add(phase);
         }
 
@@ -519,7 +522,7 @@ namespace Models.PMF.Phen
         /// <param name="emergenceDate">Emergence date (dd-mmm)</param>
         public void SetEmergenceDate(string emergenceDate)
         {
-            foreach (EmergingPhase ep in this.FindAllDescendants<EmergingPhase>())
+            foreach (EmergingPhase ep in Structure.FindChildren<EmergingPhase>(recurse: true))
                 ep.EmergenceDate = emergenceDate;
             SetGerminationDate(plant.SowingDate.ToString("d-MMM", CultureInfo.InvariantCulture));
         }
@@ -530,7 +533,7 @@ namespace Models.PMF.Phen
         /// <param name="germinationDate">Germination date (dd-mmm).</param>
         public void SetGerminationDate(string germinationDate)
         {
-            foreach (GerminatingPhase gp in this.FindAllDescendants<GerminatingPhase>())
+            foreach (GerminatingPhase gp in Structure.FindChildren<GerminatingPhase>(recurse: true))
                 gp.GerminationDate = germinationDate;
         }
 
@@ -546,7 +549,7 @@ namespace Models.PMF.Phen
             phaseTable.Columns.Add("Final Stage", typeof(string));
 
             int n = 1;
-            foreach (IPhase child in FindAllChildren<IPhase>())
+            foreach (IPhase child in Structure.FindChildren<IPhase>())
             {
                 DataRow row = phaseTable.NewRow();
                 row[0] = n;

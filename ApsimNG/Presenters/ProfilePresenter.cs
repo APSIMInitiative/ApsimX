@@ -56,15 +56,15 @@ namespace UserInterface.Presenters
             view = v as ViewBase;
             this.explorerPresenter = explorerPresenter;
 
-            Soil soilNode = this.model.FindAncestor<Soil>();
-            physical = model as Physical ?? soilNode?.FindChild<Physical>();
+            Soil soilNode = this.model.Node.FindParent<Soil>();
+            physical = model as Physical ?? soilNode?.Node.FindChild<Physical>();
             physical?.InFill();
 
-            var chemical = model as Chemical ?? soilNode?.FindChild<Chemical>();
-            var organic = model as Organic ?? soilNode?.FindChild<Organic>();
+            var chemical = model as Chemical ?? soilNode?.Node.FindChild<Chemical>();
+            var organic = model as Organic ?? soilNode?.Node.FindChild<Organic>();
             if (chemical != null && organic != null)
                 chemical.InFill(physical, organic);
-            water = model as Water ?? soilNode?.FindChild<Water>();
+            water = model as Water ?? soilNode?.Node.FindChild<Water>();
 
             ContainerView gridContainer = view.GetControl<ContainerView>("grid");
             gridPresenter = new GridPresenter();
@@ -181,8 +181,8 @@ namespace UserInterface.Presenters
                     }
                     else if (model is Chemical chemical)
                     {
-                        var solutes  = (chemical.Parent as Soil)?.CloneAndSanitise(chemical.Thickness)
-                                                                 .FindAllChildren<Solute>();
+                        var standardisedSoil = (chemical.Parent as Soil)?.CloneAndSanitise(chemical.Thickness);
+                        var solutes = standardisedSoil?.Node.FindChildren<Solute>();
                         PopulateChemicalGraph(graph, chemical.Thickness, chemical.PH, chemical.PHUnits, solutes);
                     }
 

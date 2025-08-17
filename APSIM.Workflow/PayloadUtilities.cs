@@ -75,7 +75,7 @@ public static class PayloadUtilities
                 if (FileFormat.ReadFromString<Simulations>(apsimxFileText, e => throw e, false).Model is not Simulations simulations)
                     throw new Exception("Error: Failed to read simulations from APSIMX file.");
 
-                List<Weather> weatherModels = simulations.FindAllDescendants<Weather>().ToList();
+                List<Weather> weatherModels = simulations.Node.FindChildren<Weather>(recurse: true).ToList();
 
                 if (weatherModels.Count != 0)
                 {
@@ -317,7 +317,7 @@ public static class PayloadUtilities
 
         if (File.Exists(gridCsvPath) == false)
         {
-            string docker_user = "apsiminitiative"; 
+            string docker_user = "apsiminitiative";
             string r_sims_apsim_image = docker_user + "/apsimplusr:";
             string[] validationDirs = ValidationLocationUtility.GetDirectoryPaths();
             // string[] validationDirs = ["/Prototypes/CroptimizR"]; // Example Temporary test directory list
@@ -393,7 +393,7 @@ public static class PayloadUtilities
     }
 
     /// <summary>
-    /// Submits the WorkFlo job to the Azure API.   
+    /// Submits the WorkFlo job to the Azure API.
     /// /// </summary>
     /// /// <param name="directoryPath">The directory path where the payload file is located.</param>
     public static async Task SubmitWorkFloJob(string directoryPath)
@@ -464,5 +464,5 @@ public static class PayloadUtilities
 
         }
     }
- 
+
 }

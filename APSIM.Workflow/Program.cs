@@ -117,9 +117,9 @@ public class Program
             logger.LogError("There was an issue with the validation workflow. Please check the logs for more details.");
         }
         else throw new Exception("There was an issue organising the files for submittal to Azure.\n");
-        
 
-        
+
+
     }
 
     /// <summary>
@@ -158,5 +158,5 @@ public class Program
             exitCode = 1;
     }
 
-    
+
 }
