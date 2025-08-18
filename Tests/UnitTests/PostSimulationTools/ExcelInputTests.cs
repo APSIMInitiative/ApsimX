@@ -30,12 +30,6 @@ namespace UnitTests
         {
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
-            if (ProcessUtilities.CurrentOS.IsWindows)
-            {
-                string sqliteSourceFileName = FindSqlite3DLL();
-                Directory.SetCurrentDirectory(Path.GetDirectoryName(sqliteSourceFileName));
-            }
-
             database = new SQLite();
             database.OpenDatabase(":memory:", readOnly: false);
 
