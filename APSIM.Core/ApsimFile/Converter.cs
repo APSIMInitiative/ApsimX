@@ -6989,8 +6989,17 @@ internal class Converter
             {
                 for (int i = 0; i < fractionDefoliatedBiomassToSoil.Count; i++)
                     fractionDefoliatedBiomassToSoil[i] = 1 - fractionDefoliatedBiomassToSoil[i].Value<double>();
-                simpleGrazing["FractionOfDungUrineOffPaddock"] = new JArray(fractionDefoliatedBiomassToSoil);
+                simpleGrazing["FractionIntakeNToAnimal"] = new JArray(fractionDefoliatedBiomassToSoil);
             }
+
+            var fractionDefoliatedNToSoil = simpleGrazing["FractionDefoliatedNToSoil"] as JArray;
+            if (fractionDefoliatedNToSoil != null)
+            {
+                for (int i = 0; i < fractionDefoliatedNToSoil.Count; i++)
+                    fractionDefoliatedNToSoil[i] = Math.Round(1 - fractionDefoliatedNToSoil[i].Value<double>(), 3);
+                simpleGrazing["FractionOfDungUrineOffPaddock"] = new JArray(fractionDefoliatedNToSoil);
+            }
+
         }
 
         /*

@@ -188,37 +188,52 @@ namespace Models.AgPasture
         public string NoGrazingEndString { get; set; }
 
         /// <summary></summary>
+        [Separator("Cut and carry")]
+        [Description("Is this a cut and carry system with clippings returned?")]
+        public bool IsCutAndCarry { get; set; }
+
+        /// <summary></summary>
+        [Description("Fraction of clippings returned")]
+        [Display(VisibleCallback = nameof(IsCutAndCarry))]
+        public double FractionClippingsReturned { get; set; }
+
+        /// <summary></summary>
         [Separator("Urine and Dung - if SimpleCow is in the simulation the first two parameters will be ignored")]
         [Description("Fraction of intake N exported as animal product (0-1). Single value or montly values.")]
+        [Display(VisibleCallback = nameof(IsDungUrineReturnOn))]
         public double[] FractionIntakeNToAnimal { get; set; } = new double[] { 0 };
 
         /// <summary></summary>
         [Description("N concentration in the dung (g N / 100 g DM)")]
+        [Display(VisibleCallback = nameof(IsDungUrineReturnOn))]
         public double DungNConc { get; set; } = 2.6;
 
         /// <summary>Fraction of defoliated Biomass going to soil</summary>
         [Description("Fraction of dung/urine exported off paddock e.g. to lanes/camps (0-1). Single value or montly values.")]
+        [Display(VisibleCallback = nameof(IsDungUrineReturnOn))]
         public double[] FractionOfDungUrineOffPaddock { get; set; } = new double[] { 0 };
 
         /// <summary></summary>
         [Description("Depth that urine is added (mm)")]
         [Units("mm")]
+        [Display(VisibleCallback = nameof(IsDungUrineReturnOn))]
         public double DepthUrineIsAdded { get; set; }
 
         /// <summary></summary>
         [Description("Advanced excreta options")]
+        [Display(VisibleCallback = nameof(IsDungUrineReturnOn))]
         public bool ShowAdvancedExcretaOptions { get; set; }
 
         /// <summary></summary>
         [Description("Send some fraction of the calculated dung off-paddock - usually this should be zero (0-1)")]
         [Units("0-1")]
-        [Display(VisibleCallback = nameof(ShowAdvancedExcretaOptions))]
+        [Display(VisibleCallback = nameof(IsDungUrineAdvancedOn))]
         public double SendDungElsewhere { get; set; }
 
         /// <summary></summary>
         [Description("Send some fraction of the  calculated urine off-paddock - usually this should be zero (0-1)")]
         [Units("0-1")]
-        [Display(VisibleCallback = nameof(ShowAdvancedExcretaOptions))]
+        [Display(VisibleCallback = nameof(IsDungUrineAdvancedOn))]
         public double SendUrineElsewhere { get; set; }
 
         // Patching variables.
@@ -227,6 +242,7 @@ namespace Models.AgPasture
         /// </summary>
         [Separator("Patching options and parameters")]
         [Description("Use patching to return excreta to the soil?")]
+        [Display(VisibleCallback = nameof(IsDungUrineReturnOn))]
         public bool UsePatching { get; set; }
 
         /// <summary>Create pseudo patches?</summary>
@@ -259,6 +275,7 @@ namespace Models.AgPasture
         /// <summary> </summary>
         [Separator("Trampling")]
         [Description("Turn trampling on?")]
+        [Display(VisibleCallback = nameof(IsDungUrineReturnOn))]
         public bool TramplingOn { get; set; }
 
         /// <summary> </summary>
@@ -294,6 +311,12 @@ namespace Models.AgPasture
         /// Is minimum rotation length array enabled in the GUI?
         /// </summary>
         public bool IsMinimumRotationLengthArrayTurnedOn => IsTargetMassTurnedOn || IsFlexibleGrazingTurnedOn;
+
+        /// <summary>Show dung and urine return parameters?</summary>
+        public bool IsDungUrineReturnOn => !IsCutAndCarry;
+
+        /// <summary>Show dung and urine return advanced parameters?</summary>
+        public bool IsDungUrineAdvancedOn => IsDungUrineReturnOn && ShowAdvancedExcretaOptions;
 
         ////////////// Outputs //////////////
 
@@ -334,6 +357,12 @@ namespace Models.AgPasture
         [JsonIgnore]
         [Units("kgN/ha")]
         public double AmountDungNReturned { get; private set; }
+
+        /// <summary>Mass of clippings returned to soil surface (kg/ha).</summary>
+        public double ClippingsWtReturned { get; private set; }
+
+        /// <summary>N in clippings returned to soil surface )(kg N/ha).</summary>
+        public double ClippingsNReturned { get; private set; }
 
         /// <summary>Mass of herbage just before grazing.</summary>
         [JsonIgnore]
@@ -479,7 +508,8 @@ namespace Models.AgPasture
             DaysSinceGraze += 1;
             ProportionOfTotalDM = new double[zones.First().NumForages];
             PostGrazeDM = 0;
-
+            ClippingsWtReturned = 0;
+            ClippingsNReturned = 0;
             foreach (var zone in zones)
                 zone.OnStartOfDay();
         }
@@ -520,7 +550,17 @@ namespace Models.AgPasture
             foreach (var zone in zones)
                 zone.RemoveDMFromPlants(residual, speciesCutProportions);
 
-            DoUrineDungTrampling();
+            if (IsDungUrineReturnOn)
+                DoUrineDungTrampling();
+            else
+            {
+                // cut and carry system.
+                ClippingsWtReturned = GrazedDM * FractionClippingsReturned;
+                ClippingsNReturned = GrazedN * FractionClippingsReturned;
+                foreach (var zone in zones)
+                    zone.AddResidueToSoilSurface(ClippingsWtReturned, ClippingsNReturned, "grass");
+                summary.WriteMessage(this, $"The amount of plant DM added to the soil surface was {ClippingsWtReturned} and the amount of N added was {ClippingsNReturned}", MessageType.Diagnostic);
+            }
 
             // Calculate post-grazed dry matter.
             PostGrazeDM = zones.Sum(z => z.TotalDM);
@@ -897,18 +937,20 @@ namespace Models.AgPasture
                 // Perform dung deposition.
                 if (dungWt > 0)
                 {
-                    // If urine patches is turned on, dung will go to all surface organic models in scope,
-                    // otherwise dung will only go a single zone.
-                    foreach (var surfaceOrganicMatter in surfaceOrganicMatters)
-                    {
-                        var cropType = "RuminantDung_PastureFed";
-                        surfaceOrganicMatter.Add(dungWt, dungN, 0, cropType, null);
-                        summary.WriteMessage(simpleGrazing, $"For {simpleGrazing.Parent.Name}, the amount of dung DM added to the litter was {dungWt} and the amount of N added in the dung was {dungN}", MessageType.Diagnostic);
-                    }
+                    AddResidueToSoilSurface(dungWt, dungN, "RuminantDung_PastureFed");
+                    summary.WriteMessage(simpleGrazing, $"For {simpleGrazing.Parent.Name}, the amount of dung DM added to the litter was {dungWt} and the amount of N added in the dung was {dungN}", MessageType.Diagnostic);
                 }
 
                 summary.WriteMessage(this.Zone, $"Urine N added to the soil of {urineN} to a depth of {simpleGrazing.DepthUrineIsAdded} mm", MessageType.Diagnostic);
                 summary.WriteMessage(this.Zone, $"Dung N and C added to the surface organic matter {dungN}", MessageType.Diagnostic);
+            }
+
+            public void AddResidueToSoilSurface(double mass, double n, string residueType)
+            {
+                // If urine patches is turned on, dung will go to all surface organic models in scope,
+                // otherwise dung will only go a single zone.
+                foreach (var surfaceOrganicMatter in surfaceOrganicMatters)
+                    surfaceOrganicMatter.Add(mass, n, 0, residueType, null);
             }
         }
 
