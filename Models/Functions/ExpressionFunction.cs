@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core;
 
@@ -12,8 +13,16 @@ namespace Models.Functions
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class ExpressionFunction : Model, IFunction
+    public class ExpressionFunction : Model, IFunction, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
+        /// <summary>Gets the optional units</summary>
+        [Description("The optional units of the expressions result")]
+        public string Units { get; set; }
+
         /// <summary>The expression.</summary>
         [Core.Description("Expression")]
         private string expression;
@@ -48,7 +57,7 @@ namespace Models.Functions
                 Parse(fn, Expression);
                 parsed = true;
             }
-            FillVariableNames(fn, this, arrayIndex);
+            FillVariableNames(fn, this, arrayIndex, Structure);
             Evaluate(fn);
             if (fn.Results != null && arrayIndex != -1)
                 return fn.Results[arrayIndex];
@@ -77,8 +86,9 @@ namespace Models.Functions
         /// <param name="fn">The function.</param>
         /// <param name="RelativeTo">The relative to.</param>
         /// <param name="arrayIndex">The array index</param>
+        /// <param name="structure">Structure instance</param>
         /// <exception cref="System.Exception">Cannot find variable:  + sym.m_name +  in function:  + RelativeTo.Name</exception>
-        private static void FillVariableNames(ExpressionEvaluator fn, Model RelativeTo, int arrayIndex)
+        private static void FillVariableNames(ExpressionEvaluator fn, Model RelativeTo, int arrayIndex, IStructure structure)
         {
             List<Symbol> varUnfilled = fn.Variables;
             List<Symbol> varFilled = new List<Symbol>();
@@ -89,7 +99,7 @@ namespace Models.Functions
                 symFilled.m_type = ExpressionType.Variable;
                 symFilled.m_values = null;
                 symFilled.m_value = 0;
-                object sometypeofobject = RelativeTo.FindByPath(sym.m_name.Trim())?.Value;
+                object sometypeofobject = structure.Get(sym.m_name.Trim(), relativeTo:RelativeTo);
                 if (sometypeofobject == null)
                     throw new Exception("Cannot find variable: " + sym.m_name + " in function: " + RelativeTo.Name);
                 if (sometypeofobject is Array)
@@ -145,12 +155,13 @@ namespace Models.Functions
         /// </summary>
         /// <param name="Expression">The expression.</param>
         /// <param name="RelativeTo">The relative to.</param>
+        /// <param name="structure">Locator instance</param>
         /// <returns></returns>
-        public static object Evaluate(string Expression, Model RelativeTo)
+        public static object Evaluate(string Expression, Model RelativeTo, IStructure structure)
         {
             ExpressionEvaluator fn = new ExpressionEvaluator();
             Parse(fn, Expression);
-            FillVariableNames(fn, RelativeTo, -1);
+            FillVariableNames(fn, RelativeTo, -1, structure);
             Evaluate(fn);
             if (fn.Results != null)
                 return fn.Results;

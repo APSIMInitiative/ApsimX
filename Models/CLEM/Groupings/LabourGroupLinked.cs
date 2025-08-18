@@ -11,7 +11,7 @@ namespace Models.CLEM.Groupings
 {
     ///<summary>
     /// Provides a link to an existing labour group to identify individual ruminants
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -39,7 +39,8 @@ namespace Models.CLEM.Groupings
 
         private void GetAllLabourGroupsAvailable()
         {
-            groupsAvailable = FindAncestor<Zone>().FindAllDescendants<LabourGroup>().Where(a => a.Enabled);
+            var zone = Structure.FindParent<Zone>(recurse: true);
+            groupsAvailable = Structure.FindChildren<LabourGroup>(relativeTo: zone, recurse: true).Where(a => a.Enabled);
         }
 
         private List<string> GetAllLabourGroupNames()
@@ -129,7 +130,8 @@ namespace Models.CLEM.Groupings
             {
                 htmlWriter.Write($"<div class=\"filtername\">{Name} is linked to </div>");
 
-                var foundGroup = FindAncestor<Zone>().FindAllDescendants<LabourGroup>().Where(a => a.Enabled).Cast<Model>().Where(a => $"{a.Parent.Name}.{a.Name}" == ExistingGroupName).FirstOrDefault() as LabourGroup;
+                var zone = Structure.FindParent<Zone>(recurse: true);
+                var foundGroup = Structure.FindChildren<LabourGroup>(relativeTo: zone, recurse: true).Where(a => a.Enabled).Cast<Model>().Where(a => $"{a.Parent.Name}.{a.Name}" == ExistingGroupName).FirstOrDefault() as LabourGroup;
                 if (foundGroup != null)
                     htmlWriter.Write(foundGroup.GetFullSummary(foundGroup, new List<string>(), ""));
                 else

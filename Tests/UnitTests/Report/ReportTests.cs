@@ -1,6 +1,8 @@
 ﻿namespace UnitTests.Report
 {
+    using APSIM.Core;
     using APSIM.Shared.Utilities;
+    using APSIM.Soils;
     using Models;
     using Models.Core;
     using Models.Core.ApsimFile;
@@ -20,11 +22,13 @@
     {
         private Simulations simulations;
         private Simulation simulation;
+        private Node simulationNode;
         private IClock clock;
         private Report report;
         private MockStorage storage;
         private MockSummary summary;
         private Runner runner;
+        private Node head;
 
         /// <summary>
         /// Creates a simulation and links to various models. Used by all tests.
@@ -51,19 +55,24 @@
                             {
                                 VariableNames = new string[] { },
                                 EventNames = new string[] { "[Clock].EndOfDay" },
+                            },
+                            new Models.Soils.Physical()
+                            {
+                                Thickness = [ 100, 100, 200 ]
                             }
                         }
                     }
                 }
             };
-
-            Utilities.InitialiseModel(simulations);
+            head = Node.Create(simulations);
             simulation = simulations.Children[0] as Simulation;
             runner = new Runner(simulation);
             storage = simulation.Children[0] as MockStorage;
             summary = simulation.Children[1] as MockSummary;
             clock = simulation.Children[2] as Clock;
             report = simulation.Children[3] as Report;
+
+            simulationNode = head.Walk().First(n => n.Model is Simulation);
         }
 
         /// <summary>
@@ -85,6 +94,22 @@
             double[] expected = new double[10] { 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
 
             Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        /// <summary>
+        /// Ensure we catch an infinite recursion.
+        /// </summary>
+        [Test]
+        public void ReferenceAnotherReportVariableRecursion()
+        {
+            report.VariableNames = new string[]
+            {
+                "n + 1 as n"
+            };
+            Runner runner = new Runner(simulations);
+            List<Exception> errors = runner.Run();
+            Assert.That(errors.Count == 1);
+            Assert.That(errors[0].InnerException.Message, Does.Contain("Infinite recursion"));
         }
 
         /// <summary>
@@ -120,13 +145,11 @@
                 "[Clock].DoReport"
             };
             simulation.Children.AddRange(new[] { m1, m2 });
-            simulation.ParentAllDescendants();
-            m1.OnCreated();
-            m2.OnCreated();
+            var sims = Node.Create(simulations);
 
             var runners = new[]
             {
-                new Runner(simulation, runType: Runner.RunTypeEnum.MultiThreaded),
+                new Runner(sims.Model as Simulations, runType: Runner.RunTypeEnum.MultiThreaded),
             };
             foreach (Runner runner in runners)
             {
@@ -401,16 +424,16 @@
             sims.Children.Add(sim);
             sims.Children.Add(new Summary());
             sims.Children.Add(storage);
-            sims.ParentAllDescendants();
+            Node.Create(sims);
 
             sim.Prepare();
 
             storage.Writer.WaitForIdle();
             storage.Reader.Refresh();
-            
+
             Assert.That(storage.Reader.GetData("_Factors"), Is.Not.Null);
 
-            DataTable dtExpected = Utilities.CreateTable(new string[]                      { "CheckpointName", "CheckpointID", "SimulationName", "SimulationID", "ExperimentName", "FolderName", "FactorName", "FactorValue" },
+            DataTable dtExpected = Utilities.CreateTable(new string[] { "CheckpointName", "CheckpointID", "SimulationName", "SimulationID", "ExperimentName", "FolderName", "FactorName", "FactorValue" },
                                                     new List<object[]> { new object[] {        "Current",             1,        "",          1,          "exp1",          "F",         "Cultivar",      "cult1"   },
                                                                          new object[] {        "Current",             1,        "",          1,          "exp1",          "F",             "N",            0      } });
             DataTable dtActual = storage.Reader.GetData("_Factors");
@@ -429,11 +452,11 @@
         public static void TestReportingOnModelEvents()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Report.ReportOnEvents.apsimx");
-            Simulations file = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as Simulations;
+            Simulations file = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
 
             // This simulation needs a weather node, but using a legit
             // met component will just slow down the test.
-            IModel sim = file.FindInScope<Simulation>();
+            IModel sim = file.Node.Find<Simulation>();
             Model weather = new MockWeather();
             sim.Children.Add(weather);
             weather.Parent = sim;
@@ -443,7 +466,7 @@
             Runner.Run();
 
             // Check that the report reported on the correct dates.
-            var storage = file.FindInScope<IDataStore>();
+            var storage = file.Node.Find<IDataStore>();
             List<string> fieldNames = new List<string>() { "doy" };
 
             DataTable data = storage.Reader.GetData("ReportOnFertilisation", fieldNames: fieldNames);
@@ -470,7 +493,7 @@
         {
             Simulations file = Utilities.GetRunnableSim();
 
-            Report report = file.FindInScope<Report>();
+            Report report = file.Node.Find<Report>();
             report.Name = "Report"; // Just to make sure
             report.VariableNames = new string[] { "[Clock].Today.DayOfYear as doy" };
             report.EventNames = new string[]
@@ -480,7 +503,7 @@
                 "//[Clock].EndOfWeek // entire line should be ignored"
             };
 
-            IClock clock = file.FindInScope<Clock>();
+            IClock clock = file.Node.Find<Clock>();
             clock.StartDate = new DateTime(2017, 1, 1);
             clock.EndDate = new DateTime(2017, 3, 1);
 
@@ -490,7 +513,7 @@
                 throw errors[0];
 
             List<string> fieldNames = new List<string>() { "doy" };
-            IDataStore storage = file.FindInScope<IDataStore>();
+            IDataStore storage = file.Node.Find<IDataStore>();
             DataTable data = storage.Reader.GetData("Report", fieldNames: fieldNames);
             double[] actual = DataTableUtilities.GetColumnAsDoubles(data, "doy", CultureInfo.InvariantCulture);
             double[] expected = new double[] { 1, 8, 15, 22, 29, 36, 43, 50, 57 };
@@ -505,8 +528,7 @@
         public void TestArraySpecification()
         {
             var model = new MockModel() { Z = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 } };
-            simulation.Children.Add(model);
-            Utilities.InitialiseModel(simulation);
+            simulationNode.AddChild(model);
 
             report.VariableNames = new string[] { "[MockModel].Z[3]", "[MockModel].Z[10]" };
 
@@ -527,11 +549,10 @@
         public void TestArrayRangeWithStartSpecification()
         {
             var mod = new MockModel() { Z = new double[] { 1, 2, 3, 4 } };
-            simulation.Children.Add(mod);
-            simulation.Children.Remove(storage);
+            simulationNode.AddChild(mod);
             var datastore = new DataStore();
-            simulation.Children.Add(datastore);
-            Utilities.InitialiseModel(simulation);
+            simulationNode.ReplaceChild(storage, datastore);
+
 
             report.VariableNames = new string[] { "[MockModel].Z[3:]" };
 
@@ -562,11 +583,9 @@
         public void TestArrayRangeWithEndSpecification()
         {
             var mod = new MockModel() { Z = new double[] { 1, 2, 3 } };
-            simulation.Children.Add(mod);
-            simulation.Children.Remove(storage);
+            simulationNode.AddChild(mod);
             var datastore = new DataStore();
-            simulation.Children.Add(datastore);
-            Utilities.InitialiseModel(simulation);
+            simulationNode.ReplaceChild(storage, datastore);
 
             report.VariableNames = new string[] { "[MockModel].Z[:2]" };
 
@@ -596,11 +615,9 @@
         public void TestArrayRangeWithStartAndEndSpecification()
         {
             var mod = new MockModel() { Z = new double[] { 1, 2, 3 } };
-            simulation.Children.Add(mod);
-            simulation.Children.Remove(storage);
+            simulationNode.AddChild(mod);
             var datastore = new DataStore();
-            simulation.Children.Add(datastore);
-            Utilities.InitialiseModel(simulation);
+            simulationNode.ReplaceChild(storage, datastore);
 
             report.VariableNames = new string[] { "[MockModel].Z[2:3]" };
 
@@ -635,7 +652,7 @@
         {
             Simulations sims = Utilities.GetRunnableSim();
 
-            IModel paddock = sims.FindInScope<Zone>();
+            IModel paddock = sims.Node.Find<Zone>();
             Manager script = new Manager();
             script.Name = "Manager";
             script.Code = @"using System;
@@ -660,20 +677,20 @@ namespace Models
 
             paddock.Children.Add(script);
             script.Parent = paddock;
-            script.OnCreated();
-
-            Report report = sims.FindInScope<Report>();
+            Report report = sims.Node.Find<Report>();
             report.VariableNames = new string[]
             {
                 "[Manager].Script.Value as x"
             };
-            Runner runner = new Runner(sims);
+
+            var simulations = Node.Create(sims);
+            Runner runner = new Runner(simulations.Model as Simulations);
             List<Exception> errors = runner.Run();
             if (errors != null && errors.Count > 0)
                 throw new Exception("Errors while running sims", errors[0]);
 
             List<string> fieldNames = new List<string>() { "x" };
-            IDataStore storage = sims.FindInScope<IDataStore>();
+            IDataStore storage = sims.Node.Find<IDataStore>();
             DataTable data = storage.Reader.GetData("Report", fieldNames: fieldNames);
             string[] actual = DataTableUtilities.GetColumnAsStrings(data, "x", CultureInfo.InvariantCulture);
 
@@ -692,14 +709,13 @@ namespace Models
             report.GroupByVariableName = "[Mock].A";
 
             var model = new MockModelValuesChangeDaily
-                (aDailyValues: new double[] { 1, 1, 1, 2, 2, 2, 3, 3, 3,  3 },
+                (aDailyValues: new double[] { 1, 1, 1, 2, 2, 2, 3, 3, 3, 3 },
                  bDailyValues: new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })
             {
-                 Name = "Mock"
+                Name = "Mock"
             };
 
-            simulation.Children.Add(model);
-            Utilities.InitialiseModel(simulation);
+            simulationNode.AddChild(model);
 
             report.VariableNames = new string[]
             {
@@ -708,7 +724,7 @@ namespace Models
             };
 
             List<Exception> errors = runner.Run();
-            Assert.That(errors, Is.Not.Null);   
+            Assert.That(errors, Is.Not.Null);
             Assert.That(errors.Count, Is.EqualTo(0));
 
             Assert.That(storage.Get<double>("SumA"), Is.EqualTo(
@@ -793,8 +809,128 @@ namespace Models
             Utilities.ResolveLinks(simulation);
             Utilities.CallEventAll(simulation, "SubscribeToEvents");
 
-            var summary = simulation.FindDescendant<MockSummary>();
+            var summary = simulation.Node.FindChild<MockSummary>(recurse: true);
             Assert.That(summary.messages.First(), Is.EqualTo("WARNING: Report on StartOfFirstDay instead of StartOfSimulation. At StartOfSimulation, models may not be fully initialised."));
+        }
+
+        /// <summary>
+        /// Ensure a MM array specification (e.g. soil.water[300mm]) works.
+        /// </summary>
+        [Test]
+        public void TestArraySpecificationAsMM()
+        {
+            var model = new MockModel() { Z = new double[] { 1, 2, 3, 4, 5 } };
+            simulationNode.AddChild(model);
+
+            report.VariableNames = ["[MockModel].Z[300mm]"];
+
+            List<Exception> errors = runner.Run();
+            Assert.That(errors, Is.Not.Null);
+            Assert.That(errors.Count, Is.EqualTo(0));
+
+            Assert.That(storage.Get<double>("MockModel.Z(300mm)"), Is.EqualTo(
+                        new double[] { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 }));
+        }
+
+        /// <summary>
+        /// Ensure a MM array specification works with a layer (e.g. soil.water[250mm:350mm]).
+        /// </summary>
+        [Test]
+        public void TestArraySpecificationAsMMRangeWithinLayer()
+        {
+
+            MockModel model = new()
+            {
+                // mass        depths      conc
+                Z = [ 10,        // 0-100       0.1
+                      20,        // 100-200     0.2
+                      30 ]       // 200-400     0.15
+            };
+            simulationNode.AddChild(model);
+
+            report.VariableNames = ["[MockModel].Z[250mm:350mm]"];
+
+            List<Exception> errors = runner.Run();
+            Assert.That(errors, Is.Not.Null);
+            Assert.That(errors.Count, Is.EqualTo(0));
+
+            Assert.That(storage.Get<double>("MockModel.Z(250mm:350mm)"), Is.EqualTo(
+                        new double[] { 15, 15, 15, 15, 15, 15, 15, 15, 15, 15 }));   // 100 * 0.15
+        }
+
+        /// <summary>
+        /// Ensure a MM array specification works between layers (e.g. soil.water[250mm:350mm]).
+        /// </summary>
+        [Test]
+        public void TestArraySpecificationAsMMRangeBetweenLayers()
+        {
+            MockModel model = new()
+            {
+                // mass        depths      conc
+                Z = [ 10,        // 0-100       0.1
+                      20,        // 100-200     0.2
+                      30 ]       // 200-400     0.15
+            };
+            simulationNode.AddChild(model);
+
+            report.VariableNames = ["[MockModel].Z[150mm:300mm]"];
+
+            List<Exception> errors = runner.Run();
+            Assert.That(errors, Is.Not.Null);
+            Assert.That(errors.Count, Is.EqualTo(0));
+
+            Assert.That(storage.Get<double>("MockModel.Z(150mm:300mm)"), Is.EqualTo(
+                        new double[] { 25, 25, 25, 25, 25, 25, 25, 25, 25, 25 }));  // 50 * 0.2 + 100 * 0.15
+        }
+
+        /// <summary>
+        /// Ensure a MM array specification works between layers (e.g. soil.water[250mm:350mm]).
+        /// </summary>
+        [Test]
+        public void TestMultipleArraySpecifications()
+        {
+            MockModel model = new()
+            {
+                // mass        depths      conc
+                Z = [ 10,        // 0-100       0.1
+                      20,        // 100-200     0.2
+                      30 ]       // 200-400     0.15
+            };
+            simulationNode.AddChild(model);
+
+            report.VariableNames = ["[MockModel].Z[100mm:150mm]+[MockModel].Z[150mm:200mm]"];
+
+            List<Exception> errors = runner.Run();
+            Assert.That(errors, Is.Not.Null);
+            Assert.That(errors.Count, Is.EqualTo(0));
+
+            Assert.That(storage.Get<double>("MockModel.Z(100mm:150mm)+MockModel.Z(150mm:200mm)"), Is.EqualTo(
+                        new double[] { 20, 20, 20, 20, 20, 20, 20, 20, 20, 20 }));  // 50 * 0.2 + 50 * 0.20
+        }
+
+        /// <summary>
+        /// Ensure using a range specified in an expression calculates the right column name.
+        /// </summary>
+        [Test]
+        public void TestExpressionWithArrayRangeSpecifications()
+        {
+            MockModel model = new()
+            {
+                    // mass        depths      conc
+                Z = [ 10,        // 0-100       0.1
+                      20,        // 100-200     0.2
+                      30 ]       // 200-400     0.15
+            };
+            simulationNode.AddChild(model);
+
+            report.VariableNames = ["sum([MockModel].Z[1:2])"];
+
+            List<Exception> errors = runner.Run();
+            Assert.That(errors, Is.Not.Null);
+            Assert.That(errors.Count, Is.EqualTo(0));
+
+            Assert.That(storage.Get<double>("sum(MockModel.Z(1:2))"), Is.EqualTo(
+                        new double[] { 30, 30, 30, 30, 30, 30, 30, 30, 30, 30 }));  // 10+20
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿namespace UnitTests.Core.Run
 {
+    using APSIM.Core;
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
@@ -79,6 +80,7 @@
                         new DataStore(database)
                     }
                 };
+                var tree = Node.Create(simulation);
 
                 // Run simulations.
                 Runner runner = new Runner(simulation, runType: typeOfRun);
@@ -155,6 +157,7 @@
                         }
                     }
                 };
+                var tree = Node.Create(folder);
 
                 Runner runner = new Runner(folder, runType: typeOfRun);
 
@@ -235,6 +238,7 @@
                         }
                     }
                 };
+                var tree = Node.Create(folder);
 
                 Runner runner = new Runner(folder, runType: typeOfRun, simulationNamesToRun: new string[] { "Sim1" });
 
@@ -281,6 +285,7 @@
                         new MockModelThatThrows()
                     }
                 };
+                var tree = Node.Create(simulation);
 
                 // Run simulations.
                 Runner runner = new Runner(simulation, runType: typeOfRun);
@@ -337,9 +342,10 @@
                         }
                     }
                 };
+                var sims = Node.Create(simulations);
+                Runner runner = new Runner(sims.Model as Simulations, runType: typeOfRun, runTests: true);
 
                 // Run simulations.
-                Runner runner = new Runner(simulations, runType: typeOfRun, runTests: true);
                 var exceptions = runner.Run();
 
                 // Make sure an exception is returned.
@@ -395,15 +401,16 @@
                         }
                     }
                 };
+                var sims = Node.Create(simulations);
 
                 // Run simulations.
-                Runner runner = new Runner(simulations, runType: typeOfRun, runTests:true);
+                Runner runner = new Runner(sims.Model as Simulations, runType: typeOfRun, runTests:true);
                 List<Exception> errors = runner.Run();
                 Assert.That(errors, Is.Not.Null);
                 Assert.That(errors.Count, Is.EqualTo(0));
 
                 // Make sure an exception is returned.
-                var summary = simulations.FindDescendant<MockSummary>();
+                var summary = simulations.Node.FindChild<MockSummary>(recurse: true);
                 Assert.That(summary.messages.Find(m => m.Contains("Passed Test")), Is.Not.Null);
 
                 database.CloseDatabase();
@@ -436,6 +443,7 @@
                         new MockModelThatThrows()
                     }
                 };
+                var tree = Node.Create(simulation);
 
                 // Run simulations.
                 Runner runner = new Runner(simulation, runType: typeOfRun);
@@ -496,7 +504,7 @@
                     sim1
                 }
             };
-            sims.ParentAllDescendants();
+            var tree = Node.Create(sims);
 
             Runner runner = new Runner(sim1);
             List<Exception> errors = runner.Run();
@@ -533,6 +541,7 @@
                         new MockPostSimulationTool(doThrow: true) { Name = "PostSim" }
                     }
                 };
+                var tree = Node.Create(simulation);
 
                 Runner runner = new Runner(simulation, runType: typeOfRun);
 
@@ -570,35 +579,45 @@
         [Test]
         public void TestTablesModified()
         {
-            IModel sim1 = new Simulation()
+            static Simulation createSimulation(int number)
             {
-                Name = "sim1",
-                Children = new List<IModel>()
+                return new Simulation()
                 {
-                    new Report()
-                    {
-                        Name = "Report1",
-                        VariableNames = new[] { "[Clock].Today" },
-                        EventNames = new[] { "[Clock].DoReport" },
-                    },
-                    new MockSummary(),
-                    new Clock()
-                    {
-                        StartDate = new DateTime(2020, 1, 1),
-                        EndDate = new DateTime(2020, 1, 2),
-                    },
-                }
+                    Name = $"sim{number}",
+                    Children =
+                    [
+                        new Report()
+                        {
+                            Name = $"Report{number}",
+                            VariableNames = ["[Clock].Today"],
+                            EventNames = ["[Clock].DoReport"],
+                        },
+                        new MockSummary(),
+                        new Clock()
+                        {
+                            StartDate = new DateTime(2020, 1, 1),
+                            EndDate = new DateTime(2020, 1, 2),
+                        },
+                    ]
+                };
+            }
+
+            Simulations simulations = new()
+            {
+                Children =
+                [
+                    createSimulation(1),
+                    createSimulation(2),
+                    new DataStore()
+                ]
             };
 
-            IModel sim2 = Apsim.Clone(sim1);
-            sim2.Name = "sim2";
-            sim2.Children[0].Name = "Report2";
+            var testPostSim = new TestPostSim();
+            simulations.Children.First().Children.Add(testPostSim);
 
-            TestPostSim testPostSim = new TestPostSim();
-            sim1.Children.Add(testPostSim);
+            Simulations sims = Node.Create(simulations).Model as Simulations;
 
-            Simulations sims = Simulations.Create(new[] { sim1, sim2, new DataStore() });
-            Utilities.InitialiseModel(sims);
+            var tree = Node.Create(sims);
 
             Runner runner = new Runner(sims, simulationNamesToRun: new[] { "sim1" });
             List<Exception> errors = runner.Run();
@@ -671,6 +690,7 @@
                         new MockPostSimulationTool(doThrow: true) { Name = "PostSim" }
                     }
                 };
+                var tree = Node.Create(simulation);
 
                 Runner runner = new Runner(simulation, runType:typeOfRun, runSimulations:false);
 
@@ -682,7 +702,7 @@
 
                 // Simulation shouldn't have run. Check the summary messages to make
                 // sure there is NOT a 'Simulation completed' message.
-                var summary = simulation.FindDescendant<MockSummary>();
+                var summary = simulation.Node.FindChild<MockSummary>(recurse: true);
                 Assert.That(summary.messages.Count, Is.EqualTo(0));
 
                 Assert.That(runner.Progress, Is.EqualTo(1));
@@ -728,6 +748,7 @@
                         storage
                     }
                 };
+                var tree = Node.Create(sims);
 
                 Runner runner = new Runner(sims, runType: runType, runSimulations: false);
                 List<Exception> errors = runner.Run();
@@ -776,6 +797,7 @@
                     new DataStore(),
                 }
             };
+            var sims = Node.Create(simulations);
 
             // Create a temporary directory.
             var path = Path.Combine(Path.GetTempPath(), "RunDirectoryOfFiles");
@@ -783,10 +805,10 @@
                 Directory.Delete(path, true);
             Directory.CreateDirectory(path);
 
-            File.WriteAllText(Path.Combine(path, "Sim1.apsimx"), FileFormat.WriteToString(simulations));
+            File.WriteAllText(Path.Combine(path, "Sim1.apsimx"), sims.ToJSONString());
 
-            simulations.Children[0].Name = "Sim2";
-            File.WriteAllText(Path.Combine(path, "Sim2.apsimx"), FileFormat.WriteToString(simulations));
+            sims.Rename("Sim2");
+            File.WriteAllText(Path.Combine(path, "Sim2.apsimx"), sims.ToJSONString());
 
             var runner = new Runner(Path.Combine(path, "*.apsimx"));
             runner.Run();

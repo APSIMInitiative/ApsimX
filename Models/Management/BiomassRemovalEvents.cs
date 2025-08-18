@@ -8,6 +8,7 @@ using Models.Core;
 using Models.PMF;
 using Models.PMF.Interfaces;
 using Models.PMF.Phen;
+using APSIM.Core;
 
 namespace Models.Management
 {
@@ -22,8 +23,12 @@ namespace Models.Management
     [Serializable]
     [ViewName("UserInterface.Views.PropertyAndGridView")]
     [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
-    public class BiomassRemovalEvents : Model
+    public class BiomassRemovalEvents : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>Name of crop to remove biomass from.</summary>
         [Description("Crop to remove biomass from:")]
         [Display(Type = DisplayType.PlantName)]
@@ -65,7 +70,7 @@ namespace Models.Management
         public string[] RemovalDates { get; set; }
 
         /// <summary>List of all biomass removal fractions, per organ.</summary>
-        [Display(Type = DisplayType.SubModel)]
+        [Display(Type = DisplayType.None)]
         public List<BiomassRemovalOfPlantOrganType> BiomassRemovalFractions { get; set; }
 
         /// <summary>Cutting Event.</summary>
@@ -133,7 +138,7 @@ namespace Models.Management
                 checkRemoval(removalFraction);
                 if (removalFraction.Type == RemovalType)
                 {
-                    IOrgan organ = PlantInstanceToRemoveFrom.FindDescendant<IOrgan>(removalFraction.OrganName);
+                    IOrgan organ = Structure.FindChild<IOrgan>(removalFraction.OrganName, relativeTo: PlantInstanceToRemoveFrom, recurse: true);
                     (organ as IHasDamageableBiomass).RemoveBiomass(liveToRemove: removalFraction.LiveToRemove,
                                                                    deadToRemove: removalFraction.DeadToRemove,
                                                                    liveToResidue: removalFraction.LiveToResidue,
@@ -143,7 +148,7 @@ namespace Models.Management
 
             if ((StageToSet != "")&&(StageToSet != null))
             {
-                Phenology phenology = PlantInstanceToRemoveFrom.FindChild<Phenology>();
+                Phenology phenology = Structure.FindChild<Phenology>(relativeTo: PlantInstanceToRemoveFrom);
                 if (phenology != null)
                     phenology?.SetToStage(StageToSet);
                 else
@@ -195,11 +200,11 @@ namespace Models.Management
 
             //check if our plant is currently linked, link if not
             if (PlantInstanceToRemoveFrom == null)
-                PlantInstanceToRemoveFrom = this.Parent.FindDescendant<Plant>(NameOfPlantToRemoveFrom);
+                PlantInstanceToRemoveFrom = Structure.FindChild<Plant>(NameOfPlantToRemoveFrom, relativeTo: Parent as INodeModel, recurse: true);
 
             if (PlantInstanceToRemoveFrom != null)
                 if (PlantInstanceToRemoveFrom.Parent == null)
-                    PlantInstanceToRemoveFrom = this.Parent.FindDescendant<Plant>(NameOfPlantToRemoveFrom);
+                    PlantInstanceToRemoveFrom = Structure.FindChild<Plant>(NameOfPlantToRemoveFrom, relativeTo: Parent as INodeModel, recurse: true);
 
             if (PlantInstanceToRemoveFrom == null)
                 throw new Exception("BiomassRemovalEvents could not find a crop in this simulation.");
@@ -214,7 +219,7 @@ namespace Models.Management
                 Folder replacements = Folder.FindReplacementsFolder(PlantInstanceToRemoveFrom);
                 if (replacements != null)
                 {
-                    Plant plant = replacements.FindChild<Plant>(PlantInstanceToRemoveFrom.Name);
+                    Plant plant = Structure.FindChild<Plant>(PlantInstanceToRemoveFrom.Name, relativeTo: replacements);
                     if (plant != null)
                         PlantInstanceToRemoveFrom = plant;
                 }
@@ -222,8 +227,8 @@ namespace Models.Management
             catch
             { }
 
-            
-            List<IOrgan> organs = PlantInstanceToRemoveFrom.FindAllDescendants<IOrgan>().ToList();
+
+            List<IOrgan> organs = Structure.FindChildren<IOrgan>(relativeTo: PlantInstanceToRemoveFrom, recurse: true).ToList();
 
 
             //remove all non-matching plants

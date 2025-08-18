@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using APSIM.Core;
 using Models.Core;
 using Models.Functions;
 using Models.PMF.Interfaces;
@@ -18,8 +20,12 @@ namespace Models.ForageDigestibility
     [ViewName("UserInterface.Views.PropertyAndGridView")]
     [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
 
-    public class Forages : Model
+    public class Forages : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         private List<ForageMaterialParameters> _parameters = null;
         private List<ModelWithDigestibleBiomass> forageModels = null;
         private Dictionary<string, ExpressionFunction> digestibilityFunctions = new();
@@ -52,11 +58,20 @@ namespace Models.ForageDigestibility
                         CreateParametersUsingDefaults();
 
                     forageModels = new List<ModelWithDigestibleBiomass>();
-                    foreach (var forage in FindAllInScope<IHasDamageableBiomass>())
+                    foreach (var forage in Structure.FindAll<IHasDamageableBiomass>())
                         forageModels.Add(new ModelWithDigestibleBiomass(this, forage, Parameters));
                 }
                 return forageModels;
             }
+        }
+
+        /// <summary>
+        /// Perform initialisation.
+        /// </summary>
+        public override void OnCreated()
+        {
+            base.OnCreated();
+            CreateParametersUsingDefaults();
         }
 
         /// <summary>
@@ -113,6 +128,7 @@ namespace Models.ForageDigestibility
                 if (!digestibilityFunctions.TryGetValue(digestibilityString, out ExpressionFunction expression))
                 {
                     expression = new ExpressionFunction() { Parent = this, Expression = digestibilityString };
+                    Node.AddChild(expression);
                     digestibilityFunctions.Add(digestibilityString, expression);
                 }
                 return expression.Value();
@@ -122,33 +138,38 @@ namespace Models.ForageDigestibility
         /// <summary>Create parameters using default values.</summary>
         private void CreateParametersUsingDefaults()
         {
-            var materialNames = new List<string>();
-            foreach (var forage in FindAllInScope<IHasDamageableBiomass>())
+            if (Node != null)  // Can be null during deserialisation.
             {
-                foreach (var material in forage.Material)
+                var materialNames = new List<string>();
+                foreach (var forage in Node?.WalkScoped()
+                                            .Where(n => n.Model is IHasDamageableBiomass)
+                                            .Select(n => n.Model as IHasDamageableBiomass))
                 {
-                    if (!materialNames.Contains(material.Name))
+                    foreach (var material in forage.Material)
                     {
-                        string liveDigestibility = "0.7";
-                        string deadDigestibility = "0.3";
-                        if (material.Name.StartsWith("AGP"))
+                        if (!materialNames.Contains(material.Name))
                         {
-                            liveDigestibility = "FromModel";
-                            deadDigestibility = "FromModel";
-                        }
+                            string liveDigestibility = "0.7";
+                            string deadDigestibility = "0.3";
+                            if (material.Name.StartsWith("AGP"))
+                            {
+                                liveDigestibility = "FromModel";
+                                deadDigestibility = "FromModel";
+                            }
 
-                        if (_parameters == null)
-                            _parameters = new();
-                        Parameters.Add(new ForageMaterialParameters()
-                        {
-                            Name = material.Name,
-                            LiveDigestibility = liveDigestibility,
-                            DeadDigestibility = deadDigestibility,
-                            LiveFractionConsumable = 1,
-                            DeadFractionConsumable = 1,
-                            LiveMinimumBiomass = 100
-                        });
-                        materialNames.Add(material.Name);
+                            if (_parameters == null)
+                                _parameters = new();
+                            Parameters.Add(new ForageMaterialParameters()
+                            {
+                                Name = material.Name,
+                                LiveDigestibility = liveDigestibility,
+                                DeadDigestibility = deadDigestibility,
+                                LiveFractionConsumable = 1,
+                                DeadFractionConsumable = 1,
+                                LiveMinimumBiomass = 100
+                            });
+                            materialNames.Add(material.Name);
+                        }
                     }
                 }
             }
