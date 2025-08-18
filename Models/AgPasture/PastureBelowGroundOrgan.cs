@@ -17,11 +17,12 @@ namespace Models.AgPasture
 
     /// <summary>Describes a generic below ground organ of a pasture species.</summary>
     [Serializable]
-    public class PastureBelowGroundOrgan : Model, IScopeDependency
+    public class PastureBelowGroundOrgan : Model, IStructureDependency
     {
-        /// <summary>Scope supplied by APSIM.core.</summary>
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IScope Scope { private get; set; }
+        public IStructure Structure { private get; set; }
+
 
         /// <summary>Nutrient model.</summary>
         [Link(Type = LinkType.Ancestor)]
@@ -239,43 +240,43 @@ namespace Models.AgPasture
         public void Initialise(Zone zone, double minimumLiveWt)
         {
             // link to soil models parameters
-            soil = Scope.Find<Soil>(relativeTo: zone);
+            soil = Structure.Find<Soil>(relativeTo: zone);
             if (soil == null)
             {
                 throw new Exception($"Cannot find soil in zone {zone.Name}");
             }
 
-            soilPhysical = Scope.Find<IPhysical>(relativeTo: soil);
+            soilPhysical = Structure.Find<IPhysical>(relativeTo: soil);
             if (soilPhysical == null)
             {
                 throw new Exception($"Cannot find soil physical in soil {soil.Name}");
             }
 
-            waterBalance = Scope.Find<ISoilWater>(relativeTo: soil);
+            waterBalance = Structure.Find<ISoilWater>(relativeTo: soil);
             if (waterBalance == null)
             {
                 throw new Exception($"Cannot find a water balance model in soil {soil.Name}");
             }
 
-            soilCropData = soil.FindDescendant<SoilCrop>(species.Name + "Soil");
+            soilCropData = Structure.FindChild<SoilCrop>(species.Name + "Soil", relativeTo: soil, recurse: true);
             if (soilCropData == null)
             {
                 throw new Exception($"Cannot find a soil crop parameterisation called {species.Name + "Soil"}");
             }
 
-            nutrient = Scope.Find<INutrient>(relativeTo: zone);
+            nutrient = Structure.Find<INutrient>(relativeTo: zone);
             if (nutrient == null)
             {
                 throw new Exception($"Cannot find SoilNitrogen in zone {zone.Name}");
             }
 
-            no3 = Scope.Find<ISolute>("NO3", relativeTo: zone);
+            no3 = Structure.Find<ISolute>("NO3", relativeTo: zone);
             if (no3 == null)
             {
                 throw new Exception($"Cannot find NO3 solute in zone {zone.Name}");
             }
 
-            nh4 = Scope.Find<ISolute>("NH4", relativeTo: zone);
+            nh4 = Structure.Find<ISolute>("NH4", relativeTo: zone);
             if (nh4 == null)
             {
                 throw new Exception($"Cannot find NH4 solute in zone {zone.Name}");

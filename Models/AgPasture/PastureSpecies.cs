@@ -23,11 +23,12 @@ namespace Models.AgPasture
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public class PastureSpecies : Model, IPlant, ICanopy, IUptake, IScopedModel, IScopeDependency
+    public class PastureSpecies : Model, IPlant, ICanopy, IUptake, IScopedModel, IStructureDependency
     {
-        /// <summary>Scope supplied by APSIM.core.</summary>
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IScope Scope { private get; set; }
+        public IStructure Structure { private get; set; }
+
 
         /// <summary>Current cultivar.</summary>
         private Cultivar cultivarDefinition = null;
@@ -269,7 +270,7 @@ namespace Models.AgPasture
             {
 
                 // Find cultivar and apply cultivar overrides.
-                cultivarDefinition = FindAllDescendants<Cultivar>().FirstOrDefault(c => c.IsKnownAs(cultivar));
+                cultivarDefinition = Structure.FindChildren<Cultivar>(recurse: true).FirstOrDefault(c => c.IsKnownAs(cultivar));
                 if (cultivarDefinition != null)
                 {
                     mySummary.WriteMessage(this, $"Applying cultivar {cultivar}", MessageType.Diagnostic);
@@ -370,7 +371,7 @@ namespace Models.AgPasture
                 }
 
                 // 2. get the amount of soil water demanded NOTE: This is in L, not mm,
-                Zone parentZone = FindAncestor<Zone>();
+                Zone parentZone = Structure.FindParent<Zone>(recurse: true);
                 double waterDemand = myWaterDemand * parentZone.Area;
 
                 // 3. estimate fraction of water used up
@@ -2418,7 +2419,7 @@ namespace Models.AgPasture
                 if (roots != null)
                     return roots.First();
                 else
-                    return this.FindDescendant<PastureBelowGroundOrgan>();
+                    return Structure.FindChild<PastureBelowGroundOrgan>(recurse: true);
             }
         }
 
@@ -2483,7 +2484,7 @@ namespace Models.AgPasture
             foreach (RootZone rootZone in RootZonesInitialisations)
             {
                 // find the zone and get its soil
-                Zone zone = Scope.Find<Zone>(rootZone.ZoneName);
+                Zone zone = Structure.Find<Zone>(rootZone.ZoneName);
                 if (zone == null)
                     throw new Exception("Cannot find zone: " + rootZone.ZoneName);
 

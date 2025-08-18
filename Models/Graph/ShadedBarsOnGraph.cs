@@ -20,11 +20,11 @@ namespace Models
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Series))]
-    public class ShadedBarsOnGraph : Model, ICachableGraphable, IScopeDependency
+    public class ShadedBarsOnGraph : Model, ICachableGraphable, IStructureDependency
     {
-        /// <summary>Scope supplied by APSIM.core.</summary>
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IScope Scope { private get; set; }
+        public IStructure Structure { private get; set; }
 
         /// <summary>The table to search for phenological stage names.</summary>
         [NonSerialized]
@@ -52,11 +52,11 @@ namespace Models
         /// </summary>
         public string[] GetValidColumnNames()
         {
-            IDataStore storage = Scope.Find<IDataStore>();
+            IDataStore storage = Structure.Find<IDataStore>();
             if (storage == null)
                 return null;
 
-            Series series = FindAncestor<Series>();
+            Series series = Structure.FindParent<Series>(recurse: true);
             if (series == null)
                 return null;
 
@@ -69,7 +69,7 @@ namespace Models
         /// <returns></returns>
         public string[] GetValidSimNames()
         {
-            return GraphPage.FindSimulationDescriptions(FindAncestor<Series>())?.Select(s => s.Name)?.ToArray();
+            return GraphPage.FindSimulationDescriptions(Structure.FindParent<Series>(recurse: true))?.Select(s => s.Name)?.ToArray();
         }
 
         /// <summary>Return a list of extra fields that the definition should read.</summary>
@@ -90,7 +90,7 @@ namespace Models
                                                                   List<SimulationDescription> simDescriptions,
                                                                   List<string> simulationFilter = null)
         {
-            Series seriesAncestor = FindAncestor<Series>();
+            Series seriesAncestor = Structure.FindParent<Series>(recurse: true);
             if (seriesAncestor == null)
                 throw new Exception("ShadedBarsOnGraph model must be a descendant of a series");
             IEnumerable<SeriesDefinition> definitions = seriesAncestor.CreateSeriesDefinitions(storage, simDescriptions, simulationFilter);

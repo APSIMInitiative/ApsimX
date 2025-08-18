@@ -11,7 +11,7 @@ namespace Models.CLEM.Resources
     ///<summary>
     /// Store for all the biomass growing in the fields (pasture, crop residue etc)
     /// This acts like an AnimalFoodStore but in reality the food is in a field
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -40,7 +40,7 @@ namespace Models.CLEM.Resources
         {
             Items = new List<GrazeFoodStoreType>();
 
-            foreach (IModel childModel in FindAllChildren<IModel>())
+            foreach (IModel childModel in Structure.FindChildren<IModel>())
             {
                 switch (childModel.GetType().ToString())
                 {
@@ -61,7 +61,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Completed")]
         private new void OnSimulationCompleted(object sender, EventArgs e)
         {
-            foreach (GrazeFoodStoreType childModel in this.FindAllChildren<GrazeFoodStoreType>())
+            foreach (GrazeFoodStoreType childModel in Structure.FindChildren<GrazeFoodStoreType>())
                 childModel.EcologicalIndicatorsCalculated -= Resource_EcologicalIndicatorsCalculated;
 
             if (Items != null)

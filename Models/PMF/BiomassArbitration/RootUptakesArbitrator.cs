@@ -24,11 +24,11 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IPlant))]
-    public class RootUptakesArbitrator : Model, IUptake, IScopeDependency
+    public class RootUptakesArbitrator : Model, IUptake, IStructureDependency
     {
-        /// <summary>Scope supplied by APSIM.core.</summary>
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IScope Scope { private get; set; }
+        public IStructure Structure { private get; set; }
 
         ///1. Links
         ///------------------------------------------------------------------------------------------------
@@ -122,16 +122,16 @@ namespace Models.PMF
         virtual protected void OnSimulationCommencing(object sender, EventArgs e)
         {
             List<IHasWaterDemand> OrgansToDemandWater = new List<IHasWaterDemand>();
-            foreach (Model hwd in Scope.FindAll<IHasWaterDemand>(relativeTo: plant))
+            foreach (Model hwd in Structure.FindAll<IHasWaterDemand>(relativeTo: plant))
                 OrgansToDemandWater.Add(hwd as IHasWaterDemand);
             waterDemandingOrgans = OrgansToDemandWater;
 
             List<IWaterNitrogenUptake> OrgansToUptakeWaterAndN = new List<IWaterNitrogenUptake>();
-            foreach (Model wnu in Scope.FindAll<IWaterNitrogenUptake>(relativeTo: plant))
+            foreach (Model wnu in Structure.FindAll<IWaterNitrogenUptake>(relativeTo: plant))
                 OrgansToUptakeWaterAndN.Add(wnu as IWaterNitrogenUptake);
             uptakingOrgans = OrgansToUptakeWaterAndN;
 
-            biomassArbitrator = plant.FindChild<BiomassArbitrator>();
+            biomassArbitrator = Structure.FindChild<BiomassArbitrator>(relativeTo: plant);
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -141,7 +141,7 @@ namespace Models.PMF
         public void OnPlantSowing(object sender, SowingParameters data)
         {
             List<double> zoneAreas = new List<double>();
-            List<Zone> zones = Scope.FindAll<Zone>().ToList();
+            List<Zone> zones = Structure.FindAll<Zone>().ToList();
             foreach (Zone z in zones)
                 zoneAreas.Add(z.Area);
             WaterSupply = new PlantWaterOrNDelta(zoneAreas);

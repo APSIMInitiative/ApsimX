@@ -111,7 +111,8 @@ namespace Models.Core
             }
 
             // Updates the parameters from the manager model.
-            IModel pathObject = model.FindDescendant<Manager>(StringUtilities.CleanStringOfSymbols(path.Split('.').First()));
+            var cleanPath = StringUtilities.CleanStringOfSymbols(path.Split('.').First());
+            IModel pathObject = model.Node.FindChild<Manager>(cleanPath, recurse: true);
             if (pathObject is Manager manager)
                 manager.GetParametersFromScriptModel();
 
@@ -183,6 +184,12 @@ namespace Models.Core
             }
         }
 
+        /// <summary>Evaluates whether or not a prospective override path matches up with anything.</summary>
+        /// <param name="relativeTo">The model to check relative to.</param>
+        /// <param name="path">The path to be checked against relativeTo.</param>
+        /// <returns>True if there is at least one hit.</returns>
+        public static bool PathHasMatches(IModel relativeTo, string path) => FindAllByPath(relativeTo, path).Any();
+
         /// <summary>
         /// Change the value of the property.
         /// </summary>
@@ -218,7 +225,7 @@ namespace Models.Core
             IModel replacement;
             if (string.IsNullOrEmpty(replacementPath))
             {
-                replacement = extFile.FindAllDescendants().Where(d => typeToFind.IsAssignableFrom(d.GetType())).FirstOrDefault();
+                replacement = extFile.Node.FindChildren<IModel>(recurse: true).Where(d => typeToFind.IsAssignableFrom(d.GetType())).FirstOrDefault();
                 if (replacement == null)
                     throw new Exception($"Unable to find replacement model of type {typeToFind.Name} in file {replacementFile}");
             }

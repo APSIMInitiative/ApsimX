@@ -55,11 +55,12 @@ namespace Models.Optimisation
     [ViewName("UserInterface.Views.PropertyAndGridView")]
     [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
-    public class CroptimizR : Model, IRunnable, IReportsStatus, IScopeDependency
+    public class CroptimizR : Model, IRunnable, IReportsStatus, IStructureDependency
     {
-        /// <summary>Scope supplied by APSIM.core.</summary>
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IScope Scope { private get; set; }
+        public IStructure Structure { private get; set; }
+
 
         /// <summary>
         /// File name of the generated csv file containing croptimizR
@@ -266,7 +267,7 @@ namespace Models.Optimisation
         /// </summary>
         private string GenerateApsimXFile()
         {
-            Simulations rootNode = FindAncestor<Simulations>();
+            Simulations rootNode = Structure.FindParent<Simulations>(recurse: true);
             string apsimxFileName = GetTempFileName("input_file.apsimx");
 
             Simulations sims = new Simulations();
@@ -278,7 +279,7 @@ namespace Models.Optimisation
                 sims.Children.Add(Apsim.Clone(replacements));
 
             // Search for IDataStore, not DataStore - to allow for StorageViaSockets.
-            IDataStore storage = Scope.Find<IDataStore>();
+            IDataStore storage = Structure.Find<IDataStore>();
             IModel newDataStore = new DataStore();
             if (storage != null && storage is IModel m)
                 newDataStore.Children.AddRange(m.Children.Select(c => Apsim.Clone(c)));
@@ -293,7 +294,7 @@ namespace Models.Optimisation
                 originalFile = storage?.FileName;
 
             // Copy files across.
-            foreach (IReferenceExternalFiles fileReference in (rootNode ?? sims).FindAllDescendants<IReferenceExternalFiles>())
+            foreach (IReferenceExternalFiles fileReference in Structure.FindChildren<IReferenceExternalFiles>(relativeTo: rootNode ?? sims, recurse: true))
             {
                 foreach (string file in fileReference.GetReferencedFileNames())
                 {
@@ -313,7 +314,7 @@ namespace Models.Optimisation
         /// <param name="message">Message to be written.</param>
         private void WriteMessage(string message)
         {
-            IDataStore storage = Scope.Find<IDataStore>();
+            IDataStore storage = Structure.Find<IDataStore>();
             if (storage == null)
                 throw new ApsimXException(this, "No datastore is available!");
 
@@ -361,7 +362,7 @@ namespace Models.Optimisation
         private string GetSimulationNames()
         {
             List<string> simulationNames = new List<string>();
-            foreach (ISimulationDescriptionGenerator generator in this.FindAllDescendants<ISimulationDescriptionGenerator>())
+            foreach (ISimulationDescriptionGenerator generator in Structure.FindChildren<ISimulationDescriptionGenerator>(recurse: true))
                 if (!(generator is Simulation sim && sim.Parent is ISimulationDescriptionGenerator))
                     simulationNames.AddRange(generator.GenerateSimulationDescriptions().Select(s => $"'{s.Name}'"));
 
@@ -448,7 +449,7 @@ namespace Models.Optimisation
                 Status = "Installing R Packages";
                 R r = new R(cancelToken.Token);
                 r.InstallPackages("remotes", "dplyr", "nloptr", "DiceDesign", "DBI", "cli");
-                r.InstallFromGithub("hol430/ApsimOnR", "SticsRPacks/CroptimizR");
+                r.InstallFromGithub("APSIMInitiative/ApsimOnR", "SticsRPacks/CroptimizR");
 
                 Status = "Running Parameter Optimization";
 
@@ -462,13 +463,13 @@ namespace Models.Optimisation
             // Copy output files into appropriate output directory, if one is specified. Otherwise, delete them.
             Status = "Reading Output";
             DataTable output = null;
-            string apsimxFileDir = FindAncestor<Simulations>()?.FileName;
+            string apsimxFileDir = Structure.FindParent<Simulations>(recurse: true)?.FileName;
             if (string.IsNullOrEmpty(apsimxFileDir))
-                apsimxFileDir = FindAncestor<Simulation>()?.FileName;
+                apsimxFileDir = Structure.FindParent<Simulation>(recurse: true)?.FileName;
             if (!string.IsNullOrEmpty(apsimxFileDir))
                 apsimxFileDir = Path.GetDirectoryName(apsimxFileDir);
 
-            IDataStore storage = Scope.Find<IDataStore>();
+            IDataStore storage = Structure.Find<IDataStore>();
             bool firstFile = true;
             foreach (string file in Directory.EnumerateFiles(outputPath))
             {
@@ -489,7 +490,7 @@ namespace Models.Optimisation
             // Now, we run the simulations with the optimal values, and store
             // the results in a checkpoint called 'After'. Checkpointing has
             // not been implemented on the sockets storage implementation.
-            if (output != null && Scope.Find<IDataStore>().Writer is DataStoreWriter)
+            if (output != null && Structure.Find<IDataStore>().Writer is DataStoreWriter)
             {
                 Status = "Running simulations with optimised parameters";
                 var optimalValues = GetOptimalValues(output);
@@ -524,7 +525,7 @@ namespace Models.Optimisation
         /// <param name="fileName">Name of the apsimx file run by the optimiser.</param>
         private void RunSimsWithOptimalValues(string fileName, string checkpointName, IEnumerable<Override> optimalValues)
         {
-            IDataStore storage = Scope.Find<IDataStore>();
+            IDataStore storage = Structure.Find<IDataStore>();
 
             // First, clone the simulations (we don't want to change the values
             // of the parameters in the original file).
@@ -533,7 +534,7 @@ namespace Models.Optimisation
             // Apply the optimal values to the cloned simulations.
             Overrides.Apply(clonedSims, optimalValues);
 
-            DataStore clonedStorage = clonedSims.FindChild<DataStore>();
+            DataStore clonedStorage = Structure.FindChild<DataStore>(relativeTo: clonedSims);
             clonedStorage.Close();
             clonedStorage.CustomFileName = storage.FileName;
             clonedStorage.Open();

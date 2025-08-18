@@ -25,9 +25,12 @@ namespace Models.PMF.SimplePlantModels
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class ScrumCropInstance : Model, ILocatorDependency
+    public class ScrumCropInstance : Model, IStructureDependency
     {
-        [NonSerialized] private ILocator locator;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
 
         /// <summary>Harvesting Event.</summary>
         public event EventHandler<EventArgs> Harvesting;
@@ -388,9 +391,6 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Publicises the Nitrogen demand for this crop instance. Occurs when a plant is sown.</summary>
         public event EventHandler<ScrumFertDemandData> SCRUMTotalNDemand;
 
-        /// <summary>Locator supplied by APSIM kernel.</summary>
-        public void SetLocator(ILocator locator) => this.locator = locator;
-
         /// <summary>Calculates the amount of N required to grow the expected yield.</summary>
         /// <param name="yieldExpected">Fresh yield expected at harvest (t/ha)</param>
         /// <returns>The amount of N required by the crop (kg/ha)</returns>
@@ -555,7 +555,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Establishes this crop instance (sets SCRUM running).</summary>
         public void Establish(ScrumManagementInstance management)
         {
-            var soilCrop = soil.FindDescendant<SoilCrop>(scrum.Name + "Soil");
+            var soilCrop = Structure.FindChild<SoilCrop>(scrum.Name + "Soil", relativeTo: soil, recurse: true);
 
             // SPRUM sets soil KL to 1 and uses the KL modifier to determine appropriate kl based on root depth
             for (int d = 0; d < soilCrop.KL.Length; d++)
@@ -586,10 +586,15 @@ namespace Models.PMF.SimplePlantModels
             }
 
             // initialise this crop instance in SCRUM
-            scrum.Children.Add(currentCrop);
+            // NOTE: I (Dean) had to change the cultivar name to avoid two models with the same name in scope
+            // i.e. SCRUM_Pakchoi (cultivar) and SCRUM_Pakchoi (ScrumCropInstance). This caused problems with
+            // report: [SCRUM_Pakchoi].ProductHarvested.Wt would fail because [SCRUM_Pakchoi] would find the
+            // cultivar, not the ScrumCropInstance leading to ProductHarvested not found.
+            currentCrop.Name += "Cultivar";
+            scrum.AddCultivar(currentCrop);
             double cropPopulation = 1.0;
             double rowWidth = 0.0;
-            scrum.Sow(cultivar: CropName, population: cropPopulation, depth: PlantingDepth, rowSpacing: rowWidth, maxCover: MaxCover);
+            scrum.Sow(cultivar: currentCrop.Name, population: cropPopulation, depth: PlantingDepth, rowSpacing: rowWidth, maxCover: MaxCover);
             if (management.EstablishStage.ToString() != "Seed")
             {
                 phenology.SetToStage(StageNumbers[management.EstablishStage.ToString()]);
@@ -768,20 +773,20 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Triggers the removal of biomass from various organs.</summary>
         public void HarvestScrumCrop()
         {
-            Biomass initialCropBiomass = (Biomass)locator.Get("[SCRUM].Product.Total");
+            Biomass initialCropBiomass = (Biomass)Structure.Get("[SCRUM].Product.Total");
             product.RemoveBiomass(liveToRemove: 1.0 - FieldLoss,
                                   deadToRemove: 1.0 - FieldLoss,
                                   liveToResidue: FieldLoss,
                                   deadToResidue: FieldLoss);
-            Biomass finalCropBiomass = (Biomass)locator.Get("[SCRUM].Product.Total");
+            Biomass finalCropBiomass = (Biomass)Structure.Get("[SCRUM].Product.Total");
             ProductHarvested = initialCropBiomass - finalCropBiomass;
 
-            initialCropBiomass = (Biomass)locator.Get("[SCRUM].Stover.Total");
+            initialCropBiomass = (Biomass)Structure.Get("[SCRUM].Stover.Total");
             stover.RemoveBiomass(liveToRemove: ResidueRemoval,
                                  deadToRemove: ResidueRemoval,
                                  liveToResidue: 1.0 - ResidueRemoval,
                                  deadToResidue: 1.0 - ResidueRemoval);
-            finalCropBiomass = (Biomass)locator.Get("[SCRUM].Stover.Total");
+            finalCropBiomass = (Biomass)Structure.Get("[SCRUM].Stover.Total");
             StoverRemoved = initialCropBiomass - finalCropBiomass;
             if (Harvesting != null)
             { Harvesting.Invoke(this, new EventArgs()); }
@@ -795,7 +800,7 @@ namespace Models.PMF.SimplePlantModels
             scrum.EndCrop();
 
             // remove this crop instance from SCRUM and reset parameters
-            scrum.Children.Remove(currentCrop);
+            scrum.Node.RemoveChild(currentCrop);
             cropEstablished = false;
             cropTerminating = true;
         }

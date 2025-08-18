@@ -40,11 +40,11 @@ namespace Models.LifeCycle
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LifeCycle))]
-    public class LifeCyclePhase : Model, IScopeDependency
+    public class LifeCyclePhase : Model, IStructureDependency
     {
-        /// <summary>Scope supplied by APSIM.core.</summary>
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IScope Scope { private get; set; }
+        public IStructure Structure { private get; set; }
 
         /// <summary>Returns change (0-1) in PhysiologicalAge of the cohort being processed</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -175,10 +175,10 @@ namespace Models.LifeCycle
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             ProgenyDestinations = new List<ProgenyDestinationPhase>();
-            foreach (ProgenyDestinationPhase pdest in this.FindAllChildren<ProgenyDestinationPhase>())
+            foreach (ProgenyDestinationPhase pdest in Structure.FindChildren<ProgenyDestinationPhase>())
                 ProgenyDestinations.Add(pdest);
             MigrantDestinations = new List<MigrantDestinationPhase>();
-            foreach (MigrantDestinationPhase mdest in this.FindAllChildren<MigrantDestinationPhase>())
+            foreach (MigrantDestinationPhase mdest in Structure.FindChildren<MigrantDestinationPhase>())
                 MigrantDestinations.Add(mdest);
         }
 
@@ -238,11 +238,11 @@ namespace Models.LifeCycle
                             throw new Exception(FullPath + " is predicting values for migration but has not MigrantDestinationPhase specified");
                         if (destEmigrants > 0)
                         {
-                            var zone = Parent.FindAncestor<Zone>();
-                            LifeCycle mDestinationCycle = Scope.Find<LifeCycle>(mdest.NameOfLifeCycleForMigrants, relativeTo: zone);
+                            var zone = Structure.FindParent<Zone>(relativeTo: Parent as INodeModel, recurse: true);
+                            LifeCycle mDestinationCycle = Structure.Find<LifeCycle>(mdest.NameOfLifeCycleForMigrants, relativeTo: zone);
                             if (mDestinationCycle == null)
                                 throw new Exception(FullPath + " could not find a destination LifeCycle for migrants called " + mdest.NameOfLifeCycleForMigrants);
-                            LifeCyclePhase mDestinationPhase = mDestinationCycle.FindChild<LifeCyclePhase>(mdest.NameOfPhaseForMigrants);
+                            LifeCyclePhase mDestinationPhase = Structure.FindChild<LifeCyclePhase>(mdest.NameOfPhaseForMigrants, relativeTo:mDestinationCycle);
                             if (mDestinationPhase == null)
                                 throw new Exception(FullPath + " could not find a destination LifeCyclePhase for migrants called " + mdest.NameOfPhaseForMigrants);
 
@@ -273,11 +273,11 @@ namespace Models.LifeCycle
 
                         if (arrivals > 0)
                         {
-                            var zone = Parent.FindAncestor<Zone>();
-                            LifeCycle pDestinationCylce = Scope.Find<LifeCycle>(pdest.NameOfLifeCycleForProgeny, relativeTo: zone);
+                            var zone = Structure.FindParent<Zone>(relativeTo: Parent as INodeModel, recurse: true);
+                            LifeCycle pDestinationCylce = Structure.Find<LifeCycle>(pdest.NameOfLifeCycleForProgeny, relativeTo: zone);
                             if (pDestinationCylce == null)
                                 throw new Exception(FullPath + " could not find a destination LifeCycle for progeny called " + pdest.NameOfLifeCycleForProgeny);
-                            LifeCyclePhase pDestinationPhase = pDestinationCylce.FindChild<LifeCyclePhase>(pdest.NameOfPhaseForProgeny);
+                            LifeCyclePhase pDestinationPhase = Structure.FindChild<LifeCyclePhase>(pdest.NameOfPhaseForProgeny, relativeTo:pDestinationCylce);
                             if (pDestinationPhase == null)
                                 throw new Exception(FullPath + " could not find a destination LifeCyclePhase for progeny called " + pdest.NameOfPhaseForProgeny);
 

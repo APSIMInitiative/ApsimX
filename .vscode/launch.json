@@ -108,10 +108,39 @@
                 "threadExit": false
             },
             "args": [
-                // "C:/Users/RIC394/Downloads/APSIM.Workflow test docs/test1/",
-                // "-v"
-                "-l"
+                "-d",
+                "C:/Users/RIC394/source/repos/ApsimX/Tests/Validation/Canola",
+                // "C:/Users/RIC394/source/repos/ApsimX/Tests/Validation/Maize",
+                "-v",
+                // "-l"
             ]
         },
+        {
+            "name": "Apsim.Workflow: Splitter",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder}/bin/Debug/net8.0/Apsim.Workflow.dll",
+            "preLaunchTask": "Build Debug",            
+            "cwd": "${workspaceFolder}",            
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "requireExactSource": false,
+            "logging": {
+                "moduleLoad": false,
+                "threadExit": false
+            },
+            "symbolOptions": {
+                "searchMicrosoftSymbolServer": false
+            },
+            "args": [
+                // "C:/git/ApsimX/Tests/Validation/Chickpea/Chickpea.apsimx",
+                // "-s",
+                // "C:/git/ApsimX/APSIM.Workflow/Resources/chickpea.json"
+                "-d",
+                "C:/Users/RIC394/source/repos/ApsimX/Tests/Validation/Canola/",
+                "-s",
+                ""
+            ]
+        }
     ]
 }

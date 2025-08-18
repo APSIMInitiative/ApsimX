@@ -11,11 +11,12 @@ namespace Models.PMF.Arbitrator
     /// <summary>The method used to Retranslocate Biomass Type</summary>
     [Serializable]
     [ValidParent(ParentType = typeof(BiomassTypeArbitrator))]
-    public class C4RetranslocationMethod : Model, IPartitionMethod, IScopeDependency
+    public class C4RetranslocationMethod : Model, IPartitionMethod, IStructureDependency
     {
-        /// <summary>Scope supplied by APSIM.core.</summary>
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IScope Scope { private get; set; }
+        public IStructure Structure { private get; set; }
+
 
         /// <summary>Determines Nutrient limitations to DM allocations</summary>
         [Link(Type = LinkType.Ancestor, ByName = true)]
@@ -41,7 +42,7 @@ namespace Models.PMF.Arbitrator
                     double BiomassRetranslocated = 0;
                     if (MathUtilities.IsPositive(BAT.TotalRetranslocationSupply))
                     {
-                        var phenology = Scope.Find<Phenology>();
+                        var phenology = Structure.Find<Phenology>();
                         if (phenology.Beyond("EndGrainFill"))
                             return;
                         arbitrationMethod.DoAllocation(Organs, BAT.TotalRetranslocationSupply, ref BiomassRetranslocated, BAT);

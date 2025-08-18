@@ -26,11 +26,11 @@ namespace Models.AgPasture
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(Simulation))]
-    public class SimpleGrazing : Model, IScopeDependency
+    public class SimpleGrazing : Model, IStructureDependency
     {
-        /// <summary>Scope supplied by APSIM.core.</summary>
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IScope Scope { private get; set; }
+        public IStructure Structure { private get; set; }
 
         [Link] IClock clock = null;
         [Link] ISummary summary = null;
@@ -399,7 +399,7 @@ namespace Models.AgPasture
         {
             if (UsePatching)
             {
-                urineDungPatches = new UrineDungPatches(this, Scope, PseudoPatches, ZoneCount, urineReturnType,
+                urineDungPatches = new UrineDungPatches(this, Structure, PseudoPatches, ZoneCount, urineReturnType,
                                                         UrineReturnPattern, PseudoRandomSeed, DepthUrineIsAdded, maxEffectiveNConcentration);
                 urineDungPatches.OnPreLink();
             }
@@ -423,7 +423,7 @@ namespace Models.AgPasture
                                                                        .Sum(z => z.Area);
             zones = forages.ModelsWithDigestibleBiomass.GroupBy(f => f.Zone,
                                                                 f => f,
-                                                                (z, f) => new ZoneWithForage(z, Scope, f.ToList(), areaOfAllZones, summary, urineDungPatches, simpleCow))
+                                                                (z, f) => new ZoneWithForage(z, Structure, f.ToList(), areaOfAllZones, summary, urineDungPatches, simpleCow))
                                                        .ToList();
 
             if (GrazingRotationType == GrazingRotationTypeEnum.TargetMass)
@@ -486,7 +486,7 @@ namespace Models.AgPasture
           );
         }
 
-        urineDungPatches?.OnStartOfSimulation();
+        urineDungPatches?.OnStartOfSimulation(Structure);
     }
 
         /// <summary>This method is invoked at the beginning of each day to perform management actions.</summary>
@@ -691,13 +691,13 @@ namespace Models.AgPasture
 
             /// <summary>onstructor</summary>
             /// <param name="zone">Our zone.</param>
-            /// <param name="scope">Scope instance</param>
+            /// <param name="structure">Scope instance</param>
             /// <param name="forages">Our forages.</param>
             /// <param name="areaOfAllZones">The area of all zones in the simulation.</param>
             /// <param name="summary">The Summary file.</param>
             /// <param name="urineDungPatches">An instance for urine / dung return for patching. Can be null.</param>
             /// <param name="simpleCow">Optional simpleCow instance</param>
-            public ZoneWithForage(Zone zone, IScope scope, List<ModelWithDigestibleBiomass> forages, double areaOfAllZones,
+            public ZoneWithForage(Zone zone, IStructure structure, List<ModelWithDigestibleBiomass> forages, double areaOfAllZones,
                                   ISummary summary, UrineDungPatches urineDungPatches,
                                   SimpleCow simpleCow)
             {
@@ -705,9 +705,9 @@ namespace Models.AgPasture
                 this.forages = forages;
                 this.urineDungPatches = urineDungPatches;
                 this.simpleCow = simpleCow;
-                surfaceOrganicMatter = scope.Find<SurfaceOrganicMatter>(relativeTo: zone);
-                urea = scope.Find<Solute>("Urea", relativeTo: zone);
-                physical = scope.Find<IPhysical>(relativeTo: zone);
+                surfaceOrganicMatter = structure.Find<SurfaceOrganicMatter>(relativeTo: zone);
+                urea = structure.Find<Solute>("Urea", relativeTo: zone);
+                physical = structure.Find<IPhysical>(relativeTo: zone);
                 areaWeighting = zone.Area / areaOfAllZones;
                 this.summary = summary;
             }

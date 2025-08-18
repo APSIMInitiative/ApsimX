@@ -86,7 +86,7 @@ namespace UserInterface.Presenters
 
             foreach (OrganicPool pool in nutrient.Node.FindAll<OrganicPool>())
             {
-                foreach (OrganicFlow cFlow in pool.FindAllChildren<OrganicFlow>())
+                foreach (OrganicFlow cFlow in pool.Node.FindChildren<OrganicFlow>())
                 {
                     foreach (string destinationName in cFlow.DestinationNames)
                     {
@@ -124,7 +124,7 @@ namespace UserInterface.Presenters
                 model.DirectedGraphInfo.AddNode(node);
             }
             foreach (Solute solute in nutrient.Node.FindAll<ISolute>()) {
-                foreach (NFlow nitrogenFlow in nutrient.FindAllChildren<NFlow>().Where(flow => flow.SourceName == solute.Name)) {
+                foreach (NFlow nitrogenFlow in nutrient.Node.FindChildren<NFlow>().Where(flow => flow.SourceName == solute.Name)) {
                     {
                         string destName = nitrogenFlow.DestinationName;
                         if (destName == null)

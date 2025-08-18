@@ -20,11 +20,11 @@ namespace Models.Functions
         "Optional full or partial removal of accumulated values can occur on specified events, stages or dates")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SetOnEvent : Model, IFunction, IScopeDependency
+    public class SetOnEvent : Model, IFunction, IStructureDependency
     {
-        /// <summary>Scope supplied by APSIM.core.</summary>
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IScope Scope { private get; set; }
+        public IStructure Structure { private get; set; }
 
         ///Links
         /// -----------------------------------------------------------------------------------------------------------
@@ -97,11 +97,11 @@ namespace Models.Functions
             setValue = PreSetValue.Value();
             if (!String.IsNullOrEmpty(NameOfPlantToLink))
             {
-                parentPhenology = Scope.Find<Plant>(NameOfPlantToLink).Phenology;
+                parentPhenology = Structure.Find<Plant>(NameOfPlantToLink).Phenology;
             }
             else
             {
-                parentPhenology = FindAllAncestors<Plant>().FirstOrDefault()?.Phenology;
+                parentPhenology = Structure.FindParents<Plant>().FirstOrDefault()?.Phenology;
             }
         }
 

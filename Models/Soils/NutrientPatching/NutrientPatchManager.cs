@@ -20,11 +20,12 @@ namespace Models.Soils.NutrientPatching
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class NutrientPatchManager : Model, INutrient, INutrientPatchManager, IScopeDependency
+    public class NutrientPatchManager : Model, INutrient, INutrientPatchManager, IStructureDependency
     {
-        /// <summary>Scope supplied by APSIM.core.</summary>
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IScope Scope { private get; set; }
+        public IStructure Structure { private get; set; }
+
 
         [Link]
         private IClock clock = null;
@@ -551,16 +552,16 @@ namespace Models.Soils.NutrientPatching
                     throw new Exception("NutrientPatchManager must be the last child of soil");
 
                 // Find the physical node.
-                soilPhysical = Scope.Find<Physical>();
-                clock = Scope.Find<Clock>();
+                soilPhysical = Structure.Find<Physical>();
+                clock = Structure.Find<Clock>();
 
                 // Create a new nutrient patch.
-                var newPatch = new NutrientPatch(soilPhysical.Thickness, this, Scope);
+                var newPatch = new NutrientPatch(soilPhysical.Thickness, this, Structure);
                 newPatch.CreationDate = clock.Today;
                 newPatch.Name = "base";
                 patches.Add(newPatch);
                 Node.AddChild(newPatch.Nutrient);
-                Structure.ReconnectLinksAndEvents(newPatch.Nutrient);
+                Models.Core.ApsimFile.Structure.ReconnectLinksAndEvents(newPatch.Nutrient);
 
                 // Create an OrganicPoolPatch under SurfaceOrganicMatter so that SurfaceOrganicMatter residue composition
                 // C and N flows go to this patch manager rather than directly to the pool under Nutrient in the first patch.
@@ -570,7 +571,7 @@ namespace Models.Soils.NutrientPatching
                 };
 
                 Node.InsertChild(0, microbialPool);
-                Structure.ReconnectLinksAndEvents(microbialPool);
+                Models.Core.ApsimFile.Structure.ReconnectLinksAndEvents(microbialPool);
 
                 var humicPool = new OrganicPoolPatch(this)
                 {
@@ -578,7 +579,7 @@ namespace Models.Soils.NutrientPatching
                 };
 
                 Node.InsertChild(0, humicPool);
-                Structure.ReconnectLinksAndEvents(microbialPool);
+                Models.Core.ApsimFile.Structure.ReconnectLinksAndEvents(microbialPool);
             }
         }
 
@@ -913,7 +914,7 @@ namespace Models.Soils.NutrientPatching
         private void ClonePatch(int j)
         {
             // create new patch
-            var newPatch = new NutrientPatch(patches[j]);
+            var newPatch = new NutrientPatch(patches[j], Structure);
             patches.Add(newPatch);
             //int k = patches.Count - 1;
 

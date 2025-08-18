@@ -14,9 +14,12 @@ namespace Models.Zones
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [Description("This model agregates variablse across multiple zones for reporting")]
-    public class ZoneAgregate : Model, ILocatorDependency
+    public class ZoneAgregate : Model, IStructureDependency
     {
-        [NonSerialized] private ILocator locator;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
 
         /// <summary>
         /// Zones in simulation
@@ -77,25 +80,28 @@ namespace Models.Zones
         public double FintTreeGreen { get { return Ri.AmountByZone[0] / Ro.Amount; } }
         ///<summary> The proportion of radiation intercepted by the trunk and dead leaf on the tree canopy </summary>
         public double FintTreeDead { get { return Rid.AmountByZone[0] / Ro.Amount; } }
+        ///<summary> The proportion of radiation intercepted by the tree canopy </summary>
+        public double FintTreeTotal { get { return (Rid.AmountByZone[0]+ Ri.AmountByZone[0]) / Ro.Amount; } }
+
         /// <summary> The proportion of radiation intercepted by the green leaf of the understory </summary>
         public double FintUnderstoryGreen { get { return Ri.AmountByZone[1] / Ro.Amount; } }
         /// <summary> The proportion of radiation intercepted by the dead leaf of the understory </summary>
         public double FintUnderstoryDead { get { return Rid.AmountByZone[1] / Ro.Amount; } }
 
-        /// <summary>Locator supplied by APSIM kernel.</summary>
-        public void SetLocator(ILocator locator) => this.locator = locator;
-
-        PlantWaterOrNDelta UpdateValues(string varName)
+        PlantWaterOrNDelta UpdateValues(string varName, bool VarPerM2 = false)
         {
-            return new PlantWaterOrNDelta(ZoneAreas, amountByZone(varName));
+            return new PlantWaterOrNDelta(ZoneAreas, amountByZone(varName, VarPerM2));
         }
 
-        private List<double> amountByZone(string varName)
+        private List<double> amountByZone(string varName, bool VarPerM2)
         {
             List<double> ret = new List<double>();
             foreach (Zone z in Zones)
             {
-                ret.Add((locator.Get(varName, relativeTo: z) != null)? (double)locator.Get(varName, relativeTo: z) : 0.0 );
+                double areaAdjustment = 1.0;
+                if (VarPerM2)
+                    areaAdjustment = (double)Structure.Get("Area", relativeTo: z) * 10000;
+                ret.Add((Structure.Get(varName, relativeTo: z) != null)? (double)Structure.Get(varName, relativeTo: z) * areaAdjustment : 0.0 );
             }
             return ret;
         }
@@ -103,13 +109,13 @@ namespace Models.Zones
         [EventSubscribe("DoReportCalculations")]
         private void onDoReportCalculations(object sender, EventArgs e)
         {
-            Eop = UpdateValues("[ICanopy].PotentialEP");
+            Eop = UpdateValues("[ICanopy].PotentialEP", true);
             Ri = UpdateValues("[Leaf].Canopy.RadiationIntercepted");
-            Rid = UpdateValues("[Leaf].Canopy.RadiationInterceptedByDead");
-            Et = UpdateValues("[ICanopy].Transpiration");
+            Rid = UpdateValues("[Trunk].EnergyBalance.RadiationInterceptedByDead");
+            Et = UpdateValues("[ICanopy].Transpiration", true);
             Ro = UpdateValues("IncidentRadiation");
-            Irrigation = UpdateValues("[Irrigation].IrrigationApplied");
-            Nitrogen = UpdateValues("[Fertiliser].NitrogenApplied"); //divide N by 10 to make grams
+            Irrigation = UpdateValues("[Irrigation].IrrigationApplied", true);
+            Nitrogen = UpdateValues("[Fertiliser].NitrogenApplied", true); //divide N by 10 to make grams
             AccumulatedIrrigation = PlantWaterOrNDelta.Add(AccumulatedIrrigation,Irrigation);
             AccumulatedNitrogen = PlantWaterOrNDelta.Add(AccumulatedNitrogen, Nitrogen);
         }
@@ -121,7 +127,7 @@ namespace Models.Zones
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             Zones = new List<Zone>();
-            foreach (Zone newZone in this.Parent.FindAllDescendants<Zone>())
+            foreach (Zone newZone in Structure.FindChildren<Zone>(relativeTo: Parent as INodeModel, recurse: true))
                 Zones.Add(newZone);
             string message = "For ZoneAgregate to work it requires a multizone simulation with the first zone named \"Row\" and the second zone named \"Alley\"";
             if (Zones[0].Name != "Row")

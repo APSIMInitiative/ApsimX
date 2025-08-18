@@ -1,6 +1,8 @@
 using APSIM.Shared.Utilities;
+using Topten.RichTextKit;
 
 namespace APSIM.Core;
+
 
 /// <summary>
 /// A Node instance encapsulates the concept of a model in a tree of models. The nodes are
@@ -9,7 +11,7 @@ namespace APSIM.Core;
 /// contains the child nodes and a _Parent_ property that links to the parent node.
 /// There are also methods for adding, removing and replace child nodes and for walking the node tree.
 /// </summary>
-public class Node : ILocator, IScope
+public class Node : IStructure
 {
     private readonly List<Node> children = [];
     private ScopingRules scope;
@@ -115,8 +117,8 @@ public class Node : ILocator, IScope
             relativeToNode = relativeTo.Node;
 
         foreach (var node in relativeToNode.WalkScoped())
-                if (node.Model is T && (name == null || node.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
-                    yield return (T)node.Model;
+            if (node.Model is T && (name == null || node.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
+                yield return (T)node.Model;
     }
 
     /// <summary>
@@ -215,9 +217,122 @@ public class Node : ILocator, IScope
     /// <param name="path"></param>
     public void ClearEntry(string path) => locator.ClearEntry(this, path);
 
+
+
+    /// <summary>
+    /// Find a child.
+    /// </summary>
+    /// <typeparam name="T">Type of child to find.</typeparam>
+    /// <param name="name">Optional name of child.</param>
+    /// <param name="recurse">Recursively look for child?</param>
+    /// <param name="relativeTo">The node to make the find relative to.</param>
+    /// <returns>Child or null if not found.</returns>
+    public T FindChild<T>(string name = null, bool recurse = false, INodeModel relativeTo = null)
+    {
+        return FindChildren<T>(name, recurse, relativeTo).FirstOrDefault();
+    }
+
+    /// <summary>
+    /// Find all children direct and/or recursively.
+    /// </summary>
+    /// <typeparam name="T">Type of child nodes to find.</typeparam>
+    /// <param name="name">Optional name of child.</param>
+    /// <param name="recurse">Recursively look for children?</param>
+    /// <param name="relativeTo">The node to make the find relative to.</param>
+    /// <returns>Collection of child nodes or empty collection</returns>
+    public IEnumerable<T> FindChildren<T>(string name = null, bool recurse = false, INodeModel relativeTo = null)
+    {
+        Node relativeToNode = this;
+        if (relativeTo != null)
+            relativeToNode = relativeTo.Node;
+
+        IEnumerable<Node> children;
+        if (recurse)
+            children = relativeToNode.Walk().Skip(1);
+        else
+            children = relativeToNode.Children;
+
+        foreach (var node in children)
+            if (node.Model is T && (name == null || node.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
+                yield return (T)node.Model;
+    }
+
+    /// <summary>
+    /// Find a sibling
+    /// </summary>
+    /// <typeparam name="T">Type of sibling to find.</typeparam>
+    /// <param name="name">Optional name of child.</param>
+    /// <param name="relativeTo">The node to make the find relative to.</param>
+    /// <returns>Sibling or null if not found.</returns>
+    public T FindSibling<T>(string name = null, INodeModel relativeTo = null)
+    {
+        var value = FindSiblings<T>(name, relativeTo);
+        if (value != null)
+            return value.FirstOrDefault();
+        return default;
+    }
+
+    /// <summary>
+    /// Find all siblings.
+    /// </summary>
+    /// <typeparam name="T">Type of siblings to find.</typeparam>
+    /// <param name="name">Optional name of siblings.</param>
+    /// <param name="relativeTo">The node to make the find relative to.</param>
+    /// <returns>Collection of sibling nodes or empty collection</returns>
+    public IEnumerable<T> FindSiblings<T>(string name = null, INodeModel relativeTo = null)
+    {
+        Node relativeToNode = this;
+        if (relativeTo != null)
+            relativeToNode = relativeTo.Node;
+        if (relativeToNode.Parent == null)
+            return Enumerable.Empty<T>();
+        return FindChildren<T>(name, recurse: false, relativeTo: relativeToNode.Parent.Model)
+               .Where(child => child as INodeModel != relativeToNode.Model);
+    }
+
+    /// <summary>
+    /// Find a parent
+    /// </summary>
+    /// <typeparam name="T">Type of parent to find.</typeparam>
+    /// <param name="name">Optional name of parent.</param>
+    /// <param name="relativeTo">The node to make the find relative to.</param>
+    /// <param name="recurse">Recurse up the tree of parents looking for a match?</param>
+    /// <returns>Parent or null if not found.</returns>
+    public T FindParent<T>(string name = null, bool recurse = false, INodeModel relativeTo = null)
+    {
+        if (recurse)
+            return FindParents<T>(name, relativeTo).FirstOrDefault();
+        else if (Parent.Model is T && (name == null || Parent.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
+            return (T)Parent.Model;
+        else
+            return default;
+    }
+
+    /// <summary>
+    /// Find a parent
+    /// </summary>
+    /// <typeparam name="T">Type of parent to find.</typeparam>
+    /// <param name="name">Optional name of parent.</param>
+    /// <param name="relativeTo">The node to make the find relative to.</param>
+    /// <returns>Parent or null if not found.</returns>
+    public IEnumerable<T> FindParents<T>(string name = null, INodeModel relativeTo = null)
+    {
+        Node relativeToNode = this;
+        if (relativeTo != null)
+            relativeToNode = relativeTo.Node;
+        if (relativeToNode.Parent != null)
+        {
+            foreach (var node in relativeToNode.WalkParents())
+                if (node.Model is T && (name == null || node.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
+                    yield return (T)node.Model;
+        }
+    }
+
+
+
     /// <summary>Add child model.</summary>
     /// <param name="childModel">The child model to add.</param>
-    public Node AddChild(INodeModel childModel)
+    public void AddChild(INodeModel childModel)
     {
         var childNode = AddChildDontInitialise(childModel);
 
@@ -227,52 +342,6 @@ public class Node : ILocator, IScope
 
         scope?.Clear();
         locator?.Clear();
-        return childNode;
-    }
-
-    /// <summary>Add child model but don't initialise it.</summary>
-    /// <param name="childModel">The child node to add.</param>
-    public Node AddChildDontInitialise(INodeModel childModel)
-    {
-        // Create a child node to contain the child model.
-        var childNode = new Node(childModel, FullNameAndPath);
-        childNode.Parent = this;
-        childNode.FileName = childNode.Parent.FileName;
-        childNode.Compiler = childNode.Parent.Compiler;
-        children.Add(childNode);
-
-        // Give the child our services.
-        childNode.FileName = FileName;
-        childNode.Compiler = Compiler;
-        childNode.scope = scope;
-        childNode.locator = locator;
-        childModel.Node = childNode;
-
-        // Resolves child dependencies.
-        ResolvesDependencies(childNode);
-
-        // Ensure the model is inserted into parent model.
-        childNode.Model.SetParent(Model);
-        if (!Model.GetChildren().Contains(childModel))
-            Model.AddChild(childModel);
-
-        // Recurse through all children.
-        foreach (var c in childNode.Model.GetChildren())
-            childNode.AddChildDontInitialise(c);
-
-        return childNode;
-    }
-
-    /// <summary>
-    /// Resolve dependencies.
-    /// </summary>
-    /// <param name="node">Node to resolve dependencies in.</param>
-    private static void ResolvesDependencies(Node node)
-    {
-        if (node.Model is ILocatorDependency locatorDependency)
-            locatorDependency.SetLocator(node);
-        if (node.Model is IScopeDependency scopeDependency)
-            scopeDependency.Scope = node;
     }
 
     /// <summary>Remove a child model.</summary>
@@ -289,6 +358,7 @@ public class Node : ILocator, IScope
 
         // remove child node.
         children.Remove(nodeToRemove);
+        nodeToRemove.Parent = null;
 
         scope?.Clear();
         locator?.Clear();
@@ -315,10 +385,11 @@ public class Node : ILocator, IScope
     /// <summary>Insert a child node</summary>
     /// <param name="index">The position of the child in the children list.</param>
     /// <param name="childModels">The child model to add.</param>
-    public Node InsertChild(int index, INodeModel childModel)
+    public void InsertChild(int index, INodeModel childModel)
     {
         // Add the child model to children collection. It will be added to the end of the collection.
-        Node childNode = AddChild(childModel);
+        AddChild(childModel);
+        Node childNode = children.Find(child => child.Model == childModel);
 
         // Move the node to the correct position
         children.Remove(childNode);
@@ -327,8 +398,6 @@ public class Node : ILocator, IScope
         // Move the model to the correct position
         Model.RemoveChild(childModel);
         Model.InsertChild(index, childModel);
-
-        return childNode;
     }
 
     /// <summary>Clear all child nodes.</summary>
@@ -425,6 +494,50 @@ public class Node : ILocator, IScope
         }
     }
 
+
+    /// <summary>Add child model but don't initialise it.</summary>
+    /// <param name="childModel">The child node to add.</param>
+    private Node AddChildDontInitialise(INodeModel childModel)
+    {
+        // Create a child node to contain the child model.
+        var childNode = new Node(childModel, FullNameAndPath);
+        childNode.Parent = this;
+        childNode.FileName = childNode.Parent.FileName;
+        childNode.Compiler = childNode.Parent.Compiler;
+        children.Add(childNode);
+
+        // Give the child our services.
+        childNode.FileName = FileName;
+        childNode.Compiler = Compiler;
+        childNode.scope = scope;
+        childNode.locator = locator;
+        childModel.Node = childNode;
+
+        // Resolves child dependencies.
+        ResolvesDependencies(childNode);
+
+        // Ensure the model is inserted into parent model.
+        childNode.Model.SetParent(Model);
+        if (!Model.GetChildren().Contains(childModel))
+            Model.AddChild(childModel);
+
+        // Recurse through all children.
+        foreach (var c in childNode.Model.GetChildren())
+            childNode.AddChildDontInitialise(c);
+
+        return childNode;
+    }
+
+    /// <summary>
+    /// Resolve dependencies.
+    /// </summary>
+    /// <param name="node">Node to resolve dependencies in.</param>
+    private static void ResolvesDependencies(Node node)
+    {
+        if (node.Model is IStructureDependency s)
+            s.Structure = node;
+    }
+
     /// <summary>
     /// Give the specified model a unique name
     /// </summary>
@@ -442,4 +555,5 @@ public class Node : ILocator, IScope
         if (counter == 10000)
             throw new Exception("Cannot create a unique name for model: " + originalName);
     }
+
 }

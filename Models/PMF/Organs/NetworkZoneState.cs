@@ -11,8 +11,12 @@ namespace Models.PMF.Organs
 {
     /// <summary>The state of each zone that root knows about.</summary>
     [Serializable]
-    public class NetworkZoneState : Model
+    public class NetworkZoneState : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>The soil in this zone</summary>
         public Soil Soil { get; set; }
 
@@ -119,24 +123,25 @@ namespace Models.PMF.Organs
         /// <summary>Constructor</summary>
         /// <param name="Plant">The parant plant</param>
         /// <param name="soil">The soil in the zone.</param>
-        /// <param name="scope">Scope instance</param>
-        public NetworkZoneState(Plant Plant, Soil soil, IScope scope)
+        /// <param name="structure">Scope instance</param>
+        public NetworkZoneState(Plant Plant, Soil soil, IStructure structure)
         {
             this.Soil = soil;
             this.plant = Plant;
-            this.parentNetwork = Plant.FindDescendant<RootNetwork>();
-            nutrient = soil.FindChild<INutrient>();
-            Physical = soil.FindChild<IPhysical>();
-            WaterBalance = soil.FindChild<ISoilWater>();
-            IsWeirdoPresent = soil.FindChild("Weirdo") != null;
+            this.Structure = structure;
+            this.parentNetwork = Structure.FindChild<RootNetwork>(relativeTo: Plant, recurse: true);
+            nutrient = Structure.FindChild<INutrient>(relativeTo: soil);
+            Physical = Structure.FindChild<IPhysical>(relativeTo: soil);
+            WaterBalance = Structure.FindChild<ISoilWater>(relativeTo: soil);
+            IsWeirdoPresent = Structure.FindChild<IModel>("Weirdo", relativeTo:soil) != null;
 
-            zone = soil.FindAncestor<Zone>();
+            zone = Structure.FindParent<Zone>(relativeTo: soil, recurse: true);
             if (zone == null)
                 throw new Exception("Soil " + soil + " is not in a zone.");
 
             Clear();
-            NO3 = scope.Find<ISolute>("NO3", relativeTo: zone);
-            NH4 = scope.Find<ISolute>("NH4", relativeTo: zone);
+            NO3 = structure.Find<ISolute>("NO3", relativeTo: zone);
+            NH4 = structure.Find<ISolute>("NH4", relativeTo: zone);
             Name = zone.Name;
         }
 
@@ -144,7 +149,7 @@ namespace Models.PMF.Organs
         /// <summary>Determine if XF constrains root growth to a maximum depth.</summary>
         public void SetMaxDepthFromXF()
         {
-            var soilCrop = Soil.FindDescendant<SoilCrop>(plant.Name + "Soil");
+            var soilCrop = Structure.FindChild<SoilCrop>(plant.Name + "Soil", relativeTo: Soil, recurse: true);
             if (soilCrop == null)
                 throw new Exception($"Cannot find a soil crop parameterisation called {plant.Name}Soil");
 
@@ -314,7 +319,7 @@ namespace Models.PMF.Organs
             double[] xf = null;
             if (!IsWeirdoPresent)
             {
-                var soilCrop = Soil.FindDescendant<SoilCrop>(plant.Name + "Soil");
+                var soilCrop = Structure.FindChild<SoilCrop>(plant.Name + "Soil", relativeTo: Soil, recurse: true);
                 if (soilCrop == null)
                     throw new Exception($"Cannot find a soil crop parameterisation called {plant.Name}Soil");
 

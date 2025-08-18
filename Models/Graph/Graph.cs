@@ -28,11 +28,11 @@ namespace Models
     [ValidParent(ParentType = typeof(Sobol))]
     [ValidParent(ParentType = typeof(Folder))]
     [ValidParent(ParentType = typeof(GraphPanel))]
-    public class Graph : Model, IScopeDependency
+    public class Graph : Model, IStructureDependency
     {
-        /// <summary>Scope supplied by APSIM.core.</summary>
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IScope Scope { private get; set; }
+        public IStructure Structure { private get; set; }
 
         /// <summary>The data tables on the graph.</summary>
         [NonSerialized]
@@ -52,7 +52,7 @@ namespace Models
         /// Gets or sets a list of all series
         /// </summary>
         [JsonIgnore]
-        public List<Series> Series { get { return FindAllChildren<Series>().ToList(); } }
+        public List<Series> Series { get { return Structure.FindChildren<Series>().ToList(); } }
 
         /// <summary>
         /// Gets or sets the location of the legend
@@ -93,7 +93,7 @@ namespace Models
         {
             EnsureAllAxesExist();
 
-            var series = FindAllChildren<Series>().Where(g => g.Enabled);
+            var series = Structure.FindChildren<Series>().Where(g => g.Enabled);
             var definitions = new List<SeriesDefinition>();
             foreach (var s in series)
             {
@@ -108,9 +108,30 @@ namespace Models
         /// <returns>A list of series annotations.</returns>
         public IEnumerable<IAnnotation> GetAnnotationsToGraph()
         {
-            return FindAllChildren<IGraphable>()
+            return Structure.FindChildren<IGraphable>()
                         .Where(g => g.Enabled)
                         .SelectMany(g => g.GetAnnotations());
+        }
+        
+        
+        /// <summary>
+        /// Get the axis for the position
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        /// 
+
+        public Axis GetAxis(AxisPosition position)
+        {
+            foreach (Axis axis in Axis)
+            {
+                if (axis.Position == position)
+                    return axis;
+
+            }
+
+            throw new Exception("Axis position not valid");
         }
 
         /// <summary>
@@ -173,7 +194,7 @@ namespace Models
             // Using the graphpage API - this will load each series' data in parallel.
             GraphPage page = new GraphPage();
             page.Graphs.Add(this);
-            return page.GetAllSeriesDefinitions(Parent, Scope.Find<IDataStore>()?.Reader).FirstOrDefault()?.SeriesDefinitions;
+            return page.GetAllSeriesDefinitions(Parent, Structure.Find<IDataStore>()?.Reader).FirstOrDefault()?.SeriesDefinitions;
         }
 
         /// <summary>

@@ -13,20 +13,22 @@ namespace Models.PostSimulationTools
     [ValidParent(typeof(IDataStore))]
     [ValidParent(typeof(ParallelPostSimulationTool))]
     [ValidParent(typeof(SerialPostSimulationTool))]
-    public class SerialPostSimulationTool : Model, IPostSimulationTool, IScopeDependency
+    public class SerialPostSimulationTool : Model, IPostSimulationTool, IStructureDependency
     {
-          /// <summary>Scope supplied by APSIM.core.</summary>
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IScope Scope { private get; set; }
+        public IStructure Structure { private get; set; }
+
+
 
         /// <summary>
         /// Run the post-simulation tool.
         /// </summary>
         public void Run()
         {
-            IDataStore storage = Scope.Find<IDataStore>();
+            IDataStore storage = Structure.Find<IDataStore>();
             Links links = new Links(new object[1] { storage });
-            foreach (IPostSimulationTool tool in FindAllChildren<IPostSimulationTool>())
+            foreach (IPostSimulationTool tool in Structure.FindChildren<IPostSimulationTool>())
             {
                 links.Resolve(tool);
                 tool.Run();

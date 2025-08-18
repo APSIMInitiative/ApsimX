@@ -23,11 +23,11 @@ namespace Models.PMF.Organs
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class Root : Model, IWaterNitrogenUptake, IArbitration, IOrgan, IOrganDamage, IRoot, IHasDamageableBiomass, IScopeDependency
+    public class Root : Model, IWaterNitrogenUptake, IArbitration, IOrgan, IOrganDamage, IRoot, IHasDamageableBiomass, IStructureDependency
     {
-        /// <summary>Scope supplied by APSIM.core.</summary>
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IScope Scope { private get; set; }
+        public IStructure Structure { private get; set; }
 
         /// <summary>Tolerance for biomass comparisons</summary>
         private double BiomassToleranceValue = 0.0000000001;
@@ -424,10 +424,10 @@ namespace Models.PMF.Organs
 
                 foreach (ZoneState Z in Zones)
                 {
-                    Zone zone = Scope.Find<Zone>(Z.Name);
-                    var soilPhysical = Z.Soil.FindChild<IPhysical>();
-                    var waterBalance = Z.Soil.FindChild<ISoilWater>();
-                    var soilCrop = Z.Soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
+                    Zone zone = Structure.Find<Zone>(Z.Name);
+                    var soilPhysical = Structure.FindChild<IPhysical>(relativeTo: Z.Soil);
+                    var waterBalance = Structure.FindChild<ISoilWater>(relativeTo: Z.Soil);
+                    var soilCrop = Structure.FindChild<SoilCrop>(parentPlant.Name + "Soil", relativeTo: Z.Soil, recurse: true);
                     double[] paw = APSIM.Shared.APSoil.APSoilUtilities.CalcPAWC(soilPhysical.Thickness, soilCrop.LL, waterBalance.SW, soilCrop.XF);
                     double[] pawmm = MathUtilities.Multiply(paw, soilPhysical.Thickness);
                     double[] pawc = APSIM.Shared.APSoil.APSoilUtilities.CalcPAWC(soilPhysical.Thickness, soilCrop.LL, soilPhysical.DUL, soilCrop.XF);
@@ -456,8 +456,8 @@ namespace Models.PMF.Organs
                 if (liveWt > 0)
                     foreach (ZoneState Z in Zones)
                     {
-                        var soilPhysical = Z.Soil.FindChild<IPhysical>();
-                        var waterBalance = Z.Soil.FindChild<ISoilWater>();
+                        var soilPhysical = Structure.FindChild<IPhysical>(relativeTo: Z.Soil);
+                        var waterBalance = Structure.FindChild<ISoilWater>(relativeTo: Z.Soil);
                         double[] paw = waterBalance.PAW;
                         double[] pawc = soilPhysical.PAWC;
                         Biomass[] layerLiveForZone = Z.LayerLive;
@@ -487,8 +487,8 @@ namespace Models.PMF.Organs
                 if (liveWt > 0)
                     foreach (ZoneState Z in Zones)
                     {
-                        var soilPhysical = Z.Soil.FindChild<IPhysical>();
-                        var waterBalance = Z.Soil.FindChild<ISoilWater>();
+                        var soilPhysical = Structure.FindChild<IPhysical>(relativeTo: Z.Soil);
+                        var waterBalance = Structure.FindChild<ISoilWater>(relativeTo: Z.Soil);
 
                         double[] paw = waterBalance.PAW;
                         double[] pawc = soilPhysical.PAWC;
@@ -920,14 +920,14 @@ namespace Models.PMF.Organs
 
             for (int i = 0; i < ZoneNamesToGrowRootsIn.Count; i++)
             {
-                Zone zone = Scope.Find<Zone>(ZoneNamesToGrowRootsIn[i]);
+                Zone zone = Structure.Find<Zone>(ZoneNamesToGrowRootsIn[i]);
                 if (zone != null)
                 {
-                    Soil soil = Scope.Find<Soil>(relativeTo: zone);
+                    Soil soil = Structure.Find<Soil>(relativeTo: zone);
                     if (soil == null)
                         throw new Exception("Cannot find soil in zone: " + zone.Name);
                     ZoneState newZone = new ZoneState(parentPlant, this, soil, ZoneRootDepths[i], ZoneInitialDM[i], parentPlant.Population, MaxNConc,
-                                                      rootFrontVelocity, maximumRootDepth, remobilisationCost, Scope);
+                                                      rootFrontVelocity, maximumRootDepth, remobilisationCost, Structure);
                     Zones.Add(newZone);
                 }
             }
@@ -1049,13 +1049,13 @@ namespace Models.PMF.Organs
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Soil soil = Scope.Find<Soil>();
+            Soil soil = Structure.Find<Soil>();
             if (soil == null)
                 throw new Exception("Cannot find soil");
             PlantZone = new ZoneState(parentPlant, this, soil, 0, InitialWt, parentPlant.Population, MaxNConc,
-                                      rootFrontVelocity, maximumRootDepth, remobilisationCost, Scope);
+                                      rootFrontVelocity, maximumRootDepth, remobilisationCost, Structure);
 
-            SoilCrop = soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
+            SoilCrop = Structure.FindChild<SoilCrop>(parentPlant.Name + "Soil", relativeTo: soil, recurse: true);
             if (SoilCrop == null)
                 throw new Exception("Cannot find a soil crop parameterisation for " + parentPlant.Name);
 
