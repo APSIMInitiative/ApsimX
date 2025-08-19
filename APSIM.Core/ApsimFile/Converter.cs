@@ -1,6 +1,7 @@
 using APSIM.Numerics;
 using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Utilities;
+using BruTile.Wmts.Generated;
 using Newtonsoft.Json.Linq;
 using System.Globalization;
 using System.Reflection;
@@ -15,7 +16,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 200; } }
+    public static int LatestVersion { get { return 201; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -6970,6 +6971,35 @@ internal class Converter
         {
             plant.Remove("structure");
             plant.Remove("Leaf");
+        }
+    }
+
+
+    /// <summary>
+    /// For SimpleGrazing, create new parameter FractionOfDungUrineOffPaddock = 1-FractionDefoliatedBiomassToSoil
+    /// </summary>
+    /// <param name="root">The root JSON token.</param>
+    /// <param name="_">The name of the apsimx file.</param>
+    private static void UpgradeToVersion201(JObject root, string _)
+    {
+        foreach (var simpleGrazing in JsonUtilities.ChildrenOfType(root, "SimpleGrazing"))
+        {
+            var fractionDefoliatedBiomassToSoil = simpleGrazing["FractionDefoliatedBiomassToSoil"] as JArray;
+            if (fractionDefoliatedBiomassToSoil != null)
+            {
+                for (int i = 0; i < fractionDefoliatedBiomassToSoil.Count; i++)
+                    fractionDefoliatedBiomassToSoil[i] = 1 - fractionDefoliatedBiomassToSoil[i].Value<double>();
+                simpleGrazing["FractionIntakeNToAnimal"] = new JArray(fractionDefoliatedBiomassToSoil);
+            }
+
+            var fractionDefoliatedNToSoil = simpleGrazing["FractionDefoliatedNToSoil"] as JArray;
+            if (fractionDefoliatedNToSoil != null)
+            {
+                for (int i = 0; i < fractionDefoliatedNToSoil.Count; i++)
+                    fractionDefoliatedNToSoil[i] = Math.Round(1 - fractionDefoliatedNToSoil[i].Value<double>(), 3);
+                simpleGrazing["FractionOfDungUrineOffPaddock"] = new JArray(fractionDefoliatedNToSoil);
+            }
+
         }
     }
 

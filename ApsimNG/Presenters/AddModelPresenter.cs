@@ -187,6 +187,7 @@
                         }
                         else
                         {
+                            Node.Create(child as INodeModel);
                             child.ResourceName = selectedModelType.ResourceString;
                             bool isUnderReplacements = false;
                             if (Folder.IsModelReplacementsFolder(model))
