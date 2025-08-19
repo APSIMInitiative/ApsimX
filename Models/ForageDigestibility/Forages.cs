@@ -181,8 +181,8 @@ namespace Models.ForageDigestibility
         /// </summary>
         private void RemoveDuplicateForages()
         {
-            var distinctParameters = _parameters.DistinctBy(p => p.Name).ToList();
-            if (_parameters.Count() != distinctParameters.Count)
+            var distinctParameters = _parameters?.DistinctBy(p => p.Name).ToList();
+            if (_parameters?.Count != distinctParameters?.Count)
                 _parameters = distinctParameters;
         }
 
