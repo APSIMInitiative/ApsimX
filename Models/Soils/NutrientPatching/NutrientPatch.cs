@@ -50,10 +50,11 @@ namespace Models.Soils.NutrientPatching
             Nutrient = simulations.Children[0] as Nutrient;
             Nutrient.IsHidden = true;
 
-            CreateSolutes(Nutrient, (patchManager as IModel).FindAncestor<Soil>().FindAllChildren<Solute>());
+            var soil = structure.FindParent<Soil>(relativeTo: patchManager, recurse: true);
+            CreateSolutes(Nutrient, structure.FindChildren<Solute>(relativeTo: soil), structure);
 
             // Find all solutes.
-            foreach (ISolute solute in Nutrient.FindAllChildren<ISolute>())
+            foreach (ISolute solute in structure.FindChildren<ISolute>(relativeTo: Nutrient))
                 solutes.Add(solute.Name, solute);
             lignin = structure.Find<OrganicPool>("FOMLignin", relativeTo: Nutrient);
             if (lignin == null)
@@ -67,7 +68,7 @@ namespace Models.Soils.NutrientPatching
         }
 
         /// <summary>Copy constructor.</summary>
-        public NutrientPatch(NutrientPatch from)
+        public NutrientPatch(NutrientPatch from, IStructure structure)
         {
             soilThickness = from.soilThickness;
             patchManager = from.patchManager;
@@ -76,14 +77,14 @@ namespace Models.Soils.NutrientPatching
             Structure.Add(Nutrient, from.Nutrient.Parent);
 
             // Find all solutes.
-            foreach (ISolute solute in Nutrient.FindAllChildren<ISolute>())
+            foreach (ISolute solute in structure.FindChildren<ISolute>(relativeTo: Nutrient))
                 solutes.Add(solute.Name, solute);
             lignin = from.lignin;
             cellulose = from.cellulose;
             carbohydrate = from.carbohydrate;
         }
 
-        private void CreateSolutes(IModel parent, IEnumerable<Solute> solutes)
+        private void CreateSolutes(Nutrient nutrient, IEnumerable<Solute> solutes, IStructure structure)
         {
             foreach (Solute solute in solutes)
             {
@@ -92,8 +93,7 @@ namespace Models.Soils.NutrientPatching
                 newSolute.Thickness = solute.Thickness;
                 newSolute.InitialValues = solute.InitialValues;
                 newSolute.InitialValuesUnits = solute.InitialValuesUnits;
-                newSolute.Parent = parent;
-                parent.Children.Add(newSolute);
+                nutrient.AddSolute(newSolute);
             }
         }
 

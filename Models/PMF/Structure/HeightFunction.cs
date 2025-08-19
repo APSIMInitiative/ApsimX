@@ -16,8 +16,12 @@ namespace Models.PMF.Struct
     [Serializable]
     [ValidParent(ParentType = typeof(SimpleLeaf))]
     [ValidParent(ParentType = typeof(Structure))]
-    public class HeightFunction : Model, IFunction
+    public class HeightFunction : Model, IFunction, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>The potential height</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction PotentialHeight = null;
@@ -39,7 +43,7 @@ namespace Models.PMF.Struct
         public double Value(int arrayIndex = -1)
         {
             if (ChildFunctions == null)
-                ChildFunctions = FindAllChildren<IFunction>();
+                ChildFunctions = Structure.FindChildren<IFunction>();
 
             double PotentialHeightIncrement = PotentialHeight.Value(arrayIndex) - PotentialHeightYesterday;
             double StressValue = 1.0;

@@ -8,6 +8,7 @@ using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
 using UserInterface.EventArguments;
+using Microsoft.Data.Sqlite;
 using Models;
 using Models.Core;
 using Models.Storage;
@@ -110,7 +111,7 @@ namespace UserInterface.Presenters
                 page.Graphs.Add(graph);
                 SeriesDefinitions = page.GetAllSeriesDefinitions(graph, storage?.Reader, SimulationFilter)[0].SeriesDefinitions;
             }
-            catch (SQLiteException e)
+            catch (SqliteException e)
             {
                 explorerPresenter.MainPresenter.ShowError(new Exception("Error obtaining data from database: ", e));
             }
@@ -629,7 +630,7 @@ namespace UserInterface.Presenters
         /// <param name="model">The model.</param>
         private void OnGraphModelChanged(object model)
         {
-            if (model == graph || graph.FindAllDescendants().Contains(model) || graph.Axis.Contains(model))
+            if (model == graph || graph.Node.FindChildren<IModel>(recurse: true).Contains(model) || graph.Axis.Contains(model))
                 DrawGraph();
         }
 
