@@ -29,11 +29,11 @@ namespace Models.PMF.Phen
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction LeafNumber = null;
 
-        [Link(Type = LinkType.Child, ByName = true)]
-        IFunction FullyExpandedLeafNo = null;
+        //[Link(Type = LinkType.Child, ByName = true)]
+        //IFunction FullyExpandedLeafNo = null;
 
-        [Link(Type = LinkType.Child, ByName = true)]
-        IFunction InitialisedLeafNumber = null;
+        //[Link(Type = LinkType.Child, ByName = true)]
+        //IFunction InitialisedLeafNumber = null;
 
         //2. Private and protected fields
         //-----------------------------------------------------------------------------------------------------------------
@@ -90,7 +90,7 @@ namespace Models.PMF.Phen
             FractionCompleteYesterday = FractionComplete;
 
             //if (leaf.ExpandedCohortNo >= (leaf.InitialisedCohortNo))
-            if (FullyExpandedLeafNo.Value() >= InitialisedLeafNumber.Value())
+            if (LeafNumber.Value() >= FinalLeafNumber.Value())
             {
                 proceedToNextPhase = true;
                 propOfDayToUse = 0.00001;  //assumes we use most of the Tt today to get to final leaf.  Should be calculated as a function of the phyllochron

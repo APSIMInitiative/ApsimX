@@ -738,8 +738,8 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.ExpressionFunction, Models",
-                  "Expression": "[Leaf].ExpandedCohortNo + [Leaf].NextExpandingLeafProportion",
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].HaunStage",
                   "Name": "LeafNumber",
                   "ResourceName": null,
                   "Children": [],
