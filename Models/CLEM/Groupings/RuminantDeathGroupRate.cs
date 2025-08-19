@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using Models.CLEM.Resources;
 using System.ComponentModel.DataAnnotations;
-using APSIM.Shared.Utilities;
+using APSIM.Numerics;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Models.CLEM.Interfaces;
 using System.IO;
@@ -99,7 +99,7 @@ namespace Models.CLEM.Groupings
             if(Style == ParameterStyle.GetFromParameters)
             {
                 // ensure parameters are available for all ruminant types
-                foreach (var rumtype in FindAllInScope<RuminantType>())
+                foreach (var rumtype in Structure.FindAll<RuminantType>())
                 {
                     if(rumtype.Parameters.GrowPF is null && rumtype.Parameters.Grow is null)
                     {
@@ -122,7 +122,7 @@ namespace Models.CLEM.Groupings
             {
                 case ParameterStyle.GetFromParameters:
                     htmlWriter.Write($"\r\n<div class=\"activityentry\">The annual mortality rates for the specified individuals each time-step are provided in the following breed parameter files: ");
-                    foreach (var rumtype in FindAllInScope<RuminantType>())
+                    foreach (var rumtype in Structure.FindAll<RuminantType>())
                     {
                         htmlWriter.Write(rumtype.Name);
                         if (rumtype.Parameters.GrowPF is not null)

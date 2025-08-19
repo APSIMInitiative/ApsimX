@@ -742,7 +742,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public virtual void PrepareForTimestep()
         {
-            if (this is not ITimer && this is not ActivityFolder)
+            if (this is not IActivityTimer && this is not ActivityFolder)
             {
                 Status = ActivityStatus.NotNeeded;
             }

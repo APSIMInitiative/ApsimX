@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Models.CLEM
+﻿namespace Models.CLEM
 {
     /// <summary>
     /// Status of activity

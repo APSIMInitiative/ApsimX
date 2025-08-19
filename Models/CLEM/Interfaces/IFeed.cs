@@ -1,7 +1,4 @@
 ﻿using Models.Core;
-using Newtonsoft.Json;
-using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Interfaces
 {

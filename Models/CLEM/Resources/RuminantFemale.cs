@@ -1,9 +1,7 @@
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
 using Models.Core;
-using APSIM.Numerics;
 using APSIM.Shared.Documentation.Extensions;
-using APSIM.Shared.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

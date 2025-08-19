@@ -1,21 +1,13 @@
-﻿using Models.Core.Attributes;
+﻿using APSIM.Numerics;
+using Models.CLEM.Interfaces;
+using Models.CLEM.Resources;
 using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Models.CLEM.Resources;
-using APSIM.Shared.Utilities;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text.Json.Serialization;
-using Docker.DotNet.Models;
-using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.Spreadsheet;
-using Models.PMF.Phen;
-using Models.Utilities;
-using static Models.Core.ScriptCompiler;
-using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Activities
 {
@@ -72,13 +64,13 @@ namespace Models.CLEM.Activities
                 // condition-based intake reduction
                 if (ind.First().Parameters.GrowPF_CI.RelativeConditionEffect_CI20 == 1.0)
                 {
-                    summary = FindInScope<Summary>();
+                    summary = Structure.Find<Summary>();
                     summary.WriteMessage(this, $"Ruminant intake reduction based on high condition is disabled for [{ind.Key}].{Environment.NewLine}To allow this functionality set [Parameters].[GrowPF].[GrowPF CI].RelativeConditionEffect_CI20 to a value greater than [1] (default 1.5)", MessageType.Warning);
                 }
                 // intake reduced by quality of feed
                 if (ind.First().Parameters.GrowPF_CI.IgnoreFeedQualityIntakeAdustment)
                 {
-                    summary ??= FindInScope<Summary>();
+                    summary ??= Structure.Find<Summary>();
                     summary.WriteMessage(this, $"Ruminant intake reduction based on intake quality is disabled for [{ind.Key}].{Environment.NewLine}To allow this functionality set [Parameters].[GrowPF].[GrowPF CI].IgnoreFeedQualityIntakeAdustment to [False]", MessageType.Warning);
                 }
             }
@@ -295,7 +287,7 @@ namespace Models.CLEM.Activities
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             // check parameters are available for all ruminants.
-            foreach (var item in FindAllInScope<RuminantType>().Where(a => a.Parameters.GrowSCA07 is null))
+            foreach (var item in Structure.FindAll<RuminantType>().Where(a => a.Parameters.GrowSCA07 is null))
             {
                 yield return new ValidationResult($"No [RuminantParametersGrowSCA07] parameters are provided for [{item.NameWithParent}]", new string[] { "RuminantParametersGrowSCA" });
             }

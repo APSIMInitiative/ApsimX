@@ -23,12 +23,8 @@ namespace Models.CLEM
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/DataReaders/RainfallShuffler.htm")]
 
-    public class RainfallShuffler: CLEMModel, IValidatableObject, IStructureDependency
+    public class RainfallShuffler: CLEMModel, IValidatableObject
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
         [Link]
         private IClock clock = null;
 

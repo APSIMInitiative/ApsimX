@@ -1,15 +1,10 @@
 ﻿using Docker.DotNet.Models;
-using DocumentFormat.OpenXml.Drawing;
-using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Models.Core.Attributes;
-using Models.PMF.Organs;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 
@@ -87,7 +82,7 @@ namespace Models.CLEM.Resources
                 {
                     cohort.Parent = this;
                     cohort.MinimumTimeStepInterval = this.MinimumTimeStepInterval;
-                    Structure.Add(cohort, this);
+                    Core.ApsimFile.Structure.Add(cohort, this);
                 }
             }
         }

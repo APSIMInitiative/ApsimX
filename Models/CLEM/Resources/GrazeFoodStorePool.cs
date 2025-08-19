@@ -1,8 +1,6 @@
 ﻿using Models.CLEM.Interfaces;
-using Models.Core;
 using Newtonsoft.Json;
 using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Resources
 {

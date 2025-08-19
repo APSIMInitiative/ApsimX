@@ -10,7 +10,6 @@ using Models.Core.Attributes;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using System.Globalization;
-using APSIM.Shared.Documentation;
 
 namespace Models.CLEM
 {

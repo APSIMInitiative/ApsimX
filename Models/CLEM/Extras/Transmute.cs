@@ -8,7 +8,6 @@ using Newtonsoft.Json;
 using Models.Core.Attributes;
 using Models.CLEM.Interfaces;
 using System.IO;
-using APSIM.Shared.Utilities;
 using APSIM.Numerics;
 
 namespace Models.CLEM

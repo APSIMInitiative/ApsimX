@@ -1,18 +1,10 @@
-﻿using DocumentFormat.OpenXml.Drawing.Charts;
-using DocumentFormat.OpenXml.Presentation;
-using Models.CLEM.Activities;
+﻿using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.Core;
-using Models.Core.Attributes;
-using Models.DCAPST.Environment;
-using Models.PMF.Phen;
-using SixLabors.ImageSharp;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
-using System.Linq;
-using System.Runtime.Intrinsics.X86;
 
 namespace Models.CLEM.Resources
 {
@@ -290,7 +282,7 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (FindInScope<RuminantActivityGrowPF>() is not null || FindInScope<RuminantActivityGrowSCA07>() is not null)
+            if (Structure.Find<RuminantActivityGrowPF>() is not null || Structure.Find<RuminantActivityGrowSCA07>() is not null)
             {
                 ISummary summary = null;
                 RuminantType ruminantType = null;
@@ -298,14 +290,14 @@ namespace Models.CLEM.Resources
                 if (RelativeConditionEffect_CI20 == 1.0)
                 {
                     ruminantType = FindAncestor<RuminantType>();
-                    summary = FindInScope<Summary>();
+                    summary = Structure.Find<Summary>();
                     summary.WriteMessage(this, $"Ruminant intake reduction based on high condition is disabled for [{ruminantType?.Name??"Unknown"}].{Environment.NewLine}To allow this functionality set [Parameters].[GrowPF].[GrowPF CI].RelativeConditionEffect_CI20 to a value greater than [1] (default 1.5)", MessageType.Warning);
                 }
                 // intake reduced by quality of feed turned off
                 if (IgnoreFeedQualityIntakeAdustment)
                 {
                     ruminantType ??= FindAncestor<RuminantType>();
-                    summary ??= FindInScope<Summary>();
+                    summary ??= Structure.Find<Summary>();
                     summary.WriteMessage(this, $"Ruminant intake reduction based on intake quality is disabled for [{ruminantType?.Name ?? "Unknown"}].{Environment.NewLine}To allow this functionality set [Parameters].[GrowPF].[GrowPF CI].IgnoreFeedQualityIntakeAdustment to [False]", MessageType.Warning);
                 }
             }

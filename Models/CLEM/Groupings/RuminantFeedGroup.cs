@@ -1,5 +1,4 @@
-﻿using AsyncIO;
-using Models.CLEM.Activities;
+﻿using Models.CLEM.Activities;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;

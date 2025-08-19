@@ -26,13 +26,8 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Crop/ManageCrop.htm")]
     [ModelAssociations(associatedModels: new Type[] { typeof(CropActivityManageProduct) },
         associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Child })]
-    public class CropActivityManageCrop: CLEMActivityBase, IValidatableObject, IPastureManager, IStructureDependency
+    public class CropActivityManageCrop: CLEMActivityBase, IValidatableObject, IPastureManager
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
-
         private int currentCropIndex = 0;
         private int numberOfCrops = 0;
 

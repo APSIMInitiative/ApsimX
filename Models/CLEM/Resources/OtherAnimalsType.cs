@@ -2,11 +2,9 @@
 using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
-using Models.PMF.Organs;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Xml.Serialization;
 

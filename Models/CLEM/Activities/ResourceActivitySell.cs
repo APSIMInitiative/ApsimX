@@ -7,9 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
 using System.IO;
 using System.Linq;
-using APSIM.Shared.Utilities;
 using APSIM.Numerics;
-using static Models.Core.ScriptCompiler;
 
 namespace Models.CLEM.Activities
 {

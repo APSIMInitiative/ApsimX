@@ -1,5 +1,4 @@
-﻿using APSIM.Core;
-using Models.CLEM.Resources;
+﻿using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using System;

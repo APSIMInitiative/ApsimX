@@ -1,20 +1,12 @@
-﻿using Models.Core.Attributes;
-using Models.Core;
+﻿using Models.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Models.CLEM.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
-using Microsoft.VisualBasic.FileIO;
 using Newtonsoft.Json;
-using Models.LifeCycle;
-using Models.PMF.Organs;
-using Microsoft.CodeAnalysis.CSharp;
-using Docker.DotNet.Models;
 
 namespace Models.CLEM.Activities
 {

@@ -1,6 +1,4 @@
 using APSIM.Shared.Documentation.Extensions;
-using DocumentFormat.OpenXml.VariantTypes;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
@@ -34,8 +32,12 @@ namespace Models.CLEM
     [Version(1, 0, 2, "New ResourceUnitConverter functionality added that changes some reporting.\r\nThis change will cause errors for all previous custom resource ledger reports created using the APSIM Report component.\r\nTo fix errors add \".Name\" to all LastTransaction.ResourceType and LastTransaction.Activity entries in custom ledgers (i.e. LastTransaction.ResourceType.Name as Resource). The CLEM ReportResourceLedger component has been updated to automatically handle the changes")]
     [Version(1, 0, 1, "")]
     [ModelAssociations( associatedModels: new Type[] { typeof(CLEMEvents), typeof(ResourcesHolder), typeof(ActivitiesHolder) }, AssociationStyles = new ModelAssociationStyle[] { ModelAssociationStyle.InScope, ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent })]
-    public class ZoneCLEM : Zone, ICLEMUI, ICLEMDescriptiveSummary, IScopedModel
+    public class ZoneCLEM : Zone, ICLEMUI, ICLEMDescriptiveSummary, IScopedModel, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public new IStructure Structure { get; set; }
+
         [Link]
         private readonly Summary summary = null;
         [Link]
@@ -182,8 +184,8 @@ namespace Models.CLEM
             // The tests of model associations (Attribute) now fire in Commencing and will break on error before any validation.
 
             // not all errors will be reported in validation so perform in two steps
-            Validate(FindInScope<CLEMEvents>(), "", this, summary, FindInScope<CLEMEvents>());
-            Validate(this, "", this, summary, FindInScope<CLEMEvents>());
+            Validate(Structure.Find<CLEMEvents>(), "", this, summary, Structure.Find<CLEMEvents>());
+            Validate(this, "", this, summary, Structure.Find<CLEMEvents>());
             ReportInvalidParameters(this, dataStore, summary, simulation.Name);
         }
 

@@ -7,7 +7,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Models.Core.Attributes;
 using System.IO;
-using APSIM.Shared.Utilities;
 using Models.CLEM.Groupings;
 using Newtonsoft.Json;
 using APSIM.Numerics;

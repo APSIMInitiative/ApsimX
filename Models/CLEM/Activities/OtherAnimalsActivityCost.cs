@@ -4,13 +4,9 @@ using Models.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Models.CLEM.Resources;
-using System.ComponentModel.DataAnnotations;
 using System.IO;
 using Models.CLEM.Groupings;
-using System.Net.WebSockets;
 
 namespace Models.CLEM.Activities
 {

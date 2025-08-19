@@ -1,15 +1,12 @@
-using Models.Core;
 using Models.CLEM.Resources;
+using Models.Core;
+using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using Newtonsoft.Json;
-using Models.Core.Attributes;
 using System.IO;
-using Models.Core.ApsimFile;
-using Models.CLEM.Groupings;
-using System.Linq.Expressions;
+using System.Linq;
 
 namespace Models.CLEM.Activities
 {
@@ -52,7 +49,7 @@ namespace Models.CLEM.Activities
             if (!(FindAncestor<ZoneCLEM>()?.BuildTransactionCategoryFromTree??false))
                 transCat = TransactionCategory;
 
-            bool usingGrowPF = FindInScope<RuminantActivityGrowPF>() is not null;
+            bool usingGrowPF = Structure.Find<RuminantActivityGrowPF>() is not null;
 
             GrazeFoodStore grazeFoodStore = Resources.FindResourceGroup<GrazeFoodStore>();
             if (grazeFoodStore is null)
@@ -68,7 +65,7 @@ namespace Models.CLEM.Activities
             Guid nextUID = ActivitiesHolder.AddToGuID(this.UniqueID, 1);
             foreach (GrazeFoodStoreType pastureType in grazeFoodStore.Children.Where(a => a.GetType() == typeof(GrazeFoodStoreType) || a.GetType() == typeof(CommonLandFoodStoreType)))
             {
-                Structure.Add(new RuminantActivityGrazePasture(this, pastureType, events, transCat, usingGrowPF, nextUID), this);
+                Core.ApsimFile.Structure.Add(new RuminantActivityGrazePasture(this, pastureType, events, transCat, usingGrowPF, nextUID), this);
                 nextUID = ActivitiesHolder.AddToGuID(nextUID, 1);
 
                 //string transCat = "";

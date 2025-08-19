@@ -25,8 +25,12 @@ namespace Models.CLEM
     [HelpUri(@"Content/Features/Market.htm")]
     [Version(1, 0, 2, "Tested and functioning for targeted feeding including transmutations but still needs movement of goods to market.")]
     [Version(1, 0, 1, "Early implementation of market place for multi-farm simulations. This is a major addition and is not checked for full functionality.")]
-    public class Market : Zone, IValidatableObject, ICLEMUI, IScopedModel
+    public class Market : Zone, IValidatableObject, ICLEMUI, IScopedModel, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public new IStructure Structure { get; set; }
+
         [Link]
         private Summary summary = null;
         [Link]
@@ -97,7 +101,7 @@ namespace Models.CLEM
         {
             // validation is performed here
             // see ZoneCLEM OnCLEMValidate for more details
-            CLEMEvents events = FindInScope<CLEMEvents>();
+            CLEMEvents events = Structure.Find<CLEMEvents>();
 
             if (!ZoneCLEM.Validate(this, "", this, summary, events))
                 ZoneCLEM.ReportInvalidParameters(this, dataStore, summary, simulation.Name);

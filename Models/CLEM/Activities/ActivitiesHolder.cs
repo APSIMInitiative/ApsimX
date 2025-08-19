@@ -1,12 +1,12 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Reporting;
 using Models.CLEM.Resources;
+using Models.Core;
+using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
-using Models.Core.Attributes;
-using Models.CLEM.Reporting;
+using System.Linq;
 
 namespace Models.CLEM.Activities
 {
@@ -23,10 +23,8 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     [ModelAssociations(singleInstance: true)]
-    public class ActivitiesHolder: CLEMModel, IValidatableObject
+    public class ActivitiesHolder: CLEMModel
     {
-        //[Link]
-        //CLEMEvents events = null;
         private ActivityFolder timeStep = new() { Name = "TimeStep", Status = ActivityStatus.NoTask };
         private int nextUniqueID = 1;
         private bool foundReportActivitiesPerformed = false;
@@ -111,7 +109,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("Commencing")]
         private void SetUniqueActivityIDs(object sender, EventArgs e)
         {
-            foundReportActivitiesPerformed = FindAllInScope<ReportActivitiesPerformed>().Any();
+            foundReportActivitiesPerformed = base.Structure.FindAll<ReportActivitiesPerformed>().Any();
 
             foreach (var activity in FindAllDescendants<CLEMActivityBase>())
             {

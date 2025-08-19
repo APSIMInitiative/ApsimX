@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
-using static Models.Core.ScriptCompiler;
 
 namespace Models.CLEM.Activities
 {

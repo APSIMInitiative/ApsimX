@@ -424,7 +424,7 @@ namespace Models.CLEM
             }
             htmlWriter.Write(".</div>");
 
-            if (FindAllInScope<RuminantActivityGrazeAll>().Any() || FindAllInScope<RuminantActivityGrazePasture>().Any() || FindAllInScope<RuminantActivityGrazePastureHerd>().Any())
+            if (Structure.FindAll<RuminantActivityGrazeAll>().Any() || Structure.FindAll<RuminantActivityGrazePasture>().Any() || Structure.FindAll<RuminantActivityGrazePastureHerd>().Any())
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 htmlWriter.Write($"Ecological indicators will be calculated every {CLEMModel.DisplaySummaryValueSnippet(EcologicalIndicatorsCalculationInterval)} months");

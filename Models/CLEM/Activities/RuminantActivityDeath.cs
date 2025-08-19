@@ -4,13 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
-using System.Text.Json.Serialization;
 using Models.CLEM.Groupings;
-using APSIM.Shared.Utilities;
 using System.ComponentModel.DataAnnotations;
-using DocumentFormat.OpenXml.Office2010.PowerPoint;
-using Models.GrazPlan;
-using static Models.Core.ScriptCompiler;
 
 namespace Models.CLEM.Activities
 {

@@ -1,7 +1,5 @@
-﻿using DocumentFormat.OpenXml.Wordprocessing;
-using Models.CLEM.Interfaces;
+﻿using Models.CLEM.Interfaces;
 using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Resources
 {

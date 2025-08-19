@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using Models.Core.Attributes;
 using System.IO;
-using APSIM.Shared.Utilities;
+using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {

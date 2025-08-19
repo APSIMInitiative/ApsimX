@@ -9,7 +9,6 @@ using System.Linq;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;
-using DocumentFormat.OpenXml.Office.CustomXsn;
 using APSIM.Core;
 
 namespace Models.CLEM.Activities
@@ -25,12 +24,8 @@ namespace Models.CLEM.Activities
     [Description("Feed people (labour) as selected with a specified feeding style.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Labour/LabourActivityFeed.htm")]
-    public class LabourActivityFeed : CLEMActivityBase, IHandlesActivityCompanionModels, IStructureDependency
+    public class LabourActivityFeed : CLEMActivityBase, IHandlesActivityCompanionModels
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
         [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
 

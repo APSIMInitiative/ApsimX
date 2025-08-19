@@ -1,10 +1,12 @@
-﻿using APSIM.Shared.Utilities;
+﻿using APSIM.Core;
+using APSIM.Shared.Utilities;
 using Models.CLEM;
 using Models.CLEM.Activities;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
+using Models.Core.ApsimFile;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -262,6 +264,12 @@ namespace UserInterface.Presenters
 
         private string TableRowHTML(IModel model)
         {
+            IStructure structure = (model as CLEMModel)?.Structure;
+            if (structure == null)
+            {
+                return "";
+            }
+
             // create row
             using (StringWriter tblstr = new StringWriter())
             {
@@ -291,7 +299,7 @@ namespace UserInterface.Presenters
                                         LabourGroup filtergroup = nested;
                                         if (nested is LabourGroupLinked ngl)
                                         {
-                                            filtergroup = nested.FindAllInScope<LabourGroup>().Where(lg => $"{lg.Parent.Name}.{lg.Name}" == ngl.ExistingGroupName).FirstOrDefault();
+                                            filtergroup = structure.FindAll<LabourGroup>(relativeTo: nested).Where(lg => $"{lg.Parent.Name}.{lg.Name}" == ngl.ExistingGroupName).FirstOrDefault();
                                         }
 
                                         if (filtergroup is not null && filtergroup.Filter(lt))
@@ -434,6 +442,12 @@ namespace UserInterface.Presenters
 
         private string TableRowMarkdown(IModel model)
         {
+            IStructure structure = (model as CLEMModel)?.Structure;
+            if (structure == null)
+            {
+                return "";
+            }
+
             using (StringWriter tblstr = new StringWriter())
             {
                 // create row
@@ -468,7 +482,7 @@ namespace UserInterface.Presenters
                                         LabourGroup filtergroup = nested;
                                         if (nested is LabourGroupLinked ngl)
                                         {
-                                            filtergroup = nested.FindAllInScope<LabourGroup>().Where(lg => $"{lg.Parent.Name}.{lg.Name}" == ngl.ExistingGroupName).FirstOrDefault();
+                                            filtergroup = structure.FindAll<LabourGroup>(relativeTo: nested).Where(lg => $"{lg.Parent.Name}.{lg.Name}" == ngl.ExistingGroupName).FirstOrDefault();
                                             filtergroup.InitialiseFilters();
                                         }
                                         if (filtergroup is not null && filtergroup.Filter(lt))

@@ -1,8 +1,6 @@
 ﻿using APSIM.Shared.Utilities;
-using Models.CLEM.Activities;
 using Models.CLEM.Resources;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Models.Core.Attributes;
 using Newtonsoft.Json;
 using System;
@@ -393,7 +391,7 @@ namespace Models.CLEM
                             SetAttributeWithValue castrate = new();
                             castrate.AttributeName = "Castrated";
                             castrate.Category = RuminantAttributeCategoryTypes.Sterilise_Castrate;
-                            Structure.Add(castrate, cohort);
+                            Core.ApsimFile.Structure.Add(castrate, cohort);
                         }
                     }
                     else
@@ -409,7 +407,7 @@ namespace Models.CLEM
                         {
                             SetPreviousConception prevconcep = new();
                             prevconcep.NumberDaysPregnant = daysPregnant;
-                            Structure.Add(prevconcep, cohort);
+                            Core.ApsimFile.Structure.Add(prevconcep, cohort);
                         }
                     }
                     else

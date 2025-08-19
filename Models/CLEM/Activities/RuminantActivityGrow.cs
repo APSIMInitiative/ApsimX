@@ -1,18 +1,15 @@
-
-using Models.Core;
+using APSIM.Numerics;
+using Models.CLEM.Interfaces;
+using Models.CLEM.Reporting;
 using Models.CLEM.Resources;
+using Models.Core;
+using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using Newtonsoft.Json;
-using Models.Core.Attributes;
 using System.IO;
-using APSIM.Shared.Utilities;
-using Models.CLEM.Reporting;
-using Models.Utilities;
-using Models.CLEM.Interfaces;
-using System.Numerics;
+using System.Linq;
 
 namespace Models.CLEM.Activities
 {
@@ -599,7 +596,7 @@ namespace Models.CLEM.Activities
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             // check parameters are available for all ruminants.
-            foreach (var item in FindAllInScope<RuminantType>().Where(a => a.Parameters.Grow is null))
+            foreach (var item in Structure.FindAll<RuminantType>().Where(a => a.Parameters.Grow is null))
             {
                 yield return new ValidationResult($"No [RuminantParametersGrow] parameters are provided for [{item.NameWithParent}]", new string[] { "RuminantParametersGrow" });
             }

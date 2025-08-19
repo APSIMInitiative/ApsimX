@@ -9,8 +9,6 @@ using System.Linq;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;
-using APSIM.Shared.Utilities;
-using StdUnits;
 using APSIM.Numerics;
 
 namespace Models.CLEM.Activities

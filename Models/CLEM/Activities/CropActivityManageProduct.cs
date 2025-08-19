@@ -9,11 +9,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
 using APSIM.Numerics;
-using Models.GrazPlan;
-using static Models.Core.ScriptCompiler;
 
 namespace Models.CLEM.Activities
 {

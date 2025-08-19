@@ -1,12 +1,7 @@
-﻿using DocumentFormat.OpenXml.Presentation;
-using Models.CLEM.Interfaces;
+﻿using Models.CLEM.Interfaces;
 using Models.Core;
-using Models.Core.Attributes;
-using Models.DCAPST.Environment;
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.IO;
-using System.Runtime.Intrinsics.X86;
 
 namespace Models.CLEM.Resources
 {

@@ -1,5 +1,4 @@
 ﻿using APSIM.Numerics;
-using APSIM.Shared.Utilities;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;

@@ -1,8 +1,4 @@
-﻿using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Drawing.Charts;
-using DocumentFormat.OpenXml.Wordprocessing;
-using MathNet.Numerics;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
@@ -13,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
@@ -1103,7 +1100,7 @@ namespace Models.CLEM.Activities
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             // check parameters are available for all ruminants.
-            foreach (var item in FindAllInScope<RuminantType>().Where(a => a.Parameters.GrowPF is null))
+            foreach (var item in Structure.FindAll<RuminantType>().Where(a => a.Parameters.GrowPF is null))
             {
                 yield return new ValidationResult($"No [RuminantParametersGrowPF] parameters are provided for [{item.NameWithParent}]", new string[] { "RuminantParametersGrowPF5" });
             }

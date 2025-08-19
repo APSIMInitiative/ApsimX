@@ -8,10 +8,8 @@ using Models.CLEM.Resources;
 using Models.Core.Attributes;
 using System.IO;
 using Models.CLEM.Interfaces;
-using APSIM.Shared.Utilities;
 using Newtonsoft.Json;
 using APSIM.Numerics;
-using static Models.Core.ScriptCompiler;
 
 namespace Models.CLEM.Activities
 {

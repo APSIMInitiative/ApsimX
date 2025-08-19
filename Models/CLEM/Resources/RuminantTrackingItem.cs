@@ -1,11 +1,5 @@
-﻿using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Office2016.Drawing.Command;
-using Models.CLEM.Interfaces;
+﻿using Models.CLEM.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models.CLEM.Resources
 {

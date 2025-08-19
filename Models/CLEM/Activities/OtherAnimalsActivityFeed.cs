@@ -7,9 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
-using DocumentFormat.OpenXml.Office.CustomUI;
 using System.Linq;
-using APSIM.Shared.Utilities;
 using Docker.DotNet.Models;
 
 namespace Models.CLEM.Activities

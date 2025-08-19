@@ -1,15 +1,16 @@
 ﻿
 namespace UserInterface.Presenters
 {
+    using APSIM.Core;
+    using global::UserInterface.Interfaces;
+    using global::UserInterface.Views;
+    using Models.CLEM;
+    using Models.Core;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Security;
     using System.Reflection;
-    using global::UserInterface.Interfaces;
-    using global::UserInterface.Views;
-    using Models.CLEM;
-    using Models.Core;
 
     /// <summary>
     /// This presenter class is responsible for wrapping the SimplePropertyPresenter in a view that includes a 
@@ -99,7 +100,13 @@ namespace UserInterface.Presenters
         {
             this.model = model as Model;
 
-            userLevel = (int)((model as IModel).FindInScope<ZoneCLEM>()?.UserType?? CLEMUserType.General);
+            IStructure structure = (model as CLEMModel)?.Structure;
+            if (structure == null)
+            {
+                return;
+            }
+
+            userLevel = (int)(structure.Find<ZoneCLEM>(relativeTo: model as Model)?.UserType?? CLEMUserType.General);
 
             treeview = view as IPropertyCategorisedView;
             if(view is null)

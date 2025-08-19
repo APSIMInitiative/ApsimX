@@ -1,5 +1,4 @@
-﻿using Docker.DotNet.Models;
-
+﻿
 namespace Models.CLEM.Interfaces
 {
     /// <summary>

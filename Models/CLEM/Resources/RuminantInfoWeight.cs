@@ -1,17 +1,5 @@
-﻿using APSIM.Shared.Documentation.Extensions;
-using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Drawing.Charts;
-using DocumentFormat.OpenXml.Spreadsheet;
-using Models.CLEM.Activities;
-using Models.CLEM.Interfaces;
-using Models.Core;
-using Models.Interfaces;
+﻿using APSIM.Numerics;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models.CLEM.Resources
 {

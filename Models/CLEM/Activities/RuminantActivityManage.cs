@@ -10,9 +10,7 @@ using Newtonsoft.Json;
 using System.Globalization;
 using System.IO;
 using Models.CLEM.Interfaces;
-using APSIM.Shared.Utilities;
 using APSIM.Numerics;
-using APSIM.Core;
 
 namespace Models.CLEM.Activities
 {
@@ -40,11 +38,11 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "First implementation of this activity using IAT/NABSA processes")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantManage.htm")]
     [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGeneral) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Child })]
-    public class RuminantActivityManage : CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels, IStructureDependency
+    public class RuminantActivityManage : CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
+        [Link(IsOptional = true)]
+        private readonly CLEMEvents events = null;
+
         private int maxBreeders;
         private int minBreeders;
         private int femaleBreedersRequired = 0;
@@ -1249,12 +1247,12 @@ namespace Models.CLEM.Activities
                             RuminantTypeCohort cohort = selectedPurchaseDetails[i].SpecifyRuminantComponent.Details;
                             cohort.Number = totals[i];
                             Status = ActivityStatus.Success;
-                            var newindividuals = cohort.CreateIndividuals(null, clock.Today, selectedPurchaseDetails[i].SpecifyRuminantComponent.BreedType);
+                            var newindividuals = cohort.CreateIndividuals(null, events.Clock.Today, selectedPurchaseDetails[i].SpecifyRuminantComponent.BreedType);
                             foreach (var ind in newindividuals)
                             {
                                 ind.SaleFlag = HerdChangeReason.SirePurchase;
                                 ind.ID = 0;
-                                ind.DateOfPurchase = clock.Today;
+                                ind.DateOfPurchase = events.Clock.Today;
 
                                 // TODO: supply attributes with new individuals
 
@@ -1456,13 +1454,13 @@ namespace Models.CLEM.Activities
                                 RuminantTypeCohort cohort = purchaseBreederDetails[i].SpecifyRuminantComponent.Details;
                                 cohort.Number = totals[i];
                                 Status = ActivityStatus.Success;
-                                var newindividuals = cohort.CreateIndividuals(null, clock.Today, purchaseBreederDetails[i].SpecifyRuminantComponent.BreedType);
+                                var newindividuals = cohort.CreateIndividuals(null, events.Clock.Today, purchaseBreederDetails[i].SpecifyRuminantComponent.BreedType);
                                 foreach (var ind in newindividuals)
                                 {
                                     //ind.Location = grazeStoreBreeders;
                                     ind.SaleFlag = HerdChangeReason.BreederPurchase;
                                     ind.ID = 0;
-                                    ind.DateOfPurchase = clock.Today; // PurchaseAge = ind.Age;
+                                    ind.DateOfPurchase = events.Clock.Today; // PurchaseAge = ind.Age;
 
                                     // weight will be set to normalised weight as it was assigned 0 at initialisation
                                     //ind.PreviousWeight = ind.Weight;

@@ -8,11 +8,9 @@ using Models.Core.Attributes;
 using System.Globalization;
 using System.IO;
 using Newtonsoft.Json;
-using APSIM.Shared.Utilities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
 using Models.CLEM.Groupings;
-using System.Xml;
 using APSIM.Numerics;
 using DocumentFormat.OpenXml.Bibliography;
 

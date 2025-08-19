@@ -1,6 +1,4 @@
 ﻿using Models.CLEM.Interfaces;
-using Models.CLEM.Reporting;
-using Models.LifeCycle;
 using System;
 using System.Collections.Generic;
 

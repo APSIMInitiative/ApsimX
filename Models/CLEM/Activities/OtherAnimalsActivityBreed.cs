@@ -5,12 +5,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
-using DocumentFormat.OpenXml.Drawing.Charts;
-using SixLabors.ImageSharp;
 using Models.CLEM.Interfaces;
-using Models.PMF.Organs;
 using System.Collections.Generic;
-using Models.LifeCycle;
 using System.IO;
 
 namespace Models.CLEM.Activities

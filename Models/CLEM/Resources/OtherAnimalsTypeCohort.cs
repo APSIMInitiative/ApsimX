@@ -1,11 +1,9 @@
-﻿using Microsoft.VisualBasic.FileIO;
-using Models.CLEM.Activities;
+﻿using Models.CLEM.Activities;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 

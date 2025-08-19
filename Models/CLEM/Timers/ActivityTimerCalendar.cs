@@ -1,6 +1,4 @@
-﻿using DocumentFormat.OpenXml.Drawing;
-using DocumentFormat.OpenXml.EMMA;
-using Models.CLEM.Activities;
+﻿using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
 using Models.CLEM.Resources;
@@ -202,8 +200,8 @@ namespace Models.CLEM.Timers
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            Clock clock = this.FindInScope<Clock>();
-            CLEMEvents clemEvents = this.FindInScope<CLEMEvents>();
+            Clock clock = Structure.Find<Clock>();
+            CLEMEvents clemEvents = Structure.Find<CLEMEvents>();
             clemEvents.Clock = clock;
             if (clock is null || clemEvents is null)
                 return $"<div class=\"filter\"><span class=\"errorlink\">No CLEM Events component provided below Clock</span></div>";

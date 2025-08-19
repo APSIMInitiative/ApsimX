@@ -7,11 +7,8 @@ using System.Linq;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;
-using APSIM.Shared.Utilities;
-using Models.Core.ApsimFile;
 using Models.CLEM.Groupings;
 using APSIM.Numerics;
-using APSIM.Core;
 
 namespace Models.CLEM.Activities
 {
@@ -29,12 +26,8 @@ namespace Models.CLEM.Activities
     [Description("Perform grazing of all herds within a specified pasture (paddock)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGraze.htm")]
-    public class RuminantActivityGrazePasture : CLEMRuminantActivityBase, IValidatableObject, IStructureDependency
+    public class RuminantActivityGrazePasture : CLEMRuminantActivityBase, IValidatableObject
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
         /// <summary>
         /// Link to clock
         /// Public so children can be dynamically created after links defined
@@ -91,15 +84,15 @@ namespace Models.CLEM.Activities
             //Guid currentUid = ActivitiesHolder.AddToGuID(grazeAll.UniqueID, 1);
             UniqueID = parentBasedUid;
 
-            SetLinkedModels(grazeAll.FindInScope<ResourcesHolder>());
-            Structure.Add(CreateRuminantFilterGroup(), this);
+            SetLinkedModels(Structure.Find<ResourcesHolder>(relativeTo: grazeAll));
+            Core.ApsimFile.Structure.Add(CreateRuminantFilterGroup(), this);
             InitialiseHerd(true, true);
 
             Guid nextUID = ActivitiesHolder.AddToGuID(parentBasedUid, 2);
             foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())
             {
                 RuminantActivityGrazePastureHerd newPastureHerd = new RuminantActivityGrazePastureHerd(this, herdType, events, transactionCategory, usingGrowPF, nextUID);
-                Structure.Add(newPastureHerd, this);
+                Core.ApsimFile.Structure.Add(newPastureHerd, this);
                 //newPastureHerd.InitialiseHerd(true, false);
                 nextUID = ActivitiesHolder.AddToGuID(nextUID, 2);
             }
@@ -147,7 +140,7 @@ namespace Models.CLEM.Activities
 
             GrazeFoodStoreModel = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
-            bool usingGrowPF = FindInScope<RuminantActivityGrowPF>() is not null;
+            bool usingGrowPF = Structure.Find<RuminantActivityGrowPF>() is not null;
 
             //Create list of children by breed
             //Guid currentUid = UniqueID;
@@ -161,7 +154,7 @@ namespace Models.CLEM.Activities
             Guid nextUID = ActivitiesHolder.AddToGuID(UniqueID, 1);
             foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())
             {
-                Structure.Add(new RuminantActivityGrazePastureHerd(this, herdType, events, transCat, usingGrowPF, nextUID), this);
+                Core.ApsimFile.Structure.Add(new RuminantActivityGrazePastureHerd(this, herdType, events, transCat, usingGrowPF, nextUID), this);
                 nextUID = ActivitiesHolder.AddToGuID(nextUID, 1);
             }
             this.FindAllDescendants<RuminantActivityGrazePastureHerd>().LastOrDefault().IsHidden = true;

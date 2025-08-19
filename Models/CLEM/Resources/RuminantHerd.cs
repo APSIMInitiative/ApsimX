@@ -1,6 +1,4 @@
 using Docker.DotNet.Models;
-using DocumentFormat.OpenXml.Drawing;
-using DocumentFormat.OpenXml.Spreadsheet;
 using Models.CLEM.Activities;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
@@ -11,7 +9,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 using System.Linq;
 
 namespace Models.CLEM.Resources
@@ -89,7 +86,7 @@ namespace Models.CLEM.Resources
             id = 1;
             Herd = new List<Ruminant>();
             PurchaseIndividuals = new List<Ruminant>();
-            RuminantGrowActivity = FindAllInScope<IRuminantActivityGrow>().Where(a => (a as CLEMActivityBase).ActivityEnabled).FirstOrDefault();
+            RuminantGrowActivity = Structure.FindAll<IRuminantActivityGrow>().Where(a => (a as CLEMActivityBase).ActivityEnabled).FirstOrDefault();
 
             foreach (RuminantType rType in this.FindAllChildren<RuminantType>())
                 rType.Parameters.Initialise(rType);
@@ -101,14 +98,14 @@ namespace Models.CLEM.Resources
                 string warn = $"[r={Name}] requires at least one [a=RuminantActivityGrow_____] to manage growth and aging of individuals.";
                 Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
             }
-            if (FindAllInScope<IRuminantActivityGrow>().Where(a => (a as CLEMActivityBase).ActivityEnabled).Count() > 1)
+            if (Structure.FindAll<IRuminantActivityGrow>().Where(a => (a as CLEMActivityBase).ActivityEnabled).Count() > 1)
             {
                 string warn = $"Only one [a=RuminantActivityGrow_____] activity is permitted in the simulation";
                 string warnfull = $"{warn}{Environment.NewLine}CLEM does not support using different growth models in a simulation even if filtered by herds or breeds. Ensure a single growth component is enabled (ActivityEnabled property or Disable in UI tree)";
                 Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error, warnfull);
             }
 
-            if (!FindAllInScope<RuminantActivityDeath>().Any())
+            if (!Structure.FindAll<RuminantActivityDeath>().Any())
             {
                 // check that a death activity is present for the herd if ruminant types are present.
                 string warn = $"[r={Name}] requires at least one [a=RuminantActivityDeath] to manage death and remove individuals that died.{Environment.NewLine}No individuals will be removed from this simulation even if they have beed identified to have died.";

@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml.Spreadsheet;
-using Models.CLEM.Activities;
+﻿using Models.CLEM.Activities;
 using Models.Core;
 using Models.Core.Attributes;
 using Newtonsoft.Json;

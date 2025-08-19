@@ -1,16 +1,11 @@
-﻿using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Wordprocessing;
-using Models.CLEM.Groupings;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
-using Models.PMF.Organs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Newtonsoft.Json;
-using System.Threading.Tasks;
 
 namespace Models.CLEM.Activities
 {

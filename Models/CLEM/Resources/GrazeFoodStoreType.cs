@@ -7,7 +7,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -1023,8 +1022,8 @@ namespace Models.CLEM.Resources
                 {
                     double amountToRemove = pool.Amount * useproportion;
                     amountBurned += amountToRemove;
-                    dryMatterDigestibility += pool.DMD * amountToRemove;
-                    nitrogen += pool.Nitrogen * amountToRemove;
+                    dryMatterDigestibility += pool.DryMatterDigestibility * amountToRemove;
+                    nitrogen += pool.NitrogenPercent * amountToRemove;
                     pool.Remove(amountToRemove, this, "Burned");
                 }
                 request.Provided = amountBurned;

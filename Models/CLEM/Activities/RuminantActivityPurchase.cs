@@ -8,9 +8,7 @@ using Models.Core.Attributes;
 using System.Globalization;
 using System.IO;
 using Models.CLEM.Interfaces;
-using APSIM.Shared.Utilities;
 using APSIM.Numerics;
-using DocumentFormat.OpenXml.Office.CustomXsn;
 using APSIM.Core;
 
 namespace Models.CLEM.Activities
@@ -26,16 +24,10 @@ namespace Models.CLEM.Activities
     [Version(1, 1, 0, "Replaces old Trade herd approach")]
     [Version(1, 0, 2, "Includes improvements such as a relationship to define numbers purchased based on pasture biomass and allows placement of purchased individuals in a specified paddock")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantPurchase.htm")]
-    public class RuminantActivityPurchase : CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels, IStructureDependency
+    public class RuminantActivityPurchase : CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels
     {
         [Link]
         private readonly Clock clock = null;
-
-        /// <summary>
-        /// Structure instance supplied by APSIM.core.
-        /// </summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
 
         private string grazeStore = "";
         private Relationship numberToStock;

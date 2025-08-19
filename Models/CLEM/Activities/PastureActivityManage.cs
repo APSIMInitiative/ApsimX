@@ -8,8 +8,6 @@ using System.Linq;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;
-using APSIM.Core;
-using Models.CLEM.Timers;
 
 namespace Models.CLEM.Activities
 {
@@ -29,12 +27,8 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Added ecological indicator calculations")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Pasture/ManagePasture.htm")]
-    public class PastureActivityManage: CLEMActivityBase, IValidatableObject, IPastureManager, IHandlesActivityCompanionModels, IStructureDependency
+    public class PastureActivityManage: CLEMActivityBase, IValidatableObject, IPastureManager, IHandlesActivityCompanionModels
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
         [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
         [Link]
@@ -552,7 +546,7 @@ namespace Models.CLEM.Activities
             htmlWriter.Write(" occupies ");
             Land parentLand = null;
             if (LandTypeNameToUse != null && LandTypeNameToUse != "")
-                parentLand = FindInScope(LandTypeNameToUse.Split('.')[0]) as Land;
+                parentLand = Structure.Find<Land>(LandTypeNameToUse.Split('.')[0]);
 
             if (UseAreaAvailable)
                 htmlWriter.Write("the unallocated portion of ");

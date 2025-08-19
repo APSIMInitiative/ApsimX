@@ -1,7 +1,4 @@
-﻿using Models.Aqua;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
 namespace Models.CLEM.Resources
 {

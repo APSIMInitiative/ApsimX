@@ -7,10 +7,10 @@ using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
 using System.IO;
-using APSIM.Shared.Utilities;
 using Models.CLEM.Reporting;
 using Models.CLEM.Groupings;
-using Models.Core.ApsimFile;
+using APSIM.Core;
+using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
@@ -27,12 +27,8 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGraze.htm")]
     [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGrazing) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType })]
-    class RuminantActivityGrazePastureHerd : CLEMRuminantActivityBase, IValidatableObject, IStructureDependency
+    class RuminantActivityGrazePastureHerd : CLEMRuminantActivityBase, IValidatableObject
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
         /// <summary>
         /// Link to clock
         /// Public so children can be dynamically created after links defined
@@ -165,8 +161,8 @@ namespace Models.CLEM.Activities
             this.usingGrowPF = usingGrowPF;
             Status = ActivityStatus.NoTask;
             UniqueID = parentBasedUid; 
-            SetLinkedModels(grazePasture.FindInScope<ResourcesHolder>());
-            Structure.Add(CreateRuminantFilterGroup(), this);
+            SetLinkedModels(Structure.Find<ResourcesHolder>(relativeTo: grazePasture));
+            Core.ApsimFile.Structure.Add(CreateRuminantFilterGroup(), this);
             InitialiseHerd(false, false);
         }
 
@@ -210,7 +206,7 @@ namespace Models.CLEM.Activities
             GrazeFoodStoreModel = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
             RuminantTypeModel = Resources.FindResourceType<RuminantHerd, RuminantType>(this, RuminantTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
-            usingGrowPF = FindInScope<RuminantActivityGrowPF>() is not null;
+            usingGrowPF = Structure.Find<RuminantActivityGrowPF>() is not null;
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

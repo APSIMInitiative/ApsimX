@@ -1,4 +1,4 @@
-﻿using APSIM.Shared.Utilities;
+﻿using APSIM.Numerics;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;

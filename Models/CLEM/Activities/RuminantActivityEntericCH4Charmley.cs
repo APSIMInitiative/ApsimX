@@ -1,12 +1,11 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Resources;
+using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Models.CLEM.Resources;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
-using DocumentFormat.OpenXml.Drawing;
-using Models.Core.Attributes;
+using System.Linq;
 
 namespace Models.CLEM.Activities
 {
@@ -42,7 +41,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             // find first GreenhouseGasType flagged to autocollect methane. 
-            methaneEmissions = FindAllInScope<GreenhouseGasesType>().Where(a => a.AutoCollectType == GreenhouseGasTypes.CH4).FirstOrDefault();
+            methaneEmissions = Structure.FindAll<GreenhouseGasesType>().Where(a => a.AutoCollectType == GreenhouseGasTypes.CH4).FirstOrDefault();
             if(methaneEmissions is not null)
                 InitialiseHerd(false, true);
         }

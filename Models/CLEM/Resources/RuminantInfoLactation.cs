@@ -1,4 +1,4 @@
-﻿using APSIM.Shared.Utilities;
+﻿using APSIM.Numerics;
 using System;
 
 namespace Models.CLEM.Resources

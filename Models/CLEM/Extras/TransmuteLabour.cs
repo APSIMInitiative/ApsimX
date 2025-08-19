@@ -9,7 +9,6 @@ using Models.CLEM.Activities;
 using Models.CLEM.Groupings;
 using System.Linq;
 using System.IO;
-using APSIM.Shared.Utilities;
 using APSIM.Numerics;
 
 namespace Models.CLEM

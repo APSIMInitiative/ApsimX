@@ -1,9 +1,5 @@
-﻿using APSIM.Shared.Utilities;
-using Docker.DotNet.Models;
-using Models.CLEM.Interfaces;
+﻿using APSIM.Numerics;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.Json.Serialization;
 
 namespace Models.CLEM.Resources

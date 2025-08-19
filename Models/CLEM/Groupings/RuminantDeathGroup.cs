@@ -1,4 +1,4 @@
-﻿using APSIM.Shared.Utilities;
+﻿using APSIM.Numerics;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
@@ -9,8 +9,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models.CLEM.Groupings
 {
@@ -84,7 +82,7 @@ namespace Models.CLEM.Groupings
         {
             var results = new List<ValidationResult>();
 
-            if (FindInScope<RuminantParametersGrow>() is null)
+            if (Structure.Find<RuminantParametersGrow>() is null)
             {
                 string[] memberNames = new string[] { "Missing Ruminant.Grow parameters" };
                 results.Add(new ValidationResult($"[a=RuminantActivityDeath] requires parameters defined in [r=Ruminant.Parameters.RuminantParametersGrow].{Environment.NewLine}Ensure [r=Ruminant.Parameters.RuminantParametersGrow] is present and has the parameters for your breed provided..", memberNames));

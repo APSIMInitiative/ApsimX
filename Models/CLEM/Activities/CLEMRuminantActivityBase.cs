@@ -6,7 +6,6 @@ using Models.CLEM.Resources;
 using Models.CLEM.Groupings;
 using Newtonsoft.Json;
 using Models.CLEM.Interfaces;
-using APSIM.Shared.Graphing;
 
 namespace Models.CLEM.Activities
 {

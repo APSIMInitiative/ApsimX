@@ -1,13 +1,8 @@
 ﻿using Models.Core;
 using Models.CLEM.Resources;
 using System;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using Models.Core.Attributes;
-using static Models.GrazPlan.GrazType;
 using System.Collections.Generic;
-using Models.CLEM.Groupings;
-using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Activities
 {

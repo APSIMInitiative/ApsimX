@@ -4,6 +4,7 @@ using APSIM.Shared.Utilities;
 using Newtonsoft.Json.Linq;
 using System.Globalization;
 using System.Reflection;
+using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using System.Xml;
 
@@ -6821,6 +6822,185 @@ internal class Converter
                 manager.Save();
             }
         }
+    }
+
+    /// <summary>
+    /// Change CLEM to work with new custom time-step rather than months
+    /// </summary>
+    /// <param name="root">The root JSON token.</param>
+    /// <param name="_">The name of the apsimx file.</param>
+    private static void UpgradeToVersion200(JObject root, string _)
+    {
+        // replace all Grow24 with GrowPF
+
+        var rumCompUpdated = new Tuple<string, string, string>[]
+        {
+                new("Activities", "RuminantActivityGrow24", "RuminantActivityGrowPF"),
+                new("Resources", "RuminantParametersGrow24", "RuminantParametersGrowPF"),
+                new("Resources", "RuminantParametersGrow24CACRD", "RuminantParametersGrowPFCACRD"),
+                new("Resources", "RuminantParametersGrow24CD", "RuminantParametersGrowPFCD"),
+                new("Resources", "RuminantParametersGrow24CG", "RuminantParametersGrowPFCG"),
+                new("Resources", "RuminantParametersGrow24CI", "RuminantParametersGrowPFCI"),
+                new("Resources", "RuminantParametersGrow24CKCL", "RuminantParametersGrowPFCKCL"),
+                new("Resources", "RuminantParametersGrow24CM", "RuminantParametersGrowPFCM"),
+                new("Resources", "RuminantParametersGrow24CP", "RuminantParametersGrowPFCP"),
+                new("Resources", "RuminantParametersGrow24CW", "RuminantParametersGrowPFCW"),
+        };
+
+        foreach (var update in rumCompUpdated)
+        {
+            foreach (JObject rumComponent in JsonUtilities.ChildrenRecursively(root, $"Models.CLEM.{update.Item1}.{update.Item2}"))
+            {
+                rumComponent["$type"] = $"Models.CLEM.{update.Item1}.{update.Item3}, Models";
+            }
+        }
+
+        // Pseudocode plan:
+        // 1. Loop through each tuple in propertyUpdates (model type, property name).
+        // 2. For each tuple, find all nodes of the given model type in the JSON root.
+        // 3. For each node, check if the property exists and is not already an AgeSpecifier (i.e., not an object).
+        // 4. If so, replace the property value with a new AgeSpecifier object, using the existing value as input.
+        // 5. For "LabourType", multiply the value by 12 (years to months); otherwise, use the value as-is (already in months).
+
+        var propertyUpdates = new Tuple<string, string>[]
+        {
+                new("RuminantActivityControlledMating", "MaximumAgeMating"),
+                new("RuminantActivityWean", "WeaningAge"),
+                new("RuminantActivityManage", "MaximumBreederAge"),
+                new("RuminantActivityManage", "MaximumSireAge"),
+                new("RuminantActivityManage", "MaleSellingAge"),
+                new("RuminantActivityManage", "FemaleSellingAge"),
+                new("ProductStoreTypeManure", "MaximumAge"),
+                new("LabourType", "InitialAge"),
+                new("OtherAnimalsActivityBreed", "InitialAge")
+        };
+
+        foreach (var item in propertyUpdates)
+        {
+            foreach (var node in JsonUtilities.ChildrenOfType(root, item.Item1))
+            {
+                // Only update if AgeSpecifier is not already present
+                if (JsonUtilities.ChildrenOfType(node, "AgeSpecifier").Count == 0)
+                {
+                    var propValue = node[item.Item2];
+                    if (propValue is not null && propValue.Type.ToString() != "Object")
+                    {
+                        decimal value = node.Value<decimal>(item.Item2);
+                        if (item.Item1 == "LabourType")
+                            value *= 12;
+                        node[item.Item2] = JContainer.FromObject(createCLEMAgeSpecifier(value));   //(new Models.CLEM.AgeSpecifier(value));
+                    }
+                }
+            }
+        }
+
+        foreach (var node in JsonUtilities.ChildrenOfType(root, "RuminantTypeCohort"))
+            if (!node.Properties().Where(a => a.Name == "AgeDetails").Any())
+            {
+                decimal value = node.Value<decimal>("Age");
+                node.Add(new JProperty("AgeDetails", JContainer.FromObject(createCLEMAgeSpecifier(value))));   //JContainer.FromObject(new AgeSpecifier(node.Value<decimal>("Age")))));
+            }
+
+        foreach (var node in JsonUtilities.ChildrenOfType(root, "FilterByProperty").Where(a => a.GetValue("PropertyOfIndividual").ToString() == "Age"))
+        {
+            node["PropertyOfIndividual"] = "AgeInYears";
+            node["Value"] = JContainer.FromObject(node.Value<decimal>("Value") / 12.0m);
+        }
+
+        foreach (JObject clk in JsonUtilities.ChildrenRecursively(root, "Clock"))
+        {
+            //check if child already has a CLEMEvents
+            if (JsonUtilities.ChildWithName(clk, "CLEMEvents") == null)
+            {
+                string newCLEMEvents = @"{
+                ""$type"": ""Models.CLEM.CLEMEvents, Models"",
+                ""TimeStep"": 30, 
+                ""CustomTimeStep"": 0,
+                ""EcologicalIndicatorsCalculationInterval"": 12,
+                ""EcologicalIndicatorsCalculationMonth"": 7,
+                ""Interval"": 0,
+                ""Notes"": null,
+                ""SelectedTab"": null,
+                ""Name"": ""CLEMEvents"",
+                ""ResourceName"": null,
+                ""Children"": [],
+                ""Enabled"": true,
+                ""ReadOnly"": false
+                }";
+
+                //JsonUtilities.AddModel(clk, new CLEMEvents());
+                JsonUtilities.AddChild(clk, JObject.Parse(newCLEMEvents));
+                
+            }
+        }
+
+        // replace ActivityTimerDateRange with new ActivityTimerCalendar details
+        // set start ymd to start.Year, Start.Month, Start.Day
+        // set end ymd to end.Year, end.Month, end.Day
+
+        foreach (var node in JsonUtilities.ChildrenOfType(root, "ActivityTimerDateRange"))
+        {
+            node["$type"] = "Models.CLEM.Timers.ActivityTimerCalendar, Models";
+            var decmonth = node.Value<DateTime>("StartDate");
+            decimal months = decmonth.Year * 12 + decmonth.Month + (decmonth.Day / DateTime.DaysInMonth(decmonth.Year, decmonth.Month));
+            node.Add(new JProperty("StartDetails", JContainer.FromObject(createCLEMAgeSpecifier(months)))); //new AgeSpecifier(months))));
+            decmonth = node.Value<DateTime>("EndDate");
+            months = decmonth.Year * 12 + decmonth.Month + (decmonth.Day / DateTime.DaysInMonth(decmonth.Year, decmonth.Month));
+            node.Add(new JProperty("EndDetails", JContainer.FromObject(createCLEMAgeSpecifier(months))));  //new AgeSpecifier(months))));
+        }
+
+        // replace ActivityTimerInterval with new ActivityTimerCalendar
+        // place interval in the repeatDetails
+        // set start and end ymd to 0, MonthDue, 0
+        foreach (var node in JsonUtilities.ChildrenOfType(root, "ActivityTimerInterval"))
+        {
+            node["$type"] = "Models.CLEM.Timers.ActivityTimerCalendar, Models";
+            var monthDue = node.Value<decimal>("MonthDue");
+            node.Add(new JProperty("StartDetails", JContainer.FromObject(createCLEMAgeSpecifier(monthDue))));  //new AgeSpecifier(monthDue))));
+            node.Add(new JProperty("EndDetails", JContainer.FromObject(createCLEMAgeSpecifier(monthDue))));  //new AgeSpecifier(monthDue))));
+            var interval = node.Value<decimal>("Interval");
+            node.Add(new JProperty("RepeatDetails", JContainer.FromObject(createCLEMAgeSpecifier(interval)))); //new AgeSpecifier(interval))));
+        }
+
+        // replace ActivityTimerMonthRange with new ActivityTimerCalendar
+        // set start ymd to 0, Start.Month, 0
+        // set end ymd to 0, end.Month, 0
+        foreach (var node in JsonUtilities.ChildrenOfType(root, "ActivityTimerMonthRange"))
+        {
+            node["$type"] = "Models.CLEM.Timers.ActivityTimerCalendar, Models";
+            var startMonth = node.Value<decimal>("StartMonth");
+            node.Add(new JProperty("StartDetails", JContainer.FromObject(createCLEMAgeSpecifier(startMonth)))); //new AgeSpecifier(startMonth))));
+            var endMonth = node.Value<decimal>("EndMonth");
+            node.Add(new JProperty("EndDetails", JContainer.FromObject(createCLEMAgeSpecifier(endMonth)))); //new AgeSpecifier(endMonth))));
+        }
+    }
+
+    private static JObject createCLEMAgeSpecifier(decimal value)
+    {
+        int[] parts;
+        if (value >= 12)
+        {
+            decimal years = Math.Floor(value / 12);
+            decimal remainingMonths = value - (years * 12);
+            decimal partmonths = value - decimal.Floor(value);
+            parts = [Convert.ToInt32(years), Convert.ToInt32(remainingMonths), Convert.ToInt32(partmonths * 30.4M)];
+        }
+        else
+        {
+            decimal partmonths = value - decimal.Floor(value);
+            parts = [0, Convert.ToInt32(value), Convert.ToInt32(partmonths * 30.4M)];
+        }
+
+        string partsString = string.Join($",{Environment.NewLine}", parts);
+
+        string newAgeSpecifier = @"{
+                                    ""$type"": ""Models.CLEM.AgeSpecifier, Models"",
+                                    ""Parts"": [
+                                      [VALUE]
+                                    ]
+                                  }";
+        newAgeSpecifier = newAgeSpecifier.Replace("[VALUE]", partsString);
+        return JObject.Parse(newAgeSpecifier);
     }
 
 }

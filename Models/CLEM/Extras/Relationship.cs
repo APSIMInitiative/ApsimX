@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 using System.IO;
-using APSIM.Shared.Utilities;
 using System.Xml.Serialization;
 using Models.CLEM.Resources;
 using APSIM.Numerics;

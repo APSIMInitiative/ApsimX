@@ -1,10 +1,8 @@
-using DocumentFormat.OpenXml.Drawing;
 using Models.CLEM.Activities;
 using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
-using Models.PMF.Struct;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

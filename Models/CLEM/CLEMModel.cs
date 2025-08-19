@@ -1,5 +1,5 @@
-﻿using APSIM.Shared.Utilities;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+﻿using APSIM.Core;
+using APSIM.Shared.Utilities;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
@@ -8,7 +8,6 @@ using Models.Core.Attributes;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -20,8 +19,12 @@ namespace Models.CLEM
     ///</summary> 
     [Serializable]
     [Description("This is the Base CLEM model and should not be used directly.")]
-    public abstract class CLEMModel : Core.Model, ICLEMUI, ICLEMDescriptiveSummary
+    public abstract class CLEMModel : Model, ICLEMUI, ICLEMDescriptiveSummary, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { get; set; }
+    
         /// <summary>
         /// Link to summary
         /// </summary>
@@ -96,9 +99,23 @@ namespace Models.CLEM
         /// <summary>
         /// Method to check model associations based on attribute values.
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="model">The requesting model</param>
         public static void CheckModelAssociations(Model model)
         {
+            IStructure structure;
+            if (model is CLEMModel clemModel)
+            {
+                structure = clemModel.Structure;
+            }
+            else if(model is ZoneCLEM zoneModel)
+            {
+                structure = zoneModel.Structure;
+            }
+            else
+            {
+                return;
+            }
+
             ModelAssociationsAttribute requiredAttribte = model.GetType().GetCustomAttribute<ModelAssociationsAttribute>();
             if (requiredAttribte is not null)
             {
@@ -108,7 +125,7 @@ namespace Models.CLEM
                     switch (requiredAttribte.AssociationStyles[i])
                     {
                         case ModelAssociationStyle.InScope:
-                            if (model.FindAllInScope().Where(a => a.GetType() == requiredAttribte.AssociatedModels[i]).Any() == false)
+                            if (structure.FindAll<Model>(relativeTo: model).Where(a => a.GetType() == requiredAttribte.AssociatedModels[i]).Any() == false)
                                 errors.Add($"Cannot find required component [x={requiredAttribte.AssociatedModels[i].Name}] in scope for [x={model.FullPath}]");
                             break;
                         case ModelAssociationStyle.Descendent:
@@ -134,7 +151,7 @@ namespace Models.CLEM
 
                 if (requiredAttribte.SingleInstance)
                 {
-                    var allfound = model.FindAllInScope().Where(a => a.GetType() == model.GetType());
+                    var allfound = structure.FindAll<Model>(relativeTo: model).Where(a => a.GetType() == model.GetType());
                     if (allfound.Count() > 1 && allfound.FirstOrDefault() == model)
                         errors.Add($"Only one instance of [x={model.GetType().Name}] is allowed in scope of [CLEM].");
                 }

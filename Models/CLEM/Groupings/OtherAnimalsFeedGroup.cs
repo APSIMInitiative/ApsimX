@@ -4,12 +4,9 @@ using Models.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Models.CLEM.Resources;
 using Newtonsoft.Json;
 using Models.CLEM.Interfaces;
-using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Groupings
 {
