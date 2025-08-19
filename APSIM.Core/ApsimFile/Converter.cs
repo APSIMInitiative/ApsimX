@@ -7001,24 +7001,6 @@ internal class Converter
             }
 
         }
-
-        /*
-          "MinimumRotationLengthArray": [
-            15.0,
-            15.0,
-            15.0,
-            15.0,
-            15.0,
-            15.0,
-            15.0,
-            15.0,
-            15.0,
-            15.0,
-            15.0,
-            15.0
-          ],
-        */
-
     }
 
 }
