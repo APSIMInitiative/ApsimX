@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 199,
+  "Version": 200,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -16,13 +16,13 @@
             "OxdefObserved.xlsx"
           ],
           "SheetNames": [
-            "Scott1989.Harvest",
-            "Scott1989.TimeSeries",
-            "Scott1987.Harvest",
-            "Scott1987.TimeSeries",
-            "Rhine.timing",
-            "Rhine.duration",
-            "Mollabashi.TimeSeries"
+            "Scott1989_Harvest",
+            "Scott1989_TimeSeries",
+            "Scott1987_Harvest",
+            "Scott1987_TimeSeries",
+            "Rhine_timing",
+            "Rhine_duration",
+            "Mollabashi_TimeSeries"
           ],
           "Name": "ExcelInput",
           "ResourceName": null,
@@ -33,7 +33,7 @@
         {
           "$type": "Models.PostSimulationTools.PredictedObserved, Models",
           "PredictedTableName": "Report_Day",
-          "ObservedTableName": "Scott1989.TimeSeries",
+          "ObservedTableName": "Scott1989_TimeSeries",
           "FieldNameUsedForMatch": "SimulationName",
           "FieldName2UsedForMatch": "Clock.Today",
           "FieldName3UsedForMatch": null,
@@ -48,7 +48,7 @@
         {
           "$type": "Models.PostSimulationTools.PredictedObserved, Models",
           "PredictedTableName": "Report_Harvest",
-          "ObservedTableName": "Scott1989.Harvest",
+          "ObservedTableName": "Scott1989_Harvest",
           "FieldNameUsedForMatch": "SimulationName",
           "FieldName2UsedForMatch": null,
           "FieldName3UsedForMatch": null,
@@ -63,7 +63,7 @@
         {
           "$type": "Models.PostSimulationTools.PredictedObserved, Models",
           "PredictedTableName": "Report_Day",
-          "ObservedTableName": "Scott1987.TimeSeries",
+          "ObservedTableName": "Scott1987_TimeSeries",
           "FieldNameUsedForMatch": "SimulationName",
           "FieldName2UsedForMatch": "Clock.Today",
           "FieldName3UsedForMatch": null,
@@ -78,7 +78,7 @@
         {
           "$type": "Models.PostSimulationTools.PredictedObserved, Models",
           "PredictedTableName": "Report_Harvest",
-          "ObservedTableName": "Scott1987.Harvest",
+          "ObservedTableName": "Scott1987_Harvest",
           "FieldNameUsedForMatch": "SimulationName",
           "FieldName2UsedForMatch": null,
           "FieldName3UsedForMatch": null,
@@ -93,7 +93,7 @@
         {
           "$type": "Models.PostSimulationTools.PredictedObserved, Models",
           "PredictedTableName": "Report_Harvest",
-          "ObservedTableName": "Rhine.timing",
+          "ObservedTableName": "Rhine_timing",
           "FieldNameUsedForMatch": "SimulationName",
           "FieldName2UsedForMatch": "Year",
           "FieldName3UsedForMatch": null,
@@ -108,7 +108,7 @@
         {
           "$type": "Models.PostSimulationTools.PredictedObserved, Models",
           "PredictedTableName": "Report_Harvest",
-          "ObservedTableName": "Rhine.duration",
+          "ObservedTableName": "Rhine_duration",
           "FieldNameUsedForMatch": "SimulationName",
           "FieldName2UsedForMatch": "Year",
           "FieldName3UsedForMatch": null,
@@ -123,7 +123,7 @@
         {
           "$type": "Models.PostSimulationTools.PredictedObserved, Models",
           "PredictedTableName": "Report_Day",
-          "ObservedTableName": "Mollabashi.TimeSeries",
+          "ObservedTableName": "Mollabashi_TimeSeries",
           "FieldNameUsedForMatch": "SimulationName",
           "FieldName2UsedForMatch": "Clock.Today",
           "FieldName3UsedForMatch": null,
@@ -252,12 +252,6 @@
         },
         {
           "$type": "Models.PMF.Plant, Models",
-          "Phenology": null,
-          "Arbitrator": null,
-          "structure": null,
-          "Leaf": null,
-          "Root": null,
-          "AboveGround": null,
           "PlantType": "Soybean",
           "Name": "Soybean",
           "ResourceName": "",
@@ -461,7 +455,6 @@
             },
             {
               "$type": "Models.PMF.Phen.Phenology, Models",
-              "thermalTime": null,
               "Name": "Phenology",
               "ResourceName": null,
               "Children": [
@@ -485,7 +478,6 @@
                 },
                 {
                   "$type": "Models.Functions.SubDailyInterpolation, Models",
-                  "InterpolationMethod": null,
                   "agregationMethod": 0,
                   "Name": "VegetativeThermalTime",
                   "ResourceName": null,
@@ -568,7 +560,6 @@
                 },
                 {
                   "$type": "Models.Functions.SubDailyInterpolation, Models",
-                  "InterpolationMethod": null,
                   "agregationMethod": 0,
                   "Name": "ReproductiveThermalTime",
                   "ResourceName": null,
@@ -1355,7 +1346,6 @@
             },
             {
               "$type": "Models.PMF.Organs.SimpleLeaf, Models",
-              "MetData": null,
               "Albedo": 0.25,
               "Gsmax350": 0.015,
               "R50": 150.0,
@@ -1379,9 +1369,6 @@
               "Children": [
                 {
                   "$type": "Models.Functions.SupplyFunctions.RUEModel, Models",
-                  "FT": null,
-                  "FVPD": null,
-                  "RadnInt": null,
                   "Name": "Photosynthesis",
                   "ResourceName": null,
                   "Children": [
@@ -2438,12 +2425,6 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
-                  "Structural": null,
-                  "Metabolic": null,
-                  "Storage": null,
-                  "QStructuralPriority": null,
-                  "QMetabolicPriority": null,
-                  "QStoragePriority": null,
                   "Name": "DMDemands",
                   "ResourceName": null,
                   "Children": [
@@ -2771,12 +2752,6 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
-                  "Structural": null,
-                  "Metabolic": null,
-                  "Storage": null,
-                  "QStructuralPriority": null,
-                  "QMetabolicPriority": null,
-                  "QStoragePriority": null,
                   "Name": "NDemands",
                   "ResourceName": null,
                   "Children": [
@@ -3071,12 +3046,6 @@
             },
             {
               "$type": "Models.PMF.Organs.ReproductiveOrgan, Models",
-              "SurfaceOrganicMatter": null,
-              "Summary": null,
-              "biomassRemovalModel": null,
-              "DMConversionEfficiency": null,
-              "MaintenanceRespirationFunction": null,
-              "RemobilisationCost": null,
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
               "DMDemand": null,
@@ -3446,9 +3415,6 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                  "Structural": null,
-                  "Metabolic": null,
-                  "Storage": null,
                   "Name": "DMDemandPriorityFactors",
                   "ResourceName": null,
                   "Children": [
@@ -3488,9 +3454,6 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                  "Structural": null,
-                  "Metabolic": null,
-                  "Storage": null,
                   "Name": "NDemandPriorityFactors",
                   "ResourceName": null,
                   "Children": [
@@ -3534,9 +3497,6 @@
             },
             {
               "$type": "Models.PMF.Organs.Root, Models",
-              "SurfaceOrganicMatter": null,
-              "RootShape": null,
-              "InitialWt": null,
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
@@ -3993,12 +3953,6 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
-                  "Structural": null,
-                  "Metabolic": null,
-                  "Storage": null,
-                  "QStructuralPriority": null,
-                  "QMetabolicPriority": null,
-                  "QStoragePriority": null,
                   "Name": "DMDemands",
                   "ResourceName": null,
                   "Children": [
@@ -4185,12 +4139,6 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
-                  "Structural": null,
-                  "Metabolic": null,
-                  "Storage": null,
-                  "QStructuralPriority": null,
-                  "QMetabolicPriority": null,
-                  "QStoragePriority": null,
                   "Name": "NDemands",
                   "ResourceName": null,
                   "Children": [
@@ -4338,9 +4286,6 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                  "Structural": null,
-                  "Metabolic": null,
-                  "Storage": null,
                   "Name": "InitialWt",
                   "ResourceName": null,
                   "Children": [
@@ -4742,9 +4687,6 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                  "Structural": null,
-                  "Metabolic": null,
-                  "Storage": null,
                   "Name": "DMDemands",
                   "ResourceName": null,
                   "Children": [
@@ -4920,9 +4862,6 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                  "Structural": null,
-                  "Metabolic": null,
-                  "Storage": null,
                   "Name": "NDemands",
                   "ResourceName": null,
                   "Children": [
@@ -5035,13 +4974,6 @@
             },
             {
               "$type": "Models.PMF.Organs.GenericOrgan, Models",
-              "SenescenceRate": null,
-              "NRetranslocationFactor": null,
-              "DMRetranslocationFactor": null,
-              "InitialWt": null,
-              "DMConversionEfficiency": null,
-              "CarbonConcentration": null,
-              "RetranslocateNitrogen": null,
               "StartLive": null,
               "DMSupply": null,
               "NSupply": null,
@@ -5397,12 +5329,6 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
-                  "Structural": null,
-                  "Metabolic": null,
-                  "Storage": null,
-                  "QStructuralPriority": null,
-                  "QMetabolicPriority": null,
-                  "QStoragePriority": null,
                   "Name": "DMDemands",
                   "ResourceName": null,
                   "Children": [
@@ -5601,12 +5527,6 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
-                  "Structural": null,
-                  "Metabolic": null,
-                  "Storage": null,
-                  "QStructuralPriority": null,
-                  "QMetabolicPriority": null,
-                  "QStoragePriority": null,
                   "Name": "NDemands",
                   "ResourceName": null,
                   "Children": [
@@ -5718,9 +5638,6 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                  "Structural": null,
-                  "Metabolic": null,
-                  "Storage": null,
                   "Name": "InitialWt",
                   "ResourceName": null,
                   "Children": [
@@ -5783,13 +5700,6 @@
             },
             {
               "$type": "Models.PMF.Organs.GenericOrgan, Models",
-              "SenescenceRate": null,
-              "NRetranslocationFactor": null,
-              "DMRetranslocationFactor": null,
-              "InitialWt": null,
-              "DMConversionEfficiency": null,
-              "CarbonConcentration": null,
-              "RetranslocateNitrogen": null,
               "StartLive": null,
               "DMSupply": null,
               "NSupply": null,
@@ -6134,12 +6044,6 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
-                  "Structural": null,
-                  "Metabolic": null,
-                  "Storage": null,
-                  "QStructuralPriority": null,
-                  "QMetabolicPriority": null,
-                  "QStoragePriority": null,
                   "Name": "DMDemands",
                   "ResourceName": null,
                   "Children": [
@@ -6313,12 +6217,6 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
-                  "Structural": null,
-                  "Metabolic": null,
-                  "Storage": null,
-                  "QStructuralPriority": null,
-                  "QMetabolicPriority": null,
-                  "QStoragePriority": null,
                   "Name": "NDemands",
                   "ResourceName": null,
                   "Children": [
@@ -6534,9 +6432,6 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                  "Structural": null,
-                  "Metabolic": null,
-                  "Storage": null,
                   "Name": "InitialWt",
                   "ResourceName": null,
                   "Children": [
@@ -8589,12 +8484,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "Phenology": null,
-                          "Arbitrator": null,
-                          "structure": null,
-                          "Leaf": null,
-                          "Root": null,
-                          "AboveGround": null,
                           "Name": "soybean",
                           "ResourceName": "Soybean",
                           "Children": [],
@@ -14692,12 +14581,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "Phenology": null,
-                          "Arbitrator": null,
-                          "structure": null,
-                          "Leaf": null,
-                          "Root": null,
-                          "AboveGround": null,
                           "Name": "soybean",
                           "ResourceName": "Soybean",
                           "Children": [],
@@ -17366,12 +17249,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "Phenology": null,
-                          "Arbitrator": null,
-                          "structure": null,
-                          "Leaf": null,
-                          "Root": null,
-                          "AboveGround": null,
                           "Name": "soybean",
                           "ResourceName": "Soybean",
                           "Children": [],
@@ -19546,12 +19423,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "Phenology": null,
-                          "Arbitrator": null,
-                          "structure": null,
-                          "Leaf": null,
-                          "Root": null,
-                          "AboveGround": null,
                           "Name": "soybean",
                           "ResourceName": "Soybean",
                           "Children": [],
@@ -23838,12 +23709,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "Phenology": null,
-                          "Arbitrator": null,
-                          "structure": null,
-                          "Leaf": null,
-                          "Root": null,
-                          "AboveGround": null,
                           "Name": "soybean",
                           "ResourceName": "Soybean",
                           "Children": [],
@@ -27883,12 +27748,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "Phenology": null,
-                          "Arbitrator": null,
-                          "structure": null,
-                          "Leaf": null,
-                          "Root": null,
-                          "AboveGround": null,
                           "Name": "soybean",
                           "ResourceName": "Soybean",
                           "Children": [],
