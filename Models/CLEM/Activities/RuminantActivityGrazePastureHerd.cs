@@ -29,10 +29,6 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGraze.htm")]
     class RuminantActivityGrazePastureHerd : CLEMRuminantActivityBase, IValidatableObject, IStructureDependency
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
         /// <summary>
         /// Link to clock
         /// Public so children can be dynamically created after links defined
@@ -166,7 +162,7 @@ namespace Models.CLEM.Activities
                     Value = RuminantTypeName
                 }
             );
-            this.Children.Add(herdGroup);
+            Structure.AddChild(herdGroup);
 
             this.InitialiseHerd(false, false);
 
@@ -190,7 +186,7 @@ namespace Models.CLEM.Activities
             // reset the simulation subscriptions to correct the new order before running the simulation.
             if (IsHidden)
             {
-                Events events = new Events(FindAncestor<Simulation>());
+                Events events = new Events(Structure.FindParent<Simulation>(recurse: true));
                 //events.DisconnectEvents();
                 events.ReconnectEvents("Models.Clock", "CLEMGetResourcesRequired");
             }

@@ -52,7 +52,7 @@ namespace Models.CLEM.Activities
             manureStore = Resources.FindResourceType<ProductStore, ProductStoreTypeManure>(this, "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             // locate a cut and carry limiter associated with this event.
-            limiter = ActivityCarryLimiter.Locate(this);
+            limiter = ActivityCarryLimiter.Locate(this, Structure);
         }
 
         /// <inheritdoc/>

@@ -93,16 +93,16 @@ namespace Models.CLEM.Activities
             food = Resources.FindResourceGroup<HumanFoodStore>();
             bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
 
-            Market = food.FindAncestor<ResourcesHolder>().FoundMarket;
+            Market = Structure.FindParent<ResourcesHolder>(relativeTo: food, recurse: true).FoundMarket;
 
             resourcesHolder = base.Resources;
             // if market is present point to market to find the resource
             if (Market != null)
-                resourcesHolder = Market.FindChild<ResourcesHolder>();
+                resourcesHolder = Structure.FindChild<ResourcesHolder>(relativeTo: Market);
 
             // set the food store linked in any TargetPurchase if target proportion set > 0
             // check that all purchase resources have transmutation or recalulate the proportion
-            var targetPurchases = this.FindAllChildren<LabourActivityFeedTargetPurchase>().Where(a => a.TargetProportion > 0).ToList();
+            var targetPurchases = Structure.FindChildren<LabourActivityFeedTargetPurchase>().Where(a => a.TargetProportion > 0).ToList();
             if (targetPurchases.Any())
             {
                 double checkPropAvailable = 0;
@@ -171,7 +171,7 @@ namespace Models.CLEM.Activities
             double otherIntake = this.DailyIntakeOtherSources * aE * daysInMonth;
             otherIntake += peopleList.Sum(a => a.GetAmountConsumed());
 
-            List<LabourActivityFeedTarget> labourActivityFeedTargets = this.FindAllChildren<LabourActivityFeedTarget>().ToList();
+            List<LabourActivityFeedTarget> labourActivityFeedTargets = Structure.FindChildren<LabourActivityFeedTarget>().ToList();
 
             // determine targets
             foreach (LabourActivityFeedTarget target in labourActivityFeedTargets)
@@ -205,12 +205,12 @@ namespace Models.CLEM.Activities
             }
 
             // get max months before spoiling of all food stored (will be zero for non perishable food)
-            int maxFoodAge = food.FindAllChildren<HumanFoodStoreType>().Max(a => a.Pools.Select(b => a.UseByAge - b.Age).DefaultIfEmpty(0).Max());
+            int maxFoodAge = Structure.FindChildren<HumanFoodStoreType>(relativeTo: food).Max(a => a.Pools.Select(b => a.UseByAge - b.Age).DefaultIfEmpty(0).Max());
 
             // create list of all food parcels
             List<HumanFoodParcel> foodParcels = new List<HumanFoodParcel>();
 
-            foreach (HumanFoodStoreType foodStore in food.FindAllChildren<HumanFoodStoreType>().ToList())
+            foreach (HumanFoodStoreType foodStore in Structure.FindChildren<HumanFoodStoreType>(relativeTo: food).ToList())
             {
                 foreach (HumanFoodStorePool pool in foodStore.Pools.Where(a => a.Amount > 0))
                 {
@@ -239,7 +239,7 @@ namespace Models.CLEM.Activities
                 HumanFoodStore food = resources.FindResourceGroup<HumanFoodStore>();
                 if (food != null)
                 {
-                    foreach (HumanFoodStoreType foodStore in food.FindAllChildren<HumanFoodStoreType>())
+                    foreach (HumanFoodStoreType foodStore in Structure.FindChildren<HumanFoodStoreType>(relativeTo: food))
                     {
                         foreach (HumanFoodStorePool pool in foodStore.Pools.Where(a => a.Amount > 0))
                         {
@@ -403,7 +403,7 @@ namespace Models.CLEM.Activities
                     metricneeded = Math.Max(0, (targetUnfilled.Target - targetUnfilled.CurrentAchieved));
                     double amountToFull = intakeLimit - intake;
 
-                    foreach (LabourActivityFeedTargetPurchase purchase in this.FindAllChildren<LabourActivityFeedTargetPurchase>())
+                    foreach (LabourActivityFeedTargetPurchase purchase in Structure.FindChildren<LabourActivityFeedTargetPurchase>())
                     {
                         HumanFoodStoreType foodtype = purchase.FoodStore;
                         if (purchase.ProportionToPurchase > 0 && foodtype != null && (foodtype.TransmutationDefined & intake < intakeLimit))
@@ -505,7 +505,7 @@ namespace Models.CLEM.Activities
                             labour.FeedToTargetIntake += amount;
                         }
                 }
-                if (this.FindAllChildren<LabourActivityFeedTarget>().Where(a => !a.TargetAchieved).Any())
+                if (Structure.FindChildren<LabourActivityFeedTarget>().Where(a => !a.TargetAchieved).Any())
                     this.Status = ActivityStatus.Partial;
                 else
                     this.Status = ActivityStatus.Success;
@@ -536,7 +536,7 @@ namespace Models.CLEM.Activities
                 // determine AEs to be fed - NOTE does not account for aging in reserve calcualtion
                 double aE = people.AdultEquivalents(IncludeHiredLabour);
 
-                LabourActivityFeedTarget feedTarget = this.FindAllChildren<LabourActivityFeedTarget>().FirstOrDefault();
+                LabourActivityFeedTarget feedTarget = Structure.FindChildren<LabourActivityFeedTarget>().FirstOrDefault();
 
                 // amount to store
                 //double amountToStore = daysInMonth[i] * aE * (feedTarget.TargetValue - feedTarget.OtherSourcesValue);
@@ -550,7 +550,7 @@ namespace Models.CLEM.Activities
 
                 double amountStored = 0; // reset here to make store based on all food types
 
-                foreach (HumanFoodStoreType foodStore in food.FindAllChildren<HumanFoodStoreType>().ToList())
+                foreach (HumanFoodStoreType foodStore in Structure.FindChildren<HumanFoodStoreType>(relativeTo: food).ToList())
                 {
                     // double amountStored = 0; reset here to make store based on each food type
                     double amountAvailable = foodStore.Pools.Sum(a => a.Amount);
@@ -664,7 +664,7 @@ namespace Models.CLEM.Activities
             }
 
             // check that at least one target has been provided.
-            if (this.FindAllChildren<LabourActivityFeedTarget>().Count() == 0)
+            if (Structure.FindChildren<LabourActivityFeedTarget>().Count() == 0)
             {
                 string[] memberNames = new string[] { "LabourActivityFeedToTargets" };
                 results.Add(new ValidationResult(String.Format("At least one [LabourActivityFeedTarget] component is required below the feed activity [{0}]", this.Name), memberNames));
@@ -681,8 +681,8 @@ namespace Models.CLEM.Activities
         {
             return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
             {
-                (FindAllChildren<LabourActivityFeedTarget>(), true, "childgroupactivityborder", "The following targets are applied:", "No LabourActivityFeedTarget was provided"),
-                (FindAllChildren<LabourActivityFeedTargetPurchase>(), true, "childgroupactivityborder", "The following purchases will be used to supply food:", "")
+                (Structure.FindChildren<LabourActivityFeedTarget>(), true, "childgroupactivityborder", "The following targets are applied:", "No LabourActivityFeedTarget was provided"),
+                (Structure.FindChildren<LabourActivityFeedTargetPurchase>(), true, "childgroupactivityborder", "The following purchases will be used to supply food:", "")
             };
         }
 
@@ -705,10 +705,10 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("</div>");
 
                 // find a market place if present
-                Simulation sim = FindAncestor<Simulation>();
+                Simulation sim = Structure.FindParent<Simulation>(recurse: true);
                 if (sim != null)
                 {
-                    Market marketPlace = sim.FindChild<Market>();
+                    Market marketPlace = Structure.FindChild<Market>(relativeTo: sim);
                     if (marketPlace != null)
                     {
                         htmlWriter.Write("<div class=\"activityentry\">");
