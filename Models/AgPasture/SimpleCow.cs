@@ -66,8 +66,11 @@ public class SimpleCow : Model, IStructureDependency
     [JsonIgnore] public double SilageNFed { get; set; }
     /// <summary></summary>
     [JsonIgnore] public double SilageMEFed { get; set; }
+    /// <summary></summary>
+    [JsonIgnore] public double SilageDigestibility { get; set; }
 
-// Cow characteristics
+
+    // Cow characteristics
     /// <summary></summary>
     [Separator("Cow characteristics")]
 
@@ -112,6 +115,7 @@ public class SimpleCow : Model, IStructureDependency
     [Units("kgN/100kgN")]
     public double[] CowN2Exported { get; set; } // = { 30.0, 10.0 };
 
+    /*
     /// <summary></summary>
     [Description("Percent of intake N to urine when the cow is lactating and dry")]
     [Units("kgN/100kgN")]
@@ -122,9 +126,11 @@ public class SimpleCow : Model, IStructureDependency
     [Units("kgN/100kgN")]
     public double[] CowN2DungPerc { get; set; } // = { 28.0, 36.0 };
 
-    /// <summary></summary>
+     /// <summary></summary>
     /// <summary></summary>
     [JsonIgnore] public double[] CowN2BodyPerc { get; set; } = { 0.0, 0.0 }; //just use for checking later on would be { 30.0, 10.0 } with above values
+    */
+
 
     /// <summary></summary>
     [JsonIgnore] public DateTime CowDateInCalf{ get; set; }  // calculated from CowDateCalving and DaysFromCalvingToInCalf
@@ -163,11 +169,19 @@ public class SimpleCow : Model, IStructureDependency
     /// <summary></summary>
     [JsonIgnore] public double HerdDMIntake { get; set; }
     /// <summary></summary>
+    [JsonIgnore] public double HerdMEConcIntake { get; set; }
+    /// <summary></summary>
+    [JsonIgnore] public double HerdDigesitbilityIntake { get; set; }
+    /// <summary></summary>
     [JsonIgnore] public double HerdDungNReturned { get; set; }
     /// <summary></summary>
     [JsonIgnore] public double HerdDungWtReturned { get; set; }
     /// <summary></summary>
     [JsonIgnore] public double HerdUrineNReturned { get; set; }
+    /// <summary></summary>
+    [JsonIgnore] public double HerdNToMilk { get; set; }
+    /// <summary></summary>
+    [JsonIgnore] public double HerdNToPregnancy { get; set; }
     /// <summary></summary>
     [JsonIgnore] public double HerdNumUrinations { get; set; }
 
@@ -175,11 +189,11 @@ public class SimpleCow : Model, IStructureDependency
     [EventSubscribe("StartOfSimulation")]
     private void OnStartOfSimulation(object sender, EventArgs e)
     {
-        if (100.0 - CowN2Exported[0] - CowN2UrinePerc[0] - CowN2DungPerc[0] > 0.1)
+        /*if (100.0 - CowN2Exported[0] - CowN2UrinePerc[0] - CowN2DungPerc[0] > 0.1)
             throw new Exception("Disposition of N intake when the cow is milking must add up to 100");
 
         if (CowN2Exported[1] + CowN2UrinePerc[1] + CowN2DungPerc[1] != 100.0)
-            throw new Exception("Disposition of N intake when the cow is dry must add up to 100");
+            throw new Exception("Disposition of N intake when the cow is dry must add up to 100"); */
 
         if (Structure.Find<SimpleGrazing>(relativeTo: this) == null)
             throw new Exception("SimpleCow needs SimpleGrazing. Please add it to your simulation");
@@ -193,16 +207,17 @@ public class SimpleCow : Model, IStructureDependency
         // MJME/day https://www.dairynz.co.nz/media/5789573/facts_and_figures_web_chapter4_cow_feed_requirements.pdf page 4 and Excel regression on table "Maintenance MJ ME/day"
         CowMaintME = CowBodyWeight * 0.0942 + 11.507;
 
-			CowState = "Dry-Pregnant";  // initial state - make sure this updated on day 1
+		CowState = "Dry-Pregnant";  // initial state - make sure this updated on day 1
 
-			// First three terms give the target milk solids production in kg MS /cow /season
-			// Last value obtained by fitting the final term of the Woods curve to various target milk solids production values - fitted value
-			LactationCurveParam[3] = CowBodyWeight * MilkSolidsAsPercentOfCowBodyWeight / 100.0 / 4542.2;
+		// First three terms (define above) give the target milk solids production in kg MS /cow /season
+		// Last value (here, below) obtained by fitting the final term of the Woods curve to various target milk solids production values - fitted value
+		LactationCurveParam[3] = CowBodyWeight * MilkSolidsAsPercentOfCowBodyWeight / 100.0 / 4542.2;
 
-        //Paraemter values fitted from (DairyNZ, 2017, p. 49) with the equation fitted to the values in the table.
+        //Parameter values fitted from (DairyNZ, 2017, p. 49) with the equation fitted to the values in the table.
         CowPregnancyParam[0] = 1.35 * CalfBirthWeight + 22.41;
         CowPregnancyParam[1] = -0.14;
 
+        SilageDigestibility = SilageMEConc / 16;
     }
 
     /// <summary>
@@ -215,6 +230,7 @@ public class SimpleCow : Model, IStructureDependency
     {
         // zero out the supplementary feeding data etc from yesterday - only really need to do this the day after a grazing
         SilageMade = 0.0;
+
         SilageFed = 0.0;
         SilageNFed = 0.0;
         SilageMEFed = 0.0;
@@ -222,34 +238,40 @@ public class SimpleCow : Model, IStructureDependency
 
         // zero out the daily intake etc. values - these should only hold non-zero values on a grazing day
         StockingDensity = 0.0;
+        HerdMEDemand = 0.0;
+
         HerdDMIntake = 0.0;
         HerdNIntake = 0.0;
-        HerdMEDemand = 0.0;
-        CowMEDemand = 0.0;
+        HerdMEConcIntake = 0.0;
+        HerdDigesitbilityIntake = 0.0;
+
         HerdUrineNReturned = 0.0;
         HerdDungNReturned = 0.0;
         HerdDungWtReturned = 0.0;
-        //UrineNToSoil = 0.0;
-        //DungNToSoil = 0.0;
+        HerdNToPregnancy = 0.0;
+        HerdNToMilk = 0.0;
+
+        CowMEDemand = 0.0;
         CowMSPerDay = 0.0;
         WeeksBeforeCalving = 0.0;
         LactationWeek = 0.0;
 
-        // just were are the cows at right now?
+        // update the cow physiological state
         CowPhysiologicalState();
     }
 
     /// <summary>
     /// Called by SimpleGrazing component.
     /// </summary>
-    /// <param name="grazedDM">The amount of grazed dry matter (kg/ha)</param>
-    /// <param name="grazedME">The amount of grazed metabolisable energy (MJ ME/ha)</param>
-    /// <param name="grazedN">The amount of grazed nitrogen (kgN/ha)</param>
-    public (double urineN, double dungN) OnGrazed(double grazedDM, double grazedME, double grazedN)
+    /// <param name="pastureRemovedDM">The amount of grazed dry matter (kg/ha)</param>
+    /// <param name="pastureRemovedME">The amount of grazed metabolisable energy (MJ ME/ha)</param>
+    /// <param name="pastureRemovedN">The amount of grazed nitrogen (kgN/ha)</param>
+    public (double urineN, double dungN) OnGrazed(double pastureRemovedDM, double pastureRemovedME, double pastureRemovedN)
     {
-		double grazedMEConc = grazedDM / grazedME;  // CHECK!!!!
+		double pastureRemovedMEConc = pastureRemovedME / pastureRemovedDM;
+        double pastureRemovedDigestibility = pastureRemovedMEConc / 16.0;
 
-        // now do the ME and N demand
+        // now do the ME and N demand calculations
         CowEnergyAndNDemand();
 
         // could replace this with looking at milk and pregnancy
@@ -259,34 +281,61 @@ public class SimpleCow : Model, IStructureDependency
         else
             StockingDensity = DaysPerGrazeWhenMilking * Num1HaPaddocks * StockingRate;
 
-
         HerdMEDemand = CowMEDemand * StockingDensity;  // in SimpleCow the Demand is also the Intake - not that this is ME /ha (not per cow)
 
-        // compare the ME and N removed from SimpleGrazing against herd demand
-        if (grazedME < 0.95 * HerdMEDemand)  // there is an energy deficit so add silage
-        {
-            SilageFed = (HerdMEDemand - grazedME) / SilageMEConc;
-            HerdNIntake = grazedN + SilageFed * SilageNConc / 100.0;
-        }
-        else if (grazedME > 1.05 * HerdMEDemand)  // there is an energy excess and put the DM associated with that into silage
-        {
-            SilageMade = (grazedME - HerdMEDemand) / grazedMEConc / 100.0;
-            HerdNIntake = grazedN * (1.0 - SilageFed / grazedDM);
-        }
-        else  // the unlikely event that there is a great match between pasture available and herd demand
-            HerdNIntake = grazedN;
+        double pastureGrazedME = Math.Min(pastureRemovedME, HerdMEDemand);
+        double pastureGrazedDM = Math.Min(pastureGrazedME / pastureRemovedME, 1.0) * pastureRemovedDM;
+        double pastureGrazedN = Math.Max(pastureGrazedME / pastureRemovedME, 1.0) * pastureRemovedN;
 
-        HerdDMIntake = grazedDM + SilageFed - SilageMade;
+        if ((HerdMEDemand - pastureGrazedME) > 0.05 * HerdMEDemand) // feed/energy shortfall, need to feed out some silage
+        {
+            SilageMEFed = HerdMEDemand - pastureGrazedME;
+            SilageFed = SilageMEFed / SilageMEConc;
+            SilageNFed = SilageFed * SilageNConc / 100.0;
+        }
+        else if ((pastureRemovedDM - pastureGrazedME) < 0.05 * HerdMEDemand) // excess feed, need to make some silage
+            SilageMade = (pastureRemovedDM - pastureGrazedDM);
 
-        // N considerations - urine N info to be sent to SimplePatches
+        HerdNIntake = pastureGrazedN + SilageNFed;
+        HerdDMIntake = pastureGrazedDM + SilageFed;
+        HerdMEConcIntake = pastureRemovedMEConc * pastureGrazedDM / HerdDMIntake + SilageMEConc * SilageFed / HerdDMIntake;
+        HerdDigesitbilityIntake = pastureRemovedDigestibility * pastureGrazedDM / HerdDMIntake + SilageDigestibility * SilageFed / HerdDMIntake;
+
+
+
+        /* // N considerations - urine N info to be sent to SimplePatches
         int Index;
         if (CowState == "Dry-Pregnant")   // change to a test on MS production today
             Index = 1;
         else
-            Index = 0;
+            Index = 0; */
 
-        HerdUrineNReturned = (grazedN + SilageFed * SilageNConc / 100.0) * CowN2UrinePerc[Index] / 100.0;
-        HerdDungNReturned = (grazedN + SilageFed * SilageNConc / 100.0) * CowN2DungPerc[Index] / 100.0;
+
+        // N to body assume zero for now
+
+
+        // N to milk based on: 
+        // CowMSPerDay calculated 'above'
+        // New Zealand Dairy Statistics 2022-23 page 29 table 4.3 gives 3.94 / (3.94 + 4.90) = 0.445 of MS is protein
+        // N is then protein * 6.25/100
+        HerdNToMilk = CowMSPerDay  * 0.445 / 6.25 * StockingDensity;                  // milk solids to protein to N
+
+        // N to foetus calculate based on calf wt - see if Kathryn will help - zero for now
+        HerdNToPregnancy = 0.0;
+
+
+
+        double herdNForExcretion = HerdNIntake                                   // intake N
+                                 - HerdNToMilk                                   // milk solids to protein to N 
+                                 - HerdNToPregnancy;                             // subtract the N to conceptus here when available
+
+        // N to dung based on digestibility and 2.6% N in dung but maximum 90% of N intake
+        double herdDungWt = HerdDMIntake * (1.0 - HerdDigesitbilityIntake);
+        HerdDungNReturned = Math.Min(herdDungWt * 0.026, 0.9 * herdNForExcretion);
+
+        // N to urine based on difference
+        HerdUrineNReturned = herdNForExcretion - HerdDungNReturned;
+
         return (HerdUrineNReturned, HerdDungNReturned);
     }
 
