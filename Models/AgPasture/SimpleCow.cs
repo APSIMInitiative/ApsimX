@@ -165,6 +165,22 @@ public class SimpleCow : Model, IStructureDependency
     [Units("kg MS /cow /day")]
     [JsonIgnore] public double CowMSPerDay { get; set; } = 0.0;         // kgMS/day/head - calculated, initialising here
 
+    /// <summary>Cow dry matter intake</summary>
+    [Units("kg DM /cow /day")]
+    [JsonIgnore] public double CowDMIntake { get; set; }
+
+    /// <summary>Cow dry matter intake from pasture</summary>
+    [Units("kg DM /cow /day")]
+    [JsonIgnore] public double CowPastureIntake { get; set; }
+
+    /// <summary>Cow dry matter intake from silage</summary>
+    [Units("kg DM /cow /day")]
+    [JsonIgnore] public double CowSilageIntake { get; set; }
+
+    /// <summary>Cow N intake</summary>
+    [Units("kg N /cow /day")]
+    [JsonIgnore] public double CowNIntake { get; set; }
+
     /// <summary>Parameters used in the calculation of pregnancy energy demand</summary>
     //[Description("Energy for pregnancy parameters")]
     [Units("-")]
@@ -325,6 +341,10 @@ public class SimpleCow : Model, IStructureDependency
 
         CowMEDemand = 0.0;
         CowMSPerDay = 0.0;
+        CowDMIntake = 0.0;
+        CowPastureIntake = 0.0;
+        CowSilageIntake = 0.0;
+        CowNIntake = 0.0;
         WeeksBeforeCalving = 0.0;
         LactationWeek = 0.0;
 
@@ -372,6 +392,11 @@ public class SimpleCow : Model, IStructureDependency
         HerdDMIntake = pastureGrazedDM + SilageFed;
         HerdMEConcIntake = pastureRemovedMEConc * pastureGrazedDM / HerdDMIntake + SilageMEConc * SilageFed / HerdDMIntake;
         HerdDigesitbilityIntake = pastureRemovedDigestibility * pastureGrazedDM / HerdDMIntake + SilageDigestibility * SilageFed / HerdDMIntake;
+
+        CowDMIntake = HerdDMIntake / StockingDensity;
+        CowPastureIntake = pastureGrazedDM / StockingDensity;
+        CowSilageIntake = SilageFed / StockingDensity;
+        CowNIntake = HerdNIntake / StockingDensity;
 
         // N to body assume zero for now
 
