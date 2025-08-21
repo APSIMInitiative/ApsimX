@@ -151,8 +151,10 @@ public class SimpleCow : Model, IStructureDependency
     [JsonIgnore] public double CowMaintME { get; set; } // ME required for maintenance
     /// <summary></summary>
     [JsonIgnore] public string CowState { get; set; }
-    [JsonIgnore] private double WeeksBeforeCalving { get; set; }
-    [JsonIgnore] private double LactationWeek { get; set; }
+    /// <summary></summary>
+    [JsonIgnore] public double WeeksBeforeCalving { get; set; }
+    /// <summary></summary>
+    [JsonIgnore] public double LactationWeek { get; set; }
     /// <summary></summary>
     [JsonIgnore] public double CowMSPerDay { get; set; } = 0.0;         // kgMS/day/head - calculated, initialising here
     /// <summary></summary>
@@ -320,10 +322,19 @@ public class SimpleCow : Model, IStructureDependency
         // N is then protein * 6.25/100
         HerdNToMilk = CowMSPerDay  * 0.445 / 6.25 * StockingDensity;                  // milk solids to protein to N
 
-        // N to foetus calculate based on calf wt - see if Kathryn will help - zero for now
-        HerdNToPregnancy = 0.0;
+        // N to pregnancy from ARC 1980
+        // Standard birth weight - 40 kg
+        //         A        B       C
+        // Calf    5.358	15.229	0.00538
+        // Uterus  8.536	13.12	0.00262
 
+        double cumPrCalf = CalfBirthWeight / 40.0 * Math.Exp(5.358 - 15.229 * Math.Exp(-1.0 * 0.00538 * (283 - WeeksBeforeCalving * 7.0)));
+        double cumPrUterus = CalfBirthWeight / 40.0 * Math.Exp(8.536 - 13.12 * Math.Exp(-1.0 * 0.00262 * (283 - WeeksBeforeCalving * 7.0)));
 
+        double CalfToday = cumPrCalf * (15.229 * 0.00538 * Math.Exp(-1.0 * 0.00538 * (283 - WeeksBeforeCalving * 7.0)));
+        double UrterusToday = cumPrUterus * (13.12 * 0.00262 * Math.Exp(-1.0 * 0.00262 * (283 - WeeksBeforeCalving * 7.0)));
+
+        HerdNToPregnancy = (CalfToday + UrterusToday ) / 6.25;
 
         double herdNForExcretion = HerdNIntake                                   // intake N
                                  - HerdNToMilk                                   // milk solids to protein to N 

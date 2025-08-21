@@ -31,7 +31,7 @@
         {
           "$type": "Models.Clock, Models",
           "Start": "2015-07-01T00:00:00",
-          "End": "2016-06-30T00:00:00",
+          "End": "2016-08-01T00:00:00",
           "Name": "Clock",
           "ResourceName": null,
           "Children": [],
@@ -209,18 +209,18 @@
               "FlexibleExpressionForTimingOfGrazing": null,
               "FlexibleGrazePostDM": 0.0,
               "MaximumRotationLengthArray": [
-                50.0,
-                50.0,
-                50.0,
-                50.0,
-                60.0,
-                60.0,
-                90.0,
-                70.0,
-                50.0,
-                50.0,
-                50.0,
-                50.0
+                21.0,
+                21.0,
+                21.0,
+                21.0,
+                21.0,
+                21.0,
+                21.0,
+                21.0,
+                21.0,
+                21.0,
+                21.0,
+                21.0
               ],
               "MinimumRotationLengthArray": [
                 21.0,
@@ -236,8 +236,8 @@
                 21.0,
                 21.0
               ],
-              "NoGrazingStartString": "13-may",
-              "NoGrazingEndString": "15-jul",
+              "NoGrazingStartString": "",
+              "NoGrazingEndString": "",
               "IsCutAndCarry": false,
               "FractionClippingsReturned": 0.0,
               "FractionIntakeNToAnimal": [
@@ -268,10 +268,10 @@
             },
             {
               "$type": "Models.AgPasture.SimpleCow, Models",
-              "StockingRate": 3.5,
-              "Num1HaPaddocks": 25,
+              "StockingRate": 1.0,
+              "Num1HaPaddocks": 1,
               "DaysPerGrazeWhenMilking": 1,
-              "DaysPerGrazeWhenDry": 3,
+              "DaysPerGrazeWhenDry": 1,
               "SilageNConc": 3.0,
               "SilageMEConc": 12.0,
               "CowBodyWeight": 450.0,
@@ -1516,6 +1516,149 @@
               "$type": "Models.Report, Models",
               "VariableNames": [
                 "[Clock].Today as Date",
+                "[SimpleCow].CowState as CowState",
+                "[SimpleCow].StockingDensity as SD",
+                "[SimpleCow].CowMEDemand as MEDemand_PerCow",
+                "[SimpleCow].HerdMEDemand as MEDemand_PerHa",
+                "",
+                "",
+                "[SimpleCow].HerdDMIntake as HerdDMIntake",
+                "[SimpleCow].HerdNIntake as HerdNIntake",
+                "",
+                "[SimpleCow].HerdNToMilk as HerdNToMilk",
+                "[SimpleCow].HerdNToPregnancy as HerdNToPregnancy",
+                "",
+                "",
+                "[SimpleCow].HerdDungNReturned as HerdDungNReturned",
+                "[SimpleCow].HerdUrineNReturned as HerdUrineNReturned",
+                "[SimpleCow].CowMSPerDay as CowMSPerDay",
+                "[SimpleCow].WeeksBeforeCalving as WeeksBeforeCalving"
+              ],
+              "EventNames": [
+                "SimpleGrazing.GrazedToday == true",
+                "//[Clock].EndOfDay"
+              ],
+              "GroupByVariableName": null,
+              "Name": "Report",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report, Models",
+              "VariableNames": [
+                "[Clock].Today as Date",
+                "[SurfaceOrganicMatter].Wt"
+              ],
+              "EventNames": [
+                "[Clock].EndOfDay"
+              ],
+              "GroupByVariableName": null,
+              "Name": "Report1",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": false,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.SimpleGrazing, Models",
+              "GrazingRotationType": 1,
+              "SimpleGrazingFrequencyString": "21",
+              "SimpleMinGrazable": 0.0,
+              "SimpleGrazingResidual": 1500.0,
+              "PreGrazeDMArray": [
+                2700.0,
+                2700.0,
+                2700.0,
+                2700.0,
+                2700.0,
+                2700.0,
+                2700.0,
+                2700.0,
+                2700.0,
+                2700.0,
+                2700.0,
+                2700.0
+              ],
+              "PostGrazeDMArray": [
+                1500.0,
+                1500.0,
+                1500.0,
+                1500.0,
+                1250.0,
+                1250.0,
+                1250.0,
+                1250.0,
+                1500.0,
+                1500.0,
+                1500.0,
+                1500.0
+              ],
+              "FlexibleExpressionForTimingOfGrazing": null,
+              "FlexibleGrazePostDM": 0.0,
+              "MaximumRotationLengthArray": [
+                50.0,
+                50.0,
+                50.0,
+                50.0,
+                60.0,
+                60.0,
+                90.0,
+                70.0,
+                50.0,
+                50.0,
+                50.0,
+                50.0
+              ],
+              "MinimumRotationLengthArray": [
+                21.0,
+                21.0,
+                21.0,
+                21.0,
+                21.0,
+                21.0,
+                21.0,
+                21.0,
+                21.0,
+                21.0,
+                21.0,
+                21.0
+              ],
+              "NoGrazingStartString": "13-may",
+              "NoGrazingEndString": "14-may",
+              "IsCutAndCarry": false,
+              "FractionClippingsReturned": 0.0,
+              "FractionIntakeNToAnimal": [
+                0.0
+              ],
+              "DungNConc": 2.6,
+              "FractionOfDungUrineOffPaddock": [
+                0.0
+              ],
+              "DepthUrineIsAdded": 250.0,
+              "ShowAdvancedExcretaOptions": false,
+              "SendDungElsewhere": 0.0,
+              "SendUrineElsewhere": 0.0,
+              "UsePatching": false,
+              "PseudoPatches": true,
+              "ZoneCount": 25,
+              "UrineReturnPattern": 2,
+              "PseudoRandomSeed": 666,
+              "FractionPopulationDecline": 0.0,
+              "TramplingOn": false,
+              "MaximumPropLitterMovedToSoil": 0.1,
+              "PastureConsumedAtMaximumRateOfLitterRemoval": 1200.0,
+              "Name": "SimpleGrazing1",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": false,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report, Models",
+              "VariableNames": [
+                "[Clock].Today as Date",
                 "[AGPRyegrass].AboveGroundWt + [AGPWhiteClover].AboveGroundWt as PastureBiomass",
                 "Sum of ([AGPRyegrass].HarvestedWt + [AGPWhiteClover].HarvestedWt) from 1-Jul to [Clock].Today as cumHarvestedWt   //the amount harvested (kg DM /ha)",
                 "Sum of [SimpleGrazing].GrazedDM from 1-Jul to [Clock].Today as cumDMHarvested",
@@ -1551,7 +1694,7 @@
                 "[SimpleCow].HerdNIntake as HerdNIntake",
                 "",
                 "[SimpleCow].HerdNToMilk as HerdNToMilk",
-                "",
+                "[SimpleCow].HerdNToPregnancy as HerdNToPregnancy",
                 "",
                 "",
                 "[SimpleCow].HerdDungNReturned as HerdDungNReturned",
@@ -1563,23 +1706,7 @@
                 "//[Clock].EndOfDay"
               ],
               "GroupByVariableName": null,
-              "Name": "Report",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Report, Models",
-              "VariableNames": [
-                "[Clock].Today as Date",
-                "[SurfaceOrganicMatter].Wt"
-              ],
-              "EventNames": [
-                "[Clock].EndOfDay"
-              ],
-              "GroupByVariableName": null,
-              "Name": "Report1",
+              "Name": "Report2",
               "ResourceName": null,
               "Children": [],
               "Enabled": false,
