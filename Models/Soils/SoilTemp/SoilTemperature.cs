@@ -578,7 +578,7 @@ namespace Models.Soils.SoilTemp
         public double DepthToConstantTemperature { get; set; } = 10000.0;
 
         /// <summary>The number of steps in a day.</summary>
-        public int StepsPerDay = 24;     // number of iterations in a day
+        public int StepsPerDay = 8;     // number of iterations in a day
 
         #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
