@@ -7,7 +7,7 @@ using APSIM.Core;
 namespace Models.AgPasture;
 
 /// <summary>
-/// A simple cow model.
+/// A simple cow intake and N partitioning model.
 /// </summary>
 [Serializable]
 [ViewName("UserInterface.Views.PropertyView")]
@@ -28,7 +28,7 @@ public class SimpleCow : Model, IStructureDependency
     /// <summary></summary>
     [Separator("Farm context")]
 
-    [Description("Stocking rate based on effective hectage (cows/ha)")]
+    [Description("Stocking rate based on effective hectarage (cows/ha)")]
     [Units("cows/ha")]
     public double StockingRate { get; set; }
 
@@ -58,18 +58,6 @@ public class SimpleCow : Model, IStructureDependency
     public double SilageMEConc { get; set; }
 
 
-    /// <summary></summary>
-    [JsonIgnore] public double SilageMade { get; set; }
-    /// <summary></summary>
-    [JsonIgnore] public double SilageFed { get; set; }
-    /// <summary></summary>
-    [JsonIgnore] public double SilageNFed { get; set; }
-    /// <summary></summary>
-    [JsonIgnore] public double SilageMEFed { get; set; }
-    /// <summary></summary>
-    [JsonIgnore] public double SilageDigestibility { get; set; }
-
-
     // Cow characteristics
     /// <summary></summary>
     [Separator("Cow characteristics")]
@@ -84,7 +72,7 @@ public class SimpleCow : Model, IStructureDependency
     public double CalfBirthWeightPercent  { get; set; }
 
     /// <summary></summary>
-    [Description("Milk solids production as a percentage of cow live weight")]
+    [Description("Season milk solids production as a percentage of cow live weight")]
     [Units("%")]
     public double MilkSolidsAsPercentOfCowBodyWeight  { get; set; }
 
@@ -104,99 +92,181 @@ public class SimpleCow : Model, IStructureDependency
     public int LactationDuration  { get; set; }
 
     /// <summary></summary>
-    [Description("Cow walking distance - assumes flat land, add 50% for rolling land (km /day)")]
+    [Description("Cow walking distance - assumes flat land, user should add 50% for rolling land (km /day)")]
     [Units("km /day")]
     public double CowWalkingDist { get; set; }
 
-    /// <summary></summary>
-    [Separator("Where does the intake N go? Specify the proportion of N intake going to various destinations when milking and dry")]
-
-    [Description("Percent of intake N to production, liveweight and lanes etc. when the cow is lactating and dry")]
-    [Units("kgN/100kgN")]
-    public double[] CowN2Exported { get; set; } // = { 30.0, 10.0 };
-
-    /*
-    /// <summary></summary>
-    [Description("Percent of intake N to urine when the cow is lactating and dry")]
-    [Units("kgN/100kgN")]
-    public double[] CowN2UrinePerc { get; set; } // = { 42.0, 54.0 };
-
-    /// <summary></summary>
-    [Description("Percent of intake N to dung when the cow is lactating and dry")]
-    [Units("kgN/100kgN")]
-    public double[] CowN2DungPerc { get; set; } // = { 28.0, 36.0 };
-
-     /// <summary></summary>
-    /// <summary></summary>
-    [JsonIgnore] public double[] CowN2BodyPerc { get; set; } = { 0.0, 0.0 }; //just use for checking later on would be { 30.0, 10.0 } with above values
-    */
 
 
-    /// <summary></summary>
+
+
+    // calculated variables related to the cow
+
+    /// <summary>Date that the cows get in-calf</summary>
+    //[Description("In-calf date (dd-mmm-yyyy)")]
+    [Units("dd-mmm-yyyy")]
     [JsonIgnore] public DateTime CowDateInCalf{ get; set; }  // calculated from CowDateCalving and DaysFromCalvingToInCalf
+
     /// <summary></summary>
+    //[Description("Date cows dried off (dd-mmm-yyyy)")]
+    [Units("dd-mmm-yyyy")]
     [JsonIgnore] public DateTime CowDateDryOff{ get; set; }  // calculated from CowDateCalving and LactationDuration
-    /// <summary></summary>
+
+
+    // Internal parameters
+
+    /// <summary>Lactation curve parameters from Woods</summary>
+    //[Description("Lactation curve parameters")]
+    [Units("-")]
     [JsonIgnore] public double[] LactationCurveParam = { 20.0, 0.2, -0.04, 0.0 };         // will calculate the last value at Init based on CowBodyWeight and MilkSolidsAsPercentOfCowBodyWeight
-    /// <summary></summary>
+
+    /// <summary>Energy contained in a kg of milk solids</summary>
+    //[Description("Milk solids energy content")]
+    [Units("MJ ME / kg MS")]
     [JsonIgnore] public double CowMSEnergyPerKg{ get; set; }  = 80.0;         // MJME/kg MS
-    /// <summary></summary>
+
+    /// <summary>Energy required per kilometer of walking</summary>
+    //[Description("Energy to walk one km")]
+    [Units("MJ ME / km")]
     [JsonIgnore] public double CowWalkingEnergyPerKm = 2.0;         // MJME/km
-    /// <summary></summary>
+
+    /// <summary>Birth weight of the calf</summary>
+    //[Description("Calf birth weight")]
+    [Units("kg")]
     [JsonIgnore] public double CalfBirthWeight { get; set; }   // birthweight - calulated as a percentage of liveweight at Init
 
-    /// <summary></summary>
+    /// <summary>Cow energy demand (all purposes)</summary>
+    //[Description("Cow energy demand")]
+    [Units("MJ ME /cow /day")]
     [JsonIgnore] public double CowMEDemand { get; set; } // ME required for maintenance
-    /// <summary></summary>
+
+    /// <summary>Cow energy demand for maintenance</summary>
+    //[Description("Cow energy demand for maintenance")]
+    [Units("MJ ME /cow /day")]
     [JsonIgnore] public double CowMaintME { get; set; } // ME required for maintenance
-    /// <summary></summary>
+
+    /// <summary>Physiological state of the cow</summary>
+    //[Description("Physiological state of the cow")]
+    [Units("-")]
     [JsonIgnore] public string CowState { get; set; }
-    /// <summary></summary>
+
+    /// <summary>Weeks before calving</summary>
+    //[Description("Weeks before calving")]
+    [Units("weeks")]
     [JsonIgnore] public double WeeksBeforeCalving { get; set; }
-    /// <summary></summary>
+
+    /// <summary>Weeks since the start of lactation</summary>
+    //[Description("Weeks since the start of lactation")]
+    [Units("weeks")]
     [JsonIgnore] public double LactationWeek { get; set; }
-    /// <summary></summary>
+
+    /// <summary>Milk solids production</summary>
+    //[Description("Milk solids production")]
+    [Units("kg MS /cow /day")]
     [JsonIgnore] public double CowMSPerDay { get; set; } = 0.0;         // kgMS/day/head - calculated, initialising here
-    /// <summary></summary>
+
+    /// <summary>Parameters used in the calculation of pregnancy energy demand</summary>
+    //[Description("Energy for pregnancy parameters")]
+    [Units("-")]
     [JsonIgnore] public double[] CowPregnancyParam { get; set; } = { 0.0, 0.0 }; // multiplier and exponential parameters for pregnancy energy - values calculated at Init
 
+    // Herd characteristics
 
-// Herd characteristics
-    /// <summary></summary>
+    /// <summary>Herd stocking density</summary>
+    //[Description("Herd stocking density")]
+    [Units("head /ha /day")]
     [JsonIgnore] public double StockingDensity { get; set; }
-    /// <summary></summary>
+
+    /// <summary>Energy demand of the herd</summary>
+    //[Description("Herd energy demand")]
+    [Units("MJ ME /ha /day")]
     [JsonIgnore] public double HerdMEDemand { get; set; }
+
     /// <summary></summary>
+    //[Description("Herd N intake")]
+    [Units("kg N /ha /day")]
     [JsonIgnore] public double HerdNIntake { get; set; }
-    /// <summary></summary>
+
+    /// <summary>Herd dry matter intake</summary>
+    //[Description("Herd dry matter intake")]
+    [Units("kg DM /ha /day")]
     [JsonIgnore] public double HerdDMIntake { get; set; }
-    /// <summary></summary>
+
+    /// <summary>Herd metabolisable energy intake</summary>
+    //[Description("Herd ME intake")]
+    [Units("MJ ME /ha /day")]
     [JsonIgnore] public double HerdMEConcIntake { get; set; }
-    /// <summary></summary>
+
+    /// <summary>Digestibility of the herd intake</summary>
+    //[Description("Digestibility of the herd intake")]
+    [Units("kg DM / kg DM")]
     [JsonIgnore] public double HerdDigesitbilityIntake { get; set; }
-    /// <summary></summary>
+
+    /// <summary>Herd N retuned to pasture in dung</summary>
+    //[Description("Herd N retuned to pasture in dung")]
+    [Units("kg N /ha /day")]
     [JsonIgnore] public double HerdDungNReturned { get; set; }
-    /// <summary></summary>
+
+    /// <summary>Herd weight of dung returned to pasture</summary>
+    //[Description("Herd weight of dung returned to pasture")]
+    [Units("kg DM /ha /day")]
     [JsonIgnore] public double HerdDungWtReturned { get; set; }
-    /// <summary></summary>
+
+    /// <summary>Herd N returned to pasture in urine</summary>
+    //[Description("Herd N returned to pasture in urine")]
+    [Units("kg N /ha /day")]
     [JsonIgnore] public double HerdUrineNReturned { get; set; }
-    /// <summary></summary>
+
+    /// <summary>Herd N partitioned to milk</summary>
+    //[Description("Herd N partitioned to milk")]
+    [Units("kg N /ha /day")]
     [JsonIgnore] public double HerdNToMilk { get; set; }
-    /// <summary></summary>
+
+    /// <summary>Herd N partitioned to pregnancy</summary>
+    //[Description("Herd N partitioned to pregnancy")]
+    [Units("kg N /ha /day")]
     [JsonIgnore] public double HerdNToPregnancy { get; set; }
-    /// <summary></summary>
+
+    /// <summary>Herd number of urinations Summary</summary>
+    //[Description("Herd number of urinations Description")]
+    [Units("-")]
     [JsonIgnore] public double HerdNumUrinations { get; set; }
+
+
+
+
+    /// <summary>Amount of silage made on the paddock</summary>
+    //[Description("Amount of silage made")]
+    [Units("kg DM/ha")]
+    [JsonIgnore] public double SilageMade { get; set; }
+
+    /// <summary>Amount of silage fed out to the cows</summary>
+    //[Description("Amount of silage fed out")]
+    [Units("kg DM/ha")]
+    [JsonIgnore] public double SilageFed { get; set; }
+
+    /// <summary>Amount of N in the silage fed out to the cows</summary>
+    //[Description("Amount of N in the silage fed out")]
+    [Units("kg N/ha")]
+    [JsonIgnore] public double SilageNFed { get; set; }
+
+    /// <summary>Metabilisable energy in SilageFed</summary>
+    //[Description("Amount of ME in the silage fed out")]
+    [Units("MJ ME/ha")]
+    [JsonIgnore] public double SilageMEFed { get; set; }
+
+    /// <summary>Digestibility of the silage</summary>
+    //[Description("Digestibiity of the silage")]
+    [Units("kg DM / kg DM")]
+    [JsonIgnore] public double SilageDigestibility { get; set; }
+
+
+
 
 
     [EventSubscribe("StartOfSimulation")]
     private void OnStartOfSimulation(object sender, EventArgs e)
     {
-        /*if (100.0 - CowN2Exported[0] - CowN2UrinePerc[0] - CowN2DungPerc[0] > 0.1)
-            throw new Exception("Disposition of N intake when the cow is milking must add up to 100");
-
-        if (CowN2Exported[1] + CowN2UrinePerc[1] + CowN2DungPerc[1] != 100.0)
-            throw new Exception("Disposition of N intake when the cow is dry must add up to 100"); */
-
         if (Structure.Find<SimpleGrazing>(relativeTo: this) == null)
             throw new Exception("SimpleCow needs SimpleGrazing. Please add it to your simulation");
 
@@ -303,30 +373,19 @@ public class SimpleCow : Model, IStructureDependency
         HerdMEConcIntake = pastureRemovedMEConc * pastureGrazedDM / HerdDMIntake + SilageMEConc * SilageFed / HerdDMIntake;
         HerdDigesitbilityIntake = pastureRemovedDigestibility * pastureGrazedDM / HerdDMIntake + SilageDigestibility * SilageFed / HerdDMIntake;
 
-
-
-        /* // N considerations - urine N info to be sent to SimplePatches
-        int Index;
-        if (CowState == "Dry-Pregnant")   // change to a test on MS production today
-            Index = 1;
-        else
-            Index = 0; */
-
-
         // N to body assume zero for now
 
-
         // N to milk based on: 
-        // CowMSPerDay calculated 'above'
-        // New Zealand Dairy Statistics 2022-23 page 29 table 4.3 gives 3.94 / (3.94 + 4.90) = 0.445 of MS is protein
-        // N is then protein * 6.25/100
+        //          CowMSPerDay calculated 'above'
+        //          New Zealand Dairy Statistics 2022-23 page 29 table 4.3 gives 3.94 / (3.94 + 4.90) = 0.445 of MS is protein
+        //          N is then protein * 6.25/100
         HerdNToMilk = CowMSPerDay  * 0.445 / 6.25 * StockingDensity;                  // milk solids to protein to N
 
         // N to pregnancy from ARC 1980
-        // Standard birth weight - 40 kg
-        //         A        B       C
-        // Calf    5.358	15.229	0.00538
-        // Uterus  8.536	13.12	0.00262
+        //      Standard birth weight - 40 kg
+        //              A        B       C
+        //      Calf    5.358	15.229	0.00538
+        //      Uterus  8.536	13.12	0.00262
 
         double cumPrCalf = CalfBirthWeight / 40.0 * Math.Exp(5.358 - 15.229 * Math.Exp(-1.0 * 0.00538 * (283 - WeeksBeforeCalving * 7.0)));
         double cumPrUterus = CalfBirthWeight / 40.0 * Math.Exp(8.536 - 13.12 * Math.Exp(-1.0 * 0.00262 * (283 - WeeksBeforeCalving * 7.0)));
@@ -334,7 +393,7 @@ public class SimpleCow : Model, IStructureDependency
         double CalfToday = cumPrCalf * (15.229 * 0.00538 * Math.Exp(-1.0 * 0.00538 * (283 - WeeksBeforeCalving * 7.0)));
         double UrterusToday = cumPrUterus * (13.12 * 0.00262 * Math.Exp(-1.0 * 0.00262 * (283 - WeeksBeforeCalving * 7.0)));
 
-        HerdNToPregnancy = (CalfToday + UrterusToday ) / 6.25;
+        HerdNToPregnancy = (CalfToday + UrterusToday ) / 6.25 * StockingDensity;
 
         double herdNForExcretion = HerdNIntake                                   // intake N
                                  - HerdNToMilk                                   // milk solids to protein to N 
@@ -381,7 +440,6 @@ public class SimpleCow : Model, IStructureDependency
             CowMSPerDay = 0.0;
             LactationWeek = -1;   // not lactating
         }
-
     }
 
     private void CowEnergyAndNDemand()
@@ -399,10 +457,5 @@ public class SimpleCow : Model, IStructureDependency
                     + energyPregnancy
                     + CowWalkingDist * CowWalkingEnergyPerKm
                     + CowMSPerDay * CowMSEnergyPerKg;  //=72.154*EXP(-0.143*L3)
-
-
-
-
     }
-
 }
