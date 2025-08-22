@@ -96,249 +96,91 @@ namespace Models.Soils.SoilTemp
         /// <summary>Particle density of soil fines (Mg/m3)</summary>
         private double ps = 2.65;   // CHECK, should come from soil physical
 
-        /// <summary>List of names of soil constituents</summary>
-        private string[] soilConstituentNames = { "Rocks", "OrganicMatter", "Sand", "Silt", "Clay", "Water", "Ice", "Air" };
 
-        /// <summary>Gets the volumetric specific heat of soil constituents (MJ/m3/K)</summary>
-        /// <param name="name">The name of the constituent</param>
-        /// <param name="layer">The layer index</param>
-        private double volumetricSpecificHeat(string name, int layer)
-        {
-            double specificHeatRocks = 2.39;
-            double specificHeatOM = 2.50;
-            double specificHeatSand = 2.39;
-            double specificHeatSilt = 2.39;
-            double specificHeatClay = 2.39;
-            double specificHeatWater = 4.18;
-            double specificHeatIce = 1.73;
-            double specificHeatAir = 0.0012;
+        private const double specificHeatRocks = 2.39;
+        private const double specificHeatOM = 2.50;
+        private const double specificHeatSand = 2.39;
+        private const double specificHeatSilt = 2.39;
+        private const double specificHeatClay = 2.39;
+        private const double specificHeatWater = 4.18;
+        private const double specificHeatIce = 1.73;
+        private const double specificHeatAir = 0.0012;
 
-            double result = 0.0;
 
-            if (name == "Rocks")
-            {
-                result = specificHeatRocks;
-            }
-            else if (name == "OrganicMatter")
-            {
-                result = specificHeatOM;
-            }
-            else if (name == "Sand")
-            {
-                result = specificHeatSand;
-            }
-            else if (name == "Silt")
-            {
-                result = specificHeatSilt;
-            }
-            else if (name == "Clay")
-            {
-                result = specificHeatClay;
-            }
-            else if (name == "Water")
-            {
-                result = specificHeatWater;
-            }
-            else if (name == "Ice")
-            {
-                result = specificHeatIce;
-            }
-            else if (name == "Air")
-            {
-                result = specificHeatAir;
-            }
-            else
-            {
-                throw new Exception("Cannot return specific heat for " + name);
-            }
-
-            return result;
-        }
-
-        /// <summary>Gets the thermal conductance of soil constituents (W/K)</summary>
-        /// <param name="name">The name of the constituent</param>
-        /// <param name="layer">The layer index</param>
-        private double ThermalConductance(string name, int layer)
-        {
-            double thermalConductanceRocks = 7.70;
-            double thermalConductanceOM = 0.25;
-            double thermalConductanceSand = 7.70;
-            double thermalConductanceSilt = 2.74;
-            double thermalConductanceClay = 1.93;
-            double thermalConductanceWater = 0.57;
-            double thermalConductanceIce = 2.18;
-            double thermalConductanceAir = 0.025;
-
-            double result = 0.0;
-
-            if (name == "Rocks")
-            {
-                result = thermalConductanceRocks;
-            }
-            else if (name == "OrganicMatter")
-            {
-                result = thermalConductanceOM;
-            }
-            else if (name == "Sand")
-            {
-                result = thermalConductanceSand;
-            }
-            else if (name == "Silt")
-            {
-                result = thermalConductanceSilt;
-            }
-            else if (name == "Clay")
-            {
-                result = thermalConductanceClay;
-            }
-            else if (name == "Water")
-            {
-                result = thermalConductanceWater;
-            }
-            else if (name == "Ice")
-            {
-                result = thermalConductanceIce;
-            }
-            else if (name == "Air")
-            {
-                result = thermalConductanceAir;
-            }
-            else if (name == "Minerals")
-            {
-                result = Math.Pow(thermalConductanceRocks, volumetricFractionRocks(layer)) *
-                         Math.Pow(thermalConductanceSand, volumetricFractionSand(layer)) *
-                         Math.Pow(thermalConductanceSilt, volumetricFractionSilt(layer)) *
-                         Math.Pow(thermalConductanceClay, volumetricFractionClay(layer));
-            }
-            else
-            {
-                throw new Exception("Cannot return thermal conductance for " + name);
-            }
-
-            return result;
-        }
-
-        /// <summary>Gets the shape factor of soil constituents (W/m/K - CHECK, unit)</summary>
-        /// <param name="name">The name of the constituent</param>
-        /// <param name="layer">The layer index</param>
-        private double shapeFactor(string name, int layer)
-        {
-            double shapeFactorRocks = 0.182;
-            double shapeFactorOM = 0.5;
-            double shapeFactorSand = 0.182;
-            double shapeFactorSilt = 0.0534;
-            double shapeFactorClay = 0.00775;
-            double shapeFactorWater = 1.0;
-            //double shapeFactorIce = 0.0;         // shapeFactorIce and Air calculated below.
-            //double shapeFactorAir = double.NaN;
-
-            double result = 0.0;
-
-            if (name == "Rocks")
-            {
-                result = shapeFactorRocks;
-            }
-            else if (name == "OrganicMatter")
-            {
-                result = shapeFactorOM;
-            }
-            else if (name == "Sand")
-            {
-                result = shapeFactorSand;
-            }
-            else if (name == "Silt")
-            {
-                result = shapeFactorSilt;
-            }
-            else if (name == "Clay")
-            {
-                result = shapeFactorClay;
-            }
-            else if (name == "Water")
-            {
-                result = shapeFactorWater;
-            }
-            else if (name == "Ice")
-            {
-                result = 0.333 - (0.333 * volumetricFractionIce(layer) /
-                                  (volumetricFractionWater(layer) + volumetricFractionIce(layer) + volumetricFractionAir(layer)));
-                return result;
-            }
-            else if (name == "Air")
-            {
-                result = 0.333 - (0.333 * volumetricFractionAir(layer) /
-                    (volumetricFractionWater(layer) + volumetricFractionIce(layer) + volumetricFractionAir(layer)));
-                return result;
-            }
-            else if (name == "Minerals")
-            {
-                result = shapeFactorRocks * volumetricFractionRocks(layer) +
-                         shapeFactorSand * volumetricFractionSand(layer) +
-                         shapeFactorSilt * volumetricFractionSilt(layer) +
-                         shapeFactorClay * volumetricFractionClay(layer);
-            }
-            else
-            {
-                throw new Exception("Cannot return thermal conductance for " + name);
-            }
-
-            return result;
-        }
-
-        /// <summary>Volumetric fraction of rocks in the soil (m3/m3)</summary>
-        private double volumetricFractionRocks(int layer) => rocks[layer] / 100.0;
-
-        /// <summary>Volumetric fraction of organic matter in the soil (m3/m3)</summary>
-        private double volumetricFractionOrganicMatter(int layer) => carbon[layer] / 100.0 * 2.5 * bulkDensity[layer] / pom;
-
-        /// <summary>Volumetric fraction of sand in the soil (m3/m3)</summary>
-        private double volumetricFractionSand(int layer) => CheckNegative((1 - volumetricFractionOrganicMatter(layer) - volumetricFractionRocks(layer)) *
-                                                                           sand[layer] / 100.0 * bulkDensity[layer] / ps);
-
-        /// <summary>Volumetric fraction of silt in the soil (m3/m3)</summary>
-        private double volumetricFractionSilt(int layer) => CheckNegative((1 - volumetricFractionOrganicMatter(layer) - volumetricFractionRocks(layer)) *
-                                                                           silt[layer] / 100.0 * bulkDensity[layer] / ps);
-
-        /// <summary>Volumetric fraction of clay in the soil (m3/m3)</summary>
-        private double volumetricFractionClay(int layer) => CheckNegative((1 - volumetricFractionOrganicMatter(layer) - volumetricFractionRocks(layer)) *
-                                                                           clay[layer] / 100.0 * bulkDensity[layer] / ps);
-
-        /// <summary>Volumetric fraction of water in the soil (m3/m3)</summary>
-        private double volumetricFractionWater(int layer) => CheckNegative((1 - volumetricFractionOrganicMatter(layer)) * soilWater[layer]);
-
-        /// <summary>Volumetric fraction of ice in the soil (m3/m3)</summary>
-        /// <remarks>
-        /// Not implemented yet, might be simulated in the future. Something like:
-        ///  (1 - VolumetricFractionOrganicMatter(i)) * waterBalance.Ice[i];
-        /// </remarks>
-        private double volumetricFractionIce(int layer) => 0.0;
-
-        /// <summary>Volumetric fraction of air in the soil (m3/m3)</summary>
-        private double volumetricFractionAir(int layer)
-        {
-            return CheckNegative(1.0 - volumetricFractionRocks(layer) -
-                                      // volumetricFractionOrganicMatter(layer) - // volumetric organic matter is already factored into sand, silt and clay
-                                       volumetricFractionSand(layer) -
-                                       volumetricFractionSilt(layer) -
-                                       volumetricFractionClay(layer) -
-                                       volumetricFractionWater(layer) -
-                                       volumetricFractionIce(layer));
-        }
+        private double thermalConductanceRocks = 7.70;
+        private double thermalConductanceOM = 0.25;
+        private double thermalConductanceSand = 7.70;
+        private double thermalConductanceSilt = 2.74;
+        private double thermalConductanceClay = 1.93;
+        private double thermalConductanceWater = 0.57;
+        private double thermalConductanceIce = 2.18;
+        private double thermalConductanceAir = 0.025;
+        private double[] thermalConductanceMinerals;
+        private double shapeFactorRocks = 0.182;
+        private double shapeFactorOM = 0.5;
+        private double shapeFactorSand = 0.182;
+        private double shapeFactorSilt = 0.0534;
+        private double shapeFactorClay = 0.00775;
+        private double shapeFactorWater = 1.0;
+        private double[] shapeFactorIce;
+        private double[] shapeFactorAir;
+        private double[] shapeFactorMinerals;
+        private double[] _volumetricFractionRocks;
+        private double[] _volumetricFractionOrganicMatter;
+        private double[] _volumetricFractionSand;
+        private double[] _volumetricFractionSilt;
+        private double[] _volumetricFractionClay;
+        private double[] _volumetricFractionWater;
+        private double _volumetricFractionIce = 0.0;
+        private double[] _volumetricFractionAir;
 
         /// <summary>
-        /// Check for a negative value and throw if found. If OK then return value.
+        /// Calculatet all constituent variables.
         /// </summary>
-        /// <param name="v">Value to check</param>
-        /// <returns></returns>
-        private double CheckNegative(double v)
+        private void CalculateConstituentVariables()
         {
-            if (v < 0)
-                throw new Exception(
-                    "Please check your soil physical node. The rock content, bulk density and/or saturated water content " +
-                    "are inconsistent with each other. You will need to fix your soil properties before proceeding. " +
-                    "Note that if you have rocks in the soil, the bulk density is on a fine earth basis " +
-                    "(g fine earth/cc whole soil volume)");
-            return v;
+            for (int node = 1; node <= numNodes; node++)
+            {
+                _volumetricFractionRocks[node] = rocks[node] / 100.0;
+
+                _volumetricFractionOrganicMatter[node] = carbon[node] / 100.0 * 2.5 * bulkDensity[node] / pom;
+                _volumetricFractionSand[node] = (1 - _volumetricFractionOrganicMatter[node] - _volumetricFractionRocks[node]) *
+                                        sand[node] / 100.0 * bulkDensity[node] / ps;
+                _volumetricFractionSilt[node] = (1 - _volumetricFractionOrganicMatter[node] - _volumetricFractionRocks[node]) *
+                                        silt[node] / 100.0 * bulkDensity[node] / ps;
+                _volumetricFractionClay[node] = (1 - _volumetricFractionOrganicMatter[node] - _volumetricFractionRocks[node]) *
+                                        clay[node] / 100.0 * bulkDensity[node] / ps;
+                _volumetricFractionWater[node] = (1 - _volumetricFractionOrganicMatter[node]) * soilWater[node];
+                _volumetricFractionAir[node] = 1.0 - _volumetricFractionRocks[node] -
+                                                        // volumetricFractionOrganicMatter[node] - // volumetric organic matter is already factored into sand, silt and clay
+                                                        _volumetricFractionSand[node] -
+                                                        _volumetricFractionSilt[node] -
+                                                        _volumetricFractionClay[node] -
+                                                        _volumetricFractionWater[node] -
+                                                        _volumetricFractionIce;
+
+
+                thermalConductanceMinerals[node] = Math.Pow(thermalConductanceRocks, _volumetricFractionRocks[node]) *
+                                                   Math.Pow(thermalConductanceSand, _volumetricFractionSand[node]) *
+                                                   Math.Pow(thermalConductanceSilt, _volumetricFractionSilt[node]) *
+                                                   Math.Pow(thermalConductanceClay, _volumetricFractionClay[node]);
+
+                shapeFactorIce[node] = 0.333 - (0.333 * _volumetricFractionIce /
+                                                (_volumetricFractionWater[node] + _volumetricFractionIce + _volumetricFractionAir[node]));
+                shapeFactorAir[node] = 0.333 - (0.333 * _volumetricFractionAir[node] /
+                                                (_volumetricFractionWater[node] + _volumetricFractionIce + _volumetricFractionAir[node]));
+                shapeFactorMinerals[node] = shapeFactorRocks * _volumetricFractionRocks[node] +
+                                    shapeFactorSand * _volumetricFractionSand[node] +
+                                    shapeFactorSilt * _volumetricFractionSilt[node] +
+                                    shapeFactorClay * _volumetricFractionClay[node];
+
+                if (_volumetricFractionAir[node] < 0)
+                    throw new Exception(
+                        "Please check your soil physical node. The rock content, bulk density and/or saturated water content " +
+                        "are inconsistent with each other. You will need to fix your soil properties before proceeding. " +
+                        "Note that if you have rocks in the soil, the bulk density is on a fine earth basis " +
+                        "(g fine earth/cc whole soil volume)");
+            }
         }
 
         /// <summary>Calculate the density of air at a given environmental conditions</summary>
@@ -728,6 +570,19 @@ namespace Models.Soils.SoilTemp
         /// </summary>
         private void DoInitialise()
         {
+            thermalConductanceMinerals = new double[numNodes + 1];
+            shapeFactorIce = new double[numNodes + 1];
+            shapeFactorAir = new double[numNodes + 1];
+            shapeFactorMinerals = new double[numNodes + 1];
+            _volumetricFractionRocks = new double[numNodes + 1];
+            _volumetricFractionOrganicMatter = new double[numNodes + 1];
+            _volumetricFractionSand = new double[numNodes + 1];
+            _volumetricFractionSilt = new double[numNodes + 1];
+            _volumetricFractionClay = new double[numNodes + 1];
+            _volumetricFractionWater = new double[numNodes + 1];
+            _volumetricFractionAir = new double[numNodes + 1];
+
+            CalculateConstituentVariables();
             doThermalConductivityCoeffs();
 
             // set t and tn values to TAve. soil_temp is currently not used
@@ -1025,6 +880,7 @@ namespace Models.Soils.SoilTemp
         /// <summary>Perform actions for current day</summary>
         private void doProcess()
         {
+            CalculateConstituentVariables();
             const int interactionsPerDay = 48;     // number of iterations in a day
 
             double cva = 0.0;
@@ -1109,11 +965,15 @@ namespace Models.Soils.SoilTemp
 
             for (int node = 1; node <= numNodes; node++)
             {
-                volSpecHeatSoil[node] = 0;
-                foreach (var constituentName in soilConstituentNames)
-                {
-                    volSpecHeatSoil[node] += volumetricSpecificHeat(constituentName, node) * 1000000.0 * soilWater[node];
-                }
+                volSpecHeatSoil[node] = (specificHeatRocks +
+                                         specificHeatOM +
+                                         specificHeatSand +
+                                         specificHeatSilt +
+                                         specificHeatClay +
+                                         specificHeatWater +
+                                         specificHeatIce +
+                                         specificHeatAir)
+                                         * 1000000.0 * soilWater[node];
             }
             // now get weighted average for soil elements between the nodes. i.e. map layers to nodes
             mapLayer2Node(volSpecHeatSoil, ref this.volSpecHeatSoil);
@@ -1130,16 +990,26 @@ namespace Models.Soils.SoilTemp
             {
                 double numerator = 0.0;
                 double denominator = 0.0;
-                foreach (var constituentName in thermalConductivityConstituentNames)
-                {
-                    double shapeFactorConstituent = shapeFactor(constituentName, node);
-                    double thermalConductanceConstituent = ThermalConductance(constituentName, node);
-                    double thermalConductanceWater = ThermalConductance("Water", node);
-                    double k = (2.0 / 3.0) * Math.Pow(1 + shapeFactorConstituent * (thermalConductanceConstituent / thermalConductanceWater - 1.0), -1) +
-                               (1.0 / 3.0) * Math.Pow(1 + shapeFactorConstituent * (thermalConductanceConstituent / thermalConductanceWater - 1.0) * (1 - 2 * shapeFactorConstituent), -1);
-                    numerator += thermalConductanceConstituent * soilWater[node] * k;
-                    denominator += soilWater[node] * k;
-                }
+
+                double k = CalculateK(shapeFactorOM, thermalConductanceOM);
+                numerator += thermalConductanceOM * soilWater[node] * k;
+                denominator += soilWater[node] * k;
+
+                k = CalculateK(shapeFactorMinerals[node], thermalConductanceMinerals[node]);
+                numerator += thermalConductanceMinerals[node] * soilWater[node] * k;
+                denominator += soilWater[node] * k;
+
+                k = CalculateK(shapeFactorWater, thermalConductanceWater);
+                numerator += thermalConductanceWater * soilWater[node] * k;
+                denominator += soilWater[node] * k;
+
+                k = CalculateK(shapeFactorIce[node], thermalConductanceIce);
+                numerator += thermalConductanceIce * soilWater[node] * k;
+                denominator += soilWater[node] * k;
+
+                k = CalculateK(shapeFactorAir[node], thermalConductanceAir);
+                numerator += thermalConductanceAir * soilWater[node] * k;
+                denominator += soilWater[node] * k;
 
                 thermCondLayers[node] = numerator / denominator;
             }
@@ -1147,6 +1017,13 @@ namespace Models.Soils.SoilTemp
             // now get weighted average for soil elements between the nodes. i.e. map layers to nodes
             mapLayer2Node(thermCondLayers, ref thermalConductivity);
         }
+
+        private double CalculateK(double shapeFactor, double thermalConductance)
+        {
+            return (2.0 / 3.0) * Math.Pow(1 + shapeFactor * (thermalConductance / thermalConductanceWater - 1.0), -1) +
+                   (1.0 / 3.0) * Math.Pow(1 + shapeFactor * (thermalConductance / thermalConductanceWater - 1.0) * (1 - 2 * shapeFactor), -1);
+        }
+
 
         private void mapLayer2Node(double[] layerArray, ref double[] nodeArray)
         {
