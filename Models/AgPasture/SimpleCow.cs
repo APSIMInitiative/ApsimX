@@ -97,6 +97,12 @@ public class SimpleCow : Model, IStructureDependency
     public double CowWalkingDist { get; set; }
 
 
+    /// <summary></summary>
+    [Description("Number of urinations per cow per day")]
+    [Units("Urinations /cow /day")]
+    public double CowNumUrinations { get; set; }
+
+
 
 
 
@@ -421,8 +427,9 @@ public class SimpleCow : Model, IStructureDependency
         HerdNToPregnancy = (CalfToday + UrterusToday ) / 6.25 * StockingDensity;
 
         double herdNForExcretion = HerdNIntake                                   // intake N
-                                 - HerdNToMilk                                   // milk solids to protein to N 
-                                 - HerdNToPregnancy;                             // subtract the N to conceptus here when available
+                                 - HerdNToMilk                                   // milk solids N 
+                                 - HerdNToPregnancy;                             // subtract the N to foetus and uterus
+                                                                                 // ****  if ever do LW changes then also needs adding in
 
         // N to dung based on digestibility and 2.6% N in dung but maximum 90% of N intake
         double herdDungWt = HerdDMIntake * (1.0 - HerdDigesitbilityIntake);
@@ -430,6 +437,16 @@ public class SimpleCow : Model, IStructureDependency
 
         // N to urine based on difference
         HerdUrineNReturned = herdNForExcretion - HerdDungNReturned;
+
+        HerdNumUrinations = CowNumUrinations * StockingDensity;
+        // for patching will need to figure out (including where/who)
+        //      selecting from the binomial distribution - did the difference in mean get sorted out?
+        //      sort in order of amount of N
+        //      calculate area
+        //      accumulate area into a grid's worth
+        //      apply and repeat until all urine added
+
+        // ******** check that when patches are enabled that the amount of N being applied is from the model not from the testing monthly amounts
 
         return (HerdUrineNReturned, HerdDungNReturned);
     }
