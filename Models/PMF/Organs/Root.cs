@@ -419,7 +419,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return CalFASW(1e10, false);
+                return CalFASW(1e10);
             }
         }
 
@@ -484,9 +484,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Returns the Fraction of Available Soil Water for the root system (across zones and specified depth)</summary>
-        /// <param name="depth">The zone.</param>
-        /// <param name="inMM">Should PAWmm/PAWCmm be used instead of PAW/PAWC?</param>
-        public double CalFASW(double depth, bool inMM)
+        public double CalFASW(double depth)
         {
             double fasw = 0;
             double TotalArea = 0;
@@ -495,19 +493,19 @@ namespace Models.PMF.Organs
             {
                 Zone zone = Structure.Find<Zone>(Z.Name);
                 var soilCrop = Structure.FindChild<SoilCrop>(parentPlant.Name + "Soil", relativeTo: Z.Soil, recurse: true);
-                var soilPhysical = Structure.FindChild<IPhysical>(relativeTo: Z.Soil);                
+                var soilPhysical = Structure.FindChild<IPhysical>(relativeTo: Z.Soil);
 
-                double[] paw = inMM ? soilCrop.PAWmm : soilCrop.PAW;
-                double[] pawc = inMM ? soilCrop.PAWCmm : soilCrop.PAWC;
+                double[] pawmm = soilCrop.PAWmm;
+                double[] pawcmm = soilCrop.PAWCmm;
 
                 if (MathUtilities.IsLessThan(depth, MathUtilities.Sum(soilPhysical.Thickness), 1e-3))
                 {
-                    paw = SoilUtilities.KeepTopXmm(paw, soilPhysical.Thickness, depth);
-                    pawc = SoilUtilities.KeepTopXmm(pawc, soilPhysical.Thickness, depth);
+                    pawmm = SoilUtilities.KeepTopXmm(pawmm, soilPhysical.Thickness, depth);
+                    pawcmm = SoilUtilities.KeepTopXmm(pawcmm, soilPhysical.Thickness, depth);
                 }
 
                 TotalArea += zone.Area;
-                fasw += MathUtilities.Sum(paw) / MathUtilities.Sum(pawc) * zone.Area;
+                fasw += MathUtilities.Sum(pawmm) / MathUtilities.Sum(pawcmm) * zone.Area;
             }
 
             fasw = fasw / TotalArea;
