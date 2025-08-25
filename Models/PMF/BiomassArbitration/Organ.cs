@@ -660,20 +660,28 @@ namespace Models.PMF
         {
             Simulation sim = Structure.FindParent<Simulation>();
             List<Zone> zones = Structure.FindAll<Zone>(relativeTo: sim).ToList();
-            RectangularZone parentZone = Structure.FindParent<Zone>(recurse: true) as RectangularZone;
+            Zone parentZone = Structure.FindParent<Zone>(recurse: true);
             double totalWidth = 0;
             double[] zoneWidths = new double[zones.Count];
             int zi = 0;
             foreach (Zone z in zones)
             {
-                double thisWidth = (z as RectangularZone).Width;
-                totalWidth += thisWidth;
-                if (z.Name == parentZone.Name)
-                    zoneWidths[zi] = thisWidth;
+                if (z is RectangularZone)
+                {
+                    double thisWidth = (z as RectangularZone).Width;
+                    totalWidth += thisWidth;
+                    if (z.Name == parentZone.Name)
+                        zoneWidths[zi] = thisWidth;
+                    else
+                    {
+                        double overlap = (Width / 1000) - (parentZone as RectangularZone).Width;
+                        zoneWidths[zi] = overlap;
+                    }
+                }
                 else
                 {
-                    double overlap = (Width/1000) - parentZone.Width;
-                    zoneWidths[zi] = overlap;
+                    totalWidth = 1.0;
+                    zoneWidths[zi] = 1.0;
                 }
                 zi += 1;
             }
