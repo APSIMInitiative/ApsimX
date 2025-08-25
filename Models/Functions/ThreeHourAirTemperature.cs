@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Models.Core;
+using Models.Interfaces;
+using Models.PMF;
+using Models.PMF.Organs;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Models.Core;
-using Models.Interfaces;
-using Newtonsoft.Json;
 
 namespace Models.Functions
 {
@@ -23,6 +25,10 @@ namespace Models.Functions
         [Link]
         protected IWeather MetData = null;
 
+        /// <summary>The plant</summary>
+        [Link]
+        protected Plant Plant = null;
+
         /// <summary>Factors used to multiply daily range to give diurnal pattern of temperatures between Tmax and Tmin</summary>
         public List<double> TempRangeFactors = null;
 
@@ -36,8 +42,21 @@ namespace Models.Functions
         /// <returns>list of 8 temperature estimates for 3 hourly periods</returns>
         public List<double> SubDailyValues()
         {
+            double tmax = MetData.MaxT;
+            var root = Plant.Root as Root;
+
+            if (Plant.IsAlive && Plant.IsEmerged)
+            {
+                double pwpf = root.PlantWaterPotentialFactor;
+                double power = (pwpf >= 0.65) ? 1.0 : 0.0;
+                tmax = tmax * Math.Pow(1.65 - pwpf, power);
+
+                if (tmax <= MetData.MinT)
+                    tmax = MetData.MinT + 1;
+            }
+
             List<double> sdts = new List<Double>();
-            double diurnal_range = MetData.MaxT - MetData.MinT;
+            double diurnal_range = tmax - MetData.MinT;
             foreach (double trf in TempRangeFactors)
             {
                 sdts.Add(MetData.MinT + trf * diurnal_range);
