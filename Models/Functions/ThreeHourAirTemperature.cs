@@ -48,7 +48,7 @@ namespace Models.Functions
             {
                 var root = Plant.Root as Root;
 
-                if (Plant.IsAlive && Plant.IsEmerged)
+                if (root is not null && Plant.IsAlive && Plant.IsEmerged)
                 {
                     double pwpf = root.PlantWaterPotentialFactor;
                     tmax = tmax * Math.Pow(1.65 - pwpf, (pwpf >= 0.65) ? 1.0 : 0.0);
