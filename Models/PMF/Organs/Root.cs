@@ -419,25 +419,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                double fasw = 0;
-                double TotalArea = 0;
-
-                foreach (ZoneState Z in Zones)
-                {
-                    Zone zone = Structure.Find<Zone>(Z.Name);
-                    var soilPhysical = Structure.FindChild<IPhysical>(relativeTo: Z.Soil);
-                    var waterBalance = Structure.FindChild<ISoilWater>(relativeTo: Z.Soil);
-                    var soilCrop = Structure.FindChild<SoilCrop>(parentPlant.Name + "Soil", relativeTo: Z.Soil, recurse: true);
-                    double[] paw = APSIM.Shared.APSoil.APSoilUtilities.CalcPAWC(soilPhysical.Thickness, soilCrop.LL, waterBalance.SW, soilCrop.XF);
-                    double[] pawmm = MathUtilities.Multiply(paw, soilPhysical.Thickness);
-                    double[] pawc = APSIM.Shared.APSoil.APSoilUtilities.CalcPAWC(soilPhysical.Thickness, soilCrop.LL, soilPhysical.DUL, soilCrop.XF);
-                    double[] pawcmm = MathUtilities.Multiply(pawc, soilPhysical.Thickness);
-                    TotalArea += zone.Area;
-
-                    fasw += MathUtilities.Sum(pawmm) / MathUtilities.Sum(pawcmm) * zone.Area;
-                }
-                fasw = fasw / TotalArea;
-                return fasw;
+                return CalFASW(1e10);
             }
         }
 
@@ -499,6 +481,35 @@ namespace Models.PMF.Organs
 
                 return MeanWTF;
             }
+        }
+
+        /// <summary>Returns the Fraction of Available Soil Water for the root system (across zones and specified depth)</summary>
+        public double CalFASW(double depth)
+        {
+            double fasw = 0;
+            double TotalArea = 0;
+
+            foreach (ZoneState Z in Zones)
+            {
+                Zone zone = Structure.Find<Zone>(Z.Name);
+                var soilCrop = Structure.FindChild<SoilCrop>(parentPlant.Name + "Soil", relativeTo: Z.Soil, recurse: true);
+                var soilPhysical = Structure.FindChild<IPhysical>(relativeTo: Z.Soil);
+
+                double[] pawmm = soilCrop.PAWmm;
+                double[] pawcmm = soilCrop.PAWCmm;
+
+                if (MathUtilities.IsLessThan(depth, MathUtilities.Sum(soilPhysical.Thickness), 1e-3))
+                {
+                    pawmm = SoilUtilities.KeepTopXmm(pawmm, soilPhysical.Thickness, depth);
+                    pawcmm = SoilUtilities.KeepTopXmm(pawcmm, soilPhysical.Thickness, depth);
+                }
+
+                TotalArea += zone.Area;
+                fasw += MathUtilities.Sum(pawmm) / MathUtilities.Sum(pawcmm) * zone.Area;
+            }
+
+            fasw = fasw / TotalArea;
+            return fasw;
         }
 
         /// <summary>Gets or sets the maximum nconc.</summary>
