@@ -51,8 +51,7 @@ namespace Models.Functions
                 if (Plant.IsAlive && Plant.IsEmerged)
                 {
                     double pwpf = root.PlantWaterPotentialFactor;
-                    double power = (pwpf >= 0.65) ? 1.0 : 0.0;
-                    tmax = tmax * Math.Pow(1.65 - pwpf, power);
+                    tmax = tmax * Math.Pow(1.65 - pwpf, (pwpf >= 0.65) ? 1.0 : 0.0);
 
                     if (tmax <= MetData.MinT)
                         tmax = MetData.MinT + 1;
