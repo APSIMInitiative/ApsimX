@@ -9,6 +9,9 @@ namespace Models
         /// <summary>The amount of irrigation actually applied (mm).</summary>
         double IrrigationApplied { get; }
 
+        /// <summary>The number of irrigation events triggered.</summary>
+        double IrrigationEvents { get; }
+
         /// <summary>The depth at which irrigation is applied (mm).</summary>
         double Depth { get; }
 

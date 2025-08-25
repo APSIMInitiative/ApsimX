@@ -24,6 +24,10 @@ namespace Models
         [JsonIgnore]
         public double IrrigationApplied { get; private set; }
 
+        /// <summary>Gets the number of irrigation events triggered.</summary>
+        [JsonIgnore]
+        public double IrrigationEvents { get; private set; }
+
         /// <summary>Gets or sets the depth at which irrigation is applied (mm).</summary>
         [JsonIgnore]
         public double Depth { get; private set; }
@@ -95,6 +99,7 @@ namespace Models
                     summary.WriteMessage(this, string.Format("{0:F1} mm of water added via irrigation at depth {1} mm", irrigData.Amount, Depth), MessageType.Diagnostic);
 
                 IrrigationApplied += irrigData.Amount;
+                IrrigationEvents += 1;
             }
             else if (doOutput && amount < 0)
                 summary.WriteMessage(this, "Irrigation did not occur because the amount given was negative", MessageType.Warning);
