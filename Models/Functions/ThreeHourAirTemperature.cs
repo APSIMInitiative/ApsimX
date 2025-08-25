@@ -44,7 +44,7 @@ namespace Models.Functions
         {
             double tmax = MetData.MaxT;
 
-            if (Plant is not null)
+            if (Plant is not null && Plant.Name != "Sorghum")
             {
                 var root = Plant.Root as Root;
 
