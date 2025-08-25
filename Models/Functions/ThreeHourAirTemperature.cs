@@ -26,7 +26,7 @@ namespace Models.Functions
         protected IWeather MetData = null;
 
         /// <summary>The plant</summary>
-        [Link]
+        [Link(IsOptional = true)]
         protected Plant Plant = null;
 
         /// <summary>Factors used to multiply daily range to give diurnal pattern of temperatures between Tmax and Tmin</summary>
@@ -43,16 +43,20 @@ namespace Models.Functions
         public List<double> SubDailyValues()
         {
             double tmax = MetData.MaxT;
-            var root = Plant.Root as Root;
 
-            if (Plant.IsAlive && Plant.IsEmerged)
+            if (Plant is not null)
             {
-                double pwpf = root.PlantWaterPotentialFactor;
-                double power = (pwpf >= 0.65) ? 1.0 : 0.0;
-                tmax = tmax * Math.Pow(1.65 - pwpf, power);
+                var root = Plant.Root as Root;
 
-                if (tmax <= MetData.MinT)
-                    tmax = MetData.MinT + 1;
+                if (Plant.IsAlive && Plant.IsEmerged)
+                {
+                    double pwpf = root.PlantWaterPotentialFactor;
+                    double power = (pwpf >= 0.65) ? 1.0 : 0.0;
+                    tmax = tmax * Math.Pow(1.65 - pwpf, power);
+
+                    if (tmax <= MetData.MinT)
+                        tmax = MetData.MinT + 1;
+                }
             }
 
             List<double> sdts = new List<Double>();
