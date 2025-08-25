@@ -432,13 +432,37 @@ namespace Models.PMF.Organs
                     double[] pawmm = MathUtilities.Multiply(paw, soilPhysical.Thickness);
                     double[] pawc = APSIM.Shared.APSoil.APSoilUtilities.CalcPAWC(soilPhysical.Thickness, soilCrop.LL, soilPhysical.DUL, soilCrop.XF);
                     double[] pawcmm = MathUtilities.Multiply(pawc, soilPhysical.Thickness);
-                    TotalArea += zone.Area;
 
+                    TotalArea += zone.Area;
                     fasw += MathUtilities.Sum(pawmm) / MathUtilities.Sum(pawcmm) * zone.Area;
                 }
+
                 fasw = fasw / TotalArea;
                 return fasw;
             }
+        }
+
+        /// <summary>Returns the Fraction of Available Soil Water for the root system (across zones and specified depth)</summary>
+        public double CalFASW(double depth)
+        {
+            double fasw = 0;
+            double TotalArea = 0;
+
+            foreach (ZoneState Z in Zones)
+            {
+                Zone zone = Structure.Find<Zone>(Z.Name);
+                var soilCrop = Structure.FindChild<SoilCrop>(parentPlant.Name + "Soil", relativeTo: Z.Soil, recurse: true);
+                var soilPhysical = Structure.FindChild<IPhysical>(relativeTo: Z.Soil);
+
+                double[] pawmm = SoilUtilities.KeepTopXmm(soilCrop.PAWmm, soilPhysical.Thickness, depth);
+                double[] pawcmm = SoilUtilities.KeepTopXmm(soilCrop.PAWCmm, soilPhysical.Thickness, depth);
+
+                TotalArea += zone.Area;
+                fasw += MathUtilities.Sum(pawmm) / MathUtilities.Sum(pawcmm) * zone.Area;
+            }
+
+            fasw = fasw / TotalArea;
+            return fasw;
         }
 
         /// <summary>Gets a factor to account for root zone Water tension weighted for root mass.</summary>
