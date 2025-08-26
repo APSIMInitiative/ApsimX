@@ -311,7 +311,7 @@ namespace Models.PMF
             {
                 IFunction width = Structure.Find<IFunction>("Width") as IFunction;
                 if (width != null)
-                    return width.Value() / 1000;
+                    return width.Value() / 1000; //Convert from mm to m
                 else
                 {
                     RectangularZone parentZone = Structure.FindParent<RectangularZone>(recurse: true);
@@ -723,7 +723,6 @@ namespace Models.PMF
         /// </summary>
         private void initialiseSOMZones()
         {
-            List<double> zoneAreas = new List<double>();
             Simulation sim = Structure.FindParent<Simulation>();
             List<Zone> zones = Structure.FindAll<Zone>(relativeTo: sim).ToList();
             foreach (Zone z in zones)
