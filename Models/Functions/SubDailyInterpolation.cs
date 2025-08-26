@@ -14,7 +14,7 @@ namespace Models.Functions
     /// </summary>
 
     [Serializable]
-    [Description("Uses the specified InterpolationMethod to determine sub daily values then calcualtes a value for the Response at each of these time steps and returns either the sum or average depending on the AgrevationMethod selected")]
+    [Description("Uses the specified InterpolationMethod to determine sub daily values then calculates a value for the Response at each of these time steps and returns either the sum or average depending on the AggregationMethod selected")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SubDailyInterpolation : Model, IFunction
@@ -32,12 +32,12 @@ namespace Models.Functions
         [Link(Type = LinkType.Child, ByName = true)]
         private IIndexedFunction Response = null;
 
-        /// <summary>Method used to agreagate sub daily values</summary>
-        [Description("Method used to agregate sub daily temperature function")]
-        public AgregationMethod agregationMethod { get; set; }
+        /// <summary>Method used to aggreagate sub daily values</summary>
+        [Description("Method used to aggregate sub daily temperature function")]
+        public AggregationMethod aggregationMethod { get; set; }
 
         /// <summary>Method used to agreagate sub daily values</summary>
-        public enum AgregationMethod
+        public enum AggregationMethod
         {
             /// <summary>Return average of sub daily values</summary>
             Average,
@@ -59,9 +59,9 @@ namespace Models.Functions
         {
             if (SubDailyResponse != null)
             {
-                if (agregationMethod == AgregationMethod.Average)
+                if (aggregationMethod == AggregationMethod.Average)
                     return SubDailyResponse.Average();
-                if (agregationMethod == AgregationMethod.Sum)
+                if (aggregationMethod == AggregationMethod.Sum)
                     return SubDailyResponse.Sum();
                 else
                     throw new Exception("invalid agregation method selected in " + this.Name + "temperature interpolation");

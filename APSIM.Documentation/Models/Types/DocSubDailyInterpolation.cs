@@ -30,8 +30,8 @@ namespace APSIM.Documentation.Models.Types
 
             if (Response != null)
             {
-                section.Add(new Paragraph($"{model.Name} is the {sub.agregationMethod.ToString().ToLower()} of sub-daily values from a {Response.GetType().Name}."));
-                section.Add(new Paragraph($"Each of the interpolated {InterpolationMethod.OutputValueType}s are then passed into the following Response and the {sub.agregationMethod} taken to give daily {sub.Name}"));
+                section.Add(new Paragraph($"{model.Name} is the {sub.aggregationMethod.ToString().ToLower()} of sub-daily values from a {Response.GetType().Name}."));
+                section.Add(new Paragraph($"Each of the interpolated {InterpolationMethod.OutputValueType}s are then passed into the following Response and the {sub.aggregationMethod} taken to give daily {sub.Name}"));
                 section.Add(AutoDocumentation.DocumentModel(Response));
                 section.Add(AutoDocumentation.DocumentModel(InterpolationMethod as IModel));
             }
