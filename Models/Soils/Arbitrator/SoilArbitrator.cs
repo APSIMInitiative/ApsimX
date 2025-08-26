@@ -74,8 +74,8 @@ namespace Models.Soils.Arbitrator
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            uptakeModels = Parent.FindAllDescendants<IUptake>().ToList();
-            zones = Parent.FindAllDescendants<Zone>().ToList();
+            uptakeModels = Structure.FindChildren<IUptake>(relativeTo: Parent as INodeModel, recurse: true).ToList();
+            zones = Structure.FindChildren<Zone>(relativeTo: Parent as INodeModel, recurse: true).ToList();
             InitialSoilState = new SoilState(zones, Structure);
             if (!(this.Parent is Simulation))
                 throw new Exception(this.Name + " must be placed directly under the simulation node as it won't work properly anywhere else");

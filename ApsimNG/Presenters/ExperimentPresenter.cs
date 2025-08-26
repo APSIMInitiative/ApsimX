@@ -46,7 +46,7 @@ namespace UserInterface.Presenters
             explorerPresenter = parentPresenter;
 
             //add playlists to popup menu
-            List<Playlist> playlists = explorerPresenter.ApsimXFile.FindAllDescendants<Playlist>().ToList();
+            List<Playlist> playlists = explorerPresenter.ApsimXFile.Node.FindChildren<Playlist>(recurse: true).ToList();
             foreach (Playlist playlist in playlists)
             {
                 IMenuItemView item = view.AddMenuItem("Add to " + playlist.Name);
@@ -176,7 +176,7 @@ namespace UserInterface.Presenters
                 experiment.DisabledSimNames = selectedSimulations.Union(experiment.DisabledSimNames).ToList();
             PopulateView();
         }
-        
+
         /// <summary>
         /// Generates a .csv file containing the factor information displayed in the grid.
         /// The user can edit this file to more efficiently enable or disable factors in bulk.
@@ -320,7 +320,7 @@ namespace UserInterface.Presenters
                 string itemText = itemView.GetLabel();
                 string playlistName = itemText.Replace("Add to", "").Trim();
 
-                Playlist playlist = explorerPresenter.ApsimXFile.FindDescendant(playlistName) as Playlist;
+                Playlist playlist = explorerPresenter.ApsimXFile.Node.FindChild<Playlist>(playlistName, recurse: true);
                 if (playlist != null)
                     playlist.AddSimulationNamesToList(namesToAdd.ToArray());
             }

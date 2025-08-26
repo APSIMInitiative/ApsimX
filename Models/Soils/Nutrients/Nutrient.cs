@@ -283,6 +283,15 @@ namespace Models.Soils.Nutrients
         }
 
         /// <summary>
+        /// Add a solute.
+        /// </summary>
+        /// <param name="solute">The solute to add.</param>
+        public void AddSolute(Solute solute)
+        {
+            Structure.AddChild(solute);
+        }
+
+        /// <summary>
         /// Perform initialisation so that instance is valid.
         /// </summary>
         /// <param name="sender">The sender.</param>
@@ -303,7 +312,7 @@ namespace Models.Soils.Nutrients
 
             // Try getting solutes from children first. This happens when using NutrientPatchManager.
             // If not found, use scope to locate solutes.
-            solutes = FindAllChildren<ISolute>();
+            solutes = Structure.FindChildren<ISolute>();
             if (!solutes.Any())
                 solutes = Structure.FindAll<ISolute>();
 
@@ -319,7 +328,7 @@ namespace Models.Soils.Nutrients
             hydrolysis = nutrientFlows.First(flow => flow.Name == "Hydrolysis");
             denitrification = nutrientFlows.First(flow => flow.Name == "Denitrification");
             nitrification = nutrientFlows.First(flow => flow.Name == "Nitrification");
-            organicFlows = FindAllDescendants<OrganicFlow>().ToList();
+            organicFlows = Structure.FindChildren<OrganicFlow>(recurse: true).ToList();
 
             Reset();
             FOM = new CompositeNutrientPool(new IOrganicPool[] { FOMCarbohydrate, FOMCellulose, FOMLignin });

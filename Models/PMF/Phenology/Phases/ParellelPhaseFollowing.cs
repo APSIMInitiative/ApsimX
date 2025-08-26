@@ -14,8 +14,12 @@ namespace Models.PMF.Phen
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
-    public class ParallelPhaseFollowing : Model, IParallelPhase
+    public class ParallelPhaseFollowing : Model, IParallelPhase, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
 
@@ -147,7 +151,7 @@ namespace Models.PMF.Phen
         [EventSubscribe("Commencing")]
         private void onSimulationCommencing(object sender, EventArgs e)
         {
-            priorPhase = plant.FindDescendant<IParallelPhase>(PriorParallelPhaseName);
+            priorPhase = Structure.FindChild<IParallelPhase>(PriorParallelPhaseName, relativeTo: plant as INodeModel, recurse: true);
             ResetPhase();
         }
     }

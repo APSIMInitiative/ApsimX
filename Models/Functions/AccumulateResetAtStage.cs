@@ -14,8 +14,12 @@ namespace Models.Functions
     [Description("Adds the value of all children functions to the previous day's accumulation and reset to zero each time the specisified stage is passed")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class AccumulateResetAtStage : Model, IFunction
+    public class AccumulateResetAtStage : Model, IFunction, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// Private class members
         /// -----------------------------------------------------------------------------------------------------------
 
@@ -47,7 +51,7 @@ namespace Models.Functions
         private void PostPhenology(object sender, EventArgs e)
         {
             if (ChildFunctions == null)
-                ChildFunctions = FindAllChildren<IFunction>().ToList();
+                ChildFunctions = Structure.FindChildren<IFunction>().ToList();
 
             double DailyIncrement = 0.0;
             foreach (IFunction function in ChildFunctions)

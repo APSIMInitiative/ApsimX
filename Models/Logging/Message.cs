@@ -35,7 +35,7 @@ namespace Models.Logging
         /// <summary>
         /// Name of the zone in which the message was sent.
         /// </summary>
-        public string Zone => Provider.FindAncestor<Zone>()?.Name;
+        public string Zone => Provider.Node.FindParent<Zone>(recurse: true)?.Name;
 
         /// <summary>
         /// Relative path - used for export functionality.
