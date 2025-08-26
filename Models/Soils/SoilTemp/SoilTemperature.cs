@@ -881,7 +881,7 @@ namespace Models.Soils.SoilTemp
         private void doProcess()
         {
             CalculateConstituentVariables();
-            const int interactionsPerDay = 48;     // number of iterations in a day
+            const int interactionsPerDay = 24;     // number of iterations in a day
 
             double cva = 0.0;
             double cloudFr = 0.0;
@@ -1127,8 +1127,11 @@ namespace Models.Soils.SoilTemp
             // Calculate coeffs A, B, C, D for intermediate nodes
             for (int node = surfaceNode; node <= numNodes - 1; node++)
             {
-                c[node] = MathUtilities.Divide(c[node], b[node], 0);
-                d[node] = MathUtilities.Divide(d[node], b[node], 0);
+                if (b[node] > 0)
+                {
+                    c[node] = c[node] / b[node];
+                    d[node] = d[node] / b[node];
+                }
                 b[node + 1] -= a[node + 1] * c[node];
                 d[node + 1] -= a[node + 1] * d[node];
             }
@@ -1138,7 +1141,7 @@ namespace Models.Soils.SoilTemp
             for (int node = numNodes - 1; node >= surfaceNode; node += -1)
             {
                 newTemps[node] = d[node] - c[node] * newTemps[node + 1];
-                if (MathUtilities.IsGreaterThan(newTemps[node], 100) || MathUtilities.IsLessThan(newTemps[node], -50))
+                if ((newTemps[node] > 100) || newTemps[node] < -50)
                     throw new Exception($"newTemps({node}) is outside range of -50.0 to 100.0");
             }
         }
@@ -1372,20 +1375,6 @@ namespace Models.Soils.SoilTemp
             }
 
             Array.ConstrainedCopy(soilTemp, 1, soilTempIO, topsoilNode, numNodes);
-        }
-
-        /// <summary>Gets the average soil temperature for each soil layer</summary>
-        /// <param name="depthLag">The lag factor for depth (radians)</param>
-        /// <param name="alx">The time of a g_year from hottest instance (radians)</param>
-        /// <param name="deltaTemp">The change in surface soil temperature since the hottest day (oC)</param>
-        /// <returns>The temperature of each soil layer (oC)</returns>
-        /// <remarks>
-        /// The difference in temperature between surface and subsurface layers is an exponential function
-        /// of the ratio of the depth at the bottom of the layer and the temperature damping depth of the soil
-        /// </remarks>
-        private double calcLayerTemperature(double depthLag, double alx, double deltaTemp)
-        {
-            return weather.Tav + (weather.Amp / 2.0 * Math.Cos(alx - depthLag) + deltaTemp) * Math.Exp(-depthLag);
         }
 
         /// <summary>Calculate initial soil surface temperature</summary>
