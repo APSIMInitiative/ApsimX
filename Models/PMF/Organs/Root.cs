@@ -419,6 +419,7 @@ namespace Models.PMF.Organs
         {
             get
             {
+                // FAWS across the root system (no constraint).
                 return CalFASW(1e10);
             }
         }
@@ -483,7 +484,7 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Returns the Fraction of Available Soil Water for the root system (across zones and specified depth)</summary>
+        /// <summary>Returns the Fraction of Available Soil Water across the root system (across zones, constrained by the specified depth)</summary>
         public double CalFASW(double depth)
         {
             double fasw = 0;
