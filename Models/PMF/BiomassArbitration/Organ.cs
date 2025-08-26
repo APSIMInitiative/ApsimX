@@ -305,16 +305,22 @@ namespace Models.PMF
         /// The width of the organ is assumed to be the width of the parent plant.  
         /// If parent plant does not have width model it is set as the width of the parent zone
         /// </summary>
-        public double Width
+        public double PlantWidth
         {
             get
             {
-                RectangularZone parentZone = Structure.FindParent<RectangularZone>(recurse: true);
                 IFunction width = Structure.Find<IFunction>("Width") as IFunction;
                 if (width != null)
-                    return width.Value();
+                    return width.Value() / 1000;
                 else
-                    return parentZone.Width;
+                {
+                    RectangularZone parentZone = Structure.FindParent<RectangularZone>(recurse: true);
+
+                    if (parentZone != null)
+                        return parentZone.Width;
+                    else
+                        return 1.0;
+                }
             }
         }
         
@@ -668,30 +674,46 @@ namespace Models.PMF
             {
                 if (z is RectangularZone)
                 {
-                    double thisWidth = (z as RectangularZone).Width;
-                    totalWidth += thisWidth;
+                    totalWidth += (z as RectangularZone).Width;
+                }
+                else
+                {
+                    totalWidth = 1.0;
+                }
+                zi += 1;
+            }
+            double plantWidth = Math.Min(PlantWidth,totalWidth);
+            double zoneLength = 1.0;
+            zi = 0;
+            foreach (Zone z in zones)
+            {
+                if (z is RectangularZone)
+                {
                     if (z.Name == parentZone.Name)
-                        zoneWidths[zi] = thisWidth;
+                    {
+                        zoneWidths[zi] = (z as RectangularZone).Width;
+                        zoneLength = (z as RectangularZone).Length;
+                    }
                     else
                     {
-                        double overlap = (Width / 1000) - (parentZone as RectangularZone).Width;
+                        double overlap = plantWidth - (parentZone as RectangularZone).Width;
                         zoneWidths[zi] = overlap;
                     }
                 }
                 else
                 {
-                    totalWidth = 1.0;
                     zoneWidths[zi] = 1.0;
                 }
                 zi += 1;
             }
-
+            double plantLength = Math.Min(zoneLength, PlantWidth); //Assume plant is square, length represents spaciing so will not exceed zone length as plants start touching
+            double plantArea = plantWidth * plantLength;
             zi = 0;
             foreach (Zone z in zones)
             {
                 ISurfaceOrganicMatter somZone = Structure.FindChild<ISurfaceOrganicMatter>(relativeTo: z);
                 double rza = zoneWidths[zi] / totalWidth;
-                somZone.Add(wt/(z.Area*10000) * 10 * rza, n / (z.Area * 10000) * 10 * rza, 0, parentPlant.PlantType, Name);
+                somZone.Add((wt/plantArea) * 10 * rza, (n /plantArea) * 10 * rza, 0, parentPlant.PlantType, Name);
                 zi += 1;
             }
         }
