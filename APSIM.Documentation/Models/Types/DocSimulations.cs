@@ -8,6 +8,7 @@ using Models;
 using Models.Core;
 using Models.Core.ApsimFile;
 using Graph = Models.Graph;
+using System;
 
 namespace APSIM.Documentation.Models.Types
 {
