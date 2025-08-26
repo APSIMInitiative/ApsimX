@@ -714,7 +714,7 @@ namespace Models.PMF
                 ISurfaceOrganicMatter somZone = Structure.FindChild<ISurfaceOrganicMatter>(relativeTo: z);
                 double rza = zoneWidths[zi] / totalWidth;
                 somZone.Add((wt/plantArea) * 10 * rza, (n /plantArea) * 10 * rza, 0, parentPlant.PlantType, Name);
-                zi += 1;
+                zi += 1; 
             }
         }
 
