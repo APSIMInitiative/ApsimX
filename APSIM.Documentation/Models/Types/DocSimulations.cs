@@ -229,8 +229,8 @@ namespace APSIM.Documentation.Models.Types
                     // Remove new build system prefix. /wd/ gets added to help with Azure compute node pathing but is
                     // not necessary for local paths, and especially not here.
                     Console.WriteLine($"Removing new build system suffix from {additions.ExtraLink}");
-                    additions.ExtraLink = additions.ExtraLink.Replace("/wd/", "");
-                    Simulations speciesSims = FileFormat.ReadFromFile<Simulations>(additions.ExtraLink).Model as Simulations;
+                    var extraLink = additions.ExtraLink.Replace("/wd/", "");
+                    Simulations speciesSims = FileFormat.ReadFromFile<Simulations>(extraLink).Model as Simulations;
                     Section extraSection = new($"{additions.ExtraLinkName}", AutoDocumentation.Document(speciesSims));
                     additionsTags.Add(extraSection);
                 }
