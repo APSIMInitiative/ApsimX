@@ -228,7 +228,7 @@ namespace APSIM.Documentation.Models.Types
                 {
                     // Remove new build system prefix. /wd/ gets added to help with Azure compute node pathing but is
                     // not necessary for local paths, and especially not here.
-                    string extraLink;
+                    string extraLink = additions.ExtraLink;
                     Console.WriteLine($"Removing new build system prefix from {additions.ExtraLink}");
                     if (additions.ExtraLink.StartsWith("/wd/"))
                     {
