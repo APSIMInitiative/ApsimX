@@ -14,6 +14,7 @@ on:
 jobs:
   run-model-validations:
     name: run-model-validations
+    if: github.repository == 'APSIMInitiative/ApsimX'
     runs-on: ubuntu-latest
     env:
       ALL_APSIM_FILES: ""
