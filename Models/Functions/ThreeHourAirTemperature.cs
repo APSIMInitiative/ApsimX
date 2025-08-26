@@ -51,7 +51,7 @@ namespace Models.Functions
                 if (root is not null && Plant.IsAlive && Plant.IsEmerged)
                 {
                     double fasw = Math.Min(root.CalFASW(600), 1);
-                    tmax = tmax * Math.Sqrt(1.90 - fasw);
+                    tmax = tmax * Math.Sqrt(1.85 - fasw);
 
                     if (tmax <= MetData.MinT)
                         tmax = MetData.MinT + 1;
