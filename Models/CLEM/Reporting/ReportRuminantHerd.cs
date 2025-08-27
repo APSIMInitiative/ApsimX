@@ -35,6 +35,12 @@ namespace Models.CLEM.Reporting
         public bool ReportAtStart { get; set; } = true;
 
         /// <summary>
+        /// Specifiy when the report will be generated within time step events
+        /// </summary>
+        [Description("Within time step reporting style")]
+        public WithinTimeStepTimingStyle WithinTimeStepTiming { get; set; } = WithinTimeStepTimingStyle.Normal;
+
+        /// <summary>
         /// Report item was generated event handler
         /// </summary>
         public event EventHandler OnReportItemGenerated;
@@ -60,9 +66,34 @@ namespace Models.CLEM.Reporting
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMHerdSummary")]
-        private void OnCLEMHerdSummary(object sender, EventArgs e)
+        private void OnCLEMLate(object sender, EventArgs e)
         {
-            if (TimingOK)
+            if (WithinTimeStepTiming == WithinTimeStepTimingStyle.Late && TimingOK)
+                ReportHerd();
+        }
+
+        /// <summary>
+        /// Function to report herd individuals each month
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMAnimalMark")]
+        private void OnCLEMNormal(object sender, EventArgs e)
+        {
+            if (WithinTimeStepTiming == WithinTimeStepTimingStyle.Normal && TimingOK)
+                ReportHerd();
+        }
+
+
+        /// <summary>
+        /// Function to report herd individuals each month
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMDoCutAndCarry")]
+        private void OnCLEMEarly(object sender, EventArgs e)
+        {
+            if (WithinTimeStepTiming == WithinTimeStepTimingStyle.Early && TimingOK)
                 ReportHerd();
         }
 
