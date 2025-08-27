@@ -188,8 +188,7 @@ namespace APSIM.Documentation.Models.Types
             else
             {
                 extraLinkDir = assemblyDir + Path.DirectorySeparatorChar +
-                    directory + Path.DirectorySeparatorChar +
-                    Path.DirectorySeparatorChar;
+                    directory + Path.DirectorySeparatorChar;
             }
 
             List<ITag> additionsTags = new();
