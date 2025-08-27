@@ -24,9 +24,9 @@ namespace Models.CLEM.Resources
         public double Previous { get { return Amount - Change; } }
 
         /// <summary>
-        /// Amount provided (used to track excess) energy or protein
+        /// Net amount showing any overall excess or shortfall
         /// </summary>
-        public double Extra { get; set; }
+        public double Net { get; set; }
 
         /// <summary>
         /// Amount provided (used to track excess) energy or protein
@@ -80,7 +80,7 @@ namespace Models.CLEM.Resources
         {
             Change = 0 - Amount;
             Amount = 0;
-            Extra = 0;
+            Net = 0;
         }
     }
 }

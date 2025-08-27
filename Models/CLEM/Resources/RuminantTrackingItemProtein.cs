@@ -24,7 +24,7 @@ namespace Models.CLEM.Resources
         public double Change { get; private set; }
 
         /// <summary>
-        /// Change in the total mass of wet protein
+        /// Change in the total mass of wet protein (kg timestep-1)
         /// </summary>
         public double ChangeWet { get { return Change / ProportionDry; } }
 
@@ -32,35 +32,35 @@ namespace Models.CLEM.Resources
         public double Previous { get { return Amount - Change; } }
 
         /// <summary>
-        /// Previous total mass of wet protein
+        /// Previous total mass of wet protein (kg timestep-1)
         /// </summary>
         public double PreviousWet { get { return Previous / ProportionDry; } }
 
         /// <inheritdoc/>
-        public double Extra { get; set; }
+        public double Net { get; set; }
 
         /// <summary>
-        /// Report protein for maintenance (kg)
+        /// Report protein for maintenance (kg day-1)
         /// </summary>
-        public double ForMaintenence { get; set; }
+        public double ForMaintenance { get; set; }
 
         /// <summary>
-        /// Report protein for wool (kg)
+        /// Report protein for wool (kg day-1)
         /// </summary>
         public double ForWool { get; set; }
 
         /// <summary>
-        /// Report protein for pregnancy (kg)
+        /// Report protein for pregnancy (kg day-1)
         /// </summary>
         public double ForPregnancy { get; set; }
 
         /// <summary>
-        /// Report protein required for kg gain defined from net energy (kg)
+        /// Report protein required for kg gain defined from net energy (kg day-1)
         /// </summary>
         public double ForGain { get; set; }
 
         /// <summary>
-        /// Report protein avalable after leaving stomach and accounting for other protein use (kg)
+        /// Report protein avalable after leaving stomach and accounting for other protein use (kg day-1)
         /// </summary>
         public double AvailableForGain { get; set; }
 
@@ -92,7 +92,7 @@ namespace Models.CLEM.Resources
         {
             Amount = 0;
             Change = 0;
-            Extra = 0;
+            Net = 0;
         }
 
         /// <summary>
@@ -100,11 +100,12 @@ namespace Models.CLEM.Resources
         /// </summary>
         public void TimeStepReset()
         {
-            ForMaintenence = 0;
+            ForMaintenance = 0;
             ForPregnancy = 0;
             ForGain = 0;
             AvailableForGain = 0;
             ForWool = 0;
+            Net = 0;
         }
 
         /// <inheritdoc/>

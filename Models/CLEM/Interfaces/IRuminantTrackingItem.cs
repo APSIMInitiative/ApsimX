@@ -18,7 +18,7 @@ namespace Models.CLEM.Interfaces
         /// <summary>
         /// Amount extra offered to other sources
         /// </summary>
-        double Extra { get; set; }
+        double Net { get; set; }
         /// <summary>
         /// Previous amount
         /// </summary>
