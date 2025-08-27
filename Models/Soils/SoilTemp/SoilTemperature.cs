@@ -881,7 +881,7 @@ namespace Models.Soils.SoilTemp
         private void doProcess()
         {
             CalculateConstituentVariables();
-            const int interactionsPerDay = 24;     // number of iterations in a day
+            const int interactionsPerDay = 8;     // number of iterations in a day
 
             double cva = 0.0;
             double cloudFr = 0.0;
