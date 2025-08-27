@@ -1,5 +1,5 @@
 ---
-title: 'Publish APSIMNG from source codes'
+title: 'Publish APSIMNG from source code'
 date: '2023-03-07'
 slug: compile-apsimng
 ---
@@ -18,7 +18,7 @@ git clone  --depth 1  https://github.com/APSIMInitiative/ApsimX.git
 
 ## Publish solution for batch mode
 
-Run following command under root folders on Windows
+Run following commands under the ApsimX directory
 
 Publish for windows
 
@@ -44,11 +44,14 @@ Copy the contents `bin/Release/net8.0/<runtime-identify>/publish/` to your opera
 
 ## .NET runtime
 
-Apsim NG has been updated to run using .NET 6.0. This can be downloaded [from dotnet](https://dotnet.microsoft.com/en-us/download/dotnet/6.0).
+Apsim NG has been updated to run using .NET 8.0. This can be downloaded [from dotnet](https://dotnet.microsoft.com/en-us/download/dotnet/8.0).
 
 ## Further steps
 
-On Windows, check whether `sqlite3.dll` is under `bin\Release\net8.0\win-x64\publish`  folder. If not, copy from `bin\Release\net8.0\win-x64\` to `publish` folder.
+Sqlite has been included as a nuget package in the ApsimNG project and is no longer installed seperately.
+However if you are using an older version of the source code this may be required.
+
+On Windows, check whether `sqlite3.dll` is under `bin\Release\net8.0\win-x64\publish` folder. If not, copy from `bin\Release\net8.0\win-x64\` to `publish` folder.
 
 On Linux, sqlite3 should be installed into system with following command
 
