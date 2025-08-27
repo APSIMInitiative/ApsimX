@@ -6,7 +6,6 @@ using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Graph = Models.Graph;
 using System;
 
@@ -190,7 +189,7 @@ namespace APSIM.Documentation.Models.Types
             {
                 extraLinkDir = assemblyDir + Path.DirectorySeparatorChar +
                     directory + Path.DirectorySeparatorChar +
-                    "AgPasture" + Path.DirectorySeparatorChar;
+                    Path.DirectorySeparatorChar;
             }
 
             List<ITag> additionsTags = new();
@@ -232,7 +231,7 @@ namespace APSIM.Documentation.Models.Types
                     Console.WriteLine($"Removing new build system prefix from {additions.ExtraLink}");
                     if (additions.ExtraLink.StartsWith("/wd/"))
                     {
-                        extraLink = additions.ExtraLink.Substring(4);
+                        extraLink = additions.ExtraLink.Substring(4).Replace("//", "/");
                     }
                     Simulations speciesSims = FileFormat.ReadFromFile<Simulations>(extraLink).Model as Simulations;
                     Section extraSection = new($"{additions.ExtraLinkName}", AutoDocumentation.Document(speciesSims));
