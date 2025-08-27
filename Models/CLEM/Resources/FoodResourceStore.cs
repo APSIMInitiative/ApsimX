@@ -85,7 +85,7 @@ namespace Models.CLEM.Resources
         public double ReduceIntakeByProportion(double proportion)
         {
             double amountReduced = 0;
-            if (MathUtilities.IsPositive(proportion) && MathUtilities.IsLessThanOrEqual(proportion, 1.0))
+            if (MathUtilities.IsPositive(proportion) && MathUtilities.IsLessThan(proportion, 1.0))
             {
                 amountReduced = Details.Amount * proportion;
                 Details.Amount *= (1 - proportion);

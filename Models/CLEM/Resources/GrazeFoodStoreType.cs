@@ -591,12 +591,12 @@ namespace Models.CLEM.Resources
         private void OnCLEMDetachPasture(object sender, EventArgs e)
         {
             // detach and carryover detach are monthly so divide by 30.4 to daily and apply for time-step
-            if (DetachRate < 1 | CarryoverDetachRate < 1)
+            if (DetachRate <= 1 | CarryoverDetachRate <= 1)
             {
                 double detached = 0;
                 foreach (var pool in Pools)
                 {
-                    double detach = DetachRate / 30.4 * events.Interval;
+                    double detach = Math.Min(1.0, DetachRate / 30.4 * events.Interval);
                     if (pool.Age >= 12)
                     {
                         detach = CarryoverDetachRate / 30.4 * events.Interval;
