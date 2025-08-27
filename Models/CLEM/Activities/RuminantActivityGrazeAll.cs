@@ -65,7 +65,9 @@ namespace Models.CLEM.Activities
             Guid nextUID = ActivitiesHolder.AddToGuID(this.UniqueID, 1);
             foreach (GrazeFoodStoreType pastureType in grazeFoodStore.Children.Where(a => a.GetType() == typeof(GrazeFoodStoreType) || a.GetType() == typeof(CommonLandFoodStoreType)))
             {
-                Core.ApsimFile.Structure.Add(new RuminantActivityGrazePasture(this, pastureType, events, transCat, usingGrowPF, nextUID), this);
+                var newGrazePasture = new RuminantActivityGrazePasture(this, pastureType, events, transCat, usingGrowPF, nextUID);
+                Core.ApsimFile.Structure.Add(newGrazePasture, this);
+                newGrazePasture.AddRequiredChildren(nextUID, usingGrowPF);
                 nextUID = ActivitiesHolder.AddToGuID(nextUID, 1);
 
                 //string transCat = "";

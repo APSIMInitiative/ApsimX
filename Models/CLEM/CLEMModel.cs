@@ -23,6 +23,7 @@ namespace Models.CLEM
     {
         /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
+        [JsonIgnore]
         public IStructure Structure { get; set; }
     
         /// <summary>

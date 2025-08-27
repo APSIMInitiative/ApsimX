@@ -268,7 +268,13 @@ namespace Models.CLEM.Activities
         {
             List<string> transCatsList = new();
             if (model.parentZone is null)
+            {
                 model.parentZone = model.FindAncestor<ZoneCLEM>();
+                if (model.parentZone is null)
+                {
+                    return "";
+                }
+            }
 
             if (model.parentZone.BuildTransactionCategoryFromTree && model.Parent is CLEMActivityBase)
             {

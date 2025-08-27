@@ -161,9 +161,17 @@ namespace Models.CLEM.Activities
             this.usingGrowPF = usingGrowPF;
             Status = ActivityStatus.NoTask;
             UniqueID = parentBasedUid; 
+            Structure = grazePasture.Structure;
             SetLinkedModels(Structure.Find<ResourcesHolder>(relativeTo: grazePasture));
+        }
+
+        /// <summary>
+        /// Add required children to this activity after the activity is fully created
+        /// </summary>
+        public void AddRequiredChildren()
+        {
             Core.ApsimFile.Structure.Add(CreateRuminantFilterGroup(), this);
-            InitialiseHerd(false, false);
+            InitialiseHerd(true, true);
         }
 
         public RuminantActivityGroup CreateRuminantFilterGroup()

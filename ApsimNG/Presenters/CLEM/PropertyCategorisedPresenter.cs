@@ -100,13 +100,12 @@ namespace UserInterface.Presenters
         {
             this.model = model as Model;
 
-            IStructure structure = (model as CLEMModel)?.Structure;
-            if (structure == null)
-            {
-                return;
-            }
-
-            userLevel = (int)(structure.Find<ZoneCLEM>(relativeTo: model as Model)?.UserType?? CLEMUserType.General);
+            //IStructure structure = (model as CLEMModel)?.Structure;
+            //if (structure == null)
+            //{
+            //    return;
+            //}
+            userLevel = (int)((model as Model).FindAncestor<ZoneCLEM>()?.UserType?? CLEMUserType.General);
 
             treeview = view as IPropertyCategorisedView;
             if(view is null)

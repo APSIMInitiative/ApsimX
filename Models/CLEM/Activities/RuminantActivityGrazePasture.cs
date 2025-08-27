@@ -83,16 +83,36 @@ namespace Models.CLEM.Activities
             Status = ActivityStatus.NoTask;
             //Guid currentUid = ActivitiesHolder.AddToGuID(grazeAll.UniqueID, 1);
             UniqueID = parentBasedUid;
-
+            Structure = grazeAll.Structure;
             SetLinkedModels(Structure.Find<ResourcesHolder>(relativeTo: grazeAll));
+            //Core.ApsimFile.Structure.Add(CreateRuminantFilterGroup(), this);
+            //InitialiseHerd(true, true);
+
+            //Guid nextUID = ActivitiesHolder.AddToGuID(parentBasedUid, 2);
+            //foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())
+            //{
+            //    RuminantActivityGrazePastureHerd newPastureHerd = new RuminantActivityGrazePastureHerd(this, herdType, events, transactionCategory, usingGrowPF, nextUID);
+            //    Core.ApsimFile.Structure.Add(newPastureHerd, this);
+            //    //newPastureHerd.InitialiseHerd(true, false);
+            //    nextUID = ActivitiesHolder.AddToGuID(nextUID, 2);
+            //}
+        }
+
+        /// <summary>
+        /// Add required children to this activity after the activity is fully created
+        /// </summary>
+        public void AddRequiredChildren(Guid parentBasedUid, bool usingGrowPF)
+        {
             Core.ApsimFile.Structure.Add(CreateRuminantFilterGroup(), this);
             InitialiseHerd(true, true);
 
             Guid nextUID = ActivitiesHolder.AddToGuID(parentBasedUid, 2);
             foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())
             {
-                RuminantActivityGrazePastureHerd newPastureHerd = new RuminantActivityGrazePastureHerd(this, herdType, events, transactionCategory, usingGrowPF, nextUID);
+                RuminantActivityGrazePastureHerd newPastureHerd = new RuminantActivityGrazePastureHerd(this, herdType, events, TransactionCategory, usingGrowPF, nextUID);
+
                 Core.ApsimFile.Structure.Add(newPastureHerd, this);
+                newPastureHerd.AddRequiredChildren();
                 //newPastureHerd.InitialiseHerd(true, false);
                 nextUID = ActivitiesHolder.AddToGuID(nextUID, 2);
             }
