@@ -98,7 +98,7 @@ namespace Models.CLEM.Resources
                 string warn = $"[r={Name}] requires at least one [a=RuminantActivityGrow_____] to manage growth and aging of individuals.";
                 Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
             }
-            if (Structure.FindAll<IRuminantActivityGrow>().Where(a => (a as CLEMActivityBase).ActivityEnabled).Count() > 1)
+            if (Structure.FindAll<IRuminantActivityGrow>().Where(a => (a as CLEMModel).Enabled).Count() > 1)
             {
                 string warn = $"Only one [a=RuminantActivityGrow_____] activity is permitted in the simulation";
                 string warnfull = $"{warn}{Environment.NewLine}CLEM does not support using different growth models in a simulation even if filtered by herds or breeds. Ensure a single growth component is enabled (ActivityEnabled property or Disable in UI tree)";
