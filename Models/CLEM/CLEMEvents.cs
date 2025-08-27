@@ -78,6 +78,8 @@ namespace Models.CLEM
         /// <summary>CLEM sell animals to market including transporting and labour</summary>
         public event EventHandler CLEMAnimalSell;
         /// <summary>CLEM buy animals including transporting and labour</summary>
+        public event EventHandler CLEMPreFinalise;
+        /// <summary>CLEM buy animals including transporting and labour</summary>
         public event EventHandler CLEMAnimalBuy;
         /// <summary>CLEM Age your resources (eg. Decomose Fodder, Age your labour, Age your Animals)</summary>
         public event EventHandler CLEMAgeResources;
@@ -197,7 +199,6 @@ namespace Models.CLEM
                     return (date, date);
             }
         }
-
         private void SetNextTimeStep(DateTime fromDate)
         {
             timeStepStart = fromDate;
@@ -340,6 +341,7 @@ namespace Models.CLEM
                 CLEMAnimalSell?.Invoke(this, args);
                 CLEMDetachPasture?.Invoke(this, args);
                 CLEMHerdSummary?.Invoke(this, args);
+                CLEMPreFinalise?.Invoke(this, args);
                 CLEMAgeResources?.Invoke(this, args);
                 CLEMAnimalBuy?.Invoke(this, args);
                 CLEMFinalizeTimeStep?.Invoke(this, args);

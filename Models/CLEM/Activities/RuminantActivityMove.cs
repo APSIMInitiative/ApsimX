@@ -131,8 +131,8 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        [EventSubscribe("CLEMAnimalMark")]
-        protected void OnCLEMAnimalMark(object sender, EventArgs e)
+        [EventSubscribe("CLEMPreFinalise")]
+        protected void OnCLEMAnimalMarkLate(object sender, EventArgs e)
         {
             if (TimeStepTiming == WithinTimeStepTimingStyle.Late)
                 ManageActivityResourcesAndTasks();
@@ -148,7 +148,7 @@ namespace Models.CLEM.Activities
 
         /// <inheritdoc/>
         [EventSubscribe("CLEMDoCutAndCarry")]
-        protected void OnCLEMCutAndCarry(object sender, EventArgs e)
+        protected void OnCLEMAnimalMarkEarly(object sender, EventArgs e)
         {
             if (TimeStepTiming == WithinTimeStepTimingStyle.Early)
                 ManageActivityResourcesAndTasks();
