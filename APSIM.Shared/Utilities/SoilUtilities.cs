@@ -93,7 +93,7 @@ namespace APSIM.Shared.Utilities
             for (int i = 0; i < thickness.Length; i++)
             {
                 CumDepth = CumDepth + thickness[i];
-                if (CumDepth >= depth) { return i; }
+                if (MathUtilities.IsGreaterThanOrEqual(CumDepth, depth)) { return i; }
             }
             throw new Exception("Depth deeper than bottom of soil profile");
         }
