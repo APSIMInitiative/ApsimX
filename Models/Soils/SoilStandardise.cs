@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -20,26 +21,43 @@ namespace Models.Soils;
 public static class SoilSanitise
 {
     /// <summary>
+    /// Clone and sanitise a soil.
+    /// </summary>
+    /// <param name="soil">The soil</param>
+    /// <param name="targetThickness">The layer thickness to change the soil to. Leave null for physical thickness</param>
+    public static Soil CloneAndSanitise(this Soil soil, double[] targetThickness = null)
+    {
+        Soil clonedSoil = soil.Clone();
+        Node.Create(clonedSoil);
+        Sanitise(clonedSoil, targetThickness);
+        return clonedSoil;
+    }
+
+    /// <summary>
     /// Sanitise a soil.
     /// </summary>
     /// <param name="soil"></param>
-    public static void Sanitise(this Soil soil)
+    /// <param name="targetThickness">The layer thickness to change the soil to. Leave null for physical thickness</param>
+    public static void Sanitise(this Soil soil, double[] targetThickness = null)
     {
-        var physical = soil.FindChild<Physical>();
-        var chemical = soil.FindChild<Chemical>();
-        var layerStructure = soil.FindChild<LayerStructure>();
-        var organic = soil.FindChild<Organic>();
-        var water = soil.FindChild<Water>();
-        var waterBalance = soil.FindChild<ISoilWater>();
-        var temperature = soil.FindChild<Models.Soils.SoilTemp.SoilTemperature>();
+        var physical = soil.Node.FindChild<Physical>();
+        var chemical = soil.Node.FindChild<Chemical>();
+        var layerStructure = soil.Node.FindChild<LayerStructure>();
+        var organic = soil.Node.FindChild<Organic>();
+        var water = soil.Node.FindChild<Water>();
+        var waterBalance = soil.Node.FindChild<ISoilWater>();
+        var temperature = soil.Node.FindChild<Models.Soils.SoilTemp.SoilTemperature>();
 
         // Determine the target layer structure.
-        var targetThickness = physical.Thickness;
-        if (layerStructure != null)
+        if (targetThickness == null)
         {
-            targetThickness = layerStructure.Thickness;
-            if (targetThickness.Sum() > physical.Thickness.Sum())
-                throw new Exception("The LayerStructure profile is deeper than the physical profile. This is not allowed.");
+            targetThickness = physical.Thickness;
+            if (layerStructure != null)
+            {
+                targetThickness = layerStructure.Thickness;
+                if (targetThickness.Sum() > physical.Thickness.Sum())
+                    throw new Exception("The LayerStructure profile is deeper than the physical profile. This is not allowed.");
+            }
         }
 
         if (physical != null)
@@ -60,7 +78,7 @@ public static class SoilSanitise
         if (temperature != null)
             SanitiseSoilTemperature(temperature, targetThickness);
 
-        foreach (var solute in soil.FindAllChildren<Solute>())
+        foreach (var solute in soil.Node.FindChildren<Solute>())
             SanitiseSolute(solute, targetThickness);
     }
 
@@ -71,11 +89,11 @@ public static class SoilSanitise
     /// <param name="soil">The soil to repair.</param>
     public static void InitialiseSoil(Soil soil)
     {
-        var physical = soil.FindChild<Physical>();
+        var physical = soil.Node.FindChild<Physical>();
         if (physical != null)
         {
             // Ensure soil has a water noe.
-            var water = soil.FindChild<Water>();
+            var water = soil.Node.FindChild<Water>();
             if (water == null)
             {
                 water = new();
@@ -87,10 +105,12 @@ public static class SoilSanitise
                 water.InitialValues = physical.DUL;
 
             // Ensure soil has a WaterBalance node.
-            var waterBalance = soil.FindChild<WaterBalance>();
+            var waterBalance = soil.Node.FindChild<WaterBalance>();
             if (waterBalance == null)
-                soil.Node.AddChild(new WaterBalance()
+            {
+                waterBalance = new WaterBalance()
                 {
+                    ResourceName = "WaterBalance",
                     SummerDate = "1-Nov",
                     SummerU = 5.0,
                     SummerCona = 5.0,
@@ -105,10 +125,13 @@ public static class SoilSanitise
                     CNCov = 0.8,
                     Thickness = physical.Thickness,
                     SWCON = MathUtilities.CreateArrayOfValues(0.3, physical.Thickness.Length)
-                });
+                };
+                Node.Create(waterBalance);
+                soil.Node.AddChild(waterBalance);
+            }
 
             // Ensure soil has an Organic node.
-            var organic = soil.FindChild<Organic>();
+            var organic = soil.Node.FindChild<Organic>();
             if (organic == null)
                 soil.Node.AddChild(new Organic()
                 {
@@ -121,7 +144,7 @@ public static class SoilSanitise
                 });
 
             // Ensure soil has an Chemical node.
-            var chemical = soil.FindChild<Chemical>();
+            var chemical = soil.Node.FindChild<Chemical>();
             if (chemical == null)
                 soil.Node.AddChild(new Chemical()
                 {
@@ -130,26 +153,33 @@ public static class SoilSanitise
                 });
 
             // Ensure soil has an Nutrient node.
-            var nutrient = soil.FindChild<Nutrient>();
+            var nutrient = soil.Node.FindChild<Nutrient>();
             if (nutrient == null)
-                soil.Node.AddChild(new Nutrient() { });
+            {
+                nutrient = new Nutrient()
+                {
+                    ResourceName = "Nutrient"
+                };
+                Node.Create(nutrient);
+                soil.Node.AddChild(nutrient);
+            }
 
             // Ensure solutes exist in soil.
-            if (soil.FindChild<Solute>("NO3") == null)
-                soil.Node.AddChild(new Solute()
-                {
-                    Name = "NO3",
-                    Thickness = physical.Thickness,
-                    InitialValues = MathUtilities.CreateArrayOfValues(1.0, physical.Thickness.Length)
-                });
-            if (soil.FindChild<Solute>("NH4") == null)
+                if (soil.Node.FindChild<Solute>("NO3") == null)
+                    soil.Node.AddChild(new Solute()
+                    {
+                        Name = "NO3",
+                        Thickness = physical.Thickness,
+                        InitialValues = MathUtilities.CreateArrayOfValues(1.0, physical.Thickness.Length)
+                    });
+            if (soil.Node.FindChild<Solute>("NH4") == null)
                 soil.Node.AddChild(new Solute()
                 {
                     Name = "NH4",
                     Thickness = physical.Thickness,
                     InitialValues = MathUtilities.CreateArrayOfValues(0.1, physical.Thickness.Length)
                 });
-            if (soil.FindChild<Solute>("Urea") == null)
+            if (soil.Node.FindChild<Solute>("Urea") == null)
                 soil.Node.AddChild(new Solute()
                 {
                     Name = "Urea",
@@ -158,22 +188,22 @@ public static class SoilSanitise
                 });
 
             // Ensure soil has a soil temperature node.
-            var soilTemperature = soil.FindChild<SoilTemperature>();
+            var soilTemperature = soil.Node.FindChild<SoilTemperature>();
             if (soilTemperature == null)
                 soil.Node.AddChild(new SoilTemperature() { Name = "Temperature" });
             else
                 soilTemperature.Name = "Temperature";
 
-            var euc = physical.FindChild<SoilCrop>("EucalyptusSoil");
-            var pinus = physical.FindChild<SoilCrop>("PinusSoil");
+            var euc = physical.Node.FindChild<SoilCrop>("EucalyptusSoil");
+            var pinus = physical.Node.FindChild<SoilCrop>("PinusSoil");
             if (euc != null && pinus == null)
             {
                 pinus = euc.Clone();
                 pinus.Name = "PinusSoil";
                 physical.Node.AddChild(pinus);
             }
-            var scrum = physical.FindChild<SoilCrop>("SCRUMSoil");
-            var firstSoilCrop = physical.FindChild<SoilCrop>();
+            var scrum = physical.Node.FindChild<SoilCrop>("SCRUMSoil");
+            var firstSoilCrop = physical.Node.FindChild<SoilCrop>();
             if (scrum == null && firstSoilCrop != null)
             {
                 scrum = firstSoilCrop.Clone();
@@ -256,7 +286,7 @@ public static class SoilSanitise
     {
         if (!MathUtilities.AreEqual(targetThickness, physical.Thickness))
         {
-            foreach (var crop in (physical as IModel).FindAllChildren<SoilCrop>())
+            foreach (var crop in (physical as IModel).Node.FindChildren<SoilCrop>())
             {
                 crop.KL = SoilUtilities.MapConcentration(crop.KL, physical.Thickness, targetThickness, MathUtilities.LastValue(crop.KL));
                 crop.XF = SoilUtilities.MapConcentration(crop.XF, physical.Thickness, targetThickness, MathUtilities.LastValue(crop.XF));
@@ -279,7 +309,7 @@ public static class SoilSanitise
                 physical.Rocks = SoilUtilities.MapConcentration(physical.Rocks, physical.Thickness, targetThickness, MathUtilities.LastValue(physical.Rocks));
             physical.Thickness = targetThickness;
 
-            foreach (var crop in (physical as IModel).FindAllChildren<SoilCrop>())
+            foreach (var crop in (physical as IModel).Node.FindChildren<SoilCrop>())
             {
                 var soilCrop = crop as SoilCrop;
                 // Ensure crop LL are between Airdry and DUL.
@@ -301,7 +331,7 @@ public static class SoilSanitise
     public static void InFill(this Physical physical)
     {
         // Fill in missing XF values.
-        foreach (var crop in (physical as IModel).FindAllChildren<SoilCrop>())
+        foreach (var crop in (physical as IModel).Node.FindChildren<SoilCrop>())
         {
             if (crop.KL == null)
                 FillInKLForCrop(crop);
@@ -536,7 +566,7 @@ public static class SoilSanitise
         thickness.Add(3000);
 
         // Get the first crop ll or ll15.
-        var firstCrop = (physical as IModel).FindChild<SoilCrop>();
+        var firstCrop = (physical as IModel).Node.FindChild<SoilCrop>();
         double[] LowerBound;
         if (physical != null && firstCrop != null)
             LowerBound = SoilUtilities.MapConcentration(firstCrop.LL, physical.Thickness, thickness.ToArray(), MathUtilities.LastValue(firstCrop.LL));
@@ -839,8 +869,8 @@ public static class SoilSanitise
 
             if (predictedCropNames != null)
             {
-                var water = soil.FindChild<Physical>();
-                var crops = water.FindAllChildren<SoilCrop>().ToList();
+                var water = soil.Node.FindChild<Physical>();
+                var crops = water.Node.FindChildren<SoilCrop>().ToList();
 
                 foreach (string cropName in predictedCropNames)
                 {
@@ -938,7 +968,7 @@ public static class SoilSanitise
         if (A == null)
             return null;
 
-        var physical = soil.FindChild<IPhysical>();
+        var physical = soil.Node.FindChild<IPhysical>();
         double[] LL = PredictedLL(physical, A, B);
         LL = SoilUtilities.MapConcentration(LL, PredictedThickness, physical.Thickness, LL.Last());
         KL = SoilUtilities.MapConcentration(KL, PredictedThickness, physical.Thickness, KL.Last());

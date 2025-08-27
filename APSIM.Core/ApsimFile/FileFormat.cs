@@ -132,6 +132,7 @@ public class FileFormat
                 if (!(member is PropertyInfo property) ||
                     !property.GetMethod.IsPublic ||
                     !property.CanWrite ||
+                    property.PropertyType.Name == "IStructure" ||
                     property.SetMethod.IsPrivate)
                     return false;
 

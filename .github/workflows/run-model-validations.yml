@@ -26,7 +26,9 @@ jobs:
 
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v4
-    
+      with:
+        dotnet-version: '8.0.x'
+
     - name: Get PR number from GitHub API
       id: fetch_pr_number
       run: |
@@ -78,7 +80,7 @@ jobs:
       id: meta_apsimplusr
       uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
       with:
-        images: ric394/apsimplusr
+        images: apsiminitiative/apsimplusr
         flavor: latest=true
         tags: |
           type=ref,event=branch
@@ -116,7 +118,6 @@ jobs:
 
         # Tell POStats2 to open and get ready to accept data
         echo "Opening POStats2 to accept data..."
-        echo "Pull Request Number: ${{ steps.fetch_pr_number.outputs.pr_number }}" 
         echo "Commit SHA: ${{ github.sha }}"
         # NOTE: Enable once the workflow is ready for production.
         commitsha=${{ github.sha }}
@@ -124,19 +125,22 @@ jobs:
         author=${{ github.actor }}
         echo "commitsha variable: ${commitsha}"
         echo "author variable: ${author}"
-        # pr_number="10271"
-        pr_number=${{ steps.fetch_pr_number.outputs.pr_number }}
-        response=$(curl "https://postats2.apsim.info/api/open?pullrequestnumber=${pr_number}&commitid=${commitsha}&author=${author}&count=0") # count needs to be a proper number later
+        # substrings the variable so we get the number only after the 'pr-' part.
+        echo "PR Number: ${DOCKER_METADATA_OUTPUT_VERSION:3}"
+        # makes the variable available in subsequent steps.
+        echo "NOTE: HARDCODED JOB COUNT: 149"
+        jobcount=149
+        response=$(curl "https://postats2.apsim.info/api/open?pullrequestnumber=${DOCKER_METADATA_OUTPUT_VERSION:3}&commitid=${commitsha}&author=${author}&count=${jobcount}") # count needs to be a proper number later
         echo "POStats2 open response: ${response}"
         echo "Start creating payload..."
-        dotnet ./bin/Release/net8.0/APSIM.Workflow.dll --payload-directory "${PAYLOAD_FOLDER_PATH}" -g "$author" -t $DOCKER_METADATA_OUTPUT_VERSION --commit-sha "$commitsha" --pr-number ${pr_number} -v
+        dotnet ./bin/Release/net8.0/APSIM.Workflow.dll --payload-directory "${PAYLOAD_FOLDER_PATH}" -g "$author" -t $DOCKER_METADATA_OUTPUT_VERSION --commit-sha "$commitsha" --pr-number ${DOCKER_METADATA_OUTPUT_VERSION:3} -v
 
     - name: Print workflow submit success summary markdown
       if: success()
       run: |
         echo "## Workflow submit success summary :tada:" >> $GITHUB_STEP_SUMMARY
         echo 'All jobs submitted to Azure successfully!' >> $GITHUB_STEP_SUMMARY
-        echo 'Run logs and predicted/observed metrics for this validation run can be viewed at [POStats2](https://postats2.apsim.info/${{ steps.fetch_pr_number.outputs.pr_number }})' >> $GITHUB_STEP_SUMMARY
+        echo 'Run logs and predicted/observed metrics for this validation run can be viewed at [POStats2](https://postats2.apsim.info/${{ steps.submit_azure_jobs.outputs.pr_number }})' >> $GITHUB_STEP_SUMMARY
         echo 'Note: The validation results may take some time to appear.' >> $GITHUB_STEP_SUMMARY
 
     - name: Print workflow submit failure summary markdown
@@ -145,4 +149,4 @@ jobs:
         echo "## Workflow submit failure summary :sob:" >> $GITHUB_STEP_SUMMARY
         echo "The workflow failed to submit all jobs to Azure." >> $GITHUB_STEP_SUMMARY
         echo "Reason: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
-        echo "Please check the logs for more information: [POStats2](https://postats2.apsim.info/${{ steps.fetch_pr_number.outputs.pr_number }}) " >> $GITHUB_STEP_SUMMARY
+        echo "Please check the logs for more information: [POStats2](https://postats2.apsim.info/${{ steps.submit_azure_jobs.outputs.pr_number }}) " >> $GITHUB_STEP_SUMMARY

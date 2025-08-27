@@ -30,10 +30,6 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Pasture/ManagePasture.htm")]
     public class PastureActivityManage: CLEMActivityBase, IValidatableObject, IPastureManager, IHandlesActivityCompanionModels, IStructureDependency
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
         [Link]
         private IClock clock = null;
         [Link]
@@ -205,15 +201,15 @@ namespace Models.CLEM.Activities
             // locate Land Type resource for this forage.
             LinkedLandItem = Resources.FindResourceType<Land, LandType>(this, LandTypeNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
-            relationshipLC = FindAllChildren<Relationship>().Where(a => a.Identifier == "Utilisation % to change in Land condition index").FirstOrDefault();
+            relationshipLC = Structure.FindChildren<Relationship>().Where(a => a.Identifier == "Utilisation % to change in Land condition index").FirstOrDefault();
             if (relationshipLC != null)
-                LandConditionIndex = relationshipLC.FindChild<RelationshipRunningValue>();
+                LandConditionIndex = Structure.FindChild<RelationshipRunningValue>(relativeTo: relationshipLC);
 
-            relationshipGBA = FindAllChildren<Relationship>().Where(a => a.Identifier == "Utilisation % to change in Grass basal area").FirstOrDefault();
+            relationshipGBA = Structure.FindChildren<Relationship>().Where(a => a.Identifier == "Utilisation % to change in Grass basal area").FirstOrDefault();
             if (relationshipGBA != null)
-                GrassBasalArea = relationshipGBA.FindChild<RelationshipRunningValue>();
+                GrassBasalArea = Structure.FindChild<RelationshipRunningValue>(relativeTo: relationshipGBA);
 
-            filePasture = zoneCLEM.Parent.FindAllDescendants().Where(a => a.Name == PastureDataReader).FirstOrDefault() as IFilePasture;
+            filePasture = Structure.FindChildren<IModel>(recurse: true).Where(a => a.Name == PastureDataReader).FirstOrDefault() as IFilePasture;
 
             if (LandConditionIndex is null || GrassBasalArea is null || filePasture is null)
                 return;
@@ -222,7 +218,7 @@ namespace Models.CLEM.Activities
             if (filePasture != null)
             {
                 // check that database has region id and land id
-                ZoneCLEM clem = FindAncestor<ZoneCLEM>();
+                ZoneCLEM clem = Structure.FindParent<ZoneCLEM>(recurse: true);
                 int recs = filePasture.RecordsFound((filePasture as FileSQLitePasture).RegionColumnName, clem.ClimateRegion);
                 if (recs == 0)
                     throw new ApsimXException(this, $"No pasture production records were located by [x={(filePasture as Model).Name}] for [a={this.Name}] given [Region id] = [{clem.ClimateRegion}] as specified in [{clem.Name}]");
@@ -498,7 +494,7 @@ namespace Models.CLEM.Activities
         {
             return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
             {
-                (FindAllChildren<Relationship>(), true, "childgroupactivityborder", "Relationships for change in land condition and grass basal area as function of utilisation:", "")
+                (Structure.FindChildren<Relationship>(), true, "childgroupactivityborder", "Relationships for change in land condition and grass basal area as function of utilisation:", "")
             };
         }
 
