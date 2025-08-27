@@ -37,7 +37,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Implements minimum breeders kept to define breeder purchase limits")]
     [Version(1, 0, 1, "First implementation of this activity using IAT/NABSA processes")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantManage.htm")]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGeneral) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Child })]
+    [ModelAssociations(associatedModels: [typeof(RuminantParametersGeneral)], associationStyles: [ModelAssociationStyle.InScope])]
     public class RuminantActivityManage : CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels
     {
         [Link(IsOptional = true)]
@@ -136,7 +136,7 @@ namespace Models.CLEM.Activities
         /// Maximum breeder age for removal
         /// </summary>
         [Category("Destock", "Breeding females")]
-        [Description("Maximum female breeder age (months) before removal")]
+        [Description("Old female breeder age for removal")]
         [Core.Display(EnabledCallback = "EnableOldFemaleSellProperties", SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
         public AgeSpecifier MaximumBreederAge { get; set; } = new int[] { 20, 0 };
@@ -200,7 +200,7 @@ namespace Models.CLEM.Activities
         /// Maximum sire age for removal
         /// </summary>
         [Category("Destock", "Breeding males")]
-        [Description("Maximum sire age (months) before removal")]
+        [Description("Old sire age for removal")]
         [Core.Display(EnabledCallback = "EnableOldMaleSellProperties", SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
         public AgeSpecifier MaximumSireAge { get; set; } = new int[] { 20, 0 };
@@ -1767,7 +1767,8 @@ namespace Models.CLEM.Activities
                 }
 
                 // unknown entries
-                var unknownPurchases = purchaseDetails.Where(f => (f.ExampleRuminant is RuminantFemale) ? !(f.ExampleRuminant as RuminantFemale).IsBreeder : !(f.ExampleRuminant as RuminantMale).IsSire);
+                var unknownPurchases = purchaseDetails.Where(f => (ManageFemaleBreederNumbers && (f.ExampleRuminant is RuminantFemale ruminantFemale) && !ruminantFemale.IsBreeder) || (ManageMaleBreederNumbers && (f.ExampleRuminant is RuminantMale ruminantMale) && !ruminantMale.IsSire));
+                //var unknownPurchases = purchaseDetails.Where(f => (ManageFemaleBreederNumbers && ((f.ExampleRuminant is RuminantFemale) ? !(f.ExampleRuminant as RuminantFemale).IsBreeder)) : (ManageMaleBreederNumbers && !((f.ExampleRuminant as RuminantMale).IsSire));
 
                 if (unknownPurchases.Any())
                     foreach (var item in unknownPurchases)
