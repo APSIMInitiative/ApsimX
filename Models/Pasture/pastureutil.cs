@@ -161,7 +161,7 @@ namespace Models.GrazPlan
         /// <returns></returns>
         public static double Div0(double X, double Y)
         {
-            if (X == 0.0)
+            if (X == 0.0 || Y == 0)
             {
                 return 0.0;
             }
@@ -689,7 +689,14 @@ namespace Models.GrazPlan
         public static void CheckNaN(IEnumerable v)
         {
             foreach (var value in v)
-                CheckNaN((double)value);
+            {
+                if (value is double d)
+                    CheckNaN(d);
+                else if (value is IEnumerable e)
+                    CheckNaN(e);
+                else
+                    throw new Exception("In CheckNaN: Unknown type.");
+            }
         }
 
         /// <summary>

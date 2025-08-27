@@ -185,6 +185,30 @@ namespace Models.GrazPlan
                 }
             }
         }
+
+        /// <summary>
+        ///
+        /// </summary>
+        public void CheckNaN()
+        {
+            PastureUtil.CheckNaN(fMaxShootConc);
+            PastureUtil.CheckNaN(fMinShootConc);
+            PastureUtil.CheckNaN(fMaxDemand);
+            PastureUtil.CheckNaN(fCritDemand);
+            PastureUtil.CheckNaN(fSupplied);
+            PastureUtil.CheckNaN(fRootTranslocSupply);
+            PastureUtil.CheckNaN(fStemTranslocSupply);
+            PastureUtil.CheckNaN(fRecycled);
+            PastureUtil.CheckNaN(fRecycledSum);
+            PastureUtil.CheckNaN(fFixed);
+            PastureUtil.CheckNaN(fUptake);
+            PastureUtil.CheckNaN(fUptakeSum);
+            PastureUtil.CheckNaN(fRelocated);
+            PastureUtil.CheckNaN(fRelocatedSum);
+            PastureUtil.CheckNaN(fRelocatedRoot);
+            PastureUtil.CheckNaN(fLeached);
+            PastureUtil.CheckNaN(fGaseousLoss);
+        }
     }
 
     /// <summary>
@@ -1885,10 +1909,11 @@ namespace Models.GrazPlan
                     {
                         this.FCohorts[iCohort].ComputeNutrientDemand(elem);
 
-                        File.AppendAllLines(Pasture.logFileName, [
-                            $"fMaxDemand[TOTAL]: {FCohorts[iCohort].FNutrientInfo[(int)elem].fMaxDemand[TOTAL]:F2}",
-                            $"fCritDemand[TOTAL]: {FCohorts[iCohort].FNutrientInfo[(int)elem].fCritDemand[TOTAL]:F2}"
-                        ]);
+                        if (Pasture.logFileName != null)
+                            File.AppendAllLines(Pasture.logFileName, [
+                                $"fMaxDemand[TOTAL]: {FCohorts[iCohort].FNutrientInfo[(int)elem].fMaxDemand[TOTAL]:F2}",
+                                $"fCritDemand[TOTAL]: {FCohorts[iCohort].FNutrientInfo[(int)elem].fCritDemand[TOTAL]:F2}"
+                            ]);
 
                         this.FCohorts[iCohort].ResetNutrientSupply(elem);
                         this.FCohorts[iCohort].TranslocateNutrients(elem);
