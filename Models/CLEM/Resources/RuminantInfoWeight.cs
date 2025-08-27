@@ -352,7 +352,14 @@ namespace Models.CLEM.Resources
         {
             EmptyBodyMassChange = wtChange;
             EmptyBodyMass += wtChange;
-            Base.Adjust(wtChange * (individual.Parameters.General?.EBW2LW_CG18 ?? 1.09));
+            if (individual.AgeInDays == 0)
+            {
+                Base.Adjust(wtChange);
+            }
+            else
+            {
+                Base.Adjust(wtChange * (individual.Parameters.General?.EBW2LW_CG18 ?? 1.09));
+            }
 
             UpdateLiveWeight();
 

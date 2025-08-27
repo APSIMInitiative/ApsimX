@@ -21,7 +21,8 @@ namespace Models.CLEM.Interfaces
         /// Method to calculate and set the initial protein and fat masses at birth.
         /// </summary>
         /// <param name="newborn">Newborn ruminant to have fat and protein set</param>
-        public void SetProteinAndFatAtBirth(Ruminant newborn);
+        /// <param name="birthWeight">Birthweight provided when no conceptus details for mother</param>
+        public void SetProteinAndFatAtBirth(Ruminant newborn, double birthWeight = 0);
 
         /// <summary>
         /// Calculate and set the initial fat and protein weights of the specified individual on creation using RuminantCohort details

@@ -54,7 +54,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         public double Protein { get; set; }
         /// <summary>
-        /// Protein saved by lactation reduction (kg)
+        /// Protein saved by lactation reduction (kg/day)
         /// </summary>
         public double ProteinReduced { get; set; }
         /// <summary>

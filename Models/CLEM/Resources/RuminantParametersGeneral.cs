@@ -260,6 +260,14 @@ namespace Models.CLEM.Resources
         public double MJEnergyPerKgProtein { get; set; } = 23.6; // GrowPF, 23.8 Oddy;
 
         /// <summary>
+        /// The proportion of empty body weight at birth that is fat
+        /// </summary>
+        [Description("Proportion of empty body weight fat at birth")]
+        [Category("Breed:CrossBreed", "Weight")]
+        [Required, Proportion, GreaterThanValue(0)]
+        public double ProportionBirthEmptyBodyFat { get; set; } = 0.05; // 0.024 cattle, 0.023 sheep
+
+        /// <summary>
         /// Determine whether wool production is included.
         /// </summary>
         [Description("Include wool production")]

@@ -258,7 +258,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public void SetProteinAndFatAtBirth(Ruminant newborn)
+        public void SetProteinAndFatAtBirth(Ruminant newborn, double birthWeight = 0)
         {
             throw new NotImplementedException("Birth fat and protein not currently calculated!");
         }

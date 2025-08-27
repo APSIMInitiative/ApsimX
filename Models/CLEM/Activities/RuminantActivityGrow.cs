@@ -95,7 +95,7 @@ namespace Models.CLEM.Activities
             List<Ruminant> herd = ruminantHerd.Herd;
 
             // Calculate potential intake and reset stores
-            // Order age descending so breeder females calculate milkproduction before suckings grow
+            // Order isSuckling (0 false and adults, 1 suckling) so breeder females calculate milkproduction before suckings grow
             foreach (var ind in herd.GroupBy(a => a.IsSucklingWithMother).OrderBy(a => a.Key))
             {
                 foreach (var indi in ind)
@@ -103,7 +103,6 @@ namespace Models.CLEM.Activities
                     // these three are from new intake approach
                     indi.Intake.SolidsDaily.Reset();
                     indi.Intake.MilkDaily.Reset(indi.IsSuckling);
-                    //indi.Weight.Protein.TimeStepReset(); No protein is used in Grow activity
 
                     CalculatePotentialIntake(indi);
 
@@ -111,7 +110,6 @@ namespace Models.CLEM.Activities
                     indi.Intake.Reset();
                     indi.Energy.Reset();
                     indi.Output.Reset();
-
                 }
             }
         }
@@ -240,7 +238,7 @@ namespace Models.CLEM.Activities
                 adjustedEnergyBalance = (-0.5936 / 0.322 * energyMilk);
 
             // set milk production in lactating females for consumption.
-            // ToDo: can th adjustment be >1 or doe this need to be constrained to the previouisl cal of milk production.
+            // ToDo: can the adjustment be >1 or does this need to be constrained to the previous calculation of milk production.
             // Math.Min(ind.MilkProductionPotential, Math.Max(0.0, ind.MilkProductionPotential * (0.5936 + 0.322 * adjustedEnergyBalance / energyMilk)));
             ind.Milk.ProductionRate = Math.Min(ind.Milk.PotentialRate, Math.Max(0.0, ind.Milk.PotentialRate * (0.5936 + 0.322 * adjustedEnergyBalance / energyMilk)));
             ind.Milk.Available = ind.Milk.ProductionRate * events.Interval;
@@ -433,8 +431,6 @@ namespace Models.CLEM.Activities
                 // calculate engergy and growth from milk intake
                 // recalculate milk intake based on mothers updated milk production for the time step using the previous monthly potential milk intake
                 ind.Intake.MilkDaily.Received = Math.Min(ind.Intake.MilkDaily.Expected, ind.MothersMilkProductionAvailable);
-                //ind.Intake.MilkDaily.Received = Math.Min(ind.Intake.MilkDaily.Expected, ind.MothersMilkProductionAvailable * events.Interval);
-
                 ind.Mother?.Milk.Take(ind.Intake.MilkDaily.Received, MilkUseReason.Suckling);
                 double milkIntakeDaily = ind.Intake.MilkDaily.Received;
                 //double milkIntakeDaily = ind.Intake.MilkDaily.Received / events.Interval;
@@ -467,6 +463,9 @@ namespace Models.CLEM.Activities
                 // See adult section below!
                 //
 
+                //
+                // ToDo: kgl growth efficiency from lactation is not used anywhere. previously CLEM included this in feedingValue, see below
+                //
 
                 // REMOVED!
                 // if (MathUtilities.IsPositive(EnergyBalance))
@@ -568,7 +567,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public void SetProteinAndFatAtBirth(Ruminant newborn)
+        public void SetProteinAndFatAtBirth(Ruminant newborn, double birthWeight = 0)
         {
             // No fat and protein is tracked in this model so this method of interface is not required.
         }

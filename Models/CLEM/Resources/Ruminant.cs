@@ -453,7 +453,7 @@ namespace Models.CLEM.Resources
             get
             {
                 if (DateOfBirth > Parameters.Details.CurrentTimeStep.TimeStepStart)
-                    return (int)(Parameters.Details.CurrentTimeStep.TimeStepStart - DateOfBirth).TotalDays;
+                    return (int)(Parameters.Details.CurrentTimeStep.TimeStepEnd - DateOfBirth).TotalDays;
                 else
                     return Parameters.Details.CurrentTimeStep.Interval;
             }
@@ -1042,8 +1042,6 @@ namespace Models.CLEM.Resources
                 weight = expectedWeight;
             
             // previous calculation of expected weight, updated code will alter the birthweight calculation for CLEM.Grow
-            // weight = Parameters.General.BirthScalar[NumberOfFetuses - 1] * Weight.StandardReferenceWeight * (1 - 0.33 * (1 - Weight.RelativeSizeByLiveWeight));
-
             ID = id;
             Parameters = new RuminantParameters(mother.Parameters);
             Location = mother.Location;
@@ -1056,7 +1054,7 @@ namespace Models.CLEM.Resources
             Energy = new RuminantInfoEnergy(this);
 
             // pass to ruminant grow activity to determine how to set protein and fat at birth where the newborn has access to mother's properties
-            growActivity?.SetProteinAndFatAtBirth(this);
+            growActivity?.SetProteinAndFatAtBirth(this, weight);
             Weight.SetStandardReferenceWeight(Sex, Parameters.General);
 
             if (growActivity.IncludeFatAndProtein)
