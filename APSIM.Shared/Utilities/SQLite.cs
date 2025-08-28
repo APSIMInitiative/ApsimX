@@ -174,10 +174,19 @@ namespace APSIM.Shared.Utilities
                     table.Rows.Add(row);
                 }
             }
-            reader.Close();
-            reader.DisposeAsync();
 
-            cmd.Dispose();
+            try
+            {
+                reader.Close();
+                reader.DisposeAsync();
+
+                cmd.DisposeAsync();
+            }
+            catch
+            {
+                Console.WriteLine("SQLite failed to dispse correctly.");
+            }
+            
 
             return table;
         }
