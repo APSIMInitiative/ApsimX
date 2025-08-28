@@ -12,6 +12,8 @@ namespace UnitTests
     {
         public double IrrigationApplied { get; set; }
 
+        public double IrrigationEvents { get; set; }
+
         public double Depth { get; set; }
 
         public double Duration { get; set; }
