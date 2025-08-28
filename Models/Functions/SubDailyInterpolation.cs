@@ -34,10 +34,10 @@ namespace Models.Functions
 
         /// <summary>Method used to aggregate sub daily values</summary>
         [Description("Method used to aggregate sub daily temperature function")]
-        public AggregationMethod aggregationMethod { get; set; }
+        public AgregationMethod agregationMethod { get; set; }
 
-        /// <summary>Method used to agregate sub daily values</summary>
-        public enum AggregationMethod
+        /// <summary>Method used to aggregate sub daily values</summary>
+        public enum AgregationMethod
         {
             /// <summary>Return average of sub daily values</summary>
             Average,
@@ -59,9 +59,9 @@ namespace Models.Functions
         {
             if (SubDailyResponse != null)
             {
-                if (aggregationMethod == AggregationMethod.Average)
+                if (agregationMethod == AgregationMethod.Average)
                     return SubDailyResponse.Average();
-                if (aggregationMethod == AggregationMethod.Sum)
+                if (agregationMethod == AgregationMethod.Sum)
                     return SubDailyResponse.Sum();
                 else
                     throw new Exception("invalid aggregation method selected in " + this.Name + "temperature interpolation");
