@@ -47,10 +47,8 @@ namespace APSIM.ZMQServer
 
         public void aboutToStart(string s)
         {
-#if false
-            Console.WriteLine("About to start " + s);
-            var sim = sims.FindChild<Simulation>(s);
-#endif
+            foreach(var storage in sims.Node.FindAll<Models.Storage.DataStore>()) 
+                storage.Writer.Clean(new[] { s }, false);
         }
 #if false
         public bool HasMethod(object objectToCheck, string methodName)
