@@ -1,4 +1,5 @@
 using System;
+using DocumentFormat.OpenXml.Drawing.Charts;
 
 namespace Models.GrazPlan
 {
@@ -183,7 +184,7 @@ namespace Models.GrazPlan
 
         public enum TSoilNutrient { snNO3, snNH4, snUrea, snPOx, snSO4, snElS, snCations };
 
-		// SoilArray         = packed array[SURFACE..MaxSoilLayers] of Float;
+        // SoilArray         = packed array[SURFACE..MaxSoilLayers] of Float;
         // LayerArray        = packed array[1..MaxSoilLayers]       of Float;
         // DigClassArray     = packed array[1..DigClassNo]          of Float; // double[GrazType.DigClassNo+1]
         // PastureArray      = packed array[1..MaxPlantSpp]         of Float;
@@ -200,15 +201,38 @@ namespace Models.GrazPlan
             /// </summary>
             public double DM;
 
+            private double[] _nu = new double[4];
+
             /// <summary>
             /// Nutrients in kg element/ha [0, N...
             /// </summary>
-            public double[] Nu = new double[4];
+            public double[] Nu
+            {
+                get => _nu;
+                set
+                {
+                    foreach (var v in value)
+                        if (double.IsNaN(v))
+                            throw new Exception("Nan detected in Nu");
+                    _nu = value;
+                }
+            }
 
             /// <summary>
             /// Ash alkalinity in mol/ha
             /// </summary>
             public double AshAlk;
+
+            /// <summary>
+            ///
+            /// </summary>
+            /// <exception cref="Exception"></exception>
+            public void CheckNaN()
+            {
+                PastureUtil.CheckNaN(DM);
+                PastureUtil.CheckNaN(_nu);
+                PastureUtil.CheckNaN(AshAlk);
+            }
         }
 
         /// <summary>
