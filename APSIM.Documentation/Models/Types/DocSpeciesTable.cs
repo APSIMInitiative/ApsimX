@@ -5,6 +5,7 @@ using Models.AgPasture;
 using System.Data;
 using System.Linq;
 using APSIM.Shared.Utilities;
+using APSIM.Core;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -24,7 +25,7 @@ namespace APSIM.Documentation.Models.Types
         public override List<ITag> Document(int none = 0)
         {
             List<ITag> tags = new List<ITag>();
-            IEnumerable<PastureSpecies> models = model.FindAllInScope<PastureSpecies>();
+            IEnumerable<PastureSpecies> models = model.Node.FindAll<PastureSpecies>();
 
             DataTable table = new DataTable();
             table.Columns.Add("Parameter name");
@@ -33,7 +34,7 @@ namespace APSIM.Documentation.Models.Types
                 foreach (var model in models)
                     table.Columns.Add(model.Name);
 
-                var parameterNames = Resource.GetModelParameterNames(models.First().ResourceName);
+                var parameterNames = InterfaceDocumentation.GetModelParameterNames(models.First().ResourceName);
 
                 foreach (var parameterName in parameterNames)
                 {
@@ -41,7 +42,7 @@ namespace APSIM.Documentation.Models.Types
                     row["Parameter name"] = parameterName;
                     foreach (var model in models)
                     {
-                        IVariable variable = model.FindByPath(parameterName);
+                        var variable = model.Node.GetObject(parameterName);
                         if (variable != null)
                         {
                             var value = variable.Value;

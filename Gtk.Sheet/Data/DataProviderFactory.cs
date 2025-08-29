@@ -87,7 +87,7 @@ public class DataProviderFactory
         {
             DisplayAttribute displayAttribute = property.GetCustomAttribute<DisplayAttribute>();
             UnitsAttribute unitsAttribute = property.GetCustomAttribute<UnitsAttribute>();
-            if (displayAttribute != null)
+            if (displayAttribute != null && displayAttribute.Type == DisplayType.None)
             {
                 string units;
                 string[] validUnits = null;

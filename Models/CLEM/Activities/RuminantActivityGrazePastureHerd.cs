@@ -11,6 +11,7 @@ using APSIM.Shared.Utilities;
 using Models.CLEM.Reporting;
 using Models.CLEM.Groupings;
 using APSIM.Numerics;
+using APSIM.Core;
 
 namespace Models.CLEM.Activities
 {
@@ -26,7 +27,7 @@ namespace Models.CLEM.Activities
     [Description("Performs grazing of a specified herd and pasture (paddock)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGraze.htm")]
-    class RuminantActivityGrazePastureHerd : CLEMRuminantActivityBase, IValidatableObject
+    class RuminantActivityGrazePastureHerd : CLEMRuminantActivityBase, IValidatableObject, IStructureDependency
     {
         /// <summary>
         /// Link to clock
@@ -161,7 +162,7 @@ namespace Models.CLEM.Activities
                     Value = RuminantTypeName
                 }
             );
-            this.Children.Add(herdGroup);
+            Structure.AddChild(herdGroup);
 
             this.InitialiseHerd(false, false);
 
@@ -179,13 +180,13 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMValidate")]
         private void OnFinalInitialise(object sender, EventArgs e)
         {
-            shortfallReportingCutoff = FindInScope<ReportResourceShortfalls>()?.PropPastureShortfallOfDesiredIntake??0.02;
+            shortfallReportingCutoff = Structure.Find<ReportResourceShortfalls>()?.PropPastureShortfallOfDesiredIntake??0.02;
 
             // if this is the last of newly added models that will be set to hidden
             // reset the simulation subscriptions to correct the new order before running the simulation.
             if (IsHidden)
             {
-                Events events = new Events(FindAncestor<Simulation>());
+                Events events = new Events(Structure.FindParent<Simulation>(recurse: true));
                 //events.DisconnectEvents();
                 events.ReconnectEvents("Models.Clock", "CLEMGetResourcesRequired");
             }
@@ -436,7 +437,7 @@ namespace Models.CLEM.Activities
 
             if (GrazeFoodStoreTypeName.Contains("."))
             {
-                ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
+                ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
                 if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreTypeName) is null)
                 {
                     string[] memberNames = new string[] { "Location is not valid" };

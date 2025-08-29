@@ -46,7 +46,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Artificial insemination in use (defined by presence of add-on component)
         /// </summary>
-        private bool useControlledMating { get { return (controlledMating != null); }  }
+        private bool useControlledMating { get { return (controlledMating != null && controlledMating.ActivityEnabled); }  }
 
         private RuminantActivityControlledMating controlledMating = null;
         private ConceptionStatusChangedEventArgs conceptionArgs = new ConceptionStatusChangedEventArgs();
@@ -71,7 +71,7 @@ namespace Models.CLEM.Activities
         {
             this.AllocationStyle = ResourceAllocationStyle.Manual;
 
-            controlledMating = this.FindAllChildren<RuminantActivityControlledMating>().FirstOrDefault();
+            controlledMating = Structure.FindChildren<RuminantActivityControlledMating>().FirstOrDefault();
 
             // Assignment of mothers was moved to RuminantHerd resource to ensure this is done even if no breeding activity is included
             this.InitialiseHerd(false, true);
@@ -696,7 +696,7 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write("No pregnancy of breeders from matings prior to simulation start is inferred");
                     htmlWriter.Write("</div>");
                 }
-                controlledMating = this.FindAllChildren<RuminantActivityControlledMating>().FirstOrDefault();
+                controlledMating = Structure.FindChildren<RuminantActivityControlledMating>().FirstOrDefault();
                 if (controlledMating is null)
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");

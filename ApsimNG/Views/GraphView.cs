@@ -100,7 +100,7 @@ namespace UserInterface.Views
         private bool inRightClick = false;
 
         private OxyPlot.GtkSharp.PlotView plot1;
-        private Box vbox1 = null;
+        private Paned vbox1 = null;
         private Expander expander1 = null;
         private Box vbox2 = null;
         private Label captionLabel = null;
@@ -119,7 +119,7 @@ namespace UserInterface.Views
         public GraphView(ViewBase owner) : base(owner)
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.GraphView.glade");
-            vbox1 = (Box)builder.GetObject("vbox1");
+            vbox1 = (Paned)builder.GetObject("vbox1");
             expander1 = (Expander)builder.GetObject("expander1");
             vbox2 = (Box)builder.GetObject("vbox2");
             captionLabel = (Label)builder.GetObject("captionLabel");
@@ -132,16 +132,18 @@ namespace UserInterface.Views
         protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
         {
             this.owner = ownerView;
-            vbox1 = gtkControl as Box;
+            vbox1 = gtkControl as Paned;
             mainWidget = vbox1;
 
             plot1 = new PlotView();
             plot1.Model = new PlotModel();
             if (vbox1.Window != null)
                 plot1.SetSizeRequest(vbox1.Window.Width, vbox1.Window.Height);
-            if (vbox2 == null)
-                vbox2 = vbox1;
-            vbox2.PackStart(plot1, true, true, 0);
+
+            if (vbox2 != null)
+                vbox2.PackStart(plot1, true, true, 0);
+            else
+                vbox1.Add1(plot1);
 
             smallestDate = DateTime.MaxValue;
             largestDate = DateTime.MinValue;
@@ -527,7 +529,7 @@ namespace UserInterface.Views
                 series.YFieldName = yFieldName;
 
                 // Create data points
-                series.Caption = this.PopulateCaptions(x, y, xAxisType, yAxisType, caption);
+                series.Caption = this.PopulateCaptions(x, y, xAxisType, yAxisType, caption, title);
 
                 series.CanTrackerInterpolatePoints = false;
 
@@ -1406,8 +1408,11 @@ namespace UserInterface.Views
         public void ShowEditorPanel(object editorObj, string expanderLabel)
         {
             Widget editor = editorObj as Widget;
+            editor.Visible = true;
+            editor.Expand = true;
             if (editor != null)
             {
+                (mainWidget as Paned).Position = (int)(mainWidget.AllocatedHeight * 0.75);
                 expander1.Foreach(delegate (Widget widget)
                 {
                     if (widget != label2)
@@ -1563,13 +1568,15 @@ namespace UserInterface.Views
         /// <param name="xAxisType">The x axis the data is associated with</param>
         /// <param name="yAxisType">The y axis the data is associated with</param>
         /// <param name="caption">The caption values</param>
+        /// <param name="title">The title</param>
         /// <returns>A list of captions related to the x, y values</returns>
         private List<string> PopulateCaptions(
             IEnumerable x,
             IEnumerable y,
             APSIM.Shared.Graphing.AxisPosition xAxisType,
             APSIM.Shared.Graphing.AxisPosition yAxisType,
-            IEnumerable caption)
+            IEnumerable caption,
+            string title)
         {
             List<string> newCaptions = new List<string>();
             if (x != null && y != null && caption != null && ((ICollection)x).Count > 0 && ((ICollection)y).Count > 0)
@@ -1583,7 +1590,7 @@ namespace UserInterface.Views
                 // Create data points
                 for (int i = 0; i < Math.Min(xValues.Length, yValues.Length); i++)
                     if (!double.IsNaN(xValues[i]) && !double.IsNaN(yValues[i]))
-                        newCaptions.Add(captions[i]);
+                        newCaptions.Add("Group: " + title + "\n" + "Simulation: " + captions[i]);
 
                 return newCaptions;
             }
@@ -1893,7 +1900,6 @@ namespace UserInterface.Views
             try
             {
                 OnPlotClick?.Invoke(this, EventArgs.Empty);
-                OnAxisClick?.Invoke(APSIM.Shared.Graphing.AxisPosition.Bottom);
                 OnLegendClick?.Invoke(this, new LegendClickArgs());
                 OnTitleClick?.Invoke(this, EventArgs.Empty);
                 OnAnnotationClick?.Invoke(this, EventArgs.Empty);
@@ -1978,6 +1984,7 @@ namespace UserInterface.Views
                         else if (bottomAxisArea.Contains(location) && GetAxis(APSIM.Shared.Graphing.AxisPosition.Bottom) != null)
                         {
                             this.OnAxisClick.Invoke(APSIM.Shared.Graphing.AxisPosition.Bottom);
+                            
                         }
                     }
                 }
