@@ -125,6 +125,9 @@ namespace Models.CLEM.Activities
                 grazePastureHerd.InitialiseHerd(false, false);
             }
             Structure.FindChildren<RuminantActivityGrazePastureHerd>(recurse: true).LastOrDefault().IsHidden = true;
+
+            Events events = new Events(Structure.FindParent<Simulation>(recurse: true));
+            events.ReconnectEvents("Models.Clock");
         }
 
         /// <inheritdoc/>

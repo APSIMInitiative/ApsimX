@@ -80,6 +80,7 @@ namespace Models.CLEM.Activities
                     grazePasture.UniqueID = currentUid;
                     grazePasture.SetLinkedModels(Resources);
                     grazePasture.InitialiseHerd(true, true);
+                    Structure.AddChild(grazePasture);
 
                     Guid currentHerdUid = currentUid;
                     foreach (RuminantType herdType in Structure.FindChildren<RuminantType>(relativeTo: HerdResource))
@@ -120,10 +121,14 @@ namespace Models.CLEM.Activities
                                 Parent = herdGroup
                             }
                         );
-                        grazePastureHerd.Children.Add(herdGroup);
-                        grazePasture.Children.Add(grazePastureHerd);
+
+                        grazePasture.Structure.AddChild(grazePastureHerd);
+
+                        grazePastureHerd.Structure.AddChild(herdGroup);
+
+                        //(grazePasture as CLEMModel).Structure.AddChild(grazePastureHerd);
+                        //grazePasture.Children.Add(grazePastureHerd);
                     }
-                    Structure.AddChild(grazePasture);
 
                     foreach (var activityGroup in Structure.FindChildren<RuminantActivityGroup>(relativeTo: grazePasture, recurse: true))
                         activityGroup.InitialiseFilters();
@@ -132,6 +137,11 @@ namespace Models.CLEM.Activities
 
                 }
                 Structure.FindChildren<RuminantActivityGrazePastureHerd>(recurse: true).LastOrDefault().IsHidden = true;
+
+                Events events = new Events(Structure.FindParent<Simulation>(recurse: true));
+                //events.DisconnectEvents();
+                //events.ReconnectEvents("Models.Clock", "CLEMGetResourcesRequired");
+                events.ReconnectEvents("Models.Clock");
             }
             else
                 Summary.WriteMessage(this, $"No GrazeFoodStore is available for the ruminant grazing activity [a={this.Name}]!", MessageType.Warning);
