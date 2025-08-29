@@ -109,8 +109,9 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="initialAttributes">The initial attributes found from parent</param>
         /// <param name="ruminantType">The breed parameters if overwritten</param>
+        /// <param name="getUniqueID">Determine unique id</param>
         /// <returns>List of ruminants</returns>
-        public List<Ruminant> CreateIndividuals(List<ISetAttribute> initialAttributes, RuminantType ruminantType = null)
+        public List<Ruminant> CreateIndividuals(List<ISetAttribute> initialAttributes, RuminantType ruminantType = null, bool getUniqueID = true)
         {
             List<ISetAttribute> localAttributes = new List<ISetAttribute>();
             // add any whole herd attributes
@@ -119,7 +120,7 @@ namespace Models.CLEM.Resources
             // Add any attributes defined at the cohort level
             localAttributes.AddRange(Structure.FindChildren<ISetAttribute>().ToList());
 
-            return CreateIndividuals(Convert.ToInt32(this.Number, CultureInfo.InvariantCulture), localAttributes, ruminantType);
+            return CreateIndividuals(Convert.ToInt32(this.Number, CultureInfo.InvariantCulture), localAttributes, ruminantType, getUniqueID);
         }
 
         /// <summary>
