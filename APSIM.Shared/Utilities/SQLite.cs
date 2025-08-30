@@ -176,7 +176,7 @@ namespace APSIM.Shared.Utilities
                     }
                 }
                 reader.Close();
-                reader.Dispose();
+                reader.DisposeAsync();
             }
             return table;
         }
