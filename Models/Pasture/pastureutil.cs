@@ -161,7 +161,7 @@ namespace Models.GrazPlan
         /// <returns></returns>
         public static double Div0(double X, double Y)
         {
-            if (X == 0.0 || Y == 0)
+            if (X == 0.0 || Y == 0.0)
             {
                 return 0.0;
             }
@@ -683,9 +683,9 @@ namespace Models.GrazPlan
 
 
         /// <summary>
-        ///
+        /// Recursively validates that all numeric values in the enumerable do not contain NaN values.
         /// </summary>
-        /// <param name="v"></param>
+        /// <param name="v">The enumerable to check for NaN values.</param>
         public static void CheckNaN(IEnumerable v)
         {
             foreach (var value in v)
@@ -700,7 +700,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        ///
+        /// Validates that the double value is not NaN and throws an exception if it is.
         /// </summary>
         /// <param name="v"></param>
         /// <exception cref="Exception"></exception>

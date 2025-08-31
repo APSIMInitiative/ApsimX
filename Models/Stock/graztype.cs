@@ -1,5 +1,4 @@
 using System;
-using DocumentFormat.OpenXml.Drawing.Charts;
 
 namespace Models.GrazPlan
 {
@@ -224,9 +223,8 @@ namespace Models.GrazPlan
             public double AshAlk;
 
             /// <summary>
-            ///
+            /// Validates that all numeric properties do not contain NaN values and throws an exception if any are found.
             /// </summary>
-            /// <exception cref="Exception"></exception>
             public void CheckNaN()
             {
                 PastureUtil.CheckNaN(DM);

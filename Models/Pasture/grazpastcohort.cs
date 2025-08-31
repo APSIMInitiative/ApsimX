@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using StdUnits;
 using static Models.GrazPlan.GrazType;
 
@@ -33,7 +32,7 @@ namespace Models.GrazPlan
         private double[,] FPotRootTransloc = new double[GrazType.OLDR + 1, GrazType.MaxSoilLayers + 1];         // [EFFR..OLDR,1..MaxSoilLayers]
 
         /// <summary>
-        ///
+        /// Validates that all cohort properties do not contain NaN values and throws an exception if any are found.
         /// </summary>
         public void CheckNaN()
         {

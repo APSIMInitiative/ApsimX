@@ -187,7 +187,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        ///
+        /// Validates that all nutrient information properties do not contain NaN values.
         /// </summary>
         public void CheckNaN()
         {
