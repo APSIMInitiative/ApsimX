@@ -19,7 +19,7 @@
     <PackageReference Include="Mapsui.Nts" Version="4.1.7" />
     <PackageReference Include="Mapsui.Rendering.Skia" Version="4.1.7" />
     <PackageReference Include="Mapsui.Tiling" Version="4.1.7" />
-    <PackageReference Include="Markdig" Version="0.31.0" />
+    <PackageReference Include="Markdig" Version="0.38.0" />
     <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
     <PackageReference Include="ProjNET4GeoAPI" Version="1.4.1" />
     <EmbeddedResource Include="Resources\**" />
