@@ -296,10 +296,18 @@ namespace Models.CLEM.Activities
                         };
                         newPasture.Set(growth * Area);
                         newPasture.NitrogenPercent = LinkedNativeFoodType.GreenNitrogenPercent;
-                        newPasture.DryMatterDigestibility = newPasture.NitrogenPercent * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
+                        if (LinkedNativeFoodType.DMDStyle == DryMatterDigestibilityStyle.SpecifyNewGrowthDMD)
+                        {
+                            newPasture.DryMatterDigestibility = LinkedNativeFoodType.GreenDMD;
+                        }
+                        else
+                        {
+                            newPasture.DryMatterDigestibility = newPasture.NitrogenPercent * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
+                        }
                         newPasture.DryMatterDigestibility = Math.Min(100, Math.Max(LinkedNativeFoodType.MinimumDMD, newPasture.DryMatterDigestibility));
                         newPasture.Growth = newPasture.Amount;
                         newPasture.GrowthDate = dataEntry.CutDate;
+                        newPasture.RumenDegradableProteinPercent = LinkedNativeFoodType.RumenDegradableProteinPercent;
                         LinkedNativeFoodType.Add(newPasture, this, null, "Growth");
                     }
                 }
