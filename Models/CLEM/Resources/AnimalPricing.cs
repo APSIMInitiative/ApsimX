@@ -21,7 +21,6 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 2, "Custom grouping with filtering")]
     [Version(1, 0, 3, "Purchase and sales identifier used")]
     [HelpUri(@"Content/Features/Resources/Ruminants/AnimalPricing.htm")]
-    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class AnimalPricing : CLEMModel, IValidatableObject
     {
         /// <summary>
