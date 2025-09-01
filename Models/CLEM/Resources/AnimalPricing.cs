@@ -21,6 +21,7 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 2, "Custom grouping with filtering")]
     [Version(1, 0, 3, "Purchase and sales identifier used")]
     [HelpUri(@"Content/Features/Resources/Ruminants/AnimalPricing.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class AnimalPricing : CLEMModel, IValidatableObject
     {
         /// <summary>
@@ -29,7 +30,6 @@ namespace Models.CLEM.Resources
         public AnimalPricing()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
-            this.SetDefaults();
         }
 
         #region validation
@@ -37,19 +37,15 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
 
             if (Structure.FindChildren<AnimalPriceGroup>().Count() == 0)
             {
-                string[] memberNames = new string[] { "Animal pricing" };
-                results.Add(new ValidationResult("No [AnimalPriceGroups] have been provided for [r=" + this.Name + "].\r\nAdd [AnimalPriceGroups] to include animal pricing.", memberNames));
+                yield return new ValidationResult("No [AnimalPriceGroups] have been provided for [r=" + this.Name + "].\r\nAdd [AnimalPriceGroups] to include animal pricing.", new string[] { "Animal pricing" });
             }
             else if (Structure.FindChildren<AnimalPriceGroup>().Cast<AnimalPriceGroup>().Where(a => a.Value == 0).Count() > 0)
             {
-                string[] memberNames = new string[] { "Animal pricing" };
-                results.Add(new ValidationResult("No price [Value] has been set for some of the [AnimalPriceGroup] in [r=" + this.Name + "]\r\nThese will not result in price calculations and can be deleted.", memberNames));
+                yield return new ValidationResult("No price [Value] has been set for some of the [AnimalPriceGroup] in [r=" + this.Name + "]\r\nThese will not result in price calculations and can be deleted.", new string[] { "Animal pricing" });
             }
-            return results;
         }
 
         #endregion
