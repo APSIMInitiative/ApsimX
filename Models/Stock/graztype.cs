@@ -200,22 +200,10 @@ namespace Models.GrazPlan
             /// </summary>
             public double DM;
 
-            private double[] _nu = new double[4];
-
             /// <summary>
             /// Nutrients in kg element/ha [0, N...
             /// </summary>
-            public double[] Nu
-            {
-                get => _nu;
-                set
-                {
-                    foreach (var v in value)
-                        if (double.IsNaN(v))
-                            throw new Exception("Nan detected in Nu");
-                    _nu = value;
-                }
-            }
+            public double[] Nu = new double[4];
 
             /// <summary>
             /// Ash alkalinity in mol/ha
@@ -228,7 +216,7 @@ namespace Models.GrazPlan
             public void CheckNaN()
             {
                 PastureUtil.CheckNaN(DM);
-                PastureUtil.CheckNaN(_nu);
+                PastureUtil.CheckNaN(Nu);
                 PastureUtil.CheckNaN(AshAlk);
             }
         }
