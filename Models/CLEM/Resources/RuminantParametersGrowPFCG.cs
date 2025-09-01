@@ -90,9 +90,9 @@ namespace Models.CLEM.Resources
         /// This value is used to calculate energyEmptyBodyGain in CalculateEnergy(ind)
         /// </details>
         [Category("Breed", "Growth")]
-        [Description("Energy per kg growth #1 [CG8]")]
+        [Description("Energy per kg growth #1 [CG8b]")]
         [Required, GreaterThanValue(0)] 
-        public double GrowthEnergyIntercept1_CG8b { get; set; } = 6.7; //ToDo: check that this is now the same value for B.indicus/Charolais from rearrangement by GrassGro
+        public double GrowthEnergyIntercept1_CG8b { get; set; } = 6.7;
 
         /// <summary>
         /// Intercept Parameter for calculation of energy needed per kg empty body gain #2 (b, see p37 Table 1.11 Nutrient Requirements of domesticated ruminants, SCA CG9)
@@ -100,7 +100,7 @@ namespace Models.CLEM.Resources
         [Category("Breed:CrossBreed", "Growth:Growth")]
         [Description("Energy per kg growth #2 [CG9]")]
         [Required, GreaterThanValue(0)] 
-        public double GrowthEnergyIntercept2_CG9 { get; set; } = 20.3; // B.indicus 16.5
+        public double GrowthEnergyIntercept2_CG9 { get; set; } = 20.3; // B.indicus 16.5 // sheep 20.3
 
         /// <summary>
         /// Slope parameter for calculation of energy needed per kg empty body gain #1 (a, see p37 Table 1.11 Nutrient Requirements of domesticated ruminants, SCA CG10)

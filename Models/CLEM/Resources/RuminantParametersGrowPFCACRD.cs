@@ -71,7 +71,7 @@ namespace Models.CLEM.Resources
         [Category("Breed:CrossBreed", "Growth")]
         [Description("N recycling to rumen scalar")]
         [Required, GreaterThanEqualValue(0)]
-        public double ProteinShortfallAlleviationScalar { get; set; } = 0.0; // B.indicus 0.5, B.indicus x breeds 0.25
+        public double ProteinShortfallAlleviationScalar { get; set; } = 0.0; // B.indicus 0.5, B.indicus x breeds 0.25 sheep 0 bos taurus 0
 
         #endregion
 

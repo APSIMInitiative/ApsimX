@@ -95,7 +95,7 @@ namespace Models.CLEM.Resources
         /// Standard Reference Weight for castrated male from female multiplier
         /// </summary>
         [Category("Farm:CrossBreed", "General")]
-        [Description("Castrated male SRW multiplier from female")]
+        [Description("Castrated male SRW multiplier")]
         [Required, GreaterThanValue(0)]
         public double SRWCastrateMaleMultiplier { get; set; } = 1.2;
 
@@ -103,7 +103,7 @@ namespace Models.CLEM.Resources
         /// Standard Reference Weight for male from female multiplier
         /// </summary>
         [Category("Farm:CrossBreed", "General")]
-        [Description("Male SRW multiplier from female")]
+        [Description("Male SRW multiplier")]
         [Required, GreaterThanValue(0)]
         public double SRWMaleMultiplier { get; set; } = 1.4;
 
@@ -112,7 +112,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Category("Breed:CrossBreed", "Breeding")]
         [Units("Proportion of female SRW")]
-        [Description("Birth mass as proportion of female SRW (singlet,twins,triplets..)")]
+        [Description("Proportional birth mass (singlet,twins,triplets..)")]
         [Required, GreaterThanValue(0), Proportion, MinLength(1)]
         public double[] BirthScalar { get; set; } = new[] { 0.07, 0.055 };
 
@@ -120,7 +120,8 @@ namespace Models.CLEM.Resources
         /// Weight(kg) of 1 animal equivalent (e.g. steer, DSE)
         /// </summary>
         [Category("Farm", "General")]
-        [Description("Weight (kg) of an animal equivalent")]
+        [Description("Weight of an animal equivalent")]
+        [Units("kg")]
         [Required, GreaterThanValue(0)]
         public double BaseAnimalEquivalent { get; set; } = 450;
 

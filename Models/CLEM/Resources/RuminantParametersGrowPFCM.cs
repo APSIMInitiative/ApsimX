@@ -75,6 +75,7 @@ namespace Models.CLEM.Resources
         // Solid diet EFP CM10 - hard coded
 
         // milk diet EFP CM11 - hard coded
+
         /// <summary>
         /// Grazing energy as proportion of metabolic energy
         /// </summary>

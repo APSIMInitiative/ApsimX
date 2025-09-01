@@ -120,7 +120,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Breeding")]
         [Description("Probability of dystocia at birth coefficients")]
         [Required]
-        public double[] DystociaCoefficients { get; set; } = new [] { 0.0, 0.0 };
+        public double[] DystociaCoefficients { get; set; } = new [] { 0.0, 0.0 }; // cattle 0,0 sheep 1.4, 9.815  
 
         ///// <summary>
         ///// Proportion of wet mother's with no offspring accepting orphan

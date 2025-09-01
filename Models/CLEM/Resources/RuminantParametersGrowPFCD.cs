@@ -43,37 +43,37 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0)]
         public double EffectBCOnMortality2_CD3 { get; set; } = 0.6;
 
-        /// <summary>
-        /// Lower bound for pregnancy toximia 
-        /// </summary>
-        [Category("Farm", "Survival")]
-        [Description("Lower bound for pregnancy toximia")]
-        [Required, GreaterThanEqualValue(0)]
-        public double LowerBoundsPregnancyToximia_CD4 { get; set; } = 0.0;
+        ///// <summary>
+        ///// Lower bound for pregnancy toximia 
+        ///// </summary>
+        //[Category("Farm", "Survival")]
+        //[Description("Lower bound for pregnancy toximia")]
+        //[Required, GreaterThanEqualValue(0)]
+        //public double LowerBoundsPregnancyToximia_CD4 { get; set; } = 0.0;
 
-        /// <summary>
-        /// Upper bound for pregnancy toximia 
-        /// </summary>
-        [Category("Farm", "Survival")]
-        [Description("Upper bound for pregnancy toximia")]
-        [Required, GreaterThanEqualValue(0)]
-        public double UpperBoundsPregnancyToximia_CD5 { get; set; } = 0.0;
+        ///// <summary>
+        ///// Upper bound for pregnancy toximia 
+        ///// </summary>
+        //[Category("Farm", "Survival")]
+        //[Description("Upper bound for pregnancy toximia")]
+        //[Required, GreaterThanEqualValue(0)]
+        //public double UpperBoundsPregnancyToximia_CD5 { get; set; } = 0.0;
 
-        /// <summary>
-        /// Lower bound for pregnancy dystocia
-        /// </summary>
-        [Category("Farm", "Survival")]
-        [Description("Lower bound for pregnancy dystocia")]
-        [Required, GreaterThanEqualValue(0)]
-        public double LowerBoundsPregnancyDystocia_CD6 { get; set; } = 0.0;
+        ///// <summary>
+        ///// Lower bound for pregnancy dystocia
+        ///// </summary>
+        //[Category("Farm", "Survival")]
+        //[Description("Lower bound for pregnancy dystocia")]
+        //[Required, GreaterThanEqualValue(0)]
+        //public double LowerBoundsPregnancyDystocia_CD6 { get; set; } = 0.0;
 
-        /// <summary>
-        /// Upper bound for pregnancy dystocia 
-        /// </summary>
-        [Category("Farm", "Survival")]
-        [Description("Upper bound for pregnancy dystocia")]
-        [Required, GreaterThanEqualValue(0)]
-        public double UpperBoundsPregnancyDystocia_CD7 { get; set; } = 0.0;
+        ///// <summary>
+        ///// Upper bound for pregnancy dystocia 
+        ///// </summary>
+        //[Category("Farm", "Survival")]
+        //[Description("Upper bound for pregnancy dystocia")]
+        //[Required, GreaterThanEqualValue(0)]
+        //public double UpperBoundsPregnancyDystocia_CD7 { get; set; } = 0.0;
 
         /// <summary>
         /// Critical ratio of fat to EBM content for survival 
@@ -119,10 +119,10 @@ namespace Models.CLEM.Resources
                 BasalMortalityRate_CD1 = BasalMortalityRate_CD1,
                 EffectBCOnMortality1_CD2 = EffectBCOnMortality1_CD2,
                 EffectBCOnMortality2_CD3 = EffectBCOnMortality2_CD3,
-                LowerBoundsPregnancyToximia_CD4 = LowerBoundsPregnancyToximia_CD4,
-                UpperBoundsPregnancyToximia_CD5 = UpperBoundsPregnancyToximia_CD5,
-                LowerBoundsPregnancyDystocia_CD6 = LowerBoundsPregnancyDystocia_CD6,
-                UpperBoundsPregnancyDystocia_CD7 = UpperBoundsPregnancyDystocia_CD7,
+                //LowerBoundsPregnancyToximia_CD4 = LowerBoundsPregnancyToximia_CD4,
+                //UpperBoundsPregnancyToximia_CD5 = UpperBoundsPregnancyToximia_CD5,
+                //LowerBoundsPregnancyDystocia_CD6 = LowerBoundsPregnancyDystocia_CD6,
+                //UpperBoundsPregnancyDystocia_CD7 = UpperBoundsPregnancyDystocia_CD7,
                 RelativeDifferenceWeightDyingIndividuals_CD12 = RelativeDifferenceWeightDyingIndividuals_CD12,
                 UpperLimitForMortalityInWeaners_CD13 = UpperLimitForMortalityInWeaners_CD13
             };

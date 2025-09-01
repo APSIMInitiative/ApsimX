@@ -97,7 +97,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Category("Breed", "Pregnancy")]
         [Description("Conceptus protein parameter [CP12]")]
-        public double ConceptusProteinParameter_CP12 { get; set; } = 6.22; //4.56
+        public double ConceptusProteinParameter_CP12 { get; set; } = 6.22; // sheep? 4.56
 
         /// <summary>
         /// Conceptus protein parameter #2 (SCA CP13)
@@ -122,7 +122,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Breeding")]
         [Description("Probability of toxaemia during late pregnancy coefficients")]
         [Required]
-        public double[] ToxaemiaCoefficients { get; set; } = new[] { 0.0, 0.0 };
+        public double[] ToxaemiaCoefficients { get; set; } = new[] { 0.0, 0.0 }; // 
 
         /// <summary>
         /// Create copy of this class
