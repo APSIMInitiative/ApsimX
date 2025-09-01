@@ -669,12 +669,9 @@ namespace Models.CLEM.Activities
             double rumenDegradableProteinRequirement = 1;
             while (rumenDegradableProteinIntake < rumenDegradableProteinRequirement && reductionCount < maxReductionAllowed)
             {
-                // ToDo: JD? EForBasalMetabolism is 0.103 for the lactating mother at 1278 days old
-                // grazingE for metabolic scalar is 0.0025
-
-                //ToDo: remove the scalar when implemented correctly in grazing
-                ind.Energy.ForBasalMetabolism = ((ind.Parameters.GrowPF_CM.FHPScalar_CM2 * sexEffect * Math.Pow(ind.Weight.Base.Amount, 0.75)) * Math.Max(Math.Exp(-ind.Parameters.GrowPF_CM.MainExponentForAge_CM3 * ind.AgeInDays), ind.Parameters.GrowPF_CM.AgeEffectMin_CM4) * (1.0 + ind.Parameters.GrowPF_CM.MilkScalar_CM5 * ind.Intake.ProportionMilk)) / km * ind.Parameters.GrowPF_CM.GrazingEnergyFromMetabolicScalar_CM6;
-                ind.Energy.ForHPViscera = ind.Parameters.GrowPF_CM.HPVisceraFL_CM1 * ind.Energy.FromIntake * ind.Parameters.GrowPF_CM.GrazingEnergyFromMetabolicScalar_CM6;
+                //ToDo: include adjustment onto maint for activity level which should be an additional 5-25% depending on walking and terrain requirements.
+                ind.Energy.ForBasalMetabolism = ((ind.Parameters.GrowPF_CM.FHPScalar_CM2 * sexEffect * Math.Pow(ind.Weight.Base.Amount, 0.75)) * Math.Max(Math.Exp(-ind.Parameters.GrowPF_CM.MainExponentForAge_CM3 * ind.AgeInDays), ind.Parameters.GrowPF_CM.AgeEffectMin_CM4) * (1.0 + ind.Parameters.GrowPF_CM.MilkScalar_CM5 * ind.Intake.ProportionMilk)) / km;
+                ind.Energy.ForHPViscera = ind.Parameters.GrowPF_CM.HPVisceraFL_CM1 * ind.Energy.FromIntake;
 
                 double adjustedFeedingLevel = -1;
                 if (MathUtilities.GreaterThan(ind.Energy.FromIntake, 0, 2) & MathUtilities.GreaterThan(ind.Energy.ForMaintenance, 0, 2))
@@ -727,7 +724,7 @@ namespace Models.CLEM.Activities
                         case FeedType.PastureTropical:
                         case FeedType.PastureTemperate:
                         case FeedType.HaySilage:
-                            rdpi += (1 - (ind.Parameters.GrowPF_CACRD.RumenDegradabilityIntercept_CRD1 - ind.Parameters.GrowPF_CACRD.RumenDegradabilitySlope_CRD2 * store.Value.Details?.DryMatterDigestibility ?? 0) * feedingLevel) * store.Value.DegradableCrudeProtein; 
+                            rdpi += (1 - (ind.Parameters.GrowPF_CACRD.RumenDegradabilityIntercept_CRD1 - ind.Parameters.GrowPF_CACRD.RumenDegradabilitySlope_CRD2 * (store.Value.Details?.DryMatterDigestibility ?? 0) / 100.0) * feedingLevel) * store.Value.DegradableCrudeProtein; 
                             break;
                         default:
                             break;
