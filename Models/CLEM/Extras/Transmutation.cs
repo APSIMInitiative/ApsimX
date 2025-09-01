@@ -13,9 +13,9 @@ namespace Models.CLEM
 {
     ///<summary>
     /// Resource transmutation
-    /// Will convert one resource into another (e.g. $ => labour) 
+    /// Will convert one resource into another (e.g. $ => labour)
     /// These transmutations are defined under each ResourceType in the Resources section of the UI tree
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -69,7 +69,7 @@ namespace Models.CLEM
         /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (!this.FindAllChildren<ITransmute>().Where(a => (a as IModel).Enabled).Any())
+            if (!Structure.FindChildren<ITransmute>().Where(a => (a as IModel).Enabled).Any())
             {
                 yield return new ValidationResult("No transmute components provided under this transmutation", new string[] { "Transmutes" });
             }
@@ -84,14 +84,14 @@ namespace Models.CLEM
             using StringWriter htmlWriter = new();
             htmlWriter.Write("<div class=\"activityentry\">");
 
-            var pricing = this.FindAllChildren<ITransmute>().Where(a => a.TransmuteStyle == TransmuteStyle.UsePricing);
-            var direct = this.FindAllChildren<ITransmute>().Where(a => a.TransmuteStyle == TransmuteStyle.Direct);
+            var pricing = Structure.FindChildren<ITransmute>().Where(a => a.TransmuteStyle == TransmuteStyle.UsePricing);
+            var direct = Structure.FindChildren<ITransmute>().Where(a => a.TransmuteStyle == TransmuteStyle.Direct);
 
             htmlWriter.Write($"The following resources (B) will transmute ");
             if (pricing.Any())
             {
                 htmlWriter.Write($"using the resource purchase price ");
-                var transmuteResourcePrice = ((this.FindAncestor<ResourcesHolder>()).FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ResourceInShortfall, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore))?.Price(PurchaseOrSalePricingStyleType.Purchase);
+                var transmuteResourcePrice = ((Structure.FindParent<ResourcesHolder>(recurse: true)).FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ResourceInShortfall, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore))?.Price(PurchaseOrSalePricingStyleType.Purchase);
                 if (transmuteResourcePrice != null)
                     htmlWriter.Write("found");
                 else
@@ -108,7 +108,7 @@ namespace Models.CLEM
 
             htmlWriter.WriteLine("</div>");
 
-            if (!this.FindAllChildren<ITransmute>().Any())
+            if (!Structure.FindChildren<ITransmute>().Any())
             {
                 htmlWriter.Write("<div class=\"errorbanner\">");
                 htmlWriter.Write("No Transmute components provided");

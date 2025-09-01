@@ -25,22 +25,22 @@ namespace UserInterface.Classes
             if (replacements == null)
                 return crop.CultivarNames;
 
-            IPlant replacementCrop = replacements.FindChild((crop as IModel).Name) as IPlant;
+            IPlant replacementCrop = replacements.Node.FindChild<IModel>((crop as IModel).Name) as IPlant;
             if (replacementCrop != null)
                 return replacementCrop.CultivarNames;
 
             // Check for cultivar folders under replacements.
             List<string> cultivarNames = crop.CultivarNames.ToList();
-            foreach (Folder cultivarFolder in (crop as IModel).FindAllChildren<Folder>())
+            foreach (Folder cultivarFolder in (crop as IModel).Node.FindChildren<Folder>())
             {
-                IModel replacementFolder = replacements.FindChild(cultivarFolder.Name);
+                IModel replacementFolder = replacements.Node.FindChild<IModel>(cultivarFolder.Name);
                 if (replacementFolder != null)
                 {
                     // If we find a matching cultivar folder under replacements, remove
                     // all cultivar names added by this folder in the official plant
                     // model, and add the cultivar names added by the matching cultivar
                     // folder under replacements.
-                    foreach (IModel cultivar in cultivarFolder.FindAllDescendants<Cultivar>())
+                    foreach (IModel cultivar in cultivarFolder.Node.FindChildren<Cultivar>(recurse: true))
                     {
                         cultivarNames.Remove(cultivar.Name);
 
@@ -52,10 +52,10 @@ namespace UserInterface.Classes
                         cultivarNames.RemoveAll(c => c.StartsWith(cultivar.Name + "|"));
                     }
 
-                    foreach (Alias alias in cultivarFolder.FindAllDescendants<Alias>())
+                    foreach (Alias alias in cultivarFolder.Node.FindChildren<Alias>(recurse: true))
                         cultivarNames.RemoveAll(c => c.StartsWith(alias.Name + "|"));
 
-                    foreach (IModel cultivar in replacementFolder.FindAllDescendants<Cultivar>())
+                    foreach (IModel cultivar in replacementFolder.Node.FindChildren<Cultivar>(recurse: true))
                         cultivarNames.Add(cultivar.Name);
                 }
             }
@@ -141,7 +141,7 @@ namespace UserInterface.Classes
                 Folder replacements = Folder.FindReplacementsFolder(lifeCycle);
                 if (replacements != null)
                 {
-                    LifeCycle replacementLifeCycle = replacements.FindChild((lifeCycle as IModel).Name) as LifeCycle;
+                    LifeCycle replacementLifeCycle = replacements.Node.FindChild<IModel>((lifeCycle as IModel).Name) as LifeCycle;
                     if (replacementLifeCycle != null)
                     {
                         return replacementLifeCycle.LifeCyclePhaseNames;

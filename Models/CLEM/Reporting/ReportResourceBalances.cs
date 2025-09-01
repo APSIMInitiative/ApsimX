@@ -113,7 +113,7 @@ namespace Models.CLEM.Reporting
             if (ResourceGroupsToReport is null || !ResourceGroupsToReport.Any())
                 return;
 
-            timers = FindAllChildren<IActivityTimer>();
+            timers = Structure.FindChildren<IActivityTimer>();
 
             List<string> variableNames = new();
             if (ResourceGroupsToReport.Where(a => a.Contains("[Clock].Today")).Any() is false)
@@ -154,7 +154,7 @@ namespace Models.CLEM.Reporting
                                 }
                                 else
                                 {
-                                    foreach (CLEMModel item in model.FindAllChildren<CLEMModel>())
+                                    foreach (CLEMModel item in Structure.FindChildren<CLEMModel>(relativeTo: model))
                                     {
                                         string amountStr = "Amount";
                                         switch (item)

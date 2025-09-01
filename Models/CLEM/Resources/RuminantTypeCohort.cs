@@ -11,6 +11,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 namespace Models.CLEM.Resources
 {
@@ -166,7 +167,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            setPreviousConception = this.FindChild<SetPreviousConception>();
+            setPreviousConception = Structure.FindChild<SetPreviousConception>();
 
             if (ManagedPastureName is not null && ManagedPastureName != "" && ManagedPastureName.StartsWith("Not specified") == false)
             {
@@ -188,7 +189,7 @@ namespace Models.CLEM.Resources
             if (initialAttributes != null)
                 localAttributes.AddRange(initialAttributes);
             // Add any attributes defined at the cohort level
-            localAttributes.AddRange(this.FindAllChildren<ISetAttribute>().ToList());
+            localAttributes.AddRange(Structure.FindChildren<ISetAttribute>().ToList());
 
             return CreateIndividuals(Convert.ToInt32(this.Number, CultureInfo.InvariantCulture), localAttributes, date, ruminantType);
         }
@@ -209,10 +210,10 @@ namespace Models.CLEM.Resources
 
             List<Ruminant> individuals = new();
             initialAttributes ??= new();
-            setPreviousConception = FindChild<SetPreviousConception>();
+            setPreviousConception = Structure.FindChild<SetPreviousConception>();
 
             RuminantType parent = ruminantType;
-            parent ??= FindAncestor<RuminantType>();
+            parent ??= Structure.FindParent<RuminantType>(recurse: true);
 
             // get Ruminant Herd resource for unique ids
             RuminantHerd ruminantHerd = parent.Parent as RuminantHerd; 
@@ -277,14 +278,15 @@ namespace Models.CLEM.Resources
             using StringWriter htmlWriter = new();
             if (!FormatForParentControl)
             {
-                rumType = FindAncestor<RuminantType>();
+                rumType = Structure.FindParent<RuminantType>(recurse: true);
                 if (rumType is null)
                 {
                     // look for rum type in SpecifyRuminant
-                    var specParent = this.FindAllAncestors<SpecifyRuminant>().FirstOrDefault();
+                    var specParent = Structure.FindParents<SpecifyRuminant>().FirstOrDefault();
                     if (specParent != null)
                     {
-                        var resHolder = this.FindAncestor<ZoneCLEM>().FindDescendant<ResourcesHolder>();
+                        var zoneCLEM = Structure.FindParent<ZoneCLEM>(recurse: true);
+                        var resHolder = Structure.FindChild<ResourcesHolder>(relativeTo:zoneCLEM);
                         rumType = resHolder.FindResourceType<RuminantHerd, RuminantType>(this, specParent.RuminantTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
                         specifyRuminantParent = true;
                     }
@@ -434,7 +436,7 @@ namespace Models.CLEM.Resources
             {
                 if (!(CurrentAncestorList.Count >= 3 && CurrentAncestorList[CurrentAncestorList.Count - 1] == typeof(RuminantInitialCohorts).Name))
                 {
-                    RuminantType rumtype = FindAncestor<RuminantType>();
+                    RuminantType rumtype = Structure.FindParent<RuminantType>(recurse: true);
                     if (rumtype != null)
                     {
                         Ruminant newInd = null;
@@ -455,7 +457,7 @@ namespace Models.CLEM.Resources
 
                         if ((Parent as RuminantInitialCohorts).ConceptionsFound)
                         {
-                            var setConceptionFound = this.FindChild<SetPreviousConception>();
+                            var setConceptionFound = Structure.FindChild<SetPreviousConception>();
                             if (setConceptionFound != null)
                                 htmlWriter.Write($"<td class=\"fill\"><span class=\"setvalue\">{setConceptionFound.NumberDaysPregnant}</span> days</td>");
                             else
@@ -464,7 +466,7 @@ namespace Models.CLEM.Resources
 
                         if ((Parent as RuminantInitialCohorts).AttributesFound)
                         {
-                            var setAttributesFound = this.FindAllChildren<SetAttributeWithValue>();
+                            var setAttributesFound = Structure.FindChildren<SetAttributeWithValue>();
                             if (setAttributesFound.Any())
                             {
                                 htmlWriter.Write($"<td class=\"fill\">");

@@ -55,15 +55,16 @@ namespace UserInterface.Presenters
             {
                 int terminatedCount = 0;
                 // find IStorageReader of simulation
-                IModel simulation = model.FindAncestor<Simulation>();
-                if (model.Node.Find<IDataStore>() is not IDataStore ds)
-                {
+                IModel simulation = model.Node.FindParent<Simulation>(recurse: true);
+                IDataStore ds = model.Node.Find<IDataStore>();
+                if (ds == null)
+                { 
                     markdownWriter.Write("### No [DataStore] found in simulation.");
                     return markdownWriter.ToString();
                 }
 
                 DataTable dataTable = null;
-                bool expSim = model.FindAllAncestors<Experiment>().Any();
+                bool expSim = model.Node.FindParents<Experiment>().Any();
                 // ensure _Messages table has been created.
                 if (ds.Reader.TableNames.Any())
                 { 
@@ -270,9 +271,9 @@ namespace UserInterface.Presenters
                 htmlWriter.WriteLine(htmlString);
 
                 // find IStorageReader of simulation
-                IModel simulation = model.FindAncestor<Simulation>();
-                IModel simulations = simulation.FindAncestor<Simulations>();
-                IDataStore ds = simulations.FindAllChildren<IDataStore>().FirstOrDefault();
+                IModel simulation = model.Node.FindParent<Simulation>(recurse: true);
+                IModel simulations = simulation.Node.FindParent<Simulations>(recurse: true);
+                IDataStore ds = simulations.Node.FindChildren<IDataStore>().FirstOrDefault();
                 if (ds == null)
                     return htmlWriter.ToString();
 

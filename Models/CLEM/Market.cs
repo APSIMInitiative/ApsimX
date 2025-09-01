@@ -75,7 +75,7 @@ namespace Models.CLEM
             get
             {
                 if (resources == null)
-                    resources = this.FindAllChildren<ResourcesHolder>().FirstOrDefault();
+                    resources = Structure.FindChildren<ResourcesHolder>().FirstOrDefault();
                 return resources;
             }
         }
@@ -89,7 +89,11 @@ namespace Models.CLEM
             get
             {
                 if (bankAccount == null)
-                    bankAccount = Resources.FindResourceGroup<Finance>()?.FindAllChildren<FinanceType>().FirstOrDefault() as FinanceType;
+                {
+                    var finance = Resources.FindResourceGroup<Finance>();
+                    if (finance != null)
+                        bankAccount = Structure.FindChildren<FinanceType>(relativeTo: finance).FirstOrDefault();
+                }
                 return bankAccount;
             }
         }
@@ -123,7 +127,7 @@ namespace Models.CLEM
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             // check that one resources and on activities are present.
-            int holderCount = this.FindAllChildren<ResourcesHolder>().Count();
+            int holderCount = Structure.FindChildren<ResourcesHolder>().Count();
             if (holderCount == 0)
             {
                 string[] memberNames = new string[] { "CLEM.Resources" };
@@ -134,14 +138,14 @@ namespace Models.CLEM
                 string[] memberNames = new string[] { "CLEM.Resources" };
                 yield return new ValidationResult("A market place must contain only one (1) Resources Holder to manage resources", memberNames);
             }
-            holderCount = this.FindAllChildren<ActivitiesHolder>().Count();
+            holderCount = Structure.FindChildren<ActivitiesHolder>().Count();
             if (holderCount > 1)
             {
                 string[] memberNames = new string[] { "CLEM.Activities" };
                 yield return new ValidationResult("A market place must contain only one (1) Activities Holder to manage activities", memberNames);
             }
             // only one market
-            holderCount = FindAncestor<Simulation>().FindAllChildren<Market>().Count();
+            holderCount = Structure.FindChildren<Market>(relativeTo: Structure.FindParent<Simulation>(recurse: true)).Count();
             if (holderCount > 1)
             {
                 string[] memberNames = new string[] { "CLEM.Markets" };
@@ -167,7 +171,7 @@ namespace Models.CLEM
             parents.Add(model.GetType().Name);
 
             htmlWriter.Write($"\r\n<div class=\"holdermain\" style=\"opacity: {((!this.Enabled) ? "0.4" : "1")}\">");
-            foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>())
+            foreach (CLEMModel cm in Structure.FindChildren<CLEMModel>())
                 htmlWriter.Write(cm.GetFullSummary(cm, parents, "", markdown2Html));
             htmlWriter.Write("</div>");
 

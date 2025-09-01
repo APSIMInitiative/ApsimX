@@ -121,10 +121,11 @@ namespace Models.CLEM.Activities
             amountToSkip = 0;
             numberToDo = 0;
             numberToSkip = 0;
+
             // no filters applied here as we don't want to assume anything. User can filter based on ruminant.ProportionFleeceAttained or fleece weight and allow MarkedForSale in time-step.
             IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>();
             //IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.Weight.Wool.Amount > 0); //+ a.CashmereWeight
-            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd);
+            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd, Structure);
             numberToDo = uniqueIndividuals?.Count() ?? 0;
 
             // provide updated measure for companion models

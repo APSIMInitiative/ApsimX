@@ -12,7 +12,7 @@ namespace Models.CLEM.Groupings
 {
     ///<summary>
     /// Contains a group of filters and sorters to identify individual ruminants
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -42,7 +42,6 @@ namespace Models.CLEM.Groupings
     public class RuminantGroup : FilterGroup<Ruminant>
     {
         #region descriptive summary
-
         /// <inheritdoc/>
         public override string ModelSummary()
         {

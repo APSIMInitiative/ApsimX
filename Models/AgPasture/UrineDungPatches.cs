@@ -97,8 +97,8 @@ namespace Models.AgPasture
         /// </summary>
         public void OnPreLink()
         {
-            var simulation = simpleGrazing.FindAncestor<Simulation>() as Simulation;
-            var zone = simulation.FindChild<Zone>();
+            var simulation = simpleGrazing.Node.FindParent<Simulation>(recurse: true) as Simulation;
+            var zone = simulation.Node.FindChild<Zone>();
 
             if (zoneCount == 0)
                 throw new Exception("Number of patches/zones in urine patches is zero.");
@@ -159,7 +159,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Invoked at start of simulation.</summary>
-        public void OnStartOfSimulation()
+        public void OnStartOfSimulation(IStructure structure)
         {
             if (!pseudoPatches)
                 summary.WriteMessage(simpleGrazing, "Created " + zoneCount + " identical zones, each of area " + (1.0 / zoneCount) + " ha", MessageType.Diagnostic);
@@ -186,7 +186,7 @@ namespace Models.AgPasture
             }
             else
             {
-                var simulation = simpleGrazing.FindAncestor<Simulation>();
+                var simulation = structure.FindParent<Simulation>(relativeTo: simpleGrazing, recurse: true);
                 var physical = structure.Find<IPhysical>(relativeTo: simpleGrazing);
                 double[] arrayForMaxEffConc = Enumerable.Repeat(maxEffectiveNConcentration, physical.Thickness.Length).ToArray();
                 foreach (Zone zone in structure.FindAll<Zone>(relativeTo: simulation))
@@ -205,38 +205,6 @@ namespace Models.AgPasture
             ZoneNumForUrine = -1;  // this will be incremented to 0 (first zone) below
 
             UrinePenetration();
-        }
-
-        /// <summary>Invoked to do trampling and dung return.</summary>
-        public void DoTramplingAndDungReturn(double amountDungCReturned, double amountDungNReturned)
-        {
-            // Note that dung is assumed to be spread uniformly over the paddock (patches or sones).
-            // There is no need to bring zone area into the calculations here but zone area must be included for variables reported FROM the zone to the upper level
-
-            int i = -1;  // patch or paddock counter
-            foreach (Zone zone in structure.FindAll<Zone>(relativeTo: simpleGrazing))
-            {
-                i += 1;
-                SurfaceOrganicMatter surfaceOM = structure.Find<SurfaceOrganicMatter>(relativeTo: zone) as SurfaceOrganicMatter;
-
-                // do some trampling of litter
-                // accelerate the movement of surface litter into the soil - do this before the dung is added
-                double temp = surfaceOM.Wt * 0.1;
-
-                surfaceOM.Incorporate(fraction: (double) 0.1, depth: (double)100.0, doOutput: true);
-
-                summary.WriteMessage(simpleGrazing, "For patch " + i + " the amount of litter trampled was " + temp + " and the remaining litter is " + (surfaceOM.Wt), MessageType.Diagnostic);
-
-                // move the dung to litter
-                AddFaecesType dung = new()
-                {
-                    OMWeight = amountDungCReturned / 0.4,  //assume dung C is 40% of OM
-                    OMN = amountDungNReturned
-                };
-                surfaceOM.Add(dung.OMWeight, dung.OMN, 0.0, "RuminantDung_PastureFed", null);
-                summary.WriteMessage(simpleGrazing, "For patch " + i + " the amount of dung DM added to the litter was " + (amountDungCReturned / 0.4) + " and the amount of N added in the dung was " + (amountDungNReturned), MessageType.Diagnostic);
-
-            }
         }
 
         /// <summary>Invoked to do urine return</summary>

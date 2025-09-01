@@ -24,7 +24,7 @@ namespace APSIM.Documentation.Models.Types
         {
 
             bool showGraphs = true;
-            List<Folder> folderAncestorList = model.FindAllAncestors<Folder>().ToList();
+            List<Folder> folderAncestorList = model.Node.FindParents<Folder>().ToList();
             foreach (Folder folder in folderAncestorList)
                 if (folder.ShowInDocs == false)
                     showGraphs = false;

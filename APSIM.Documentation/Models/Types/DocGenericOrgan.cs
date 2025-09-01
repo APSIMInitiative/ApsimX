@@ -28,15 +28,15 @@ namespace APSIM.Documentation.Models.Types
             // List the parameters, properties, and processes from this organ that need to be documented:
 
             // Document DM demands.
-            section.Add(new Section("Dry Matter Demand", DocumentDMDemand(model.FindChild("dmDemands"))));
+            section.Add(new Section("Dry Matter Demand", DocumentDMDemand(model.Node.FindChild<IModel>("dmDemands"))));
 
             // Document N demands.
-            section.Add(new Section("Nitrogen Demand", DocumentNDemand(model.FindChild("nDemands"))));
+            section.Add(new Section("Nitrogen Demand", DocumentNDemand(model.Node.FindChild<IModel>("nDemands"))));
 
             // Document N concentration thresholds.
             section.Add(new Section("N Concentration Thresholds", DocumentNConcentrationThresholds(model as GenericOrgan)));
 
-            IModel nDemandSwitch = model.FindChild("NitrogenDemandSwitch");
+            IModel nDemandSwitch = model.Node.FindChild<IModel>("NitrogenDemandSwitch");
             List<ITag> demandTags = new List<ITag>();
             if (nDemandSwitch is Constant nDemandConst)
             {
@@ -59,7 +59,7 @@ namespace APSIM.Documentation.Models.Types
             // Document senescence and detachment.
             section.Add(new Section("Senescence and Detachment", DocumentSenescence(model as GenericOrgan)));
 
-            IModel biomassRemovalModel = model.FindChild<BiomassRemoval>();
+            IModel biomassRemovalModel = model.Node.FindChild<BiomassRemoval>();
             if (biomassRemovalModel != null)
                 section.Add(AutoDocumentation.DocumentModel(biomassRemovalModel));
 
@@ -85,19 +85,19 @@ namespace APSIM.Documentation.Models.Types
         private static List<ITag> DocumentNConcentrationThresholds(GenericOrgan organ)
         {
             List<ITag> subTags = new List<ITag>();
-            IModel minNConc = organ.FindChild("MinimumNConc");
+            IModel minNConc = organ.Node.FindChild<IModel>("MinimumNConc");
             if (minNConc != null)
                 subTags.AddRange(AutoDocumentation.DocumentModel(minNConc));
             else
                 subTags.Add(new Paragraph("MinimumNConc not found."));
 
-            IModel critNConc = organ.FindChild("CriticalNConc");
+            IModel critNConc = organ.Node.FindChild<IModel>("CriticalNConc");
             if (critNConc != null)
                 subTags.AddRange(AutoDocumentation.DocumentModel(critNConc));
             else
                 subTags.Add(new Paragraph("CritNConc not found."));
 
-            IModel maxNConc = organ.FindChild("MaximumNConc");
+            IModel maxNConc = organ.Node.FindChild<IModel>("MaximumNConc");
             if (maxNConc != null)
                 subTags.AddRange(AutoDocumentation.DocumentModel(maxNConc));
             else
@@ -109,7 +109,7 @@ namespace APSIM.Documentation.Models.Types
         private static List<ITag> DocumentDMSupply(GenericOrgan organ)
         {
             List<ITag> subTags = new List<ITag>();
-            IModel dmReallocFactor = organ.FindChild("DMReallocationFactor");
+            IModel dmReallocFactor = organ.Node.FindChild<IModel>("DMReallocationFactor");
             if (dmReallocFactor is Constant dmReallocConst)
             {
                 if (dmReallocConst.Value() == 0)
@@ -122,7 +122,7 @@ namespace APSIM.Documentation.Models.Types
                 subTags.Add(new Paragraph("The proportion of senescing DM that is allocated each day is quantified by the DMReallocationFactor."));
                 subTags.AddRange(AutoDocumentation.DocumentModel(dmReallocFactor));
             }
-            IModel dmRetransFactor = organ.FindChild("DMRetranslocationFactor");
+            IModel dmRetransFactor = organ.Node.FindChild<IModel>("DMRetranslocationFactor");
             if (dmRetransFactor is Constant dmRetransConst)
             {
                 if (dmRetransConst.Value() == 0)
@@ -141,7 +141,7 @@ namespace APSIM.Documentation.Models.Types
         private static List<ITag> DocumentNSupply(GenericOrgan organ)
         {
             List<ITag> subTags = new List<ITag>();
-            IModel nReallocFactor = organ.FindChild("NReallocationFactor");
+            IModel nReallocFactor = organ.Node.FindChild<IModel>("NReallocationFactor");
             if (nReallocFactor is Constant nReallocConst)
             {
                 if (nReallocConst.Value() == 0)
@@ -154,7 +154,7 @@ namespace APSIM.Documentation.Models.Types
                 subTags.Add(new Paragraph("The proportion of senescing N that is allocated each day is quantified by the NReallocationFactor."));
                 subTags.AddRange(AutoDocumentation.DocumentModel(nReallocFactor));
             }
-            IModel nRetransFactor = organ.FindChild("NRetranslocationFactor");
+            IModel nRetransFactor = organ.Node.FindChild<IModel>("NRetranslocationFactor");
             if (nRetransFactor is Constant nRetransConst)
             {
                 if (nRetransConst.Value() == 0)
@@ -173,7 +173,7 @@ namespace APSIM.Documentation.Models.Types
         private static List<ITag> DocumentSenescence(GenericOrgan organ)
         {
             List<ITag> subTags = new List<ITag>();
-            IModel senescenceRate = organ.FindChild("SenescenceRate");
+            IModel senescenceRate = organ.Node.FindChild<IModel>("SenescenceRate");
             if (senescenceRate is Constant senescenceConst)
             {
                 if (senescenceConst.Value() == 0)
@@ -187,7 +187,7 @@ namespace APSIM.Documentation.Models.Types
                 subTags.AddRange(AutoDocumentation.DocumentModel(senescenceRate));
             }
 
-            IModel detachmentRate = organ.FindChild("DetachmentRateFunction");
+            IModel detachmentRate = organ.Node.FindChild<IModel>("DetachmentRateFunction");
             if (detachmentRate is Constant detachmentConst)
             {
                 if (detachmentConst.Value() == 0)

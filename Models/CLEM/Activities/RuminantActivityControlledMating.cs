@@ -103,7 +103,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialise")]
         private void OnCLEMInitialiseSetAttributes(object sender, EventArgs e)
         {
-            attributeList = FindAllDescendants<ISetAttribute>().ToList();
+            attributeList = Structure.FindChildren<ISetAttribute>(recurse: true).ToList();
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -116,7 +116,7 @@ namespace Models.CLEM.Activities
             InitialiseHerd(false, true);
             filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>(false, true);
 
-            milkingTimer = FindChild<ActivityTimerBreedForMilking>();
+            milkingTimer = Structure.FindChild<ActivityTimerBreedForMilking>();
 
             // check that timer exists for controlled mating
             if (!TimingExists)
@@ -150,7 +150,7 @@ namespace Models.CLEM.Activities
             numberToDo = 0;
             numberToSkip = 0;
             IEnumerable<RuminantFemale> herd = GetBreeders();
-            uniqueIndividuals = GetUniqueIndividuals<RuminantFemale>(filterGroups, herd);
+            uniqueIndividuals = GetUniqueIndividuals<RuminantFemale>(filterGroups, herd, Structure);
             numberToDo = uniqueIndividuals?.Count() ?? 0;
             amountToDo = numberToDo;
 
@@ -303,7 +303,7 @@ namespace Models.CLEM.Activities
         {
             using StringWriter htmlWriter = new();
             // set attribute with value
-            IEnumerable<SetAttributeWithValue> attributeSetters = FindAllChildren<SetAttributeWithValue>();
+            IEnumerable<SetAttributeWithValue> attributeSetters = Structure.FindChildren<SetAttributeWithValue>();
             if (attributeSetters.Any())
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
@@ -313,7 +313,8 @@ namespace Models.CLEM.Activities
             else
             {
                 // need to check for mandatory attributes
-                var mandatoryAttributes = FindAncestor<Zone>().FindAllDescendants<SetAttributeWithValue>().Where(a => a.Mandatory).Select(a => a.AttributeName).Distinct();
+                var zone = Structure.FindParent<Zone>(recurse: true);
+                var mandatoryAttributes = Structure.FindChildren<SetAttributeWithValue>(relativeTo: zone, recurse: true).Where(a => a.Mandatory).Select(a => a.AttributeName).Distinct();
                 if (mandatoryAttributes.Any())
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");

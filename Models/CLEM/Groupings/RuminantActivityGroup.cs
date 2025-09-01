@@ -10,7 +10,7 @@ namespace Models.CLEM.Groupings
 {
     ///<summary>
     /// Defines a group of individual ruminants for which all activities below the implementation consider
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -55,8 +55,10 @@ namespace Models.CLEM.Groupings
         {
             using StringWriter htmlWriter = new();
             htmlWriter.Write("\r\n<div class=\"filterborder filteractivityborder clearfix\">");
-            if (!FindAllChildren<Filter>().Any())
+            if (Structure.FindChildren<Filter>().Count() < 1)
+            {
                 htmlWriter.Write("<div class=\"filter\">All individuals</div>");
+            }
             return htmlWriter.ToString();
         }
         #endregion

@@ -354,7 +354,7 @@ namespace Models.Surface
             {
                 // This happens when user clicks on SurfaceOrganicMatter in tree.
                 // Links haven't been resolved yet
-                ResidueTypes = FindChild<ResidueTypes>();
+                ResidueTypes = Structure.FindChild<ResidueTypes>();
             }
             return ResidueTypes.Names;
         }

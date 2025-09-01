@@ -15,7 +15,7 @@ namespace Models.CLEM
     ///<summary>
     /// Reads in external resource input data and makes it available to other models.
     ///</summary>
-    ///    
+    ///
     ///<remarks>
     ///</remarks>
     [Serializable]
@@ -121,7 +121,7 @@ namespace Models.CLEM
 
 
         /// <summary>
-        /// Gets or sets the full file name (with path). 
+        /// Gets or sets the full file name (with path).
         /// The Commands.ChangeProperty() uses this property to change the model.
         /// This is done after the user changes the file using the browse button in the View.
         /// </summary>
@@ -134,7 +134,7 @@ namespace Models.CLEM
                     return "";
                 else
                 {
-                    Simulation simulation = FindAncestor<Simulation>();
+                    Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
                     if (simulation != null)
                         return PathUtilities.GetAbsolutePath(FileName, simulation.FileName);
                     else
@@ -184,8 +184,8 @@ namespace Models.CLEM
         /// <summary>
         /// Provides an error message to display if something is wrong.
         /// Used by the UserInterface to give a warning of what is wrong
-        /// 
-        /// When the user selects a file using the browse button in the UserInterface 
+        ///
+        /// When the user selects a file using the browse button in the UserInterface
         /// and the file can not be displayed for some reason in the UserInterface.
         /// </summary>
         [JsonIgnore]
@@ -262,7 +262,7 @@ namespace Models.CLEM
         }
 
         /// <summary>
-        /// Collect the 
+        /// Collect the
         /// </summary>
         /// <returns>A list of column names</returns>
         public IEnumerable<string> GetUniqueResourceTypes()

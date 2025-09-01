@@ -16,7 +16,7 @@
             database1.OpenDatabase(":memory:", readOnly: false);
             CreateTable(database1, "_Simulations",
                         columnNames: new List<string> { "ID", "Name", "FolderName" },
-                        columnTypes: new List<string> { "int", "string", "string" },
+                        columnTypes: new List<string> { "integer", "string", "string" },
                         rowValues: new List<object[]>
                             {
                                 new object[] { 1, "Sim1", "Folder1" },
@@ -25,7 +25,7 @@
 
             CreateTable(database1, "Report",
                         columnNames: new List<string> { "SimulationID", "A", "B" },
-                        columnTypes: new List<string> { "int", "float", "string" },
+                        columnTypes: new List<string> { "integer", "float", "string" },
                         rowValues: new List<object[]>
                             {
                                 new object[] { 1, 10.0, "str1" },
@@ -36,7 +36,7 @@
             database2.OpenDatabase(":memory:", readOnly: false);
             CreateTable(database2, "_Simulations",
                         columnNames: new List<string> { "ID", "Name", "FolderName" },
-                        columnTypes: new List<string> { "int", "string", "string" },
+                        columnTypes: new List<string> { "integer", "string", "string" },
                         rowValues: new List<object[]>
                             {
                                 new object[] { 1, "Sim3", "Folder3" },
@@ -45,7 +45,7 @@
 
             CreateTable(database2, "Report",
                         columnNames: new List<string> { "SimulationID", "A", "B" },
-                        columnTypes: new List<string> { "int", "float", "string" },
+                        columnTypes: new List<string> { "integer", "float", "string" },
                         rowValues: new List<object[]>
                             {
                                 new object[] { 1, 20.0, "str3" },
@@ -79,7 +79,7 @@
             database1.OpenDatabase(":memory:", readOnly: false);
             CreateTable(database1, "_Simulations",
                         columnNames: new List<string> { "ID", "Name", "FolderName" },
-                        columnTypes: new List<string> { "int", "string", "string" },
+                        columnTypes: new List<string> { "integer", "string", "string" },
                         rowValues: new List<object[]>
                             {
                                 new object[] { 1, "Sim1", "Folder1" },
@@ -88,7 +88,7 @@
 
             CreateTable(database1, "Report",
                         columnNames: new List<string> { "SimulationID", "A", "B" },
-                        columnTypes: new List<string> { "int", "float", "string" },
+                        columnTypes: new List<string> { "integer", "float", "string" },
                         rowValues: new List<object[]>
                             {
                                 new object[] { 1, 10.0, "str1" },
@@ -99,7 +99,7 @@
             database2.OpenDatabase(":memory:", readOnly: false);
             CreateTable(database2, "_Simulations",
                         columnNames: new List<string> { "ID", "Name", "FolderName" },
-                        columnTypes: new List<string> { "int", "string", "string" },
+                        columnTypes: new List<string> { "integer", "string", "string" },
                         rowValues: new List<object[]>
                             {
                                 new object[] { 1, "Sim1", "Folder3" },
@@ -108,7 +108,7 @@
 
             CreateTable(database2, "Report",
                         columnNames: new List<string> { "SimulationID", "A", "B" },
-                        columnTypes: new List<string> { "int", "float", "string" },
+                        columnTypes: new List<string> { "integer", "float", "string" },
                         rowValues: new List<object[]>
                             {
                                 new object[] { 1, 20.0, "str3" },
@@ -140,7 +140,7 @@
             database1.OpenDatabase(":memory:", readOnly: false);
             CreateTable(database1, "_Simulations",
                         columnNames: new List<string> { "ID", "Name", "FolderName" },
-                        columnTypes: new List<string> { "int", "string", "string" },
+                        columnTypes: new List<string> { "integer", "string", "string" },
                         rowValues: new List<object[]>
                             {
                                 new object[] { 1, "Sim1", "Folder1" },
@@ -149,7 +149,7 @@
 
             CreateTable(database1, "Report1",
                         columnNames: new List<string> { "SimulationID", "A", "B" },
-                        columnTypes: new List<string> { "int", "float", "string" },
+                        columnTypes: new List<string> { "integer", "float", "string" },
                         rowValues: new List<object[]>
                             {
                                 new object[] { 1, 10.0, "str1" },
@@ -160,7 +160,7 @@
             database2.OpenDatabase(":memory:", readOnly: false);
             CreateTable(database2, "_Simulations",
                         columnNames: new List<string> { "ID", "Name", "FolderName" },
-                        columnTypes: new List<string> { "int", "string", "string" },
+                        columnTypes: new List<string> { "integer", "string", "string" },
                         rowValues: new List<object[]>
                             {
                                 new object[] { 1, "Sim3", "Folder3" },
@@ -169,7 +169,7 @@
 
             CreateTable(database2, "Report2",
                         columnNames: new List<string> { "SimulationID", "A", "B" },
-                        columnTypes: new List<string> { "int", "float", "string" },
+                        columnTypes: new List<string> { "integer", "float", "string" },
                         rowValues: new List<object[]>
                             {
                                 new object[] { 1, 20.0, "str3" },
@@ -207,7 +207,7 @@
             database1.OpenDatabase(":memory:", readOnly: false);
             CreateTable(database1, "_Simulations",
                         columnNames: new List<string> { "ID", "Name", "FolderName" },
-                        columnTypes: new List<string> { "int", "string", "string" },
+                        columnTypes: new List<string> { "integer", "string", "string" },
                         rowValues: new List<object[]>
                             {
                                 new object[] { 1, "Sim1", "Folder1" },
@@ -226,7 +226,7 @@
             database2.OpenDatabase(":memory:", readOnly: false);
             CreateTable(database2, "_Simulations",
                         columnNames: new List<string> { "ID", "Name", "FolderName" },
-                        columnTypes: new List<string> { "int", "string", "string" },
+                        columnTypes: new List<string> { "integer", "string", "string" },
                         rowValues: new List<object[]>
                             {
                                 new object[] { 1, "Sim1", "Folder3" },

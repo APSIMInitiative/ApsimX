@@ -28,24 +28,24 @@ namespace APSIM.Documentation.Models.Types
 
             // document DM demands
             subTags.Add(new Paragraph("The dry matter demand for the organ is calculated as defined in DMDemands, based on the DMDemandFunction and partition fractions for each biomass pool."));
-            IModel DMDemand = this.model.FindChild("dmDemands");
+            IModel DMDemand = this.model.Node.FindChild<IModel>("dmDemands");
             subTags.AddRange(AutoDocumentation.DocumentModel(DMDemand));
             section.Add(new Section("Dry Matter Demand", subTags));
 
             // document N demands
             subTags = new List<ITag>();
             subTags.Add(new Paragraph("The N demand is calculated as defined in NDemands, based on DM demand the N concentration of each biomass pool."));
-            IModel NDemand = this.model.FindChild("nDemands");
+            IModel NDemand = this.model.Node.FindChild<IModel>("nDemands");
             subTags.AddRange(AutoDocumentation.DocumentModel(NDemand));
 
             // document N concentration thresholds
-            IModel MinN = this.model.FindChild("MinimumNConc");
+            IModel MinN = this.model.Node.FindChild<IModel>("MinimumNConc");
             subTags.AddRange(AutoDocumentation.DocumentModel(MinN));
-            IModel CritN = this.model.FindChild("CriticalNConc");
+            IModel CritN = this.model.Node.FindChild<IModel>("CriticalNConc");
             subTags.AddRange(AutoDocumentation.DocumentModel(CritN));
-            IModel MaxN = this.model.FindChild("MaximumNConc");
+            IModel MaxN = this.model.Node.FindChild<IModel>("MaximumNConc");
             subTags.AddRange(AutoDocumentation.DocumentModel(MaxN));
-            IModel NDemSwitch = this.model.FindChild("NitrogenDemandSwitch");
+            IModel NDemSwitch = this.model.Node.FindChild<IModel>("NitrogenDemandSwitch");
             if (NDemSwitch is Constant)
             {
                 if ((NDemSwitch as Constant).Value() == 1.0)
@@ -63,10 +63,10 @@ namespace APSIM.Documentation.Models.Types
                 subTags.AddRange(AutoDocumentation.DocumentModel(NDemSwitch));
             }
             section.Add(new Section("Nitrogen Demand", subTags));
-            
+
             // document DM supplies
             subTags = new List<ITag>();
-            IModel DMReallocFac = this.model.FindChild("DMReallocationFactor");
+            IModel DMReallocFac = this.model.Node.FindChild<IModel>("DMReallocationFactor");
             if (DMReallocFac is Constant)
             {
                 if ((DMReallocFac as Constant).Value() == 0)
@@ -79,7 +79,7 @@ namespace APSIM.Documentation.Models.Types
                 subTags.Add(new Paragraph("The proportion of senescing DM that is allocated each day is quantified by the DMReallocationFactor."));
                 subTags.AddRange(AutoDocumentation.DocumentModel(DMReallocFac));
             }
-            IModel DMRetransFac = this.model.FindChild("DMRetranslocationFactor");
+            IModel DMRetransFac = this.model.Node.FindChild<IModel>("DMRetranslocationFactor");
             if (DMRetransFac is Constant)
             {
                 if ((DMRetransFac as Constant).Value() == 0)
@@ -96,7 +96,7 @@ namespace APSIM.Documentation.Models.Types
 
             // document N supplies
             subTags = new List<ITag>();
-            IModel NReallocFac = this.model.FindChild("NReallocationFactor");
+            IModel NReallocFac = this.model.Node.FindChild<IModel>("NReallocationFactor");
             if (NReallocFac is Constant)
             {
                 if ((NReallocFac as Constant).Value() == 0)
@@ -109,7 +109,7 @@ namespace APSIM.Documentation.Models.Types
                 subTags.Add(new Paragraph("The proportion of senescing N that is allocated each day is quantified by the NReallocationFactor."));
                 subTags.AddRange(AutoDocumentation.DocumentModel(NReallocFac));
             }
-            IModel NRetransFac = this.model.FindChild("NRetranslocationFactor");
+            IModel NRetransFac = this.model.Node.FindChild<IModel>("NRetranslocationFactor");
             if (NRetransFac is Constant)
             {
                 if ((NRetransFac as Constant).Value() == 0)
@@ -126,7 +126,7 @@ namespace APSIM.Documentation.Models.Types
 
             // document senescence and detachment
             subTags = new List<ITag>();
-            IModel SenRate = this.model.FindChild("SenescenceRate");
+            IModel SenRate = this.model.Node.FindChild<IModel>("SenescenceRate");
             if (SenRate is Constant)
             {
                 if ((SenRate as Constant).Value() == 0)
@@ -140,7 +140,7 @@ namespace APSIM.Documentation.Models.Types
                 subTags.AddRange(AutoDocumentation.DocumentModel(SenRate));
             }
 
-            IModel DetRate = this.model.FindChild("DetachmentRateFunction");
+            IModel DetRate = this.model.Node.FindChild<IModel>("DetachmentRateFunction");
             if (DetRate is Constant)
             {
                 if ((DetRate as Constant).Value() == 0)

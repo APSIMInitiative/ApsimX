@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Groupings;
+﻿using APSIM.Core;
+using Models.CLEM.Groupings;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
@@ -33,13 +34,13 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (!FindAllChildren<LabourPriceGroup>().Any())
+            if (Structure.FindChildren<LabourPriceGroup>(relativeTo: this).Count() == 0)
             {
-                yield return new ValidationResult("No [LabourPriceGroups] have been provided for [r=" + this.Name + "].\r\nAdd [LabourPriceGroups] to include labour pricing.", new string[] { "Labour pricing" });
+                yield return new ValidationResult($"No [LabourPriceGroups] have been provided for [r={Name}].\r\nAdd [LabourPriceGroups] to include labour pricing.", new string[] { "Labour pricing" });
             }
-            else if (FindAllChildren<LabourPriceGroup>().Cast<LabourPriceGroup>().Any(a => a.Value == 0))
+            else if (Structure.FindChildren<LabourPriceGroup>(relativeTo: this).Where(a => a.Value == 0).Count() > 0)
             {
-                yield return new ValidationResult("No price [Value] has been set for some of the [LabourPriceGroup] in [r=" + this.Name + "]\r\nThese will not result in price calculations and can be deleted.", new string[] { "Labour pricing" });
+                yield return new ValidationResult($"No price [Value] has been set for some of the [LabourPriceGroup] in [r={Name}]\r\nThese will not result in price calculations and can be deleted.", new string[] { "Labour pricing" });
             }
         }
 

@@ -113,7 +113,7 @@ namespace Models
         public override void OnCreated()
         {
             base.OnCreated();
-            if (this.FindChild<Manager>() == null)
+            if (this.Node.FindChild<Manager>() == null)
             {
                 Manager script = new Manager();
                 script.Name = "Config";
@@ -196,7 +196,7 @@ namespace Models
         {
             get
             {
-                Manager manager = this.FindChild<Manager>();
+                Manager manager = this.Node.FindChild<Manager>();
                 return manager?.Children?.FirstOrDefault() as IGraphPanelScript;
             }
         }

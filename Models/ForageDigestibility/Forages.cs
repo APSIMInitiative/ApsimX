@@ -71,7 +71,7 @@ namespace Models.ForageDigestibility
         public override void OnCreated()
         {
             base.OnCreated();
-            CreateParametersUsingDefaults();
+            RemoveDuplicateForages();
         }
 
         /// <summary>
@@ -173,6 +173,17 @@ namespace Models.ForageDigestibility
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Remove all duplicate forage parameters. There was a defect that keep creating
+        /// new forage parameterisations when they weren't necessary
+        /// </summary>
+        private void RemoveDuplicateForages()
+        {
+            var distinctParameters = _parameters?.DistinctBy(p => p.Name).ToList();
+            if (_parameters?.Count != distinctParameters?.Count)
+                _parameters = distinctParameters;
         }
 
         /// <summary>Encapsulates an amount of material removed from a plant.</summary>

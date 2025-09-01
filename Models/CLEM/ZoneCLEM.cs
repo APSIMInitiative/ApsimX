@@ -15,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using APSIM.Core;
+using Models.Core.ApsimFile;
 
 namespace Models.CLEM
 {
@@ -138,10 +139,10 @@ namespace Models.CLEM
         private void OnCompleted(object sender, EventArgs e)
         {
             // if auto create summary
-            if (AutoCreateDescriptiveSummary && !FindAllAncestors<Experiment>().Any())
+            if (AutoCreateDescriptiveSummary && !Structure.FindParents<Experiment>().Any())
             {
                 if (!File.Exists(wholeSimulationSummaryFile))
-                    File.WriteAllText(wholeSimulationSummaryFile, CLEMModel.CreateDescriptiveSummaryHTML(this, false, false, (sender as Simulation).FileName));
+                    File.WriteAllText(wholeSimulationSummaryFile, CLEMModel.CreateDescriptiveSummaryHTML(this, Structure, false, false, (sender as Simulation).FileName));
                 else
                 {
                     string html = File.ReadAllText(wholeSimulationSummaryFile);
@@ -150,7 +151,7 @@ namespace Models.CLEM
                     if (index > 0)
                     {
                         htmlWriter.Write(html[..(index - 1)]);
-                        htmlWriter.Write(CLEMModel.CreateDescriptiveSummaryHTML(this, false, true));
+                        htmlWriter.Write(CLEMModel.CreateDescriptiveSummaryHTML(this, Structure, false, true));
                         htmlWriter.Write(html[index..]);
                         File.WriteAllText(wholeSimulationSummaryFile, htmlWriter.ToString());
                     }
@@ -348,9 +349,9 @@ namespace Models.CLEM
             CurrentAncestorList.Add(model.GetType().Name);
 
             // get clock
-            IModel parentSim = FindAncestor<Simulation>();
+            IModel parentSim = Structure.FindParent<Simulation>(recurse: true);
 
-            htmlWriter.Write(CLEMModel.AddMemosToSummary(parentSim, markdown2Html));
+            htmlWriter.Write(CLEMModel.AddMemosToSummary(parentSim, Structure, markdown2Html));
 
             // create the summary box with properties of this component
             if (this is ICLEMDescriptiveSummary)
@@ -365,7 +366,7 @@ namespace Models.CLEM
             }
 
             // find random number generator
-            RandomNumberGenerator rnd = parentSim.FindDescendant<RandomNumberGenerator>();
+            RandomNumberGenerator rnd = Structure.FindChild<RandomNumberGenerator>(relativeTo: parentSim, recurse: true);
             if (rnd != null)
             {
                 htmlWriter.Write("\r\n<div class=\"clearfix defaultbanner\">");
@@ -380,12 +381,12 @@ namespace Models.CLEM
                     htmlWriter.Write("each run identical by using the seed <span class=\"setvalue\">" + rnd.Seed.ToString() + "</span>");
                 htmlWriter.Write("\r\n</div>");
 
-                htmlWriter.Write(CLEMModel.AddMemosToSummary(rnd, markdown2Html));
+                htmlWriter.Write(CLEMModel.AddMemosToSummary(rnd, Structure, markdown2Html));
 
                 htmlWriter.Write("\r\n</div>");
             }
 
-            Clock clk = parentSim.FindChild<Clock>();
+            Clock clk = Structure.FindChild<Clock>(relativeTo: parentSim as INodeModel, recurse: true);
             if (clk != null)
             {
                 htmlWriter.Write("\r\n<div class=\"clearfix defaultbanner\">");
@@ -405,13 +406,13 @@ namespace Models.CLEM
                     htmlWriter.Write("<span class=\"setvalue\">" + clk.EndDate.ToShortDateString() + "</span>");
                 htmlWriter.Write("\r\n</div>");
 
-                htmlWriter.Write(CLEMModel.AddMemosToSummary(clk, markdown2Html));
+                htmlWriter.Write(CLEMModel.AddMemosToSummary(clk, Structure, markdown2Html));
 
                 htmlWriter.Write("\r\n</div>");
                 htmlWriter.Write("\r\n</div>");
             }
 
-            foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>())
+            foreach (CLEMModel cm in Structure.FindChildren<CLEMModel>())
                 htmlWriter.Write(cm.GetFullSummary(cm, CurrentAncestorList, "", markdown2Html));
 
             CurrentAncestorList = null;
@@ -428,7 +429,7 @@ namespace Models.CLEM
                 htmlWriter.Write("This farm is identified as region ");
                 htmlWriter.Write($"<span class=\"setvalue\">{ClimateRegion}</span></div>");
 
-                ResourcesHolder resources = this.FindChild<ResourcesHolder>();
+                ResourcesHolder resources = Structure.FindChild<ResourcesHolder>();
                 if (resources != null)
                 {
                     if (resources.FoundMarket != null)
@@ -438,17 +439,6 @@ namespace Models.CLEM
                         htmlWriter.Write($"<span class=\"setvalue\">{FarmMultiplier}</span></div> farm(s) when trading with the Market</div>");
                     }
                 }
-
-                //if ((this.FindDescendant<RuminantActivityGrazeAll>() != null) || (this.FindDescendant<RuminantActivityGrazePasture>() != null) || (this.FindDescendant<RuminantActivityGrazePastureHerd>() != null))
-                //{
-                //    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                //    htmlWriter.Write("Ecological indicators will be calculated every ");
-                //    if (EcologicalIndicatorsCalculationInterval <= 0)
-                //        htmlWriter.Write("<span class=\"errorlink\">NOT SET</span> months");
-                //    else
-                //        htmlWriter.Write($"<span class=\"setvalue\">{EcologicalIndicatorsCalculationInterval}</span> month{((EcologicalIndicatorsCalculationInterval == 1) ? "" : "s")}");
-                //    htmlWriter.Write($" starting at the end of {EcologicalIndicatorsCalculationMonth}</div>");
-                //}
 
                 if (AutoCreateDescriptiveSummary)
                 {

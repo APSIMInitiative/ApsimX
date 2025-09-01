@@ -12,7 +12,7 @@ namespace Models.CLEM.Activities
 {
     ///<summary>
     /// Manager for all activities available to the model
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -75,7 +75,7 @@ namespace Models.CLEM.Activities
         /// <returns>CLEM formated GuID object.</returns>
         public Guid NextGuID
         {
-            get 
+            get
             {
                 int current = nextUniqueID;
                 nextUniqueID++;
@@ -111,7 +111,7 @@ namespace Models.CLEM.Activities
         {
             foundReportActivitiesPerformed = base.Structure.FindAll<ReportActivitiesPerformed>().Any();
 
-            foreach (var activity in FindAllDescendants<CLEMActivityBase>())
+            foreach (var activity in Structure.FindChildren<CLEMActivityBase>(recurse: true))
             {
                 activity.UniqueID = NextGuID;
                 activity.Status = ActivityStatus.Ignored;
@@ -142,7 +142,7 @@ namespace Models.CLEM.Activities
         private void ReportAllActivityStatus(bool fromSetup = false)
         {
             // fire all activity performed triggers at end of time step
-            foreach (CLEMActivityBase child in FindAllChildren<CLEMActivityBase>())
+            foreach (CLEMActivityBase child in Structure.FindChildren<CLEMActivityBase>())
                 child.ReportActivityStatus(0, fromSetup);
 
             // add timestep activity for reporting
@@ -186,7 +186,7 @@ namespace Models.CLEM.Activities
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             // ensure all folders are not APSIM folders
-            if (FindAllDescendants<Folder>().Any())
+            if (Structure.FindChildren<Folder>(recurse: true).Any())
             {
                 yield return new ValidationResult("Only CLEMFolders should be used in the Activity holder. This type of folder provides functionality for working with Activities in CLEM. At least one APSIM Folder was used in the Activities section.", new string[] { "ActivityHolder" });
             }
@@ -212,7 +212,7 @@ namespace Models.CLEM.Activities
         public override string ModelSummaryClosingTags()
         {
             return "\r\n</div>";
-        } 
+        }
         #endregion
     }
 }

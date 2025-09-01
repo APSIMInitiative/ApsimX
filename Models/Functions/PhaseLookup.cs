@@ -11,8 +11,12 @@ namespace Models.Functions
     /// </summary>
     [Serializable]
     [Description("A value is chosen according to the current growth phase.")]
-    public class PhaseLookup : Model, IFunction
+    public class PhaseLookup : Model, IFunction, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>The child functions</summary>
         private IEnumerable<IFunction> ChildFunctions;
 
@@ -21,7 +25,7 @@ namespace Models.Functions
         public double Value(int arrayIndex = -1)
         {
             if (ChildFunctions == null)
-                ChildFunctions = FindAllChildren<IFunction>().ToList();
+                ChildFunctions = Structure.FindChildren<IFunction>().ToList();
 
             foreach (IFunction F in ChildFunctions)
             {

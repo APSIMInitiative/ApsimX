@@ -56,7 +56,7 @@ namespace Models
             if (storage == null)
                 return null;
 
-            Series series = FindAncestor<Series>();
+            Series series = Structure.FindParent<Series>(recurse: true);
             if (series == null)
                 return null;
 
@@ -69,7 +69,7 @@ namespace Models
         /// <returns></returns>
         public string[] GetValidSimNames()
         {
-            return GraphPage.FindSimulationDescriptions(FindAncestor<Series>())?.Select(s => s.Name)?.ToArray();
+            return GraphPage.FindSimulationDescriptions(Structure.FindParent<Series>(recurse: true))?.Select(s => s.Name)?.ToArray();
         }
 
         /// <summary>Return a list of extra fields that the definition should read.</summary>
@@ -91,7 +91,7 @@ namespace Models
                                                                   List<SimulationDescription> simDescriptions,
                                                                   List<string> simulationFilter = null)
         {
-            Series seriesAncestor = FindAncestor<Series>();
+            Series seriesAncestor = Structure.FindParent<Series>(recurse: true);
             if (seriesAncestor == null)
                 throw new Exception("EventNamesOnGraph model must be a descendant of a series");
             IEnumerable<SeriesDefinition> definitions = seriesAncestor.CreateSeriesDefinitions(storage, simDescriptions, simulationFilter);

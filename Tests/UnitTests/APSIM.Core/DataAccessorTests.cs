@@ -188,6 +188,18 @@ public class DataAccessorTests
         Assert.That(DataAccessor.Get(wrapper, new DataArrayFilter("250mm", thickness)), Is.EqualTo(30.0));
     }
 
+    /// <summary>Checks that a mm array specifier works when the depth profile is non integer.</summary>
+    [Test]
+    public void EnsureMMArrayFilterWithNonIntegerDepthsWorks()
+    {
+        double[] thickness = [100, 99.999999, 200];
+        double[] data = [10, 20, 30];
+
+        Wrapper<double[]> wrapper = new() { Data = data };
+        Assert.That(DataAccessor.Get(wrapper, new DataArrayFilter("100mm", thickness)), Is.EqualTo(10.0));
+        Assert.That(DataAccessor.Get(wrapper, new DataArrayFilter("200mm", thickness)), Is.EqualTo(20.0));
+    }
+
     /// <summary>
     /// Ensure a MM array specification works with a layer (e.g. soil.water[250mm:350mm]).
     /// </summary>

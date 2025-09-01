@@ -97,7 +97,7 @@ namespace Models.CLEM.Activities
             if (bankType == null && Resources.FindResource<Finance>() != null)
                 Summary.WriteMessage(this, $"No bank account has been specified for [a={Name}]. No funds will be earned!", MessageType.Warning);
 
-            var labour = FindAllChildren<LabourRequirement>();
+            var labour = Structure.FindChildren<LabourRequirement>();
             // get check labour required
             if (labour == null)
             {

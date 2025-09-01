@@ -25,7 +25,7 @@ namespace APSIM.Documentation.Models.Types
 
             section.Add(new Paragraph($"*{model.Name}* is calculated using linear interpolation"));
 
-            XYPairs xyPairs = model.FindChild<XYPairs>();
+            XYPairs xyPairs = model.Node.FindChild<XYPairs>();
             if (xyPairs != null)
                 section.Add(AutoDocumentation.DocumentModel(xyPairs));
 

@@ -23,7 +23,7 @@ namespace Models.Soils.Arbitrator
             Zones = new List<ZoneWaterAndN>();
             foreach (Zone Z in allZones)
             {
-                Soil soil = Z.FindChild<Soil>();
+                Soil soil = structure.FindChild<Soil>(relativeTo: Z);
                 if (soil != null)
                     Zones.Add(new ZoneWaterAndN(Z, soil, structure));
             }

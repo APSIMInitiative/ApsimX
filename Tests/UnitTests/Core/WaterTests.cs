@@ -20,7 +20,7 @@ namespace UnitTests.Core
         [Test]
         public void TestChangingWaterValues()
         {
-            Water waterModel = GetSoilModel().FindChild<Water>();
+            Water waterModel = GetSoilModel().Node.FindChild<Water>();
 
             for (int i = 0; i < 2; i++)
             {
@@ -76,7 +76,7 @@ namespace UnitTests.Core
         [Test]
         public void TestChangingInitialValues_ChangesAllOtherValues()
         {
-            Water waterModel = GetSoilModel().FindChild<Water>();
+            Water waterModel = GetSoilModel().Node.FindChild<Water>();
             waterModel.InitialValues[0] = 0.300;
             Assert.That(waterModel.InitialPAWmm, Is.EqualTo(327.9207228741369).Within(1.0));
             Assert.That(waterModel.FractionFull, Is.EqualTo(0.91).Within(0.1));
@@ -89,7 +89,7 @@ namespace UnitTests.Core
         [Test]
         public void TestChangingInitialPAWmm_ChangesAllOtherValues()
         {
-            Water waterModel = GetSoilModel().FindChild<Water>();
+            Water waterModel = GetSoilModel().Node.FindChild<Water>();
             waterModel.InitialPAWmm = 160.0;
             double[] expectedInitialValues = new double[] {
                     0.376,
@@ -111,7 +111,7 @@ namespace UnitTests.Core
         [Test]
         public void TestChangingFractionFull_ChangesAllOtherValues()
         {
-            Water waterModel = GetSoilModel().FindChild<Water>();
+            Water waterModel = GetSoilModel().Node.FindChild<Water>();
             waterModel.FractionFull = 0.78;
             double[] expectedInitialValues = new double[] {
                 0.464,
@@ -134,7 +134,7 @@ namespace UnitTests.Core
         [Test]
         public void TestChangingDepthWetSoil_ChangesAllOtherValues()
         {
-            Water waterModel = GetSoilModel().FindChild<Water>();
+            Water waterModel = GetSoilModel().Node.FindChild<Water>();
             waterModel.DepthWetSoil = 300;
             double[] expectedInitialValues = new double[]{
                 0.521,
@@ -157,7 +157,7 @@ namespace UnitTests.Core
         [Test]
         public void TestChangingFilledFromTop_ChangesAllEffectedValues()
         {
-            Water waterModel = GetSoilModel().FindChild<Water>();
+            Water waterModel = GetSoilModel().Node.FindChild<Water>();
             waterModel.FractionFull = 0.66;
             waterModel.FilledFromTop = true;
             double[] expectedInitialValues = new double[] {
@@ -178,7 +178,7 @@ namespace UnitTests.Core
         [Test]
         public void TestChangingRelativeTo_ChangesAllEffectedValues()
         {
-            Water waterModel = GetSoilModel().FindChild<Water>();
+            Water waterModel = GetSoilModel().Node.FindChild<Water>();
             waterModel.RelativeTo = "Wheat";
             waterModel.FractionFull = 0.66;
             waterModel.FilledFromTop = true;

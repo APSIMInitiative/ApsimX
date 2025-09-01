@@ -48,7 +48,7 @@ namespace Models.CLEM.Activities
         [Description("Move at start of simulation")]
         [Required]
         public bool PerformAtStartOfSimulation { get; set; }
-        
+
         /// <summary>
         /// Determines whether sucklings are automatically moved with the mother or separated
         /// </summary>
@@ -160,7 +160,7 @@ namespace Models.CLEM.Activities
             numberToDo = 0;
             numberToSkip = 0;
             IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.Location != pastureName);
-            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd);
+            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd, Structure);
             numberToDo = uniqueIndividuals?.Count() ?? 0;
 
             // provide updated measure for companion models

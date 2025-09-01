@@ -38,11 +38,19 @@ namespace Models.CLEM.Resources
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
 
+<<<<<<< HEAD
             if (!FindAllChildren<AnimalPriceGroup>().Any())
+=======
+            if (Structure.FindChildren<AnimalPriceGroup>().Count() == 0)
+>>>>>>> d9e3f52708a3599b88b74866c1962487c9d5f408
             {
                 yield return new ValidationResult("No [AnimalPriceGroups] have been provided for [r=" + this.Name + "].\r\nAdd [AnimalPriceGroups] to include animal pricing.", new string[] { "Animal pricing" });
             }
+<<<<<<< HEAD
             else if (FindAllChildren<AnimalPriceGroup>().Cast<AnimalPriceGroup>().Any(a => a.Value == 0))
+=======
+            else if (Structure.FindChildren<AnimalPriceGroup>().Cast<AnimalPriceGroup>().Where(a => a.Value == 0).Count() > 0)
+>>>>>>> d9e3f52708a3599b88b74866c1962487c9d5f408
             {
                 yield return new ValidationResult("No price [Value] has been set for some of the [AnimalPriceGroup] in [r=" + this.Name + "]\r\nThese will not result in price calculations and can be deleted.", new string[] { "Animal pricing" });
             }
@@ -62,7 +70,11 @@ namespace Models.CLEM.Resources
         public override string ModelSummaryInnerClosingTags()
         {
             string html = "";
+<<<<<<< HEAD
             if (FindAllChildren<AnimalPriceGroup>().Count() >= 1)
+=======
+            if (Structure.FindChildren<AnimalPriceGroup>().Count() >= 1)
+>>>>>>> d9e3f52708a3599b88b74866c1962487c9d5f408
                 html += "</table></div>";
 
             return html;
@@ -72,7 +84,11 @@ namespace Models.CLEM.Resources
         public override string ModelSummaryInnerOpeningTags()
         {
             string html = "";
+<<<<<<< HEAD
             if (FindAllChildren<AnimalPriceGroup>().Count() >= 1)
+=======
+            if (Structure.FindChildren<AnimalPriceGroup>().Count() >= 1)
+>>>>>>> d9e3f52708a3599b88b74866c1962487c9d5f408
                 html += "<div class=\"topspacing\"><table><tr><th>Name</th><th>Filter</th><th>Value</th><th>Style</th><th>Type</th></tr>";
             else
                 html += "<span class=\"errorlink\">No Animal Price Groups defined!</span>";

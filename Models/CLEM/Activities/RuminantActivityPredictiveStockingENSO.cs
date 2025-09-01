@@ -185,7 +185,7 @@ namespace Models.CLEM.Activities
         {
             ForecastSequence = new Dictionary<DateTime, double>();
 
-            Simulation simulation = FindAncestor<Simulation>();
+            Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
             if (simulation != null)
                 fullFilename = PathUtilities.GetAbsolutePath(MonthlySOIFile, simulation.FileName);
             else
@@ -220,11 +220,13 @@ namespace Models.CLEM.Activities
             InitialiseHerd(false, true);
 
             // try attach relationships
-            pastureToStockingChangeElNino = FindAllChildren<Relationship>().Where(a => a.Identifier == "PastureToStockingChangeElNino").FirstOrDefault();
-            pastureToStockingChangeLaNina = FindAllChildren<Relationship>().Where(a => a.Identifier == "PastureToStockingChangeLaNina").FirstOrDefault();
+            pastureToStockingChangeElNino = Structure.FindChildren<Relationship>().Where(a => a.Identifier == "PastureToStockingChangeElNino").FirstOrDefault();
+            pastureToStockingChangeLaNina = Structure.FindChildren<Relationship>().Where(a => a.Identifier == "PastureToStockingChangeLaNina").FirstOrDefault();
 
             filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>(true, false);
-            paddocks = Resources.FindResourceGroup<GrazeFoodStore>()?.FindAllChildren<GrazeFoodStoreType>();
+            var grazeFoodStore = Resources.FindResourceGroup<GrazeFoodStore>();
+            if (grazeFoodStore != null)
+                paddocks = Structure.FindChildren<GrazeFoodStoreType>(relativeTo: grazeFoodStore);
             paddockChanges = new List<(string paddockName, double AE, double AeShortfall)>();
         }
 
@@ -248,7 +250,7 @@ namespace Models.CLEM.Activities
             destockToSkip = 0;
             destockToDo = 0;
             IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => (a.Location ?? "") != "");
-            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd);
+            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd, Structure);
 
             // Get ENSO forcase for current time
             ENSOState forecastEnsoState = GetENSOMeasure();
@@ -425,7 +427,7 @@ namespace Models.CLEM.Activities
                     GrazeFoodStoreType pasture = paddocks.Where(a => a.Name == paddock.paddockName).FirstOrDefault();
                     if (pasture != null && MathUtilities.IsGreaterThanOrEqual(pasture.TonnesPerHectare * 1000, MinimumFeedBeforeRestock))
                     {
-                        var specifyComponents = FindAllChildren<SpecifyRuminant>();
+                        var specifyComponents = Structure.FindChildren<SpecifyRuminant>();
                         if (specifyComponents.Count() == 0)
                         {
                             string warn = $"No [f=SpecifyRuminant]s were provided in [a={Name}]\r\nNo restocking will be performed.";
@@ -502,7 +504,7 @@ namespace Models.CLEM.Activities
             htmlWriter.Write($"\r\n<div class=\"activityentry\">Mean SOI less than <span class=\"setvalue\">{SOIForElNino}</span></div>");
 
             // relationship to use
-            var relationship = FindAllChildren<Relationship>().Where(a => a.Identifier == "PastureToStockingChangeElNino").FirstOrDefault();
+            var relationship = Structure.FindChildren<Relationship>().Where(a => a.Identifier == "PastureToStockingChangeElNino").FirstOrDefault();
             if (relationship is null)
                 htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"errorlink\">No <span class=\"otherlink\">Relationship</span> provided!</span> No herd change will be calculated for this phase</div>");
             else
@@ -520,7 +522,7 @@ namespace Models.CLEM.Activities
             htmlWriter.Write($"\r\n<div class=\"activityentry\">Mean SOI greater than <span class=\"setvalue\">{SOIForLaNina}</span></div>");
 
             // relationship to use
-            relationship = FindAllChildren<Relationship>().Where(a => a.Identifier == "PastureToStockingChangeLaNina").FirstOrDefault();
+            relationship = Structure.FindChildren<Relationship>().Where(a => a.Identifier == "PastureToStockingChangeLaNina").FirstOrDefault();
             if (relationship is null)
                 htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"errorlink\">No <span class=\"otherlink\">Relationship</span> provided!</span> No herd change will be calculated for this phase</div>");
             else
@@ -534,7 +536,7 @@ namespace Models.CLEM.Activities
             htmlWriter.Write("\r\n<div class=\"activitybannerlight\">Herd change</div>");
             // Destock
             htmlWriter.Write("\r\n<div class=\"activitycontentlight\">");
-            var rumGrps = FindAllChildren<RuminantGroup>();
+            var rumGrps = Structure.FindChildren<RuminantGroup>();
             if (rumGrps.Count() == 0)
                 htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"errorlink\">No <span class=\"filterlink\">RuminantGroups</span> were provided</span>. No destocking will be performed</div>");
             else
@@ -545,7 +547,7 @@ namespace Models.CLEM.Activities
 
             // restock
             // pasture
-            var specs = FindAllChildren<SpecifyRuminant>();
+            var specs = Structure.FindChildren<SpecifyRuminant>();
             if (!specs.Any())
                 htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"errorlink\">No <span class=\"resourcelink\">SpecifyRuminant</span> were provided</span>. No restocking will be performed</div>");
             else

@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
 using Newtonsoft.Json.Linq;
 
 [assembly: InternalsVisibleTo("UnitTests")]
@@ -210,7 +211,8 @@ internal class ManagerConverter
                 break;
 
             Match match = Regex.Match(line, pattern);
-            if (match.Groups["TypeName"].Value != string.Empty &&
+            if (!lines[i].Contains("[Description") &&
+                match.Groups["TypeName"].Value != string.Empty &&
                 match.Groups["TypeName"].Value != "as" &&
                 match.Groups["TypeName"].Value != "return" &&
                 match.Groups["TypeName"].Value != "namespace" &&
@@ -698,6 +700,18 @@ internal class ManagerConverter
         int posOpenComment = code.LastIndexOf("/*", pos);
         int posCloseComment = code.LastIndexOf("*/", pos);
         return posOpenComment > posCloseComment;
+    }
+
+    /// <summary>
+    /// The value of a manager line.
+    /// </summary>
+    /// <param name="lineIndex">The index of the line to set</param>
+    /// <param name="contents">The contents of the new line.</param>
+    public void SetLineContents(int lineIndex, string contents)
+    {
+        if (lineIndex < 0 || lineIndex >= lines.Count)
+            throw new Exception($"Cannot set the contents of a manager line. Index out of bounds. Index={lineIndex}");
+        lines[lineIndex] = contents;
     }
 }
 

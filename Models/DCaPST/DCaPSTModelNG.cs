@@ -31,7 +31,7 @@ namespace Models.DCAPST
     {
         /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IStructure Structure { private get; set; }
+        public IStructure Structure { get; set; }
 
         [Link]
         IClock clock = null;
@@ -235,7 +235,7 @@ namespace Models.DCAPST
         {
             if (weather is null ||
                 weather is not Weather weatherModel ||
-                weatherModel.FindChild<CO2Value>() is null
+                Structure.FindChild<CO2Value>(relativeTo: weatherModel) is null
             )
             {
                 throw new Exception($"Invalid DCaPST simulation. No {nameof(CO2Value)} model has been configured in {nameof(Weather)} model.");
@@ -273,7 +273,7 @@ namespace Models.DCAPST
             DcapstModel.DailyRun(leaf.LAI, sln);
 
             // Outputs
-            foreach (ICanopy canopy in plant.FindAllChildren<ICanopy>())
+            foreach (ICanopy canopy in Structure.FindChildren<ICanopy>(relativeTo: plant as INodeModel))
             {
                 canopy.LightProfile = new CanopyEnergyBalanceInterceptionlayerType[1]
                 {
@@ -439,7 +439,7 @@ namespace Models.DCAPST
         private ICanopy GetLeaf()
         {
             if (plant == null) return null;
-			ICanopy find = plant.FindChild<ICanopy>("Leaf");
+			ICanopy find = Structure.FindChild<ICanopy>("Leaf", relativeTo: plant as INodeModel);
             if (find == null) throw new ArgumentNullException(nameof(find), "Cannot find leaf configuration");
             return find;
         }

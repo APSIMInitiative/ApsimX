@@ -89,11 +89,7 @@ namespace Models.PreSimulationTools
             }
             set
             {
-                Simulations simulations = FindAncestor<Simulations>();
-                if (simulations != null && simulations.FileName != null && value != null)
-                    this.filenames = value.Select(v => PathUtilities.GetRelativePath(v, simulations.FileName)).ToArray();
-                else
-                    this.filenames = value;
+                this.filenames = value;
             }
         }
 
@@ -243,9 +239,14 @@ namespace Models.PreSimulationTools
                 if (storage.Reader.TableNames.Contains(sheet))
                     storage.Writer.DeleteTable(sheet);
 
+            Simulations simulations = Structure.FindParent<Simulations>(recurse: true);
             foreach (string fileName in FileNames)
             {
-                string absoluteFileName = PathUtilities.GetAbsolutePath(fileName.Trim(), storage.FileName);
+                string fullFileName = fileName;
+                if (simulations != null && simulations.FileName != null)
+                    fullFileName = PathUtilities.GetRelativePath(fileName, simulations.FileName);
+
+                string absoluteFileName = PathUtilities.GetAbsolutePath(fullFileName.Trim(), storage.FileName);
                 if (!File.Exists(absoluteFileName))
                     throw new Exception($"Error in {Name}: file '{absoluteFileName}' does not exist");
 
@@ -257,7 +258,7 @@ namespace Models.PreSimulationTools
 
                     DataColumn col = table.Columns.Add("_Filename", typeof(string));
                     for (int i = 0; i < table.Rows.Count; i++)
-                        table.Rows[i][col] = fileName;
+                        table.Rows[i][col] = fullFileName;
 
                     // Don't delete previous data existing in this table. Doing so would
                     // cause problems when merging sheets from multiple excel files.
@@ -308,7 +309,7 @@ namespace Models.PreSimulationTools
         /// <summary>From the list of columns read in, get a list of columns that match apsim variables.</summary>
         public void GetDerivedColumnsFromObserved()
         {
-            Simulations sims = this.FindAncestor<Simulations>();
+            Simulations sims = Structure.FindParent<Simulations>(recurse: true);
 
             List<string> tableNames = SheetNames.ToList();
 
@@ -356,7 +357,7 @@ namespace Models.PreSimulationTools
         /// <summary>From the list of columns read in, get a list of columns that match apsim variables.</summary>
         public void GetAPSIMColumnsFromObserved()
         {
-            Simulations sims = this.FindAncestor<Simulations>();
+            Simulations sims = Structure.FindParent<Simulations>(recurse: true);
 
             storage?.Writer.Stop();
             storage?.Reader.Refresh();
@@ -479,7 +480,7 @@ namespace Models.PreSimulationTools
                 return null;
 
             string[] nameParts = nameWithoutBrackets.Split('.');
-            IModel firstPart = sims.FindDescendant(nameParts[0]);
+            IModel firstPart = Structure.FindChild<IModel>(nameParts[0], relativeTo:sims);
             if (firstPart == null)
                 return null;
 

@@ -69,11 +69,11 @@ namespace Models.CLEM.Resources
             if ((Parent as RuminantTypeCohort).Sex == Sex.Female)
             {
                 // get the breed to check gestation
-                RuminantType ruminantType = this.FindAncestor<RuminantType>();
+                RuminantType ruminantType = Structure.FindParent<RuminantType>(recurse: true);
                 if (ruminantType is null)
                 {
                     // find type from a specify ruminant component
-                    var specifyRuminant = this.FindAncestor<SpecifyRuminant>();
+                    var specifyRuminant = Structure.FindParent<SpecifyRuminant>(recurse: true);
                     if (specifyRuminant != null)
                         ruminantType = resources.FindResourceType<RuminantHerd, RuminantType>(this, specifyRuminant.RuminantTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 

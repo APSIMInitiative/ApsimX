@@ -65,7 +65,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            parentManagementActivity = FindAncestor<CropActivityManageCrop>();
+            parentManagementActivity = Structure.FindParent<CropActivityManageCrop>(recurse: true);
             parentManageProductActivity = (Parent as CropActivityManageProduct);
         }
 
@@ -75,12 +75,12 @@ namespace Models.CLEM.Activities
             amountToSkip = 0;
             if (TimingOK)
             {
-                if (FindAncestor<CropActivityManageProduct>().CurrentlyManaged)
+                if (Structure.FindParent<CropActivityManageProduct>(recurse: true).CurrentlyManaged)
                     Status = ActivityStatus.Success;
                 else
                 {
                     Status = ActivityStatus.Warning;
-                    foreach (var child in FindAllChildren<CLEMActivityBase>())
+                    foreach (var child in Structure.FindChildren<CLEMActivityBase>())
                     {
                         child.Status = ActivityStatus.Warning;
                     }
@@ -176,7 +176,7 @@ namespace Models.CLEM.Activities
         public override string ModelSummary()
         {
             using StringWriter htmlWriter = new();
-            if (FindAllChildren<ActivityFee>().Count() + FindAllChildren<LabourRequirement>().Count() == 0)
+            if (Structure.FindChildren<ActivityFee>().Count() + Structure.FindChildren<LabourRequirement>().Count() == 0)
                 htmlWriter.Write("<div class=\"errorlink\">This task is not needed as it has no fee or labour requirement</div>");
             return htmlWriter.ToString();
         } 

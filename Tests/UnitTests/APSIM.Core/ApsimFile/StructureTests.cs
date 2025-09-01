@@ -172,7 +172,7 @@
             [EventSubscribe("StartOfSimulation")]
             private void StartOfSim(object sender, EventArgs args)
             {
-                IModel parent = FindAncestor<Zone>();
+                IModel parent = Node.FindParent<Zone>(recurse: true);
                 Structure.Add(new Model1(), parent);
             }
         }
@@ -197,7 +197,7 @@
         public void AddNodeWithMissingLink()
         {
             Simulations sims = Utilities.GetRunnableSim();
-            Zone sim = sims.FindDescendant<Zone>();
+            Zone sim = sims.Node.FindChild<Zone>(recurse: true);
             Structure.Add(new Model0(), sim);
             Runner runner = new Runner(sims);
             List<Exception> errors = runner.Run();

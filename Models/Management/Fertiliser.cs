@@ -13,8 +13,13 @@ namespace Models;
 /// <summary>This model is responsible for applying fertiliser.</summary>
 [Serializable]
 [ValidParent(ParentType = typeof(Zone))]
-public class Fertiliser : Model
+public class Fertiliser : Model, IStructureDependency
 {
+    /// <summary>Structure instance supplied by APSIM.core.</summary>
+    [field: NonSerialized]
+    public IStructure Structure { private get; set; }
+
+
     private double[] cumThickness;
 
     /// <summary>The soil</summary>
@@ -60,7 +65,7 @@ public class Fertiliser : Model
             AddFertiliserSoluteSpecToArray(fertiliserType.Solute6Name, fertiliserType.Solute6Fraction, solutesToApply);
 
             // find fertiliser release function (child of FertiliserType)
-            var releaseRate = fertiliserType.FindChild<IFunction>("Release");
+            var releaseRate = Structure.FindChild<IFunction>("Release", relativeTo: fertiliserType);
             if (releaseRate == null)
                 throw new Exception($"Cannot find a release rate function for fertiliser type: {fertiliserType.Name}");
 
@@ -79,14 +84,14 @@ public class Fertiliser : Model
             {
                 var newPool = new FertiliserPool(this, summary, fertiliserType, solutesToApply, physical.Thickness,
                                                 amount, depth, depthBottom, doOutput);
-                var poolNode = Node.AddChild(newPool);
+                Node.AddChild(newPool);
 
                 // Clone fertiliser release function (child of FertiliserType) so that the release rate function
                 // can hold state that is specific to this fertiliser application
 
                 var releaseRateModel = releaseRate as IModel;
                 releaseRateModel = releaseRateModel.Clone();
-                Structure.Add(releaseRateModel, newPool);
+                Models.Core.ApsimFile.Structure.Add(releaseRateModel, newPool);
                 newPool.SetReleaseFunction(releaseRate);
             }
         }
@@ -127,7 +132,7 @@ public class Fertiliser : Model
 
             // Remove pools that are empty.
             if (pool.Amount == 0)
-                Structure.Delete(pool);
+                Models.Core.ApsimFile.Structure.Delete(pool);
         }
     }
 

@@ -15,7 +15,7 @@ namespace Models.CLEM.Resources
 {
     ///<summary>
     /// Parent model of the herd of Ruminant Types.
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -88,7 +88,7 @@ namespace Models.CLEM.Resources
             PurchaseIndividuals = new List<Ruminant>();
             RuminantGrowActivity = Structure.FindAll<IRuminantActivityGrow>().Where(a => (a as CLEMActivityBase).ActivityEnabled).FirstOrDefault();
 
-            foreach (RuminantType rType in this.FindAllChildren<RuminantType>())
+            foreach (RuminantType rType in Structure.FindChildren<RuminantType>())
                 rType.Parameters.Initialise(rType);
 
             // check for big erros and stop after initialisation
@@ -326,9 +326,9 @@ namespace Models.CLEM.Resources
                     catNames.Add("All");
                     break;
                 case RuminantTransactionsGroupingStyle.ByPriceGroup:
-                    var animalPricing = ruminantType.FindAllChildren<AnimalPricing>().FirstOrDefault();
+                    var animalPricing = Structure.FindChildren<AnimalPricing>(relativeTo: ruminantType).FirstOrDefault();
                     if (animalPricing != null)
-                        catNames.AddRange(animalPricing.FindAllChildren<AnimalPriceGroup>().Select(a => a.Name));
+                        catNames.AddRange(Structure.FindChildren<AnimalPriceGroup>(relativeTo: animalPricing).Select(a => a.Name));
                     break;
                 case RuminantTransactionsGroupingStyle.ByClass:
                     catNames.AddRange(Enum.GetNames(typeof(RuminantClass)));
@@ -377,7 +377,7 @@ namespace Models.CLEM.Resources
             return groupedInd;
         }
 
-        #endregion 
+        #endregion
 
         #region weaning event
 

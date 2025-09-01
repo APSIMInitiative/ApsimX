@@ -102,9 +102,9 @@ namespace Models.CLEM.Activities
                 bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
 
             // get reader
-            Model parentZone = FindAllAncestors<Zone>().FirstOrDefault();
+            Model parentZone = Structure.FindParents<Zone>().FirstOrDefault();
             if(parentZone != null)
-                fileResource = parentZone.FindDescendant<FileResource>(ResourceDataReader);
+                fileResource = Structure.FindChild<FileResource>(ResourceDataReader, recurse: true);
 
             resourcesForMonth = new List<(IResourceType resource, double amount)>();
 
@@ -124,7 +124,7 @@ namespace Models.CLEM.Activities
                         if (resourceName.Contains("."))
                             resource = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, resourceName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
                         else
-                            resource = Resources.FindAllDescendants<IResourceType>(resourceName).FirstOrDefault();
+                            resource = Structure.FindChildren<IResourceType>(resourceName, relativeTo: Resources, recurse: true).FirstOrDefault();
 
                         switch (resource.GetType().ToString())
                         {
@@ -145,13 +145,13 @@ namespace Models.CLEM.Activities
 
                         if (resource != null)
                         {
-                            var matchingResources = FindAllChildren<ResourceActivityExternalMultiplier>().Where(a => a.ResourceTypeName == (resource as CLEMModel).NameWithParent || a.ResourceTypeName == (resource as CLEMModel).Name);
+                            var matchingResources = Structure.FindChildren<ResourceActivityExternalMultiplier>().Where(a => a.ResourceTypeName == (resource as CLEMModel).NameWithParent || a.ResourceTypeName == (resource as CLEMModel).Name);
                             if (matchingResources.Count() > 1)
                             {
                                 warn = $"[a={Name}] could not distinguish between multiple occurences of resource [r={resourceName}] provided by [x={fileResource.Name}] in the local [r=ResourcesHolder]\r\nEnsure all resource names are unique across stores, or use ResourceStore.ResourceType notation to specify resources in the input file";
                                 Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
                             }
-                            resourceMultiplier = FindAllChildren<ResourceActivityExternalMultiplier>().Where(a => a.ResourceTypeName == (resource as CLEMModel).NameWithParent || a.ResourceTypeName == (resource as CLEMModel).Name).FirstOrDefault()?.Multiplier ?? 1;
+                            resourceMultiplier = Structure.FindChildren<ResourceActivityExternalMultiplier>().Where(a => a.ResourceTypeName == (resource as CLEMModel).NameWithParent || a.ResourceTypeName == (resource as CLEMModel).Name).FirstOrDefault()?.Multiplier ?? 1;
                         }
                         else
                         {
@@ -435,7 +435,7 @@ namespace Models.CLEM.Activities
         {
             var childList = new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
             {
-                (FindAllChildren<ResourceActivityExternalMultiplier>(), true, "childgroupfilterborder", "The following multipliers will be applied:", "")
+                (Structure.FindChildren<ResourceActivityExternalMultiplier>(), true, "childgroupfilterborder", "The following multipliers will be applied:", "")
             };
             return childList;
         }

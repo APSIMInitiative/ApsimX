@@ -16,7 +16,7 @@ namespace Models.CLEM
 {
     ///<summary>
     /// CLEM base model
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [Description("This is the Base CLEM model and should not be used directly.")]
     public abstract class CLEMModel : Model, ICLEMUI, ICLEMDescriptiveSummary, IStructureDependency
@@ -130,20 +130,20 @@ namespace Models.CLEM
                                 errors.Add($"Cannot find required component [x={requiredAttribte.AssociatedModels[i].Name}] in scope for [x={model.FullPath}]");
                             break;
                         case ModelAssociationStyle.Descendent:
-                            if (model.FindAllDescendants().Where(a => a.GetType() == requiredAttribte.AssociatedModels[i]).Any() == false)
+                            if (structure.FindChildren<CLEMModel>(relativeTo: model, recurse:true).Where(a => a.GetType() == requiredAttribte.AssociatedModels[i]).Any() == false)
                                 errors.Add($"Cannot find required component [x={requiredAttribte.AssociatedModels[i].Name}] as descendent of [x={model.FullPath}]");
                             break;
                         case ModelAssociationStyle.Child:
-                            if (model.FindAllChildren().Where(a => a.GetType() == requiredAttribte.AssociatedModels[i]).Any() == false)
+                            if (structure.FindChildren<CLEMModel>(relativeTo: model).Where(a => a.GetType() == requiredAttribte.AssociatedModels[i]).Any() == false)
                                 errors.Add($"Cannot find required component [x={requiredAttribte.AssociatedModels[i].Name}] as child of [x={model.FullPath}]");
                             break;
                         case ModelAssociationStyle.DescendentOfRuminantType:
                             // find Ruminant Types
-                            var rumTypes = model.FindAncestor<Zone>().FindAllDescendants<RuminantType>();
-
+                            var zone = structure.FindParent<Zone>(relativeTo: model, recurse: true);
+                            var rumTypes = structure.FindChildren<RuminantType>(relativeTo: zone, recurse: true);
                             foreach (var rumType in rumTypes)
                             {
-                                if (rumType.FindAllDescendants().Where(a => a.GetType() == requiredAttribte.AssociatedModels[i]).Any() == false)
+                                if (structure.FindChildren<CLEMModel>(relativeTo: rumType, recurse: true).Where(a => a.GetType() == requiredAttribte.AssociatedModels[i]).Any() == false)
                                     errors.Add($"Cannot find required component [x={requiredAttribte.AssociatedModels[i].Name}] as descendent of [r={rumType.Name}] as required by [x={model.FullPath}]");
                             }
                             break;
@@ -159,9 +159,11 @@ namespace Models.CLEM
 
                 if (errors.Any())
                 {
-                    Summary summary = model.FindAncestor<Simulation>().FindChild<Summary>();
+                    var sim = structure.FindParent<Simulation>(relativeTo: model, recurse: true);
+                    Summary summary = structure.FindChild<Summary>(relativeTo: sim, recurse: true);
+                    var zone = structure.FindParent<Zone>(relativeTo: model, recurse: true);
                     foreach (var error in errors)
-                        summary.WriteMessage(model.FindAncestor<Zone>(), error, MessageType.Error);
+                        summary.WriteMessage(zone, error, MessageType.Error);
                 }
             }
             IEnumerable<ValidParentAttribute> validParents = model.GetType().GetCustomAttributes<ValidParentAttribute>();
@@ -170,11 +172,13 @@ namespace Models.CLEM
 
                 if(!validParents.Where(a => a.ParentType == (model as IModel).Parent.GetType() | (a.ParentType.IsInterface && model.Parent.GetType().GetInterfaces().Contains(a.ParentType)) | (model.Parent.GetType().IsSubclassOf(a.ParentType))).Any())
                 {
-                    Summary summary = model.FindAncestor<Simulation>().FindChild<Summary>();
-                    if(validParents.Count() > 1)
-                        summary.WriteMessage(model.FindAncestor<Zone>(), $"Only a component of type {string.Join(',', validParents.Select(a => $"[{a.ParentType.Name}]"))} is permitted as a parent of [x={model.FullPath}]", MessageType.Error);
+                    var sim = structure.FindParent<Simulation>(relativeTo: model, recurse: true);
+                    Summary summary = structure.FindChild<Summary>(relativeTo: sim, recurse: true);
+                    var zone = structure.FindParent<Zone>(relativeTo: model, recurse: true);
+                    if (validParents.Count() > 1)
+                        summary.WriteMessage(zone, $"Only a component of type {string.Join(',', validParents.Select(a => $"[{a.ParentType.Name}]"))} is permitted as a parent of [x={model.FullPath}]", MessageType.Error);
                     else
-                        summary.WriteMessage(model.FindAncestor<Zone>(), $"Only components of types {string.Join("", validParents.Select(a => $"[{a.ParentType.Name}]"))} are permitted as a parent of [x={model.FullPath}]", MessageType.Error);
+                        summary.WriteMessage(zone, $"Only components of types {string.Join("", validParents.Select(a => $"[{a.ParentType.Name}]"))} are permitted as a parent of [x={model.FullPath}]", MessageType.Error);
                 }
             }   
         }
@@ -187,7 +191,8 @@ namespace Models.CLEM
         {
             get
             {
-                activityTimers ??= FindAllChildren<IActivityTimer>();
+                if (activityTimers is null)
+                    activityTimers = Structure.FindChildren<IActivityTimer>();
                 return activityTimers;
             }
         }
@@ -199,7 +204,7 @@ namespace Models.CLEM
         {
             get
             {
-                var result = this.FindAllChildren<IActivityTimer>().Sum(a => a.ActivityDue ? 0 : 1);
+                var result = Structure.FindChildren<IActivityTimer>().Sum(a => a.ActivityDue ? 0 : 1);
                 return (result == 0);
             }
         }
@@ -212,10 +217,10 @@ namespace Models.CLEM
         public IEnumerable<string> GetResourcesAvailableByName(object[] typesToFind)
         {
             List<string> results = new();
-            Zone zone = FindAncestor<Zone>();
+            Zone zone = Structure.FindParent<Zone>(recurse: true);
             if (zone is not null)
             {
-                ResourcesHolder resources = zone.FindChild<ResourcesHolder>();
+                ResourcesHolder resources = Structure.FindChild<ResourcesHolder>(relativeTo: zone);
                 if (resources is not null)
                 {
                     foreach (object type in typesToFind)
@@ -224,9 +229,13 @@ namespace Models.CLEM
                             results.Add(type as string);
                         else if (type is Type)
                         {
-                            var list = resources.FindResource(type as Type)?.FindAllChildren<IResourceType>().Select(a => (a as CLEMModel).NameWithParent) ?? null;
+                            var res = resources.FindResource(type as Type);
+                            IEnumerable<string> list = null;
+                            if (res != null)
+                                list = Structure.FindChildren<IResourceType>(relativeTo: res).Select(a => (a as CLEMModel).NameWithParent) ?? null;
                             if (list != null)
-                                results.AddRange(resources.FindResource(type as Type).FindAllChildren<IResourceType>().Select(a => (a as CLEMModel).NameWithParent));
+                                results.AddRange(Structure.FindChildren<IResourceType>(relativeTo: res)
+                                       .Select(a => (a as CLEMModel).NameWithParent));
                         }
                     }
                 }
@@ -241,13 +250,13 @@ namespace Models.CLEM
         /// <returns>A list of model names</returns>
         public IEnumerable<string> GetNameOfModelsByType(Type[] typesToFind)
         {
-            Simulation simulation = FindAncestor<Simulation>();
+            Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
             if (simulation is null)
                 return new List<string>().AsEnumerable();
             else
             {
                 List<Type> types = new();
-                return simulation.FindAllDescendants().Where(a => typesToFind.ToList().Contains(a.GetType())).Select(a => a.Name);
+                return Structure.FindChildren<IModel>(relativeTo: simulation, recurse: true).Where(a => typesToFind.ToList().Contains(a.GetType())).Select(a => a.Name);
             }
         }
 
@@ -481,7 +490,7 @@ namespace Models.CLEM
             IEnumerable<IModel> unique = new List<IModel>();
             foreach (var selectFilter in modelsToSummarise.Select(a => a.models))
                 unique = unique.Union(selectFilter);
-            modelsToSummarise.Add((this.FindAllChildren().Where(a => !unique.Contains(a)), true, "", "", ""));
+            modelsToSummarise.Add((Structure.FindChildren<IModel>().Where(a => !unique.Contains(a)), true, "", "", ""));
 
             return modelsToSummarise;
         }
@@ -517,7 +526,7 @@ namespace Models.CLEM
                     htmlWriter.Write(cm.ModelSummaryInnerOpeningTagsBeforeSummary());
 
                     if (ReportMemosType == DescriptiveSummaryMemoReportingType.AtTop)
-                        htmlWriter.Write(AddMemosToSummary(model, markdown2Html));
+                        htmlWriter.Write(AddMemosToSummary(model, Structure, markdown2Html));
 
                     if (model is IActivityCompanionModel)
                     {
@@ -530,12 +539,12 @@ namespace Models.CLEM
                     htmlWriter.Write(cm.ModelSummaryInnerOpeningTags());
 
                     // TODO: think through the various model types that do not support memos being writen within children
-                    // for example all the filters in a filter group and timers and cohorts 
+                    // for example all the filters in a filter group and timers and cohorts
                     // basically anyting that does special actions with all the children
                     // if the current model supports memos in place set reportMemosInPlace to true.
 
                     if (ReportMemosType == DescriptiveSummaryMemoReportingType.AtBottom)
-                        htmlWriter.Write(AddMemosToSummary(model, markdown2Html));
+                        htmlWriter.Write(AddMemosToSummary(model, Structure, markdown2Html));
 
                     var childrenToSummarise = HandleChildrenInSummary();
                     foreach (var item in childrenToSummarise)
@@ -622,16 +631,17 @@ namespace Models.CLEM
         /// Create memos included for summary description
         /// </summary>
         /// <param name="model">Model to report child memos for</param>
+        /// <param name="structure">Structure instance</param>
         /// <param name="markdown2Html">markdown to html converter</param>
         /// <returns></returns>
-        public static string AddMemosToSummary(IModel model, Func<string, string> markdown2Html = null)
+        public static string AddMemosToSummary(IModel model, IStructure structure, Func<string, string> markdown2Html = null)
         {
             string html = "";
             string memoContainerClass = model is CLEMModel { ModelSummaryStyle: HTMLSummaryStyle.Filter } ? "memo-container-simple" : "memo-container";
             string memoHeadClass = model is CLEMModel { ModelSummaryStyle: HTMLSummaryStyle.Filter } ? "memo-head-simple" : "memo-head";
             string memoTextClass = model is CLEMModel { ModelSummaryStyle: HTMLSummaryStyle.Filter } ? "memo-text-simple" : "memo-text";
 
-            foreach (var memo in model.FindAllChildren<Memo>())
+            foreach (var memo in structure.FindChildren<Memo>(relativeTo: model as INodeModel))
             {
                 html += $"<div class='{memoContainerClass}'><div class='{memoHeadClass}'>Memo</div>";
 
@@ -777,7 +787,7 @@ namespace Models.CLEM
 
                     if (this is CLEMActivityBase)
                     {
-                        string transCat = CLEMActivityBase.UpdateTransactionCategory(this as CLEMActivityBase);
+                        string transCat = CLEMActivityBase.UpdateTransactionCategory(this as CLEMActivityBase, Structure);
                         if (transCat != "")
                             htmlWriter.Write($"<div class=\"partialdiv\">tag: {transCat}</div>");
                     }
@@ -790,12 +800,13 @@ namespace Models.CLEM
         /// Create the HTML for the descriptive summary display of a supplied component
         /// </summary>
         /// <param name="modelToSummarise">Model to create summary fpr</param>
+        /// <param name="structure">Structure instance</param>
         /// <param name="darkTheme">Boolean representing if in dark mode</param>
         /// <param name="markdown2Html">Method to convert markdown to html</param>
         /// <param name="bodyOnly">Only produve the body html</param>
         /// <param name="apsimFilename">Create master simulation summary header</param>
         /// <returns></returns>
-        public static string CreateDescriptiveSummaryHTML(Model modelToSummarise, bool darkTheme = false, bool bodyOnly = false, string apsimFilename = "", Func<string, string> markdown2Html = null)
+        public static string CreateDescriptiveSummaryHTML(Model modelToSummarise, IStructure structure, bool darkTheme = false, bool bodyOnly = false, string apsimFilename = "", Func<string, string> markdown2Html = null)
         {
             // currently includes autoupdate script for display of summary information in browser
             // give APSIM Next Gen no longer has access to WebKit HTMLView in GTK for .Net core
@@ -1002,7 +1013,7 @@ namespace Models.CLEM
                 if (apsimFilename != "")
                 {
                     htmlWriter.Write($"\r\n<div class=\"activityentry\">Filename: {apsimFilename}</div>");
-                    Model sim = (modelToSummarise as Model).FindAncestor<Simulation>();
+                    Model sim = structure.FindParent<Simulation>(relativeTo: modelToSummarise as Model, recurse: true);
                     htmlWriter.Write($"\r\n<div class=\"activityentry\">Simulation: {sim.Name}</div>");
                 }
 

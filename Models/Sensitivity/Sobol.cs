@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.Run;
@@ -26,8 +27,12 @@ namespace Models
     [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Folder))]
-    public class Sobol : Model, ISimulationDescriptionGenerator, IPostSimulationTool
+    public class Sobol : Model, ISimulationDescriptionGenerator, IPostSimulationTool, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         [Link]
         private IDataStore dataStore = null;
 
@@ -99,7 +104,7 @@ namespace Models
         /// <summary>Gets a list of simulation descriptions.</summary>
         public List<SimulationDescription> GenerateSimulationDescriptions()
         {
-            var baseSimulation = this.FindChild<Simulation>();
+            var baseSimulation = Structure.FindChild<Simulation>();
 
             // Calculate all combinations.
             CalculateFactors();
@@ -228,7 +233,7 @@ namespace Models
         {
             get
             {
-                return this.FindChild<Simulation>();
+                return Structure.FindChild<Simulation>();
             }
         }
 

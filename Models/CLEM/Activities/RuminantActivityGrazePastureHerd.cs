@@ -190,6 +190,8 @@ namespace Models.CLEM.Activities
                     Parent = herdGroup
                 }
             );
+
+            //ToDO: ensure this is added with the new Structure.AddChild()
             herdGroup.InitialiseFilters();
             return herdGroup;
         }
@@ -229,7 +231,7 @@ namespace Models.CLEM.Activities
             // reset the simulation subscriptions to correct the new order before running the simulation.
             if (IsHidden)
             {
-                Events events = new(FindAncestor<Simulation>());
+                Events events = new(Structure.FindParent<Simulation>(recurse: true));
                 events.ReconnectEvents("Models.CLEM.CLEMEvents", "CLEMGetResourcesRequired");
             }
         }

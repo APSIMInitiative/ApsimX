@@ -210,7 +210,7 @@ namespace Models.CLEM
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
             // look for a shuffler
-            shuffler = FindAllChildren<RainfallShuffler>().FirstOrDefault();
+            shuffler = Structure.FindChildren<RainfallShuffler>().FirstOrDefault();
             if (shuffler != null)
                 rndClem = Structure.Find<RandomNumberGenerator>();
         }
@@ -368,7 +368,7 @@ namespace Models.CLEM
         {
             get
             {
-                Simulation sim = FindAncestor<Simulation>();
+                Simulation sim = Structure.FindParent<Simulation>(recurse: true);
                 if (sim?.FileName != null)
                 {
                     return PathUtilities.GetAbsolutePath(FileName, sim.FileName);

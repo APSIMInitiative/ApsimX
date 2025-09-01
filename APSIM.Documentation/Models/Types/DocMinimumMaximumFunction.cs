@@ -25,7 +25,7 @@ namespace APSIM.Documentation.Models.Types
         {
             Section section = GetSummaryAndRemarksSection(model);
 
-            foreach (IModel child in model.FindAllChildren())
+            foreach (IModel child in model.Node.FindChildren<IModel>())
                 section.Add(AutoDocumentation.DocumentModel(child));
 
             string type = "Max";
@@ -57,7 +57,7 @@ namespace APSIM.Documentation.Models.Types
                 }
             }
             writer.Append(')');
-            
+
             newTags.Add(new Paragraph(writer.ToString()));
 
             newTags.Add(new Paragraph("Where:"));

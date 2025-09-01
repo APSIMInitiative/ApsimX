@@ -18,7 +18,7 @@ namespace Models.Functions.RootShape
         /// <summary>Calculates the root area for a layer of soil</summary>
         public void CalcRootProportionInLayers(IRootGeometryData zone)
         {
-            var physical = zone.Soil.FindChild<Soils.IPhysical>();
+            var physical = zone.Soil.Node.FindChild<Soils.IPhysical>();
             zone.RootArea = 0;
             for (int layer = 0; layer < physical.Thickness.Length; layer++)
             {

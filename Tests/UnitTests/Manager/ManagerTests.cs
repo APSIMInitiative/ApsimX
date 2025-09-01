@@ -268,7 +268,7 @@ namespace UnitTests.ManagerTests
             var Runner = new Runner(file);
             Runner.Run();
 
-            Summary sum = file.FindDescendant<Summary>();
+            Summary sum = file.Node.FindChild<Summary>(recurse: true);
             bool found = false;
             foreach (Message message in sum.GetMessages("Simulation"))
                 if (message.Text.Contains("Correct Manager Called"))

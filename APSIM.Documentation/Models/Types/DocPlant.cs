@@ -63,14 +63,14 @@ namespace APSIM.Documentation.Models.Types
                     tableDataBiomass.Rows.Add(row);
                 }
             }
-            if (tableDataBiomass.Rows.Count > 0) 
+            if (tableDataBiomass.Rows.Count > 0)
             {
                 newTags.Add(new Section("Composite Biomass", new Table(tableDataBiomass)));
             }
 
             //Write cultivars table
-            List<Cultivar> cultivars = model.FindAllDescendants<Cultivar>().ToList();
-            if (cultivars.Count > 0) 
+            List<Cultivar> cultivars = model.Node.FindChildren<Cultivar>(recurse: true).ToList();
+            if (cultivars.Count > 0)
             {
                 DataTable cultivarNameTable = new();
                 cultivarNameTable.Columns.Add("Cultivar Name");

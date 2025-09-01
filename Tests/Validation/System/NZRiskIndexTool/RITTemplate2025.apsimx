@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 193,
+  "Version": 201,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -15,7 +15,6 @@
     },
     {
       "$type": "Models.Storage.DataStore, Models",
-      "useFirebird": false,
       "CustomFileName": null,
       "Name": "DataStore",
       "ResourceName": null,
@@ -670,8 +669,6 @@
                                 0.087,
                                 0.042
                               ],
-                              "InitialPAWmm": 74.2,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
                               "ResourceName": null,
@@ -1350,8 +1347,6 @@
                               "InitialValues": [
                                 0.162
                               ],
-                              "InitialPAWmm": 254.0,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
                               "ResourceName": null,
@@ -1947,8 +1942,6 @@
                                 0.343,
                                 0.353
                               ],
-                              "InitialPAWmm": 389.42500000000007,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
                               "ResourceName": null,
@@ -2457,6 +2450,76 @@
                   "DeadFractionConsumable": 1.0,
                   "LiveMinimumBiomass": 10.0,
                   "DeadMinimumBiomass": 0.0
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "SurfaceOrganicMatter.Residue",
+                  "LiveDigestibility": "0.7",
+                  "DeadDigestibility": "0.3",
+                  "LiveFractionConsumable": 1.0,
+                  "DeadFractionConsumable": 1.0,
+                  "LiveMinimumBiomass": 100.0,
+                  "DeadMinimumBiomass": 0.0
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPRyegrass.Leaf",
+                  "LiveDigestibility": "FromModel",
+                  "DeadDigestibility": "FromModel",
+                  "LiveFractionConsumable": 1.0,
+                  "DeadFractionConsumable": 1.0,
+                  "LiveMinimumBiomass": 100.0,
+                  "DeadMinimumBiomass": 0.0
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPRyegrass.Stem",
+                  "LiveDigestibility": "FromModel",
+                  "DeadDigestibility": "FromModel",
+                  "LiveFractionConsumable": 1.0,
+                  "DeadFractionConsumable": 1.0,
+                  "LiveMinimumBiomass": 100.0,
+                  "DeadMinimumBiomass": 0.0
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPRyegrass.Stolon",
+                  "LiveDigestibility": "FromModel",
+                  "DeadDigestibility": "FromModel",
+                  "LiveFractionConsumable": 1.0,
+                  "DeadFractionConsumable": 1.0,
+                  "LiveMinimumBiomass": 100.0,
+                  "DeadMinimumBiomass": 0.0
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPWhiteClover.Leaf",
+                  "LiveDigestibility": "FromModel",
+                  "DeadDigestibility": "FromModel",
+                  "LiveFractionConsumable": 1.0,
+                  "DeadFractionConsumable": 1.0,
+                  "LiveMinimumBiomass": 100.0,
+                  "DeadMinimumBiomass": 0.0
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPWhiteClover.Stem",
+                  "LiveDigestibility": "FromModel",
+                  "DeadDigestibility": "FromModel",
+                  "LiveFractionConsumable": 1.0,
+                  "DeadFractionConsumable": 1.0,
+                  "LiveMinimumBiomass": 100.0,
+                  "DeadMinimumBiomass": 0.0
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPWhiteClover.Stolon",
+                  "LiveDigestibility": "FromModel",
+                  "DeadDigestibility": "FromModel",
+                  "LiveFractionConsumable": 1.0,
+                  "DeadFractionConsumable": 1.0,
+                  "LiveMinimumBiomass": 100.0,
+                  "DeadMinimumBiomass": 0.0
                 }
               ],
               "Name": "Forages",
@@ -2488,6 +2551,7 @@
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 0.0,
+              "CanopyType": null,
               "Name": "Block",
               "ResourceName": null,
               "Children": [
@@ -2557,17 +2621,17 @@
                   ],
                   "NoGrazingStartString": null,
                   "NoGrazingEndString": null,
-                  "FractionDefoliatedBiomassToSoil": [
-                    0.4
+                  "IsCutAndCarry": false,
+                  "FractionClippingsReturned": 0.0,
+                  "FractionIntakeNToAnimal": [
+                    0.6
                   ],
-                  "FractionDefoliatedNToSoil": [
-                    0.4
+                  "DungNConc": 2.6,
+                  "FractionOfDungUrineOffPaddock": [
+                    0.6
                   ],
-                  "FractionExcretedNToDung": [
-                    1.0
-                  ],
-                  "CNRatioDung": 0.0,
-                  "DepthUrineIsAdded": 17.5,
+                  "DepthUrineIsAdded": 250.0,
+                  "ShowAdvancedExcretaOptions": false,
                   "SendDungElsewhere": 0.0,
                   "SendUrineElsewhere": 1.0,
                   "UsePatching": false,
@@ -3825,8 +3889,6 @@
                         0.138,
                         0.076
                       ],
-                      "InitialPAWmm": 166.51500000000001,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,

@@ -106,7 +106,7 @@ namespace APSIM.Server.Sensibility
         private IDictionary<IModel, string> GetSimulationState()
         {
             Dictionary<IModel, string> result = new Dictionary<IModel, string>();
-            foreach (IModel model in sim.FindAllDescendants())
+            foreach (IModel model in sim.Node.FindChildren<IModel>(recurse: true))
                 result[model] = GetModelState(model);
             return result;
         }

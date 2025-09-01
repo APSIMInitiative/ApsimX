@@ -24,7 +24,7 @@ namespace APSIM.Documentation.Models.Types
         {
             Section section = GetSummaryAndRemarksSection(model);
 
-            foreach (IModel child in model.FindAllChildren())
+            foreach (IModel child in model.Node.FindChildren<IModel>())
             {
                 if (child is Memo || child is Graph || child is Folder)
                 {

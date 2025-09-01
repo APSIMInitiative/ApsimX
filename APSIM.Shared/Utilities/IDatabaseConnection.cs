@@ -147,9 +147,6 @@ namespace APSIM.Shared.Utilities
         /// <summary>Convert .NET type into an SQLite type</summary>
         string GetDBDataTypeName(Type type);
 
-        /// <summary>Convert .NET type into an SQLite type</summary>
-        string GetDBDataTypeName(Type type, bool allowLongStrings);
-
         /// <summary>
         /// 
         /// </summary>

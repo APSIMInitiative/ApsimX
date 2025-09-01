@@ -73,7 +73,7 @@ namespace Models.CLEM.Activities
             Status = ActivityStatus.NoTask;
             AllocationStyle = ResourceAllocationStyle.Manual;
 
-            controlledMating = FindAllChildren<RuminantActivityControlledMating>().FirstOrDefault();
+            controlledMating = Structure.FindChildren<RuminantActivityControlledMating>().FirstOrDefault();
 
             // Assignment of mothers was moved to RuminantHerd resource to ensure this is done even if no breeding activity is included
             InitialiseHerd(false, true);
@@ -718,7 +718,7 @@ namespace Models.CLEM.Activities
             {
                 htmlWriter.Write("No pregnancy of breeders from matings prior to simulation start is inferred.</div>");
             }
-            controlledMating = this.FindAllChildren<RuminantActivityControlledMating>().FirstOrDefault();
+            controlledMating = Structure.FindChildren<RuminantActivityControlledMating>().FirstOrDefault();
             if (controlledMating is null)
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");

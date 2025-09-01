@@ -89,7 +89,7 @@ namespace Models.CLEM
         /// </summary>
         public void ClearRules()
         {
-            foreach (Filter filter in FindAllChildren<Filter>())
+            foreach (Filter filter in Structure.FindChildren<Filter>())
                 filter.ClearRule();
         }
 
@@ -124,15 +124,14 @@ namespace Models.CLEM
             }
 
             properties =  properties.OrderBy(x => x.Key).ToDictionary(pair => pair.Key, pair => pair.Value);
-
-            foreach (Filter filter in FindAllChildren<Filter>())
+            foreach (Filter filter in Structure.FindChildren<Filter>())
             {
                 filter.Initialise();
                 if (includeBuildRules)
                     filter.BuildRule();
             }
 
-            sortList = FindAllChildren<ISort>();
+            sortList = Structure.FindChildren<ISort>();
         }
 
         /// <summary>
@@ -164,7 +163,7 @@ namespace Models.CLEM
             if (source is null)
                 throw new NullReferenceException("Cannot filter a null object");
 
-            filterRules ??= FindAllChildren<Filter>().Select(filter => filter.Rule);
+            filterRules ??= Structure.FindChildren<Filter>().Select(filter => filter.Rule);
 
             var filtered = filterRules.Any() ? source.Where(item => filterRules.All(rule => rule is null ? false : rule(item))) : source;
 
@@ -173,7 +172,7 @@ namespace Models.CLEM
                 filtered = filtered.Sort(sortList, RandomiseBeforeSorting);
 
             // do all takes and skips
-            foreach (var take in FindAllChildren<TakeFromFiltered>())
+            foreach (var take in Structure.FindChildren<TakeFromFiltered>())
             {
                 int number = 0;
                 switch (take.TakeStyle)
@@ -214,7 +213,7 @@ namespace Models.CLEM
             if (item == null)
                 throw new NullReferenceException("Cannot filter a null object");
 
-            filterRules ??= FindAllChildren<Filter>().Select(filter => filter.Rule);
+            filterRules ??= Structure.FindChildren<Filter>().Select(filter => filter.Rule);
 
             return filterRules.All(rule => rule is null ? false : rule(item));
         }
@@ -254,7 +253,7 @@ namespace Models.CLEM
         {
             using StringWriter htmlWriter = new();
             htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
-            if (!FindAllChildren<Filter>().Any())
+            if (Structure.FindChildren<Filter>().Count() == 0)
                 htmlWriter.Write("<div class=\"filter\">All individuals</div>");
 
             return htmlWriter.ToString();

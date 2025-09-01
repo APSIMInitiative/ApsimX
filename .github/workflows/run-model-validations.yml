@@ -14,6 +14,7 @@ on:
 jobs:
   run-model-validations:
     name: run-model-validations
+    if: github.repository_owner == 'APSIMInitiative'
     runs-on: ubuntu-latest
     env:
       ALL_APSIM_FILES: ""
@@ -26,7 +27,9 @@ jobs:
 
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v4
-    
+      with:
+        dotnet-version: '8.0.x'
+
     - name: Get PR number from GitHub API
       id: fetch_pr_number
       run: |

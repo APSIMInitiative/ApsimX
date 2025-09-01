@@ -57,7 +57,7 @@ namespace UserInterface.Presenters
             intellisense = new IntellisensePresenter(seriesView as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
 
-            parentGraph = series.FindAncestor<Graph>();
+            parentGraph = series.Node.FindParent<Graph>(recurse: true);
             if (parentGraph != null)
             {
                 try
@@ -169,7 +169,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                foreach (var s in series.Parent.FindAllChildren<Series>())
+                foreach (var s in series.Parent.Node.FindChildren<Series>())
                 {
                     ChangeProperty command = new ChangeProperty(s, name, value);
                     explorerPresenter.CommandHistory.Add(command);
@@ -261,7 +261,7 @@ namespace UserInterface.Presenters
                     SetModelProperty("FactorToVaryLines", this.seriesView.LineType.SelectedValue.Replace("Vary by ", ""));
             }
         }
-        
+
         /// <summary>Series marker type has been changed by the user.</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
@@ -390,7 +390,7 @@ namespace UserInterface.Presenters
             else
                 command = new ChangeProperty(parentGraph.GetAxis(AxisPosition.Bottom), "Title", null);
             explorerPresenter.CommandHistory.Add(command);
-           
+
 
         }
 

@@ -76,7 +76,7 @@ namespace Models.CLEM.Resources
                 ManagedPasture = resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ManagedPastureName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
             }
 
-            foreach (FileRuminantCohorts cohortsReader in FindAllChildren<FileRuminantCohorts>().ToList())
+            foreach (FileRuminantCohorts cohortsReader in Structure.FindChildren<FileRuminantCohorts>().ToList())
             {
                 foreach (RuminantTypeCohort cohort in cohortsReader.ReadCohortsFromFile())
                 {
@@ -93,28 +93,14 @@ namespace Models.CLEM.Resources
         /// <returns>A list of ruminants</returns>
         public List<Ruminant> CreateIndividuals(DateTime date)
         {
-            List<ISetAttribute> initialCohortAttributes = FindAllChildren<ISetAttribute>().ToList();
-            List<Ruminant> individuals = new();
-            foreach (RuminantTypeCohort cohort in FindAllChildren<RuminantTypeCohort>())
+            List<ISetAttribute> initialCohortAttributes = [.. Structure.FindChildren<ISetAttribute>()];
+            List<Ruminant> individuals = [];
+            foreach (RuminantTypeCohort cohort in Structure.FindChildren<RuminantTypeCohort>())
             {
                 individuals.AddRange(cohort.CreateIndividuals(initialCohortAttributes, date));
             }
             return individuals;
         }
-
-        //#region validation
-
-        ///// <inheritdoc/>
-        //public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        //{
-        //    //if (ManagedPastureName is not null && ManagedPastureName != "" && ManagedPastureName.StartsWith("Not specified") == false)
-        //    //{
-        //    //    GrazeFoodStore grazeFoodStore = FindInScope<GrazeFoodStore>(ManagedPastureName);
-        //    //    if (grazeFoodStore == null)
-        //    //        yield return new ValidationResult($"Could not find the GrazeFoodStore (pasture) in which to place new individuals from {this.NameWithParent}", new string[] { "ManagedPastureName" });
-        //    //}
-        //}
-        //#endregion
 
         #region descriptive summary
 
@@ -123,7 +109,7 @@ namespace Models.CLEM.Resources
         {
             return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
             {
-                (FindAllChildren<ISetAttribute>().Cast<IModel>(), false, "", "", "")
+                (Structure.FindChildren<ISetAttribute>().Cast<IModel>(), false, "", "", "")
             };
         }
 
@@ -133,11 +119,11 @@ namespace Models.CLEM.Resources
             using StringWriter htmlWriter = new();
             htmlWriter.Write("\r\n<div class=\"activityentry\">");
 
-            if (FindAllChildren<FileRuminantCohorts>().Any())
+            if (Structure.FindChildren<FileRuminantCohorts>().Any())
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 htmlWriter.Write($"Ruminant cohort file readers will be used to provide initial cohorts");
-                if (FindAllChildren<RuminantTypeCohort>().Any())
+                if (Structure.FindChildren<RuminantTypeCohort>().Any())
                 {
                     htmlWriter.Write($" which will be included with the cohorts also provided");
                 }
@@ -146,7 +132,7 @@ namespace Models.CLEM.Resources
 
             if (ManagedPastureName != "Not specified")
             {
-                bool overridePasture = FindAllChildren<RuminantTypeCohort>().Where(a => a.ManagedPastureName != "Not specified").Any();
+                bool overridePasture = Structure.FindChildren<RuminantTypeCohort>().Where(a => a.ManagedPastureName != "Not specified").Any();
 
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 if (overridePasture) {
@@ -179,8 +165,8 @@ namespace Models.CLEM.Resources
         public override string ModelSummaryInnerOpeningTags()
         {
             WeightWarningOccurred = false;
-            ConceptionsFound = this.FindAllDescendants<SetPreviousConception>().Any();
-            AttributesFound = this.FindAllDescendants<SetAttributeWithValue>().Any();
+            ConceptionsFound = Structure.FindChildren<SetPreviousConception>(recurse: true).Any();
+            AttributesFound = Structure.FindChildren<SetAttributeWithValue>(recurse: true).Any();
             return $"<table><tr><th>Name</th><th>Sex</th><th>Age</th><th>Weight</th><th>Norm.Wt.</th><th>Number</th><th>Suckling</th><th>Sire</th>{(ConceptionsFound ? "<th>Pregnant</th>" : "")}{(AttributesFound ? "<th>Attributes</th>" : "")}</tr>";
         }
 

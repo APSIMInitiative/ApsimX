@@ -204,7 +204,7 @@ namespace Models.CLEM.Activities
             // activity is performed in CLEMDoCutAndCarry not CLEMGetResources
             AllocationStyle = ResourceAllocationStyle.Manual;
 
-            fileCrop = simulation.FindAllDescendants().Where(a => a.Name == ModelNameFileCrop).FirstOrDefault() as IFileCrop;
+            fileCrop = simulation.Node.FindChildren<IModel>(recurse: true).Where(a => a.Name == ModelNameFileCrop).FirstOrDefault() as IFileCrop;
             if (fileCrop == null)
                 throw new ApsimXException(this, $"Unable to locate crop data reader [x={ModelNameFileCrop ?? "Unknown"}] requested by [a={NameWithParent}]");
 
@@ -217,7 +217,7 @@ namespace Models.CLEM.Activities
             }
 
             // look up tree until we find a parent to allow nested crop products for rotate vs mixed cropping/products
-            parentManagementActivity = FindAncestor<CropActivityManageCrop>();
+            parentManagementActivity = Structure.FindParent<CropActivityManageCrop>(recurse: true);
 
             // Retrieve harvest data from the forage file for the entire run.
             // only get entries where a harvest happened (Amtkg > 0)
@@ -231,7 +231,7 @@ namespace Models.CLEM.Activities
             UnitsToHaConverter = (parentManagementActivity.LinkedLandItem.Parent as Land).UnitsOfAreaToHaConversion;
 
             // locate a cut and carry limiter associated with this event.
-            limiter = ActivityCarryLimiter.Locate(this);
+            limiter = ActivityCarryLimiter.Locate(this, Structure);
 
             // check if harvest type tags have been provided
             HarvestTagsUsed = HarvestData.Where(a => a.HarvestType != "").Count() > 0;
@@ -245,7 +245,9 @@ namespace Models.CLEM.Activities
         {
             // parent crop doesn't know pasture area until FinalInitialise activity
             // We must initialise biomass after the crop/pasture area is known
-            if (LinkedResourceItem is GrazeFoodStoreType && (Parent as CropActivityManageCrop).FindAllChildren<CropActivityManageProduct>().Where(a => a.StoreItemName == StoreItemName).FirstOrDefault() == this)
+            if (LinkedResourceItem is GrazeFoodStoreType && Structure.FindChildren<CropActivityManageProduct>(relativeTo: Parent as CropActivityManageCrop)
+                                                                     .Where(a => a.StoreItemName == this.StoreItemName)
+                                                                     .FirstOrDefault() == this)
             {
                 double firstMonthsGrowth = 0;
                 CropDataType cropData = HarvestData.Where(a => a.Year == events.Clock.StartDate.Year && a.Month == events.Clock.StartDate.Month).FirstOrDefault();
@@ -608,7 +610,7 @@ namespace Models.CLEM.Activities
             // ensure we don't try and change the crop area planeted when using unallocated land
             if (PlantedMultiplier != 1)
             {
-                var parentManageCrop = this.FindAncestor<CropActivityManageCrop>();
+                var parentManageCrop = Structure.FindParent<CropActivityManageCrop>(recurse: true);
                 if (parentManageCrop != null && parentManageCrop.UseAreaAvailable)
                 {
                     yield return new ValidationResult($"You cannot alter the crop area planted for product [a={Name}] when the crop [a={parentManageCrop.NameWithParent}] is set to use all available land", new string[] { "Invalid crop area" });
@@ -627,10 +629,10 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
         {
-            string intro = (FindAllChildren<CropActivityManageProduct>().Any()) ? "Mixed crop" : "";
+            string intro = (Structure.FindChildren<CropActivityManageProduct>().Count() >= 1) ? "Mixed crop" : "";
             return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
             {
-                (FindAllChildren<CropActivityManageProduct>(), true, "childgrouprotationborder", intro, ""),
+                (Structure.FindChildren<CropActivityManageProduct>(), true, "childgrouprotationborder", intro, ""),
             };
         }
 
