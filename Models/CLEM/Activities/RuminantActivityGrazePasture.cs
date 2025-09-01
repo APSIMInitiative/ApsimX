@@ -118,7 +118,6 @@ namespace Models.CLEM.Activities
                     }
                 );
                 grazePastureHerd.Children.Add(herdGroup);
-                //Children.Add(grazePastureHerd);
                 Structure.AddChild(grazePastureHerd);
 
                 Structure.FindChild<RuminantActivityGroup>(relativeTo: grazePastureHerd).InitialiseFilters();

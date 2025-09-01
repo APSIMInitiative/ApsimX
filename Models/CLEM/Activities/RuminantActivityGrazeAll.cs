@@ -123,11 +123,7 @@ namespace Models.CLEM.Activities
                         );
 
                         grazePasture.Structure.AddChild(grazePastureHerd);
-
                         grazePastureHerd.Structure.AddChild(herdGroup);
-
-                        //(grazePasture as CLEMModel).Structure.AddChild(grazePastureHerd);
-                        //grazePasture.Children.Add(grazePastureHerd);
                     }
 
                     foreach (var activityGroup in Structure.FindChildren<RuminantActivityGroup>(relativeTo: grazePasture, recurse: true))
@@ -139,8 +135,6 @@ namespace Models.CLEM.Activities
                 Structure.FindChildren<RuminantActivityGrazePastureHerd>(recurse: true).LastOrDefault().IsHidden = true;
 
                 Events events = new Events(Structure.FindParent<Simulation>(recurse: true));
-                //events.DisconnectEvents();
-                //events.ReconnectEvents("Models.Clock", "CLEMGetResourcesRequired");
                 events.ReconnectEvents("Models.Clock");
             }
             else
