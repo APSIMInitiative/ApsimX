@@ -1086,7 +1086,7 @@ namespace Models.CLEM.Resources
             double dystociaRate = 0;
             if (Parameters.Breeding.DystociaCoefficients.Sum() != 0)
             {
-                dystociaRate = StdMath.SIG(Weight.Live / expectedWeight *
+                dystociaRate = StdMath.SIG(weight / expectedWeight *
                                        Math.Max(Weight.RelativeCondition, 1.0), Parameters.Breeding.DystociaCoefficients);
             }
             if (MathUtilities.IsLessThan(RandomNumberGenerator.Generator.NextDouble(), dystociaRate))
