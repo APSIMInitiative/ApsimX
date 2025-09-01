@@ -49,6 +49,7 @@ namespace Models.CLEM.Groupings
 
         /// <inheritdoc/>
         [Description("Category for transactions")]
+        [Category("Simulation", "Reporting")]
         [Models.Core.Display(Order = 500)]
         public string TransactionCategory { get; set; }
 

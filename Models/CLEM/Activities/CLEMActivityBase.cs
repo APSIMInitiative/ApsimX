@@ -46,11 +46,14 @@ namespace Models.CLEM.Activities
         /// Label to assign each transaction created by this activity in ledgers
         /// </summary>
         [Description("Category for transactions")]
+        [Category("Simulation", "Reporting")]
+
         [Models.Core.Display(Order = 500)]
         virtual public string TransactionCategory { get; set; }
 
         /// <inheritdoc/>
         [Description("Insufficient resources available action")]
+        [Category("Simulation", "Action")]
         [Models.Core.Display(Order = 1000)]
         public OnPartialResourcesAvailableActionTypes OnPartialResourcesAvailableAction { get; set; }
 

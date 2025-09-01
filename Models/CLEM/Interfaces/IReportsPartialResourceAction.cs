@@ -10,8 +10,8 @@ namespace Models.CLEM.Interfaces
         /// <summary>
         /// Action to perform when Insufficient resources available action
         /// </summary>
-        [Description("Insufficient resources available action")]
-        [Models.Core.Display(Order = 1000)]
+        //[Description("Insufficient resources available action")]
+        //[Models.Core.Display(Order = 1000)]
         public OnPartialResourcesAvailableActionTypes OnPartialResourcesAvailableAction { get; set; }
 
         /// <summary>

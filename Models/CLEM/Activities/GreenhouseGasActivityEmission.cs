@@ -61,6 +61,7 @@ namespace Models.CLEM.Activities
         /// Label to assign each transaction created by this activity in ledgers
         /// </summary>
         [Description("Category for transactions")]
+        [Category("Simulation", "Reporting")]
         [Models.Core.Display(Order = 500)]
         public string TransactionCategory { get; set; }
 
