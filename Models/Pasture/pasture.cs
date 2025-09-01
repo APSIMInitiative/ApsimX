@@ -109,7 +109,7 @@ namespace Models.GrazPlan
         /// <summary>
         ///
         /// </summary>
-        public static string logFileName;
+        public static string logFileName = null;
 
 
         #region Class links

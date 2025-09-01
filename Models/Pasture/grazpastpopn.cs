@@ -4534,7 +4534,7 @@ namespace Models.GrazPlan
         /// <returns></returns>
         public double WaterDemand(int comp, double pastureWaterDemand)
         {
-            if (UseAusfarmWaterDemand)
+            if (!UseAusfarmWaterDemand)
                 return this.LightPropn(comp) * (this.Inputs.PotentialET - this.Inputs.SurfaceEvap) * this.CO2_WaterDemand(comp);
             else
             {
@@ -4574,7 +4574,7 @@ namespace Models.GrazPlan
                     }
                     else
                     {
-                        fExtractDepth = Math.Max(0.0, fRootDepth_ - this.FSoilDepths[iLayer+1]);
+                        fExtractDepth = Math.Max(0.0, fRootDepth_ - this.FSoilDepths[iLayer]);
                     }
 
                     double theta = waterMM[iLayer] / FSoilLayers[iLayer+1];
