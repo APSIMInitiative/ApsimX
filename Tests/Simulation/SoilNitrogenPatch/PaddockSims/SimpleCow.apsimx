@@ -41,7 +41,7 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "C:/aaUnderVC/ApsimX/Examples/WeatherFiles/NZ_Lincoln.met",
+          "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "ResourceName": null,
@@ -2489,9 +2489,9 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "C:/aaUnderVC/ApsimX/Examples/WeatherFiles/NZ_Lincoln.met",
+              "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln.met",
               "ExcelWorkSheetName": "",
-              "Name": "Weather",
+              "Name": "Weather", 
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
