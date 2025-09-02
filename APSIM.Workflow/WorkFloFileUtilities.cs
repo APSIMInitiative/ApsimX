@@ -34,7 +34,7 @@ public static class WorkFloFileUtilities
                 "grid.csv"
             ];
             string workFloFileContents = $"""
-            name: workflo_apsim_validation
+            name: workflo_apsim_validation_pr_{options.PullRequestNumber}
             inputfiles:
             - .env
             - workflow.yml
