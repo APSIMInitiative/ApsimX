@@ -272,13 +272,13 @@ public class SimpleCow : Model, IStructureDependency
     [Units("kg N/ha")]
     [JsonIgnore] public double SilageNFed { get; set; }
 
-    /// <summary>Metabilisable energy in SilageFed</summary>
+    /// <summary>Metabolisable energy in SilageFed</summary>
     //[Description("Amount of ME in the silage fed out")]
     [Units("MJ ME/ha")]
     [JsonIgnore] public double SilageMEFed { get; set; }
 
     /// <summary>Digestibility of the silage</summary>
-    //[Description("Digestibiity of the silage")]
+    //[Description("Digestibility of the silage")]
     [Units("kg DM / kg DM")]
     [JsonIgnore] public double SilageDigestibility { get; set; }
 
@@ -307,7 +307,7 @@ public class SimpleCow : Model, IStructureDependency
 		// Last value (here, below) obtained by fitting the final term of the Woods curve to various target milk solids production values - fitted value
 		LactationCurveParam[3] = CowBodyWeight * MilkSolidsAsPercentOfCowBodyWeight / 100.0 / 4542.2;
 
-        //Parameter values fitted from (DairyNZ, 2017, p. 49) with the equation fitted to the values in the table.
+        // Parameter values fitted from (DairyNZ, 2017, p. 49) with the equation fitted to the values in the table.
         CowPregnancyParam[0] = 1.35 * CalfBirthWeight + 22.41;
         CowPregnancyParam[1] = -0.14;
 
@@ -383,7 +383,7 @@ public class SimpleCow : Model, IStructureDependency
 
         double pastureGrazedME = Math.Min(pastureRemovedME, HerdMEDemand);
         double pastureGrazedDM = Math.Min(pastureGrazedME / pastureRemovedME, 1.0) * pastureRemovedDM;
-        double pastureGrazedN = Math.Max(pastureGrazedME / pastureRemovedME, 1.0) * pastureRemovedN;
+        double pastureGrazedN = Math.Min(pastureGrazedME / pastureRemovedME, 1.0) * pastureRemovedN;
 
         if ((HerdMEDemand - pastureGrazedME) > 0.05 * HerdMEDemand) // feed/energy shortfall, need to feed out some silage
         {
@@ -391,7 +391,7 @@ public class SimpleCow : Model, IStructureDependency
             SilageFed = SilageMEFed / SilageMEConc;
             SilageNFed = SilageFed * SilageNConc / 100.0;
         }
-        else if ((pastureRemovedDM - pastureGrazedME) < 0.05 * HerdMEDemand) // excess feed, need to make some silage
+        else if ((pastureRemovedME - pastureGrazedME) < 0.05 * HerdMEDemand) // excess feed, need to make some silage
             SilageMade = (pastureRemovedDM - pastureGrazedDM);
 
         HerdNIntake = pastureGrazedN + SilageNFed;
