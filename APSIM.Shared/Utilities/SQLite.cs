@@ -95,10 +95,13 @@ namespace APSIM.Shared.Utilities
         {
             if (_open)
             {
-                SqliteConnection.ClearAllPools();
-                _connection?.Close();
-                _connection?.Dispose();
-                _connection = null;
+                if (_connection != null)
+                {
+                    _connection?.Close();
+                    SqliteConnection.ClearPool(_connection);
+                    _connection?.Dispose();
+                    _connection = null;
+                }
                 _open = false;
             }
         }
