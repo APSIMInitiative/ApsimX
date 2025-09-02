@@ -3294,7 +3294,7 @@
                     {
                       "$type": "Models.Climate.Weather, Models",
                       "ConstantsFile": null,
-                      "FileName": "C:/Jessica/GIT/ApsimX/ApsimX/Tests/Validation/Ryegrass/Gatton.met",
+                      "FileName": "Gatton.met",
                       "ExcelWorkSheetName": "",
                       "Name": "Weather",
                       "ResourceName": null,
