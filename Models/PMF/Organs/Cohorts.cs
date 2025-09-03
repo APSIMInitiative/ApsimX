@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 
@@ -28,7 +29,7 @@ namespace Models.PMF.Organs
         public double AreaDead { get; set; } = 0;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public bool IsSenesced { get; set; }
 

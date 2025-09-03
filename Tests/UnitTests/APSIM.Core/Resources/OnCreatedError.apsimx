@@ -1,0 +1,87 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 250,
+  "Version": 55,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "Name": "Simulation",
+      "Children": [
+        {
+          "$type": "Models.Clock, Models",
+          "StartDate": "2003-10-20T00:00:00",
+          "EndDate": "2004-05-23T00:00:00",
+          "Name": "Clock",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Summary, Models",
+          "CaptureErrors": true,
+          "CaptureWarnings": true,
+          "CaptureSummaryText": true,
+          "Name": "Summary",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Zone, Models",
+          "Area": 1.0,
+          "Slope": 0.0,
+          "Name": "Field",
+          "Children": [
+            {
+              "$type": "Models.Report, Models",
+              "ExperimentFactorNames": null,
+              "ExperimentFactorValues": null,
+              "VariableNames": [
+                "[Clock].Today",
+                "[Soil].SoilWater.SWmm"
+              ],
+              "EventNames": [
+                "[Clock].DoReport"
+              ],
+              "Name": "Report",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
+              "Code": "namespace Models\r\n{\r\n\tusing System;\r\n\tusing Core;\r\n\r\n\t[Serializable]\r\n\tpublic class Script : Model\r\n\t{\r\n\t\tpublic override void OnCreated()\r\n\t\t{\r\n\t\t\tthrow new Exception(\"Error thrown from manager script's OnCreated()\");\r\n\t\t}\r\n\t}\r\n}",
+              "Parameters": [],
+              "Name": "Manager",
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+}

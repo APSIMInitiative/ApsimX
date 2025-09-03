@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 188,
+  "Version": 190,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -339,16 +339,16 @@
                         12.77
                       ],
                       "Rocks": [
-                        15.104,
-                        26.211,
-                        26.211,
-                        38.378,
-                        38.378,
-                        38.378,
-                        40.153,
-                        40.153,
-                        40.153,
-                        40.153
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
                       ],
                       "Texture": null,
                       "BD": [
@@ -827,6 +827,7 @@
                         null
                       ],
                       "CLMetadata": null,
+                      "CECMetadata": null,
                       "ESPMetadata": [
                         null,
                         null,
@@ -897,6 +898,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -938,6 +940,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -979,6 +982,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
@@ -1021,7 +1025,9 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.CERESSoilTemperature, Models",
+                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "Thickness": null,
+                      "InitialValues": null,
                       "Name": "CERESSoilTemperature",
                       "ResourceName": null,
                       "Children": [],
@@ -1555,7 +1561,7 @@
                     "[Wheat].AboveGroundLive.N",
                     "[Wheat].AboveGroundLive.Wt",
                     "[Wheat].Ear.N",
-                    "[Wheat].Ear.Nconc",
+                    "[Wheat].Ear.NConc",
                     "[Wheat].Ear.Wt",
                     "[Wheat].Grain.N",
                     "[Wheat].Grain.NConc",
@@ -1600,7 +1606,7 @@
                     "[Wheat].Phenology.Zadok.Stage",
                     "[Wheat].Root.Depth",
                     "[Wheat].Root.N",
-                    "[Wheat].Root.Nconc",
+                    "[Wheat].Root.NConc",
                     "[Wheat].Root.Wt",
                     "[Wheat].SowingData.Cultivar",
                     "[Wheat].Spike.N",
@@ -1629,7 +1635,7 @@
                 },
                 {
                   "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
-                  "ParameterFile": "C:\\GitHubRepos\\ApsimX\\Tests\\Simulation\\Infrastructure\\SetSimulationParametersFromFile\\SimulationParameterOverWrites.csv",
+                  "ParameterFile": "SimulationParameterOverWrites.csv",
                   "SetEventName": "[Plant].Sowing",
                   "Name": "SetPhenologyParams",
                   "ResourceName": null,

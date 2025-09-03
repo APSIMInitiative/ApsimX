@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core;
 
@@ -21,7 +22,7 @@ namespace Models.Factorial
     ///     to indicate a path to a model that will be replaced by the child
     ///     nodes.
     /// or
-    ///     left null to indicate there are child FactorValues. 
+    ///     left null to indicate there are child FactorValues.
     /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.FactorView")]
@@ -29,8 +30,12 @@ namespace Models.Factorial
     [ValidParent(ParentType = typeof(Factors))]
     [ValidParent(ParentType = typeof(CompositeFactor))]
     [ValidParent(ParentType = typeof(Permutation))]
-    public class Factor : Model, IReferenceExternalFiles
+    public class Factor : Model, IReferenceExternalFiles, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>A specification for producing a series of factor values.</summary>
         public string Specification { get; set; }
 
@@ -41,7 +46,7 @@ namespace Models.Factorial
         {
             try
             {
-                var childCompositeFactors = FindAllChildren<CompositeFactor>().Where(f => f.Enabled);
+                var childCompositeFactors = Structure.FindChildren<CompositeFactor>().Where(f => f.Enabled);
                 if (string.IsNullOrEmpty(Specification))
                 {
                     // Return each child CompositeFactor
@@ -152,15 +157,19 @@ namespace Models.Factorial
             // Must be a model replacement.
             // Need to find a child value of the correct type.
 
-            Experiment experiment = FindAncestor<Experiment>();
+            Experiment experiment = Structure.FindParent<Experiment>(recurse: true);
             if (experiment != null)
             {
-                var baseSimulation = experiment.FindChild<Simulation>();
-                IModel modelToReplace = baseSimulation.FindByPath(specification)?.Value as IModel;
+                var baseSimulation = Structure.FindChild<Simulation>(relativeTo: experiment);
+                IModel modelToReplace = baseSimulation.Node.GetObject(specification)?.Value as IModel;
                 if (modelToReplace == null)
                     throw new ApsimXException(this, "Cannot find model: " + specification);
                 foreach (IModel newModel in Children.Where(c => c.Enabled))
-                    values.Add(new CompositeFactor(this, specification, newModel));
+                {
+                    var compositeFactor = new CompositeFactor(this, specification, newModel);
+                    Node.Create(compositeFactor);
+                    values.Add(compositeFactor);
+                }
             }
             return values;
         }

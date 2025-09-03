@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.PMF;
@@ -30,7 +31,7 @@ namespace Models.ForageDigestibility
         public string Name => forageModel.Name;
 
         /// <summary>Zone that forage is located in.</summary>
-        public Zone Zone => (forageModel as IModel).FindAncestor<Zone>();
+        public Zone Zone => (forageModel as IModel).Node.FindParent<Zone>(recurse: true);
 
         /// <summary>A collection of digestible material that can be grazed.</summary>
         public IEnumerable<DamageableBiomass> Material
@@ -193,7 +194,7 @@ namespace Models.ForageDigestibility
                 {
                     summary?.WriteMessage(forageModel as IModel, "Biomass removed from " + forageModel.Name + " by grazing: " + (defoliatedDM * 10).ToString("#0.0") + "kg/ha", MessageType.Information);
                 }
- 
+
                 return new Forages.MaterialRemoved(defoliatedDM * 10, defoliatedN * 10, defoliatedDigestibility); // convert mass from g/m2 to kg/ha
             }
             return null;

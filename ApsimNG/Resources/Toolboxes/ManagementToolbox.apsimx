@@ -1,13 +1,12 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 184,
+  "Version": 195,
   "Name": "Management toolbox",
   "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Weather",
       "ResourceName": null,
       "Children": [
@@ -336,7 +335,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Plant",
       "ResourceName": null,
       "Children": [
@@ -426,15 +424,16 @@
         {
           "$type": "Models.Manager, Models",
           "CodeArray": [
-            "using Models.Interfaces;",
-            "using APSIM.Shared.Utilities;",
-            "using Models.Utilities;",
-            "using Models.Soils;",
-            "using Models.PMF;",
-            "using Models.Core;",
-            "using System;",
-            "using System.Linq;",
+            "using APSIM.Numerics;",
             "using Models.Climate;",
+            "using System.Linq;",
+            "using System;",
+            "using Models.Core;",
+            "using Models.PMF;",
+            "using Models.Soils;",
+            "using Models.Utilities;",
+            "using APSIM.Shared.Utilities;",
+            "using Models.Interfaces;",
             "",
             "namespace Models",
             "{",
@@ -480,6 +479,9 @@
             "        [Description(\"Plant population (/m2)\")]",
             "        public double Population { get; set; }",
             "        ",
+            "        [Description(\"Force sowing at end of sowing window\")]",
+            "        public bool MustSow { get; set; }",
+            "        ",
             "        ",
             "        [EventSubscribe(\"StartOfSimulation\")]",
             "        private void OnSimulationCommencing(object sender, EventArgs e)",
@@ -492,10 +494,23 @@
             "        {",
             "            accumulatedRain.Update();",
             "            ",
-            "            if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&",
-            "                !Crop.IsAlive &&",
-            "                MathUtilities.Sum(waterBalance.ESW) >= MinESW &&",
-            "                accumulatedRain.Sum >= MinRain)",
+            "            bool sowToday = false;",
+            "            if (!Crop.IsAlive)",
+            "            {",
+            "                if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate))",
+            "                {",
+            "                    if (MathUtilities.Sum(waterBalance.ESW) >= MinESW && accumulatedRain.Sum >= MinRain)",
+            "                    {",
+            "                        sowToday = true;",
+            "                    }",
+            "                    else if (MustSow && DateUtilities.CompareDates(EndDate, Clock.Today) == 0) //end of sowing window",
+            "                    {",
+            "                        sowToday = true;",
+            "                    }",
+            "                }",
+            "            }",
+            "            ",
+            "            if (sowToday)",
             "            {",
             "                Crop.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    ",
             "            }",
@@ -543,6 +558,10 @@
             {
               "Key": "Population",
               "Value": "6"
+            },
+            {
+              "Key": "MustSow",
+              "Value": "False"
             }
           ],
           "Name": "Sow using a variable rule",
@@ -709,7 +728,7 @@
             "                    depth: 100, ",
             "                    rowSpacing: RowWidthmm);",
             "                TimeSincePlanting = 0;",
-            "                Fertiliser.Apply(Amount: FertAmount, Type: Fertiliser.Types.NO3N);",
+            "                Fertiliser.Apply(amount: FertAmount, type: \"NO3N\");",
             "            }",
             "",
             "            if (TimeSincePlanting > HarvestAge && Plant.IsAlive)",
@@ -837,13 +856,14 @@
             "",
             "// Both will return an array of values in mm (not volumetric). ",
             "",
-            "using Models.Soils;",
-            "using System;",
-            "using System.Linq;",
-            "using Models.Core;",
-            "using Models.PMF;",
-            "using Models.PMF.Organs;",
+            "using APSIM.Numerics;",
             "using APSIM.Shared.Utilities;",
+            "using Models.PMF.Organs;",
+            "using Models.PMF;",
+            "using Models.Core;",
+            "using System.Linq;",
+            "using System;",
+            "using Models.Soils;",
             "namespace Models",
             "{",
             "    [Serializable]",
@@ -978,7 +998,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Fertilise",
       "ResourceName": null,
       "Children": [
@@ -1002,7 +1021,7 @@
             "        [Separator(\"A component to apply fertiliser on one or more dates on every year of the simulation\")]",
             "",
             "        [Description(\"Type of fertiliser to apply? \")] ",
-            "        public Fertiliser.Types FertiliserType { get; set; }",
+            "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
             "",
             "        [Description(\"Enter the fertilisation dates as dd-mmm with comma separation (any year information entered will be ignored): \")] ",
             "        public string[] FertiliserDates { get; set; } ",
@@ -1010,7 +1029,7 @@
             "        [Description(\"Fertilise depth (mm)\")]",
             "        public double FertiliseDepth { get; set; }",
             "",
-            "        [Description(\"Amount of fertiliser to be applied (kg /ha)\")] ",
+            "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")] ",
             "        public double Amount { get; set; }",
             "",
             "        [Description(\"Is the above amount to be applied each time? (yes/ticked)? Or is it the total annual amount across all dates (no/unticked)\")] ",
@@ -1025,9 +1044,9 @@
             "                if (DateUtilities.DatesEqual(ddMMM, Clock.Today))",
             "                {",
             "                    if (AmountType)",
-            "                        Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+            "                        Fertiliser.Apply(amount: Amount, type: FertiliserType);",
             "                    else",
-            "                        Fertiliser.Apply(Amount: Amount / FertiliserDates.Length, Type: FertiliserType, Depth: FertiliseDepth);",
+            "                        Fertiliser.Apply(amount: Amount / FertiliserDates.Length, type: FertiliserType, depth: FertiliseDepth);",
             "                }",
             "            }",
             "        }",
@@ -1089,7 +1108,7 @@
             "",
             "",
             "        [Separator(\"Fertiliser will be applied on the date(s) below\")]",
-            "        [Description(\"Apply fertiliser on the same day(s) each year? If no, then must include the year of appliaction below\")]",
+            "        [Description(\"Apply fertiliser on the same day(s) each year? If no, then must include the year of application below\")]",
             "        public bool EachYear { get; set; }",
             "",
             "        [Description(\"Dates for one or more fertiliser applications (dd-mmm or dd-mmm-yyyy) as a list with a comma between dates\")]",
@@ -1109,11 +1128,11 @@
             "        [Description(\"Depth at which to apply the fertiliser (mm)\")]",
             "        public double Depth { get; set; }",
             "",
-            "        [Description(\"Amount of fertiliser to apply (kg N /ha) per application\")]",
+            "        [Description(\"Amount of fertiliser to apply (kg/ha) per application\")]",
             "        public double Amount { get; set; }",
             "",
             "        [Description(\"Fertiliser type - select from the list\")]",
-            "        public Fertiliser.Types FertiliserType { get; set; }",
+            "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
             "",
             "",
             "        [EventSubscribe(\"StartOfSimulation\")]",
@@ -1250,7 +1269,7 @@
             "        public IPlant Crop { get; set; }",
             "",
             "        [Description(\"Type of fertiliser to apply? \")] ",
-            "        public Fertiliser.Types FertiliserType { get; set; }",
+            "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
             "    ",
             "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
             "        public double Amount { get; set; }",
@@ -1263,7 +1282,7 @@
             "        {",
             "            Model crop = sender as Model;",
             "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-            "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType, Depth: FertiliseDepth);",
+            "                Fertiliser.Apply(amount: Amount, type: FertiliserType, depth: FertiliseDepth);",
             "        }",
             "    }",
             "}"
@@ -1316,7 +1335,7 @@
             "        public double Stage { get; set; }",
             "",
             "        [Description(\"Type of fertiliser to apply? \")] ",
-            "        public Fertiliser.Types FertiliserType { get; set; }",
+            "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
             "",
             "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")] ",
             "        public double Amount { get; set; }",
@@ -1332,7 +1351,7 @@
             "            if (zadok >= Stage && !hasFertilised)",
             "            { ",
             "                Summary.WriteMessage(this, \"Fertilising!!\", MessageType.Diagnostic); ",
-            "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType, Depth: FertiliseDepth);",
+            "                Fertiliser.Apply(amount: Amount, type: FertiliserType, depth: FertiliseDepth);",
             "                hasFertilised = true; ",
             "            } ",
             "        }",
@@ -1372,14 +1391,15 @@
         {
           "$type": "Models.Manager, Models",
           "CodeArray": [
-            "using Models.Soils;",
-            "using APSIM.Shared.Utilities;",
+            "using APSIM.Numerics;",
             "using Models.Soils.Nutrients;",
-            "using Models.PMF;",
-            "using Models.Core;",
-            "using System;",
             "using System.Linq;",
+            "using System;",
+            "using Models.Core;",
+            "using Models.PMF;",
             "using Models.Soils.Nutrients;",
+            "using APSIM.Shared.Utilities;",
+            "using Models.Soils;",
             "namespace Models",
             "{",
             "    [Serializable]",
@@ -1390,7 +1410,7 @@
             "        [Link(ByName=true)] Solute NO3;",
             "",
             "        [Description(\"Type of fertiliser to apply? \")] ",
-            "        public Fertiliser.Types FertiliserType { get; set; }",
+            "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
             "    ",
             "        [Description(\"Threshold amount of NO3 to topup to (kg/ha)\")]",
             "        public double Threshold { get; set;}",
@@ -1402,7 +1422,7 @@
             "        private void OnDoManagement(object sender, EventArgs e)",
             "        {",
             "            double Amount = Threshold - MathUtilities.Sum(NO3.kgha);",
-            "            Fertiliser.Apply(Amount: Amount, Type: FertiliserType, Depth: FertiliseDepth);",
+            "            Fertiliser.Apply(amount: Amount, type: FertiliserType, depth: FertiliseDepth);",
             "        }",
             "    }",
             "}"
@@ -1430,13 +1450,14 @@
         {
           "$type": "Models.Manager, Models",
           "CodeArray": [
-            "using Models.Soils;",
-            "using System;",
-            "using Models.Functions;",
-            "using Models.Core;",
-            "using Models.PMF;",
-            "using APSIM.Shared.Utilities;",
+            "using APSIM.Numerics;",
             "using System.Diagnostics;",
+            "using APSIM.Shared.Utilities;",
+            "using Models.PMF;",
+            "using Models.Core;",
+            "using Models.Functions;",
+            "using System;",
+            "using Models.Soils;",
             "namespace Models",
             "{",
             "    [Serializable]",
@@ -1470,7 +1491,7 @@
             "        public double FertiliseDepth { get; set; }",
             "               ",
             "        [Description(\"Type of fertiliser to apply? \")]",
-            "        public Fertiliser.Types FertiliserType { get; set; }",
+            "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
             "          ",
             "        private DateTime FertiliseDate;",
             "        private Model obj;",
@@ -1516,7 +1537,7 @@
             "            if (clock.Today == FertiliseDate)",
             "            {",
             "                waitingForFertiliser = false;",
-            "                fertiliser.Apply(Amount: Amount, Type: FertiliserType, Depth: FertiliseDepth);",
+            "                fertiliser.Apply(amount: Amount, type: FertiliserType, depth: FertiliseDepth);",
             "            }",
             "        }",
             "    }",
@@ -1549,7 +1570,7 @@
             },
             {
               "Key": "FertiliserType",
-              "Value": "Urea"
+              "Value": "UreaGranular"
             }
           ],
           "Name": "Fertilise when variable reaches threshold",
@@ -1596,7 +1617,7 @@
             "        public double FertiliseDepth { get; set; }",
             "               ",
             "        [Description(\"Type of fertiliser to apply? \")] ",
-            "        public Fertiliser.Types FertiliserType { get; set; }   ",
+            "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }   ",
             "          ",
             "        private DateTime FertiliseDate;  ",
             "               ",
@@ -1615,7 +1636,7 @@
             "        private void OnDoManagementCalculations(object sender, EventArgs e)",
             "        {",
             "            if (clock.Today == FertiliseDate)",
-            "               fertiliser.Apply(Amount: Amount, Type: FertiliserType, Depth: FertiliseDepth);",
+            "               fertiliser.Apply(amount: Amount, type: FertiliserType, depth: FertiliseDepth);",
             "        }",
             "    }",
             "}"
@@ -1634,12 +1655,12 @@
               "Value": "30"
             },
             {
-              "Key": "FertiliserType",
-              "Value": "Urea"
-            },
-            {
               "Key": "FertiliseDepth",
               "Value": "0"
+            },
+            {
+              "Key": "FertiliserType",
+              "Value": "UreaGranular"
             }
           ],
           "Name": "Fertilise on event",
@@ -1982,7 +2003,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Irrigate",
       "ResourceName": null,
       "Children": [
@@ -2282,17 +2302,18 @@
         {
           "$type": "Models.Manager, Models",
           "CodeArray": [
+            "using APSIM.Numerics;",
             "using Models.Interfaces;",
-            "using System;",
-            "using System.Linq;",
-            "using Models.Core;",
-            "using System.Collections.Generic;",
-            "using System.Text;",
-            "using Models.Soils;",
-            "using Models.PMF;",
-            "using Models;",
-            "using System.Xml.Serialization;",
             "using APSIM.Shared.Utilities;",
+            "using System.Xml.Serialization;",
+            "using Models;",
+            "using Models.PMF;",
+            "using Models.Soils;",
+            "using System.Text;",
+            "using System.Collections.Generic;",
+            "using Models.Core;",
+            "using System.Linq;",
+            "using System;",
             "using Models.Interfaces;",
             "namespace Models",
             "{",
@@ -2727,6 +2748,10 @@
               "Value": "10"
             },
             {
+              "Key": "PercPAWIrrigDeficitShallow",
+              "Value": "0"
+            },
+            {
               "Key": "IrrigEffShallow",
               "Value": "100"
             },
@@ -2745,10 +2770,6 @@
             {
               "Key": "IrrigEffDeep",
               "Value": "100"
-            },
-            {
-              "Key": "PercPAWIrrigDeficitShallow",
-              "Value": "0"
             }
           ],
           "Name": "CentrePivot",
@@ -2890,7 +2911,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Soil",
       "ResourceName": null,
       "Children": [
@@ -3186,20 +3206,20 @@
           ],
           "Parameters": [
             {
-              "Key": "DateCsvString",
-              "Value": "1/01/2000"
-            },
-            {
-              "Key": "ValueCsvString",
-              "Value": "100,0,0,0,0,0,0,0"
-            },
-            {
               "Key": "SoluteName",
               "Value": "Br"
             },
             {
               "Key": "SetAdd",
               "Value": "Set"
+            },
+            {
+              "Key": "DateCsvString",
+              "Value": "1/01/2000"
+            },
+            {
+              "Key": "ValueCsvString",
+              "Value": "100,0,0,0,0,0,0,0"
             }
           ],
           "Name": "SoluteInitialise",
@@ -3513,6 +3533,10 @@
           ],
           "Parameters": [
             {
+              "Key": "Solute",
+              "Value": ""
+            },
+            {
               "Key": "Dates",
               "Value": "1-jun, 1-jul"
             },
@@ -3523,10 +3547,6 @@
             {
               "Key": "Amount",
               "Value": "100"
-            },
-            {
-              "Key": "Solute",
-              "Value": ""
             }
           ],
           "Name": "AddTracer",
@@ -3542,7 +3562,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Pasture Graze Stock",
       "ResourceName": null,
       "Children": [
@@ -3585,11 +3604,7 @@
             "        {",
             "            if (DateUtilities.WithinDates(ManureDate, Clock.Today, ManureDate))",
             "            {",
-            "                SOM.FractionFaecesAdded = MDMP;",
-            "                AddFaecesType Data = new AddFaecesType();",
-            "                Data.OMWeight = Amount;",
-            "                Data.OMN = Amount * NConc;",
-            "                SOM.AddFaeces(Data);",
+            "                SOM.Add(Amount * MDMP, Amount * NConc, 0.0, \"RuminantDung_PastureFed\", \"Manure\");",
             "            }",
             "        }",
             "    }",
@@ -3674,8 +3689,7 @@
             "            if (OnDepositionDate())",
             "            {",
             "                double[] weights = GetLayerWeights();",
-            "                            double cumulativeDepth = 0.0;",
-            "                            Fertiliser.Types FertiliserType = Fertiliser.Types.UreaN;",
+            "                            double cumulativeDepth = 0.0; string FertiliserType = \"UreaN\";",
             "                ",
             "                for (int i = 0; i < soilPhysical.Thickness.Length; i++)",
             "               {",
@@ -3723,10 +3737,6 @@
           ],
           "Parameters": [
             {
-              "Key": "Amount",
-              "Value": "1000"
-            },
-            {
               "Key": "EachYear",
               "Value": "False"
             },
@@ -3737,6 +3747,10 @@
             {
               "Key": "Depth",
               "Value": "0"
+            },
+            {
+              "Key": "Amount",
+              "Value": "1000"
             }
           ],
           "Name": "Urine deposition on fixed dates",
@@ -3859,7 +3873,13 @@
             "        [Description(\"Species to resow. Comma delimited, case matters\")]",
             "        public string[] TheSpecies2Sow { get; set; }        ",
             "",
+            "        [Description(\"Cultivars to resow. Comma delimited, case matters. Use the species name for the default cultivar\")]",
+            "        public string[] TheCultivars2Sow { get; set; }        ",
             "",
+            "        [EventSubscribe(\"StartOfSimulation\")]",
+            "        private void OnStartOfSimulation(object sender, EventArgs e)",
+            "        {",
+            "        }",
             "",
             "        [EventSubscribe(\"DoManagement\")]",
             "        private void OnDoManagement(object sender, EventArgs e)",
@@ -3877,11 +3897,15 @@
             "\t\t\t// second cultivation",
             "            if (DateUtilities.WithinDates(DateCultivation2, clock.Today, DateCultivation2))",
             "\t\t\t\tsurfaceOrganicMatter.Incorporate(FracResidues2, CultivationDepth2);",
-            "",
+            "            ",
+            "            int i = -1;",
             "            if (DateUtilities.WithinDates(DateResow, clock.Today, DateResow))",
             "\t\t\t\tforeach (var plant in plants)",
             "              \t\tif (TheSpecies2Sow != null && TheSpecies2Sow.Length > 0 && TheSpecies2Sow.Contains(plant.Name))",
-            "                \t\tplant.Sow(cultivar: plant.Name, population: 100.0, depth: 5.0, rowSpacing: 75.0);",
+            "              \t\t{",
+            "                \t\ti += 1;",
+            "                \t\tplant.Sow(cultivar: TheCultivars2Sow[i], population: 100.0, depth: 5.0, rowSpacing: 75.0);",
+            "              \t\t}",
             "        }",
             "        ",
             "",
@@ -3894,27 +3918,15 @@
           "Parameters": [
             {
               "Key": "Date2Kill",
-              "Value": "5-Oct-1980"
+              "Value": "5-Nov-1980"
             },
             {
               "Key": "TheSpecies2Kill",
               "Value": "AGPRyegrass, AGPWhiteClover"
             },
             {
-              "Key": "TheSpecies2Sow",
-              "Value": "AGPRyegrass, AGPWhiteClover"
-            },
-            {
-              "Key": "FracResidues2",
-              "Value": "0.5"
-            },
-            {
-              "Key": "CultivationDepth2",
-              "Value": "10"
-            },
-            {
               "Key": "DateCultivation1",
-              "Value": "8-Oct-1980"
+              "Value": "8-Nov-1980"
             },
             {
               "Key": "FracResidues1",
@@ -3926,11 +3938,27 @@
             },
             {
               "Key": "DateCultivation2",
-              "Value": "15-Oct-1980"
+              "Value": "15-Nov-1980"
+            },
+            {
+              "Key": "FracResidues2",
+              "Value": "0.5"
+            },
+            {
+              "Key": "CultivationDepth2",
+              "Value": "10"
             },
             {
               "Key": "DateResow",
-              "Value": "17-Oct-1980"
+              "Value": "17-Nov-1980"
+            },
+            {
+              "Key": "TheSpecies2Sow",
+              "Value": "AGPRyegrass, AGPWhiteClover"
+            },
+            {
+              "Key": "TheCultivars2Sow",
+              "Value": "Prostrate, AGPWhiteClover"
             }
           ],
           "Name": "RenewPasture",
@@ -3946,7 +3974,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Other",
       "ResourceName": null,
       "Children": [

@@ -4902,27 +4902,6 @@
                               "Date": "2012-05-31",
                               "Action": "[Irrigation].Apply(10);",
                               "Line": "2012-05-31 [Irrigation].Apply(10);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "0001-01-01",
-                              "Action": "",
-                              "Line": "0001-01-01 "
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "0001-01-01",
-                              "Action": "",
-                              "Line": "0001-01-01 "
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "0001-01-01",
-                              "Action": "",
-                              "Line": "0001-01-01 "
                             }
                           ],
                           "Name": "Irrig",

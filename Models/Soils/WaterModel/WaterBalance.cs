@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using APSIM.Core;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -45,8 +47,12 @@ namespace Models.WaterModel
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [Serializable]
-    public class WaterBalance : Model, ISoilWater
+    public class WaterBalance : Model, ISoilWater, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         private Physical physical;
         private HyProps hyprops = new HyProps();
 
@@ -833,7 +839,7 @@ namespace Models.WaterModel
         /// <summary>Initialise the model.</summary>
         private void Initialise()
         {
-            solutes = FindAllSiblings<Solute>().ToList();
+            solutes = Structure.FindSiblings<Solute>().ToList();
             Water = water.InitialValuesMM;
             Runon = 0;
             Runoff = 0;

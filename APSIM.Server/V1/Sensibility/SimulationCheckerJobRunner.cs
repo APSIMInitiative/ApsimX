@@ -27,12 +27,12 @@ namespace APSIM.Server.Sensibility
         /// <param name="sim">The simulation.</param>
         private void AddLoggerToSim(Simulation sim)
         {
-            if (sim.FindChild<Logger>() == null)
+            if (sim.Node.FindChild<Logger>() == null)
             {
                 Logger logger = new Logger();
                 sim.Children.Add(logger);
                 logger.Parent = sim;
-                var links = new Links(sim.Services);
+                var links = new Links(sim.ModelServices);
                 links.Resolve(logger, true, throwOnFail: true);
                 var events = new Events(logger);
                 events.ConnectEvents();

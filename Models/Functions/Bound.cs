@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using Models.Core;
 
 namespace Models.Functions
@@ -10,8 +11,12 @@ namespace Models.Functions
     /// </summary>
     [Serializable]
     [Description("Bounds the child function between lower and upper bounds")]
-    public class BoundFunction : Model, IFunction
+    public class BoundFunction : Model, IFunction, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>The child functions</summary>
         private IEnumerable<IFunction> ChildFunctions;
 
@@ -26,7 +31,7 @@ namespace Models.Functions
         public double Value(int arrayIndex = -1)
         {
             if (ChildFunctions == null)
-                ChildFunctions = FindAllChildren<IFunction>().ToList();
+                ChildFunctions = Structure.FindChildren<IFunction>().ToList();
             foreach (IFunction child in ChildFunctions)
                 if (child != Lower && child != Upper)
                     return Math.Max(Math.Min(Upper.Value(arrayIndex), child.Value(arrayIndex)), Lower.Value(arrayIndex));

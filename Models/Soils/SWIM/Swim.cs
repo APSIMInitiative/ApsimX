@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using APSIM.Core;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -17,8 +19,13 @@ namespace Models.Soils
     [ViewName("UserInterface.Views.PropertyView")]   // Until we have a better view for SWIM...
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Swim3 : Model, ISoilWater
+    public class Swim3 : Model, ISoilWater, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
+
         [Link]
         private IClock clock = null;
 
@@ -922,6 +929,7 @@ namespace Models.Soils
                 summary.WriteMessage(this, string.Format("     Drain Radius (mm) ={0,10:F3}", subsurfaceDrain.DrainRadius), MessageType.Diagnostic);
                 summary.WriteMessage(this, string.Format("     Imperm Layer Depth (mm)  ={0,10:F3}", subsurfaceDrain.ImpermDepth), MessageType.Diagnostic);
                 summary.WriteMessage(this, string.Format("     Lateral Conductivity (mm/d)  ={0,10:F3}", subsurfaceDrain.Klat), MessageType.Diagnostic);
+                summary.WriteMessage(this, string.Format("     Drain Open (True/False) ={0,10}", subsurfaceDrain.Open), MessageType.Diagnostic);
             }
 
         }
@@ -1766,7 +1774,7 @@ namespace Models.Soils
             for (int i = 0; i < solutes.Count; i++)
             {
                 solute_names[i] = solutes[i].Name;
-                var soluteParam = Parent.FindChild<Solute>(solute_names[i]);
+                var soluteParam = Structure.FindChild<Solute>(solute_names[i], relativeTo: Parent as INodeModel);
                 if (soluteParam == null)
                     throw new Exception("Could not find parameters for solute called " + solute_names[i]);
                 if (soluteParam.FIP == null || double.IsNaN(MathUtilities.Sum(soluteParam.FIP)))
@@ -1855,7 +1863,7 @@ namespace Models.Soils
 
                 var plant = model as IPlant;
                 if (plant == null)
-                    plant = model.FindAncestor<IPlant>(); // the canopy might be a leaf or energybalance and we need to find what plant it is on.
+                    plant = Structure.FindParent<IPlant>(relativeTo: model as INodeModel, recurse: true); // the canopy might be a leaf or energybalance and we need to find what plant it is on.
                 if (plant != null)
                 {
                     if (plant.IsAlive)
@@ -4727,7 +4735,7 @@ namespace Models.Soils
             double wt_above_drain2;
             double[] qdrain2 = new double[n + 1];
 
-            if (subsurfaceDrain != null)
+            if (subsurfaceDrain != null && subsurfaceDrain.Open)
             {
                 int drain_node = SoilUtilities.LayerIndexOfClosestDepth(physical.Thickness, subsurfaceDrain.DrainDepth);
 

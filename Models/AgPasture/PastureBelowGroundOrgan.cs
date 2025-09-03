@@ -9,14 +9,21 @@ using Models.Soils.Arbitrator;
 using APSIM.Shared.Utilities;
 using Models.PMF.Interfaces;
 using System.Collections.Generic;
+using APSIM.Numerics;
+using APSIM.Core;
 
 namespace Models.AgPasture
 {
 
     /// <summary>Describes a generic below ground organ of a pasture species.</summary>
     [Serializable]
-    public class PastureBelowGroundOrgan : Model
+    public class PastureBelowGroundOrgan : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
+
         /// <summary>Nutrient model.</summary>
         [Link(Type = LinkType.Ancestor)]
         private PastureSpecies species = null;
@@ -197,7 +204,7 @@ namespace Models.AgPasture
             get
             {
                 double[] result = new double[nLayers];
-                double totalRootLength = Tissue[0].DM.Wt * SpecificRootLength * 0.1; // m root/m2 
+                double totalRootLength = Tissue[0].DM.Wt * SpecificRootLength * 0.1; // m root/m2
                 totalRootLength *= 0.001; // convert into mm root/mm2 soil)
                 for (int layer = 0; layer < result.Length; layer++)
                 {
@@ -233,43 +240,43 @@ namespace Models.AgPasture
         public void Initialise(Zone zone, double minimumLiveWt)
         {
             // link to soil models parameters
-            soil = zone.FindInScope<Soil>();
+            soil = Structure.Find<Soil>(relativeTo: zone);
             if (soil == null)
             {
                 throw new Exception($"Cannot find soil in zone {zone.Name}");
             }
 
-            soilPhysical = soil.FindInScope<IPhysical>();
+            soilPhysical = Structure.Find<IPhysical>(relativeTo: soil);
             if (soilPhysical == null)
             {
                 throw new Exception($"Cannot find soil physical in soil {soil.Name}");
             }
 
-            waterBalance = soil.FindInScope<ISoilWater>();
+            waterBalance = Structure.Find<ISoilWater>(relativeTo: soil);
             if (waterBalance == null)
             {
                 throw new Exception($"Cannot find a water balance model in soil {soil.Name}");
             }
 
-            soilCropData = soil.FindDescendant<SoilCrop>(species.Name + "Soil");
+            soilCropData = Structure.FindChild<SoilCrop>(species.Name + "Soil", relativeTo: soil, recurse: true);
             if (soilCropData == null)
             {
                 throw new Exception($"Cannot find a soil crop parameterisation called {species.Name + "Soil"}");
             }
 
-            nutrient = zone.FindInScope<INutrient>();
+            nutrient = Structure.Find<INutrient>(relativeTo: zone);
             if (nutrient == null)
             {
                 throw new Exception($"Cannot find SoilNitrogen in zone {zone.Name}");
             }
 
-            no3 = zone.FindInScope("NO3") as ISolute;
+            no3 = Structure.Find<ISolute>("NO3", relativeTo: zone);
             if (no3 == null)
             {
                 throw new Exception($"Cannot find NO3 solute in zone {zone.Name}");
             }
 
-            nh4 = zone.FindInScope("NH4") as ISolute;
+            nh4 = Structure.Find<ISolute>("NH4", relativeTo: zone);
             if (nh4 == null)
             {
                 throw new Exception($"Cannot find NH4 solute in zone {zone.Name}");
@@ -291,6 +298,7 @@ namespace Models.AgPasture
                     if (z > 0)
                     {
                         MaximumAllowedRootingDepth = soilPhysical.ThicknessCumulative[z - 1];
+                        break;
                     }
                     else
                     { // not a soil...
@@ -514,6 +522,7 @@ namespace Models.AgPasture
                 {
                     BottomLayer = layer;
                     currentDepth += soilPhysical.Thickness[layer];
+                    //break;  2025-05-08 VOS needs to consult with RC and see why this was supposed to be here
                 }
                 else
                 {
@@ -612,7 +621,7 @@ namespace Models.AgPasture
 
         /// <summary>Computes the allocation of new growth to roots for each layer.</summary>
         /// <remarks>
-        /// The current target distribution for roots changes whenever the root depth changes, this is then used to allocate 
+        /// The current target distribution for roots changes whenever the root depth changes, this is then used to allocate
         ///  new growth to each layer within the root zone. The existing distribution is used on any DM removal, so it may
         ///  take some time for the actual distribution to evolve to be equal to the target.
         /// </remarks>

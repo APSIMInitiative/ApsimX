@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using APSIM.Core;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -107,8 +109,13 @@ namespace Models.GrazPlan
     [ViewName("UserInterface.Views.MarkdownView")]
     [PresenterName("UserInterface.Presenters.GenericPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
-    public class Stock : Model
+    public class Stock : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
+
         /// <summary>
         /// The list of user specified forage component names
         /// </summary>
@@ -941,7 +948,7 @@ namespace Models.GrazPlan
 
                 return values;
             }
-        }       
+        }
 
         // =========== Condition score of animals ==================
 
@@ -3707,9 +3714,9 @@ namespace Models.GrazPlan
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             this.randFactory.Initialise(RandSeed);
-            StockModel = new StockList(this, systemClock, locWtr, paddocks);
+            StockModel = new StockList(this, systemClock, locWtr, paddocks, Structure);
 
-            var childGenotypes = this.FindAllChildren<Genotype>().Cast<Genotype>().ToList();
+            var childGenotypes = Structure.FindChildren<Genotype>().Cast<Genotype>().ToList();
             if (childGenotypes != null)
                 childGenotypes.ForEach(animalParamSet => Genotypes.Add(animalParamSet));
 
@@ -3794,7 +3801,7 @@ namespace Models.GrazPlan
                     Surface.AddFaecesType faeces = new Surface.AddFaecesType();
                     if (this.PopulateFaeces(paddInfo, faeces))
                     {
-                        ((SurfaceOrganicMatter)paddInfo.AddFaecesObj).AddFaeces(faeces);
+                        ((SurfaceOrganicMatter)paddInfo.AddFaecesObj).Add(faeces.OMWeight, faeces.OMN, faeces.OMP, "manure", null, 0, faeces.NO3N, faeces.NH4N);
                     }
                 }
                 if (paddInfo.AddUrineObj != null)

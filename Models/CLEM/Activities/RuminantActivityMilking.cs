@@ -9,6 +9,7 @@ using Models.Core.Attributes;
 using System.IO;
 using Models.CLEM.Groupings;
 using APSIM.Shared.Utilities;
+using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
@@ -102,7 +103,7 @@ namespace Models.CLEM.Activities
             numberToDo = 0;
             numberToSkip = 0;
             IEnumerable<RuminantFemale> herd = GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.IsLactating);
-            uniqueIndividuals = GetUniqueIndividuals<RuminantFemale>(filterGroups, herd);
+            uniqueIndividuals = GetUniqueIndividuals<RuminantFemale>(filterGroups, herd, Structure);
             numberToDo = uniqueIndividuals?.Count() ?? 0;
 
             // provide updated measure for companion models
@@ -210,9 +211,9 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Milk is placed in ");
                 htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(ResourceTypeName, "Not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
 
     }

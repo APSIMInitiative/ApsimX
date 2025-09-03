@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Core;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
@@ -81,7 +83,7 @@ namespace Models.WaterModel
                 coverSurfaceCrop = addCover(coverSurfaceCrop, effectiveCropCover);
             }
 
-            // add cover known to affect runoff i.e. residue with canopy shading residue         
+            // add cover known to affect runoff i.e. residue with canopy shading residue
             return addCover(coverSurfaceCrop, surfaceOrganicMatter.Cover);
         }
 

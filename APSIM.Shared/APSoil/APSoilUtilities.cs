@@ -1,5 +1,6 @@
 ﻿namespace APSIM.Shared.APSoil
 {
+    using APSIM.Numerics;
     using APSIM.Shared.Utilities;
     using System;
     using System.IO;

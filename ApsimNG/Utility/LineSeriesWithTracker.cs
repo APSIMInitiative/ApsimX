@@ -1,10 +1,15 @@
-﻿namespace Utility
-{
-    using System;
-    using APSIM.Shared.Graphing;
-    using APSIM.Shared.Utilities;
-    using OxyPlot;
+﻿using System;
+using System.Collections;
+using APSIM.Shared.Graphing;
+using APSIM.Shared.Utilities;
+using OxyPlot;
+using System.Linq;
+using System.Collections.Generic;
+using APSIM.Numerics;
 
+
+namespace Utility
+{
     /// <summary>
     /// A line series with a better tracker.
     /// </summary>
@@ -39,6 +44,11 @@
         /// Type of the y variable
         /// </summary>
         public Type YType { get; set; }
+
+        /// <summary>
+        /// Caption for each data point
+        /// </summary>
+        public IEnumerable Caption { get; set; }
 
 
         public LineSeriesWithTracker() { }
@@ -90,7 +100,14 @@
                         yInput = d.ToString();
                 }
 
-                hitResult.Series.TrackerFormatString = TooltipTitle + "\n" + XFieldName + ": " + xInput + "\n" + YFieldName + ": " + yInput;
+                string caption = "";
+                if (Caption != null)
+                {
+                    List<string> captions = Caption.Cast<string>().ToList();
+                    caption = captions.ToArray<string>()[(int)hitResult.Index];
+                }
+
+                hitResult.Series.TrackerFormatString = caption + "\n" + XFieldName + ": " + xInput + "\n" + YFieldName + ": " + yInput;
             }
 
             return hitResult;

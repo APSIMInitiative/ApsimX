@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Core;
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
@@ -143,8 +144,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (parentPlant.IsAlive)
-                ClearBiomassFlows();
+            ClearBiomassFlows();
         }
 
         /// <summary>Called when [simulation commencing].</summary>

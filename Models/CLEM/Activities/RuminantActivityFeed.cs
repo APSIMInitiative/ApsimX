@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;
 using APSIM.Shared.Utilities;
+using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
@@ -148,7 +149,7 @@ namespace Models.CLEM.Activities
             wasted = 0;
             excessFed = 0;
             IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm);
-            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups.OfType<RuminantFeedGroup>(), herd);
+            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups.OfType<RuminantFeedGroup>(), herd, Structure);
             numberToDo = uniqueIndividuals?.Count() ?? 0;
             IndividualsToBeFed = uniqueIndividuals;
 
@@ -253,7 +254,7 @@ namespace Models.CLEM.Activities
                     {
                         // reduce individuals in group
                         int numberToRemove = Math.Min(numberPresent, numberNotAllowed);
-                        numberPresent -= numberToRemove;    
+                        numberPresent -= numberToRemove;
                         numberNotAllowed -= numberToRemove;
 
                         // calculate feed not needed for removed individuals
@@ -262,7 +263,7 @@ namespace Models.CLEM.Activities
                         iChild.CurrentIndividualsToFeed = iChild.CurrentIndividualsToFeed.SkipLast(numberToRemove).ToList();
                         iChild.UpdateCurrentFeedDemand(this);
 
-                        // remove from amountToSkip 
+                        // remove from amountToSkip
                         amountToSkip -= previouslyRequired;
                         Status = ActivityStatus.Partial;
                     }
@@ -349,7 +350,7 @@ namespace Models.CLEM.Activities
 
                     double totalWeight = 0;
                     if(FeedStyle == RuminantFeedActivityTypes.SpecifiedDailyAmount || FeedStyle == RuminantFeedActivityTypes.ProportionOfFeedAvailable)
-                    {  
+                    {
                         totalWeight = iChild.CurrentIndividualsToFeed.Sum(a => a.Weight);
                     }
 
@@ -416,7 +417,7 @@ namespace Models.CLEM.Activities
             // check that all children with proportion of feed available do not exceed 1
             if(FeedStyle == RuminantFeedActivityTypes.ProportionOfFeedAvailable)
             {
-                double propOfFeed = FindAllChildren<RuminantFeedGroup>().Sum(a => a.Value);
+                double propOfFeed = Structure.FindChildren<RuminantFeedGroup>().Sum(a => a.Value);
                 if(MathUtilities.IsGreaterThan(propOfFeed, 1.0))
                 {
                     string[] memberNames = new string[] { "Total proportion exceeds 1" };
@@ -439,9 +440,9 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("</div>");
                 if (ProportionTramplingWastage > 0)
                     htmlWriter.Write("\r\n<div class=\"activityentry\"> <span class=\"setvalue\">" + (ProportionTramplingWastage).ToString("0.##%") + "</span> is lost through trampling</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
     }
 }

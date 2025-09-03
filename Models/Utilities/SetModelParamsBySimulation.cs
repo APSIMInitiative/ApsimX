@@ -1,4 +1,5 @@
-﻿using APSIM.Shared.Utilities;
+using APSIM.Core;
+using APSIM.Shared.Utilities;
 using DocumentFormat.OpenXml.Drawing;
 using Models.Core;
 using Newtonsoft.Json;
@@ -23,13 +24,16 @@ namespace Models.Utilities
                       "Contains additional columns for each model parameter that is to be overwritten.  \n" +
                       "Each parameter column must have a header name that matches a full parameter address (e.g [Wheat].Phenology.Phyllochron.BasePhyllochron.FixedValue)  \n" +
                       "Set desired parameter values down the column to match the SimulationName specified in each row.")]
-    
+
     [ValidParent(ParentType = typeof(Zone))]
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SetModelParamsBySimulation : Model 
+    public class SetModelParamsBySimulation : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
 
         /// <summary>Location of file with crop specific coefficients</summary>
@@ -54,12 +58,12 @@ namespace Models.Utilities
         {
             get
             {
-                Simulation simulation = FindAncestor<Simulation>();
+                Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
                 if (simulation != null)
                     return PathUtilities.GetAbsolutePath(ParameterFile, simulation.FileName);
                 else
                 {
-                    Simulations simulations = FindAncestor<Simulations>();
+                    Simulations simulations = Structure.FindParent<Simulations>(recurse: true);
                     if (simulations != null)
                         return PathUtilities.GetAbsolutePath(ParameterFile, simulations.FileName);
                     else
@@ -68,7 +72,7 @@ namespace Models.Utilities
             }
             set
             {
-                Simulations simulations = FindAncestor<Simulations>();
+                Simulations simulations = Structure.FindParent<Simulations>(recurse: true);
                 if (simulations != null)
                     ParameterFile = PathUtilities.GetRelativePath(value, simulations.FileName);
                 else
@@ -76,25 +80,23 @@ namespace Models.Utilities
                 readCSVandUpdateProperties();
             }
         }
-                
-        private string CurrentSimulationName 
-        { 
-            get 
+
+        private string CurrentSimulationName
+        {
+            get
             { if (simulation != null)
-                    return  simulation.Name; 
-            else 
+                    return  simulation.Name;
+            else
                     return null;
             }
         }
 
-        ///<summary></summary> 
+        ///<summary></summary>
         [JsonIgnore] public Dictionary<string, string> CurrentSimParams { get; set; }
 
         [Link(Type = LinkType.Ancestor)]
-        private Zone zone = null;
-
-        [Link(Type = LinkType.Ancestor)]
         private Simulation simulation = null;
+
 
         ////// This secton contains the components that get values from the csv coefficient file to    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ////// display in the grid view and set them back to the csv when they are changed in the grid !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -147,7 +149,7 @@ namespace Models.Utilities
             return new DataTable();
         }
 
-        
+
         /// <summary>
         /// Gets the parameter set from the CoeffientFile for the CropName specified and returns in a dictionary maped to paramter names.
         /// </summary>
@@ -180,7 +182,7 @@ namespace Models.Utilities
         }
 
         /// <summary>
-        /// Method to find the current simulation row in ParameterFile and step throuh each column applying parameter sets 
+        /// Method to find the current simulation row in ParameterFile and step throuh each column applying parameter sets
         /// </summary>
         private void onSetEvent(object sender, EventArgs e)
         {
@@ -189,7 +191,7 @@ namespace Models.Utilities
             foreach (DataColumn column in setVars.Columns)
             {
                 varName = column.ColumnName.ToString();
-                if (varName != "SimulationName") 
+                if (varName != "SimulationName")
                 {
                     CurrentSimParams = getCurrentParams(setVars, CurrentSimulationName, varName);
                     object Pval = 0;
@@ -203,7 +205,7 @@ namespace Models.Utilities
                                                  CurrentSimulationName + " is not present in the SimulationName column in " + FullFileName);
                     }
                     if (Pval.ToString() != "")
-                        zone.Set(varName, Pval);
+                        Structure.Set(varName, Pval);
                 }
             }
         }

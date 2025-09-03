@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Models.Core;
 using Models.Functions;
 
@@ -14,8 +16,12 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(NutrientPoolFunctions))]
-    public class MobilisationSupplyFunction : Model, IFunction
+    public class MobilisationSupplyFunction : Model, IFunction, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         private Organ parentOrgan = null;
 
         // Declare a delegate type for calculating the IFunction return value:
@@ -39,7 +45,7 @@ namespace Models.PMF
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             parentOrgan = FindParentOrgan(this.Parent);
-            var childFunctions = FindAllChildren<IFunction>().ToList();
+            var childFunctions = Structure.FindChildren<IFunction>().ToList();
             var lookup = new Dictionary<string, Dictionary<string, Dictionary<string, DeficitCalculation>>>(StringComparer.InvariantCultureIgnoreCase);
 
             var carbonReAllocationFuntions = new Dictionary<string, DeficitCalculation>(StringComparer.InvariantCultureIgnoreCase)

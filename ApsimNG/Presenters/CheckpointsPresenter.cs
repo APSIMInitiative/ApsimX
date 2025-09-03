@@ -28,7 +28,7 @@
 
         /// <summary>The delete button on the view.</summary>
         private ButtonView deleteButton;
-        
+
         /// <summary>The checkpoint list popup menu.</summary>
         private MenuDescriptionArgs popupMenu;
 
@@ -48,7 +48,7 @@
             this.view = view as ViewBase;
             this.explorerPresenter = explorerPresenter;
 
-            storage = this.model.FindInScope<DataStore>();
+            storage = this.model.Node.Find<DataStore>();
 
             checkpointList = this.view.GetControl<TreeView>("CheckpointList");
             addButton = this.view.GetControl<ButtonView>("AddButton");
@@ -57,7 +57,8 @@
             popupMenu = new MenuDescriptionArgs()
             {
                 Name = "Show on graphs?",
-                ResourceNameForImage = "empty"
+                ResourceNameForImage = "empty",
+                Enabled = true,
             };
             popupMenu.OnClick += OnCheckpointTicked;
             checkpointList.ContextMenu = new MenuView();
@@ -110,7 +111,7 @@
         /// <param name="e">Event arguments</param>
         private void OnAddButtonClicked(object sender, EventArgs e)
         {
-            string checkpointName = Utility.StringEntryForm.ShowDialog(explorerPresenter, "New checkpoint name", 
+            string checkpointName = Utility.StringEntryForm.ShowDialog(explorerPresenter, "New checkpoint name",
                                                                        "Enter new checkpoint name:", null);
             if (checkpointName != null)
             {
@@ -167,7 +168,7 @@
         {
             var checkpointName = checkpointList.SelectedNode.Replace(".Checkpoints.", "");
             var checkpoint = rootNode.Children.Find(node => node.Name == checkpointName);
-    
+
             storage.Writer.SetCheckpointShowGraphs(checkpoint.Name, !checkpoint.ResourceNameForImage.Contains("Check"));
             storage.Reader.Refresh();
             PopulateList();

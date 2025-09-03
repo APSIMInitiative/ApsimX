@@ -7,6 +7,7 @@ using System.Linq;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
 using APSIM.Shared.Utilities;
+using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
@@ -81,7 +82,7 @@ namespace Models.CLEM.Activities
             numberToDo = 0;
             numberToSkip = 0;
             IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.NotMarkedForSale);
-            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd);
+            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd, Structure);
             numberToDo = uniqueIndividuals?.Count() ?? 0;
 
             // provide updated measure for companion models

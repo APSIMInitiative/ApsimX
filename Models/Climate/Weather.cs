@@ -1,4 +1,6 @@
-﻿using APSIM.Shared.Utilities;
+﻿using APSIM.Core;
+using APSIM.Numerics;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
 using Newtonsoft.Json;
@@ -18,8 +20,12 @@ namespace Models.Climate
     [PresenterName("UserInterface.Presenters.MetDataPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
-    public class Weather : Model, IWeather, IReferenceExternalFiles
+    public class Weather : Model, IWeather, IReferenceExternalFiles, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>
         /// A link to the clock model.
         /// </summary>
@@ -130,12 +136,12 @@ namespace Models.Climate
         {
             get
             {
-                Simulation simulation = FindAncestor<Simulation>();
+                Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
                 if (simulation != null)
                     return PathUtilities.GetAbsolutePath(this.constantsFile, simulation.FileName);
                 else
                 {
-                    Simulations simulations = FindAncestor<Simulations>();
+                    Simulations simulations = Structure.FindParent<Simulations>(recurse: true);
                     if (simulations != null)
                         return PathUtilities.GetAbsolutePath(this.constantsFile, simulations.FileName);
                     else
@@ -144,20 +150,25 @@ namespace Models.Climate
             }
             set
             {
-                Simulations simulations = FindAncestor<Simulations>();
-                if (simulations != null)
-                    this.constantsFile = PathUtilities.GetRelativePath(value, simulations.FileName);
-                else
                     this.constantsFile = value;
             }
         }
+
+        /// <summary>
+        /// Filename for the weather file.
+        /// </summary>
+        private string fileName;
 
         /// <summary>
         /// Gets or sets the file name. Should be relative filename where possible.
         /// </summary>
         [Summary]
         [Description("Weather file name")]
-        public string FileName { get; set; }
+        public string FileName
+        {
+            get { return fileName; }
+            set { fileName = value.Replace("\\", "/"); }
+        }
 
         /// <summary>
         /// Gets or sets the full file name (with path). The user interface uses this.
@@ -167,12 +178,12 @@ namespace Models.Climate
         {
             get
             {
-                Simulation simulation = FindAncestor<Simulation>();
+                Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
                 if (simulation != null && simulation.FileName != null)
                     return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
                 else
                 {
-                    Simulations simulations = FindAncestor<Simulations>();
+                    Simulations simulations = Structure.FindParent<Simulations>(recurse: true);
                     if (simulations != null)
                         return PathUtilities.GetAbsolutePath(this.FileName, simulations.FileName);
                     else
@@ -181,11 +192,7 @@ namespace Models.Climate
             }
             set
             {
-                Simulations simulations = FindAncestor<Simulations>();
-                if (simulations != null)
-                    this.FileName = PathUtilities.GetRelativePathAndRootExamples(value, simulations.FileName);
-                else
-                    this.FileName = value;
+                this.FileName = value;
             }
         }
 
@@ -397,6 +404,7 @@ namespace Models.Climate
         /// <summary>
         /// Gets the latitude
         /// </summary>
+        [JsonIgnore]
         public double Latitude
         {
             get
@@ -416,6 +424,7 @@ namespace Models.Climate
         /// <summary>
         /// Gets the longitude
         /// </summary>
+        [JsonIgnore]
         public double Longitude
         {
             get
@@ -431,6 +440,7 @@ namespace Models.Climate
         /// Gets the average temperature
         /// </summary>
         [Units("°C")]
+        [JsonIgnore]
         public double Tav
         {
             get
@@ -452,6 +462,7 @@ namespace Models.Climate
         /// <summary>
         /// Gets the temperature amplitude.
         /// </summary>
+        [JsonIgnore]
         public double Amp
         {
             get
@@ -623,6 +634,14 @@ namespace Models.Climate
                 this.AirPressure = 1010;
             if (DiffuseFraction == 0)
                 this.DiffuseFraction = -1;
+
+            Simulations simulations = Structure.FindParent<Simulations>(recurse: true);
+            if (simulations != null)
+                this.constantsFile = PathUtilities.GetRelativePath(constantsFile, simulations.FileName);
+
+            if (simulations != null)
+                FileName = PathUtilities.GetRelativePathAndRootExamples(FileName, simulations.FileName);
+
             if (reader != null)
             {
                 reader.Close();
@@ -764,7 +783,7 @@ namespace Models.Climate
 
             if (this.reader == null)
                 if (!this.OpenDataFile())
-                    throw new ApsimXException(this, "Cannot find weather file '" + this.FileName + "'");
+                    throw new ApsimXException(this, "Cannot find weather file '" + this.FullFileName + "'");
 
             //get weather for that date
             DailyMetDataFromFile readMetData = new DailyMetDataFromFile();
@@ -988,6 +1007,7 @@ namespace Models.Climate
             }
             else
             {
+
                 return false;
             }
         }
@@ -1052,7 +1072,15 @@ namespace Models.Climate
             // get dataset size
             DateTime start = this.reader.FirstDate;
             DateTime last = this.reader.LastDate;
+
             int nyears = last.Year - start.Year + 1;
+
+            DateTime endDate = new DateTime(last.Year, start.Month, start.Day); //get same day of year as start date
+            if (endDate > last)
+                endDate = new DateTime(last.Year-1, start.Month, start.Day);
+
+            if ((endDate - start).TotalDays < 730)
+                throw new Exception("Tav and Amp cannot be calculated from less than two years of met data.");
 
             // temp storage arrays
             double[,] monthlyMeans = new double[12, nyears];
@@ -1085,7 +1113,7 @@ namespace Models.Climate
                 monthlySums[curMonth - 1, yearIndex] = monthlySums[curMonth - 1, yearIndex] + ((maxt + mint) * 0.5);
                 monthlyDays[curMonth - 1, yearIndex]++;
 
-                if (curDate >= last)
+                if (curDate >= endDate)
                     moreData = false;
             }
 

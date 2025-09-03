@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.PMF.Organs;
@@ -15,7 +16,7 @@ namespace Models.Functions.RootShape
         /// <summary>Calculates the proportion of the layer's volume occupied by roots.</summary>
         public double CalcRootProportion(ZoneState zone, int layer)
         {
-            var physical = zone.Soil.FindChild<Soils.IPhysical>();
+            var physical = zone.Soil.Node.FindChild<Soils.IPhysical>();
 
             double top = layer == 0 ? 0 : MathUtilities.Sum(physical.Thickness, 0, layer - 1);
             double bottom = top + physical.Thickness[layer];
@@ -36,7 +37,7 @@ namespace Models.Functions.RootShape
         /// <param name="zone">What is a ZoneState?</param>
         public override void CalcRootVolumeProportionInLayers(ZoneState zone)
         {
-            var physical = zone.Soil.FindChild<Soils.IPhysical>();
+            var physical = zone.Soil.Node.FindChild<Soils.IPhysical>();
             for (int i = 0; i < physical.Thickness.Length; i++)
                 zone.RootProportionVolume[i] = CalcRootProportion(zone, i);
         }

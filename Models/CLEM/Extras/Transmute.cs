@@ -9,13 +9,14 @@ using Models.Core.Attributes;
 using Models.CLEM.Interfaces;
 using System.IO;
 using APSIM.Shared.Utilities;
+using APSIM.Numerics;
 
 namespace Models.CLEM
 {
     ///<summary>
     /// A resource transmute component used as a child of a Transmutation component
     /// Determines the amount of a specified resource (B) required for the transmutation of shortfall resource (A)
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -33,7 +34,7 @@ namespace Models.CLEM
         private double shortfallPacketSize = 1;
         private bool shortfallWholePackets = false;
         private double shortfallPricePacketMultiplier;
-        private FinanceType financeType; 
+        private FinanceType financeType;
 
         /// <inheritdoc/>
         [JsonIgnore]
@@ -96,7 +97,7 @@ namespace Models.CLEM
             {
                 ResourceGroup = (TransmuteResourceType as IModel).Parent as ResourceBaseWithTransactions;
 
-                var shortfallResourceType = (this as IModel).FindAncestor<IResourceType>();
+                var shortfallResourceType = Structure.FindParent<IResourceType>(recurse: true);
                 shortfallPacketSize = (Parent as Transmutation).TransmutationPacketSize;
                 shortfallWholePackets = (Parent as Transmutation).UseWholePackets;
 
@@ -108,7 +109,7 @@ namespace Models.CLEM
                         if ((shortfallResourceType as CLEMResourceTypeBase).EquivalentMarketStore.PricingExists(PurchaseOrSalePricingStyleType.Purchase))
                             shortfallPricing = (shortfallResourceType as CLEMResourceTypeBase).EquivalentMarketStore.Price(PurchaseOrSalePricingStyleType.Purchase);
 
-                    if(shortfallPricing is null)                    
+                    if(shortfallPricing is null)
                         shortfallPricing = shortfallResourceType.Price(PurchaseOrSalePricingStyleType.Purchase);
 
                     shortfallPacketSize = shortfallPricing.PacketSize;
@@ -249,7 +250,7 @@ namespace Models.CLEM
             }
 
             // get pricing if available
-            IResourceType parentResource = FindAncestor<CLEMResourceTypeBase>() as IResourceType;
+            IResourceType parentResource = Structure.FindParent<CLEMResourceTypeBase>(recurse: true) as IResourceType;
             if (TransmuteStyle == TransmuteStyle.UsePricing)
             {
                 if (shortfallPricing is null)
