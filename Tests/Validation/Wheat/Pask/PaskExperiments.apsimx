@@ -1855,7 +1855,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "C:/GitHubRepos/ApsimX/Tests/Validation/Wheat/met/Lincoln_-43.6_172.45.met",
+              "FileName": "%root%/Tests/Validation/Wheat/met/Lincoln_-43.6_172.45.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -5737,7 +5737,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "C:/GitHubRepos/ApsimX/Tests/Validation/Wheat/met/325_52775.met",
+              "FileName": "%root%/Tests/Validation/Wheat/met/325_52775.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -9534,7 +9534,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "C:/GitHubRepos/ApsimX/Tests/Validation/Wheat/met/325_52775.met",
+              "FileName": "%root%/Tests/Validation/Wheat/met/325_52775.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
