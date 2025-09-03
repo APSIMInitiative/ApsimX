@@ -420,7 +420,7 @@ namespace Models.PMF.Organs
             get
             {
                 // FAWS across the root system (no constraint).
-                return CalFASW(1e10);
+                return CalFASW(double.MaxValue);
             }
         }
 
