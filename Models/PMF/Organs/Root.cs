@@ -499,7 +499,7 @@ namespace Models.PMF.Organs
                 double[] pawmm = soilCrop.PAWmm;
                 double[] pawcmm = soilCrop.PAWCmm;
 
-                if (MathUtilities.IsLessThan(depth, MathUtilities.Sum(soilPhysical.Thickness), 1e-3))
+                if (MathUtilities.IsLessThan(depth, MathUtilities.Sum(soilPhysical.Thickness)))
                 {
                     pawmm = SoilUtilities.KeepTopXmm(pawmm, soilPhysical.Thickness, depth);
                     pawcmm = SoilUtilities.KeepTopXmm(pawcmm, soilPhysical.Thickness, depth);
