@@ -420,7 +420,7 @@ namespace Models.PMF.Organs
             get
             {
                 // FAWS across the root system (no constraint).
-                return CalFASW(double.MaxValue);
+                return CalcFASW(double.MaxValue);
             }
         }
 
@@ -485,7 +485,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Returns the Fraction of Available Soil Water across the root system (across zones, constrained by the specified depth)</summary>
-        public double CalFASW(double depth)
+        public double CalcFASW(double depth)
         {
             double fasw = 0;
             double TotalArea = 0;
