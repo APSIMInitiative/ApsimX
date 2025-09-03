@@ -29,10 +29,6 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGraze.htm")]
     class RuminantActivityGrazePastureHerd : CLEMRuminantActivityBase, IValidatableObject, IStructureDependency
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
         /// <summary>
         /// Link to clock
         /// Public so children can be dynamically created after links defined
@@ -166,7 +162,7 @@ namespace Models.CLEM.Activities
                     Value = RuminantTypeName
                 }
             );
-            this.Children.Add(herdGroup);
+            Structure.AddChild(herdGroup);
 
             this.InitialiseHerd(false, false);
 
@@ -176,24 +172,6 @@ namespace Models.CLEM.Activities
 
             GrazeFoodStoreModel = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
             RuminantTypeModel = Resources.FindResourceType<RuminantHerd, RuminantType>(this, RuminantTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
-        }
-
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMValidate")]
-        private void OnFinalInitialise(object sender, EventArgs e)
-        {
-            shortfallReportingCutoff = Structure.Find<ReportResourceShortfalls>()?.PropPastureShortfallOfDesiredIntake??0.02;
-
-            // if this is the last of newly added models that will be set to hidden
-            // reset the simulation subscriptions to correct the new order before running the simulation.
-            if (IsHidden)
-            {
-                Events events = new Events(FindAncestor<Simulation>());
-                //events.DisconnectEvents();
-                events.ReconnectEvents("Models.Clock", "CLEMGetResourcesRequired");
-            }
         }
 
         /// <summary>An event handler to allow us to clear requests at start of month.</summary>

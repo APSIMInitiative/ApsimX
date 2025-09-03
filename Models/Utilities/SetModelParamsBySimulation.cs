@@ -58,12 +58,12 @@ namespace Models.Utilities
         {
             get
             {
-                Simulation simulation = FindAncestor<Simulation>();
+                Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
                 if (simulation != null)
                     return PathUtilities.GetAbsolutePath(ParameterFile, simulation.FileName);
                 else
                 {
-                    Simulations simulations = FindAncestor<Simulations>();
+                    Simulations simulations = Structure.FindParent<Simulations>(recurse: true);
                     if (simulations != null)
                         return PathUtilities.GetAbsolutePath(ParameterFile, simulations.FileName);
                     else
@@ -72,7 +72,7 @@ namespace Models.Utilities
             }
             set
             {
-                Simulations simulations = FindAncestor<Simulations>();
+                Simulations simulations = Structure.FindParent<Simulations>(recurse: true);
                 if (simulations != null)
                     ParameterFile = PathUtilities.GetRelativePath(value, simulations.FileName);
                 else

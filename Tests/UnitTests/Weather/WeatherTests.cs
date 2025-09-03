@@ -58,7 +58,7 @@ namespace UnitTests.Weather
 
             baseSim.Prepare();
             baseSim.Run();
-            var summary = baseSim.FindDescendant<MockSummary>();
+            var summary = baseSim.Node.FindChild<MockSummary>(recurse: true);
             Assert.That(summary.messages[0], Is.EqualTo("Simulation terminated normally"));
         }
 
@@ -77,6 +77,7 @@ namespace UnitTests.Weather
                 FullFileName = weatherFilePath,
                 ExcelWorkSheetName = "Sheet1"
             };
+            Node.Create(weather);
 
             Assert.That(weather.StartDate, Is.EqualTo(new DateTime(1987, 5, 30)));
             Assert.That(weather.EndDate, Is.EqualTo(new DateTime(1987, 6, 26)));
@@ -224,7 +225,7 @@ namespace UnitTests.Weather
             foreach (string exampleFile in exampleFileNames)
             {
                 Simulations sim = FileFormat.ReadFromFile<Simulations>(exampleFile, e => {return;}).Model as Simulations;
-                IEnumerable<Models.Climate.Weather> weatherModels = sim.FindAllDescendants<Models.Climate.Weather>();
+                IEnumerable<Models.Climate.Weather> weatherModels = sim.Node.FindChildren<Models.Climate.Weather>(recurse: true);
                 foreach (Models.Climate.Weather weatherModel in weatherModels)
                 {
                     if (!weatherModel.FileName.Contains("%root%/Examples/WeatherFiles/") && weatherModel.FileName.Contains('\\'))
@@ -334,7 +335,6 @@ namespace UnitTests.Weather
                         new MockSummary()
                     }
             };
-
             Models.Climate.SimpleWeather weather = baseSim.Children[0] as Models.Climate.SimpleWeather;
             Clock clock = baseSim.Children[1] as Clock;
 
