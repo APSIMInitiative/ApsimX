@@ -27,10 +27,6 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Labour/LabourActivityFeed.htm")]
     public class LabourActivityFeed : CLEMActivityBase, IHandlesActivityCompanionModels, IStructureDependency
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
         private int numberToDo;
         private double amountToDo;
         private IEnumerable<LabourFeedGroup> filterGroups;
@@ -139,10 +135,10 @@ namespace Models.CLEM.Activities
             }
             // check that no filters will filter all groups otherwise return all
             // account for any sorting or reduced takes
-            var emptyfilters = filters.Where(a => a.FindAllChildren<Filter>().Any() == false);
+            var emptyfilters = filters.Where(a => Structure.FindChildren<Filter>(relativeTo: a).Any() == false);
             if (emptyfilters.Any())
             {
-                foreach (var empty in emptyfilters.Where(a => a.FindAllChildren<ISort>().Any() || a.FindAllChildren<TakeFromFiltered>().Any()))
+                foreach (var empty in emptyfilters.Where(a => Structure.FindChildren<ISort>(relativeTo: a).Any() || Structure.FindChildren<TakeFromFiltered>(relativeTo: a).Any()))
                     population = empty.Filter(population);
                 return population;
             }
@@ -302,7 +298,7 @@ namespace Models.CLEM.Activities
         {
             return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
             {
-                (FindAllChildren<LabourFeedGroup>(), true, "childgroupactivityborder", "The following groups will be fed:", "No LabourFeedGroup was provided"),
+                (Structure.FindChildren<LabourFeedGroup>(), true, "childgroupactivityborder", "The following groups will be fed:", "No LabourFeedGroup was provided"),
             };
         }
 

@@ -56,17 +56,16 @@ namespace UserInterface.Presenters
             view = v as ViewBase;
             this.explorerPresenter = explorerPresenter;
 
-            Soil soilNode = this.model.FindAncestor<Soil>();
-            if (soilNode != null)
-            {
-                physical = soilNode.FindChild<Physical>();
-                physical.InFill();
-                var chemical = soilNode.FindChild<Chemical>();
-                var organic = soilNode.FindChild<Organic>();
-                if (chemical != null && organic != null)
-                    chemical.InFill(physical, organic);
-                water = soilNode.FindChild<Water>();
-            }
+            Soil soilNode = this.model.Node.FindParent<Soil>();
+            physical = model as Physical ?? soilNode?.Node.FindChild<Physical>();
+            physical?.InFill();
+
+            var chemical = model as Chemical ?? soilNode?.Node.FindChild<Chemical>();
+            var organic = model as Organic ?? soilNode?.Node.FindChild<Organic>();
+            if (chemical != null && organic != null)
+                chemical.InFill(physical, organic);
+            water = model as Water ?? soilNode?.Node.FindChild<Water>();
+
             ContainerView gridContainer = view.GetControl<ContainerView>("grid");
             gridPresenter = new GridPresenter();
             gridPresenter.Attach(model, gridContainer, explorerPresenter);
@@ -106,7 +105,7 @@ namespace UserInterface.Presenters
             {
                 topPane.Position = (int)Math.Round(paneWidth * 0.3);
             }
-            
+
             numLayersLabel = view.GetControl<LabelView>("numLayers_lbl");
             if (!propertyView.AnyProperties)
             {
@@ -182,7 +181,9 @@ namespace UserInterface.Presenters
                     }
                     else if (model is Chemical chemical)
                     {
-                        PopulateChemicalGraph(graph, chemical.Thickness, chemical.PH, chemical.PHUnits, Chemical.GetStandardisedSolutes(chemical));
+                        var standardisedSoil = (chemical.Parent as Soil)?.CloneAndSanitise(chemical.Thickness);
+                        var solutes = standardisedSoil?.Node.FindChildren<Solute>();
+                        PopulateChemicalGraph(graph, chemical.Thickness, chemical.PH, chemical.PHUnits, solutes);
                     }
 
                     numLayersLabel.Text = $"{gridPresenter.RowCount()-1} layers";  // -1 to not count the empty row at bottom of sheet.
@@ -362,7 +363,7 @@ namespace UserInterface.Presenters
                                         System.Drawing.Color.Red, LineType.Solid, MarkerType.None,
                                         LineThickness.Normal, MarkerSize.Normal, 1, true);
             }
-                
+
 
             graph.DrawLineAndMarkers("DUL", dul,
                         cumulativeThickness,

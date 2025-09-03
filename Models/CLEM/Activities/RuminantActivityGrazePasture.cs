@@ -31,10 +31,6 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGraze.htm")]
     public class RuminantActivityGrazePasture : CLEMRuminantActivityBase, IValidatableObject, IStructureDependency
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
         /// <summary>
         /// Link to clock
         /// Public so children can be dynamically created after links defined
@@ -80,12 +76,12 @@ namespace Models.CLEM.Activities
             Guid currentUid = UniqueID;
             List<IModel> grazePastureList = new List<IModel>();
 
-            bool buildTransactionFromTree = FindAncestor<ZoneCLEM>().BuildTransactionCategoryFromTree;
+            bool buildTransactionFromTree = Structure.FindParent<ZoneCLEM>(recurse: true).BuildTransactionCategoryFromTree;
             string transCat = "";
             if (!buildTransactionFromTree)
                 transCat = TransactionCategory;
 
-            foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())
+            foreach (RuminantType herdType in Structure.FindChildren<RuminantType>(relativeTo: HerdResource))
             {
                 RuminantActivityGrazePastureHerd grazePastureHerd = new RuminantActivityGrazePastureHerd
                 {
@@ -122,13 +118,15 @@ namespace Models.CLEM.Activities
                     }
                 );
                 grazePastureHerd.Children.Add(herdGroup);
-                grazePastureHerd.FindChild<RuminantActivityGroup>().InitialiseFilters();
+                Structure.AddChild(grazePastureHerd);
 
+                Structure.FindChild<RuminantActivityGroup>(relativeTo: grazePastureHerd).InitialiseFilters();
                 grazePastureHerd.InitialiseHerd(false, false);
-                Children.Add(grazePastureHerd);
-                Models.Core.ApsimFile.Structure.Add(grazePastureHerd, this);
             }
-            this.FindAllDescendants<RuminantActivityGrazePastureHerd>().LastOrDefault().IsHidden = true;
+            Structure.FindChildren<RuminantActivityGrazePastureHerd>(recurse: true).LastOrDefault().IsHidden = true;
+
+            Events events = new Events(Structure.FindParent<Simulation>(recurse: true));
+            events.ReconnectEvents("Models.Clock");
         }
 
         /// <inheritdoc/>
@@ -138,7 +136,7 @@ namespace Models.CLEM.Activities
 
             // check nested graze breed requirements for this pasture
             double totalNeeded = 0;
-            IEnumerable<RuminantActivityGrazePastureHerd> grazeHerdChildren = FindAllChildren<RuminantActivityGrazePastureHerd>();
+            IEnumerable<RuminantActivityGrazePastureHerd> grazeHerdChildren = Structure.FindChildren<RuminantActivityGrazePastureHerd>();
             double potentialIntakeLimiter = -1;
             foreach (RuminantActivityGrazePastureHerd item in grazeHerdChildren)
             {

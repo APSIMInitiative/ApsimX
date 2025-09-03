@@ -322,14 +322,7 @@ namespace Models.Storage
         /// <returns></returns>
         public DataTable GetDataUsingSql(string sql)
         {
-            try
-            {
-                return Connection.ExecuteQuery(sql);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            return Connection.ExecuteQuery(sql);
         }
 
         /// <summary>Execute sql.</summary>

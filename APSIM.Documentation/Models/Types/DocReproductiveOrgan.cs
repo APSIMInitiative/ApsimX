@@ -28,7 +28,7 @@ namespace APSIM.Documentation.Models.Types
 
             // Document Constants
             var constantTags = new List<ITag>();
-            foreach (var constant in model.FindAllChildren<Constant>())
+            foreach (var constant in model.Node.FindChildren<Constant>())
                 constantTags.AddRange(AutoDocumentation.DocumentModel(constant));
             section.Add(new Section("Constants", constantTags));
 

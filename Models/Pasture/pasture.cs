@@ -115,12 +115,6 @@ namespace Models.GrazPlan
         #region Class links
 
         /// <summary>
-        /// The simulation
-        /// </summary>
-        [Link]
-        private Simulation simulation = null;
-
-        /// <summary>
         /// The simulation clock
         /// </summary>
         [Link]
@@ -2219,9 +2213,9 @@ namespace Models.GrazPlan
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            logFileName = Path.Combine(Path.GetDirectoryName(simulation.FileName), "log-apsim.txt");
-            if (File.Exists(logFileName))
-                File.Delete(logFileName);
+            //logFileName = Path.Combine(Path.GetDirectoryName(simulation.FileName), "log-apsim.txt");
+            //if (File.Exists(logFileName))
+            //    File.Delete(logFileName);
 
             // Initialise the pasture model with green and dry cohorts that are
             // found as children of this component.
@@ -2449,7 +2443,7 @@ namespace Models.GrazPlan
                 throw new Exception($"Cannot find soil physical in soil {soil.Name}");
             }
 
-            soilCropData = soil.FindDescendant<Models.Soils.SoilCrop>(Species + "Soil");
+            soilCropData = Structure.FindChild<Models.Soils.SoilCrop>(Species + "Soil", relativeTo: soil, recurse: true);
             if (soilCropData == null)
             {
                 throw new Exception($"Cannot find a soil crop parameterisation called {Species + "Soil"}");
@@ -2542,7 +2536,7 @@ namespace Models.GrazPlan
         private void GetSiblingPlants()
         {
             // get values from sibling components
-            foreach (ICanopy amodel in zone.FindAllDescendants<ICanopy>())
+            foreach (ICanopy amodel in Structure.FindChildren<ICanopy>(relativeTo: zone, recurse: true))
             {
                 if (amodel != this)
                 {
@@ -2609,33 +2603,34 @@ namespace Models.GrazPlan
 
             EvaluateSoilWaterAvailability(water.MM);
 
-            File.AppendAllLines(logFileName, new string[]
-                            {
-                                "-------------",
-                                $"DATE:  {systemClock.Today:d MMM yyyy}",
-                                $"TMax: {FInputs.MaxTemp:F2}",
-                                $"TMin: {FInputs.MinTemp:F2}",
-                                $"Rain: {FInputs.Precipitation:F2}",
-                                $"RainIntercept: {FInputs.RainIntercept:F2}",
-                                $"Radn: {FInputs.Radiation:F2}",
-                                $"PotentialET: {FInputs.PotentialET:F2}",
-                                $"VP_Deficit: {FInputs.VP_Deficit:F2}",
-                                $"Windspeed: {FInputs.Windspeed:F2}",
-                                $"DayLength: {FInputs.DayLength:F2}",
-                                $"CO2: {FInputs.CO2_PPM:F2}",
-                                $"SurfaceEvap: {FInputs.SurfaceEvap:F2}",
-                                $"ASW: {StringUtilities.Build(FInputs.ASW[1..], ",", format:"F5")}",
-                                $"WFPS: {StringUtilities.Build(FInputs.WFPS[1..], ",", format:"F5")}",
-                                $"NO3,  {systemClock.Today:d MMM yyyy}, {StringUtilities.Build(no3.kgha, ",", format:"F5")}",
-                                $"NH4,  {systemClock.Today:d MMM yyyy}, {StringUtilities.Build(nh4.kgha, ",", format:"F5")}",
-                                $"pH: {StringUtilities.Build(FInputs.pH[1..], ",", format:"F5")}",
-                                $"FTranspiration  {systemClock.Today:d MMM yyyy}, 1, {StringUtilities.Build(FTranspiration[1][1..(FNoLayers+1)], ",", format:"F5")}",
-                                $"FTranspiration  {systemClock.Today:d MMM yyyy}, 2, {StringUtilities.Build(FTranspiration[2][1..(FNoLayers+1)], ",", format:"F5")}",
-                                $"FTranspiration  {systemClock.Today:d MMM yyyy}, 3, {StringUtilities.Build(FTranspiration[3][1..(FNoLayers+1)], ",", format:"F5")}",
-                                $"Theta :  {systemClock.Today:d MMM yyyy}, {StringUtilities.Build(FInputs.Theta[1..], ",", format:"F5")}",
-                                $"max water available to plant: {StringUtilities.Build(mySoilWaterAvailable, ",", format:"F5")}",
-                                $"water demand: { CalculateWaterDemand():F2}"
-                            });
+            if (Pasture.logFileName != null)
+                File.AppendAllLines(logFileName, new string[]
+                                {
+                                    "-------------",
+                                    $"DATE:  {systemClock.Today:d MMM yyyy}",
+                                    $"TMax: {FInputs.MaxTemp:F2}",
+                                    $"TMin: {FInputs.MinTemp:F2}",
+                                    $"Rain: {FInputs.Precipitation:F2}",
+                                    $"RainIntercept: {FInputs.RainIntercept:F2}",
+                                    $"Radn: {FInputs.Radiation:F2}",
+                                    $"PotentialET: {FInputs.PotentialET:F2}",
+                                    $"VP_Deficit: {FInputs.VP_Deficit:F2}",
+                                    $"Windspeed: {FInputs.Windspeed:F2}",
+                                    $"DayLength: {FInputs.DayLength:F2}",
+                                    $"CO2: {FInputs.CO2_PPM:F2}",
+                                    $"SurfaceEvap: {FInputs.SurfaceEvap:F2}",
+                                    $"ASW: {StringUtilities.Build(FInputs.ASW[1..], ",", format:"F5")}",
+                                    $"WFPS: {StringUtilities.Build(FInputs.WFPS[1..], ",", format:"F5")}",
+                                    $"NO3,  {systemClock.Today:d MMM yyyy}, {StringUtilities.Build(no3.kgha, ",", format:"F5")}",
+                                    $"NH4,  {systemClock.Today:d MMM yyyy}, {StringUtilities.Build(nh4.kgha, ",", format:"F5")}",
+                                    $"pH: {StringUtilities.Build(FInputs.pH[1..], ",", format:"F5")}",
+                                    $"FTranspiration  {systemClock.Today:d MMM yyyy}, 1, {StringUtilities.Build(FTranspiration[1][1..(FNoLayers+1)], ",", format:"F5")}",
+                                    $"FTranspiration  {systemClock.Today:d MMM yyyy}, 2, {StringUtilities.Build(FTranspiration[2][1..(FNoLayers+1)], ",", format:"F5")}",
+                                    $"FTranspiration  {systemClock.Today:d MMM yyyy}, 3, {StringUtilities.Build(FTranspiration[3][1..(FNoLayers+1)], ",", format:"F5")}",
+                                    $"Theta :  {systemClock.Today:d MMM yyyy}, {StringUtilities.Build(FInputs.Theta[1..], ",", format:"F5")}",
+                                    $"max water available to plant: {StringUtilities.Build(mySoilWaterAvailable, ",", format:"F5")}",
+                                    $"water demand: { CalculateWaterDemand():F2}"
+                                });
             for (int i = 0; i <= GrazType.stSENC; i++)
             {
                 FTranspiration[i] = new double[MaxSoilLayers + 1];
@@ -2666,11 +2661,12 @@ namespace Models.GrazPlan
 
             PastureModel.ComputeRates(systemClock.Today, fSupply, myWaterDemand);    // main growth update function
 
-            File.AppendAllLines(logFileName, new string[]
-            {
-                $"NO3Uptake:  {systemClock.Today:d MMM yyyy}, {StringUtilities.Build(mySoilNO3UptakeAvail, ",", format:"F5")}",
-                $"NH4Uptake:  {systemClock.Today:d MMM yyyy}, {StringUtilities.Build(mySoilNH4UptakeAvail, ",", format:"F5")}",
-            });
+            if (Pasture.logFileName != null)
+                File.AppendAllLines(logFileName, new string[]
+                {
+                    $"NO3Uptake:  {systemClock.Today:d MMM yyyy}, {StringUtilities.Build(mySoilNO3UptakeAvail, ",", format:"F5")}",
+                    $"NH4Uptake:  {systemClock.Today:d MMM yyyy}, {StringUtilities.Build(mySoilNH4UptakeAvail, ",", format:"F5")}",
+                });
 
         }
 
@@ -2817,10 +2813,11 @@ namespace Models.GrazPlan
                         }
                     }
 
-                    File.AppendAllLines(logFileName, [
-                        $"Leaf and stem Wt to surfaceom: {removed.dltCropDM[ptLEAF-1]:F2}, {removed.dltCropDM[ptSTEM-1]:F2}",
-                        $"Leaf and stem N to surfaceom: {removed.dltDM_N[ptLEAF-1]:F2}, {removed.dltDM_N[ptSTEM-1]:F2}"
-                    ]);
+                    if (Pasture.logFileName != null)
+                        File.AppendAllLines(logFileName, [
+                            $"Leaf and stem Wt to surfaceom: {removed.dltCropDM[ptLEAF-1]:F2}, {removed.dltCropDM[ptSTEM-1]:F2}",
+                            $"Leaf and stem N to surfaceom: {removed.dltDM_N[ptLEAF-1]:F2}, {removed.dltDM_N[ptSTEM-1]:F2}"
+                        ]);
 
                     PastureModel.MassUnit = sPrevUnit;
                 }
@@ -3229,7 +3226,7 @@ namespace Models.GrazPlan
         public void SetActualWaterUptake(List<ZoneWaterAndN> zones)
         {
             // These lines are just for logging purposes.
-            Zone parentZone = FindAncestor<Zone>();
+            Zone parentZone = Structure.FindParent<Zone>(recurse: true);
 
             Array.Clear(mySoilWaterUptakeAvail);
 
@@ -3326,7 +3323,7 @@ namespace Models.GrazPlan
                 }
 
                 // 2. get the amount of soil water demanded NOTE: This is in L, not mm,
-                Zone parentZone = FindAncestor<Zone>();
+                Zone parentZone = Structure.FindParent<Zone>(recurse: true);
                 double waterDemand = CalculateWaterDemand() * parentZone.Area;
 
 

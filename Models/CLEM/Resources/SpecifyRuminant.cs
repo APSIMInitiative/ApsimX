@@ -83,12 +83,12 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            Details = this.FindAllChildren<RuminantTypeCohort>().FirstOrDefault();
+            Details = Structure.FindChildren<RuminantTypeCohort>().FirstOrDefault();
             ruminantType = resources.FindResourceType<RuminantHerd, RuminantType>(this.Parent as Model, RuminantTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             // create example ruminant
             Details.Number = 1;
-            ExampleIndividual = Details.CreateIndividuals(null, BreedParams).FirstOrDefault();
+            ExampleIndividual = Details.CreateIndividuals(null, BreedParams, getUniqueID:false).FirstOrDefault();
         }
 
         #region validation
@@ -109,7 +109,7 @@ namespace Models.CLEM.Resources
                 results.Add(new ValidationResult("An invalid [r=RuminantType] was specified", memberNames));
             }
 
-            if (this.FindAllChildren<RuminantTypeCohort>().Count() != 1)
+            if (Structure.FindChildren<RuminantTypeCohort>().Count() != 1)
             {
                 string[] memberNames = new string[] { "Specify ruminant" };
                 results.Add(new ValidationResult("A single [r=RuminantTypeCohort] must be present under each [f=SpecifyRuminant] component", memberNames));
@@ -133,7 +133,7 @@ namespace Models.CLEM.Resources
                 else
                     htmlWriter.Write("<span class=\"resourcelink\">" + RuminantTypeName + "</span>");
 
-                cohortFound = FindAllChildren<RuminantTypeCohort>().Count() > 0;
+                cohortFound = Structure.FindChildren<RuminantTypeCohort>().Count() > 0;
                 if (cohortFound)
                     htmlWriter.Write($" with the following details:</div>");
                 else

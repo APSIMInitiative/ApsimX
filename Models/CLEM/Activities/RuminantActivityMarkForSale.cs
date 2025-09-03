@@ -105,7 +105,7 @@ namespace Models.CLEM.Activities
             numberToDo = 0;
             numberToSkip = 0;
             IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None);
-            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd);
+            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd, Structure);
             numberToDo = uniqueIndividuals?.Count() ?? 0;
 
             // provide updated measure for companion models
@@ -168,7 +168,7 @@ namespace Models.CLEM.Activities
         public override string ModelSummary()
         {
             return $"\r\n<div class=\"activityentry\">Flag individuals for sale as {CLEMModel.DisplaySummaryValueSnippet(SaleFlagToUse.ToString(), "SaleFlag not set")}</div>";
-        } 
+        }
         #endregion
     }
 }
