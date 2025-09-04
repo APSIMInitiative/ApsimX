@@ -9,9 +9,7 @@ using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models;
-using Models.Climate;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Models.Core.Run;
 using Models.Interfaces;
 using Models.Storage;
@@ -33,7 +31,10 @@ namespace UnitTests.Weather
             string weatherFilePath = Path.ChangeExtension(Path.GetTempFileName(), ".xlsx");
             using (FileStream file = new FileStream(weatherFilePath, FileMode.Create, FileAccess.Write))
             {
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("UnitTests.Weather.WeatherTestsExcelFile.xlsx").CopyTo(file);
+                using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("UnitTests.Weather.WeatherTestsExcelFile.xlsx"))
+                {
+                    stream.CopyTo(file);
+                }
             }
 
             Simulation baseSim = new Simulation()
@@ -73,7 +74,10 @@ namespace UnitTests.Weather
             string weatherFilePath = Path.ChangeExtension(Path.GetTempFileName(), ".bin");
             using (FileStream file = new FileStream(weatherFilePath, FileMode.Create, FileAccess.Write))
             {
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("UnitTests.Weather.BinaryMetfile.bin").CopyTo(file);
+                using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("UnitTests.Weather.BinaryMetfile.bin"))
+                {
+                    stream.CopyTo(file);
+                }
             }
 
             Simulation baseSim = new Simulation()

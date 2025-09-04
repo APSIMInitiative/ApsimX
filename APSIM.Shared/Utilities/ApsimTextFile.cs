@@ -101,7 +101,7 @@ namespace APSIM.Shared.Utilities
         /// <summary>Is the file a CSV file</summary>
         public bool IsCSVFile { get; set; } = false;
 
-        /// <summary>Is the file a CSV file</summary>
+        /// <summary>Is the file a Binary file</summary>
         public bool IsBinaryFile { get; set; } = false;
 
         /// <summary>The inStreamReader - used for text and csv files</summary>
