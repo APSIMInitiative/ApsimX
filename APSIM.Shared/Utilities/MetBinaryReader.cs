@@ -35,71 +35,46 @@ namespace APSIM.Shared.Utilities
         /// </returns>
         public static string Read(byte[] bytes)
         {
-            string hex = Convert.ToHexString(bytes);
-
-            int position = 0;
+            BinaryData data = new BinaryData(Convert.ToHexString(bytes), 0);
 
             //read version
-            (string, int) resultString = HexToString(hex, position);
-            string version = resultString.Item1; //not used when converting to string. Will be useful if a future binary format is developed
-            position = resultString.Item2;
+            //not used when converting to string. Will be useful if a future binary format is developed
+            string version = HexToString(data);
 
             //read constants
-            (int, int) resultInt = HexToInt(hex, position);
-            int constantsLength = resultInt.Item1;
-            position = resultInt.Item2;
+            int constantsLength = HexToInt(data);
 
-            List<(string, string)> constants = new List<(string, string)>();
+            List<StringPair> constants = new List<StringPair>();
             string start_date = "";
 
             for (int i = 0; i < constantsLength; i++)
             {
-                //name
-                (string, string) constant;
-                resultString = HexToString(hex, position);
-                constant.Item1 = resultString.Item1;
-                position = resultString.Item2;
+                string name = HexToString(data);
+                string value = HexToString(data);
 
-                //value
-                resultString = HexToString(hex, position);
-                constant.Item2 = resultString.Item1;
-                position = resultString.Item2;
-
-                if (constant.Item1 == "start_date")
-                    start_date = constant.Item2;
+                //start date isn't an actual constant, but is stored as a constant to save space
+                if (name == "start_date")
+                    start_date = value;
                 else
-                    constants.Add(constant);
+                    constants.Add(new StringPair(name, value));
             }
 
             //headers
-            List<(string, string)> columns = new List<(string, string)>();
-            columns.Add(("date", "()"));
+            List<StringPair> columns = new List<StringPair>();
+            columns.Add(new StringPair("date", "()"));
 
-            resultInt = HexToInt(hex, position);
-            int columnsLength = resultInt.Item1;
-            position = resultInt.Item2;
-
+            int columnsLength = HexToInt(data);
             for (int i = 0; i < columnsLength; i++)
-            {
-                resultString = HexToString(hex, position);
-                columns.Add((resultString.Item1, ""));
-                position = resultString.Item2;
-            }
+                columns.Add(new StringPair(HexToString(data), ""));
 
             for (int i = 1; i < columnsLength + 1; i++)
-            {
-                resultString = HexToString(hex, position);
-                columns[i] = (columns[i].Item1, resultString.Item1);
-                position = resultString.Item2;
-            }
+                columns[i].Value = HexToString(data);
 
             //data
             DateTime date = DateUtilities.GetDate(start_date);
 
-            List<List<string>> data = new List<List<string>>();
-            resultInt = HexToInt(hex, position, 8);
-            int rowsLength = resultInt.Item1;
-            position = resultInt.Item2;
+            List<List<string>> values = new List<List<string>>();
+            int rowsLength = HexToInt(data, 8);
 
             for (int i = 0; i < rowsLength; i++)
             {
@@ -109,111 +84,100 @@ namespace APSIM.Shared.Utilities
                 date = date.AddDays(1);
 
                 for (int j = 0; j < columnsLength; j++)
-                {
-                    resultString = DecodeNumber(hex, position);
-                    row.Add(resultString.Item1);
-                    position = resultString.Item2;
-                }
-                data.Add(row);
+                    row.Add(DecodeNumber(data));
+
+                values.Add(row);
             }
 
-            return getMetfileString(constants, columns, data);
+            return GetMetfileString(constants, columns, values);
         }
 
         /// <summary>
         /// Convert a hex string to an int
         /// </summary>
         /// <param name="data">the hex string</param>
-        /// <param name="pos">the starting position to read from</param>
         /// <param name="size">how many digits it should be stored as. 1 hex = 4 bits</param>
         /// <returns>
         /// value: an int value for the given hex
         /// position: the end position after reading
         /// </returns>
-        private static (int, int) HexToInt(string data, int pos = 0, int size = 2)
+        private static int HexToInt(BinaryData data, int size = 2)
         {
-            string substring = data.Substring(pos, size);
+            string substring = data.Hex.Substring(data.Position, size);
             int value = Convert.ToInt32(substring, 16);
-            return (value, pos + size);
+            data.Position += size;
+            return value;
         }
 
         /// <summary>
         /// Convert a hex string to a character string
         /// </summary>
         /// <param name="data">the hex string</param>
-        /// <param name="pos">the starting position to read from</param>
         /// <returns>
         /// value: a string value for the given bits
         /// position: the end position after reading
         /// </returns>
-        private static (string, int) HexToString(string data, int pos = 0)
+        private static string HexToString(BinaryData data)
         {
-            var result = HexToInt(data, pos);
-            int length = result.Item1;
-            int position = result.Item2;
+            int length = HexToInt(data);
             int count = length * 2;
 
-            string substring = data.Substring(position, count);
+            string substring = data.Hex.Substring(data.Position, count);
             byte[] output = Convert.FromHexString(substring);
 
-            return (Encoding.UTF8.GetString(output), position + count);
+            data.Position += count;
+
+            return Encoding.UTF8.GetString(output);
         }
 
         /// <summary>
         /// Convert a hex string to a metfile number
         /// </summary>
         /// <param name="data">the hex string</param>
-        /// <param name="pos">the starting position to read from</param>
         /// <returns>
         /// value: a number value for the given bits
         /// position: the end position after reading
         /// </returns>
-        private static (string, int) DecodeNumber(string data, int pos = 0) {
-
-            int position = pos;
-
-            var result = HexToInt(data, position, 1);
-            int length = result.Item1;
-            position = result.Item2;
+        private static string DecodeNumber(BinaryData data)
+        {
+            int length = HexToInt(data, 1);
 
             string output = "";
             for (int i = 0; i < length; i++)
             {
-                result = HexToInt(data, position, 1);
-                int index = result.Item1;
-                position = result.Item2;
-
+                int index = HexToInt(data, 1);
                 output += SYMBOLS[index];
             }
 
-            return (output, position);
+            return output;
         }
 
         /// <summary>
-        /// 
+        /// Takes the different parts of the met file after being converted to strings and builds a normal
+        /// text metfile out of them with the correct formatting for it to be readable.
         /// </summary>
-        /// <param name="constants"></param>
-        /// <param name="columns"></param>
-        /// <param name="data"></param>
+        /// <param name="constants">A list of StringPairs, one for each constant</param>
+        /// <param name="columns">A list of StringPairs, where the name is the column name, and the value is the unit string</param>
+        /// <param name="data">A list of list of strings of all the row x column data</param>
         /// <returns></returns>
-        private static string getMetfileString(List<(string, string)> constants, List<(string, string)> columns, List<List<string>> data)
+        private static string GetMetfileString(List<StringPair> constants, List<StringPair> columns, List<List<string>> data)
         {
             StringBuilder builder = new StringBuilder(2000000);
             string line = "";
 
             builder.AppendLine("[weather.met.weather]");
 
-            foreach ((string, string) constant in constants)
-                builder.AppendLine($"{constant.Item1} = {constant.Item2}");
+            foreach (StringPair constant in constants)
+                builder.AppendLine($"{constant.Name} = {constant.Value}");
 
             line = "";
-            foreach ((string, string) column in columns)
-                line += $"{column.Item1} ";
+            foreach (StringPair column in columns)
+                line += $"{column.Name} ";
             builder.AppendLine(line);
 
             line = "";
-            foreach ((string, string) column in columns)
-                line += $"{column.Item2} ";
+            foreach (StringPair column in columns)
+                line += $"{column.Value} ";
             builder.AppendLine(line);
 
             foreach (List<string> row in data)
@@ -227,6 +191,80 @@ namespace APSIM.Shared.Utilities
             }
 
             return builder.ToString();
+        }
+
+        /// <summary>
+        /// BinaryData stores the hex string that is read when reading the file, and the position through the string
+        /// that has been read. It is up to the reader functions to keep the position correct.
+        /// </summary>
+        private class BinaryData
+        {
+            /// <summary>
+            /// A string of hex values representing the file
+            /// </summary>
+            public string Hex { get; set; }
+
+            /// <summary>
+            /// The current read position through the file.
+            /// It is up to the reader functions to keep the position correct.
+            /// </summary>
+            public int Position { get; set; }
+
+            /// <summary>
+            /// Basic Constructor
+            /// </summary>
+            public BinaryData()
+            {
+                Hex = "";
+                Position = 0;
+            }
+
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="hex">Hex string of the data</param>
+            /// <param name="position">Position to start at</param>
+            public BinaryData(string hex, int position)
+            {
+                Hex = hex;
+                Position = position;
+            }
+        }
+
+        /// <summary>
+        /// A string pair to store constants and column data
+        /// </summary>
+        private class StringPair
+        {
+            /// <summary>
+            /// Name of the pair
+            /// </summary>
+            public string Name { get; set; }
+
+            /// <summary>
+            /// Value of the pair
+            /// </summary>
+            public string Value { get; set; }
+
+            /// <summary>
+            /// Basic Constructor
+            /// </summary>
+            public StringPair()
+            {
+                Name = "";
+                Value = "";
+            }
+
+            /// <summary>
+            /// Constructor for setting a pair.
+            /// </summary>
+            /// <param name="name">The name of the pair</param>
+            /// <param name="value">The value of the pair</param>
+            public StringPair(string name, string value)
+            {
+                Name = name;
+                Value = value;
+            }
         }
     }
 }
