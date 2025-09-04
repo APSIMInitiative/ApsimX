@@ -60,10 +60,6 @@ namespace Models.PMF
         [Link(Type = LinkType.Ancestor)]
         public Plant parentPlant = null;
 
-        /// <summary>The surface organic matter model</summary>
-        [Link]
-        private List<ISurfaceOrganicMatter> somZones = null;
-
         /// <summary>The senescence rate function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
@@ -305,11 +301,11 @@ namespace Models.PMF
         /// The width of the organ is assumed to be the width of the parent plant.  
         /// If parent plant does not have width model it is set as the width of the parent zone
         /// </summary>
-        public double PlantWidth
+        private double PlantWidth
         {
             get
             {
-                IFunction width = Structure.Find<IFunction>("Width") as IFunction;
+                IFunction width = Structure.FindChild<IFunction>("Width",relativeTo: parentPlant) as IFunction;
                 if (width != null)
                     return width.Value() / 1000; //Convert from mm to m
                 else
@@ -727,8 +723,6 @@ namespace Models.PMF
             List<Zone> zones = Structure.FindAll<Zone>(relativeTo: sim).ToList();
             foreach (Zone z in zones)
             {
-                ISurfaceOrganicMatter som = Structure.FindChild<ISurfaceOrganicMatter>(relativeTo: z);
-                somZones.Add(som);
                 simArea += z.Area;
             }
         }
