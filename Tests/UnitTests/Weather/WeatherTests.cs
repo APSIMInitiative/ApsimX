@@ -65,7 +65,7 @@ namespace UnitTests.Weather
         }
 
         /// <summary>
-        /// Tests a simple weather file in .xlsx (Excel) format.
+        /// Tests a weather file in .bin (Binary) format.
         /// </summary>
         [Test]
         public void BinaryWeatherFileTest()
