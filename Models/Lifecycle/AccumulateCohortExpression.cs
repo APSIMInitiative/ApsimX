@@ -1,11 +1,12 @@
 ﻿using System;
+using APSIM.Core;
 using Models.Core;
 using Models.Functions;
 
 namespace Models.LifeCycle
 {
     /// <summary>
-    /// Iterates through each cohort and adds the value of the Expression: 
+    /// Iterates through each cohort and adds the value of the Expression:
     /// </summary>
 
     [Serializable]
@@ -13,8 +14,11 @@ namespace Models.LifeCycle
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LifeCyclePhase))]
-    public class AccumulateCohortExpression : Model, IFunction
+    public class AccumulateCohortExpression : Model, IFunction, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
         /// <summary>The parent LifeCycle phase from which cohorts are evaluated</summary>
         private LifeCyclePhase parent { get; set; }
@@ -40,7 +44,7 @@ namespace Models.LifeCycle
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            parent = FindAncestor<LifeCyclePhase>();
+            parent = Structure.FindParent<LifeCyclePhase>(recurse: true);
         }
 
         /// <summary>When core LifeCycle processes are complete, calculate additional cohort specific expression</summary>

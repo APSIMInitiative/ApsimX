@@ -79,7 +79,7 @@ namespace Models.Core.Run
                 }
                 //need to set the relative back to simulations so the runner can find all the simulations
                 //when it comes time to run.
-                this.relativeTo = relativeTo.FindAncestor<Simulations>();
+                this.relativeTo = relativeTo.Node.FindParent<Simulations>(recurse: true);
             }
 
             if (simulationNamePatternMatch != null)
@@ -155,7 +155,7 @@ namespace Models.Core.Run
             if (rootModel == null)
                 return new List<string>();
 
-            IEnumerable<ISimulationDescriptionGenerator> allSims = rootModel.FindAllDescendants<ISimulationDescriptionGenerator>();
+            IEnumerable<ISimulationDescriptionGenerator> allSims = rootModel.Node.FindChildren<ISimulationDescriptionGenerator>(recurse: true);
 
             //remove any sims there are under replacements
             allSims = allSims.Where(s => Folder.IsUnderReplacementsFolder((s as IModel)) == null);
@@ -254,9 +254,9 @@ namespace Models.Core.Run
                         throw new Exception($"Duplicate simulation names found: {string.Join(", ", duplicates)}");
 
                     // Check for duplicate soils
-                    foreach (var zone in rootModel.FindAllDescendants<Zone>().Where(z => z.Enabled))
+                    foreach (var zone in rootModel.Node.FindChildren<Zone>(recurse: true).Where(z => z.Enabled))
                     {
-                        bool duplicateSoils = zone.FindAllChildren<Models.Soils.Soil>().Where(s => s.Enabled).Count() > 1;
+                        bool duplicateSoils = zone.Node.FindChildren<Models.Soils.Soil>().Where(s => s.Enabled).Count() > 1;
                         if (duplicateSoils)
                             throw new Exception($"Duplicate soils found in zone: {zone.FullPath}");
                     }
@@ -266,7 +266,7 @@ namespace Models.Core.Run
                     e.Publish("BeginRun", new object[] { this, new EventArgs() });
 
                     // Find a storage model.
-                    storage = rootModel.FindChild<IDataStore>();
+                    storage = rootModel.Node.FindChild<IDataStore>();
 
                     // Find simulations to run.
                     if (runSimulations)
@@ -373,8 +373,8 @@ namespace Models.Core.Run
 
         private IEnumerable<IPreSimulationTool> FindPreSimulationTools()
         {
-            return relativeTo.FindAllInScope<IPreSimulationTool>()
-                            .Where(t => t.FindAllAncestors()
+            return relativeTo.Node.FindAll<IPreSimulationTool>()
+                            .Where(t => t.Node.FindParents<IModel>()
                                          .All(a => !(a is ParallelPostSimulationTool || a is SerialPostSimulationTool)));
         }
 
@@ -410,8 +410,8 @@ namespace Models.Core.Run
 
         private IEnumerable<IPostSimulationTool> FindPostSimulationTools()
         {
-            return relativeTo.FindAllInScope<IPostSimulationTool>()
-                            .Where(t => t.FindAllAncestors()
+            return relativeTo.Node.FindAll<IPostSimulationTool>()
+                            .Where(t => t.Node.FindParents<IModel>()
                                          .All(a => !(a is ParallelPostSimulationTool || a is SerialPostSimulationTool)));
         }
 
@@ -426,7 +426,7 @@ namespace Models.Core.Run
                 services = (relativeTo as Simulations).GetServices();
             else
             {
-                Simulations sims = relativeTo.FindInScope<Simulations>();
+                Simulations sims = relativeTo.Node.Find<Simulations>();
                 if (sims != null)
                     services = sims.GetServices();
                 else if (relativeTo is Simulation)
@@ -440,7 +440,7 @@ namespace Models.Core.Run
             }
 
             var links = new Links(services);
-            foreach (ITest test in rootModel.FindAllDescendants<ITest>()
+            foreach (ITest test in rootModel.Node.FindChildren<ITest>(recurse: true)
                                             .Where(t => t.Enabled))
             {
                 DateTime startTime = DateTime.Now;

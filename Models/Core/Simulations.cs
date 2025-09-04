@@ -17,11 +17,14 @@ namespace Models.Core
     /// Encapsulates a collection of simulations. It is responsible for creating this collection, changing the structure of the components within the simulations, renaming components, adding new ones, deleting components. The user interface talks to an instance of this class.
     /// </summary>
     [Serializable]
-    [ScopedModel]
     [ViewName("UserInterface.Views.MarkdownView")]
     [PresenterName("UserInterface.Presenters.GenericPresenter")]
-    public class Simulations : Model, ISimulationEngine
+    public class Simulations : Model, ISimulationEngine, IScopedModel, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         [NonSerialized]
         private Links links;
 
@@ -53,13 +56,6 @@ namespace Models.Core
             return new Events(model);
         }
 
-        /// <summary>Returns an instance of an locator service</summary>
-        /// <param name="model">The model the service is for</param>
-        public ILocator GetLocatorService(IModel model)
-        {
-            return new Locator(model);
-        }
-
         /// <summary>Constructor</summary>
         public Simulations()
         {
@@ -84,9 +80,9 @@ namespace Models.Core
         /// <summary>
         /// Initialise model.
         /// </summary>
-        public override void OnCreated(Node node)
+        public override void OnCreated()
         {
-            base.OnCreated(node);
+            base.OnCreated();
             FileName = Node.FileName;
         }
 
@@ -110,7 +106,7 @@ namespace Models.Core
             List<string> filesReferenced = new List<string>();
             filesReferenced.Add(FileName);
             filesReferenced.AddRange(FindAllReferencedFiles());
-            DataStore storage = this.FindInScope<DataStore>();
+            DataStore storage = Structure.Find<DataStore>();
             if (storage != null)
             {
                 storage.Writer.AddCheckpoint(checkpointName, filesReferenced);
@@ -176,7 +172,7 @@ namespace Models.Core
         /// <summary>Look through all models. For each simulation found set the filename.</summary>
         private void SetFileNameInAllSimulations()
         {
-            foreach (Model child in this.FindAllDescendants().ToList())
+            foreach (Model child in Structure.FindChildren<IModel>(recurse: true).ToList())
             {
                 if (child is Simulation)
                 {
@@ -207,7 +203,7 @@ namespace Models.Core
         public List<object> GetServices()
         {
             List<object> services = new List<object>();
-            var storage = this.FindInScope<IDataStore>();
+            var storage = Structure.Find<IDataStore>();
             if (storage != null)
                 services.Add(storage);
             return services;
@@ -227,11 +223,6 @@ namespace Models.Core
         /// </summary>
         public void ClearSimulationReferences()
         {
-            // Clears the locator caches for our Simulations.
-            // These caches may result in cyclic references and memory leaks if not cleared
-            foreach (Model simulation in this.FindAllDescendants().ToList())
-                if (simulation is Simulation)
-                    (simulation as Simulation).ClearCaches();
             // Explicitly clear the child lists
             ClearChildLists();
         }
@@ -240,7 +231,7 @@ namespace Models.Core
         public IEnumerable<string> FindAllReferencedFiles(bool isAbsolute = true)
         {
             SortedSet<string> fileNames = new SortedSet<string>();
-            foreach (IReferenceExternalFiles model in this.FindAllDescendants<IReferenceExternalFiles>().Where(m => m.Enabled))
+            foreach (IReferenceExternalFiles model in Structure.FindChildren<IReferenceExternalFiles>(recurse: true).Where(m => m.Enabled))
                 foreach (string fileName in model.GetReferencedFileNames())
                     if (isAbsolute == true)
                     {

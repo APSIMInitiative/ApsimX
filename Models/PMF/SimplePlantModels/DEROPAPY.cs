@@ -1,4 +1,5 @@
-﻿using APSIM.Numerics;
+﻿using APSIM.Core;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Climate;
 using Models.Core;
@@ -24,8 +25,12 @@ namespace Models.PMF.SimplePlantModels
     [Serializable]
     [ViewName("UserInterface.Views.PropertyAndGridView")]
     [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
-    public class DEROPAPY : Model
+    public class DEROPAPY : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>Location of file with crop specific coefficients</summary>
         [Description("File path for coefficient file")]
         [Display(Type = DisplayType.FileName)]
@@ -40,12 +45,12 @@ namespace Models.PMF.SimplePlantModels
         {
             get
             {
-                Simulation simulation = FindAncestor<Simulation>();
+                Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
                 if (simulation != null)
                     return PathUtilities.GetAbsolutePath(this.CoefficientFile, simulation.FileName);
                 else
                 {
-                    Simulations simulations = FindAncestor<Simulations>();
+                    Simulations simulations = Structure.FindParent<Simulations>(recurse: true);
                     if (simulations != null)
                         return PathUtilities.GetAbsolutePath(this.CoefficientFile, simulations.FileName);
                     else
@@ -54,7 +59,7 @@ namespace Models.PMF.SimplePlantModels
             }
             set
             {
-                Simulations simulations = FindAncestor<Simulations>();
+                Simulations simulations = Structure.FindParent<Simulations>(recurse: true);
                 if (simulations != null)
                     this.CoefficientFile = PathUtilities.GetRelativePath(value, simulations.FileName);
                 else
@@ -206,8 +211,8 @@ namespace Models.PMF.SimplePlantModels
 
             double soilDepthMax = 0;
 
-            var soilCrop = soil.FindDescendant<SoilCrop>(deropapy.Name + "Soil");
-            var physical = soil.FindDescendant<Physical>("Physical");
+            var soilCrop = Structure.FindChild<SoilCrop>(deropapy.Name + "Soil", relativeTo: soil, recurse: true);
+            var physical = Structure.FindChild<Physical>("Physical", relativeTo: soil, recurse: true);
             if (soilCrop == null)
                 throw new Exception($"Cannot find a soil crop parameterisation called {deropapy.Name}Soil");
 
@@ -228,7 +233,7 @@ namespace Models.PMF.SimplePlantModels
             if (RootsInNeighbourZone)
             {  //Must add root zone prior to sowing the crop.  For some reason they (silently) dont add if you try to do so after the crop is established
                 string neighbour = "";
-                List<Zone> zones = simulation.FindAllChildren<Zone>().ToList();
+                List<Zone> zones = Structure.FindChildren<Zone>(relativeTo: simulation).ToList();
                 if (zones.Count > 2)
                     throw new Exception("Strip crop logic only set up for 2 zones, your simulation has more than this");
                 if (zones.Count > 1)
@@ -250,7 +255,7 @@ namespace Models.PMF.SimplePlantModels
                     Constant InitStor = new Constant();
                     InitStor.FixedValue = 0;
                     InitialDM.Storage = InitStor;
-                    root.ZoneInitialDM.Add(InitialDM);
+                    //root.ZoneInitialDM.Add(InitialDM);
                 }
             }
 
@@ -261,7 +266,7 @@ namespace Models.PMF.SimplePlantModels
             double rowWidth = 0.0;
 
             derochild = coeffCalc();
-            deropapy.Children.Add(derochild);
+            deropapy.AddCultivar(derochild);
             deropapy.Sow(cropName, population, depth, rowWidth);
             phenology.SetAge(AgeAtSimulationStart);
             summary.WriteMessage(this, "Some of the message above is not relevent as DEROPAPY has no notion of population, bud number or row spacing." +

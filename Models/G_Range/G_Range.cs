@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -20,8 +21,12 @@ namespace Models
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public partial class G_Range : Model, IPlant, ICanopy, IUptake
+    public partial class G_Range : Model, IPlant, ICanopy, IUptake, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         #region Links
 
         /// <summary>Link to APSIM summary (logs the messages raised during model run).</summary>
@@ -1473,7 +1478,7 @@ namespace Models
         {
             get
             {
-                Simulation simulation = FindAncestor<Simulation>();
+                Simulation simulation = Structure.FindParent<Simulation>(relativeTo: this, recurse: true);
                 if (simulation != null)
                     return PathUtilities.GetAbsolutePath(this.DatabaseName, simulation.FileName);
                 else
@@ -1481,7 +1486,7 @@ namespace Models
             }
             set
             {
-                Simulations simulations = FindAncestor<Simulations>();
+                Simulations simulations = Structure.FindParent<Simulations>(recurse: true);
                 if (simulations != null)
                     this.DatabaseName = PathUtilities.GetRelativePath(value, simulations.FileName);
                 else

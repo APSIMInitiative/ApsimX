@@ -2433,7 +2433,6 @@
             },
             {
               "$type": "Models.Storage.DataStore, Models",
-              "useFirebird": false,
               "CustomFileName": null,
               "Name": "DataStore",
               "ResourceName": null,
@@ -3121,7 +3120,6 @@
             },
             {
               "$type": "Models.Storage.DataStore, Models",
-              "useFirebird": false,
               "CustomFileName": null,
               "Name": "DataStore",
               "ResourceName": null,
@@ -4581,7 +4579,6 @@
             },
             {
               "$type": "Models.Storage.DataStore, Models",
-              "useFirebird": false,
               "CustomFileName": null,
               "Name": "DataStore",
               "ResourceName": null,
@@ -5660,7 +5657,6 @@
             },
             {
               "$type": "Models.Storage.DataStore, Models",
-              "useFirebird": false,
               "CustomFileName": null,
               "Name": "DataStore",
               "ResourceName": null,

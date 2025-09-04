@@ -31,7 +31,7 @@ namespace Models.Functions
                 // and namespace lines e.g.
                 //    using Models.Clock;
                 //    using Models;
-                var models = relativeTo.FindAllInScope().ToList().Where(model => !model.IsHidden &&
+                var models = relativeTo.Node.FindAll<IModel>().ToList().Where(model => !model.IsHidden &&
                                                                         model.GetType() != typeof(Graph) &&
                                                                         model.GetType() != typeof(Series) &&
                                                                         model.GetType().Name != "StorageViaSockets");
@@ -72,10 +72,10 @@ namespace Models.Functions
                     function = (T)result.Instance;
 
                     // Resolve links
-                    var functionAsModel = function as IModel;
-                    functionAsModel.Parent = relativeTo;
+                    var functionAsModel = function as INodeModel;
+                    relativeToNode.AddChild(functionAsModel);
                     var linkResolver = new Links();
-                    linkResolver.Resolve(functionAsModel, true);
+                    linkResolver.Resolve(functionAsModel as IModel, true);
                     return true;
                 }
                 else

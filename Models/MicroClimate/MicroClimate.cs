@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
+using Models.Climate;
 using Models.Core;
 using Models.Interfaces;
+using Models.Zones;
 
 namespace Models
 {
@@ -18,8 +21,13 @@ namespace Models
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
-    public class MicroClimate : Model
+    public class MicroClimate : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
+
         /// <summary>The clock</summary>
         [Link]
         private IClock clock = null;
@@ -186,7 +194,6 @@ namespace Models
             get { return NetShortWaveRadiation + NetLongWaveRadiation; }
         }
 
-
         /// <summary>Gets the net short wave radiation (MJ/m2).</summary>
         [Description("Net short wave radiation")]
         [Units("MJ/m^2")]
@@ -235,10 +242,10 @@ namespace Models
             if (ReferenceHeight < 1 || ReferenceHeight > 10)
                 throw new Exception($"Error in microclimate: reference height must be between 1 and 10. Actual value is {ReferenceHeight}");
             microClimatesZones = new List<MicroClimateZone>();
-            foreach (Zone newZone in this.Parent.FindAllDescendants<Zone>())
-                microClimatesZones.Add(new MicroClimateZone(clock, newZone, MinimumHeightDiffForNewLayer));
+            foreach (Zone newZone in Structure.FindChildren<Zone>(relativeTo: Parent as INodeModel, recurse: true))
+                microClimatesZones.Add(new MicroClimateZone(clock, newZone, Structure, MinimumHeightDiffForNewLayer));
             if (microClimatesZones.Count == 0)
-                microClimatesZones.Add(new MicroClimateZone(clock, this.Parent as Zone, MinimumHeightDiffForNewLayer));
+                microClimatesZones.Add(new MicroClimateZone(clock, this.Parent as Zone, Structure, MinimumHeightDiffForNewLayer));
         }
 
         /// <summary>Called when the canopy energy balance needs to be calculated.</summary>
@@ -253,19 +260,55 @@ namespace Models
             dayLengthEvap = MathUtilities.DayLength(clock.Today.DayOfYear, sunAngleNetPositiveRadiation, weather.Latitude);
             // VOS - a temporary kludge to get this running for high latitudes. MicroMet is due for a clean up soon so reconsider then.
             dayLengthEvap = Math.Max(dayLengthEvap, (dayLengthLight * 2.0 / 3.0));
-            if (microClimatesZones.Count == 2 && microClimatesZones[0].Zone is Zones.RectangularZone && microClimatesZones[1].Zone is Zones.RectangularZone)
+
+            string canopyType = "BroadAcre";
+            foreach (MicroClimateZone ZoneMC in microClimatesZones)
             {
-                // We are in a strip crop simulation
-                microClimatesZones[0].DoCanopyCompartments();
-                microClimatesZones[1].DoCanopyCompartments();
-                CalculateStripZoneShortWaveRadiation();
+                ZoneMC.IncomingRs = weather.Radn;
+                ZoneMC.DoCanopyCompartments();
+                if ((ZoneMC.Zone.CanopyType != "BroadAcre")&&(ZoneMC.Zone.CanopyType != null))
+                {
+                    canopyType = ZoneMC.Zone.CanopyType;
+                    ZoneMC.RadiationModel = canopyType;
+                }
             }
-            else // Normal 1D zones are to be used
+
+            if (canopyType == "BroadAcre")
+            {
                 foreach (MicroClimateZone ZoneMC in microClimatesZones)
                 {
-                    ZoneMC.DoCanopyCompartments();
                     CalculateLayeredShortWaveRadiation(ZoneMC, weather.Radn);
                 }
+            }
+            else
+            {
+                MicroClimateZone tallest = new MicroClimateZone(new RectangularZone((microClimatesZones[0].Zone as RectangularZone).Length, 0));
+                MicroClimateZone shortest = new MicroClimateZone(new RectangularZone((microClimatesZones[0].Zone as RectangularZone).Length, 0));
+                if (microClimatesZones.Count == 1)
+                {
+                    tallest = microClimatesZones[0];
+                }
+                else
+                {
+                    if (microClimatesZones[0].DeltaZ.Sum() > microClimatesZones[1].DeltaZ.Sum())
+                    {
+                        tallest = microClimatesZones[0];
+                        shortest = microClimatesZones[1];
+                    }
+                    else
+                    {
+                        tallest = microClimatesZones[1];
+                        shortest = microClimatesZones[0];
+                    }
+                }
+
+                if (canopyType == "TreeRow")
+                    DoTreeRowCropShortWaveRadiation(ref tallest, ref shortest);
+                if (canopyType == "CropRow")
+                    DoStripCropShortWaveRadiation(ref tallest, ref shortest);
+                if (canopyType == "VineRow")
+                    DoVineStripShortWaveRadiation(ref tallest, ref shortest);
+            }
 
             // Light distribution is now complete so calculate remaining micromet equations
             foreach (var zoneMC in microClimatesZones)
@@ -281,44 +324,8 @@ namespace Models
                 zoneMC.CalculateCanopyTemperature();
                 zoneMC.SetCanopyEnergyTerms();
                 zoneMC.SoilWater.Eo = eoCalculator.Calculate(zoneMC);
+                //zoneMC.SoilWater.CoverTotal = 1-MathUtilities.Divide((zoneMC.SurfaceRs),zoneMC.IncomingRs,0);
             }
-        }
-
-        ///<summary> Calculate the short wave radiation balance for strip crop system</summary>
-        private void CalculateStripZoneShortWaveRadiation()
-        {
-
-            MicroClimateZone tallest;
-            MicroClimateZone shortest;
-            if (microClimatesZones[0].DeltaZ.Sum() > microClimatesZones[1].DeltaZ.Sum())
-            {
-                tallest = microClimatesZones[0];
-                shortest = microClimatesZones[1];
-            }
-            else
-            {
-                tallest = microClimatesZones[1];
-                shortest = microClimatesZones[0];
-            }
-
-            bool TallestIsTree = false;
-            bool TallestIsVine = false;
-            double Wt = (tallest.Zone as Zones.RectangularZone).Width * 1000;    // Width of tallest crop zone
-            foreach (MicroClimateCanopy c in tallest.Canopies)
-            {
-
-                if (c.Canopy.CanopyType == "STRUM")
-                    TallestIsTree = true;
-
-                if ((c.Canopy.Height - c.Canopy.Depth) > 0 && c.Canopy.Width <= Wt)
-                    TallestIsVine = true;
-            }
-            if (TallestIsTree)
-                DoTreeRowCropShortWaveRadiation(ref tallest, ref shortest);
-            else if (TallestIsVine)
-                DoVineStripShortWaveRadiation(ref tallest, ref shortest);
-            else
-                DoStripCropShortWaveRadiation(ref tallest, ref shortest);
         }
 
         /// <summary>
@@ -328,94 +335,92 @@ namespace Models
         /// <param name="alleyZone"></param>
         private void DoTreeRowCropShortWaveRadiation(ref MicroClimateZone treeZone, ref MicroClimateZone alleyZone)
         {
+            if (DateUtilities.DatesAreEqual("02/01/2008",clock.Today))
+            {
+
+            }
+
+            double TreeCanopyHeight = treeZone.DeltaZ.Sum();
+            double TreeZoneWidth = (treeZone.Zone as Zones.RectangularZone).Width;
+            double AlleyZoneWidth = (alleyZone.Zone as Zones.RectangularZone).Width;
+            double SimulationWidth = TreeZoneWidth + AlleyZoneWidth;
+            double TreeZoneLength = (treeZone.Zone as Zones.RectangularZone).Length;
+            double AlleyZoneLength = (alleyZone.Zone as Zones.RectangularZone).Length;
+
+            if (TreeZoneLength != AlleyZoneLength)
+                throw new Exception("tree zone radiation interception requires zone and alley lengths to be the same.");
+
+            double TreeZoneArea = (treeZone.Zone as Zones.RectangularZone).Area * 10000;
+            treeZone.AreaM2 = TreeZoneArea;
+            double AlleyZoneArea = (alleyZone.Zone as Zones.RectangularZone).Area * 10000;
+            alleyZone.AreaM2 = AlleyZoneArea;
+            double SimulationArea = TreeZoneArea + AlleyZoneArea;
+
+            treeZone.IncomingRs = TreeZoneArea * weather.Radn; //Overwrite base value with area adjusted value
+            alleyZone.IncomingRs = AlleyZoneArea * weather.Radn; //Overwrite base value with area adjusted value
+
             if (treeZone.DeltaZ.Sum() > 0 || alleyZone.DeltaZ.Sum() > 0)               // Don't perform calculations if both layers are empty
             {
-                double Ht = treeZone.DeltaZ.Sum();                                 // Height of tree canopy
-                double Wt = (treeZone.Zone as Zones.RectangularZone).Width;    // Width of tree zone
-                double Wa = (alleyZone.Zone as Zones.RectangularZone).Width;   // Width of alley zone
-                double CDt = 0;//tree.Canopies[0].Canopy.Depth / 1000;         // Depth of tree canopy
-                double CWt = 0;//Math.Min(tree.Canopies[0].Canopy.Width / 1000, (Wt + Wa));// Width of the tree canopy
+
+
+                double TreeCanopyDepth = 0;
+                double TreeCanopyWidth = 0;
                 foreach (MicroClimateCanopy c in treeZone.Canopies)
                     if (c.Canopy.Depth < c.Canopy.Height)
                     {
-                        if (CDt > 0.0)
+                        if (TreeCanopyDepth > 0.0)
                             throw new Exception("Can't have two tree canopies");
                         else
                         {
-                            CDt = c.Canopy.Depth / 1000;
-                            CWt = Math.Min(c.Canopy.Width / 1000, (Wt + Wa));
+                            TreeCanopyDepth = c.Canopy.Depth / 1000;
+                            TreeCanopyWidth = c.Canopy.Width / 1000;
                         }
                     }
-                double CBHt = Ht - CDt;                                        // Base hight of the tree canopy
-                double Ha = alleyZone.DeltaZ.Sum();                            // Height of alley canopy
-                if ((Ha > CBHt) & (treeZone.DeltaZ.Length > 1))
+                if (AlleyZoneArea > 0)
+                    TreeCanopyWidth = Math.Min(TreeCanopyWidth, TreeZoneWidth + AlleyZoneWidth);
+                double TreeCanopyArea = TreeCanopyWidth * Math.Min(TreeCanopyWidth, TreeZoneLength); //Cap width of the canopy in the length dirrection to the inter row spacing (which sets Tree zone length) so the canopy widght can't exceed the inter row spacing
+                double TreeCanopyBaseHeight = TreeCanopyHeight - TreeCanopyDepth;
+                treeZone.SimulationAreaM2 = SimulationArea;
+                alleyZone.SimulationAreaM2 = SimulationArea;
+                double AlleyCropCanopyHeight = alleyZone.DeltaZ.Sum();
+                if ((AlleyCropCanopyHeight > TreeCanopyBaseHeight) & (treeZone.DeltaZ.Length > 1))
                     throw (new Exception("Height of the alley canopy must not exceed the base height of the tree canopy"));
-                double WaOl = Math.Min(CWt - Wt, Wa);                         // Width of tree canopy that overlap the alley zone
-                double WaOp = Wa - WaOl;                                      // Width of the open alley zone between tree canopies
-                double Ft = CWt / (Wt + Wa);                                  // Fraction of space in tree canopy
-                double Fa = WaOp / (Wt + Wa);                                 // Fraction of open space in the alley row
-                double LAIt = treeZone.LAItotsum.Sum();                       // LAI of trees
-                double LAIa = alleyZone.LAItotsum.Sum();                      // LAI of alley crop
-                double Kt = treeZone.layerKtot[treeZone.layerKtot.Length - 1];  // Extinction Coefficient of trees
+                double TreeZoneCanopyOverlap = Math.Min(TreeCanopyWidth - TreeZoneWidth, AlleyZoneWidth);
+                double TreeCanopyGap = AlleyZoneWidth - TreeZoneCanopyOverlap;
+                double TreeCanopyLAI = treeZone.LAItotsum.Sum(); // LAI of trees in M2 of leaf area per m2 canopy area.  I.E. the area doesn't count the gaps between canopy rows
+                double CropCanopyLAI = alleyZone.LAItotsum.Sum();
+                double Kt = treeZone.layerKtot[treeZone.layerKtot.Length - 1];
                 double Ka = 0;
                 if (alleyZone.layerKtot.Length != 0)
                     Ka = alleyZone.layerKtot[0];                           // Extinction Coefficient of alley crop
-                double LAIthomo = Ft * LAIt;                                  // LAI of trees if spread homogeneously across row and alley zones
-                double Ftbla = (Math.Sqrt(Math.Pow(CDt, 2) + Math.Pow(CWt, 2)) - CDt) / CWt;    // View factor for the tree canopy if a black body
-                double Fabla = (Math.Sqrt(Math.Pow(CDt, 2) + Math.Pow(WaOp, 2)) - CDt) / WaOp;  // View factor for the gap between trees in alley if trees a black body
-                if (WaOp == 0) Fabla = 0;
-                //All transmission and interception values below are a fraction of the total short wave radiation incident to both the tree and alley rows
-                double Tt = Ft * (Ftbla * Math.Exp(-Kt * LAIt)
-                          + Ft * (1 - Ftbla) * Math.Exp(-Kt * LAIthomo))
-                          + Fa * Ft * (1 - Fabla) * Math.Exp(-Kt * LAIthomo);     //  Transmission of light to the bottom of the tree canopy
-                double Ta = Fa * (Fabla + Fa * (1 - Fabla) * Math.Exp(-Kt * LAIthomo))
-                          + Ft * Fa * ((1 - Ftbla) * Math.Exp(-Kt * LAIthomo));   //  Transmission of light to the bottom of the gap in the tree canopy
-                double It = 1 - Tt - Ta;                                    // Interception by the trees
-                double St = Tt * Wt / CWt;                                  // Transmission to the soil in the tree zone
-                double IaOl = Tt * WaOl / CWt * (1 - Math.Exp(-Ka * LAIa)); // Interception by the alley canopy below the overlap of the trees
-                double IaOp = Ta * (1 - Math.Exp(-Ka * LAIa));              // Interception by the alley canopy in the gaps between tree canopy
-                double Ia = IaOl + IaOp;                                    // Interception by the alley canopy
-                double SaOl = Tt * WaOl / CWt * (Math.Exp(-Ka * LAIa));     // Transmission to the soil beneigth the alley canopy under the tree canopy
-                double SaOp = Ta * (Math.Exp(-Ka * LAIa));                  // Transmission to the soil beneigth the alley canopy in the open
-                double Sa = SaOl + SaOp;                                    // Transmission to the soil beneight the alley
-                double EnergyBalanceCheck = It + St + Ia + Sa;              // Sum of all light fractions (should equal 1)
 
+                double FpassingTreeBB = 0;
+                if (TreeCanopyGap > 0)
+                    FpassingTreeBB = (Math.Sqrt(Math.Pow(TreeCanopyDepth, 2) + Math.Pow(TreeCanopyGap, 2)) - TreeCanopyDepth) / TreeCanopyGap;  //Fraction of radiation making it to the base of the tree canopy gap relative to the radiation incident to the area of the gap at the top of the tree canopy.  I.E the amount of radiation the side of the tree canopy intercepts .
+                double FtransTree = Math.Exp(-Kt * TreeCanopyLAI);// Fraction of radiation transmitted through the tree canopy.  I.E the proportion of radiation not passing through the canopy.  Excludes the radiation passing through gaps
+                double FpassingCropBB = (Math.Sqrt(Math.Pow(AlleyCropCanopyHeight, 2) + Math.Pow(TreeZoneWidth, 2)) - AlleyCropCanopyHeight) / TreeZoneWidth;  //Fraction of radiation making it to the base of the row relative to the amount incident to the area of the row at the top of the crop canopy.   I.E the amount of radiation the side of the crop canopy intercepts .
+                double FTransCrop = Math.Exp(-Ka * CropCanopyLAI); // Fraction of radiation transmitted through the alley canopy
+                double FradCrop = 1 - FTransCrop; //Fraction of radiation reaching the alley surface that is intercepted by the understory crop
 
-                if (Math.Abs(1 - EnergyBalanceCheck) > 0.001)
-                    throw (new Exception("Energy Balance not maintained in strip crop light interception model"));
-
-                Ft = (Wt) / (Wt + Wa);  // Remove overlap so scaling back to zone ground area works
-                Fa = (Wa) / (Wt + Wa);  // Remove overlap so scaling back to zone ground area works
-
-                // Perform Top-Down Light Balance for tree zone
-                // ==============================
-                double Rint = 0;
-                double Rin = weather.Radn * It / Ft;
-                for (int i = treeZone.numLayers - 1; i >= 0; i += -1)
+                //First tree canopy intercepts radiation
+                double IncidentRadn = Math.Max(SimulationArea, TreeCanopyArea) * weather.Radn;
+                double TreeCanopyTopRadInt = IncidentRadn * Math.Min(1,TreeCanopyArea / SimulationArea) * (1 - FtransTree); //Radiation that strikes the top of the tree canpy and is intercepted
+                double TreeCanopySideRadInt = IncidentRadn * TreeCanopyGap / SimulationWidth * (1-FpassingTreeBB) * (1 - FtransTree); //Radiation that is in the gap at the top of the canopy but is intercepted by the sides of the canopy in the gap.
+                double TreeCanopyRadInt = TreeCanopyTopRadInt + TreeCanopySideRadInt; //Radiation (MJ) intercepted by the tree canopy
+                for (int j = 0; j <= treeZone.Canopies.Count - 1; j++)
                 {
-                    if (double.IsNaN(Rint))
-                        throw new Exception("Bad Radiation Value in Light partitioning");
-                    Rint = Rin;
-                    for (int j = 0; j <= treeZone.Canopies.Count - 1; j++)
-                        treeZone.Canopies[j].Rs[i] = Rint * MathUtilities.Divide(treeZone.Canopies[j].Ftot[i] * treeZone.Canopies[j].Ktot, treeZone.layerKtot[i], 0.0);
-                    Rin -= Rint;
+                    treeZone.Canopies[j].Rs[1] = TreeCanopyRadInt/ SimulationArea * treeZone.Canopies[j].Ftot[1]; //Normalise back to m2 so it gells with the rest of micro climate
                 }
-                treeZone.SurfaceRs = weather.Radn * St / Ft;
+                double RadnRemaining = IncidentRadn - TreeCanopyRadInt;
 
-                // Perform Top-Down Light Balance for alley zone
-                // ==============================
-                Rint = 0;
-                Rin = weather.Radn * Ia / Fa;
-                for (int i = alleyZone.numLayers - 1; i >= 0; i += -1)
-                {
-                    if (double.IsNaN(Rint))
-                        throw new Exception("Bad Radiation Value in Light partitioning");
-                    Rint = Rin;
-                    for (int j = 0; j <= alleyZone.Canopies.Count - 1; j++)
-                        alleyZone.Canopies[j].Rs[i] = Rint * MathUtilities.Divide(alleyZone.Canopies[j].Ftot[i] * alleyZone.Canopies[j].Ktot, alleyZone.layerKtot[i], 0.0);
-                    Rin -= Rint;
-                }
-                alleyZone.SurfaceRs = weather.Radn * Sa / Fa;
+                //Then we partition transmitted radiation between the row and alley understory
+                //Understory soil in row zone gets its share based on relative area
+                double RowZoneUnderStorySoilRad = RadnRemaining * TreeZoneWidth/Math.Max(SimulationWidth,TreeCanopyWidth)*FpassingCropBB;
+                treeZone.SurfaceRs = RowZoneUnderStorySoilRad/TreeZoneArea;
+                RadnRemaining -= RowZoneUnderStorySoilRad;
+
+                //Then do top down radiation partitioning in the alley with the remaining radiation
+                CalculateLayeredShortWaveRadiation(alleyZone, RadnRemaining/AlleyZoneArea);
 
             }
             else
@@ -511,7 +516,7 @@ namespace Models
 
                 double Wt = (vine.Zone as Zones.RectangularZone).Width;    // Width of tree zone
                 double Wa = (alley.Zone as Zones.RectangularZone).Width;   // Width of alley zone
-                double CWt = vine.Canopies[0].Canopy.Width / 1000;         // Width of the tree canopy
+                double CWt = Math.Max(vine.Canopies[0].Canopy.Width,10) / 1000;         // Width of the tree canopy
 
                 double WaOp = Wa + Wt - CWt;                               // Width of the open alley zone between tree canopies
                 double Ft = CWt / (Wt + Wa);                              // Fraction of space in tree canopy

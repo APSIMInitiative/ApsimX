@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -25,8 +26,11 @@ namespace Models.PMF.Organs
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class Leaf : Model, IOrgan, ICanopy, ILeaf, IHasWaterDemand, IArbitration, IOrganDamage, IHasDamageableBiomass
+    public class Leaf : Model, IOrgan, ICanopy, ILeaf, IHasWaterDemand, IArbitration, IOrganDamage, IHasDamageableBiomass, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
         /// <summary>The surface organic matter model</summary>
         [Link]
@@ -182,7 +186,7 @@ namespace Models.PMF.Organs
         {  get
             {
                 if (parentPlant.IsAlive)
-                    return Structure.Height;
+                    return LeafStructure.Height;
                 else
                     return 0.0;
             }
@@ -241,7 +245,7 @@ namespace Models.PMF.Organs
         #region Links
         /// <summary>The structure</summary>
         [Link]
-        public Structure Structure = null;
+        public Structure LeafStructure = null;
         #endregion
 
         /// <summary>A list of material (biomass) that can be damaged.</summary>
@@ -261,9 +265,9 @@ namespace Models.PMF.Organs
             //CohortPopulation - Structure.MainStemPopn
             get
             {
-                if (Structure != null)
+                if (LeafStructure != null)
                 {
-                    double fractionMainStem = Math.Min(1, Structure.MainStemPopn / Structure.TotalStemPopn);
+                    double fractionMainStem = Math.Min(1, LeafStructure.MainStemPopn / LeafStructure.TotalStemPopn);
                     return LAI * fractionMainStem;
                 }
                 else
@@ -280,9 +284,9 @@ namespace Models.PMF.Organs
             //CohortPopulation - Structure.MainStemPopn
             get
             {
-                if (Structure != null)
+                if (LeafStructure != null)
                 {
-                    double fractionBranch = Math.Max(1 - Structure.MainStemPopn / Structure.TotalStemPopn, 0);
+                    double fractionBranch = Math.Max(1 - LeafStructure.MainStemPopn / LeafStructure.TotalStemPopn, 0);
                     return LAI * fractionBranch;
                 }
                 else
@@ -498,7 +502,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the dead cohort no.</summary>
         [Description("Number of leaf cohorts that have fully Senesced")]
-        public double DeadCohortNo { get { return Math.Min(Leaves.Count(l => l.IsDead), Structure.finalLeafNumber.Value()); } }
+        public double DeadCohortNo { get { return Math.Min(Leaves.Count(l => l.IsDead), LeafStructure.finalLeafNumber.Value()); } }
 
         /// <summary>Gets the plant appeared green leaf no.</summary>
         [Units("/plant")]
@@ -635,11 +639,11 @@ namespace Models.PMF.Organs
                             else
                                 return Math.Min(1,
                                     Leaves[(int)ExpandedCohortNo].Age / Leaves[(int)ExpandedCohortNo].GrowthDuration *
-                                    Structure.NextLeafProportion);
+                                    LeafStructure.NextLeafProportion);
                         else
                             return 0;
                     else
-                        return Structure.NextLeafProportion - 1;
+                        return LeafStructure.NextLeafProportion - 1;
                 return 0;
             }
         }
@@ -1082,7 +1086,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            Structure.UpdateHeight();
+            LeafStructure.UpdateHeight();
             Width = WidthFunction.Value();
             Depth = DepthFunction.Value();
 
@@ -1134,7 +1138,7 @@ namespace Models.PMF.Organs
             WaterAllocation = 0;
             CohortsAtInitialisation = 0;
             TipsAtEmergence = 0;
-            Structure.TipToAppear = 0;
+            LeafStructure.TipToAppear = 0;
             DMSupply.Clear();
             DMDemand.Clear();
             NSupply.Clear();
@@ -1145,7 +1149,7 @@ namespace Models.PMF.Organs
             MaxCanopyTemperature = 0;
             MeanCanopyTemperature = 0;
             LightProfile = null;
-            Structure.UpdateHeight();
+            LeafStructure.UpdateHeight();
             Width = WidthFunction.Value();
             Depth = DepthFunction.Value();
             CurrentExpandingLeaf = 0;
@@ -1229,7 +1233,7 @@ namespace Models.PMF.Organs
                     Detached.Add(L.Detached);
                 }
 
-                Structure.UpdateHeight();
+                LeafStructure.UpdateHeight();
 
                 //Work out what proportion of the canopy has died today.  This variable is addressed by other classes that need to perform senescence proces at the same rate as leaf senescnce
                 FractionDied = 0;
@@ -1244,8 +1248,8 @@ namespace Models.PMF.Organs
         /// <summary>Zeroes the leaves.</summary>
         public virtual void ZeroLeaves()
         {
-            Structure.LeafTipsAppeared = 0;
-            Structure.Clear();
+            LeafStructure.LeafTipsAppeared = 0;
+            LeafStructure.Clear();
             Leaves.Clear();
             needToRecalculateLiveDead = true;
             Summary.WriteMessage(this, "Removing leaves from plant", MessageType.Diagnostic);
@@ -1849,11 +1853,11 @@ namespace Models.PMF.Organs
         [EventSubscribe("Pruning")]
         private void OnPruning(object sender, EventArgs e)
         {
-            Structure.CohortToInitialise = 0;
-            Structure.TipToAppear = 0;
-            Structure.Clear();
-            Structure.ResetStemPopn();
-            Structure.NextLeafProportion = 1.0;
+            LeafStructure.CohortToInitialise = 0;
+            LeafStructure.TipToAppear = 0;
+            LeafStructure.Clear();
+            LeafStructure.ResetStemPopn();
+            LeafStructure.NextLeafProportion = 1.0;
 
             Leaves.Clear();
             needToRecalculateLiveDead = true;
@@ -1876,7 +1880,7 @@ namespace Models.PMF.Organs
             Detached = new Biomass();
             Removed = new Biomass();
             List<LeafCohort> initialLeaves = new List<LeafCohort>();
-            foreach (LeafCohort initialLeaf in this.FindAllChildren<LeafCohort>())
+            foreach (LeafCohort initialLeaf in Structure.FindChildren<LeafCohort>(relativeTo: this))
                 initialLeaves.Add(initialLeaf);
             InitialLeaves = initialLeaves.ToArray();
         }

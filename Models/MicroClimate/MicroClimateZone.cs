@@ -1,11 +1,12 @@
-﻿using APSIM.Numerics;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json.Serialization;
+using APSIM.Core;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
-using Models.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Models
 {
@@ -49,6 +50,14 @@ namespace Models
 
         /// <summary>Latitude.</summary>
         private double Latitude;
+
+        /// <summary>The area of the Zone in m2 </summary>
+        /// Only != 1 if TreeRow radiation mode is used as it needs to adjust radiation interception for zone overlaps etc)
+        public double AreaM2 { get; set; } = 1.0;
+
+        /// <summary>The area of the Zone in m2 </summary>
+        /// Only != 1 if TreeRow radiation mode is used Canopy area can exceed zone area because of overlap)
+        public double SimulationAreaM2 { get; set; } = 1.0;
 
         /// <summary>The surface organic matter model.</summary>
         public ISurfaceOrganicMatter SurfaceOM { get; private set; }
@@ -116,6 +125,9 @@ namespace Models
         /// <summary>weights vpd towards vpd at maximum temperature</summary>
         private const double svp_fract = 0.66;
 
+        /// <summary>The radiation model used for partitioning light</summary>
+        public string RadiationModel { get; set; } = "BroadAcre";
+
         /// <summary>The Albedo of the combined soil-plant system for this zone</summary>
         public double Albedo;
 
@@ -129,7 +141,7 @@ namespace Models
         public double sumRs;
 
         /// <summary>The incoming rs</summary>
-        public double IncomingRs;
+        public double IncomingRs { get; set; }
 
         /// <summary>The shortwave radiation reaching the surface</summary>
         public double SurfaceRs;
@@ -155,7 +167,6 @@ namespace Models
         /// <summary>The height difference between canopies required for a new layer to be created (m).</summary>
         public double MinimumHeightDiffForNewLayer { get; set; }
 
-
         /// <summary>Gets or sets the component data.</summary>
         public List<MicroClimateCanopy> Canopies = new List<MicroClimateCanopy>();
 
@@ -163,15 +174,22 @@ namespace Models
         /// <param name="clockModel">The clock model.</param>
         /// <param name="zoneModel">The zone model.</param>
         /// <param name="minHeightDiffForNewLayer">Minimum canopy height diff for new layer.</param>
-        public MicroClimateZone(IClock clockModel, Zone zoneModel, double minHeightDiffForNewLayer)
+        /// <param name="structure">Structure instance</param>
+        public MicroClimateZone(IClock clockModel, Zone zoneModel, IStructure structure, double minHeightDiffForNewLayer)
         {
             clock = clockModel;
             Zone = zoneModel;
             MinimumHeightDiffForNewLayer = minHeightDiffForNewLayer;
-            canopyModels = Zone.FindAllDescendants<ICanopy>().ToList();
-            modelsThatHaveCanopies = Zone.FindAllDescendants<IHaveCanopy>().ToList();
-            SoilWater = Zone.FindInScope<ISoilWater>();
-            SurfaceOM = Zone.FindInScope<ISurfaceOrganicMatter>();
+            canopyModels = structure.FindChildren<ICanopy>(relativeTo: Zone, recurse: true).ToList();
+            modelsThatHaveCanopies = structure.FindChildren<IHaveCanopy>(relativeTo: Zone, recurse: true).ToList();
+            SoilWater = structure.Find<ISoilWater>(relativeTo: Zone);
+            SurfaceOM = structure.Find<ISurfaceOrganicMatter>(relativeTo: Zone);
+        }
+
+        /// <summary>Constructor. for blank zone</summary>
+        public MicroClimateZone(Zone zoneModel)
+        {
+            Zone = zoneModel;
         }
 
         /// <summary>The zone model.</summary>
@@ -285,6 +303,8 @@ namespace Models
             Latitude = weatherModel.Latitude;
             Wind = weatherModel.Wind;
 
+
+
             Albedo = 0;
             Emissivity = 0;
             NetLongWaveRadiation = 0;
@@ -305,7 +325,7 @@ namespace Models
             // There are two ways to finding canopies in the simulation.
             // 1. Some models ARE canopies e.g. Leaf, SimpleLeaf.
             foreach (ICanopy canopy in canopyModels)
-                if (canopy.Height > 0)
+                if (MathUtilities.IsGreaterThan(canopy.Height, 0))
                     Canopies.Add(new MicroClimateCanopy(canopy));
 
             // 2. Some models HAVE canopies e.g. SurfaceOM.
@@ -325,20 +345,40 @@ namespace Models
         /// <param name="soilAlbedo">Soil albedo.</param>
         public void CalculateEnergyTerms(double soilAlbedo)
         {
+            for (int i = numLayers - 1; i >= 0; i += -1)
+            {
+                for (int j = 0; j <= Canopies.Count - 1; j++)
+                {
+                    Canopies[j].FRs[i] = Math.Min(1.0,MathUtilities.Divide(Canopies[j].Rs[i], Radn, 0.0));
+                }
+            }
+
             sumRs = 0.0;
             Albedo = 0.0;
             Emissivity = 0.0;
 
             for (int i = numLayers - 1; i >= 0; i += -1)
+            {
                 for (int j = 0; j <= Canopies.Count - 1; j++)
                 {
-                    Albedo += MathUtilities.Divide(Canopies[j].Rs[i], Radn, 0.0) * Canopies[j].Canopy.Albedo;
-                    Emissivity += MathUtilities.Divide(Canopies[j].Rs[i], Radn, 0.0) * canopyEmissivity;
+                    Albedo += Canopies[j].FRs[i] * Canopies[j].Canopy.Albedo;
+                    Emissivity += Canopies[j].FRs[i] * canopyEmissivity;
                     sumRs += Canopies[j].Rs[i];
                 }
+            }
 
-            Albedo += (1.0 - MathUtilities.Divide(sumRs, Radn, 0.0)) * soilAlbedo;
-            Emissivity += (1.0 - MathUtilities.Divide(sumRs, Radn, 0.0)) * soilEmissivity;
+            if (RadiationModel != "TreeRow")
+            {
+                Albedo += (1.0 - MathUtilities.Divide(sumRs, Radn, 0.0)) * soilAlbedo;
+                Emissivity += (1.0 - MathUtilities.Divide(sumRs, Radn, 0.0)) * soilEmissivity;
+            }
+            else
+            {
+                Albedo += MathUtilities.Divide(SurfaceRs, Radn, 0.0) * soilAlbedo;
+                Emissivity += MathUtilities.Divide(SurfaceRs, Radn, 0.0) * soilEmissivity;
+            }
+            //if((Albedo <0)||(Albedo>1))
+            //    throw new Exception("Bad Albedo");
         }
 
         /// <summary>
@@ -357,7 +397,7 @@ namespace Models
             // ====================================================
             for (int i = numLayers - 1; i >= 0; i += -1)
                 for (int j = 0; j <= Canopies.Count - 1; j++)
-                    Canopies[j].Rl[i] = MathUtilities.Divide(Canopies[j].Rs[i], Radn, 0.0) * NetLongWaveRadiation;
+                    Canopies[j].Rl[i] = Canopies[j].FRs[i] * NetLongWaveRadiation;
         }
 
         /// <summary>
@@ -373,7 +413,7 @@ namespace Models
             // ====================================================
             for (int i = numLayers - 1; i >= 0; i += -1)
                 for (int j = 0; j <= Canopies.Count - 1; j++)
-                    Canopies[j].Rsoil[i] = MathUtilities.Divide(Canopies[j].Rs[i], Radn, 0.0) * SoilHeatFlux;
+                    Canopies[j].Rsoil[i] = Canopies[j].FRs[i] * SoilHeatFlux;
         }
 
         /// <summary>Calculate the canopy conductance for system compartments</summary>
@@ -440,22 +480,6 @@ namespace Models
             }
         }
 
-        /// <summary>Calculate the canopy heat flux and temperature</summary>
-        public void CalculateCanopyTemperature()
-        {
-            for (int i = numLayers - 1; i >= 0; i += -1)
-            {
-                for (int j = 0; j <= Canopies.Count - 1; j++)
-                {
-                    Canopies[j].heatFlux[i] = CropCanopyHeatFlux(MinT, MaxT, AirPressure, Canopies[j].Rs[i] + Canopies[j].Rl[i], Canopies[j].Rsoil[i], Canopies[j].PET[i]);
-
-                    Canopies[j].minTemperature[i] = CropCanopyTemperature(MinT, MaxT, MinT, AirPressure, Canopies[j].Ga[i], Canopies[j].heatFlux[i]);
-                    Canopies[j].maxTemperature[i] = CropCanopyTemperature(MinT, MaxT, MaxT, AirPressure, Canopies[j].Ga[i], Canopies[j].heatFlux[i]);
-                    Canopies[j].temperature[i] = 0.5 * (Canopies[j].minTemperature[i] + Canopies[j].maxTemperature[i]);
-                }
-            }
-        }
-
         /// <summary>Calculate the Penman-Monteith water demand</summary>
         /// <param name="dayLengthEvap">This is the length of time within the day during which the sun is above the horizon.</param>
         /// <param name="nightInterceptionFraction">The fraction of intercepted rainfall that evaporates at night.</param>
@@ -511,32 +535,24 @@ namespace Models
                 if (Canopies[j].Canopy != null)
                 {
                     CanopyEnergyBalanceInterceptionlayerType[] lightProfile = new CanopyEnergyBalanceInterceptionlayerType[numLayers];
+                    double totalPETa = 0;
+                    double totalPETr = 0;
                     double totalPotentialEp = 0;
                     double totalInterception = 0.0;
-                    double minCanopyTemperature = 0.0;
-                    double maxCanopyTemperature = 0.0;
-                    double meanCanopyTemperature = 0.0;
-
                     for (int i = 0; i <= numLayers - 1; i++)
                     {
                         lightProfile[i] = new CanopyEnergyBalanceInterceptionlayerType();
                         lightProfile[i].thickness = DeltaZ[i];
-                        lightProfile[i].AmountOnGreen = Canopies[j].Rs[i] * RadnGreenFraction(j);
-                        lightProfile[i].AmountOnDead = Canopies[j].Rs[i] * (1 - RadnGreenFraction(j));
+                        lightProfile[i].AmountOnGreen = Canopies[j].Rs[i] * SimulationAreaM2 * RadnGreenFraction(j);
+                        lightProfile[i].AmountOnDead = Canopies[j].Rs[i] * SimulationAreaM2 * (1 - RadnGreenFraction(j));
+                        totalPETa += Canopies[j].PETa[i];
+                        totalPETr += Canopies[j].PETr[i];
                         totalPotentialEp += Canopies[j].PET[i];
                         totalInterception += Canopies[j].interception[i];
-
-                        minCanopyTemperature += (Canopies[j].minTemperature[i] * Canopies[j].Rs[i]);
-                        maxCanopyTemperature += (Canopies[j].maxTemperature[i] * Canopies[j].Rs[i]);
-                        meanCanopyTemperature += (Canopies[j].temperature[i] * Canopies[j].Rs[i]);
                     }
                     Canopies[j].Canopy.PotentialEP = totalPotentialEp;
                     Canopies[j].Canopy.WaterDemand = totalPotentialEp;
                     Canopies[j].Canopy.LightProfile = lightProfile;
-
-                    Canopies[j].Canopy.MinCanopyTemperature = minCanopyTemperature / sumRs;
-                    Canopies[j].Canopy.MaxCanopyTemperature = maxCanopyTemperature / sumRs;
-                    Canopies[j].Canopy.MeanCanopyTemperature = meanCanopyTemperature / sumRs;
                 }
         }
 
@@ -577,6 +593,7 @@ namespace Models
                     Array.Resize<double>(ref Canopies[j].Ftot, numLayers);
                     Array.Resize<double>(ref Canopies[j].Fgreen, numLayers);
                     Array.Resize<double>(ref Canopies[j].Rs, numLayers);
+                    Array.Resize<double>(ref Canopies[j].FRs, numLayers);
                     Array.Resize<double>(ref Canopies[j].Rl, numLayers);
                     Array.Resize<double>(ref Canopies[j].Rsoil, numLayers);
                     Array.Resize<double>(ref Canopies[j].Gc, numLayers);
@@ -586,10 +603,6 @@ namespace Models
                     Array.Resize<double>(ref Canopies[j].PETa, numLayers);
                     Array.Resize<double>(ref Canopies[j].Omega, numLayers);
                     Array.Resize<double>(ref Canopies[j].interception, numLayers);
-                    Array.Resize<double>(ref Canopies[j].heatFlux, numLayers);
-                    Array.Resize<double>(ref Canopies[j].minTemperature, numLayers);
-                    Array.Resize<double>(ref Canopies[j].maxTemperature, numLayers);
-                    Array.Resize<double>(ref Canopies[j].temperature, numLayers);
                 }
             }
             for (int i = 0; i <= numLayers - 1; i++)
@@ -742,41 +755,6 @@ namespace Models
             double denominator = layerSolRad * Math.Exp(-1.0 * layerK * layerLAI) + cropR50;
             double hyperbolic = Math.Max(1.0, MathUtilities.Divide(numerator, denominator, 0.0));
             return Math.Max(0.0001, MathUtilities.Divide(cropGsMax * cropLAIfac, layerK, 0.0) * Math.Log(hyperbolic));
-        }
-
-        /// <summary>
-        /// Calculate the canopy heat flux (MJ/m2/d)
-        /// <param name="mint">(INPUT) Minimum temperature (oC)</param>
-        /// <param name="maxt">(INPUT) Maximum temperature (oC)</param>
-        /// <param name="airPressure">(INPUT) Air pressure (hPa)</param>
-        /// <param name="netRadn">(INPUT) Net radiation (MJ/m2/d)</param>
-        /// <param name="soilHeatFlux">(INPUT) Soil heat flux (MJ/m2/d)</param>
-        /// <param name="potentialTranspiration">(INPUT) Potential transpiration (mm)</param>
-        /// </summary>
-        private double CropCanopyHeatFlux(double mint, double maxt, double airPressure, double netRadn, double soilHeatFlux, double potentialTranspiration)
-        {
-            double averageT = CalcAverageT(mint, maxt);
-            double lambda = CalcLambda(averageT) / 1e6; // MJ/kg
-            double cropHeatFlux = netRadn - soilHeatFlux - potentialTranspiration * lambda; // lambda is used to convert mm to MJ/m2/d
-            return cropHeatFlux;
-        }
-
-        /// <summary>
-        /// Calculate the crop canopy temperature for MinT or MaxT
-        /// <param name="mint">(INPUT) Minimum temperature (oC)</param>
-        /// <param name="maxt">(INPUT) Maximum temperature (oC)</param>
-        /// <param name="targetAirTemp">(INPUT) Either minimum or maximum temperature (oC)</param>
-        /// <param name="airPressure">(INPUT) Air pressure (hPa)</param>
-        /// <param name="conductance">(INPUT) Boundary layer conductance (m/s)</param>
-        /// <param name="cropHeatFlux">(INPUT) Canopy heat flux (MJ/m2/d)</param>
-        /// </summary>
-        private double CropCanopyTemperature(double mint, double maxt, double targetAirTemp, double airPressure, double conductance, double cropHeatFlux)
-        {
-            double averageT = CalcAverageT(mint, maxt);
-            double RhoA = CalcRhoA(averageT, airPressure); // kg/m3
-            double specificHeatCapacityAir = 0.00101; // MJ/kg/°C
-            double canopyTemperature = targetAirTemp + (cropHeatFlux / (RhoA * specificHeatCapacityAir * conductance * 86400));
-            return canopyTemperature;
         }
 
         /// <summary>

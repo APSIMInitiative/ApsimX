@@ -7,6 +7,7 @@ using APSIM.Shared.APSoil;
 using Models.Core;
 using Models.Interfaces;
 using Newtonsoft.Json;
+using APSIM.Core;
 
 namespace Models.Soils
 {
@@ -15,12 +16,18 @@ namespace Models.Soils
     /// This class encapsulates the water content (initial and current) in the simulation.
     /// </summary>
     [Serializable]
-    [ViewName("ApsimNG.Resources.Glade.WaterView.glade")]
-    [PresenterName("UserInterface.Presenters.WaterPresenter")]
+    [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
+    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Water : Model
+    public class Water : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
+
         private double[] volumetric;
+        private double initialFractionFull = double.NaN;
 
         /// <summary>Last initialisation event.</summary>
         public event EventHandler WaterChanged;
@@ -46,15 +53,35 @@ namespace Models.Soils
         /// <summary>Thickness</summary>
         public double[] Thickness { get; set; }
 
+        [JsonIgnore]
+        private double[] initialValues = null;
+
         /// <summary>Initial water values</summary>
-        [Description("Initial values")]
         [Summary]
         [Units("mm/mm")]
         [Display(Format = "N3")]
-        public double[] InitialValues { get; set; }
+        public double[] InitialValues
+        {
+            get => initialValues;
+            set
+            {
+                double[] current = initialValues;
+                initialValues = value;
+
+                try
+                {
+                    AreInitialValuesWithinPhysicalBoundaries();
+                }
+                catch (Exception ex)
+                {
+                    initialValues = current;
+                    throw new Exception(ex.Message);
+                }
+            }
+        }
 
         /// <summary>Initial values total mm</summary>
-        [Summary]
+            [Summary]
         [Units("mm")]
         public double[] InitialValuesMM => InitialValues == null ? null : MathUtilities.Multiply(InitialValues, Thickness);
 
@@ -121,16 +148,18 @@ namespace Models.Soils
         }
 
         /// <summary>Plant available water (mm).</summary>
+        [Description("Intial PAW (mm)")]
         [Units("mm")]
+        [JsonIgnore]
         public double InitialPAWmm
         {
             get
             {
                 if (InitialValues == null)
                     return 0;
-                double[] values =  MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM);
+                double[] values = MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM);
                 if (values != null)
-                    return values.Sum();
+                    return MathUtilities.Round(values.Sum(), 3);
                 return 0;
             }
             set
@@ -190,14 +219,18 @@ namespace Models.Soils
         private string relativeToCheck = "LL15";
 
         /// <summary>The crop name (or LL15) that fraction full is relative to</summary>
+        [Description("Relative To")]
+        [Display(Type = DisplayType.SoilCrop)]
+        [JsonIgnore]
         public string RelativeTo
         {
             get => relativeToCheck;
             set
             {
                 string newValue = value;
-                if (newValue == null)
+                if (newValue == null || newValue == "")
                     newValue = "LL15";
+
                 // This structure is required to create a 'source of truth' to ensure
                 // a stack overflow does not occurs.
                 if (relativeToCheck != newValue)
@@ -216,10 +249,10 @@ namespace Models.Soils
         /// <summary>Allowed strings in 'RelativeTo' property.</summary>
         public IEnumerable<string> AllowedRelativeTo => (GetAllowedRelativeToStrings());
 
-        [JsonIgnore]
         private bool filledFromTop = false;
 
         /// <summary>Distribute the water at the top of the profile when setting fraction full.</summary>
+        [Description("Filled From Top:")]
         public bool FilledFromTop
         {
             get => filledFromTop;
@@ -227,12 +260,12 @@ namespace Models.Soils
             {
                 double percent = FractionFull;
                 filledFromTop = value;
-                if(Physical != null)
+                if (Physical != null)
                     UpdateInitialValuesFromFractionFull(percent);
             }
         }
 
-        /// <summary>Calculate the fraction of the profile that is full.</summary>
+        /// <summary>Calculate the fraction of the profile that is full as fraction (0 to 1)</summary>
         [JsonIgnore]
         public double FractionFull
         {
@@ -251,10 +284,11 @@ namespace Models.Soils
                         {
                             //Get layer indices that have a XF as 0.
                             var plantCrop = GetCropSoil();
+                            var xf = SoilUtilities.MapConcentration(plantCrop.XF, Physical.Thickness, Thickness, plantCrop.XF.Last());
 
-                            double[] initialValuesMMMinusEmptyXFLayers = MathUtilities.Multiply(plantCrop.XF, InitialValuesMM);
-                            double[] relativeToLLMMMinusEmptyXFLayers = MathUtilities.Multiply(plantCrop.XF, RelativeToLLMM);
-                            double[] dulMMMinusEmptyXFLayers = MathUtilities.Multiply(plantCrop.XF, dulMM);
+                            double[] initialValuesMMMinusEmptyXFLayers = MathUtilities.Multiply(xf, InitialValuesMM);
+                            double[] relativeToLLMMMinusEmptyXFLayers = MathUtilities.Multiply(xf, RelativeToLLMM);
+                            double[] dulMMMinusEmptyXFLayers = MathUtilities.Multiply(xf, dulMM);
 
                             newFractionFull = MathUtilities.Subtract(initialValuesMMMinusEmptyXFLayers, relativeToLLMMMinusEmptyXFLayers).Sum() /
                                                 MathUtilities.Subtract(dulMMMinusEmptyXFLayers, relativeToLLMMMinusEmptyXFLayers).Sum();
@@ -269,14 +303,33 @@ namespace Models.Soils
                                 newFractionFull = paw.Sum() / MathUtilities.Subtract(dulMM, RelativeToLLMM).Sum();
                         }
 
-                        return newFractionFull;
+                        return MathUtilities.Round(newFractionFull, 3);
                     }
                 }
                 else return 0;
             }
             set
             {
-                UpdateInitialValuesFromFractionFull(value);
+                UpdateInitialValuesFromFractionFull(MathUtilities.Round(value, 3));
+            }
+        }
+
+        /// <summary>Calculate the fraction of the profile that is full as percentage (0 to 100)</summary>
+        [JsonIgnore]
+        [Description("Percent Full %")]
+        [Units("%")]
+        public double PercentFull
+        {
+            get
+            {
+                return FractionFull * 100;
+            }
+            set
+            {
+                if (value >= 0 && value <= 100)
+                    FractionFull = value / 100;
+                else
+                    throw new Exception("Percent Full must be a number between 0 and 100.");
             }
         }
 
@@ -299,6 +352,8 @@ namespace Models.Soils
 
                 double fraction = FractionFull;
             }
+            else
+                initialFractionFull = value;
         }
 
         /// <summary>Calculate the depth of wet soil (mm).</summary>
@@ -333,11 +388,17 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Finds the 'Soil' node. Try parent first, then a soil in scope.</summary>
+        public Soil Soil => Node?.FindParent<Soil>() ??
+                            Node?.WalkScoped()
+                                ?.FirstOrDefault(n => n.Model is Soil)
+                                ?.Model as Soil;
+
         /// <summary>Finds the 'Physical' node.</summary>
-        public IPhysical Physical => FindAncestor<Soil>()?.FindDescendant<IPhysical>() ?? FindInScope<IPhysical>();
+        public IPhysical Physical => Soil?.Node.FindChild<IPhysical>();
 
         /// <summary>Finds the 'SoilWater' node.</summary>
-        public ISoilWater WaterModel => FindAncestor<Soil>()?.FindDescendant<ISoilWater>() ?? FindInScope<ISoilWater>();
+        public ISoilWater WaterModel => Soil?.Node.FindChild<ISoilWater>();
 
         /// <summary>Find LL values (mm) for the RelativeTo property.</summary>
         public double[] RelativeToLL
@@ -381,7 +442,15 @@ namespace Models.Soils
             }
         }
 
-
+        /// <summary>
+        /// Update the initial values;
+        /// </summary>
+        public override void OnCreated()
+        {
+            base.OnCreated();
+            if (!double.IsNaN(initialFractionFull))
+                UpdateInitialValuesFromFractionFull(initialFractionFull);
+        }
 
         /// <summary>
         /// Get all soil crop names as strings from the relevant Soil this water node is a child of as well as LL15 (default value).
@@ -393,10 +462,10 @@ namespace Models.Soils
             IEnumerable<SoilCrop> ancestorSoilCropLists = new List<SoilCrop>();
             // LL15 is here as this is the default value.
             List<string> newSoilCropNames = new List<string> { "LL15" };
-            Soil ancestorSoil = FindAncestor<Soil>();
+            Soil ancestorSoil = Structure.FindParent<Soil>(recurse: true);
             if (ancestorSoil != null)
             {
-                ancestorSoilCropLists = ancestorSoil.FindAllDescendants<SoilCrop>();
+                ancestorSoilCropLists = Structure.FindChildren<SoilCrop>(relativeTo: ancestorSoil, recurse: true);
                 newSoilCropNames.AddRange(ancestorSoilCropLists.Select(s => s.Name.Replace("Soil", "")));
             }
             return newSoilCropNames;
@@ -408,18 +477,27 @@ namespace Models.Soils
         public bool AreInitialValuesWithinPhysicalBoundaries()
         {
             if (this.Physical == null)
-                throw new Exception("To check boundaries of InitialValues Physical must not be null.");
+                return true; //when loading from file physical will be none, in this case, just accept the
+
+            if (Physical.AirDry == null || Physical.SAT == null)
+                return true;   //we need these to check, but WEIRDO simulations doesn't have an airdry
 
             if (InitialValues.Length != Thickness.Length)
-                return false;
+                    return false;
 
             var mappedInitialValues = SoilUtilities.MapConcentration(InitialValues, Thickness, Physical.Thickness, MathUtilities.LastValue(Physical.LL15));
 
             for (int i = 0; i < mappedInitialValues.Length; i++)
             {
-                if (mappedInitialValues[i] < Physical.AirDry[i] || mappedInitialValues[i] > Physical.SAT[i])
-                    return false;
+                double water = mappedInitialValues[i];
+                double airDry = Physical.AirDry[i];
+                double sat = Physical.SAT[i];
+                if (!MathUtilities.FloatsAreEqual(water, airDry) && water < airDry)
+                    throw new Exception($"A water initial value of {water} on layer {i+1} was less than AirDry of {airDry}.");
+                else if (!MathUtilities.FloatsAreEqual(water, sat) && water > sat)
+                    throw new Exception($"A water initial value of {water} on layer {i+1} was more than Saturation of {sat}.");
             }
+
             return true;
         }
 
@@ -429,12 +507,12 @@ namespace Models.Soils
         /// <exception cref="Exception"></exception>
         private SoilCrop GetCropSoil()
         {
-            var physical = FindSibling<Physical>();
+            var physical = Structure.Find<Physical>();
             if (physical == null)
-                physical = FindInScope<Physical>();
+                physical = Structure.Find<Physical>();
                 if (physical == null)
                     throw new Exception($"Unable to locate a Physical node when updating {this.Name}.");
-            var plantCrop = physical.FindChild<SoilCrop>(RelativeTo + "Soil");
+            var plantCrop = Structure.FindChild<SoilCrop>(RelativeTo + "Soil", relativeTo: physical);
             if (plantCrop == null)
                 throw new Exception($"Unable to locate an appropriate SoilCrop with the name of {RelativeTo + "Soil"} under {physical.Name}.");
             return plantCrop;

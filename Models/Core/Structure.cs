@@ -29,7 +29,8 @@ namespace Models.Core.ApsimFile
                 throw new ArgumentException($"A {modelToAdd.GetType().Name} cannot be added to a {parent.GetType().Name}.");
 
             var parentNode = (parent as Model).Node;
-            var childNode = parentNode.AddChild(modelToAdd as INodeModel);
+            parentNode.AddChild(modelToAdd as INodeModel);
+            var childNode = modelToAdd.Node;
 
             // Ensure the model name is valid.
             EnsureNameIsUnique(modelToAdd);
@@ -39,7 +40,19 @@ namespace Models.Core.ApsimFile
             Folder.IsModelReplacementsFolder(modelToAdd);
 
             // If the model is being added at runtime then need to resolve links and events.
-            Simulation parentSimulation = parent.FindAncestor<Simulation>();
+            ReconnectLinksAndEvents(modelToAdd);
+
+            Apsim.ClearCaches(modelToAdd);
+            return modelToAdd;
+        }
+
+        /// <summary>
+        /// Reconnect links a events.
+        /// </summary>
+        /// <param name="modelToAdd"></param>
+        public static void ReconnectLinksAndEvents(IModel modelToAdd)
+        {
+            Simulation parentSimulation = modelToAdd.Parent.Node.FindParent<Simulation>(recurse: true);
             if (parentSimulation != null && parentSimulation.IsRunning)
             {
                 var links = new Links(parentSimulation.ModelServices);
@@ -48,14 +61,11 @@ namespace Models.Core.ApsimFile
                 events.ConnectEvents();
 
                 // Publish Commencing event
-                events.PublishToModelAndChildren("Commencing", new object[] { parent, new EventArgs() });
+                events.PublishToModelAndChildren("Commencing", new object[] { modelToAdd.Parent, new EventArgs() });
 
                 // Call StartOfSimulation events
-                events.PublishToModelAndChildren("StartOfSimulation", new object[] { parent, new EventArgs() });
+                events.PublishToModelAndChildren("StartOfSimulation", new object[] { modelToAdd.Parent, new EventArgs() });
             }
-
-            Apsim.ClearCaches(modelToAdd);
-            return modelToAdd;
         }
 
         /// <summary>Adds a new model (as specified by the string argument) to the specified parent.</summary>
@@ -100,24 +110,6 @@ namespace Models.Core.ApsimFile
             return modelToAdd;
         }
 
-        /// <summary>Renames a new model.</summary>
-        /// <param name="model">The model to rename.</param>
-        /// <param name="newName">The new name for the model.</param>
-        /// <returns>The newly created model.</returns>
-        public static void Rename(IModel model, string newName)
-        {
-            //use a clone to see if the name is good
-            IModel clone = model.Clone();
-            clone.Name = newName;
-            clone.Parent = model.Parent;
-            model.Name = ""; //rename the existing model so it doesn't conflict
-            EnsureNameIsUnique(clone);
-
-            //set the name to whatever was found using the clone.
-            model.Name = clone.Name.Trim();
-            Apsim.ClearCaches(model);
-        }
-
         /// <summary>Move a model from one parent to another.</summary>
         /// <param name="model">The model to move.</param>
         /// <param name="newParent">The new parente for the model.</param>
@@ -148,14 +140,14 @@ namespace Models.Core.ApsimFile
             string originalName = modelToCheck.Name;
             string newName = originalName;
             int counter = 0;
-            IModel siblingWithSameName = modelToCheck.FindSibling(newName);
+            IModel siblingWithSameName = modelToCheck.Node.FindSibling<IModel>(newName);
             while (siblingWithSameName != null && counter < 10000)
             {
                 counter++;
                 newName = originalName + counter.ToString();
-                siblingWithSameName = modelToCheck.FindSibling(newName);
+                siblingWithSameName = modelToCheck.Node.FindSibling<IModel>(newName);
             }
-            Simulations sims = modelToCheck.FindAncestor<Simulations>();
+            Simulations sims = modelToCheck.Node.FindParent<Simulations>(recurse: true);
             if (sims != null)
             {
                 bool stop = false;
@@ -163,13 +155,12 @@ namespace Models.Core.ApsimFile
                 {
                     bool goodName = true;
 
-                    var obj = sims.FindByPath(modelToCheck.Parent.FullPath + "." + newName);
-                    if (obj != null) { //found a potential conflict
+                    var variable = modelToCheck.Node.GetObject(modelToCheck.Parent.FullPath + "." + newName, relativeTo: sims);
+                    if (variable != null) { //found a potential conflict
                         goodName = false;
-                        if (obj is IVariable variable) //name is a variable, check if they have the same type (aka a link)
-                            if (variable.DataType.Name.CompareTo(modelToCheck.GetType().Name) == 0)
-                                if (modelToCheck.FindSibling(newName) == null)
-                                    goodName = true;
+                        if (variable.DataType.Name.CompareTo(modelToCheck.GetType().Name) == 0)
+                            if (modelToCheck.Node.FindSibling<IModel>(newName) == null)
+                                goodName = true;
                     }
 
                     if (goodName == false)
@@ -196,7 +187,11 @@ namespace Models.Core.ApsimFile
         public static bool Delete(IModel model)
         {
             Apsim.ClearCaches(model);
-            return model.Parent.Children.Remove(model as Model);
+
+            Node parentNode = (model.Parent as Model).Node;
+            parentNode.RemoveChild(model as Model);
+
+            return true;
         }
 
         /// <summary>Replace one model with another.</summary>

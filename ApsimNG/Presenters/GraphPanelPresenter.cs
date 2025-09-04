@@ -115,7 +115,7 @@ namespace UserInterface.Presenters
         private void WorkerThread()
         {
             ClearGraphs();
-            Graph[] graphs = panel.FindAllChildren<Graph>().ToArray();
+            Graph[] graphs = panel.Node.FindChildren<Graph>().ToArray();
 
             IGraphPanelScript script = panel.Script;
             if (script != null)
@@ -368,7 +368,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private IStorageReader GetStorage()
         {
-            return (panel.FindInScope<IDataStore>()).Reader;
+            return (panel.Node.Find<IDataStore>()).Reader;
         }
 
         /// <summary>
@@ -377,7 +377,7 @@ namespace UserInterface.Presenters
         /// <param name="changedModel"></param>
         private void OnModelChanged(object changedModel)
         {
-            if (changedModel == panel || panel.FindAllDescendants().Contains(changedModel as Model))
+            if (changedModel == panel || panel.Node.FindChildren<IModel>(recurse: true).Contains(changedModel as Model))
                 Refresh();
         }
 

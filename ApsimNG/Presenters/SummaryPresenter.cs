@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using APSIM.Core;
 using DocumentFormat.OpenXml.Office.CustomXsn;
 using MathNet.Numerics;
 using Microsoft.IdentityModel.Tokens;
@@ -97,8 +98,7 @@ namespace UserInterface.Presenters
         private void SetSimulationNamesInView()
         {
             // populate the simulation names in the view.
-            ScopingRules scope = new();
-            IModel scopedParent = scope.FindScopedParentModel(summaryModel);
+            IModel scopedParent = summaryModel.Node.ScopedParent().Model as IModel;
 
             if (scopedParent is Simulation parentSimulation)
             {
@@ -121,10 +121,10 @@ namespace UserInterface.Presenters
             }
             else
             {
-                List<ISimulationDescriptionGenerator> simulations = summaryModel.FindAllInScope<ISimulationDescriptionGenerator>().Cast<ISimulationDescriptionGenerator>().ToList();
+                List<ISimulationDescriptionGenerator> simulations = summaryModel.Node.FindAll<ISimulationDescriptionGenerator>().Cast<ISimulationDescriptionGenerator>().ToList();
                 simulations.RemoveAll(s => s is Simulation && (s as IModel).Parent is Experiment);
                 List<string> simulationNames = simulations.SelectMany(m => m.GenerateSimulationDescriptions()).Select(m => m.Name).ToList();
-                simulationNames.AddRange(summaryModel.FindAllInScope<Models.Optimisation.CroptimizR>().Select(x => x.Name));
+                simulationNames.AddRange(summaryModel.Node.FindAll<Models.Optimisation.CroptimizR>().Select(x => x.Name));
                 summaryView.SimulationDropDown.Values = simulationNames.ToArray();
                 if (simulationNames != null && simulationNames.Count > 0)
                     summaryView.SimulationDropDown.SelectedValue = simulationNames[0];

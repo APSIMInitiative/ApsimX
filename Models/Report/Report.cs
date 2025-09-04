@@ -25,8 +25,13 @@ namespace Models
     [ValidParent(ParentType = typeof(Zones.RectangularZone))]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(CLEMFolder))]
-    public class Report : Model
+    public class Report : Model, IStructureDependency, IVariableSupplier
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { protected get; set; }
+
+
         /// <summary>The columns to write to the data store.</summary>
         [JsonIgnore]
         public List<IReportColumn> Columns { get; private set; } = null;
@@ -83,6 +88,21 @@ namespace Models
 
         /// <summary>Group by variable name.</summary>
         public string GroupByVariableName { get; set; }
+
+        /// <summary>
+        /// Get the value of a variable.
+        /// </summary>
+        /// <param name="name">Name of the variable.</param>
+        /// <param name="value">The value of the variable.</param>
+        /// <returns>True if found, false otherwise.</returns>
+        public bool Get(string name, out object value)
+        {
+            value = null;
+            var col = Columns?.Find(c => c.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+            if (col != null)
+                value = col.GetValue(0);
+            return col != null;
+        }
 
         /// <summary>
         /// Connect event handlers.
@@ -162,7 +182,7 @@ namespace Models
         private string[] TidyUpVariableNames()
         {
             List<string> variableNames = new List<string>();
-            IModel zone = FindAncestor<Zone>();
+            IModel zone = Structure.FindParent<Zone>(recurse: true);
             if (zone == null)
                 zone = simulation;
             variableNames.Add($"[{zone.Name}].Name as Zone");
@@ -322,7 +342,7 @@ namespace Models
                 try
                 {
                     if (!string.IsNullOrEmpty(fullVariableName))
-                        Columns.Add(new ReportColumn(fullVariableName, clock, Locator, events, GroupByVariableName, from, to));
+                        Columns.Add(new ReportColumn(fullVariableName, clock, Structure, events, GroupByVariableName, from, to));
                 }
                 catch (Exception err)
                 {

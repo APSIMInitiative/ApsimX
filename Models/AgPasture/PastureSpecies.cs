@@ -11,6 +11,7 @@ using Models.PMF.Interfaces;
 using Models.Soils.Arbitrator;
 using APSIM.Shared.Utilities;
 using APSIM.Numerics;
+using APSIM.Core;
 
 namespace Models.AgPasture
 {
@@ -19,12 +20,16 @@ namespace Models.AgPasture
     /// Describes a pasture species.
     /// </summary>
     [Serializable]
-    [ScopedModel]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public class PastureSpecies : Model, IPlant, ICanopy, IUptake
+    public class PastureSpecies : Model, IPlant, ICanopy, IUptake, IScopedModel, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
+
         /// <summary>Current cultivar.</summary>
         private Cultivar cultivarDefinition = null;
 
@@ -72,6 +77,20 @@ namespace Models.AgPasture
         #endregion  --------------------------------------------------------------------------------------------------------  --------------------------------------------------------------------------------------------------------
 
         #region ICanopy implementation  ------------------------------------------------------------------------------------
+
+        /// <summary>The advective componnet of wter demand</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double PotentialEPa { get; set; }
+
+        /// <summary>The radiation componnet of wter demand</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double PotentialEPr { get; set; }
+
+        /// <summary>The area of the canopy is 1m2</summary>
+        [JsonIgnore]
+        public double Area { get; set; } = 1.0;
 
         /// <summary>Canopy type identifier.</summary>
         public string CanopyType { get; set; } = "PastureSpecies";
@@ -266,7 +285,7 @@ namespace Models.AgPasture
             {
 
                 // Find cultivar and apply cultivar overrides.
-                cultivarDefinition = FindAllDescendants<Cultivar>().FirstOrDefault(c => c.IsKnownAs(cultivar));
+                cultivarDefinition = Structure.FindChildren<Cultivar>(recurse: true).FirstOrDefault(c => c.IsKnownAs(cultivar));
                 if (cultivarDefinition != null)
                 {
                     mySummary.WriteMessage(this, $"Applying cultivar {cultivar}", MessageType.Diagnostic);
@@ -367,7 +386,7 @@ namespace Models.AgPasture
                 }
 
                 // 2. get the amount of soil water demanded NOTE: This is in L, not mm,
-                Zone parentZone = FindAncestor<Zone>();
+                Zone parentZone = Structure.FindParent<Zone>(recurse: true);
                 double waterDemand = myWaterDemand * parentZone.Area;
 
                 // 3. estimate fraction of water used up
@@ -2408,7 +2427,16 @@ namespace Models.AgPasture
         public TissuesHelper DeadTissue { get; private set; }
 
         /// <summary>Root organ of this plant.</summary>
-        public PastureBelowGroundOrgan Root { get { return roots.First(); } }
+        public PastureBelowGroundOrgan Root
+        {
+            get
+            {
+                if (roots != null)
+                    return roots.First();
+                else
+                    return Structure.FindChild<PastureBelowGroundOrgan>(recurse: true);
+            }
+        }
 
         /// <summary>List of organs that can be damaged.</summary>
         public List<IOrganDamage> Organs
@@ -2471,7 +2499,7 @@ namespace Models.AgPasture
             foreach (RootZone rootZone in RootZonesInitialisations)
             {
                 // find the zone and get its soil
-                Zone zone = this.FindInScope(rootZone.ZoneName) as Zone;
+                Zone zone = Structure.Find<Zone>(rootZone.ZoneName);
                 if (zone == null)
                     throw new Exception("Cannot find zone: " + rootZone.ZoneName);
 

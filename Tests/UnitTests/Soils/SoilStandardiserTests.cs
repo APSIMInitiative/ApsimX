@@ -4,6 +4,8 @@
     using Models.Core;
     using Models.Soils;
     using Models.Soils.Nutrients;
+    using Models.Soils.SoilTemp;
+    using Models.WaterModel;
     using NUnit.Framework;
     using System;
     using System.Collections.Generic;
@@ -63,7 +65,7 @@
                     new Water
                     {
                         Thickness = new double[] { 500 },
-                        InitialValues = new double[] { 0.103 },
+                        InitialValues = new double[] { 0.261 },
                     }
                 }
             };
@@ -71,9 +73,9 @@
 
             soil.Sanitise();
 
-            var physical = soil.FindChild<Physical>();
-            var soilOrganicMatter = soil.FindChild<Organic>();
-            var water = soil.FindChild<Water>();
+            var physical = soil.Node.FindChild<Physical>();
+            var soilOrganicMatter = soil.Node.FindChild<Organic>();
+            var water = soil.Node.FindChild<Water>();
 
             // Make sure layer structures have been standardised.
             var targetThickness = new double[] { 100, 300, 300 };
@@ -133,7 +135,7 @@
                     new Water
                     {
                         Thickness = new double[] { 500 },
-                        InitialValues = new double[] { 0.103 }
+                        InitialValues = new double[] { 0.261 }
                     },
                     new LayerStructure
                     {
@@ -145,9 +147,9 @@
 
             soil.Sanitise();
 
-            var physical = soil.FindChild<Physical>();
-            var soilOrganicMatter = soil.FindChild<Organic>();
-            var water = soil.FindChild<Water>();
+            var physical = soil.Node.FindChild<Physical>();
+            var soilOrganicMatter = soil.Node.FindChild<Organic>();
+            var water = soil.Node.FindChild<Water>();
 
             // Make sure layer structures have been standardised.
             var targetThickness = new double[] { 100, 300 };
@@ -165,12 +167,12 @@
 
             soil.Sanitise();
 
-            var chemical = soil.FindChild<Chemical>();
-            var organic = soil.FindChild<Organic>();
-            var water = soil.FindChild<Water>();
-            var solutes = soil.FindAllChildren<Solute>().ToArray();
+            var chemical = soil.Node.FindChild<Chemical>();
+            var organic = soil.Node.FindChild<Organic>();
+            var water = soil.Node.FindChild<Water>();
+            var solutes = soil.Node.FindChildren<Solute>().ToArray();
 
-            Assert.That(soil.FindAllChildren<Water>().Count(), Is.EqualTo(1));
+            Assert.That(soil.Node.FindChildren<Water>().Count(), Is.EqualTo(1));
             Assert.That(water.Name, Is.EqualTo("Water"));
             Assert.That(water.Volumetric, Is.EqualTo(new double[] { 0.1, 0.2 }));
             Assert.That(organic.Carbon, Is.EqualTo(new double[] { 2.0, 0.9 }));
@@ -185,7 +187,7 @@
         public void DontStandardiseDisabledSoils()
         {
             Soil soil = CreateSimpleSoil();
-            Physical phys = soil.FindChild<Physical>();
+            Physical phys = soil.Node.FindChild<Physical>();
 
             // Remove a layer from BD - this will cause standardisation to fail.
             phys.BD = new double[phys.BD.Length - 1];
@@ -195,8 +197,8 @@
 
             // Chuck the soil in a simulation.
             Simulations sims = Utilities.GetRunnableSim();
-            Zone paddock = sims.FindDescendant<Zone>();
-            paddock.Children.Add(soil);
+            Zone paddock = sims.Node.FindChild<Zone>(recurse: true);
+            paddock.Node.AddChild(soil);
             soil.Parent = paddock;
 
             var tree = Node.Create(soil);
@@ -207,9 +209,47 @@
             Assert.That(errors.Count, Is.EqualTo(0), "There should be no errors - the faulty soil is disabled");
         }
 
+        [Test]
+        public void EnsureSoilStandardiserAddsMissingNodes()
+        {
+            Soil soil = new()
+            {
+                Children =
+                [
+                    new Physical()
+                    {
+                        Thickness = [100, 200],
+                        BD = [1.36, 1.216],
+                        AirDry = [0.135, 0.214],
+                        LL15 = [0.27, 0.267],
+                        DUL = [0.365, 0.461],
+                        SAT = [0.400, 0.481],
+                    },
+                ]
+            };
+            Node.Create(soil);
+            SoilSanitise.InitialiseSoil(soil);
+
+            var waterBalance = soil.Node.FindChild<WaterBalance>();
+            var nutrient = soil.Node.FindChild<Nutrient>();
+            Assert.That(soil.Node.FindChild<SoilTemperature>(), Is.Not.Null);
+            Assert.That(soil.Node.FindChild<Solute>("NO3"), Is.Not.Null);
+            Assert.That(soil.Node.FindChild<Solute>("NH4"), Is.Not.Null);
+            Assert.That(soil.Node.FindChild<Solute>("Urea"), Is.Not.Null);
+            Assert.That(soil.Node.FindChild<Water>(), Is.Not.Null);
+            Assert.That(waterBalance, Is.Not.Null);
+            Assert.That(soil.Node.FindChild<Organic>(), Is.Not.Null);
+            Assert.That(soil.Node.FindChild<Chemical>(), Is.Not.Null);
+            Assert.That(nutrient, Is.Not.Null);
+
+            // Ensure that waterbalance and nutrient models have their child models from resource.
+            Assert.That(waterBalance.Children.Count, Is.GreaterThan(0));
+            Assert.That(nutrient.Children.Count, Is.GreaterThan(0));
+        }
+
         private Soil CreateSimpleSoil()
         {
-            return new Soil
+            var soil = new Soil
             {
                 Children = new List<IModel>()
                 {
@@ -257,6 +297,8 @@
                     }
                 }
             };
+            Node.Create(soil);
+            return soil;
         }
     }
 }

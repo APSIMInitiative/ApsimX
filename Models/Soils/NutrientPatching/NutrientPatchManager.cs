@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Extensions.Collections;
 using APSIM.Shared.Utilities;
@@ -19,8 +20,13 @@ namespace Models.Soils.NutrientPatching
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class NutrientPatchManager : Model, INutrient, INutrientPatchManager
+    public class NutrientPatchManager : Model, INutrient, INutrientPatchManager, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
+
         [Link]
         private IClock clock = null;
 
@@ -546,15 +552,16 @@ namespace Models.Soils.NutrientPatching
                     throw new Exception("NutrientPatchManager must be the last child of soil");
 
                 // Find the physical node.
-                soilPhysical = FindInScope<Physical>();
-                clock = FindInScope<Clock>();
+                soilPhysical = Structure.Find<Physical>();
+                clock = Structure.Find<Clock>();
 
                 // Create a new nutrient patch.
-                var newPatch = new NutrientPatch(soilPhysical.Thickness, this);
+                var newPatch = new NutrientPatch(soilPhysical.Thickness, this, Structure);
                 newPatch.CreationDate = clock.Today;
                 newPatch.Name = "base";
                 patches.Add(newPatch);
-                Structure.Add(newPatch.Nutrient, this);
+                Node.AddChild(newPatch.Nutrient);
+                Models.Core.ApsimFile.Structure.ReconnectLinksAndEvents(newPatch.Nutrient);
 
                 // Create an OrganicPoolPatch under SurfaceOrganicMatter so that SurfaceOrganicMatter residue composition
                 // C and N flows go to this patch manager rather than directly to the pool under Nutrient in the first patch.
@@ -562,19 +569,17 @@ namespace Models.Soils.NutrientPatching
                 {
                     Name = "Microbial"
                 };
-                Structure.Add(microbialPool, this);
 
-                // Move the child to the first in the list so that scoping finds it before child of nutrient with same name.
-                Children.Remove(microbialPool);
-                Children.Insert(0, microbialPool);
+                Node.InsertChild(0, microbialPool);
+                Models.Core.ApsimFile.Structure.ReconnectLinksAndEvents(microbialPool);
 
                 var humicPool = new OrganicPoolPatch(this)
                 {
                     Name = "Humic"
                 };
-                Structure.Add(humicPool, this);
-                Children.Remove(humicPool);
-                Children.Insert(0, humicPool);
+
+                Node.InsertChild(0, humicPool);
+                Models.Core.ApsimFile.Structure.ReconnectLinksAndEvents(microbialPool);
             }
         }
 
@@ -909,7 +914,7 @@ namespace Models.Soils.NutrientPatching
         private void ClonePatch(int j)
         {
             // create new patch
-            var newPatch = new NutrientPatch(patches[j]);
+            var newPatch = new NutrientPatch(patches[j], Structure);
             patches.Add(newPatch);
             //int k = patches.Count - 1;
 

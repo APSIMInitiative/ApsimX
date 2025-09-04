@@ -56,7 +56,7 @@ namespace Models.Interfaces
         double MeanCanopyTemperature { get; set; }
 
         /// <summary>Sets the light profile.</summary>
-        CanopyEnergyBalanceInterceptionlayerType[] LightProfile { set; }
+        CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get;  set; }
     }
 
     /// <summary>This interface describes a model that has a list of canopies.</summary>

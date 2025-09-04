@@ -1,4 +1,6 @@
 ﻿using System;
+using APSIM.Core;
+using DocumentFormat.OpenXml.Office.CustomXsn;
 using Models.Core;
 using Models.Management;
 using Newtonsoft.Json;
@@ -13,8 +15,13 @@ namespace Models.PMF.Phen
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
-    public class GotoPhase : Model, IPhase
+    public class GotoPhase : Model, IPhase, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
+
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
 
@@ -34,11 +41,11 @@ namespace Models.PMF.Phen
             get
             {
                 if (phenology == null)
-                    phenology = FindInScope<Phenology>();
-                return phenology.FindChild<IPhase>(PhaseNameToGoto)?.Start;
+                    phenology = Structure.Find<Phenology>();
+                return Structure.FindChild<IPhase>(PhaseNameToGoto, relativeTo: phenology)?.Start;
             }
         }
-        /// <summary>Is the phase emerged from the 
+        /// <summary>Is the phase emerged from the
         /// ground?</summary>
         [Description("Is the phase emerged?")]
         public bool IsEmerged { get; set; } = true;

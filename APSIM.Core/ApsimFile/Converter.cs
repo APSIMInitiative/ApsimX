@@ -1,6 +1,7 @@
 using APSIM.Numerics;
 using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Utilities;
+using BruTile.Wmts.Generated;
 using Newtonsoft.Json.Linq;
 using System.Globalization;
 using System.Reflection;
@@ -15,7 +16,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 195; } }
+    public static int LatestVersion { get { return 201; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -6426,4 +6427,580 @@ internal class Converter
             }
         }
     }
+
+    /// <summary>
+    /// Rename Barley Report Variables
+    /// </summary>
+    /// <param name="root"></param>
+    /// <param name="fileName"></param>
+    private static void UpgradeToVersion196(JObject root, string fileName)
+    {
+        foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+        {
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Leaf.AppearedCohortNo", "[Barley].Leaf.Tips");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Leaf.ExpandedCohortNo", "[Barley].Leaf.Ligules");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Structure.Height", "[Barley].Leaf.Height");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Structure.LeafTipsAppeared", "[Barley].Leaf.Tips");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Structure.FinalLeafNumber", "[Barley].Phenology.FinalLeafNumber");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Structure.MainStemPopn", "[Barley].Leaf.MainStemPopulation");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Structure.TotalStemPopn", "[Barley].Leaf.StemPopulation");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Structure.BranchNumber", "[Barley].Leaf.StemNumberPerPlant");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Structure.Phyllochron", "[Barley].Phenology.Phyllochron");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Barley].Structure.HaunStage", "[Barley].Phenology.HaunStage");
+        }
+        foreach (var graph in JsonUtilities.ChildrenOfType(root, "Series"))
+        {
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Leaf.AppearedCohortNo", "Barley.Leaf.Tips");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Leaf.ExpandedCohortNo", "Barley.Leaf.Ligules");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Structure.Height", "Barley.Leaf.Height");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Structure.LeafTipsAppeared", "Barley.Leaf.Tips");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Structure.FinalLeafNumber", "Barley.Phenology.FinalLeafNumber");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Structure.MainStemPopn", "Barley.Leaf.MainStemPopulation");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Structure.TotalStemPopn", "Barley.Leaf.StemPopulation");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Structure.BranchNumber", "Barley.Leaf.StemNumberPerPlant");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Structure.Phyllochron", "Barley.Phenology.Phyllochron");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Barley.Structure.HaunStage", "Barley.Phenology.HaunStage");
+        }
+    }
+
+    /// <summary>Process a locator match. Used by converter below.</summary>
+    private static string ProcessLocatorMatch(Match match, string pattern, ManagerConverter manager, ref List<Declaration> declarations, ref bool changed)
+    {
+        // convert remainder to args.
+        string remainder = "(" + match.Groups["remainder"].ToString();
+        int posCloseBracket = StringUtilities.FindMatchingClosingBracket(remainder, 0, '(', ')');
+        if (posCloseBracket == -1)
+        {
+            changed = false;
+            return match.Groups[0].ToString();
+        }
+        string args = remainder.Substring(1, posCloseBracket - 1);
+        remainder = remainder.Substring(posCloseBracket);
+
+        // The remainder may have additional matches e.g. multiple Get calls on the one line as in example above.
+        // Using recursion, replace them.
+        var decls = declarations;
+        bool remainderChanged = changed;
+        remainder = Regex.Replace(remainder, pattern, match =>
+        {
+            return ProcessLocatorMatch(match, pattern, manager, ref decls, ref remainderChanged);
+        });
+        declarations = decls;
+        changed = remainderChanged;
+
+        // Add a private locator field if necessary.
+        if (declarations == null)
+            declarations = manager.GetDeclarations();
+        var locatorInstanceName = "locator";
+        var locatorDeclaration = declarations.FirstOrDefault(decl => decl.TypeName == "Locator" || decl.TypeName == "ILocator");
+        if (locatorDeclaration == null)
+        {
+            locatorDeclaration = new Declaration()
+            {
+                InstanceName = locatorInstanceName,
+                IsPrivate = true,
+                TypeName = "ILocator"
+            };
+            declarations.Add(locatorDeclaration);
+        }
+        else
+        {
+            // Make sure the old type name isn't 'Locator'.
+            locatorDeclaration.TypeName = "ILocator";
+
+            // If the locator has a [Link] attribute, remove it.
+            var linkAttribute = locatorDeclaration.Attributes.Find(a => a == "[Link]");
+            if (linkAttribute != null)
+                locatorDeclaration.Attributes.Remove(linkAttribute);
+
+            locatorInstanceName = locatorDeclaration.InstanceName;
+        }
+
+        locatorDeclaration.Attributes = ["[NonSerialized]"];
+
+        string relativeTo = match.Groups["relativeTo"].ToString();
+        if (relativeTo == locatorInstanceName || relativeTo == "")
+            relativeTo = null;
+
+        string methodName = match.Groups["methodName"].ToString();
+        if (methodName == "FindByPath")
+            methodName = "GetObject";
+
+        string replacementString = $"{locatorInstanceName}.{methodName}({args}";
+        if (relativeTo != null)
+            replacementString += $", relativeTo: {relativeTo}";
+
+        replacementString += remainder;
+        return replacementString;
+    }
+
+    /// <summary>
+    /// Change manager scripts usage of Model.FindByPath, Simulation.Get, Simulation.GetVariableObject and Simulation.Set
+    /// </summary>
+    /// <param name="root">The root JSON token.</param>
+    /// <param name="_">The name of the apsimx file.</param>
+    private static void UpgradeToVersion197(JObject root, string _)
+    {
+        foreach (var manager in JsonUtilities.ChildManagers(root))
+        {
+            // The strategy is to change the script class to implement a ILocatorDependency and then call:
+            // locator.Get, locator.GetObject etc.
+
+            // Change lines that look like:
+            //     fractionToRemove = (double)myZone.Get(species.Name + "." + organ.Name + ".BiomassRemovalDefaults." + typeOfDefoliation + ".FractionDeadToRemove")
+            //     AlleyZone = (RectangularZone)this.Parent.Parent.Parent.FindInScope("Alley") as RectangularZone;
+            // to:
+            //     fractionToRemove = (double)locator.Get(species.Name + "." + organ.Name + ".BiomassRemovalDefaults." + typeOfDefoliation + ".FractionDeadToRemove", relativeto: myZone)
+            //     AlleyZone = (RectangularZone)locator.FindInScope("Alley", relativeTo: this.Parent.Parent.Parent) as RectangularZone;
+
+            // Change Locator links like:
+            //     [Link] Locator locator;
+            // to:
+            //     Locator locator;
+
+            // Add:
+            //     ': ILocatorDependency to class definition
+            //     Locator locator;   if it doesn't already exist.
+            //     public void SetLocator(ILocator locator) => this.locator = locator;
+
+            // Examples for regex testing:
+
+            //     BudsDays= (double)zone.Get("Lucerne.Phenology.BudsVisableDaysAfterCutting.Value()");  // Prototypes\Lucerne\LucerneValidation.apsim x
+            //     if ((bool)zone.Get("Slurp.IsAlive") == true)  // Prototypes\Weirdo\Weirdo.apsimx
+            //     double Current_Paddock = (double) Zones[i].FindByPath(\"Manager_P.Script.This_field_no\").Value;   // Test/Simulation/MultiZoneManagement/MultiFieldMultiZoneManagementBasic.apsimx
+            //     if (crop.Get("grain_N", out GN))   // Test/Simulation/MultiZoneManagement/MultiPaddock.apsimx
+            //     double Ep =  GetValuebyName(myPaddockZones[paddockName].Get($"[{cropName}].Leaf.WaterAllocation"));  // Test/Simulation/MultiZoneManagement/MultiPaddock.apsimx
+            //     sim.Set(\"Clock.EndDate\", Clock.Today.AddDays(1));  // Tests\Validation\Oats\Oats.apsimx
+            //     TreeRadInt = (double)RowZone.Get(\"STRUM.Leaf.RadiationIntercepted\") + (double)RowZone.Get(\"STRUM.Trunk.EnergyBalance.RadiationInterceptedByDead\"); // Prototypes\STRUM\STRUM.apsimx
+
+            List<Declaration> declarations = null;
+            string pattern = @"(?<relativeTo>[\w\d\[\]]*)\.*(?<methodName>Get|Set|FindByPath)\((?<remainder>.+)";
+            bool changed = false;
+            manager.ReplaceRegex(pattern, match =>
+            {
+                changed = true;
+                return ProcessLocatorMatch(match, pattern, manager, ref declarations, ref changed);
+            });
+
+            // If the manager references IFunction then add APSIM.Core to the using statements.
+            if (manager.FindString("IFunction") != -1 && !manager.GetUsingStatements().Contains("APSIM.Core"))
+            {
+                manager.AddUsingStatement("APSIM.Core");
+                manager.Save();
+            }
+
+            if (changed)
+            {
+                manager.SetDeclarations(declarations);
+                if (!manager.GetUsingStatements().Contains("APSIM.Core"))
+                    manager.AddUsingStatement("APSIM.Core");
+                manager.Replace(": Model", ": Model, ILocatorDependency");
+
+                string pattern2 = @"(\n.+\[EventSubscribe)";
+
+                var matches = manager.FindRegexMatches(pattern2);
+                if (matches.Any())
+                {
+                    string code = manager.ToString();
+                    int pos = matches.First().Index;
+                    string replacement = Environment.NewLine + @"        public void SetLocator(ILocator locator) => this.locator = locator;" + Environment.NewLine;
+                    code = code.Insert(pos, replacement);
+                    manager.Read(code);
+                }
+
+                manager.Save();
+            }
+        }
+    }
+
+
+    /// <summary>Process a scope match. Used by converter below.</summary>
+    private static string ProcessScopeMatch(Match match, string pattern, ManagerConverter manager, ref List<Declaration> declarations, ref bool changed)
+    {
+        // convert remainder to args.
+        string remainder = "(" + match.Groups["remainder"].ToString();
+        int posCloseBracket = StringUtilities.FindMatchingClosingBracket(remainder, 0, '(', ')');
+        if (posCloseBracket == -1)
+        {
+            changed = false;
+            return match.Groups[0].ToString();
+        }
+        string args = remainder.Substring(1, posCloseBracket - 1);
+        remainder = remainder.Substring(posCloseBracket);
+
+        var decls = declarations;
+
+        // Add a private scope field if necessary.
+        if (declarations == null)
+            declarations = manager.GetDeclarations();
+        var scopeInstanceName = "Scope";
+        var scopeDeclaration = declarations.FirstOrDefault(decl => decl.TypeName == "Scope" || decl.TypeName == "IScope");
+        if (scopeDeclaration == null)
+        {
+            scopeDeclaration = new Declaration()
+            {
+                InstanceName = $"{scopeInstanceName} {{ private get; set; }}",
+                IsPrivate = false,
+                TypeName = "IScope"
+            };
+            declarations.Add(scopeDeclaration);
+        }
+        else
+        {
+            // Make sure the old type name isn't 'Scope'.
+            scopeDeclaration.TypeName = "IScope";
+
+            // If the scope has a [Link] attribute, remove it.
+            var scopeAttribute = scopeDeclaration.Attributes.Find(a => a == "[Link]");
+            if (scopeAttribute != null)
+                scopeDeclaration.Attributes.Remove(scopeAttribute);
+
+            scopeInstanceName = scopeDeclaration.InstanceName.Replace("{ private get; set; }", string.Empty);
+        }
+
+        scopeDeclaration.Attributes = ["[field:NonSerialized]"];
+
+        string relativeTo = match.Groups["relativeTo"].ToString().Trim();
+
+        // Look for a cast in relativeTo and remove it if found.
+        // RelativeTo can look like:
+        //      (RectangularZone)this.Parent.Parent.Parent.
+        //      (z as Zone).
+        string cast = null;
+        if (relativeTo != null && relativeTo.StartsWith('('))
+        {
+            int posEndCast = StringUtilities.FindMatchingClosingBracket(relativeTo, 0, '(', ')');
+            if (posEndCast != -1 && relativeTo[posEndCast + 1] != '.')
+            {
+                cast = relativeTo.Substring(0, posEndCast + 1);
+                relativeTo = relativeTo.Substring(posEndCast + 1);
+            }
+        }
+
+        // Process relativeTo.
+        if (relativeTo.EndsWith('.'))
+            relativeTo = relativeTo[..^1];
+        if (relativeTo == scopeInstanceName || string.IsNullOrEmpty(relativeTo))
+            relativeTo = null;
+
+        // Extract a generic type.
+        string typeName = match.Groups["type"].ToString();
+        if (typeName == string.Empty)
+            typeName = "<IModel>";
+
+        // Extract a method name.
+        string methodName = match.Groups["methodName"].ToString();
+        if (methodName == "FindInScope")
+            methodName = "Find";
+        if (methodName == "FindAllInScope")
+            methodName = "FindAll";
+
+        string prefix = match.Groups["prefix"].ToString();
+
+        string replacementString = $"{prefix} {cast} {scopeInstanceName}.{methodName}{typeName}({args}";
+        if (relativeTo != null && relativeTo != "this")
+        {
+            if (args != string.Empty)
+                replacementString += ", ";
+            replacementString += $"relativeTo: (INodeModel){relativeTo}";
+        }
+
+        replacementString += remainder;
+        return replacementString;
+    }
+
+    /// <summary>
+    /// Change manager scripts usage of Model.FindInScope, Model.FindAllInScope and the variants.
+    /// </summary>
+    /// <param name="root">The root JSON token.</param>
+    /// <param name="_">The name of the apsimx file.</param>
+    private static void UpgradeToVersion198(JObject root, string _)
+    {
+        foreach (var manager in JsonUtilities.ChildManagers(root))
+        {
+            // The strategy is to change the script class to implement a IScopeDependency and then call:
+            // scope.Find or scope.FindAll
+
+            // Change lines that look like:
+            //     RowZone = this.Parent.Parent.Parent.FindInScope("Row") as RectangularZone;
+            //     var allModels = leaf.FindAllInScope("Zone");
+            // to:
+            //     RowZone = scope.FindInScope<RectangularZone>("Row", relativeTo: this.Parent.Parent.Parent));
+            //     var allModels = scope.FindAll<IModel>("Zone", relativeTo: leaf);
+
+            // Add:
+            //     ': IScopeDependency to class definition
+            //     IScope scope;   if it doesn't already exist.
+            //     public void SetScope(IScope scope) => this.scope = scope;
+
+            // Examples for regex testing:
+            //     RowZone = this.Parent.Parent.Parent.FindInScope("Row") as RectangularZone;
+            //     Models.Report myReport = zone.FindInScope(ReportSpecificDates_Name) as Models.Report;
+            //     settlingWater = (PondWater)SettlingPond.FindInScope(\"PondWater\");
+            //     var myPaddock = FindInScope(currentPaddock) as Zone;
+            //     var myPaddock = FindInScope<Zone>(currentPaddock);
+            //
+            //     var allModels = FindAllInScope<Zone>(currentPaddock);
+            //     var allModels = leaf.FindAllInScope("Zone");
+            //     var allModels = FindAllInScope<Zone>();
+            //
+            //     myWaterBalances[ paddock ] = myPaddockZones[ paddock ].FindInScope("SoilWater") as WaterBalance;
+            //     AlleyZone = (RectangularZone)this.Parent.Parent.Parent.FindInScope(\"Alley\") as RectangularZone;
+            //     foreach (Zone zone in this.Parent.FindAllInScope<Zone>().OfType<IModel>().ToList())
+
+            List<Declaration> declarations = null;
+            string pattern = @"(?<prefix>=|in)+\w*(?<relativeTo>[\w\d\[\]\(\). ]*)\.*(?<methodName>FindInScope|FindAllInScope)(?<type>\<[\w\d]+\>)*\((?<remainder>.+)";
+            bool changed = false;
+            manager.ReplaceRegex(pattern, match =>
+            {
+                changed = true;
+                return ProcessScopeMatch(match, pattern, manager, ref declarations, ref changed);
+            });
+
+            if (changed)
+            {
+                manager.SetDeclarations(declarations);
+                if (!manager.GetUsingStatements().Contains("APSIM.Core"))
+                    manager.AddUsingStatement("APSIM.Core");
+                manager.Replace(": Model", ": Model, IScopeDependency");
+                manager.Save();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Change to IStructure use rather than IScope and ILocator in manager scripts
+    /// </summary>
+    /// <param name="root">The root JSON token.</param>
+    /// <param name="_">The name of the apsimx file.</param>
+    private static void UpgradeToVersion199(JObject root, string _)
+    {
+        foreach (var manager in JsonUtilities.ChildManagers(root))
+        {
+            bool changed1 = manager.Replace(", ILocatorDependency", string.Empty);
+            bool changed2 = manager.Replace(", IScopeDependency", string.Empty);
+
+            if (changed1 || changed2)
+            {
+                manager.Replace(": Model", ": Model, IStructureDependency");
+
+                var declarations = manager.GetDeclarations();
+
+                // Find existing locator and/or scope delcarations and remove them.
+                var locator = declarations.Find(d => d.TypeName == "ILocator");
+                var scope = declarations.Find(d => d.TypeName == "IScope");
+                if (locator != null)
+                    declarations.Remove(locator);
+                if (scope != null)
+                    declarations.Remove(scope);
+
+                // Find usage of old scope and locator and change them to new structure instance.
+                string[] patterns = ["scope.", "scope .", "locator.", "locator ."];
+                foreach (string pattern in patterns)
+                    manager.Replace(pattern, "Structure."); // Replace all locator usage with structure.
+
+                // Remove old IScope lines added in previous converter.
+                manager.Replace("[field:NonSerialized]", string.Empty);
+                manager.Replace("public IScope Scope { private get; set; }", string.Empty);
+                manager.Replace("public void SetLocator(ILocator locator) => this.locator = locator;", string.Empty);
+                manager.Replace("public void SetScope(IScope scope) => this.scope = scope;", string.Empty);
+
+                // Change old calls to Structure.Add to give it the namespace so it doesn't clash with new Structure member.
+                // Need to temporarily rename string to a temp string and then back again. Can't do it in one line because
+                // 'Structure.Add' appears in replacement string and it will endlessly keep applying the replacement.
+                manager.Replace("Structure.Add", "##StructAdd##");
+                manager.Replace("##StructAdd##", "Models.Core.ApsimFile.Structure.Add");
+
+                // Add a structure declaration.
+                declarations.Add(new Declaration()
+                {
+                    InstanceName = $"Structure {{ private get; set; }}",
+                    IsPrivate = false,
+                    TypeName = "IStructure"
+                });
+                manager.SetDeclarations(declarations);
+                manager.Save();
+            }
+        }
+    }
+
+
+    /// <summary>
+    /// Change all FindSibling, FindChild, FindChildren, FindDescendent, FindAncestor methods to
+    /// Structure.FindSibling, Structure.Child, Structure.FindChildren, Structure.Parent
+    /// </summary>
+    /// <param name="root">The root JSON token.</param>
+    /// <param name="_">The name of the apsimx file.</param>
+    private static void UpgradeToVersion200(JObject root, string _)
+    {
+        // The strategy is to add a IStructureDependency to a manager script if any of
+        //      FindSibling, FindChild, FindChildren, FindDescendent, FindAncestor
+        // is called. Then change the calls to their Structure equivalent.
+
+        foreach (var manager in JsonUtilities.ChildManagers(root))
+        {
+            List<Declaration> declarations = null;
+            string pattern = @"(?<relativeTo>[\w\d\[\].]*)\.*(?<methodName>FindChild|FindSibling|FindDescendant|FindAncestor|FindAllSiblings|FindAllChildren|FindAllDescendants|FindAllAncestors)(?<type>\<[\w\d\.]+\>)*\((?<remainder>.+)";
+            bool changed = false;
+            manager.ReplaceRegex(pattern, match =>
+            {
+                changed = true;
+                // convert remainder to args.
+                string remainder = "(" + match.Groups["remainder"].ToString();
+                int posCloseBracket = StringUtilities.FindMatchingClosingBracket(remainder, 0, '(', ')');
+                if (posCloseBracket == -1)
+                {
+                    changed = false;
+                    return match.Groups[0].ToString();
+                }
+                string args = remainder.Substring(1, posCloseBracket - 1);
+                remainder = remainder.Substring(posCloseBracket);
+
+                var decls = declarations;
+                if (declarations == null)
+                    declarations = manager.GetDeclarations();
+
+                // Add a private structure property if necessary.
+                var structureDeclaration = declarations.FirstOrDefault(decl => decl.TypeName == "IStructure");
+                if (structureDeclaration == null)
+                {
+                    structureDeclaration = new Declaration()
+                    {
+                        InstanceName = "Structure { private get; set; }",
+                        IsPrivate = false,
+                        TypeName = "IStructure"
+                    };
+                    declarations.Add(structureDeclaration);
+                }
+                structureDeclaration.Attributes = ["[field:NonSerialized]"];
+
+                string relativeTo = match.Groups["relativeTo"].ToString().Trim();
+
+                // Look for a cast in relativeTo and remove it if found.
+                // RelativeTo can look like:
+                //      (RectangularZone)this.Parent.Parent.Parent.
+                //      (z as Zone).
+                string cast = null;
+                if (relativeTo != null && relativeTo.StartsWith('('))
+                {
+                    int posEndCast = StringUtilities.FindMatchingClosingBracket(relativeTo, 0, '(', ')');
+                    if (posEndCast != -1 && relativeTo[posEndCast + 1] != '.')
+                    {
+                        cast = relativeTo.Substring(0, posEndCast + 1);
+                        relativeTo = relativeTo.Substring(posEndCast + 1);
+                    }
+                }
+
+                // Process relativeTo.
+                if (relativeTo.EndsWith('.'))
+                    relativeTo = relativeTo[..^1];
+                if (relativeTo == string.Empty)
+                    relativeTo = null;
+
+                // Extract a generic type.
+                string typeName = match.Groups["type"].ToString();
+                if (typeName == string.Empty)
+                    typeName = "<IModel>";
+
+                // Extract a method name and map to new name.
+                string[] recursiveMethods = ["FindDescendant", "FindAncestor", "FindAllDescendants", "FindAllAncestors", "FindAllChildren"];
+                string methodName = match.Groups["methodName"].ToString();
+                bool addRecurseArgument = recursiveMethods.Contains(methodName);
+                if (methodName == "FindDescendant")
+                    methodName = "FindChild";
+                if (methodName == "FindAncestor")
+                    methodName = "FindParent";
+                if (methodName == "FindAllSiblings")
+                    methodName = "FindSiblings";
+                if (methodName == "FindAllDescendants")
+                    methodName = "FindChildren";
+                if (methodName == "FindAllAncestors")
+                    methodName = "FindParents";
+                if (methodName == "FindAllChildren")
+                    methodName = "FindChildren";
+
+                if (addRecurseArgument)
+                {
+                    if (args.Trim().Length > 0)
+                        args += ", ";
+                    args += "recurse: true";
+                }
+
+                if (relativeTo != null && relativeTo != "this")
+                {
+                    if (args.Trim().Length > 0)
+                        args += ", ";
+                    args += $"relativeTo: (INodeModel){relativeTo}";
+                }
+
+                string prefix = match.Groups["prefix"].ToString();
+                string replacementString = $"{prefix} {cast} Structure.{methodName}{typeName}({args}";
+
+                replacementString += remainder;
+                return replacementString;
+            });
+
+            if (changed)
+            {
+                manager.SetDeclarations(declarations);
+
+                // Remove all IStructure properties without a [field:NonSerialized] attribute. A previous converter did this.
+                int posIStructure = 0;
+                while ((posIStructure = manager.FindString("IStructure ", posIStructure)) != -1)
+                {
+                    int posFieldNonSerialize = manager.FindString("[field:NonSerialized]");
+                    if (posFieldNonSerialize == -1 || posFieldNonSerialize != posIStructure - 1)
+                        manager.SetLineContents(posIStructure, string.Empty);
+                    posIStructure++;
+                }
+
+                if (!manager.GetUsingStatements().Contains("APSIM.Core"))
+                    manager.AddUsingStatement("APSIM.Core");
+                if (manager.FindString(", IStructureDependency") == -1)
+                    manager.Replace(": Model", ": Model, IStructureDependency");
+                manager.Save();
+            }
+        }
+
+        // Due to a previous defect (https://github.com/APSIMInitiative/ApsimX/issues/10298), we need
+        // to remove any Structure and Leaf components under Plant. They are [Links] and shouldn't have
+        // been serialised to the .apsimx file. NOTE: The child models won't be deleted.
+        // Because Plant and Leaf now have a 'Structure' and a 'structure' member, the deserialisation tries
+        // to deserialise a PMF.Structure into a APSIM.Core.Structure.
+        foreach (var plant in JsonUtilities.ChildrenOfType(root, "Plant"))
+        {
+            plant.Remove("structure");
+            plant.Remove("Leaf");
+        }
+    }
+
+
+    /// <summary>
+    /// For SimpleGrazing, create new parameter FractionOfDungUrineOffPaddock = 1-FractionDefoliatedBiomassToSoil
+    /// </summary>
+    /// <param name="root">The root JSON token.</param>
+    /// <param name="_">The name of the apsimx file.</param>
+    private static void UpgradeToVersion201(JObject root, string _)
+    {
+        foreach (var simpleGrazing in JsonUtilities.ChildrenOfType(root, "SimpleGrazing"))
+        {
+            var fractionDefoliatedBiomassToSoil = simpleGrazing["FractionDefoliatedBiomassToSoil"] as JArray;
+            if (fractionDefoliatedBiomassToSoil != null)
+            {
+                for (int i = 0; i < fractionDefoliatedBiomassToSoil.Count; i++)
+                    fractionDefoliatedBiomassToSoil[i] = 1 - fractionDefoliatedBiomassToSoil[i].Value<double>();
+                simpleGrazing["FractionIntakeNToAnimal"] = new JArray(fractionDefoliatedBiomassToSoil);
+            }
+
+            var fractionDefoliatedNToSoil = simpleGrazing["FractionDefoliatedNToSoil"] as JArray;
+            if (fractionDefoliatedNToSoil != null)
+            {
+                for (int i = 0; i < fractionDefoliatedNToSoil.Count; i++)
+                    fractionDefoliatedNToSoil[i] = Math.Round(1 - fractionDefoliatedNToSoil[i].Value<double>(), 3);
+                simpleGrazing["FractionOfDungUrineOffPaddock"] = new JArray(fractionDefoliatedNToSoil);
+            }
+
+        }
+    }
+
 }
