@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 171,
+  "Version": 199,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -16,7 +16,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Replacements",
       "ResourceName": null,
       "Children": [],
@@ -25,7 +24,6 @@
     },
     {
       "$type": "Models.Storage.DataStore, Models",
-      "useFirebird": false,
       "CustomFileName": null,
       "Name": "DataStore",
       "ResourceName": null,
@@ -67,7 +65,7 @@
               "$type": "Models.Tests, Models",
               "AcceptedStats": [
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "FodderBeet.Leaf.CoverTotal",
                   "n": 120,
                   "Slope": 0.8485358058598863,
@@ -79,10 +77,11 @@
                   "NSE": 0.7623253480130303,
                   "ME": 0.04580970498284623,
                   "MAE": 0.07849109795663338,
-                  "RSR": 0.4854832951678959
+                  "RSR": 0.4854832951678959,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "FodderBeet.Leaf.LAI",
                   "n": 36,
                   "Slope": 0.800509294322508,
@@ -94,10 +93,11 @@
                   "NSE": 0.744728831494895,
                   "ME": -0.06302704375993892,
                   "MAE": 0.48294624552206705,
-                  "RSR": 0.49817697930885607
+                  "RSR": 0.49817697930885607,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "FodderBeet.Leaf.Live.NConc",
                   "n": 36,
                   "Slope": 0.5550005427570194,
@@ -109,10 +109,11 @@
                   "NSE": 0.5013091775601914,
                   "ME": -0.0014015006475624917,
                   "MAE": 0.003998573009148489,
-                  "RSR": 0.696303310055509
+                  "RSR": 0.696303310055509,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "FodderBeet.Leaf.Live.Wt",
                   "n": 36,
                   "Slope": 1.2031763041820207,
@@ -124,10 +125,11 @@
                   "NSE": 0.29744984224700854,
                   "ME": 20.899465695210992,
                   "MAE": 43.25631435648682,
-                  "RSR": 0.8264592401281422
+                  "RSR": 0.8264592401281422,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "FodderBeet.Leaf.N",
                   "n": 36,
                   "Slope": 1.2858103649425288,
@@ -139,10 +141,11 @@
                   "NSE": -0.05984356126426693,
                   "ME": 1.8296805324796415,
                   "MAE": 1.9022309344067345,
-                  "RSR": 1.0150879086760218
+                  "RSR": 1.0150879086760218,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "FodderBeet.Petiole.Live.Wt",
                   "n": 36,
                   "Slope": 0.7313052264520821,
@@ -154,10 +157,11 @@
                   "NSE": 0.6804962561307731,
                   "ME": 33.32067358582602,
                   "MAE": 40.273096652579355,
-                  "RSR": 0.5573406856428655
+                  "RSR": 0.5573406856428655,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "FodderBeet.Petiole.N",
                   "n": 36,
                   "Slope": 0.8681382184764416,
@@ -169,10 +173,11 @@
                   "NSE": 0.17380148461568,
                   "ME": 1.195308043532333,
                   "MAE": 1.2468938785380643,
-                  "RSR": 0.8962413495390874
+                  "RSR": 0.8962413495390874,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "FodderBeet.Petiole.NConc",
                   "n": 36,
                   "Slope": 0.06060946216823672,
@@ -184,10 +189,11 @@
                   "NSE": 0.028563768834537484,
                   "ME": 0.0012882237668030018,
                   "MAE": 0.004772931907473246,
-                  "RSR": 0.9718291472326122
+                  "RSR": 0.9718291472326122,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "FodderBeet.Phenology.Stage",
                   "n": 8,
                   "Slope": 0.26405720084975687,
@@ -199,10 +205,11 @@
                   "NSE": -2.2600888732999334,
                   "ME": 0.69257747408934,
                   "MAE": 0.69257747408934,
-                  "RSR": 1.6889575969033213
+                  "RSR": 1.6889575969033213,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "FodderBeet.StorageRoot.Live.Wt",
                   "n": 36,
                   "Slope": 0.9277003151892315,
@@ -214,10 +221,11 @@
                   "NSE": 0.9697390643280361,
                   "ME": -50.38895822888076,
                   "MAE": 90.39087098105917,
-                  "RSR": 0.17152362556079678
+                  "RSR": 0.17152362556079678,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "FodderBeet.StorageRoot.N",
                   "n": 36,
                   "Slope": 1.2470780619936428,
@@ -229,10 +237,11 @@
                   "NSE": 0.6789049912946854,
                   "ME": -0.7472610569408863,
                   "MAE": 2.6079147993640635,
-                  "RSR": 0.5587268589462517
+                  "RSR": 0.5587268589462517,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "FodderBeet.StorageRoot.NConc",
                   "n": 36,
                   "Slope": -0.25089385437110723,
@@ -244,10 +253,11 @@
                   "NSE": -2.3442529381824477,
                   "ME": -0.003809537075908259,
                   "MAE": 0.005575352943094967,
-                  "RSR": 1.8031519689790252
+                  "RSR": 1.8031519689790252,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "FodderBeet.Structure.LeafTipsAppeared",
                   "n": 88,
                   "Slope": 1.4435591793842977,
@@ -259,10 +269,11 @@
                   "NSE": -1.002785852827408,
                   "ME": 11.641565704034916,
                   "MAE": 11.641565704034916,
-                  "RSR": 1.4071342944728629
+                  "RSR": 1.4071342944728629,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Nit",
                   "n": 2152,
                   "Slope": 1.0,
@@ -274,10 +285,11 @@
                   "NSE": 1.0,
                   "ME": 0.0,
                   "MAE": 0.0,
-                  "RSR": 0.0
+                  "RSR": 0.0,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Oats.AboveGround.Live.Wt",
                   "n": 30,
                   "Slope": 0.4070715155104046,
@@ -289,10 +301,11 @@
                   "NSE": 0.27609502531550467,
                   "ME": -438.23111250911666,
                   "MAE": 440.10891115027096,
-                  "RSR": 0.8365254382633434
+                  "RSR": 0.8365254382633434,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Oats.Ear.Wt",
                   "n": 14,
                   "Slope": 0.7254112332754478,
@@ -304,10 +317,11 @@
                   "NSE": 0.7610113004247191,
                   "ME": -160.84677439509127,
                   "MAE": 161.53402999913533,
-                  "RSR": 0.471081816860985
+                  "RSR": 0.471081816860985,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Oats.Grain.Live.NConc",
                   "n": 14,
                   "Slope": 0.6805411122850575,
@@ -319,10 +333,11 @@
                   "NSE": 0.2159609463825516,
                   "ME": 0.0026336041505047145,
                   "MAE": 0.0036155102919049288,
-                  "RSR": 0.853250411118181
+                  "RSR": 0.853250411118181,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Oats.Grain.Live.Wt",
                   "n": 14,
                   "Slope": 0.5569432589319618,
@@ -334,10 +349,11 @@
                   "NSE": 0.6450790059284716,
                   "ME": -56.030422744316276,
                   "MAE": 177.74987084499486,
-                  "RSR": 0.5740814354209607
+                  "RSR": 0.5740814354209607,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Oats.Leaf.CoverTotal",
                   "n": 132,
                   "Slope": 0.8256460951675533,
@@ -349,10 +365,11 @@
                   "NSE": 0.6241075354810823,
                   "ME": 0.0898661975194025,
                   "MAE": 0.11644501956188295,
-                  "RSR": 0.6107739306266832
+                  "RSR": 0.6107739306266832,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Oats.Leaf.Dead.Nconc",
                   "n": 14,
                   "Slope": 0.022611301782941767,
@@ -364,10 +381,11 @@
                   "NSE": -1.0673174924480828,
                   "ME": -0.47324417870415086,
                   "MAE": 0.4760923847166696,
-                  "RSR": 1.3855150512618835
+                  "RSR": 1.3855150512618835,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Oats.Leaf.Dead.Wt",
                   "n": 14,
                   "Slope": 0.9507885883596938,
@@ -379,10 +397,11 @@
                   "NSE": 0.6608204817026662,
                   "ME": -0.2664567940329522,
                   "MAE": 27.412148860948456,
-                  "RSR": 0.5612062097371379
+                  "RSR": 0.5612062097371379,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Oats.Leaf.DeadCohortNo",
                   "n": 46,
                   "Slope": 0.8033621410195468,
@@ -394,10 +413,11 @@
                   "NSE": 0.5782638655025549,
                   "ME": 0.10298913531005437,
                   "MAE": 1.264402156047847,
-                  "RSR": 0.6423145317214488
+                  "RSR": 0.6423145317214488,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Oats.Leaf.ExpandedCohortNo",
                   "n": 46,
                   "Slope": 1.083230504209714,
@@ -409,10 +429,11 @@
                   "NSE": 0.7651487530514425,
                   "ME": -0.15896734465723567,
                   "MAE": 0.812228301297063,
-                  "RSR": 0.47931804165749003
+                  "RSR": 0.47931804165749003,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Oats.Leaf.GreenCohortNo",
                   "n": 46,
                   "Slope": 0.7746541526100847,
@@ -424,10 +445,11 @@
                   "NSE": -0.37099987331062323,
                   "ME": 1.407608704398507,
                   "MAE": 1.7858695760369294,
-                  "RSR": 1.158099964700221
+                  "RSR": 1.158099964700221,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Oats.Leaf.LAI",
                   "n": 14,
                   "Slope": 1.040846228056056,
@@ -439,10 +461,11 @@
                   "NSE": 0.9246764540541836,
                   "ME": 0.10886465677385859,
                   "MAE": 0.32360876882214706,
-                  "RSR": 0.2644679426016929
+                  "RSR": 0.2644679426016929,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Oats.Leaf.Live.NConc",
                   "n": 14,
                   "Slope": 0.860210688103619,
@@ -454,10 +477,11 @@
                   "NSE": 0.9177895840164799,
                   "ME": 0.004267754301852247,
                   "MAE": 0.005119656774830163,
-                  "RSR": 0.2762937628924487
+                  "RSR": 0.2762937628924487,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Oats.Leaf.Live.Wt",
                   "n": 14,
                   "Slope": 0.6874300979755511,
@@ -469,10 +493,11 @@
                   "NSE": 0.8407588534606901,
                   "ME": -15.023378286958227,
                   "MAE": 22.467884753178055,
-                  "RSR": 0.38453449641008697
+                  "RSR": 0.38453449641008697,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Oats.Leaf.N",
                   "n": 14,
                   "Slope": 0.9210438649634708,
@@ -484,10 +509,11 @@
                   "NSE": 0.40909756508342543,
                   "ME": 1.1963623918786552,
                   "MAE": 1.6567649709796253,
-                  "RSR": 0.7407395751118062
+                  "RSR": 0.7407395751118062,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Oats.Leaf.SenescingCohortNo",
                   "n": 46,
                   "Slope": 0.7980673474165186,
@@ -499,10 +525,11 @@
                   "NSE": -1.3578828575149537,
                   "ME": 0.45679346844553875,
                   "MAE": 0.6448369565541331,
-                  "RSR": 1.5187575627879186
+                  "RSR": 1.5187575627879186,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Oats.Panicle.Live.NConc",
                   "n": 14,
                   "Slope": 1.2380540303527472,
@@ -514,10 +541,11 @@
                   "NSE": -20.924124074881703,
                   "ME": 0.011617579636452043,
                   "MAE": 0.011617579636452043,
-                  "RSR": 4.511996809882533
+                  "RSR": 4.511996809882533,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Oats.Panicle.Wt",
                   "n": 14,
                   "Slope": 0.97914942301158,
@@ -529,10 +557,11 @@
                   "NSE": -0.3291817034321942,
                   "ME": 30.653733220789178,
                   "MAE": 41.90317878797324,
-                  "RSR": 1.1109636146998865
+                  "RSR": 1.1109636146998865,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Oats.Phenology.Stage",
                   "n": 12,
                   "Slope": 0.2919057088965357,
@@ -544,10 +573,11 @@
                   "NSE": 0.08622390455279771,
                   "ME": 0.2559813858291608,
                   "MAE": 0.296666680780614,
-                  "RSR": 0.9152202398839685
+                  "RSR": 0.9152202398839685,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Oats.Stem.Live.NConc",
                   "n": 14,
                   "Slope": 0.9655304347911463,
@@ -559,10 +589,11 @@
                   "NSE": 0.9693728568260074,
                   "ME": -0.0016179213472915326,
                   "MAE": 0.0023153669442740584,
-                  "RSR": 0.16864012004898488
+                  "RSR": 0.16864012004898488,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Oats.Stem.Live.Wt",
                   "n": 14,
                   "Slope": 0.09771790441039696,
@@ -574,10 +605,11 @@
                   "NSE": -1.663366950587561,
                   "ME": -355.47097179856263,
                   "MAE": 363.98159674141635,
-                  "RSR": 1.5726177075554697
+                  "RSR": 1.5726177075554697,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Oats.Stem.N",
                   "n": 14,
                   "Slope": 1.086601317120736,
@@ -589,10 +621,11 @@
                   "NSE": 0.7582007876541318,
                   "ME": -0.1428531568339337,
                   "MAE": 0.596478464710248,
-                  "RSR": 0.47384368734367355
+                  "RSR": 0.47384368734367355,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Oats.Structure.LeafTipsAppeared",
                   "n": 46,
                   "Slope": 1.0288937742213902,
@@ -604,10 +637,11 @@
                   "NSE": 0.7152054999686643,
                   "ME": -0.07324105775943826,
                   "MAE": 0.5195499937412779,
-                  "RSR": 0.527828869282503
+                  "RSR": 0.527828869282503,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Oats.Total.NConc",
                   "n": 30,
                   "Slope": 0.7562468691823493,
@@ -619,10 +653,11 @@
                   "NSE": 0.8982735413272268,
                   "ME": -0.0029729884722961885,
                   "MAE": 0.004067672442314026,
-                  "RSR": 0.31358503905163276
+                  "RSR": 0.31358503905163276,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilNitrogen.mineral_n(1)",
                   "n": 36,
                   "Slope": 0.9224508682496654,
@@ -634,10 +669,11 @@
                   "NSE": 0.4585714721795484,
                   "ME": 3.728211267824328,
                   "MAE": 10.943731114047187,
-                  "RSR": 0.7255265994380259
+                  "RSR": 0.7255265994380259,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilNitrogen.mineral_n(2)",
                   "n": 36,
                   "Slope": 0.8163320365860853,
@@ -649,10 +685,11 @@
                   "NSE": 0.6249490772354807,
                   "ME": 0.6455683763393273,
                   "MAE": 4.021868824546202,
-                  "RSR": 0.6038483597531883
+                  "RSR": 0.6038483597531883,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilNitrogen.mineral_n(3)",
                   "n": 36,
                   "Slope": 0.7822629156469403,
@@ -664,10 +701,11 @@
                   "NSE": 0.46268665573174483,
                   "ME": -0.3893753950872754,
                   "MAE": 6.338321675898276,
-                  "RSR": 0.7227641203007638
+                  "RSR": 0.7227641203007638,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilNitrogen.mineral_n(4)",
                   "n": 36,
                   "Slope": 0.5195269976352027,
@@ -679,10 +717,11 @@
                   "NSE": 0.3950525307671552,
                   "ME": -6.522463119961736,
                   "MAE": 7.197316302074025,
-                  "RSR": 0.7669050611811515
+                  "RSR": 0.7669050611811515,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilNitrogen.mineral_n(5)",
                   "n": 36,
                   "Slope": 0.4897550508992258,
@@ -694,10 +733,11 @@
                   "NSE": 0.3468160310722128,
                   "ME": -6.078250091485402,
                   "MAE": 6.3723825831562895,
-                  "RSR": 0.7968939514081559
+                  "RSR": 0.7968939514081559,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilNitrogen.mineral_n(6)",
                   "n": 36,
                   "Slope": 0.5035941438470359,
@@ -709,10 +749,11 @@
                   "NSE": 0.04401012212621769,
                   "ME": -2.8298959522799447,
                   "MAE": 3.123834725049304,
-                  "RSR": 0.9640718870957702
+                  "RSR": 0.9640718870957702,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilNitrogen.NH4.kgha(1)",
                   "n": 36,
                   "Slope": 0.7587502165985498,
@@ -724,10 +765,11 @@
                   "NSE": 0.4194963876660962,
                   "ME": 2.818576225349042,
                   "MAE": 4.741333932923568,
-                  "RSR": 0.7512512974972458
+                  "RSR": 0.7512512974972458,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilNitrogen.NH4.kgha(2)",
                   "n": 36,
                   "Slope": -0.026268091802008182,
@@ -739,10 +781,11 @@
                   "NSE": -0.1812291857863213,
                   "ME": -0.5912367666223951,
                   "MAE": 0.8092346169392358,
-                  "RSR": 1.0716423209069914
+                  "RSR": 1.0716423209069914,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilNitrogen.NH4.kgha(3)",
                   "n": 36,
                   "Slope": 0.17609344548329062,
@@ -754,10 +797,11 @@
                   "NSE": -1.728036722802416,
                   "ME": -1.8448657576300473,
                   "MAE": 1.8448657576300473,
-                  "RSR": 1.6285754280802576
+                  "RSR": 1.6285754280802576,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilNitrogen.NH4.kgha(4)",
                   "n": 36,
                   "Slope": 0.0958617460566776,
@@ -769,10 +813,11 @@
                   "NSE": -1.332517389683677,
                   "ME": -1.2302017818532156,
                   "MAE": 1.2311160427924666,
-                  "RSR": 1.505896822484941
+                  "RSR": 1.505896822484941,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilNitrogen.NH4.kgha(5)",
                   "n": 36,
                   "Slope": 0.024726919975898803,
@@ -784,10 +829,11 @@
                   "NSE": -1.2095026053686242,
                   "ME": -1.236053725104197,
                   "MAE": 1.2367116235319826,
-                  "RSR": 1.4656491848315112
+                  "RSR": 1.4656491848315112,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilNitrogen.NH4.kgha(6)",
                   "n": 36,
                   "Slope": 0.09503960746020218,
@@ -799,10 +845,11 @@
                   "NSE": -0.93552641838229,
                   "ME": -0.9912756474767946,
                   "MAE": 1.0009490452790346,
-                  "RSR": 1.3717732304026962
+                  "RSR": 1.3717732304026962,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilNitrogen.NO3.kgha(1)",
                   "n": 36,
                   "Slope": 0.9544005380693772,
@@ -814,10 +861,11 @@
                   "NSE": 0.6298959751342865,
                   "ME": 0.9096349712808511,
                   "MAE": 6.474860206063912,
-                  "RSR": 0.5998527798621363
+                  "RSR": 0.5998527798621363,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilNitrogen.NO3.kgha(2)",
                   "n": 36,
                   "Slope": 0.9574843524617669,
@@ -829,10 +877,11 @@
                   "NSE": 0.6628107358381526,
                   "ME": 1.236805224918105,
                   "MAE": 3.4909799613395336,
-                  "RSR": 0.5725582029042177
+                  "RSR": 0.5725582029042177,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilNitrogen.NO3.kgha(3)",
                   "n": 36,
                   "Slope": 0.7706747297701744,
@@ -844,10 +893,11 @@
                   "NSE": 0.4100800016651709,
                   "ME": 1.4554904238030988,
                   "MAE": 7.263982919492106,
-                  "RSR": 0.7573198344916215
+                  "RSR": 0.7573198344916215,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilNitrogen.NO3.kgha(4)",
                   "n": 36,
                   "Slope": 0.5185570586567182,
@@ -859,10 +909,11 @@
                   "NSE": 0.4591380086745711,
                   "ME": -5.292261462491827,
                   "MAE": 6.744264164405526,
-                  "RSR": 0.7251469141642574
+                  "RSR": 0.7251469141642574,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilNitrogen.NO3.kgha(5)",
                   "n": 36,
                   "Slope": 0.4789196529025778,
@@ -874,10 +925,11 @@
                   "NSE": 0.44179556182207746,
                   "ME": -4.842196228752429,
                   "MAE": 5.957980062514902,
-                  "RSR": 0.7366809074081172
+                  "RSR": 0.7366809074081172,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilNitrogen.NO3.kgha(6)",
                   "n": 36,
                   "Slope": 0.4684776300711854,
@@ -889,10 +941,11 @@
                   "NSE": 0.3518784153716029,
                   "ME": -1.8386204109480513,
                   "MAE": 2.7493868323326196,
-                  "RSR": 0.7937998534124381
+                  "RSR": 0.7937998534124381,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilNitrogen.ProfileMineralN",
                   "n": 36,
                   "Slope": 0.9335279672285971,
@@ -904,10 +957,11 @@
                   "NSE": 0.6209788803137462,
                   "ME": -11.446205345128725,
                   "MAE": 23.726977501321475,
-                  "RSR": 0.6070360411462606
+                  "RSR": 0.6070360411462606,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilNitrogen.ProfileNH4",
                   "n": 36,
                   "Slope": 0.5778115242224404,
@@ -919,10 +973,11 @@
                   "NSE": 0.457921164287759,
                   "ME": -3.075057465574172,
                   "MAE": 8.141641654749533,
-                  "RSR": 0.725962182400564
+                  "RSR": 0.725962182400564,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilNitrogen.ProfileNO3",
                   "n": 36,
                   "Slope": 0.8727940680331566,
@@ -934,10 +989,11 @@
                   "NSE": 0.6802381644793805,
                   "ME": -8.371147495435752,
                   "MAE": 18.378285874143426,
-                  "RSR": 0.5575657470753681
+                  "RSR": 0.5575657470753681,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilWater.ProfileWater",
                   "n": 2094,
                   "Slope": 0.8728134883657317,
@@ -949,10 +1005,11 @@
                   "NSE": 0.872381595065997,
                   "ME": 3.274682289706251,
                   "MAE": 25.733150354703213,
-                  "RSR": 0.357151872649431
+                  "RSR": 0.357151872649431,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilWater.SW(1)",
                   "n": 2094,
                   "Slope": 1.1163772355204564,
@@ -964,10 +1021,11 @@
                   "NSE": 0.6902566587023671,
                   "ME": 0.02849944152655132,
                   "MAE": 0.034327517477429306,
-                  "RSR": 0.55641299575174
+                  "RSR": 0.55641299575174,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilWater.SW(2)",
                   "n": 2094,
                   "Slope": 0.9409017587502934,
@@ -979,10 +1037,11 @@
                   "NSE": 0.8597992165699903,
                   "ME": 0.007591418024592042,
                   "MAE": 0.020674055017110168,
-                  "RSR": 0.3743445336267927
+                  "RSR": 0.3743445336267927,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilWater.SW(3)",
                   "n": 2094,
                   "Slope": 0.8830773594295676,
@@ -994,10 +1053,11 @@
                   "NSE": 0.8394327520840843,
                   "ME": -0.0067599150524625925,
                   "MAE": 0.021596995786268038,
-                  "RSR": 0.40061274098170274
+                  "RSR": 0.40061274098170274,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilWater.SW(4)",
                   "n": 2094,
                   "Slope": 0.7532575482461508,
@@ -1009,10 +1069,11 @@
                   "NSE": 0.621680657489021,
                   "ME": -0.033684154361304605,
                   "MAE": 0.03869875254272438,
-                  "RSR": 0.6149298124567387
+                  "RSR": 0.6149298124567387,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilWater.SW(5)",
                   "n": 2094,
                   "Slope": 0.6378265880003656,
@@ -1024,10 +1085,11 @@
                   "NSE": 0.5876004294380864,
                   "ME": -0.02298695411006533,
                   "MAE": 0.03227421979325125,
-                  "RSR": 0.6420300827207976
+                  "RSR": 0.6420300827207976,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilWater.SW(6)",
                   "n": 2094,
                   "Slope": 0.4337332470802658,
@@ -1039,10 +1101,11 @@
                   "NSE": 0.26994982341914486,
                   "ME": -0.009998087400954462,
                   "MAE": 0.03026449111318754,
-                  "RSR": 0.8542256947247879
+                  "RSR": 0.8542256947247879,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.SoilWater.SW(7)",
                   "n": 2094,
                   "Slope": 0.04392360108816716,
@@ -1054,10 +1117,11 @@
                   "NSE": -2.958408157820735,
                   "ME": 0.06629928819458289,
                   "MAE": 0.06760398137524976,
-                  "RSR": 1.989099746250622
+                  "RSR": 1.989099746250622,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.Temperature(1)",
                   "n": 2112,
                   "Slope": 0.8453743265952671,
@@ -1069,10 +1133,11 @@
                   "NSE": 0.3043237042110486,
                   "ME": 2.339363664585677,
                   "MAE": 2.8032407334943494,
-                  "RSR": 0.8338746330255198
+                  "RSR": 0.8338746330255198,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.Temperature(2)",
                   "n": 2112,
                   "Slope": 0.9388112047437813,
@@ -1084,10 +1149,11 @@
                   "NSE": 0.4222520573375864,
                   "ME": 1.8506733856487312,
                   "MAE": 2.2341201303263425,
-                  "RSR": 0.7599173558784663
+                  "RSR": 0.7599173558784663,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.Temperature(3)",
                   "n": 2112,
                   "Slope": 0.8965557149095666,
@@ -1099,10 +1165,11 @@
                   "NSE": 0.5728480857725116,
                   "ME": 1.329075893586354,
                   "MAE": 1.8164101856767252,
-                  "RSR": 0.6534138537466897
+                  "RSR": 0.6534138537466897,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.Temperature(4)",
                   "n": 2112,
                   "Slope": 0.9040224106188438,
@@ -1114,10 +1181,11 @@
                   "NSE": 0.5236864768423342,
                   "ME": 1.0671471776256654,
                   "MAE": 1.5840831474850698,
-                  "RSR": 0.6899913013374316
+                  "RSR": 0.6899913013374316,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.Temperature(5)",
                   "n": 2112,
                   "Slope": 0.8623033378179652,
@@ -1129,10 +1197,11 @@
                   "NSE": 0.50692581767216,
                   "ME": 0.7653980658306101,
                   "MAE": 1.4203975270535707,
-                  "RSR": 0.7020261527702003
+                  "RSR": 0.7020261527702003,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.Temperature(6)",
                   "n": 2112,
                   "Slope": 0.8385556364505713,
@@ -1144,10 +1213,11 @@
                   "NSE": 0.4661771342691575,
                   "ME": 0.5731102798066847,
                   "MAE": 1.3028340679961772,
-                  "RSR": 0.7304588343583395
+                  "RSR": 0.7304588343583395,
+                  "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Soil.Temperature(7)",
                   "n": 2112,
                   "Slope": 0.8027947033763677,
@@ -1159,7 +1229,8 @@
                   "NSE": 0.48871178619366185,
                   "ME": 0.310897431402219,
                   "MAE": 1.1871702369314001,
-                  "RSR": 0.7148749027514477
+                  "RSR": 0.7148749027514477,
+                  "RMR": 0.0
                 }
               ],
               "AcceptedStatsName": "Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR",
@@ -1223,7 +1294,7 @@
                       "Children": [
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": null,
+                          "OperationsList": null,
                           "Name": "0",
                           "ResourceName": null,
                           "Children": [],
@@ -1248,20 +1319,20 @@
                       "Children": [
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "2016-10-28",
-                              "Action": "[Fertiliser].Apply(25, Fertiliser.Types.UreaN, 10);",
-                              "Line": "2016-10-28 [Fertiliser].Apply(25, Fertiliser.Types.UreaN, 10);"
+                              "Action": "[Fertiliser].Apply(25, \"UreaN\", 10);",
+                              "Line": "2016-10-28 [Fertiliser].Apply(25, \"UreaN\", 10);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "2017-01-18",
-                              "Action": "[Fertiliser].Apply(25, Fertiliser.Types.UreaN, 10);",
-                              "Line": "2017-01-18 [Fertiliser].Apply(25, Fertiliser.Types.UreaN, 10);"
+                              "Action": "[Fertiliser].Apply(25, \"UreaN\", 10);",
+                              "Line": "2017-01-18 [Fertiliser].Apply(25, \"UreaN\", 10);"
                             }
                           ],
                           "Name": "50",
@@ -1288,27 +1359,27 @@
                       "Children": [
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "2016-10-28",
-                              "Action": "[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 10);",
-                              "Line": "2016-10-28 [Fertiliser].Apply(100, Fertiliser.Types.UreaN, 10);"
+                              "Action": "[Fertiliser].Apply(100, \"UreaN\", 10);",
+                              "Line": "2016-10-28 [Fertiliser].Apply(100, \"UreaN\", 10);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "2017-01-18",
-                              "Action": "[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 10);",
-                              "Line": "2017-01-18 [Fertiliser].Apply(100, Fertiliser.Types.UreaN, 10);"
+                              "Action": "[Fertiliser].Apply(100, \"UreaN\", 10);",
+                              "Line": "2017-01-18 [Fertiliser].Apply(100, \"UreaN\", 10);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "2017-02-15",
-                              "Action": "[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 10);",
-                              "Line": "2017-02-15 [Fertiliser].Apply(100, Fertiliser.Types.UreaN, 10);"
+                              "Action": "[Fertiliser].Apply(100, \"UreaN\", 10);",
+                              "Line": "2017-02-15 [Fertiliser].Apply(100, \"UreaN\", 10);"
                             }
                           ],
                           "Name": "300",
@@ -1345,7 +1416,7 @@
                       "Children": [
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
+                          "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -1535,7 +1606,7 @@
                       "Children": [
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": null,
+                          "OperationsList": null,
                           "Name": "Nil",
                           "ResourceName": null,
                           "Children": [
@@ -1618,19 +1689,19 @@
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 50.0,
+              "CanopyType": null,
               "Name": "paddock",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "Manager folder",
                   "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "OperationsList": [
                         {
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
@@ -1717,7 +1788,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": null,
+                      "OperationsList": null,
                       "Name": "IrrigationSchedule",
                       "ResourceName": null,
                       "Children": [],
@@ -1726,7 +1797,7 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": null,
+                      "OperationsList": null,
                       "Name": "FertiliserSchedule",
                       "ResourceName": null,
                       "Children": [],
@@ -2015,10 +2086,6 @@
                         {
                           "Key": "OtherDateString",
                           "Value": "27/07/2017 28/07/2017 29/07/2017 30/07/2017 31/07/2017 08/08/2017 09/08/2017 10/08/2017 11/08/2017 12/08/2017 13/08/2017 14/08/2017 15/08/2017 16/08/2017 17/08/2017 18/08/2017 28/08/2017 29/08/2017 30/08/2017 31/08/2017"
-                        },
-                        {
-                          "Key": "RainshelterCover",
-                          "Value": ""
                         }
                       ],
                       "Name": "ClimateControl",
@@ -2108,11 +2175,11 @@
                         "            if (IrrFactor == true)",
                         "            {",
                         "                if (NitFactor == 0)",
-                        "                    Fert.Apply(40, Models.Fertiliser.Types.UreaN, 10);",
+                        "                    Fert.Apply(40, \"UreaN\", 10);",
                         "                if (NitFactor == 50)",
-                        "                    Fert.Apply(85, Models.Fertiliser.Types.UreaN, 10);",
+                        "                    Fert.Apply(85, \"UreaN\", 10);",
                         "                if (NitFactor == 300)",
-                        "                    Fert.Apply(270, Models.Fertiliser.Types.UreaN, 10);",
+                        "                    Fert.Apply(270, \"UreaN\", 10);",
                         "            }",
                         "        }",
                         "    }",
@@ -2120,12 +2187,12 @@
                       ],
                       "Parameters": [
                         {
-                          "Key": "NitFactor",
-                          "Value": "0"
-                        },
-                        {
                           "Key": "IrrFactor",
                           "Value": "False"
+                        },
+                        {
+                          "Key": "NitFactor",
+                          "Value": "0"
                         }
                       ],
                       "Name": "AdditionalActions",
@@ -2149,7 +2216,7 @@
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
-                  "ResourceName": null,
+                  "ResourceName": "MicroClimate",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -2247,9 +2314,32 @@
                       "PHUnits": 0,
                       "EC": null,
                       "ESP": null,
-                      "CEC": null,
+                      "CEC": [
+                        13.2108,
+                        11.854999999999999,
+                        7.0280000000000005,
+                        7.117100000000001,
+                        6.423,
+                        5.5602,
+                        5.5642,
+                        6.039300000000001,
+                        6.0449,
+                        5.9149
+                      ],
                       "ECMetadata": null,
                       "CLMetadata": null,
+                      "CECMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
@@ -2271,18 +2361,6 @@
                         100.0,
                         200.0,
                         250.0
-                      ],
-                      "ParticleSizeClay": [
-                        24.0,
-                        23.2,
-                        17.9,
-                        13.3,
-                        12.0,
-                        16.7,
-                        12.7,
-                        12.8,
-                        11.5,
-                        11.8
                       ],
                       "ParticleSizeSand": [
                         15.9,
@@ -2308,7 +2386,30 @@
                         50.9,
                         50.3
                       ],
-                      "Rocks": null,
+                      "ParticleSizeClay": [
+                        24.0,
+                        23.2,
+                        17.9,
+                        13.3,
+                        12.0,
+                        16.7,
+                        12.7,
+                        12.9,
+                        8.4,
+                        11.8
+                      ],
+                      "Rocks": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
                       "Texture": null,
                       "BD": [
                         1.116,
@@ -2388,11 +2489,55 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
-                      "RocksMetadata": null,
+                      "RocksMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
                       "TextureMetadata": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClayMetadata": null,
+                      "ParticleSizeSandMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "ParticleSizeSiltMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "ParticleSizeClayMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
                       "Name": "Physical",
                       "ResourceName": null,
                       "Children": [
@@ -2434,9 +2579,42 @@
                             1.0,
                             1.0
                           ],
-                          "LLMetadata": null,
-                          "KLMetadata": null,
-                          "XFMetadata": null,
+                          "LLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "KLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "XFMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
                           "Name": "FodderBeetSoil",
                           "ResourceName": null,
                           "Children": [],
@@ -2481,9 +2659,42 @@
                             1.0,
                             1.0
                           ],
-                          "LLMetadata": null,
-                          "KLMetadata": null,
-                          "XFMetadata": null,
+                          "LLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "KLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "XFMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
                           "Name": "OatsSoil",
                           "ResourceName": null,
                           "Children": [],
@@ -2646,14 +2857,6 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "Temperature",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Soils.Water, Models",
                       "Thickness": [
                         150.0,
@@ -2675,8 +2878,6 @@
                         0.22,
                         0.22
                       ],
-                      "InitialPAWmm": 290.95,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -2737,6 +2938,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -2778,6 +2980,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -2819,7 +3022,18 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "Urea",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "Thickness": null,
+                      "InitialValues": null,
+                      "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -2831,6 +3045,12 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "Phenology": null,
+                  "Arbitrator": null,
+                  "structure": null,
+                  "Leaf": null,
+                  "Root": null,
+                  "AboveGround": null,
                   "Name": "Oats",
                   "ResourceName": "Oats",
                   "Children": [],
@@ -2900,7 +3120,7 @@
                     "[Oats].AboveGround.NConc",
                     "[Oats].Leaf.Live.NConc ",
                     "[Oats].Stem.Live.NConc",
-                    "[Oats].Leaf.Dead.Nconc ",
+                    "[Oats].Leaf.Dead.NConc ",
                     "[Oats].Stem.NConc",
                     "[Oats].Grain.NConc ",
                     "[Oats].Root.NConc ",
@@ -2945,7 +3165,7 @@
                     "sum([Soil].Nutrient.DenitrifiedN) as DenitrifiedN",
                     "(-[FodderBeet].Root.NUptake - [Oats].Root.NUptake) as UptakeN",
                     "([Soil].SoilWater.LeachNO3+[Soil].SoilWater.LeachNH4) as Soil.Nutrient.NLeached",
-                    "([Soil].SoilWater.FlowNO3[3] + [Soil].SoilWater.FlowNH4[3]) as Soil.Nutrient.NLeach60cm",
+                    "([NO3].Flow[3] + [NH4].Flow[3]) as Soil.Nutrient.NLeach60cm",
                     "[SurfaceOrganicMatter].N as TotalSurfOMN",
                     "sum([Soil].Nutrient.FOM.N) as TotalFOMN",
                     "sum([Soil].Nutrient.Microbial.N) as TotalMicrobialN",
@@ -2978,6 +3198,12 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "Phenology": null,
+                  "Arbitrator": null,
+                  "structure": null,
+                  "Leaf": null,
+                  "Root": null,
+                  "AboveGround": null,
                   "Name": "FodderBeet",
                   "ResourceName": "FodderBeet",
                   "Children": [],
@@ -2995,7 +3221,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "PlantOutputs",
           "ResourceName": null,
           "Children": [
@@ -3506,7 +3731,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Biomass_FB",
               "ResourceName": null,
               "Children": [
@@ -3905,7 +4129,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Biomass_Os",
               "ResourceName": null,
               "Children": [
@@ -4304,7 +4527,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Nitrogen_FB",
               "ResourceName": null,
               "Children": [
@@ -4674,7 +4896,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Nitrogen_Os",
               "ResourceName": null,
               "Children": [
@@ -5044,7 +5265,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "NConc_FB",
               "ResourceName": null,
               "Children": [
@@ -5414,7 +5634,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "NConc_Os",
               "ResourceName": null,
               "Children": [
@@ -5784,7 +6003,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Canopy",
               "ResourceName": null,
               "Children": [
@@ -6488,7 +6706,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "GLF",
               "ResourceName": null,
               "Children": [
@@ -6794,7 +7011,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "SoilOutputs",
           "ResourceName": null,
           "Children": [
@@ -7189,7 +7405,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "OrganicN",
               "ResourceName": null,
               "Children": [
@@ -7472,7 +7687,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "MineralN",
               "ResourceName": null,
               "Children": [
@@ -8100,7 +8314,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "TotalMineralN",
                   "ResourceName": null,
                   "Children": [
@@ -8284,7 +8497,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": true,
-                      "GraphsPerPage": 6,
                       "Name": "Dry",
                       "ResourceName": null,
                       "Children": [
@@ -8877,7 +9089,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": true,
-                      "GraphsPerPage": 6,
                       "Name": "Irrig",
                       "ResourceName": null,
                       "Children": [
@@ -9474,7 +9685,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "NH4",
                   "ResourceName": null,
                   "Children": [
@@ -9658,7 +9868,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": true,
-                      "GraphsPerPage": 6,
                       "Name": "Dry",
                       "ResourceName": null,
                       "Children": [
@@ -10251,7 +10460,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": true,
-                      "GraphsPerPage": 6,
                       "Name": "Irrig",
                       "ResourceName": null,
                       "Children": [
@@ -10848,7 +11056,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "NO3",
                   "ResourceName": null,
                   "Children": [
@@ -11032,7 +11239,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": true,
-                      "GraphsPerPage": 6,
                       "Name": "Dry",
                       "ResourceName": null,
                       "Children": [
@@ -11625,7 +11831,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": true,
-                      "GraphsPerPage": 6,
                       "Name": "Irrig",
                       "ResourceName": null,
                       "Children": [
@@ -12226,7 +12431,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Water",
               "ResourceName": null,
               "Children": [
@@ -12817,14 +13021,12 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "SWC",
                   "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": true,
-                      "GraphsPerPage": 6,
                       "Name": "Dry",
                       "ResourceName": null,
                       "Children": [
@@ -13611,7 +13813,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": true,
-                      "GraphsPerPage": 6,
                       "Name": "Irrig",
                       "ResourceName": null,
                       "Children": [
@@ -14406,14 +14607,12 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Temperature",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Dry",
                   "ResourceName": null,
                   "Children": [
@@ -15103,7 +15302,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Irrig",
                   "ResourceName": null,
                   "Children": [
@@ -15797,7 +15995,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "PredObs",
               "ResourceName": null,
               "Children": [
@@ -16124,7 +16321,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "SoilWatLayers",
                   "ResourceName": null,
                   "Children": [
@@ -16695,7 +16891,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "SoilNLayers",
                   "ResourceName": null,
                   "Children": [
@@ -17186,7 +17381,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "NH4Layers",
                   "ResourceName": null,
                   "Children": [
@@ -17677,7 +17871,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "NO3Layers",
                   "ResourceName": null,
                   "Children": [
