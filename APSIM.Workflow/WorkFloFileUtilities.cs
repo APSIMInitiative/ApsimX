@@ -47,7 +47,7 @@ public static class WorkFloFileUtilities
               grid: grid.csv
               steps:
                 - uses: apsiminitiative/apsimplusr:{options.DockerImageTag}
-                  args: --verbose '"$Path"' 
+                  args: --verbose '"$Path"'
               finally:
                 - uses: apsiminitiative/postats2-collector:latest
                   args: upload {currentBuildNumber} {options.CommitSHA} {options.GitHubAuthorID} {brisbaneDatetimeNow.ToString(timeFormat)} ""$Path""
