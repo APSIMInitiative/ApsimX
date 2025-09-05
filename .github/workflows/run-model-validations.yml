@@ -119,12 +119,10 @@ jobs:
 
         # Tell POStats2 to open and get ready to accept data
         echo "Opening POStats2 to accept data..."
-        echo "Commit SHA: ${{ github.sha }}"
+        echo "Commit SHA: ${{ github.event.pull_request.head.sha }}"
         # NOTE: Enable once the workflow is ready for production.
-        commitsha=${{ github.sha }}
-        # commitsha=9ef60f11dd6ceb95c141f00f027637057b2dd0f5
+        commitsha=${{ github.event.pull_request.head.sha }}
         author=${{ github.actor }}
-        echo "commitsha variable: ${commitsha}"
         echo "author variable: ${author}"
         # substrings the variable so we get the number only after the 'pr-' part.
         echo "PR Number: ${DOCKER_METADATA_OUTPUT_VERSION:3}"
