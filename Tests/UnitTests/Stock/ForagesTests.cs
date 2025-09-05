@@ -249,5 +249,73 @@ namespace UnitTests.Stock
             var forageMaterial = forageModels[0].Material.ToList();
             Assert.That(forages.GetDigestibility(forageMaterial[0]), Is.EqualTo(0.4));
         }
+
+        /// <summary>Make sure duplicate forage parameterisations are removed.</summary>
+        [Test]
+        public void RemoveDuplicateForageParameters()
+        {
+            var simulation = new Simulation
+            {
+                Children = new List<IModel>()
+                {
+                    new MockSummary(),
+                    new Forages()
+                    {
+                        Parameters = new List<ForageMaterialParameters>
+                        {
+                            new()
+                            {
+                                Name = "Crop1.Leaf",
+                                LiveDigestibility = "0.7",
+                                LiveFractionConsumable = 1,
+                                LiveMinimumBiomass = 100,  // kg/ha
+                            },
+                            new()
+                            {
+                                Name = "Crop1.Leaf",
+                                DeadDigestibility = "0.3",
+                                DeadFractionConsumable = 0.5,
+                                DeadMinimumBiomass = 50,   // kg/ha
+                            },
+                            new()
+                            {
+                                Name = "Crop1.Stolon",
+                                LiveDigestibility = "0.6",
+                                LiveFractionConsumable = 1.0,
+                                LiveMinimumBiomass = 100,   // kg/ha
+                            }
+                        }
+                    },
+                    new Zone()
+                    {
+                        Children = new List<IModel>()
+                        {
+                            new MockForage()
+                            {
+                                Name = "Crop1",
+                                Material = new List<DamageableBiomass>()
+                                {
+                                    new DamageableBiomass("Crop1.Leaf", new Biomass() {StructuralWt = 200 }, isLive: true),   // g/m2
+                                    new DamageableBiomass("Crop1.Stolon", new Biomass() {StructuralWt = 5 }, isLive: true)    // g/m2
+                                }
+                            }
+                        }
+
+                    }
+                }
+            };
+            Node.Create(simulation);
+            Utilities.ResolveLinks(simulation);
+
+            var forages = simulation.Node.FindChild<Forages>();
+
+            var parameters = forages.Parameters.ToList();
+            Assert.That(parameters.Count, Is.EqualTo(2));
+
+            Assert.That(parameters[0].Name, Is.EqualTo("Crop1.Leaf"));
+            Assert.That(parameters[0].LiveDigestibility, Is.EqualTo("0.7"));
+            Assert.That(parameters[1].Name, Is.EqualTo("Crop1.Stolon"));
+            Assert.That(parameters[1].LiveDigestibility, Is.EqualTo("0.6"));
+        }
     }
 }
