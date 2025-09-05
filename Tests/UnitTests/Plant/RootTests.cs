@@ -1,36 +1,54 @@
 ﻿using APSIM.Core;
 using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Drawing;
-using DocumentFormat.OpenXml.VariantTypes;
-using Microsoft.CodeAnalysis.VisualBasic.Syntax;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Models;
-using Models.AgPasture;
-using Models.Agroforestry;
 using Models.Core;
 using Models.Core.ApsimFile;
+using Models.DCAPST;
+using Models.GrazPlan;
 using Models.PMF;
 using Models.PMF.Organs;
 using Models.Soils;
+using Models.Soils.SoilTemp;
 using Models.Storage;
+using Models.Surface;
+using Models.Utilities;
+using Models.WaterModel;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using UnitTests.Weather;
 
 namespace UnitTests.Core
 {
     [TestFixture]
     public class RootTests
     {
+
+        /// <summary>Test that the CalcFSW() function in Root class works as expected.</summary>
+        [Test]
+        public void TestRootCalcFSW_Simplified()
+        {
+            Simulations simulations = Utilities.GetRunnableSimForPlantTesting(true);
+            Zone zone = simulations.Node.FindChild<Zone>(recurse: true);
+            Root root = zone.Node.FindChild<Root>(recurse: true);
+            Simulation sim = simulations.Node.FindChild<Simulation>(recurse: true);
+            var tree = Node.Create(simulations);
+            sim.Prepare();
+            sim.Run();
+            double fsw = root.CalcFASW(10000.0);
+            Assert.That(fsw, Is.EqualTo(0.0833).Within(0.0001));
+        }
         /// <summary>
         /// Test that the CalcFASW function in Root class works as expected.
         /// </summary>
         [Test]
         public void TestRootCalcFASW()
         {
-            string path = System.IO.Path.Combine("%root%", "Examples", "Wheat.apsimx");
+            string path = Path.Combine("%root%", "Examples", "Wheat.apsimx");
             path = PathUtilities.GetAbsolutePath(path, null);
             Simulations sims = FileFormat.ReadFromFile<Simulations>(path).Model as Simulations;
             Simulation sim = sims.Node.FindChild<Simulation>(recurse: true);
@@ -41,10 +59,12 @@ namespace UnitTests.Core
             Zone zone = sims.Node.FindChild<Zone>(recurse: true);
             Water water = zone.Node.FindChild<Water>(recurse: true);
             water.InitialValues = [0.521, 0.349, 0.280, 0.280, 0.280, 0.280, 0.280];
+            Soil newSoil = SetupSoil(sims);
+            sims.Node.ReplaceChild(sims.Node.FindChild<Soil>(recurse: true), newSoil);
 
             // Modify the clock end date so only 1 year of simulation.
             IClock clock = sim.Node.FindChild<Clock>(recurse: true);
-            clock.StartDate = new System.DateTime(2000, 1, 1);
+            clock.StartDate = new DateTime(2000, 1, 1);
             clock.EndDate = clock.StartDate.AddDays(1);
 
             // Update the wheat sowing date to be the 1nd day of the simulation.
@@ -52,6 +72,7 @@ namespace UnitTests.Core
             sim.Node.Set("[Field].Sow using a variable rule.Script.EndDate", "02-jan");
             sim.Node.Set("[Field].Sow using a variable rule.Script.MinRain", -1);
             sim.Node.Set("[Field].Sow using a variable rule.Script.MinESW", -1);
+            
 
             // Add detached variable to report.
             var report = sim.Node.FindChild<Models.Report>(recurse: true);
@@ -83,7 +104,7 @@ namespace UnitTests.Core
         }
 
         /// <summary>Returns a soil model that can be used for testing.</summary>
-        public static Soil SetupSoil()
+        public static Soil SetupSoil(Simulations sims)
         {
             var soil = new Soil
             {
@@ -131,9 +152,10 @@ namespace UnitTests.Core
                         Thickness = new double[] { 150, 150, 300, 300, 300, 300, 300 },
                         InitialValues = new double[] { 38, double.NaN, 500, 490, 500, 500, 500 },
                         InitialValuesUnits = Solute.UnitsEnum.ppm
-                    }
+                    },
                 }
             };
+            soil.Children.Add(sims.Node.FindChild<WaterBalance>(recurse: true));
 
             return soil;
         }

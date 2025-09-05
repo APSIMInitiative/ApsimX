@@ -12,7 +12,9 @@ using Models.PMF.Library;
 using Models.Soils;
 using Models.Soils.Arbitrator;
 using Newtonsoft.Json;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("UnitTests")]
 namespace Models.PMF.Organs
 {
 
@@ -174,7 +176,7 @@ namespace Models.PMF.Organs
         public BiomassPoolType potentialDMAllocation { get; set; }
 
         /// <summary>Link to the soilCrop</summary>
-        public SoilCrop SoilCrop {get; private set;} = null;
+        public SoilCrop SoilCrop { get; private set; } = null;
 
         /// <summary>Water supplied by root network to soil arbitrator for this plant instance</summary>
         public PlantWaterOrNDelta WaterUptakeSupply { get; set; }
@@ -922,7 +924,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Initialise all zones.</summary>
-        private void InitialiseZones()
+        internal void InitialiseZones()
         {
             Zones.Clear();
             Zones.Add(PlantZone);
@@ -1059,7 +1061,7 @@ namespace Models.PMF.Organs
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         /// <exception cref="ApsimXException">Cannot find a soil crop parameterisation for  + Name</exception>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        internal void OnSimulationCommencing(object sender, EventArgs e)
         {
             Soil soil = Structure.Find<Soil>();
             if (soil == null)

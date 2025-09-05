@@ -9,9 +9,16 @@ using APSIM.Shared.JobRunning;
 using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Models.Storage;
 using NUnit.Framework;
+using Models.Soils;
+using Models.WaterModel;
+using Models.PMF;
+using Models.Surface;
+using UnitTests.Weather;
+using Models.Soils.SoilTemp;
+using Models.Soils.Nutrients;
+
 
 namespace UnitTests
 {
@@ -214,6 +221,118 @@ namespace UnitTests
             sims.Write(FileName: Path.ChangeExtension(Path.GetTempFileName(), ".apsimx"));
             return sims;
         }
+
+        /// <summary>
+        /// Gets a IPlant model from the resources folder in Models.
+        /// </summary>
+        /// <returns></returns>
+        public static T GetModelFromResource<T>(string modelName)
+        {
+            string modelResourcePath = Path.Combine("%root%", "Models", "Resources", $"{modelName}.json");
+            string fullModelResourcePath = PathUtilities.GetAbsolutePath(modelResourcePath, null);
+            Simulations sims = (Simulations)FileFormat.ReadFromFile<Simulations>(fullModelResourcePath).Model;
+            T model = sims.Node.FindChild<T>();
+            return model;
+        }
+
+        /// <summary>
+        /// Returns a lightweight simulation which can be used for plant or other complex testing purposes.
+        /// </summary>
+        /// <param name=""></param>
+        /// <returns></returns>
+        public static Simulations GetRunnableSimForPlantTesting(bool useInMemoryDb = false)
+        {
+            Simulations simulations = GetRunnableSim(useInMemoryDb);
+            Simulation sim = simulations.Node.FindChild<Simulation>(recurse: true);
+            Zone zone = simulations.Node.FindChild<Zone>(recurse: true);
+
+            sim.Node.AddChild(new MockWeather());
+
+            AddTestingSoil(simulations);
+
+            zone.Node.AddChild(GetModelFromResource<Plant>("Wheat"));
+
+            // Values taken from Wheat example file.
+            // zone.Node.AddChild(new SurfaceOrganicMatter()
+            // {
+            //     InitialResidueName = "wheat_stubble",
+            //     InitialResidueType = "wheat",
+            //     InitialResidueMass = 500,
+            //     InitialStandingFraction = 0,
+            //     InitialCPR = 0,
+            //     InitialCNR = 100,
+            // });
+            zone.Node.AddChild(GetModelFromResource<SurfaceOrganicMatter>("SurfaceOrganicMatter"));
+            return simulations;
+        }
+
+        ///<summary>Returns a Soil model that can be used for testing.</summary>
+        public static void AddTestingSoil(Simulations simulations)
+        {
+            Zone zone = simulations.Node.FindChild<Zone>(recurse: true);
+            zone.Node.AddChild(new Soil());
+            var soil = zone.Node.FindChild<Soil>(recurse: true);
+            soil.Node.AddChild(new Physical
+            {
+                Thickness = new double[] { 150, 150, 300, 300, 300, 300, 300 },
+                BD = new double[] { 1.011, 1.071, 1.094, 1.159, 1.173, 1.163, 1.187 },
+                AirDry = new double[] { 0.130, 0.199, 0.280, 0.280, 0.280, 0.280, 0.280 },
+                LL15 = new double[] { 0.261, 0.248, 0.280, 0.280, 0.280, 0.280, 0.280 },
+                DUL = new double[] { 0.521, 0.497, 0.488, 0.480, 0.472, 0.457, 0.452 },
+                SAT = new double[] { 0.589, 0.566, 0.557, 0.533, 0.527, 0.531, 0.522 },
+            });
+
+            var physical = soil.Node.FindChild<Physical>(recurse: true);
+            physical.Node.AddChild(new SoilCrop
+            {
+                Name = "Wheat",
+                KL = new double[] { 0.060, 0.060, 0.060, 0.040, 0.040, 0.020, 0.010 },
+                LL = new double[] { 0.261, 0.248, 0.280, 0.306, 0.360, 0.392, 0.446 }
+            });
+
+            soil.Node.AddChild(new Water
+            {
+                Thickness = new double[] { 150, 150, 300, 300, 300, 300, 300 },
+                InitialValues = new double[] { 0.313, 0.298, 0.322, 0.320, 0.318, 0.315, 0.314 },
+            });
+
+            soil.Node.AddChild(new Organic
+            {
+                Thickness = new double[] { 150, 150, 300, 300, 300, 300, 300 },
+                Carbon = new double[] { 2, 1, 0.5, 0.4, 0.3, 0.2, 0.2 }
+            });
+
+            soil.Node.AddChild(new Solute
+            {
+                Name = "NO3",
+                Thickness = new double[] { 150, 150, 300, 300, 300, 300, 300 },
+                InitialValues = new double[] { 1, 1, 1, 1, 1, 1, 1 }, // Make these values match the Wheat example
+                InitialValuesUnits = Solute.UnitsEnum.ppm
+            });
+
+            // TODO: add NH4 and Urea solutes.
+            soil.Node.AddChild(new Solute
+            {
+                Name = "NH4",
+                Thickness = new double[] { 150, 150, 300, 300, 300, 300, 300 },
+                InitialValues = new double[] { 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1 },
+                InitialValuesUnits = Solute.UnitsEnum.ppm
+            });
+
+            soil.Node.AddChild(new Solute
+            {
+                Name = "Urea",
+                Thickness = new double[] { 150, 150, 300, 300, 300, 300, 300 },
+                InitialValues = new double[] { 0, 0, 0, 0, 0, 0, 0 },
+                InitialValuesUnits = Solute.UnitsEnum.ppm
+            });
+
+            soil.Node.AddChild(GetModelFromResource<WaterBalance>("WaterBalance"));
+            soil.Node.AddChild(GetModelFromResource<Nutrient>("Nutrient")); 
+            soil.Node.AddChild(new Chemical());
+            soil.Node.AddChild(new SoilTemperature());
+        }
+
 
         public static Simulations GetSimpleExperiment()
         {
