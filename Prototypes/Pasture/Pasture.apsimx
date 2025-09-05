@@ -869,23 +869,23 @@
               "Parameters": [
                 {
                   "Key": "OverrideNutrient",
-                  "Value": "True"
+                  "Value": "False"
                 },
                 {
                   "Key": "OverrideWater",
-                  "Value": "True"
+                  "Value": "False"
                 },
                 {
                   "Key": "OverrideWaterUptake",
-                  "Value": "True"
+                  "Value": "False"
                 },
                 {
                   "Key": "OverrideWaterDemand",
-                  "Value": "True"
+                  "Value": "False"
                 },
                 {
                   "Key": "OverrideNUptake",
-                  "Value": "True"
+                  "Value": "False"
                 }
               ],
               "Name": "PastureOverrides",
@@ -3444,7 +3444,7 @@
                           "Y2FieldName": null,
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
+                          "Cumulative": true,
                           "CumulativeX": false,
                           "Filter": null,
                           "Name": "APSIM",
@@ -3473,7 +3473,7 @@
                           "Y2FieldName": null,
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
+                          "Cumulative": true,
                           "CumulativeX": false,
                           "Filter": null,
                           "Name": "AusFarm",
@@ -5586,10 +5586,50 @@
                     200.0,
                     200.0
                   ],
-                  "ParticleSizeSand": null,
-                  "ParticleSizeSilt": null,
-                  "ParticleSizeClay": null,
-                  "Rocks": null,
+                  "ParticleSizeSand": [
+                    5.0,
+                    5.0,
+                    5.0,
+                    5.0,
+                    5.0,
+                    5.0,
+                    5.0,
+                    5.0,
+                    5.0
+                  ],
+                  "ParticleSizeSilt": [
+                    65.0,
+                    65.0,
+                    65.0,
+                    65.0,
+                    65.0,
+                    65.0,
+                    65.0,
+                    65.0,
+                    65.0
+                  ],
+                  "ParticleSizeClay": [
+                    30.0,
+                    30.0,
+                    30.0,
+                    30.0,
+                    30.0,
+                    30.0,
+                    30.0,
+                    30.0,
+                    30.0
+                  ],
+                  "Rocks": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
                   "Texture": null,
                   "BD": [
                     0.93,
@@ -5703,11 +5743,51 @@
                     "Unknown source or quality of data"
                   ],
                   "KSMetadata": null,
-                  "RocksMetadata": null,
+                  "RocksMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
                   "TextureMetadata": null,
-                  "ParticleSizeSandMetadata": null,
-                  "ParticleSizeSiltMetadata": null,
-                  "ParticleSizeClayMetadata": null,
+                  "ParticleSizeSandMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
+                  "ParticleSizeSiltMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
+                  "ParticleSizeClayMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
                   "Name": "Physical",
                   "ResourceName": null,
                   "Children": [
@@ -5757,8 +5837,28 @@
                         "Field measured and checked for sensibility",
                         "Field measured and checked for sensibility"
                       ],
-                      "KLMetadata": null,
-                      "XFMetadata": null,
+                      "KLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "XFMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
                       "Name": "wheatSoil",
                       "ResourceName": null,
                       "Children": [],
@@ -5811,8 +5911,28 @@
                         "Estimated based on local knowledge",
                         "Estimated based on local knowledge"
                       ],
-                      "KLMetadata": null,
-                      "XFMetadata": null,
+                      "KLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "XFMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
                       "Name": "barleySoil",
                       "ResourceName": null,
                       "Children": [],
@@ -5865,8 +5985,28 @@
                         "Field measured and checked for sensibility",
                         "Field measured and checked for sensibility"
                       ],
-                      "KLMetadata": null,
-                      "XFMetadata": null,
+                      "KLMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
+                      "XFMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
                       "Name": "Sub Clover - LeuraSoil",
                       "ResourceName": null,
                       "Children": [],
@@ -6028,10 +6168,30 @@
                   "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
-                  "CEC": null,
+                  "CEC": [
+                    10.707500000000001,
+                    9.3575,
+                    9.020000000000001,
+                    9.020000000000001,
+                    8.9075,
+                    8.9075,
+                    8.795,
+                    8.57,
+                    8.57
+                  ],
                   "ECMetadata": null,
                   "CLMetadata": null,
-                  "CECMetadata": null,
+                  "CECMetadata": [
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated",
+                    "Calculated"
+                  ],
                   "ESPMetadata": null,
                   "PHMetadata": [
                     "Estimated based on local knowledge",

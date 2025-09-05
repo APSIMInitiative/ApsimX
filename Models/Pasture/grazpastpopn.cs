@@ -513,6 +513,36 @@ namespace Models.GrazPlan
         /// <summary></summary>
         public ResizePool_ ResizePool = null;
 
+
+        /// <summary>
+        /// Nutrient uptake for the specified nutrient
+        /// </summary>
+        /// <param name="nutr">Nutrient. pnNO3...</param>
+        /// <returns>Nutrient uptake for each soil layer in kg/ha</returns>
+        public SoilLayer[] NutrUptake(TPlantNutrient nutr)
+        {
+            string sUnit = MassUnit;
+            MassUnit = "kg/ha";
+
+            double[][] Uptakes = GetNutrUptake(nutr);
+            SoilLayer[] result = new SoilLayer[SoilLayerCount];
+            double value;
+            for (uint Ldx = 1; Ldx <= SoilLayerCount; Ldx++)
+            {
+                value = 0.0;
+                for (int Kdx = 0; Kdx <= MAXNUTRAREAS - 1; Kdx++)
+                    value = value + Uptakes[Kdx][Ldx];
+
+                result[Ldx - 1] = new SoilLayer();
+                result[Ldx - 1].thickness = SoilLayer_MM[Ldx];
+                result[Ldx - 1].amount = value;
+            }
+
+            MassUnit = sUnit;
+
+            return result;
+        }
+
         /// <summary>
         /// Common initialisation logic at construction time.
         /// </summary>
@@ -562,7 +592,7 @@ namespace Models.GrazPlan
                 this.MovePool = PastureUtil.MovePool0;
                 this.ResizePool = PastureUtil.ResizePool0;
             }
-            else if ((elements.Length == 1) && (elements[0] ==TPlantElement.N))
+            else if ((elements.Length == 1) && (elements[0] == TPlantElement.N))
             {
                 this.AddPool = PastureUtil.AddPool1;
                 this.MovePool = PastureUtil.MovePool1;
@@ -1895,8 +1925,9 @@ namespace Models.GrazPlan
         /// Compute nutrient rates
         /// </summary>
         /// <param name="elem">N, P, S</param>
-        /// <param name="fSupply">Nutrient supply in g/m^2</param>
-        private void ComputeNutrientRates(TPlantElement elem, double[][][] fSupply)
+        /// <param name="no3Uptake">NO3 uptake (kg/ha)</param>
+        /// <param name="nh4Uptake">NH4 uptake (kg/ha)</param>
+        public void ComputeNutrientRates(TPlantElement elem, double[] no3Uptake, double[] nh4Uptake)
         {
             int iComp;
             int iCohort;
@@ -1929,7 +1960,7 @@ namespace Models.GrazPlan
                     }
                 }
 
-                this.ComputeNutrientUptake(iComp, elem);
+                this.ComputeNutrientUptake(iComp, elem, no3Uptake, nh4Uptake);
 
                 for (iCohort = 0; iCohort <= this.CohortCount() - 1; iCohort++)
                 {
@@ -1995,7 +2026,9 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="comp">Herbage component</param>
         /// <param name="elem"></param>
-        private void ComputeNutrientUptake(int comp, TPlantElement elem)
+        /// <param name="no3Uptake">NO3 uptake. If null, will calculate.</param>
+        /// <param name="nh4Uptake">NH4 uptake. If null, will calculate.</param>
+        private void ComputeNutrientUptake(int comp, TPlantElement elem, double[] no3Uptake, double[] nh4Uptake)
         {
             double fDemandSum;
             int iLastLayer;
@@ -2041,207 +2074,95 @@ namespace Models.GrazPlan
 
             if (fDemandSum > VERYSMALL)
             {
-                fRLD = this.EffRootLengthD(comp);                                              // Length density of eff. roots  (m/m^3)
-                fRadii = this.RootRadii(comp);                                                 // Average root radius (m)
-                fTransp_M = this.Transpiration(comp);                                          // Transpiration (m^3/m^2/d)
-                for (iLayer = 1; iLayer <= iLastLayer; iLayer++)
+                if (no3Uptake == null)
                 {
-                    fTransp_M[iLayer] = 0.001 * fTransp_M[iLayer];
-                }
-
-                PastureUtil.Fill3DArray(fSupply, 0.0);
-                for (iLayer = 1; iLayer <= iLastLayer; iLayer++)
-                {
-                    if ((fRLD[iLayer] > VERYSMALL)
-                       && (this.Inputs.Theta[iLayer] > VERYSMALL)
-                       && (this.FSoilFract[comp][iLayer] > VERYSMALL))
+                    fRLD = this.EffRootLengthD(comp);                                              // Length density of eff. roots  (m/m^3)
+                    fRadii = this.RootRadii(comp);                                                 // Average root radius (m)
+                    fTransp_M = this.Transpiration(comp);                                          // Transpiration (m^3/m^2/d)
+                    for (iLayer = 1; iLayer <= iLastLayer; iLayer++)
                     {
-                        fDepth_M = 0.001 * this.SoilLayer_MM[iLayer];                           // Soil layer depth in metres
-                        fTortuosity = 0.45 * Math.Pow(this.Inputs.WFPS[iLayer], 0.3 * this.FCampbellParam[iLayer]);
-                        var values = Enum.GetValues(typeof(TPlantNutrient)).Cast<TPlantNutrient>().ToArray();
-                        foreach (var Nutr in values)
-                        {
-                            if (Nutr2Elem[(int)Nutr] == elem)                                   // Quantities that depend on the nutrient
-                            {
-                                fDe = DiffuseAq[(int)Nutr] * this.Inputs.Theta[iLayer] * fTortuosity;       // Effective diffusivity (m^2/d)
-                                fRootDistance = Math.Sqrt(this.FSoilFract[comp][iLayer] / (Math.PI * fRLD[iLayer])); // Half-distance between roots (m)
-                                fEffRadius = this.Params.NutrEffK[(int)Nutr] * fRadii[iLayer];
-                                fRootLength = fRLD[iLayer] * fDepth_M;                          // Root length in the layer (m/m^2)
-                                fRho = fRootDistance / fEffRadius;                              // Dimensionless distance between roots
-                                if (fRho > 1.0)
-                                {
-                                    fTau = -Math.Min(0.4999999,                                 // Dimensionless transpiration
-                                                          fTransp_M[iLayer] / (2.0 * Math.PI * fDe * fRootLength));
-                                    fSlope = 0.5 * Math.PI * fRootLength * fDe * (StdMath.Sqr(fRho) - 1.0) / this.G(fRho, fTau);
-                                }
-                                else
-                                {
-                                    fSlope = VERYLARGE;
-                                }
+                        fTransp_M[iLayer] = 0.001 * fTransp_M[iLayer];
+                    }
 
-                                TSoilNutrientDistn nutrDist = this.Inputs.Nutrients[(int)Nutr];
-                                for (iArea = 0; iArea <= nutrDist.NoAreas - 1; iArea++)
+                    PastureUtil.Fill3DArray(fSupply, 0.0);
+                    for (iLayer = 1; iLayer <= iLastLayer; iLayer++)
+                    {
+                        if ((fRLD[iLayer] > VERYSMALL)
+                        && (this.Inputs.Theta[iLayer] > VERYSMALL)
+                        && (this.FSoilFract[comp][iLayer] > VERYSMALL))
+                        {
+                            fDepth_M = 0.001 * this.SoilLayer_MM[iLayer];                           // Soil layer depth in metres
+                            fTortuosity = 0.45 * Math.Pow(this.Inputs.WFPS[iLayer], 0.3 * this.FCampbellParam[iLayer]);
+                            var values = Enum.GetValues(typeof(TPlantNutrient)).Cast<TPlantNutrient>().ToArray();
+                            foreach (var Nutr in values)
+                            {
+                                if (Nutr2Elem[(int)Nutr] == elem)                                   // Quantities that depend on the nutrient
                                 {
-                                    // fSupply is in units of g/m^2/d of uptake per (m/m^3) of root length
-                                    fAvailGM2 = 0.99999 * (nutrDist.AvailKgHa[iArea][iLayer] * KGHA_GM2) * this.FSoilFract[comp][iLayer];
-                                    fSupply[(int)Nutr][iArea][iLayer] = Math.Min(nutrDist.RelAreas[iArea] * fSlope * nutrDist.SolnPPM[iArea][iLayer],
-                                                                       fAvailGM2) / fRLD[iLayer];
+                                    fDe = DiffuseAq[(int)Nutr] * this.Inputs.Theta[iLayer] * fTortuosity;       // Effective diffusivity (m^2/d)
+                                    fRootDistance = Math.Sqrt(this.FSoilFract[comp][iLayer] / (Math.PI * fRLD[iLayer])); // Half-distance between roots (m)
+                                    fEffRadius = this.Params.NutrEffK[(int)Nutr] * fRadii[iLayer];
+                                    fRootLength = fRLD[iLayer] * fDepth_M;                          // Root length in the layer (m/m^2)
+                                    fRho = fRootDistance / fEffRadius;                              // Dimensionless distance between roots
+                                    if (fRho > 1.0)
+                                    {
+                                        fTau = -Math.Min(0.4999999,                                 // Dimensionless transpiration
+                                                            fTransp_M[iLayer] / (2.0 * Math.PI * fDe * fRootLength));
+                                        fSlope = 0.5 * Math.PI * fRootLength * fDe * (StdMath.Sqr(fRho) - 1.0) / this.G(fRho, fTau);
+                                    }
+                                    else
+                                    {
+                                        fSlope = VERYLARGE;
+                                    }
+
+                                    TSoilNutrientDistn nutrDist = this.Inputs.Nutrients[(int)Nutr];
+                                    for (iArea = 0; iArea <= nutrDist.NoAreas - 1; iArea++)
+                                    {
+                                        // fSupply is in units of g/m^2/d of uptake per (m/m^3) of root length
+                                        fAvailGM2 = 0.99999 * (nutrDist.AvailKgHa[iArea][iLayer] * KGHA_GM2) * this.FSoilFract[comp][iLayer];
+                                        fSupply[(int)Nutr][iArea][iLayer] = Math.Min(nutrDist.RelAreas[iArea] * fSlope * nutrDist.SolnPPM[iArea][iLayer],
+                                                                        fAvailGM2) / fRLD[iLayer];
+                                    }
                                 }
                             }
+                        }
+                    }
+                }
+                else
+                {
+                    // uptake calculated by APSIM soil arbitrator. Create a fSupply array to pass to UptakeNutrients.
+                    for (iCohort = 0; iCohort <= this.CohortCount() - 1; iCohort++)
+                    {
+                        if (this.BelongsIn(iCohort, comp))
+                        {
+                            double[] rld = this.EffRootLengthD(comp)
+                                            .Skip(1)     // convert from 1-based array to zero-based.
+                                            .ToArray();
+
+                            // fSupply is in units of g/m^2/d of uptake per (m/m^3) of root length so convert uptakes from APSIM (kg/ha) into these units.
+                            double[] no3fSupply = new double[no3Uptake.Length];
+                            double[] nh4fSupply = new double[nh4Uptake.Length];
+                            for (int i = 0; i < no3Uptake.Length; i++)
+                            {
+                                if (!MathUtilities.FloatsAreEqual(rld[i], 0))
+                                {
+                                    no3fSupply[i] = no3Uptake[i] * KGHA_GM2 / rld[i];
+                                    nh4fSupply[i] = nh4Uptake[i] * KGHA_GM2 / rld[i];
+                                }
+                            }
+                            fSupply = CreateFSupply(no3fSupply, nh4fSupply);
                         }
                     }
                 }
 
                 for (iCohort = 0; iCohort <= this.CohortCount() - 1; iCohort++)
-                {
-                    if (this.BelongsIn(iCohort, comp))
                     {
-                        this.FCohorts[iCohort].UptakeNutrients(elem, fSupply);
-                    }
-                }
-            } // if fDemandSum > VERYSMALL
-        }
-
-        /// <summary>
-        /// Compute the nutrient uptake
-        /// </summary>
-        /// <param name="comp">Herbage component</param>
-        /// <param name="elem">N,P,S</param>
-        /// <param name="myZone"></param>
-        /// <returns>The supply for [nutrient][area][layer] in g/m^2</returns>
-        public double[][][] ComputeNutrientUptake2(int comp, TPlantElement elem, ZoneWaterAndN myZone)
-        {
-            int iLastLayer;
-            double[] fTransp_M;
-            double[] fRadii;
-            double[] fRLD;
-            double[][][] fSupply;     // TElemUptakeDistn
-            double fDepth_M;
-            double fRootDistance;
-            double fEffRadius;
-            double fRootLength;
-            double fTortuosity;
-            double fDe;
-            double fRho;
-            double fTau;
-            double fSlope;
-            double fAvailGM2;
-            int iCohort;
-            int iLayer;
-            double demandSum = 0;
-
-            // initialise the 3D array
-            int x = Enum.GetNames(typeof(TPlantNutrient)).Length;
-            fSupply = new double[x][][];
-            for (int i = 0; i < x; i++)
-            {
-                fSupply[i] = new double[MAXNUTRAREAS][];
-                for (int j = 0; j < MAXNUTRAREAS; j++)
-                {
-                    fSupply[i][j] = new double[this.FSoilLayerCount + 1];
-                }
-            }
-
-            iLastLayer = 0;
-            for (iCohort = 0; iCohort <= this.CohortCount() - 1; iCohort++)
-            {
-                if (this.BelongsIn(iCohort, comp))
-                {
-                    demandSum = demandSum + Math.Max( 0.0, FCohorts[iCohort].FNutrientInfo[(int)elem].fMaxDemand[TOTAL]
-                                         - FCohorts[iCohort].FNutrientInfo[(int)elem].fSupplied );
-                    iLastLayer = Math.Max(iLastLayer, this.FCohorts[iCohort].FMaxRootLayer);
-                }
-            }
-
-            if (demandSum > VERYSMALL)
-            {
-                fRLD = this.EffRootLengthD(comp);                                              // Length density of eff. roots  (m/m^3)
-                fRadii = this.RootRadii(comp);                                                 // Average root radius (m)
-                fTransp_M = this.Transpiration(comp);                                          // Transpiration (m^3/m^2/d)
-                for (iLayer = 1; iLayer <= iLastLayer; iLayer++)
-                {
-                    fTransp_M[iLayer] = 0.001 * fTransp_M[iLayer];
-                }
-
-                PastureUtil.Fill3DArray(fSupply, 0.0);
-                for (iLayer = 1; iLayer <= iLastLayer; iLayer++)
-                {
-                    if ((fRLD[iLayer] > VERYSMALL)
-                        && (this.Inputs.Theta[iLayer] > VERYSMALL)
-                        && (this.FSoilFract[comp][iLayer] > VERYSMALL))
-                    {
-                        fDepth_M = 0.001 * this.SoilLayer_MM[iLayer];                           // Soil layer depth in metres
-                        fTortuosity = 0.45 * Math.Pow(this.Inputs.WFPS[iLayer], 0.3 * this.FCampbellParam[iLayer]);
-                        var values = Enum.GetValues(typeof(TPlantNutrient)).Cast<TPlantNutrient>().ToArray();
-                        foreach (var Nutr in values)
+                        if (this.BelongsIn(iCohort, comp))
                         {
-                            if (Nutr2Elem[(int)Nutr] == elem)                                   // Quantities that depend on the nutrient
-                            {
-                                fDe = DiffuseAq[(int)Nutr] * this.Inputs.Theta[iLayer] * fTortuosity;       // Effective diffusivity (m^2/d)
-                                fRootDistance = Math.Sqrt(this.FSoilFract[comp][iLayer] / (Math.PI * fRLD[iLayer])); // Half-distance between roots (m)
-                                fEffRadius = this.Params.NutrEffK[(int)Nutr] * fRadii[iLayer];
-                                fRootLength = fRLD[iLayer] * fDepth_M;                          // Root length in the layer (m/m^2)
-                                fRho = fRootDistance / fEffRadius;                              // Dimensionless distance between roots
-                                if (fRho > 1.0)
-                                {
-                                    fTau = -Math.Min(0.4999999,                                 // Dimensionless transpiration
-                                                            fTransp_M[iLayer] / (2.0 * Math.PI * fDe * fRootLength));
-                                    fSlope = 0.5 * Math.PI * fRootLength * fDe * (StdMath.Sqr(fRho) - 1.0) / this.G(fRho, fTau);
-                                }
-                                else
-                                {
-                                    fSlope = VERYLARGE;
-                                }
-
-                                // fSupply is in units of g/m^2/d of uptake per (m/m^3) of root length
-                                double amountKgHa;
-                                if (Nutr == TPlantNutrient.pnNO3)
-                                    amountKgHa = myZone.NO3N[iLayer - 1];
-                                else if (Nutr == TPlantNutrient.pnNH4)
-                                    amountKgHa = myZone.NH4N[iLayer - 1];
-                                else
-                                    throw new Exception("Invalid element");
-                                double amountSolN = amountKgHa * 100.0 / this.FSoilLayers[iLayer] / this.Inputs.Theta[iLayer];
-
-                                fAvailGM2 = 0.99999 * (amountKgHa * KGHA_GM2) * this.FSoilFract[comp][iLayer];
-                                double relArea = 1;
-                                fSupply[(int)Nutr][0][iLayer] = Math.Min(relArea * fSlope * amountSolN, fAvailGM2);
-                            }
+                            this.FCohorts[iCohort].UptakeNutrients(elem, fSupply);
                         }
                     }
-                }
-            }
-
-            return fSupply;
+            } // if fDemandSum > VERYSMALL
         }
-
-        /// <summary>
-        /// Compute the nutrient uptake
-        /// </summary>
-        /// <param name="comp">Herbage component</param>
-        /// <param name="elem">N,P,S</param>
-        /// <param name="fSupply">Nutrient supply g/m^2</param>
-        private void ComputeNutrientUptake3(int comp, TPlantElement elem, double[][][] fSupply)
-        {
-            double totalMaxDemandAllCohorts = 0;
-            for (int iCohort = 0; iCohort <= this.CohortCount() - 1; iCohort++)
-            {
-                totalMaxDemandAllCohorts += this.FCohorts[iCohort].FNutrientInfo[(int)elem].fMaxDemand[TOTAL];
-            }
-
-            for (int iCohort = 0; iCohort <= this.CohortCount() - 1; iCohort++)
-            {
-                if (this.BelongsIn(iCohort, comp))
-                {
-                    double maxDemandOfCohort = this.FCohorts[iCohort].FNutrientInfo[(int)elem].fMaxDemand[TOTAL];
-
-                    fSupply[0][0] = MathUtilities.Multiply_Value(fSupply[0][0], maxDemandOfCohort / totalMaxDemandAllCohorts);
-                    fSupply[1][0] = MathUtilities.Multiply_Value(fSupply[1][0], maxDemandOfCohort / totalMaxDemandAllCohorts);
-                    this.FCohorts[iCohort].UptakeNutrients(elem, fSupply);
-                }
-            }
-        }
-
 
         /// <summary>
         ///
@@ -3642,7 +3563,7 @@ namespace Models.GrazPlan
         /// <param name="cohort">The cohort index</param>
         /// <param name="comp">The herbage component</param>
         /// <returns></returns>
-        protected bool BelongsIn(int cohort, int comp)
+        public bool BelongsIn(int cohort, int comp)
         {
             bool result = false;
 
@@ -5124,9 +5045,10 @@ namespace Models.GrazPlan
         /// the methods which it calls.
         /// </summary>
         /// <param name="today"></param>
-        /// <param name="fSupply">Nutrient supply in g/m^2</param>
+        /// <param name="no3Uptake">NO3 uptake (kg/ha)</param>
+        /// <param name="nh4Uptake">NH4 uptake (kg/ha)</param>
         /// <param name="pastureWaterDemand"></param>
-        public void ComputeRates(DateTime today, double[][][] fSupply, double pastureWaterDemand)
+        public void ComputeRates(DateTime today, double[] no3Uptake, double[] nh4Uptake, double pastureWaterDemand)
         {
             double fMoistureChange;
             double fDormTempFract;
@@ -5160,7 +5082,6 @@ namespace Models.GrazPlan
                 DormMeanTemp = Inputs.MeanTemp;
             }
 
-            PastureUtil.CheckNaN(fSupply);
             foreach (var s in FCohorts)
                 s.CheckNaN();
 
@@ -5174,7 +5095,6 @@ namespace Models.GrazPlan
                 }
             }
 
-            PastureUtil.CheckNaN(fSupply);
             foreach (var s in FCohorts)
                 s.CheckNaN();
 
@@ -5187,13 +5107,11 @@ namespace Models.GrazPlan
                 }
             }
 
-            PastureUtil.CheckNaN(fSupply);
             foreach (var s in FCohorts)
                 s.CheckNaN();
 
             this.ComputePotAssimilation(pastureWaterDemand);
 
-            PastureUtil.CheckNaN(fSupply);
             foreach (var s in FCohorts)
                 s.CheckNaN();
 
@@ -5206,7 +5124,6 @@ namespace Models.GrazPlan
                 }
             }
 
-            PastureUtil.CheckNaN(fSupply);
             foreach (var s in FCohorts)
                 s.CheckNaN();
 
@@ -5224,7 +5141,6 @@ namespace Models.GrazPlan
                 this.FCohorts[iCohort].ComputeFrostHardening(this.Inputs.MinTemp);
             }
 
-            PastureUtil.CheckNaN(fSupply);
             foreach (var s in FCohorts)
                 s.CheckNaN();
 
@@ -5234,11 +5150,10 @@ namespace Models.GrazPlan
             {
                 if (this.FElements.Contains(Elem))
                 {
-                    this.ComputeNutrientRates(Elem, fSupply);
+                    this.ComputeNutrientRates(Elem, no3Uptake, nh4Uptake);
                 }
             }
 
-            PastureUtil.CheckNaN(fSupply);
             foreach (var s in FCohorts)
                 s.CheckNaN();
 
@@ -5258,13 +5173,11 @@ namespace Models.GrazPlan
                 }
             }
 
-            PastureUtil.CheckNaN(fSupply);
             foreach (var s in FCohorts)
                 s.CheckNaN();
 
             this.ComputePhenology();
 
-            PastureUtil.CheckNaN(fSupply);
             foreach (var s in FCohorts)
                 s.CheckNaN();
 
@@ -5283,9 +5196,35 @@ namespace Models.GrazPlan
 
                 this.ComputeSeedFlows();
             }
-            PastureUtil.CheckNaN(fSupply);
             foreach (var s in FCohorts)
                 s.CheckNaN();
+        }
+
+        private static double[][][] CreateFSupply(double[] mySoilNO3UptakeAvail, double[] mySoilNH4UptakeAvail)
+        {
+            int numLayers = mySoilNO3UptakeAvail.Length;
+
+            // initialise the 3D array. This is the FSupply calculated by the arbitrator being sent for uptake.
+            int x = Enum.GetNames(typeof(TPlantNutrient)).Length;
+            double[][][] fSupply = new double[x][][];   // g/m^2
+            for (int i = 0; i < x; i++)
+            {
+                fSupply[i] = new double[MAXNUTRAREAS][];
+                for (int j = 0; j < MAXNUTRAREAS; j++)
+                {
+                    fSupply[i][j] = new double[numLayers + 1];
+                }
+
+                for (int layer = 1; layer <= numLayers; layer++)
+                {
+                    if (i == (int)TPlantNutrient.pnNO3)
+                        fSupply[i][0][layer] = mySoilNO3UptakeAvail[layer - 1];
+                    else if (i == (int)TPlantNutrient.pnNH4)
+                        fSupply[i][0][layer] = mySoilNH4UptakeAvail[layer - 1];
+                }
+            }
+
+            return fSupply;
         }
 
         /// <summary>
