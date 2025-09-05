@@ -246,7 +246,7 @@ namespace UnitTests
             Simulation sim = simulations.Node.FindChild<Simulation>(recurse: true);
             Zone zone = simulations.Node.FindChild<Zone>(recurse: true);
 
-            sim.Node.AddChild(new MockWeather());
+            sim.Node.AddChild(new MockWeather()); // TODO: needs to use met file from wheat example (or a subset of it)
 
             AddTestingSoil(simulations);
 
@@ -262,7 +262,14 @@ namespace UnitTests
             //     InitialCPR = 0,
             //     InitialCNR = 100,
             // });
-            zone.Node.AddChild(GetModelFromResource<SurfaceOrganicMatter>("SurfaceOrganicMatter"));
+            var som = GetModelFromResource<SurfaceOrganicMatter>("SurfaceOrganicMatter");
+            som.InitialResidueName = "wheat_stubble";
+            som.InitialResidueType = "wheat";
+            som.InitialResidueMass = 500;
+            som.InitialStandingFraction = 0;
+            som.InitialCPR = 0;
+            som.InitialCNR = 100;
+            zone.Node.AddChild(som);
             return simulations;
         }
 
@@ -285,7 +292,7 @@ namespace UnitTests
             var physical = soil.Node.FindChild<Physical>(recurse: true);
             physical.Node.AddChild(new SoilCrop
             {
-                Name = "Wheat",
+                Name = "WheatSoil",
                 KL = new double[] { 0.060, 0.060, 0.060, 0.040, 0.040, 0.020, 0.010 },
                 LL = new double[] { 0.261, 0.248, 0.280, 0.306, 0.360, 0.392, 0.446 }
             });
@@ -299,7 +306,11 @@ namespace UnitTests
             soil.Node.AddChild(new Organic
             {
                 Thickness = new double[] { 150, 150, 300, 300, 300, 300, 300 },
-                Carbon = new double[] { 2, 1, 0.5, 0.4, 0.3, 0.2, 0.2 }
+                Carbon = new double[] { 1.2, 0.96, 0.6, 0.3, 0.18, 0.12, 0.12 },
+                SoilCNRatio = new double[] { 12, 12, 12, 12, 12, 12, 12 },
+                FBiom = new double[] { 0.04, 0.02, 0.2, 0.2, 0.1, 0.1, 0.1 },
+                FInert = new double[] { 0.4, 0.6, 0.8, 1.0, 1.0, 1.0, 1.0 },
+                FOM = new double[] { 347.1, 270.3, 164.0, 99.5, 60.3, 36.6, 22.2 },
             });
 
             soil.Node.AddChild(new Solute
@@ -329,7 +340,11 @@ namespace UnitTests
 
             soil.Node.AddChild(GetModelFromResource<WaterBalance>("WaterBalance"));
             soil.Node.AddChild(GetModelFromResource<Nutrient>("Nutrient")); 
-            soil.Node.AddChild(new Chemical());
+            soil.Node.AddChild(new Chemical
+            {
+                Thickness = new double[] { 150, 150, 300, 300, 300, 300, 300 },
+                PH = new double[] { 8.0, 8.0, 8.0, 8.0, 8.0, 8.0, 8.0 },
+            });
             soil.Node.AddChild(new SoilTemperature());
         }
 
