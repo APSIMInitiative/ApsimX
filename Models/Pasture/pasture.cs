@@ -109,7 +109,7 @@ namespace Models.GrazPlan
         /// <summary>
         ///
         /// </summary>
-        public static string logFileName = null;
+        public static string logFileName;
 
 
         #region Class links
@@ -2306,11 +2306,6 @@ namespace Models.GrazPlan
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
             DoPastureGrowth();
-        /*}
-
-                    [EventSubscribe("DoEndPasture")]
-                    private void OnDoEndPasture(object sender, EventArgs e)
-                    {*/
             EndStep();
         }
 
