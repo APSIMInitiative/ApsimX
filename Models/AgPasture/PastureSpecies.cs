@@ -2284,9 +2284,9 @@ namespace Models.AgPasture
                 {
                     Wt = Leaf.DMTotalHarvestable + Stem.DMTotalHarvestable + Stolon.DMTotalHarvestable,
                     N = Leaf.NTotalHarvestable + Stem.NTotalHarvestable + Stolon.NTotalHarvestable,
-                    Digestibility = MathUtilities.Divide(Leaf.StandingDigestibility * Leaf.NTotalHarvestable +
-                                                         Stem.StandingDigestibility * Stem.NTotalHarvestable +
-                                                         Stolon.StandingDigestibility * Stolon.NTotalHarvestable,
+                    Digestibility = MathUtilities.Divide(Leaf.StandingDigestibility * Leaf.DMTotalHarvestable +
+                                                         Stem.StandingDigestibility * Stem.DMTotalHarvestable +
+                                                         Stolon.StandingDigestibility * Stolon.DMTotalHarvestable,
                                                          Leaf.DMTotalHarvestable + Stem.DMTotalHarvestable +
                                                          Stolon.DMTotalHarvestable, 0.0)
                 };
