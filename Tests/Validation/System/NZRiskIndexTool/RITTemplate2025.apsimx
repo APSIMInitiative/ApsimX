@@ -2547,7 +2547,7 @@
                     "\t\t\telse if (SlopeCategory.ToString() == \"EasyHill\")",
                     "\t\t\t\tSlope = 20.0;",
                     "\t\t\telse if (SlopeCategory.ToString() == \"SteepHill\")",
-                    "\t\t\t    if (CorrectionType == \"Manning\"",
+                    "\t\t\t    if (CorrectionType.ToString() == \"Manning\")",
                     "\t\t\t\t    Slope = 35.0;",
                     "\t\t\t\telse",
                     "\t\t\t\t    Slope = 25.0;    // this is because of the parabolic nature of Williams that maxes out at 25 degrees",
