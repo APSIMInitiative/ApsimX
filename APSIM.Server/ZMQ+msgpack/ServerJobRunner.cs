@@ -5,6 +5,7 @@ using APSIM.Shared.JobRunning;
 using Models.Core;
 using Models.Core.Run;
 using static Models.Core.Overrides;
+using Models.Storage;
 
 namespace APSIM.ZMQServer
 {
@@ -18,7 +19,7 @@ namespace APSIM.ZMQServer
         public IEnumerable<Override> Replacements { get; set; } = Enumerable.Empty<Override>();
         private List<(IRunnable, IJobManager)> jobs = new List<(IRunnable, IJobManager)>();
 
-        public ServerJobRunner ( ApsimEncapsulator a = null ) { apsim = a; }
+        public ServerJobRunner(ApsimEncapsulator a = null) { apsim = a; }
         /// <summary>
         /// Get a list of jobs to be run.
         /// </summary>
@@ -49,14 +50,13 @@ namespace APSIM.ZMQServer
         {
             if (job is SimulationDescription sim)
             {
-                sim.Storage.Writer.Clean(new[] { sim.SimulationToRun.Name }, false);
-                apsim?.aboutToStart( job.Name );
+                apsim?.aboutToStart(job.Name);
                 sim.Run(cancelToken, Replacements);
             }
             else
             {
                 base.Prepare(job);
-                apsim?.aboutToStart( job.Name );
+                apsim?.aboutToStart(job.Name);
                 base.Run(job);
             }
         }
@@ -71,7 +71,7 @@ namespace APSIM.ZMQServer
         /// </summary>
         public void Dispose()
         {
-            foreach ( (IRunnable job, _) in jobs)
+            foreach ((IRunnable job, _) in jobs)
             {
                 job.Cleanup(null);
             }
