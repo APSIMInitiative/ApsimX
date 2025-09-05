@@ -95,10 +95,20 @@ namespace APSIM.Shared.Utilities
         {
             if (_open)
             {
-                SqliteConnection.ClearAllPools();
-                _connection?.Close();
-                _connection?.Dispose();
-                _connection = null;
+                if (_connection != null)
+                {
+                    try
+                    {
+                        _connection?.Close();
+                        SqliteConnection.ClearPool(_connection);
+                        _connection?.Dispose();
+                    }
+                    catch
+                    {
+                        Console.WriteLine("SQLite failed to close correctly when closing database.");
+                    }
+                    _connection = null;
+                }
                 _open = false;
             }
         }
@@ -122,62 +132,72 @@ namespace APSIM.Shared.Utilities
         public System.Data.DataTable ExecuteQuery(string query)
         {
             DataTable table = new DataTable();
-            using (SqliteCommand cmd = new SqliteCommand(query, _connection))
+            SqliteCommand cmd = new SqliteCommand(query, _connection);
+            SqliteDataReader reader = cmd.ExecuteReader();
+            if (reader.HasRows)
             {
-                using (SqliteDataReader reader = cmd.ExecuteReader())
+                // "Load" would be really simple to use here, but because SQLite doesn't support
+                // true DATE fields, it doesn't handle returned dates well.
+                //
+                // The approach taken here is to examine the "type" of each column as it was
+                // defined when the SQLite table was created, and create a DataColumn of a
+                // compatible type. We then read the returned data row by row and add the values
+                // to the resulting DataTable. Note that DataTables have stricter expectations
+                // about "type" than does SQLite, and errors may occur if the data values do not
+                // match the expected type. This may occur when column names were used
+                // inconsistently across multiple simulations or across multiple files of
+                // obeserved data imported from Excel.
+                // We could possibly just treat all DataColumns as being of type "Object", but it's
+                // probably better to let any dataype inconsistencies raise exceptions so that they
+                // can be identified and corrected.
+                // table.Load(reader);
+
+                //get the number of returned columns
+                int columnCount = reader.FieldCount;
+
+                Type[] colTypes = new Type[columnCount];
+                // Add datatable columns of appropriate type
+                for (int i = 0; i < columnCount; i++)
                 {
-                    if (reader.HasRows)
+                    colTypes[i] = GetTypeFromSQLiteType(reader.GetDataTypeName(i));
+                    table.Columns.Add(reader.GetName(i), colTypes[i]);
+                }
+
+                // Add the data rows
+                object[] values = new object[columnCount];
+                while (reader.Read())
+                {
+                    DataRow row = table.NewRow();
+                    reader.GetValues(values);
+
+                    for (int i = 0; i < values.Length; i++)
                     {
-                        // "Load" would be really simple to use here, but because SQLite doesn't support
-                        // true DATE fields, it doesn't handle returned dates well.
-                        //
-                        // The approach taken here is to examine the "type" of each column as it was
-                        // defined when the SQLite table was created, and create a DataColumn of a
-                        // compatible type. We then read the returned data row by row and add the values
-                        // to the resulting DataTable. Note that DataTables have stricter expectations
-                        // about "type" than does SQLite, and errors may occur if the data values do not
-                        // match the expected type. This may occur when column names were used
-                        // inconsistently across multiple simulations or across multiple files of
-                        // obeserved data imported from Excel.
-                        // We could possibly just treat all DataColumns as being of type "Object", but it's
-                        // probably better to let any dataype inconsistencies raise exceptions so that they
-                        // can be identified and corrected.
-                        // table.Load(reader);
+                        // This test is needed to handle some odd things that can happen
+                        // when values are imported from multiple Excel files and column
+                        // data types cannot be determined by the importer.
+                        if (colTypes[i] != typeof(string) && (values[i] is string) && String.IsNullOrEmpty(values[i] as string))
+                            row[i] = DBNull.Value;
+                        else
+                            row[i] = values[i];
 
-                        //get the number of returned columns
-                        int columnCount = reader.FieldCount;
-
-                        Type[] colTypes = new Type[columnCount];
-                        // Add datatable columns of appropriate type
-                        for (int i = 0; i < columnCount; i++)
-                        {
-                            colTypes[i] = GetTypeFromSQLiteType(reader.GetDataTypeName(i));
-                            table.Columns.Add(reader.GetName(i), colTypes[i]);
-                        }
-
-                        // Add the data rows
-                        object[] values = new object[columnCount];
-                        while (reader.Read())
-                        {
-                            DataRow row = table.NewRow();
-                            reader.GetValues(values);
-                            
-                            for (int i = 0; i < values.Length; i++)
-                            {
-                                // This test is needed to handle some odd things that can happen
-                                // when values are imported from multiple Excel files and column
-                                // data types cannot be determined by the importer.
-                                if (colTypes[i] != typeof(string) && (values[i] is string) && String.IsNullOrEmpty(values[i] as string))                                
-                                    row[i] = DBNull.Value;
-                                else
-                                    row[i] = values[i];
-       
-                            }
-                            table.Rows.Add(row);
-                        }
                     }
+                    table.Rows.Add(row);
                 }
             }
+
+            try
+            {
+                reader.Close();
+                reader.DisposeAsync();
+
+                cmd.DisposeAsync();
+            }
+            catch
+            {
+                Console.WriteLine("SQLite failed to dispose correctly.");
+            }
+            
+
             return table;
         }
         
