@@ -36,6 +36,47 @@ Intellectual property rights in APSIM are retained by the APSIM Initiative. If a
 
 Please read our [guide](https://apsimnextgeneration.netlify.app/contribute/).
 
+## Software Development Guidelines, Rules and processes
+
+### Reporting issues
+
+#### Best practices
+
+* When submitting an issue include the apsim file with any required met and input files required to make it run in a zip archive.
+* Describe the steps that lead to the issue occuring so that it can be reproduced. This includes details like where you clicked, what settings were enabled and what operating system it occurred on.
+* For graphical user interace (GUI) issues please submit a minimally reproducable example apsim file, describe the user interface model this issue affects
+
+### Pull requests and code submissions
+
+#### Getting a Pull request reviewed
+
+* To have the software team review a pull request attach the `Ready for Software Review` label.
+* It is best practice to rerun a pull request if it is behind the main branch. This ensures it runs with the newest changes.
+
+### Pull request requirements and best practices
+
+* Each pull request must only do one thing.
+* The requirements for a pull request differ based on the changes submitted.
+  * **Science** changes require observed data to demonstrate that the change does what it intends. Additionally unit test are to be included.
+  * **Graphical user interface (GUI)** changes and fixes that include a short video showing the changes working will improve review time.
+  * **Bug fixes** must include a unit test to reduce the likelihood of recurrence and to also verify the fix.
+* All pull requests should briefly and concisely describe what the issue was, what changes have been made and the rationale.
+
+#### Adding new simulations and apsim files
+
+##### Making changes to existing datasets
+
+* To enable a fast and thorough review of changes when new files and data are added, it is best to first create a pull request that only adds the data. Followed by another pull request that adds the apsim file. This is to allow a clearer review that allows reviewers to determine which files changed statistics and helps with debugging when required.
+
+### Pull request process
+
+1. A pull request is submitted with a `Ready for Software Review` label. If you are unable to apply labels, request to be added to the developers github team.
+2. Validation and user tests are run.
+3. Once status checks all run successfully, a peer review performed by the software team.
+4. If issues are found or need further discussion the `Ready for Software Review` will be removed.
+5. Once the issues have been resolved and discussion is complete the pull request author should reapply the `Ready for Software Review` label.
+6. Once reviewed the pull request will be merged.
+
 ## Publications
 
 * [doi:10.1016/j.envsoft.2014.07.009](https://dx.doi.org/10.1016/j.envsoft.2014.07.009)
