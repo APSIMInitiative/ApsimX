@@ -88,7 +88,7 @@ namespace Models.CLEM.Resources
         public double GetDietaryValue(string metric, bool includeHiredLabour, bool reportPerAE)
         {
             double value = 0;
-            foreach (LabourType ind in Items.Where(a => includeHiredLabour | (a.Hired == false)))
+            foreach (LabourType ind in Items.Where(a => includeHiredLabour | (a.IsHired == false)))
                 value += ind.GetDietDetails(metric); // / (reportPerAE?ind.TotalAdultEquivalents:1);
             return value / (reportPerAE ? AdultEquivalents(includeHiredLabour) : 1);
         }
@@ -171,7 +171,7 @@ namespace Models.CLEM.Resources
                         AgeInMonths = labourChildModel.InitialAge * 12,
                         LabourAvailability = labourChildModel.LabourAvailability,
                         Name = labourChildModel.Name,
-                        Hired = labourChildModel.Hired
+                        IsHired = labourChildModel.IsHired
                     };
                     labour.SetParentResourceBaseWithTransactions(this);
                     labour.Attributes.Add("Group", att);
@@ -192,7 +192,7 @@ namespace Models.CLEM.Resources
                             AgeInMonths = labourChildModel.InitialAge * 12,
                             LabourAvailability = labourChildModel.LabourAvailability,
                             Name = labourChildModel.Name + ((labourChildModel.Individuals > 1) ? "_" + (i + 1).ToString() : ""),
-                            Hired = labourChildModel.Hired
+                            IsHired = labourChildModel.IsHired
                         };
                         labour.SetParentResourceBaseWithTransactions(this);
                         labour.Attributes.Add("Group", att);
@@ -201,9 +201,7 @@ namespace Models.CLEM.Resources
                     }
                 }
             }
-            // clone pricelist so model can modify if needed and not affect initial parameterisation
-            if (Structure.FindChildren<LabourPricing>().Count() > 0)
-                PayList = Apsim.Clone(Structure.FindChildren<LabourPricing>().FirstOrDefault());
+            PayList = Structure.FindChild<LabourPricing>();
         }
 
         /// <summary>
@@ -301,7 +299,7 @@ namespace Models.CLEM.Resources
             {
                 foreach (LabourType item in Items)
                 {
-                    if (!item.Hired)
+                    if (!item.IsHired)
                         item.AgeInMonths++;
 
                     //Update labour available if needed.
@@ -333,7 +331,7 @@ namespace Models.CLEM.Resources
         {
             double ae = 0;
             foreach (LabourType person in Items)
-                if (!person.Hired | (includeHired))
+                if (!person.IsHired | (includeHired))
                     ae += (CalculateAE(person.AgeInMonths) ?? 1) * Convert.ToDouble(person.Individuals, System.Globalization.CultureInfo.InvariantCulture);
             return ae;
         }
@@ -475,7 +473,7 @@ namespace Models.CLEM.Resources
                     htmlWriter.Write($"<td><span class=\"setvalue\">{labourType.Sex}</span></td>");
                     htmlWriter.Write($"<td><span class=\"setvalue\">{labourType.InitialAge}</span></td>");
                     htmlWriter.Write($"<td><span class=\"setvalue\">{labourType.Individuals}</span></td>");
-                    htmlWriter.Write("<td" + ((labourType.Hired) ? " class=\"fill\"" : "") + "></td>");
+                    htmlWriter.Write("<td" + ((labourType.IsHired) ? " class=\"fill\"" : "") + "></td>");
                     htmlWriter.Write("</tr>");
                 }
                 htmlWriter.Write("</table>");
