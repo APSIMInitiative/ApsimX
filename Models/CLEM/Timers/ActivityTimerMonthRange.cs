@@ -70,7 +70,6 @@ namespace Models.CLEM.Timers
         public ActivityTimerMonthRange()
         {
             ModelSummaryStyle = HTMLSummaryStyle.Filter;
-            this.SetDefaults();
         }
 
         /// <inheritdoc/>

@@ -99,13 +99,14 @@ namespace UserInterface.Presenters
         public virtual void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.model = model as Model;
-
-            //IStructure structure = (model as CLEMModel)?.Structure;
-            //if (structure == null)
+            if (model is CLEMModel cm)
+            {
+                userLevel = (int)(cm.Structure.Find<ZoneCLEM>()?.UserType ?? CLEMUserType.General);
+            }
+            //else
             //{
             //    return;
             //}
-            userLevel = (int)((model as Model).FindAncestor<ZoneCLEM>()?.UserType?? CLEMUserType.General);
 
             treeview = view as IPropertyCategorisedView;
             if(view is null)

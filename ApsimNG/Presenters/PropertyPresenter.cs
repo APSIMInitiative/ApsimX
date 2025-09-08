@@ -1,6 +1,8 @@
 using APSIM.Shared.Utilities;
+using Models.CLEM;
 using Models.CLEM.Interfaces;
 using Models.Core;
+using Models.Core.ApsimFile;
 using Models.Utilities;
 using System;
 using System.Collections;
@@ -189,11 +191,14 @@ namespace UserInterface.Presenters
             }
 
             // Also allow children of parent object to be added as groups if they are of type ISubParameters (Used in CLEM and CategoryProperyPresenter)
-            foreach (var submodel in (obj as IModel).FindAllChildren<ISubParameters>().Cast<IModel>())
+            if (obj is CLEMModel cm)
             {
-                PropertyGroup group = GetProperties(submodel);
-                group.Name = submodel.Name;
-                subModelProperties.Add(group);
+                foreach (var submodel in cm.Structure.FindChildren<ISubParameters>().Cast<CLEMModel>())
+                {
+                    PropertyGroup group = GetProperties(submodel);
+                    group.Name = submodel.Name;
+                    subModelProperties.Add(group);
+                }
             }
 
             string name = obj is IModel model ? model.Name : obj.GetType().Name;

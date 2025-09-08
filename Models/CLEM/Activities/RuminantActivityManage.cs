@@ -11,6 +11,7 @@ using System.Globalization;
 using System.IO;
 using Models.CLEM.Interfaces;
 using APSIM.Numerics;
+using NetTopologySuite.Operation.Relate;
 
 namespace Models.CLEM.Activities
 {
@@ -652,7 +653,7 @@ namespace Models.CLEM.Activities
             }
             if(information.Count > 0)
             {
-                information.Insert(0, $"The numbers in initial cohorts for [r={cohorts.FirstOrDefault().FindAncestor<RuminantType>().Name}] were adjusted by [a={Name}] at start of the simulation.");
+                information.Insert(0, $"The numbers in initial cohorts for [r={Structure.FindParent<RuminantType>(relativeTo: cohorts.FirstOrDefault(), recurse:true).Name}] were adjusted by [a={Name}] at start of the simulation.");
                 Warnings.CheckAndWrite(string.Join(Environment.NewLine, information), Summary, this, MessageType.Information);
             }
         }
@@ -678,14 +679,14 @@ namespace Models.CLEM.Activities
             mortalityRate = breedParameters.FindBaseMortalityRate;
 
             // get list of replacement individuals
-            purchaseDetails = this.FindAllChildren<SpecifyRuminant>().Cast<SpecifyRuminant>().Select((a, index) => new SpecifiedRuminantListItem() { Index = index, ExampleRuminant = a.ExampleIndividual, SpecifyRuminantComponent = a }).Cast<SpecifiedRuminantListItem>().ToList();
+            purchaseDetails = Structure.FindChildren<SpecifyRuminant>().Select((a, index) => new SpecifiedRuminantListItem() { Index = index, ExampleRuminant = a.ExampleIndividual, SpecifyRuminantComponent = a }).Cast<SpecifiedRuminantListItem>().ToList();
 
             var ah = Structure.Find<ActivitiesHolder>();
             // check for managed paddocks and warn if breeders placed in yards.
             if ((ManageFemaleBreederNumbers & PerformFemaleStocking) && MaximumProportionBreedersPerPurchase > 0)
             {
                 var selectedBreederPurchaseDetails = purchaseDetails.Where(a => a.ExampleRuminant is RuminantFemale && (a.ExampleRuminant as RuminantFemale).IsAbleToBreed && a.SpecifyRuminantComponent.Details.ManagedPasture is null);
-                if ((Structure.FindChildren<PastureActivityManage>(relativeTo: ah, recurse: true).Any() && selectedBreederPurchaseDetails.Any())
+                if (Structure.FindChildren<PastureActivityManage>(relativeTo: ah, recurse: true).Any() && selectedBreederPurchaseDetails.Any())
                 {
                     foreach (var purchDetail in selectedBreederPurchaseDetails)
                     {
@@ -839,7 +840,7 @@ namespace Models.CLEM.Activities
                         {
                             var filters = GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "SelectMalesForGrowOut");
                             var uniqueIndividuals = GetUniqueIndividuals<RuminantMale>(filters,
-                                                                                       GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.Weaned && !a.ReplacementBreeder && !a.IsSire && !a.Attributes.Exists("GrowOut")),
+                                                                                       GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.IsWeaned && !a.IsReplacementBreeder && !a.IsSire && !a.Attributes.Exists("GrowOut")),
                                                                                        Structure);
                             number = uniqueIndividuals.Count();
                         }
@@ -849,7 +850,7 @@ namespace Models.CLEM.Activities
                         {
                             var filters = GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "SelectFemalesForGrowOut");
                             var uniqueIndividuals = GetUniqueIndividuals<RuminantFemale>(filters,
-                                                                                         GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => !a.ReplacementBreeder && a.IsPreBreeder && !a.Attributes.Exists("GrowOut")),
+                                                                                         GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => !a.IsReplacementBreeder && a.IsPreBreeder && !a.Attributes.Exists("GrowOut")),
                                                                                          Structure);
                             number = uniqueIndividuals.Count();
                         }
@@ -859,7 +860,7 @@ namespace Models.CLEM.Activities
                         {
                             var filters = GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "SelectMalesForGrowOut");
                             var uniqueIndividuals = GetUniqueIndividuals<RuminantMale>(filters,
-                                                                                       GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.Attributes.Exists("GrowOut") && ((a.Age >= MaleSellingAge) || a.Weight >= MaleSellingWeight)),
+                                                                                       GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.Attributes.Exists("GrowOut") && ((a.AgeInDays >= MaleSellingAge.InDays) || a.Weight.Live >= MaleSellingWeight)),
                                                                                        Structure);
                             number = uniqueIndividuals.Count();
                         }
@@ -869,7 +870,7 @@ namespace Models.CLEM.Activities
                         {
                             var filters = GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "SelectFemalesForGrowOut");
                             var uniqueIndividuals = GetUniqueIndividuals<RuminantFemale>(filters,
-                                                                                         GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.Attributes.Exists("GrowOut") && ((a.Age >= FemaleSellingAge) || a.Weight >= FemaleSellingWeight)),
+                                                                                         GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.Attributes.Exists("GrowOut") && ((a.AgeInDays >= FemaleSellingAge.InDays) || a.Weight.Live >= FemaleSellingWeight)),
                                                                                          Structure);
                             number = uniqueIndividuals.Count();
                         }
@@ -879,7 +880,7 @@ namespace Models.CLEM.Activities
                         {
                             var filters = GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "RemoveOldSiresFromHerd");
                             var uniqueIndividuals = GetUniqueIndividuals<RuminantMale>(filters,
-                                                                                       GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.IsSire && a.Age >= MaximumSireAge),
+                                                                                       GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.IsSire && a.AgeInDays >= MaximumSireAge.InDays),
                                                                                        Structure);
                             number = uniqueIndividuals.Count();
                         }
@@ -889,7 +890,7 @@ namespace Models.CLEM.Activities
                         {
                             var filters = GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "RemoveOldFemalesFromHerd");
                             var uniqueIndividuals = GetUniqueIndividuals<RuminantFemale>(filters,
-                                                                                         GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.Age >= MaximumBreederAge),
+                                                                                         GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.AgeInDays >= MaximumBreederAge.InDays),
                                                                                          Structure);
                             number = uniqueIndividuals.Count();
                         }
@@ -1908,8 +1909,8 @@ namespace Models.CLEM.Activities
             htmlWriter.Write("\r\n<div class=\"activitycontentlight\">");
 
             // does controlled mating exist in simulation
-            var zone = this.FindAncestor<Zone>();
-            bool cmate = zone?.FindDescendant<RuminantActivityControlledMating>() != null;
+            var zone = Structure.FindParent<Zone>(recurse: true);
+            bool cmate = Structure.FindChild<RuminantActivityControlledMating>(relativeTo: zone, recurse:true) != null;
 
             if (ManageFemaleBreederNumbers && (PerformFemaleStocking | PerformFemaleDestocking))
             {

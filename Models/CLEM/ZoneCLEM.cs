@@ -349,7 +349,7 @@ namespace Models.CLEM
             CurrentAncestorList.Add(model.GetType().Name);
 
             // get clock
-            IModel parentSim = Structure.FindParent<Simulation>(recurse: true);
+            Simulation parentSim = Structure.FindParent<Simulation>(recurse: true);
 
             htmlWriter.Write(CLEMModel.AddMemosToSummary(parentSim, Structure, markdown2Html));
 
@@ -386,7 +386,7 @@ namespace Models.CLEM
                 htmlWriter.Write("\r\n</div>");
             }
 
-            Clock clk = Structure.FindChild<Clock>(relativeTo: parentSim as INodeModel, recurse: true);
+            Clock clk = Structure.FindChild<Clock>(relativeTo: parentSim, recurse: true);
             if (clk != null)
             {
                 htmlWriter.Write("\r\n<div class=\"clearfix defaultbanner\">");

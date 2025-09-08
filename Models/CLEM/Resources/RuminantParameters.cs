@@ -1,4 +1,6 @@
-﻿using Models.CLEM.Interfaces;
+﻿using APSIM.Core;
+using Models.CLEM.Interfaces;
+using Models.Core.ApsimFile;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -142,7 +144,7 @@ namespace Models.CLEM.Resources
             {
                 if (property.PropertyType.GetInterfaces().Contains(typeof(ISubParameters)))
                 {
-                    var subParameterModel = ruminantType.FindAllDescendants().Where(a => a.GetType() == property.PropertyType).FirstOrDefault();
+                    var subParameterModel = ruminantType.Structure.FindChildren<CLEMModel>(recurse: true).Where(a => a.GetType() == property.PropertyType).FirstOrDefault();
                     property.SetValue(this, subParameterModel);
                 }
             }

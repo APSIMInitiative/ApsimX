@@ -110,7 +110,7 @@ namespace Models.CLEM.Timers
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            Range = new(events, StartDetails, EndDetails, RepeatInterval, WholeTimeStepMustBeInRange, FindAllChildren<ActivityTimerSequence>());
+            Range = new(events, StartDetails, EndDetails, RepeatInterval, WholeTimeStepMustBeInRange, Structure.FindChildren<ActivityTimerSequence>());
         }
 
         /// <summary>
@@ -211,7 +211,7 @@ namespace Models.CLEM.Timers
                 return $"<div class=\"filter\"><span class=\"errorlink\">Invalid date component specified. Missing month value</span></div>";
             }
 
-            TimerRange range = new(clemEvents, StartDetails, EndDetails, RepeatInterval, WholeTimeStepMustBeInRange, FindAllChildren<ActivityTimerSequence>(), true);
+            TimerRange range = new(clemEvents, StartDetails, EndDetails, RepeatInterval, WholeTimeStepMustBeInRange, Structure.FindChildren<ActivityTimerSequence>(), true);
 
             using StringWriter htmlWriter = new();
             htmlWriter.Write("\r\n<div class=\"filter\">");

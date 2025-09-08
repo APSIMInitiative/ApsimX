@@ -289,14 +289,14 @@ namespace Models.CLEM.Resources
                 // condition-based intake reduction turned off
                 if (RelativeConditionEffect_CI20 == 1.0)
                 {
-                    ruminantType = FindAncestor<RuminantType>();
+                    ruminantType = Structure.FindParent<RuminantType>(recurse: true);
                     summary = Structure.Find<Summary>();
                     summary.WriteMessage(this, $"Ruminant intake reduction based on high condition is disabled for [{ruminantType?.Name??"Unknown"}].{Environment.NewLine}To allow this functionality set [Parameters].[GrowPF].[GrowPF CI].RelativeConditionEffect_CI20 to a value greater than [1] (default 1.5)", MessageType.Warning);
                 }
                 // intake reduced by quality of feed turned off
                 if (IgnoreFeedQualityIntakeAdustment)
                 {
-                    ruminantType ??= FindAncestor<RuminantType>();
+                    ruminantType ??= Structure.FindParent<RuminantType>(recurse: true);
                     summary ??= Structure.Find<Summary>();
                     summary.WriteMessage(this, $"Ruminant intake reduction based on intake quality is disabled for [{ruminantType?.Name ?? "Unknown"}].{Environment.NewLine}To allow this functionality set [Parameters].[GrowPF].[GrowPF CI].IgnoreFeedQualityIntakeAdustment to [False]", MessageType.Warning);
                 }

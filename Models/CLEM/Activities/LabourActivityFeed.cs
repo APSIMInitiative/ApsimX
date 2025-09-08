@@ -129,10 +129,10 @@ namespace Models.CLEM.Activities
             }
             // check that no filters will filter all groups otherwise return all
             // account for any sorting or reduced takes
-            var emptyfilters = filters.Where(a => Structure.FindChildren<Filter>(relativeTo: a).Any() == false);
+            var emptyfilters = filters.Where(a => a.Structure.FindChildren<Filter>(relativeTo: a).Any() == false);
             if (emptyfilters.Any())
             {
-                foreach (var empty in emptyfilters.Where(a => Structure.FindChildren<ISort>(relativeTo: a).Any() || Structure.FindChildren<TakeFromFiltered>(relativeTo: a).Any()))
+                foreach (var empty in emptyfilters.Where(a => a.Structure.FindChildren<ISort>(relativeTo: a).Any() || a.Structure.FindChildren<TakeFromFiltered>(relativeTo: a).Any()))
                     population = empty.Filter(population);
                 return population;
             }

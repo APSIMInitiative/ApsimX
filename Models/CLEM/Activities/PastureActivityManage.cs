@@ -163,7 +163,7 @@ namespace Models.CLEM.Activities
             if (relationshipGBA != null)
                 GrassBasalArea = Structure.FindChild<RelationshipRunningValue>(relativeTo: relationshipGBA);
 
-            filePasture = Structure.FindChildren<IModel>(recurse: true).Where(a => a.Name == PastureDataReader).FirstOrDefault() as IFilePasture;
+            filePasture = Structure.FindAll<CLEMModel>().Where(a => a.Name == PastureDataReader).FirstOrDefault() as IFilePasture;
 
             if (LandConditionIndex is null || GrassBasalArea is null || filePasture is null)
                 return;
@@ -311,50 +311,6 @@ namespace Models.CLEM.Activities
                         LinkedNativeFoodType.Add(newPasture, this, null, "Growth");
                     }
                 }
-
-                ////Get this months pasture data from the pasture data list
-                //DateTime startOfMonth;
-                //if (events.TimeStepStart.Month == events.TimeStepEnd.Month)
-                //{
-                //    startOfMonth = new(events.TimeStepStart.Year, events.TimeStepStart.Month, 1);
-                //}
-                //else
-                //{
-                //    startOfMonth = new(events.TimeStepEnd.Year, events.TimeStepEnd.Month, 1);
-                //}
-                //if (!events.IsDateInTimeStep(startOfMonth))
-                //{
-                //    return;
-                //}
-
-                //PastureDataType pasturedata = pastureDataList.Where(a => a.Year == startOfMonth.Year && a.Month == startOfMonth.Month).FirstOrDefault();
-
-                //growth = pasturedata.Growth;
-                ////TODO: check units from input files.
-                //// convert from kg/ha to kg/area unit
-                //growth *= unitsOfArea2Ha;
-
-                //LinkedNativeFoodType.CurrentEcologicalIndicators.Rainfall += pasturedata.Rainfall;
-                //LinkedNativeFoodType.CurrentEcologicalIndicators.Erosion += pasturedata.SoilLoss;
-                //LinkedNativeFoodType.CurrentEcologicalIndicators.Runoff += pasturedata.Runoff;
-                //LinkedNativeFoodType.CurrentEcologicalIndicators.Cover += pasturedata.Cover;
-                //LinkedNativeFoodType.CurrentEcologicalIndicators.TreeBasalArea += pasturedata.TreeBA;
-
-                //if (growth > 0)
-                //{
-                //    Status = ActivityStatus.Success;
-                //    GrazeFoodStorePool newPasture = new GrazeFoodStorePool
-                //    {
-                //        Age = 0
-                //    };
-                //    newPasture.Set(growth * Area);
-                //    newPasture.NitrogenPercent = LinkedNativeFoodType.GreenNitrogenPercent;
-                //    newPasture.DryMatterDigestibility = newPasture.NitrogenPercent * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
-                //    newPasture.DryMatterDigestibility = Math.Min(100, Math.Max(LinkedNativeFoodType.MinimumDMD, newPasture.DryMatterDigestibility));
-                //    newPasture.Growth = newPasture.Amount;
-                //    newPasture.GrowthDate = startOfMonth;
-                //    LinkedNativeFoodType.Add(newPasture, this, null, "Growth");
-                //}
             }
 
             // report activity performed.

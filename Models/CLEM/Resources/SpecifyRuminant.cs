@@ -113,7 +113,7 @@ namespace Models.CLEM.Resources
             }
 
             // bubble through to check status of any cohorts as children of in SepcifyRuminant
-            foreach (RuminantTypeCohort cohort in FindAllChildren<RuminantTypeCohort>())
+            foreach (RuminantTypeCohort cohort in Structure.FindChildren<RuminantTypeCohort>())
             {
                 foreach (var val in cohort.Validate(validationContext))
                 {

@@ -160,7 +160,7 @@ namespace Models.CLEM
                     return "";
                 else
                 {
-                    Simulation simulation = FindAncestor<Simulation>();
+                    Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
                     if (simulation != null)
                         return PathUtilities.GetAbsolutePath(FileName, simulation.FileName);
                     else
