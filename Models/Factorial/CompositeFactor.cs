@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.Run;
@@ -21,8 +22,12 @@ namespace Models.Factorial
     [Serializable]
     [ViewName("UserInterface.Views.EditorView")]
     [PresenterName("UserInterface.Presenters.CompositeFactorPresenter")]
-    public class CompositeFactor : Model, IReferenceExternalFiles
+    public class CompositeFactor : Model, IReferenceExternalFiles, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>Parameterless constrctor needed for serialisation</summary>
         public CompositeFactor()
         {
@@ -80,7 +85,7 @@ namespace Models.Factorial
                     descriptorName = Parent.Name;
                 if (Specifications != null && Specifications.Count > 0)
                 {
-                    // compound factor value ie. one that has multiple specifications. 
+                    // compound factor value ie. one that has multiple specifications.
                     simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor(descriptorName, Name));
                 }
                 else
@@ -127,7 +132,7 @@ namespace Models.Factorial
         /// <param name="allValues">The list of values to add to.</param>
         private void ParseSpecification(string specification, List<string> allPaths, List<object> allValues)
         {
-            if (string.IsNullOrEmpty(specification))
+            if (string.IsNullOrEmpty(specification) || specification.StartsWith("//"))
                 return;
 
             string path = specification;
@@ -144,15 +149,15 @@ namespace Models.Factorial
             else
             {
                 // Find the model that we are to replace.
-                var experiment = FindAncestor<Experiment>();
-                var baseSimulation = experiment.FindChild<Simulation>();
-                var modelToReplace = baseSimulation.FindByPath(path)?.Value as IModel;
+                var experiment = Structure.FindParent<Experiment>(recurse: true);
+                var baseSimulation = Structure.FindChild<Simulation>(relativeTo: experiment);
+                var modelToReplace = baseSimulation.Node.Get(path) as IModel;
 
                 if (modelToReplace == null)
                     throw new Exception($"Error in CompositeFactor {Name}: Unable to find a model to replace from path '{path}'");
 
                 // Now find a child of that type.
-                IEnumerable<IModel> possibleMatches = FindAllChildren().Where(c => modelToReplace.GetType().IsAssignableFrom(c.GetType()));
+                IEnumerable<IModel> possibleMatches = Structure.FindChildren<IModel>().Where(c => modelToReplace.GetType().IsAssignableFrom(c.GetType()));
                 if (possibleMatches.Count() > 1)
                     value = possibleMatches.FirstOrDefault(m => m.Name == modelToReplace.Name);
                 else if (possibleMatches.Count() == 1)
@@ -170,7 +175,7 @@ namespace Models.Factorial
         {
             ParseAllSpecifications(out List<string> paths, out List<object> values);
 
-            Simulations sims = FindAncestor<Simulations>();
+            Simulations sims = Structure.FindParent<Simulations>(recurse: true);
             IEnumerable<string> result = values.OfType<string>().Where(str => File.Exists(PathUtilities.GetAbsolutePath(str, sims.FileName)));
             return result;
         }

@@ -1,4 +1,6 @@
 using System;
+using APSIM.Core;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -14,8 +16,12 @@ namespace Models.Functions
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("A simple scale to convert soil water content into a value between 0 and 2 where 0 = LL/LL15, 1 = DUL and 2 = SAT")]
-    public class SoilWaterScale : Model, IFunction
+    public class SoilWaterScale : Model, IFunction, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>Options for lower limit</summary>
         public enum LowerLimit
         {
@@ -43,7 +49,7 @@ namespace Models.Functions
 
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e) {
-            root = FindAncestor<Root>();
+            root = Structure.FindParent<Root>(recurse: true);
             if (LLModel == LowerLimit.LL)
             {
                 if (root == null)

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 
@@ -13,8 +15,12 @@ namespace Models.Functions
     [Description("Maintains a moving sum of a given value for a user-specified number of simulation days")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class MovingSumFunction : Model, IFunction
+    public class MovingSumFunction : Model, IFunction, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>The number of days over which to calculate the moving sum</summary>
         [Description("Number of Days")]
         public int NumberOfDays { get; set; }
@@ -28,7 +34,7 @@ namespace Models.Functions
             get
             {
                 IFunction value;
-                IEnumerable<IFunction> ChildFunctions = FindAllChildren<IFunction>();
+                IEnumerable<IFunction> ChildFunctions = Structure.FindChildren<IFunction>();
                 if (ChildFunctions.Count() == 1)
                     value = ChildFunctions.First();
                 else

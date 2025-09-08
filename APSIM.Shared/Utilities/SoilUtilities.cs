@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Drawing.Charts;
+﻿using APSIM.Numerics;
+using DocumentFormat.OpenXml.Drawing.Charts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,10 +49,10 @@ namespace APSIM.Shared.Utilities
             // ------------------------------------------------
             // Return the proportion of the layer contributing to Given Depth - mm/mm
             // ------------------------------------------------
-            
+
             // find the layer in which GivenDepth lies
             int GivenDepthLayer = LayerIndexOfClosestDepth(Thickness, GivenDepth);
-            
+
             double[] ProportionOfCumThickness = new double[Thickness.Length];
             double[] CumThickness = ToCumThickness(Thickness);
 
@@ -63,7 +64,7 @@ namespace APSIM.Shared.Utilities
                     if (i == 0)
                         ProportionOfCumThickness[i] = (GivenDepth - 0) / GivenDepth;
                     else
-                        ProportionOfCumThickness[i] = (GivenDepth - CumThickness[i-1]) / GivenDepth;  
+                        ProportionOfCumThickness[i] = (GivenDepth - CumThickness[i-1]) / GivenDepth;
                 else
                     ProportionOfCumThickness[i] = 0.0;
             }
@@ -92,7 +93,7 @@ namespace APSIM.Shared.Utilities
             for (int i = 0; i < thickness.Length; i++)
             {
                 CumDepth = CumDepth + thickness[i];
-                if (CumDepth >= depth) { return i; }
+                if (MathUtilities.IsGreaterThanOrEqual(CumDepth, depth)) { return i; }
             }
             throw new Exception("Depth deeper than bottom of soil profile");
         }
@@ -114,7 +115,7 @@ namespace APSIM.Shared.Utilities
             return depth_of_root_in_layer / thickness[layerIndex];
         }
 
-        
+
         /// <summary>Keep the top x mm of soil and zero the rest.</summary>
         /// <param name="values">The layered values.</param>
         /// <param name="thickness">Soil layer thickness.</param>
@@ -128,7 +129,7 @@ namespace APSIM.Shared.Utilities
                 returnValues[i] *= proportion;
             }
             return returnValues;
-        }        
+        }
 
         /// <summary>Calculate conversion factor from kg/ha to ppm (mg/kg)</summary>
         /// <param name="thickness">Soil layer thickness.</param>
@@ -519,7 +520,7 @@ namespace APSIM.Shared.Utilities
             double[] newValues = MathUtilities.SetArrayOfCorrectSize(values, numValues).ToArray();
             for (int i = 0; i < numValues; i++)
             {
-                if (i >= newValues.Length || double.IsNaN(newValues[i])) 
+                if (i >= newValues.Length || double.IsNaN(newValues[i]))
                     newValues[i] = f(i);
             }
             return (newValues, DetermineMetadata(values, valuesMetadata, newValues, "Calculated"));
@@ -535,12 +536,12 @@ namespace APSIM.Shared.Utilities
         ///       10         null       10
         ///       20         calc       25
         ///       30         calc       30
-        /// 
+        ///
         ///     metadata2
         ///        null
         ///        null
         ///        calc
-        ///        
+        ///
         /// </remarks>
         /// <param name="values1">The original values.</param>
         /// <param name="metadata1">Metadata for the original values.</param>
@@ -580,9 +581,9 @@ namespace APSIM.Shared.Utilities
                 // If all metadata is null, return null.
                 if (!MathUtilities.ValuesInArray(metadataValues))
                     return null;
-                    
+
                 return metadataValues.ToArray();
             }
-        }        
+        }
     }
 }

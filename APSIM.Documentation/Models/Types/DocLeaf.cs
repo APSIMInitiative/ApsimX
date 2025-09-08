@@ -31,14 +31,14 @@ namespace APSIM.Documentation.Models.Types
                         "Radiation interception is calculated from LAI using an extinction coefficient of:\n\n")
             };
 
-            IModel extinctionCoeff = (model as Leaf).FindChild("ExtinctionCoeff");
-            IModel extinctionCoefficient = (model as Leaf).FindChild("ExtinctionCoefficient");
+            IModel extinctionCoeff = (model as Leaf).Node.FindChild<IModel>("ExtinctionCoeff");
+            IModel extinctionCoefficient = (model as Leaf).Node.FindChild<IModel>("ExtinctionCoefficient");
 
             if (extinctionCoefficient != null)
                 dmfTags.AddRange(AutoDocumentation.DocumentModel(extinctionCoefficient));
             else if (extinctionCoeff != null)
                 dmfTags.AddRange(AutoDocumentation.DocumentModel(extinctionCoeff));
-            dmfTags.AddRange(AutoDocumentation.DocumentModel((model as Leaf).FindChild("Photosynthesis")));
+            dmfTags.AddRange(AutoDocumentation.DocumentModel((model as Leaf).Node.FindChild<IModel>("Photosynthesis")));
 
             var dmfSection = new Section("Dry Matter Fixation", dmfTags);
             section.Add(dmfSection);

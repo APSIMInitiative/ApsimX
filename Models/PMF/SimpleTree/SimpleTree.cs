@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Core;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -16,8 +18,12 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public class SimpleTree : Model, IPlant, ICanopy, IUptake
+    public class SimpleTree : Model, IPlant, ICanopy, IUptake, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         #region Canopy interface
 
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
@@ -189,7 +195,7 @@ namespace Models.PMF
             Uptakes = new List<ZoneWaterAndN>();
             EP = 0;
 
-            soilCrop = Soil.FindDescendant<SoilCrop>(Name + "Soil");
+            soilCrop = Structure.FindChild<SoilCrop>(Name + "Soil", relativeTo: Soil, recurse: true);
             if (soilCrop == null)
                 throw new Exception($"Cannot find a soil crop parameterisation called {Name}Soil");
 

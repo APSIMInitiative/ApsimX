@@ -1,4 +1,5 @@
-﻿using APSIM.Shared.Utilities;
+﻿using APSIM.Numerics;
+using APSIM.Shared.Utilities;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
@@ -14,7 +15,7 @@ namespace Models.CLEM
 {
     ///<summary>
     /// Determines the individual ruminans required for the transmutation
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -46,7 +47,7 @@ namespace Models.CLEM
         public TransmuteStyle TransmuteStyle { get ; set; }
 
         /// <summary>
-        /// Style for direct exchange 
+        /// Style for direct exchange
         /// </summary>
         [Description("Measure of ruminant (for direct transmute)")]
         public PricingStyleType DirectExhangeStyle { get; set; }
@@ -123,7 +124,7 @@ namespace Models.CLEM
                     if (!queryOnly)
                         // remove individual from herd immediately
                         (ResourceGroup as RuminantHerd).Herd.Remove(ind);
-                    
+
                     if (MathUtilities.IsGreaterThanOrEqual(available, needed))
                     {
                         if (queryOnly)
@@ -185,9 +186,9 @@ namespace Models.CLEM
             TransmuteResourceTypeName = ResourceGroup.Name;
             shortfallPacketSize = (Parent as Transmutation).TransmutationPacketSize;
             shortfallWholePackets = (Parent as Transmutation).UseWholePackets;
-            groupings = ResourceGroup.FindAllChildren<RuminantGroup>();
+            groupings = Structure.FindChildren<RuminantGroup>(relativeTo: ResourceGroup);
 
-            var shortfallResourceType = this.FindAncestor<IResourceType>();
+            var shortfallResourceType = Structure.FindParent<IResourceType>(relativeTo: this, recurse: true);
             if (shortfallResourceType != null && TransmuteStyle == TransmuteStyle.UsePricing)
             {
                 shortfallPricing = shortfallResourceType.Price(PurchaseOrSalePricingStyleType.Purchase);
@@ -209,7 +210,7 @@ namespace Models.CLEM
 
             if (ResourceGroup is null)
             {
-                IResourceType parentResource = FindAncestor<CLEMResourceTypeBase>() as IResourceType;
+                IResourceType parentResource = Structure.FindParent<CLEMResourceTypeBase>(recurse: true) as IResourceType;
                 string[] memberNames = new string[] { "Ruminant herd resource" };
                 results.Add(new ValidationResult($"No [r=Ruminant] resource was found for a herd-based transmute [r={this.Name}] for [r={parentResource.Name}]", memberNames));
             }
@@ -254,7 +255,7 @@ namespace Models.CLEM
                         htmlWriter.Write($"<span class=\"errorlink\">Not set</span> {directexchangeStyleText} ");
                 }
 
-                IModel ruminants = this.FindAncestor<ResourcesHolder>().FindResourceGroup<RuminantHerd>();
+                IModel ruminants = Structure.FindParent<ResourcesHolder>(recurse: true).FindResourceGroup<RuminantHerd>();
                 if(ruminants is null)
                     htmlWriter.Write("<span class=\"errorlink\">Herd not found</span>");
                 else

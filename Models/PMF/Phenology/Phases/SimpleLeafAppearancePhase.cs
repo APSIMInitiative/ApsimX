@@ -1,4 +1,6 @@
 ﻿using System;
+using APSIM.Core;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
@@ -9,7 +11,7 @@ namespace Models.PMF.Phen
     /// <summary>
     /// This phase goes from the specified start stage to the specified end stage and
     /// its duration is determined by leaf appearance rate and the number of leaves to
-    /// complete the phase. 
+    /// complete the phase.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]

@@ -36,7 +36,7 @@ namespace Models.CLEM.Activities
             // locate OtherAnimals resource holder
             otherAnimals = Resources.FindResourceGroup<OtherAnimals>();
             if(otherAnimals != null)
-                otherAnimalsTypes = otherAnimals.FindAllChildren<OtherAnimalsType>();
+                otherAnimalsTypes = Structure.FindChildren<OtherAnimalsType>(relativeTo: otherAnimals);
 
             if (otherAnimalsTypes == null)
             {

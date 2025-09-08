@@ -10,6 +10,8 @@ using System.IO;
 using APSIM.Shared.Utilities;
 using Models.Core.ApsimFile;
 using Models.CLEM.Groupings;
+using APSIM.Numerics;
+using APSIM.Core;
 
 namespace Models.CLEM.Activities
 {
@@ -27,7 +29,7 @@ namespace Models.CLEM.Activities
     [Description("Perform grazing of all herds within a specified pasture (paddock)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGraze.htm")]
-    public class RuminantActivityGrazePasture : CLEMRuminantActivityBase, IValidatableObject
+    public class RuminantActivityGrazePasture : CLEMRuminantActivityBase, IValidatableObject, IStructureDependency
     {
         /// <summary>
         /// Link to clock
@@ -74,12 +76,12 @@ namespace Models.CLEM.Activities
             Guid currentUid = UniqueID;
             List<IModel> grazePastureList = new List<IModel>();
 
-            bool buildTransactionFromTree = FindAncestor<ZoneCLEM>().BuildTransactionCategoryFromTree;
+            bool buildTransactionFromTree = Structure.FindParent<ZoneCLEM>(recurse: true).BuildTransactionCategoryFromTree;
             string transCat = "";
             if (!buildTransactionFromTree)
                 transCat = TransactionCategory;
 
-            foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())
+            foreach (RuminantType herdType in Structure.FindChildren<RuminantType>(relativeTo: HerdResource))
             {
                 RuminantActivityGrazePastureHerd grazePastureHerd = new RuminantActivityGrazePastureHerd
                 {
@@ -116,13 +118,15 @@ namespace Models.CLEM.Activities
                     }
                 );
                 grazePastureHerd.Children.Add(herdGroup);
-                grazePastureHerd.FindChild<RuminantActivityGroup>().InitialiseFilters();
+                Structure.AddChild(grazePastureHerd);
 
+                Structure.FindChild<RuminantActivityGroup>(relativeTo: grazePastureHerd).InitialiseFilters();
                 grazePastureHerd.InitialiseHerd(false, false);
-                Children.Add(grazePastureHerd);
-                Structure.Add(grazePastureHerd, this);
             }
-            this.FindAllDescendants<RuminantActivityGrazePastureHerd>().LastOrDefault().IsHidden = true;
+            Structure.FindChildren<RuminantActivityGrazePastureHerd>(recurse: true).LastOrDefault().IsHidden = true;
+
+            Events events = new Events(Structure.FindParent<Simulation>(recurse: true));
+            events.ReconnectEvents("Models.Clock");
         }
 
         /// <inheritdoc/>
@@ -132,7 +136,7 @@ namespace Models.CLEM.Activities
 
             // check nested graze breed requirements for this pasture
             double totalNeeded = 0;
-            IEnumerable<RuminantActivityGrazePastureHerd> grazeHerdChildren = FindAllChildren<RuminantActivityGrazePastureHerd>();
+            IEnumerable<RuminantActivityGrazePastureHerd> grazeHerdChildren = Structure.FindChildren<RuminantActivityGrazePastureHerd>();
             double potentialIntakeLimiter = -1;
             foreach (RuminantActivityGrazePastureHerd item in grazeHerdChildren)
             {
@@ -180,7 +184,7 @@ namespace Models.CLEM.Activities
 
             if (GrazeFoodStoreTypeName.Contains("."))
             {
-                ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
+                ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
                 if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreTypeName) is null)
                 {
                     string[] memberNames = new string[] { "Location is not valid" };

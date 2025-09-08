@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using APSIM.Core;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -17,8 +19,13 @@ namespace Models.Soils
     [ViewName("UserInterface.Views.PropertyView")]   // Until we have a better view for SWIM...
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Swim3 : Model, ISoilWater
+    public class Swim3 : Model, ISoilWater, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
+
         [Link]
         private IClock clock = null;
 
@@ -141,7 +148,6 @@ namespace Models.Soils
         private double[] TD_soldrain;
         private double[] TD_slssof;
         private double[] TD_wflow;
-        private double[][] TD_sflow;
         private double t;
         private double _dt;
         private double _wp;
@@ -614,18 +620,6 @@ namespace Models.Soils
         [JsonIgnore]
         public double[] LateralOutflow { get { throw new NotImplementedException("SWIM doesn't implement a LateralOutflow property"); } }
 
-        /// <summary>NO3 movement out of a layer. </summary>
-        public double[] FlowNO3 => TD_sflow[SoluteIndex("NO3")];
-
-        /// <summary>NH4 movement out of a layer. </summary>
-        public double[] FlowNH4 => TD_sflow[SoluteIndex("NH4")];
-
-        /// <summary>NH4 movement out of a layer. </summary>
-        public double[] FlowUrea => TD_sflow[SoluteIndex("Urea")];
-
-        /// <summary>CL movement out of a layer. </summary>
-        public double[] FlowCl => TD_sflow[SoluteIndex("Cl")];
-
         /// <summary>NO3 movement out of a sub surface drain. </summary>
         public double SubsurfaceDrainNO3 => TD_slssof[SoluteIndex("NO3")];
 
@@ -666,13 +660,7 @@ namespace Models.Soils
         [JsonIgnore]
         public double[] Flux { get { throw new NotImplementedException("SWIM doesn't implement a Flux property"); } }
 
-        /// <summary>The efficiency (0-1) that solutes move down with water.</summary>
-        [JsonIgnore]
-        public double[] SoluteFluxEfficiency { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        /// <summary>The efficiency (0-1) that solutes move up with water.</summary>
-        [JsonIgnore]
-        public double[] SoluteFlowEfficiency { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         // In the Fortran version, the data for ponding water was held in
         // array members with an index of -1.
@@ -941,6 +929,7 @@ namespace Models.Soils
                 summary.WriteMessage(this, string.Format("     Drain Radius (mm) ={0,10:F3}", subsurfaceDrain.DrainRadius), MessageType.Diagnostic);
                 summary.WriteMessage(this, string.Format("     Imperm Layer Depth (mm)  ={0,10:F3}", subsurfaceDrain.ImpermDepth), MessageType.Diagnostic);
                 summary.WriteMessage(this, string.Format("     Lateral Conductivity (mm/d)  ={0,10:F3}", subsurfaceDrain.Klat), MessageType.Diagnostic);
+                summary.WriteMessage(this, string.Format("     Drain Open (True/False) ={0,10}", subsurfaceDrain.Open), MessageType.Diagnostic);
             }
 
         }
@@ -1616,7 +1605,9 @@ namespace Models.Soils
 
             for (int sol = 0; sol < num_solutes; sol++)
             {
-                Array.Resize(ref TD_sflow[sol], newSize + 1);
+                var soluteFlow = solutes[sol].Flow;
+                Array.Resize(ref soluteFlow, newSize + 1);
+                solutes[sol].Flow = soluteFlow;
                 Array.Resize(ref dc[sol], newSize);
                 Array.Resize(ref csl[sol], newSize + 1);
                 Array.Resize(ref cslt[sol], newSize);
@@ -1725,7 +1716,6 @@ namespace Models.Soils
             Array.Resize(ref slos, newSize);
             Array.Resize(ref d0, newSize);
 
-            Array.Resize(ref TD_sflow, newSize);
             Array.Resize(ref dc, newSize);
             Array.Resize(ref csl, newSize);
             Array.Resize(ref cslt, newSize);
@@ -1748,7 +1738,9 @@ namespace Models.Soils
 
             for (int idx = oldSize; idx < newSize; idx++)
             {
-                Array.Resize(ref TD_sflow[idx], n + 2);
+                var soluteFlow = solutes[idx].Flow;
+                Array.Resize(ref soluteFlow, n + 2);
+                solutes[idx].Flow = soluteFlow;
                 Array.Resize(ref dc[idx], n + 1);
                 Array.Resize(ref csl[idx], n + 2);
                 Array.Resize(ref cslt[idx], n + 1);
@@ -1782,7 +1774,7 @@ namespace Models.Soils
             for (int i = 0; i < solutes.Count; i++)
             {
                 solute_names[i] = solutes[i].Name;
-                var soluteParam = Parent.FindChild<Solute>(solute_names[i]);
+                var soluteParam = Structure.FindChild<Solute>(solute_names[i], relativeTo: Parent as INodeModel);
                 if (soluteParam == null)
                     throw new Exception("Could not find parameters for solute called " + solute_names[i]);
                 if (soluteParam.FIP == null || double.IsNaN(MathUtilities.Sum(soluteParam.FIP)))
@@ -1871,7 +1863,7 @@ namespace Models.Soils
 
                 var plant = model as IPlant;
                 if (plant == null)
-                    plant = model.FindAncestor<IPlant>(); // the canopy might be a leaf or energybalance and we need to find what plant it is on.
+                    plant = Structure.FindParent<IPlant>(relativeTo: model as INodeModel, recurse: true); // the canopy might be a leaf or energybalance and we need to find what plant it is on.
                 if (plant != null)
                 {
                     if (plant.IsAlive)
@@ -2509,7 +2501,7 @@ namespace Models.Soils
                 TD_slssof[sol] = 0.0;
                 TD_soldrain[sol] = 0.0;
                 for (int node = 0; node <= n + 1; node++)
-                    TD_sflow[sol][node] = 0.0;
+                    solutes[sol].Flow[node] = 0.0;
             }
 
             for (int node = 0; node <= n + 1; node++)
@@ -2879,7 +2871,7 @@ namespace Models.Soils
 
                         for (int node = 0; node <= n + 1; node++)
                         {
-                            TD_sflow[solnum][node] += qsl[solnum][node] * _dt * (1e4) * (1e4) * 1e-9;
+                            solutes[solnum].Flow[node] += qsl[solnum][node] * _dt * (1e4) * (1e4) * 1e-9;
                             TD_slssof[solnum] += csl[solnum][node] * qssof[node] * _dt * (1e4) * (1e4) * 1e-9;
                         }
                     }
@@ -3613,7 +3605,7 @@ namespace Models.Soils
                     if (solute_names[solnum] == flowName)
                     {
                         for (int node = 0; node <= n + 1; node++)
-                            flowArray[node] = TD_sflow[solnum][node];
+                            flowArray[node] = solutes[solnum].Flow[node];
                         flowFlag = true;
                         //flowUnits = "(kg/ha)";
                         return;
@@ -4743,7 +4735,7 @@ namespace Models.Soils
             double wt_above_drain2;
             double[] qdrain2 = new double[n + 1];
 
-            if (subsurfaceDrain != null)
+            if (subsurfaceDrain != null && subsurfaceDrain.Open)
             {
                 int drain_node = SoilUtilities.LayerIndexOfClosestDepth(physical.Thickness, subsurfaceDrain.DrainDepth);
 

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using APSIM.Core;
+using APSIM.Numerics;
 using APSIM.Shared.APSoil;
 using APSIM.Shared.Utilities;
 using Models.Climate;
@@ -19,8 +21,13 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class WEIRDO : Model, ISoilWater
+    public class WEIRDO : Model, ISoilWater, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
+
         #region IsoilInterface
         /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
         public double PrecipitationInterception { get; set; }
@@ -144,7 +151,12 @@ namespace Models.Soils
             {
                 IPhysical physical = soilPhysical;
                 if (physical == null) //So that the GUI can find physical when calling this
-                    physical = FindAncestor<Soil>()?.FindDescendant<IPhysical>() ?? FindInScope<IPhysical>();
+                {
+                    var soil = Structure.FindParent<Soil>(recurse: true);
+                    if (soil != null)
+                        physical = Structure.FindChild<IPhysical>(relativeTo: soil, recurse: true)
+                            ?? Structure.Find<IPhysical>();
+                }
                 return APSoilUtilities.CalcPAWC(physical.Thickness, physical.LL15, physical.DUL, null);
             }
         }
@@ -166,16 +178,21 @@ namespace Models.Soils
 
         /// <summary>Plant available water CAPACITY (DUL-LL15).</summary>
         [Units("mm")]
-        [Display(Format = "N0", ShowTotal = true)]
+        [Display(Format = "N0")]
         [JsonIgnore]
-        public double[] PAWCmm { 
-            get 
-            { 
+        public double[] PAWCmm {
+            get
+            {
                 IPhysical physical = soilPhysical;
                 if (physical == null) //So that the GUI can find physical when calling this
-                    physical = FindAncestor<Soil>()?.FindDescendant<IPhysical>() ?? FindInScope<IPhysical>();
-                return MathUtilities.Multiply(PAWC, physical.Thickness); 
-            } 
+                {
+                    var soil = Structure.FindParent<Soil>(recurse: true);
+                    if (soil != null)
+                        physical = Structure.FindChild<IPhysical>(relativeTo: soil, recurse: true)
+                            ?? Structure.Find<IPhysical>();
+                }
+                return MathUtilities.Multiply(PAWC, physical.Thickness);
+            }
         }
 
         /// <summary>Plant available water SW-LL15 (mm/mm).</summary>
@@ -1162,12 +1179,6 @@ namespace Models.Soils
         private double ProfileSaturation { get; set; }
         private double SODPondDepth { get; set; }
         private double EODPondDepth { get; set; }
-        /// <summary>The efficiency (0-1) that solutes move down with water.</summary>
-        /// <remarks>Not imlpemented</remarks>
-        public double[] SoluteFluxEfficiency { get; set; }
-        /// <summary>The efficiency (0-1) that solutes move up with water.</summary>
-        /// <remarks>Not imlpemented</remarks>
-        public double[] SoluteFlowEfficiency { get; set; }
 
         #endregion
 

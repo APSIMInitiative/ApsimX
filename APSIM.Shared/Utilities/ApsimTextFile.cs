@@ -8,6 +8,7 @@ using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace APSIM.Shared.Utilities
 {
@@ -100,6 +101,9 @@ namespace APSIM.Shared.Utilities
         /// <summary>Is the file a CSV file</summary>
         public bool IsCSVFile { get; set; } = false;
 
+        /// <summary>Is the file a Binary file</summary>
+        public bool IsBinaryFile { get; set; } = false;
+
         /// <summary>The inStreamReader - used for text and csv files</summary>
         private StreamReaderRandomAccess inStreamReader;
 
@@ -180,8 +184,16 @@ namespace APSIM.Shared.Utilities
 
             IsCSVFile = Path.GetExtension(fileName).ToLower() == ".csv";
             IsExcelFile = ExcelUtilities.IsExcelFile(fileName);
+            IsBinaryFile = Path.GetExtension(fileName).ToLower() == ".bin";
 
-            if (IsExcelFile)
+            //convert to text file so it fits into current reader
+            if (IsBinaryFile)
+            {
+                Stream metFileStream = MetBinaryReader.Load(fileName);
+                inStreamReader = new StreamReaderRandomAccess(metFileStream);
+                Open();
+            }
+            else if (IsExcelFile)
             {
                 OpenExcelReader();
             }
@@ -649,7 +661,7 @@ namespace APSIM.Shared.Utilities
                 words = new StringCollection();
                 words.AddRange(StringUtilities.SplitStringHonouringQuotes(Line, " \t").ToArray());
             }
-                
+
 
             if (words.Count != Headings.Count)
                 throw new Exception("Invalid number of values on line: " + Line + "\r\nin file: " + _FileName);
@@ -750,7 +762,12 @@ namespace APSIM.Shared.Utilities
             {
                 string ColumnName = table.Columns[col].ColumnName;
                 if (ColumnName.Equals("date", StringComparison.CurrentCultureIgnoreCase))
-                    DateUtilities.GetDate(table.Rows[rowIndex][col].ToString());
+                {
+                    var obj = table.Rows[rowIndex][col];
+                    if (obj is DateTime dt)
+                        return dt;
+                    return DateUtilities.GetDate(obj.ToString());
+                }
                 else if (ColumnName.Equals("year", StringComparison.CurrentCultureIgnoreCase))
                     Year = Convert.ToInt32(table.Rows[rowIndex][col], CultureInfo.InvariantCulture);
                 else if (ColumnName.Equals("month", StringComparison.CurrentCultureIgnoreCase))
@@ -915,7 +932,11 @@ namespace APSIM.Shared.Utilities
                 Units = new StringCollection();
                 Headings = new StringCollection();
 
-                DataTable resultDt = ExcelUtilities.ReadExcelFileData(_FileName, _SheetName);
+                DataTable resultDt;
+                if (ExcelUtilities.IsOpenXMLExcelFile(_FileName))
+                    resultDt = ExcelUtilities.ReadOpenXMLFileData(_FileName, _SheetName);
+                else
+                    resultDt = ExcelUtilities.ReadExcelFileData(_FileName, _SheetName);
 
                 if (resultDt == null)
                     throw new Exception("There does not appear to be any data.");
@@ -1073,6 +1094,14 @@ namespace APSIM.Shared.Utilities
                 for (int i = 0; i < resultDt.Columns.Count; i++)
                 {
                     _excelData.Columns[i].DataType = StringUtilities.DetermineType(resultDt.Rows[0][i].ToString(), Units[i]);
+                    if (Headings[i].Equals("date", StringComparison.CurrentCultureIgnoreCase) && _excelData.Columns[i].DataType == typeof(float))
+                    {
+                        // This must have been stored as an OADate.
+                        _excelData.Columns[i].DataType = typeof(DateTime);
+                        foreach (DataRow row in resultDt.Rows)
+                            row[i] = DateTime.FromOADate(Convert.ToDouble(row[i])).ToString(DateUtilities.DEFAULT_FORMAT_DAY_MONTH_YEAR,
+                                                                                            CultureInfo.InvariantCulture);
+                    }
                 }
                 _excelData.Load(resultDt.CreateDataReader());
 

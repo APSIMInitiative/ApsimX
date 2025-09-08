@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Graph = Models.Graph;
+using System;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -32,7 +33,7 @@ namespace APSIM.Documentation.Models.Types
         {
             List<ITag> tags = new List<ITag>();
             Simulations sims = model as Simulations;
-            
+
             bool documentFile = false;
 
             if (!string.IsNullOrEmpty(sims.FileName))
@@ -69,7 +70,7 @@ namespace APSIM.Documentation.Models.Types
             List<ITag> tags = new List<ITag>();
             List<ITag> modelTags = new List<ITag>();
 
-            List<Memo> memos = m.FindAllChildren<Memo>().ToList();
+            List<Memo> memos = m.Node.FindChildren<Memo>().ToList();
             List<ITag> memoTags = new List<ITag>();
             if (name.ToLower() != "wheat")          //Wheat has the memo in both the validation and resource, so don't do it for that.
                     foreach (IModel child in memos)
@@ -81,8 +82,8 @@ namespace APSIM.Documentation.Models.Types
             List<IModel> modelsToDocument = new();
             if(name == "AgPasture")
             {
-                IModel agpRyegrassModel = m.FindDescendant("AGPRyegrass");
-                IModel agpWhiteCloverModel = m.FindDescendant("AGPWhiteClover");
+                IModel agpRyegrassModel = m.Node.FindChild<IModel>("AGPRyegrass", recurse: true);
+                IModel agpWhiteCloverModel = m.Node.FindChild<IModel>("AGPWhiteClover", recurse: true);
                 modelsToDocument.Add(agpRyegrassModel);
                 modelsToDocument.Add(agpWhiteCloverModel);
                 modelTags.AddRange(AutoDocumentation.DocumentModel(agpRyegrassModel));
@@ -91,7 +92,7 @@ namespace APSIM.Documentation.Models.Types
             else
             {
                 // Find a single instance of all unique Plant models.
-                modelToDocument = m.FindDescendant(name);
+                modelToDocument = m.Node.FindChild<IModel>(name, recurse: true);
                 if (modelToDocument != null)
                 {
                     modelTags.AddRange(AutoDocumentation.DocumentModel(modelToDocument));
@@ -112,13 +113,13 @@ namespace APSIM.Documentation.Models.Types
                     firstSection.Add(tag);
                 }
             }
-            
+
             tags.Add(firstSection);
 
             //Then just document the folders that aren't replacements
-            foreach (IModel child in m.FindAllChildren<Folder>())
+            foreach (IModel child in m.Node.FindChildren<Folder>())
             {
-                if(child.Name != "Replacements")
+                if(!Folder.IsModelReplacementsFolder(child))
                     tags.AddRange(AutoDocumentation.DocumentModel(child));
             }
 
@@ -134,7 +135,7 @@ namespace APSIM.Documentation.Models.Types
                     tags.Add(new Section($"{agPastureModel.Name} Interface", InterfaceDocumentation.Document(agPastureModel)));
                 }
             }
-            // Add any (if available for a validation file) science documentation, 
+            // Add any (if available for a validation file) science documentation,
             // media or other supporting docs.
             tags.AddRange(AddAdditionals(m));
             return tags;
@@ -153,13 +154,13 @@ namespace APSIM.Documentation.Models.Types
                 tags.Add(firstSection);
             }
 
-            foreach(IModel child in m.FindAllChildren())
+            foreach(IModel child in m.Node.FindChildren<IModel>())
             {
                 if (child is Simulation)
-                { 
+                {
                     tags.Add(new Section(child.Name, DocumentTutorial(child as Simulation)));
-                } 
-                else if(child is Memo || child is Graph || (child is Folder && child.Name != "Replacements"))
+                }
+                else if(child is Memo || child is Graph || (child is Folder && !Folder.IsModelReplacementsFolder(child)))
                 {
                     tags.AddRange(AutoDocumentation.DocumentModel(child));
                 }
@@ -186,9 +187,8 @@ namespace APSIM.Documentation.Models.Types
             }
             else
             {
-                extraLinkDir = assemblyDir + Path.DirectorySeparatorChar + 
-                    directory + Path.DirectorySeparatorChar +
-                    "AgPasture" + Path.DirectorySeparatorChar;
+                extraLinkDir = assemblyDir + Path.DirectorySeparatorChar +
+                    directory + Path.DirectorySeparatorChar;
             }
 
             List<ITag> additionsTags = new();
@@ -196,7 +196,7 @@ namespace APSIM.Documentation.Models.Types
             Dictionary<string, DocAdditions> validationAdditions = new()
             {
                 {"AgPasture", new DocAdditions(
-                    scienceDocLink:"https://www.apsim.info/wp-content/uploads/2024/12/AgPastureScience.pdf", 
+                    scienceDocLink:"https://www.apsim.info/wp-content/uploads/2024/12/AgPastureScience.pdf",
                     extraLinkName: "Species Table",
                     extraLink: extraLinkDir + "SpeciesTable.apsimx")},
                 {"Canola", new DocAdditions(videoLink: "https://www.youtube.com/watch?v=kz3w5nOtdqM")},
@@ -212,7 +212,7 @@ namespace APSIM.Documentation.Models.Types
                 DocAdditions additions = validationAdditions[name];
                 if(additions.ScienceDocLink != null)
                 {
-                    Section scienceSection = new("Science Documentation", new Paragraph($"<a href=\"{additions.ScienceDocLink}\" target=\"_blank\">View science documentation here</a>"));   
+                    Section scienceSection = new("Science Documentation", new Paragraph($"<a href=\"{additions.ScienceDocLink}\" target=\"_blank\">View science documentation here</a>"));
                     additionsTags.Add(scienceSection);
                 }
 
@@ -224,9 +224,18 @@ namespace APSIM.Documentation.Models.Types
 
                 if(additions.ExtraLink != null)
                 {
-                    Simulations speciesSims = FileFormat.ReadFromFile<Simulations>(additions.ExtraLink, e => throw e, false).NewModel as Simulations;
+                    // Remove new build system prefix. /wd/ gets added to help with Azure compute node pathing but is
+                    // not necessary for local paths, and especially not here.
+                    string extraLink = additions.ExtraLink;
+                    Console.WriteLine($"Removing new build system prefix from {additions.ExtraLink}");
+                    if (additions.ExtraLink.StartsWith("/wd/"))
+                    {
+                        extraLink = additions.ExtraLink.Substring(4).Replace("//", "/");
+                    }
+                    Simulations speciesSims = FileFormat.ReadFromFile<Simulations>(extraLink).Model as Simulations;
                     Section extraSection = new($"{additions.ExtraLinkName}", AutoDocumentation.Document(speciesSims));
                     additionsTags.Add(extraSection);
+                    
                 }
             }
             return additionsTags;

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -15,9 +17,9 @@ namespace Models
 {
     /// <summary>
     /// # The APSIM Sugarcane Model
-    /// 
-    /// Sugarcane model is ported from APSIM 7.10 and does not have a PMF structure. 
-    /// 
+    ///
+    /// Sugarcane model is ported from APSIM 7.10 and does not have a PMF structure.
+    ///
     /// Default values for cultivars are based of Q117 and Q117_ratoon.
     /// </summary>
     /// <remarks>
@@ -346,8 +348,11 @@ namespace Models
     [ViewName("UserInterface.Views.MarkdownView")]
     [PresenterName("UserInterface.Presenters.GenericPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public class Sugarcane : Model, IPlant, ICanopy, IUptake
+    public class Sugarcane : Model, IPlant, ICanopy, IUptake, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
         #region Canopy interface
 
@@ -12078,10 +12083,10 @@ namespace Models
             get
             {
                 List<string> returnArray = new List<string>();
-                List<Cultivar> pmfCultivars = FindAllDescendants<Cultivar>().ToList();
+                List<Cultivar> pmfCultivars = Structure.FindChildren<Cultivar>(recurse: true).ToList();
                 foreach(Cultivar c in pmfCultivars)
                     returnArray.Add(c.Name);
-                    
+
                 return returnArray.ToArray();
             }
         }
@@ -13210,10 +13215,10 @@ namespace Models
                 adjustedName += "_ratoon";
 
             // Find cultivar and apply cultivar overrides.
-            Cultivar cultivarDefinition = FindAllDescendants<Cultivar>().FirstOrDefault(c => c.IsKnownAs(adjustedName));
+            Cultivar cultivarDefinition = Structure.FindChildren<Cultivar>(recurse: true).FirstOrDefault(c => c.IsKnownAs(adjustedName));
             if (cultivarDefinition == null)
-                throw new ApsimXException(this, $"Cannot find a cultivar definition for '{name}'");
-            
+                throw new ApsimXException(this, $"Cannot find a cultivar definition for '{adjustedName}'. NOTE: When adding a cultivar you also need a second \'_ratoon\' cultivar.");
+
             //setup defaults into cult
             cult = new SugarcaneCultivar(isRatoon);
 
@@ -13244,7 +13249,7 @@ namespace Models
 
             //!       sugar_sw_supply
 
-            var Sugarcane = Soil.FindDescendant<SoilCrop>("SugarcaneSoil");
+            var Sugarcane = Structure.FindChild<SoilCrop>("SugarcaneSoil", relativeTo: Soil, recurse: true);
             if (Sugarcane == null)
                 throw new Exception($"Cannot find a soil crop parameterisation called SugarcaneSoil");
 

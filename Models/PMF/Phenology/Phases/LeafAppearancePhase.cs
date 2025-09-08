@@ -1,4 +1,6 @@
 ﻿using System;
+using APSIM.Core;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
@@ -7,10 +9,10 @@ using Newtonsoft.Json;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// This phase goes from the specified start stage to the specified end stage and 
+    /// This phase goes from the specified start stage to the specified end stage and
     /// it continues until the final main-stem leaf has finished expansion.
     /// The duration of this phase is determined by leaf appearance rate (Structure.Phyllochron)
-    /// and the number of leaves produced on the mainstem (Structure.FinalLeafNumber). 
+    /// and the number of leaves produced on the mainstem (Structure.FinalLeafNumber).
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]

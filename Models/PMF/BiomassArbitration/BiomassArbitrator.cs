@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -11,24 +13,24 @@ namespace Models.PMF
 {
     ///<summary>
     /// The Arbitrator class determines the allocation of dry matter (DM) and Nitrogen between each of the organs in the crop model. Each organ can have up to three different pools of biomass:
-    /// 
+    ///
     /// * **Structural biomass** which is essential for growth and remains within the organ once it is allocated there.
     /// * **Metabolic biomass** which generally remains within an organ but is able to be re-allocated when the organ senesces and may be retranslocated when demand is high relative to supply.
     /// * **Storage biomass** which is partitioned to organs when supply is high relative to demand and is available for retranslocation to other organs whenever supply from uptake, fixation, or re-allocation is lower than demand.
-    /// 
-    /// The process followed for biomass arbitration is shown in Figure [FigureNumber]. Arbitration calculations are triggered by a series of events (shown below) that are raised every day.  For these calculations, at each step the Arbitrator exchange information with each organ, so the basic computations of demand and supply are done at the organ level, using their specific parameters. 
-    /// 
-    /// 1. **doPotentialPlantGrowth**.  When this event occurs, each organ class executes code to determine their potential growth, biomass supplies and demands.  In addition to demands for structural, non-structural and metabolic biomass (DM and N) each organ may have the following biomass supplies: 
+    ///
+    /// The process followed for biomass arbitration is shown in Figure [FigureNumber]. Arbitration calculations are triggered by a series of events (shown below) that are raised every day.  For these calculations, at each step the Arbitrator exchange information with each organ, so the basic computations of demand and supply are done at the organ level, using their specific parameters.
+    ///
+    /// 1. **doPotentialPlantGrowth**.  When this event occurs, each organ class executes code to determine their potential growth, biomass supplies and demands.  In addition to demands for structural, non-structural and metabolic biomass (DM and N) each organ may have the following biomass supplies:
     /// 	* **Fixation supply**.  From photosynthesis (DM) or symbiotic fixation (N)
     /// 	* **Uptake supply**.  Typically uptake of N from the soil by the roots but could also be uptake by other organs (eg foliage application of N).
     /// 	* **Retranslocation supply**.  Storage biomass that may be moved from organs to meet demands of other organs.
     /// 	* **Reallocation supply**. Biomass that can be moved from senescing organs to meet the demands of other organs.
     /// 2. **doPotentialPlantPartitioning.** On this event the Arbitrator first executes the DoDMSetup() method to gather the DM supplies and demands from each organ, these values are computed at the organ level.  It then executes the DoPotentialDMAllocation() method which works out how much biomass each organ would be allocated assuming N supply is not limiting and sends these allocations to the organs.  Each organ then uses their potential DM allocation to determine their N demand (how much N is needed to produce that much DM) and the arbitrator calls DoNSetup() to gather the N supplies and demands from each organ and begin N arbitration.  Firstly DoNReallocation() is called to redistribute N that the plant has available from senescing organs.  After this step any unmet N demand is considered as plant demand for N uptake from the soil (N Uptake Demand).
-    /// 3. **doNutrientArbitration.** When this event occurs, the soil arbitrator gets the N uptake demands from each plant (where multiple plants are growing in competition) and their potential uptake from the soil and determines how much of their demand that the soil is able to provide.  This value is then passed back to each plant instance as their Nuptake and doNUptakeAllocation() is called to distribute this N between organs.  
-    /// 4. **doActualPlantPartitioning.**  On this event the arbitrator call DoNRetranslocation() and DoNFixation() to satisfy any unmet N demands from these sources.  Finally, DoActualDMAllocation is called where DM allocations to each organ are reduced if the N allocation is insufficient to achieve the organs minimum N concentration and final allocations are sent to organs. 
-    /// 
+    /// 3. **doNutrientArbitration.** When this event occurs, the soil arbitrator gets the N uptake demands from each plant (where multiple plants are growing in competition) and their potential uptake from the soil and determines how much of their demand that the soil is able to provide.  This value is then passed back to each plant instance as their Nuptake and doNUptakeAllocation() is called to distribute this N between organs.
+    /// 4. **doActualPlantPartitioning.**  On this event the arbitrator call DoNRetranslocation() and DoNFixation() to satisfy any unmet N demands from these sources.  Finally, DoActualDMAllocation is called where DM allocations to each organ are reduced if the N allocation is insufficient to achieve the organs minimum N concentration and final allocations are sent to organs.
+    ///
     /// ![Alt Text](ArbitratorSequenceDiagram.png)
-    /// 
+    ///
     /// **Figure [FigureNumber]:**  Schematic showing the procedure for arbitration of biomass partitioning.  Pink boxes represent events that occur every day and their numbering shows the order of calculations. Blue boxes represent the methods that are called when these events occur.  Orange boxes contain properties that make up the organ/arbitrator interface.  Green boxes are organ specific properties.
     /// </summary>
 
@@ -36,8 +38,12 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IPlant))]
-    public class BiomassArbitrator : Model, ITotalCFixationSupply
+    public class BiomassArbitrator : Model, ITotalCFixationSupply, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         ///1. Links
         ///------------------------------------------------------------------------------------------------
 
@@ -49,7 +55,7 @@ namespace Models.PMF
         [Link(Type = LinkType.Ancestor)]
         protected IZone zone = null;
 
-        [Link] 
+        [Link]
         private Clock clock = null;
 
         ///2. Private And Protected Fields
@@ -107,13 +113,13 @@ namespace Models.PMF
             }
         }
 
-        /// <summary>Gets the Amount of C not allocated</summary>
+        /// <summary>Gets the Amount of C supply not allocated</summary>
         /// <value>The n supply.</value>
         [JsonIgnore]
         [Units("gC/m2")]
         public double UnallocatedC { get; private set; }
 
-        /// <summary>Gets the Amount of N not allocated</summary>
+        /// <summary>Gets the Amount of N supply not allocated</summary>
         /// <value>The n supply.</value>
         [JsonIgnore]
         [Units("gN/m2")]
@@ -140,7 +146,7 @@ namespace Models.PMF
         [EventSubscribe("Commencing")]
         virtual protected void OnSimulationCommencing(object sender, EventArgs e)
         {
-            PlantOrgans = plant.FindAllChildren<Organ>().ToList();
+            PlantOrgans = Structure.FindChildren<Organ>(relativeTo: plant).ToList();
         }
 
 
@@ -224,7 +230,7 @@ namespace Models.PMF
                 {
                     if (count > 0)
                         throw new Exception("Two organs have IWaterNitrogenUptake");
-                    o.Nitrogen.SuppliesAllocated.Uptake = TotalPlantUptake / zone.Area;
+                    o.Nitrogen.SuppliesAllocated.Uptake = TotalPlantUptake;
                     count += 1;
                 }
             }
@@ -299,10 +305,10 @@ namespace Models.PMF
                     endC += o.C;
                     endN += o.N;
                 }
-                
-                if (!MathUtilities.FloatsAreEqual(checkC, endC, 1e-11))
+
+                if (!MathUtilities.FloatsAreEqual(checkC, endC, checkC * 1e-10))
                     throw new Exception(clock.Today.ToString() + " Mass balance violation in Carbon");
-                if (!MathUtilities.FloatsAreEqual(checkN, endN, 1e-12))
+                if (!MathUtilities.FloatsAreEqual(checkN, endN, checkN * 1e-10))
                     throw new Exception(clock.Today.ToString() + "Mass balance violation in Nitrogen");
             }
         }
@@ -319,7 +325,7 @@ namespace Models.PMF
             {
                 var N = o.Nitrogen;
                 if (N.DemandsAllocated.Total > N.Demands.Total || MathUtilities.FloatsAreEqual(N.DemandsAllocated.Total, N.Demands.Total))
-                    N.MaxCDelta = 100000000; //given high value so where there is no N deficit in organ and N limitation to growth  
+                    N.MaxCDelta = 100000000; //given high value so where there is no N deficit in organ and N limitation to growth
                 else
                     if (N.DemandsAllocated.Total == 0 || N.ConcentrationOrFraction.Structural == 0)
                     N.MaxCDelta = 0;
@@ -331,7 +337,7 @@ namespace Models.PMF
                 {
                     double StructuralProportion = C.DemandsAllocated.Structural / C.DemandsAllocated.Total;
                     double MetabolicProportion = C.DemandsAllocated.Metabolic / C.DemandsAllocated.Total;
-                    double StorageProportion = C.DemandsAllocated.Storage / C.DemandsAllocated.Total; ;
+                    double StorageProportion = C.DemandsAllocated.Storage / C.DemandsAllocated.Total;
                     // Reset C demand allocations based on what is possible with given N supply
                     C.DemandsAllocated = new NutrientPoolsState(
                         Math.Min(C.DemandsAllocated.Structural, N.MaxCDelta * StructuralProportion),  //To introduce effects of other nutrients Need to include Plimited and Klimited growth in this min function
@@ -369,7 +375,7 @@ namespace Models.PMF
                     CFixationDownRegulationToNLimitation = Math.Min(PotentialAllocationYetToWindBack, Carbon.TotalFixationSupply);
                     double AllocationToWindBack = Math.Min(Carbon.TotalFixationSupplyAllocated, PotentialAllocationYetToWindBack);
                     double constrainedAllocation = Carbon.TotalFixationSupplyAllocated - AllocationToWindBack;
-                    
+
                     foreach (Organ o in PlantOrgans) //Redo Fixation with constrained amount
                     {
                         if (o.Carbon.Supplies.Fixation > 0)
@@ -385,7 +391,7 @@ namespace Models.PMF
                 {
                     double AllocationToWindBack = Math.Min(Carbon.TotalReAllocationSupplyAllocated, PotentialAllocationYetToWindBack);
                     double constrainedAllocation = Carbon.TotalReAllocationSupplyAllocated - AllocationToWindBack;
-                    
+
                     foreach (Organ o in PlantOrgans) //Redo allocation with constrained amount
                     {
                         o.Carbon.SuppliesAllocated.ReAllocation = new NutrientPoolsState(
@@ -396,7 +402,7 @@ namespace Models.PMF
                     PotentialAllocationYetToWindBack -= AllocationToWindBack;
                 }
 
-                if (PotentialAllocationYetToWindBack > 0)
+                if (!MathUtilities.FloatsAreEqual(PotentialAllocationYetToWindBack, 0, 1E-12))
                     throw new Exception("Problem with nutrient constrained supply allocation");
             }
         }
@@ -415,7 +421,7 @@ namespace Models.PMF
         }
 
         /// <summary>Relatives the allocation.</summary>
-        /// <param name="TotalSupply">The amount of nutrient to allocate</param>
+        /// <param name="TotalSupply">The amount of nutrient (g) to allocate</param>
         /// <param name="PRS">The supply and demand info for that nutrient</param>
         public double DoAllocation(double TotalSupply, PlantNutrientsDelta PRS)
         {

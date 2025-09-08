@@ -9,6 +9,7 @@ using Models.Core.Attributes;
 using System.IO;
 using APSIM.Shared.Utilities;
 using Models.CLEM.Reporting;
+using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
@@ -56,7 +57,7 @@ namespace Models.CLEM.Activities
         public string MethaneStoreName { get; set; }
 
         /// <summary>
-        /// Use the corrected energy equation 
+        /// Use the corrected energy equation
         /// </summary>
         [Description("Use the corrected energy equation (27_5_24)")]
         public bool UseFixedEnergyConversionEquation { get; set; } = true;

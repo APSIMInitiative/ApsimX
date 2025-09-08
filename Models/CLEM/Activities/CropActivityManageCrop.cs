@@ -8,6 +8,8 @@ using System.Linq;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;
+using APSIM.Core;
+using System.Threading;
 
 namespace Models.CLEM.Activities
 {
@@ -23,7 +25,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "Beta build")]
     [Version(1, 0, 2, "Rotational cropping implemented")]
     [HelpUri(@"Content/Features/Activities/Crop/ManageCrop.htm")]
-    public class CropActivityManageCrop: CLEMActivityBase, IValidatableObject, IPastureManager
+    public class CropActivityManageCrop: CLEMActivityBase, IValidatableObject, IPastureManager, IStructureDependency
     {
         private int currentCropIndex = 0;
         private int numberOfCrops = 0;
@@ -48,7 +50,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Use unallocated land")]
         public bool UseAreaAvailable { get; set; }
-        
+
         /// <summary>
         /// Area of land actually received (maybe less than requested)
         /// </summary>
@@ -123,7 +125,7 @@ namespace Models.CLEM.Activities
                     currentCropIndex = 0;
 
                 int i = 0;
-                foreach (CropActivityManageProduct item in this.FindAllChildren<CropActivityManageProduct>())
+                foreach (CropActivityManageProduct item in Structure.FindChildren<CropActivityManageProduct>())
                 {
                     item.CurrentlyManaged = (i == currentCropIndex);
                     if (item.CurrentlyManaged)
@@ -166,7 +168,7 @@ namespace Models.CLEM.Activities
                         {
                             CheckResources(ResourceRequestList, Guid.NewGuid());
                             TakeResources(ResourceRequestList, false);
-                            //Now the Land has been allocated we have an Area 
+                            //Now the Land has been allocated we have an Area
                             //Assign the area actually got after taking it. It might be less than AreaRequested (if partial)
                             Area += ResourceRequestList.FirstOrDefault().Provided;
                         }
@@ -197,7 +199,7 @@ namespace Models.CLEM.Activities
                 LinkedLandItem.TransactionOccurred -= LinkedLandItem_TransactionOccurred;
         }
 
-        // Method to listen for land use transactions 
+        // Method to listen for land use transactions
         // This allows this activity to dynamically respond when use available area is selected
         // only listens when use available is set for parent
         private void LinkedLandItem_TransactionOccurred(object sender, EventArgs e)
@@ -243,11 +245,11 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
         {
-            string intro = (this.FindAllChildren<CropActivityManageProduct>().Count() > 1) ? "Rotating through crops" : "";
+            string intro = (Structure.FindChildren<CropActivityManageProduct>().Count() > 1) ? "Rotating through crops" : "";
 
             return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
             {
-                (FindAllChildren<CropActivityManageProduct>(), true, "childgrouprotationborder", intro, "No CropActivityManageProduct component provided"),
+                (Structure.FindChildren<CropActivityManageProduct>(), true, "childgrouprotationborder", intro, "No CropActivityManageProduct component provided"),
             };
         }
 
@@ -259,10 +261,10 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("\r\n<div class=\"activityentry\">This crop uses ");
 
                 Land parentLand = null;
-                IModel clemParent = FindAncestor<ZoneCLEM>();
+                Model clemParent = Structure.FindParent<ZoneCLEM>(relativeTo: this, recurse: true);
                 if (LandItemNameToUse != null && LandItemNameToUse != "")
                     if (clemParent != null && clemParent.Enabled)
-                        parentLand = clemParent.FindInScope(LandItemNameToUse.Split('.')[0]) as Land;
+                        parentLand = Structure.Find<Land>(LandItemNameToUse.Split('.')[0], relativeTo: clemParent);
 
                 if (UseAreaAvailable)
                     htmlWriter.Write("the unallocated portion of ");
@@ -277,7 +279,7 @@ namespace Models.CLEM.Activities
                 }
                 htmlWriter.Write($"{ CLEMModel.DisplaySummaryValueSnippet(LandItemNameToUse, "Resource not set", HTMLSummaryStyle.Resource)}");
                 htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
         #endregion

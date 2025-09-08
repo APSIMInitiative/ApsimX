@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Numerics;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
 using Gtk.Sheet;
 using Models.Core;
 using Models.Soils;
+using Models.WaterModel;
 using UserInterface.Views;
 
 namespace UserInterface.Presenters
@@ -54,17 +56,16 @@ namespace UserInterface.Presenters
             view = v as ViewBase;
             this.explorerPresenter = explorerPresenter;
 
-            Soil soilNode = this.model.FindAncestor<Soil>();
-            if (soilNode != null)
-            {
-                physical = soilNode.FindChild<Physical>();
-                physical.InFill();
-                var chemical = soilNode.FindChild<Chemical>();
-                var organic = soilNode.FindChild<Organic>();
-                if (chemical != null && organic != null)
-                    chemical.InFill(physical, organic);
-                water = soilNode.FindChild<Water>();
-            }
+            Soil soilNode = this.model.Node.FindParent<Soil>();
+            physical = model as Physical ?? soilNode?.Node.FindChild<Physical>();
+            physical?.InFill();
+
+            var chemical = model as Chemical ?? soilNode?.Node.FindChild<Chemical>();
+            var organic = model as Organic ?? soilNode?.Node.FindChild<Organic>();
+            if (chemical != null && organic != null)
+                chemical.InFill(physical, organic);
+            water = model as Water ?? soilNode?.Node.FindChild<Water>();
+
             ContainerView gridContainer = view.GetControl<ContainerView>("grid");
             gridPresenter = new GridPresenter();
             gridPresenter.Attach(model, gridContainer, explorerPresenter);
@@ -78,37 +79,50 @@ namespace UserInterface.Presenters
             graph.AddContextAction("Copy graph to clipboard", CopyGraphToClipboard);
 
             //get the paned object that holds the graph and grid
-            Gtk.Paned bottomPane = view.GetGladeObject<Gtk.Paned>("bottom");
+            Gtk.Paned topPane = view.GetGladeObject<Gtk.Paned>("top");
             int paneWidth = view.MainWidget.ParentWindow.Width; //this should get the width of this view
-            bottomPane.Position = (int)Math.Round(paneWidth * 0.75); //set the slider for the pane at about 75% across
+            topPane.Position = (int)Math.Round(paneWidth * 0.5); //set the slider for the pane at about 50% across
+
+            Gtk.Paned leftPane = view.GetGladeObject<Gtk.Paned>("left");
+            leftPane.Position = view.MainWidget.ParentWindow.Height;
+            Gtk.Label redValuesWarningLbl = view.GetGladeObject<Gtk.Label>("output_lbl");
+            redValuesWarningLbl.Visible = false;
 
             if (model is Physical)
             {
-                Gtk.Label redValuesWarningLbl = new("<span color=\"red\">Note: values in red are estimates only and needed for the simulation of soil temperature. Overwrite with local values wherever possible.</span>");
-                ((Gtk.Box)bottomPane.Child1).Add(redValuesWarningLbl);
+                redValuesWarningLbl.Text = new("<span color=\"red\">Note: values in red are estimates only and needed for the simulation of soil temperature. Overwrite with local values wherever possible.</span>");
                 redValuesWarningLbl.UseMarkup = true;
                 redValuesWarningLbl.Wrap = true;
                 redValuesWarningLbl.Visible = true;
+
+                redValuesWarningLbl.GetPreferredHeight(out int minHeight, out int natHeight);
+                leftPane.Position = view.MainWidget.ParentWindow.Height - natHeight;
+
+                //set the slider for the pane at about 60% across
+                topPane.Position = (int)Math.Round(paneWidth * 0.6);
+            }
+            else if (model is WaterBalance)
+            {
+                topPane.Position = (int)Math.Round(paneWidth * 0.3);
             }
 
-
-            numLayersLabel = view.GetControl<LabelView>("numLayersLabel");
-
+            numLayersLabel = view.GetControl<LabelView>("numLayers_lbl");
             if (!propertyView.AnyProperties)
             {
-                var layeredLabel = view.GetControl<LabelView>("layeredLabel");
-                var propertiesLabel = view.GetControl<LabelView>("parametersLabel");
+                var layeredLabel = view.GetControl<LabelView>("layered_lbl");
+                var propertiesLabel = view.GetControl<LabelView>("parameters_lbl");
                 propertiesLabel.Visible = false;
                 layeredLabel.Visible = false;
             }
             else
             {
                 // Position the splitter to give the "Properties" section as much space as it needs, and no more
-                if (view.MainWidget is Gtk.Paned paned)
-                {
-                    paned.Child1.GetPreferredHeight(out int minHeight, out int natHeight);
-                    paned.Position = natHeight;
-                }
+                Gtk.Paned rightPane = view.GetGladeObject<Gtk.Paned>("right");
+                rightPane.Child1.GetPreferredHeight(out int minHeight, out int natHeight);
+                rightPane.Position = natHeight;
+                //if SoilWater, hide empty graph space
+                if (model is WaterBalance)
+                    rightPane.Position = view.MainWidget.ParentWindow.Height;
             }
 
             Refresh();
@@ -152,7 +166,7 @@ namespace UserInterface.Presenters
                             relativeLL = (model as SoilCrop).LL;
                         }
                         //Since we can view the soil relative to water, lets not have the water node graphing options effect this graph.
-                        WaterPresenter.PopulateWaterGraph(graph, physical.Thickness, physical.AirDry, physical.LL15, physical.DUL, physical.SAT,
+                        PopulateWaterGraph(graph, physical.Thickness, physical.AirDry, physical.LL15, physical.DUL, physical.SAT,
                                                         cllName, water.Thickness, relativeLL, water.InitialValues, llsoilName, llsoil);
                     }
 
@@ -167,7 +181,9 @@ namespace UserInterface.Presenters
                     }
                     else if (model is Chemical chemical)
                     {
-                        PopulateChemicalGraph(graph, chemical.Thickness, chemical.PH, chemical.PHUnits, Chemical.GetStandardisedSolutes(chemical));
+                        var standardisedSoil = (chemical.Parent as Soil)?.CloneAndSanitise(chemical.Thickness);
+                        var solutes = standardisedSoil?.Node.FindChildren<Solute>();
+                        PopulateChemicalGraph(graph, chemical.Thickness, chemical.PH, chemical.PHUnits, solutes);
                     }
 
                     numLayersLabel.Text = $"{gridPresenter.RowCount()-1} layers";  // -1 to not count the empty row at bottom of sheet.
@@ -295,6 +311,110 @@ namespace UserInterface.Presenters
             graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, height, double.NaN, false, false);
             graph.FormatAxis(AxisPosition.Bottom, "Initial solute (ppm) ", inverted: false, xBottomMin, xBottomMax, double.NaN, false, false);
             graph.FormatLegend(LegendPosition.BottomRight, LegendOrientation.Vertical);
+            graph.Refresh();
+        }
+
+        public static void PopulateWaterGraph(GraphView graph, double[] thickness, double[] airdry, double[] ll15, double[] dul, double[] sat,
+                                               string cllName, double[] swThickness, double[] cll, double[] sw, string llsoilsName, double[] llsoil)
+        {
+
+            double[] cumulativeThickness = APSIM.Shared.Utilities.SoilUtilities.ToCumThickness(thickness);
+            double[] cumulativeSWThickness = APSIM.Shared.Utilities.SoilUtilities.ToCumThickness(swThickness);
+
+            double[] cllMapped = null;
+            if (cll.Length == thickness.Length)
+                cllMapped = cll;
+            else if (cll.Length == swThickness.Length)
+                cllMapped = SoilUtilities.MapConcentration(cll, swThickness, thickness, 0);
+
+            double[] swMapped = null;
+            if (sw.Length == thickness.Length)
+                swMapped = sw;
+            else if (sw.Length == swThickness.Length)
+                swMapped = SoilUtilities.MapConcentration(sw, swThickness, thickness, 0);
+
+            graph.Clear();
+
+            //draw the area relative to whatever the water node is currently relative to
+            graph.DrawRegion($"PAW relative to {cllName}", cllMapped, cumulativeThickness,
+                            swMapped, cumulativeThickness,
+                            AxisPosition.Top, AxisPosition.Left,
+                            System.Drawing.Color.LightSkyBlue, true);
+
+            graph.DrawLineAndMarkers("Airdry", airdry,
+                                    cumulativeThickness,
+                                    "", "", null, null, AxisPosition.Top, AxisPosition.Left,
+                                    System.Drawing.Color.Red, LineType.DashDot, MarkerType.None,
+                                    LineThickness.Normal, MarkerSize.Normal, 1, true);
+
+            if (llsoil == null)
+            {
+                graph.DrawLineAndMarkers(cllName, cllMapped,
+                                        cumulativeThickness,
+                                        "", "", null, null, AxisPosition.Top, AxisPosition.Left,
+                                        System.Drawing.Color.Red, LineType.Solid, MarkerType.None,
+                                        LineThickness.Normal, MarkerSize.Normal, 1, true);
+            }
+            else
+            {
+                graph.DrawLineAndMarkers("LL15", ll15,
+                                        cumulativeThickness,
+                                        "", "", null, null, AxisPosition.Top, AxisPosition.Left,
+                                        System.Drawing.Color.Red, LineType.Solid, MarkerType.None,
+                                        LineThickness.Normal, MarkerSize.Normal, 1, true);
+            }
+
+
+            graph.DrawLineAndMarkers("DUL", dul,
+                        cumulativeThickness,
+                        "", "", null, null, AxisPosition.Top, AxisPosition.Left,
+                        System.Drawing.Color.Blue, LineType.Solid, MarkerType.None,
+                        LineThickness.Normal, MarkerSize.Normal, 1, true);
+
+            graph.DrawLineAndMarkers("SAT", sat,
+                                    cumulativeThickness,
+                                    "", "", null, null, AxisPosition.Top, AxisPosition.Left,
+                                    System.Drawing.Color.Blue, LineType.DashDot, MarkerType.None,
+                                    LineThickness.Normal, MarkerSize.Normal, 1, true);
+
+            if (llsoil != null && llsoilsName != null)
+            {
+                graph.DrawLineAndMarkers(llsoilsName, llsoil,
+                        cumulativeThickness,
+                        "", "", null, null, AxisPosition.Top, AxisPosition.Left,
+                        System.Drawing.Color.Green, LineType.Dash, MarkerType.None,
+                        LineThickness.Normal, MarkerSize.Normal, 1, true);
+            }
+
+            List<double> vols = new List<double>();
+            if (airdry != null)
+                vols.AddRange(airdry);
+            if (cll != null)
+                vols.AddRange(cll);
+            if (dul != null)
+                vols.AddRange(dul);
+            if (sat != null)
+                vols.AddRange(sat);
+            if (llsoil != null)
+                vols.AddRange(llsoil);
+
+            double padding = 0.01; //add 1% to bounds
+            double xTopMin = MathUtilities.Min(vols);
+            double xTopMax = MathUtilities.Max(vols);
+            xTopMin -= xTopMax * padding;
+            xTopMax += xTopMax * padding;
+
+
+            double physicalHeight = MathUtilities.Max(cumulativeThickness);
+            double waterHeight = MathUtilities.Max(cumulativeSWThickness);
+            double height = physicalHeight;
+            if (waterHeight < physicalHeight)
+                height = waterHeight;
+
+            graph.FormatAxis(AxisPosition.Top, "Volumetric water (mm/mm)", inverted: false, xTopMin, xTopMax, double.NaN, false, false);
+            graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, height, double.NaN, false, false);
+            graph.FormatLegend(LegendPosition.RightBottom, LegendOrientation.Vertical);
+
             graph.Refresh();
         }
 

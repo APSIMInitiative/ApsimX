@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Reflection;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Newtonsoft.Json;
 using Shared.Utilities;
+using APSIM.Core;
+using System.Linq;
+using System.IO;
 
 namespace Models
 {
@@ -24,57 +26,24 @@ namespace Models
     [ValidParent(ParentType = typeof(Factorial.CompositeFactor))]
     [ValidParent(ParentType = typeof(Factorial.Factor))]
     [ValidParent(ParentType = typeof(Soils.Soil))]
-    public class Manager : Model
+    public class Manager : Model, IStructureDependency
     {
-        [NonSerialized]
-        [Link]
-        private ScriptCompiler scriptCompiler = null;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
         /// <summary>The code to compile.</summary>
         private string[] cSharpCode = ReflectionUtilities.GetResourceAsStringArray("Models.Resources.Scripts.BlankManager.cs");
 
         /// <summary>
-        /// Compile Lock
+        /// Stores the code for the current child script model. This is used
+        /// to check if the child script model needs recompiling.
         /// </summary>
-        private readonly object compileLockObject = new object();
+        private string CodeForLastSuccessfullCompile;
 
-        /// <summary>
-        /// At design time the [Link] above will be null. In that case search for a 
-        /// Simulations object and get its compiler.
-        /// 
-        /// </summary>
-        public ScriptCompiler Compiler()
-        {
-            if (TryGetCompiler())
-                return scriptCompiler;
-            else
-                throw new Exception("Cannot find a script compiler in manager.");
-        }
-
-        /// <summary>
-        /// At design time the [Link] above will be null. In that case search for a 
-        /// Simulations object and get its compiler.
-        /// </summary>
-        /// <returns>True if compiler was found.</returns>
-        private bool TryGetCompiler()
-        {
-            if (scriptCompiler == null)
-            {
-                var simulations = FindAncestor<Simulations>();
-                if (simulations == null)
-                    return false;
-                scriptCompiler = simulations.ScriptCompiler;
-            }
-            return true;
-        }
-
-        /// <summary>Which child is the compiled script model.</summary>
+        /// <summary>Get the compiled script model or null if none.</summary>
         [JsonIgnore]
-        private IModel ScriptModel { get; set; } = null;
-
-        /// <summary>Script model compiled for this manager.</summary>
-        [JsonIgnore]
-        public IModel Script { get {return ScriptModel;} }
+        public IModel Script { get; private set; }
 
         /// <summary>The array of code lines that gets stored in file</summary>
         public string[] CodeArray
@@ -106,7 +75,8 @@ namespace Models
                 else
                 {
                     cSharpCode = CodeFormatting.Split(value);
-                    RebuildScriptModel();
+                    if (Node != null)
+                        RebuildScriptModel();
                 }
             }
         }
@@ -122,26 +92,27 @@ namespace Models
         public ManagerCursorLocation Cursor { get; set; } = new ManagerCursorLocation();
 
         /// <summary>
-        /// Stores the success of the last compile
-        /// Used to check if the binary is up to date before running simulations
-        /// Prevents an old binary brom being used if the last compile had errors
-        /// </summary>
-        [JsonIgnore]
-        public bool SuccessfullyCompiledLast { get; private set; } = false;
-
-        /// <summary>
         /// Stores errors that were generated the last time the script was compiled.
         /// </summary>
         [JsonIgnore]
         public string Errors { get; private set; } = null;
 
+
         /// <summary>
-        /// Called when the model has been newly created in memory whether from 
-        /// cloning or deserialisation.
+        /// Instance has been created.
         /// </summary>
         public override void OnCreated()
         {
             base.OnCreated();
+            RebuildScriptModel();
+        }
+
+        /// <summary>
+        /// Called when the model is about to be deserialised.
+        /// </summary>
+        public override void OnSerialising()
+        {
+            GetParametersFromScriptModel();
         }
 
         /// <summary>
@@ -152,95 +123,84 @@ namespace Models
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            if (Enabled && ScriptModel != null)
-            {
-                // throw an exception to stop simulations from running with an old binary
-                if (SuccessfullyCompiledLast == false)
-                    throw new Exception("Errors found in manager model " + Name);
-                GetParametersFromScriptModel();
-                SetParametersInScriptModel();
-            }
-        }
+            // Need to clear the locator cache so that when we set properties in the script model
+            // parameters like [Lentil] get resolved, not from the cache, but from a new search
+            // for the model. The cache can be out of date for models (e.g. lentil) that have been
+            // overwritten from Replacements.
+            Structure.ClearLocator();
 
-        /// <summary>
-        /// Set compiler to given script compiler
-        /// </summary>
-        public void SetCompiler(ScriptCompiler compiler)
-        {
-            scriptCompiler = compiler;
+            // Need to update our parameter value collection and then reset them in the script.
+            // Some manager scripts refer to a model (e.g. [Lentil]). Resetting these parameters
+            // in the script model will force a lookup on a new model instance which may have come
+            // from an override like Replacements or factor.
+            GetParametersFromScriptModel();
+            SetParametersInScriptModel();
         }
 
         /// <summary>Rebuild the script model and return error message if script cannot be compiled.</summary>
-        /// <param name="allowDuplicateClassName">Optional to not throw if this has a duplicate class name (used when copying script node)</param> 
+        /// <param name="allowDuplicateClassName">Optional to not throw if this has a duplicate class name (used when copying script node)</param>
         public void RebuildScriptModel(bool allowDuplicateClassName = false)
         {
-            if (!TryGetCompiler())
-                return;
+            // Only compile if code is different to last successful compilation.
+            if (Enabled && !string.IsNullOrEmpty(Code) && Code != CodeForLastSuccessfullCompile)
+            {
+                // If the script child model exists. Then get its parameter values.
+                if (Script != null)
+                    GetParametersFromScriptModel();
 
-            lock (compileLockObject) {
+                var results = Node.Compiler.Compile(Code, Node, null, allowDuplicateClassName);
+                Errors = results.ErrorMessages;
 
-                if (Enabled && !string.IsNullOrEmpty(Code))
+                // Remove old script node.
+                if (Script != null)
                 {
-                    // If the script child model exists. Then get its parameter values.
-                    if (ScriptModel != null)
-                        GetParametersFromScriptModel();
-
-                    var results = Compiler().Compile(Code, this, null, allowDuplicateClassName);
-                    this.Errors = results.ErrorMessages;
-                    if (this.Errors == null)
-                    {
-                        //remove all old script children
-                        for(int i = this.Children.Count - 1; i >= 0; i--)
-                            if (this.Children[i] as IScript != null)
-                                this.Children.Remove(this.Children[i]);
-
-                        //add new script model
-                        var newModel = results.Instance as IModel;
-                        if (newModel != null)
-                        {
-                            SuccessfullyCompiledLast = true;
-                            newModel.IsHidden = true;
-                            ScriptModel = Structure.Add(newModel, this);
-                        }
-                        else
-                        {
-                            ScriptModel = null;
-                            SuccessfullyCompiledLast = false;
-                        }
-                    }
-                    else
-                    {
-                        SuccessfullyCompiledLast = false;
-                        Parameters = null;
-                        throw new Exception($"Errors found in manager model {Name}{Environment.NewLine}{this.Errors}");
-                    }
-
-                    SetParametersInScriptModel();
+                    Node.RemoveChild(Script as INodeModel);
+                    Script = null;
                 }
+
+                if (Errors == null)
+                {
+                    //add new script model
+                    Script = results.Instance as IModel;
+                    if (Script != null)
+                    {
+                        CodeForLastSuccessfullCompile = Code;
+                        Script.IsHidden = true;
+                        Node.AddChild(Script as INodeModel);
+                    }
+                }
+                if (Script == null)
+                {
+                    CodeForLastSuccessfullCompile = null;
+                    if (Errors != null)
+                        throw new Exception($"Errors found in manager model {Name}{Environment.NewLine}{Errors}");
+                }
+
+                SetParametersInScriptModel();
             }
         }
 
         /// <summary>Set the scripts parameters from the 'xmlElement' passed in.</summary>
         private void SetParametersInScriptModel()
         {
-            if (Enabled && ScriptModel != null && Parameters != null)
+            if (Enabled && Script != null && Parameters != null)
             {
                     List<Exception> errors = new List<Exception>();
                     foreach (var parameter in Parameters)
                     {
                         try
                         {
-                            PropertyInfo property = ScriptModel.GetType().GetProperty(parameter.Key);
+                            PropertyInfo property = Script.GetType().GetProperty(parameter.Key);
                             if (property != null)
                             {
                                 object value;
                                 if ((typeof(IModel).IsAssignableFrom(property.PropertyType) || property.PropertyType.IsInterface) && (parameter.Value.StartsWith(".") || parameter.Value.StartsWith("[")))
-                                    value = this.FindByPath(parameter.Value)?.Value;
+                                    value = Structure.GetObject(parameter.Value)?.Value;
                                 else if (property.PropertyType == typeof(IPlant))
-                                    value = this.FindInScope(parameter.Value);
+                                    value = Structure.Find<object>(parameter.Value);
                                 else
                                     value = ReflectionUtilities.StringToObject(property.PropertyType, parameter.Value);
-                                property.SetValue(ScriptModel, value, null);
+                                property.SetValue(Script, value, null);
                             }
                         }
                         catch (Exception err)
@@ -262,19 +222,19 @@ namespace Models
         /// <returns></returns>
         public void GetParametersFromScriptModel()
         {
-            if (Enabled && ScriptModel != null)
+            if (Enabled && Script != null)
             {
                 if (Parameters == null)
                     Parameters = new List<KeyValuePair<string, string>>();
                 Parameters.Clear();
 
-                foreach (PropertyInfo property in ScriptModel.GetType().GetProperties(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public))
+                foreach (PropertyInfo property in Script.GetType().GetProperties(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public))
                 {
                     if (property.CanRead && property.CanWrite &&
                         ReflectionUtilities.GetAttribute(property, typeof(JsonIgnoreAttribute), false) == null &&
                         Attribute.IsDefined(property, typeof(DescriptionAttribute)))
                     {
-                        object value = property.GetValue(ScriptModel, null);
+                        object value = property.GetValue(Script, null);
                         if (value == null)
                             value = "";
                         else if (value is IModel)
@@ -321,7 +281,7 @@ namespace Models
 
             foreach(MethodInfo method in methods)
             {
-                if (method.Name.CompareTo(name) == 0) 
+                if (method.Name.CompareTo(name) == 0)
                 {
                     return method.Invoke(script, args);
                 }

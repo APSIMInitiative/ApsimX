@@ -1,4 +1,6 @@
 ﻿using System;
+using APSIM.Core;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
@@ -13,8 +15,12 @@ namespace Models.LifeCycle
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LifeCyclePhase))]
-    public class KLDamage : Model
+    public class KLDamage : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         [Link]
         private Soil Soil = null;
 
@@ -36,7 +42,7 @@ namespace Models.LifeCycle
         {
             if (SoilCrop == null)
                 throw new Exception($"No soil/crop specified in {Name}");
-            SoilCrop = Soil.FindDescendant<SoilCrop>(SoilCrop.Name);
+            SoilCrop = Structure.FindChild<SoilCrop>(SoilCrop.Name, relativeTo: Soil, recurse: true);
             initialKL = SoilCrop.KL.Clone() as double[];
         }
 

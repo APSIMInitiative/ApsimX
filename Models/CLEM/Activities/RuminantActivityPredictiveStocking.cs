@@ -10,6 +10,7 @@ using Models.Core.Attributes;
 using System.IO;
 using Newtonsoft.Json;
 using APSIM.Shared.Utilities;
+using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
@@ -129,7 +130,9 @@ namespace Models.CLEM.Activities
             AeDestocked = 0;
             this.InitialiseHerd(false, true);
             filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>(true, false);
-            paddocks = Resources.FindResourceGroup<GrazeFoodStore>()?.FindAllChildren<GrazeFoodStoreType>();
+            var grazeFoodStore = Resources.FindResourceGroup<GrazeFoodStore>();
+            if (grazeFoodStore != null)
+                paddocks =Structure.FindChildren<GrazeFoodStoreType>(relativeTo: grazeFoodStore);
             paddockShortfalls = new List<(string paddockName, double number, double AE, double AeShortfall)>();
         }
 
@@ -151,7 +154,7 @@ namespace Models.CLEM.Activities
             amountToDo = 0;
             amountToSkip = 0;
             IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => (a.Location ?? "") != "");
-            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd);
+            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd, Structure);
             numberToDo = uniqueIndividuals?.Count() ?? 0;
 
             int monthsToAssess = 0;
@@ -330,7 +333,7 @@ namespace Models.CLEM.Activities
         {
             return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
             {
-                (FindAllChildren<RuminantGroup>(), true, "childgroupfilterborder", "Individuals will be sold in the following order:", "")
+                (Structure.FindChildren<RuminantGroup>(), true, "childgroupfilterborder", "Individuals will be sold in the following order:", "")
             };
         }
 

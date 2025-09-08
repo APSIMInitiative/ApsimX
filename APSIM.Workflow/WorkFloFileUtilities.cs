@@ -1,82 +1,67 @@
 
+using System;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+
 namespace APSIM.Workflow;
+
+/// <summary>
+/// Utility class for creating and managing WorkFlo files.
+/// A workflow file is a YAML file that defines a series of tasks to be executed in a specific order.
+/// </summary>
 public static class WorkFloFileUtilities
 {
     /// <summary>
     /// Creates a validation workflow file in the specified directory.
     /// </summary>
-    /// <param name="directoryPathString"></param>
+    /// <param name="options">Command line argument values</param>
     /// <exception cref="DirectoryNotFoundException"></exception>
-    public static void CreateValidationWorkFloFile(string directoryPathString, List<string> apsimFilePaths)
+    public static void CreateValidationWorkFloFile(Options options)
     {
-        if (!Directory.Exists(directoryPathString))
+        try
         {
-            throw new DirectoryNotFoundException("Directory not found: " + directoryPathString);
+            string currentBuildNumber = options.PullRequestNumber; // Placeholder for development, replace with actual call to GetCurrentBuildNumberAsync
+            string timeFormat = "yyyy.M.d-HH:mm";
+            TimeZoneInfo brisbaneTZ = TimeZoneInfo.FindSystemTimeZoneById("E. Australia Standard Time");
+            DateTime brisbaneDatetimeNow = TimeZoneInfo.ConvertTime(DateTime.Now, brisbaneTZ);
+            string workFloFileName = "workflow.yml";
+            // Include the workflow yml file for debugging purposes
+            string[] inputFiles = [
+                ".env",
+                workFloFileName,
+                "grid.csv"
+            ];
+            string workFloFileContents = $"""
+            name: workflo_apsim_validation_pr_{options.PullRequestNumber}
+            inputfiles:
+            - .env
+            - workflow.yml
+            - grid.csv
+            tasks:
+            - name: sim
+              inputfiles:
+              - .env
+              - workflow.yml
+              grid: grid.csv
+              steps:
+                - uses: apsiminitiative/apsimplusr:{options.DockerImageTag}
+                  args: --verbose '"$Path"'
+              finally:
+                - uses: apsiminitiative/postats2-collector:latest
+                  args: upload {currentBuildNumber} {options.CommitSHA} {options.GitHubAuthorID} {brisbaneDatetimeNow.ToString(timeFormat)} ""$Path""
+            """;
+            File.WriteAllText(Path.Combine(options.DirectoryPath, workFloFileName), workFloFileContents);
+            Console.WriteLine($"Workflow.yml contents:\n{workFloFileContents}");
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Error creating validation workflow file: {ex.Message}\n{ex.StackTrace}");
         }
 
-        string workFloFileName = "workflow.yml";
-        string workFloName = GetDirectoryName(directoryPathString);
-        string exclusionPattern = "*.yml";
-        string[] inputFiles = Directory.GetFiles(directoryPathString).Except(Directory.GetFiles(directoryPathString, exclusionPattern)).ToArray();
-        string workFloFileContents = InitializeWorkFloFile(workFloName);
-        workFloFileContents = AddInputFilesToWorkFloFile(workFloFileContents, inputFiles);
-        workFloFileContents = AddTaskToWorkFloFile(workFloFileContents, inputFiles);
-        string indent = "  ";
-        workFloFileContents = AddInputFilesToWorkFloFile(workFloFileContents, inputFiles, indent);
-        workFloFileContents = AddStepsToWorkFloFile(workFloFileContents, indent, apsimFilePaths);
-        File.WriteAllText(Path.Combine(directoryPathString, workFloFileName), workFloFileContents);
     }
 
-    /// <summary>
-    /// Adds steps to the workflow file for each apsimx file present in the directory
-    /// </summary>
-    /// <param name="workFloFileContents"></param>
-    /// <param name="indent"></param>
-    /// <param name="apsimFilePaths"></param>
-    /// <returns></returns>
-    private static string AddStepsToWorkFloFile(string workFloFileContents, string indent, List<string> apsimFilePaths)
-    {
-        workFloFileContents += $"{indent}steps: "+ Environment.NewLine;
-        foreach(string filePath in apsimFilePaths)
-        {
-            string apsimFileName = Path.GetFileName(filePath);
-            workFloFileContents += $"""
-
-                {indent}  - uses: apsiminitiative/apsimng
-                {indent}    args: {Path.GetFileName(apsimFileName)} --csv 
-                
-                """;
-        }
-        return workFloFileContents;
-    }
-
-
-    /// <summary>
-    /// Initializes the workflow file with the name and input files statement.
-    /// </summary>
-    /// <param name="workFloName">Name for the WorkFlo</param>
-    public static string InitializeWorkFloFile(string workFloName)
-    {
-        string workFloFileContents = $"""
-        name: {workFloName}
-        inputfiles:{Environment.NewLine}
-        """;
-        return workFloFileContents;
-    }
-
-    /// <summary>
-    /// Adds input file lines to the workflow file with correct indentation.
-    /// </summary>
-    /// <param name="workfloFileText"></param>
-    public static string AddInputFilesToWorkFloFile(string workfloFileText, string[] inputFiles, string indent = "")
-    {
-        foreach (string file in inputFiles)
-        {
-            string inputFileName = Path.GetFileName(file);
-            workfloFileText += indent + "- " + inputFileName + Environment.NewLine;
-        }
-        return workfloFileText;
-    }
 
     /// <summary>
     /// Gets the directory name from the specified directory path.
@@ -92,21 +77,21 @@ public static class WorkFloFileUtilities
         return dirName;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name=""></param>
-    /// <param name="inputFiles"></param>
-    /// <returns></returns>
-    public static string AddTaskToWorkFloFile(string workFloFileContents, string[] inputFiles)
-    {
-        workFloFileContents += $"""
-        tasks:
-        - name: 0001
-          inputfiles:{Environment.NewLine}
-        """;
-        return workFloFileContents; 
-    }
 
+    /// <summary>
+    /// Gets the current build number.
+    /// </summary>
+    /// <returns></returns>
+    public static async Task<string> GetCurrentBuildNumberAsync()
+    {
+        using HttpClient client = new()
+        {
+            BaseAddress = new Uri("https://builds.apsim.info/api/"),
+        };
+        using HttpResponseMessage response = await client.GetAsync("nextgen/nextversion/");
+        response.EnsureSuccessStatusCode();
+        var jsonResponse = await response.Content.ReadAsStringAsync();
+        return jsonResponse;
+    }
 
 }

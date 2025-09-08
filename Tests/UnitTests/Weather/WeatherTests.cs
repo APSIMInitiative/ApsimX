@@ -5,10 +5,11 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using APSIM.Core;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Models.Core.Run;
 using Models.Interfaces;
 using Models.Storage;
@@ -30,7 +31,10 @@ namespace UnitTests.Weather
             string weatherFilePath = Path.ChangeExtension(Path.GetTempFileName(), ".xlsx");
             using (FileStream file = new FileStream(weatherFilePath, FileMode.Create, FileAccess.Write))
             {
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("UnitTests.Weather.WeatherTestsExcelFile.xlsx").CopyTo(file);
+                using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("UnitTests.Weather.WeatherTestsExcelFile.xlsx"))
+                {
+                    stream.CopyTo(file);
+                }
             }
 
             Simulation baseSim = new Simulation()
@@ -53,11 +57,85 @@ namespace UnitTests.Weather
                     new MockSummary()
                 }
             };
+            var tree = Node.Create(baseSim);
 
             baseSim.Prepare();
             baseSim.Run();
-            var summary = baseSim.FindDescendant<MockSummary>();
+            var summary = baseSim.Node.FindChild<MockSummary>(recurse: true);
             Assert.That(summary.messages[0], Is.EqualTo("Simulation terminated normally"));
+        }
+
+        /// <summary>
+        /// Tests a weather file in .bin (Binary) format.
+        /// </summary>
+        [Test]
+        public void BinaryWeatherFileTest()
+        {
+            string weatherFilePath = Path.ChangeExtension(Path.GetTempFileName(), ".bin");
+            using (FileStream file = new FileStream(weatherFilePath, FileMode.Create, FileAccess.Write))
+            {
+                using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("UnitTests.Weather.BinaryMetfile.bin"))
+                {
+                    stream.CopyTo(file);
+                }
+            }
+
+            Simulation baseSim = new Simulation()
+            {
+                Name = "Base",
+                Children = new List<IModel>()
+                {
+                    new Models.Climate.Weather()
+                    {
+                        Name = "Weather",
+                        FullFileName = weatherFilePath
+                    },
+                    new Clock()
+                    {
+                        Name = "Clock",
+                        StartDate = new DateTime(1998, 11, 9),
+                        EndDate = new DateTime(1998, 11, 12)
+                    },
+                    new MockSummary()
+                }
+            };
+            var tree = Node.Create(baseSim);
+
+            baseSim.Prepare();
+            baseSim.Run();
+
+            var weather = baseSim.Node.FindChild<Models.Climate.Weather>(recurse: true);
+            Assert.That(MathUtilities.RoundSignificant(weather.Latitude, 2), Is.EqualTo(-24.45));
+            Assert.That(MathUtilities.RoundSignificant(weather.Longitude, 2), Is.EqualTo(127.2));
+            Assert.That(MathUtilities.RoundSignificant(weather.MaxT, 1), Is.EqualTo(35.5));
+            Assert.That(MathUtilities.RoundSignificant(weather.MinT, 1), Is.EqualTo(18.3));
+            Assert.That(MathUtilities.RoundSignificant(weather.Rain, 1), Is.EqualTo(0));
+            Assert.That(MathUtilities.RoundSignificant(weather.Radn, 1), Is.EqualTo(28.3));
+            Assert.That(MathUtilities.RoundSignificant(weather.VP, 1), Is.EqualTo(5.1));
+
+            var summary = baseSim.Node.FindChild<MockSummary>(recurse: true);
+            Assert.That(summary.messages[0], Is.EqualTo("Simulation terminated normally"));
+        }
+
+        [Test]
+        public void ExcelOADateTest()
+        {
+            string weatherFilePath = Path.ChangeExtension(Path.GetTempFileName(), ".xlsx");
+            using (FileStream file = new(weatherFilePath, FileMode.Create, FileAccess.Write))
+            {
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("UnitTests.Weather.OADateExcelFile.xlsx").CopyTo(file);
+            }
+
+            Models.Climate.Weather weather = new()
+            {
+                Name = "Weather",
+                FullFileName = weatherFilePath,
+                ExcelWorkSheetName = "Sheet1"
+            };
+            Node.Create(weather);
+
+            Assert.That(weather.StartDate, Is.EqualTo(new DateTime(1987, 5, 30)));
+            Assert.That(weather.EndDate, Is.EqualTo(new DateTime(1987, 6, 26)));
         }
 
         [Test]
@@ -111,7 +189,8 @@ namespace UnitTests.Weather
                 };
 
                 // Run simulations.
-                Runner runner = new Runner(sims);
+                var simulations = Node.Create(sims);
+                Runner runner = new Runner(simulations.Model as Simulations);
                 List<Exception> errors = runner.Run();
                 Assert.That(errors, Is.Not.Null);
                 if (errors.Count != 0)
@@ -161,7 +240,7 @@ namespace UnitTests.Weather
             Clock clock = baseSim.Children[1] as Clock;
             clock.StartDate = DateTime.ParseExact("1900-01-01", "yyyy-MM-dd", CultureInfo.InvariantCulture);
             clock.EndDate = DateTime.ParseExact("1900-01-02", "yyyy-MM-dd", CultureInfo.InvariantCulture);
-
+            Node.Create(baseSim);
             baseSim.Prepare();
             baseSim.Run();
 
@@ -200,8 +279,8 @@ namespace UnitTests.Weather
             IEnumerable<string> exampleFileNames = Directory.GetFiles(exampleFileDirectory, "*.apsimx", SearchOption.AllDirectories);
             foreach (string exampleFile in exampleFileNames)
             {
-                Simulations sim = FileFormat.ReadFromFile<Simulations>(exampleFile, e => throw new Exception(), false).NewModel as Simulations;
-                IEnumerable<Models.Climate.Weather> weatherModels = sim.FindAllDescendants<Models.Climate.Weather>();
+                Simulations sim = FileFormat.ReadFromFile<Simulations>(exampleFile, e => {return;}).Model as Simulations;
+                IEnumerable<Models.Climate.Weather> weatherModels = sim.Node.FindChildren<Models.Climate.Weather>(recurse: true);
                 foreach (Models.Climate.Weather weatherModel in weatherModels)
                 {
                     if (!weatherModel.FileName.Contains("%root%/Examples/WeatherFiles/") && weatherModel.FileName.Contains('\\'))
@@ -243,7 +322,7 @@ namespace UnitTests.Weather
             weatherFiles.Add("WaggaWagga.met");
 
             var binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            
+
 
             foreach (string wFile in weatherFiles)
             {
@@ -311,13 +390,13 @@ namespace UnitTests.Weather
                         new MockSummary()
                     }
             };
-
             Models.Climate.SimpleWeather weather = baseSim.Children[0] as Models.Climate.SimpleWeather;
             Clock clock = baseSim.Children[1] as Clock;
 
             weather.FileName = weatherFilePath2;
             clock.StartDate = DateTime.ParseExact("1990-01-01", "yyyy-MM-dd", CultureInfo.InvariantCulture);
             clock.EndDate = DateTime.ParseExact("1990-01-02", "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            Node.Create(baseSim);
             baseSim.Prepare();
             baseSim.Run();
 

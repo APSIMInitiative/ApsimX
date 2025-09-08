@@ -5,6 +5,8 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
+using APSIM.Core;
+using APSIM.Numerics;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
 using Models.Core.Run;
@@ -218,7 +220,7 @@ namespace Models
         public IEnumerable Y2 { get; private set; }
 
         /// <summary>The simulation names for each point.</summary>
-        public IEnumerable<string> SimulationNamesForEachPoint { get; private set; }
+        public IEnumerable SimulationNamesForEachPoint { get; private set; }
 
         /// <summary>Gets the error values for the x series</summary>
         public IEnumerable<double> XError { get; private set; }
@@ -292,11 +294,11 @@ namespace Models
                             {
                                 matched = false;
                             }
-                            else 
+                            else
                             {
                                 //Remove this descriptor from column name so that it isn't used to filter again
-                                if (descriptor.Name.CompareTo("Zone") != 0) 
-                                    columnNames.Remove(descriptor.Name); 
+                                if (descriptor.Name.CompareTo("Zone") != 0)
+                                    columnNames.Remove(descriptor.Name);
                             }
                         }
                         if (matched) {
@@ -354,6 +356,7 @@ namespace Models
                         Y = MathUtilities.Cumulative(Y as IEnumerable<double>);
                     if (Series.CumulativeX)
                         X = MathUtilities.Cumulative(X as IEnumerable<double>);
+                    SimulationNamesForEachPoint = GetDataFromView(View, "SimulationName");
                 }
             }
         }
@@ -362,8 +365,9 @@ namespace Models
         /// Return a list of field names that this definition will read from the data table.
         /// </summary>
         /// <param name="fieldsThatExist"></param>
+        /// <param name="structure">Structure instance</param>
         /// <returns></returns>
-        public List<string> GetFieldNames(List<string> fieldsThatExist)
+        public List<string> GetFieldNames(List<string> fieldsThatExist, IStructure structure)
         {
             var filter = GetFilter(fieldsThatExist);
             var fieldsToRead = new List<string>();
@@ -385,7 +389,7 @@ namespace Models
             fieldsToRead.AddRange(ExtractFieldNamesFromFilter(filter));
 
             // Add any fields from child graphable models.
-            foreach (IGraphable series in Series.FindAllChildren<IGraphable>())
+            foreach (IGraphable series in structure.FindChildren<IGraphable>(relativeTo: Series))
                 fieldsToRead.AddRange(series.GetExtraFieldsToRead(this));
             return fieldsToRead;
         }
@@ -409,7 +413,7 @@ namespace Models
                         else
                             filter = AddToFilter(filter, $"[{descriptor.Name}] = '{descriptor.Value}'");
                     }
-                        
+
                 }
             }
             if (!string.IsNullOrEmpty(userFilter))
@@ -495,7 +499,7 @@ namespace Models
         /// <returns>The return data or null if not found</returns>
         private IEnumerable GetDataFromModels(string fieldName)
         {
-            return Series.FindByPath(fieldName)?.Value as IEnumerable;
+            return Series.Node.Get(fieldName) as IEnumerable;
         }
 
         /// <summary>Gets a column of data from a view.</summary>

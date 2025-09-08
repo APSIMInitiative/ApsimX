@@ -1,4 +1,6 @@
-﻿using APSIM.Shared.Utilities;
+﻿using APSIM.Core;
+using APSIM.Numerics;
+using APSIM.Shared.Utilities;
 using Models.Climate;
 using Models.Core;
 using Models.Functions;
@@ -23,14 +25,18 @@ namespace Models.PMF.SimplePlantModels
     [Serializable]
     [ViewName("UserInterface.Views.PropertyAndGridView")]
     [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
-    public class DEROPAPY : Model
+    public class DEROPAPY : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>Location of file with crop specific coefficients</summary>
         [Description("File path for coefficient file")]
         [Display(Type = DisplayType.FileName)]
         public string CoefficientFile { get; set ; }
-        
-        
+
+
         /// <summary>
         /// Gets or sets the full file name (with path). The user interface uses this.
         /// </summary>
@@ -39,12 +45,12 @@ namespace Models.PMF.SimplePlantModels
         {
             get
             {
-                Simulation simulation = FindAncestor<Simulation>();
+                Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
                 if (simulation != null)
                     return PathUtilities.GetAbsolutePath(this.CoefficientFile, simulation.FileName);
                 else
                 {
-                    Simulations simulations = FindAncestor<Simulations>();
+                    Simulations simulations = Structure.FindParent<Simulations>(recurse: true);
                     if (simulations != null)
                         return PathUtilities.GetAbsolutePath(this.CoefficientFile, simulations.FileName);
                     else
@@ -53,7 +59,7 @@ namespace Models.PMF.SimplePlantModels
             }
             set
             {
-                Simulations simulations = FindAncestor<Simulations>();
+                Simulations simulations = Structure.FindParent<Simulations>(recurse: true);
                 if (simulations != null)
                     this.CoefficientFile = PathUtilities.GetRelativePath(value, simulations.FileName);
                 else
@@ -69,7 +75,7 @@ namespace Models.PMF.SimplePlantModels
         [Display(Type = DisplayType.CSVCrops)]
         public string CurrentCropName { get; set; }
 
-        ///<summary></summary> 
+        ///<summary></summary>
         [JsonIgnore] public string[] ParamName { get; set; }
 
         /// <summary>
@@ -77,16 +83,16 @@ namespace Models.PMF.SimplePlantModels
         /// </summary>
         [JsonIgnore] public string[] CropNames { get; set; }
 
-        ///<summary></summary> 
+        ///<summary></summary>
         [JsonIgnore] public Dictionary<string, string> CurrentCropParams { get; set; }
 
-        ///<summary>The days after the winter solstice when the crop must end and rewind to the start of its cycle for next season</summary> 
+        ///<summary>The days after the winter solstice when the crop must end and rewind to the start of its cycle for next season</summary>
         private int EndSeasonDAWS { get; set; }
 
-        ///<summary>bool to indicate if crop has already done a phenology rewind this season</summary> 
+        ///<summary>bool to indicate if crop has already done a phenology rewind this season</summary>
         private bool HasRewondThisSeason { get; set; }
 
-        ///<summary>bool to indicate if crop started growth this season</summary> 
+        ///<summary>bool to indicate if crop started growth this season</summary>
         private bool HasStartedGrowthhisSeason { get; set; } = false;
 
         /// <summary>The plant</summary>
@@ -141,7 +147,7 @@ namespace Models.PMF.SimplePlantModels
 
             foreach (DataColumn column in readData.Columns)
                 column.ReadOnly = true;
-            
+
             if (readData.Rows.Count == 0)
                 throw new Exception("Failed to read any rows of data from " + FullFileName);
             if ((CurrentCropName != null)&&(CurrentCropName != ""))
@@ -205,8 +211,8 @@ namespace Models.PMF.SimplePlantModels
 
             double soilDepthMax = 0;
 
-            var soilCrop = soil.FindDescendant<SoilCrop>(deropapy.Name + "Soil");
-            var physical = soil.FindDescendant<Physical>("Physical");
+            var soilCrop = Structure.FindChild<SoilCrop>(deropapy.Name + "Soil", relativeTo: soil, recurse: true);
+            var physical = Structure.FindChild<Physical>("Physical", relativeTo: soil, recurse: true);
             if (soilCrop == null)
                 throw new Exception($"Cannot find a soil crop parameterisation called {deropapy.Name}Soil");
 
@@ -227,7 +233,7 @@ namespace Models.PMF.SimplePlantModels
             if (RootsInNeighbourZone)
             {  //Must add root zone prior to sowing the crop.  For some reason they (silently) dont add if you try to do so after the crop is established
                 string neighbour = "";
-                List<Zone> zones = simulation.FindAllChildren<Zone>().ToList();
+                List<Zone> zones = Structure.FindChildren<Zone>(relativeTo: simulation).ToList();
                 if (zones.Count > 2)
                     throw new Exception("Strip crop logic only set up for 2 zones, your simulation has more than this");
                 if (zones.Count > 1)
@@ -249,7 +255,7 @@ namespace Models.PMF.SimplePlantModels
                     Constant InitStor = new Constant();
                     InitStor.FixedValue = 0;
                     InitialDM.Storage = InitStor;
-                    root.ZoneInitialDM.Add(InitialDM);
+                    //root.ZoneInitialDM.Add(InitialDM);
                 }
             }
 
@@ -260,7 +266,7 @@ namespace Models.PMF.SimplePlantModels
             double rowWidth = 0.0;
 
             derochild = coeffCalc();
-            deropapy.Children.Add(derochild);
+            deropapy.AddCultivar(derochild);
             deropapy.Sow(cropName, population, depth, rowWidth);
             phenology.SetAge(AgeAtSimulationStart);
             summary.WriteMessage(this, "Some of the message above is not relevent as DEROPAPY has no notion of population, bud number or row spacing." +
@@ -324,11 +330,11 @@ namespace Models.PMF.SimplePlantModels
 
 
         /// <summary>
-        /// Data structure that appends a parameter value to each address in the base deroParams dictionary 
+        /// Data structure that appends a parameter value to each address in the base deroParams dictionary
         /// then writes them into a commands property in a Cultivar object.
         /// </summary>
-        /// <returns>a Cultivar object with the overwrites set for the CropName selected using the parameters displayed 
-        /// in the grid view that come from the CoeffientFile selected 
+        /// <returns>a Cultivar object with the overwrites set for the CropName selected using the parameters displayed
+        /// in the grid view that come from the CoeffientFile selected
         /// </returns>
         public Cultivar coeffCalc()
         {
@@ -439,7 +445,7 @@ namespace Models.PMF.SimplePlantModels
             string cleaned = clean(vect);
             string[] strung = cleaned.Split(',');
             double[] doubles = new double[strung.Length];
-            for (int i = 0; i < strung.Length; i++) 
+            for (int i = 0; i < strung.Length; i++)
             {
                 doubles[i] = Double.Parse(strung[i]);
             }
@@ -483,7 +489,7 @@ namespace Models.PMF.SimplePlantModels
             {"Gsmax350", "[DEROPAPY].Leaf.Canopy.Gsmax350 = " },
             {"R50", "[DEROPAPY].Leaf.Canopy.R50 = " },
             {"RelSlowLAI",  "[DEROPAPY].Leaf.Canopy.ExpandedGreenArea.Expansion.Delta.Integral.GrowthPattern.XYPairs.X[2] = "},
-            {"LAIbase","[DEROPAPY].Leaf.Canopy.GreenAreaIndex.WinterBase.PrunThreshold.FixedValue = " },                                   
+            {"LAIbase","[DEROPAPY].Leaf.Canopy.GreenAreaIndex.WinterBase.PrunThreshold.FixedValue = " },
             {"LAIbaseInitial", "[DEROPAPY].Leaf.Canopy.GreenAreaIndex.WinterBase.GAICarryover.PreEventValue.FixedValue = "},
             {"LAIAnnualGrowth","[DEROPAPY].Leaf.Canopy.ExpandedGreenArea.Expansion.Delta.Integral.LAIAnnualGrowth.FixedValue = " },
             {"ExtCoeff","[DEROPAPY].Leaf.Canopy.GreenExtinctionCoefficient.PotentialExtinctionCoeff.FixedValue = " },

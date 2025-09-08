@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Soils;
@@ -13,8 +14,13 @@ namespace Models.Agroforestry
     /// Class to hold spatial parameters for tree proxy.
     /// </summary>
     [Serializable]
-    public class TreeProxySpatial : Model
+    public class TreeProxySpatial : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
+
         private List<TreeProxySpatialParameter> _parameters;
 
         /// <summary>
@@ -63,6 +69,15 @@ namespace Models.Agroforestry
             }
         }
 
+        /// <summary>
+        /// Perform initialisation.
+        /// </summary>
+        public override void OnCreated()
+        {
+            base.OnCreated();
+            CreateParametersUsingDefaults();
+        }
+
         /// <summary>Get the RLD values for a tree height cutoff.</summary>
         /// <param name="thCutoff">The tree height cutoff.</param>
         public double[] Rld(double thCutoff)
@@ -87,18 +102,21 @@ namespace Models.Agroforestry
         /// <summary>Create parameters using default values.</summary>
         private void CreateParametersUsingDefaults()
         {
-            // Get the first soil. For now we're assuming all soils have the same structure.
-            var physical = TreeProxyInstance.FindInScope<Physical>();
-            if (physical != null)
+            if (Node != null)   // Can be null during deserialisation.
             {
-                _parameters = new()
+                // Get the first soil. For now we're assuming all soils have the same structure.
+                var physical = Structure.Find<Physical>(relativeTo: TreeProxyInstance);
+                if (physical != null)
                 {
-                    new() { Name = "Shade (%)" },
-                    new() { Name = "Root Length Density (cm/cm3)" },
-                    new() { Name = "Depth (cm)" },
-                };
-                foreach (string s in SoilUtilities.ToDepthStringsCM(physical.Thickness))
-                    _parameters.Add( new() { Name = s });
+                    _parameters = new()
+                    {
+                        new() { Name = "Shade (%)" },
+                        new() { Name = "Root Length Density (cm/cm3)" },
+                        new() { Name = "Depth (cm)" },
+                    };
+                    foreach (string s in SoilUtilities.ToDepthStringsCM(physical.Thickness))
+                        _parameters.Add(new() { Name = s });
+                }
             }
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using Models.Core;
 using Newtonsoft.Json;
 
@@ -22,9 +23,14 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(Folder))]
     [ValidParent(ParentType = typeof(ModelOverrides))]
     [ValidParent(ParentType = typeof(Sugarcane))]
+    [ValidParent(ParentType = typeof(OilPalm.OilPalm))]
     [ValidParent(ParentType = typeof(AgPasture.PastureSpecies))]
-    public class Cultivar : Model, ILineEditor
+    public class Cultivar : Model, ILineEditor, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>Default constructor.</summary>
         /// <remarks>This is needed for AddModel to work.</remarks>
         public Cultivar()
@@ -71,9 +77,9 @@ namespace Models.PMF
         {
             List<string> names = new List<string>();
             names.Add(Name);
-            foreach (string name in FindAllChildren<Alias>().Select(a => a.Name))
+            foreach (string name in Structure.FindChildren<Alias>().Select(a => a.Name))
                 names.Add(name);
-                
+
             return names;
         }
 
@@ -82,8 +88,15 @@ namespace Models.PMF
         public void Apply(IModel model)
         {
             relativeToModel = model;
-            if (Command != null)
-                undos = Overrides.Apply(model, Overrides.ParseStrings(Command));
+            if (Command == null)
+                return;
+            var incomingOverrides = Overrides.ParseStrings(Command);
+            foreach (var incoming in incomingOverrides)
+            {
+                if (!Overrides.PathHasMatches(model, incoming.Path))
+                    throw new Exception($"Can't find {incoming.Path} in cultivar {Name}.");
+            }
+            undos = Overrides.Apply(model, incomingOverrides);
         }
 
         /// <summary>Undoes cultivar changes, if any.</summary>

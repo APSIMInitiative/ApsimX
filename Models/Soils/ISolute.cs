@@ -50,6 +50,9 @@
         /// <summary>Concentration of solute in solution.</summary>
         double[] ConcInSolution { get; set; }
 
+        /// <summary>Amount of N leaching from each soil layer (kg /ha)</summary>
+        public double[] Flow { get; set; }
+
         /// <summary>Setter for kgha.</summary>
         /// <remarks>
         /// This is necessary to allow the use of the SoilCNPatch capability
@@ -63,5 +66,10 @@
         /// <param name="callingModelType">Type of calling model</param>
         /// <param name="delta">New delta values</param>
         void AddKgHaDelta(SoluteSetterType callingModelType, double[] delta);
+
+        /// <summary>Add an amount of solute at a specified depth.</summary>
+        /// <param name="amount">Amount of solute to add (kg/ha).</param>
+        /// <param name="layerIndex">Layer index.</param>
+        void AddToLayer(double amount, int layerIndex);
     }
 }

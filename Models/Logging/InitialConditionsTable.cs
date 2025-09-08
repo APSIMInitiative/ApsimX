@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 
@@ -21,12 +22,12 @@ namespace Models.Logging
         private string relativePath;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public IEnumerable<InitialCondition> Conditions { get; private set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="provider"></param>
         /// <param name="conditions"></param>
@@ -63,7 +64,15 @@ namespace Models.Logging
                             DataTableUtilities.AddColumn(vectorsTable, columnName, MathUtilities.StringsToDoubles(value));
                         else
                         {
-                            value = value.Select(x => double.Parse(x).ToString(condition.DisplayFormat)).ToArray();
+                            List<string> convertedArray = new List<string>();
+                            foreach (string val in value)
+                            {
+                                if (string.IsNullOrEmpty(val))
+                                    convertedArray.Add("");
+                                else
+                                    convertedArray.Add(double.Parse(val).ToString(condition.DisplayFormat));
+                            }
+                            value = convertedArray.ToArray();
                             DataTableUtilities.AddColumn(vectorsTable, columnName, value);
                         }
                     }

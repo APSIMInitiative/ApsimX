@@ -1,10 +1,12 @@
 [weather.met.weather]
 
 
-latitude =           -32.2049 (DECIMAL DEGREES)
-longitude  =        116.7604 (DECIMAL DEGREES)
+latitude = -32.2049 (DECIMAL DEGREES)
+longitude = 116.7604 (DECIMAL DEGREES)
 
-
+!Tav and Amp used from nearby 035274 BEVERLEY LongPaddock met file.
+tav = 17.76 (oC) ! Annual average ambient temperature. Based on 1 Jan 1957 to current.
+amp = 14.95 (oC) ! Annual amplitude in mean monthly temperature. Based on 1 Jan 1957 to current.
 
 
 

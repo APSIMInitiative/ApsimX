@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
@@ -70,8 +71,7 @@ namespace UnitTests.Core
         {
             Simulation sim = CreateSimulation(Path.Combine("%root%", "Examples", fileName));
             Logger logger = new Logger();
-            logger.Parent = sim;
-            sim.Children.Add(logger);
+            sim.Node.AddChild(logger);
             sim.Prepare();
 
             // 2. Run simulation.
@@ -88,8 +88,8 @@ namespace UnitTests.Core
 
             // Easiest way to debug this test is to uncomment these two lines
             // and open the two json files in a diff tool.
-            // File.WriteAllText(Path.Combine(Path.GetTempPath(), $"pre-{Guid.NewGuid().ToString()}.json"), pre);
-            // File.WriteAllText(Path.Combine(Path.GetTempPath(), $"post-{Guid.NewGuid().ToString()}.json"), post);
+            //File.WriteAllText(Path.Combine(Path.GetTempPath(), $"pre-{Guid.NewGuid().ToString()}.json"), pre);
+            //File.WriteAllText(Path.Combine(Path.GetTempPath(), $"post-{Guid.NewGuid().ToString()}.json"), post);
 
             Assert.That(post, Is.EqualTo(pre), $"{Path.GetFileName(sim.FileName)} simulation failed to zero all variables");
         }
@@ -97,14 +97,14 @@ namespace UnitTests.Core
         private static Simulation CreateSimulation(string path)
         {
             path = PathUtilities.GetAbsolutePath(path, null);
-            Simulations sims = FileFormat.ReadFromFile<Simulations>(path, e => throw e, false).NewModel as Simulations;
-            foreach (Soil soil in sims.FindAllDescendants<Soil>())
+            Simulations sims = FileFormat.ReadFromFile<Simulations>(path).Model as Simulations;
+            foreach (Soil soil in sims.Node.FindChildren<Soil>(recurse: true))
                 soil.Sanitise();
-            DataStore storage = sims.FindDescendant<DataStore>();
+            DataStore storage = sims.Node.FindChild<DataStore>(recurse: true);
             storage.UseInMemoryDB = true;
-            IClock clock = sims.FindDescendant<Clock>();
+            IClock clock = sims.Node.FindChild<Clock>(recurse: true);
             clock.EndDate = clock.StartDate.AddYears(1);
-            return sims.FindDescendant<Simulation>();
+            return sims.Node.FindChild<Simulation>(recurse: true);
         }
     }
 }

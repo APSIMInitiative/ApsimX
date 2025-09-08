@@ -3,6 +3,7 @@ using System;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using System.Collections.Generic;
+using APSIM.Numerics;
 
 namespace Models.Soils.Nutrients
 {
@@ -115,62 +116,62 @@ namespace Models.Soils.Nutrients
         ///////////////////////////////////////////////////////////////////////////
 
         /// <summary>Dynamic pH within the volatilisation model</summary>
-        public double[] pH { get; set; }
+        public double[] pH { get; private set; }
 
         /// <summary>Emissability, fraction subject to loss, of NH3 gas by soil layer (0-1)</summary>
-        public double[] EmissabilityNH3 { get; set; }
+        public double[] EmissabilityNH3 { get; private set; }
 
         /// <summary>The amount of NH3 in the soil (ppm)</summary>
         [Units("ppm")]
-        public double[] NH3ppm { get; set; }
+        public double[] NH3ppm { get; private set; }
 
         /// <summary>The amount of NH3 in the soil (kg/ha)</summary>
         [Units("kgN/ha")]
-        public double[] NH3 { get; set; }
+        public double[] NH3 { get; private set; }
 
         /// <summary>The amount of NH3 in the soil in gaseous form (g/ha)</summary>
         [Units("g/ha")]
-        public double[] NH3Gas { get; set; }
+        public double[] NH3Gas { get; private set; }
 
         /// <summary>The estimated amount of NH3 volatilised (kg/ha/day)</summary>
         [Units("kgN/ha")]
-        public double[] EmissionNH3 { get; set; }
+        public double[] EmissionNH3 { get; private set; }
 
         /// <summary>The amount of NH4 in the soil solution (kg/ha)</summary>
         [Units("kgN/ha")]
-        public double[] NH4Sol { get; set; }
+        public double[] NH4Sol { get; private set; }
 
         /// <summary>The potential gas exchange (Air-filled-pore-spaces/day)</summary>
         [Units("AFPV/day")]
-        public double PotGasExchangeNH { get; set; }
+        public double PotGasExchangeNH { get; private set; }
 
         /// <summary>The volume of gas exchanged (L/m2/day)</summary>
         [Units("L/m2/day")]
-        public double[] GasExchangeNH { get; set; }
+        public double[] GasExchangeNH { get; private set; }
 
         /// <summary>The air filled pore volume (L/m2)</summary>
         [Units("L/m2")]
-        public double[] AirFilledPoreVolume { get; set; }
+        public double[] AirFilledPoreVolume { get; private set; }
 
         /// <summary>The ratio between NH3 and NHx in the soil solution</summary>
         [Units("")]
-        public double[] NH3toNHxRatio { get; set; }
+        public double[] NH3toNHxRatio { get; private set; }
 
         /// <summary>The ratio between NH3 liquide and gas in the soil</summary>
         [Units("x1000")]
-        public double[] NH3GtoNH3ARatio { get; set; }
+        public double[] NH3GtoNH3ARatio { get; private set; }
 
         /// <summary>The equilibrium constant for NH4-NH3</summary>
         [Units("")]
-        public double[] pK_NHx { get; set; }
+        public double[] pK_NHx { get; private set; }
 
         /// <summary>The equilibrium constant for NH3A-NH3G</summary>
         [Units("")]
-        public double[] pG_NH3 { get; set; }
+        public double[] pG_NH3 { get; private set; }
 
         /// <summary>The rain factor</summary>
         [Units("")]
-        public double RainFactor { get; set; }
+        public double RainFactor { get; private set; }
 
         ///////////////////////////////////////////////////////////////////////////
         // Methods (functions)
