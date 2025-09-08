@@ -59,7 +59,7 @@ public class Options
 
     /// <summary> Gets the number of simulations/validation locations available. </summary>
     [Option("sim-count", Required = false, HelpText = "The number of simulations/validation locations available.")]
-    public string SimulationCount { get; } = "";
+    public string SimulationCount { get; set; } = "";
 
 }
     

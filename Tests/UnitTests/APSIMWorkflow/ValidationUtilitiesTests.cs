@@ -12,7 +12,6 @@ public class ValidationLocationUtilityTest
     [SetUp]
     public static void Setup()
     {
-        originalDir = Directory.GetCurrentDirectory();
         Directory.SetCurrentDirectory(Path.Combine(originalDir, @"../../../"));
     }
 
