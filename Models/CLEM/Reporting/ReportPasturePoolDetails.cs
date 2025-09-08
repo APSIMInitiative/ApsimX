@@ -155,14 +155,14 @@ namespace Models.CLEM.Reporting
             {
                 // pasture based measures
                 foreach (string pastureVariable in pastureEntries)
-                    variableNames.Add($"[{resHolder.Name}].{pasture.NameWithParent}.Report(\"{pastureVariable}\", {ReportInTonnes.ToString().ToLower()}, {ReportPerHectare.ToString().ToLower()}, -1)) as {pasture.Name}.{pastureVariable}");
+                    variableNames.Add($"[{resHolder.Name}].{pasture.NameWithParent}.Report(\"{pastureVariable}\", {ReportInTonnes.ToString().ToLower()}, {ReportPerHectare.ToString().ToLower()}, -1) as {pasture.Name}.{pastureVariable}");
 
                 // by pool measures
                 foreach (string poolVariable in poolEntries)
                 {
                     for (int j = 0; j <= 12; j++)
                     {
-                        variableNames.Add($"[{resHolder.Name}].{pasture.NameWithParent}.Report(\"{poolVariable}\", {ReportInTonnes.ToString().ToLower()}, {ReportPerHectare.ToString().ToLower()}, {j})) as {pasture.Name}.{poolVariable}.{j,0:D2}");
+                        variableNames.Add($"[{resHolder.Name}].{pasture.NameWithParent}.Report(\"{poolVariable}\", {ReportInTonnes.ToString().ToLower()}, {ReportPerHectare.ToString().ToLower()}, {j}) as {pasture.Name}.{poolVariable}.{j,0:D2}");
                     }
                 }
             }
@@ -173,10 +173,9 @@ namespace Models.CLEM.Reporting
             VariableNames = variableNames.ToArray();
 
             if (EventNames == null || EventNames.Count() == 0)
-                EventNames = new string[] { "[CLEMEvents].CLEMHerdSummary" };
+                EventNames = new string[] { "[Clock].CLEMEvents.CLEMEndOfTimeStep" }; //CLEMEvents.CLEMHerdSummary
 
             SubscribeToEvents();
         }
-
     }
 }
