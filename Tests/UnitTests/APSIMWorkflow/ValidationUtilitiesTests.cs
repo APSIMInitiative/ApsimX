@@ -13,7 +13,7 @@ public class ValidationLocationUtilityTest
     public static void Setup()
     {
         originalDir = Directory.GetCurrentDirectory();
-        Directory.SetCurrentDirectory(Path.Combine(originalDir, @"..\..\..\"));
+        Directory.SetCurrentDirectory(Path.Combine(originalDir, @"../../../"));
     }
 
     
@@ -24,11 +24,9 @@ public class ValidationLocationUtilityTest
     }
 
     [Test]
-    public void GetDirectoryPaths_ShouldNotIncludeExcludedSims()
+    public void TestGetDirectoryPaths_ShouldNotIncludeExcludedSims()
     {
-
-        var newDir = Directory.GetCurrentDirectory();
         var result = ValidationLocationUtility.GetDirectoryPaths();
-        Assert.That(PayloadUtilities.EXCLUDED_SIMS_FILEPATHS, Does.Not.Contain(result));
+        Assert.That(result, Does.Not.Contain(PayloadUtilities.EXCLUDED_SIMS_FILEPATHS));
     }
 }
