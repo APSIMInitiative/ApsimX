@@ -38,6 +38,12 @@ Please read our [guide](https://apsimnextgeneration.netlify.app/contribute/).
 
 ## Software Development Guidelines, Rules and processes
 
+### General good practices
+
+* As the project follows the agile methodology, short-lived(1-2 weeks max) feature branches are ideal. Branches that are used to develop a new plant are an exception here. Branches that exist over long periods of time tend to be difficult to keep up to date which reduces the branch's likelihood of being merged.
+* Aim to make smaller and more frequent PRs over larger less frequent PRs. Smaller PRs tend to be easier to review. Larger pieces of work can usually be broken into smaller feature branches which are easier to manage.
+*
+
 ### Reporting issues
 
 #### Best practices
