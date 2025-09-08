@@ -43,7 +43,7 @@ namespace APSIM.Workflow
                             if (apsimxNormalizedFilePath.Contains(location))
                             {
                                 var locationFolderIndex = apsimxNormalizedFilePath.IndexOf(location);
-                                validation_directories.Add("/" + apsimxNormalizedFilePath.Substring(locationFolderIndex, locationFolderIndex + location.Length)); // for linux compatibility
+                                validation_directories.Add("/" + apsimxNormalizedFilePath.Substring(locationFolderIndex)); // for linux compatibility
                             }
                             else
                             {
