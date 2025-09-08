@@ -29,20 +29,13 @@ namespace Models.CLEM.Activities
     public class RuminantActivityGrazePasture : CLEMRuminantActivityBase, IValidatableObject
     {
         /// <summary>
-        /// Link to clock
-        /// Public so children can be dynamically created after links defined
-        /// </summary>
-        [Link]
-        public CLEMEvents events = null;
-
-        /// <summary>
         /// Number of hours grazed
         /// Based on 8 hour grazing days
         /// Could be modified to account for rain/heat walking to water etc.
         /// </summary>
         [Description("Number of hours grazed (based on 8 hr grazing day)")]
         [Required, Range(0, 8, ErrorMessage = "Value based on maximum 8 hour grazing day"), GreaterThanValue(0)]
-        public double HoursGrazed { get; set; }
+        public double HoursGrazed { get; set; } = 8;
 
         /// <summary>
         /// Paddock or pasture to graze
@@ -68,86 +61,17 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Constructor using details from a GrazeAll activity
         /// </summary>
-        public RuminantActivityGrazePasture(RuminantActivityGrazeAll grazeAll, GrazeFoodStoreType pastureType, CLEMEvents events, string transactionCategory, bool usingGrowPF, Guid parentBasedUid)
+        public RuminantActivityGrazePasture(RuminantActivityGrazeAll grazeAll, GrazeFoodStoreType pastureType, string transactionCategory, Guid parentProvidedUid)
         {
-            ActivitiesHolder = grazeAll.ActivitiesHolder;
             CLEMParentName = grazeAll.CLEMParentName;
             GrazeFoodStoreTypeName = pastureType.NameWithParent;
             HoursGrazed = grazeAll.HoursGrazed;
             TransactionCategory = transactionCategory;
-            GrazeFoodStoreModel = pastureType;
-            this.events = events;
-            Parent = grazeAll;
             Name = "Graze_" + (pastureType).Name;
             OnPartialResourcesAvailableAction = grazeAll.OnPartialResourcesAvailableAction;
             Status = ActivityStatus.NoTask;
-            //Guid currentUid = ActivitiesHolder.AddToGuID(grazeAll.UniqueID, 1);
-            UniqueID = parentBasedUid;
-            Structure = grazeAll.Structure;
-            SetLinkedModels(Structure.Find<ResourcesHolder>(relativeTo: grazeAll));
-            //Core.ApsimFile.Structure.Add(CreateRuminantFilterGroup(), this);
-            //InitialiseHerd(true, true);
-
-            //Guid nextUID = ActivitiesHolder.AddToGuID(parentBasedUid, 2);
-            //foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())
-            //{
-            //    RuminantActivityGrazePastureHerd newPastureHerd = new RuminantActivityGrazePastureHerd(this, herdType, events, transactionCategory, usingGrowPF, nextUID);
-            //    Core.ApsimFile.Structure.Add(newPastureHerd, this);
-            //    //newPastureHerd.InitialiseHerd(true, false);
-            //    nextUID = ActivitiesHolder.AddToGuID(nextUID, 2);
-            //}
+            UniqueID = parentProvidedUid;
         }
-
-        /// <summary>
-        /// Add required children to this activity after the activity is fully created
-        /// </summary>
-        public void AddRequiredChildren(Guid parentBasedUid, bool usingGrowPF)
-        {
-            Core.ApsimFile.Structure.Add(CreateRuminantFilterGroup(), this);
-            InitialiseHerd(true, true);
-
-            Guid nextUID = ActivitiesHolder.AddToGuID(parentBasedUid, 2);
-            foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())
-            {
-                RuminantActivityGrazePastureHerd newPastureHerd = new RuminantActivityGrazePastureHerd(this, herdType, events, TransactionCategory, usingGrowPF, nextUID);
-
-                Core.ApsimFile.Structure.Add(newPastureHerd, this);
-                newPastureHerd.AddRequiredChildren();
-                //newPastureHerd.InitialiseHerd(true, false);
-                nextUID = ActivitiesHolder.AddToGuID(nextUID, 2);
-            }
-        }
-
-        /// <summary>
-        /// Create filter group needed for this
-        /// </summary>
-        /// <returns></returns>
-        public RuminantActivityGroup CreateRuminantFilterGroup()
-        {
-            string location = GrazeFoodStoreTypeName;
-            if (location.Contains("."))
-            {
-                location = location.Split('.')[1];
-            }
-
-            // add ruminant activity filter group to ensure correct individuals are selected
-            RuminantActivityGroup herdGroup = new()
-            {
-                Name = $"Filter_{location}"
-            };
-            herdGroup.Children.Add(
-                new FilterByProperty()
-                {
-                    PropertyOfIndividual = "Location",
-                    Operator = System.Linq.Expressions.ExpressionType.Equal,
-                    Value = location,
-                    Parent = herdGroup
-                }
-            );
-            herdGroup.InitialiseFilters();
-            return herdGroup;
-        }
-
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -155,12 +79,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            // This method will only fire if the user has added this activity to the UI
-            // Otherwise all details will be provided from GrazeAll code [CLEMInitialiseActivity]
-
             GrazeFoodStoreModel = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
-
-            bool usingGrowPF = Structure.Find<RuminantActivityGrowPF>() is not null;
 
             //Create list of children by breed
             //Guid currentUid = UniqueID;
@@ -171,13 +90,18 @@ namespace Models.CLEM.Activities
             if (!buildTransactionFromTree)
                 transCat = TransactionCategory;
 
-            Guid nextUID = ActivitiesHolder.AddToGuID(UniqueID, 1);
+            InitialiseHerd(true, true);
+            Guid nextUID = ActivitiesHolder.AddToGuID(UniqueID, 2);
             foreach (RuminantType herdType in Structure.FindChildren<RuminantType>(relativeTo: HerdResource))
             {
-                Core.ApsimFile.Structure.Add(new RuminantActivityGrazePastureHerd(this, herdType, events, transCat, usingGrowPF, nextUID), this);
-                nextUID = ActivitiesHolder.AddToGuID(nextUID, 1);
+                var newGrazePastureHerd = new RuminantActivityGrazePastureHerd(this, herdType, transCat, nextUID);
+                Core.ApsimFile.Structure.Add(newGrazePastureHerd, this);
+                var events = new Events(newGrazePastureHerd);
+                // Publish Commencing event
+                events.PublishToModelAndChildren("CLEMInitialiseActivity", new object[] { newGrazePastureHerd, new EventArgs() });
+
+                nextUID = ActivitiesHolder.AddToGuID(nextUID, 2);
             }
-            Structure.FindChildren<RuminantActivityGrazePastureHerd>(recurse: true).LastOrDefault().IsHidden = true;
         }
 
         /// <inheritdoc/>

@@ -40,10 +40,9 @@ namespace Models.CLEM.Activities
         private double totalPastureRequired = 0;
         private double totalPastureDesired = 0;
         [JsonIgnore]
-        private FoodResourcePacket foodDetails = new();
         private ResourceRequest pastureRequest = null;
         private double shortfallReportingCutoff = 0.01;
-        private bool isStandAloneModel = false;
+        private bool isStandAloneModel = true;
         private bool usingGrowPF = false;
         private string shortHerdName = "";
 
@@ -144,56 +143,60 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Constructor using details from a GrazeAll activity
         /// </summary>
-        public RuminantActivityGrazePastureHerd(RuminantActivityGrazePasture grazePasture, RuminantType herdType, CLEMEvents events, string transactionCategory, bool usingGrowPF, Guid parentBasedUid)
+        public RuminantActivityGrazePastureHerd(RuminantActivityGrazePasture grazePasture, RuminantType herdType, string transactionCategory, Guid parentBasedUid)
         {
             shortHerdName = herdType.Name;
             RuminantTypeName = herdType.NameWithParent;
             GrazeFoodStoreTypeName = grazePasture.GrazeFoodStoreTypeName;
-            ActivitiesHolder = grazePasture.ActivitiesHolder;
-            GrazeFoodStoreModel = grazePasture.GrazeFoodStoreModel;
-            RuminantTypeModel = herdType;
             HoursGrazed = grazePasture.HoursGrazed;
             Parent = grazePasture;
-            this.events = events;
             Name = $"Graze_{grazePasture.GrazeFoodStoreModel.Name}_{herdType.Name}";
             OnPartialResourcesAvailableAction = grazePasture.OnPartialResourcesAvailableAction;
             TransactionCategory = transactionCategory;
-            this.usingGrowPF = usingGrowPF;
             Status = ActivityStatus.NoTask;
-            UniqueID = parentBasedUid; 
-            Structure = grazePasture.Structure;
-            SetLinkedModels(Structure.Find<ResourcesHolder>(relativeTo: grazePasture));
+            UniqueID = parentBasedUid;
+            isStandAloneModel = false;
         }
 
         /// <summary>
         /// Add required children to this activity after the activity is fully created
         /// </summary>
-        public void AddRequiredChildren()
-        {
-            Core.ApsimFile.Structure.Add(CreateRuminantFilterGroup(), this);
-            InitialiseHerd(true, true);
-        }
-
-        public RuminantActivityGroup CreateRuminantFilterGroup()
+        public void AddHerdLocationFilter()
         {
             // add ruminant activity filter group to ensure correct individuals are selected
+            string location = GrazeFoodStoreModel.Name;
+            if (location.Contains("."))
+            {
+                location = location.Split('.')[1];
+            }
+
             RuminantActivityGroup herdGroup = new()
             {
-                Name = $"Filter_{shortHerdName}"
+                Name = $"Filter_{location}_{shortHerdName}"
             };
-            herdGroup.Children.Add(
-                new FilterByProperty()
-                {
-                    PropertyOfIndividual = "HerdName",
-                    Operator = System.Linq.Expressions.ExpressionType.Equal,
-                    Value = shortHerdName,
-                    Parent = herdGroup
-                }
+            Core.ApsimFile.Structure.Add(herdGroup, this);
+
+            Core.ApsimFile.Structure.Add(new FilterByProperty()
+            {
+                PropertyOfIndividual = "Location",
+                Operator = System.Linq.Expressions.ExpressionType.Equal,
+                Value = location,
+                Parent = herdGroup,
+                Name = "GrazeLocation"
+            }, herdGroup
+            );
+            Core.ApsimFile.Structure.Add(new FilterByProperty()
+            {
+                PropertyOfIndividual = "HerdName",
+                Operator = System.Linq.Expressions.ExpressionType.Equal,
+                Value = shortHerdName,
+                Parent = herdGroup,
+                Name = "GrazeHerd"
+            }, herdGroup
             );
 
-            //ToDO: ensure this is added with the new Structure.AddChild()
-            herdGroup.InitialiseFilters();
-            return herdGroup;
+            var events = new Events(herdGroup);
+            events.PublishToModelAndChildren("Commencing", new object[] { herdGroup, new EventArgs() });
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -202,21 +205,16 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            // This method will only fire if the user has added this activity to the UI simulation tree
-            // Otherwise all details will be provided from GrazeAll or GrazePaddock code [CLEMInitialiseActivity] as the activity is created and added to the simulation.
-
-            isStandAloneModel = true;
-            Children.Add(CreateRuminantFilterGroup());
-            InitialiseHerd(false, false);
-
-            // if no settings have been provided from parent set limiter to 1.0. i.e. no limitation
-            if (MathUtilities.FloatsAreEqual(GrazingCompetitionLimiter, 0))
-                GrazingCompetitionLimiter = 1.0;
+            GrazingCompetitionLimiter = 1.0;
 
             GrazeFoodStoreModel = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
             RuminantTypeModel = Resources.FindResourceType<RuminantHerd, RuminantType>(this, RuminantTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
-            usingGrowPF = Structure.Find<RuminantActivityGrowPF>() is not null;
+            usingGrowPF = Structure.Find<RuminantActivityGrowPF>()?.Enabled??false;
+
+            AddHerdLocationFilter();
+
+            InitialiseHerd(true, false);
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -226,14 +224,6 @@ namespace Models.CLEM.Activities
         private void OnFinalInitialise(object sender, EventArgs e)
         {
             shortfallReportingCutoff = Structure.Find<ReportResourceShortfalls>()?.PropPastureShortfallOfDesiredIntake??0.02;
-
-            // if this is the last of newly added models that will be set to hidden
-            // reset the simulation subscriptions to correct the new order before running the simulation.
-            if (IsHidden)
-            {
-                Events events = new(Structure.FindParent<Simulation>(recurse: true));
-                events.ReconnectEvents("Models.CLEM.CLEMEvents", "CLEMGetResourcesRequired");
-            }
         }
 
         /// <summary>An event handler to allow us to clear requests at start of month.</summary>
@@ -245,6 +235,7 @@ namespace Models.CLEM.Activities
             ResourceRequestList = null;
             PoolFeedLimits = null;
             //TODO: add local hoursGrazed that is reset to user level each time step but can be reduced by other activities such as RuminantActivityMove, or ManageRuminants
+            //this actually needs to be a property of each individual as we don't know the how management of an individual affects grazing time.
             PotentialIntakeGrazingTimeLimiter = HoursGrazed / 8;
         }
 
@@ -285,10 +276,8 @@ namespace Models.CLEM.Activities
             {
                 ResourceRequestList = new List<ResourceRequest>();
                 pastureRequest = null;
-                // as the grazing activity has added a dynamic filter group we do not need the where filter here.
-                //IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.Location == GrazeFoodStoreModel.Name && a.HerdName == RuminantTypeModel.Name);
+                // as the grazing activity has added a dynamic filter group (location and herd name) we do not need the where filter here.
                 IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm);
-                //var herd2 = CurrentHerd(false);
 
                 totalPastureRequired = 0;
                 totalPastureDesired = 0;
@@ -334,7 +323,6 @@ namespace Models.CLEM.Activities
                     totalPastureRequired *= events.Interval;
 
                     ConsumedPasturePoolsPacket.Reset();
-                    ConsumedPasturePoolsPacket.Amount = 0;
 
                     if (MathUtilities.IsPositive(totalPastureRequired))
                     {
@@ -380,7 +368,7 @@ namespace Models.CLEM.Activities
 
             if (MathUtilities.IsPositive(totalPastureRequired))
             {
-                //IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.Location == GrazeFoodStoreModel.Name && a.HerdName == RuminantTypeModel.Name);
+                // the activity automatically filters by the assigned breen and pasture.
                 IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm);
 
                 // shortfall already takes into account competition (AdjustResourcesForActivity) and availability
@@ -400,7 +388,6 @@ namespace Models.CLEM.Activities
                         eaten = Math.Max(0, ind.Intake.SolidsDaily.Required); ;
 
                     ConsumedPasturePoolsPacket.Amount = eaten * shortfall;
-                    //foodDetails.Amount /= (double)events.Interval;
 
                     ind.Intake.AddFeed(ConsumedPasturePoolsPacket);
 
