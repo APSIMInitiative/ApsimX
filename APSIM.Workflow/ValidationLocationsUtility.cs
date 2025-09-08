@@ -28,25 +28,35 @@ namespace APSIM.Workflow
         /// <returns>A string array</returns>
         public static string[] GetDirectoryPaths()
         {
-            List<string> validation_directories = [];
-            foreach (string location in VALIDATION_LOCATIONS)
+            try
             {
-                var directory = Path.GetFullPath(RELATIVE_PATH_PREFIX + location);
-                if (Directory.GetFiles(directory, "*.apsimx", SearchOption.AllDirectories).Any())
+                List<string> validation_directories = [];
+                foreach (string location in VALIDATION_LOCATIONS)
                 {
-                    var apsimxFiles = Directory.GetFiles(directory, "*.apsimx", SearchOption.AllDirectories);
-                    foreach (var apsimxFile in apsimxFiles)
+                    var directory = Path.GetFullPath(RELATIVE_PATH_PREFIX + location);
+                    if (Directory.GetFiles(directory, "*.apsimx", SearchOption.AllDirectories).Any())
                     {
-                        if (!PayloadUtilities.EXCLUDED_SIMS_FILEPATHS.Contains("/" + apsimxFile.NormalizePath()))
+                        var apsimxFiles = Directory.GetFiles(directory, "*.apsimx", SearchOption.AllDirectories);
+                        foreach (var apsimxFile in apsimxFiles)
                         {
-                            var apsimxNormalizedFilePath = apsimxFile.NormalizePath();
-                            var locationFolderIndex = apsimxNormalizedFilePath.IndexOf(location);
-                            validation_directories.Add("/" + apsimxNormalizedFilePath.Substring(locationFolderIndex, locationFolderIndex + location.Length)); // for linux compatibility
+                            if (!PayloadUtilities.EXCLUDED_SIMS_FILEPATHS.Contains("/" + apsimxFile.NormalizePath()))
+                            {
+                                var apsimxNormalizedFilePath = apsimxFile.NormalizePath();
+                                var locationFolderIndex = apsimxNormalizedFilePath.IndexOf(location);
+                                if (locationFolderIndex == -1)
+                                    throw new Exception("location: " + location + " not found in apsimx file path: " + apsimxNormalizedFilePath);
+                                validation_directories.Add("/" + apsimxNormalizedFilePath.Substring(locationFolderIndex, locationFolderIndex + location.Length)); // for linux compatibility
+                            }
                         }
                     }
                 }
+                return validation_directories.ToArray();
             }
-            return validation_directories.ToArray();
+            catch ()
+            {
+
+            }
+
         }
 
         /// <summary>
