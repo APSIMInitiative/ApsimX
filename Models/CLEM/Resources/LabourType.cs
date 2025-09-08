@@ -80,6 +80,13 @@ namespace Models.CLEM.Resources
             }
         }
 
+        /// <summary>
+        /// The name of the individuals which may include an index at end for LabourTypes initialised with more than one individual
+        /// </summary>
+        [JsonIgnore]
+        [FilterByProperty]
+        public string NameOfIndividual {  get { return Name; } }
+
         private double? adultEquivalent = null;
 
         /// <summary>
@@ -110,7 +117,6 @@ namespace Models.CLEM.Resources
         /// Adult equivalents of all individuals.
         /// </summary>
         [JsonIgnore]
-        [FilterByProperty]
         public double TotalAdultEquivalents
         {
             get
@@ -194,7 +200,8 @@ namespace Models.CLEM.Resources
         /// Hired labour switch
         /// </summary>
         [Description("Hired labour")]
-        public bool Hired { get; set; }
+        [FilterByProperty]
+        public bool IsHired { get; set; }
 
         /// <summary>
         /// The unique id of the last activity request for this labour type
@@ -380,7 +387,7 @@ namespace Models.CLEM.Resources
                             htmlWriter.Write($"<span class=\"setvalue\">{this.Individuals}</span> x ");
                         htmlWriter.Write($"<span class=\"setvalue\">{this.InitialAge}</span> year old ");
                         htmlWriter.Write($"<span class=\"setvalue\">{this.Sex}</span>");
-                        if (Hired)
+                        if (IsHired)
                             htmlWriter.Write(" as hired labour");
                     }
                     htmlWriter.Write("</div>");
