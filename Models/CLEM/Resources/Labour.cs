@@ -201,9 +201,7 @@ namespace Models.CLEM.Resources
                     }
                 }
             }
-            // clone pricelist so model can modify if needed and not affect initial parameterisation
-            if (Structure.FindChildren<LabourPricing>().Count() > 0)
-                PayList = Apsim.Clone(Structure.FindChildren<LabourPricing>().FirstOrDefault());
+            PayList = Structure.FindChild<LabourPricing>();
         }
 
         /// <summary>
