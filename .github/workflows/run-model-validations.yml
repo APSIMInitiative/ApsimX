@@ -128,7 +128,7 @@ jobs:
         echo "PR Number: ${DOCKER_METADATA_OUTPUT_VERSION:3}"
         # makes the variable available in subsequent steps.
         echo "NOTE: HARDCODED JOB COUNT: 145"
-        jobcount=145
+        jobcount=$(dotnet ./bin/Release/net8.0/APSIM.Workflow.dll --sim-count)
         response=$(curl "https://postats2.apsim.info/api/open?pullrequestnumber=${DOCKER_METADATA_OUTPUT_VERSION:3}&commitid=${commitsha}&author=${author}&count=${jobcount}") # count needs to be a proper number later
         echo "POStats2 open response: ${response}"
         echo "Start creating payload..."
