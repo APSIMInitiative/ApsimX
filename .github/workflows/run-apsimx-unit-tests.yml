@@ -12,6 +12,7 @@ jobs:
   build-and-test:
     name: build-and-test
     # Run all subsequent steps on the specified operating systems.
+    if: github.repository_owner == 'APSIMInitiative'
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
