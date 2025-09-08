@@ -328,7 +328,7 @@ namespace UserInterface.Views
         {
             try
             {
-                string fileName = AskUserForFileName("Choose a weather file to open", Utility.FileDialog.FileActionType.Open, "APSIM Weather file (*.met)|*.met|Excel file(*.xlsx)|*.xlsx|CSV file(*.csv)|*.csv", labelFileName.Text);
+                string fileName = AskUserForFileName("Choose a weather file to open", Utility.FileDialog.FileActionType.Open, "APSIM Weather file (*.met)|*.met|Excel file(*.xlsx)|*.xlsx|CSV file(*.csv)|*.csv|Binary file(*.bin)|*.bin", labelFileName.Text);
                 if (!String.IsNullOrEmpty(fileName))
                 {
                     Filename = fileName;
