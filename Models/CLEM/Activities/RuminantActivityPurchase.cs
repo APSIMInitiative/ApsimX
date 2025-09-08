@@ -26,12 +26,9 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantPurchase.htm")]
     public class RuminantActivityPurchase : CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels
     {
-<<<<<<< HEAD
         [Link]
-        private readonly Clock clock = null;
+        private readonly CLEMEvents events = null;
 
-=======
->>>>>>> d9e3f52708a3599b88b74866c1962487c9d5f408
         private string grazeStore = "";
         private Relationship numberToStock;
         private GrazeFoodStoreType foodStore;
@@ -200,11 +197,11 @@ namespace Models.CLEM.Activities
                     if (number > 0)
                     {
                         RuminantTypeCohort purchasetype = Structure.FindChild<RuminantTypeCohort>(relativeTo: purchaseSpecific);
-                        var purchaseIndividuals = purchasetype.CreateIndividuals(number, Structure.FindChildren<ISetAttribute>(relativeTo: purchasetype).ToList(), clock.Today, rumTypeToUse, false);
+                        var purchaseIndividuals = purchasetype.CreateIndividuals(number, Structure.FindChildren<ISetAttribute>(relativeTo: purchasetype).ToList(), events.TimeStepStart, rumTypeToUse, false);
 
                         foreach (var ind in purchaseIndividuals)
                         {
-                            ind.DateOfPurchase = clock.Today; // PurchaseAge = purchasetype.Age;
+                            ind.DateOfPurchase = events.TimeStepStart;
                             ind.SaleFlag = HerdChangeReason.TradePurchase;
                             ind.Location = grazeStore;
                             if ((TagLabel ?? "") != "")

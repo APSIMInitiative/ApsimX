@@ -273,17 +273,13 @@ namespace Models.CLEM.Activities
         {
             List<string> transCatsList = new();
             if (model.parentZone is null)
-<<<<<<< HEAD
             {
-                model.parentZone = model.FindAncestor<ZoneCLEM>();
+                model.parentZone = structure.FindParent<ZoneCLEM>(relativeTo: model, recurse: true);
                 if (model.parentZone is null)
                 {
                     return "";
                 }
             }
-=======
-                model.parentZone = structure.FindParent<ZoneCLEM>(relativeTo: model, recurse: true);
->>>>>>> d9e3f52708a3599b88b74866c1962487c9d5f408
 
             if (model.parentZone.BuildTransactionCategoryFromTree && model.Parent is CLEMActivityBase)
             {
@@ -308,13 +304,8 @@ namespace Models.CLEM.Activities
         protected virtual void OnInitialSummary(object sender, EventArgs e)
         {
             // create Transaction category based on Zone settings
-<<<<<<< HEAD
-            TransactionCategory = UpdateTransactionCategory(this);
-            Status = ActivityStatus.NoTask; // Ignored;
-=======
             TransactionCategory = UpdateTransactionCategory(this, Structure);
-            Status = ActivityStatus.Ignored;
->>>>>>> d9e3f52708a3599b88b74866c1962487c9d5f408
+            Status = ActivityStatus.NoTask; // Ignored;
         }
 
         /// <summary>An event handler to perform companion tasks at start of simulation.</summary>

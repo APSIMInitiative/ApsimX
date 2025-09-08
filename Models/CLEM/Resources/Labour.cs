@@ -122,11 +122,7 @@ namespace Models.CLEM.Resources
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             // Add warning if no individuals defined
-<<<<<<< HEAD
-            if (FindAllChildren<LabourType>().Any() && this.FindAllChildren<LabourType>().Cast<LabourType>().Sum(a => a.Individuals) == 0)
-=======
-            if (Structure.FindChildren<LabourType>().Count() > 0 && Structure.FindChildren<LabourType>().Cast<LabourType>().Sum(a => a.Individuals) == 0)
->>>>>>> d9e3f52708a3599b88b74866c1962487c9d5f408
+            if (Structure.FindChildren<LabourType>().Any() && Structure.FindChildren<LabourType>().Cast<LabourType>().Sum(a => a.Individuals) == 0)
             {
                 string warningString = "No individuals have been set in any [r=LabourType]\r\nAdd individuals or consider removing or disabling [r=Labour]";
                 if (!warningsNotFound.Contains(warningString))
@@ -417,37 +413,11 @@ namespace Models.CLEM.Resources
             using StringWriter htmlWriter = new();
             if (AllowAgeing)
             {
-<<<<<<< HEAD
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 htmlWriter.Write("Individuals age with time");
                 htmlWriter.Write("</div>");
-=======
-                if (AllowAging)
-                {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write("Individuals age with time");
-                    htmlWriter.Write("</div>");
-                }
-                htmlWriter.Write("\r\n<div class=\"holderresourcesub\">");
-                htmlWriter.Write("\r\n<div class=\"clearfix resourcebannerlight\">Labour types</div>");
-                htmlWriter.Write("\r\n<div class=\"resourcecontentlight\">");
-                htmlWriter.Write("<table><tr><th>Name</th><th>Gender</th><th>Age (yrs)</th><th>Number</th><th>Hired</th></tr>");
-                foreach (LabourType labourType in Structure.FindChildren<LabourType>(relativeTo: this))
-                {
-                    htmlWriter.Write("<tr>");
-                    htmlWriter.Write($"<td>{labourType.Name}</td>");
-                    htmlWriter.Write($"<td><span class=\"setvalue\">{labourType.Sex}</span></td>");
-                    htmlWriter.Write($"<td><span class=\"setvalue\">{labourType.InitialAge}</span></td>");
-                    htmlWriter.Write($"<td><span class=\"setvalue\">{labourType.Individuals}</span></td>");
-                    htmlWriter.Write("<td" + ((labourType.Hired) ? " class=\"fill\"" : "") + "></td>");
-                    htmlWriter.Write("</tr>");
-                }
-                htmlWriter.Write("</table>");
-                htmlWriter.Write("</div></div>");
-                return htmlWriter.ToString();
->>>>>>> d9e3f52708a3599b88b74866c1962487c9d5f408
             }
-            if(!this.FindAllChildren<Relationship>().Where(a => a.Identifier == "Adult equivalent").Any())
+            if(Structure.FindChildren<Relationship>().Where(a => a.Identifier == "Adult equivalent").Any() == false)
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 htmlWriter.Write($"No [Relationship] with the identifier [Adult equivalent] was provided with [{Parent.Name}]. All individuals are assumed to be 1 AE.");
@@ -458,7 +428,7 @@ namespace Models.CLEM.Resources
             htmlWriter.Write("\r\n<div class=\"clearfix resourcebannerlight\">Labour types</div>");
             htmlWriter.Write("\r\n<div class=\"resourcecontentlight\">");
             htmlWriter.Write("<table><tr><th>Name</th><th>Gender</th><th>Age (yrs)</th><th>Number</th><th>Hired</th></tr>");
-            foreach (LabourType labourType in this.FindAllChildren<LabourType>())
+            foreach (LabourType labourType in Structure.FindChildren<LabourType>(relativeTo: this))
             {
                 htmlWriter.Write("<tr>");
                 htmlWriter.Write($"<td>{labourType.Name}</td>");

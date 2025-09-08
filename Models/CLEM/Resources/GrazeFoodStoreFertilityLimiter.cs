@@ -103,11 +103,7 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-<<<<<<< HEAD
-            bool timerpresent = FindAllChildren<ActivityTimerCalendar>().Count() > 0;
-=======
-            bool timerpresent = Structure.FindChildren<ActivityTimerMonthRange>().Count() > 0;
->>>>>>> d9e3f52708a3599b88b74866c1962487c9d5f408
+            bool timerpresent = Structure.FindChildren<ActivityTimerMonthRange>().Any();
             parentPasture = this.Parent as GrazeFoodStoreType;
 
             using (StringWriter htmlWriter = new StringWriter())
