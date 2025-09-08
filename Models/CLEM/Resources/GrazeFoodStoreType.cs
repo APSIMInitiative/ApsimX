@@ -845,7 +845,8 @@ namespace Models.CLEM.Resources
                 MetabolisableEnergyContent = MetabolisableEnergyContent,
                 FatPercent = FatPercent,
                 NitrogenPercent = 0,
-                DryMatterDigestibility = 0
+                DryMatterDigestibility = 0,
+                RumenDegradableProteinPercent = RumenDegradableProteinPercent
             };
 
             switch (resourceAmount)
