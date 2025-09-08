@@ -1,12 +1,11 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 192,
+  "Version": 201,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Storage.DataStore, Models",
-      "useFirebird": false,
       "CustomFileName": null,
       "Name": "DataStore",
       "ResourceName": null,
@@ -17,7 +16,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": true,
-      "GraphsPerPage": 6,
       "Name": "Grazing example",
       "ResourceName": null,
       "Children": [
@@ -87,6 +85,7 @@
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 50.0,
+              "CanopyType": null,
               "ModelSummaryStyle": 7,
               "Name": "CLEM",
               "ResourceName": null,
@@ -807,6 +806,7 @@
                           "ModelNameFileCrop": "FileForage",
                           "CropName": "Native",
                           "StoreItemName": "GrazeFoodStore.NativePasture",
+                          "AddProductStyle": 0,
                           "ProportionKept": 1.0,
                           "PlantedMultiplier": 1.0,
                           "TreesPerHa": 0.0,
@@ -1219,7 +1219,6 @@
                 {
                   "$type": "Models.CLEM.CLEMFolder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Reports",
                   "ResourceName": null,
                   "Children": [
@@ -1466,7 +1465,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "Graphs",
                   "ResourceName": null,
                   "Children": [
