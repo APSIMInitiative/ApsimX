@@ -52,9 +52,9 @@ namespace APSIM.Workflow
                 }
                 return validation_directories.ToArray();
             }
-            catch ()
+            catch (Exception ex)
             {
-
+                throw new Exception("Error occurred while getting directory paths." + ex.Message);
             }
 
         }
