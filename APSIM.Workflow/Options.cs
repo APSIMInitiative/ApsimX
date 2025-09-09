@@ -57,5 +57,9 @@ public class Options
     [Option('n', "pr-number", Required = false, HelpText = "The pull request number for the workflow.")]
     public string PullRequestNumber { get; set; } = "";
 
+    /// <summary> Gets the number of simulations/validation locations available. </summary>
+    [Option("sim-count", Required = false, HelpText = "The number of simulations/validation locations available.")]
+    public string SimulationCount { get; set; } = "";
+
 }
     
