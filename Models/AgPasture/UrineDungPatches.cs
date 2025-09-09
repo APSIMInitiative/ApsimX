@@ -1,6 +1,9 @@
 using System;
 using System.Linq;
 using APSIM.Core;
+using APSIM.Numerics;
+using MathNet.Numerics.Distributions;
+using MathNet.Numerics.LinearAlgebra;
 using Models.Core;
 using Models.Core.ApsimFile;
 using Models.Soils;
@@ -20,7 +23,6 @@ namespace Models.AgPasture
         private readonly SimpleGrazing simpleGrazing;
         private readonly bool pseudoPatches;
         private double[] monthlyUrineNAmt;                 // breaks the N balance but useful for testing
-        private double[] urineDepthPenetrationArray;
         private Random pseudoRandom;
         private int pseudoRandomSeed;
         private readonly ISummary summary;
@@ -150,7 +152,7 @@ namespace Models.AgPasture
             else //(!PseudoPatches)  // so now this is zones - possibly multiple zones
             {
                 zone.Area = 1.0 / zoneCount;  // and then this will apply to all the new zones
-                for (int i = 0; i < zoneCount-1; i++)
+                for (int i = 0; i < zoneCount - 1; i++)
                 {
                     var newZone = Apsim.Clone(zone);
                     Structure.Add(newZone, simulation);
@@ -203,40 +205,52 @@ namespace Models.AgPasture
 
             NumZonesForUrine = 1;  // in the future this might be > 1
             ZoneNumForUrine = -1;  // this will be incremented to 0 (first zone) below
-
-            UrinePenetration();
         }
 
         /// <summary>Invoked to do urine return</summary>
-        public void DoUrineReturn(double amountUrineNReturned)
+        public void DoUrineReturn(int numUrinations, double meanLoad)
         {
             GetZoneForUrineReturn();
 
             summary.WriteMessage(simpleGrazing, "The Zone for urine return is " + ZoneNumForUrine, MessageType.Diagnostic);
 
-            if (!pseudoPatches)
+            (double[] urineVolume, double[] urineLoad) = CalculateLoadVolume(numUrinations, meanLoad);
+
+            double gridArea = 10000 / zoneCount;
+            double gridAreaUsed = 0;
+            for (int i = 0; i <= numUrinations; i++)
             {
-                Zone zone = structure.FindAll<Zone>(relativeTo: simpleGrazing).ToArray()[ZoneNumForUrine];
-                Fertiliser thisFert = structure.Find<Fertiliser>(relativeTo: zone) as Fertiliser;
+                // use the Beatson data for wetted area, convert to radius, add 0.1 m edge and then convert back to an area. Note this is a natural log
+                // check 2L should give a area of 0.3866 m2
+                double urinationArea = Math.PI * Math.Pow(Math.Sqrt((0.135 * Math.Log(urineVolume[i]) + 0.104) / Math.PI) + 0.1, 2.0);
+                gridAreaUsed += urinationArea; // m2
+                double urinationDepth = urineVolume[i] / urinationArea / 0.05;    // 0.05 is the assumed increase in water content from the urineation
 
-                thisFert.Apply(amount: amountUrineNReturned * zoneCount,
-                        type: "UreaN",
-                        depth: 0.0,   // when depthBottom is specified then this means depthTop
-                        depthBottom: urineDepthPenetration,
-                        doOutput: true);
+                AddUrineToGrid(urineLoad[i], urinationDepth);
 
-                summary.WriteMessage(simpleGrazing, amountUrineNReturned + " urine N added to Zone " + ZoneNumForUrine + ", the local load was " + amountUrineNReturned / zone.Area + " kg N /ha", MessageType.Diagnostic);
+                if (gridAreaUsed - 0.5 * urinationArea >= gridArea)
+                {
+                    GetZoneForUrineReturn();
+                    //ureaToAdd = 0.0; // zero out the depth array
+                    gridAreaUsed = 0.0;
+                }
             }
-            else // PseudoPatches
+
+        }
+
+        private void AddUrineToGrid(double ureaToAdd, double urinationDepth)
+        {
+            if (pseudoPatches)
             {
                 int[] PatchToAddTo = new int[1];  //because need an array variable for this
                 string[] PatchNmToAddTo = new string[0];  //need an array variable for this
                 double[] UreaToAdd = new double[physical.Thickness.Length];
 
-                for (int ii = 0; ii <= (physical.Thickness.Length - 1); ii++)
-                    UreaToAdd[ii] = urineDepthPenetrationArray[ii]  * amountUrineNReturned * zoneCount;
+                // calculate the depth distribution as in UrineDungPatches.cs line 282 and accumulate the N into ureaToAdd
+                double[] depthPenetration = UrinePenetration(urinationDepth);
 
-                // needed??   UreaReturned += AmountFertNReturned;
+                for (int ii = 0; ii <= (physical.Thickness.Length - 1); ii++)
+                    UreaToAdd[ii] = depthPenetration[ii] * ureaToAdd * zoneCount;
 
                 AddSoilCNPatchType CurrentPatch = new();
                 CurrentPatch.Sender = "manager";
@@ -251,6 +265,20 @@ namespace Models.AgPasture
                 summary.WriteMessage(simpleGrazing, "Patch MinN prior to urine return: " + patchManager.MineralNEachPatch[ZoneNumForUrine], MessageType.Diagnostic);
                 patchManager.Add(CurrentPatch);
                 summary.WriteMessage(simpleGrazing, "Patch MinN after urine return: " + patchManager.MineralNEachPatch[ZoneNumForUrine], MessageType.Diagnostic);
+            }
+            else
+            {
+                // Explicit patches
+                Zone zone = structure.FindAll<Zone>(relativeTo: simpleGrazing).ToArray()[ZoneNumForUrine];
+                Fertiliser thisFert = structure.Find<Fertiliser>(relativeTo: zone) as Fertiliser;
+
+                thisFert.Apply(amount: ureaToAdd * zoneCount,
+                        type: "UreaN",
+                        depth: 0.0,   // when depthBottom is specified then this means depthTop
+                        depthBottom: urineDepthPenetration,
+                        doOutput: true);
+
+                summary.WriteMessage(simpleGrazing, ureaToAdd + " urine N added to Zone " + ZoneNumForUrine + ", the local load was " + ureaToAdd / zone.Area + " kg N /ha", MessageType.Diagnostic);
             }
         }
 
@@ -279,11 +307,11 @@ namespace Models.AgPasture
         }
 
         /// <summary>Calculate the urine penetration array.</summary>
-        private void UrinePenetration()
+        private double[] UrinePenetration(double urineDepthPenetration)
         {
             // note this assumes that all the paddocks are the same
             double tempDepth = 0.0;
-            urineDepthPenetrationArray = new double[physical.Thickness.Length];
+            var urineDepthPenetrationArray = new double[physical.Thickness.Length];
             for (int i = 0; i <= (physical.Thickness.Length - 1); i++)
             {
                 tempDepth += physical.Thickness[i];
@@ -298,6 +326,99 @@ namespace Models.AgPasture
                 }
                 summary.WriteMessage(simpleGrazing, "The proportion of urine applied to the " + i + "th layer will be " + urineDepthPenetrationArray[i], MessageType.Diagnostic);
             }
+            return urineDepthPenetrationArray;
+        }
+
+        [NonSerialized]
+        private Random RandomNumGenerator = new Random(10);
+
+        //////////////////// PARAMETERS ///////////////////////
+
+        /// <summary>Means of the original distributions in log space, mu_i load (gN) first and then mu_j volume (L)</summary>
+        public double[] VectorOfMeans { get; set; } = [1.1567018157972, 0.400851532821705];
+
+        /// <summary>Covariance matrix - in order of E_ii, E_ij, E_ij, E_jj</summary>
+        public double[] CovarianceMatrix { get; set; } = [0.047123025480434, 0.033361752139528, 0.033361752139528, 0.033598852595467];
+
+        /// <summary>Constrain the sampling?</summary>
+        public bool DoConstraints { get; set; } = true;
+
+        /// <summary>Choose constraint probability</summary>
+        public double OneMinusAlpha { get; set; } = 0.9;
+
+        //////////////////// OUTPUTS ///////////////////////
+
+        /// <summary>Normal mean load to generate</summary>
+        public double NormalMeanLoadToGenerate { get; set; }
+
+        /// <summary>
+        /// Calculate load and volume.
+        /// </summary>
+        /// <param name="numUrinations">Number of animal urinations.</param>
+        /// <param name="meanLoad">Mean urination load (g N).</param>
+        /// <returns></returns>
+        private (double[] load, double[] volume) CalculateLoadVolume(int numUrinations, double meanLoad)
+        {
+            // I (VOS) don't understand what the subtraction is here but the secnd version gives an actual mean much closer to the intended mean
+            NormalMeanLoadToGenerate = Math.Log10(meanLoad) - 0.5 * CovarianceMatrix[0];
+            //NormalMeanLoadToGenerate = Math.Log10(MeanLoadToGenerate) - 1.0 * CovarianceMatrix[0];
+
+            double[,] TransformedMu = { { NormalMeanLoadToGenerate },
+                                        { VectorOfMeans[1] }};
+
+            double[,] SigmaRows = { { CovarianceMatrix[0], CovarianceMatrix[1] },
+                                    { CovarianceMatrix[2], CovarianceMatrix[3] } };
+
+            double[,] SigmaColumns = { { 1 } };
+
+            // Converts parameters to MathNet matrices.
+            Matrix<double> TransformedMuMatrix = Matrix<double>.Build.DenseOfArray(TransformedMu);
+            Matrix<double> SigmaRowsMatrix = Matrix<double>.Build.DenseOfArray(SigmaRows);
+            Matrix<double> SigmaColumnsMatrix = Matrix<double>.Build.DenseOfArray(SigmaColumns);
+
+            // Initialises transformed distribution.
+            var TransformedMVN = new MatrixNormal(TransformedMuMatrix,
+                                                  SigmaRowsMatrix,
+                                                  SigmaColumnsMatrix,
+                                                  RandomNumGenerator);
+
+            // Generates samples and transforms them back to lognormal space.
+            double[] LogNormalLoadSamples = new double[numUrinations];
+            double[] LogNormalVolumeSamples = new double[numUrinations];
+
+            // This is a value from the chi squared distribution, used to check whether the generated sample is within the confidence interval.
+            double ChiSqMax = ChiSquared.InvCDF(2, OneMinusAlpha);
+
+            for (int i = 0; i < numUrinations; i++)
+            {
+
+                bool reject = true;
+                while (reject)
+                {
+                    // Calculates the sample's chi squared score.
+                    Matrix<double> LoadVolumeSample = TransformedMVN.Sample();
+                    Matrix<double> Deviation = LoadVolumeSample.Subtract(TransformedMuMatrix);
+                    Matrix<double> DeviationT = Deviation.Transpose();
+                    Matrix<double> SigmaRowsMatrixInv = SigmaRowsMatrix.Inverse();
+                    Matrix<double> ChiSqScore = (DeviationT.Multiply(SigmaRowsMatrixInv)).Multiply(Deviation);
+
+                    // If constrained and sample is outside confidence interval, discards sample and tries again.
+                    if ((ChiSqScore[0,0] > ChiSqMax) && DoConstraints)
+                    {
+                        reject = true;
+                    }
+                    else
+                    {
+                        reject = false;
+                        LogNormalLoadSamples[i] = Math.Pow(10.0, LoadVolumeSample[0,0]);
+                        LogNormalVolumeSamples[i] = Math.Pow(10.0, LoadVolumeSample[1,0]);
+                    }
+                }
+            }
+
+            // Return load and volume.
+            return (load: LogNormalLoadSamples,       // could aim to correct this against the intended??? Not the best solution
+                    volume: LogNormalVolumeSamples);
         }
     }
 }

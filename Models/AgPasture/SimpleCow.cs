@@ -169,7 +169,7 @@ public class SimpleCow : Model, IStructureDependency
     /// <summary></summary>
     [JsonIgnore] public double HerdUrineNReturned { get; set; }
     /// <summary></summary>
-    [JsonIgnore] public double HerdNumUrinations { get; set; }
+    [JsonIgnore] public int HerdNumUrinations { get; set; }
 
 
     [EventSubscribe("StartOfSimulation")]
@@ -245,7 +245,7 @@ public class SimpleCow : Model, IStructureDependency
     /// <param name="grazedDM">The amount of grazed dry matter (kg/ha)</param>
     /// <param name="grazedME">The amount of grazed metabolisable energy (MJ ME/ha)</param>
     /// <param name="grazedN">The amount of grazed nitrogen (kgN/ha)</param>
-    public (double urineN, double dungN) OnGrazed(double grazedDM, double grazedME, double grazedN)
+    public (int numUrinations, double urineN, double dungN) OnGrazed(double grazedDM, double grazedME, double grazedN)
     {
 		double grazedMEConc = grazedDM / grazedME;  // CHECK!!!!
 
@@ -287,7 +287,7 @@ public class SimpleCow : Model, IStructureDependency
 
         HerdUrineNReturned = (grazedN + SilageFed * SilageNConc / 100.0) * CowN2UrinePerc[Index] / 100.0;
         HerdDungNReturned = (grazedN + SilageFed * SilageNConc / 100.0) * CowN2DungPerc[Index] / 100.0;
-        return (HerdUrineNReturned, HerdDungNReturned);
+        return (HerdNumUrinations, HerdUrineNReturned, HerdDungNReturned);
     }
 
     private void CowPhysiologicalState()

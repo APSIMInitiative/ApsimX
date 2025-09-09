@@ -874,16 +874,21 @@ namespace Models.AgPasture
 
                 // Calculate the urine and dung N deposition to soil.
                 // If SimpleCow is in the simulation then call it to get urine and dung N return
+                int numberUrinations;
+
                 if (simpleCow != null)
                 {
                     // SIMPLECOW is in simulation. It calculates urine and dung N.
-                    var (urineNSimpleCow, dungNSimpleCow) = simpleCow.OnGrazed(GrazedDM, GrazedME, GrazedN);
-                    urineN = urineNSimpleCow;
+                    var (numUrinations, urineNSimpleCow, dungNSimpleCow) = simpleCow.OnGrazed(GrazedDM, GrazedME, GrazedN);
+                    urineN = urineNSimpleCow;   // total for herd.
                     dungN = dungNSimpleCow;
+                    numberUrinations = numUrinations;
                 }
+                else
+                    numberUrinations = 1000;  // sensible default if SimpleCow not in simulation?
 
                 // Apply fraction of dung and urine to lanes, gateways etc.
-                double fractionOfDungUrineOffPaddock = 1 - MonthLookup(simpleGrazing.FractionOfDungUrineOffPaddock, month);
+                    double fractionOfDungUrineOffPaddock = 1 - MonthLookup(simpleGrazing.FractionOfDungUrineOffPaddock, month);
                 dungN *= fractionOfDungUrineOffPaddock;
                 urineN *= fractionOfDungUrineOffPaddock;
 
@@ -916,7 +921,7 @@ namespace Models.AgPasture
                     else
                     {
                         // PATCHING.
-                        urineDungPatches.DoUrineReturn(amountUrineNReturned);
+                        urineDungPatches.DoUrineReturn(numberUrinations, urineN);
                     }
                 }
 
