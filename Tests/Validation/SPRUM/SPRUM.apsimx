@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 197,
+  "Version": 201,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -12,12 +12,6 @@
       "Children": [
         {
           "$type": "Models.PMF.Plant, Models",
-          "Phenology": null,
-          "Arbitrator": null,
-          "structure": null,
-          "Leaf": null,
-          "Root": null,
-          "AboveGround": null,
           "PlantType": "SPRUM",
           "Name": "SPRUM",
           "ResourceName": null,
@@ -33,7 +27,6 @@
             },
             {
               "$type": "Models.PMF.Phen.Phenology, Models",
-              "thermalTime": null,
               "Name": "Phenology",
               "ResourceName": null,
               "Children": [
@@ -248,6 +241,7 @@
                 },
                 {
                   "$type": "Models.PMF.Phen.Age, Models",
+                  "AnniversaryOnWinterSolstice": false,
                   "Name": "Age",
                   "ResourceName": null,
                   "Children": [],
@@ -304,11 +298,6 @@
             },
             {
               "$type": "Models.PMF.Organ, Models",
-              "parentPlant": null,
-              "senescenceRate": null,
-              "InitialWt": null,
-              "Carbon": null,
-              "Nitrogen": null,
               "RootNetworkObject": null,
               "Cconc": 0.4,
               "IsAboveGround": true,
@@ -352,10 +341,6 @@
                     },
                     {
                       "$type": "Models.PMF.NutrientFunctions, Models",
-                      "C": null,
-                      "N": null,
-                      "P": null,
-                      "K": null,
                       "Name": "AssimilationCostFunctions",
                       "ResourceName": null,
                       "Children": [
@@ -405,10 +390,6 @@
                     },
                     {
                       "$type": "Models.PMF.NutrientFunctions, Models",
-                      "C": null,
-                      "N": null,
-                      "P": null,
-                      "K": null,
                       "Name": "MobilisationCostFunctions",
                       "ResourceName": null,
                       "Children": [
@@ -514,12 +495,6 @@
                   "Children": [
                     {
                       "$type": "Models.PMF.NutrientDemandFunctions, Models",
-                      "Structural": null,
-                      "Metabolic": null,
-                      "Storage": null,
-                      "QStructuralPriority": null,
-                      "QMetabolicPriority": null,
-                      "QStoragePriority": null,
                       "Name": "DemandFunctions",
                       "ResourceName": null,
                       "Children": [
@@ -599,10 +574,6 @@
                     },
                     {
                       "$type": "Models.PMF.NutrientSupplyFunctions, Models",
-                      "ReAllocation": null,
-                      "Uptake": null,
-                      "Fixation": null,
-                      "ReTranslocation": null,
                       "Name": "SupplyFunctions",
                       "ResourceName": null,
                       "Children": [
@@ -628,9 +599,6 @@
                         },
                         {
                           "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                          "Structural": null,
-                          "Metabolic": null,
-                          "Storage": null,
                           "Name": "ReAllocation",
                           "ResourceName": null,
                           "Children": [
@@ -670,9 +638,6 @@
                         },
                         {
                           "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                          "Structural": null,
-                          "Metabolic": null,
-                          "Storage": null,
                           "Name": "ReTranslocation",
                           "ResourceName": null,
                           "Children": [
@@ -716,9 +681,6 @@
                     },
                     {
                       "$type": "Models.PMF.NutrientProportionFunctions, Models",
-                      "Structural": null,
-                      "Metabolic": null,
-                      "Storage": null,
                       "Name": "PoolFractions",
                       "ResourceName": null,
                       "Children": [
@@ -794,18 +756,11 @@
                   "Children": [
                     {
                       "$type": "Models.PMF.NutrientDemandFunctions, Models",
-                      "Structural": null,
-                      "Metabolic": null,
-                      "Storage": null,
-                      "QStructuralPriority": null,
-                      "QMetabolicPriority": null,
-                      "QStoragePriority": null,
                       "Name": "DemandFunctions",
                       "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "multiplier": null,
                           "Name": "Structural",
                           "ResourceName": null,
                           "Children": [],
@@ -814,7 +769,6 @@
                         },
                         {
                           "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "multiplier": null,
                           "Name": "Metabolic",
                           "ResourceName": null,
                           "Children": [],
@@ -823,7 +777,6 @@
                         },
                         {
                           "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "multiplier": null,
                           "Name": "Storage",
                           "ResourceName": null,
                           "Children": [],
@@ -866,10 +819,6 @@
                     },
                     {
                       "$type": "Models.PMF.NutrientSupplyFunctions, Models",
-                      "ReAllocation": null,
-                      "Uptake": null,
-                      "Fixation": null,
-                      "ReTranslocation": null,
                       "Name": "SupplyFunctions",
                       "ResourceName": null,
                       "Children": [
@@ -895,9 +844,6 @@
                         },
                         {
                           "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                          "Structural": null,
-                          "Metabolic": null,
-                          "Storage": null,
                           "Name": "ReAllocation",
                           "ResourceName": null,
                           "Children": [
@@ -937,9 +883,6 @@
                         },
                         {
                           "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                          "Structural": null,
-                          "Metabolic": null,
-                          "Storage": null,
                           "Name": "ReTranslocation",
                           "ResourceName": null,
                           "Children": [
@@ -983,9 +926,6 @@
                     },
                     {
                       "$type": "Models.PMF.NutrientConcentrationFunctions, Models",
-                      "Maximum": null,
-                      "Critical": null,
-                      "Minimum": null,
                       "Name": "ConcFunctions",
                       "ResourceName": null,
                       "Children": [
@@ -1100,11 +1040,6 @@
             },
             {
               "$type": "Models.PMF.Organ, Models",
-              "parentPlant": null,
-              "senescenceRate": null,
-              "InitialWt": null,
-              "Carbon": null,
-              "Nitrogen": null,
               "RootNetworkObject": null,
               "Cconc": 0.4,
               "IsAboveGround": true,
@@ -1138,10 +1073,6 @@
                     },
                     {
                       "$type": "Models.PMF.NutrientFunctions, Models",
-                      "C": null,
-                      "N": null,
-                      "P": null,
-                      "K": null,
                       "Name": "AssimilationCostFunctions",
                       "ResourceName": null,
                       "Children": [
@@ -1191,10 +1122,6 @@
                     },
                     {
                       "$type": "Models.PMF.NutrientFunctions, Models",
-                      "C": null,
-                      "N": null,
-                      "P": null,
-                      "K": null,
                       "Name": "MobilisationCostFunctions",
                       "ResourceName": null,
                       "Children": [
@@ -1300,12 +1227,6 @@
                   "Children": [
                     {
                       "$type": "Models.PMF.NutrientDemandFunctions, Models",
-                      "Structural": null,
-                      "Metabolic": null,
-                      "Storage": null,
-                      "QStructuralPriority": null,
-                      "QMetabolicPriority": null,
-                      "QStoragePriority": null,
                       "Name": "DemandFunctions",
                       "ResourceName": null,
                       "Children": [
@@ -1396,10 +1317,6 @@
                     },
                     {
                       "$type": "Models.PMF.NutrientSupplyFunctions, Models",
-                      "ReAllocation": null,
-                      "Uptake": null,
-                      "Fixation": null,
-                      "ReTranslocation": null,
                       "Name": "SupplyFunctions",
                       "ResourceName": null,
                       "Children": [
@@ -1442,9 +1359,6 @@
                         },
                         {
                           "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                          "Structural": null,
-                          "Metabolic": null,
-                          "Storage": null,
                           "Name": "ReAllocation",
                           "ResourceName": null,
                           "Children": [
@@ -1484,9 +1398,6 @@
                         },
                         {
                           "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                          "Structural": null,
-                          "Metabolic": null,
-                          "Storage": null,
                           "Name": "ReTranslocation",
                           "ResourceName": null,
                           "Children": [
@@ -1530,9 +1441,6 @@
                     },
                     {
                       "$type": "Models.PMF.NutrientProportionFunctions, Models",
-                      "Structural": null,
-                      "Metabolic": null,
-                      "Storage": null,
                       "Name": "PoolFractions",
                       "ResourceName": null,
                       "Children": [
@@ -1608,18 +1516,11 @@
                   "Children": [
                     {
                       "$type": "Models.PMF.NutrientDemandFunctions, Models",
-                      "Structural": null,
-                      "Metabolic": null,
-                      "Storage": null,
-                      "QStructuralPriority": null,
-                      "QMetabolicPriority": null,
-                      "QStoragePriority": null,
                       "Name": "DemandFunctions",
                       "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "multiplier": null,
                           "Name": "Structural",
                           "ResourceName": null,
                           "Children": [],
@@ -1628,7 +1529,6 @@
                         },
                         {
                           "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "multiplier": null,
                           "Name": "Metabolic",
                           "ResourceName": null,
                           "Children": [],
@@ -1637,7 +1537,6 @@
                         },
                         {
                           "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "multiplier": null,
                           "Name": "Storage",
                           "ResourceName": null,
                           "Children": [],
@@ -1680,10 +1579,6 @@
                     },
                     {
                       "$type": "Models.PMF.NutrientSupplyFunctions, Models",
-                      "ReAllocation": null,
-                      "Uptake": null,
-                      "Fixation": null,
-                      "ReTranslocation": null,
                       "Name": "SupplyFunctions",
                       "ResourceName": null,
                       "Children": [
@@ -1709,9 +1604,6 @@
                         },
                         {
                           "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                          "Structural": null,
-                          "Metabolic": null,
-                          "Storage": null,
                           "Name": "ReAllocation",
                           "ResourceName": null,
                           "Children": [
@@ -1751,9 +1643,6 @@
                         },
                         {
                           "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                          "Structural": null,
-                          "Metabolic": null,
-                          "Storage": null,
                           "Name": "ReTranslocation",
                           "ResourceName": null,
                           "Children": [
@@ -1797,9 +1686,6 @@
                     },
                     {
                       "$type": "Models.PMF.NutrientConcentrationFunctions, Models",
-                      "Maximum": null,
-                      "Critical": null,
-                      "Minimum": null,
                       "Name": "ConcFunctions",
                       "ResourceName": null,
                       "Children": [
@@ -1867,7 +1753,6 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.SubDailyInterpolation, Models",
-                          "InterpolationMethod": null,
                           "agregationMethod": 0,
                           "Name": "FRGRFunctionTemp",
                           "ResourceName": null,
@@ -2028,6 +1913,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.AccumulateFunctionGeneral, Models",
+                          "AccumulateToday": false,
                           "AccumulateEventName": "[Clock].DoPotentialPlantGrowth",
                           "NameOfPlantToLink": null,
                           "StartStageName": null,
@@ -2242,9 +2128,6 @@
                 },
                 {
                   "$type": "Models.Functions.SupplyFunctions.RUEModel, Models",
-                  "FT": null,
-                  "FVPD": null,
-                  "RadnInt": null,
                   "Name": "Photosynthesis",
                   "ResourceName": null,
                   "Children": [
@@ -2428,11 +2311,6 @@
             },
             {
               "$type": "Models.PMF.Organ, Models",
-              "parentPlant": null,
-              "senescenceRate": null,
-              "InitialWt": null,
-              "Carbon": null,
-              "Nitrogen": null,
               "RootNetworkObject": null,
               "Cconc": 0.4,
               "IsAboveGround": true,
@@ -2456,10 +2334,6 @@
                     },
                     {
                       "$type": "Models.PMF.NutrientFunctions, Models",
-                      "C": null,
-                      "N": null,
-                      "P": null,
-                      "K": null,
                       "Name": "AssimilationCostFunctions",
                       "ResourceName": null,
                       "Children": [
@@ -2509,10 +2383,6 @@
                     },
                     {
                       "$type": "Models.PMF.NutrientFunctions, Models",
-                      "C": null,
-                      "N": null,
-                      "P": null,
-                      "K": null,
                       "Name": "MobilisationCostFunctions",
                       "ResourceName": null,
                       "Children": [
@@ -2598,12 +2468,6 @@
                   "Children": [
                     {
                       "$type": "Models.PMF.NutrientDemandFunctions, Models",
-                      "Structural": null,
-                      "Metabolic": null,
-                      "Storage": null,
-                      "QStructuralPriority": null,
-                      "QMetabolicPriority": null,
-                      "QStoragePriority": null,
                       "Name": "DemandFunctions",
                       "ResourceName": null,
                       "Children": [
@@ -2673,10 +2537,6 @@
                     },
                     {
                       "$type": "Models.PMF.NutrientSupplyFunctions, Models",
-                      "ReAllocation": null,
-                      "Uptake": null,
-                      "Fixation": null,
-                      "ReTranslocation": null,
                       "Name": "SupplyFunctions",
                       "ResourceName": null,
                       "Children": [
@@ -2729,9 +2589,6 @@
                         },
                         {
                           "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                          "Structural": null,
-                          "Metabolic": null,
-                          "Storage": null,
                           "Name": "ReAllocation",
                           "ResourceName": null,
                           "Children": [
@@ -2771,9 +2628,6 @@
                         },
                         {
                           "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                          "Structural": null,
-                          "Metabolic": null,
-                          "Storage": null,
                           "Name": "ReTranslocation",
                           "ResourceName": null,
                           "Children": [
@@ -2817,9 +2671,6 @@
                     },
                     {
                       "$type": "Models.PMF.NutrientProportionFunctions, Models",
-                      "Structural": null,
-                      "Metabolic": null,
-                      "Storage": null,
                       "Name": "PoolFractions",
                       "ResourceName": null,
                       "Children": [
@@ -2895,18 +2746,11 @@
                   "Children": [
                     {
                       "$type": "Models.PMF.NutrientDemandFunctions, Models",
-                      "Structural": null,
-                      "Metabolic": null,
-                      "Storage": null,
-                      "QStructuralPriority": null,
-                      "QMetabolicPriority": null,
-                      "QStoragePriority": null,
                       "Name": "DemandFunctions",
                       "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "multiplier": null,
                           "Name": "Structural",
                           "ResourceName": null,
                           "Children": [],
@@ -2915,7 +2759,6 @@
                         },
                         {
                           "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "multiplier": null,
                           "Name": "Metabolic",
                           "ResourceName": null,
                           "Children": [],
@@ -2924,7 +2767,6 @@
                         },
                         {
                           "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "multiplier": null,
                           "Name": "Storage",
                           "ResourceName": null,
                           "Children": [],
@@ -2967,10 +2809,6 @@
                     },
                     {
                       "$type": "Models.PMF.NutrientSupplyFunctions, Models",
-                      "ReAllocation": null,
-                      "Uptake": null,
-                      "Fixation": null,
-                      "ReTranslocation": null,
                       "Name": "SupplyFunctions",
                       "ResourceName": null,
                       "Children": [
@@ -3023,9 +2861,6 @@
                         },
                         {
                           "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                          "Structural": null,
-                          "Metabolic": null,
-                          "Storage": null,
                           "Name": "ReAllocation",
                           "ResourceName": null,
                           "Children": [
@@ -3065,9 +2900,6 @@
                         },
                         {
                           "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                          "Structural": null,
-                          "Metabolic": null,
-                          "Storage": null,
                           "Name": "ReTranslocation",
                           "ResourceName": null,
                           "Children": [
@@ -3111,9 +2943,6 @@
                     },
                     {
                       "$type": "Models.PMF.NutrientConcentrationFunctions, Models",
-                      "Maximum": null,
-                      "Critical": null,
-                      "Minimum": null,
                       "Name": "ConcFunctions",
                       "ResourceName": null,
                       "Children": [
@@ -3223,11 +3052,6 @@
             },
             {
               "$type": "Models.PMF.Organ, Models",
-              "parentPlant": null,
-              "senescenceRate": null,
-              "InitialWt": null,
-              "Carbon": null,
-              "Nitrogen": null,
               "RootNetworkObject": null,
               "Cconc": 0.4,
               "IsAboveGround": false,
@@ -3261,10 +3085,6 @@
                     },
                     {
                       "$type": "Models.PMF.NutrientFunctions, Models",
-                      "C": null,
-                      "N": null,
-                      "P": null,
-                      "K": null,
                       "Name": "AssimilationCostFunctions",
                       "ResourceName": null,
                       "Children": [
@@ -3314,10 +3134,6 @@
                     },
                     {
                       "$type": "Models.PMF.NutrientFunctions, Models",
-                      "C": null,
-                      "N": null,
-                      "P": null,
-                      "K": null,
                       "Name": "MobilisationCostFunctions",
                       "ResourceName": null,
                       "Children": [
@@ -3491,12 +3307,6 @@
                   "Children": [
                     {
                       "$type": "Models.PMF.NutrientDemandFunctions, Models",
-                      "Structural": null,
-                      "Metabolic": null,
-                      "Storage": null,
-                      "QStructuralPriority": null,
-                      "QMetabolicPriority": null,
-                      "QStoragePriority": null,
                       "Name": "DemandFunctions",
                       "ResourceName": null,
                       "Children": [
@@ -3576,10 +3386,6 @@
                     },
                     {
                       "$type": "Models.PMF.NutrientSupplyFunctions, Models",
-                      "ReAllocation": null,
-                      "Uptake": null,
-                      "Fixation": null,
-                      "ReTranslocation": null,
                       "Name": "SupplyFunctions",
                       "ResourceName": null,
                       "Children": [
@@ -3605,9 +3411,6 @@
                         },
                         {
                           "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                          "Structural": null,
-                          "Metabolic": null,
-                          "Storage": null,
                           "Name": "ReAllocation",
                           "ResourceName": null,
                           "Children": [
@@ -3647,9 +3450,6 @@
                         },
                         {
                           "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                          "Structural": null,
-                          "Metabolic": null,
-                          "Storage": null,
                           "Name": "ReTranslocation",
                           "ResourceName": null,
                           "Children": [
@@ -3693,9 +3493,6 @@
                     },
                     {
                       "$type": "Models.PMF.NutrientProportionFunctions, Models",
-                      "Structural": null,
-                      "Metabolic": null,
-                      "Storage": null,
                       "Name": "PoolFractions",
                       "ResourceName": null,
                       "Children": [
@@ -3771,18 +3568,11 @@
                   "Children": [
                     {
                       "$type": "Models.PMF.NutrientDemandFunctions, Models",
-                      "Structural": null,
-                      "Metabolic": null,
-                      "Storage": null,
-                      "QStructuralPriority": null,
-                      "QMetabolicPriority": null,
-                      "QStoragePriority": null,
                       "Name": "DemandFunctions",
                       "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "multiplier": null,
                           "Name": "Structural",
                           "ResourceName": null,
                           "Children": [],
@@ -3791,7 +3581,6 @@
                         },
                         {
                           "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "multiplier": null,
                           "Name": "Storage",
                           "ResourceName": null,
                           "Children": [],
@@ -3800,7 +3589,6 @@
                         },
                         {
                           "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "multiplier": null,
                           "Name": "Metabolic",
                           "ResourceName": null,
                           "Children": [],
@@ -3843,10 +3631,6 @@
                     },
                     {
                       "$type": "Models.PMF.NutrientSupplyFunctions, Models",
-                      "ReAllocation": null,
-                      "Uptake": null,
-                      "Fixation": null,
-                      "ReTranslocation": null,
                       "Name": "SupplyFunctions",
                       "ResourceName": null,
                       "Children": [
@@ -3872,9 +3656,6 @@
                         },
                         {
                           "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                          "Structural": null,
-                          "Metabolic": null,
-                          "Storage": null,
                           "Name": "ReAllocation",
                           "ResourceName": null,
                           "Children": [
@@ -3914,9 +3695,6 @@
                         },
                         {
                           "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                          "Structural": null,
-                          "Metabolic": null,
-                          "Storage": null,
                           "Name": "ReTranslocation",
                           "ResourceName": null,
                           "Children": [
@@ -3960,9 +3738,6 @@
                     },
                     {
                       "$type": "Models.PMF.NutrientConcentrationFunctions, Models",
-                      "Maximum": null,
-                      "Critical": null,
-                      "Minimum": null,
                       "Name": "ConcFunctions",
                       "ResourceName": null,
                       "Children": [
@@ -4016,9 +3791,6 @@
                 },
                 {
                   "$type": "Models.PMF.RootNetwork, Models",
-                  "parentOrgan": null,
-                  "RootFrontCalcSwitch": null,
-                  "RootDepthStressFactor": null,
                   "ZoneNamesToGrowRootsIn": [],
                   "klByLayer": null,
                   "WaterTakenUp": null,
@@ -7292,11 +7064,6 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
-                  "Phenology": null,
-                  "Arbitrator": null,
-                  "structure": null,
-                  "Leaf": null,
-                  "Root": null,
                   "Name": "SPRUM",
                   "ResourceName": "SPRUM",
                   "Children": [],
@@ -11207,7 +10974,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "%root%\\Examples\\WeatherFiles\\NZ_Lincoln.met",
+              "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -12479,11 +12246,6 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
-                  "Phenology": null,
-                  "Arbitrator": null,
-                  "structure": null,
-                  "Leaf": null,
-                  "Root": null,
                   "Name": "SPRUM",
                   "ResourceName": "SPRUM",
                   "Children": [],
@@ -17900,7 +17662,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "%root%\\Examples\\WeatherFiles\\NZ_Lincoln.met",
+              "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -18629,11 +18391,6 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
-                  "Phenology": null,
-                  "Arbitrator": null,
-                  "structure": null,
-                  "Leaf": null,
-                  "Root": null,
                   "Name": "SPRUM",
                   "ResourceName": "SPRUM",
                   "Children": [],
@@ -22577,11 +22334,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "Phenology": null,
-                      "Arbitrator": null,
-                      "structure": null,
-                      "Leaf": null,
-                      "Root": null,
                       "Name": "SPRUM",
                       "ResourceName": "SPRUM",
                       "Children": [],
@@ -23996,11 +23748,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "Phenology": null,
-                      "Arbitrator": null,
-                      "structure": null,
-                      "Leaf": null,
-                      "Root": null,
                       "Name": "SPRUM",
                       "ResourceName": "SPRUM",
                       "Children": [],
@@ -25693,11 +25440,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "Phenology": null,
-                      "Arbitrator": null,
-                      "structure": null,
-                      "Leaf": null,
-                      "Root": null,
                       "Name": "SPRUM",
                       "ResourceName": "SPRUM",
                       "Children": [],
@@ -27457,11 +27199,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "Phenology": null,
-                      "Arbitrator": null,
-                      "structure": null,
-                      "Leaf": null,
-                      "Root": null,
                       "Name": "SPRUM",
                       "ResourceName": "SPRUM",
                       "Children": [],
@@ -30033,11 +29770,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "Phenology": null,
-                      "Arbitrator": null,
-                      "structure": null,
-                      "Leaf": null,
-                      "Root": null,
                       "Name": "SPRUM",
                       "ResourceName": "SPRUM",
                       "Children": [],
