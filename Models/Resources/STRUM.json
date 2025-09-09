@@ -70,6 +70,14 @@
           "ReadOnly": false
         },
         {
+          "$type": "Models.PMF.DimensionsInZones, Models",
+          "Name": "DimensionsInZones",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.PMF.Phen.Phenology, Models",
           "thermalTime": null,
           "Name": "Phenology",
