@@ -71,7 +71,7 @@
         },
         {
           "$type": "Models.PMF.DimensionsInZones, Models",
-          "Name": "DimensionsInZones",
+          "Name": "DimensionsOverZones",
           "ResourceName": null,
           "Children": [],
           "Enabled": true,
