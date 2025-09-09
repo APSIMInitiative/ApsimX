@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using APSIM.Core;
 using APSIM.Numerics;
+using APSIM.Shared.Utilities;
 using MathNet.Numerics.Distributions;
 using MathNet.Numerics.LinearAlgebra;
 using Models.Core;
@@ -212,49 +213,52 @@ namespace Models.AgPasture
         {
             // meanLoad is coming in as kg N excreted by the herd
             // convert the herd value to a per urination value in g
-            meanLoad = meanLoad * 1000.0 / numUrinations;   
-
-            GetZoneForUrineReturn();
+            meanLoad = meanLoad * 1000.0 / numUrinations;
 
             summary.WriteMessage(simpleGrazing, "The Zone for urine return is " + ZoneNumForUrine, MessageType.Diagnostic);
 
             (double[] urineLoad, double[] urineVolume) = CalculateLoadVolume(numUrinations, meanLoad);
 
-            double gridArea = 10000 / zoneCount;
+            double[] ureaToAdd = new double[physical.Thickness.Length];
+            double gridArea = 10000 / zoneCount;   // m2
             double gridAreaUsed = 0;
+            double totalUrineAdded = 0;  // kg
             for (int i = 0; i < numUrinations; i++)
             {
+                urineLoad[i] = urineLoad[i] * Constants.g2kg;
+
                 // use the Beatson data for wetted area, convert to radius, add 0.1 m edge and then convert back to an area. Note this is a natural log
                 // check 2L should give a area of 0.3866 m2
                 double urinationArea = Math.PI * Math.Pow(Math.Sqrt((0.135 * Math.Log(urineVolume[i]) + 0.104) / Math.PI) + 0.1, 2.0);
                 gridAreaUsed += urinationArea; // m2
                 double urinationDepth = urineVolume[i] / urinationArea / 0.05;    // 0.05 is the assumed increase in water content from the urineation
 
-                AddUrineToGrid(urineLoad[i] / 1000.0, urinationDepth, urinationArea);   // convert the urine load from g to kg
+                // convert urineLoad for this urination into a depth profile.
+                double[] depthPenetration = UrinePenetration(urinationDepth);
+                for (int ii = 0; ii <= (physical.Thickness.Length - 1); ii++)
+                    ureaToAdd[ii] += depthPenetration[ii] * urineLoad[i] * zoneCount;   // kg
 
-                if (gridAreaUsed - 0.5 * urinationArea >= gridArea)
+                if (gridAreaUsed - 0.5 * urinationArea >= gridArea || i == numUrinations-1)
                 {
                     GetZoneForUrineReturn();
-                    //ureaToAdd = 0.0; // zero out the depth array
+                    AddUrineToGrid(ureaToAdd);
+                    totalUrineAdded += ureaToAdd.Sum();
+                    Array.Clear(ureaToAdd);   // zero out the depth array
                     gridAreaUsed = 0.0;
                 }
             }
-
+            if (MathUtilities.FloatsAreEqual(urineLoad.Sum(), totalUrineAdded))
+                throw new Exception($"The amount of urine added ({totalUrineAdded}) does not equal the amount that should have been added ({urineLoad.Sum()})");
         }
 
-        private void AddUrineToGrid(double ureaToAdd, double urinationDepth, double urinationArea)
+        private void AddUrineToGrid(double[] ureaToAddByLayer)
         {
+            double ureaToAdd = ureaToAddByLayer.Sum();
             if (pseudoPatches)
             {
                 int[] PatchToAddTo = new int[1];  //because need an array variable for this
                 string[] PatchNmToAddTo = new string[0];  //need an array variable for this
-                double[] UreaToAdd = new double[physical.Thickness.Length];
 
-                // calculate the depth distribution as in UrineDungPatches.cs line 282 and accumulate the N into ureaToAdd
-                double[] depthPenetration = UrinePenetration(urinationDepth);
-
-                for (int ii = 0; ii <= (physical.Thickness.Length - 1); ii++)
-                    UreaToAdd[ii] = depthPenetration[ii] * ureaToAdd * zoneCount; 
 
                 AddSoilCNPatchType CurrentPatch = new();
                 CurrentPatch.Sender = "manager";
@@ -262,13 +266,11 @@ namespace Models.AgPasture
                 PatchToAddTo[0] = ZoneNumForUrine;
                 CurrentPatch.AffectedPatches_id = PatchToAddTo;
                 CurrentPatch.AffectedPatches_nm = PatchNmToAddTo;
-                CurrentPatch.Urea = UreaToAdd;
+                CurrentPatch.Urea = ureaToAddByLayer;
 
                 var patchManager = structure.Find<NutrientPatchManager>(relativeTo: simpleGrazing);
-
-                summary.WriteMessage(simpleGrazing, "Patch MinN prior to urine return: " + patchManager.MineralNEachPatch[ZoneNumForUrine], MessageType.Diagnostic);
                 patchManager.Add(CurrentPatch);
-                summary.WriteMessage(simpleGrazing, "Patch MinN after urine return: " + patchManager.MineralNEachPatch[ZoneNumForUrine], MessageType.Diagnostic);
+                summary.WriteMessage(simpleGrazing, ureaToAdd + " urine N added to Zone " + ZoneNumForUrine + ", the local load was " + ureaToAdd + " kg N /ha", MessageType.Diagnostic);
             }
             else
             {
@@ -281,7 +283,6 @@ namespace Models.AgPasture
                         depth: 0.0,   // when depthBottom is specified then this means depthTop
                         depthBottom: urineDepthPenetration,
                         doOutput: true);
-
                 summary.WriteMessage(simpleGrazing, ureaToAdd + " urine N added to Zone " + ZoneNumForUrine + ", the local load was " + ureaToAdd / zone.Area + " kg N /ha", MessageType.Diagnostic);
             }
         }

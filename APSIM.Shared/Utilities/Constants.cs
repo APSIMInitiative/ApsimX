@@ -28,12 +28,14 @@ namespace APSIM.Shared.Utilities
         /// <summary>convert fraction to percent</summary>
         public const double fract2pcnt = 100.0;
 
+        /// <summary>convert g to kg</summary>
+        public const double g2kg = 1.0 / 1000.0;
 
 
         /// <summary>
         /// ISO 3166 list of English short country names.
         /// </summary>
-        public static readonly string[] Countries = 
+        public static readonly string[] Countries =
         {
             "Afghanistan",
             "Åland Islands",
