@@ -218,7 +218,7 @@ namespace Models.AgPasture
 
             double gridArea = 10000 / zoneCount;
             double gridAreaUsed = 0;
-            for (int i = 0; i <= numUrinations; i++)
+            for (int i = 0; i < numUrinations; i++)
             {
                 // use the Beatson data for wetted area, convert to radius, add 0.1 m edge and then convert back to an area. Note this is a natural log
                 // check 2L should give a area of 0.3866 m2
