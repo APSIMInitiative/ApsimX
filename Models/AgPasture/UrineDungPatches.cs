@@ -210,11 +210,15 @@ namespace Models.AgPasture
         /// <summary>Invoked to do urine return</summary>
         public void DoUrineReturn(int numUrinations, double meanLoad)
         {
+            // meanLoad is coming in as kg N excreted by the herd
+            // convert the herd value to a per urination value in g
+            meanLoad = meanLoad * 1000.0 / numUrinations;   
+
             GetZoneForUrineReturn();
 
             summary.WriteMessage(simpleGrazing, "The Zone for urine return is " + ZoneNumForUrine, MessageType.Diagnostic);
 
-            (double[] urineVolume, double[] urineLoad) = CalculateLoadVolume(numUrinations, meanLoad);
+            (double[] urineLoad, double[] urineVolume) = CalculateLoadVolume(numUrinations, meanLoad);
 
             double gridArea = 10000 / zoneCount;
             double gridAreaUsed = 0;
@@ -226,7 +230,7 @@ namespace Models.AgPasture
                 gridAreaUsed += urinationArea; // m2
                 double urinationDepth = urineVolume[i] / urinationArea / 0.05;    // 0.05 is the assumed increase in water content from the urineation
 
-                AddUrineToGrid(urineLoad[i], urinationDepth);
+                AddUrineToGrid(urineLoad[i] / 1000.0, urinationDepth, urinationArea);   // convert the urine load from g to kg
 
                 if (gridAreaUsed - 0.5 * urinationArea >= gridArea)
                 {
@@ -238,7 +242,7 @@ namespace Models.AgPasture
 
         }
 
-        private void AddUrineToGrid(double ureaToAdd, double urinationDepth)
+        private void AddUrineToGrid(double ureaToAdd, double urinationDepth, double urinationArea)
         {
             if (pseudoPatches)
             {
@@ -250,7 +254,7 @@ namespace Models.AgPasture
                 double[] depthPenetration = UrinePenetration(urinationDepth);
 
                 for (int ii = 0; ii <= (physical.Thickness.Length - 1); ii++)
-                    UreaToAdd[ii] = depthPenetration[ii] * ureaToAdd * zoneCount;
+                    UreaToAdd[ii] = depthPenetration[ii] * ureaToAdd * zoneCount; 
 
                 AddSoilCNPatchType CurrentPatch = new();
                 CurrentPatch.Sender = "manager";
@@ -359,7 +363,7 @@ namespace Models.AgPasture
         /// <returns></returns>
         private (double[] load, double[] volume) CalculateLoadVolume(int numUrinations, double meanLoad)
         {
-            // I (VOS) don't understand what the subtraction is here but the secnd version gives an actual mean much closer to the intended mean
+            // I (VOS) don't understand what the subtraction is here but the second version gives an actual mean much closer to the intended mean
             NormalMeanLoadToGenerate = Math.Log10(meanLoad) - 0.5 * CovarianceMatrix[0];
             //NormalMeanLoadToGenerate = Math.Log10(MeanLoadToGenerate) - 1.0 * CovarianceMatrix[0];
 
