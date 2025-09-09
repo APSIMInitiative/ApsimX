@@ -6,7 +6,6 @@ using APSIM.Numerics;
 using Models.Core;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
-using Models.Zones;
 using Newtonsoft.Json;
 using Zone = Models.Core.Zone;
 
@@ -113,7 +112,7 @@ namespace Models.PMF
         private bool resetOrganTomorrow { get; set; }
 
         private double simArea { get; set; }
-
+        private DimensionsOverZones DOZ { get; set; }
 
         ///3. The Constructor
         /// -------------------------------------------------------------------------------------------------
@@ -297,29 +296,6 @@ namespace Models.PMF
             }
         }
 
-        /// <summary>
-        /// The width of the organ is assumed to be the width of the parent plant.  
-        /// If parent plant does not have width model it is set as the width of the parent zone
-        /// </summary>
-        private double PlantWidth
-        {
-            get
-            {
-                IFunction width = Structure.FindChild<IFunction>("Width",relativeTo: parentPlant) as IFunction;
-                if (width != null)
-                    return width.Value() / 1000; //Convert from mm to m
-                else
-                {
-                    RectangularZone parentZone = Structure.FindParent<RectangularZone>(recurse: true);
-
-                    if (parentZone != null)
-                        return parentZone.Width;
-                    else
-                        return 1.0;
-                }
-            }
-        }
-        
         ///6. Public methods
         /// --------------------------------------------------------------------------------------------------
 
@@ -416,6 +392,7 @@ namespace Models.PMF
             if (data.Plant == parentPlant)
             {
                 initialiseBiomass();
+                DOZ = Structure.FindChild<DimensionsInZones>(recurse:true, relativeTo:parentPlant);
 
                 if (RootNetworkObject != null)
                     RootNetworkObject.InitailiseNetwork(Live);
@@ -660,57 +637,23 @@ namespace Models.PMF
         /// <param name="n"></param>
         private void addSOMtoZones(double wt, double n)
         {
-            Simulation sim = Structure.FindParent<Simulation>();
-            List<Zone> zones = Structure.FindAll<Zone>(relativeTo: sim).ToList();
-            Zone parentZone = Structure.FindParent<Zone>(recurse: true);
-            double totalWidth = 0;
-            double[] zoneWidths = new double[zones.Count];
             int zi = 0;
-            foreach (Zone z in zones)
+
+            if (DOZ == null)
             {
-                if (z is RectangularZone)
-                {
-                    totalWidth += (z as RectangularZone).Width;
-                }
-                else
-                {
-                    totalWidth = 1.0;
-                }
-                zi += 1;
-            }
-            double plantWidth = Math.Min(PlantWidth,totalWidth);
-            double zoneLength = 1.0;
-            zi = 0;
-            foreach (Zone z in zones)
-            {
-                if (z is RectangularZone)
-                {
-                    if (z.Name == parentZone.Name)
-                    {
-                        zoneWidths[zi] = (z as RectangularZone).Width;
-                        zoneLength = (z as RectangularZone).Length;
-                    }
-                    else
-                    {
-                        double overlap = plantWidth - (parentZone as RectangularZone).Width;
-                        zoneWidths[zi] = overlap;
-                    }
-                }
-                else
-                {
-                    zoneWidths[zi] = 1.0;
-                }
-                zi += 1;
-            }
-            double plantLength = Math.Min(zoneLength, PlantWidth); //Assume plant is square, length represents spaciing so will not exceed zone length as plants start touching
-            double plantArea = plantWidth * plantLength;
-            zi = 0;
-            foreach (Zone z in zones)
-            {
+                Zone z = Structure.FindParent<Zone>(recurse: true);
                 ISurfaceOrganicMatter somZone = Structure.FindChild<ISurfaceOrganicMatter>(relativeTo: z);
-                double rza = zoneWidths[zi] / totalWidth;
-                somZone.Add((wt/plantArea) * 10 * rza, (n /plantArea) * 10 * rza, 0, parentPlant.PlantType, Name);
-                zi += 1; 
+                somZone.Add(wt/(z.Area * 10000) * 10, n/(z.Area * 10000) * 10, 0, parentPlant.PlantType, Name);
+            }
+            else
+            {
+                foreach (Zone z in DOZ.zones)
+                {
+                    ISurfaceOrganicMatter somZone = Structure.FindChild<ISurfaceOrganicMatter>(relativeTo: z);
+
+                    somZone.Add((wt * DOZ.RAOZ[zi] * 10)/(z.Area * 10000), (n * DOZ.RAOZ[zi] * 10)/(z.Area * 10000), 0, parentPlant.PlantType, Name);
+                    zi += 1;
+                }
             }
         }
 
