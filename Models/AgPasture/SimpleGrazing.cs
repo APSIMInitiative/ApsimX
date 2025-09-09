@@ -882,7 +882,7 @@ namespace Models.AgPasture
                     var (numUrinations, urineNSimpleCow, dungNSimpleCow) = simpleCow.OnGrazed(GrazedDM, GrazedME, GrazedN);
                     urineN = urineNSimpleCow;   // total for herd.
                     dungN = dungNSimpleCow;
-                    numberUrinations = numUrinations;
+                    numberUrinations = (int)numUrinations;
                 }
                 else
                     numberUrinations = 1000;  // sensible default if SimpleCow not in simulation?
