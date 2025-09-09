@@ -70,7 +70,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.PMF.DimensionsInZones, Models",
+          "$type": "Models.PMF.DimensionsOverZones, Models",
           "Name": "DimensionsOverZones",
           "ResourceName": null,
           "Children": [],
