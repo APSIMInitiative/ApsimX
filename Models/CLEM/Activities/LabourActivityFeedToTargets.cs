@@ -151,7 +151,7 @@ namespace Models.CLEM.Activities
                 return null;
             }
 
-            List<LabourType> peopleList = people.Items.Where(a => IncludeHiredLabour || a.Hired == false).ToList();
+            List<LabourType> peopleList = people.Items.Where(a => IncludeHiredLabour || a.IsHired == false).ToList();
             peopleList.Select(a => { a.FeedToTargetIntake = 0; return a; }).ToList();
 
             // determine AEs to be fed
@@ -484,7 +484,7 @@ namespace Models.CLEM.Activities
         {
             // add all provided requests to the individuals intake pools.
 
-            List<LabourType> group = people?.Items.Where(a => IncludeHiredLabour | a.Hired != true).ToList();
+            List<LabourType> group = people?.Items.Where(a => IncludeHiredLabour | a.IsHired != true).ToList();
             Status = ActivityStatus.NotNeeded;
             if (group != null && group.Count > 0)
             {
