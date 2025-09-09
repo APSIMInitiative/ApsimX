@@ -392,7 +392,7 @@ namespace Models.PMF
             if (data.Plant == parentPlant)
             {
                 initialiseBiomass();
-                DOZ = Structure.FindChild<DimensionsInZones>(recurse:true, relativeTo:parentPlant);
+                DOZ = Structure.FindChild<DimensionsOverZones>(recurse:true, relativeTo:parentPlant);
 
                 if (RootNetworkObject != null)
                     RootNetworkObject.InitailiseNetwork(Live);
