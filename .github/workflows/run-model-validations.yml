@@ -120,9 +120,11 @@ jobs:
         # Tell POStats2 to open and get ready to accept data
         echo "Opening POStats2 to accept data..."
         echo "Commit SHA: ${{ github.event.pull_request.head.sha }}"
-        # NOTE: Enable once the workflow is ready for production.
         commitsha=${{ github.event.pull_request.head.sha }}
         author=${{ github.actor }}
+        # This is used to make a PR specific pool to avoid multiple PRs issues on Azure.
+        azure_pool="${DOCKER_METADATA_OUTPUT_VERSION:3}-${commitsha:0:6}"
+        echo "azure pool: ${azure_pool}"
         echo "author variable: ${author}"
         # substrings the variable so we get the number only after the 'pr-' part.
         echo "PR Number: ${DOCKER_METADATA_OUTPUT_VERSION:3}"
@@ -132,7 +134,7 @@ jobs:
         response=$(curl "https://postats2.apsim.info/api/open?pullrequestnumber=${DOCKER_METADATA_OUTPUT_VERSION:3}&commitid=${commitsha}&author=${author}&count=${jobcount}") # count needs to be a proper number later
         echo "POStats2 open response: ${response}"
         echo "Start creating payload..."
-        dotnet ./bin/Release/net8.0/APSIM.Workflow.dll --payload-directory "${PAYLOAD_FOLDER_PATH}" -g "$author" -t $DOCKER_METADATA_OUTPUT_VERSION --commit-sha "$commitsha" --pr-number ${DOCKER_METADATA_OUTPUT_VERSION:3} -v
+        dotnet ./bin/Release/net8.0/APSIM.Workflow.dll --payload-directory "${PAYLOAD_FOLDER_PATH}" -g "$author" -t $DOCKER_METADATA_OUTPUT_VERSION --commit-sha "$commitsha" --pr-number ${DOCKER_METADATA_OUTPUT_VERSION:3} --azure-pool ${azure_pool} -v
 
     - name: Print workflow submit success summary markdown
       if: success()
