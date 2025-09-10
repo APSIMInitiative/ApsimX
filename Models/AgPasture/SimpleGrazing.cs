@@ -411,7 +411,7 @@ namespace Models.AgPasture
             if (UsePatching)
             {
                 urineDungPatches = new UrineDungPatches(this, Structure, PseudoPatches, ZoneCount, urineReturnType,
-                                                        UrineReturnPattern, PseudoRandomSeed, DepthUrineIsAdded, maxEffectiveNConcentration);
+                                                        UrineReturnPattern, PseudoRandomSeed, maxEffectiveNConcentration);
                 urineDungPatches.OnPreLink();
             }
         }

@@ -31,6 +31,8 @@ namespace APSIM.Shared.Utilities
         /// <summary>convert g to kg</summary>
         public const double g2kg = 1.0 / 1000.0;
 
+        /// <summary>convert g to kg</summary>
+        public const double kg2g = 1000.0;
 
         /// <summary>
         /// ISO 3166 list of English short country names.

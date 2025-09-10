@@ -26,7 +26,6 @@ namespace Models.AgPasture
         private Random pseudoRandom;
         private int pseudoRandomSeed;
         private readonly ISummary summary;
-        private readonly Clock clock;
         private readonly Physical physical;
 
         // User properties.
@@ -39,9 +38,6 @@ namespace Models.AgPasture
 
         /// <summary>Urine return pattern.</summary>
         private readonly UrineReturnPatterns urineReturnPattern;
-
-        /// <summary>Depth of urine penetration (mm)</summary>
-        private readonly double urineDepthPenetration;
 
         /// <summary>Maximum effective NO3-N or NH4-N concentration</summary>
         private readonly double maxEffectiveNConcentration;
@@ -67,7 +63,6 @@ namespace Models.AgPasture
         /// <param name="urineReturnType"></param>
         /// <param name="urineReturnPattern"></param>
         /// <param name="pseudoRandomSeed"></param>
-        /// <param name="urineDepthPenetration"></param>
         /// <param name="maxEffectiveNConcentration"></param>
         public UrineDungPatches(SimpleGrazing simpleGrazing,
                                 IStructure structure,
@@ -76,7 +71,6 @@ namespace Models.AgPasture
                                 UrineReturnTypes urineReturnType,
                                 UrineReturnPatterns urineReturnPattern,
                                 int pseudoRandomSeed,
-                                double urineDepthPenetration,
                                 double maxEffectiveNConcentration)
         {
             this.simpleGrazing = simpleGrazing;
@@ -86,10 +80,8 @@ namespace Models.AgPasture
             this.urineReturnType = urineReturnType;
             this.urineReturnPattern = urineReturnPattern;
             this.pseudoRandomSeed = pseudoRandomSeed;
-            this.urineDepthPenetration = urineDepthPenetration;
             this.maxEffectiveNConcentration = maxEffectiveNConcentration;
             summary = structure.Find<ISummary>(relativeTo: simpleGrazing);
-            clock = structure.Find<Clock>(relativeTo: simpleGrazing);
             physical = structure.Find<Physical>(relativeTo: simpleGrazing);
         }
 
@@ -129,28 +121,26 @@ namespace Models.AgPasture
                 patchManager.AllowPatchAmalgamationByAge = false;
                 patchManager.PatchAgeForForcedMerge = 1000000.0;  // ie don't merge
 
-                int[] PatchToAddTo = new int[1];  //need an array variable for this
-                string[] PatchNmToAddTo = new string[1];
                 int nPatchesAdded = 0;
                 double NewArea = 1.0 / zoneCount;
 
                 while (nPatchesAdded < zoneCount - 1)
                 {
-                    AddSoilCNPatchType NewPatch = new AddSoilCNPatchType();
-                    NewPatch.DepositionType = DepositionTypeEnum.ToNewPatch;
-                    NewPatch.AreaFraction = NewArea;
-                    PatchToAddTo[0] = 0;
-                    PatchNmToAddTo[0] = "0";
-                    NewPatch.AffectedPatches_id = PatchToAddTo;
-                    NewPatch.AffectedPatches_nm = PatchNmToAddTo;
-                    NewPatch.SuppressMessages = false;
-                    patchManager.Add(NewPatch);
+                    AddSoilCNPatchType newPatch = new AddSoilCNPatchType
+                    {
+                        DepositionType = DepositionTypeEnum.ToNewPatch,
+                        AreaFraction = NewArea,
+                        AffectedPatches_id = [0],
+                        AffectedPatches_nm = ["0"],
+                        SuppressMessages = false
+                    };
+                    patchManager.Add(newPatch);
                     nPatchesAdded += 1;
                 }
-
             }
-            else //(!PseudoPatches)  // so now this is zones - possibly multiple zones
+            else
             {
+                // explicit patches
                 zone.Area = 1.0 / zoneCount;  // and then this will apply to all the new zones
                 for (int i = 0; i < zoneCount - 1; i++)
                 {
@@ -174,10 +164,6 @@ namespace Models.AgPasture
                 DivisorForReporting = 1.0;
             else
                 DivisorForReporting = zoneCount;
-
-            //monthlyUrineNAmt = new double[] { 24, 19, 17, 12, 8, 5, 5, 10, 16, 19, 23, 25 }; //This is to get a pattern of return that varies with month but removes the variation that might be caused by small changes in herbage growth
-            //MonthlyUrineNAmt = new double[] { 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25 }; //This is to get a pattern of return that varies with month but removes the variation that might be caused by small changes in herbage growth
-            //MonthlyUrineNAmt = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }; //This is to get a pattern of return that varies with month but removes the variation that might be caused by small changes in herbage growth
 
             if (pseudoPatches)
             {
@@ -212,19 +198,24 @@ namespace Models.AgPasture
         {
             // meanLoad is coming in as kg N excreted by the herd
             // convert the herd value to a per urination value in g
-            meanLoad = meanLoad * 1000.0 / numUrinations;
+            meanLoad = meanLoad * Constants.kg2g / numUrinations; // to g/urination
 
             summary.WriteMessage(simpleGrazing, "The Zone for urine return is " + ZoneNumForUrine, MessageType.Diagnostic);
 
             (double[] urineLoad, double[] urineVolume) = CalculateLoadVolume(numUrinations, meanLoad);
 
+
+
             double[] ureaToAdd = new double[physical.Thickness.Length];
-            double gridArea = 10000 / zoneCount;   // m2
+            double gridArea = 10000 / zoneCount;   // m2/patch
             double gridAreaUsed = 0;
             double totalUrineAdded = 0;  // kg
             for (int i = 0; i < numUrinations; i++)
             {
-                urineLoad[i] = urineLoad[i] * Constants.g2kg;
+                //urineLoad[i] = urineLoad[i] * Constants.g2kg;
+
+                // THIS IS TEMPORARY - DELETE !!!!!!!!
+                urineLoad[i] = meanLoad * Constants.g2kg;
 
                 // use the Beatson data for wetted area, convert to radius, add 0.1 m edge and then convert back to an area. Note this is a natural log
                 // check 2L should give a area of 0.3866 m2
@@ -240,7 +231,7 @@ namespace Models.AgPasture
                 if (gridAreaUsed - 0.5 * urinationArea >= gridArea || i == numUrinations-1)
                 {
                     GetZoneForUrineReturn();
-                    AddUrineToGrid(ureaToAdd);
+                    AddUrineToGrid(ureaToAdd, urinationDepth);
                     totalUrineAdded += ureaToAdd.Sum();
                     Array.Clear(ureaToAdd);   // zero out the depth array
                     gridAreaUsed = 0.0;
@@ -250,26 +241,26 @@ namespace Models.AgPasture
                 throw new Exception($"The amount of urine added ({totalUrineAdded}) does not equal the amount that should have been added ({urineLoad.Sum()})");
         }
 
-        private void AddUrineToGrid(double[] ureaToAddByLayer)
+        /// <summary>
+        /// Add urine to grid (patch), pseudo or explicit.
+        /// </summary>
+        /// <param name="ureaToAddByLayer">Amount of urine to add - layered (kg/ha)</param>
+        /// <param name="urineDepthPenetration">Urine depth penetration (mm)</param>
+        private void AddUrineToGrid(double[] ureaToAddByLayer, double urineDepthPenetration)
         {
             double ureaToAdd = ureaToAddByLayer.Sum();
             if (pseudoPatches)
             {
-                int[] PatchToAddTo = new int[1];  //because need an array variable for this
-                string[] PatchNmToAddTo = new string[0];  //need an array variable for this
-
-
-                AddSoilCNPatchType CurrentPatch = new();
-                CurrentPatch.Sender = "manager";
-                CurrentPatch.DepositionType = DepositionTypeEnum.ToSpecificPatch;
-                PatchToAddTo[0] = ZoneNumForUrine;
-                CurrentPatch.AffectedPatches_id = PatchToAddTo;
-                CurrentPatch.AffectedPatches_nm = PatchNmToAddTo;
-                CurrentPatch.Urea = ureaToAddByLayer;
-
                 var patchManager = structure.Find<NutrientPatchManager>(relativeTo: simpleGrazing);
-                patchManager.Add(CurrentPatch);
-                summary.WriteMessage(simpleGrazing, ureaToAdd + " urine N added to Zone " + ZoneNumForUrine + ", the local load was " + ureaToAdd + " kg N /ha", MessageType.Diagnostic);
+                AddSoilCNPatchType patch = new()
+                {
+                    Sender = "manager",
+                    DepositionType = DepositionTypeEnum.ToSpecificPatch,
+                    AffectedPatches_id = [ZoneNumForUrine],
+                    AffectedPatches_nm = [],
+                    Urea = ureaToAddByLayer
+                };
+                patchManager.Add(patch);
             }
             else
             {
@@ -282,8 +273,8 @@ namespace Models.AgPasture
                         depth: 0.0,   // when depthBottom is specified then this means depthTop
                         depthBottom: urineDepthPenetration,
                         doOutput: true);
-                summary.WriteMessage(simpleGrazing, ureaToAdd + " urine N added to Zone " + ZoneNumForUrine + ", the local load was " + ureaToAdd + " kg N /ha", MessageType.Diagnostic);
             }
+            summary.WriteMessage(simpleGrazing, ureaToAdd + " urine N added to Zone " + ZoneNumForUrine + ", the local load was " + ureaToAdd + " kg N /ha", MessageType.Diagnostic);
         }
 
         /// <summary>Determine and return the zone for urine return.</summary>
