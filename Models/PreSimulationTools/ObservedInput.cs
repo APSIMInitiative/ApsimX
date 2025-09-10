@@ -458,11 +458,10 @@ namespace Models.PreSimulationTools
         /// </summary>
         private DataTable CombineRows(DataTable datatable)
         {
-
             if (!datatable.GetColumnNames().ToList().Contains("Clock.Today"))
                 return datatable;
 
-            //Select the rows where columns 1-4 have repeated same values
+            //Get a distinct list of rows of SimulationName and Clock.Today
             var distinctRows = datatable.AsEnumerable()
                 .Select(s => new
                 {
@@ -474,7 +473,6 @@ namespace Models.PreSimulationTools
 
             DataTable newDataTable = datatable.Clone();
 
-            //Go through each distinct rows to gather column5 and column6 values
             foreach (var item in distinctRows)
             {
                 if (!string.IsNullOrEmpty(item.clockAsString))
@@ -485,7 +483,7 @@ namespace Models.PreSimulationTools
                     //select all rows in original datatable with this distinct values
                     IEnumerable<DataRow> results = datatable.Select().Where(p => p["SimulationName"] == item.simulation && p["Clock.Today"].ToString() == item.clockAsString);
 
-                    //Preserve column1 - 4 values
+                    //Insert our fixed values
                     newDataRow["SimulationName"] = item.simulation;
                     newDataRow["Clock.Today"] = item.clock;
 
@@ -500,16 +498,10 @@ namespace Models.PreSimulationTools
                             {
                                 if (!defaultColumns.Contains(column) && !string.IsNullOrEmpty(newDataRow[column].ToString()))
                                 {
-                                    bool showError = false;
                                     bool isDouble1 = double.TryParse(newDataRow[column].ToString(), out double existing);
                                     bool isDouble2 = double.TryParse(row[column].ToString(), out double other);
-                                    if (isDouble1 == true && isDouble2 == true && MathUtilities.FloatsAreEqual(existing, other))
-                                        showError = false;
-                                    else
-                                        showError = true;
-                                    
-                                    if (showError)
-                                        throw new Exception($"Error merging data rows, same value found on two dates. {column} on date {item.clock} has values {newDataRow[column]} and {row[column]} on different rows.");
+                                    if (isDouble1 != true || isDouble2 != true || !MathUtilities.FloatsAreEqual(existing, other))
+                                        throw new Exception($"Error merging data rows, conflicting value found on two dates. {column} on date {item.clock} has values {newDataRow[column]} and {row[column]} on different rows.");
                                 }
                                 newDataRow[column] = row[column];
                             }
