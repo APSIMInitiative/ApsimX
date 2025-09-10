@@ -5674,7 +5674,8 @@
                 "Sum of [SimpleGrazing].GrazedN from 1-jan to [Clock].Today as cumNHarvested",
                 "Sum of [SimpleCow].HerdUrineNReturned from 1-jan to [Clock].Today as cumUrineNReturned",
                 "Sum of [ISoilWater].LeachNO3 from 1-jan to [Clock].Today as Leaching",
-                "sum([Soil].NO3.kgha + [Soil].NH4.kgha + [Soil].Urea.kgha) as MineralN"
+                "sum([Soil].NO3.kgha + [Soil].NH4.kgha + [Soil].Urea.kgha) as MineralN",
+                "[AGPRyegrass].AboveGroundWt + [AGPWhiteClover].AboveGroundWt as Biomass   //the amount harvested (kg DM /ha)"
               ],
               "EventNames": [
                 "[Clock].EndOfDay"
