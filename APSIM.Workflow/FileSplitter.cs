@@ -32,7 +32,7 @@ namespace APSIM.Workflow
         public static List<string> Run(string apsimFilepath, string? jsonFilepath, bool IsForWorkflow, ILogger logger)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            
+
             string? directory = Path.GetDirectoryName(apsimFilepath) + "/";
             string? outFilepath = directory;
             List<string> newSplitDirectories = new List<string>();
@@ -41,7 +41,7 @@ namespace APSIM.Workflow
             {
                 string json = File.ReadAllText(jsonFilepath);
                 SplittingRules? rules = JsonSerializer.Deserialize<SplittingRules>(json);
-                if (rules != null) 
+                if (rules != null)
                 {
                     outFilepath = rules.OutputPath;
                     if (outFilepath != null)
@@ -66,7 +66,7 @@ namespace APSIM.Workflow
             string weatherFilesDirectory = outFilepath + "WeatherFiles" + "/";
             Directory.CreateDirectory(weatherFilesDirectory);
 
-            List<Experiment> experiments = simulations.FindAllDescendants<Experiment>().Where(exp => exp.Enabled == true).ToList();
+            List<Experiment> experiments = simulations.Node.FindChildren<Experiment>(recurse: true).Where(exp => exp.Enabled == true).ToList();
             foreach(Experiment exp in experiments)
             {
                 string newDirectory = outFilepath + exp.Name + "/";
@@ -90,7 +90,7 @@ namespace APSIM.Workflow
                     else CopyWeatherFiles(sims, directory, weatherFilesDirectory);
                     string? oldInputFileDir = Directory.GetParent(directory)!.FullName;
                     CopyObservedData(sims, folder, oldInputFileDir!, newDirectory + "/", logger);
-                    newSplitDirectories.Add("/" + newDirectory); 
+                    newSplitDirectories.Add("/" + newDirectory);
                 }
                 else
                 {
@@ -102,11 +102,11 @@ namespace APSIM.Workflow
             /*
             if (groups == null)
             {
-                
+
             }
-            else 
+            else
             {
-                
+
                 //for each group, make a file
                 foreach(SplittingGroup group in groups)
                 {
@@ -128,12 +128,12 @@ namespace APSIM.Workflow
                 //any leftover experiments
                 if (experiments.Count > 0)
                     throw new Exception("Leftover Experiments");
-                    
+
             }
             */
         }
 
-        private static Simulations MakeTemplateSims(Simulations sims) 
+        private static Simulations MakeTemplateSims(Simulations sims)
         {
             Simulations template = new Simulations();
             foreach(Model child in sims.Children)
@@ -171,7 +171,7 @@ namespace APSIM.Workflow
                 string? newDirectory = Path.GetDirectoryName(filepath);
                 if (newDirectory != null && !Directory.Exists(newDirectory))
                     Directory.CreateDirectory(newDirectory);
-                
+
                 Node newFileNode = Node.Create(newFile, null, false, filepath);
                 string output = FileFormat.WriteToString(newFileNode);
                 File.WriteAllText(filepath, output);
@@ -185,9 +185,9 @@ namespace APSIM.Workflow
         /// <param name="newDirectory">Directory where the apsim met file will be copied</param>
         /// <param name="directory">The directory where the current file is located</param>
         /// <exception cref="Exception"></exception>
-        private static void PrepareWeatherFiles(Model model, string newDirectory, string directory) 
+        private static void PrepareWeatherFiles(Model model, string newDirectory, string directory)
         {
-            foreach(Weather weather in model.FindAllDescendants<Weather>())
+            foreach(Weather weather in model.Node.FindChildren<Weather>(recurse: true))
             {
                 try
                 {
@@ -196,7 +196,7 @@ namespace APSIM.Workflow
                     string? newDirectoryName = Path.GetDirectoryName(newDirectory)!.Split(Path.DirectorySeparatorChar).LastOrDefault();
                     string originalFilePath = directory + weather.FileName;
                     weather.FileName = weatherFileName;
-                    Simulations parentSim = weather.FindAncestor<Simulations>();
+                    Simulations parentSim = weather.Node.FindParent<Simulations>(recurse: true);
 
                     if (parentSim != null)
                         parentSim.Write(parentSim.FileName);
@@ -215,9 +215,9 @@ namespace APSIM.Workflow
         }
 
 
-        private static void CopyWeatherFiles(Model model, string oldDirectory, string newDirectory) 
+        private static void CopyWeatherFiles(Model model, string oldDirectory, string newDirectory)
         {
-            foreach(Weather weather in model.FindAllDescendants<Weather>())
+            foreach(Weather weather in model.Node.FindChildren<Weather>(recurse: true))
             {
                 weather.FileName = newDirectory + Path.GetFileName(weather.FileName);
                 if (!weather.FileName.Contains("%root%"))
@@ -226,10 +226,10 @@ namespace APSIM.Workflow
                     weather.FileName = weather.FileName.Replace("%root%", oldDirectory);
             }
         }
-        
-        private static void FixInputPaths(Model model, string oldDirectory, string newDirectory) 
+
+        private static void FixInputPaths(Model model, string oldDirectory, string newDirectory)
         {
-            foreach(ExcelInput excelInput in model.FindAllDescendants<ExcelInput>())
+            foreach(ExcelInput excelInput in model.Node.FindChildren<ExcelInput>(recurse: true))
             {
                 List<string> newFilepaths = new List<string>();
                 foreach(string file in excelInput.FileNames)
@@ -239,7 +239,7 @@ namespace APSIM.Workflow
                     else
                         newFilepaths.Add(file.Replace("%root%", oldDirectory));
                 }
-                    
+
                 excelInput.FileNames = newFilepaths.ToArray();
             }
             return;
@@ -248,7 +248,7 @@ namespace APSIM.Workflow
         private static List<string> GetListOfSimulationNames(Model sims)
         {
             List<string> simNames = new List<string>();
-            foreach(Experiment exp in sims.FindAllDescendants<Experiment>())
+            foreach(Experiment exp in sims.Node.FindChildren<Experiment>(recurse: true))
                 foreach(SimulationDescription sim in exp.GetSimulationDescriptions())
                     simNames.Add(sim.Name.ToLower().Trim());
             return simNames;
@@ -263,16 +263,16 @@ namespace APSIM.Workflow
         /// <param name="newDirectory">New directory to copy to</param>
         /// <param name="logger">Logger for logging output.</param>
         /// <exception cref="Exception"></exception>
-        public static void CopyObservedData(Model sims, Model folder, string oldDirectory, string newDirectory, ILogger logger) 
+        public static void CopyObservedData(Model sims, Model folder, string oldDirectory, string newDirectory, ILogger logger)
         {
             try
             {
                 logger.LogInformation("Copying observed data from " + oldDirectory + " to " + newDirectory);
                 List<string> simulationNames = GetListOfSimulationNames(sims);
-                DataStore datastore = sims.FindDescendant<DataStore>();
+                DataStore datastore = sims.Node.FindChild<DataStore>(recurse: true);
                 List<string> allSheetNames = new List<string>();
                 List<List<string>> allColumnNames = new List<List<string>>();
-                foreach (ExcelInput input in datastore.FindAllDescendants<ExcelInput>())
+                foreach (ExcelInput input in datastore.Node.FindChildren<ExcelInput>(recurse: true))
                 {
                     List<string> newSheetNames = new List<string>();
                     List<string> newFilepaths = new List<string>();
@@ -376,11 +376,11 @@ namespace APSIM.Workflow
             }
         }
 
-        private static void RemoveUnusedPO(Model sims, Model folder, List<string> allSheetNames, List<List<string>> observedColumns) 
+        private static void RemoveUnusedPO(Model sims, Model folder, List<string> allSheetNames, List<List<string>> observedColumns)
         {
 
-            List<PredictedObserved> poStats = sims.FindAllDescendants<PredictedObserved>().ToList();
-            List<Report> reports = folder.FindAllDescendants<Report>().ToList();      
+            List<PredictedObserved> poStats = sims.Node.FindChildren<PredictedObserved>(recurse: true).ToList();
+            List<Report> reports = folder.Node.FindChildren<Report>(recurse: true).ToList();
 
             List<PredictedObserved> removeList = new List<PredictedObserved>();
             foreach (PredictedObserved po in poStats)
@@ -408,7 +408,7 @@ namespace APSIM.Workflow
                     if (!hasReport)
                         removeList.Add(po);
                 }
-                
+
             }
 
             foreach (PredictedObserved po in removeList)

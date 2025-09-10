@@ -131,7 +131,7 @@ namespace Models.PMF
                 OrgansToUptakeWaterAndN.Add(wnu as IWaterNitrogenUptake);
             uptakingOrgans = OrgansToUptakeWaterAndN;
 
-            biomassArbitrator = plant.FindChild<BiomassArbitrator>();
+            biomassArbitrator = Structure.FindChild<BiomassArbitrator>(relativeTo: plant);
         }
 
         /// <summary>Called when crop is ending</summary>

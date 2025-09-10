@@ -555,7 +555,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Establishes this crop instance (sets SCRUM running).</summary>
         public void Establish(ScrumManagementInstance management)
         {
-            var soilCrop = soil.FindDescendant<SoilCrop>(scrum.Name + "Soil");
+            var soilCrop = Structure.FindChild<SoilCrop>(scrum.Name + "Soil", relativeTo: soil, recurse: true);
 
             // SPRUM sets soil KL to 1 and uses the KL modifier to determine appropriate kl based on root depth
             for (int d = 0; d < soilCrop.KL.Length; d++)
@@ -586,10 +586,15 @@ namespace Models.PMF.SimplePlantModels
             }
 
             // initialise this crop instance in SCRUM
-            scrum.Children.Add(currentCrop);
+            // NOTE: I (Dean) had to change the cultivar name to avoid two models with the same name in scope
+            // i.e. SCRUM_Pakchoi (cultivar) and SCRUM_Pakchoi (ScrumCropInstance). This caused problems with
+            // report: [SCRUM_Pakchoi].ProductHarvested.Wt would fail because [SCRUM_Pakchoi] would find the
+            // cultivar, not the ScrumCropInstance leading to ProductHarvested not found.
+            currentCrop.Name += "Cultivar";
+            scrum.AddCultivar(currentCrop);
             double cropPopulation = 1.0;
             double rowWidth = 0.0;
-            scrum.Sow(cultivar: CropName, population: cropPopulation, depth: PlantingDepth, rowSpacing: rowWidth, maxCover: MaxCover);
+            scrum.Sow(cultivar: currentCrop.Name, population: cropPopulation, depth: PlantingDepth, rowSpacing: rowWidth, maxCover: MaxCover);
             if (management.EstablishStage.ToString() != "Seed")
             {
                 phenology.SetToStage(StageNumbers[management.EstablishStage.ToString()]);
@@ -795,7 +800,7 @@ namespace Models.PMF.SimplePlantModels
             scrum.EndCrop();
 
             // remove this crop instance from SCRUM and reset parameters
-            scrum.Children.Remove(currentCrop);
+            scrum.Node.RemoveChild(currentCrop);
             cropEstablished = false;
             cropTerminating = true;
         }

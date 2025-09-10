@@ -389,84 +389,89 @@ internal class Locator
             }
         }
 
+        // We never want to match on an IStructure property in a model. By setting the propertyInfo to null
+        // we might find a Structure child model which is probably what we want to locate.
+        if (propertyInfo?.PropertyType.Name == "IStructure")
+            propertyInfo = null;
+
         if (!onlyModelChildren && propertyInfo == null)
-        {
-            if (name.IndexOf('(') > 0)
             {
-                // before trying to access the method we need to identify the types of arguments to identify overloaded methods.
-                // assume: presence of quotes is string
-                // assume: tolower = false or true is boolean
-                // assume: presence of . and tryparse is double
-                // assume: tryparse is int32
-                List<Type> argumentsTypes = new List<Type>();
-                argumentsList = new List<object>();
-                // get arguments and store in VariableMethod
-                string args = name.Substring(name.IndexOf('('));
-                args = args.Substring(0, args.IndexOf(')'));
-                args = args.Replace("(", "").Replace(")", "");
-
-                if (args.Length > 0)
+                if (name.IndexOf('(') > 0)
                 {
-                    args = args.Trim('(').Trim(')');
-                    var argList = args.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim(' ')).ToArray();
+                    // before trying to access the method we need to identify the types of arguments to identify overloaded methods.
+                    // assume: presence of quotes is string
+                    // assume: tolower = false or true is boolean
+                    // assume: presence of . and tryparse is double
+                    // assume: tryparse is int32
+                    List<Type> argumentsTypes = new List<Type>();
+                    argumentsList = new List<object>();
+                    // get arguments and store in VariableMethod
+                    string args = name.Substring(name.IndexOf('('));
+                    args = args.Substring(0, args.IndexOf(')'));
+                    args = args.Replace("(", "").Replace(")", "");
 
-                    for (int argid = 0; argid < argList.Length; argid++)
+                    if (args.Length > 0)
                     {
-                        var trimmedarg = argList[argid].Trim(' ').Trim(new char[] { '(', ')' }).Trim(' ');
-                        if (trimmedarg.Contains('"'))
+                        args = args.Trim('(').Trim(')');
+                        var argList = args.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim(' ')).ToArray();
+
+                        for (int argid = 0; argid < argList.Length; argid++)
                         {
-                            argumentsTypes.Add(typeof(string));
-                            argumentsList.Add(trimmedarg.Trim('\"'));
-                        }
-                        else if (trimmedarg.ToLower() == "false" || trimmedarg.ToLower() == "true")
-                        {
-                            argumentsTypes.Add(typeof(bool));
-                            argumentsList.Add(System.Convert.ToBoolean(trimmedarg, CultureInfo.InvariantCulture));
-                        }
-                        else if (trimmedarg.Contains('.') && double.TryParse(trimmedarg, out _))
-                        {
-                            argumentsTypes.Add(typeof(double));
-                            argumentsList.Add(System.Convert.ToDouble(trimmedarg, CultureInfo.InvariantCulture));
-                        }
-                        else if (Int32.TryParse(trimmedarg, out _))
-                        {
-                            argumentsTypes.Add(typeof(Int32));
-                            argumentsList.Add(System.Convert.ToInt32(trimmedarg, CultureInfo.InvariantCulture));
-                        }
-                        else
-                        {
-                            if (throwOnError)
-                                throw new Exception($"Unable to determine the type of argument ({trimmedarg}) in Report method");
+                            var trimmedarg = argList[argid].Trim(' ').Trim(new char[] { '(', ')' }).Trim(' ');
+                            if (trimmedarg.Contains('"'))
+                            {
+                                argumentsTypes.Add(typeof(string));
+                                argumentsList.Add(trimmedarg.Trim('\"'));
+                            }
+                            else if (trimmedarg.ToLower() == "false" || trimmedarg.ToLower() == "true")
+                            {
+                                argumentsTypes.Add(typeof(bool));
+                                argumentsList.Add(System.Convert.ToBoolean(trimmedarg, CultureInfo.InvariantCulture));
+                            }
+                            else if (trimmedarg.Contains('.') && double.TryParse(trimmedarg, out _))
+                            {
+                                argumentsTypes.Add(typeof(double));
+                                argumentsList.Add(System.Convert.ToDouble(trimmedarg, CultureInfo.InvariantCulture));
+                            }
+                            else if (Int32.TryParse(trimmedarg, out _))
+                            {
+                                argumentsTypes.Add(typeof(Int32));
+                                argumentsList.Add(System.Convert.ToInt32(trimmedarg, CultureInfo.InvariantCulture));
+                            }
                             else
-                                return null;
+                            {
+                                if (throwOnError)
+                                    throw new Exception($"Unable to determine the type of argument ({trimmedarg}) in Report method");
+                                else
+                                    return null;
+                            }
                         }
                     }
-                }
 
 
-                string functionName = name.Substring(0, name.IndexOf('('));
-                methodInfo = relativeToObject.GetType().GetMethod(functionName, argumentsTypes.ToArray<Type>());
-                if (methodInfo == null && ignoreCase) // If not found, try using a case-insensitive search
-                {
-                    // try to get the method with identified arguments
-                    BindingFlags bindingFlags = BindingFlags.Default | BindingFlags.IgnoreCase;
-                    methodInfo = relativeToObject.GetType().GetMethod(functionName, argumentsTypes.Count(), bindingFlags, null, argumentsTypes.ToArray<Type>(), null);
-                }
-                if (methodInfo == null) // If not found, try searching without parameters in case they are optional and none were provided
-                {
-                    methodInfo = relativeToObject.GetType().GetMethod(functionName);
-                    if (methodInfo != null) //if we found it, add missing parameters in for the optional ones missing
+                    string functionName = name.Substring(0, name.IndexOf('('));
+                    methodInfo = relativeToObject.GetType().GetMethod(functionName, argumentsTypes.ToArray<Type>());
+                    if (methodInfo == null && ignoreCase) // If not found, try using a case-insensitive search
                     {
-                        ParameterInfo[] parameters = methodInfo.GetParameters();
-                        while (argumentsList.Count < parameters.Length)
+                        // try to get the method with identified arguments
+                        BindingFlags bindingFlags = BindingFlags.Default | BindingFlags.IgnoreCase;
+                        methodInfo = relativeToObject.GetType().GetMethod(functionName, argumentsTypes.Count(), bindingFlags, null, argumentsTypes.ToArray<Type>(), null);
+                    }
+                    if (methodInfo == null) // If not found, try searching without parameters in case they are optional and none were provided
+                    {
+                        methodInfo = relativeToObject.GetType().GetMethod(functionName);
+                        if (methodInfo != null) //if we found it, add missing parameters in for the optional ones missing
                         {
-                            argumentsTypes.Add(typeof(object));
-                            argumentsList.Add(Type.Missing);
+                            ParameterInfo[] parameters = methodInfo.GetParameters();
+                            while (argumentsList.Count < parameters.Length)
+                            {
+                                argumentsTypes.Add(typeof(object));
+                                argumentsList.Add(Type.Missing);
+                            }
                         }
                     }
                 }
             }
-        }
 
         // Not a property or method, may be a child model.
         if (relativeToObject is INodeModel model)

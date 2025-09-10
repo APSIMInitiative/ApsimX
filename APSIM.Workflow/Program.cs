@@ -68,6 +68,10 @@ public class Program
                     Console.WriteLine(dir);
                 }
             }
+            else if (!string.IsNullOrWhiteSpace(options.SimulationCount))
+            {
+                Console.WriteLine(ValidationLocationUtility.GetSimulationCount());
+            }
             if (!string.IsNullOrEmpty(options.DirectoryPath))
             {
                 Stopwatch stopwatch = new Stopwatch();
@@ -117,9 +121,9 @@ public class Program
             logger.LogError("There was an issue with the validation workflow. Please check the logs for more details.");
         }
         else throw new Exception("There was an issue organising the files for submittal to Azure.\n");
-        
 
-        
+
+
     }
 
     /// <summary>
@@ -158,5 +162,5 @@ public class Program
             exitCode = 1;
     }
 
-    
+
 }

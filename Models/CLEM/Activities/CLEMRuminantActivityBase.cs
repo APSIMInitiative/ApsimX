@@ -6,13 +6,14 @@ using Models.CLEM.Resources;
 using Models.CLEM.Groupings;
 using Newtonsoft.Json;
 using Models.CLEM.Interfaces;
+using APSIM.Core;
 
 namespace Models.CLEM.Activities
 {
     ///<summary>
     /// CLEM ruminant specific activity base model
     /// This has the ability of identify herd to be used.
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -120,20 +121,21 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="filters">The filter groups to include</param>
         /// <param name="herd">the individuals to filter</param>
+        /// <param name="structure">Structure instance</param>
         /// <returns>A list of unique individuals</returns>
-        public static IEnumerable<T> GetUniqueIndividuals<T>(IEnumerable<RuminantGroup> filters, IEnumerable<T> herd) where T: Ruminant 
+        public static IEnumerable<T> GetUniqueIndividuals<T>(IEnumerable<RuminantGroup> filters, IEnumerable<T> herd, IStructure structure) where T: Ruminant
         {
             // no filters provided
             if (!filters.Any())
             {
                 return herd;
             }
-            // check that no filters will filter all groups otherwise return all 
-            var emptyfilters = filters.Where(a => a.FindAllChildren<Filter>().Any() == false);
+            // check that no filters will filter all groups otherwise return all
+            var emptyfilters = filters.Where(a => structure.FindChildren<Filter>(relativeTo: a).Any() == false);
             if (emptyfilters.Any())
             {
                 // account for any sorting or reduced takes
-                foreach (var empty in emptyfilters.Where(a => a.FindAllChildren<ISort>().Any() || a.FindAllChildren<TakeFromFiltered>().Any()))
+                foreach (var empty in emptyfilters.Where(a => structure.FindChildren<ISort>(relativeTo: a).Any() || structure.FindChildren<TakeFromFiltered>(relativeTo: a).Any()))
                     herd = empty.Filter(herd);
                 return herd;
             }
@@ -215,7 +217,7 @@ namespace Models.CLEM.Activities
             }
             else
             {
-                var ruminantTypeChildren = HerdResource.FindAllChildren<RuminantType>();
+                var ruminantTypeChildren = Structure.FindChildren<RuminantType>(relativeTo: HerdResource);
                 if (!ruminantTypeChildren.Any())
                     throw new ApsimXException(this, $"No Ruminant Type exists for Activity [a={this.Name}]{Environment.NewLine}Please supply a ruminant type in the Ruminant Group of the Resources");
 
@@ -291,7 +293,7 @@ namespace Models.CLEM.Activities
         {
             return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
             {
-                (FindAllChildren<RuminantGroup>(), true, "childgroupfilterborder", "Individuals will be selected from the following:", "")
+                (Structure.FindChildren<RuminantGroup>(), true, "childgroupfilterborder", "Individuals will be selected from the following:", "")
             };
         }
 

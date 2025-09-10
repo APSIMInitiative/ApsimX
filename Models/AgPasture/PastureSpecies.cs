@@ -270,7 +270,7 @@ namespace Models.AgPasture
             {
 
                 // Find cultivar and apply cultivar overrides.
-                cultivarDefinition = FindAllDescendants<Cultivar>().FirstOrDefault(c => c.IsKnownAs(cultivar));
+                cultivarDefinition = Structure.FindChildren<Cultivar>(recurse: true).FirstOrDefault(c => c.IsKnownAs(cultivar));
                 if (cultivarDefinition != null)
                 {
                     mySummary.WriteMessage(this, $"Applying cultivar {cultivar}", MessageType.Diagnostic);
@@ -371,7 +371,7 @@ namespace Models.AgPasture
                 }
 
                 // 2. get the amount of soil water demanded NOTE: This is in L, not mm,
-                Zone parentZone = FindAncestor<Zone>();
+                Zone parentZone = Structure.FindParent<Zone>(recurse: true);
                 double waterDemand = myWaterDemand * parentZone.Area;
 
                 // 3. estimate fraction of water used up
@@ -2269,9 +2269,9 @@ namespace Models.AgPasture
                 {
                     Wt = Leaf.DMTotalHarvestable + Stem.DMTotalHarvestable + Stolon.DMTotalHarvestable,
                     N = Leaf.NTotalHarvestable + Stem.NTotalHarvestable + Stolon.NTotalHarvestable,
-                    Digestibility = MathUtilities.Divide(Leaf.StandingDigestibility * Leaf.NTotalHarvestable +
-                                                         Stem.StandingDigestibility * Stem.NTotalHarvestable +
-                                                         Stolon.StandingDigestibility * Stolon.NTotalHarvestable,
+                    Digestibility = MathUtilities.Divide(Leaf.StandingDigestibility * Leaf.DMTotalHarvestable +
+                                                         Stem.StandingDigestibility * Stem.DMTotalHarvestable +
+                                                         Stolon.StandingDigestibility * Stolon.DMTotalHarvestable,
                                                          Leaf.DMTotalHarvestable + Stem.DMTotalHarvestable +
                                                          Stolon.DMTotalHarvestable, 0.0)
                 };
@@ -2419,7 +2419,7 @@ namespace Models.AgPasture
                 if (roots != null)
                     return roots.First();
                 else
-                    return this.FindDescendant<PastureBelowGroundOrgan>();
+                    return Structure.FindChild<PastureBelowGroundOrgan>(recurse: true);
             }
         }
 

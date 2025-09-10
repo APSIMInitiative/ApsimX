@@ -565,20 +565,20 @@ namespace UserInterface.Presenters
                 Soil currentSoil = this.explorerPresenter.ApsimXFile.Node.Get(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly) as Soil;
                 if (currentSoil != null)
                 {
-                    Simulation simulation = currentSoil.FindAncestor<Simulation>();
+                    Simulation simulation = currentSoil.Node.FindParent<Simulation>(recurse: true);
                     if (simulation != null)
                     {
                         // Remove nutrient
                         // Replace solutes with patching solutes
                         // Add NutrientPatchManager
 
-                        var nutrient = currentSoil.FindChild<Models.Soils.Nutrients.Nutrient>();
+                        var nutrient = currentSoil.Node.FindChild<Models.Soils.Nutrients.Nutrient>();
 
                         List<ICommand> commands = new();
 
                         commands.Add(new DeleteModelCommand(nutrient, explorerPresenter.GetNodeDescription(nutrient)));
 
-                        foreach (var solute in currentSoil.FindAllChildren<Solute>())
+                        foreach (var solute in currentSoil.Node.FindChildren<Solute>())
                         {
                             var newSolute = new SolutePatch()
                             {
@@ -617,11 +617,11 @@ namespace UserInterface.Presenters
             Soil currentSoil = this.explorerPresenter.ApsimXFile.Node.Get(this.explorerPresenter.CurrentNodePath, LocatorFlags.ModelsOnly) as Soil;
             if (currentSoil != null)
             {
-                Simulation simulation = currentSoil.FindAncestor<Simulation>();
+                Simulation simulation = currentSoil.Node.FindParent<Simulation>(recurse: true);
                 if (simulation != null)
                 {
-                    var nutrient = currentSoil.FindChild<Models.Soils.Nutrients.Nutrient>();
-                    var nutrientPatchManager = currentSoil.FindChild<NutrientPatchManager>();
+                    var nutrient = currentSoil.Node.FindChild<Models.Soils.Nutrients.Nutrient>();
+                    var nutrientPatchManager = currentSoil.Node.FindChild<NutrientPatchManager>();
                     return nutrient != null && nutrientPatchManager == null;
                 }
             }
@@ -919,7 +919,7 @@ namespace UserInterface.Presenters
                             child.ReadOnly = !hidden;
 
                             // Recursively set the hidden property.
-                            foreach (IModel c in child.FindAllDescendants())
+                            foreach (IModel c in child.Node.FindChildren<IModel>(recurse: true))
                                 c.ReadOnly = !hidden;
                         }
 
@@ -972,7 +972,7 @@ namespace UserInterface.Presenters
                     // on all descendants to the new value of the model's enabled property.
                     List<ChangeProperty.Property> changes = new List<ChangeProperty.Property>();
                     changes.Add(new ChangeProperty.Property(model, nameof(model.Enabled), !model.Enabled));
-                    foreach (IModel child in model.FindAllDescendants())
+                    foreach (IModel child in model.Node.FindChildren<IModel>(recurse: true))
                         changes.Add(new ChangeProperty.Property(child, nameof(model.Enabled), !model.Enabled));
 
                     ChangeProperty command = new ChangeProperty(changes);
@@ -987,7 +987,7 @@ namespace UserInterface.Presenters
                     {
                         if (model is Manager manager)
                             manager.RebuildScriptModel();
-                        foreach (Manager m in model.FindAllDescendants<Manager>())
+                        foreach (Manager m in model.Node.FindChildren<Manager>(recurse: true))
                             m.RebuildScriptModel();
                     }
                 }
@@ -1182,11 +1182,11 @@ namespace UserInterface.Presenters
 
             if (model is Simulations || model is Folder)
             {
-                IEnumerable<Simulation> sims = (model as Model).FindAllDescendants<Simulation>();
+                IEnumerable<Simulation> sims = (model as Model).Node.FindChildren<Simulation>(recurse: true);
                 foreach (Simulation sim in sims)
                     namesToAdd.Add(sim.Name);
 
-                IEnumerable<Experiment> exps = (model as Model).FindAllDescendants<Experiment>();
+                IEnumerable<Experiment> exps = (model as Model).Node.FindChildren<Experiment>(recurse: true);
                 foreach (Experiment exp in exps)
                     namesToAdd.Add(exp.Name);
             }
@@ -1203,7 +1203,7 @@ namespace UserInterface.Presenters
             string itemText = label.Text;
             string playlistName = itemText.Replace("Add to", "").Trim();
 
-            Playlist playlist = explorerPresenter.ApsimXFile.FindDescendant(playlistName) as Playlist;
+            Playlist playlist = explorerPresenter.ApsimXFile.Node.FindChild<Playlist>(playlistName, recurse: true);
             if (playlist != null)
             {
                 playlist.AddSimulationNamesToList(namesToAdd.ToArray());

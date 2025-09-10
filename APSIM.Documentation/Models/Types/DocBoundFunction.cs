@@ -25,7 +25,7 @@ namespace APSIM.Documentation.Models.Types
         {
             Section section = GetSummaryAndRemarksSection(model);
 
-            List<IModel> childFunctions = model.FindAllChildren<IModel>().ToList();
+            List<IModel> childFunctions = model.Node.FindChildren<IModel>().ToList();
 
             IModel Upper = null;
             IModel Lower = null;

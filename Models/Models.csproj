@@ -33,7 +33,7 @@
     <PackageReference Include="System.CodeDom" Version="6.0.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
     <PackageReference Include="System.Resources.Extensions" Version="6.0.0" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="9.0.5" />
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.5.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="4.5.0" />
@@ -49,11 +49,6 @@
     <Compile Remove="Importer\**" />
     <EmbeddedResource Remove="Importer\**" />
 	<EmbeddedResource Include="Clock.cs" />
-
-    <Content Include="..\DeploymentSupport\Windows\Bin64\sqlite3.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-
     <PackageReference Include="APSIM.Soils" Version="8.2.0" />
   </ItemGroup>
 

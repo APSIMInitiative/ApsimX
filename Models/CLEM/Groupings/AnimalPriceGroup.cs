@@ -12,7 +12,7 @@ namespace Models.CLEM.Groupings
 {
     ///<summary>
     /// Contains a group of filters to identify individual ruminants in a set price group
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -81,7 +81,7 @@ namespace Models.CLEM.Groupings
         public ResourcePriceChangeDetails LastPriceChange { get; set; }
 
         /// <inheritdoc/>
-        public IResourceType Resource { get { return FindAncestor<IResourceType>(); } }
+        public IResourceType Resource { get { return Structure.FindParent<IResourceType>(recurse: true); } }
 
         /// <summary>
         /// Constructor
@@ -171,7 +171,7 @@ namespace Models.CLEM.Groupings
                     htmlWriter.Write("</span>");
                     htmlWriter.Write("</div>");
                 }
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
@@ -213,7 +213,7 @@ namespace Models.CLEM.Groupings
                 {
                     htmlWriter.Write("\r\n</div>");
                 }
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
@@ -225,7 +225,7 @@ namespace Models.CLEM.Groupings
                 if (FormatForParentControl)
                 {
                     htmlWriter.Write("<tr><td>" + this.Name + "</td><td>");
-                    if (!(this.FindAllChildren<Filter>().Count() >= 1))
+                    if (!(Structure.FindChildren<Filter>().Count() >= 1))
                     {
                         htmlWriter.Write("<div class=\"filter\">All individuals</div>");
                     }
@@ -233,12 +233,12 @@ namespace Models.CLEM.Groupings
                 else
                 {
                     htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
-                    if (!(this.FindAllChildren<Filter>().Count() >= 1))
+                    if (!(Structure.FindChildren<Filter>().Count() >= 1))
                     {
                         htmlWriter.Write("<div class=\"filter\">All individuals</div>");
                     }
                 }
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using static Models.GrazPlan.GrazType;
 
 namespace Models.GrazPlan
@@ -160,13 +161,16 @@ namespace Models.GrazPlan
         /// <returns></returns>
         public static double Div0(double X, double Y)
         {
-            if (X == 0.0)
+            if (X == 0.0 || Y == 0.0)
             {
                 return 0.0;
             }
             else
             {
-                return X / Y;
+                var value = X / Y;
+                if (double.IsNaN(value))
+                    throw new Exception("Divide by zero");
+                return value;
             }
         }
 
@@ -672,7 +676,38 @@ namespace Models.GrazPlan
                 amount = Math.Min(amount, srcPool.Nu[(int)Elem]);
                 srcPool.Nu[(int)Elem] = srcPool.Nu[(int)Elem] - amount;
                 dstPool.Nu[(int)Elem] = dstPool.Nu[(int)Elem] + amount;
+                if (double.IsNaN(srcPool.Nu[(int)Elem]) || double.IsNaN(dstPool.Nu[(int)Elem]))
+                    throw new Exception("NaN detected in MoveNutrient");
             }
+        }
+
+
+        /// <summary>
+        /// Recursively validates that all numeric values in the enumerable do not contain NaN values.
+        /// </summary>
+        /// <param name="v">The enumerable to check for NaN values.</param>
+        public static void CheckNaN(IEnumerable v)
+        {
+            foreach (var value in v)
+            {
+                if (value is double d)
+                    CheckNaN(d);
+                else if (value is IEnumerable e)
+                    CheckNaN(e);
+                else
+                    throw new Exception("In CheckNaN: Unknown type.");
+            }
+        }
+
+        /// <summary>
+        /// Validates that the double value is not NaN and throws an exception if it is.
+        /// </summary>
+        /// <param name="v"></param>
+        /// <exception cref="Exception"></exception>
+        public static void CheckNaN(double v)
+        {
+            if (double.IsNaN(v))
+                throw new Exception("NaN detected");
         }
     }
 }

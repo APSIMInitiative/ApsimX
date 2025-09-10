@@ -32,6 +32,11 @@ namespace Models.Core
         [Link]
         private ISummary summary = null;
 
+        [Link(IsOptional = true)]
+        private IClock clock = null;
+
+        private IReportsStatus reportStatus = null;
+
         /// <summary>Invoked when simulation is about to commence.</summary>
         public event EventHandler Commencing;
 
@@ -46,7 +51,7 @@ namespace Models.Core
         {
             get
             {
-                return this.FindAllChildren<Zone>().Sum(z => (z as Zone).Area);
+                return this.Node.FindChildren<Zone>().Sum(z => (z as Zone).Area);
             }
         }
 
@@ -85,11 +90,10 @@ namespace Models.Core
         {
             get
             {
-                Clock c = this.FindChild<Clock>();
-                if (c == null)
+                if (clock == null)
                     return 0;
                 else
-                    return c.FractionComplete;
+                    return clock.FractionComplete;
             }
         }
 
@@ -117,7 +121,7 @@ namespace Models.Core
         public List<object> ModelServices { get; set; } = new List<object>();
 
         /// <summary>Status message.</summary>
-        public string Status => FindAllDescendants<IReportsStatus>().FirstOrDefault(s => !string.IsNullOrEmpty(s.Status))?.Status;
+        public string Status => reportStatus?.Status;
 
         /// <summary>
         /// Called when models should disconnect from events to which they've
@@ -140,13 +144,13 @@ namespace Models.Core
             var simulationDescription = new SimulationDescription(this);
 
             // Add a folderName descriptor.
-            var folderNode = FindAncestor<Folder>();
+            var folderNode = Structure.FindParent<Folder>(recurse: true);
             if (folderNode != null)
                 simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor("FolderName", folderNode.Name));
 
             simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor("SimulationName", Name));
 
-            foreach (var zone in this.FindAllDescendants<Zone>())
+            foreach (var zone in Structure.FindChildren<Zone>(recurse: true))
                 simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor("Zone", zone.Name));
 
             return new List<SimulationDescription>() { simulationDescription };
@@ -163,7 +167,7 @@ namespace Models.Core
                 RemoveDisabledModels(this);
 
                 // Standardise the soil.
-                var soils = FindAllDescendants<Soils.Soil>();
+                var soils = Structure.FindChildren<Soil>(recurse: true);
                 foreach (Soils.Soil soil in soils)
                     soil.Sanitise();
 
@@ -173,11 +177,11 @@ namespace Models.Core
                 // Note the ToList(). This is important because some models can
                 // add/remove models from the simulations tree in their OnPreLink()
                 // method, and FindAllDescendants() is lazy.
-                FindAllDescendants().ToList().ForEach(model => model.OnPreLink());
+                Structure.FindChildren<IModel>(recurse: true).ToList().ForEach(model => model.OnPreLink());
 
                 if (ModelServices == null || ModelServices.Count < 1)
                 {
-                    var simulations = FindAncestor<Simulations>();
+                    var simulations = Structure.FindParent<Simulations>(recurse: true);
                     if (simulations != null)
                         ModelServices = simulations.GetServices();
                     else
@@ -224,6 +228,9 @@ namespace Models.Core
             // when called from the unit tests.
             if (cancelToken == null)
                 cancelToken = new CancellationTokenSource();
+
+            // Find a report status model if it exists.
+            reportStatus = Structure.FindChildren<IReportsStatus>(recurse: true).FirstOrDefault();
 
             try
             {
@@ -287,12 +294,12 @@ namespace Models.Core
         /// <param name="parentZone">The zone to check.</param>
         private static void CheckNotMultipleSoilWaterModels(IModel parentZone)
         {
-            foreach (var soil in parentZone.FindAllChildren<Soils.Soil>())
-                if (soil.FindAllChildren<Models.Interfaces.ISoilWater>().Where(c => (c as IModel).Enabled).Count() > 1)
+            foreach (var soil in parentZone.Node.FindChildren<Soils.Soil>())
+                if (soil.Node.FindChildren<Models.Interfaces.ISoilWater>().Where(c => (c as IModel).Enabled).Count() > 1)
                     throw new Exception($"More than one water balance found in zone {parentZone.Name}");
 
             // Check to make sure there is only one ISoilWater in each zone.
-            foreach (IModel zone in parentZone.FindAllChildren<Models.Interfaces.IZone>())
+            foreach (IModel zone in parentZone.Node.FindChildren<Models.Interfaces.IZone>())
                 CheckNotMultipleSoilWaterModels(zone);
         }
 

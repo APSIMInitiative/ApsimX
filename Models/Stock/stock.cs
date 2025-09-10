@@ -3716,7 +3716,7 @@ namespace Models.GrazPlan
             this.randFactory.Initialise(RandSeed);
             StockModel = new StockList(this, systemClock, locWtr, paddocks, Structure);
 
-            var childGenotypes = this.FindAllChildren<Genotype>().Cast<Genotype>().ToList();
+            var childGenotypes = Structure.FindChildren<Genotype>().Cast<Genotype>().ToList();
             if (childGenotypes != null)
                 childGenotypes.ForEach(animalParamSet => Genotypes.Add(animalParamSet));
 

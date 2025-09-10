@@ -25,8 +25,8 @@ namespace APSIM.Documentation.Models.Types
             Section section = GetSummaryAndRemarksSection(model);
 
             FrostSenescenceFunction frost = model as FrostSenescenceFunction;
-            IFunction frostKill = model.FindChild<IFunction>("frostKill");
-            IFunction frostKillSevere = model.FindChild<IFunction>("frostKillSevere");
+            IFunction frostKill = model.Node.FindChild<IFunction>("frostKill");
+            IFunction frostKillSevere = model.Node.FindChild<IFunction>("frostKillSevere");
 
             section.Add(new Paragraph($"FrostKill: {frostKill.Value()} °C"));
             section.Add(new Paragraph($"FrostKillSevere: {frostKillSevere.Value()} °C"));

@@ -69,7 +69,7 @@ namespace Models.CLEM.Groupings
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            feedActivityParent = FindAncestor<OtherAnimalsActivityFeed>();
+            feedActivityParent = Structure.FindParent<OtherAnimalsActivityFeed>(recurse: true);
             SelectedOtherAnimalsType = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, AnimalTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as OtherAnimalsType;
 
             currentFeedRequest = new ResourceRequest()
@@ -84,7 +84,7 @@ namespace Models.CLEM.Groupings
             };
 
             // warning that any take filters will be ignored.
-            if (FindAllDescendants<TakeFromFiltered>().Any())
+            if (Structure.FindChildren<TakeFromFiltered>(recurse: true).Any())
             {
                 string warnMessage = $"The [TakeFiltered] component of [f={this.NameWithParent}] is not valid for [OtherAnimalFeedGroup].Take or Skip will be ignored.";
                 Warnings.CheckAndWrite(warnMessage, Summary, this, MessageType.Warning);

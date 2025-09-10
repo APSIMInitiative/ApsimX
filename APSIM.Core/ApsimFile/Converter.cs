@@ -1,6 +1,7 @@
 using APSIM.Numerics;
 using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Utilities;
+using BruTile.Wmts.Generated;
 using Newtonsoft.Json.Linq;
 using System.Globalization;
 using System.Reflection;
@@ -15,7 +16,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 199; } }
+    public static int LatestVersion { get { return 201; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -6820,6 +6821,185 @@ internal class Converter
                 manager.SetDeclarations(declarations);
                 manager.Save();
             }
+        }
+    }
+
+
+    /// <summary>
+    /// Change all FindSibling, FindChild, FindChildren, FindDescendent, FindAncestor methods to
+    /// Structure.FindSibling, Structure.Child, Structure.FindChildren, Structure.Parent
+    /// </summary>
+    /// <param name="root">The root JSON token.</param>
+    /// <param name="_">The name of the apsimx file.</param>
+    private static void UpgradeToVersion200(JObject root, string _)
+    {
+        // The strategy is to add a IStructureDependency to a manager script if any of
+        //      FindSibling, FindChild, FindChildren, FindDescendent, FindAncestor
+        // is called. Then change the calls to their Structure equivalent.
+
+        foreach (var manager in JsonUtilities.ChildManagers(root))
+        {
+            List<Declaration> declarations = null;
+            string pattern = @"(?<relativeTo>[\w\d\[\].]*)\.*(?<methodName>FindChild|FindSibling|FindDescendant|FindAncestor|FindAllSiblings|FindAllChildren|FindAllDescendants|FindAllAncestors)(?<type>\<[\w\d\.]+\>)*\((?<remainder>.+)";
+            bool changed = false;
+            manager.ReplaceRegex(pattern, match =>
+            {
+                changed = true;
+                // convert remainder to args.
+                string remainder = "(" + match.Groups["remainder"].ToString();
+                int posCloseBracket = StringUtilities.FindMatchingClosingBracket(remainder, 0, '(', ')');
+                if (posCloseBracket == -1)
+                {
+                    changed = false;
+                    return match.Groups[0].ToString();
+                }
+                string args = remainder.Substring(1, posCloseBracket - 1);
+                remainder = remainder.Substring(posCloseBracket);
+
+                var decls = declarations;
+                if (declarations == null)
+                    declarations = manager.GetDeclarations();
+
+                // Add a private structure property if necessary.
+                var structureDeclaration = declarations.FirstOrDefault(decl => decl.TypeName == "IStructure");
+                if (structureDeclaration == null)
+                {
+                    structureDeclaration = new Declaration()
+                    {
+                        InstanceName = "Structure { private get; set; }",
+                        IsPrivate = false,
+                        TypeName = "IStructure"
+                    };
+                    declarations.Add(structureDeclaration);
+                }
+                structureDeclaration.Attributes = ["[field:NonSerialized]"];
+
+                string relativeTo = match.Groups["relativeTo"].ToString().Trim();
+
+                // Look for a cast in relativeTo and remove it if found.
+                // RelativeTo can look like:
+                //      (RectangularZone)this.Parent.Parent.Parent.
+                //      (z as Zone).
+                string cast = null;
+                if (relativeTo != null && relativeTo.StartsWith('('))
+                {
+                    int posEndCast = StringUtilities.FindMatchingClosingBracket(relativeTo, 0, '(', ')');
+                    if (posEndCast != -1 && relativeTo[posEndCast + 1] != '.')
+                    {
+                        cast = relativeTo.Substring(0, posEndCast + 1);
+                        relativeTo = relativeTo.Substring(posEndCast + 1);
+                    }
+                }
+
+                // Process relativeTo.
+                if (relativeTo.EndsWith('.'))
+                    relativeTo = relativeTo[..^1];
+                if (relativeTo == string.Empty)
+                    relativeTo = null;
+
+                // Extract a generic type.
+                string typeName = match.Groups["type"].ToString();
+                if (typeName == string.Empty)
+                    typeName = "<IModel>";
+
+                // Extract a method name and map to new name.
+                string[] recursiveMethods = ["FindDescendant", "FindAncestor", "FindAllDescendants", "FindAllAncestors", "FindAllChildren"];
+                string methodName = match.Groups["methodName"].ToString();
+                bool addRecurseArgument = recursiveMethods.Contains(methodName);
+                if (methodName == "FindDescendant")
+                    methodName = "FindChild";
+                if (methodName == "FindAncestor")
+                    methodName = "FindParent";
+                if (methodName == "FindAllSiblings")
+                    methodName = "FindSiblings";
+                if (methodName == "FindAllDescendants")
+                    methodName = "FindChildren";
+                if (methodName == "FindAllAncestors")
+                    methodName = "FindParents";
+                if (methodName == "FindAllChildren")
+                    methodName = "FindChildren";
+
+                if (addRecurseArgument)
+                {
+                    if (args.Trim().Length > 0)
+                        args += ", ";
+                    args += "recurse: true";
+                }
+
+                if (relativeTo != null && relativeTo != "this")
+                {
+                    if (args.Trim().Length > 0)
+                        args += ", ";
+                    args += $"relativeTo: (INodeModel){relativeTo}";
+                }
+
+                string prefix = match.Groups["prefix"].ToString();
+                string replacementString = $"{prefix} {cast} Structure.{methodName}{typeName}({args}";
+
+                replacementString += remainder;
+                return replacementString;
+            });
+
+            if (changed)
+            {
+                manager.SetDeclarations(declarations);
+
+                // Remove all IStructure properties without a [field:NonSerialized] attribute. A previous converter did this.
+                int posIStructure = 0;
+                while ((posIStructure = manager.FindString("IStructure ", posIStructure)) != -1)
+                {
+                    int posFieldNonSerialize = manager.FindString("[field:NonSerialized]");
+                    if (posFieldNonSerialize == -1 || posFieldNonSerialize != posIStructure - 1)
+                        manager.SetLineContents(posIStructure, string.Empty);
+                    posIStructure++;
+                }
+
+                if (!manager.GetUsingStatements().Contains("APSIM.Core"))
+                    manager.AddUsingStatement("APSIM.Core");
+                if (manager.FindString(", IStructureDependency") == -1)
+                    manager.Replace(": Model", ": Model, IStructureDependency");
+                manager.Save();
+            }
+        }
+
+        // Due to a previous defect (https://github.com/APSIMInitiative/ApsimX/issues/10298), we need
+        // to remove any Structure and Leaf components under Plant. They are [Links] and shouldn't have
+        // been serialised to the .apsimx file. NOTE: The child models won't be deleted.
+        // Because Plant and Leaf now have a 'Structure' and a 'structure' member, the deserialisation tries
+        // to deserialise a PMF.Structure into a APSIM.Core.Structure.
+        foreach (var plant in JsonUtilities.ChildrenOfType(root, "Plant"))
+        {
+            plant.Remove("structure");
+            plant.Remove("Leaf");
+        }
+    }
+
+
+    /// <summary>
+    /// For SimpleGrazing, create new parameter FractionOfDungUrineOffPaddock = 1-FractionDefoliatedBiomassToSoil
+    /// </summary>
+    /// <param name="root">The root JSON token.</param>
+    /// <param name="_">The name of the apsimx file.</param>
+    private static void UpgradeToVersion201(JObject root, string _)
+    {
+        foreach (var simpleGrazing in JsonUtilities.ChildrenOfType(root, "SimpleGrazing"))
+        {
+            var fractionDefoliatedBiomassToSoil = simpleGrazing["FractionDefoliatedBiomassToSoil"] as JArray;
+            if (fractionDefoliatedBiomassToSoil != null)
+            {
+                for (int i = 0; i < fractionDefoliatedBiomassToSoil.Count; i++)
+                    fractionDefoliatedBiomassToSoil[i] = 1 - fractionDefoliatedBiomassToSoil[i].Value<double>();
+                simpleGrazing["FractionIntakeNToAnimal"] = new JArray(fractionDefoliatedBiomassToSoil);
+            }
+
+            var fractionDefoliatedNToSoil = simpleGrazing["FractionDefoliatedNToSoil"] as JArray;
+            if (fractionDefoliatedNToSoil != null)
+            {
+                for (int i = 0; i < fractionDefoliatedNToSoil.Count; i++)
+                    fractionDefoliatedNToSoil[i] = Math.Round(1 - fractionDefoliatedNToSoil[i].Value<double>(), 3);
+                simpleGrazing["FractionOfDungUrineOffPaddock"] = new JArray(fractionDefoliatedNToSoil);
+            }
+
         }
     }
 

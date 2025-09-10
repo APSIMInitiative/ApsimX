@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace APSIM.Workflow
 {
@@ -14,9 +15,9 @@ namespace APSIM.Workflow
         /// <summary>The locations where validation directories are expected to be found.</summary>
         public static readonly string[] VALIDATION_LOCATIONS =
         [
-            "Prototypes/", 
-            "Tests/Simulation/", 
-            "Tests/UnderReview/", 
+            "Prototypes/",
+            "Tests/Simulation/",
+            "Tests/UnderReview/",
             "Tests/Validation/",
             "Examples/"
         ];
@@ -28,31 +29,46 @@ namespace APSIM.Workflow
         public static string[] GetDirectoryPaths()
         {
             List<string> validation_directories = [];
-            foreach(string location in VALIDATION_LOCATIONS)
+            foreach (string location in VALIDATION_LOCATIONS)
             {
-                string[] directories = Directory.GetDirectories(RELATIVE_PATH_PREFIX + location, "*" , SearchOption.AllDirectories);
-                foreach (string directory in directories)
+                var directory = Path.GetFullPath(RELATIVE_PATH_PREFIX + location);
+                if (Directory.GetFiles(directory, "*.apsimx", SearchOption.AllDirectories).Any())
                 {
-                    if (Directory.GetFiles(directory, "*.apsimx").Length > 0)
+                    var apsimxFiles = Directory.GetFiles(directory, "*.apsimx", SearchOption.AllDirectories);
+                    foreach (var apsimxFile in apsimxFiles)
                     {
-                        var fullpath = Path.GetFullPath(directory);
-                        // remove unneeded prefixes, these are different in different environments
-                        foreach (string validation_location in VALIDATION_LOCATIONS)
+                        if (!PayloadUtilities.EXCLUDED_SIMS_FILEPATHS.Contains("/" + apsimxFile.NormalizePath()))
                         {
-                            string full_path_normalized = fullpath.Replace("\\", "/");
-                            string validation_location_normalized = validation_location.Replace("\\", "/");
-                            if (full_path_normalized.Contains(validation_location_normalized))
+                            var apsimxNormalizedFilePath = apsimxFile.NormalizePath();
+                            if (apsimxNormalizedFilePath.Contains(location))
                             {
-                                var reduced_path = full_path_normalized.Substring(full_path_normalized.IndexOf(validation_location_normalized));
-                                var dirApsimFiles = Directory.GetFiles(reduced_path, "*.apsimx", SearchOption.AllDirectories);
-                                foreach (var apsimFile in dirApsimFiles)
-                                    validation_directories.Add("/" + apsimFile.Replace("\\", "/")); // for linux compatibility
+                                var locationFolderIndex = apsimxNormalizedFilePath.IndexOf(location);
+                                validation_directories.Add("/" + apsimxNormalizedFilePath.Substring(locationFolderIndex)); // for linux compatibility
+                            }
+                            else
+                            {
+                                throw new Exception("The location: " + location + " was not found in the apsimx file path: " + apsimxNormalizedFilePath);
                             }
                         }
                     }
                 }
             }
             return validation_directories.ToArray();
+        }
+        
+
+        /// <summary>
+        /// Get the number of simulations/validation locations available.
+        /// </summary>
+        public static int GetSimulationCount()
+        {
+            return GetDirectoryPaths().Length;
+        }
+        
+        /// <summary>Normalize a file path to use forward slashes instead of backslashes.</summary>
+        public static string NormalizePath(this string path)
+        {
+            return path.Replace("\\", "/");
         }
     }
 }

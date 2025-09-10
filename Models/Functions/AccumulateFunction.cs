@@ -14,8 +14,12 @@ namespace Models.Functions
     [Description("Adds the value of all children functions to the previous day's accumulation between start and end phases")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class AccumulateFunction : Model, IFunction
+    public class AccumulateFunction : Model, IFunction, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         ///Links
         /// -----------------------------------------------------------------------------------------------------------
 
@@ -86,7 +90,7 @@ namespace Models.Functions
         private void PostPhenology(object sender, EventArgs e)
         {
             if (ChildFunctions == null)
-                ChildFunctions = FindAllChildren<IFunction>().ToList();
+                ChildFunctions = Structure.FindChildren<IFunction>().ToList();
 
             if (phenology.Between(startStageIndex, endStageIndex))
             {

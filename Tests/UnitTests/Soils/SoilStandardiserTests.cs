@@ -73,9 +73,9 @@
 
             soil.Sanitise();
 
-            var physical = soil.FindChild<Physical>();
-            var soilOrganicMatter = soil.FindChild<Organic>();
-            var water = soil.FindChild<Water>();
+            var physical = soil.Node.FindChild<Physical>();
+            var soilOrganicMatter = soil.Node.FindChild<Organic>();
+            var water = soil.Node.FindChild<Water>();
 
             // Make sure layer structures have been standardised.
             var targetThickness = new double[] { 100, 300, 300 };
@@ -147,9 +147,9 @@
 
             soil.Sanitise();
 
-            var physical = soil.FindChild<Physical>();
-            var soilOrganicMatter = soil.FindChild<Organic>();
-            var water = soil.FindChild<Water>();
+            var physical = soil.Node.FindChild<Physical>();
+            var soilOrganicMatter = soil.Node.FindChild<Organic>();
+            var water = soil.Node.FindChild<Water>();
 
             // Make sure layer structures have been standardised.
             var targetThickness = new double[] { 100, 300 };
@@ -167,12 +167,12 @@
 
             soil.Sanitise();
 
-            var chemical = soil.FindChild<Chemical>();
-            var organic = soil.FindChild<Organic>();
-            var water = soil.FindChild<Water>();
-            var solutes = soil.FindAllChildren<Solute>().ToArray();
+            var chemical = soil.Node.FindChild<Chemical>();
+            var organic = soil.Node.FindChild<Organic>();
+            var water = soil.Node.FindChild<Water>();
+            var solutes = soil.Node.FindChildren<Solute>().ToArray();
 
-            Assert.That(soil.FindAllChildren<Water>().Count(), Is.EqualTo(1));
+            Assert.That(soil.Node.FindChildren<Water>().Count(), Is.EqualTo(1));
             Assert.That(water.Name, Is.EqualTo("Water"));
             Assert.That(water.Volumetric, Is.EqualTo(new double[] { 0.1, 0.2 }));
             Assert.That(organic.Carbon, Is.EqualTo(new double[] { 2.0, 0.9 }));
@@ -187,7 +187,7 @@
         public void DontStandardiseDisabledSoils()
         {
             Soil soil = CreateSimpleSoil();
-            Physical phys = soil.FindChild<Physical>();
+            Physical phys = soil.Node.FindChild<Physical>();
 
             // Remove a layer from BD - this will cause standardisation to fail.
             phys.BD = new double[phys.BD.Length - 1];
@@ -197,8 +197,8 @@
 
             // Chuck the soil in a simulation.
             Simulations sims = Utilities.GetRunnableSim();
-            Zone paddock = sims.FindDescendant<Zone>();
-            paddock.Children.Add(soil);
+            Zone paddock = sims.Node.FindChild<Zone>(recurse: true);
+            paddock.Node.AddChild(soil);
             soil.Parent = paddock;
 
             var tree = Node.Create(soil);
@@ -230,16 +230,16 @@
             Node.Create(soil);
             SoilSanitise.InitialiseSoil(soil);
 
-            var waterBalance = soil.FindChild<WaterBalance>();
-            var nutrient = soil.FindChild<Nutrient>();
-            Assert.That(soil.FindChild<SoilTemperature>(), Is.Not.Null);
-            Assert.That(soil.FindChild<Solute>("NO3"), Is.Not.Null);
-            Assert.That(soil.FindChild<Solute>("NH4"), Is.Not.Null);
-            Assert.That(soil.FindChild<Solute>("Urea"), Is.Not.Null);
-            Assert.That(soil.FindChild<Water>(), Is.Not.Null);
+            var waterBalance = soil.Node.FindChild<WaterBalance>();
+            var nutrient = soil.Node.FindChild<Nutrient>();
+            Assert.That(soil.Node.FindChild<SoilTemperature>(), Is.Not.Null);
+            Assert.That(soil.Node.FindChild<Solute>("NO3"), Is.Not.Null);
+            Assert.That(soil.Node.FindChild<Solute>("NH4"), Is.Not.Null);
+            Assert.That(soil.Node.FindChild<Solute>("Urea"), Is.Not.Null);
+            Assert.That(soil.Node.FindChild<Water>(), Is.Not.Null);
             Assert.That(waterBalance, Is.Not.Null);
-            Assert.That(soil.FindChild<Organic>(), Is.Not.Null);
-            Assert.That(soil.FindChild<Chemical>(), Is.Not.Null);
+            Assert.That(soil.Node.FindChild<Organic>(), Is.Not.Null);
+            Assert.That(soil.Node.FindChild<Chemical>(), Is.Not.Null);
             Assert.That(nutrient, Is.Not.Null);
 
             // Ensure that waterbalance and nutrient models have their child models from resource.
@@ -249,7 +249,7 @@
 
         private Soil CreateSimpleSoil()
         {
-            return new Soil
+            var soil = new Soil
             {
                 Children = new List<IModel>()
                 {
@@ -297,6 +297,8 @@
                     }
                 }
             };
+            Node.Create(soil);
+            return soil;
         }
     }
 }
