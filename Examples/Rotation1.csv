@@ -1,0 +1,13 @@
+Inputfield,Potato,Wheat,OatForage,Carrot,TurnipForage
+CropName,Potato,Wheat,OatForage,Carrot,TurnipForage
+EstablishDate,15-Oct,15-Apr,1-Mar,1-Sep,1-Mar
+EstablishStage,Seed,Seed,Seed,Seed,Seed
+PlantingDepth,20,20,20,10,10
+HarvestDate,31-Mar,16-Feb,15-Aug,15-Feb,15-Aug
+TtEstabToHarv,,,,,
+HarvestStage,Maturity,Ripe,EarlyReproductive,Vegetative,Vegetative
+ExpectedYield,60,12,10,80,10
+FieldLoss,0.05,0,0,0.05,0
+ResidueRemoval,0,0.8,0,0,0
+ResidueIncorporation,.9,.8,1,1,0
+ResidueIncorporationDepth,100,50,100,100,0

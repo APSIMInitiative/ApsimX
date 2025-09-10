@@ -346,7 +346,6 @@ Name: {localappdata}\VirtualStore\Apsim; Type: dirifempty
 [Files]
 Source: {#ApsimX}\bin\Release\net8.0\win-x64\publish\*; DestDir: {app}\bin; Flags: ignoreversion;
 ;fixme
-Source: {#ApsimX}\DeploymentSupport\global\*; DestDir: {app}\bin; Flags: ignoreversion;
 Source: {#ApsimX}\DeploymentSupport\Windows\Bin64\sqlite3.dll; DestDir: {app}\bin; Flags: ignoreversion;
 Source: {#ApsimX}\bin\Release\net8.0\win-x64\publish\Models.xml; DestDir: {app}\bin; Flags: ignoreversion; 
 Source: {#ApsimX}\APSIM.Documentation\Resources\APSIM.bib; DestDir: {app}; Flags: ignoreversion;

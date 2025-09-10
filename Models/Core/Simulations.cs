@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core.ApsimFile;
 using Models.Core.Interfaces;
@@ -15,11 +17,14 @@ namespace Models.Core
     /// Encapsulates a collection of simulations. It is responsible for creating this collection, changing the structure of the components within the simulations, renaming components, adding new ones, deleting components. The user interface talks to an instance of this class.
     /// </summary>
     [Serializable]
-    [ScopedModel]
     [ViewName("UserInterface.Views.MarkdownView")]
     [PresenterName("UserInterface.Presenters.GenericPresenter")]
-    public class Simulations : Model, ISimulationEngine
+    public class Simulations : Model, ISimulationEngine, IScopedModel, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         [NonSerialized]
         private Links links;
 
@@ -44,9 +49,6 @@ namespace Models.Core
             }
         }
 
-        /// <summary>Gets a c# script compiler.</summary>
-        public ScriptCompiler ScriptCompiler { get; } = new ScriptCompiler();
-
         /// <summary>Returns an instance of an events service</summary>
         /// <param name="model">The model the service is for</param>
         public IEvent GetEventService(IModel model)
@@ -54,37 +56,10 @@ namespace Models.Core
             return new Events(model);
         }
 
-        /// <summary>Returns an instance of an locator service</summary>
-        /// <param name="model">The model the service is for</param>
-        public ILocator GetLocatorService(IModel model)
-        {
-            return new Locator(model);
-        }
-
         /// <summary>Constructor</summary>
         public Simulations()
         {
-            Version = ApsimFile.Converter.LatestVersion;
-        }
-
-        /// <summary>
-        /// Create a simulations model
-        /// </summary>
-        /// <param name="children">The child models</param>
-        public static Simulations Create(IEnumerable<IModel> children)
-        {
-            Simulations newSimulations = new Core.Simulations();
-            newSimulations.Children.AddRange(children.Cast<Model>());
-
-            // Parent all models.
-            newSimulations.Parent = null;
-            newSimulations.ParentAllDescendants();
-
-            // Call OnCreated in all models.
-            foreach (IModel model in newSimulations.FindAllDescendants().ToList())
-                model.OnCreated();
-
-            return newSimulations;
+            Version = FileFormat.JSONVersion;
         }
 
         /// <summary>
@@ -100,6 +75,15 @@ namespace Models.Core
             {
                 // Setter is provided so that this property gets serialized.
             }
+        }
+
+        /// <summary>
+        /// Initialise model.
+        /// </summary>
+        public override void OnCreated()
+        {
+            base.OnCreated();
+            FileName = Node.FileName;
         }
 
         /// <summary>
@@ -122,7 +106,7 @@ namespace Models.Core
             List<string> filesReferenced = new List<string>();
             filesReferenced.Add(FileName);
             filesReferenced.AddRange(FindAllReferencedFiles());
-            DataStore storage = this.FindInScope<DataStore>();
+            DataStore storage = Structure.Find<DataStore>();
             if (storage != null)
             {
                 storage.Writer.AddCheckpoint(checkpointName, filesReferenced);
@@ -130,29 +114,12 @@ namespace Models.Core
             }
         }
 
-        /// <summary>
-        /// Revert this object to a previous one.
-        /// </summary>
-        /// <param name="checkpointName">Name of checkpoint</param>
-        /// <returns>A new simulations object that represents the file on disk</returns>
-        public Simulations RevertCheckpoint(string checkpointName)
-        {
-            IDataStore storage = this.FindInScope<DataStore>();
-            if (storage != null)
-            {
-                storage.Writer.RevertCheckpoint(checkpointName);
-                storage.Reader.Refresh();
-            }
-            List<Exception> creationExceptions = new List<Exception>();
-            return FileFormat.ReadFromFile<Simulations>(FileName, e => throw e, false).NewModel as Simulations;
-        }
-
         /// <summary>Write the specified simulation set to the specified filename</summary>
         /// <param name="FileName">Name of the file.</param>
         public void Write(string FileName)
         {
             string tempFileName = Path.GetTempFileName();
-            File.WriteAllText(tempFileName, FileFormat.WriteToString(this));
+            File.WriteAllText(tempFileName, Node.ToJSONString());
 
             // If we get this far without an exception then copy the tempfilename over our filename,
             // creating a backup (.bak) in the process.
@@ -162,6 +129,7 @@ namespace Models.Core
                 File.Move(FileName, bakFileName);
             File.Move(tempFileName, FileName);
             this.FileName = FileName;
+            Node.FileName = FileName;
             SetFileNameInAllSimulations();
         }
 
@@ -173,7 +141,7 @@ namespace Models.Core
             try
             {
                 string tempFileName = Path.GetTempFileName();
-                File.WriteAllText(tempFileName, FileFormat.WriteToString(this));
+                File.WriteAllText(tempFileName, Node.ToJSONString());
 
                 // If we get this far without an exception then copy the tempfilename over our filename,
                 // creating a backup (.bak) in the process.
@@ -204,10 +172,13 @@ namespace Models.Core
         /// <summary>Look through all models. For each simulation found set the filename.</summary>
         private void SetFileNameInAllSimulations()
         {
-            foreach (Model child in this.FindAllDescendants().ToList())
+            foreach (Model child in Structure.FindChildren<IModel>(recurse: true).ToList())
             {
                 if (child is Simulation)
+                {
                     (child as Simulation).FileName = FileName;
+                    (child as Simulation).Node.FileName = FileName;
+                }
                 else if (child is DataStore)
                 {
                     DataStore storage = child as DataStore;
@@ -232,10 +203,9 @@ namespace Models.Core
         public List<object> GetServices()
         {
             List<object> services = new List<object>();
-            var storage = this.FindInScope<IDataStore>();
+            var storage = Structure.Find<IDataStore>();
             if (storage != null)
                 services.Add(storage);
-            services.Add(ScriptCompiler);
             return services;
         }
 
@@ -253,11 +223,6 @@ namespace Models.Core
         /// </summary>
         public void ClearSimulationReferences()
         {
-            // Clears the locator caches for our Simulations.
-            // These caches may result in cyclic references and memory leaks if not cleared
-            foreach (Model simulation in this.FindAllDescendants().ToList())
-                if (simulation is Simulation)
-                    (simulation as Simulation).ClearCaches();
             // Explicitly clear the child lists
             ClearChildLists();
         }
@@ -266,7 +231,7 @@ namespace Models.Core
         public IEnumerable<string> FindAllReferencedFiles(bool isAbsolute = true)
         {
             SortedSet<string> fileNames = new SortedSet<string>();
-            foreach (IReferenceExternalFiles model in this.FindAllDescendants<IReferenceExternalFiles>().Where(m => m.Enabled))
+            foreach (IReferenceExternalFiles model in Structure.FindChildren<IReferenceExternalFiles>(recurse: true).Where(m => m.Enabled))
                 foreach (string fileName in model.GetReferencedFileNames())
                     if (isAbsolute == true)
                     {

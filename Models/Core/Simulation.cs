@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading;
 using System.Data;
 using Models.Soils;
+using APSIM.Core;
 
 namespace Models.Core
 {
@@ -22,14 +23,19 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Sobol))]
     [ValidParent(ParentType = typeof(CroptimizR))]
     [Serializable]
-    [ScopedModel]
-    public class Simulation : Model, IRunnable, ISimulationDescriptionGenerator, IReportsStatus
+    public class Simulation : Model, IRunnable, ISimulationDescriptionGenerator, IReportsStatus, IScopedModel, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         [Link]
         private ISummary summary = null;
 
-        [NonSerialized]
-        private ScopingRules scope = null;
+        [Link(IsOptional = true)]
+        private IClock clock = null;
+
+        private IReportsStatus reportStatus = null;
 
         /// <summary>Invoked when simulation is about to commence.</summary>
         public event EventHandler Commencing;
@@ -45,7 +51,7 @@ namespace Models.Core
         {
             get
             {
-                return this.FindAllChildren<Zone>().Sum(z => (z as Zone).Area);
+                return this.Node.FindChildren<Zone>().Sum(z => (z as Zone).Area);
             }
         }
 
@@ -77,19 +83,6 @@ namespace Models.Core
             Warning
         };
 
-        /// <summary>Returns the object responsible for scoping rules.</summary>
-        public ScopingRules Scope
-        {
-            get
-            {
-                if (scope == null)
-                {
-                    scope = new ScopingRules();
-                }
-                return scope;
-            }
-        }
-
         /// <summary>
         /// Returns the job's progress as a real number in range [0, 1].
         /// </summary>
@@ -97,11 +90,10 @@ namespace Models.Core
         {
             get
             {
-                Clock c = this.FindChild<Clock>();
-                if (c == null)
+                if (clock == null)
                     return 0;
                 else
-                    return c.FractionComplete;
+                    return clock.FractionComplete;
             }
         }
 
@@ -114,34 +106,10 @@ namespace Models.Core
         /// execution thread.
         /// </summary>
         [JsonIgnore]
-        public bool IsInitialising { get; set; } = false;
+        public bool IsInitialising => Node.IsInitialising;
 
         /// <summary>A list of keyword/value meta data descriptors for this simulation.</summary>
         public List<SimulationDescription.Descriptor> Descriptors { get; set; }
-
-        /// <summary>Gets the value of a variable or model.</summary>
-        /// <param name="namePath">The name of the object to return</param>
-        /// <returns>The found object or null if not found</returns>
-        public object Get(string namePath)
-        {
-            return Locator.Get(namePath);
-        }
-
-        /// <summary>Get the underlying variable object for the given path.</summary>
-        /// <param name="namePath">The name of the variable to return</param>
-        /// <returns>The found object or null if not found</returns>
-        public IVariable GetVariableObject(string namePath)
-        {
-            return Locator.GetObject(namePath);
-        }
-
-        /// <summary>Sets the value of a variable. Will throw if variable doesn't exist.</summary>
-        /// <param name="namePath">The name of the object to set</param>
-        /// <param name="value">The value to set the property to</param>
-        public void Set(string namePath, object value)
-        {
-            Locator.Set(namePath, value);
-        }
 
         /// <summary>Return the filename that this simulation sits in.</summary>
         /// <value>The name of the file.</value>
@@ -150,10 +118,10 @@ namespace Models.Core
 
         /// <summary>Collection of models that will be used in resolving links. Can be null.</summary>
         [JsonIgnore]
-        public List<object> Services { get; set; } = new List<object>();
+        public List<object> ModelServices { get; set; } = new List<object>();
 
         /// <summary>Status message.</summary>
-        public string Status => FindAllDescendants<IReportsStatus>().FirstOrDefault(s => !string.IsNullOrEmpty(s.Status))?.Status;
+        public string Status => reportStatus?.Status;
 
         /// <summary>
         /// Called when models should disconnect from events to which they've
@@ -162,23 +130,12 @@ namespace Models.Core
         public event EventHandler UnsubscribeFromEvents;
 
         /// <summary>
-        /// Simulation has completed. Clear scope and locator
+        /// Initialise model.
         /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Completed")]
-        private void OnSimulationCompleted(object sender, EventArgs e)
+        public override void OnCreated()
         {
-            ClearCaches();
-        }
-
-        /// <summary>
-        /// Clears the existing Scoping Rules
-        /// </summary>
-        public void ClearCaches()
-        {
-            Scope.Clear();
-            Locator.Clear();
+            base.OnCreated();
+            FileName = Node.FileName;
         }
 
         /// <summary>Gets the next job to run</summary>
@@ -187,13 +144,13 @@ namespace Models.Core
             var simulationDescription = new SimulationDescription(this);
 
             // Add a folderName descriptor.
-            var folderNode = FindAncestor<Folder>();
+            var folderNode = Structure.FindParent<Folder>(recurse: true);
             if (folderNode != null)
                 simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor("FolderName", folderNode.Name));
 
             simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor("SimulationName", Name));
 
-            foreach (var zone in this.FindAllDescendants<Zone>())
+            foreach (var zone in Structure.FindChildren<Zone>(recurse: true))
                 simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor("Zone", zone.Name));
 
             return new List<SimulationDescription>() { simulationDescription };
@@ -210,49 +167,33 @@ namespace Models.Core
                 RemoveDisabledModels(this);
 
                 // Standardise the soil.
-                var soils = FindAllDescendants<Soils.Soil>();
+                var soils = Structure.FindChildren<Soil>(recurse: true);
                 foreach (Soils.Soil soil in soils)
                     soil.Sanitise();
 
                 CheckNotMultipleSoilWaterModels(this);
 
-                // If this simulation was not created from deserialisation then we need
-                // to parent all child models correctly and call OnCreated for each model.
-                bool hasBeenDeserialised = Children.Count > 0 && Children[0].Parent == this;
-                if (!hasBeenDeserialised)
-                {
-                    // Parent all models.
-                    this.ParentAllDescendants();
-
-                    // Call OnCreated in all models.
-                    foreach (IModel model in FindAllDescendants().ToList())
-                        model.OnCreated();
-                }
-
                 // Call OnPreLink in all models.
                 // Note the ToList(). This is important because some models can
                 // add/remove models from the simulations tree in their OnPreLink()
                 // method, and FindAllDescendants() is lazy.
-                FindAllDescendants().ToList().ForEach(model => model.OnPreLink());
+                Structure.FindChildren<IModel>(recurse: true).ToList().ForEach(model => model.OnPreLink());
 
-                if (Services == null || Services.Count < 1)
+                if (ModelServices == null || ModelServices.Count < 1)
                 {
-                    var simulations = FindAncestor<Simulations>();
+                    var simulations = Structure.FindParent<Simulations>(recurse: true);
                     if (simulations != null)
-                        Services = simulations.GetServices();
+                        ModelServices = simulations.GetServices();
                     else
                     {
-                        Services = new List<object>();
-                        IDataStore storage = this.FindInScope<IDataStore>();
+                        ModelServices = new List<object>();
+                        IDataStore storage = Structure.Find<IDataStore>();
                         if (storage != null)
-                            Services.Add(this.FindInScope<IDataStore>());
+                            ModelServices.Add(Structure.Find<IDataStore>());
                     }
                 }
 
-                if (!Services.OfType<ScriptCompiler>().Any())
-                    Services.Add(new ScriptCompiler());
-
-                var links = new Links(Services);
+                var links = new Links(ModelServices);
                 var events = new Events(this);
 
                 // Connect all events.
@@ -287,6 +228,9 @@ namespace Models.Core
             // when called from the unit tests.
             if (cancelToken == null)
                 cancelToken = new CancellationTokenSource();
+
+            // Find a report status model if it exists.
+            reportStatus = Structure.FindChildren<IReportsStatus>(recurse: true).FirstOrDefault();
 
             try
             {
@@ -338,8 +282,10 @@ namespace Models.Core
         /// <param name="model"></param>
         private void RemoveDisabledModels(IModel model)
         {
-            model.Children.RemoveAll(child => !child.Enabled);
-            model.Children.ForEach(child => RemoveDisabledModels(child));
+            foreach (var disabledChild in model.Node.Walk().Where(n => !n.Model.Enabled).ToArray())
+            {
+                disabledChild.Parent?.RemoveChild(disabledChild.Model);
+            }
         }
 
         /// <summary>
@@ -348,19 +294,19 @@ namespace Models.Core
         /// <param name="parentZone">The zone to check.</param>
         private static void CheckNotMultipleSoilWaterModels(IModel parentZone)
         {
-            foreach (var soil in parentZone.FindAllChildren<Soils.Soil>())
-                if (soil.FindAllChildren<Models.Interfaces.ISoilWater>().Where(c => (c as IModel).Enabled).Count() > 1)
+            foreach (var soil in parentZone.Node.FindChildren<Soils.Soil>())
+                if (soil.Node.FindChildren<Models.Interfaces.ISoilWater>().Where(c => (c as IModel).Enabled).Count() > 1)
                     throw new Exception($"More than one water balance found in zone {parentZone.Name}");
 
             // Check to make sure there is only one ISoilWater in each zone.
-            foreach (IModel zone in parentZone.FindAllChildren<Models.Interfaces.IZone>())
+            foreach (IModel zone in parentZone.Node.FindChildren<Models.Interfaces.IZone>())
                 CheckNotMultipleSoilWaterModels(zone);
         }
 
         /// <summary>Store descriptors in DataStore.</summary>
         private void StoreFactorsInDataStore()
         {
-            IEnumerable<IDataStore> ss = Services.OfType<IDataStore>();
+            IEnumerable<IDataStore> ss = ModelServices.OfType<IDataStore>();
             IDataStore storage = null;
             if (ss != null && ss.Count() > 0)
                 storage = ss.First();
@@ -404,5 +350,6 @@ namespace Models.Core
                 storage.Writer.WriteTable(table, false);
             }
         }
+
     }
 }

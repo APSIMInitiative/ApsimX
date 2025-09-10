@@ -16,7 +16,7 @@ namespace Models.GrazPlan
     public class Genotype : Model
     {
         private const double DAYSPERYR = 365.25;
-        private const double NC = 2.5;                                      // 2.5 cycles joining is assumed            
+        private const double NC = 2.5;                                      // 2.5 cycles joining is assumed
 
         /// <summary>The breed ancestry of the parameter set.</summary>
         private Ancestry[] FParentage = new Ancestry[0];
@@ -29,6 +29,7 @@ namespace Models.GrazPlan
             //create a new array
             for (int i = 0; i < ConceiveSigs.Length; i++)
                 ConceiveSigs[i] = new double[2];
+            Node = APSIM.Core.Node.Create(this);
         }
 
         /// <summary>Construct an animal parameter set from a source parameters set.</summary>
@@ -42,6 +43,8 @@ namespace Models.GrazPlan
 
             if (srcSet != null)
                 Initialise();
+
+            Node = APSIM.Core.Node.Create(this);
         }
 
         /// <summary>
@@ -142,6 +145,7 @@ namespace Models.GrazPlan
                     }
                 }
             }
+            Node = APSIM.Core.Node.Create(this);
         }
 
         /// <summary>
@@ -159,6 +163,7 @@ namespace Models.GrazPlan
                 Animal = GrazType.AnimalType.Cattle;
             else if (animalTypeString == "sheep")
                 Animal = GrazType.AnimalType.Sheep;
+            Node = APSIM.Core.Node.Create(this);
             Overrides.Apply(this, parameters);
             PotFleeceWt = FleeceRatio * BreedSRW;
             SetPeakMilk(IntakeC[11] * BreedSRW);
@@ -290,7 +295,7 @@ namespace Models.GrazPlan
         [Description("Sulf C c-su-")]
         public double[] SulfC { get; set; } = new double[5];
 
-        /// <summary>Methane C c-h-1,2,3,4,5,6,7  
+        /// <summary>Methane C c-h-1,2,3,4,5,6,7
         /// 1. gross energy content of DM intake MJ/g
         /// 2. constant term at maintenance
         /// 3. M/D term at maintenance kg/MJ
@@ -303,21 +308,21 @@ namespace Models.GrazPlan
         public double[] MethC { get; set; } = new double[8];
 
         /// <summary>Ash alkalinity C c-aa-1,2,3
-        /// 1. Ash alkalinity of basal weight and conceptus    
-        /// 2. Ash alkalinity of greasy wool  
-        /// 3. Ash alkalinity of faeces  
+        /// 1. Ash alkalinity of basal weight and conceptus
+        /// 2. Ash alkalinity of greasy wool
+        /// 3. Ash alkalinity of faeces
         /// </summary>
         [Units("mol/kg")]
         [Description("Ash alkalinity C c-aa-")]
         public double[] AshAlkC { get; set; } = new double[4];
 
-        /// <summary>Ovulation period c-f  
+        /// <summary>Ovulation period c-f
         /// Conception: length of oestrus cycle
         /// </summary>
         [Description("Ovulation period c-f4")]
         public int OvulationPeriod { get; set; }
 
-        /// <summary>Puberty c-pbt-1,2  
+        /// <summary>Puberty c-pbt-1,2
         /// 1. Puberty: females
         /// 2. Puberty: males
         /// </summary>
@@ -710,27 +715,27 @@ namespace Models.GrazPlan
 
             for (N = 1; N <= MaxYoung; N++)
             {
-                SeekPR = 0.0;                                                           // SeekPR is the proportion of mothers      
-                for (P = N; P <= MaxYoung; P++)                                         //   conceiving at least N young            
+                SeekPR = 0.0;                                                           // SeekPR is the proportion of mothers
+                for (P = N; P <= MaxYoung; P++)                                         //   conceiving at least N young
                     SeekPR = SeekPR + Rates[P];
-                SeekPR = Math.Min(SeekPR, 0.9975);                                      // If 1.0, no sensitivity to condition      
+                SeekPR = Math.Min(SeekPR, 0.9975);                                      // If 1.0, no sensitivity to condition
 
-                if (SeekPR <= 0.0)                                                      // Force zero conception rate if SeekPR = 0 
+                if (SeekPR <= 0.0)                                                      // Force zero conception rate if SeekPR = 0
                     ConceiveSigs[N][0] = 10.0;
                 else
                 {
-                    if (Animal == GrazType.AnimalType.Sheep)                            // For sheep, use the default value for   
-                    {                                                                   //   curvature and fit the 50% point      
+                    if (Animal == GrazType.AnimalType.Sheep)                            // For sheep, use the default value for
+                    {                                                                   //   curvature and fit the 50% point
                         Sigs = ConceiveSigs[N];
                         Idx = 0;
                     }
-                    else if ((Animal == GrazType.AnimalType.Cattle) && (N == 1))        // For single calves, use the default value 
+                    else if ((Animal == GrazType.AnimalType.Cattle) && (N == 1))        // For single calves, use the default value
                     {                                                                   //   for the 50% point and fit the curvature
                         Sigs = ConceiveSigs[N];
                         Idx = 1;
                     }
-                    else                                                                // For twin calves, use the curvature for   
-                    {                                                                   //   single calves and fit the 50% point    
+                    else                                                                // For twin calves, use the curvature for
+                    {                                                                   //   single calves and fit the 50% point
                         Sigs = ConceiveSigs[N - 1];
                         Idx = 0;
                     }
@@ -738,8 +743,8 @@ namespace Models.GrazPlan
                     fCR1 = 0;
                     if (N > 1)
                         ComputeConception(ConceiveSigs[1], 1, ref fCR1);
-                    PR = ComputeConception(Sigs, N, ref fCR1);                          // Search algorithm begins.  Only a little  
-                    if (PR > SeekPR)                                                    //   search, so coded for size not speed    
+                    PR = ComputeConception(Sigs, N, ref fCR1);                          // Search algorithm begins.  Only a little
+                    if (PR > SeekPR)                                                    //   search, so coded for size not speed
                         Scale = InitScale[Idx];
                     else
                         Scale = -InitScale[Idx];
@@ -747,12 +752,12 @@ namespace Models.GrazPlan
                     do
                     {
                         PrevPR = PR;
-                        Sigs[Idx] = Sigs[Idx] + Scale;                                  // Move the parameter up or down...         
-                        PR = ComputeConception(Sigs, N, ref fCR1);                      // Compute the corresponding pregnancy rate 
-                                                                                        //   at (BC x size) = 1                     
-                        if ((PrevPR > SeekPR) && (PR <= SeekPR))                        // If the difference (current-wanted)       
-                            Scale = -0.25 * Scale;                                      //   changes sign, reduce the step size and 
-                        else if ((PrevPR < SeekPR) && (PR >= SeekPR))                   //   change direction                       
+                        Sigs[Idx] = Sigs[Idx] + Scale;                                  // Move the parameter up or down...
+                        PR = ComputeConception(Sigs, N, ref fCR1);                      // Compute the corresponding pregnancy rate
+                                                                                        //   at (BC x size) = 1
+                        if ((PrevPR > SeekPR) && (PR <= SeekPR))                        // If the difference (current-wanted)
+                            Scale = -0.25 * Scale;                                      //   changes sign, reduce the step size and
+                        else if ((PrevPR < SeekPR) && (PR >= SeekPR))                   //   change direction
                             Scale = -0.25 * Scale;
                     } while ((Math.Abs(SeekPR - PR) >= 1.0E-6) && (Math.Abs(Scale) >= 0.00001));     // until (Abs(SeekPR-PR) < 1.0E-6) or (Abs(Scale) < 0.00001);
 

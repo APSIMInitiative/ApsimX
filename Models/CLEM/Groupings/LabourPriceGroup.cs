@@ -10,7 +10,7 @@ namespace Models.CLEM.Groupings
 {
     ///<summary>
     /// Contains a group of filters to identify individual labour in a set price group
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -74,7 +74,7 @@ namespace Models.CLEM.Groupings
             else
                 html += "\r\n<div class=\"filterborder clearfix\">";
 
-            if (FindAllChildren<Filter>().Count() < 1)
+            if (Structure.FindChildren<Filter>().Count() < 1)
                 html += "<div class=\"filter\">All individuals</div>";
 
             return html;

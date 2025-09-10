@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Shared.Extensions.Collections;
+using Models.Agroforestry;
 using Models.Core.ApsimFile;
 using Models.Storage;
 
@@ -35,7 +37,7 @@ namespace Models.Core.Run
         /// <returns>null for success or a list of exceptions.</returns>
         public static IEnumerable<string> SplitFile(string file, uint simsPerFile, string path, OnProgress progressCallBack, bool collectExternalFiles = false)
         {
-            IModel model = FileFormat.ReadFromFile<IModel>(file, e => throw e, false).NewModel as IModel;
+            IModel model = FileFormat.ReadFromFile<Simulations>(file).Model as IModel;
             Runner runner = new Runner(file);
             return Generate(runner, simsPerFile, path, progressCallBack, collectExternalFiles);
         }
@@ -80,8 +82,9 @@ namespace Models.Core.Run
                     FixSimulation(sim, path, collectExternalFiles);
                     sims.Children.Add(sim);
                 }
+                var node = Node.Create(sims);
+                string st = node.ToJSONString();
 
-                string st = FileFormat.WriteToString(sims);
                 string fileName = Path.Combine(path, $"generated-{i}.apsimx");
                 generatedFiles.Add(fileName);
                 File.WriteAllText(fileName, st);
@@ -100,7 +103,7 @@ namespace Models.Core.Run
             // the changes are applied to the script object itself, rather than the
             // dictionary; however in this instance, we care about what's going to be
             // serialized, which is the contents of the dict.
-            foreach (Manager manager in simulation.FindAllDescendants<Manager>())
+            foreach (Manager manager in simulation.Node.FindChildren<Manager>(recurse: true))
                 manager.GetParametersFromScriptModel();
 
             if (collectExternalFiles)
@@ -109,7 +112,7 @@ namespace Models.Core.Run
                 // files onto our path and then tell the model to remove the paths. The result will be
                 // a self contained path that has all files needed to run all simulations. Useful
                 // for running on clusters.
-                foreach (IReferenceExternalFiles child in simulation.FindAllDescendants<IReferenceExternalFiles>())
+                foreach (IReferenceExternalFiles child in simulation.Node.FindChildren<IReferenceExternalFiles>(recurse: true))
                 {
                     foreach (var fileName in child.GetReferencedFileNames())
                     {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
@@ -12,6 +13,9 @@ namespace Models.PMF.Organs
     [Serializable]
     public class ZoneState : Model, IRootGeometryData
     {
+        /// <summary>Structure instance</summary>
+        IStructure structure;
+
         /// <summary>The soil in this zone</summary>
         public Soil Soil { get; set; }
 
@@ -79,6 +83,12 @@ namespace Models.PMF.Organs
 
         /// <summary>The Nuptake</summary>
         public double[] NitUptake { get; set; }
+
+        /// <summary>The NO3 uptake</summary>
+        public double[] NO3Uptake { get; set; }
+
+        /// <summary>The NH4 uptake</summary>
+        public double[] NH4Uptake { get; set; }
 
         /// <summary>Gets or sets the nuptake supply.</summary>
         public double NuptakeSupply { get; set; }
@@ -152,9 +162,11 @@ namespace Models.PMF.Organs
         /// <param name="rfv">Root front velocity</param>
         /// <param name="mrd">Maximum root depth</param>
         /// <param name="remobCost">Remobilisation cost</param>
+        /// <param name="structure">Instance of structure</param>
         public ZoneState(Plant Plant, Root Root, Soil soil, double depth,
                          NutrientPoolFunctions initialDM, double population, double maxNConc,
-                         IFunction rfv, IFunction mrd, IFunction remobCost)
+                         IFunction rfv, IFunction mrd, IFunction remobCost,
+                         IStructure structure)
         {
             this.Soil = soil;
             this.plant = Plant;
@@ -162,19 +174,20 @@ namespace Models.PMF.Organs
             this.rootFrontVelocity = rfv;
             this.maximumRootDepth = mrd;
             this.remobilisationCost = remobCost;
-            Physical = soil.FindChild<IPhysical>();
-            WaterBalance = soil.FindChild<ISoilWater>();
-            IsWeirdoPresent = soil.FindChild("Weirdo") != null;
-            SoilCrop = Soil.FindDescendant<SoilCrop>(plant.Name + "Soil");
+            this.structure = structure;
+            Physical = structure.FindChild<IPhysical>(relativeTo: soil);
+            WaterBalance = structure.FindChild<ISoilWater>(relativeTo: soil);
+            IsWeirdoPresent = structure.FindChild<IModel>("Weirdo", relativeTo: soil) != null;
+            SoilCrop = structure.FindChild<SoilCrop>(plant.Name + "Soil", relativeTo: Soil, recurse: true);
             if (SoilCrop == null)
                 throw new Exception($"Cannot find a soil crop parameterisation called {plant.Name + "Soil"}");
 
             Clear();
-            Zone zone = soil.FindAncestor<Zone>();
+            Zone zone = structure.FindParent<Zone>(relativeTo: soil, recurse: true);
             if (zone == null)
                 throw new Exception("Soil " + soil + " is not in a zone.");
-            NO3 = zone.FindInScope<ISolute>("NO3");
-            NH4 = zone.FindInScope<ISolute>("NH4");
+            NO3 = structure.Find<ISolute>("NO3", relativeTo: zone);
+            NH4 = structure.Find<ISolute>("NH4", relativeTo: zone);
             Name = zone.Name;
             Initialise(depth, initialDM, population, maxNConc);
         }
@@ -278,7 +291,7 @@ namespace Models.PMF.Organs
             double[] xf = null;
             if (!IsWeirdoPresent)
             {
-                var soilCrop = Soil.FindDescendant<SoilCrop>(plant.Name + "Soil");
+                var soilCrop = structure.FindChild<SoilCrop>(plant.Name + "Soil", relativeTo: Soil, recurse: true);
                 if (soilCrop == null)
                     throw new Exception($"Cannot find a soil crop parameterisation called {plant.Name}Soil");
 

@@ -14,7 +14,7 @@ using UserInterface.Views;
 namespace UserInterface.Presenters
 {
     /// <summary>
-    /// This presenter adds functionality to the SimplePropertyPresenter by using the child models (of the same type) of the  
+    /// This presenter adds functionality to the SimplePropertyPresenter by using the child models (of the same type) of the
     /// model passed to the presenter. The property descriptions (of the child moels) are provided on the left with a column (named)
     /// of the property entries for each model provided
     /// </summary>
@@ -72,7 +72,7 @@ namespace UserInterface.Presenters
             if (model != null)
             {
                 models.Clear();
-                models.AddRange(this.model.FindAllChildren<IModel>().Where(a => a.GetType() != typeof(Memo)));
+                models.AddRange(this.model.Node.FindChildren<IModel>().Where(a => a.GetType() != typeof(Memo)));
                 foreach (var ignoredChildGroup in (model as CLEMModel).GetChildrenInSummary().Where(a => !a.include))
                     models.RemoveAll(a => ignoredChildGroup.models.Contains(a));
 

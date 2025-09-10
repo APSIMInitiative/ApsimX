@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core.ApsimFile;
 using static Models.Core.Overrides;
@@ -87,7 +88,7 @@ namespace Models.Core.ConfigFile
                     //check if second part is a filename or value (ends in ; and file exists)
                     //if so, read contents of that file in as the value
                     string potentialFilepath = configFileDirectory + "/" + value.Substring(0, value.Length-1);
-                    if (value.Trim().EndsWith(';') && File.Exists(potentialFilepath)) 
+                    if (value.Trim().EndsWith(';') && File.Exists(potentialFilepath))
                         value = File.ReadAllText(potentialFilepath);
 
                     string[] singleLineCommandArray = { property + "=" + value };
@@ -140,13 +141,13 @@ namespace Models.Core.ConfigFile
                     if (commandSplits.Count >= 3)
                     {
                         string part3 = commandSplits[2].Trim();
-                        
+
                         bool isNode = part3.StartsWith('[') && part3.Contains(']');
                         bool isPathWithNode = rxValidPathToNodeInAnotherApsimxFile.Match(part3).Success;
 
                         if (!isNode && !isPathWithNode)
                         {
-                            if (keyword == Keyword.Duplicate) 
+                            if (keyword == Keyword.Duplicate)
                                 parameters.Add(part3);
                             else
                             {
@@ -217,23 +218,22 @@ namespace Models.Core.ConfigFile
             try
             {
                 (simulations as Simulations).ResetSimulationFileNames();
-                Locator locator = new Locator(simulations);
 
                 string keyword = instruction.Keyword.ToString();
                 switch (keyword)
                 {
                     case "Add":
-                        IModel parentNode = locator.Get(instruction.ActiveNode) as IModel;
+                        IModel parentNode = simulations.Node.Get(instruction.ActiveNode) as IModel;
                         IModel newNode = Structure.Add(instruction.NewNode, parentNode);
                         if (instruction.Parameters.Count == 1)
                             newNode.Name = instruction.Parameters[0];
                         break;
                     case "Delete":
-                        IModel nodeToBeDeleted = locator.Get(instruction.ActiveNode) as IModel;
+                        IModel nodeToBeDeleted = simulations.Node.Get(instruction.ActiveNode) as IModel;
                         Structure.Delete(nodeToBeDeleted);
                         break;
                     case "Duplicate":
-                        IModel nodeToBeCopied = locator.Get(instruction.ActiveNode) as IModel;
+                        IModel nodeToBeCopied = simulations.Node.Get(instruction.ActiveNode) as IModel;
                         IModel nodeToBeCopiedsParent = nodeToBeCopied.Parent;
                         IModel nodeClone = nodeToBeCopied.Clone();
                         if (instruction.Parameters.Count == 1)
@@ -241,8 +241,8 @@ namespace Models.Core.ConfigFile
                         Structure.Add(nodeClone, nodeToBeCopiedsParent);
                         break;
                     case "Copy":
-                        nodeToBeCopied = locator.Get(instruction.ActiveNode) as IModel;
-                        IModel nodeToCopyTo = locator.Get(instruction.NewNode) as IModel;
+                        nodeToBeCopied = simulations.Node.Get(instruction.ActiveNode) as IModel;
+                        IModel nodeToCopyTo = simulations.Node.Get(instruction.NewNode) as IModel;
                         nodeClone = nodeToBeCopied.Clone();
                         if (instruction.Parameters.Count == 1)
                             nodeClone.Name = instruction.Parameters[0];
@@ -271,11 +271,9 @@ namespace Models.Core.ConfigFile
                     // Process for adding an existing node from another file.
                     {
                         string pathOfSimWithNodeAbsoluteDirectory = configFileDirectory + Path.DirectorySeparatorChar + pathOfSimWithNode;
-                        Simulations simToCopyFrom = FileFormat.ReadFromFile<Simulations>(pathOfSimWithNodeAbsoluteDirectory, e => throw e, false).NewModel as Simulations;
-                        Locator simToCopyFromLocator = new Locator(simToCopyFrom);
-                        IModel nodeToCopy = simToCopyFromLocator.Get(instruction.NewNode) as IModel;
-                        Locator simToCopyToLocator = new Locator(simulations);
-                        IModel parentNode = simToCopyToLocator.Get(instruction.ActiveNode) as IModel;
+                        Simulations simToCopyFrom = FileFormat.ReadFromFile<Simulations>(pathOfSimWithNodeAbsoluteDirectory).Model as Simulations;
+                        IModel nodeToCopy = simToCopyFrom.Node.Get(instruction.NewNode) as IModel;
+                        IModel parentNode = simulations.Node.Get(instruction.ActiveNode) as IModel;
                         Structure.Add(nodeToCopy, parentNode);
                     }
                 }

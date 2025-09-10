@@ -272,7 +272,7 @@ namespace UserInterface.Presenters
 
             string fullFilePath = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
             string relativeFilePath = fullFilePath;
-            Simulations simulations = weatherData.FindAncestor<Simulations>();
+            Simulations simulations = weatherData.Node.FindParent<Simulations>(recurse: true);
             if (simulations != null)
                 relativeFilePath = PathUtilities.GetRelativePathAndRootExamples(filename, simulations.FileName);
 

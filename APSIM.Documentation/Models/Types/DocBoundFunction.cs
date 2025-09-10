@@ -3,6 +3,7 @@ using APSIM.Shared.Documentation;
 using Models.Core;
 using System.Linq;
 using Models.Functions;
+using APSIM.Core;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -23,12 +24,12 @@ namespace APSIM.Documentation.Models.Types
         public override List<ITag> Document(int none = 0)
         {
             Section section = GetSummaryAndRemarksSection(model);
-            
-            List<IFunction> childFunctions = model.FindAllChildren<IFunction>().ToList();
 
-            IFunction Upper = null;
-            IFunction Lower = null;
-            foreach (IFunction child in childFunctions)
+            List<IModel> childFunctions = model.Node.FindChildren<IModel>().ToList();
+
+            IModel Upper = null;
+            IModel Lower = null;
+            foreach (IModel child in childFunctions)
             {
                 if (child.Name.CompareTo("Upper") == 0)
                     Upper = child;
@@ -36,7 +37,7 @@ namespace APSIM.Documentation.Models.Types
                     Lower = child;
             }
 
-            foreach (IFunction child in childFunctions)
+            foreach (IModel child in childFunctions)
             {
                 if (child != Upper && child != Lower)
                 {

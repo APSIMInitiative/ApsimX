@@ -1,13 +1,12 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 191,
+  "Version": 195,
   "Name": "Management toolbox",
   "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Weather",
       "ResourceName": null,
       "Children": [
@@ -336,7 +335,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Plant",
       "ResourceName": null,
       "Children": [
@@ -426,15 +424,16 @@
         {
           "$type": "Models.Manager, Models",
           "CodeArray": [
-            "using Models.Interfaces;",
-            "using APSIM.Shared.Utilities;",
-            "using Models.Utilities;",
-            "using Models.Soils;",
-            "using Models.PMF;",
-            "using Models.Core;",
-            "using System;",
-            "using System.Linq;",
+            "using APSIM.Numerics;",
             "using Models.Climate;",
+            "using System.Linq;",
+            "using System;",
+            "using Models.Core;",
+            "using Models.PMF;",
+            "using Models.Soils;",
+            "using Models.Utilities;",
+            "using APSIM.Shared.Utilities;",
+            "using Models.Interfaces;",
             "",
             "namespace Models",
             "{",
@@ -857,13 +856,14 @@
             "",
             "// Both will return an array of values in mm (not volumetric). ",
             "",
-            "using Models.Soils;",
-            "using System;",
-            "using System.Linq;",
-            "using Models.Core;",
-            "using Models.PMF;",
-            "using Models.PMF.Organs;",
+            "using APSIM.Numerics;",
             "using APSIM.Shared.Utilities;",
+            "using Models.PMF.Organs;",
+            "using Models.PMF;",
+            "using Models.Core;",
+            "using System.Linq;",
+            "using System;",
+            "using Models.Soils;",
             "namespace Models",
             "{",
             "    [Serializable]",
@@ -998,7 +998,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Fertilise",
       "ResourceName": null,
       "Children": [
@@ -1109,7 +1108,7 @@
             "",
             "",
             "        [Separator(\"Fertiliser will be applied on the date(s) below\")]",
-            "        [Description(\"Apply fertiliser on the same day(s) each year? If no, then must include the year of appliaction below\")]",
+            "        [Description(\"Apply fertiliser on the same day(s) each year? If no, then must include the year of application below\")]",
             "        public bool EachYear { get; set; }",
             "",
             "        [Description(\"Dates for one or more fertiliser applications (dd-mmm or dd-mmm-yyyy) as a list with a comma between dates\")]",
@@ -1392,14 +1391,15 @@
         {
           "$type": "Models.Manager, Models",
           "CodeArray": [
-            "using Models.Soils;",
-            "using APSIM.Shared.Utilities;",
+            "using APSIM.Numerics;",
             "using Models.Soils.Nutrients;",
-            "using Models.PMF;",
-            "using Models.Core;",
-            "using System;",
             "using System.Linq;",
+            "using System;",
+            "using Models.Core;",
+            "using Models.PMF;",
             "using Models.Soils.Nutrients;",
+            "using APSIM.Shared.Utilities;",
+            "using Models.Soils;",
             "namespace Models",
             "{",
             "    [Serializable]",
@@ -1450,13 +1450,14 @@
         {
           "$type": "Models.Manager, Models",
           "CodeArray": [
-            "using Models.Soils;",
-            "using System;",
-            "using Models.Functions;",
-            "using Models.Core;",
-            "using Models.PMF;",
-            "using APSIM.Shared.Utilities;",
+            "using APSIM.Numerics;",
             "using System.Diagnostics;",
+            "using APSIM.Shared.Utilities;",
+            "using Models.PMF;",
+            "using Models.Core;",
+            "using Models.Functions;",
+            "using System;",
+            "using Models.Soils;",
             "namespace Models",
             "{",
             "    [Serializable]",
@@ -1654,12 +1655,12 @@
               "Value": "30"
             },
             {
-              "Key": "FertiliserType",
-              "Value": "UreaGranular"
-            },
-            {
               "Key": "FertiliseDepth",
               "Value": "0"
+            },
+            {
+              "Key": "FertiliserType",
+              "Value": "UreaGranular"
             }
           ],
           "Name": "Fertilise on event",
@@ -2002,7 +2003,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Irrigate",
       "ResourceName": null,
       "Children": [
@@ -2302,17 +2302,18 @@
         {
           "$type": "Models.Manager, Models",
           "CodeArray": [
+            "using APSIM.Numerics;",
             "using Models.Interfaces;",
-            "using System;",
-            "using System.Linq;",
-            "using Models.Core;",
-            "using System.Collections.Generic;",
-            "using System.Text;",
-            "using Models.Soils;",
-            "using Models.PMF;",
-            "using Models;",
-            "using System.Xml.Serialization;",
             "using APSIM.Shared.Utilities;",
+            "using System.Xml.Serialization;",
+            "using Models;",
+            "using Models.PMF;",
+            "using Models.Soils;",
+            "using System.Text;",
+            "using System.Collections.Generic;",
+            "using Models.Core;",
+            "using System.Linq;",
+            "using System;",
             "using Models.Interfaces;",
             "namespace Models",
             "{",
@@ -2747,6 +2748,10 @@
               "Value": "10"
             },
             {
+              "Key": "PercPAWIrrigDeficitShallow",
+              "Value": "0"
+            },
+            {
               "Key": "IrrigEffShallow",
               "Value": "100"
             },
@@ -2765,10 +2770,6 @@
             {
               "Key": "IrrigEffDeep",
               "Value": "100"
-            },
-            {
-              "Key": "PercPAWIrrigDeficitShallow",
-              "Value": "0"
             }
           ],
           "Name": "CentrePivot",
@@ -2910,7 +2911,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Soil",
       "ResourceName": null,
       "Children": [
@@ -3206,20 +3206,20 @@
           ],
           "Parameters": [
             {
-              "Key": "DateCsvString",
-              "Value": "1/01/2000"
-            },
-            {
-              "Key": "ValueCsvString",
-              "Value": "100,0,0,0,0,0,0,0"
-            },
-            {
               "Key": "SoluteName",
               "Value": "Br"
             },
             {
               "Key": "SetAdd",
               "Value": "Set"
+            },
+            {
+              "Key": "DateCsvString",
+              "Value": "1/01/2000"
+            },
+            {
+              "Key": "ValueCsvString",
+              "Value": "100,0,0,0,0,0,0,0"
             }
           ],
           "Name": "SoluteInitialise",
@@ -3533,6 +3533,10 @@
           ],
           "Parameters": [
             {
+              "Key": "Solute",
+              "Value": ""
+            },
+            {
               "Key": "Dates",
               "Value": "1-jun, 1-jul"
             },
@@ -3543,10 +3547,6 @@
             {
               "Key": "Amount",
               "Value": "100"
-            },
-            {
-              "Key": "Solute",
-              "Value": ""
             }
           ],
           "Name": "AddTracer",
@@ -3562,7 +3562,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Pasture Graze Stock",
       "ResourceName": null,
       "Children": [
@@ -3605,11 +3604,7 @@
             "        {",
             "            if (DateUtilities.WithinDates(ManureDate, Clock.Today, ManureDate))",
             "            {",
-            "                SOM.FractionFaecesAdded = MDMP;",
-            "                AddFaecesType Data = new AddFaecesType();",
-            "                Data.OMWeight = Amount;",
-            "                Data.OMN = Amount * NConc;",
-            "                SOM.AddFaeces(Data);",
+            "                SOM.Add(Amount * MDMP, Amount * NConc, 0.0, \"RuminantDung_PastureFed\", \"Manure\");",
             "            }",
             "        }",
             "    }",
@@ -3742,10 +3737,6 @@
           ],
           "Parameters": [
             {
-              "Key": "Amount",
-              "Value": "1000"
-            },
-            {
               "Key": "EachYear",
               "Value": "False"
             },
@@ -3756,6 +3747,10 @@
             {
               "Key": "Depth",
               "Value": "0"
+            },
+            {
+              "Key": "Amount",
+              "Value": "1000"
             }
           ],
           "Name": "Urine deposition on fixed dates",
@@ -3878,7 +3873,13 @@
             "        [Description(\"Species to resow. Comma delimited, case matters\")]",
             "        public string[] TheSpecies2Sow { get; set; }        ",
             "",
+            "        [Description(\"Cultivars to resow. Comma delimited, case matters. Use the species name for the default cultivar\")]",
+            "        public string[] TheCultivars2Sow { get; set; }        ",
             "",
+            "        [EventSubscribe(\"StartOfSimulation\")]",
+            "        private void OnStartOfSimulation(object sender, EventArgs e)",
+            "        {",
+            "        }",
             "",
             "        [EventSubscribe(\"DoManagement\")]",
             "        private void OnDoManagement(object sender, EventArgs e)",
@@ -3896,11 +3897,15 @@
             "\t\t\t// second cultivation",
             "            if (DateUtilities.WithinDates(DateCultivation2, clock.Today, DateCultivation2))",
             "\t\t\t\tsurfaceOrganicMatter.Incorporate(FracResidues2, CultivationDepth2);",
-            "",
+            "            ",
+            "            int i = -1;",
             "            if (DateUtilities.WithinDates(DateResow, clock.Today, DateResow))",
             "\t\t\t\tforeach (var plant in plants)",
             "              \t\tif (TheSpecies2Sow != null && TheSpecies2Sow.Length > 0 && TheSpecies2Sow.Contains(plant.Name))",
-            "                \t\tplant.Sow(cultivar: plant.Name, population: 100.0, depth: 5.0, rowSpacing: 75.0);",
+            "              \t\t{",
+            "                \t\ti += 1;",
+            "                \t\tplant.Sow(cultivar: TheCultivars2Sow[i], population: 100.0, depth: 5.0, rowSpacing: 75.0);",
+            "              \t\t}",
             "        }",
             "        ",
             "",
@@ -3913,27 +3918,15 @@
           "Parameters": [
             {
               "Key": "Date2Kill",
-              "Value": "5-Oct-1980"
+              "Value": "5-Nov-1980"
             },
             {
               "Key": "TheSpecies2Kill",
               "Value": "AGPRyegrass, AGPWhiteClover"
             },
             {
-              "Key": "TheSpecies2Sow",
-              "Value": "AGPRyegrass, AGPWhiteClover"
-            },
-            {
-              "Key": "FracResidues2",
-              "Value": "0.5"
-            },
-            {
-              "Key": "CultivationDepth2",
-              "Value": "10"
-            },
-            {
               "Key": "DateCultivation1",
-              "Value": "8-Oct-1980"
+              "Value": "8-Nov-1980"
             },
             {
               "Key": "FracResidues1",
@@ -3945,11 +3938,27 @@
             },
             {
               "Key": "DateCultivation2",
-              "Value": "15-Oct-1980"
+              "Value": "15-Nov-1980"
+            },
+            {
+              "Key": "FracResidues2",
+              "Value": "0.5"
+            },
+            {
+              "Key": "CultivationDepth2",
+              "Value": "10"
             },
             {
               "Key": "DateResow",
-              "Value": "17-Oct-1980"
+              "Value": "17-Nov-1980"
+            },
+            {
+              "Key": "TheSpecies2Sow",
+              "Value": "AGPRyegrass, AGPWhiteClover"
+            },
+            {
+              "Key": "TheCultivars2Sow",
+              "Value": "Prostrate, AGPWhiteClover"
             }
           ],
           "Name": "RenewPasture",
@@ -3965,7 +3974,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Other",
       "ResourceName": null,
       "Children": [

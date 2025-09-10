@@ -11,7 +11,7 @@ namespace Models.CLEM.Groupings
 {
     ///<summary>
     /// Provides a link to an existing ruminant group to identify individual ruminants
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -51,7 +51,8 @@ namespace Models.CLEM.Groupings
 
         private void GetAllRuminantGroupsAvailable()
         {
-            groupsAvailable = FindAncestor<Zone>().FindAllDescendants<RuminantGroup>().Where(a => a.Enabled);
+            var zone = Structure.FindParent<Zone>(recurse: true);
+            groupsAvailable = Structure.FindChildren<RuminantGroup>(relativeTo: zone, recurse: true).Where(a => a.Enabled);
         }
 
         private List<string> GetAllRuminantGroupNames()
@@ -146,7 +147,8 @@ namespace Models.CLEM.Groupings
                     htmlWriter.Write($" - applies to {Identifier} and");
                 htmlWriter.Write($" linked to </div>");
 
-                var foundGroup = FindAncestor<Zone>().FindAllDescendants<RuminantGroup>().Where(a => a.Enabled).Cast<Model>().Where(a => $"{a.Parent.Name}.{a.Name}" == ExistingGroupName).FirstOrDefault() as RuminantGroup;
+                var zone = Structure.FindParent<Zone>(recurse: true);
+                var foundGroup = Structure.FindChildren<RuminantGroup>(relativeTo: zone, recurse: true).Where(a => a.Enabled).Cast<Model>().Where(a => $"{a.Parent.Name}.{a.Name}" == ExistingGroupName).FirstOrDefault() as RuminantGroup;
                 if (foundGroup != null)
                     htmlWriter.Write(foundGroup.GetFullSummary(foundGroup, new List<string>(), ""));
                 else

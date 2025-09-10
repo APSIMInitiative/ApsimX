@@ -1,4 +1,5 @@
-﻿using APSIM.Shared.Utilities;
+﻿using APSIM.Core;
+using APSIM.Shared.Utilities;
 using Models.CLEM.Activities;
 using Models.CLEM.Resources;
 using Models.Core;
@@ -66,8 +67,8 @@ namespace Models.CLEM.Reporting
         [EventSubscribe("FinalInitialise")]
         private void OnCommencing(object sender, EventArgs e)
         {
-            var grzes = FindAllInScope<RuminantActivityGrazePastureHerd>();
-            var multiHerds = FindAllInScope<RuminantType>().Count() > 1;
+            var grzes = Structure.FindAll<RuminantActivityGrazePastureHerd>();
+            var multiHerds = Structure.FindAll<RuminantType>().Count() > 1;
             var multiPaddock = grzes.Count() > 1;
 
             List<string> variableNames = new List<string>();

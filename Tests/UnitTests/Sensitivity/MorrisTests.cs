@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using APSIM.Shared.Utilities;
+using APSIM.Core;
 
 namespace UnitTests.Sensitivity
 {
@@ -26,7 +27,7 @@ namespace UnitTests.Sensitivity
         public void EnsureParameterRenameWorks()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Sensitivity.MorrisTestsBroken.apsimx");
-            Simulations simulations = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as Simulations;
+            Simulations simulations = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
         }
     }
 }
