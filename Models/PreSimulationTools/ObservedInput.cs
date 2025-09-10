@@ -4,6 +4,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using APSIM.Core;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using ExcelDataReader;
 using Models.Core;
@@ -300,7 +301,7 @@ namespace Models.PreSimulationTools
                     // Write all sheets that are specified in 'SheetNames' to the data store
                     foreach (DataTable table in dataSet.Tables)
                         if (SheetNames.Any(str => string.Equals(str.Trim(), table.TableName, StringComparison.InvariantCultureIgnoreCase)))
-                            tables.Add(table);
+                            tables.Add(CombineRows(table));
                 }
             }
             return tables;
@@ -449,6 +450,79 @@ namespace Models.PreSimulationTools
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Filter through the given datatable and combine rows that have the same SimulationName and Clock.Today values.
+        /// Will throw if it encounters two rows with different values for a field that should be combined.
+        /// </summary>
+        private DataTable CombineRows(DataTable datatable)
+        {
+
+            if (!datatable.GetColumnNames().ToList().Contains("Clock.Today"))
+                return datatable;
+
+            //Select the rows where columns 1-4 have repeated same values
+            var distinctRows = datatable.AsEnumerable()
+                .Select(s => new
+                {
+                    simulation = s["SimulationName"],
+                    clock = s["Clock.Today"],
+                    clockAsString = s["Clock.Today"].ToString()
+                })
+                .Distinct();
+
+            DataTable newDataTable = datatable.Clone();
+
+            //Go through each distinct rows to gather column5 and column6 values
+            foreach (var item in distinctRows)
+            {
+                if (!string.IsNullOrEmpty(item.clockAsString))
+                {
+                    //create a new row for the result datatable
+                    DataRow newDataRow = newDataTable.NewRow();
+
+                    //select all rows in original datatable with this distinct values
+                    IEnumerable<DataRow> results = datatable.Select().Where(p => p["SimulationName"] == item.simulation && p["Clock.Today"].ToString() == item.clockAsString);
+
+                    //Preserve column1 - 4 values
+                    newDataRow["SimulationName"] = item.simulation;
+                    newDataRow["Clock.Today"] = item.clock;
+
+                    List<string> columns = datatable.GetColumnNames().ToList<string>();
+                    List<string> defaultColumns = new List<string>() {"SimulationName", "Clock.Today"};
+
+                    foreach (DataRow row in results)
+                    {
+                        foreach (string column in columns)
+                        {
+                            if (!string.IsNullOrEmpty(row[column].ToString()))
+                            {
+                                if (!defaultColumns.Contains(column) && !string.IsNullOrEmpty(newDataRow[column].ToString()))
+                                {
+                                    bool showError = false;
+                                    bool isDouble1 = double.TryParse(newDataRow[column].ToString(), out double existing);
+                                    bool isDouble2 = double.TryParse(row[column].ToString(), out double other);
+                                    if (isDouble1 == true && isDouble2 == true && MathUtilities.FloatsAreEqual(existing, other))
+                                        showError = false;
+                                    else
+                                        showError = true;
+                                    
+                                    if (showError)
+                                        throw new Exception($"Error merging data rows, same value found on two dates. {column} on date {item.clock} has values {newDataRow[column]} and {row[column]} on different rows.");
+                                }
+                                newDataRow[column] = row[column];
+                            }
+                            
+                        }
+                    }
+
+                    //add the row to the result dataTable
+                    newDataTable.Rows.Add(newDataRow);
+                }
+            }
+
+            return newDataTable;
         }
 
         /// <summary></summary>
