@@ -175,13 +175,30 @@ internal class Locator
         composite.AddInstance(relativeTo.Model);
         for (int j = 0; j < namePathBits.Length; j++)
         {
+            object objectInfo = null;
+            List<object> argumentsList = new List<object>();
+
             // look for an array specifier e.g. sw[2]
-            //need to do this first as the [ ] will screw up matching to a property
+            //need to do this first as the [ ] will screw up matching to a property if its an array
             string arraySpecifier = null;
             if (!onlyModelChildren && namePathBits[j].Contains("["))
+            {
+                string[] copyOfNamePathBits = namePathBits.Clone() as string[];
                 arraySpecifier = StringUtilities.SplitOffBracketedValue(ref namePathBits[j], '[', ']');
 
-            object objectInfo = GetInternalObjectInfo(relativeToObject, namePathBits[j], composite, namePathBits.Length-j-1, ignoreCase, throwOnError, onlyModelChildren, out List<object> argumentsList);
+                objectInfo = GetInternalObjectInfo(relativeToObject, namePathBits[j], composite, namePathBits.Length - j - 1, ignoreCase, throwOnError, onlyModelChildren, out argumentsList);
+
+                //we found and stripped [] for an array, but then didnt find the object, prehaps the object had [] in the name but wasn't an array, so let's check again
+                if (objectInfo == null)
+                {
+                    argumentsList = new List<object>();
+                    objectInfo = GetInternalObjectInfo(relativeToObject, copyOfNamePathBits[j], composite, copyOfNamePathBits.Length - j - 1, ignoreCase, throwOnError, onlyModelChildren, out argumentsList);
+                }
+            }
+            else
+            {
+                objectInfo = GetInternalObjectInfo(relativeToObject, namePathBits[j], composite, namePathBits.Length - j - 1, ignoreCase, throwOnError, onlyModelChildren, out argumentsList);
+            }
 
             //Depending on the type we found, handle it
             bool propertiesOnly = (flags & LocatorFlags.PropertiesOnly) == LocatorFlags.PropertiesOnly;
