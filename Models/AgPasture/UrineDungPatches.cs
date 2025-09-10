@@ -23,7 +23,6 @@ namespace Models.AgPasture
         private IStructure structure;
         private readonly SimpleGrazing simpleGrazing;
         private readonly bool pseudoPatches;
-        private double[] monthlyUrineNAmt;                 // breaks the N balance but useful for testing
         private Random pseudoRandom;
         private int pseudoRandomSeed;
         private readonly ISummary summary;
@@ -176,7 +175,7 @@ namespace Models.AgPasture
             else
                 DivisorForReporting = zoneCount;
 
-            monthlyUrineNAmt = new double[] { 24, 19, 17, 12, 8, 5, 5, 10, 16, 19, 23, 25 }; //This is to get a pattern of return that varies with month but removes the variation that might be caused by small changes in herbage growth
+            //monthlyUrineNAmt = new double[] { 24, 19, 17, 12, 8, 5, 5, 10, 16, 19, 23, 25 }; //This is to get a pattern of return that varies with month but removes the variation that might be caused by small changes in herbage growth
             //MonthlyUrineNAmt = new double[] { 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25 }; //This is to get a pattern of return that varies with month but removes the variation that might be caused by small changes in herbage growth
             //MonthlyUrineNAmt = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }; //This is to get a pattern of return that varies with month but removes the variation that might be caused by small changes in herbage growth
 
@@ -236,7 +235,7 @@ namespace Models.AgPasture
                 // convert urineLoad for this urination into a depth profile.
                 double[] depthPenetration = UrinePenetration(urinationDepth);
                 for (int ii = 0; ii <= (physical.Thickness.Length - 1); ii++)
-                    ureaToAdd[ii] += depthPenetration[ii] * urineLoad[i] * zoneCount;   // kg
+                    ureaToAdd[ii] += depthPenetration[ii] * urineLoad[i];   // kg
 
                 if (gridAreaUsed - 0.5 * urinationArea >= gridArea || i == numUrinations-1)
                 {
@@ -247,7 +246,7 @@ namespace Models.AgPasture
                     gridAreaUsed = 0.0;
                 }
             }
-            if (MathUtilities.FloatsAreEqual(urineLoad.Sum(), totalUrineAdded))
+            if (!MathUtilities.FloatsAreEqual(urineLoad.Sum(), totalUrineAdded))
                 throw new Exception($"The amount of urine added ({totalUrineAdded}) does not equal the amount that should have been added ({urineLoad.Sum()})");
         }
 
@@ -283,7 +282,7 @@ namespace Models.AgPasture
                         depth: 0.0,   // when depthBottom is specified then this means depthTop
                         depthBottom: urineDepthPenetration,
                         doOutput: true);
-                summary.WriteMessage(simpleGrazing, ureaToAdd + " urine N added to Zone " + ZoneNumForUrine + ", the local load was " + ureaToAdd / zone.Area + " kg N /ha", MessageType.Diagnostic);
+                summary.WriteMessage(simpleGrazing, ureaToAdd + " urine N added to Zone " + ZoneNumForUrine + ", the local load was " + ureaToAdd + " kg N /ha", MessageType.Diagnostic);
             }
         }
 
@@ -329,7 +328,6 @@ namespace Models.AgPasture
                     urineDepthPenetrationArray[i] = (urineDepthPenetration - (tempDepth - physical.Thickness[i])) / (tempDepth - (tempDepth - physical.Thickness[i])) * physical.Thickness[i] / urineDepthPenetration;
                     urineDepthPenetrationArray[i] = Math.Max(0.0, Math.Min(1.0, urineDepthPenetrationArray[i]));
                 }
-                summary.WriteMessage(simpleGrazing, "The proportion of urine applied to the " + i + "th layer will be " + urineDepthPenetrationArray[i], MessageType.Diagnostic);
             }
             return urineDepthPenetrationArray;
         }
