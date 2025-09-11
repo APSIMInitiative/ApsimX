@@ -15,6 +15,7 @@ namespace UserInterface.Presenters
         private IPresenter propertyPresenter;
         private GridPresenter columnsGridPresenter;
         private GridPresenter derivedGridPresenter;
+        private GridPresenter mergeGridPresenter;
 
         /// <summary>
         /// Attach the model to the view.
@@ -26,7 +27,7 @@ namespace UserInterface.Presenters
         {
             explorerPresenter = parentPresenter;
             view = v as ObservedInputView;
-            
+
             propertyPresenter = new PropertyPresenter();
             explorerPresenter.ApsimXFile.Links.Resolve(propertyPresenter);
             propertyPresenter.Attach(model, view.PropertyView, parentPresenter);
@@ -36,6 +37,9 @@ namespace UserInterface.Presenters
 
             derivedGridPresenter = new GridPresenter();
             CreateGridTab("DerivedTable", model as IModel, derivedGridPresenter, view.GridViewDerived);
+
+            mergeGridPresenter = new GridPresenter();
+            CreateGridTab("MergeTable", model as IModel, mergeGridPresenter, view.GridViewMerge);
         }
 
         /// <summary>
@@ -46,6 +50,7 @@ namespace UserInterface.Presenters
             propertyPresenter.Detach();
             columnsGridPresenter.Detach();
             derivedGridPresenter.Detach();
+            mergeGridPresenter.Detach();
         }
 
         /// <summary>

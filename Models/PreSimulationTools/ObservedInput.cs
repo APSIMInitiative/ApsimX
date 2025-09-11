@@ -6,6 +6,7 @@ using System.Linq;
 using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Spreadsheet;
 using ExcelDataReader;
 using Models.Core;
 using Models.Core.Run;
@@ -26,7 +27,6 @@ namespace Models.PreSimulationTools
         /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
         public IStructure Structure { private get; set; }
-
 
         /// <summary>
         /// Stores information about a column in an observed table
@@ -88,11 +88,37 @@ namespace Models.PreSimulationTools
             public int Rows;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public class MergeInfo
+        {
+            /// <summary></summary>
+            public string Name;
+
+            /// <summary></summary>
+            public string Date;
+
+            /// <summary></summary>
+            public string Column;
+
+            /// <summary></summary>
+            public string Value1;
+
+            /// <summary></summary>
+            public string Value2;
+
+            /// <summary></summary>
+            public string File;
+        }
+
         /// <summary>The DataStore</summary>
         [Link]
         private IDataStore storage = null;
 
         private string[] filenames;
+
+        private string[] reservedColumnNames = { "SimulationID", "SimulationName", "CheckpointID", "CheckpointName", "Clock.Today", "_Filename" };
 
         /// <summary>
         /// Gets or sets the file name to read from.
@@ -271,6 +297,49 @@ namespace Models.PreSimulationTools
             }
         }
 
+        /// <summary></summary>
+        public List<MergeInfo> MergeData {get; set;}
+
+        /// <summary>List of merge conflicts encountered</summary>
+        [Display]
+        public DataTable MergeTable
+        {   
+            get 
+            {
+                DataTable newTable = new DataTable();
+
+                newTable.Columns.Add("Name");
+                newTable.Columns.Add("Date");
+                newTable.Columns.Add("Column");
+                newTable.Columns.Add("Value 1");
+                newTable.Columns.Add("Value 2");
+                newTable.Columns.Add("File");
+
+                if (SimulationData == null)
+                    return newTable;
+
+                foreach (MergeInfo info in MergeData) 
+                {
+                    DataRow row = newTable.NewRow();
+                    row["Name"] = info.Name;
+                    row["Date"] = info.Date;
+                    row["Column"] = info.Column;
+                    row["Value 1"] = info.Value1;
+                    row["Value 2"] = info.Value2;
+                    row["File"] = info.File;
+                    newTable.Rows.Add(row);
+                }
+
+                for(int i = 0; i < newTable.Columns.Count; i++)
+                    newTable.Columns[i].ReadOnly = true;
+
+                DataView dv = newTable.DefaultView;
+                dv.Sort = "Name asc";
+
+                return dv.ToTable();
+            }
+        }
+
         /// <summary>Get list of column names found in this input data</summary>
         public List<string> ColumnNames { get; set; }
 
@@ -322,20 +391,20 @@ namespace Models.PreSimulationTools
                 }
             }
 
+            ColumnData = new List<ColumnInfo>();
+            DerivedData = new List<DerivedInfo>();
+            SimulationData = new List<SimulationInfo>();
+            MergeData = new List<MergeInfo>();
+
             foreach (string sheet in SheetNames)
             {
-                if (storage.Reader.TableNames.Contains(sheet))
-                {
-                    DataTable dt = CombineRows(storage.Reader.GetData(sheet));
-                    storage.Writer.WriteTable(dt, true);
-                    storage.Writer.WaitForIdle();
-                }
+                DataTable dt = storage.Reader.GetData(sheet);
+
+                dt = CombineRows(dt);
+                dt = GetAPSIMColumnsFromObserved(dt);
+                dt = GetSimulationsFromObserved(dt);
+                dt = AddDerivedColumnsFromObserved(dt);
             }
-
-            GetAPSIMColumnsFromObserved();
-            GetDerivedColumnsFromObserved();
-            GetSimulationsFromObserved();
-
         }
 
         /// <summary>
@@ -373,192 +442,127 @@ namespace Models.PreSimulationTools
         }
 
         /// <summary>From the list of columns read in, get a list of columns that match apsim variables.</summary>
-        public void GetDerivedColumnsFromObserved()
+        public DataTable GetAPSIMColumnsFromObserved(DataTable dataTable)
         {
             Simulations sims = Structure.FindParent<Simulations>(recurse: true);
-
-            List<string> tableNames = SheetNames.ToList();
-
-            DerivedData = new List<DerivedInfo>();
-
-            for (int i = 0; i < tableNames.Count; i++)
-            {
-                string tableName = tableNames[i];
-
-                storage.Reader.Refresh();
-                DataTable dt = storage.Reader.GetData(tableName);
-                dt.TableName = tableName;
-                dt.Columns.Remove("SimulationName");
-                dt.Columns.Remove("CheckpointName");
-
-                bool noMoreFound = false;
-
-                while(!noMoreFound)
-                {
-                    int count = 0;
-                    //Our current list of derived variables
-                    count += DeriveColumn(dt, ".NConc",     ".N", "/", ".Wt") ? 1 : 0;
-                    count += DeriveColumn(dt, ".N",     ".NConc", "*", ".Wt") ? 1 : 0;
-                    count += DeriveColumn(dt, ".Wt",        ".N", "/", ".NConc") ? 1 : 0;
-
-                    count += DeriveColumn(dt, ".",  ".Live.", "+", ".Dead.") ? 1 : 0;
-                    count += DeriveColumn(dt, ".Live.",  ".", "-", ".Dead.") ? 1 : 0;
-                    count += DeriveColumn(dt, ".Dead.",  ".", "-", ".Live.") ? 1 : 0;
-
-                    count += DeriveColumn(dt, "Leaf.SpecificAreaCanopy",  "Leaf.LAI", "/", "Leaf.Live.Wt") ? 1 : 0;
-                    count += DeriveColumn(dt, "Leaf.LAI",  "Leaf.SpecificAreaCanopy", "*", "Leaf.Live.Wt") ? 1 : 0;
-                    count += DeriveColumn(dt, "Leaf.Live.Wt",  "Leaf.LAI", "/", "Leaf.SpecificAreaCanopy") ? 1 : 0;
-
-                    if (count == 0)
-                        noMoreFound = true;
-                }
-
-
-                storage.Writer.WriteTable(dt, true);
-                storage.Writer.WaitForIdle();
-                storage.Writer.Stop();
-            }
-        }
-
-        /// <summary>From the list of columns read in, get a list of columns that match apsim variables.</summary>
-        public void GetAPSIMColumnsFromObserved()
-        {
-            Simulations sims = Structure.FindParent<Simulations>(recurse: true);
-
-            storage?.Writer.Stop();
-            storage?.Reader.Refresh();
-
-            List<string> tableNames = SheetNames.ToList();
 
             ColumnNames = new List<string>();
             ColumnData = new List<ColumnInfo>();
 
-            for (int i = 0; i < tableNames.Count; i++)
+            List<string> allColumnNames = dataTable.GetColumnNames().ToList();
+
+            for (int j = 0; j < dataTable.Columns.Count; j++)
             {
-                string tableName = tableNames[i];
-                DataTable dt = storage.Reader.GetData(tableName);
-                List<string> allColumnNames = dt.GetColumnNames().ToList();
+                string columnName = dataTable.Columns[j].ColumnName;
+                string columnNameOriginal = columnName;
+                //remove Error from name
+                if (columnName.EndsWith("Error"))
+                    columnName = columnName.Remove(columnName.IndexOf("Error"), 5);
 
-                for (int j = 0; j < dt.Columns.Count; j++)
+                //check if it has maths
+                bool hasMaths = false;
+                if (columnName.IndexOfAny(new char[] { '+', '-', '*', '/', '=' }) > -1 || columnName.StartsWith("sum"))
+                    hasMaths = true;
+
+                //remove ( ) from name
+                if (!hasMaths && columnName.IndexOf('(') > -1 && columnName.EndsWith(')'))
                 {
-                    string columnName = dt.Columns[j].ColumnName;
-                    string columnNameOriginal = columnName;
-                    //remove Error from name
-                    if (columnName.EndsWith("Error"))
-                        columnName = columnName.Remove(columnName.IndexOf("Error"), 5);
+                    int start = columnName.IndexOf('(');
+                    int end = columnName.LastIndexOf(')');
+                    columnName = columnName.Remove(start, end - start + 1);
+                }
 
-                    //check if it has maths
-                    bool hasMaths = false;
-                    if (columnName.IndexOfAny(new char[] {'+', '-', '*', '/', '='}) > -1 || columnName.StartsWith("sum"))
-                        hasMaths = true;
+                //filter out reserved names
+                bool reservedName = false;
+                if (reservedColumnNames.Contains(columnName))
+                    reservedName = true;
 
-                    //remove ( ) from name
-                    if (!hasMaths && columnName.IndexOf('(') > -1 && columnName.EndsWith(')'))
+                if (!ColumnNames.Contains(columnName) && !reservedName)
+                {
+                    ColumnNames.Add(columnName);
+
+                    bool nameInAPSIMFormat = this.NameIsAPSIMFormat(columnName);
+                    VariableComposite variable = null;
+                    bool nameIsAPSIMModel = false;
+                    if (nameInAPSIMFormat)
                     {
-                        int start = columnName.IndexOf('(');
-                        int end = columnName.LastIndexOf(')');
-                        columnName = columnName.Remove(start, end-start+1);
+                        variable = this.NameMatchesAPSIMModel(columnName, sims);
+                        if (variable != null)
+                        {
+                            nameIsAPSIMModel = true;
+                        }
                     }
 
-                    //filter out reserved names
-                    bool reservedName = false;
-                    if (columnName == "CheckpointName" || columnName == "CheckpointID" || columnName == "SimulationName" || columnName == "SimulationID" || columnName == "_Filename")
-                        reservedName = true;
-
-                    if(!ColumnNames.Contains(columnName) && !reservedName)
+                    //Get a filename for this property
+                    string filename = "";
+                    for (int k = 0; k < dataTable.Rows.Count && string.IsNullOrEmpty(filename); k++)
                     {
-                        ColumnNames.Add(columnName);
-
-                        bool nameInAPSIMFormat = this.NameIsAPSIMFormat(columnName);
-                        VariableComposite variable = null;
-                        bool nameIsAPSIMModel = false;
-                        if(nameInAPSIMFormat)
+                        DataRow row = dataTable.Rows[k];
+                        if (!string.IsNullOrEmpty(row[columnNameOriginal].ToString()))
                         {
-                            variable = this.NameMatchesAPSIMModel(columnName, sims);
-                            if (variable != null) {
-                                nameIsAPSIMModel = true;
-                            }
+                            filename = row["_Filename"].ToString();
                         }
-
-                        //Get a filename for this property
-                        string filename = "";
-                        for (int k = 0; k < dt.Rows.Count && string.IsNullOrEmpty(filename); k++)
-                        {
-                            DataRow row = dt.Rows[k];
-                            if (!string.IsNullOrEmpty(row[columnNameOriginal].ToString()))
-                            {
-                                filename = row["_Filename"].ToString();
-                            }
-                        }
-
-                        ColumnInfo colInfo = new ColumnInfo();
-                        colInfo.Filename = filename;
-                        colInfo.Name = columnName;
-
-                        colInfo.IsApsimVariable = "No";
-                        colInfo.DataType = "";
-                        if (nameInAPSIMFormat)
-                            colInfo.IsApsimVariable = "Not Found";
-                        if (hasMaths)
-                            colInfo.IsApsimVariable = "Maths";
-                        if (nameIsAPSIMModel && variable != null)
-                        {
-                            colInfo.IsApsimVariable = "Yes";
-                            colInfo.DataType = variable.DataType.Name;
-                        }
-
-                        colInfo.HasErrorColumn = false;
-                        if (allColumnNames.Contains(columnName + "Error"))
-                            colInfo.HasErrorColumn = true;
-
-                        ColumnData.Add(colInfo);
                     }
+
+                    ColumnInfo colInfo = new ColumnInfo();
+                    colInfo.Filename = filename;
+                    colInfo.Name = columnName;
+
+                    colInfo.IsApsimVariable = "No";
+                    colInfo.DataType = "";
+                    if (nameInAPSIMFormat)
+                        colInfo.IsApsimVariable = "Not Found";
+                    if (hasMaths)
+                        colInfo.IsApsimVariable = "Maths";
+                    if (nameIsAPSIMModel && variable != null)
+                    {
+                        colInfo.IsApsimVariable = "Yes";
+                        colInfo.DataType = variable.DataType.Name;
+                    }
+
+                    colInfo.HasErrorColumn = false;
+                    if (allColumnNames.Contains(columnName + "Error"))
+                        colInfo.HasErrorColumn = true;
+
+                    ColumnData.Add(colInfo);
                 }
             }
+            
+            return dataTable;
         }
 
-        /// <summary>From the list of columns read in, get a list of columns that match apsim variables.</summary>
-        public void GetSimulationsFromObserved()
+        /// <summary></summary>
+        public DataTable AddDerivedColumnsFromObserved(DataTable dataTable)
         {
-            Simulations sims = this.FindAncestor<Simulations>();
+            bool noMoreFound = false;
 
-            List<string> tableNames = SheetNames.ToList();
-
-            SimulationData = new List<SimulationInfo>();
-
-            for (int i = 0; i < tableNames.Count; i++)
+            while(!noMoreFound)
             {
-                string tableName = tableNames[i];
+                int count = 0;
+                //Our current list of derived variables
+                count += DeriveColumn(dataTable, ".NConc",     ".N", "/", ".Wt") ? 1 : 0;
+                count += DeriveColumn(dataTable, ".N",     ".NConc", "*", ".Wt") ? 1 : 0;
+                count += DeriveColumn(dataTable, ".Wt",        ".N", "/", ".NConc") ? 1 : 0;
 
-                storage.Reader.Refresh();
-                DataTable dt = storage.Reader.GetData(tableName);
-                dt.TableName = tableName;
-                dt.Columns.Remove("SimulationName");
-                dt.Columns.Remove("CheckpointName");
+                count += DeriveColumn(dataTable, ".",  ".Live.", "+", ".Dead.") ? 1 : 0;
+                count += DeriveColumn(dataTable, ".Live.",  ".", "-", ".Dead.") ? 1 : 0;
+                count += DeriveColumn(dataTable, ".Dead.",  ".", "-", ".Live.") ? 1 : 0;
 
-                bool noMoreFound = false;
+                count += DeriveColumn(dataTable, "Leaf.SpecificAreaCanopy",  "Leaf.LAI", "/", "Leaf.Live.Wt") ? 1 : 0;
+                count += DeriveColumn(dataTable, "Leaf.LAI",  "Leaf.SpecificAreaCanopy", "*", "Leaf.Live.Wt") ? 1 : 0;
+                count += DeriveColumn(dataTable, "Leaf.Live.Wt",  "Leaf.LAI", "/", "Leaf.SpecificAreaCanopy") ? 1 : 0;
 
-                while(!noMoreFound)
-                {
-                    int count = 0;
-                    //Our current list of derived variables
-                    count += DeriveColumn(dt, ".NConc",     ".N", "/", ".Wt") ? 1 : 0;
-                    count += DeriveColumn(dt, ".N",     ".NConc", "*", ".Wt") ? 1 : 0;
-                    count += DeriveColumn(dt, ".Wt",        ".N", "/", ".NConc") ? 1 : 0;
-
-                    count += DeriveColumn(dt, ".",  ".Live.", "+", ".Dead.") ? 1 : 0;
-                    count += DeriveColumn(dt, ".Live.",  ".", "-", ".Dead.") ? 1 : 0;
-                    count += DeriveColumn(dt, ".Dead.",  ".", "-", ".Live.") ? 1 : 0;
-
-                    if (count == 0)
-                        noMoreFound = true;
-                }
-                
-
-                storage.Writer.WriteTable(dt, true);
-                storage.Writer.WaitForIdle();
-                storage.Writer.Stop();
+                if (count == 0)
+                    noMoreFound = true;
             }
+
+            return dataTable;
+        }
+
+        /// <summary></summary>
+        public DataTable GetSimulationsFromObserved(DataTable dataTable)
+        {
+            return dataTable;
         }
         
         /// <summary>
@@ -601,26 +605,39 @@ namespace Models.PreSimulationTools
                     {
                         foreach (string column in columns)
                         {
-                            bool merged = false;
-                            foreach (DataRow newRow in newRows)
+                            if (!string.IsNullOrEmpty(row[column].ToString()))
                             {
+                                bool merged = false;
+                                foreach (DataRow newRow in newRows)
+                                {
+                                    if (!merged)
+                                    {
+                                        if (CanMergeRows(row, newRow, column))
+                                        {
+                                            newRow[column] = row[column];
+                                            merged = true;
+                                        }
+                                        else
+                                        {
+                                            MergeInfo info = new MergeInfo();
+                                            info.Name = item.simulation.ToString();
+                                            info.Date = Convert.ToDateTime(item.clock).ToString("dd/MM/yyyy");
+                                            info.Column = column;
+                                            info.Value1 = newRow[column].ToString();
+                                            info.Value2 = row[column].ToString();
+                                            info.File = newRow["_Filename"].ToString();
+                                            MergeData.Add(info);
+                                        }
+                                    }
+                                }
                                 if (!merged)
                                 {
-                                    if (CanMergeRows(row, newRow, column))
-                                    {
-                                        newRow[column] = row[column];
-                                        merged = true;
-                                    }
-                                    //errors += $"Error merging data rows from file {newDataRow["_Filename"]}: {item.simulation} on date {item.clock} in column {column} has different values {newDataRow[column]} and {row[column]} on rows.\n";
+                                    DataRow duplicateRow = newDataTable.NewRow();
+                                    duplicateRow["SimulationName"] = item.simulation;
+                                    duplicateRow["Clock.Today"] = item.clock;
+                                    duplicateRow[column] = row[column];
+                                    newRows.Add(duplicateRow);
                                 }
-                            }
-                            if (!merged)
-                            {
-                                DataRow duplicateRow = newDataTable.NewRow();
-                                duplicateRow["SimulationName"] = item.simulation;
-                                duplicateRow["Clock.Today"] = item.clock;
-                                duplicateRow[column] = row[column];
-                                newRows.Add(duplicateRow);
                             }
                         }
                     }
@@ -642,24 +659,28 @@ namespace Models.PreSimulationTools
         /// </summary>
         private bool CanMergeRows(DataRow row, DataRow newRow, string column)
         {
-            List<string> defaultColumns = new List<string>() { "SimulationID", "SimulationName", "CheckpointID", "CheckpointName", "Clock.Today", "_Filename" };
-
             if (!string.IsNullOrEmpty(row[column].ToString()))
             {
-                if (!defaultColumns.Contains(column) && !string.IsNullOrEmpty(newRow[column].ToString()))
+                if (!reservedColumnNames.Contains(column) && !string.IsNullOrEmpty(newRow[column].ToString()))
                 {
                     bool isDouble1 = double.TryParse(newRow[column].ToString(), out double existing);
                     bool isDouble2 = double.TryParse(row[column].ToString(), out double other);
-                    if (isDouble1 != true || isDouble2 != true || !MathUtilities.FloatsAreEqual(existing, other))
+                    if (isDouble1 && isDouble2)
+                    {
+                        if (!MathUtilities.FloatsAreEqual(existing, other))
+                            return false;
+                        else
+                            return true;
+                    }
+                    else if (newRow[column].ToString() != row[column].ToString())
                     {
                         return false;
                     }
+                    
                 }
             }
             return true;
         }
-
-		
 
         /// <summary></summary>
         private bool NameIsAPSIMFormat(string columnName)

@@ -18,6 +18,8 @@ namespace UserInterface.Views
 
         public ContainerView GridViewDerived = null;
 
+        public ContainerView GridViewMerge = null;
+
         public ContainerView GridViewDataTypeError = null;
 
         public ContainerView GridViewDataError = null;
@@ -47,6 +49,9 @@ namespace UserInterface.Views
             
             GridViewDerived = new ContainerView(owner);
             notebook.AppendPage(GridViewDerived.MainWidget, new Label("Derived"));
+
+            GridViewMerge = new ContainerView(owner);
+            notebook.AppendPage(GridViewMerge.MainWidget, new Label("Row Merge"));
             
             /* Additional Views Required for later
             GridViewDataTypeError = new ContainerView(owner);
