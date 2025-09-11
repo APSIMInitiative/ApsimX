@@ -68,6 +68,10 @@ public class Program
                     Console.WriteLine(dir);
                 }
             }
+            else if (!string.IsNullOrWhiteSpace(options.SimulationCount))
+            {
+                Console.WriteLine(ValidationLocationUtility.GetSimulationCount());
+            }
             if (!string.IsNullOrEmpty(options.DirectoryPath))
             {
                 Stopwatch stopwatch = new Stopwatch();

@@ -57,5 +57,13 @@ public class Options
     [Option('n', "pr-number", Required = false, HelpText = "The pull request number for the workflow.")]
     public string PullRequestNumber { get; set; } = "";
 
+    /// <summary> Gets the number of simulations/validation locations available. </summary>
+    [Option("sim-count", Required = false, HelpText = "The number of simulations/validation locations available.")]
+    public string SimulationCount { get; set; } = "";
+
+    /// <summary> Azure pool to use for the workflow. </summary>
+    [Option("azure-pool", Required = false, HelpText = "The Azure pool to use for the workflow.")]
+    public string AzurePool { get; set; } = "workflo-pool";
+
 }
     

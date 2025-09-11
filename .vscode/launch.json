@@ -141,6 +141,50 @@
                 "-s",
                 ""
             ]
+        },
+        {
+            "name": "Apsim.Workflow: Sim Count",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder}/bin/Debug/net8.0/Apsim.Workflow.dll",
+            "preLaunchTask": "Build Debug",            
+            "cwd": "${workspaceFolder}",            
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "requireExactSource": false,
+            "logging": {
+                "moduleLoad": false,
+                "threadExit": false
+            },
+            "symbolOptions": {
+                "searchMicrosoftSymbolServer": false
+            },
+            "args": [
+                "--sim-count",
+                ""
+            ]
+        },
+        {
+            "name": "Apsim.Workflow: List directories",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder}/bin/Debug/net8.0/Apsim.Workflow.dll",
+            "preLaunchTask": "Build Debug",            
+            "cwd": "${workspaceFolder}",            
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "requireExactSource": false,
+            "logging": {
+                "moduleLoad": false,
+                "threadExit": false
+            },
+            "symbolOptions": {
+                "searchMicrosoftSymbolServer": false
+            },
+            "args": [
+                "-l",
+                ""
+            ]
         }
     ]
 }
