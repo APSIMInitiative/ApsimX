@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using APSIM.Shared.Utilities;
 
 namespace APSIM.Workflow
 {
@@ -32,6 +33,10 @@ namespace APSIM.Workflow
             foreach (string location in VALIDATION_LOCATIONS)
             {
                 var directory = Path.GetFullPath(RELATIVE_PATH_PREFIX + location);
+                if (!Directory.Exists(directory))
+                {
+                    directory = PathUtilities.GetAbsolutePath(RELATIVE_PATH_PREFIX + location, PathUtilities.GetApsimXDirectory());
+                }
                 if (Directory.GetFiles(directory, "*.apsimx", SearchOption.AllDirectories).Any())
                 {
                     var apsimxFiles = Directory.GetFiles(directory, "*.apsimx", SearchOption.AllDirectories);
