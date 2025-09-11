@@ -13,9 +13,11 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
-            "Mutdapilly9294.xlsx",
-            "Kyabram9597.xlsx",
-            "Gatton9597.xlsx"
+            "C:\\Jessica\\GIT\\ApsimX\\ApsimX\\Tests\\Validation\\Ryegrass\\RainShelter.xlsx",
+            "C:\\Jessica\\GIT\\ApsimX\\ApsimX\\Tests\\Validation\\Ryegrass\\Observed.xlsx",
+            "C:\\Jessica\\GIT\\ApsimX\\ApsimX\\Tests\\Validation\\Ryegrass\\Mutdapilly9294.xlsx",
+            "C:\\Jessica\\GIT\\ApsimX\\ApsimX\\Tests\\Validation\\Ryegrass\\Kyabram9597.xlsx",
+            "C:\\Jessica\\GIT\\ApsimX\\ApsimX\\Tests\\Validation\\Ryegrass\\Gatton9597.xlsx"
           ],
           "SheetNames": [
             "Observed"
@@ -16018,7 +16020,7 @@
                                   "IncludeSeriesNameInLegend": false,
                                   "Cumulative": false,
                                   "CumulativeX": false,
-                                  "Filter": "[Species]='Ryegrass'",
+                                  "Filter": "",
                                   "Name": "Observed",
                                   "ResourceName": null,
                                   "Children": [],
