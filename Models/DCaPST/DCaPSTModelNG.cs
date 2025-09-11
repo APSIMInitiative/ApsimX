@@ -1,3 +1,4 @@
+using APSIM.Core;
 using Models.Climate;
 using Models.Core;
 using Models.DCAPST.Canopy;
@@ -26,13 +27,14 @@ namespace Models.DCAPST
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(typeof(Zone))]
-    public class DCaPSTModelNG : Model
+    public class DCaPSTModelNG : Model, IStructureDependency
     {
-        /// <summary>
-        /// Clock object reference (dcapst needs to know day of year).
-        /// </summary>
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { get; set; }
+
         [Link]
-        private readonly IClock clock = null;
+        IClock clock = null;
 
         /// <summary>
         /// Weather provider.
@@ -233,7 +235,7 @@ namespace Models.DCAPST
         {
             if (weather is null ||
                 weather is not Weather weatherModel ||
-                weatherModel.FindChild<CO2Value>() is null
+                Structure.FindChild<CO2Value>(relativeTo: weatherModel) is null
             )
             {
                 throw new Exception($"Invalid DCaPST simulation. No {nameof(CO2Value)} model has been configured in {nameof(Weather)} model.");
@@ -271,7 +273,7 @@ namespace Models.DCAPST
             DcapstModel.DailyRun(leaf.LAI, sln);
 
             // Outputs
-            foreach (ICanopy canopy in plant.FindAllChildren<ICanopy>())
+            foreach (ICanopy canopy in Structure.FindChildren<ICanopy>(relativeTo: plant as INodeModel))
             {
                 canopy.LightProfile = new CanopyEnergyBalanceInterceptionlayerType[1]
                 {
@@ -429,7 +431,7 @@ namespace Models.DCAPST
             if (string.IsNullOrEmpty(cropName)) return;
             if (plant != null) return;
 
-            plant = FindInScope<IPlant>(CropName);
+            plant = Structure.Find<IPlant>(CropName);
             rootShootRatioFunction = GetRootShootRatioFunction();
             leaf = GetLeaf();
         }
@@ -437,7 +439,7 @@ namespace Models.DCAPST
         private ICanopy GetLeaf()
         {
             if (plant == null) return null;
-			ICanopy find = plant.FindChild<ICanopy>("Leaf");
+			ICanopy find = Structure.FindChild<ICanopy>("Leaf", relativeTo: plant as INodeModel);
             if (find == null) throw new ArgumentNullException(nameof(find), "Cannot find leaf configuration");
             return find;
         }
@@ -446,7 +448,7 @@ namespace Models.DCAPST
         {
             if (plant is null) return null;
 
-            IVariable variable = plant.FindByPath("[ratioRootShoot]");
+            var variable = Structure.GetObject("[ratioRootShoot]", relativeTo:plant as INodeModel);
             if (variable is null) return null;
             if (variable.Value is not IFunction function) return null;
 
@@ -517,7 +519,7 @@ namespace Models.DCAPST
         /// </summary>
         private IEnumerable<string> GetPlantNames()
         {
-            var plants = FindAllInScope<IPlant>()
+            var plants = Structure.FindAll<IPlant>()
                 .Select(p => p.Name)
                 .Where(name => !string.IsNullOrEmpty(name))
                 .Distinct();

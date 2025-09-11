@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.Run;
@@ -15,11 +16,11 @@ namespace Models.PostSimulationTools
 {
 
     /// <summary>
-    /// Reads the contents of a file (in apsim format) and stores into the DataStore. 
+    /// Reads the contents of a file (in apsim format) and stores into the DataStore.
     /// If the file has a column name of 'SimulationName' then this model will only input data for those rows
     /// where the data in column 'SimulationName' matches the name of the simulation under which
-    /// this input model sits. 
-    /// 
+    /// this input model sits.
+    ///
     /// If the file does NOT have a 'SimulationName' column then all data will be input.
     /// </summary>
     [Serializable]
@@ -28,8 +29,12 @@ namespace Models.PostSimulationTools
     [ValidParent(ParentType = typeof(DataStore))]
     [ValidParent(ParentType = typeof(ParallelPostSimulationTool))]
     [ValidParent(ParentType = typeof(SerialPostSimulationTool))]
-    public class Input : Model, IPostSimulationTool, IReferenceExternalFiles
+    public class Input : Model, IPostSimulationTool, IReferenceExternalFiles, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>
         /// The DataStore.
         /// </summary>
@@ -42,7 +47,7 @@ namespace Models.PostSimulationTools
         public string[] FileNames { get; set; }
 
         /// <summary>
-        /// Gets or sets the full file name (with path). The user interface uses this. 
+        /// Gets or sets the full file name (with path). The user interface uses this.
         /// </summary>
         [JsonIgnore]
         [Description("EXCEL file name")]
@@ -54,13 +59,13 @@ namespace Models.PostSimulationTools
                     return null;
 
                 if (storage == null)
-                    return FileNames.Select(f => PathUtilities.GetAbsolutePath(f, FindAncestor<Simulations>().FileName)).ToArray();
+                    return FileNames.Select(f => PathUtilities.GetAbsolutePath(f, Structure.FindParent<Simulations>(recurse: true).FileName)).ToArray();
                 return FileNames.Select(f => PathUtilities.GetAbsolutePath(f, storage.FileName)).ToArray();
             }
 
             set
             {
-                Simulations simulations = FindAncestor<Simulations>();
+                Simulations simulations = Structure.FindParent<Simulations>(recurse: true);
                 this.FileNames = value.Select(v => PathUtilities.GetRelativePath(v, simulations.FileName)).ToArray();
             }
         }
@@ -119,7 +124,7 @@ namespace Models.PostSimulationTools
         public DataTable GetTable()
         {
             if (FullFileNames != null)
-                if (FullFileNames.Length > 0 && !String.IsNullOrEmpty(FullFileNames[0])) 
+                if (FullFileNames.Length > 0 && !String.IsNullOrEmpty(FullFileNames[0]))
                         return GetTable(FullFileNames[0]);
             return null;
         }

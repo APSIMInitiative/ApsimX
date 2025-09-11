@@ -1,11 +1,12 @@
 ﻿using System;
+using APSIM.Core;
 using Models.Core;
 using Models.Interfaces;
 
 namespace Models.Functions
 {
     /// <summary>Temperature function for soil processes except denitrification. Originally taken from CERES.
-    /// Functional form is (ST-BaseST)^2/(OptSt-BaseSt)^2</summary> 
+    /// Functional form is (ST-BaseST)^2/(OptSt-BaseSt)^2</summary>
 
     [Serializable]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]

@@ -174,7 +174,7 @@ namespace Models.CLEM.Activities
             else
                 herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.MarkedForSale);
 
-            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd);
+            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd, Structure);
             IndividualsToBeTrucked = uniqueIndividuals;
             numberToDo = uniqueIndividuals?.Count() ?? 0;
 
@@ -185,7 +185,7 @@ namespace Models.CLEM.Activities
 
                 if (!truckingWithImplications)
                 {
-                    uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd);
+                    uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd, Structure);
                     IndividualsToBeTrucked = uniqueIndividuals;
                 }
             }
@@ -474,8 +474,8 @@ namespace Models.CLEM.Activities
             var results = new List<ValidationResult>();
 
             // check that all or none of children are ShortfallsWithImplications
-            var truckingComponents = FindAllChildren<RuminantTrucking>().Where(a => a.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications);
-            if (truckingComponents.Any() && (truckingComponents.Count() != FindAllChildren<RuminantTrucking>().Count()))
+            var truckingComponents = Structure.FindChildren<RuminantTrucking>().Where(a => a.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications);
+            if (truckingComponents.Any() && (truckingComponents.Count() != Structure.FindChildren<RuminantTrucking>().Count()))
             {
                 string[] memberNames = new string[] { "RuminantTrucking" };
                 results.Add(new ValidationResult($"All [r=RuminantTrucking] components for [{ActivityStyle}] must be set to [UseAvailableWithImplications] if any are defined for this partial resources available action", memberNames));

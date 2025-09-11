@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -37,8 +38,12 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IPlant))]
-    public class BiomassArbitrator : Model, ITotalCFixationSupply
+    public class BiomassArbitrator : Model, ITotalCFixationSupply, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         ///1. Links
         ///------------------------------------------------------------------------------------------------
 
@@ -108,13 +113,13 @@ namespace Models.PMF
             }
         }
 
-        /// <summary>Gets the Amount of C not allocated</summary>
+        /// <summary>Gets the Amount of C supply not allocated</summary>
         /// <value>The n supply.</value>
         [JsonIgnore]
         [Units("gC/m2")]
         public double UnallocatedC { get; private set; }
 
-        /// <summary>Gets the Amount of N not allocated</summary>
+        /// <summary>Gets the Amount of N supply not allocated</summary>
         /// <value>The n supply.</value>
         [JsonIgnore]
         [Units("gN/m2")]
@@ -141,7 +146,7 @@ namespace Models.PMF
         [EventSubscribe("Commencing")]
         virtual protected void OnSimulationCommencing(object sender, EventArgs e)
         {
-            PlantOrgans = plant.FindAllChildren<Organ>().ToList();
+            PlantOrgans = Structure.FindChildren<Organ>(relativeTo: plant).ToList();
         }
 
 
@@ -225,7 +230,7 @@ namespace Models.PMF
                 {
                     if (count > 0)
                         throw new Exception("Two organs have IWaterNitrogenUptake");
-                    o.Nitrogen.SuppliesAllocated.Uptake = TotalPlantUptake / zone.Area;
+                    o.Nitrogen.SuppliesAllocated.Uptake = TotalPlantUptake;
                     count += 1;
                 }
             }
@@ -301,9 +306,9 @@ namespace Models.PMF
                     endN += o.N;
                 }
 
-                if (!MathUtilities.FloatsAreEqual(checkC, endC, 1e-11))
+                if (!MathUtilities.FloatsAreEqual(checkC, endC, checkC * 1e-10))
                     throw new Exception(clock.Today.ToString() + " Mass balance violation in Carbon");
-                if (!MathUtilities.FloatsAreEqual(checkN, endN, 1e-12))
+                if (!MathUtilities.FloatsAreEqual(checkN, endN, checkN * 1e-10))
                     throw new Exception(clock.Today.ToString() + "Mass balance violation in Nitrogen");
             }
         }
@@ -332,7 +337,7 @@ namespace Models.PMF
                 {
                     double StructuralProportion = C.DemandsAllocated.Structural / C.DemandsAllocated.Total;
                     double MetabolicProportion = C.DemandsAllocated.Metabolic / C.DemandsAllocated.Total;
-                    double StorageProportion = C.DemandsAllocated.Storage / C.DemandsAllocated.Total; ;
+                    double StorageProportion = C.DemandsAllocated.Storage / C.DemandsAllocated.Total;
                     // Reset C demand allocations based on what is possible with given N supply
                     C.DemandsAllocated = new NutrientPoolsState(
                         Math.Min(C.DemandsAllocated.Structural, N.MaxCDelta * StructuralProportion),  //To introduce effects of other nutrients Need to include Plimited and Klimited growth in this min function
@@ -397,7 +402,7 @@ namespace Models.PMF
                     PotentialAllocationYetToWindBack -= AllocationToWindBack;
                 }
 
-                if (PotentialAllocationYetToWindBack > 0)
+                if (!MathUtilities.FloatsAreEqual(PotentialAllocationYetToWindBack, 0, 1E-12))
                     throw new Exception("Problem with nutrient constrained supply allocation");
             }
         }
@@ -416,7 +421,7 @@ namespace Models.PMF
         }
 
         /// <summary>Relatives the allocation.</summary>
-        /// <param name="TotalSupply">The amount of nutrient to allocate</param>
+        /// <param name="TotalSupply">The amount of nutrient (g) to allocate</param>
         /// <param name="PRS">The supply and demand info for that nutrient</param>
         public double DoAllocation(double TotalSupply, PlantNutrientsDelta PRS)
         {

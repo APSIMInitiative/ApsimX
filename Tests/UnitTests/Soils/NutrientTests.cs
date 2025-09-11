@@ -25,7 +25,7 @@ namespace UnitTests.SurfaceOrganicMatterTests
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.totalc.apsimx");
 
             Simulations file = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
-            Models.Climate.Weather weather = file.FindDescendant<Models.Climate.Weather>();
+            Models.Climate.Weather weather = file.Node.FindChild<Models.Climate.Weather>(recurse: true);
             string properWeatherFilePath = PathUtilities.GetRelativePath(weather.FullFileName, null);
             weather.FullFileName = properWeatherFilePath;
 
@@ -35,7 +35,7 @@ namespace UnitTests.SurfaceOrganicMatterTests
             Runner.Run();
 
             // Get the output data table.
-            var storage = file.FindInScope<IDataStore>();
+            var storage = file.Node.Find<IDataStore>();
             List<string> fieldNames = new() { "sum(Nutrient.TotalC)" };
             DataTable data = storage.Reader.GetData("Report", fieldNames: fieldNames);
 

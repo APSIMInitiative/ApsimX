@@ -37,9 +37,9 @@ namespace APSIM.Documentation.Models.Types
         /// Get a section with the Summary, Remarks and Memo text included.
         /// </summary>
         public static Section GetSectionTitle(IModel model) {
-            
+
             List<ITag> tags = new List<ITag>();
-            foreach (IModel child in model.FindAllChildren<Memo>())
+            foreach (IModel child in model.Node.FindChildren<Memo>())
                 tags = AutoDocumentation.DocumentModel(child).ToList();
 
             return new Section(model.Name, tags);
@@ -49,12 +49,12 @@ namespace APSIM.Documentation.Models.Types
         /// Get a section with the Summary, Remarks and Memo text included.
         /// </summary>
         public static Section GetSummaryAndRemarksSection(IModel model) {
-            
+
             List<ITag> tags = new List<ITag>();
             tags.Add(new Paragraph(CodeDocumentation.GetSummary(model.GetType())));
             tags.Add(new Paragraph(CodeDocumentation.GetRemarks(model.GetType())));
 
-            foreach (IModel child in model.FindAllChildren<Memo>())
+            foreach (IModel child in model.Node.FindChildren<Memo>())
                 tags.AddRange(AutoDocumentation.DocumentModel(child).ToList());
 
             return new Section(model.Name, tags);

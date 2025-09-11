@@ -9147,7 +9147,6 @@
             "[Wheat].Leaf.MainStemPopulation",
             "[Wheat].SowingData.Cultivar",
             "[Wheat].SowingDate.DayOfYear",
-            "[Wheat].Leaf.CohortMaxSize",
             "[Clock].StartDate"
           ],
           "EventNames": [
@@ -9193,13 +9192,10 @@
             "[Wheat].Leaf.Dead.N",
             "[Wheat].Leaf.Dead.NConc",
             "[Wheat].Leaf.Dead.Wt",
-            "[Wheat].Leaf.DeadCohortNo",
-            "[Wheat].Leaf.SenescingCohortNo",
             "[Wheat].Leaf.Ligules",
             "[Wheat].Leaf.Fn",
             "[Wheat].Leaf.Fw",
             "[Wheat].Leaf.Height",
-            "[Wheat].Leaf.InitialisedCohortNo",
             "[Wheat].Leaf.LAI",
             "[Wheat].Leaf.Live.N",
             "[Wheat].Leaf.Live.NConc",

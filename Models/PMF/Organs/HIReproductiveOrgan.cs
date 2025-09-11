@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Core;
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;

@@ -1,6 +1,7 @@
 ﻿namespace APSIM.Shared.Utilities
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Reflection;
 
@@ -85,6 +86,8 @@
             while (directory.Name == "Debug" || directory.Name == "Release" || directory.Name == "bin")
                 directory = directory.Parent;
             string apsimxDirectory = directory.FullName;
+            if (apsimxDirectory == "/")
+                apsimxDirectory = "/wd/"; // Special condition for running on azure compute nodes. Required for new build system.
             path = path.Replace("%root%", apsimxDirectory);
 
             if (string.IsNullOrEmpty(relativePath))
@@ -162,5 +165,30 @@
 
             return path.Replace(@"\", "/");
         }
+
+
+        /// <summary>
+        /// Get all the absolute paths of files in a directory and subdirectories with the .apsimx extension.
+        /// </summary>
+        /// <param name="directory">The directory to search.</param>
+        /// <returns>A list of absolute paths to files with the .apsimx extension.</returns>
+        public static List<string> GetAllApsimXFilePaths(string directory)
+        {
+            if (string.IsNullOrEmpty(directory))
+                throw new ArgumentNullException(nameof(directory));
+
+            if (!Directory.Exists(directory))
+                throw new DirectoryNotFoundException($"The directory '{directory}' does not exist.");
+
+            List<string> apsimxFiles = new List<string>();
+            foreach (string file in Directory.EnumerateFiles(directory, "*.apsimx", SearchOption.AllDirectories))
+            {
+                apsimxFiles.Add(Path.GetFullPath(file));
+            }
+
+            return apsimxFiles;
+        }
+
     }
+    
 }

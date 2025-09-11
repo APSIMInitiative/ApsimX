@@ -32,7 +32,7 @@ namespace UnitTests.Core
 
             // prepare the simulation to run
             Simulations sims = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
-            Models.Climate.Weather weather = sims.FindDescendant<Models.Climate.Weather>();
+            Models.Climate.Weather weather = sims.Node.FindChild<Models.Climate.Weather>(recurse: true);
             weather.FullFileName = metFile;
 
             // run the simulation and get list of errors
@@ -44,7 +44,7 @@ namespace UnitTests.Core
             // check that no errors were thrown
             Assert.That(errors.Count, Is.EqualTo(0));
 
-            DataStore dataStore = sims.FindChild<DataStore>();
+            DataStore dataStore = sims.Node.FindChild<DataStore>();
 
             // check that the DataStore and expected simulations have the same amount of entries
             Assert.That(dataStore.Reader.SimulationNames.Count, Is.EqualTo(3));

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -11,8 +12,12 @@ namespace Models.Functions
     /// <remarks>Returns zero if nominator is zero, returns double.maxValue if denominator is zero.</remarks>
     [Serializable]
     [Description("Starting with the first child function, recursively divide by the values of the subsequent child functions")]
-    public class DivideFunction : Model, IFunction
+    public class DivideFunction : Model, IFunction, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>The child functions</summary>
         private List<IFunction> ChildFunctions;
 
@@ -21,7 +26,7 @@ namespace Models.Functions
         public double Value(int arrayIndex = -1)
         {
             if (ChildFunctions == null)
-                ChildFunctions = FindAllChildren<IFunction>().ToList();
+                ChildFunctions = Structure.FindChildren<IFunction>().ToList();
 
             double returnValue = 0.0;
             if (ChildFunctions.Count > 0)

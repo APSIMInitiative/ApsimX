@@ -1,4 +1,5 @@
 using System;
+using APSIM.Core;
 using Models.Core;
 using Models.Core.Run;
 using Models.Interfaces;
@@ -15,8 +16,12 @@ namespace Models
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ViewName("UserInterface.Views.PropertyView")]
     [ValidParent(ParentType = typeof(Simulation))]
-    public class Clock : Model, IClock
+    public class Clock : Model, IClock, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>The arguments</summary>
         private EventArgs args = new EventArgs();
 
@@ -52,7 +57,7 @@ namespace Models
                     return (DateTime)Start;
 
                 // If no start date provided, try and find a weather component and use its start date.
-                IWeather weather = this.FindInScope<IWeather>();
+                IWeather weather = Structure.Find<IWeather>();
                 if (weather != null)
                     return weather.StartDate;
 
@@ -82,7 +87,7 @@ namespace Models
                     return (DateTime)End;
 
                 // If no start date provided, try and find a weather component and use its start date.
-                IWeather weather = this.FindInScope<IWeather>();
+                IWeather weather = Structure.Find<IWeather>();
                 if (weather != null)
                     return weather.EndDate;
 

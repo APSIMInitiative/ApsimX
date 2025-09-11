@@ -1,3 +1,4 @@
+using APSIM.Core;
 using Models.Core;
 using Models.PMF;
 
@@ -19,19 +20,19 @@ namespace Models.DCAPST
         /// <param name="model"></param>
         /// <param name="sowingParameters"></param>
         /// <returns>The configured cultivar, or null.</returns>
-        public static Cultivar GetCultivarFromSowingParameters(IModel model, SowingParameters sowingParameters)
+        public static Cultivar GetCultivarFromSowingParameters(DCaPSTModelNG model, SowingParameters sowingParameters)
         {
             if (model is null) return null;
             if (sowingParameters is null) return null;
             if (sowingParameters.Plant is null) return null;
             if (string.IsNullOrEmpty(sowingParameters.Cultivar)) return null;
 
-            var cultivar = 
-                model.FindChild(CULTIVAR_PARAMETERS_FOLDER_NAME)?.
-                FindChild(sowingParameters.Plant.Name)?.
-                FindChild<Cultivar>(sowingParameters.Cultivar);
-
-            return cultivar;
+            var folder = model.Structure.FindChild<Folder>(CULTIVAR_PARAMETERS_FOLDER_NAME);
+            if (folder != null)
+                folder = model.Structure.FindChild<Folder>(sowingParameters.Plant.Name, relativeTo: folder);
+            if (folder != null)
+                return model.Structure.FindChild<Cultivar>(sowingParameters.Cultivar, relativeTo: folder);
+            return null;
         }
     }
 }

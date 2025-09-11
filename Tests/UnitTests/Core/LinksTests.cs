@@ -89,13 +89,17 @@ namespace UnitTests.Core
     }
 
     [Serializable]
-    class ModelWithServices : Model
+    class ModelWithServices : Model, IStructureDependency
     {
         [Link]
         public IDataStore storage = null;
 
         [Link]
         public IEvent events = null;
+
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { get; set; }
     }
 
     [TestFixture]
@@ -389,7 +393,7 @@ namespace UnitTests.Core
 
             var modelWithServices = simulations.Children[1].Children[2] as ModelWithServices;
             Assert.That(modelWithServices.storage, Is.Not.Null);
-            Assert.That(modelWithServices.Locator, Is.Not.Null);
+            Assert.That(modelWithServices.Structure, Is.Not.Null);
             Assert.That(modelWithServices.events, Is.Not.Null);
         }
 

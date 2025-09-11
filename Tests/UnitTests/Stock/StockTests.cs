@@ -588,7 +588,7 @@
             Assert.That(groups.Last().NoAnimals, Is.EqualTo(100));
 
             // Make sure summary file was written to.
-            var summary = stock.FindDescendant<MockSummary>();
+            var summary = stock.Node.FindChild<MockSummary>(recurse: true);
             Assert.That(summary.messages[0], Is.EqualTo("Sold 50 animals"));
         }
 
@@ -647,7 +647,7 @@
             Assert.That(groups.Last().NoAnimals, Is.EqualTo(100));
 
             // Make sure summary file was written to.
-            var summary = stock.FindDescendant<MockSummary>();
+            var summary = stock.Node.FindChild<MockSummary>(recurse: true);
             Assert.That(summary.messages[0], Is.EqualTo("Sold 50 animals"));
         }
 
@@ -703,7 +703,7 @@
             Assert.That(cfw, Is.EqualTo(70));
 
             // Make sure summary file was written to.
-            var summary = stock.FindDescendant<MockSummary>();
+            var summary = stock.Node.FindChild<MockSummary>(recurse: true);
             Assert.That(summary.messages[0], Is.EqualTo("Shearing animals"));
         }
 

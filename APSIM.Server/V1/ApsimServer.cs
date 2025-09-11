@@ -41,7 +41,7 @@ namespace APSIM.Server
         {
             this.options = options;
             sims = FileFormat.ReadFromFile<Simulations>(options.File).Model as Simulations;
-            sims.FindChild<Models.Storage.DataStore>().UseInMemoryDB = true;
+            sims.Node.FindChild<Models.Storage.DataStore>().UseInMemoryDB = true;
             runner = new Runner(sims);
             jobRunner = new ServerJobRunner();
             runner.Use(jobRunner);
@@ -109,7 +109,7 @@ namespace APSIM.Server
             }
             finally
             {
-                sims?.FindChild<Models.Storage.IDataStore>()?.Close();
+                sims?.Node.FindChild<Models.Storage.IDataStore>()?.Close();
             }
         }
 
@@ -160,7 +160,7 @@ namespace APSIM.Server
             {
                 // Clone the simulations object before running the command.
                 var timer = Stopwatch.StartNew();
-                command.Run(runner, jobRunner, sims.FindChild<Models.Storage.IDataStore>());
+                command.Run(runner, jobRunner, sims.Node.FindChild<Models.Storage.IDataStore>());
                 timer.Stop();
                 WriteToLog($"Command ran in {timer.ElapsedMilliseconds}ms");
                 connection.OnCommandFinished(command);

@@ -352,7 +352,7 @@ namespace Gtk.Sheet
             rawColumnNames.RemoveAll(name => unwantedColumns.Contains(name));
 
             // Determine columns that always appear at start of grid: Date, SimulationName, Zone
-            var priorityColumns = rawColumnNames.Where(name => name.Contains("Date") || name.Contains("Today"))
+            var priorityColumns = rawColumnNames.Where(name => name.Split('.').Contains("Date") || name.Split('.').Contains("Today"))
                                                 .Concat(new string[] { "SimulationName" })
                                                 .Concat(rawColumnNames.Where(name => name == "Zone"));
 

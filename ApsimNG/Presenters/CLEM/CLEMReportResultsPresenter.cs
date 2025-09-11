@@ -50,7 +50,7 @@ namespace UserInterface.Presenters
                 Report report = clemPresenter.Model as Report;
                 if(report is null)
                 {
-                    report = clemPresenter.Model.FindChild<Report>();
+                    report = clemPresenter.Model.Node.FindChild<Report>();
                     parentOfReport = true;
                 }
 
@@ -59,15 +59,15 @@ namespace UserInterface.Presenters
 
                 dataStorePresenter = new DataStorePresenter(new string[] { (parentOfReport)? (clemPresenter.Model as IModel).Name:report.Name });
 
-                Simulations simulations = report.FindAncestor<Simulations>();
+                Simulations simulations = report.Node.FindParent<Simulations>(recurse: true);
                 if (simulations != null)
-                    dataStore = simulations.FindChild<IDataStore>();
+                    dataStore = simulations.Node.FindChild<IDataStore>();
 
-                Simulation simulation = report.FindAncestor<Simulation>();
-                Experiment experiment = report.FindAncestor<Experiment>();
-                Zone paddock = report.FindAncestor<Zone>();
+                Simulation simulation = report.Node.FindParent<Simulation>(recurse: true);
+                Experiment experiment = report.Node.FindParent<Experiment>(recurse: true);
+                Zone paddock = report.Node.FindParent<Zone>(recurse: true);
 
-                IModel zoneAnscestor = report.FindAncestor<Zone>();
+                IModel zoneAnscestor = report.Node.FindParent<Zone>(recurse: true);
 
                 // Only show data which is in scope of this report.
                 // E.g. data from this zone and either experiment (if applicable) or simulation.
@@ -103,6 +103,6 @@ namespace UserInterface.Presenters
         }
 
         /// <inheritdoc/>
-        public void Refresh() { } 
+        public void Refresh() { }
     }
 }

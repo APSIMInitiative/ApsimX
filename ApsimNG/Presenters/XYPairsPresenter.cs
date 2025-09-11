@@ -7,7 +7,6 @@ using APSIM.Shared.Graphing;
 using Series = Models.Series;
 using UserInterface.Views;
 using Models.Utilities;
-using APSIM.Documentation.Models;
 using Gtk.Sheet;
 using APSIM.Shared.Utilities;
 
@@ -49,11 +48,6 @@ namespace UserInterface.Presenters
         private Graph graph;
 
         /// <summary>
-        /// A list of all properties in the variables grid.
-        /// </summary>
-        private List<VariableProperty> propertiesInGrid = new List<VariableProperty>();
-
-        /// <summary>
         /// Attach the view to the model.
         /// </summary>
         /// <param name="model">The initial water model</param>
@@ -71,7 +65,7 @@ namespace UserInterface.Presenters
 
             // Populate the graph.
             this.graph = Utility.Graph.CreateGraphFromResource("ApsimNG.Resources.XYPairsGraph.xml");
-            this.xYPairs.Children.Add(this.graph);
+            this.xYPairs.Node.AddChild(this.graph);
             this.graph.Parent = this.xYPairs;
             (this.graph.Series[0] as Series).XFieldName = graph.Parent.FullPath + ".X";
             (this.graph.Series[0] as Series).YFieldName = graph.Parent.FullPath + ".Y";
@@ -117,17 +111,17 @@ namespace UserInterface.Presenters
             if (xProperty != null)
             {
                 string propertyName = xProperty.GetValue(xYPairs.Parent, null).ToString();
-                IVariable variable = xYPairs.FindByPath(propertyName);
-                if (variable != null && variable.UnitsLabel != null)
+                var variable = xYPairs.Node.GetObject(propertyName);
+                if (variable != null)
                 {
-                    return propertyName + " " + variable.UnitsLabel;
+                    return propertyName + " " + variable.GetUnitsLabel();
                 }
 
                 return propertyName;
             }
             else if (xYPairs.Parent is LinearInterpolationFunction)
             {
-                var xValue = xYPairs.Parent.FindChild("XValue");
+                var xValue = xYPairs.Parent.Node.FindChild<IModel>("XValue");
                 if (xValue is VariableReference)
                     return (xValue as VariableReference).VariableName;
                 else

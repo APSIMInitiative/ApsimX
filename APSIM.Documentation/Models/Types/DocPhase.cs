@@ -96,20 +96,20 @@ namespace APSIM.Documentation.Models.Types
                     "*Target* = *SowingDepth* x *ShootRate* + *ShootLag*\n\n" +
                     "Where:\n\n" +
                     $"*SowingDepth* (mm) is sent from the manager with the sowing event.\n\n" +
-                    $"Progress toward emergence is driven by thermal time accumulation, where thermal time is calculated using model: {emergingPhase.FindChild<VariableReference>().Name}";
+                    $"Progress toward emergence is driven by thermal time accumulation, where thermal time is calculated using model: {emergingPhase.Node.FindChild<VariableReference>().Name}";
             }
             // TODO: Needs work. See if Function documentation can be used here instead.
             else if (phase is GenericPhase)
             {
-                var targetChild = phase.FindChild("Target");
-                var progressionChild = phase.FindChild<VariableReference>("Progression");
+                var targetChild = phase.Node.FindChild<IModel>("Target");
+                var progressionChild = phase.Node.FindChild<VariableReference>("Progression");
                 if (targetChild != null && progressionChild != null)
                 {
                     string units = "";
                     if (targetChild is AddFunction)
                     {
                         List<string> targetChildrenNames = new();
-                        foreach (IFunction function in targetChild.FindAllChildren<IFunction>())
+                        foreach (IModel function in targetChild.Node.FindChildren<IModel>())
                             targetChildrenNames.Add(function.Name);
                         return $"This phase goes from {phase.Start.ToLower()} to {phase.End.ToLower()}.\n\n" +
                             $"The *Target* for completion is calculated as the :\n\n" +
@@ -129,7 +129,7 @@ namespace APSIM.Documentation.Models.Types
                 }
                 else return "";
             }
-            else 
+            else
             {
                 return $"The {phase.Name} does not specify stages.";
             }
