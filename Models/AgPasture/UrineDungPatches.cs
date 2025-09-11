@@ -198,11 +198,11 @@ namespace Models.AgPasture
         {
             // meanLoad is coming in as kg N excreted by the herd
             // convert the herd value to a per urination value in g
-            meanLoad = meanLoad * Constants.kg2g / numUrinations; // to g/urination
+            meanLoad = meanLoad  / numUrinations; // to g/urination
 
             summary.WriteMessage(simpleGrazing, "The Zone for urine return is " + ZoneNumForUrine, MessageType.Diagnostic);
 
-            (double[] urineLoad, double[] urineVolume) = CalculateLoadVolume(numUrinations, meanLoad);
+            //(double[] urineLoad, double[] urineVolume) = CalculateLoadVolume(numUrinations, meanLoad);
 
 
 
@@ -215,18 +215,20 @@ namespace Models.AgPasture
                 //urineLoad[i] = urineLoad[i] * Constants.g2kg;
 
                 // THIS IS TEMPORARY - DELETE !!!!!!!!
-                urineLoad[i] = meanLoad * Constants.g2kg;
+                //urineLoad[i] = meanLoad;
 
                 // use the Beatson data for wetted area, convert to radius, add 0.1 m edge and then convert back to an area. Note this is a natural log
                 // check 2L should give a area of 0.3866 m2
-                double urinationArea = Math.PI * Math.Pow(Math.Sqrt((0.135 * Math.Log(urineVolume[i]) + 0.104) / Math.PI) + 0.1, 2.0);
+                //double urinationArea = Math.PI * Math.Pow(Math.Sqrt((0.135 * Math.Log(urineVolume[i]) + 0.104) / Math.PI) + 0.1, 2.0);
+                double urinationArea = 0.5;
                 gridAreaUsed += urinationArea; // m2
-                double urinationDepth = urineVolume[i] / urinationArea / 0.05;    // 0.05 is the assumed increase in water content from the urineation
+                //double urinationDepth = urineVolume[i] / urinationArea / 0.05;    // 0.05 is the assumed increase in water content from the urineation
+                double urinationDepth = 250;
 
                 // convert urineLoad for this urination into a depth profile.
                 double[] depthPenetration = UrinePenetration(urinationDepth);
                 for (int ii = 0; ii <= (physical.Thickness.Length - 1); ii++)
-                    ureaToAdd[ii] += depthPenetration[ii] * urineLoad[i];   // kg
+                    ureaToAdd[ii] += depthPenetration[ii] * meanLoad;   // kg
 
                 if (gridAreaUsed - 0.5 * urinationArea >= gridArea || i == numUrinations-1)
                 {
@@ -237,8 +239,8 @@ namespace Models.AgPasture
                     gridAreaUsed = 0.0;
                 }
             }
-            if (!MathUtilities.FloatsAreEqual(urineLoad.Sum(), totalUrineAdded))
-                throw new Exception($"The amount of urine added ({totalUrineAdded}) does not equal the amount that should have been added ({urineLoad.Sum()})");
+            if (!MathUtilities.FloatsAreEqual(meanLoad * numUrinations, totalUrineAdded))
+                throw new Exception($"The amount of urine added ({totalUrineAdded}) does not equal the amount that should have been added ({meanLoad * numUrinations})");
         }
 
         /// <summary>

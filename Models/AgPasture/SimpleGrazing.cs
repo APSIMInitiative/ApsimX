@@ -57,7 +57,6 @@ namespace Models.AgPasture
         /// <summary>Average potential ME concentration in herbage material (MJ/kg)</summary>
         private const double potentialMEOfHerbage = 16.0;
 
-        private const double maxEffectiveNConcentration = 3;
 
         /// <summary>Grazing rotation type enum for drop down.</summary>
         public enum GrazingRotationTypeEnum
@@ -265,6 +264,11 @@ namespace Models.AgPasture
         [Display(VisibleCallback = nameof(UsePatching))]
         public int PseudoRandomSeed { get; set; } = 666;
 
+        /// <summary>Maximum effective N concentration (ppm)</summary>
+        [Description("Maximum effective N concentration for each layer (ppm)")]
+        [Display(VisibleCallback = nameof(UsePatching))]
+        public double MaxEffectiveNConcentration { get; set; } = 3;
+
         // End patching variables.
 
         /// <summary></summary>
@@ -411,7 +415,7 @@ namespace Models.AgPasture
             if (UsePatching)
             {
                 urineDungPatches = new UrineDungPatches(this, Structure, PseudoPatches, ZoneCount, urineReturnType,
-                                                        UrineReturnPattern, PseudoRandomSeed, maxEffectiveNConcentration);
+                                                        UrineReturnPattern, PseudoRandomSeed, MaxEffectiveNConcentration);
                 urineDungPatches.OnPreLink();
             }
         }
