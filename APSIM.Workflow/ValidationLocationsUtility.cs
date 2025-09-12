@@ -62,7 +62,7 @@ namespace APSIM.Workflow
         /// </summary>
         public static int GetSimulationCount()
         {
-            return GetDirectoryPaths().Length;
+            return GetDirectoryPaths().Length - PayloadUtilities.EXCLUDED_SIMS_FILEPATHS.Length;
         }
         
         /// <summary>Normalize a file path to use forward slashes instead of backslashes.</summary>
