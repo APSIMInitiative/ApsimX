@@ -101,6 +101,9 @@ namespace Models.PMF
         /// <summary>Tolerance for biomass comparisons</summary>
         protected double tolerence = 3e-11;
 
+        private double haTom2 = 10000;
+        private double gPerm2TokgPerha = 10;
+
         private double startLiveC { get; set; }
         private double startDeadC { get; set; }
         private double startLiveN { get; set; }
@@ -643,7 +646,7 @@ namespace Models.PMF
             {
                 Zone z = Structure.FindParent<Zone>(recurse: true);
                 ISurfaceOrganicMatter somZone = Structure.FindChild<ISurfaceOrganicMatter>(relativeTo: z);
-                somZone.Add(wt/(z.Area * 10000) * 10, n/(z.Area * 10000) * 10, 0, parentPlant.PlantType, Name);
+                somZone.Add(wt/(z.Area * haTom2) * gPerm2TokgPerha, n/(z.Area * haTom2) * gPerm2TokgPerha, 0, parentPlant.PlantType, Name);
             }
             else
             {
@@ -651,7 +654,7 @@ namespace Models.PMF
                 {
                     ISurfaceOrganicMatter somZone = Structure.FindChild<ISurfaceOrganicMatter>(relativeTo: z);
 
-                    somZone.Add((wt * DOZ.RAOZ[zi] * 10)/(z.Area * 10000), (n * DOZ.RAOZ[zi] * 10)/(z.Area * 10000), 0, parentPlant.PlantType, Name);
+                    somZone.Add((wt * DOZ.RAOZ[zi] * gPerm2TokgPerha) /(z.Area * haTom2), (n * DOZ.RAOZ[zi] * gPerm2TokgPerha) /(z.Area * haTom2), 0, parentPlant.PlantType, Name);
                     zi += 1;
                 }
             }

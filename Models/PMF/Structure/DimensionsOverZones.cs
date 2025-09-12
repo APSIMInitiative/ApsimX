@@ -8,7 +8,7 @@ using System.Linq;
 namespace Models.PMF
 {
     /// <summary>
-    /// This class calculates dimensions relative to the spread of the plants canopy over the home and neighboruing zone.
+    /// This class calculates dimensions relative to the spread of the plants canopy over the home and neighbouring zone.
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]
@@ -107,7 +107,7 @@ namespace Models.PMF
                 RAOZ[zi] = plantWidthOverZone[zi] / plantWidth;
                 zi += 1;
             }
-            double plantLength = Math.Min(zoneLength, PlantWidth); //Assume plant is square, length represents spaciing so will not exceed zone length as plants start touching
+            double plantLength = Math.Min(zoneLength, PlantWidth); //Assume plant is square, length represents spacing so will not exceed zone length as plants start touching
             PlantArea = plantWidth * plantLength;
             
         }
