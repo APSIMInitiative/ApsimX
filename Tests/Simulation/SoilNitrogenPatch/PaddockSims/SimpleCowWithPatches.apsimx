@@ -60,7 +60,7 @@
                       "Name": "WithPatches005",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -74,7 +74,7 @@
                       "Name": "WithPatches010",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -88,7 +88,7 @@
                       "Name": "WithPatches025",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -130,7 +130,7 @@
                       "Name": "WithoutPatches001",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
@@ -146,11 +146,11 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[SimpleGrazing].PseudoPatches = true"
+                        "[SimpleGrazing].PseudoPatches = false"
                       ],
                       "Paths": null,
                       "Values": null,
-                      "Name": "Pseudo",
+                      "Name": "Explicit",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -159,11 +159,11 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[SimpleGrazing].PseudoPatches = false"
+                        "[SimpleGrazing].PseudoPatches = true"
                       ],
                       "Paths": null,
                       "Values": null,
-                      "Name": "Explicit",
+                      "Name": "Pseudo",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -471,7 +471,7 @@
                                   "Name": "AGPRyegrassSoil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -533,11 +533,11 @@
                                   "Name": "AGPWhiteCloverSoil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -603,7 +603,7 @@
                               "Name": "Organic",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -629,16 +629,32 @@
                               "PHUnits": 0,
                               "EC": null,
                               "ESP": null,
-                              "CEC": null,
+                              "CEC": [
+                                16.441,
+                                11.9115,
+                                13.021,
+                                12.764500000000002,
+                                12.764500000000002,
+                                6.982500000000001,
+                                6.978000000000001
+                              ],
                               "ECMetadata": null,
                               "CLMetadata": null,
-                              "CECMetadata": null,
+                              "CECMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -680,7 +696,7 @@
                               "Name": "SoilWater",
                               "ResourceName": "WaterBalance",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -707,7 +723,7 @@
                               "Name": "Water",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -759,7 +775,7 @@
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -811,7 +827,7 @@
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -863,7 +879,7 @@
                               "Name": "Urea",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -873,12 +889,11 @@
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
                               "$type": "Models.Soils.NutrientPatching.NutrientPatchManager, Models",
-                              "MaximumNitrogenAvailableToPlants": 3.0,
                               "NPartitionApproach": 0,
                               "AutoAmalgamationApproach": 0,
                               "basePatchApproach": 0,
@@ -890,15 +905,15 @@
                               "Name": "NutrientPatchManager",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -1193,7 +1208,7 @@
                                   "Name": "AGPRyegrassSoil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -1255,11 +1270,11 @@
                                   "Name": "AGPWhiteCloverSoil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1325,7 +1340,7 @@
                               "Name": "Organic",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1376,7 +1391,7 @@
                               "Name": "Chemical",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1418,7 +1433,7 @@
                               "Name": "SoilWater",
                               "ResourceName": "WaterBalance",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1445,7 +1460,7 @@
                               "Name": "Water",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1497,7 +1512,7 @@
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1549,7 +1564,7 @@
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1601,7 +1616,7 @@
                               "Name": "Urea",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1611,12 +1626,11 @@
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
                               "$type": "Models.Soils.NutrientPatching.NutrientPatchManager, Models",
-                              "MaximumNitrogenAvailableToPlants": 3.0,
                               "NPartitionApproach": 0,
                               "AutoAmalgamationApproach": 0,
                               "basePatchApproach": 0,
@@ -1628,15 +1642,15 @@
                               "Name": "NutrientPatchManager",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -1708,7 +1722,7 @@
                               "Name": "Chemical",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1966,7 +1980,7 @@
                                   "Name": "AGPRyegrassSoil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -2028,7 +2042,7 @@
                                   "Name": "AGPWhiteCloverSoil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -2090,7 +2104,7 @@
                                   "Name": "Slurp1Soil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -2152,7 +2166,7 @@
                                   "Name": "Slurp2Soil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -2214,7 +2228,7 @@
                                   "Name": "Rye1Soil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -2276,11 +2290,11 @@
                                   "Name": "Rye2Soil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -2330,7 +2344,7 @@
                               "Name": "SoilWater",
                               "ResourceName": "WaterBalance",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -2396,7 +2410,7 @@
                               "Name": "Organic",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -2423,7 +2437,7 @@
                               "Name": "Water",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -2475,7 +2489,7 @@
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -2527,7 +2541,7 @@
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -2579,7 +2593,7 @@
                               "Name": "Urea",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -2589,12 +2603,11 @@
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
                               "$type": "Models.Soils.NutrientPatching.NutrientPatchManager, Models",
-                              "MaximumNitrogenAvailableToPlants": 3.0,
                               "NPartitionApproach": 0,
                               "AutoAmalgamationApproach": 0,
                               "basePatchApproach": 0,
@@ -2606,15 +2619,15 @@
                               "Name": "NutrientPatchManager",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -2677,10 +2690,26 @@
                               "PHUnits": 0,
                               "EC": null,
                               "ESP": null,
-                              "CEC": null,
+                              "CEC": [
+                                13.095,
+                                7.595,
+                                6.229,
+                                5.381,
+                                4.8445,
+                                4.3525,
+                                4.24
+                              ],
                               "ECMetadata": null,
                               "CLMetadata": null,
-                              "CECMetadata": null,
+                              "CECMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
@@ -3524,7 +3553,6 @@
                             },
                             {
                               "$type": "Models.Soils.NutrientPatching.NutrientPatchManager, Models",
-                              "MaximumNitrogenAvailableToPlants": 3.0,
                               "NPartitionApproach": 0,
                               "AutoAmalgamationApproach": 0,
                               "basePatchApproach": 0,
@@ -3616,7 +3644,7 @@
                               "Name": "Chemical",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -3826,7 +3854,7 @@
                                   "Name": "AGPRyegrassSoil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -3888,7 +3916,7 @@
                                   "Name": "AGPWhiteCloverSoil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -3950,7 +3978,7 @@
                                   "Name": "Slurp1Soil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -4012,7 +4040,7 @@
                                   "Name": "Slurp2Soil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -4074,7 +4102,7 @@
                                   "Name": "Rye1Soil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -4136,11 +4164,11 @@
                                   "Name": "Rye2Soil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -4190,7 +4218,7 @@
                               "Name": "SoilWater",
                               "ResourceName": "WaterBalance",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -4256,7 +4284,7 @@
                               "Name": "Organic",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -4283,7 +4311,7 @@
                               "Name": "Water",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -4335,7 +4363,7 @@
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -4387,7 +4415,7 @@
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -4439,7 +4467,7 @@
                               "Name": "Urea",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -4449,12 +4477,11 @@
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
                               "$type": "Models.Soils.NutrientPatching.NutrientPatchManager, Models",
-                              "MaximumNitrogenAvailableToPlants": 3.0,
                               "NPartitionApproach": 0,
                               "AutoAmalgamationApproach": 0,
                               "basePatchApproach": 0,
@@ -4466,15 +4493,15 @@
                               "Name": "NutrientPatchManager",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -4546,7 +4573,7 @@
                               "Name": "Chemical",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -4756,7 +4783,7 @@
                                   "Name": "AGPRyegrassSoil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -4818,7 +4845,7 @@
                                   "Name": "AGPWhiteCloverSoil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -4880,7 +4907,7 @@
                                   "Name": "Slurp1Soil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -4942,7 +4969,7 @@
                                   "Name": "Slurp2Soil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -5004,7 +5031,7 @@
                                   "Name": "Rye1Soil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -5066,11 +5093,11 @@
                                   "Name": "Rye2Soil",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -5120,7 +5147,7 @@
                               "Name": "SoilWater",
                               "ResourceName": "WaterBalance",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -5186,7 +5213,7 @@
                               "Name": "Organic",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -5213,7 +5240,7 @@
                               "Name": "Water",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -5265,7 +5292,7 @@
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -5317,7 +5344,7 @@
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -5369,7 +5396,7 @@
                               "Name": "Urea",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -5379,12 +5406,11 @@
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
                               "$type": "Models.Soils.NutrientPatching.NutrientPatchManager, Models",
-                              "MaximumNitrogenAvailableToPlants": 3.0,
                               "NPartitionApproach": 0,
                               "AutoAmalgamationApproach": 0,
                               "basePatchApproach": 0,
@@ -5396,18 +5422,27 @@
                               "Name": "NutrientPatchManager",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[SimpleCow].StockingRate = 3",
+                  "Name": "StockingRate",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -5428,7 +5463,7 @@
             {
               "$type": "Models.Clock, Models",
               "Start": "1972-01-01T00:00:00",
-              "End": "2000-12-31T00:00:00",
+              "End": "1981-12-31T00:00:00",
               "Name": "Clock",
               "ResourceName": null,
               "Children": [],
@@ -5508,8 +5543,8 @@
                   "Name": "AGPRyegrass.Stolon",
                   "LiveDigestibility": "FromModel",
                   "DeadDigestibility": "FromModel",
-                  "LiveFractionConsumable": 1.0,
-                  "DeadFractionConsumable": 1.0,
+                  "LiveFractionConsumable": 0.0,
+                  "DeadFractionConsumable": 0.0,
                   "LiveMinimumBiomass": 0.0,
                   "DeadMinimumBiomass": 0.0
                 },
@@ -5552,11 +5587,11 @@
             },
             {
               "$type": "Models.AgPasture.SimpleCow, Models",
-              "StockingRate": 2.0,
+              "StockingRate": 1.0,
               "Num1HaPaddocks": 25,
               "DaysPerGrazeWhenMilking": 1,
               "DaysPerGrazeWhenDry": 3,
-              "SilageNConc": 3.0,
+              "SilageNConc": 2.5,
               "SilageMEConc": 12.0,
               "CowBodyWeight": 450.0,
               "CalfBirthWeightPercent": 7.0,
@@ -5574,7 +5609,7 @@
             },
             {
               "$type": "Models.AgPasture.SimpleGrazing, Models",
-              "GrazingRotationType": 1,
+              "GrazingRotationType": 0,
               "SimpleGrazingFrequencyString": "21",
               "SimpleMinGrazable": 0.0,
               "SimpleGrazingResidual": 1500.0,
@@ -5654,8 +5689,9 @@
               "UsePatching": true,
               "PseudoPatches": false,
               "ZoneCount": 1,
-              "UrineReturnPattern": 2,
+              "UrineReturnPattern": 0,
               "PseudoRandomSeed": 666,
+              "MaxEffectiveNConcentration": 3.5,
               "FractionPopulationDecline": 0.0,
               "TramplingOn": false,
               "MaximumPropLitterMovedToSoil": 0.1,
@@ -5670,21 +5706,376 @@
               "$type": "Models.Report, Models",
               "VariableNames": [
                 "[Clock].Today as Date",
-                "Sum of ([AGPRyegrass].HarvestedWt + [AGPWhiteClover].HarvestedWt) from 1-jan to [Clock].Today as cumHarvestedWt   //the amount harvested (kg DM /ha)",
-                "Sum of [SimpleGrazing].GrazedN from 1-jan to [Clock].Today as cumNHarvested",
-                "Sum of [SimpleCow].HerdUrineNReturned from 1-jan to [Clock].Today as cumUrineNReturned",
-                "Sum of [ISoilWater].LeachNO3 from 1-jan to [Clock].Today as Leaching",
-                "sum([Soil].NO3.kgha + [Soil].NH4.kgha + [Soil].Urea.kgha) as MineralN",
-                "[AGPRyegrass].AboveGroundWt + [AGPWhiteClover].AboveGroundWt as Biomass   //the amount harvested (kg DM /ha)"
+                "[Clock].Today.Year as Year",
+                "[SimpleGrazing].PseudoPatches as PseudoPatches",
+                "",
+                "[SimpleGrazing].ZoneCount as ZoneCount",
+                "",
+                "// whole soil and pasture states and fluxes (i.e., aggregated across patches or zones)",
+                "Sum of [ReportingWithZonesHelper].ScriptReporting.DenitPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as Denit",
+                "Sum of [ReportingWithZonesHelper].ScriptReporting.DenitN2OPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as DenitN2O",
+                "Sum of [ReportingWithZonesHelper].ScriptReporting.LeachedNPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as LeachN",
+                "",
+                "//Last of [ReportingWithZonesHelper].ScriptReporting.UreaPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as UreaN",
+                "//Last of [ReportingWithZonesHelper].ScriptReporting.NH4Pdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as NH4N",
+                "//Last of [ReportingWithZonesHelper].ScriptReporting.NO3Pdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as NO3N",
+                "Last of [ReportingWithZonesHelper].ScriptReporting.MinNPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as MinN",
+                "//Last of [ReportingWithZonesHelper].ScriptReporting.TotalCPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as TotalC",
+                "//Last of [ReportingWithZonesHelper].ScriptReporting.TotalNPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as TotalN",
+                "",
+                "//Mean of [ReportingWithZonesHelper].ScriptReporting.HerbageWtPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as HerbageWt",
+                "//Mean of [ReportingWithZonesHelper].ScriptReporting.HerbageNPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as HerbageN",
+                "//Mean of [ReportingWithZonesHelper].ScriptReporting.PastureCompositionPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as Composition",
+                "",
+                "Sum of [ReportingWithZonesHelper].ScriptReporting.HarvestedWtPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as HarvestedWt",
+                "Sum of [ReportingWithZonesHelper].ScriptReporting.HarvestedNPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as HarvestedN",
+                "Sum of [ReportingWithZonesHelper].ScriptReporting.FixedNPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as FixedN",
+                "Sum of [ReportingWithZonesHelper].ScriptReporting.UptakeNPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as UptakeN",
+                "",
+                "Sum of [SimpleCow].HerdUrineNReturned from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as UrineNReturned",
+                "Sum of [SimpleCow].SilageFed from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as SupplementsFed",
+                "Sum of [SimpleCow].SilageMade from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as SupplementsMade",
+                "Sum of [SimpleCow].HerdDMIntake from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as HerdDMIntake",
+                "Sum of [SimpleCow].HerdMEDemand from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as HerdMEDemand",
+                "Sum of ([SimpleCow].SilageFed - [SimpleCow].SilageMade) from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as NetSupplementsFed",
+                "",
+                "",
+                "",
+                "//[ReportingWithZonesHelper].ScriptReporting.SysTime as SysTime",
+                "",
+                "// states in the individual zones or patches",
+                "//[ReportingWithZonesHelper].ScriptReporting.UreaByPatch as UreaByPatch ",
+                "//[ReportingWithZonesHelper].ScriptReporting.NH4ByPatch as NH4ByPatch ",
+                "//[ReportingWithZonesHelper].ScriptReporting.NO3ByPatch as NO3ByPatch ",
+                "//[ReportingWithZonesHelper].ScriptReporting.MinNByPatch as MinNByPatch ",
+                "//[ReportingWithZonesHelper].ScriptReporting.TotalCByPatch as TotalCByPatch ",
+                "//[ReportingWithZonesHelper].ScriptReporting.TotalNByPatch as TotalNByPatch ",
+                "",
+                "//[NutrientPatchManager].NO3EachPatch",
+                "//sum([NO3].kgha)"
               ],
               "EventNames": [
-                "[Clock].EndOfDay"
+                "//Clock.Today >= new DateTime(1970, 1, 1) && Clock.Today.Month == 12 && Clock.Today.Day == 31 ",
+                "[Clock].EndOfYear",
+                "//[Clock].EndOfDay"
               ],
               "GroupByVariableName": null,
-              "Name": "PasturePatches",
+              "Name": "ReportingWithPatchesPaddock",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
+              "CodeArray": [
+                "using APSIM.Core;",
+                "using Models.Soils.NutrientPatching;",
+                "using Models.Soils.Nutrients;",
+                "using Models.Interfaces;",
+                "using System.Diagnostics;",
+                "using System;",
+                "using Models.Core;",
+                "using Models.Soils;",
+                "using Models.PMF;",
+                "using Models.Zones;",
+                "using Models.AgPasture;",
+                "using System.Xml.Serialization;",
+                "using System.IO;",
+                "using APSIM.Shared.Utilities;",
+                "using System.Collections.Generic;",
+                "using System.Linq;",
+                "using Newtonsoft.Json;",
+                "",
+                "namespace Models",
+                "{",
+                "    [Serializable]",
+                "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
+                "    public class ScriptReporting : Model, IStructureDependency",
+                "    {",
+                "        [Link] private Clock Clock;",
+                "        [Link] private Soil soil;",
+                "        [Link] private ISummary summary;",
+                "        //[Link] private PatchScript patchAndZoneManager;    // need to get rid of this",
+                "        [Link] private NutrientPatchManager nutrientPatchManager;",
+                "        [field:NonSerialized]",
+                "        public IStructure Structure { private get; set; }",
+                "        [Link] private SimpleGrazing simpleGrazing;",
+                "",
+                "        ",
+                "        ",
+                "        [Link] private Zone[] zones;",
+                "        ",
+                "",
+                "        [JsonIgnore] public int ZoneCount  { get; set; }",
+                "        [JsonIgnore] public int PatchCount  { get; set; }",
+                "        [JsonIgnore] public int ArrayLength  { get; set; }",
+                "",
+                "        [JsonIgnore] public string SysTime  { get; set; }",
+                "",
+                "// Whole paddock states and fluxes",
+                "        [JsonIgnore] public double DenitPdk { get; set; }",
+                "        [JsonIgnore] public double DenitN2OPdk { get; set; }",
+                "        [JsonIgnore] public double LeachedNPdk  { get; set; }",
+                "        [JsonIgnore] public double UreaPdk { get; set; }",
+                "        [JsonIgnore] public double NH4Pdk { get; set; }",
+                "        [JsonIgnore] public double NO3Pdk { get; set; }",
+                "        [JsonIgnore] public double MinNPdk  { get; set; }",
+                "        [JsonIgnore] public double TotalCPdk  { get; set; }",
+                "        [JsonIgnore] public double TotalNPdk  { get; set; }",
+                "",
+                "        [JsonIgnore] public double HerbageWtPdk { get; set; }",
+                "        [JsonIgnore] public double HerbageNPdk { get; set; }",
+                "        [JsonIgnore] public double HarvestedWtPdk { get; set; }",
+                "        [JsonIgnore] public double HarvestedNPdk { get; set; }",
+                "        [JsonIgnore] public double FixedNPdk { get; set; }",
+                "        [JsonIgnore] public double UptakeNPdk { get; set; }",
+                "        [JsonIgnore] public double PastureCompositionPdk { get; set; }",
+                "",
+                "// nitrogen stuff - the array dimension is the number of patches - patches might be either explicit zones or pseudopatches",
+                "        [JsonIgnore] public double[] DenitByPatch { get; set; }",
+                "        [JsonIgnore] public double[] DenitN2OByPatch { get; set; }",
+                "        [JsonIgnore] public double[] LeachedNByPatch  { get; set; }",
+                "        [JsonIgnore] public double[] UreaByPatch { get; set; }",
+                "        [JsonIgnore] public double[] NH4ByPatch { get; set; }",
+                "        [JsonIgnore] public double[] NO3ByPatch { get; set; }",
+                "        [JsonIgnore] public double[] MinNByPatch  { get; set; }",
+                "        ",
+                "// carbon stuff - the array dimension is the number of patches - patches might be either explicit zones or pseudopatches",
+                "        [JsonIgnore] public double[] TotalCByPatch { get; set; }",
+                "        [JsonIgnore] public double[] TotalNByPatch { get; set; }",
+                "",
+                "// pasture stuff - is using explict patches (zones) then the array dimension is the number of zones - otherwise is 1",
+                "        [JsonIgnore] public double[] HerbageWtByPatch { get; set; }",
+                "        [JsonIgnore] public double[] HerbageNByPatch { get; set; }",
+                "        [JsonIgnore] public double[] HarvestedWtByPatch { get; set; }",
+                "        [JsonIgnore] public double[] HarvestedNByPatch { get; set; }",
+                "        [JsonIgnore] public double[] FixedNByPatch { get; set; }",
+                "        [JsonIgnore] public double[] UptakeNByPatch { get; set; }",
+                "        [JsonIgnore] public double[] PastureCompositionByPatch { get; set; }",
+                "",
+                "        [EventSubscribe(\"StartOfSimulation\")]",
+                "        private void OnSimulationCommencing(object sender, EventArgs e)",
+                "        {    ",
+                "            //Debugger.Break();",
+                "            ",
+                "// first deal with the Nutrient things. These will always have multiple values - patches or zones            ",
+                "            if (simpleGrazing.PseudoPatches == true)",
+                "                ArrayLength = simpleGrazing.ZoneCount;  // was                 ArrayLength = nutrientPatchManager.NumPatches;    //the number of patches - which is fixed in this simulation but could be dangerous elsewhere",
+                "            else",
+                "                ArrayLength = zones.Length;                       // the number of paddocks/zones",
+                "",
+                "            DenitByPatch = new double[ArrayLength];",
+                "            DenitN2OByPatch = new double[ArrayLength];",
+                "            LeachedNByPatch = new double[ArrayLength];",
+                "            UreaByPatch = new double[ArrayLength];",
+                "            NH4ByPatch = new double[ArrayLength];",
+                "            NO3ByPatch = new double[ArrayLength];",
+                "            MinNByPatch = new double[ArrayLength];",
+                "            TotalCByPatch = new double[ArrayLength];",
+                "            TotalNByPatch = new double[ArrayLength];",
+                "",
+                "            HerbageWtByPatch = new double[ArrayLength];",
+                "            HerbageNByPatch = new double[ArrayLength];",
+                "            HarvestedWtByPatch = new double[ArrayLength];",
+                "            HarvestedNByPatch = new double[ArrayLength];",
+                "            FixedNByPatch = new double[ArrayLength];",
+                "            UptakeNByPatch = new double[ArrayLength];",
+                "            PastureCompositionByPatch = new double[ArrayLength];",
+                "",
+                "        }",
+                "",
+                "        [EventSubscribe(\"EndOfDay\")]",
+                "        private void OnEndOfDay(object sender, EventArgs e)",
+                "        {",
+                "            SysTime = DateTime.Now.ToString();",
+                "        ",
+                "            if (simpleGrazing.PseudoPatches == false)  // explicit zones",
+                "            {",
+                "                for (int x = 0; x < zones.Length; x++)",
+                "                {",
+                "                    // start with the patchy stuff first",
+                "                    var soil = Structure.FindChild<Soil>(relativeTo: (INodeModel)zones[x]);  ",
+                "                    var patchManager = Structure.FindChild<NutrientPatchManager>(relativeTo: (INodeModel)soil);  ",
+                "                    var waterBalance = Structure.FindChild<ISoilWater>(relativeTo: (INodeModel)soil);                                ",
+                "                    var Urea = Structure.FindChild<ISolute>(\"Urea\", relativeTo: (INodeModel)soil);                                ",
+                "                    var NH4 = Structure.FindChild<ISolute>(\"NH4\", relativeTo: (INodeModel)soil);                                ",
+                "                    var NO3 = Structure.FindChild<ISolute>(\"NO3\", relativeTo: (INodeModel)soil);    ",
+                "",
+                "                    DenitByPatch[x] = patchManager.DenitrifiedN.Sum();",
+                "                    DenitN2OByPatch[x] = patchManager.N2Oatm300mm.Sum();  // only in the top 30 cm (2 layers)",
+                "                    //DenitN2OByPatch[x] = patchManager.N2Oatm.Sum();  // for all depths",
+                "                    ",
+                "                    LeachedNByPatch[x] = waterBalance.LeachNO3 + waterBalance.LeachNH4 + waterBalance.LeachUrea;",
+                "                    UreaByPatch[x] = patchManager.Urea.kgha.Sum();",
+                "                    NH4ByPatch[x] = patchManager.NH4.kgha.Sum();",
+                "                    NO3ByPatch[x] = patchManager.NO3.kgha.Sum();",
+                "                    MinNByPatch[x] = patchManager.MineralN.Sum();",
+                "                    TotalCByPatch[x] = patchManager.TotalC.Sum();",
+                "                    TotalNByPatch[x] = patchManager.TotalN.Sum();",
+                "",
+                "                    var sward =  Structure.FindAll<PastureSpecies>(relativeTo: (INodeModel)zones[x]);                                ",
+                "                    var Clover =   Structure.FindChild<PastureSpecies>(\"AGPWhiteClover\", relativeTo: (INodeModel)zones[x]);                                ",
+                "",
+                "                    HerbageWtByPatch[x] = sward.Sum(species => species.AboveGroundWt); ",
+                "                    HerbageNByPatch[x] = sward.Sum(species => species.AboveGroundN);   ",
+                "                    HarvestedWtByPatch[x] = sward.Sum(species => species.HarvestedWt); ",
+                "                    HarvestedNByPatch[x] = sward.Sum(species => species.HarvestedN); ",
+                "                    FixedNByPatch[x] = sward.Sum(species => species.FixedN);",
+                "                    UptakeNByPatch[x] = sward.Sum(species => species.SoilUptakeN);",
+                "                    PastureCompositionByPatch[x] = Clover.AboveGroundWt / (HerbageWtByPatch[x] + 0.1);",
+                "                    ",
+                "                }",
+                "                 ",
+                "                // now do the whole-paddock stuff",
+                "                DenitPdk = DenitByPatch.Sum() / zones.Length;",
+                "                DenitN2OPdk = DenitN2OByPatch.Sum() / zones.Length;",
+                "                LeachedNPdk = LeachedNByPatch.Sum() / zones.Length;",
+                "                UreaPdk = UreaByPatch.Sum() / zones.Length;",
+                "                NH4Pdk = NH4ByPatch.Sum() / zones.Length;",
+                "                NO3Pdk = NO3ByPatch.Sum() / zones.Length;",
+                "                MinNPdk = MinNByPatch.Sum() / zones.Length;",
+                "                TotalCPdk = TotalCByPatch.Sum() / zones.Length;",
+                "                TotalNPdk = TotalNByPatch.Sum() / zones.Length;",
+                "                ",
+                "                HerbageWtPdk = HerbageWtByPatch.Sum() / zones.Length;",
+                "                HerbageNPdk = HerbageNByPatch.Sum() / zones.Length;",
+                "                HarvestedWtPdk = HarvestedWtByPatch.Sum() / zones.Length;",
+                "                HarvestedNPdk = HarvestedNByPatch.Sum() / zones.Length;",
+                "                FixedNPdk = FixedNByPatch.Sum() / zones.Length;",
+                "                UptakeNPdk = UptakeNByPatch.Sum() / zones.Length;",
+                "                PastureCompositionPdk = PastureCompositionByPatch.Sum() / zones.Length;",
+                "",
+                "            }",
+                "            else  // PseudoPatches and there will only be one zone",
+                "            {",
+                "                for (int x = 0; x < zones.Length; x++)  // there is only one however still need this to access the zone for the components",
+                "                {",
+                "                    var soil =   Structure.FindChild<Soil>(relativeTo: (INodeModel)zones[x]);  ",
+                "                    var patchManager =   Structure.FindChild<NutrientPatchManager>(relativeTo: (INodeModel)soil);  ",
+                "                    var waterBalance =   Structure.FindChild<ISoilWater>(relativeTo: (INodeModel)soil);                                ",
+                "                    var Urea =   Structure.FindChild<ISolute>(\"Urea\", relativeTo: (INodeModel)soil);                                ",
+                "                    var NH4 =   Structure.FindChild<ISolute>(\"NH4\", relativeTo: (INodeModel)soil);                                ",
+                "                    var NO3 =   Structure.FindChild<ISolute>(\"NO3\", relativeTo: (INodeModel)soil);                                ",
+                "",
+                "                    DenitByPatch = patchManager.DenitrifiedNEachPatch;",
+                "                    DenitN2OByPatch = patchManager.N2Oatm300mmEachPatch;   // note that until get a new output variable, this is for the whole profile",
+                "                    UreaByPatch = patchManager.UreaEachPatch;",
+                "                    NH4ByPatch = patchManager.NH4EachPatch;",
+                "                    NO3ByPatch = patchManager.NO3EachPatch;",
+                "                    MinNByPatch = patchManager.MineralNEachPatch;",
+                "                    TotalCByPatch = patchManager.TotalCEachPatch;",
+                "                    TotalNByPatch = patchManager.TotalNEachPatch;",
+                "",
+                "                    var sward =  Structure.FindAll<PastureSpecies>(relativeTo: (INodeModel)zones[x]);                                ",
+                "                    var Clover =   Structure.FindChild<PastureSpecies>(\"AGPWhiteClover\", relativeTo: (INodeModel)zones[x]);                                ",
+                "",
+                "                    LeachedNByPatch[x] = waterBalance.LeachNO3 + waterBalance.LeachNH4 + waterBalance.LeachUrea; ",
+                "                    HerbageWtByPatch[x] = sward.Sum(species => species.AboveGroundWt); ",
+                "                    HerbageNByPatch[x] = sward.Sum(species => species.AboveGroundN);   ",
+                "                    HarvestedWtByPatch[x] = sward.Sum(species => species.HarvestedWt); ",
+                "                    HarvestedNByPatch[x] = sward.Sum(species => species.HarvestedN); ",
+                "                    FixedNByPatch[x] = sward.Sum(species => species.FixedN);",
+                "                    UptakeNByPatch[x] = sward.Sum(species => species.SoilUptakeN);",
+                "                    PastureCompositionByPatch[x] = Clover.AboveGroundWt / (HerbageWtByPatch[x] + 0.1);",
+                "                 }",
+                "                 ",
+                "                    // now do the whole-paddock stuff",
+                "                    ",
+                "                    DenitPdk = DenitByPatch.Sum() / nutrientPatchManager.NumPatches;",
+                "                    DenitN2OPdk = DenitN2OByPatch.Sum() / nutrientPatchManager.NumPatches;",
+                "                    LeachedNPdk = LeachedNByPatch.Sum();                                        // not part of the patching so do not divide  / nutrientPatchManager.NumPatches;",
+                "                    UreaPdk = UreaByPatch.Sum() / nutrientPatchManager.NumPatches;",
+                "                    NH4Pdk = NH4ByPatch.Sum() / nutrientPatchManager.NumPatches;",
+                "                    NO3Pdk = NO3ByPatch.Sum() / nutrientPatchManager.NumPatches;",
+                "                    MinNPdk = MinNByPatch.Sum() / nutrientPatchManager.NumPatches;",
+                "                    TotalCPdk = TotalCByPatch.Sum() / nutrientPatchManager.NumPatches;",
+                "                    TotalNPdk = TotalNByPatch.Sum() / nutrientPatchManager.NumPatches;",
+                "                    ",
+                "                    HerbageWtPdk = HerbageWtByPatch.Sum();",
+                "                    HerbageNPdk = HerbageNByPatch.Sum();",
+                "                    HarvestedWtPdk = HarvestedWtByPatch.Sum();",
+                "                    HarvestedNPdk = HarvestedNByPatch.Sum();",
+                "                    FixedNPdk = FixedNByPatch.Sum();",
+                "                    UptakeNPdk = UptakeNByPatch.Sum();",
+                "                    PastureCompositionPdk = PastureCompositionByPatch.Sum();",
+                "",
+                "",
+                "                }",
+                "                ",
+                "",
+                "            }",
+                "",
+                "",
+                "        }",
+                "",
+                "}"
+              ],
+              "Parameters": [],
+              "Name": "ReportingWithZonesHelper",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report, Models",
+              "VariableNames": [
+                "[Clock].Today as Date",
+                "[Clock].Today.Year as Year",
+                "[SimpleGrazing].PseudoPatches as PseudoPatches",
+                "",
+                "[SimpleGrazing].ZoneCount as ZoneCount",
+                "",
+                "// whole soil and pasture states and fluxes (i.e., aggregated across patches or zones)",
+                "Sum of [ReportingWithZonesHelper].ScriptReporting.DenitPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as Denit",
+                "Sum of [ReportingWithZonesHelper].ScriptReporting.DenitN2OPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as DenitN2O",
+                "Sum of [ReportingWithZonesHelper].ScriptReporting.LeachedNPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as LeachN",
+                "",
+                "//Last of [ReportingWithZonesHelper].ScriptReporting.UreaPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as UreaN",
+                "//Last of [ReportingWithZonesHelper].ScriptReporting.NH4Pdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as NH4N",
+                "//Last of [ReportingWithZonesHelper].ScriptReporting.NO3Pdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as NO3N",
+                "Last of [ReportingWithZonesHelper].ScriptReporting.MinNPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as MinN",
+                "//Last of [ReportingWithZonesHelper].ScriptReporting.TotalCPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as TotalC",
+                "//Last of [ReportingWithZonesHelper].ScriptReporting.TotalNPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as TotalN",
+                "",
+                "//Mean of [ReportingWithZonesHelper].ScriptReporting.HerbageWtPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as HerbageWt",
+                "//Mean of [ReportingWithZonesHelper].ScriptReporting.HerbageNPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as HerbageN",
+                "//Mean of [ReportingWithZonesHelper].ScriptReporting.PastureCompositionPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as Composition",
+                "",
+                "Sum of [ReportingWithZonesHelper].ScriptReporting.HarvestedWtPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as HarvestedWt",
+                "Sum of [ReportingWithZonesHelper].ScriptReporting.HarvestedNPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as HarvestedN",
+                "Sum of [ReportingWithZonesHelper].ScriptReporting.FixedNPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as FixedN",
+                "Sum of [ReportingWithZonesHelper].ScriptReporting.UptakeNPdk from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as UptakeN",
+                "",
+                "Sum of [SimpleCow].HerdUrineNReturned from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as UrineNReturned",
+                "Sum of [SimpleCow].SilageFed from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as SupplementsFed",
+                "Sum of [SimpleCow].SilageMade from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as SupplementsMade",
+                "Sum of [SimpleCow].HerdDMIntake from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as HerdDMIntake",
+                "Sum of [SimpleCow].HerdMEDemand from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as HerdMEDemand",
+                "",
+                "//[ReportingWithZonesHelper].ScriptReporting.SysTime as SysTime",
+                "",
+                "// states in the individual zones or patches",
+                "//[ReportingWithZonesHelper].ScriptReporting.UreaByPatch as UreaByPatch ",
+                "//[ReportingWithZonesHelper].ScriptReporting.NH4ByPatch as NH4ByPatch ",
+                "//[ReportingWithZonesHelper].ScriptReporting.NO3ByPatch as NO3ByPatch ",
+                "//[ReportingWithZonesHelper].ScriptReporting.MinNByPatch as MinNByPatch ",
+                "//[ReportingWithZonesHelper].ScriptReporting.TotalCByPatch as TotalCByPatch ",
+                "//[ReportingWithZonesHelper].ScriptReporting.TotalNByPatch as TotalNByPatch ",
+                "",
+                "//[NutrientPatchManager].NO3EachPatch",
+                "//sum([NO3].kgha)"
+              ],
+              "EventNames": [
+                "//Clock.Today >= new DateTime(1970, 1, 1) && Clock.Today.Month == 12 && Clock.Today.Day == 31 ",
+                "[Clock].EndOfDay"
+              ],
+              "GroupByVariableName": null,
+              "Name": "DailyReport",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -7149,7 +7540,6 @@
                     },
                     {
                       "$type": "Models.Soils.NutrientPatching.NutrientPatchManager, Models",
-                      "MaximumNitrogenAvailableToPlants": 3.0,
                       "NPartitionApproach": 0,
                       "AutoAmalgamationApproach": 0,
                       "basePatchApproach": 0,
@@ -7197,9 +7587,77 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "Name": "Folder",
+          "Name": "AnnualPlots",
           "ResourceName": null,
           "Children": [
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "MEDemand",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "ReportingWithPatchesPaddock",
+                  "XFieldName": "Date",
+                  "YFieldName": "HerdMEDemand",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "MEDemand",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
             {
               "$type": "Models.Graph, Models",
               "Caption": null,
@@ -7248,9 +7706,9 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "TableName": "PasturePatches",
+                  "TableName": "ReportingWithPatchesPaddock",
                   "XFieldName": "Date",
-                  "YFieldName": "cumHarvestedWt",
+                  "YFieldName": "HarvestedWt",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
@@ -7300,7 +7758,7 @@
               "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
-              "Name": "PastureNHarvested",
+              "Name": "SupplementsFed",
               "ResourceName": null,
               "Children": [
                 {
@@ -7309,16 +7767,16 @@
                   "XAxis": 3,
                   "YAxis": 0,
                   "ColourArgb": -1663232,
-                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryColours": "SimulationName",
                   "FactorToVaryMarkers": null,
                   "FactorToVaryLines": null,
                   "Marker": 11,
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "TableName": "PasturePatches",
+                  "TableName": "ReportingWithPatchesPaddock",
                   "XFieldName": "Date",
-                  "YFieldName": "cumNHarvested",
+                  "YFieldName": "SupplementsFed",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
@@ -7326,7 +7784,7 @@
                   "Cumulative": false,
                   "CumulativeX": false,
                   "Filter": null,
-                  "Name": "PastureNHarvested",
+                  "Name": "SupplementsFed",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -7368,7 +7826,7 @@
               "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
-              "Name": "NReturned",
+              "Name": "SupplementsMade",
               "ResourceName": null,
               "Children": [
                 {
@@ -7376,17 +7834,17 @@
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": null,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "SimulationName",
                   "FactorToVaryMarkers": null,
                   "FactorToVaryLines": null,
                   "Marker": 11,
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "TableName": "PasturePatches",
+                  "TableName": "ReportingWithPatchesPaddock",
                   "XFieldName": "Date",
-                  "YFieldName": "cumUrineNReturned",
+                  "YFieldName": "SupplementsMade",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
@@ -7394,7 +7852,75 @@
                   "Cumulative": false,
                   "CumulativeX": false,
                   "Filter": null,
-                  "Name": "NReturned",
+                  "Name": "SupplementsMade",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "NetSupplementsFed",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "ReportingWithPatchesPaddock",
+                  "XFieldName": "Date",
+                  "YFieldName": "NetSupplementsFed",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "NetSupplementsFed",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -7445,16 +7971,16 @@
                   "XAxis": 3,
                   "YAxis": 2,
                   "ColourArgb": -16736653,
-                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryColours": "SimulationName",
                   "FactorToVaryMarkers": null,
                   "FactorToVaryLines": null,
                   "Marker": 11,
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "TableName": "PasturePatches",
+                  "TableName": "ReportingWithPatchesPaddock",
                   "XFieldName": "Date",
-                  "YFieldName": "MineralN",
+                  "YFieldName": "MinN",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
@@ -7513,16 +8039,298 @@
                   "XAxis": 3,
                   "YAxis": 0,
                   "ColourArgb": -2793984,
-                  "FactorToVaryColours": null,
+                  "FactorToVaryColours": "SimulationName",
                   "FactorToVaryMarkers": null,
                   "FactorToVaryLines": null,
                   "Marker": 11,
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "TableName": "PasturePatches",
+                  "TableName": "ReportingWithPatchesPaddock",
                   "XFieldName": "Date",
-                  "YFieldName": "Leaching",
+                  "YFieldName": "LeachN",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Leaching",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Folder, Models",
+          "ShowInDocs": false,
+          "Name": "DailyPlots",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "PastureHarvested",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "DailyReport",
+                  "XFieldName": "Date",
+                  "YFieldName": "HarvestedWt",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "PastureHarvested",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "PastureNHarvested",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "DailyReport",
+                  "XFieldName": "Date",
+                  "YFieldName": "HarvestedN",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "PastureNHarvested",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 2,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": "NaN",
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "Mineral N",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 2,
+                  "ColourArgb": -16736653,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "DailyReport",
+                  "XFieldName": "Date",
+                  "YFieldName": "MinN",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Mineral N",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "Leaching",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -2793984,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "DailyReport",
+                  "XFieldName": "Date",
+                  "YFieldName": "LeachN",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,

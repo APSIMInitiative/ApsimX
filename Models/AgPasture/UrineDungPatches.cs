@@ -253,6 +253,7 @@ namespace Models.AgPasture
             double ureaToAdd = ureaToAddByLayer.Sum();
             if (pseudoPatches)
             {
+                ureaToAddByLayer = MathUtilities.Multiply_Value(ureaToAddByLayer, zoneCount);
                 var patchManager = structure.Find<NutrientPatchManager>(relativeTo: simpleGrazing);
                 AddSoilCNPatchType patch = new()
                 {

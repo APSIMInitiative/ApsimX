@@ -391,7 +391,8 @@ public class SimpleCow : Model, IStructureDependency
             SilageFed = SilageMEFed / SilageMEConc;
             SilageNFed = SilageFed * SilageNConc / 100.0;
         }
-        else if ((pastureRemovedME - pastureGrazedME) < 0.05 * HerdMEDemand) // excess feed, need to make some silage
+        //else if ((pastureRemovedME - pastureGrazedME) < 0.05 * HerdMEDemand) // excess feed, need to make some silage
+        else if ((pastureRemovedDM - pastureGrazedDM) > 0.05 * pastureRemovedDM) // excess feed, need to make some silage
             SilageMade = (pastureRemovedDM - pastureGrazedDM);
 
         HerdNIntake = pastureGrazedN + SilageNFed;

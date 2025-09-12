@@ -265,9 +265,9 @@ namespace Models.AgPasture
         public int PseudoRandomSeed { get; set; } = 666;
 
         /// <summary>Maximum effective N concentration (ppm)</summary>
-        [Description("Maximum effective N concentration for each layer (ppm)")]
+        [Description("Maximum effective N concentration for each layer - for PseudoPatches only (ppm)")]
         [Display(VisibleCallback = nameof(UsePatching))]
-        public double MaxEffectiveNConcentration { get; set; } = 3;
+        public double MaxEffectiveNConcentration { get; set; } = 3.5;
 
         // End patching variables.
 
@@ -414,8 +414,13 @@ namespace Models.AgPasture
         {
             if (UsePatching)
             {
-                urineDungPatches = new UrineDungPatches(this, Structure, PseudoPatches, ZoneCount, urineReturnType,
+                if (PseudoPatches)
+                    urineDungPatches = new UrineDungPatches(this, Structure, PseudoPatches, ZoneCount, urineReturnType,
                                                         UrineReturnPattern, PseudoRandomSeed, MaxEffectiveNConcentration);
+                else
+                    urineDungPatches = new UrineDungPatches(this, Structure, PseudoPatches, ZoneCount, urineReturnType,
+                                                        UrineReturnPattern, PseudoRandomSeed, 10000.0);
+
                 urineDungPatches.OnPreLink();
             }
         }

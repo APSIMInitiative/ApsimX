@@ -482,8 +482,8 @@ namespace Models.AgPasture
                 double upFraction = MaximumNUptake / potentialAvailableN;
                 for (int layer = 0; layer <= BottomLayer; layer++)
                 {
-                    mySoilNH4Available[layer] *= upFraction;
-                    mySoilNO3Available[layer] *= upFraction;
+                    //mySoilNH4Available[layer] *= upFraction;
+                    //mySoilNO3Available[layer] *= upFraction;
                 }
             }
         }
