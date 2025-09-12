@@ -8,6 +8,7 @@ using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core.ApsimFile;
 using Models.Core.Interfaces;
+using Models.Factorial;
 using Models.Storage;
 using Newtonsoft.Json;
 
@@ -242,6 +243,29 @@ namespace Models.Core
                         fileNames.Add(fileName);
                     }
             return fileNames;
+        }
+
+        /// <summary>
+        /// Get all sSimulation and Factorial names from the given file.
+        /// </summary>
+        /// <param name="onlyEnabled"></param>
+        /// <returns></returns>
+        public List<string> GetAllSimulationAndFactorialNameList(bool onlyEnabled = false)
+        {
+            List<string> sims = [];
+            if (onlyEnabled)
+            {
+                sims = Node.FindChildren<Simulation>().Where(sim => sim.Enabled == true).Select(sim => sim.Name).ToList();
+                List<string> allExperimentCombinations = Node.FindChildren<Experiment>(recurse: true).SelectMany(experiment => experiment.GetSimulationDescriptions(false).Select(sim => sim.Name)).ToList();
+                sims.AddRange(allExperimentCombinations);
+            }
+            else
+            {
+                sims = Node.FindChildren<Simulation>().Select(sim => sim.Name).ToList();
+                List<string> allExperimentCombinations = Node.FindChildren<Experiment>(recurse: true).SelectMany(experiment => experiment.GetSimulationDescriptions().Select(sim => sim.Name)).ToList();
+                sims.AddRange(allExperimentCombinations);
+            }
+            return sims;
         }
     }
 }

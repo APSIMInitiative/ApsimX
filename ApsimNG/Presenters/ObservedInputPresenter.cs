@@ -15,7 +15,9 @@ namespace UserInterface.Presenters
         private IPresenter propertyPresenter;
         private GridPresenter columnsGridPresenter;
         private GridPresenter derivedGridPresenter;
+        private GridPresenter simulationGridPresenter;
         private GridPresenter mergeGridPresenter;
+        private GridPresenter zeroGridPresenter;
 
         /// <summary>
         /// Attach the model to the view.
@@ -38,8 +40,14 @@ namespace UserInterface.Presenters
             derivedGridPresenter = new GridPresenter();
             CreateGridTab("DerivedTable", model as IModel, derivedGridPresenter, view.GridViewDerived);
 
+            simulationGridPresenter = new GridPresenter();
+            CreateGridTab("SimulationTable", model as IModel, simulationGridPresenter, view.GridViewSimulation);
+
             mergeGridPresenter = new GridPresenter();
             CreateGridTab("MergeTable", model as IModel, mergeGridPresenter, view.GridViewMerge);
+
+            zeroGridPresenter = new GridPresenter();
+            CreateGridTab("ZeroTable", model as IModel, zeroGridPresenter, view.GridViewZero);
         }
 
         /// <summary>

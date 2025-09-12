@@ -18,17 +18,11 @@ namespace UserInterface.Views
 
         public ContainerView GridViewDerived = null;
 
+        public ContainerView GridViewSimulation = null;
+
         public ContainerView GridViewMerge = null;
 
-        public ContainerView GridViewDataTypeError = null;
-
-        public ContainerView GridViewDataError = null;
-
-        public ContainerView GridViewZeroValue = null;
-
-        public ContainerView GridViewCalculatedErrors = null;
-
-        public ContainerView GridViewSimulationNameErrors = null;
+        public ContainerView GridViewZero = null;
 
         /// <summary>
         /// Invoked when the selected tab is changed.
@@ -50,25 +44,15 @@ namespace UserInterface.Views
             GridViewDerived = new ContainerView(owner);
             notebook.AppendPage(GridViewDerived.MainWidget, new Label("Derived"));
 
+            GridViewSimulation = new ContainerView(owner);
+            notebook.AppendPage(GridViewSimulation.MainWidget, new Label("Simulations"));
+
             GridViewMerge = new ContainerView(owner);
             notebook.AppendPage(GridViewMerge.MainWidget, new Label("Row Merge"));
             
-            /* Additional Views Required for later
-            GridViewDataTypeError = new ContainerView(owner);
-            notebook.AppendPage(GridViewDataTypeError.MainWidget, new Label("Data Type Error"));
+            GridViewZero = new ContainerView(owner);
+            notebook.AppendPage(GridViewZero.MainWidget, new Label("Zeros"));
 
-            GridViewDataError = new ContainerView(owner);
-            notebook.AppendPage(GridViewDataError.MainWidget, new Label("Data Error"));
-
-            GridViewZeroValue = new ContainerView(owner);
-            notebook.AppendPage(GridViewZeroValue.MainWidget, new Label("Zero Value"));
-
-            GridViewCalculatedErrors = new ContainerView(owner);
-            notebook.AppendPage(GridViewCalculatedErrors.MainWidget, new Label("Calculated Error"));
-
-            GridViewSimulationNameErrors = new ContainerView(owner);
-            notebook.AppendPage(GridViewSimulationNameErrors.MainWidget, new Label("Sim Name Error"));
-            */
             mainWidget = notebook;
             notebook.SwitchPage += OnSwitchPage;
             mainWidget.Destroyed += _mainWidget_Destroyed;

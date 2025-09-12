@@ -6,15 +6,14 @@ using System.Linq;
 using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Spreadsheet;
 using ExcelDataReader;
 using Models.Core;
 using Models.Core.Run;
 using Models.Storage;
+using Models.PreSimulationTools.ObservedInfo;
 
 namespace Models.PreSimulationTools
 {
-
     /// <summary>
     /// Reads the contents of a specific sheet from an EXCEL file and stores into the DataStore.
     /// </summary>
@@ -27,90 +26,6 @@ namespace Models.PreSimulationTools
         /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
         public IStructure Structure { private get; set; }
-
-        /// <summary>
-        /// Stores information about a column in an observed table
-        /// </summary>
-        public class ColumnInfo
-        {
-            /// <summary></summary>
-            public string Name;
-
-            /// <summary></summary>
-            public string IsApsimVariable;
-
-            /// <summary></summary>
-            public string DataType;
-
-            /// <summary></summary>
-            public bool HasErrorColumn;
-
-            /// <summary></summary>
-            public string Filename;
-        }
-
-        /// <summary>
-        /// Stores information about derived values from the input
-        /// </summary>
-        public class DerivedInfo
-        {
-            /// <summary></summary>
-            public string Name;
-
-            /// <summary></summary>
-            public string Function;
-
-            /// <summary></summary>
-            public string DataType;
-
-            /// <summary></summary>
-            public int Added;
-
-            /// <summary></summary>
-            public int Existing;
-        }
-
-        /// <summary>
-        /// Stores information about derived values from the input
-        /// </summary>
-        public class SimulationInfo
-        {
-            /// <summary></summary>
-            public string Name;
-
-            /// <summary></summary>
-            public bool HasSimulation;
-
-            /// <summary></summary>
-            public bool HasData;
-
-            /// <summary></summary>
-            public int Rows;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public class MergeInfo
-        {
-            /// <summary></summary>
-            public string Name;
-
-            /// <summary></summary>
-            public string Date;
-
-            /// <summary></summary>
-            public string Column;
-
-            /// <summary></summary>
-            public string Value1;
-
-            /// <summary></summary>
-            public string Value2;
-
-            /// <summary></summary>
-            public string File;
-        }
 
         /// <summary>The DataStore</summary>
         [Link]
@@ -201,7 +116,7 @@ namespace Models.PreSimulationTools
                     row["APSIM"] = columnInfo.IsApsimVariable;
                     row["Type"] = columnInfo.DataType;
                     row["Error Bars"] = columnInfo.HasErrorColumn;
-                    row["File"] = columnInfo.Filename;
+                    row["File"] = columnInfo.File;
 
                     newTable.Rows.Add(row);
                 }
@@ -311,8 +226,8 @@ namespace Models.PreSimulationTools
                 newTable.Columns.Add("Name");
                 newTable.Columns.Add("Date");
                 newTable.Columns.Add("Column");
-                newTable.Columns.Add("Value 1");
-                newTable.Columns.Add("Value 2");
+                newTable.Columns.Add("Value1");
+                newTable.Columns.Add("Value2");
                 newTable.Columns.Add("File");
 
                 if (SimulationData == null)
@@ -324,8 +239,8 @@ namespace Models.PreSimulationTools
                     row["Name"] = info.Name;
                     row["Date"] = info.Date;
                     row["Column"] = info.Column;
-                    row["Value 1"] = info.Value1;
-                    row["Value 2"] = info.Value2;
+                    row["Value1"] = info.Value1;
+                    row["Value2"] = info.Value2;
                     row["File"] = info.File;
                     newTable.Rows.Add(row);
                 }
@@ -335,6 +250,43 @@ namespace Models.PreSimulationTools
 
                 DataView dv = newTable.DefaultView;
                 dv.Sort = "Name asc";
+
+                return dv.ToTable();
+            }
+        }
+
+        /// <summary></summary>
+        public List<ZeroInfo> ZeroData {get; set;}
+
+        /// <summary>List of merge conflicts encountered</summary>
+        [Display]
+        public DataTable ZeroTable
+        {   
+            get 
+            {
+                DataTable newTable = new DataTable();
+
+                newTable.Columns.Add("Name");
+                newTable.Columns.Add("Column");
+                newTable.Columns.Add("File");
+
+                if (SimulationData == null)
+                    return newTable;
+
+                foreach (ZeroInfo info in ZeroData) 
+                {
+                    DataRow row = newTable.NewRow();
+                    row["Name"] = info.Name;
+                    row["Column"] = info.Column;
+                    row["File"] = info.File;
+                    newTable.Rows.Add(row);
+                }
+
+                for(int i = 0; i < newTable.Columns.Count; i++)
+                    newTable.Columns[i].ReadOnly = true;
+
+                DataView dv = newTable.DefaultView;
+                dv.Sort = "Column asc";
 
                 return dv.ToTable();
             }
@@ -391,10 +343,12 @@ namespace Models.PreSimulationTools
                 }
             }
 
+            ColumnNames = new List<string>();
             ColumnData = new List<ColumnInfo>();
             DerivedData = new List<DerivedInfo>();
             SimulationData = new List<SimulationInfo>();
             MergeData = new List<MergeInfo>();
+            ZeroData = new List<ZeroInfo>();
 
             foreach (string sheet in SheetNames)
             {
@@ -404,6 +358,7 @@ namespace Models.PreSimulationTools
                 dt = GetAPSIMColumnsFromObserved(dt);
                 dt = GetSimulationsFromObserved(dt);
                 dt = AddDerivedColumnsFromObserved(dt);
+                DetectZeros(dt);
             }
         }
 
@@ -445,9 +400,6 @@ namespace Models.PreSimulationTools
         public DataTable GetAPSIMColumnsFromObserved(DataTable dataTable)
         {
             Simulations sims = Structure.FindParent<Simulations>(recurse: true);
-
-            ColumnNames = new List<string>();
-            ColumnData = new List<ColumnInfo>();
 
             List<string> allColumnNames = dataTable.GetColumnNames().ToList();
 
@@ -505,7 +457,7 @@ namespace Models.PreSimulationTools
                     }
 
                     ColumnInfo colInfo = new ColumnInfo();
-                    colInfo.Filename = filename;
+                    colInfo.File = filename;
                     colInfo.Name = columnName;
 
                     colInfo.IsApsimVariable = "No";
@@ -562,20 +514,65 @@ namespace Models.PreSimulationTools
         /// <summary></summary>
         public DataTable GetSimulationsFromObserved(DataTable dataTable)
         {
+            Simulations sims = Structure.FindParent<Simulations>(recurse: true);
+
+            List<string> apsimSims = sims.GetAllSimulationAndFactorialNameList();
+            List<string> observedSims = dataTable.AsEnumerable().Select(s => s["SimulationName"].ToString()).Distinct().ToList<string>();
+            List<string> existingSims = SimulationData.AsEnumerable().Select(s => s.Name).ToList<string>();
+
+            List<string> combinedSims = new List<string>();
+            combinedSims.AddRange(apsimSims);
+            combinedSims.AddRange(observedSims);
+            combinedSims = combinedSims.Distinct().ToList<string>();
+            combinedSims.Sort();
+
+            foreach (string name in combinedSims)
+            {
+                bool hasData = false;
+                bool hasSim = false;
+                int rows = 0;
+
+                if (observedSims.Contains(name))
+                {
+                    hasData = true;
+                    rows = dataTable.Select().Where(s => s["SimulationName"].ToString() == name).Count();
+                }
+
+                if (existingSims.Contains(name))
+                {
+                    SimulationInfo info = SimulationData.FirstOrDefault(s => s.Name == name);
+                    if (hasData)
+                        info.HasData = true;
+                    info.Rows += rows;
+                }
+                else
+                {
+                    if (apsimSims.Contains(name))
+                        hasSim = true;
+                        
+                    SimulationInfo info = new SimulationInfo();
+                    info.Name = name;
+                    info.HasData = hasData;
+                    info.HasSimulation = hasSim;
+                    info.Rows = rows;
+                    SimulationData.Add(info);
+                }
+            }
+
             return dataTable;
         }
-        
+
         /// <summary>
         /// Filter through the given datatable and combine rows that have the same SimulationName and Clock.Today values.
         /// Will throw if it encounters two rows with different values for a field that should be combined.
         /// </summary>
-        private DataTable CombineRows(DataTable datatable)
+        private DataTable CombineRows(DataTable dataTable)
         {
-            if (!datatable.GetColumnNames().ToList().Contains("Clock.Today"))
-                return datatable;
+            if (!dataTable.GetColumnNames().ToList().Contains("Clock.Today"))
+                return dataTable;
 
             //Get a distinct list of rows of SimulationName and Clock.Today
-            var distinctRows = datatable.AsEnumerable()
+            var distinctRows = dataTable.AsEnumerable()
                 .Select(s => new
                 {
                     simulation = s["SimulationName"],
@@ -584,7 +581,7 @@ namespace Models.PreSimulationTools
                 })
                 .Distinct();
 
-            DataTable newDataTable = datatable.Clone();
+            DataTable newDataTable = dataTable.Clone();
 
             string errors = "";
             foreach (var item in distinctRows)
@@ -592,10 +589,10 @@ namespace Models.PreSimulationTools
                 if (!string.IsNullOrEmpty(item.clockAsString))
                 {
                     //select all rows in original datatable with this distinct values
-                    IEnumerable<DataRow> results = datatable.Select().Where(p => p["SimulationName"] == item.simulation && p["Clock.Today"].ToString() == item.clockAsString);
+                    IEnumerable<DataRow> results = dataTable.Select().Where(p => p["SimulationName"] == item.simulation && p["Clock.Today"].ToString() == item.clockAsString);
 
                     //store the list of columns in the datatable
-                    List<string> columns = datatable.GetColumnNames().ToList<string>();
+                    List<string> columns = dataTable.GetColumnNames().ToList<string>();
 
                     //the one or more rows needed to capture the data during merging
                     //multiple lines may still be needed if there are conflicts in columns when trying to merge the data
@@ -612,7 +609,7 @@ namespace Models.PreSimulationTools
                                 {
                                     if (!merged)
                                     {
-                                        if (CanMergeRows(row, newRow, column))
+                                        if (CanMergeRows(row, newRow, column) < 0.25)
                                         {
                                             newRow[column] = row[column];
                                             merged = true;
@@ -657,7 +654,8 @@ namespace Models.PreSimulationTools
         /// <summary>
         /// Comparisions to check if the value in the given column can be merged into newRow from row.
         /// </summary>
-        private bool CanMergeRows(DataRow row, DataRow newRow, string column)
+        /// <returns>Returns the percentage difference between values, 0 if equal, 1 if string mismatch, 0-1 for double mismatch.</returns>
+        private double CanMergeRows(DataRow row, DataRow newRow, string column)
         {
             if (!string.IsNullOrEmpty(row[column].ToString()))
             {
@@ -668,18 +666,50 @@ namespace Models.PreSimulationTools
                     if (isDouble1 && isDouble2)
                     {
                         if (!MathUtilities.FloatsAreEqual(existing, other))
-                            return false;
+                        {
+                            double percent = existing / other;
+                            if (existing > other)
+                                percent = other / existing;
+                            return 1 - percent;
+                        }
                         else
-                            return true;
+                            return 0;
                     }
                     else if (newRow[column].ToString() != row[column].ToString())
                     {
-                        return false;
+                        return 1;
                     }
                     
                 }
             }
-            return true;
+            return 0;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        private void DetectZeros(DataTable dataTable)
+        {
+            foreach (string column in dataTable.GetColumnNames())
+            {
+                if (!column.EndsWith("Error")) {
+                    foreach (DataRow row in dataTable.Rows)
+                    {
+                        string value = row[column].ToString();
+                        bool isDouble = double.TryParse(value, out double number);
+                        if (isDouble && MathUtilities.FloatsAreEqual(0, number))
+                        {
+                            ZeroInfo info = new ZeroInfo();
+                            info.Name = row["SimulationName"].ToString();
+                            info.Column = column;
+                            info.File = row["_Filename"].ToString();
+                            ZeroData.Add(info);
+                        }
+                    }
+                }
+                
+            }
         }
 
         /// <summary></summary>
