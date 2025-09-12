@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 200,
+  "Version": 201,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -6380,7 +6380,7 @@
                 "        [Description(\"Depth of urine penetration (mm)\")]",
                 "        public double UrineDepthPenetration { get; set; }",
                 "        ",
-                "        [Description(\"Maximum effective NO3-N or NH4-N concentration for uptake (g N / Mg soil)\")]",
+                "        [Description(\"Maximum effective NO3-N or NH4-N concentration for uptake for PseudoPatches only (g N / Mg soil)\")]",
                 "        public double MaxEffectiveNConcentration { get; set; }",
                 "",
                 "",
@@ -6526,11 +6526,11 @@
                 "                    for (int i = 0; i <= (soilPhysical.Thickness.Length - 1); i++)",
                 "                        ArrayForMaxEffConc[i] = MaxEffectiveNConcentration;",
                 "                        ",
-                "                    foreach (var patchManager in patchManagers)",
+                "                    /*foreach (var patchManager in patchManagers)",
                 "                    {",
                 "                           patchManager.MaximumNO3AvailableToPlants = ArrayForMaxEffConc;",
                 "                           patchManager.MaximumNH4AvailableToPlants = ArrayForMaxEffConc;",
-                "                    }",
+                "                    }*/",
                 "                } ",
                 "            }",
                 "",
@@ -6847,7 +6847,7 @@
                 },
                 {
                   "Key": "ZoneCount",
-                  "Value": "20"
+                  "Value": "25"
                 },
                 {
                   "Key": "UrineReturnType",
@@ -6863,7 +6863,7 @@
                 },
                 {
                   "Key": "MaxEffectiveNConcentration",
-                  "Value": "3"
+                  "Value": "3.5"
                 }
               ],
               "Name": "PatchAndZoneManager",
@@ -7811,9 +7811,6 @@
                   "TurnoverDefoliationEffectMin": 0.025,
                   "MinimumGreenLeafProp": 0.8,
                   "MinimumGreenRootProp": 0.5,
-                  "Leaf": null,
-                  "Stem": null,
-                  "Stolon": null,
                   "Name": "AGPRyegrass",
                   "ResourceName": "AGPRyegrass",
                   "Children": [],
@@ -7898,9 +7895,6 @@
                   "TurnoverDefoliationEffectMin": 0.025,
                   "MinimumGreenLeafProp": 0.8,
                   "MinimumGreenRootProp": 0.5,
-                  "Leaf": null,
-                  "Stem": null,
-                  "Stolon": null,
                   "Name": "AGPWhiteClover",
                   "ResourceName": "AGPWhiteClover",
                   "Children": [],
