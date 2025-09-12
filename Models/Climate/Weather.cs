@@ -613,6 +613,14 @@ namespace Models.Climate
             }
         }
 
+        /// <summary>Get a constant from the weather file.</summary>
+        /// <param name="name">Name of constant</param>
+        /// <returns>The value (as a string) or null if not found.</returns>
+        public string GetConstant(string name)
+        {
+            return reader.Constant(name)?.Value;
+        }
+
         /// <summary>
         /// Overrides the base class method to allow for initialization.
         /// </summary>

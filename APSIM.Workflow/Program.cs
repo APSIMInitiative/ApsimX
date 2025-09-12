@@ -68,7 +68,7 @@ public class Program
                     Console.WriteLine(dir);
                 }
             }
-            else if (!string.IsNullOrWhiteSpace(options.SimulationCount))
+            else if (options.SimulationCount)
             {
                 Console.WriteLine(ValidationLocationUtility.GetSimulationCount());
             }
