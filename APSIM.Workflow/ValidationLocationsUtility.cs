@@ -23,10 +23,10 @@ namespace APSIM.Workflow
         ];
 
         /// <summary>
-        /// Get the names of all directories in the validation locations that contain an .apsimx file.
+        /// Get the paths of all apsimx files in the validation locations that contain an .apsimx file.
         /// </summary>
         /// <returns>A string array</returns>
-        public static string[] GetDirectoryPaths()
+        public static string[] GetValidationFilePaths()
         {
             List<string> validation_directories = [];
             foreach (string location in VALIDATION_LOCATIONS)
@@ -62,7 +62,7 @@ namespace APSIM.Workflow
         /// </summary>
         public static int GetSimulationCount()
         {
-            return GetDirectoryPaths().Length - PayloadUtilities.EXCLUDED_SIMS_FILEPATHS.Length;
+            return GetValidationFilePaths().Length - PayloadUtilities.EXCLUDED_SIMS_FILEPATHS.Length;
         }
         
         /// <summary>Normalize a file path to use forward slashes instead of backslashes.</summary>

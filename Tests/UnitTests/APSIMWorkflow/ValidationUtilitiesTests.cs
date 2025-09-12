@@ -25,7 +25,7 @@ public class ValidationLocationUtilityTest
     [Test]
     public void TestGetDirectoryPaths_ShouldNotIncludeExcludedSims()
     {
-        var result = ValidationLocationUtility.GetDirectoryPaths();
+        var result = ValidationLocationUtility.GetValidationFilePaths();
         Assert.That(result, Does.Not.Contain(PayloadUtilities.EXCLUDED_SIMS_FILEPATHS));
     }
 }
