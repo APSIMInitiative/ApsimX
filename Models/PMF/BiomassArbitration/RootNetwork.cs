@@ -552,8 +552,6 @@ namespace Models.PMF
                 foreach (NetworkZoneState z in Zones)
                 {
                     z.CalculateRAw();
-                    z.CalculateRelativeLiveBiomassProportions();
-                    z.CalculateRelativeDeadBiomassProportions();
                     z.CalculateRootProportionThroughLayer();
                 }
 
@@ -621,6 +619,7 @@ namespace Models.PMF
                     double RZA = z.Area / TotalArea;
                     TotalRAw = z.RAw.Sum();
                     FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[z.LayerLive.Length];
+                    z.CalculateRelativeLiveBiomassProportions();
                     for (int layer = 0; layer < z.Physical.Thickness.Length; layer++)
                     {
                         z.LayerLive[layer] -= (liveRemoved * RZA * z.LayerLiveProportion[layer]);
@@ -631,6 +630,11 @@ namespace Models.PMF
                         z.LayerLive[layer] += (allocated * RZA * fracAlloc);
 
                         z.LayerDead[layer] += (senesced * RZA * z.LayerLiveProportion[layer]);
+                    }
+                        
+                    z.CalculateRelativeDeadBiomassProportions();
+                    for (int layer = 0; layer < z.Physical.Thickness.Length; layer++)
+                    {
                         OrganNutrientsState detachedToday = detached * RZA * z.LayerDeadProportion[layer];
                         z.LayerDead[layer] -= detachedToday;
                         z.LayerDead[layer] -= (deadRemoved * RZA * z.LayerDeadProportion[layer]);

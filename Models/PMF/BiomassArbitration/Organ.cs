@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using APSIM.Core;
 using APSIM.Numerics;
-using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Functions;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Newtonsoft.Json;
+using Zone = Models.Core.Zone;
 
 namespace Models.PMF
 {
@@ -59,10 +59,6 @@ namespace Models.PMF
         [Link(Type = LinkType.Ancestor)]
         public Plant parentPlant = null;
 
-        /// <summary>The surface organic matter model</summary>
-        [Link]
-        private ISurfaceOrganicMatter surfaceOrganicMatter = null;
-
         /// <summary>The senescence rate function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
@@ -105,6 +101,9 @@ namespace Models.PMF
         /// <summary>Tolerance for biomass comparisons</summary>
         protected double tolerence = 3e-11;
 
+        private double haTom2 = 10000;
+        private double gPerm2TokgPerha = 10;
+
         private double startLiveC { get; set; }
         private double startDeadC { get; set; }
         private double startLiveN { get; set; }
@@ -115,6 +114,8 @@ namespace Models.PMF
         private bool removeBiomass { get; set; }
         private bool resetOrganTomorrow { get; set; }
 
+        private double simArea { get; set; }
+        private DimensionsOverZones DOZ { get; set; }
 
         ///3. The Constructor
         /// -------------------------------------------------------------------------------------------------
@@ -298,7 +299,6 @@ namespace Models.PMF
             }
         }
 
-
         ///6. Public methods
         /// --------------------------------------------------------------------------------------------------
 
@@ -325,7 +325,7 @@ namespace Models.PMF
             {
                 OrganNutrientsState totalToResidues = liveRetained + deadRetained;
                 Biomass toResidues = totalToResidues.ToBiomass;
-                surfaceOrganicMatter.Add(toResidues.Wt * 10.0, toResidues.N * 10.0, 0.0, parentPlant.PlantType, Name);
+                addSOMtoZones(toResidues.Wt, toResidues.N);
             }
             if ((liveToRemove + deadToRemove + liveToResidue + deadToResidue)>0)
             {
@@ -395,9 +395,12 @@ namespace Models.PMF
             if (data.Plant == parentPlant)
             {
                 initialiseBiomass();
+                DOZ = Structure.FindChild<DimensionsOverZones>(recurse:true, relativeTo:parentPlant);
 
                 if (RootNetworkObject != null)
                     RootNetworkObject.InitailiseNetwork(Live);
+                else
+                    initialiseSOMZones();
             }
         }
 
@@ -514,7 +517,7 @@ namespace Models.PMF
                     Detached = Dead * DetachmentRate;
                     Dead -= Detached;
                     if (RootNetworkObject == null)
-                        surfaceOrganicMatter.Add(Detached.Wt * 10, Detached.N * 10, 0, parentPlant.PlantType, Name);
+                        addSOMtoZones(Detached.Wt, Detached.N);
                 }
 
                 // Remove respiration
@@ -613,7 +616,7 @@ namespace Models.PMF
                 Dead.Clear();
                 if (RootNetworkObject == null)
                 {
-                    surfaceOrganicMatter.Add(Wt * 10, N * 10, 0, parentPlant.PlantType, Name);
+                    addSOMtoZones(Wt, N);
                 }
 
                 if (RootNetworkObject != null)
@@ -627,6 +630,46 @@ namespace Models.PMF
             {
                 RootNetworkObject.PlantZone.Clear();
                 RootNetworkObject.Depth = 0;
+            }
+        }
+
+        /// <summary>
+        /// Method to allocate detached plant biomass over zones
+        /// </summary>
+        /// <param name="wt"></param>
+        /// <param name="n"></param>
+        private void addSOMtoZones(double wt, double n)
+        {
+            int zi = 0;
+
+            if (DOZ == null)
+            {
+                Zone z = Structure.FindParent<Zone>(recurse: true);
+                ISurfaceOrganicMatter somZone = Structure.FindChild<ISurfaceOrganicMatter>(relativeTo: z);
+                somZone.Add(wt/(z.Area * haTom2) * gPerm2TokgPerha, n/(z.Area * haTom2) * gPerm2TokgPerha, 0, parentPlant.PlantType, Name);
+            }
+            else
+            {
+                foreach (Zone z in DOZ.zones)
+                {
+                    ISurfaceOrganicMatter somZone = Structure.FindChild<ISurfaceOrganicMatter>(relativeTo: z);
+
+                    somZone.Add((wt * DOZ.RAOZ[zi] * gPerm2TokgPerha) /(z.Area * haTom2), (n * DOZ.RAOZ[zi] * gPerm2TokgPerha) /(z.Area * haTom2), 0, parentPlant.PlantType, Name);
+                    zi += 1;
+                }
+            }
+        }
+
+        /// <summary>
+        /// set initial biomass for organ
+        /// </summary>
+        private void initialiseSOMZones()
+        {
+            Simulation sim = Structure.FindParent<Simulation>();
+            List<Zone> zones = Structure.FindAll<Zone>(relativeTo: sim).ToList();
+            foreach (Zone z in zones)
+            {
+                simArea += z.Area;
             }
         }
 
