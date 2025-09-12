@@ -587,9 +587,54 @@ namespace Models.AgPasture
         /// <summary>Add urine to the soil.</summary>
         private void DoUrineDungTrampling()
         {
+            // Calculate the urine and dung N deposition to soil.
+            // If SimpleCow is in the simulation then call it to get urine and dung N return
+            int numberUrinations;
+
+            double urineN = 0;
+            double dungN = 0;
+            double dungWt = 0;
+            if (simpleCow != null)
+            {
+                // SIMPLECOW is in simulation. It calculates urine and dung N.
+                var (numUrinations, urineNSimpleCow, dungNSimpleCow) = simpleCow.OnGrazed(GrazedDM, GrazedME, GrazedN);
+                urineN = urineNSimpleCow;   // total for herd.
+                dungN = dungNSimpleCow;
+                numberUrinations = (int)numUrinations;
+            }
+            else
+            {
+                // Calculate the dung wt.
+                double intakeN = 0;
+                foreach (var zone in zones)
+                {
+                    foreach (var grazedForage in zone.GrazedForages)
+                    {
+                        intakeN += grazedForage.N;
+                        dungWt += (1 - grazedForage.Digestibility) * grazedForage.Wt;
+                    }
+                }
+
+                // DungNConc defaults to 2.6 g N / 100 g DM
+                dungN = dungWt * DungNConc / 100; // conversion from g N / 100 g DM to fraction
+                dungN = Math.Min(dungN, 0.9 * intakeN);
+                urineN = (intakeN - dungN) * (1 - MonthLookup(FractionIntakeNToAnimal, clock.Today.Month));
+                numberUrinations = 1000;  // sensible default if SimpleCow not in simulation?
+            }
+
+            // Apply fraction of dung and urine to lanes, gateways etc.
+            double fractionOfDungUrineOffPaddock = 1 - MonthLookup(FractionOfDungUrineOffPaddock, clock.Today.Month);
+            dungN *= fractionOfDungUrineOffPaddock;
+            urineN *= fractionOfDungUrineOffPaddock;
+
+            // Apply the fractions urine/dung leaving the system.
+            dungWt *= 1.0 - SendDungElsewhere;
+            dungN *= 1.0 - SendDungElsewhere;
+            urineN *= 1.0 - SendUrineElsewhere;
+
             if (UsePatching)
             {
-                zones.First().DoUrineDungTrampling(clock.Today.Month);  // Assumes all zones are harvested the same.
+                zones.First().DoUrineDungTrampling(urineN, dungN, dungWt, numberUrinations);  // Assumes all zones are harvested the same.
 
                 AmountUrineNReturned = zones.First().AmountUrineNReturned;
                 AmountDungNReturned = zones.First().AmountDungNReturned;
@@ -597,7 +642,7 @@ namespace Models.AgPasture
             else
             {
                 foreach (var zone in zones)
-                    zone.DoUrineDungTrampling(clock.Today.Month);
+                    zone.DoUrineDungTrampling(urineN, dungN, dungWt, numberUrinations);
                 AmountUrineNReturned = zones.Sum(z => z.AmountUrineNReturned);
                 AmountDungNReturned = zones.Sum(z => z.AmountDungNReturned);
             }
@@ -704,7 +749,6 @@ namespace Models.AgPasture
             private double amountUrineNReturned;
             private double dmRemovedToday;
             private double areaWeighting;
-            private List<Forages.MaterialRemoved> grazedForages = new();
             private ISummary summary;
             UrineDungPatches urineDungPatches;
             SimpleCow simpleCow;
@@ -749,6 +793,9 @@ namespace Models.AgPasture
             /// <summary>The number of forages in our care</summary>
             public int NumForages => forages.Count;
 
+            /// <summary>Grazed forages</summary>
+            public List<Forages.MaterialRemoved> GrazedForages { get; set; } = new();
+
             /// <summary>Dry matter of all forages in zone, weighted for area on zone (kg/ha)</summary>
             public double TotalDM => forages.Sum(f => f.Material.Sum(m => m.Total.Wt) * 10) * areaWeighting;
 
@@ -787,7 +834,7 @@ namespace Models.AgPasture
                 amountDungNReturned = 0;
                 amountDungWtReturned = 0;
                 amountUrineNReturned = 0;
-                grazedForages.Clear();
+                GrazedForages.Clear();
             }
 
             /// <summary>
@@ -849,7 +896,7 @@ namespace Models.AgPasture
                             grazedN += grazed.N;    // kg/ha
                             grazedME += grazedMetabolisableEnergy * grazed.Wt;
 
-                            grazedForages.Add(grazed);
+                            GrazedForages.Add(grazed);
                         }
                     }
                 }
@@ -858,49 +905,12 @@ namespace Models.AgPasture
             /// <summary>
             /// Perform urine and dung return and trampling.
             /// </summary>
-            /// <param name="month"></param>
-            public void DoUrineDungTrampling(int month)
+            /// <param name="urineN">Amount of urine N (kg/ha)</param>
+            /// <param name="dungN">Amount of dung N (kg/ha)</param>
+            /// <param name="dungWt">Mass of dung (kg/ha)</param>
+            /// <param name="numberUrinations">Number of urinations</param>
+            public void DoUrineDungTrampling(double urineN, double dungN, double dungWt, int numberUrinations)
             {
-                // Calculate the dung wt.
-                double dungWt = 0;
-                double urineN = 0;
-                double intakeN = 0;
-                foreach (var grazedForage in grazedForages)
-                {
-                    intakeN += grazedForage.N;
-                    dungWt += (1 - grazedForage.Digestibility) * grazedForage.Wt;
-                }
-
-                // DungNConc defaults to 2.6 g N / 100 g DM
-                double dungN = dungWt * simpleGrazing.DungNConc / 100; // conversion from g N / 100 g DM to fraction
-                dungN = Math.Min(dungN, 0.9 * intakeN);
-                urineN = (intakeN - dungN) * (1 - MonthLookup(simpleGrazing.FractionIntakeNToAnimal, month));
-
-                // Calculate the urine and dung N deposition to soil.
-                // If SimpleCow is in the simulation then call it to get urine and dung N return
-                int numberUrinations;
-
-                if (simpleCow != null)
-                {
-                    // SIMPLECOW is in simulation. It calculates urine and dung N.
-                    var (numUrinations, urineNSimpleCow, dungNSimpleCow) = simpleCow.OnGrazed(GrazedDM, GrazedME, GrazedN);
-                    urineN = urineNSimpleCow;   // total for herd.
-                    dungN = dungNSimpleCow;
-                    numberUrinations = (int)numUrinations;
-                }
-                else
-                    numberUrinations = 1000;  // sensible default if SimpleCow not in simulation?
-
-                // Apply fraction of dung and urine to lanes, gateways etc.
-                    double fractionOfDungUrineOffPaddock = 1 - MonthLookup(simpleGrazing.FractionOfDungUrineOffPaddock, month);
-                dungN *= fractionOfDungUrineOffPaddock;
-                urineN *= fractionOfDungUrineOffPaddock;
-
-                // Apply the fractions urine/dung leaving the system.
-                dungWt *= 1.0 - simpleGrazing.SendDungElsewhere;
-                dungN *= 1.0 - simpleGrazing.SendDungElsewhere;
-                urineN *= 1.0 - simpleGrazing.SendUrineElsewhere;
-
                 // Update reporting variables.
                 amountDungNReturned += dungN;
                 amountDungWtReturned += dungWt;
