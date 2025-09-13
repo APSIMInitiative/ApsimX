@@ -95,25 +95,37 @@ namespace Models.Core.ConfigFile
                         value = File.ReadAllText(potentialFilepath);
 
                     // Check if the override is for a cultivar.
-                    bool hasCultivar = (property.Contains("Cultivars", StringComparison.OrdinalIgnoreCase) && property.Count(c => c == '[') == 2);
+                    bool hasCultivar = property.StartsWith("[Cultivars]", StringComparison.OrdinalIgnoreCase)
+                                       || property.Contains(".Cultivars.", StringComparison.OrdinalIgnoreCase);
 
                     // If the override is for a cultivar, we need to handle it differently.
                     if (hasCultivar)
                     {
-                        int second = property.IndexOf('[', property.IndexOf('[') + 1);
-                        var param = property[second..];
-                        property = property[..(second - 1)];
+                        // Find the first and second '['
+                        int firstBracket = property.IndexOf('[');
+                        int secondBracket = property.IndexOf('[', firstBracket + 1);
 
-                        string cultName = property.Substring(property.LastIndexOf('.') + 1);
-                        Cultivar cultivar = tempSim.Node.FindChild<Cultivar>(cultName, recurse: true);
+                        // Split at second bracket if exists, otherwise first bracket
+                        int splitIndex = secondBracket >= 0 ? secondBracket : firstBracket;
+
+                        // param = everything from the chosen bracket
+                        string param = splitIndex >= 0 ? property.Substring(splitIndex) : "";
+
+                        // property stays intact (including cultivar)
+                        property = property.Substring(0, splitIndex).TrimEnd('.');
+
+                        // extract cultivar as last token before the split
+                        int lastDot = property.LastIndexOf('.');
+                        string cultivarName = lastDot >= 0 ? property.Substring(lastDot + 1) : property;
+                        Cultivar cultivar = tempSim.Node.FindChild<Cultivar>(cultivarName, recurse: true);
 
                         string[] cultCommands = cultivar.Command;
                         bool found = false;
 
                         cultCommands = [.. cultCommands
                             .Select(line => {
-                                if (string.IsNullOrWhiteSpace(line) || line.TrimStart().StartsWith("//"))
-                                    return line;
+                                if (string.IsNullOrWhiteSpace(line) || (line.TrimStart().StartsWith("//") && !line.Contains(param)))
+                                    return null;
 
                                 if (line.Contains(param))
                                 {
@@ -127,7 +139,7 @@ namespace Models.Core.ConfigFile
                         if (!found)
                             cultCommands = cultCommands.Append($"{param} = {value}").ToArray();
 
-                        string[] singleLineCommandArray = { property + ".Command = " + string.Join(",", cultCommands) };
+                        string[] singleLineCommandArray = { property + ".Command = " + string.Join(",", cultCommands.Where(c => !string.IsNullOrWhiteSpace(c))) };
                         var overrides = Overrides.ParseStrings(singleLineCommandArray);
                         tempSim = (Simulations)ApplyOverridesToApsimxFile(overrides, tempSim);
                     }
