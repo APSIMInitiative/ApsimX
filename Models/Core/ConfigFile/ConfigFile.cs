@@ -1,13 +1,17 @@
-﻿using System;
+﻿using APSIM.Core;
+using APSIM.Shared.Utilities;
+using MathNet.Numerics.RootFinding;
+using Models.Core.ApsimFile;
+using Models.Factorial;
+using Models.PMF;
+using Models.PostSimulationTools;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using APSIM.Core;
-using APSIM.Shared.Utilities;
-using Models.Core.ApsimFile;
 using static Models.Core.Overrides;
 
 namespace Models.Core.ConfigFile
@@ -78,22 +82,63 @@ namespace Models.Core.ConfigFile
                 {
                     string property = part1;
                     string value = "";
-                    for(int i = 1; i < commandSplits.Count; i++)
+                    for (int i = 1; i < commandSplits.Count; i++)
                     {
                         value += commandSplits[i];
-                        if (i < commandSplits.Count-1)
+                        if (i < commandSplits.Count - 1)
                             value += "=";
                     }
 
-                    //check if second part is a filename or value (ends in ; and file exists)
-                    //if so, read contents of that file in as the value
-                    string potentialFilepath = configFileDirectory + "/" + value.Substring(0, value.Length-1);
+                    // Check if second part is a filename or value (ends in ; and file exists)
+                    // If so, read contents of that file in as the value
+                    string potentialFilepath = configFileDirectory + "/" + value.Substring(0, value.Length - 1);
                     if (value.Trim().EndsWith(';') && File.Exists(potentialFilepath))
                         value = File.ReadAllText(potentialFilepath);
 
-                    string[] singleLineCommandArray = { property + "=" + value };
-                    var overrides = Overrides.ParseStrings(singleLineCommandArray);
-                    tempSim = (Simulations)ApplyOverridesToApsimxFile(overrides, tempSim);
+                    // Check if the override is for a cultivar.
+                    bool hasCultivar = property.Contains(".Command.", StringComparison.OrdinalIgnoreCase);
+
+                    if (hasCultivar) {
+                        // If the override is for a cultivar, we need to handle it differently.
+                        int splitIndex = property.IndexOf(".Command.");
+                        string param = property.Replace(".Command.", "")[splitIndex..];
+                        property = property[..splitIndex].TrimEnd('.');
+                        int lastDot = property.LastIndexOf('.');
+                        string cultivarName = lastDot >= 0 ? property.Substring(lastDot + 1) : property.Replace("[", "").Replace("]", "");
+
+                        Cultivar cultivar = tempSim.Node.FindChild<Cultivar>(cultivarName, recurse: true);
+                        string[] cultCommands = cultivar.Command;
+                        bool found = false;
+
+                        cultCommands = [.. cultCommands
+                            .Select(line => {
+                                if (string.IsNullOrWhiteSpace(line) || (line.TrimStart().StartsWith("//") && !line.Contains(param)))
+                                    return null;
+
+                                if (line.Contains(param))
+                                {
+                                    found = true;
+                                    return $"{param} = {value}";
+                                }
+                                return line;
+                            })];
+
+                        // Add a new line if the cultivar parameter does not exist in the cultivar commands already.
+                        if (!found)
+                            cultCommands = cultCommands.Append($"{param} = {value}").ToArray();
+
+                        string[] singleLineCommandArray = { property + ".Command = " + string.Join(",", cultCommands.Where(c => !string.IsNullOrWhiteSpace(c))) };
+                        var overrides = Overrides.ParseStrings(singleLineCommandArray);
+                        tempSim = (Simulations)ApplyOverridesToApsimxFile(overrides, tempSim);
+
+                    } 
+                    else
+                    {
+                        string[] singleLineCommandArray = { property + "=" + value };
+                        var overrides = Overrides.ParseStrings(singleLineCommandArray);
+                        tempSim = (Simulations)ApplyOverridesToApsimxFile(overrides, tempSim);
+                    }
+
                 }
                 // else its an instruction.
                 else
@@ -113,7 +158,7 @@ namespace Models.Core.ConfigFile
                     else if (keywordString.Contains("duplicate")) { keyword = Keyword.Duplicate; }
                     else if (keywordString.Contains("save")) { keyword = Keyword.Save; }
                     else if (keywordString.Contains("load")) { keyword = Keyword.Load; }
-                    else if (keywordString.Contains("run"))  { return tempSim; }
+                    else if (keywordString.Contains("run")) { return tempSim; }
                     else throw new Exception($"keyword in command didn't match any recognised commands. Keyword given {keywordString}");
 
                     // Ignore the command as these cases are handled outside of this method.
@@ -281,7 +326,7 @@ namespace Models.Core.ConfigFile
             }
             catch (Exception e)
             {
-                string message = e.Message + " : " + instruction.Keyword + " " +  instruction.ActiveNode + " " + instruction.NewNode;
+                string message = e.Message + " : " + instruction.Keyword + " " + instruction.ActiveNode + " " + instruction.NewNode;
                 throw new Exception(message);
             }
         }
@@ -297,7 +342,7 @@ namespace Models.Core.ConfigFile
             if (pos > -1)
             {
                 string p1 = line.Substring(0, pos);
-                string p2 = line.Substring(pos+1);
+                string p2 = line.Substring(pos + 1);
 
                 if (p2.Contains(' '))
                     p2 = '"' + p2.Trim() + '"';
