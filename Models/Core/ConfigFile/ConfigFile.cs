@@ -2,6 +2,7 @@
 using APSIM.Shared.Utilities;
 using MathNet.Numerics.RootFinding;
 using Models.Core.ApsimFile;
+using Models.Factorial;
 using Models.PMF;
 using Models.PostSimulationTools;
 using System;
@@ -95,30 +96,17 @@ namespace Models.Core.ConfigFile
                         value = File.ReadAllText(potentialFilepath);
 
                     // Check if the override is for a cultivar.
-                    bool hasCultivar = property.StartsWith("[Cultivars]", StringComparison.OrdinalIgnoreCase)
-                                       || property.Contains(".Cultivars.", StringComparison.OrdinalIgnoreCase);
+                    bool hasCultivar = property.Contains(".Command.", StringComparison.OrdinalIgnoreCase);
 
-                    // If the override is for a cultivar, we need to handle it differently.
-                    if (hasCultivar)
-                    {
-                        // Find the first and second '['
-                        int firstBracket = property.IndexOf('[');
-                        int secondBracket = property.IndexOf('[', firstBracket + 1);
-
-                        // Split at second bracket if exists, otherwise first bracket
-                        int splitIndex = secondBracket >= 0 ? secondBracket : firstBracket;
-
-                        // param = everything from the chosen bracket
-                        string param = splitIndex >= 0 ? property.Substring(splitIndex) : "";
-
-                        // property stays intact (including cultivar)
-                        property = property.Substring(0, splitIndex).TrimEnd('.');
-
-                        // extract cultivar as last token before the split
+                    if (hasCultivar) {
+                        // If the override is for a cultivar, we need to handle it differently.
+                        int splitIndex = property.IndexOf(".Command.");
+                        string param = property.Replace(".Command.", "")[splitIndex..];
+                        property = property[..splitIndex].TrimEnd('.');
                         int lastDot = property.LastIndexOf('.');
-                        string cultivarName = lastDot >= 0 ? property.Substring(lastDot + 1) : property;
-                        Cultivar cultivar = tempSim.Node.FindChild<Cultivar>(cultivarName, recurse: true);
+                        string cultivarName = lastDot >= 0 ? property.Substring(lastDot + 1) : property.Replace("[", "").Replace("]", "");
 
+                        Cultivar cultivar = tempSim.Node.FindChild<Cultivar>(cultivarName, recurse: true);
                         string[] cultCommands = cultivar.Command;
                         bool found = false;
 
@@ -142,7 +130,8 @@ namespace Models.Core.ConfigFile
                         string[] singleLineCommandArray = { property + ".Command = " + string.Join(",", cultCommands.Where(c => !string.IsNullOrWhiteSpace(c))) };
                         var overrides = Overrides.ParseStrings(singleLineCommandArray);
                         tempSim = (Simulations)ApplyOverridesToApsimxFile(overrides, tempSim);
-                    }
+
+                    } 
                     else
                     {
                         string[] singleLineCommandArray = { property + "=" + value };
