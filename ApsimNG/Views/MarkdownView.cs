@@ -42,6 +42,7 @@ namespace UserInterface.Views
         private MarkdownFindView findView;
         private AccelGroup accelerators = new AccelGroup();
         private Menu popupMenu = new Menu();
+        private bool sizeAllocated = false;
 
         /// <summary>Table of font sizes for ASCII characters. Set on attach and reset on attach whenver font has changed.</summary>
         private static readonly int[] fontCharSizes = new int[128];
@@ -115,6 +116,7 @@ namespace UserInterface.Views
             textView.WidgetEventAfter += OnWidgetEventAfter;
             CreateStyles(textView);
             mainWidget.ShowAll();
+            mainWidget.SizeAllocated += OnSizeAllocated;
             mainWidget.Destroyed += OnDestroyed;
             mainWidget.Realized += OnRealized;
             textView.FocusInEvent += OnGainFocus;
@@ -187,6 +189,18 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Received when the size of the main widget has been allocated.
+        /// For now we care only whether the initial allocation has occurred.
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="args"></param>
+        private void OnSizeAllocated(object o, SizeAllocatedArgs args)
+        {
+            sizeAllocated = true;
+            MainWidget.SizeAllocated -= OnSizeAllocated;
+        }
+
+        /// <summary>
         /// Trap keypress events - show the text search dialog on ctrl + f.
         /// </summary>
         /// <param name="sender">Sender widget.</param>
@@ -241,6 +255,14 @@ namespace UserInterface.Views
         {
             get { return textView.Visible; }
             set { textView.Visible = value; }
+        }
+
+        /// <summary>
+        /// Returns true if Gtk is done allocating a size for our main widget
+        /// </summary>
+        public bool SizeIsAllocated
+        {
+            get { return sizeAllocated; }
         }
 
         /// <summary>Gets or sets the markdown text.</summary>
@@ -855,6 +877,7 @@ namespace UserInterface.Views
                 textView.VisibilityNotifyEvent -= OnVisibilityNotify;
                 textView.MotionNotifyEvent -= OnMotionNotify;
                 textView.WidgetEventAfter -= OnWidgetEventAfter;
+                mainWidget.SizeAllocated -= OnSizeAllocated;
                 mainWidget.Destroyed -= OnDestroyed;
                 mainWidget.Realized -= OnRealized;
                 textView.FocusInEvent -= OnGainFocus;

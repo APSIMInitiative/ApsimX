@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using Models.CLEM.Resources;
 
-namespace Models
+namespace Models.CLEM.Interfaces
 {
     /// <summary>
     /// A conception model capable of returning conception rate given an individual female.

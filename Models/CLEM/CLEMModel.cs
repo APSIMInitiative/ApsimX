@@ -22,7 +22,7 @@ namespace Models.CLEM
     {
         /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IStructure Structure { protected get; set; }
+        public IStructure Structure { get; set; }
 
         /// <summary>
         /// Link to summary
