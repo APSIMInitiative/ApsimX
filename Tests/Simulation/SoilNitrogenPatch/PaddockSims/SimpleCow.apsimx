@@ -256,6 +256,7 @@
               "ZoneCount": 25,
               "UrineReturnPattern": 2,
               "PseudoRandomSeed": 666,
+              "MaxEffectiveNConcentration": 3.5,
               "FractionPopulationDecline": 0.0,
               "TramplingOn": false,
               "MaximumPropLitterMovedToSoil": 0.1,
@@ -2480,7 +2481,7 @@
                       "Name": "WithPatches010",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -2494,7 +2495,7 @@
                       "Name": "WithPatches025",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -2508,7 +2509,7 @@
                       "Name": "WithPatches100",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -2522,7 +2523,7 @@
                       "Name": "WithPatches250",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
@@ -3270,7 +3271,6 @@
                             },
                             {
                               "$type": "Models.Soils.NutrientPatching.NutrientPatchManager, Models",
-                              "MaximumNitrogenAvailableToPlants": 3.0,
                               "NPartitionApproach": 0,
                               "AutoAmalgamationApproach": 0,
                               "basePatchApproach": 0,
@@ -4008,7 +4008,6 @@
                             },
                             {
                               "$type": "Models.Soils.NutrientPatching.NutrientPatchManager, Models",
-                              "MaximumNitrogenAvailableToPlants": 3.0,
                               "NPartitionApproach": 0,
                               "AutoAmalgamationApproach": 0,
                               "basePatchApproach": 0,
@@ -4986,7 +4985,6 @@
                             },
                             {
                               "$type": "Models.Soils.NutrientPatching.NutrientPatchManager, Models",
-                              "MaximumNitrogenAvailableToPlants": 3.0,
                               "NPartitionApproach": 0,
                               "AutoAmalgamationApproach": 0,
                               "basePatchApproach": 0,
@@ -5916,7 +5914,6 @@
                             },
                             {
                               "$type": "Models.Soils.NutrientPatching.NutrientPatchManager, Models",
-                              "MaximumNitrogenAvailableToPlants": 3.0,
                               "NPartitionApproach": 0,
                               "AutoAmalgamationApproach": 0,
                               "basePatchApproach": 0,
@@ -6846,7 +6843,6 @@
                             },
                             {
                               "$type": "Models.Soils.NutrientPatching.NutrientPatchManager, Models",
-                              "MaximumNitrogenAvailableToPlants": 3.0,
                               "NPartitionApproach": 0,
                               "AutoAmalgamationApproach": 0,
                               "basePatchApproach": 0,
@@ -7776,7 +7772,6 @@
                             },
                             {
                               "$type": "Models.Soils.NutrientPatching.NutrientPatchManager, Models",
-                              "MaximumNitrogenAvailableToPlants": 3.0,
                               "NPartitionApproach": 0,
                               "AutoAmalgamationApproach": 0,
                               "basePatchApproach": 0,
@@ -8048,6 +8043,7 @@
               "ZoneCount": 1,
               "UrineReturnPattern": 2,
               "PseudoRandomSeed": 666,
+              "MaxEffectiveNConcentration": 3.5,
               "FractionPopulationDecline": 0.0,
               "TramplingOn": false,
               "MaximumPropLitterMovedToSoil": 0.1,
@@ -9540,7 +9536,6 @@
                     },
                     {
                       "$type": "Models.Soils.NutrientPatching.NutrientPatchManager, Models",
-                      "MaximumNitrogenAvailableToPlants": 3.0,
                       "NPartitionApproach": 0,
                       "AutoAmalgamationApproach": 0,
                       "basePatchApproach": 0,
