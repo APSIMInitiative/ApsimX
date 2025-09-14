@@ -69,7 +69,7 @@ public static class SoilSanitise
                 SanitiseChemical(chemical, physical, organic, targetThickness);
             if (water != null && water.Thickness != null)
                 SanitiseWater(water, physical, targetThickness);
-            if (waterBalance != null && waterBalance.Thickness != null)
+            if (waterBalance != null)
             {
                 if (waterBalance is WaterBalance wb)
                     SanitiseWaterBalance(wb, physical, targetThickness);
@@ -80,8 +80,7 @@ public static class SoilSanitise
                 SanitiseSoilTemperature(temperature, targetThickness);
 
             foreach (var solute in soil.Node.FindChildren<Solute>())
-                if (solute.Thickness != null)
-                    SanitiseSolute(solute, targetThickness);
+                SanitiseSolute(solute, targetThickness);
         }
     }
 
