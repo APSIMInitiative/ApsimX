@@ -84,16 +84,22 @@ namespace Models.Core.ConfigFile
                     string value = "";
                     for (int i = 1; i < commandSplits.Count; i++)
                     {
-                        value += commandSplits[i];
-                        if (i < commandSplits.Count - 1)
-                            value += "=";
+                        if (commandSplits[i].Replace("\"", "").Trim().Length > 0)
+                        {
+                            value += commandSplits[i];
+                            if (i < commandSplits.Count - 1)
+                                value += "=";
+                        }
                     }
 
                     // Check if second part is a filename or value (ends in ; and file exists)
                     // If so, read contents of that file in as the value
-                    string potentialFilepath = configFileDirectory + "/" + value.Substring(0, value.Length - 1);
-                    if (value.Trim().EndsWith(';') && File.Exists(potentialFilepath))
-                        value = File.ReadAllText(potentialFilepath);
+                    if (value.Length > 0)
+                    {
+                        string potentialFilepath = configFileDirectory + "/" + value.Substring(0, value.Length - 1);
+                        if (value.Trim().EndsWith(';') && File.Exists(potentialFilepath))
+                            value = File.ReadAllText(potentialFilepath);
+                    }
 
                     // Check if the override is for a cultivar.
                     bool hasCultivar = property.Contains(".Command.", StringComparison.OrdinalIgnoreCase);
@@ -127,7 +133,7 @@ namespace Models.Core.ConfigFile
                         if (!found)
                             cultCommands = cultCommands.Append($"{param} = {value}").ToArray();
 
-                        string[] singleLineCommandArray = { property + ".Command = " + string.Join(",", cultCommands.Where(c => !string.IsNullOrWhiteSpace(c))) };
+                        string[] singleLineCommandArray = { property + ".Command = " + string.Join(", ", cultCommands.Where(c => !string.IsNullOrWhiteSpace(c))) };
                         var overrides = Overrides.ParseStrings(singleLineCommandArray);
                         tempSim = (Simulations)ApplyOverridesToApsimxFile(overrides, tempSim);
 
