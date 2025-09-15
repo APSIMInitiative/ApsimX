@@ -847,17 +847,18 @@ save {apsimxFileName}
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.test-wheat.apsimx");
             Simulations sims = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
-            string firstSimName = (sims.Node.FindChild<Simulation>()).Name;
             Folder replacements = new Folder()
             {
                 Name = "Replacements",
-                Enabled = true
+                Enabled = true,
+                ReadOnly = false
             };
             sims.Children.Add(replacements);
             Folder newFolder = new Folder()
             {
                 Name = "TestFolder",
-                Enabled = true
+                Enabled = true,
+                ReadOnly = false
             };
             replacements.Children.Add(newFolder);
             Cultivar newCultivar = new Cultivar()
@@ -865,35 +866,45 @@ save {apsimxFileName}
                 Name = "Hartog",
                 ReadOnly = false,
                 Enabled = true,
-                Command = [$"[Phenology].CAMP.EnvData.VrnTreatTemp = 4.4444{Environment.NewLine}", "[Leaf].FrostFraction.FixedValue = 0.1111"]
+                Command = [$"[Phenology].CAMP.EnvData.VrnTreatTemp = 4.4444", "[Leaf].FrostFraction.FixedValue = 0.1111"]
             };
             newFolder.Children.Add(newCultivar);
+            Cultivar newCultivar2 = new Cultivar()
+            {
+                Name = "Janz",
+                ReadOnly = false,
+                Enabled = true,
+                Command = [$"[Phenology].CAMP.EnvData.VrnTreatTemp = 4.4444", "[Leaf].FrostFraction.FixedValue = 0.1111"]
+            };
+            newFolder.Children.Add(newCultivar2);
+            sims.FileName = Path.Combine(Path.GetTempPath(), "test-wheat2.apsimx");
             sims.Write(sims.FileName);
-            sims.FileName = "test-wheat.apsimx";
-            string tempSimsFilePath = Path.Combine(Path.GetTempPath(), "test-wheat.apsimx");
-            File.WriteAllText(tempSimsFilePath, json);
 
             string newTempConfigFile = Path.Combine(Path.GetTempPath(), "configCopyCommand.txt");
             string newFileString =
-                $"load test-wheat.apsimx{Environment.NewLine}" +
+                $"load test-wheat2.apsimx{Environment.NewLine}" +
                 $"[Sowing].Script.StartDate = 2-May{Environment.NewLine}" +
                 $"[Sowing].Script.CultivarName = Hartog{Environment.NewLine}" +
-                $"[Hartog].Command.[Phenology].CAMP.EnvData.VrnTreatTemp = 5.5555{Environment.NewLine}" +
+                $"[TestFolder].Hartog.Command.[Phenology].CAMP.EnvData.VrnTreatTemp = 5.5555{Environment.NewLine}" +
                 $"[TestFolder].Hartog.Command.[Leaf].FrostFraction.FixedValue = 0.2222{Environment.NewLine}" +
-                $"[Replacements].TestFolder.Hartog.Command.[Phenology].CAMP.EnvData.VrnTreatDuration = 9.9999{Environment.NewLine}" +
+                $"[Replacements].TestFolder.Hartog.Command.[Phenology].CAMP.EnvData.VrnTreatDuration = 66.6666{Environment.NewLine}" +
                 $".Simulations.Replacements.TestFolder.Hartog.Command.[Leaf].Photosynthesis.RUE.FixedValue = 1.1111{Environment.NewLine}" +
-                $"save test-wheat1.apsimx{Environment.NewLine}";
+                $".Simulations.Replacements.TestFolder.Janz.Command = \"\"{Environment.NewLine}" +
+                $"save test-wheat3.apsimx{Environment.NewLine}";
 
             File.WriteAllText(newTempConfigFile, newFileString);
             Utilities.RunModels($"--apply {newTempConfigFile}");
 
             //Check that Hartog parameters were modified as intended.
-            Simulations moddedSim = FileFormat.ReadFromFile<Simulations>($"{Path.Combine(Path.GetTempPath(), "test-wheat1.apsimx")}").Model as Simulations;
-            Cultivar cultivar = moddedSim.Node.FindChild<Cultivar>("Hartog", recurse: true);
-            Assert.That(cultivar.Command.Contains("[Phenology].CAMP.EnvData.VrnTreatTemp = 5.5555"), Is.True);
-            Assert.That(cultivar.Command.Contains("[Leaf].FrostFraction.FixedValue = 0.2222"), Is.True);
-            Assert.That(cultivar.Command.Contains("[Phenology].CAMP.EnvData.VrnTreatDuration = 9.9999"), Is.True);
-            Assert.That(cultivar.Command.Contains("[Leaf].Photosynthesis.RUE.FixedValue = 1.1111"), Is.True);
+            Simulations moddedSim = FileFormat.ReadFromFile<Simulations>($"{Path.Combine(Path.GetTempPath(), "test-wheat3.apsimx")}").Model as Simulations;
+            replacements = moddedSim.Node.FindChild<Folder>("Replacements");
+            Cultivar cultivar1 = replacements.Node.FindChild<Cultivar>("Hartog", recurse: true);
+            Cultivar cultivar2 = replacements.Node.FindChild<Cultivar>("Janz", recurse: true);
+            Assert.That(cultivar1.Command.Contains("[Phenology].CAMP.EnvData.VrnTreatTemp = 5.5555"), Is.True);
+            Assert.That(cultivar1.Command.Contains("[Leaf].FrostFraction.FixedValue = 0.2222"), Is.True);
+            Assert.That(cultivar1.Command.Contains("[Phenology].CAMP.EnvData.VrnTreatDuration = 66.6666"), Is.True);
+            Assert.That(cultivar1.Command.Contains("[Leaf].Photosynthesis.RUE.FixedValue = 1.1111"), Is.True);
+            Assert.That(cultivar2.Command is null, Is.True);
         }
 
         [Test]
