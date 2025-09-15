@@ -13,6 +13,7 @@
     using System.Reflection;
     using System.Runtime.Loader;
     using System.Runtime.Serialization;
+    using System.Text.RegularExpressions;
     using System.Xml.Serialization;
 
     /// <summary>
@@ -581,7 +582,16 @@
                     elementType = dataType.GenericTypeArguments.First();
                 else
                     elementType = typeof(object);
-                object[] arr = newValue.Split(',').Select(s => StringToObject(elementType, s.TrimStart(), format)).ToArray();
+
+                object[] arr;
+                if (newValue.Contains('='))
+                {
+                    arr = Regex.Split(newValue, @"\s*,\s*(?=(?:\[|\.))").Where(s => !string.IsNullOrWhiteSpace(s)).Select(c => c.Trim()).ToArray();
+                }
+                else
+                {
+                    arr = newValue.Split(',').Select(s => StringToObject(elementType, s.TrimStart(), format)).ToArray();
+                }
 
                 // arr is an array of object. We need an array with correct element type.
                 if (dataType.IsArray)
