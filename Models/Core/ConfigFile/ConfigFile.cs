@@ -110,9 +110,12 @@ namespace Models.Core.ConfigFile
                         string param = property.Replace(".Command.", "")[splitIndex..];
                         property = property[..splitIndex].TrimEnd('.');
                         int lastDot = property.LastIndexOf('.');
-                        string cultivarName = lastDot >= 0 ? property.Substring(lastDot + 1) : property.Replace("[", "").Replace("]", "");
 
-                        Cultivar cultivar = tempSim.Node.FindChild<Cultivar>(cultivarName, recurse: true);
+                        Cultivar cultivar = tempSim.Node.Get(property) as Cultivar;
+
+                        if (cultivar == null)
+                            throw new Exception($"Cultivar not found at {property}. Check the cultivar name and path are correct.");
+
                         string[] cultCommands = cultivar.Command;
                         bool found = false;
 
