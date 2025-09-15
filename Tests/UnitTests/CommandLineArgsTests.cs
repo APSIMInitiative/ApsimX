@@ -889,6 +889,7 @@ save {apsimxFileName}
                 $"[TestFolder].Hartog.Command.[Leaf].FrostFraction.FixedValue = 0.2222{Environment.NewLine}" +
                 $"[Replacements].TestFolder.Hartog.Command.[Phenology].CAMP.EnvData.VrnTreatDuration = 66.6666{Environment.NewLine}" +
                 $".Simulations.Replacements.TestFolder.Hartog.Command.[Leaf].Photosynthesis.RUE.FixedValue = 1.1111{Environment.NewLine}" +
+                $"[TestFolder].Hartog.Command.[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 0,0,0,0,4,7,12,20{Environment.NewLine}" +
                 $".Simulations.Replacements.TestFolder.Janz.Command = \"\"{Environment.NewLine}" +
                 $"save test-wheat3.apsimx{Environment.NewLine}";
 
@@ -904,6 +905,7 @@ save {apsimxFileName}
             Assert.That(cultivar1.Command.Contains("[Leaf].FrostFraction.FixedValue = 0.2222"), Is.True);
             Assert.That(cultivar1.Command.Contains("[Phenology].CAMP.EnvData.VrnTreatDuration = 66.6666"), Is.True);
             Assert.That(cultivar1.Command.Contains("[Leaf].Photosynthesis.RUE.FixedValue = 1.1111"), Is.True);
+            Assert.That(cultivar1.Command.Contains("[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 0,0,0,0,4,7,12,20"), Is.True);
             Assert.That(cultivar2.Command is null, Is.True);
         }
 
