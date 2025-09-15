@@ -6,8 +6,8 @@ using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Graph = Models.Graph;
+using System;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -188,8 +188,7 @@ namespace APSIM.Documentation.Models.Types
             else
             {
                 extraLinkDir = assemblyDir + Path.DirectorySeparatorChar +
-                    directory + Path.DirectorySeparatorChar +
-                    "AgPasture" + Path.DirectorySeparatorChar;
+                    directory + Path.DirectorySeparatorChar;
             }
 
             List<ITag> additionsTags = new();
@@ -225,9 +224,18 @@ namespace APSIM.Documentation.Models.Types
 
                 if(additions.ExtraLink != null)
                 {
-                    Simulations speciesSims = FileFormat.ReadFromFile<Simulations>(additions.ExtraLink).Model as Simulations;
+                    // Remove new build system prefix. /wd/ gets added to help with Azure compute node pathing but is
+                    // not necessary for local paths, and especially not here.
+                    string extraLink = additions.ExtraLink;
+                    Console.WriteLine($"Removing new build system prefix from {additions.ExtraLink}");
+                    if (additions.ExtraLink.StartsWith("/wd/"))
+                    {
+                        extraLink = additions.ExtraLink.Substring(4).Replace("//", "/");
+                    }
+                    Simulations speciesSims = FileFormat.ReadFromFile<Simulations>(extraLink).Model as Simulations;
                     Section extraSection = new($"{additions.ExtraLinkName}", AutoDocumentation.Document(speciesSims));
                     additionsTags.Add(extraSection);
+                    
                 }
             }
             return additionsTags;
