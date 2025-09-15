@@ -118,10 +118,10 @@ namespace APSIM.Workflow
                         group.Folders = new List<string>();
 
                     if (group.Experiments == null)
-                        group.Experiments = new List<string>() { "" };
+                        group.Experiments = new List<string>();
 
                     if (group.Simulations == null)
-                        group.Simulations = new List<string>() { "" };
+                        group.Simulations = new List<string>();
 
                     //get list of experiments that match the names in the group
                     List<Experiment> matchingExperiments = new List<Experiment>();
@@ -473,9 +473,8 @@ namespace APSIM.Workflow
                 {
                     bool hasReport = false;
                     foreach (Report report in reports)
-                        if (report.Name == po.PredictedTableName)
-                            if (Folder.IsUnderReplacementsFolder(report) == null)
-                                hasReport = true;
+                        if (report.Name == po.PredictedTableName && Folder.IsUnderReplacementsFolder(report) == null)
+                            hasReport = true;
                     if (!hasReport)
                         removeList.Add(po);
                 }
