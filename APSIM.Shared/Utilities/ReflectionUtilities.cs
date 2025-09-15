@@ -586,7 +586,28 @@
                 object[] arr;
                 if (newValue.Contains('='))
                 {
-                    arr = Regex.Split(newValue, @"\s*,\s*(?=(?:\[|\.))").Where(s => !string.IsNullOrWhiteSpace(s)).Select(c => c.Trim()).ToArray();
+                    var assignments = new List<string>();
+                    int end = newValue.Length;
+
+                    while (end > 0)
+                    {
+                        // Find the last '=' before 'end'
+                        int eqIndex = newValue.LastIndexOf('=', end - 1);
+                        if (eqIndex == -1) break;
+
+                        // Determine the start of this assignment
+                        int start = newValue.LastIndexOf(',', eqIndex - 1) + 1;
+                        if (start < 0) start = 0;
+
+                        // LHS: everything between 'start' and '='. 
+                        string lhs = newValue.Substring(start, eqIndex - start).Trim();
+                        // RHS: everything between '=' and 'end'. 
+                        string rhs = newValue.Substring(eqIndex + 1, end - eqIndex - 1).Trim();
+
+                        assignments.Insert(0, lhs + " = " + rhs); 
+                        end = start - 1;
+                    }
+                    arr = assignments.ToArray();
                 }
                 else
                 {
