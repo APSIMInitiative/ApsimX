@@ -131,6 +131,10 @@ jobs:
         # makes the variable available in subsequent steps.
         jobcount=$(dotnet ./bin/Release/net8.0/APSIM.Workflow.dll --sim-count)
         echo "jobcount: ${jobcount}"
+        if test -z "$jobcount"; then
+          echo "The job count was found to be empty. Exiting."
+          exit 1
+        fi
         response=$(curl "https://postats2.apsim.info/api/open?pullrequestnumber=${DOCKER_METADATA_OUTPUT_VERSION:3}&commitid=${commitsha}&author=${author}&count=${jobcount}") # count needs to be a proper number later
         echo "POStats2 open response: ${response}"
         echo "Start creating payload..."

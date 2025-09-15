@@ -63,12 +63,12 @@ public class Program
                 if (options.Verbose)
                     logger.LogInformation("Validation locations:");
 
-                foreach (string dir in ValidationLocationUtility.GetDirectoryPaths())
+                foreach (string dir in ValidationLocationUtility.GetValidationFilePaths())
                 {
                     Console.WriteLine(dir);
                 }
             }
-            else if (!string.IsNullOrWhiteSpace(options.SimulationCount))
+            else if (options.SimulationCount)
             {
                 Console.WriteLine(ValidationLocationUtility.GetSimulationCount());
             }
