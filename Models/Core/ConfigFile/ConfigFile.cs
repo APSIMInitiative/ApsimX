@@ -115,6 +115,8 @@ namespace Models.Core.ConfigFile
 
                         if (cultivar == null)
                             throw new Exception($"Cultivar not found at {property}. Check the cultivar name and path are correct.");
+                        if (cultivar.ReadOnly)
+                            throw new Exception($"Cultivar at {property} is read-only and cannot be modified.");
 
                         string[] cultCommands = cultivar.Command;
                         bool found = false;
