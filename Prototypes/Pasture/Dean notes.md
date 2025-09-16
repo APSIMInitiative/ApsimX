@@ -1,6 +1,7 @@
 # Process for debugging models side by side
 
 * Run Ausfarm simulation on Bitzer (remote desktop) from RAD Studio so that code can be debugged (Models.groupproj - RAS studio project file)
+  File is: "L:\projects\ApsimX\Prototypes\Pasture\Validation\just_pasture_ryegrass.afs"
 * Log (log-ausfarm.txt) is written to desktop. Copy to local PC.
 * To get output, right click on 'Output' in Ausfarm simulation tree and export to SQLITE DB. Copy the DB to local computer and using DBBrowser for SQLite export the Simulation table to AusfarmOutputs.csv.
 
