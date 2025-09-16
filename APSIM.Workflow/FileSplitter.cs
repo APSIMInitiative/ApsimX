@@ -83,7 +83,7 @@ namespace APSIM.Workflow
             {
                 foreach (Experiment exp in experiments)
                 {
-                    string subFolder = outputPath + exp.Name + "/";
+                    string subFolder = inputPath + outputPath + exp.Name + "/";
                     string filename = exp.Name + ".apsimx";
                     string weatherFilesDirectory = subFolder + "WeatherFiles" + "/";
                     string fullFilePath = subFolder + filename;
@@ -175,7 +175,7 @@ namespace APSIM.Workflow
                     foreach (Simulation sim in matchingSimulations)
                         simulations.Remove(sim);
 
-                    string subFolder = outputPath + group.Name + "/";
+                    string subFolder = inputPath + outputPath + group.Name + "/";
                     string filename = group.Name + ".apsimx";
                     string fullFilePath = subFolder + filename;
 
@@ -213,6 +213,7 @@ namespace APSIM.Workflow
                     copiedSims.ResetSimulationFileNames();
 
                     copiedSims.Write(fullFilePath);
+                    logger.LogInformation("  created:" + fullFilePath);
 
                     newSplitDirectories.Add(subFolder);
                 }
