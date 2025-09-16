@@ -35,8 +35,6 @@ namespace APSIM.Workflow
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
             string inputPath = Path.GetDirectoryName(apsimFilepath) + "/";
-            logger.LogInformation("apsimFilepath:" + apsimFilepath);
-            logger.LogInformation("inputPath:" + inputPath);
 
             if (inputPath == null)
                 throw new ArgumentNullException(nameof(inputPath), "Current directory path cannot be null.");
