@@ -8850,7 +8850,7 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "C:/Users/ilhuber/NextGen/ApsimX/Tests/Validation/Canola/met/Argentina_01.met",
+                  "FileName": "./met/Argentina_01.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
                   "ResourceName": null,
