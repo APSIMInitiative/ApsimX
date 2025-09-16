@@ -35,8 +35,8 @@ namespace APSIM.Workflow
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
             string inputPath = Path.GetDirectoryName(apsimFilepath) + "/";
-
-            logger.LogInformation("test1");
+            logger.LogInformation("apsimFilepath:" + apsimFilepath);
+            logger.LogInformation("inputPath:" + inputPath);
 
             if (inputPath == null)
                 throw new ArgumentNullException(nameof(inputPath), "Current directory path cannot be null.");
@@ -65,8 +65,6 @@ namespace APSIM.Workflow
                 }
             }
 
-            logger.LogInformation("test2");
-
             logger.LogInformation("Output directory: " + outputPath);
             string apsimDirectrory = PathUtilities.GetApsimXDirectory();
 
@@ -82,14 +80,12 @@ namespace APSIM.Workflow
             if (experiments.Count() == 0)
                 throw new Exception("No Experiments found.");
 
-            logger.LogInformation("test3");
-
             List<string> newSplitDirectories = new List<string>();
             if (groups == null)
             {
                 foreach (Experiment exp in experiments)
                 {
-                    string subFolder = outputPath + exp.Name + "/";
+                    string subFolder = inputPath + outputPath + exp.Name + "/";
                     string filename = exp.Name + ".apsimx";
                     string weatherFilesDirectory = subFolder + "WeatherFiles" + "/";
                     string fullFilePath = subFolder + filename;
@@ -114,7 +110,6 @@ namespace APSIM.Workflow
             }
             else
             {
-                logger.LogInformation("test4");
                 //for each group, make a file
                 foreach (SplittingGroup group in groups)
                 {
@@ -153,8 +148,6 @@ namespace APSIM.Workflow
                         }
                     }
 
-                    logger.LogInformation("test5");
-
                     //remove the experiments from the main list
                     foreach (Experiment exp in matchingExperiments)
                         experiments.Remove(exp);
@@ -181,12 +174,10 @@ namespace APSIM.Workflow
                         }
                     }
 
-                    logger.LogInformation("test6");
-
                     foreach (Simulation sim in matchingSimulations)
                         simulations.Remove(sim);
 
-                    string subFolder = outputPath + group.Name + "/";
+                    string subFolder = inputPath + outputPath + group.Name + "/";
                     string filename = group.Name + ".apsimx";
                     string fullFilePath = subFolder + filename;
 
@@ -196,8 +187,6 @@ namespace APSIM.Workflow
                     Simulations copiedSims = GetSimulations(sims, folder, subFolder + filename);
                     copiedSims.FileName = sims.FileName;
                     copiedSims.ResetSimulationFileNames();
-
-                    logger.LogInformation("test7");
 
                     if (copyWeatherFiles)
                     {
@@ -221,8 +210,6 @@ namespace APSIM.Workflow
                                     allSheetNames.Add(sheet);
                         RemoveUnusedPO(copiedSims, allSheetNames);
                     }
-
-                    logger.LogInformation("test8");
 
                     copiedSims.FileName = fullFilePath;
                     copiedSims.ResetSimulationFileNames();
