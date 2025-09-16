@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using APSIM.Core;
 using APSIM.Numerics;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
@@ -98,12 +99,6 @@ namespace Models.PMF
         ///2. Private And Protected Fields
         /// -------------------------------------------------------------------------------------------------
 
-        /// <summary>Tolerance for biomass comparisons</summary>
-        protected double tolerence = 3e-11;
-
-        private double haTom2 = 10000;
-        private double gPerm2TokgPerha = 10;
-
         private double startLiveC { get; set; }
         private double startDeadC { get; set; }
         private double startLiveN { get; set; }
@@ -115,7 +110,7 @@ namespace Models.PMF
         private bool resetOrganTomorrow { get; set; }
 
         private double simArea { get; set; }
-        private DimensionsOverZones DOZ { get; set; }
+        private DimensionsOverZones dimensionsOverZones { get; set; }
 
         ///3. The Constructor
         /// -------------------------------------------------------------------------------------------------
@@ -325,7 +320,7 @@ namespace Models.PMF
             {
                 OrganNutrientsState totalToResidues = liveRetained + deadRetained;
                 Biomass toResidues = totalToResidues.ToBiomass;
-                addSOMtoZones(toResidues.Wt, toResidues.N);
+                AddSOMtoZones(toResidues.Wt, toResidues.N);
             }
             if ((liveToRemove + deadToRemove + liveToResidue + deadToResidue)>0)
             {
@@ -395,12 +390,12 @@ namespace Models.PMF
             if (data.Plant == parentPlant)
             {
                 initialiseBiomass();
-                DOZ = Structure.FindChild<DimensionsOverZones>(recurse:true, relativeTo:parentPlant);
+                dimensionsOverZones = Structure.FindChild<DimensionsOverZones>(recurse:true, relativeTo:parentPlant);
 
                 if (RootNetworkObject != null)
                     RootNetworkObject.InitailiseNetwork(Live);
                 else
-                    initialiseSOMZones();
+                    InitialiseSOMZones();
             }
         }
 
@@ -419,7 +414,7 @@ namespace Models.PMF
         /// </summary>
         public void initialiseBiomass()
         {
-            setNConcs();
+            SetNConcs();
             Nitrogen.setConcentrationsOrProportions();
             Carbon.setConcentrationsOrProportions();
 
@@ -474,7 +469,7 @@ namespace Models.PMF
                 //Do initial calculations
                 SenescenceRate = Math.Min(senescenceRate.Value(),1);
                 DetachmentRate = Math.Min(detachmentRate.Value(),1);
-                setNConcs();
+                SetNConcs();
                 Carbon.SetSuppliesAndDemands();
             }
         }
@@ -517,7 +512,7 @@ namespace Models.PMF
                     Detached = Dead * DetachmentRate;
                     Dead -= Detached;
                     if (RootNetworkObject == null)
-                        addSOMtoZones(Detached.Wt, Detached.N);
+                        AddSOMtoZones(Detached.Wt, Detached.N);
                 }
 
                 // Remove respiration
@@ -540,14 +535,14 @@ namespace Models.PMF
         {
             if (parentPlant.IsAlive)
             {
-                checkMassBalance(startLiveN, startDeadN, "N");
-                checkMassBalance(startLiveC, startDeadC, "C");
-                checkMassBalance(startLiveWt, startDeadWt, "Wt");
+                CheckMassBalance(startLiveN, startDeadN, "N");
+                CheckMassBalance(startLiveC, startDeadC, "C");
+                CheckMassBalance(startLiveWt, startDeadWt, "Wt");
                 ClearBiomassRemovals();
             }
         }
 
-        private void checkMassBalance(double startLive, double startDead, string element)
+        private void CheckMassBalance(double startLive, double startDead, string element)
         {
             double live = (double)(Structure.GetObject("Live." + element).Value);
             double dead = (double)(Structure.GetObject("Dead." + element).Value);
@@ -562,11 +557,11 @@ namespace Models.PMF
 
             double liveBal = Math.Abs(live - (startLive + allocated - senesced - reAllocated
                                                         - reTranslocated - liveRemoved - respired));
-            if (liveBal > tolerence)
+            if (MathUtilities.IsGreaterThan(liveBal, 3e-11,0.0))
                 throw new Exception(element + " mass balance violation in live biomass of " + this.Name + "on " + clock.Today.ToString());
 
             double deadBal = Math.Abs(dead - (startDead + senesced - deadRemoved - detached));
-            if (deadBal > tolerence)
+            if (MathUtilities.IsGreaterThan(deadBal, 3e-11, 0.0))
                 throw new Exception(element + " mass balance violation in dead biomass of " + this.Name + "on " + clock.Today.ToString());
 
         }
@@ -575,7 +570,7 @@ namespace Models.PMF
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantEnding")]
-        protected void onPlantEnding(object sender, EventArgs e)
+        protected void OnPlantEnding(object sender, EventArgs e)
         {
             resetOrganTomorrow = true;
         }
@@ -584,7 +579,7 @@ namespace Models.PMF
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("EndCrop")]
-        protected void onEndCrop(object sender, EventArgs e)
+        protected void OnEndCrop(object sender, EventArgs e)
         {
             resetOrganTomorrow = true;
         }
@@ -595,17 +590,17 @@ namespace Models.PMF
         /// <param name="sender"></param>
         /// <param name="e"></param>
         [EventSubscribe("DoCatchYesterday")]
-        protected void onDoCatchYesterday(object sender, EventArgs e)
+        protected void OnDoCatchYesterday(object sender, EventArgs e)
         {
             if (resetOrganTomorrow == true)
-                reset();
+                Reset();
             resetOrganTomorrow = false;
         }
 
         /// <summary>
         /// Sends all biomass to residues and zeros variables
         /// </summary>
-        private void reset()
+        private void Reset()
         {
             if (Wt > 0.0)
             {
@@ -616,7 +611,7 @@ namespace Models.PMF
                 Dead.Clear();
                 if (RootNetworkObject == null)
                 {
-                    addSOMtoZones(Wt, N);
+                    AddSOMtoZones(Wt, N);
                 }
 
                 if (RootNetworkObject != null)
@@ -638,23 +633,25 @@ namespace Models.PMF
         /// </summary>
         /// <param name="wt"></param>
         /// <param name="n"></param>
-        private void addSOMtoZones(double wt, double n)
+        private void AddSOMtoZones(double wt, double n)
         {
             int zi = 0;
 
-            if (DOZ == null)
+            if (dimensionsOverZones == null)
             {
                 Zone z = Structure.FindParent<Zone>(recurse: true);
                 ISurfaceOrganicMatter somZone = Structure.FindChild<ISurfaceOrganicMatter>(relativeTo: z);
-                somZone.Add(wt/(z.Area * haTom2) * gPerm2TokgPerha, n/(z.Area * haTom2) * gPerm2TokgPerha, 0, parentPlant.PlantType, Name);
+                somZone.Add(wt/(z.Area * Constants.ha2sm) * Constants.gPerSm2kgPerHa, 
+                    n/(z.Area * Constants.ha2sm) * Constants.gPerSm2kgPerHa, 0, parentPlant.PlantType, Name);
             }
             else
             {
-                foreach (Zone z in DOZ.zones)
+                foreach (Zone z in dimensionsOverZones.Zones)
                 {
                     ISurfaceOrganicMatter somZone = Structure.FindChild<ISurfaceOrganicMatter>(relativeTo: z);
 
-                    somZone.Add((wt * DOZ.RAOZ[zi] * gPerm2TokgPerha) /(z.Area * haTom2), (n * DOZ.RAOZ[zi] * gPerm2TokgPerha) /(z.Area * haTom2), 0, parentPlant.PlantType, Name);
+                    somZone.Add((wt * dimensionsOverZones.RelativeAreaOverZone[zi] * Constants.gPerSm2kgPerHa) /(z.Area * Constants.ha2sm), 
+                        (n * dimensionsOverZones.RelativeAreaOverZone[zi] * Constants.gPerSm2kgPerHa) /(z.Area * Constants.ha2sm), 0, parentPlant.PlantType, Name);
                     zi += 1;
                 }
             }
@@ -663,7 +660,7 @@ namespace Models.PMF
         /// <summary>
         /// set initial biomass for organ
         /// </summary>
-        private void initialiseSOMZones()
+        private void InitialiseSOMZones()
         {
             Simulation sim = Structure.FindParent<Simulation>();
             List<Zone> zones = Structure.FindAll<Zone>(relativeTo: sim).ToList();
@@ -673,7 +670,7 @@ namespace Models.PMF
             }
         }
 
-        private void setNConcs()
+        private void SetNConcs()
         {
             MaxNConc = Nitrogen.ConcentrationOrFraction != null ? Nitrogen.ConcentrationOrFraction.Storage : 0;
             MinNConc = Nitrogen.ConcentrationOrFraction != null ? Nitrogen.ConcentrationOrFraction.Structural : 0;

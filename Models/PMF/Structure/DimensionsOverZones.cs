@@ -1,4 +1,5 @@
 ﻿using APSIM.Core;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Zones;
 using System;
@@ -20,15 +21,15 @@ namespace Models.PMF
 
         /// <summary>The parent plant</summary>
         [Link(Type = LinkType.Ancestor)]
-        public Plant parentPlant = null;
+        private Plant parentPlant = null;
 
         /// <summary>List of zones the plant model interacts with</summary>
-        public List<Zone> zones = null;
+        public List<Zone> Zones = null;
 
         /// <summary>Clear all variables</summary>
-        double totalZoneWidth = 0;
-        /// <summary>RelativeAreaOverZone</summary>
-        public double[] RAOZ = null;
+        private double totalZoneWidth = 0;
+        /// <summary>The relative area of plant covering each zone</summary>
+        public double[] RelativeAreaOverZone = null;
         /// <summary>Clear all variables</summary>
         public double PlantArea = 0;
 
@@ -47,15 +48,10 @@ namespace Models.PMF
             {
                 IFunction width = Structure.FindChild<IFunction>("Width", relativeTo: parentPlant) as IFunction;
                 if (width != null)
-                    return width.Value() / 1000; //Convert from mm to m
+                    return width.Value() * Constants.mm2m; //Convert from mm to m
                 else
                 {
-                    RectangularZone parentZone = Structure.FindParent<RectangularZone>(recurse: true);
-
-                    if (parentZone != null)
-                        return parentZone.Width;
-                    else
-                        return 1.0;
+                    throw new Exception(parentPlant.Name + "Must have a Width function to determine dimensions over each zone");
                 }
             }
         }
@@ -69,7 +65,7 @@ namespace Models.PMF
             totalZoneWidth = 0;
             Zone parentZone = Structure.FindParent<Zone>(recurse: true);
             int zi = 0;
-            foreach (Zone z in zones)
+            foreach (Zone z in Zones)
             {
                 if (z is RectangularZone)
                 {
@@ -83,9 +79,9 @@ namespace Models.PMF
             }
             double plantWidth = Math.Min(PlantWidth, totalZoneWidth);
             double zoneLength = 1.0;
-            double[] plantWidthOverZone = new double[zones.Count];
+            double[] plantWidthOverZone = new double[Zones.Count];
             zi = 0;
-            foreach (Zone z in zones)
+            foreach (Zone z in Zones)
             {
                 if (z is RectangularZone)
                 {
@@ -104,7 +100,7 @@ namespace Models.PMF
                 {
                     plantWidthOverZone[zi] = 1.0;
                 }
-                RAOZ[zi] = plantWidthOverZone[zi] / plantWidth;
+                RelativeAreaOverZone[zi] = plantWidthOverZone[zi] / plantWidth;
                 zi += 1;
             }
             double plantLength = Math.Min(zoneLength, PlantWidth); //Assume plant is square, length represents spacing so will not exceed zone length as plants start touching
@@ -119,8 +115,8 @@ namespace Models.PMF
         private void OnPlantSowing(object sender, EventArgs e)
         {
             Simulation sim = Structure.FindParent<Simulation>();
-            zones = Structure.FindAll<Zone>(relativeTo: sim).ToList();
-            RAOZ = new double[zones.Count];
+            Zones = Structure.FindAll<Zone>(relativeTo: sim).ToList();
+            RelativeAreaOverZone = new double[Zones.Count];
         }
     }
 }
