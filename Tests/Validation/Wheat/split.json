@@ -1,5 +1,5 @@
 {
-	"OutputPath":"C:/git/ApsimX/Tests/Validation/Wheat/Split/",
+	"OutputPath":"temp/",
 	"CopyWeatherFiles":false,
 	"CopyObservedData":false,
 	"Groups": [
