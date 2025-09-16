@@ -213,6 +213,7 @@ namespace APSIM.Workflow
                     copiedSims.ResetSimulationFileNames();
 
                     copiedSims.Write(fullFilePath);
+                    logger.LogInformation("  created:" + fullFilePath);
 
                     newSplitDirectories.Add(subFolder);
                 }
