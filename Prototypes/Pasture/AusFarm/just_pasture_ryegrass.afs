@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <fwsimulation name="Pasture_component_test">
   <fwsversion>1.1</fwsversion>
-  <lastsaved>2025/09/15 14:35:17</lastsaved>
+  <lastsaved>2025/09/16 14:49:40</lastsaved>
   <component name="time_server" active="T" class="Time Server">
     <executable name="timesvr.dll" version="1.1"/>
     <initdata>
@@ -261,7 +261,7 @@
   </component>
 
   <component name="Manager" active="T" class="Manager">
-    <executable name="Manager.dll" version="1.1"/>
+    <executable name="manager.dll" version="1.1"/>
     <initdata>
       <![CDATA[
           <initsection>
@@ -355,7 +355,7 @@
             <init name="driver_connections" array="T">
             </init>
             <init name="filename" kind="string">
-              <val>L:\projects\ApsimX\Prototypes\Pasture\Validation\ryegrass_daily.txt</val>
+              <val>C:\Work\Repos\APSIMInitiative\ApsimX\Prototypes\Pasture\AusFarm\ryegrass_daily.txt</val>
             </init>
             <init name="interval" kind="integer4">
               <val>1</val>
@@ -927,7 +927,7 @@
             <init name="driver_connections" array="T">
             </init>
             <init name="filename" kind="string">
-              <val>L:\projects\ApsimX\Prototypes\Pasture\Validation\ryegrass_daily_mass.txt</val>
+              <val>C:\Work\Repos\APSIMInitiative\ApsimX\Prototypes\Pasture\AusFarm\ryegrass_daily_mass.txt</val>
             </init>
             <init name="interval" kind="integer4">
               <val>1</val>
@@ -1261,7 +1261,7 @@
             <init name="driver_connections" array="T">
             </init>
             <init name="filename" kind="string">
-              <val>L:\projects\ApsimX\Prototypes\Pasture\Validation\ryegrass_monthly.txt</val>
+              <val>C:\Work\Repos\APSIMInitiative\ApsimX\Prototypes\Pasture\AusFarm\ryegrass_monthly.txt</val>
             </init>
             <init name="interval" kind="integer4">
               <val>1</val>
@@ -1343,7 +1343,7 @@
               <val>silo</val>
             </init>
             <init name="filename" kind="string">
-              <val>L:\projects\ApsimX\Prototypes\Pasture\Validation\cbr_70014.met</val>
+              <val>C:\Work\Repos\APSIMInitiative\ApsimX\Prototypes\Pasture\AusFarm\cbr_70014.met</val>
             </init>
             <init name="locality" kind="string">
               <val></val>
@@ -1377,7 +1377,7 @@
             <init name="driver_connections" array="T">
             </init>
             <init name="dbname" kind="string">
-              <val>C:\Users\her123\AppData\Local\Temp\dbFolderLabel.db</val>
+              <val>C:\Users\hol353\AppData\Local\Temp\dbFolderLabel.db</val>
             </init>
             <init name="interval" kind="integer4">
               <val>1</val>
@@ -1864,6 +1864,34 @@
               </element>
               <element>
                 <field name="varname" kind="string">
+                  <val>farm.pasture01.nitrogen.model.nh4</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>farm.pasture01.nitrogen.model.nh4</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.nitrogen.model.no3</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>farm.pasture01.nitrogen.model.no3</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
                   <val>farm.pasture01.nitrogen.model.oc</val>
                 </field>
                 <field name="alias" kind="string">
@@ -2102,6 +2130,62 @@
               </element>
               <element>
                 <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.shoot_dm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>farm.pasture01.ryegrass.shoot_dm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.seedl_dm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>farm.pasture01.ryegrass.seedl_dm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.estab_dm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>farm.pasture01.ryegrass.estab_dm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.senc_dm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>farm.pasture01.ryegrass.senc_dm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
                   <val>farm.pasture01.ryegrass.dead_dm</val>
                 </field>
                 <field name="alias" kind="string">
@@ -2200,6 +2284,34 @@
               </element>
               <element>
                 <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.leaf_dm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>farm.pasture01.ryegrass.leaf_dm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.stem_dm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>farm.pasture01.ryegrass.stem_dm</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
                   <val>farm.pasture01.ryegrass.avail_dm</val>
                 </field>
                 <field name="alias" kind="string">
@@ -2246,6 +2358,20 @@
                 </field>
                 <field name="alias" kind="string">
                   <val>farm.pasture01.ryegrass.rtdep</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.ryegrass.seed_dm</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>farm.pasture01.ryegrass.seed_dm</val>
                 </field>
                 <field name="aggreg" kind="string">
                   <val>none</val>
@@ -2385,7 +2511,7 @@
               <val>Pasture_component_test</val>
             </init>
             <init name="fwsnam" kind="string">
-              <val>L:\projects\ApsimX\Prototypes\Pasture\Validation\just_pasture_ryegrass.afs</val>
+              <val>C:\Work\Repos\APSIMInitiative\ApsimX\Prototypes\Pasture\AusFarm\just_pasture_ryegrass.afs</val>
             </init>
             <init name="runid" kind="integer4">
               <val>1</val>
@@ -2409,7 +2535,7 @@
               <val>masterkey</val>
             </init>
             <init name="sdml_gen_time" kind="string">
-              <val></val>
+              <val>2025-09-16 14:49:40.529</val>
             </init>
           </initsection>
       ]]>
@@ -2656,6 +2782,7 @@
 <enr_b_coeff>   0.2  </enr_b_coeff>
 <profile_reduction>off</profile_reduction>
 </initdata>
+
         </component>
 
 
@@ -2708,7 +2835,7 @@
                   <val></val>
                 </init>
                 <init name="forage_params" kind="string">
-                  <val>C:\Users\her123\Documents\AusFarm\Library Crop Quality.prm</val>
+                  <val>C:\Work\Repos\APSIMInitiative\ApsimX\Prototypes\Pasture\AusFarm\Library Crop Quality.prm</val>
                 </init>
                 <init name="kno3" kind="single" unit="kg/mg/d">
                   <val>0</val>
@@ -2738,6 +2865,7 @@
 <cnr>   60.0    60.0     80.0      60.0</cnr>
 <standing_fraction>0.0 0.0 0.0 0.0</standing_fraction>
 </initdata>
+
         </component>
 
 
@@ -2974,7 +3102,7 @@
       <author>CSIRO Plant Industry</author>
     </module>
     <module>
-      <file>Manager.dll</file>
+      <file>manager.dll</file>
       <version>1.1</version>
       <class>Manager</class>
       <author>CSIRO Plant Industry</author>
@@ -5050,7 +5178,7 @@
 </report>
   <session>
     <trace on="False">
-      <file>L:\projects\ApsimX\Prototypes\Pasture\Validation\trace.log</file>
+      <file>C:\Users\hol353\AppData\Local\Temp\trace.log</file>
       <start>0</start>
       <end>0</end>
       <names>True</names>
@@ -5059,7 +5187,7 @@
       <msgdetail>True</msgdetail>
     </trace>
     <errors on="True">
-      <file>C:\Users\her123\AppData\Local\Temp\error_temora.log</file>
+      <file>C:\Users\hol353\AppData\Local\Temp\error_temora.log</file>
     </errors>
     <layout modelswidth="314"/>
   </session>
