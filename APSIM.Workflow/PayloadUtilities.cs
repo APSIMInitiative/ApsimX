@@ -49,9 +49,7 @@ public static class PayloadUtilities
     public static string[] EXCLUDED_SIMS_FILEPATHS = {
                 "/Prototypes/CroptimizR/template.apsimx",
                 "/Examples/Optimisation/CroptimizRExample.apsimx",
-                // "/Tests/Validation/Wheat/Wheat.apsimx",
-                // "/Tests/Validation/System/FACTS_CornSoy/FACTS_Ames.apsimx",
-                // "/Tests/Validation/Pinus/Pinus.apsimx"
+                "/Tests/Validation/Wheat/Wheat.apsimx", //Leave wheat out for now as it gets split into smaller files automatically.
             };
 
     // // Development submit azure URL
