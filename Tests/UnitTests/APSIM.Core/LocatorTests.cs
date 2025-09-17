@@ -928,7 +928,7 @@ namespace APSIM.Core.Tests
         }
         
         /// <summary>
-        /// Test to make sure the type of an object can be passed to find a child, even if the child has a different name to it's type.
+        /// Test to make sure the type of an object can be found even if it has square brackets in it's name
         /// </summary>
         [Test]
         public void GetChildModelThatHasSquareBracketsInName()
