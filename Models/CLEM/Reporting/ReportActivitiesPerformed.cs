@@ -126,8 +126,8 @@ namespace Models.CLEM.Reporting
                     if (data != null)
                     {
                         // need to filter by current simulation
-                        string simName = this.FindAllAncestors<Simulation>().First().Name;
-                        string zoneName = this.FindAllAncestors<ZoneCLEM>().First().Name;
+                        string simName = Structure.FindParents<Simulation>().First().Name;
+                        string zoneName = Structure.FindParents<ZoneCLEM>().First().Name;
                         var filteredData = data.AsEnumerable()
                             .Where(row => row.Field<String>("SimulationName") == simName & row.Field<String>("Zone") == zoneName
                             & (IncludeFolders || (row.Field<int>("Type") != 1))
@@ -199,13 +199,13 @@ namespace Models.CLEM.Reporting
         {
             DataTable dtNew = new DataTable();
 
-            //adding columns    
+            //adding columns
             for (int i = 0; i <= dt.Rows.Count; i++)
             {
                 dtNew.Columns.Add(i.ToString());
             }
 
-            //Changing Column Captions: 
+            //Changing Column Captions:
             dtNew.Columns[0].ColumnName = "Month";
 
             for (int i = 0; i < dt.Rows.Count; i++)

@@ -92,10 +92,10 @@
             Zone zone2 = this.simulation.Children[5] as Zone;
             Graph graph = zone2.Children[0] as Graph;
 
-            Assert.That(simulation.FindAncestor<Simulations>(), Is.Not.Null);
-            Assert.That(graph.FindAncestor<Simulations>().Name, Is.EqualTo("Simulations"));
-            Assert.That(graph.FindAncestor<Simulation>().Name, Is.EqualTo("Test"));
-            Assert.That(graph.FindAncestor<Zone>().Name, Is.EqualTo("Field2"));
+            Assert.That(simulation.Node.FindParent<Simulations>(recurse: true), Is.Not.Null);
+            Assert.That(graph.Node.FindParent<Simulations>(recurse: true).Name, Is.EqualTo("Simulations"));
+            Assert.That(graph.Node.FindParent<Simulation>(recurse: true).Name, Is.EqualTo("Test"));
+            Assert.That(graph.Node.FindParent<Zone>(recurse: true).Name, Is.EqualTo("Field2"));
         }
 
         /// <summary>
@@ -105,13 +105,13 @@
         public void AncestorTest()
         {
             // Passing in the top-level simulations object should return null.
-            Assert.That(simulations.FindAncestor<IModel>(), Is.Null);
+            Assert.That(simulations.Node.FindParent<IModel>(recurse: true), Is.Null);
 
             // Passing in an object should never return that object
-            Assert.That(simulation, Is.Not.EqualTo(simulation.FindAncestor<Simulation>()));
+            Assert.That(simulation, Is.Not.EqualTo(simulation.Node.FindParent<Simulation>(recurse: true)));
 
             // Searching for any IModel ancestor should return the node's parent.
-            Assert.That(simulation.Parent, Is.EqualTo(simulation.FindAncestor<IModel>()));
+            Assert.That(simulation.Parent, Is.EqualTo(simulation.Node.FindParent<IModel>(recurse: true)));
         }
 
         /// <summary>
@@ -181,7 +181,7 @@
         [Test]
         public void ChildrenTest()
         {
-            IEnumerable<Zone> allChildren = simulation.FindAllChildren<Zone>();
+            IEnumerable<Zone> allChildren = simulation.Node.FindChildren<Zone>();
             Assert.That(allChildren.Count(), Is.EqualTo(2));
         }
 
@@ -191,9 +191,9 @@
         [Test]
         public void ChildTest()
         {
-            IModel clock = simulation.FindChild<Clock>();
+            IModel clock = simulation.Node.FindChild<Clock>();
             Assert.That(clock, Is.Not.Null);
-            clock = simulation.FindChild("Clock");
+            clock = simulation.Node.FindChild<IModel>("Clock");
             Assert.That(clock, Is.Not.Null);
         }
 
@@ -203,8 +203,8 @@
         [Test]
         public void SiblingsTest()
         {
-            IModel clock = simulation.FindChild<Clock>();
-            List<IModel> allSiblings = clock.FindAllSiblings().ToList();
+            IModel clock = simulation.Node.FindChild<Clock>();
+            List<IModel> allSiblings = clock.Node.FindSiblings<IModel>().ToList();
             Assert.That(allSiblings.Count, Is.EqualTo(5));
         }
 

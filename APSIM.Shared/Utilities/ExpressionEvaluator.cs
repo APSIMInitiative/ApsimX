@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using APSIM.Numerics;
+using NetTopologySuite.Utilities;
 
 namespace APSIM.Shared.Utilities
 {
@@ -81,6 +82,13 @@ namespace APSIM.Shared.Utilities
     [Serializable]
     public class ExpressionEvaluator
     {
+        private static string[] functions =
+        [ "value","cos","sin","tan","cosh","sinh","tanh","log10","ln","logn","sqrt","abs","acos","asin","atan","exp","mean",
+          "sum","subtract","multiply","divide","min","max","floor","ceil","ceiling","stddev","median","percentile5",
+          "percentile10","percentile15","percentile20","percentile25","percentile30","percentile35","percentile40","percentile45","percentile50",
+          "percentile55","percentile60","percentile65","percentile70","percentile75","percentile80","percentile85","percentile90","percentile95"];
+
+
         /// <summary>Gets the result.</summary>
         /// <value>The result.</value>
         public double Result
@@ -1480,6 +1488,28 @@ namespace APSIM.Shared.Utilities
                     break;
             }
             return result;
+        }
+
+        /// <summary>
+        /// Return true if a string is an expression.
+        /// </summary>
+        /// <param name="st"></param>
+        public static bool IsExpression(string st)
+        {
+            //-- Remove all white spaces from the string --
+            st = st.Replace(" ", "").Replace("()", "");
+            if (st.Length == 0 || st[0] == '.')
+                return false;
+            if (st.IndexOfAny("+*/^".ToCharArray()) >= 0) // operators indicate an expression
+                return true;
+            int openingParen = st.IndexOf('(');
+            if (openingParen >= 0 && st.Substring(0, openingParen).IndexOfAny("[.".ToCharArray()) == -1)
+                return true;
+            foreach (var functionName in functions)
+                if (st.Contains($"{functionName}("))
+                    return true;
+
+            return false;
         }
 
         /// <summary>The M_B error</summary>

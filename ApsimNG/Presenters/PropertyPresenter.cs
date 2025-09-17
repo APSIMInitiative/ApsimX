@@ -257,7 +257,7 @@ namespace UserInterface.Presenters
             if ((newValue == null || newValue is string) && property.PropertyType != typeof(string))
             {
                 if (newValue is string modelName && typeof(IModel).IsAssignableFrom(property.PropertyType))
-                    newValue = model.FindAllInScope(modelName).FirstOrDefault(m => property.PropertyType.IsAssignableFrom(m.GetType()));
+                    newValue = model.Node.FindAll<IModel>(modelName).FirstOrDefault(m => property.PropertyType.IsAssignableFrom(m.GetType()));
                 else
                     newValue = ReflectionUtilities.StringToObject(property.PropertyType, (string)newValue, CultureInfo.CurrentCulture);
             }

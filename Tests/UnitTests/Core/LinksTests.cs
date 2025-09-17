@@ -89,7 +89,7 @@ namespace UnitTests.Core
     }
 
     [Serializable]
-    class ModelWithServices : Model, ILocatorDependency
+    class ModelWithServices : Model, IStructureDependency
     {
         [Link]
         public IDataStore storage = null;
@@ -97,10 +97,9 @@ namespace UnitTests.Core
         [Link]
         public IEvent events = null;
 
-        public ILocator Locator { get; private set; }
-
-        /// <summary>Locator supplied by APSIM kernel.</summary>
-        public void SetLocator(ILocator locator) => Locator = locator;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { get; set; }
     }
 
     [TestFixture]
@@ -394,7 +393,7 @@ namespace UnitTests.Core
 
             var modelWithServices = simulations.Children[1].Children[2] as ModelWithServices;
             Assert.That(modelWithServices.storage, Is.Not.Null);
-            Assert.That(modelWithServices.Locator, Is.Not.Null);
+            Assert.That(modelWithServices.Structure, Is.Not.Null);
             Assert.That(modelWithServices.events, Is.Not.Null);
         }
 

@@ -43,9 +43,11 @@ namespace Models.Functions
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class FrostHeatDamageFunctions : Model, ILocatorDependency
+    public class FrostHeatDamageFunctions : Model, IStructureDependency
     {
-        [NonSerialized] private ILocator locator;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
         //[Link]
         //Clock Clock;
@@ -256,9 +258,6 @@ namespace Models.Functions
             }
         };
 
-        /// <summary>Locator supplied by APSIM kernel.</summary>
-        public void SetLocator(ILocator locator) => this.locator = locator;
-
         // Function to set default values using reflection
         private void SetDefaultValues()
         {
@@ -423,8 +422,8 @@ namespace Models.Functions
             {
                 return;
             }
-            Phenology phen = (Phenology)locator.Get("[" + CropType + "].Phenology");
-            ReproductiveOrgan organs = (ReproductiveOrgan)locator.Get("[" + CropType + "].Grain");
+            Phenology phen = (Phenology)Structure.Get("[" + CropType + "].Phenology");
+            ReproductiveOrgan organs = (ReproductiveOrgan)Structure.Get("[" + CropType + "].Grain");
 
             double GrowthStageToday = phen.Stage; ;
             //GrowthStageToday = phen.Zadok;

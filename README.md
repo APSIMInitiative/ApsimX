@@ -11,12 +11,12 @@ ApsimX is the next generation of [APSIM](https://www.apsim.info)
 
 ## Licencing Conditions
 
-Use of APSIM source code is provided under the terms and conditions provided by either the General Use Licence or the Special Use Licence.  Use in any way is not permitted unless previously agreed to and currently bound by a licence agreement which can be reviewed on http://www.apsim.info/. The General Use licence can be found [here](https://www.apsim.info/wp-content/uploads/2023/09/APSIM_General_Use_Licence.pdf). The Special Use licence can be found [here](https://www.apsim.info/wp-content/uploads/2023/09/APSIM_Special_Use_Licence.pdf)
-Any questions, please email apsim@csiro.au.
+Use of APSIM source code is provided under the terms and conditions provided by either the General Use Licence or the Special Use Licence.  Use in any way is not permitted unless previously agreed to and currently bound by a licence agreement which can be reviewed on [https://www.apsim.info/](https://www.apsim.info/). The General Use licence can be found [here](https://www.apsim.info/wp-content/uploads/2023/09/APSIM_General_Use_Licence.pdf). The Special Use licence can be found [here](https://www.apsim.info/wp-content/uploads/2023/09/APSIM_Special_Use_Licence.pdf)
+Any questions, please email [apsim@csiro.au](mailto:apsim@csiro.au?subject=Licence%20Enquiry).
 
 ## Getting Started
 
-**Hardware required**: 
+**Hardware required**:
 
 Any recent PC with a minimum of 8Gb of RAM.
 
@@ -36,7 +36,6 @@ Intellectual property rights in APSIM are retained by the APSIM Initiative. If a
 
 Please read our [guide](https://apsimnextgeneration.netlify.app/contribute/).
 
-## Publications 
+## Publications
 
 * [doi:10.1016/j.envsoft.2014.07.009](https://dx.doi.org/10.1016/j.envsoft.2014.07.009)
-

@@ -30,10 +30,10 @@ namespace Models.Core
             // Get a list of all models that need to have event subscriptions resolved in.
             var modelsToInspectForSubscribers = new List<IModel>();
             modelsToInspectForSubscribers.Add(relativeTo);
-            modelsToInspectForSubscribers.AddRange(relativeTo.FindAllDescendants());
+            modelsToInspectForSubscribers.AddRange(relativeTo.Node.FindChildren<IModel>(recurse: true));
 
             // Get a list of models in scope that publish events.
-            var modelsToInspectForPublishers = relativeTo.Node.WalkScopedModels<IModel>().ToList();
+            var modelsToInspectForPublishers = relativeTo.Node.FindAll<IModel>().ToList();
 
             // Get a complete list of all models in scope
             var publishers = Publisher.FindAll(modelsToInspectForPublishers);
@@ -52,7 +52,7 @@ namespace Models.Core
             // disconnect named events
             List<IModel> allModels = new List<IModel>();
             allModels.Add(relativeTo);
-            allModels.AddRange(relativeTo.FindAllDescendants());
+            allModels.AddRange(relativeTo.Node.FindChildren<IModel>(recurse: true));
             List<Publisher> publishers = Publisher.FindAll(allModels).Where(a => a.Model.GetType().FullName.Contains(publisherName ?? "") && a.EventInfo.Name.Contains(eventName ?? "")).ToList();
             foreach (Events.Publisher publisher in publishers)
                 publisher.DisconnectAll();
@@ -71,7 +71,7 @@ namespace Models.Core
         {
             List<IModel> allModels = new List<IModel>();
             allModels.Add(relativeTo);
-            allModels.AddRange(relativeTo.FindAllDescendants());
+            allModels.AddRange(relativeTo.Node.FindChildren<IModel>(recurse: true));
             List<Events.Publisher> publishers = Events.Publisher.FindAll(allModels);
             foreach (Events.Publisher publisher in publishers)
                 publisher.DisconnectAll();
@@ -164,7 +164,7 @@ namespace Models.Core
         {
             var modelsToInspectForSubscribers = new List<IModel>();
             modelsToInspectForSubscribers.Add(relativeTo);
-            modelsToInspectForSubscribers.AddRange(relativeTo.FindAllDescendants());
+            modelsToInspectForSubscribers.AddRange(relativeTo.Node.FindChildren<IModel>(recurse: true));
 
             var subscribers = GetAllSubscribers(modelsToInspectForSubscribers);
 
@@ -222,7 +222,7 @@ namespace Models.Core
         private List<Subscriber> FindAllSubscribers(string name, IModel relativeTo)
         {
             List<Subscriber> subscribers = new List<Subscriber>();
-            foreach (IModel modelNode in relativeTo.Node.WalkScopedModels<IModel>())
+            foreach (IModel modelNode in relativeTo.Node.FindAll<IModel>())
             {
                 List<(MethodInfo, string)> eventHandlers = GetEventHandlersForModel(modelNode);
                 foreach (var method in eventHandlers)

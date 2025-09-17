@@ -12,9 +12,12 @@ namespace Models.Functions
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("Returns the value of a nominated internal Plant numerical variable")]
-    public class VariableReference : Model, IFunction, ILocatorDependency
+    public class VariableReference : Model, IFunction, IStructureDependency
     {
-        [NonSerialized] private ILocator locator;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         private string trimmedVariableName = "";
         private VariableComposite variable = null;
 
@@ -34,9 +37,6 @@ namespace Models.Functions
             }
         }
 
-        /// <summary>Locator supplied by APSIM kernel.</summary>
-        public void SetLocator(ILocator locator) => this.locator = locator;
-
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
@@ -45,7 +45,7 @@ namespace Models.Functions
             {
                 try
                 {
-                    variable = locator.GetObject(trimmedVariableName, LocatorFlags.ThrowOnError);
+                    variable = Structure.GetObject(trimmedVariableName, LocatorFlags.ThrowOnError);
                 }
                 catch (Exception err)
                 {

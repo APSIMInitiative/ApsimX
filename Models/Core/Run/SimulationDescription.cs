@@ -189,7 +189,7 @@ namespace Models.Core.Run
             }
             else
             {
-                IModel storage = topLevelModel.FindInScope<DataStore>();
+                IModel storage = topLevelModel.Node.Find<DataStore>();
                 services.Add(storage);
             }
 

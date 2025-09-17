@@ -22,7 +22,7 @@ namespace Models.CLEM.Resources
     public class LabourAvailabilityItem : FilterGroup<LabourType>, ILabourSpecificationItem
     {
         /// <summary>
-        /// Single values 
+        /// Single values
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(20)]
         [Description("Availability")]
@@ -106,7 +106,7 @@ namespace Models.CLEM.Resources
                 else
                     htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
 
-                if (FindAllChildren<Filter>().Count() < 1)
+                if (Structure.FindChildren<Filter>().Count() < 1)
                     htmlWriter.Write("<div class=\"filter\">Any labour</div>");
 
                 return htmlWriter.ToString();

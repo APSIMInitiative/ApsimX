@@ -69,7 +69,7 @@
             Assert.Throws<SimulationException>(() => simulation.Run());
 
             // Make sure the error was sent to summary.
-            var summary = simulation.FindDescendant<MockSummary>();
+            var summary = simulation.Node.FindChild<MockSummary>(recurse: true);
             Assert.That(summary.messages[0].Contains("Intentional exception"), Is.True);
         }
 
@@ -107,8 +107,12 @@
         }
 
         [Serializable]
-        class ModelThatDeletesAModel : Model
+        class ModelThatDeletesAModel : Model, IStructureDependency
         {
+            /// <summary>Structure instance supplied by APSIM.core.</summary>
+            [field: NonSerialized]
+            public IStructure Structure { private get; set; }
+
             private string modelNameToRemove;
 
             public ModelThatDeletesAModel(string modelNameToDelete)
@@ -118,7 +122,7 @@
 
             public override void OnPreLink()
             {
-                IModel modelToRemove = FindInScope(modelNameToRemove);
+                IModel modelToRemove = Structure.Find<IModel>(modelNameToRemove);
                 modelToRemove.Parent.Children.Remove(modelToRemove);
             }
         }
@@ -143,6 +147,7 @@
                         new ModelThatDeletesAModel("MockModelThatThrows")
                     }
             };
+            Node.Create(simulation);
 
             simulation.Run();
 

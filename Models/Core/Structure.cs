@@ -29,7 +29,8 @@ namespace Models.Core.ApsimFile
                 throw new ArgumentException($"A {modelToAdd.GetType().Name} cannot be added to a {parent.GetType().Name}.");
 
             var parentNode = (parent as Model).Node;
-            var childNode = parentNode.AddChild(modelToAdd as INodeModel);
+            parentNode.AddChild(modelToAdd as INodeModel);
+            var childNode = modelToAdd.Node;
 
             // Ensure the model name is valid.
             EnsureNameIsUnique(modelToAdd);
@@ -51,7 +52,7 @@ namespace Models.Core.ApsimFile
         /// <param name="modelToAdd"></param>
         public static void ReconnectLinksAndEvents(IModel modelToAdd)
         {
-            Simulation parentSimulation = modelToAdd.Parent.FindAncestor<Simulation>();
+            Simulation parentSimulation = modelToAdd.Parent.Node.FindParent<Simulation>(recurse: true);
             if (parentSimulation != null && parentSimulation.IsRunning)
             {
                 var links = new Links(parentSimulation.ModelServices);
@@ -139,14 +140,14 @@ namespace Models.Core.ApsimFile
             string originalName = modelToCheck.Name;
             string newName = originalName;
             int counter = 0;
-            IModel siblingWithSameName = modelToCheck.FindSibling(newName);
+            IModel siblingWithSameName = modelToCheck.Node.FindSibling<IModel>(newName);
             while (siblingWithSameName != null && counter < 10000)
             {
                 counter++;
                 newName = originalName + counter.ToString();
-                siblingWithSameName = modelToCheck.FindSibling(newName);
+                siblingWithSameName = modelToCheck.Node.FindSibling<IModel>(newName);
             }
-            Simulations sims = modelToCheck.FindAncestor<Simulations>();
+            Simulations sims = modelToCheck.Node.FindParent<Simulations>(recurse: true);
             if (sims != null)
             {
                 bool stop = false;
@@ -158,7 +159,7 @@ namespace Models.Core.ApsimFile
                     if (variable != null) { //found a potential conflict
                         goodName = false;
                         if (variable.DataType.Name.CompareTo(modelToCheck.GetType().Name) == 0)
-                            if (modelToCheck.FindSibling(newName) == null)
+                            if (modelToCheck.Node.FindSibling<IModel>(newName) == null)
                                 goodName = true;
                     }
 

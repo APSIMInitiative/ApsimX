@@ -25,9 +25,12 @@ namespace Models
     [ValidParent(ParentType = typeof(Zones.RectangularZone))]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(CLEMFolder))]
-    public class Report : Model, ILocatorDependency, IVariableSupplier
+    public class Report : Model, IStructureDependency, IVariableSupplier
     {
-        [NonSerialized] private ILocator locator;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { protected get; set; }
+
 
         /// <summary>The columns to write to the data store.</summary>
         [JsonIgnore]
@@ -85,9 +88,6 @@ namespace Models
 
         /// <summary>Group by variable name.</summary>
         public string GroupByVariableName { get; set; }
-
-        /// <summary>Locator supplied by APSIM kernel.</summary>
-        public void SetLocator(ILocator locator) => this.locator = locator;
 
         /// <summary>
         /// Get the value of a variable.
@@ -182,7 +182,7 @@ namespace Models
         private string[] TidyUpVariableNames()
         {
             List<string> variableNames = new List<string>();
-            IModel zone = FindAncestor<Zone>();
+            IModel zone = Structure.FindParent<Zone>(recurse: true);
             if (zone == null)
                 zone = simulation;
             variableNames.Add($"[{zone.Name}].Name as Zone");
@@ -342,7 +342,7 @@ namespace Models
                 try
                 {
                     if (!string.IsNullOrEmpty(fullVariableName))
-                        Columns.Add(new ReportColumn(fullVariableName, clock, locator, events, GroupByVariableName, from, to));
+                        Columns.Add(new ReportColumn(fullVariableName, clock, Structure, events, GroupByVariableName, from, to));
                 }
                 catch (Exception err)
                 {

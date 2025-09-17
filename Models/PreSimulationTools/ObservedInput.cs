@@ -4,6 +4,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using APSIM.Core;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using ExcelDataReader;
 using Models.Core;
@@ -20,9 +21,12 @@ namespace Models.PreSimulationTools
     [ViewName("UserInterface.Views.ObservedInputView")]
     [PresenterName("UserInterface.Presenters.ObservedInputPresenter")]
     [ValidParent(ParentType = typeof(DataStore))]
-    public class ObservedInput : Model, IPreSimulationTool, IReferenceExternalFiles, ILocatorDependency
+    public class ObservedInput : Model, IPreSimulationTool, IReferenceExternalFiles, IStructureDependency
     {
-        [NonSerialized] private ILocator locator;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
 
         /// <summary>
         /// Stores information about a column in an observed table
@@ -86,11 +90,7 @@ namespace Models.PreSimulationTools
             }
             set
             {
-                Simulations simulations = FindAncestor<Simulations>();
-                if (simulations != null && simulations.FileName != null && value != null)
-                    this.filenames = value.Select(v => PathUtilities.GetRelativePath(v, simulations.FileName)).ToArray();
-                else
-                    this.filenames = value;
+                this.filenames = value;
             }
         }
 
@@ -217,9 +217,6 @@ namespace Models.PreSimulationTools
         /// <summary>Get list of column names found in this input data</summary>
         public List<string> ColumnNames { get; set; }
 
-        /// <summary>Locator supplied by APSIM kernel.</summary>
-        public void SetLocator(ILocator locator) => this.locator = locator;
-
         /// <summary>Return our input filenames</summary>
         public IEnumerable<string> GetReferencedFileNames()
         {
@@ -243,25 +240,37 @@ namespace Models.PreSimulationTools
                 if (storage.Reader.TableNames.Contains(sheet))
                     storage.Writer.DeleteTable(sheet);
 
+            Simulations simulations = Structure.FindParent<Simulations>(recurse: true);
             foreach (string fileName in FileNames)
             {
-                string absoluteFileName = PathUtilities.GetAbsolutePath(fileName.Trim(), storage.FileName);
+                string fullFileName = fileName;
+                if (simulations != null && simulations.FileName != null)
+                    fullFileName = PathUtilities.GetRelativePath(fileName, simulations.FileName);
+
+                string absoluteFileName = PathUtilities.GetAbsolutePath(fullFileName.Trim(), storage.FileName);
                 if (!File.Exists(absoluteFileName))
                     throw new Exception($"Error in {Name}: file '{absoluteFileName}' does not exist");
 
                 List<DataTable> tables = LoadFromExcel(absoluteFileName);
                 foreach (DataTable table in tables)
                 {
-                    //DataTable validatedTable = ValidateColumns(table);
-                    DataTable validatedTable = table;
-
                     DataColumn col = table.Columns.Add("_Filename", typeof(string));
                     for (int i = 0; i < table.Rows.Count; i++)
-                        table.Rows[i][col] = fileName;
+                        table.Rows[i][col] = fullFileName;
 
                     // Don't delete previous data existing in this table. Doing so would
                     // cause problems when merging sheets from multiple excel files.
                     storage.Writer.WriteTable(table, false);
+                    storage.Writer.WaitForIdle();
+                }
+            }
+
+            foreach (string sheet in SheetNames)
+            {
+                if (storage.Reader.TableNames.Contains(sheet))
+                {
+                    DataTable dt = CombineRows(storage.Reader.GetData(sheet));
+                    storage.Writer.WriteTable(dt, true);
                     storage.Writer.WaitForIdle();
                 }
             }
@@ -308,7 +317,7 @@ namespace Models.PreSimulationTools
         /// <summary>From the list of columns read in, get a list of columns that match apsim variables.</summary>
         public void GetDerivedColumnsFromObserved()
         {
-            Simulations sims = this.FindAncestor<Simulations>();
+            Simulations sims = Structure.FindParent<Simulations>(recurse: true);
 
             List<string> tableNames = SheetNames.ToList();
 
@@ -356,7 +365,7 @@ namespace Models.PreSimulationTools
         /// <summary>From the list of columns read in, get a list of columns that match apsim variables.</summary>
         public void GetAPSIMColumnsFromObserved()
         {
-            Simulations sims = this.FindAncestor<Simulations>();
+            Simulations sims = Structure.FindParent<Simulations>(recurse: true);
 
             storage?.Writer.Stop();
             storage?.Reader.Refresh();
@@ -450,6 +459,104 @@ namespace Models.PreSimulationTools
             }
         }
 
+        /// <summary>
+        /// Filter through the given datatable and combine rows that have the same SimulationName and Clock.Today values.
+        /// Will throw if it encounters two rows with different values for a field that should be combined.
+        /// </summary>
+        private DataTable CombineRows(DataTable datatable)
+        {
+            if (!datatable.GetColumnNames().ToList().Contains("Clock.Today"))
+                return datatable;
+
+            //Get a distinct list of rows of SimulationName and Clock.Today
+            var distinctRows = datatable.AsEnumerable()
+                .Select(s => new
+                {
+                    simulation = s["SimulationName"],
+                    clock = s["Clock.Today"],
+                    clockAsString = s["Clock.Today"].ToString()
+                })
+                .Distinct();
+
+            DataTable newDataTable = datatable.Clone();
+
+            string errors = "";
+            foreach (var item in distinctRows)
+            {
+                if (!string.IsNullOrEmpty(item.clockAsString))
+                {
+                    //select all rows in original datatable with this distinct values
+                    IEnumerable<DataRow> results = datatable.Select().Where(p => p["SimulationName"] == item.simulation && p["Clock.Today"].ToString() == item.clockAsString);
+
+                    //store the list of columns in the datatable
+                    List<string> columns = datatable.GetColumnNames().ToList<string>();
+
+                    //the one or more rows needed to capture the data during merging
+                    //multiple lines may still be needed if there are conflicts in columns when trying to merge the data
+                    List<DataRow> newRows = new List<DataRow>();
+
+                    foreach (DataRow row in results)
+                    {
+                        foreach (string column in columns)
+                        {
+                            bool merged = false;
+                            foreach (DataRow newRow in newRows)
+                            {
+                                if (!merged)
+                                {
+                                    if (CanMergeRows(row, newRow, column))
+                                    {
+                                        newRow[column] = row[column];
+                                        merged = true;
+                                    }
+                                    //errors += $"Error merging data rows from file {newDataRow["_Filename"]}: {item.simulation} on date {item.clock} in column {column} has different values {newDataRow[column]} and {row[column]} on rows.\n";
+                                }
+                            }
+                            if (!merged)
+                            {
+                                DataRow duplicateRow = newDataTable.NewRow();
+                                duplicateRow["SimulationName"] = item.simulation;
+                                duplicateRow["Clock.Today"] = item.clock;
+                                duplicateRow[column] = row[column];
+                                newRows.Add(duplicateRow);
+                            }
+                        }
+                    }
+
+                    //add the rows to the result dataTable
+                    foreach (DataRow dupilcateRow in newRows)
+                        newDataTable.Rows.Add(dupilcateRow);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(errors))
+                throw new Exception(errors);
+
+            return newDataTable;
+        }
+
+        /// <summary>
+        /// Comparisions to check if the value in the given column can be merged into newRow from row.
+        /// </summary>
+        private bool CanMergeRows(DataRow row, DataRow newRow, string column)
+        {
+            List<string> defaultColumns = new List<string>() { "SimulationID", "SimulationName", "CheckpointID", "CheckpointName", "Clock.Today", "_Filename" };
+
+            if (!string.IsNullOrEmpty(row[column].ToString()))
+            {
+                if (!defaultColumns.Contains(column) && !string.IsNullOrEmpty(newRow[column].ToString()))
+                {
+                    bool isDouble1 = double.TryParse(newRow[column].ToString(), out double existing);
+                    bool isDouble2 = double.TryParse(row[column].ToString(), out double other);
+                    if (isDouble1 != true || isDouble2 != true || !MathUtilities.FloatsAreEqual(existing, other))
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
         /// <summary></summary>
         private bool NameIsAPSIMFormat(string columnName)
         {
@@ -479,7 +586,7 @@ namespace Models.PreSimulationTools
                 return null;
 
             string[] nameParts = nameWithoutBrackets.Split('.');
-            IModel firstPart = sims.FindDescendant(nameParts[0]);
+            IModel firstPart = Structure.FindChild<IModel>(nameParts[0], relativeTo:sims);
             if (firstPart == null)
                 return null;
 
@@ -490,7 +597,7 @@ namespace Models.PreSimulationTools
 
             try
             {
-                VariableComposite variable = locator.GetObject(fullPath, relativeTo: sims);
+                VariableComposite variable = Structure.GetObject(fullPath, relativeTo: sims);
                 return variable;
             }
             catch

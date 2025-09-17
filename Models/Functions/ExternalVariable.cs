@@ -14,21 +14,20 @@ namespace Models.Functions
     [Description("Returns the value of a nominated external APSIM numerical variable")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class ExternalVariable : Model, IFunction, ILocatorDependency
+    public class ExternalVariable : Model, IFunction, IStructureDependency
     {
-        [NonSerialized] private ILocator locator;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
         /// <summary>The variable name</summary>
         [Description("VariableName")]
         public string VariableName { get; set; }
 
-        /// <summary>Locator supplied by APSIM kernel.</summary>
-        public void SetLocator(ILocator locator) => this.locator = locator;
-
         /// <summary>Gets the value.</summary>
         public double Value(int arrayIndex = -1)
         {
-            object val = locator.GetObject(VariableName)?.Value;
+            object val = Structure.GetObject(VariableName)?.Value;
 
             if (val != null)
             {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using APSIM.Core;
+using DocumentFormat.OpenXml.Office.CustomXsn;
 using Models.Interfaces;
 using Newtonsoft.Json;
 
@@ -17,8 +18,12 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Agroforestry.AgroforestrySystem))]
-    public class Zone : Model, IZone, IScopedModel
+    public class Zone : Model, IZone, IScopedModel, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { protected get; set; }
+
         /// <summary>
         /// Link to summary, for error/warning reporting.
         /// </summary>
@@ -47,7 +52,7 @@ namespace Models.Core
         {
             get
             {
-                Simulation parentSim = this.FindAllAncestors<Simulation>().FirstOrDefault();
+                Simulation parentSim = Structure.FindParents<Simulation>().FirstOrDefault();
                 double radn = (double)parentSim.Node.Get("[Weather].Radn");
                 return radn * Area * 10000;
             }
@@ -60,11 +65,11 @@ namespace Models.Core
 
         /// <summary>Return a list of plant models.</summary>
         [JsonIgnore]
-        public List<IPlant> Plants { get { return FindAllChildren<IPlant>().ToList(); } }
+        public List<IPlant> Plants { get { return Structure.FindChildren<IPlant>().ToList(); } }
 
         /// <summary>Return a list of canopies.</summary>
         [JsonIgnore]
-        public List<ICanopy> Canopies { get { return FindAllDescendants<ICanopy>().ToList(); } }
+        public List<ICanopy> Canopies { get { return Structure.FindChildren<ICanopy>(recurse: true).ToList(); } }
 
         /// <summary>Return the index of this paddock</summary>
         public int Index { get { return Parent.Children.IndexOf(this); } }
@@ -97,7 +102,7 @@ namespace Models.Core
         /// </summary>
         private void CheckSensibility()
         {
-            if (FindInScope<MicroClimate>() == null)
+            if (Structure.Find<MicroClimate>() == null)
                 summary.WriteMessage(this, "MicroClimate not found", MessageType.Warning);
         }
 

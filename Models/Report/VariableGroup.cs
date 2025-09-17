@@ -16,7 +16,7 @@ namespace Models
     public class VariableGroup
     {
         /// <summary>An instance of a locator service.</summary>
-        private readonly ILocator locator;
+        private readonly IStructure locator;
 
         /// <summary>The values for each report event (e.g. daily) for a group.</summary>
         private readonly List<object> valuesToAggregate = new List<object>();
@@ -34,7 +34,7 @@ namespace Models
         /// <param name="valueOfGroupBy">The full name of the group by variable.</param>
         /// <param name="varName">The full name of the variable we are retrieving from APSIM.</param>
         /// <param name="aggFunction">The aggregation (e.g. sum) to apply to the values in each group.</param>
-        public VariableGroup(ILocator locatorInstance, object valueOfGroupBy,
+        public VariableGroup(IStructure locatorInstance, object valueOfGroupBy,
                                 string varName, string aggFunction)
         {
             locator = locatorInstance;

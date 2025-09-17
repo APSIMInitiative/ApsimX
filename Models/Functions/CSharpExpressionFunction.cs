@@ -31,7 +31,7 @@ namespace Models.Functions
                 // and namespace lines e.g.
                 //    using Models.Clock;
                 //    using Models;
-                var models = relativeTo.FindAllInScope().ToList().Where(model => !model.IsHidden &&
+                var models = relativeTo.Node.FindAll<IModel>().ToList().Where(model => !model.IsHidden &&
                                                                         model.GetType() != typeof(Graph) &&
                                                                         model.GetType() != typeof(Series) &&
                                                                         model.GetType().Name != "StorageViaSockets");

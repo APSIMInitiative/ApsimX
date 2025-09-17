@@ -25,8 +25,7 @@ Remember to use `Save As` not `Save` or you will overwrite the old file.
 3. Delete the `Sand Fallow` simulation. We'll use `Clay Fallow` as the starting point. Also delete the graph.
 
 4. Make a copy of `Clay Fallow` by dragging it to the simulations node in the tree and rename this new simulation to `Clay Residue`.
-	- Remove the [Weather].Rain Report Variable from the Report node in the 'Clay Residue' simulation.
- 	- Your node tree should look like this:
+	- Your node tree should look like this:
 	![Node tree](/images/moduleTwoImages/step1.png)
 
 5. Expand the new simulation then expand the paddock node. Click the SurfaceOrganicMatter module and change the initial surface residue to 3000 kg/ha.

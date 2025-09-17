@@ -23,7 +23,7 @@ namespace Models.Core
         /// <param name="model"></param>
         public static void ClearCaches(IModel model)
         {
-            Simulation simulation = model as Simulation ?? model.FindAncestor<Simulation>();
+            Simulation simulation = model as Simulation ?? model.Node.FindParent<Simulation>(recurse: true);
             if (simulation != null)
             {
                 model.Node.ClearLocator();
@@ -32,7 +32,7 @@ namespace Models.Core
             {
                 // If the model didn't have a Simulation object as an ancestor, then it's likely to
                 // have a Simulations object as one. If so, the Simulations links may need to be updated.
-                Simulations simulations = model.FindAncestor<Simulations>();
+                Simulations simulations = model.Node.FindParent<Simulations>(recurse: true);
                 if (simulations != null)
                 {
                     simulations.ClearLinks();
@@ -54,7 +54,7 @@ namespace Models.Core
             // probably an expensive thing to do.
             Links links = null;
 
-            Simulation simulation = model as Simulation ?? model.FindAncestor<Simulation>();
+            Simulation simulation = model as Simulation ?? model.Node?.FindParent<Simulation>(recurse: true);
             if (simulation != null && simulation.IsRunning)
             {
                 links = new Links();

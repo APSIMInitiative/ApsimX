@@ -26,13 +26,15 @@ namespace Models
     [ValidParent(ParentType = typeof(Factorial.CompositeFactor))]
     [ValidParent(ParentType = typeof(Factorial.Factor))]
     [ValidParent(ParentType = typeof(Soils.Soil))]
-    public class Manager : Model, ILocatorDependency
+    public class Manager : Model, IStructureDependency
     {
-        /// <summary>Locator supplied by APSIM kernal.</summary>
-        [NonSerialized] private ILocator locator;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
         /// <summary>The code to compile.</summary>
         private string[] cSharpCode = ReflectionUtilities.GetResourceAsStringArray("Models.Resources.Scripts.BlankManager.cs");
+
         /// <summary>
         /// Stores the code for the current child script model. This is used
         /// to check if the child script model needs recompiling.
@@ -96,9 +98,6 @@ namespace Models
         public string Errors { get; private set; } = null;
 
 
-        /// <summary>Locator supplied by APSIM kernel.</summary>
-        public void SetLocator(ILocator locator) => this.locator = locator;
-
         /// <summary>
         /// Instance has been created.
         /// </summary>
@@ -128,7 +127,7 @@ namespace Models
             // parameters like [Lentil] get resolved, not from the cache, but from a new search
             // for the model. The cache can be out of date for models (e.g. lentil) that have been
             // overwritten from Replacements.
-            locator.ClearLocator();
+            Structure.ClearLocator();
 
             // Need to update our parameter value collection and then reset them in the script.
             // Some manager scripts refer to a model (e.g. [Lentil]). Resetting these parameters
@@ -196,9 +195,9 @@ namespace Models
                             {
                                 object value;
                                 if ((typeof(IModel).IsAssignableFrom(property.PropertyType) || property.PropertyType.IsInterface) && (parameter.Value.StartsWith(".") || parameter.Value.StartsWith("[")))
-                                    value = locator.GetObject(parameter.Value)?.Value;
+                                    value = Structure.GetObject(parameter.Value)?.Value;
                                 else if (property.PropertyType == typeof(IPlant))
-                                    value = this.FindInScope(parameter.Value);
+                                    value = Structure.Find<object>(parameter.Value);
                                 else
                                     value = ReflectionUtilities.StringToObject(property.PropertyType, parameter.Value);
                                 property.SetValue(Script, value, null);
