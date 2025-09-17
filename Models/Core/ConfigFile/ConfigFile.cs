@@ -85,9 +85,9 @@ namespace Models.Core.ConfigFile
                         // A model's array property is being modified.
                         
                         string operation = command.Contains("+=") ? "+=" : "-=";
-                        commandSplits = StringUtilities.SplitStringHonouringQuotes(command, operation);
+                        List<string> commSplits = StringUtilities.SplitStringHonouringQuotes(command, operation);
 
-                        property = commandSplits[0].Trim();
+                        property = commSplits[0].Trim();
                         object propertyObj = tempSim.Node.Get(property);
 
                         // Check if propertyObj is an array (e.g., Cultivar's Command) or List<string> (e.g., CompositeFactor's Specifications)
@@ -99,7 +99,7 @@ namespace Models.Core.ConfigFile
                         else
                             throw new Exception($"'{property}' is not a string array or List<string>.");
 
-                        string newValues = commandSplits[1].Trim();
+                        string newValues = commSplits[1].Trim();
                         string[] assignments;
 
                         if (operation == "-=")
@@ -125,8 +125,7 @@ namespace Models.Core.ConfigFile
                                 param = assignSplits[0].Trim();
                             }
 
-                            propertyValues = [.. propertyValues
-                            .Select(line => {
+                            propertyValues = [.. propertyValues.Select(line => {
                                 if (string.IsNullOrWhiteSpace(line) || (line.TrimStart().StartsWith("//") && !line.Contains(param)))
                                     return null;
 
