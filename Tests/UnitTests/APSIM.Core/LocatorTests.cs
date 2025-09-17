@@ -940,5 +940,19 @@ namespace APSIM.Core.Tests
             //Should find ModelF even though it's not called ModelF
             Assert.That(loc.Get("[Simulation].ModelF"), Is.Not.Null);
         }
+        
+        /// <summary>
+        /// Test to make sure the type of an object can be found even if it has square brackets in it's name
+        /// </summary>
+        [Test]
+        public void GetChildModelThatHasSquareBracketsInName()
+        {
+            Simulations sims = MakeTestSimulation();
+            IStructure loc = sims.Node;
+            loc.Set("[Simulation].ModelF.Name", "ModelFWith[1]");
+
+            //Should find ModelF even though it's not called ModelF
+            Assert.That(loc.Get("[Simulation].ModelFWith[1]"), Is.Not.Null);
+        }
     }
 }
