@@ -498,6 +498,10 @@ internal class Locator
                 compareType = StringComparison.OrdinalIgnoreCase;
 
             modelInfo = model.GetChildren().FirstOrDefault(m => m.Name.Equals(name, compareType));
+
+            //If matching by name did not work, try matching by type
+            if (modelInfo == null)
+                modelInfo = model.GetChildren().FirstOrDefault(m => m.GetType().Name.Equals(name, compareType));
         }
 
         if (methodInfo != null) //if we found a method, return it

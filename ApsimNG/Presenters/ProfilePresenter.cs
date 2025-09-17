@@ -58,7 +58,8 @@ namespace UserInterface.Presenters
 
             Soil soilNode = this.model.Node.FindParent<Soil>();
             physical = model as Physical ?? soilNode?.Node.FindChild<Physical>();
-            physical?.InFill();
+            if (physical.Thickness != null)
+                physical?.InFill();
 
             var chemical = model as Chemical ?? soilNode?.Node.FindChild<Chemical>();
             var organic = model as Organic ?? soilNode?.Node.FindChild<Organic>();
@@ -166,11 +167,12 @@ namespace UserInterface.Presenters
                             relativeLL = (model as SoilCrop).LL;
                         }
                         //Since we can view the soil relative to water, lets not have the water node graphing options effect this graph.
-                        PopulateWaterGraph(graph, physical.Thickness, physical.AirDry, physical.LL15, physical.DUL, physical.SAT,
-                                                        cllName, water.Thickness, relativeLL, water.InitialValues, llsoilName, llsoil);
+                        if (physical.Thickness != null)
+                            PopulateWaterGraph(graph, physical.Thickness, physical.AirDry, physical.LL15, physical.DUL, physical.SAT,
+                                                            cllName, water.Thickness, relativeLL, water.InitialValues, llsoilName, llsoil);
                     }
 
-                    else if (model is Organic organic)
+                    else if (model is Organic organic && organic.Thickness != null)
                         PopulateOrganicGraph(graph, organic.Thickness, organic.FOM, organic.SoilCNRatio, organic.FBiom, organic.FInert);
                     else if (model is Solute solute && solute.Thickness != null)
                     {
@@ -179,7 +181,7 @@ namespace UserInterface.Presenters
                             vals = SoilUtilities.kgha2ppm(solute.Thickness, solute.SoluteBD, vals);
                         PopulateSoluteGraph(graph, solute.Thickness, solute.Name, vals);
                     }
-                    else if (model is Chemical chemical)
+                    else if (model is Chemical chemical && chemical.Thickness != null)
                     {
                         var standardisedSoil = (chemical.Parent as Soil)?.CloneAndSanitise(chemical.Thickness);
                         var solutes = standardisedSoil?.Node.FindChildren<Solute>();
@@ -322,32 +324,42 @@ namespace UserInterface.Presenters
             double[] cumulativeSWThickness = APSIM.Shared.Utilities.SoilUtilities.ToCumThickness(swThickness);
 
             double[] cllMapped = null;
-            if (cll.Length == thickness.Length)
-                cllMapped = cll;
-            else if (cll.Length == swThickness.Length)
-                cllMapped = SoilUtilities.MapConcentration(cll, swThickness, thickness, 0);
+            if (cll != null)
+            {
+                if (cll.Length == thickness.Length)
+                    cllMapped = cll;
+                else if (cll.Length == swThickness.Length)
+                    cllMapped = SoilUtilities.MapConcentration(cll, swThickness, thickness, 0);
+            }
 
             double[] swMapped = null;
-            if (sw.Length == thickness.Length)
-                swMapped = sw;
-            else if (sw.Length == swThickness.Length)
-                swMapped = SoilUtilities.MapConcentration(sw, swThickness, thickness, 0);
+            if (sw != null)
+            {
+                if (sw.Length == thickness.Length)
+                    swMapped = sw;
+                else if (sw.Length == swThickness.Length)
+                    swMapped = SoilUtilities.MapConcentration(sw, swThickness, thickness, 0);
+            }
 
             graph.Clear();
 
-            //draw the area relative to whatever the water node is currently relative to
-            graph.DrawRegion($"PAW relative to {cllName}", cllMapped, cumulativeThickness,
+            if (swMapped != null && cllMapped != null)
+            {
+                //draw the area relative to whatever the water node is currently relative to
+                graph.DrawRegion($"PAW relative to {cllName}", cllMapped, cumulativeThickness,
                             swMapped, cumulativeThickness,
                             AxisPosition.Top, AxisPosition.Left,
                             System.Drawing.Color.LightSkyBlue, true);
+            }
 
-            graph.DrawLineAndMarkers("Airdry", airdry,
-                                    cumulativeThickness,
-                                    "", "", null, null, AxisPosition.Top, AxisPosition.Left,
-                                    System.Drawing.Color.Red, LineType.DashDot, MarkerType.None,
-                                    LineThickness.Normal, MarkerSize.Normal, 1, true);
+            if (airdry != null)
+                graph.DrawLineAndMarkers("Airdry", airdry,
+                                        cumulativeThickness,
+                                        "", "", null, null, AxisPosition.Top, AxisPosition.Left,
+                                        System.Drawing.Color.Red, LineType.DashDot, MarkerType.None,
+                                        LineThickness.Normal, MarkerSize.Normal, 1, true);
 
-            if (llsoil == null)
+            if (llsoil == null && cllMapped != null)
             {
                 graph.DrawLineAndMarkers(cllName, cllMapped,
                                         cumulativeThickness,
@@ -355,7 +367,7 @@ namespace UserInterface.Presenters
                                         System.Drawing.Color.Red, LineType.Solid, MarkerType.None,
                                         LineThickness.Normal, MarkerSize.Normal, 1, true);
             }
-            else
+            else if (ll15 != null)
             {
                 graph.DrawLineAndMarkers("LL15", ll15,
                                         cumulativeThickness,
@@ -364,18 +376,19 @@ namespace UserInterface.Presenters
                                         LineThickness.Normal, MarkerSize.Normal, 1, true);
             }
 
+            if (dul != null)
+                graph.DrawLineAndMarkers("DUL", dul,
+                                        cumulativeThickness,
+                                        "", "", null, null, AxisPosition.Top, AxisPosition.Left,
+                                        System.Drawing.Color.Blue, LineType.Solid, MarkerType.None,
+                                        LineThickness.Normal, MarkerSize.Normal, 1, true);
 
-            graph.DrawLineAndMarkers("DUL", dul,
-                        cumulativeThickness,
-                        "", "", null, null, AxisPosition.Top, AxisPosition.Left,
-                        System.Drawing.Color.Blue, LineType.Solid, MarkerType.None,
-                        LineThickness.Normal, MarkerSize.Normal, 1, true);
-
-            graph.DrawLineAndMarkers("SAT", sat,
-                                    cumulativeThickness,
-                                    "", "", null, null, AxisPosition.Top, AxisPosition.Left,
-                                    System.Drawing.Color.Blue, LineType.DashDot, MarkerType.None,
-                                    LineThickness.Normal, MarkerSize.Normal, 1, true);
+            if (sat != null)
+                graph.DrawLineAndMarkers("SAT", sat,
+                                        cumulativeThickness,
+                                        "", "", null, null, AxisPosition.Top, AxisPosition.Left,
+                                        System.Drawing.Color.Blue, LineType.DashDot, MarkerType.None,
+                                        LineThickness.Normal, MarkerSize.Normal, 1, true);
 
             if (llsoil != null && llsoilsName != null)
             {
