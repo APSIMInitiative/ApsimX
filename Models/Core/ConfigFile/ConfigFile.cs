@@ -72,7 +72,7 @@ namespace Models.Core.ConfigFile
 
                 // Gets command, splits it using space and = characters, then replaces any @ symbols with spaces so
                 // nodes in the commands can be used normally.
-                List<string> commandSplits = StringUtilities.SplitStringHonouringQuotes(command, "=");
+                List<string> commandSplits = StringUtilities.SplitStringHonouringQuotes(command, " =");
 
                 // Get the first part to see what kind of command it is
                 string property = commandSplits[0].Trim();
