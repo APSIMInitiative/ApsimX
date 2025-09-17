@@ -470,7 +470,7 @@ namespace APSIM.Core.Tests
 
             //check that the child still exists as well
             Model cnrfChild = null;
-            foreach(Model child in nutrient.Children)
+            foreach (Model child in nutrient.Children)
                 if (child.Name == "CNRF")
                     cnrfChild = child;
             if (cnrfChild == null)
@@ -835,7 +835,7 @@ namespace APSIM.Core.Tests
 
             //Empty path should give back no bits or error
             inputs.Add("");
-            results.Add(new string[] {});
+            results.Add(new string[] { });
 
             //a single space path should give an error
             inputs.Add(" ");
@@ -925,6 +925,20 @@ namespace APSIM.Core.Tests
             foreach (PropertyInfo prop in properties)
                 if (names.Contains(prop.Name) == false)
                     Assert.Fail($"{prop.Name} is not tested by an individual unit test.");
+        }
+
+        /// <summary>
+        /// Test to make sure the type of an object can be passed to find a child, even if the child has a different name to it's type.
+        /// </summary>
+        [Test]
+        public void GetChildModelByTypeInsteadOfName()
+        {
+            Simulations sims = MakeTestSimulation();
+            IStructure loc = sims.Node;
+            loc.Set("[Simulation].ModelF.Name", "NotModelF");
+
+            //Should find ModelF even though it's not called ModelF
+            Assert.That(loc.Get("[Simulation].ModelF"), Is.Not.Null);
         }
         
         /// <summary>
