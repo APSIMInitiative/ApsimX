@@ -72,79 +72,108 @@ namespace Models.Core.ConfigFile
 
                 // Gets command, splits it using space and = characters, then replaces any @ symbols with spaces so
                 // nodes in the commands can be used normally.
-                List<string> commandSplits = StringUtilities.SplitStringHonouringQuotes(command, " =");
+                List<string> commandSplits = StringUtilities.SplitStringHonouringQuotes(command, "=");
 
                 // Get the first part to see what kind of command it is
-                string part1 = commandSplits[0].Trim();
+                string property = commandSplits[0].Trim();
 
                 // If first index item is a string starting with ".", or containing "[]", the command is an override
-                if (part1.StartsWith('.') || (part1.StartsWith('[') && part1.Contains(']')))
+                if (property.StartsWith('.') || (property.StartsWith('[') && property.Contains(']')))
                 {
-                    string property = part1;
-                    string value = "";
-                    for (int i = 1; i < commandSplits.Count; i++)
+                    if (command.Contains("+=") || command.Contains("-="))
                     {
-                        if (commandSplits[i].Replace("\"", "").Trim().Length > 0)
+                        // A model's array property is being modified.
+                        
+                        string operation = command.Contains("+=") ? "+=" : "-=";
+                        commandSplits = StringUtilities.SplitStringHonouringQuotes(command, operation);
+
+                        property = commandSplits[0].Trim();
+                        object propertyObj = tempSim.Node.Get(property);
+
+                        // Check if propertyObj is an array (e.g., Cultivar's Command) or List<string> (e.g., CompositeFactor's Specifications)
+                        string[] propertyValues;
+                        if (propertyObj is string[] arr)
+                            propertyValues = arr;
+                        else if (propertyObj is List<string> list)
+                            propertyValues = list.ToArray();
+                        else
+                            throw new Exception($"'{property}' is not a string array or List<string>.");
+
+                        string newValues = commandSplits[1].Trim();
+                        string[] assignments;
+
+                        if (operation == "-=")
                         {
-                            value += commandSplits[i];
-                            if (i < commandSplits.Count - 1)
-                                value += "=";
+                            if (newValues.Contains('='))
+                                throw new Exception($"Assignments ('=') cannot be removed from an array. Only use the bare names of the properties.");
+
+                            assignments = newValues.Split(",").Select(s => s.Trim()).ToArray();
+
+                        } else
+                        {
+                            assignments = ReflectionUtilities.AssignmentsToArray(newValues);
                         }
-                    }
 
-                    // Check if second part is a filename or value (ends in ; and file exists)
-                    // If so, read contents of that file in as the value
-                    if (value.Length > 0)
-                    {
-                        string potentialFilepath = configFileDirectory + "/" + value.Substring(0, value.Length - 1);
-                        if (value.Trim().EndsWith(';') && File.Exists(potentialFilepath))
-                            value = File.ReadAllText(potentialFilepath);
-                    }
+                        foreach (string assign in assignments)
+                        {
+                            bool found = false;
+                            string param = assign.Trim();
 
-                    // Check if the override is for a cultivar.
-                    bool hasCultivar = property.Contains(".Command.", StringComparison.OrdinalIgnoreCase);
+                            if (param.Contains('='))
+                            {
+                                List<string> assignSplits = StringUtilities.SplitStringHonouringQuotes(param, "=");
+                                param = assignSplits[0].Trim();
+                            }
 
-                    if (hasCultivar) {
-                        // If the override is for a cultivar, we need to handle it differently.
-                        int splitIndex = property.IndexOf(".Command.");
-                        string param = property.Replace(".Command.", "")[splitIndex..];
-                        property = property[..splitIndex].TrimEnd('.');
-                        int lastDot = property.LastIndexOf('.');
-
-                        Cultivar cultivar = tempSim.Node.Get(property) as Cultivar;
-
-                        if (cultivar == null)
-                            throw new Exception($"Cultivar not found at {property}. Check the cultivar name and path are correct.");
-                        if (cultivar.ReadOnly)
-                            throw new Exception($"Cultivar at {property} is read-only and cannot be modified.");
-
-                        string[] cultCommands = cultivar.Command;
-                        bool found = false;
-
-                        cultCommands = [.. cultCommands
+                            propertyValues = [.. propertyValues
                             .Select(line => {
                                 if (string.IsNullOrWhiteSpace(line) || (line.TrimStart().StartsWith("//") && !line.Contains(param)))
                                     return null;
 
                                 if (line.Contains(param))
                                 {
-                                    found = true;
-                                    return $"{param} = {value}";
+                                    if (operation == "-=")
+                                        return null;
+                                    else if (operation == "+=") {
+                                        found = true;
+                                        return assign;
+                                    }
                                 }
                                 return line;
                             })];
 
-                        // Add a new line if the cultivar parameter does not exist in the cultivar commands already.
-                        if (!found)
-                            cultCommands = cultCommands.Append($"{param} = {value}").ToArray();
+                            // Add a new line if the assignment does not exist in the array already.
+                            if (operation == "+=" && !found)
+                                propertyValues = propertyValues.Append(assign).ToArray();
+                        }
 
-                        string[] singleLineCommandArray = { property + ".Command = " + string.Join(", ", cultCommands.Where(c => !string.IsNullOrWhiteSpace(c))) };
+                        string[] singleLineCommandArray = { property + " = " + string.Join(", ", propertyValues.Where(c => !string.IsNullOrWhiteSpace(c))) };
                         var overrides = Overrides.ParseStrings(singleLineCommandArray);
                         tempSim = (Simulations)ApplyOverridesToApsimxFile(overrides, tempSim);
-
-                    } 
+                        
+                    }
                     else
                     {
+                        string value = "";
+                        for (int i = 1; i < commandSplits.Count; i++)
+                        {
+                            if (commandSplits[i].Replace("\"", "").Trim().Length > 0)
+                            {
+                                value += commandSplits[i];
+                                if (i < commandSplits.Count - 1)
+                                    value += "=";
+                            }
+                        }
+
+                        // Check if second part is a filename or value (ends in ; and file exists)
+                        // If so, read contents of that file in as the value
+                        if (value.Length > 0)
+                        {
+                            string potentialFilepath = configFileDirectory + "/" + value.Substring(0, value.Length - 1);
+                            if (value.Trim().EndsWith(';') && File.Exists(potentialFilepath))
+                                value = File.ReadAllText(potentialFilepath);
+                        }
+
                         string[] singleLineCommandArray = { property + "=" + value };
                         var overrides = Overrides.ParseStrings(singleLineCommandArray);
                         tempSim = (Simulations)ApplyOverridesToApsimxFile(overrides, tempSim);

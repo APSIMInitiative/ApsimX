@@ -586,28 +586,7 @@
                 object[] arr;
                 if (newValue.Contains('='))
                 {
-                    var assignments = new List<string>();
-                    int end = newValue.Length;
-
-                    while (end > 0)
-                    {
-                        // Find the last '=' before 'end'
-                        int eqIndex = newValue.LastIndexOf('=', end - 1);
-                        if (eqIndex == -1) break;
-
-                        // Determine the start of this assignment
-                        int start = newValue.LastIndexOf(',', eqIndex - 1) + 1;
-                        if (start < 0) start = 0;
-
-                        // LHS: everything between 'start' and '='. 
-                        string lhs = newValue.Substring(start, eqIndex - start).Trim();
-                        // RHS: everything between '=' and 'end'. 
-                        string rhs = newValue.Substring(eqIndex + 1, end - eqIndex - 1).Trim();
-
-                        assignments.Insert(0, lhs + " = " + rhs); 
-                        end = start - 1;
-                    }
-                    arr = assignments.ToArray();
+                    arr = AssignmentsToArray(newValue);
                 }
                 else
                 {
@@ -661,6 +640,74 @@
                 throw new FormatException($"Unable to convert {newValue} to type {dataType}", err);
             }
         }
+
+        /// <summary>
+        /// Convert a string containing multiple assignments into an array of individual
+        /// assignments, considering some assignments may have an array after "=".
+        /// Example: "var1=5, var2=3, var3=1,2,3"
+        /// </summary>
+        /// <param name="assignments">An string of one or more assignments.</param>
+        public static string[] AssignmentsToArray(string assignments)
+        {
+            var result = new List<string>();
+            string currentLhs = null;
+            var rhs = new List<string>();
+
+            foreach (var raw in assignments.Split(','))
+            {
+                var token = raw.Trim();
+                if (token.Length == 0) continue;
+
+                int eq = token.IndexOf('=');
+                if (eq >= 0)
+                {
+                    // Flush any open assignment.
+                    if (currentLhs != null)
+                    {
+                        result.Add($"{currentLhs} = {string.Join(", ", rhs)}");
+                        rhs.Clear();
+                    }
+
+                    currentLhs = token.Substring(0, eq).Trim();
+                    var firstRhs = token.Substring(eq + 1).Trim();
+                    rhs.Clear();
+                    if (firstRhs.Length > 0) rhs.Add(firstRhs);
+                    continue;
+                }
+
+                // No '=' in this token.
+                if (currentLhs != null && LooksLikeBareSymbol(token))
+                {
+                    // Close the previous assignment, then add this as a bare symbol.
+                    result.Add($"{currentLhs} = {string.Join(", ", rhs)}");
+                    rhs.Clear();
+                    currentLhs = null;
+                    result.Add(token);
+                }
+                else if (currentLhs != null)
+                {
+                    // Still in the RHS of the current assignment.
+                    rhs.Add(token);
+                }
+                else
+                {
+                    // Bare symbol before any assignment.
+                    result.Add(token);
+                }
+            }
+
+            if (currentLhs != null)
+                result.Add($"{currentLhs} = {string.Join(", ", rhs)}");
+
+            return result.ToArray();
+        }
+
+        // Bare symbol heuristic:
+        //  - a bracketed section like [Clock], [Weather]
+        //  - or a simple identifier/dotted path like var4 or Section.Name
+        private static bool LooksLikeBareSymbol(string token) =>
+            Regex.IsMatch(token, @"^\[[^\]]+\]$") ||
+            Regex.IsMatch(token, @"^[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*$");
 
         /// <summary>
         /// Convert the specified 'obj' into a string using the

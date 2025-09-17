@@ -843,10 +843,40 @@ save {apsimxFileName}
         }
 
         [Test]
-        public void TestEditingCultivarCommand()
+        public void TestEditingArrays()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.test-wheat.apsimx");
             Simulations sims = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
+
+            Experiment experiment = new Experiment()
+            {
+                Name = "Experiment",
+                Enabled = true,
+                ReadOnly = false
+            };
+            sims.Children.Add(experiment);
+            Factors factors = new Factors()
+            {
+                Name = "Factors",
+                Enabled = true,
+                ReadOnly = false
+            };
+            experiment.Children.Add(factors);
+            Factor factor = new Factor()
+            {
+                Name = "Factor",
+                Enabled = true,
+                ReadOnly = false
+            };
+            factors.Children.Add(factor);
+            CompositeFactor compFactor = new CompositeFactor()
+            {
+                Name = "CompositeFactor",
+                Specifications = new List<string>() { "[Sowing].Script.CultivarName = Hartog,Janz" },
+                Enabled = true,
+                ReadOnly = false
+            };
+            factor.Children.Add(compFactor);
             Folder replacements = new Folder()
             {
                 Name = "Replacements",
@@ -885,12 +915,12 @@ save {apsimxFileName}
                 $"load test-wheat2.apsimx{Environment.NewLine}" +
                 $"[Sowing].Script.StartDate = 2-May{Environment.NewLine}" +
                 $"[Sowing].Script.CultivarName = Hartog{Environment.NewLine}" +
-                $"[TestFolder].Hartog.Command.[Phenology].CAMP.EnvData.VrnTreatTemp = 5.5555{Environment.NewLine}" +
-                $"[TestFolder].Hartog.Command.[Leaf].FrostFraction.FixedValue = 0.2222{Environment.NewLine}" +
-                $"[Replacements].TestFolder.Hartog.Command.[Phenology].CAMP.EnvData.VrnTreatDuration = 66.6666{Environment.NewLine}" +
-                $".Simulations.Replacements.TestFolder.Hartog.Command.[Leaf].Photosynthesis.RUE.FixedValue = 1.1111{Environment.NewLine}" +
-                $"[TestFolder].Hartog.Command.[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 0,0,0,0,4,7,12,20{Environment.NewLine}" +
+                $"[TestFolder].Hartog.Command += [Phenology].CAMP.EnvData.VrnTreatTemp = 5.5555, [Leaf].FrostFraction.FixedValue = 0.2222{Environment.NewLine}" +
+                $"[Replacements].TestFolder.Hartog.Command += [Phenology].CAMP.EnvData.VrnTreatDuration = 66.6666{Environment.NewLine}" +
+                $".Simulations.Replacements.TestFolder.Hartog.Command += [Leaf].Photosynthesis.RUE.FixedValue = 1.1111, [Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 0,0,0,0,4,7,12,20{Environment.NewLine}" +                
                 $".Simulations.Replacements.TestFolder.Janz.Command = \"\"{Environment.NewLine}" +
+                $".Simulations.Experiment.Factors.Factor.CompositeFactor.Specifications += [Sowing].Script.StartDate = 1-Apr{Environment.NewLine}" +
+                $".Simulations.Experiment.Factors.Factor.Specification = [Sowing].Script.StartDate = 1-Apr, 1-May{Environment.NewLine}" +
                 $"save test-wheat3.apsimx{Environment.NewLine}";
 
             File.WriteAllText(newTempConfigFile, newFileString);
@@ -901,12 +931,16 @@ save {apsimxFileName}
             replacements = moddedSim.Node.FindChild<Folder>("Replacements");
             Cultivar cultivar1 = replacements.Node.FindChild<Cultivar>("Hartog", recurse: true);
             Cultivar cultivar2 = replacements.Node.FindChild<Cultivar>("Janz", recurse: true);
+            //Factor factor1 = factors.Node.FindChild<Factor>("Factor", recurse: true);
+            //CompositeFactor compFactor1 = factor.Node.FindChild<CompositeFactor>("CompositeFactor", recurse: true);
             Assert.That(cultivar1.Command.Contains("[Phenology].CAMP.EnvData.VrnTreatTemp = 5.5555"), Is.True);
             Assert.That(cultivar1.Command.Contains("[Leaf].FrostFraction.FixedValue = 0.2222"), Is.True);
             Assert.That(cultivar1.Command.Contains("[Phenology].CAMP.EnvData.VrnTreatDuration = 66.6666"), Is.True);
             Assert.That(cultivar1.Command.Contains("[Leaf].Photosynthesis.RUE.FixedValue = 1.1111"), Is.True);
-            Assert.That(cultivar1.Command.Contains("[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 0,0,0,0,4,7,12,20"), Is.True);
+            Assert.That(cultivar1.Command.Contains("[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 0, 0, 0, 0, 4, 7, 12, 20"), Is.True);
             Assert.That(cultivar2.Command is null, Is.True);
+            //Assert.That(factor1.Specification == "[Sowing].Script.StartDate = 1-Apr, 1-May", Is.True);
+            //Assert.That(compFactor1.Specifications.ToArray().Contains("[Sowing].Script.StartDate = 1-Apr"), Is.True);
         }
 
         [Test]
