@@ -926,5 +926,19 @@ namespace APSIM.Core.Tests
                 if (names.Contains(prop.Name) == false)
                     Assert.Fail($"{prop.Name} is not tested by an individual unit test.");
         }
+        
+        /// <summary>
+        /// Test to make sure the type of an object can be passed to find a child, even if the child has a different name to it's type.
+        /// </summary>
+        [Test]
+        public void GetChildModelThatHasSquareBracketsInName()
+        {
+            Simulations sims = MakeTestSimulation();
+            IStructure loc = sims.Node;
+            loc.Set("[Simulation].ModelF.Name", "ModelFWith[1]");
+
+            //Should find ModelF even though it's not called ModelF
+            Assert.That(loc.Get("[Simulation].ModelFWith[1]"), Is.Not.Null);
+        }
     }
 }
