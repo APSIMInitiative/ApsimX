@@ -19,6 +19,9 @@ jobs:
     env:
       ALL_APSIM_FILES: ""
     steps:
+
+    - name: echo github.head_ref
+      run: echo ${{ github.head_ref }}
     
     #- name: Checkout PR branch code
     #  uses: actions/checkout@v4
