@@ -58,7 +58,7 @@ namespace UserInterface.Presenters
 
             Soil soilNode = this.model.Node.FindParent<Soil>();
             physical = model as Physical ?? soilNode?.Node.FindChild<Physical>();
-            if (physical.Thickness != null)
+            if (physical?.Thickness != null)
                 physical?.InFill();
 
             var chemical = model as Chemical ?? soilNode?.Node.FindChild<Chemical>();
