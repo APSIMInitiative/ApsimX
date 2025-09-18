@@ -30,7 +30,7 @@ jobs:
       run: |
         git remote add upstream https://github.com/APSIMInitiative/ApsimX.git
         git fetch upstream
-        git pull upstream/master
+        git pull upstream master
 
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v4
