@@ -15,14 +15,11 @@ using Models.Soils;
 using Models.WaterModel;
 using Models.PMF;
 using Models.Surface;
-using UnitTests.Weather;
 using Models.Soils.SoilTemp;
 using Models.Soils.Nutrients;
 
-
 namespace UnitTests
 {
-
 
     [SetUpFixture]
     public static class Utilities
@@ -240,28 +237,38 @@ namespace UnitTests
         /// </summary>
         /// <param name=""></param>
         /// <returns></returns>
-        public static Simulations GetRunnableSimForPlantTesting(bool useInMemoryDb = false)
+        public static Simulations GetPlantTestingSimulation(bool useInMemoryDb = false)
         {
             Simulations simulations = GetRunnableSim(useInMemoryDb);
             Simulation sim = simulations.Node.FindChild<Simulation>(recurse: true);
-            Zone zone = simulations.Node.FindChild<Zone>(recurse: true);
 
-            sim.Node.AddChild(new MockWeather()); // TODO: needs to use met file from wheat example (or a subset of it)
+            Zone zone = simulations.Node.FindChild<Zone>(recurse: true);
+            zone.Name = "Field";
+            zone.Node.AddChild(new Fertiliser
+            {
+                Name = "Fertiliser",
+            });
+
+            DataStore storage = simulations.Node.FindChild<DataStore>(recurse: true);
+            storage.UseInMemoryDB = true;
+
+            // Clock setup
+            Clock clock = sim.Node.FindChild<Clock>(recurse: true);
+            clock.StartDate = new DateTime(2000, 1, 1);
+            clock.EndDate = clock.StartDate.AddDays(1);
+
+            // Add the standard Dalby weather file used by the Wheat example.
+            sim.Node.AddChild(new Models.Climate.Weather()
+            {
+                FileName = PathUtilities.GetAbsolutePath(Path.Combine("%root%", "Examples", "WeatherFiles", "AU_Dalby.met"), null)
+            });
 
             AddTestingSoil(simulations);
 
+            // Add Wheat model.
             zone.Node.AddChild(GetModelFromResource<Plant>("Wheat"));
 
-            // Values taken from Wheat example file.
-            // zone.Node.AddChild(new SurfaceOrganicMatter()
-            // {
-            //     InitialResidueName = "wheat_stubble",
-            //     InitialResidueType = "wheat",
-            //     InitialResidueMass = 500,
-            //     InitialStandingFraction = 0,
-            //     InitialCPR = 0,
-            //     InitialCNR = 100,
-            // });
+            // Setup SurfaceOrganicMatter model.
             var som = GetModelFromResource<SurfaceOrganicMatter>("SurfaceOrganicMatter");
             som.InitialResidueName = "wheat_stubble";
             som.InitialResidueType = "wheat";
@@ -270,8 +277,12 @@ namespace UnitTests
             som.InitialCPR = 0;
             som.InitialCNR = 100;
             zone.Node.AddChild(som);
+
+            SetupSowingRuleManager(zone);
+
             return simulations;
         }
+
 
         ///<summary>Returns a Soil model that can be used for testing.</summary>
         public static void AddTestingSoil(Simulations simulations)
@@ -321,7 +332,6 @@ namespace UnitTests
                 InitialValuesUnits = Solute.UnitsEnum.ppm
             });
 
-            // TODO: add NH4 and Urea solutes.
             soil.Node.AddChild(new Solute
             {
                 Name = "NH4",
@@ -338,8 +348,9 @@ namespace UnitTests
                 InitialValuesUnits = Solute.UnitsEnum.ppm
             });
 
-            soil.Node.AddChild(GetModelFromResource<WaterBalance>("WaterBalance"));
-            soil.Node.AddChild(GetModelFromResource<Nutrient>("Nutrient")); 
+            CreateAndSetupWaterBalance(soil, physical);
+
+            soil.Node.AddChild(GetModelFromResource<Nutrient>("Nutrient"));
             soil.Node.AddChild(new Chemical
             {
                 Thickness = new double[] { 150, 150, 300, 300, 300, 300, 300 },
@@ -348,6 +359,32 @@ namespace UnitTests
             soil.Node.AddChild(new SoilTemperature());
         }
 
+        /// <summary>
+        /// Creates and adds a WaterBalance model to the provided soil, and sets it up with standard parameters based
+        /// on the Wheat example.
+        /// </summary>
+        /// <param name="soil"></param>
+        /// <param name="physical"></param>
+        private static void CreateAndSetupWaterBalance(Soil soil, Physical physical)
+        {
+            soil.Node.AddChild(GetModelFromResource<WaterBalance>("WaterBalance"));
+            var waterBalance = soil.Node.FindChild<WaterBalance>(recurse: true);
+            waterBalance.Depth = physical.Depth;
+            waterBalance.SWCON = [0.300, 0.300, 0.300, 0.300, 0.300, 0.300, 0.300];
+            waterBalance.SummerU = 5;
+            waterBalance.SummerCona = 5;
+            waterBalance.WinterU = 5;
+            waterBalance.WinterCona = 5;
+            waterBalance.DiffusConst = 40;
+            waterBalance.DiffusSlope = 16;
+            waterBalance.Salb = 0.12;
+            waterBalance.CN2Bare = 73;
+            waterBalance.CNRed = 20;
+            waterBalance.CNCov = 0.8;
+            waterBalance.DischargeWidth = 5;
+            waterBalance.CatchmentArea = 10;
+            waterBalance.PSIDul = -100;
+        }
 
         public static Simulations GetSimpleExperiment()
         {
@@ -401,6 +438,65 @@ namespace UnitTests
             }
 
             return true;
+        }
+
+
+        /// <summary>
+        /// Setup the manager for sowing in the provided Zone model.
+        /// </summary>
+        /// <param name="zone">The Zone model to setup the sowing manager for.</param>
+        private static void SetupSowingRuleManager(Zone zone)
+        {
+            // Setup the manager for sowing.
+            zone.Node.AddChild(new Manager()
+            {
+                Name = "SowingRule",
+                Enabled = true,
+                Code = """
+                using APSIM.Numerics;
+                using Models.Climate;
+                using System.Linq;
+                using System;
+                using Models.Core;
+                using Models.PMF;
+                using Models.Soils;
+                using Models.Utilities;
+                using APSIM.Shared.Utilities;
+                using Models.Interfaces;
+
+                namespace Models
+                    {
+                        [Serializable]
+                        public class Script : Model
+                        {
+                            [Link] Clock Clock;
+
+                            [Description("Crop")]
+                            public IPlant Crop { get; set; }
+
+                            [Description("Start of sowing window (d-mmm)")]
+                            public string StartDate { get; set; }
+
+                            [Description("End of sowing window (d-mmm)")]
+                            public string EndDate { get; set; }
+
+                            [EventSubscribe("DoManagement")]
+                            private void OnDoManagement(object sender, EventArgs e)
+                            {
+                                if (Crop.IsAlive)
+                                    return;
+                                if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate))
+                                {
+                                    Crop.Sow("Hartog", 120, 30, 250);
+                                }
+                            }
+                        }
+                    }
+                """
+            });
+            var manager = zone.Node.FindChild<Manager>(name: "SowingRule", recurse: true);
+            manager.RebuildScriptModel();
+
         }
     }
 }
