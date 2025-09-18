@@ -28,10 +28,9 @@ jobs:
         
     - name: Merge upstream/master in PR branch
       run: |
-        git config pull.ff only
         git remote add upstream https://github.com/APSIMInitiative/ApsimX.git
         git fetch upstream
-        git pull upstream master
+        git merge upstream/master
 
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v4
