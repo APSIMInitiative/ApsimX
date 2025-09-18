@@ -21,17 +21,23 @@ jobs:
       ALL_APSIM_FILES: ""
     steps:
     
-    - name: Checkout PR branch code
+    #- name: Checkout PR branch code
+    #  uses: actions/checkout@v4
+    #  with:
+    #    repository: ${{github.event.pull_request.head.repo.full_name}}
+    #    ref: ${{github.event.pull_request.head.ref}}
+
+    - name: Checkout Upstream
       uses: actions/checkout@v4
       with:
-        repository: ${{github.event.pull_request.head.repo.full_name}}
-        ref: ${{github.event.pull_request.head.ref}}
+        repository: APSIMInitiative/ApsimX
+        ref: master
         
-    - name: Merge upstream/master in PR branch
+    - name: Do automerge of upstream and PR branch
       run: |
-        git remote add upstream https://github.com/APSIMInitiative/ApsimX.git
-        git fetch upstream
-        git merge upstream/master
+        git remote add prrepo ${{ github.event.pull_request.head.repo.html_url }}
+        git fetch prrepo
+        git merge prrepo/${{ github.head_ref }}
 
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v4
