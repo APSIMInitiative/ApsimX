@@ -247,6 +247,22 @@
             Assert.That(nutrient.Children.Count, Is.GreaterThan(0));
         }
 
+        /// <summary>
+        /// When the user does "Add model" and adds an empty physical, organic, chemical, solute model
+        /// make sure the soil sanitiser doesn't throw - https://github.com/APSIMInitiative/ApsimX/issues/10355
+        /// </summary>
+        [Test]
+        public void EnsureSoilsWithoutThicknessDontThrowWhenStandardised()
+        {
+            Soil soil = CreateSimpleSoil();
+            soil.Node.FindChild<Physical>().Thickness = null;
+            soil.Node.FindChild<Organic>().Thickness = null;
+            soil.Node.FindChild<Chemical>().Thickness = null;
+            soil.Node.FindChild<Solute>().Thickness = null;
+
+            Assert.DoesNotThrow(() => soil.Sanitise());
+        }
+
 
         [Test]
         public void EnsureSoilInitialiserDoesntOverwriteExistingNodes()
