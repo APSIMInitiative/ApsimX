@@ -209,16 +209,6 @@ namespace Models.GrazPlan
             /// Ash alkalinity in mol/ha
             /// </summary>
             public double AshAlk;
-
-            /// <summary>
-            /// Validates that all numeric properties do not contain NaN values and throws an exception if any are found.
-            /// </summary>
-            public void CheckNaN()
-            {
-                PastureUtil.CheckNaN(DM);
-                PastureUtil.CheckNaN(Nu);
-                PastureUtil.CheckNaN(AshAlk);
-            }
         }
 
         /// <summary>

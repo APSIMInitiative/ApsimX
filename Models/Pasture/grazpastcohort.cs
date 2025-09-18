@@ -31,61 +31,6 @@ namespace Models.GrazPlan
         /// <summary></summary>
         private double[,] FPotRootTransloc = new double[GrazType.OLDR + 1, GrazType.MaxSoilLayers + 1];         // [EFFR..OLDR,1..MaxSoilLayers]
 
-        /// <summary>
-        /// Validates that all cohort properties do not contain NaN values and throws an exception if any are found.
-        /// </summary>
-        public void CheckNaN()
-        {
-            PastureUtil.CheckNaN(FNewSpecificArea);
-            PastureUtil.CheckNaN(FPotRootTransloc);
-            PastureUtil.CheckNaN(FPotRootTranslocSum);
-            PastureUtil.CheckNaN(FRootTransloc);
-            PastureUtil.CheckNaN(FPotStemTransloc);
-            PastureUtil.CheckNaN(FPotStemTranslocSum);
-            PastureUtil.CheckNaN(FPotPartNetGrowth);
-            PastureUtil.CheckNaN(FStemTransloc);
-            PastureUtil.CheckNaN(FMaintRespRate);
-            PastureUtil.CheckNaN(FShootMaintResp);
-            PastureUtil.CheckNaN(FRootMaintResp);
-            PastureUtil.CheckNaN(FGrowthRespRate);
-            PastureUtil.CheckNaN(FPartNetGrowth);
-            foreach (var s in FShootNetGrowth)
-                s.CheckNaN();
-            foreach (var r in FRootNetGrowth)
-                r.CheckNaN();
-            FSeedNetGrowth.CheckNaN();
-            PastureUtil.CheckNaN(FRootExtension);
-            PastureUtil.CheckNaN(FNewShootDistn);
-            PastureUtil.CheckNaN(FNewRootDistn);
-            PastureUtil.CheckNaN(FShootLossRate);
-            PastureUtil.CheckNaN(FBiomassExitGM2);
-            PastureUtil.CheckNaN(FBiomassRespireGM2);
-            PastureUtil.CheckNaN(FRootAgingRate);
-            PastureUtil.CheckNaN(FRootLossRate);
-            PastureUtil.CheckNaN(FRootRelocRate);
-            PastureUtil.CheckNaN(FDMDDecline);
-            PastureUtil.CheckNaN(FDeltaFrost);
-            PastureUtil.CheckNaN(FDelta_SI);
-            PastureUtil.CheckNaN(SpecificArea);
-            foreach (var root in Roots)
-                root.CheckNaN();
-            PastureUtil.CheckNaN(StemReserve);
-            PastureUtil.CheckNaN(RootDepth);
-            PastureUtil.CheckNaN(FrostFactor);
-            PastureUtil.CheckNaN(SeedlStress);
-            PastureUtil.CheckNaN(EstabIndex);
-            PastureUtil.CheckNaN(DeadMoisture);
-            PastureUtil.CheckNaN(RelMoisture);
-            PastureUtil.CheckNaN(LimitFactors);
-            PastureUtil.CheckNaN(Assimilation);
-            PastureUtil.CheckNaN(RootTranslocSum);
-            PastureUtil.CheckNaN(StemTranslocSum);
-            PastureUtil.CheckNaN(fMaintRespiration);
-            PastureUtil.CheckNaN(fGrowthRespiration);
-            PastureUtil.CheckNaN(fR2S_Target);
-            PastureUtil.CheckNaN(Allocation);
-        }
-
         /// <summary></summary>
         private double FPotRootTranslocSum;
 
@@ -585,7 +530,6 @@ namespace Models.GrazPlan
                             {
                                 this.FNutrientInfo[(int)Elem].fMaxShootConc[iPart, iDMD] = this.MaxNutrientConc(iPart, iDMD, Elem);
                                 this.FNutrientInfo[(int)Elem].fMinShootConc[iPart, iDMD] = this.MinNutrientConc(iPart, iDMD, Elem);
-                                FNutrientInfo[(int)Elem].CheckNaN();
                             }
                         }
                     }
@@ -1548,8 +1492,6 @@ namespace Models.GrazPlan
             int part, DMD;
             int age, layer;
 
-            CheckNaN();
-
             if (this.Status == stSEEDL || this.Status == stESTAB || this.Status == stSENC)
             {
                 if (dormant)
@@ -1579,8 +1521,6 @@ namespace Models.GrazPlan
                     sink_Assim = VERYLARGE;
                 }
 
-                CheckNaN();
-
                 limitNu = 1.0;
                 var values = Enum.GetValues(typeof(TPlantElement)).Cast<TPlantElement>().ToArray();
                 foreach (var Elem in values)
@@ -1591,8 +1531,6 @@ namespace Models.GrazPlan
 
                 this.Assimilation = Math.Min(limitNu * this.FPotAssimilation, sink_Assim);
 
-                CheckNaN();
-
                 this.RootTranslocSum = 0.0;                                                   // Compute the final translocation rates for the cohort
                 for (age = EFFR; age <= OLDR; age++)
                 {
@@ -1602,8 +1540,6 @@ namespace Models.GrazPlan
                         this.RootTranslocSum += this.FRootTransloc[age, layer];
                     }
                 }
-                CheckNaN();
-
                 limitNu = 1.0;
                 foreach (var Elem in values)
                 {
@@ -1616,13 +1552,11 @@ namespace Models.GrazPlan
                     this.FStemTransloc[DMD] = limitNu * this.FPotStemTransloc[DMD];
                     this.StemTranslocSum += this.FStemTransloc[DMD];
                 }
-                CheckNaN();
 
                 for (part = ptLEAF; part <= ptSEED; part++)
                 {
                     this.FPartNetGrowth[part] = -this.fMaintRespiration[part];
                 }
-                CheckNaN();
 
                 this.FPartNetGrowth[ptSEED] = this.FPartNetGrowth[ptSEED] + this.StemTranslocSum;
 
@@ -1635,7 +1569,6 @@ namespace Models.GrazPlan
                 required = Math.Max(0.0, -this.FPartNetGrowth[ptSEED]);
                 delta = this.AssignGrowth(required, ref remainingTrans);
                 this.FPartNetGrowth[ptSEED] = this.FPartNetGrowth[ptSEED] + delta;
-                CheckNaN();
 
                 // Then other maintenance respiration
                 required = Math.Max(0.0, -(this.FPartNetGrowth[ptLEAF] + this.FPartNetGrowth[ptSTEM] + this.FPartNetGrowth[ptROOT]));
@@ -1647,7 +1580,6 @@ namespace Models.GrazPlan
                         this.FPartNetGrowth[part] = this.FPartNetGrowth[part] + (delta / required) * (-this.FPartNetGrowth[part]);
                     }
                 }
-                CheckNaN();
 
                 required = Math.Max(0.0, -(this.FPartNetGrowth[ptLEAF] + this.FPartNetGrowth[ptSTEM]));
                 if (required > 0.0)
@@ -1658,7 +1590,6 @@ namespace Models.GrazPlan
                         this.FPartNetGrowth[part] = this.FPartNetGrowth[part] + (delta / required) * (-this.FPartNetGrowth[part]);
                     }
                 }
-                CheckNaN();
 
                 for (part = ptLEAF; part <= ptSEED; part++)
                 {
@@ -1676,14 +1607,12 @@ namespace Models.GrazPlan
                     this.fGrowthRespiration[part] = this.FGrowthRespRate * Math.Max(0.0, this.FPartNetGrowth[part]);
                     this.FPartNetGrowth[part] = this.FPartNetGrowth[part] - this.fGrowthRespiration[part];
                 }
-                CheckNaN();
 
                 this.fGrowthRespiration[TOTAL] = 0.0;
                 for (part = ptLEAF; part <= ptSEED; part++)
                 {
                     this.fGrowthRespiration[TOTAL] = this.fGrowthRespiration[TOTAL] + this.fGrowthRespiration[part];
                 }
-                CheckNaN();
 
                 for (part = ptLEAF; part <= ptSTEM; part++)
                 {
@@ -1699,7 +1628,6 @@ namespace Models.GrazPlan
                         }
                     }
                 }
-                CheckNaN();
 
                 for (age = EFFR; age <= OLDR; age++)
                 {
@@ -1715,7 +1643,6 @@ namespace Models.GrazPlan
                         }
                     }
                 }
-                CheckNaN();
 
                 this.FSeedNetGrowth.DM = this.FPartNetGrowth[ptSEED];
 
@@ -1730,7 +1657,6 @@ namespace Models.GrazPlan
                 for (age = EFFR; age <= OLDR; age++)
                     for (layer = 1; layer <= this.Owner.FSoilLayerCount; layer++)
                         rootNetGrowth += FRootNetGrowth[age, layer].DM;
-                CheckNaN();
 
                 if (Pasture.logFileName != null)
                     File.AppendAllLines(Pasture.logFileName, [
@@ -2460,7 +2386,6 @@ namespace Models.GrazPlan
                     this.FNutrientInfo[(int)elem].fMaxDemand[part] = Math.Max(0.0, growthMax - imbalance);
                     this.FNutrientInfo[(int)elem].fCritDemand[part] = Math.Max(0.0, growthCrit - Math.Max(0.0, imbalance));
                     this.FNutrientInfo[(int)elem].fCritDemand[part] = Math.Min(this.FNutrientInfo[(int)elem].fMaxDemand[part], this.FNutrientInfo[(int)elem].fCritDemand[part]);
-                    FNutrientInfo[(int)elem].CheckNaN();
                 }
 
                 this.FNutrientInfo[(int)elem].fMaxDemand[TOTAL] = 0.0;                                   // Compute the total demands for this cohort
@@ -2469,7 +2394,6 @@ namespace Models.GrazPlan
                 {
                     this.FNutrientInfo[(int)elem].fMaxDemand[TOTAL] = this.FNutrientInfo[(int)elem].fMaxDemand[TOTAL] + this.FNutrientInfo[(int)elem].fMaxDemand[part];
                     this.FNutrientInfo[(int)elem].fCritDemand[TOTAL] = this.FNutrientInfo[(int)elem].fCritDemand[TOTAL] + this.FNutrientInfo[(int)elem].fCritDemand[part];
-                    FNutrientInfo[(int)elem].CheckNaN();
                 }
             }
         }
@@ -2490,8 +2414,6 @@ namespace Models.GrazPlan
             PastureUtil.FillArray(this.FNutrientInfo[(int)Elem].fRelocatedRoot, 0.0);
             PastureUtil.FillArray(this.FNutrientInfo[(int)Elem].fLeached, 0.0);
             this.FNutrientInfo[(int)Elem].fGaseousLoss = 0.0;
-            FNutrientInfo[(int)Elem].CheckNaN();
-
         }
 
         /// <summary>
@@ -2502,7 +2424,6 @@ namespace Models.GrazPlan
         {
             int age, layer;
             int DMD;
-            FNutrientInfo[(int)Elem].CheckNaN();
             this.FNutrientInfo[(int)Elem].fRootTranslocSupply = 0.0;
             for (age = EFFR; age <= OLDR; age++)
             {
@@ -2510,7 +2431,6 @@ namespace Models.GrazPlan
                 {
                     PastureUtil.XInc(ref this.FNutrientInfo[(int)Elem].fRootTranslocSupply, this.FPotRootTransloc[age, layer]
                                            * PastureUtil.Div0(this.Roots[age, layer].Nu[(int)Elem], this.Roots[age, layer].DM));
-                    FNutrientInfo[(int)Elem].CheckNaN();
                 }
             }
 
@@ -2519,12 +2439,9 @@ namespace Models.GrazPlan
             {
                 PastureUtil.XInc(ref this.FNutrientInfo[(int)Elem].fStemTranslocSupply, this.FPotStemTransloc[DMD]
                                             * PastureUtil.Div0(this.Herbage[ptSTEM, DMD].Nu[(int)Elem], this.Herbage[ptSTEM, DMD].DM));
-                FNutrientInfo[(int)Elem].CheckNaN();
             }
 
             this.FNutrientInfo[(int)Elem].fSupplied += this.FNutrientInfo[(int)Elem].fRootTranslocSupply + this.FNutrientInfo[(int)Elem].fStemTranslocSupply;
-
-            FNutrientInfo[(int)Elem].CheckNaN();
         }
 
         /// <summary>
@@ -2976,7 +2893,6 @@ namespace Models.GrazPlan
         /// <param name="nutrSupply"></param>
         public void UpdateNutrientFlows(ref DM_Pool nutrSupply)
         {
-            nutrSupply.CheckNaN();
             int iPart, iDMD;
             int iLayer;
 
@@ -3006,7 +2922,6 @@ namespace Models.GrazPlan
                     {
                         nutrSupply.Nu[(int)Elem] = 0.0;
                     }
-                    nutrSupply.CheckNaN();
 
                     if ((this.Status >= stLITT1) && (this.Status <= stLITT2))
                     {
@@ -3018,9 +2933,6 @@ namespace Models.GrazPlan
                             }
                         }
                     }
-
-                    nutrSupply.CheckNaN();
-
                 }
             }
         }
@@ -3191,8 +3103,6 @@ namespace Models.GrazPlan
                     }
                 }
             }
-            FNutrientInfo[(int)elem].CheckNaN();
-
         }
 
         /// <summary>
