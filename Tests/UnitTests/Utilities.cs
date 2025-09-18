@@ -292,59 +292,59 @@ namespace UnitTests
             var soil = zone.Node.FindChild<Soil>(recurse: true);
             soil.Node.AddChild(new Physical
             {
-                Thickness = new double[] { 150, 150, 300, 300, 300, 300, 300 },
-                BD = new double[] { 1.011, 1.071, 1.094, 1.159, 1.173, 1.163, 1.187 },
-                AirDry = new double[] { 0.130, 0.199, 0.280, 0.280, 0.280, 0.280, 0.280 },
-                LL15 = new double[] { 0.261, 0.248, 0.280, 0.280, 0.280, 0.280, 0.280 },
-                DUL = new double[] { 0.521, 0.497, 0.488, 0.480, 0.472, 0.457, 0.452 },
-                SAT = new double[] { 0.589, 0.566, 0.557, 0.533, 0.527, 0.531, 0.522 },
+                Thickness = [150, 150, 300, 300, 300, 300, 300],
+                BD = [1.011, 1.071, 1.094, 1.159, 1.173, 1.163, 1.187],
+                AirDry = [0.130, 0.199, 0.280, 0.280, 0.280, 0.280, 0.280],
+                LL15 = [0.261, 0.248, 0.280, 0.280, 0.280, 0.280, 0.280],
+                DUL = [0.521, 0.497, 0.488, 0.480, 0.472, 0.457, 0.452],
+                SAT = [0.589, 0.566, 0.557, 0.533, 0.527, 0.531, 0.522],
             });
 
             var physical = soil.Node.FindChild<Physical>(recurse: true);
             physical.Node.AddChild(new SoilCrop
             {
                 Name = "WheatSoil",
-                KL = new double[] { 0.060, 0.060, 0.060, 0.040, 0.040, 0.020, 0.010 },
-                LL = new double[] { 0.261, 0.248, 0.280, 0.306, 0.360, 0.392, 0.446 }
+                KL = [0.060, 0.060, 0.060, 0.040, 0.040, 0.020, 0.010],
+                LL = [0.261, 0.248, 0.280, 0.306, 0.360, 0.392, 0.446]
             });
 
             soil.Node.AddChild(new Water
             {
-                Thickness = new double[] { 150, 150, 300, 300, 300, 300, 300 },
-                InitialValues = new double[] { 0.313, 0.298, 0.322, 0.320, 0.318, 0.315, 0.314 },
+                Thickness = [150, 150, 300, 300, 300, 300, 300],
+                InitialValues = [0.313, 0.298, 0.322, 0.320, 0.318, 0.315, 0.314],
             });
 
             soil.Node.AddChild(new Organic
             {
-                Thickness = new double[] { 150, 150, 300, 300, 300, 300, 300 },
-                Carbon = new double[] { 1.2, 0.96, 0.6, 0.3, 0.18, 0.12, 0.12 },
-                SoilCNRatio = new double[] { 12, 12, 12, 12, 12, 12, 12 },
-                FBiom = new double[] { 0.04, 0.02, 0.2, 0.2, 0.1, 0.1, 0.1 },
-                FInert = new double[] { 0.4, 0.6, 0.8, 1.0, 1.0, 1.0, 1.0 },
-                FOM = new double[] { 347.1, 270.3, 164.0, 99.5, 60.3, 36.6, 22.2 },
+                Thickness = [150, 150, 300, 300, 300, 300, 300],
+                Carbon = [1.2, 0.96, 0.6, 0.3, 0.18, 0.12, 0.12],
+                SoilCNRatio = [12, 12, 12, 12, 12, 12, 12],
+                FBiom = [0.04, 0.02, 0.2, 0.2, 0.1, 0.1, 0.1],
+                FInert = [0.4, 0.6, 0.8, 1.0, 1.0, 1.0, 1.0],
+                FOM = [347.1, 270.3, 164.0, 99.5, 60.3, 36.6, 22.2],
             });
 
             soil.Node.AddChild(new Solute
             {
                 Name = "NO3",
-                Thickness = new double[] { 150, 150, 300, 300, 300, 300, 300 },
-                InitialValues = new double[] { 1, 1, 1, 1, 1, 1, 1 }, // Make these values match the Wheat example
+                Thickness = [150, 150, 300, 300, 300, 300, 300],
+                InitialValues = [1, 1, 1, 1, 1, 1, 1], // Make these values match the Wheat example
                 InitialValuesUnits = Solute.UnitsEnum.ppm
             });
 
             soil.Node.AddChild(new Solute
             {
                 Name = "NH4",
-                Thickness = new double[] { 150, 150, 300, 300, 300, 300, 300 },
-                InitialValues = new double[] { 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1 },
+                Thickness = [150, 150, 300, 300, 300, 300, 300],
+                InitialValues = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1],
                 InitialValuesUnits = Solute.UnitsEnum.ppm
             });
 
             soil.Node.AddChild(new Solute
             {
                 Name = "Urea",
-                Thickness = new double[] { 150, 150, 300, 300, 300, 300, 300 },
-                InitialValues = new double[] { 0, 0, 0, 0, 0, 0, 0 },
+                Thickness = [150, 150, 300, 300, 300, 300, 300],
+                InitialValues = [0, 0, 0, 0, 0, 0, 0],
                 InitialValuesUnits = Solute.UnitsEnum.ppm
             });
 
@@ -353,8 +353,8 @@ namespace UnitTests
             soil.Node.AddChild(GetModelFromResource<Nutrient>("Nutrient"));
             soil.Node.AddChild(new Chemical
             {
-                Thickness = new double[] { 150, 150, 300, 300, 300, 300, 300 },
-                PH = new double[] { 8.0, 8.0, 8.0, 8.0, 8.0, 8.0, 8.0 },
+                Thickness = [150, 150, 300, 300, 300, 300, 300],
+                PH = [8.0, 8.0, 8.0, 8.0, 8.0, 8.0, 8.0],
             });
             soil.Node.AddChild(new SoilTemperature());
         }
