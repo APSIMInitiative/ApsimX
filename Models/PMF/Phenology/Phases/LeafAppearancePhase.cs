@@ -18,7 +18,7 @@ namespace Models.PMF.Phen
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
-    public class LeafAppearancePhase : Model, IPhase
+    public class LeafAppearancePhase : Model, IPhase, IPhaseWithSetableCompletionDate
     {
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
@@ -34,6 +34,9 @@ namespace Models.PMF.Phen
 
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction InitialisedLeafNumber = null;
+
+        [Link]
+        private IClock clock = null;
 
         //2. Private and protected fields
         //-----------------------------------------------------------------------------------------------------------------
@@ -71,6 +74,9 @@ namespace Models.PMF.Phen
             }
         }
 
+        /// <summary>Data to progress.  Is empty by default.  If set by external model, phase will ignore its mechanisum and wait for the specified date to progress</summary>
+        [JsonIgnore]
+        public string DateToProgress { get; set; } = "";
 
         //6. Public method
         //-----------------------------------------------------------------------------------------------------------------
@@ -80,20 +86,31 @@ namespace Models.PMF.Phen
         {
             bool proceedToNextPhase = false;
 
-            if (First)
+            if (String.IsNullOrEmpty(DateToProgress))
             {
-                LeafNoAtStart = LeafNumber.Value();
-                TargetLeafForCompletion = FinalLeafNumber.Value() - LeafNoAtStart;
-                First = false;
+                if (First)
+                {
+                    LeafNoAtStart = LeafNumber.Value();
+                    TargetLeafForCompletion = FinalLeafNumber.Value() - LeafNoAtStart;
+                    First = false;
+                }
+
+                FractionCompleteYesterday = FractionComplete;
+
+                //if (leaf.ExpandedCohortNo >= (leaf.InitialisedCohortNo))
+                if (FullyExpandedLeafNo.Value() >= InitialisedLeafNumber.Value())
+                {
+                    proceedToNextPhase = true;
+                    propOfDayToUse = 0.00001;  //assumes we use most of the Tt today to get to final leaf.  Should be calculated as a function of the phyllochron
+                }
             }
-
-            FractionCompleteYesterday = FractionComplete;
-
-            //if (leaf.ExpandedCohortNo >= (leaf.InitialisedCohortNo))
-            if (FullyExpandedLeafNo.Value() >= InitialisedLeafNumber.Value())
+            else
             {
-                proceedToNextPhase = true;
-                propOfDayToUse = 0.00001;  //assumes we use most of the Tt today to get to final leaf.  Should be calculated as a function of the phyllochron
+                if (DateUtilities.DatesAreEqual(DateToProgress, clock.Today))
+                {
+                    proceedToNextPhase = true;
+                    propOfDayToUse = 1;
+                }
             }
 
             return proceedToNextPhase;
@@ -106,6 +123,7 @@ namespace Models.PMF.Phen
             FractionCompleteYesterday = 0;
             TargetLeafForCompletion = 0;
             First = true;
+            DateToProgress = "";
         }
 
         //7. Private methode

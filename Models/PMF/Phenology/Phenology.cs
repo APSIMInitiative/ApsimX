@@ -522,9 +522,7 @@ namespace Models.PMF.Phen
         /// <param name="emergenceDate">Emergence date (dd-mmm)</param>
         public void SetEmergenceDate(string emergenceDate)
         {
-            foreach (EmergingPhase ep in Structure.FindChildren<EmergingPhase>(recurse: true))
-                ep.EmergenceDate = emergenceDate;
-            SetGerminationDate(plant.SowingDate.ToString("d-MMM", CultureInfo.InvariantCulture));
+
         }
 
         /// <summary>
@@ -533,8 +531,27 @@ namespace Models.PMF.Phen
         /// <param name="germinationDate">Germination date (dd-mmm).</param>
         public void SetGerminationDate(string germinationDate)
         {
-            foreach (GerminatingPhase gp in Structure.FindChildren<GerminatingPhase>(recurse: true))
-                gp.GerminationDate = germinationDate;
+
+        }
+
+        /// <summary>
+        /// Method to set the 
+        /// </summary>
+        /// <param name="completionDate"></param>
+        /// <param name="PhaseName"></param>
+        public void SetPhaseCompletionDate(string completionDate, string PhaseName)
+        {
+            foreach (IPhase p in phases) //Iterate through each phase in order
+            {
+                if (String.IsNullOrEmpty((p as IPhaseWithSetableCompletionDate).DateToProgress))  //If DateToProgress is not alread set, make it the completionDate.  This ensures all phases prior to the phase to be set will have completed on the day the taret phase is set to complete
+                {
+                    (p as IPhaseWithSetableCompletionDate).DateToProgress = completionDate;
+                }
+                if (p.Name == PhaseName)
+                {
+                    break;
+                }
+            }
         }
 
         /// <summary>

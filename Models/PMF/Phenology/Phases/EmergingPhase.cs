@@ -16,7 +16,7 @@ namespace Models.PMF.Phen
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
-    public class EmergingPhase : Model, IPhase, IPhaseWithTarget
+    public class EmergingPhase : Model, IPhase, IPhaseWithTarget, IPhaseWithSetableCompletionDate
     {
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
@@ -26,9 +26,6 @@ namespace Models.PMF.Phen
 
         [Link]
         IClock clock = null;
-
-        [Link]
-        Plant plant = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction target = null;
@@ -72,11 +69,9 @@ namespace Models.PMF.Phen
         [JsonIgnore]
         public double ProgressThroughPhase { get; set; }
 
-        /// <summary>
-        /// Date for emergence to occur.  null by default so model is used
-        /// </summary>
+        /// <summary>Data to progress.  Is empty by default.  If set by external model, phase will ignore its mechanisum and wait for the specified date to progress</summary>
         [JsonIgnore]
-        public string EmergenceDate { get; set; }
+        public string DateToProgress { get; set; } = "";
 
         // 3. Public methods
         //-----------------------------------------------------------------------------------------------------------------
@@ -86,18 +81,10 @@ namespace Models.PMF.Phen
         public bool DoTimeStep(ref double propOfDayToUse)
         {
             bool proceedToNextPhase = false;
-            TTForTimeStep = phenology.thermalTime.Value() * propOfDayToUse;
-            if (EmergenceDate != null)
+            if (String.IsNullOrEmpty(DateToProgress))
             {
-                Target = (DateUtilities.GetDate(EmergenceDate, clock.Today) - plant.SowingDate).TotalDays;
-                ProgressThroughPhase += 1;
-                if (DateUtilities.DayMonthIsEqual(EmergenceDate, clock.Today))
-                {
-                    proceedToNextPhase = true;
-                }
-            }
-            else
-            {
+                TTForTimeStep = phenology.thermalTime.Value() * propOfDayToUse;
+
                 ProgressThroughPhase += TTForTimeStep;
                 if (ProgressThroughPhase > Target)
                 {
@@ -110,6 +97,14 @@ namespace Models.PMF.Phen
                     ProgressThroughPhase = Target;
                 }
             }
+            else
+            {
+                if (DateUtilities.DatesAreEqual(DateToProgress, clock.Today))
+                {
+                    proceedToNextPhase = true;
+                    propOfDayToUse = 1;
+                }
+            }
             return proceedToNextPhase;
         }
 
@@ -119,7 +114,7 @@ namespace Models.PMF.Phen
             TTForTimeStep = 0;
             ProgressThroughPhase = 0;
             Target = 0;
-            EmergenceDate = null;
+            DateToProgress = null;
         }
 
         // 4. Private method
