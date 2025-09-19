@@ -39,7 +39,7 @@ jobs:
           git remote add upstream https://github.com/APSIMInitiative/ApsimX.git || git remote set-url upstream https://github.com/APSIMInitiative/ApsimX.git
           git fetch upstream master
           git merge --no-ff upstream/master || { echo "Merge conflict detected. Aborting merge and exiting."; git merge --abort; exit 1; }
-
+      
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v4
         with:
@@ -89,6 +89,10 @@ jobs:
       - name: Split Wheat Validation
         run: |
           dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -d ./Tests/Validation/Wheat/Wheat.apsimx -s ./Tests/Validation/Wheat/split.json
+
+      - name: Split FAR Validation
+        run: |
+          dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -d ./Tests/Validation/Wheat/FAR/FAR.apsimx -s ./Tests/Validation/Wheat/FAR/split.json
 
       - name: Log in to Docker Hub
         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
