@@ -56,9 +56,12 @@ namespace UserInterface.Presenters
             view = v as ViewBase;
             this.explorerPresenter = explorerPresenter;
 
-            Soil soilNode = this.model.Node.FindParent<Soil>();
+            Soil soilNode = this.model.Node.FindParent<Soil>(recurse: true);
+            if (soilNode == null)
+                throw new Exception($"ProfilePresenter could not find the Soil node above {this.model.Name} ({this.model.GetType().Name})");
+                
             physical = model as Physical ?? soilNode?.Node.FindChild<Physical>();
-            if (physical.Thickness != null)
+            if (physical?.Thickness != null)
                 physical?.InFill();
 
             var chemical = model as Chemical ?? soilNode?.Node.FindChild<Chemical>();

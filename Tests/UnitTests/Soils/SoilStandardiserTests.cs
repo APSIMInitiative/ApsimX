@@ -263,6 +263,54 @@
             Assert.DoesNotThrow(() => soil.Sanitise());
         }
 
+
+        [Test]
+        public void EnsureSoilInitialiserDoesntOverwriteExistingNodes()
+        {
+            Soil soil = new()
+            {
+                Children =
+                [
+                    new Physical()
+                    {
+                        Thickness = [100, 200],
+                        ParticleSizeClay = [ 1, 2 ],
+                        ParticleSizeSand = [ 3, 4 ],
+                        ParticleSizeSilt = [ 5, 6 ],
+                        BD = [1.36, 1.216],
+                        AirDry = [0.135, 0.214],
+                        LL15 = [0.27, 0.267],
+                        DUL = [0.365, 0.461],
+                        SAT = [0.400, 0.481],
+                    },
+                    new Organic()
+                    {
+                        Thickness = [100, 200],
+                        Carbon = [100, 200]
+                    },
+                    new Chemical()
+                    {
+                        Thickness = [100, 200],
+                        CEC = [10, 11]
+                    },
+                    new WaterBalance()
+                    {
+                        Thickness = [100, 200],
+                        SWCON = [200, 200]
+                    }
+                ]
+            };
+            Node.Create(soil);
+            SoilSanitise.InitialiseSoil(soil);
+
+            Assert.That(soil.Node.FindChild<Physical>().ParticleSizeClay, Is.EqualTo([1, 2]));
+            Assert.That(soil.Node.FindChild<Physical>().ParticleSizeSand, Is.EqualTo([3, 4]));
+            Assert.That(soil.Node.FindChild<Physical>().ParticleSizeSilt, Is.EqualTo([5, 6]));
+            Assert.That(soil.Node.FindChild<Organic>().Carbon, Is.EqualTo([100, 200]));
+            Assert.That(soil.Node.FindChild<Chemical>().CEC, Is.EqualTo([10, 11 ]));
+            Assert.That(soil.Node.FindChild<WaterBalance>().SWCON, Is.EqualTo([200, 200 ]));
+        }
+
         private Soil CreateSimpleSoil()
         {
             var soil = new Soil
