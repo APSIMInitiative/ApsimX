@@ -58,8 +58,8 @@
 			"Simulations":[]
 		},
 		{
-			"Name":"Wheat-International",
-			"Folders":["Turkey", "Europe", "NorthAmerica", "China", "Iran", "Africa", "ControlledEnvironment"],
+			"Name":"Wheat-InternationalSensibility",
+			"Folders":["Turkey", "Europe", "NorthAmerica", "China", "Iran", "Africa", "ControlledEnvironment", "Sensibility"],
 			"Experiments":[],
 			"Simulations":[]
 		},
@@ -70,14 +70,20 @@
 			"Simulations":[]
 		},
 		{
-			"Name":"Wheat-QueenslandWA",
-			"Folders":["SE Queensland", "Western Australia"],
+			"Name":"Wheat-Queensland",
+			"Folders":["SE Queensland"],
 			"Experiments":[],
 			"Simulations":[]
 		},
 		{
-			"Name":"WheatSouthernAustraliaSensibility",
-			"Folders":["Southern Australia", "Sensibility"],
+			"Name":"Wheat-WA",
+			"Folders":["Western Australia"],
+			"Experiments":[],
+			"Simulations":[]
+		},
+		{
+			"Name":"Wheat-SouthernAustralia",
+			"Folders":["Southern Australia"],
 			"Experiments":[],
 			"Simulations":[]
 		}

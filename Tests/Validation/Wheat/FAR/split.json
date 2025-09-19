@@ -1,0 +1,31 @@
+{
+	"OutputPath":"temp/",
+	"CopyWeatherFiles":false,
+	"CopyObservedData":false,
+	"Groups": [
+		{
+			"Name":"FAR-AlbanyBeelbangeraDaysdale",
+			"Folders":["Albany","Beelbangera","Daysdale","Esperance","Finley","Gnarwarre"],
+			"Experiments":[],
+			"Simulations":[]
+		},
+		{
+			"Name":"FAR-Millicent",
+			"Folders":["Millicent"],
+			"Experiments":[],
+			"Simulations":[]
+		},
+		{
+			"Name":"FAR-WallendbeenYarrawonga",
+			"Folders":["Wallendbeen","Yarrawonga"],
+			"Experiments":[],
+			"Simulations":[]
+		},
+		{
+			"Name":"FAR-Hagley",
+			"Folders":["Hagley"],
+			"Experiments":[],
+			"Simulations":[]
+		}
+	]
+}
