@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 193,
+  "Version": 199,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -29,7 +29,6 @@
     },
     {
       "$type": "Models.Storage.DataStore, Models",
-      "useFirebird": false,
       "CustomFileName": null,
       "Name": "DataStore",
       "ResourceName": null,
@@ -87,6 +86,7 @@
           "Slope": 0.0,
           "AspectAngle": 0.0,
           "Altitude": 50.0,
+          "CanopyType": null,
           "Name": "Field",
           "ResourceName": null,
           "Children": [
@@ -139,8 +139,6 @@
                     0.25,
                     0.25
                   ],
-                  "InitialPAWmm": 0.0,
-                  "RelativeTo": "LL15",
                   "FilledFromTop": true,
                   "Name": "Water",
                   "ResourceName": null,
@@ -187,10 +185,10 @@
                     14.0
                   ],
                   "ParticleSizeClay": [
-                    35.5,
-                    39.0,
-                    41.8,
-                    43.2,
+                    35.0,
+                    39.5,
+                    42.6,
+                    43.4,
                     44.0,
                     44.0,
                     44.0,
@@ -3050,6 +3048,12 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
+              "Phenology": null,
+              "Arbitrator": null,
+              "structure": null,
+              "Leaf": null,
+              "Root": null,
+              "AboveGround": null,
               "Name": "Maize",
               "ResourceName": "Maize",
               "Children": [],
@@ -3058,6 +3062,12 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
+              "Phenology": null,
+              "Arbitrator": null,
+              "structure": null,
+              "Leaf": null,
+              "Root": null,
+              "AboveGround": null,
               "Name": "Wheat",
               "ResourceName": "Wheat",
               "Children": [],
@@ -3349,7 +3359,7 @@
             },
             {
               "$type": "Models.Management.BiomassRemovalEvents, Models",
-              "PlantToRemoveBiomassFrom": "Wheat",
+              "NameOfPlantToRemoveFrom": "Wheat",
               "RemovalType": 0,
               "StageToSet": "",
               "RemovalDates": [
@@ -3415,7 +3425,7 @@
             },
             {
               "$type": "Models.Management.BiomassRemovalEvents, Models",
-              "PlantToRemoveBiomassFrom": "Maize",
+              "NameOfPlantToRemoveFrom": "Maize",
               "RemovalType": 1,
               "StageToSet": "",
               "RemovalDates": [
@@ -4110,6 +4120,7 @@
           "Slope": 0.0,
           "AspectAngle": 0.0,
           "Altitude": 50.0,
+          "CanopyType": null,
           "Name": "Field",
           "ResourceName": null,
           "Children": [
@@ -4162,8 +4173,6 @@
                     0.25,
                     0.25
                   ],
-                  "InitialPAWmm": 0.0,
-                  "RelativeTo": "LL15",
                   "FilledFromTop": true,
                   "Name": "Water",
                   "ResourceName": null,
@@ -4210,10 +4219,10 @@
                     14.0
                   ],
                   "ParticleSizeClay": [
-                    35.5,
-                    39.0,
-                    41.8,
-                    43.2,
+                    35.0,
+                    39.5,
+                    42.6,
+                    43.4,
                     44.0,
                     44.0,
                     44.0,
@@ -7073,6 +7082,12 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
+              "Phenology": null,
+              "Arbitrator": null,
+              "structure": null,
+              "Leaf": null,
+              "Root": null,
+              "AboveGround": null,
               "Name": "Wheat",
               "ResourceName": "Wheat",
               "Children": [],
@@ -7247,7 +7262,7 @@
             },
             {
               "$type": "Models.Management.BiomassRemovalEvents, Models",
-              "PlantToRemoveBiomassFrom": "Wheat",
+              "NameOfPlantToRemoveFrom": "Wheat",
               "RemovalType": 0,
               "StageToSet": "",
               "RemovalDates": [],
