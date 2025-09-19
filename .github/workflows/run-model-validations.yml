@@ -27,7 +27,7 @@ jobs:
 
       - name: Merge APSIMInitiative/master into PR branch (ensure PR branch up to date)
         run: |
-          git remote add upstream https://github.com/APSIMInitiative/ApsimX.git
+          git remote add upstream https://github.com/APSIMInitiative/ApsimX.git || git remote set-url upstream https://github.com/APSIMInitiative/ApsimX.git
           git fetch upstream master
           git merge --no-ff upstream/master || { echo "Merge conflict detected. Aborting merge and exiting."; git merge --abort; exit 1; }
 
