@@ -267,6 +267,30 @@ namespace UnitTests.Weather
             Assert.That(weather.TomorrowsMetData.Rain, Is.EqualTo(weather1900.Rain).Within(0.01));
         }
 
+
+        [Test]
+        public void TestGetConstantsFromTopOfWeatherFile()
+        {
+            string weatherData = ReflectionUtilities.GetResourceAsString("UnitTests.Weather.CustomMetData.met");
+            string metFile = Path.GetTempFileName();
+            File.WriteAllText(metFile, weatherData);
+            var simulations = new Simulations()
+            {
+                Children =
+                [
+                    new Models.Climate.Weather() { FullFileName = metFile }
+                ]
+            };
+            var weather = simulations.Children[0] as Models.Climate.Weather;
+            Node.Create(simulations);
+            weather.OpenDataFile();
+
+            Assert.That(weather.GetConstant("longitude"), Is.EqualTo("150"));
+            Assert.That(weather.GetConstant("Longitude"), Is.EqualTo("150"));
+            Assert.That(weather.GetConstant("asdf"), Is.Null);
+        }
+
+
         /// <summary>
         /// Ensures all example .met files contain %root%
         /// </summary>

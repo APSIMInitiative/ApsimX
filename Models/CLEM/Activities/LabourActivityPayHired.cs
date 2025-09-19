@@ -102,7 +102,7 @@ namespace Models.CLEM.Activities
             int currentmonth = clock.Today.Month;
             double totaldays = 0;
             double totalfees = 0;
-            foreach (LabourType item in labour.Items.Where(a => a.Hired))
+            foreach (LabourType item in labour.Items.Where(a => a.IsHired))
             {
                 double days = 0;
                 switch (task)
@@ -185,7 +185,7 @@ namespace Models.CLEM.Activities
             else
             {
                 // make sure labour hired present
-                if (labour.Items.Where(a => a.Hired).Count() == 0)
+                if (labour.Items.Where(a => a.IsHired).Count() == 0)
                 {
                     string[] memberNames = new string[] { "Hired labour" };
                     results.Add(new ValidationResult("No [r=LabourType] of hired labour has been defined in [r=Labour]\r\nThis activity will not be performed without hired labour.", memberNames));
