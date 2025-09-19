@@ -46,8 +46,8 @@ Please read on below and review additional information in our [guide](https://ap
 #### Things to avoid :x:
 
 * Keeping branches in development for long periods of time. Branches that have been left and need to be brought up to date with the newest changes can be difficult to update.
-* Submitting pull requests that resolve multiple unrelated issues in the one pull request. Doing so increases the difficulty of reviewal.
-* Submitting pull requests that contain multiple new features. This also increases the reviewal time.
+* Submitting pull requests that resolve multiple unrelated issues in the one pull request. Doing so increases the difficulty of review.
+* Submitting pull requests that contain multiple new features. This also increases the review time.
 
 ### Reporting issues
 
