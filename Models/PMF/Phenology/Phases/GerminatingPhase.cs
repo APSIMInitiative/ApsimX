@@ -18,7 +18,7 @@ namespace Models.PMF.Phen
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
-    public class GerminatingPhase : Model, IPhase
+    public class GerminatingPhase : Model, IPhase, IPhaseWithSetableCompletionDate
     {
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
@@ -74,11 +74,9 @@ namespace Models.PMF.Phen
         [JsonIgnore]
         public double FractionComplete { get { return 0; } }
 
-        /// <summary>
-        /// Date for germination to occur.  null by default so model is used
-        /// </summary>
+        /// <summary>Data to progress.  Is empty by default.  If set by external model, phase will ignore its mechanisum and wait for the specified date to progress</summary>
         [JsonIgnore]
-        public string GerminationDate { get; set; }
+        public string DateToProgress { get; set; } = "";
 
         // 4. Public method
         //-----------------------------------------------------------------------------------------------------------------
@@ -90,9 +88,9 @@ namespace Models.PMF.Phen
             bool proceedToNextPhase = false;
             double sowLayerTemperature = soilTemperature.Value[SowLayer];
 
-            if (GerminationDate != null)
+            if (!String.IsNullOrEmpty(DateToProgress))
             {
-                if (DateUtilities.DayMonthIsEqual(GerminationDate, clock.Today))
+                if (DateUtilities.DatesAreEqual(DateToProgress, clock.Today))
                 {
                     doGermination(ref proceedToNextPhase, ref propOfDayToUse);
                 }
@@ -107,7 +105,7 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>Resets the phase.</summary>
-        public virtual void ResetPhase() { GerminationDate = null; }
+        public virtual void ResetPhase() { DateToProgress = ""; }
 
         // 5. Private methods
         //-----------------------------------------------------------------------------------------------------------------

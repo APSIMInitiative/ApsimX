@@ -1,5 +1,6 @@
 ﻿using System;
 using APSIM.Core;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
 using Newtonsoft.Json;
@@ -13,7 +14,7 @@ namespace Models.PMF.Phen
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
-    public class GenericPhase : Model, IPhase, IPhaseWithTarget
+    public class GenericPhase : Model, IPhase, IPhaseWithTarget, IPhaseWithSetableCompletionDate
     {
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
@@ -23,6 +24,9 @@ namespace Models.PMF.Phen
 
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction progression = null;
+
+        [Link] 
+        private IClock clock = null;
 
         // 2. Public properties
         //-----------------------------------------------------------------------------------------------------------------
@@ -65,6 +69,10 @@ namespace Models.PMF.Phen
         [Units("oD")]
         public double Target { get { return target.Value(); } }
 
+        /// <summary>Data to progress.  Is empty by default.  If set by external model, phase will ignore its mechanisum and wait for the specified date to progress</summary>
+        [JsonIgnore]
+        public string DateToProgress { get; set; } = "";
+
         // 3. Public methods
         //-----------------------------------------------------------------------------------------------------------------
         /// <summary>Compute the phenological development during one time-step.</summary>
@@ -73,32 +81,48 @@ namespace Models.PMF.Phen
         {
             bool proceedToNextPhase = false;
 
-            if (ProgressThroughPhase >= Target)
+            if (String.IsNullOrEmpty(DateToProgress))
             {
-                // We have entered this timestep after Target decrease below progress so exit without doing anything
-                proceedToNextPhase = true;
+
+                if (ProgressThroughPhase >= Target)
+                {
+                    // We have entered this timestep after Target decrease below progress so exit without doing anything
+                    proceedToNextPhase = true;
+                }
+                else
+                {
+                    ProgressionForTimeStep = progression.Value() * propOfDayToUse;
+                    ProgressThroughPhase += ProgressionForTimeStep;
+
+                    if (ProgressThroughPhase > Target)
+                    {
+                        if (ProgressionForTimeStep > 0.0)
+                        {
+                            proceedToNextPhase = true;
+                            propOfDayToUse *= (ProgressThroughPhase - Target) / ProgressionForTimeStep;
+                            ProgressionForTimeStep *= (1 - propOfDayToUse);
+                        }
+                        ProgressThroughPhase = Target;
+                    }
+                }
             }
             else
             {
-                ProgressionForTimeStep = progression.Value() * propOfDayToUse;
-                ProgressThroughPhase += ProgressionForTimeStep;
-
-                if (ProgressThroughPhase > Target)
+                if (DateUtilities.DatesAreEqual(DateToProgress, clock.Today))
                 {
-                    if (ProgressionForTimeStep > 0.0)
-                    {
-                        proceedToNextPhase = true;
-                        propOfDayToUse *= (ProgressThroughPhase - Target) / ProgressionForTimeStep;
-                        ProgressionForTimeStep *= (1 - propOfDayToUse);
-                    }
-                    ProgressThroughPhase = Target;
+                    proceedToNextPhase = true;
+                    propOfDayToUse = 1;
                 }
             }
-            return proceedToNextPhase;
+                return proceedToNextPhase;
         }
 
         /// <summary>Resets the phase.</summary>
-        public void ResetPhase() { ProgressThroughPhase = 0.0; }
+        public void ResetPhase() 
+        { 
+            ProgressThroughPhase = 0.0;
+            DateToProgress = "";
+        }
 
         // 4. Private method
         //-----------------------------------------------------------------------------------------------------------------
