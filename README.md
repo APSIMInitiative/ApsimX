@@ -46,16 +46,16 @@ Please read on below and review additional information in our [guide](https://ap
 #### Things to avoid :x:
 
 * Keeping branches in development for long periods of time. Branches that have been left and need to be brought up to date with the newest changes can be difficult to update.
-* Submitting pull requests that resolve multiple unrelated issues in the one pull request. Doing so increases the difficulty of reviewal.
-* Submitting pull requests that contain multiple new features. This also increases the reviewal time.
+* Submitting pull requests that resolve multiple unrelated issues in the one pull request. Doing so increases the difficulty of review.
+* Submitting pull requests that contain multiple new features. This also increases the review time.
 
 ### Reporting issues
 
 #### Best practices
 
 * When submitting an issue include the apsim file with any required met and input files required to make it run in a zip archive.
-* Describe the steps that lead to the issue occuring so that it can be reproduced. This includes details like where you clicked, what settings were enabled and what operating system it occurred on.
-* For graphical user interace (GUI) issues please submit a minimally reproducable example apsim file, describe the user interface model this issue affects and the steps to reproduce the error.
+* Describe the steps that lead to the issue occurring so that it can be reproduced. This includes details like where you clicked, what settings were enabled and what operating system it occurred on.
+* For graphical user interface (GUI) issues please submit a minimally reproducible example apsim file, describe the user interface model this issue affects and the steps to reproduce the error.
 
 ### Pull requests and code submissions
 
