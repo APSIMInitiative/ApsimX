@@ -55,7 +55,7 @@ Please read on below and review additional information in our [guide](https://ap
 
 * When submitting an issue include the apsim file with any required met and input files required to make it run in a zip archive.
 * Describe the steps that lead to the issue occuring so that it can be reproduced. This includes details like where you clicked, what settings were enabled and what operating system it occurred on.
-* For graphical user interace (GUI) issues please submit a minimally reproducable example apsim file, describe the user interface model this issue affects and the steps to reproduce the error.
+* For graphical user interface (GUI) issues please submit a minimally reproducible example apsim file, describe the user interface model this issue affects and the steps to reproduce the error.
 
 ### Pull requests and code submissions
 
