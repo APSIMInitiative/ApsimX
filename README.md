@@ -1,8 +1,5 @@
 # ApsimX
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/aff3e00e-23f5-41e7-a721-bc9a171b3199/deploy-status)](https://app.netlify.com/sites/apsimnextgeneration/deploys)
-[![Build Status](https://jenkins.apsim.info/buildStatus/icon?job=apsim)](https://jenkins.apsim.info/user/hol353/my-views/view/all/job/apsim/)
-
 ApsimX is the next generation of [APSIM](https://www.apsim.info)
 
 * APSIM is an agricultural modelling framework used extensively worldwide.
@@ -34,15 +31,23 @@ Any individual or organisation (a 3rd party outside of the APSIM Initiative (AI)
 
 Intellectual property rights in APSIM are retained by the APSIM Initiative. If a licensee makes any improvements to APSIM, the intellectual property rights to those improvements belong to the APSIM Initiative. This means that the APSIM Initiative can choose to make the improvements - including source code - and these improvements would then be made available to all licensed users. As part of the submission process, you are complying with this term as well as making it available to all licensed users. Any Improvements to APSIM are required to be unencumbered and the contributing party warrants that the IP being contributed does not and will not infringe any third party IPR rights.
 
-Please read our [guide](https://apsimnextgeneration.netlify.app/contribute/).
+Please read on below and review additional information in our [guide](https://apsimnextgeneration.netlify.app/contribute/).
 
-## Software Development Guidelines, Rules and processes
+## Software Development Guidelines, Rules and Processes
 
-### General good practices
+### General Good Practices
 
-* As the project follows the agile methodology, short-lived(1-2 weeks max) feature branches are ideal. Branches that are used to develop a new plant are an exception here. Branches that exist over long periods of time tend to be difficult to keep up to date which reduces the branch's likelihood of being merged.
+#### Things to do :white_check_mark:
+
+* As the project follows the agile methodology, short-lived (1-2 weeks max) feature branches are ideal. Branches that are used to develop a new plant are an exception here.
 * Aim to make smaller and more frequent PRs over larger less frequent PRs. Smaller PRs tend to be easier to review. Larger pieces of work can usually be broken into smaller feature branches which are easier to manage.
-*
+* Regularly pull in changes from APSIMInitiative/master branch.
+
+#### Things to avoid :x:
+
+* Keeping branches in development for long periods of time. Branches that have been left and need to be brought up to date with the newest changes can be difficult to update.
+* Submitting pull requests that resolve multiple unrelated issues in the one pull request. Doing so increases the difficulty of reviewal.
+* Submitting pull requests that contain multiple new features. This also increases the reviewal time.
 
 ### Reporting issues
 
@@ -50,7 +55,7 @@ Please read our [guide](https://apsimnextgeneration.netlify.app/contribute/).
 
 * When submitting an issue include the apsim file with any required met and input files required to make it run in a zip archive.
 * Describe the steps that lead to the issue occuring so that it can be reproduced. This includes details like where you clicked, what settings were enabled and what operating system it occurred on.
-* For graphical user interace (GUI) issues please submit a minimally reproducable example apsim file, describe the user interface model this issue affects
+* For graphical user interace (GUI) issues please submit a minimally reproducable example apsim file, describe the user interface model this issue affects and the steps to reproduce the error.
 
 ### Pull requests and code submissions
 
@@ -65,20 +70,20 @@ Please read our [guide](https://apsimnextgeneration.netlify.app/contribute/).
 * The requirements for a pull request differ based on the changes submitted.
   * **Science** changes require observed data to demonstrate that the change does what it intends. Additionally unit test are to be included.
   * **Graphical user interface (GUI)** changes and fixes that include a short video showing the changes working will improve review time.
-  * **Bug fixes** must include a unit test to reduce the likelihood of recurrence and to also verify the fix.
+  * **Bug fixes** should include a unit test to reduce the likelihood of recurrence and to also verify the fix.
 * All pull requests should briefly and concisely describe what the issue was, what changes have been made and the rationale.
 
 #### Adding new simulations and apsim files
 
 ##### Making changes to existing datasets
 
-* To enable a fast and thorough review of changes when new files and data are added, it is best to first create a pull request that only adds the data. Followed by another pull request that adds the apsim file. This is to allow a clearer review that allows reviewers to determine which files changed statistics and helps with debugging when required.
+* To enable a fast and thorough review of changes when new files and data are added, it is best to first create a pull request that only adds the data followed by another pull request that adds the apsim file. This is to allow a clearer review that allows reviewers to determine which files changed statistics and helps with debugging when required.
 
 ### Pull request process
 
-1. A pull request is submitted with a `Ready for Software Review` label. If you are unable to apply labels, request to be added to the developers github team.
+1. A pull request is submitted with a `Ready for Software Review` label. If you are unable to apply labels, request to be added to the developers github team by submitting a comment in the pull request.
 2. Validation and user tests are run.
-3. Once status checks all run successfully, a peer review performed by the software team.
+3. Once status checks all run successfully, a peer review is performed by the software team.
 4. If issues are found or need further discussion the `Ready for Software Review` will be removed.
 5. Once the issues have been resolved and discussion is complete the pull request author should reapply the `Ready for Software Review` label.
 6. Once reviewed the pull request will be merged.
