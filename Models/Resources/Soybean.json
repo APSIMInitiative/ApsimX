@@ -6664,6 +6664,82 @@
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Vegetative.Target.FixedValue = 388",
+                    "[Phenology].EarlyFlowering.Target.FixedValue = 140",
+                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.324",
+                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 664",
+                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.1, 16.49",
+                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.1, 16.49",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 0.9",
+                    "[Root].RootFrontVelocity.AFPSFactor.XYPairs.Y = 0.0, 1.0, 1.0"
+                  ],
+                  "Name": "MG4_Oxdef",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Vegetative.Target.FixedValue = 388",
+                    "[Phenology].EarlyFlowering.Target.FixedValue = 140",
+                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.324",
+                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 664",
+                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.1, 16.49",
+                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.1, 16.49",
+                    "[Root].RootFrontVelocity.AFPSFactor.XYPairs.Y = 0.0, 1.0, 1.0"
+                  ],
+                  "Name": "MG4_1989",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Vegetative.Target.FixedValue = 388",
+                    "[Phenology].EarlyFlowering.Target.FixedValue = 140",
+                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.324",
+                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 664",
+                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.1, 16.49",
+                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.1, 16.49",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 0.8",
+                    "[Root].RootFrontVelocity.AFPSFactor.XYPairs.X = 0.0, 0.05, 1.0",
+                    "[Root].RootFrontVelocity.AFPSFactor.XYPairs.Y = 0.0, 1.0, 1.0"
+                  ],
+                  "Name": "MG4_Rhine",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Vegetative.Target.FixedValue = 280",
+                    "[Phenology].EarlyFlowering.Target.FixedValue = 110",
+                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.30",
+                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 557",
+                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.54, 16.3",
+                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.54, 16.3",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 0.9",
+                    "[Root].RootFrontVelocity.PotentialRootFrontVelocity.PreEmergence.Function.FixedValue = 2.5",
+                    "[Root].RootFrontVelocity.PotentialRootFrontVelocity.early.Function.FixedValue = 28",
+                    "[Root].RootFrontVelocity.PotentialRootFrontVelocity.late.Function.FixedValue = 0",
+                    "[Root].RootFrontVelocity.AFPSFactor.XYPairs.X = 0.0, 0.05, 1.0",
+                    "[Root].RootFrontVelocity.AFPSFactor.XYPairs.Y = 0.0, 1.0, 1.0"
+                  ],
+                  "Name": "MG3_Wayne_WL",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
