@@ -13,7 +13,7 @@ namespace Models.Soils.Nutrients
     [Serializable]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ViewName("UserInterface.Views.PropertyView")]
-    [ValidParent(ParentType = typeof(Nutrient))]
+    [ValidParent(ParentType = typeof(Soil))]
     public class NH3Volatilisation : Model
     {
 

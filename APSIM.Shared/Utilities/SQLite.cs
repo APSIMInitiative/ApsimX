@@ -97,9 +97,16 @@ namespace APSIM.Shared.Utilities
             {
                 if (_connection != null)
                 {
-                    _connection?.Close();
-                    SqliteConnection.ClearPool(_connection);
-                    _connection?.Dispose();
+                    try
+                    {
+                        _connection?.Close();
+                        SqliteConnection.ClearPool(_connection);
+                        _connection?.Dispose();
+                    }
+                    catch
+                    {
+                        Console.WriteLine("SQLite failed to close correctly when closing database.");
+                    }
                     _connection = null;
                 }
                 _open = false;
@@ -187,7 +194,7 @@ namespace APSIM.Shared.Utilities
             }
             catch
             {
-                Console.WriteLine("SQLite failed to dispse correctly.");
+                Console.WriteLine("SQLite failed to dispose correctly.");
             }
             
 

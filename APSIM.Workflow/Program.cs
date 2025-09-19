@@ -6,9 +6,7 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using Humanizer;
-using System.Threading;
 
 namespace APSIM.Workflow;
 
@@ -55,7 +53,7 @@ public class Program
         {
             if (options.SplitFiles != null)
             {
-                FileSplitter.Run(options.DirectoryPath, options.SplitFiles, true, logger);
+                FileSplitter.Run(options.DirectoryPath, options.SplitFiles, Path.GetDirectoryName(options.DirectoryPath) + "/", logger);
                 return;
             }
             else if (options.ValidationLocations)
@@ -63,10 +61,14 @@ public class Program
                 if (options.Verbose)
                     logger.LogInformation("Validation locations:");
 
-                foreach (string dir in ValidationLocationUtility.GetDirectoryPaths())
+                foreach (string dir in ValidationLocationUtility.GetValidationFilePaths())
                 {
                     Console.WriteLine(dir);
                 }
+            }
+            else if (options.SimulationCount)
+            {
+                Console.WriteLine(ValidationLocationUtility.GetSimulationCount());
             }
             if (!string.IsNullOrEmpty(options.DirectoryPath))
             {
