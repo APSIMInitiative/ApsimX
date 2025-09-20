@@ -1,13 +1,17 @@
-﻿using System;
+﻿using APSIM.Core;
+using APSIM.Shared.Utilities;
+using MathNet.Numerics.RootFinding;
+using Models.Core.ApsimFile;
+using Models.Factorial;
+using Models.PMF;
+using Models.PostSimulationTools;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using APSIM.Core;
-using APSIM.Shared.Utilities;
-using Models.Core.ApsimFile;
 using static Models.Core.Overrides;
 
 namespace Models.Core.ConfigFile
@@ -71,29 +75,109 @@ namespace Models.Core.ConfigFile
                 List<string> commandSplits = StringUtilities.SplitStringHonouringQuotes(command, " =");
 
                 // Get the first part to see what kind of command it is
-                string part1 = commandSplits[0].Trim();
+                string property = commandSplits[0].Trim();
 
                 // If first index item is a string starting with ".", or containing "[]", the command is an override
-                if (part1.StartsWith('.') || (part1.StartsWith('[') && part1.Contains(']')))
+                if (property.StartsWith('.') || (property.StartsWith('[') && property.Contains(']')))
                 {
-                    string property = part1;
-                    string value = "";
-                    for(int i = 1; i < commandSplits.Count; i++)
+                    if (command.Contains("+=") || command.Contains("-="))
                     {
-                        value += commandSplits[i];
-                        if (i < commandSplits.Count-1)
-                            value += "=";
+                        // A model's array property is being modified.
+                        
+                        string operation = command.Contains("+=") ? "+=" : "-=";
+                        List<string> commSplits = StringUtilities.SplitStringHonouringQuotes(command, operation);
+
+                        property = commSplits[0].Trim();
+                        object propertyObj = tempSim.Node.Get(property);
+
+                        // Check if propertyObj is an array (e.g., Cultivar's Command) or List<string> (e.g., CompositeFactor's Specifications)
+                        string[] propertyValues;
+                        if (propertyObj is string[] arr)
+                            propertyValues = arr;
+                        else if (propertyObj is List<string> list)
+                            propertyValues = list.ToArray();
+                        else
+                            throw new Exception($"'{property}' is not a string array or List<string>.");
+
+                        string newValues = commSplits[1].Trim();
+                        string[] assignments;
+
+                        if (operation == "-=")
+                        {
+                            if (newValues.Contains('='))
+                                throw new Exception($"Assignments ('=') cannot be removed from an array. Only use the bare names of the properties.");
+
+                            assignments = newValues.Split(",").Select(s => s.Trim()).ToArray();
+
+                        } else
+                        {
+                            assignments = ReflectionUtilities.AssignmentsToArray(newValues);
+                        }
+
+                        foreach (string assign in assignments)
+                        {
+                            bool found = false;
+                            string param = assign.Trim();
+
+                            if (param.Contains('='))
+                            {
+                                List<string> assignSplits = StringUtilities.SplitStringHonouringQuotes(param, "=");
+                                param = assignSplits[0].Trim();
+                            }
+
+                            propertyValues = [.. propertyValues.Select(line => {
+                                if (string.IsNullOrWhiteSpace(line) || (line.TrimStart().StartsWith("//") && !line.Contains(param)))
+                                    return null;
+
+                                if (line.Contains(param))
+                                {
+                                    if (operation == "-=")
+                                        return null;
+                                    else if (operation == "+=") {
+                                        found = true;
+                                        return assign;
+                                    }
+                                }
+                                return line;
+                            })];
+
+                            // Add a new line if the assignment does not exist in the array already.
+                            if (operation == "+=" && !found)
+                                propertyValues = propertyValues.Append(assign).ToArray();
+                        }
+
+                        string[] singleLineCommandArray = { property + " = " + string.Join(", ", propertyValues.Where(c => !string.IsNullOrWhiteSpace(c))) };
+                        var overrides = Overrides.ParseStrings(singleLineCommandArray);
+                        tempSim = (Simulations)ApplyOverridesToApsimxFile(overrides, tempSim);
+                        
+                    }
+                    else
+                    {
+                        string value = "";
+                        for (int i = 1; i < commandSplits.Count; i++)
+                        {
+                            if (commandSplits[i].Replace("\"", "").Trim().Length > 0)
+                            {
+                                value += commandSplits[i];
+                                if (i < commandSplits.Count - 1)
+                                    value += "=";
+                            }
+                        }
+
+                        // Check if second part is a filename or value (ends in ; and file exists)
+                        // If so, read contents of that file in as the value
+                        if (value.Length > 0)
+                        {
+                            string potentialFilepath = configFileDirectory + "/" + value.Substring(0, value.Length - 1);
+                            if (value.Trim().EndsWith(';') && File.Exists(potentialFilepath))
+                                value = File.ReadAllText(potentialFilepath);
+                        }
+
+                        string[] singleLineCommandArray = { property + "=" + value };
+                        var overrides = Overrides.ParseStrings(singleLineCommandArray);
+                        tempSim = (Simulations)ApplyOverridesToApsimxFile(overrides, tempSim);
                     }
 
-                    //check if second part is a filename or value (ends in ; and file exists)
-                    //if so, read contents of that file in as the value
-                    string potentialFilepath = configFileDirectory + "/" + value.Substring(0, value.Length-1);
-                    if (value.Trim().EndsWith(';') && File.Exists(potentialFilepath))
-                        value = File.ReadAllText(potentialFilepath);
-
-                    string[] singleLineCommandArray = { property + "=" + value };
-                    var overrides = Overrides.ParseStrings(singleLineCommandArray);
-                    tempSim = (Simulations)ApplyOverridesToApsimxFile(overrides, tempSim);
                 }
                 // else its an instruction.
                 else
@@ -113,7 +197,7 @@ namespace Models.Core.ConfigFile
                     else if (keywordString.Contains("duplicate")) { keyword = Keyword.Duplicate; }
                     else if (keywordString.Contains("save")) { keyword = Keyword.Save; }
                     else if (keywordString.Contains("load")) { keyword = Keyword.Load; }
-                    else if (keywordString.Contains("run"))  { return tempSim; }
+                    else if (keywordString.Contains("run")) { return tempSim; }
                     else throw new Exception($"keyword in command didn't match any recognised commands. Keyword given {keywordString}");
 
                     // Ignore the command as these cases are handled outside of this method.
@@ -281,7 +365,7 @@ namespace Models.Core.ConfigFile
             }
             catch (Exception e)
             {
-                string message = e.Message + " : " + instruction.Keyword + " " +  instruction.ActiveNode + " " + instruction.NewNode;
+                string message = e.Message + " : " + instruction.Keyword + " " + instruction.ActiveNode + " " + instruction.NewNode;
                 throw new Exception(message);
             }
         }
@@ -297,7 +381,7 @@ namespace Models.Core.ConfigFile
             if (pos > -1)
             {
                 string p1 = line.Substring(0, pos);
-                string p2 = line.Substring(pos+1);
+                string p2 = line.Substring(pos + 1);
 
                 if (p2.Contains(' '))
                     p2 = '"' + p2.Trim() + '"';
