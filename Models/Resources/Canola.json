@@ -7363,6 +7363,23 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
+                "[Phenology].Vegetative.Target.XYPairs.X = 0,10",
+                "[Phenology].Vegetative.Target.XYPairs.Y = 300,1",
+                "[Leaf].Phyllochron.Base.FixedValue = 60",
+                "[Photosynthesis].RUE.Potential.FixedValue = 3.4",
+                "[Phenology].EarlyFlowering.Target.FixedValue = 120",
+                "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 500",
+                "[Grain].PotentialHarvestIndex.GrainFraction.FixedValue = 0.6"
+              ],
+              "Name": "Hyola575",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
                 "[Phenology].Vegetative.Target.XYPairs.X = 0,16",
                 "[Phenology].Vegetative.Target.XYPairs.Y = 360,213.33",
                 "[Leaf].Phyllochron.Base.FixedValue = 49"
