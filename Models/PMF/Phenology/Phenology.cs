@@ -517,24 +517,6 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>
-        /// Force emergence on the date called if emergence has not occurred already
-        /// </summary>
-        /// <param name="emergenceDate">Emergence date (dd-mmm)</param>
-        public void SetEmergenceDate(string emergenceDate)
-        {
-
-        }
-
-        /// <summary>
-        /// Force germination on the date called if germination has not occurred already
-        /// </summary>
-        /// <param name="germinationDate">Germination date (dd-mmm).</param>
-        public void SetGerminationDate(string germinationDate)
-        {
-
-        }
-
-        /// <summary>
         /// Method to set the 
         /// </summary>
         /// <param name="completionDate"></param>
