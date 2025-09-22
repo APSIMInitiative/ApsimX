@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Factorial;
 
@@ -63,7 +64,7 @@ namespace Models.Core
             try
             {
                 T newModel = (T)ReflectionUtilities.Clone(model);
-                newModel.ParentAllDescendants();
+                Node.Create(newModel as INodeModel);
                 return newModel;
             }
             finally
