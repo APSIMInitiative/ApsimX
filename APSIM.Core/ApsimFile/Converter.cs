@@ -16,7 +16,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 201; } }
+    public static int LatestVersion { get { return 202; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -7000,6 +7000,92 @@ internal class Converter
                 simpleGrazing["FractionOfDungUrineOffPaddock"] = new JArray(fractionDefoliatedNToSoil);
             }
 
+        }
+    }
+
+    /// <summary>
+    /// Perform necessary cultivar path updates following waterlogging modifications for the Maize, Canola and Soybean models.
+    /// </summary>
+    /// <param name="root">Root json token.</param>
+    /// <param name="name">File name.</param>
+    private static void UpgradeToVersion202(JObject root, string name)
+    {
+        // NOTE: Only do the conversion if the cultivar is the descendant of a plant with resource name one of these 3 or
+        // the resource .json file. Want to leave people's replacement models untouched.
+        var weAreRelevantResourceFile = name != null && (name.EndsWith("Maize.json") || name.EndsWith("Soybean.json") || name.EndsWith("Canola.json"));
+
+        List<(string, string)> maizeUpadtes =
+        [
+            ("[Grain].MaximumPotentialGrainSize.FixedValue", "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue"),
+            ("[Grain].MaximumGrainsPerCob.FixedValue", "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue"),
+            ("[Structure].Phyllochron.Phyllochron", "[Structure].Phyllochron.BasePhyllochron.Phyllochron"),
+            ("[Leaf].Photosynthesis.FW.XYPairs", "[Leaf].Photosynthesis.FW.Deficient.XYPairs"),
+            ("[Maize].Grain.MaximumPotentialGrainSize.FixedValue", "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue"),
+            ("[Maize].Grain.MaximumGrainsPerCob.FixedValue", "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue"),
+            ("[Maize].Structure.Phyllochron.Phyllochron", "[Structure].Phyllochron.BasePhyllochron.Phyllochron"),
+            ("[Maize].Leaf.Photosynthesis.FW.XYPairs", "[Leaf].Photosynthesis.FW.Deficient.XYPairs"),
+        ];
+        List<(string, string)> soybeanUpdates =
+        [
+            ("[Grain].PotentialHarvestIndex", "[Grain].PotentialHarvestIndex.PotentialHarvestIndex"),
+            ("[Leaf].Photosynthesis.FW.XYPairs", "[Leaf].Photosynthesis.FW.Deficient.XYPairs"),
+            ("[Leaf].Phyllochron", "[Leaf].Phyllochron.Phyllochron"),
+            ("[Leaf].ExtinctionCoefficient", "[Leaf].ExtinctionCoefficient.ExtinctionCoefficient"),
+            ("[Soybean].Grain.PotentialHarvestIndex", "[Grain].PotentialHarvestIndex.PotentialHarvestIndex"),
+            ("[Soybean].Leaf.Photosynthesis.FW.XYPairs", "[Leaf].Photosynthesis.FW.Deficient.XYPairs"),
+            ("[Soybean].Leaf.Phyllochron", "[Leaf].Phyllochron.Phyllochron"),
+            ("[Soybean].Leaf.ExtinctionCoefficient", "[Leaf].ExtinctionCoefficient.ExtinctionCoefficient")
+        ];
+        List<(string, string)> canolaUpdates =
+        [
+            ("[Leaf].Photosynthesis.FW.XYPairs", "[Leaf].Photosynthesis.FW.Deficient.XYPairs"),
+            ("[Leaf].ExtinctionCoefficient", "[Leaf].ExtinctionCoefficient.PotentialExtinctionCoefficient"),
+            ("[Leaf].SenescenceRate.Reproductive.Rate.Fraction.Modifier", "[Leaf].SenescenceRate.Reproductive.Rate.MaximumFunction.Fraction.Modifier"),
+            ("[Grain].MaximumPotentialGrainSize", "[Grain].MaximumPotentialGrainSize.GrainSize"),
+            ("[Canola].Leaf.Photosynthesis.FW.XYPairs", "[Leaf].Photosynthesis.FW.Deficient.XYPairs"),
+            ("[Canola].Leaf.ExtinctionCoefficient", "[Leaf].ExtinctionCoefficient.PotentialExtinctionCoefficient"),
+            ("[Canola].Leaf.SenescenceRate.Reproductive.Rate.Fraction.Modifier", "[Leaf].SenescenceRate.Reproductive.Rate.MaximumFunction.Fraction.Modifier"),
+            ("[Canola].Grain.MaximumPotentialGrainSize", "[Grain].MaximumPotentialGrainSize.GrainSize"),
+        ];
+
+        foreach (var plant in JsonUtilities.ChildrenOfType(root, "Plant"))
+        {
+            var plantName = plant["Name"].Value<string>();
+            var updates = plantName switch
+            {
+                "Maize" => maizeUpadtes,
+                "Soybean" => soybeanUpdates,
+                "Canola" => canolaUpdates,
+                _ => null
+            };
+            if (updates != null && (weAreRelevantResourceFile || plant["ResourceName"].Value<string>() == plantName))
+            {
+                foreach (var cultivar in JsonUtilities.ChildrenOfType(plant, "Cultivar"))
+                {
+                    UpdateCultivarPaths(cultivar, updates);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Update cultivar paths given a collection of old and new paths.
+    /// </summary>
+    /// <param name="cultivar">The cultivar json object.</param>
+    /// <param name="pathUpdates">The (old, new) cultivar paths.</param>
+    private static void UpdateCultivarPaths(JObject cultivar, IEnumerable<(string, string)> pathUpdates)
+    {
+        if (!cultivar["Command"].HasValues)
+            return;
+
+        foreach (JValue line in cultivar["Command"].Children())
+        {
+            var linestr = line.Value.ToString();
+            foreach (var (original, replacement) in pathUpdates)
+            {
+                linestr = linestr.Replace(original, replacement);
+            }
+            line.Value = linestr;
         }
     }
 
