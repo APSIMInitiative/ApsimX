@@ -7013,13 +7013,13 @@ internal class Converter
         Dictionary<string,Dictionary<string,string>> repDict = new Dictionary<string, Dictionary<string, string>>();
         repDict["Germination"] = new Dictionary<string, string>
         {
-            {"findPattern", @"(\[?Wheat\]?)\.Phenology\.SetGerminationDate\(\s*((?>[^()]+|\((?<DEPTH>)|\)(?<-DEPTH>))*(?(DEPTH)(?!)))\s*\);" },
-            {"replacePattern", @"$1.Phenology.SetPhaseCompletionDate($2,""Germinating"");" }
+            {"findPattern", @"Phenology\.SetGerminationDate\(\s*((?>[^()]+|\((?<DEPTH>)|\)(?<-DEPTH>))*(?(DEPTH)(?!)))\s*\);" },
+            {"replacePattern", @"Phenology.SetPhaseCompletionDate($1,""Germinating"");" }
         };
         repDict["Emergence"] = new Dictionary<string, string>
         {
-            {"findPattern", @"(\[?Wheat\]?)\.Phenology\.SetEmergenceDate\(\s*((?>[^()]+|\((?<DEPTH>)|\)(?<-DEPTH>))*(?(DEPTH)(?!)))\s*\);" },
-            {"replacePattern", @"$1.Phenology.SetPhaseCompletionDate($2,""Emerging"");" }
+            {"findPattern", @"Phenology\.SetEmergenceDate\(\s*((?>[^()]+|\((?<DEPTH>)|\)(?<-DEPTH>))*(?(DEPTH)(?!)))\s*\);" },
+            {"replacePattern", @"Phenology.SetPhaseCompletionDate($1,""Emerging"");" }
         };
 
         foreach (Dictionary<string,string> stage in repDict.Values)
