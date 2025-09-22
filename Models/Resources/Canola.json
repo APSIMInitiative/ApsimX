@@ -3248,7 +3248,7 @@
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
                   "Start": "Emergence",
-                  "End": "GreenBud",
+                  "End": "StartFlowering",
                   "Name": "Vegetative",
                   "ResourceName": null,
                   "Children": [
@@ -3437,7 +3437,7 @@
                 },
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
-                  "Start": "GreenBud",
+                  "Start": "StartFlowering",
                   "End": "EndPodDevelopment",
                   "Name": "Reproductive",
                   "ResourceName": null,
