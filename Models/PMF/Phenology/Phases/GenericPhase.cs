@@ -49,10 +49,19 @@ namespace Models.PMF.Phen
         {
             get
             {
-                if (Target == 0.0)
-                    return 1.0;
+                if (String.IsNullOrEmpty(DateToProgress))
+                {
+                    if (Target == 0.0)
+                        return 1.0;
+                    else
+                        return ProgressThroughPhase / Target;
+                }
                 else
-                    return ProgressThroughPhase / Target;
+                {
+                    double dayDurationOfPhase = (DateUtilities.GetDate(DateToProgress) - firstDate).Days;
+                    double daysInPhase = (clock.Today - firstDate).Days;
+                    return daysInPhase / dayDurationOfPhase;
+                }
             }
         }
 
@@ -72,6 +81,12 @@ namespace Models.PMF.Phen
         /// <summary>Data to progress.  Is empty by default.  If set by external model, phase will ignore its mechanisum and wait for the specified date to progress</summary>
         [JsonIgnore]
         public string DateToProgress { get; set; } = "";
+
+        /// <summary>First date in this phase</summary>
+        private DateTime firstDate { get; set; }
+
+        /// <summary>Flag for the first day of this phase</summary>
+        private bool first { get; set; }
 
         // 3. Public methods
         //-----------------------------------------------------------------------------------------------------------------
@@ -108,6 +123,12 @@ namespace Models.PMF.Phen
             }
             else
             {
+                if (first)
+                {
+                    firstDate = clock.Today;
+                    first = false;
+                }
+                
                 if (DateUtilities.DatesAreEqual(DateToProgress, clock.Today))
                 {
                     proceedToNextPhase = true;
@@ -122,6 +143,7 @@ namespace Models.PMF.Phen
         { 
             ProgressThroughPhase = 0.0;
             DateToProgress = "";
+            first = true;
         }
 
         // 4. Private method
