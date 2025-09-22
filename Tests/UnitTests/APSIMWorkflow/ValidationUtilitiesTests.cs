@@ -15,7 +15,7 @@ public class ValidationLocationUtilityTest
         Directory.SetCurrentDirectory(Path.Combine(originalDir, @"../../../"));
     }
 
-    
+
     [TearDown]
     public static void Teardown()
     {
@@ -25,7 +25,14 @@ public class ValidationLocationUtilityTest
     [Test]
     public void TestGetDirectoryPaths_ShouldNotIncludeExcludedSims()
     {
-        var result = ValidationLocationUtility.GetDirectoryPaths();
+        var result = ValidationLocationUtility.GetValidationFilePaths();
         Assert.That(result, Does.Not.Contain(PayloadUtilities.EXCLUDED_SIMS_FILEPATHS));
+    }
+    
+    [Test]
+    public void TestGetSimulationCount_ShouldReturnNonZeroCount()
+    {
+        int count = ValidationLocationUtility.GetSimulationCount();
+        Assert.That(count, Is.GreaterThan(0)); // Assuming there are valid validation directories in the test setup.
     }
 }

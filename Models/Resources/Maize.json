@@ -6937,6 +6937,58 @@
               "ReadOnly": false
             },
             {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].Juvenile.Target.FixedValue = 350",
+                "[Phenology].Photosensitive.Target.XYPairs.Y = 0,0,0",
+                "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                "[Phenology].FloweringToGrainFilling.Target.FixedValue = 95",
+                "[Phenology].GrainFilling.Target.FixedValue = 450",
+                "[Phenology].Maturing.Target.FixedValue = 1",
+                "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36",
+                "[Leaf].Photosynthesis.RUE.FixedValue = 2.4",
+                "[Grain].MaximumGrainsPerCob.FixedValue =  637 // PotentialMaximumGrainsPerCob",
+                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.34 // PotentialGrainSize",
+                "[Phenology].Emerging.Target.ShootLag.FixedValue = 250",
+                "[Phenology].Emerging.Target.DepthxRate.ShootRate.FixedValue = 0.7",
+                "[Root].RootFrontVelocity.AFPSFactor.XYPairs.Y = 0, 1, 1"
+              ],
+              "Name": "DMY1",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].Juvenile.Target.FixedValue = 270",
+                "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0 ,0",
+                "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                "[Phenology].GrainFilling.Target.FixedValue = 640",
+                "[Phenology].Maturing.Target.FixedValue = 50",
+                "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 50",
+                "[Leaf].Photosynthesis.RUE.FixedValue = 2.25",
+                "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y = 0.1, 1, 1, 1,0",
+                "[Leaf].CohortParameters.SenescenceDuration.XYPairs.Y = 200, 300, 1100",
+                "[Leaf].CohortParameters.DMRetranslocationFactor.FixedValue = 0.025",
+                "[Maize].Grain.MaximumGrainsPerCob.FixedValue = 640 // PotentialMaximumGrainsPerCob",
+                "[Maize].Grain.MaximumPotentialGrainSize.FixedValue = 0.32 // PotentialMaximumGrainsPerCob",
+                "[Maize].Root.SpecificRootLength.FixedValue = 135",
+                "[Maize].Root.RootFrontVelocity.PotentialRootFrontVelocity.PreFlowering.RootFrontVelocity.FixedValue = 25",
+                "[Grain].MaximumNConc.InitialPhase.InitialNconc.FixedValue = 0.025",
+                "[Root].RootFrontVelocity.AFPSFactor.XYPairs.X = 0, 0.05, 1",
+                "[Root].RootFrontVelocity.AFPSFactor.XYPairs.Y = 0, 1, 1"
+              ],
+              "Name": "DeKalb_62_97VT3_Kaur",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
               "$type": "Models.Core.Folder, Models",
               "Name": "Generic",
               "Children": [
