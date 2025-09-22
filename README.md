@@ -88,6 +88,10 @@ Please read on below and review additional information in our [guide](https://ap
 5. Once the issues have been resolved and discussion is complete the pull request author should reapply the `Ready for Software Review` label.
 6. Once reviewed the pull request will be merged.
 
+### Changing apsimx files
+
+* When fixing an issue with `.apsimx` files avoid opening files and making changes directly. Instead create a converter so that all affected `.apsimx` files will be changed automatically. Additionally, resource files (models loaded from json files) will need to be changed and this is best done by using the `update resources` button in the main menu.
+
 ## Publications
 
 * [doi:10.1016/j.envsoft.2014.07.009](https://dx.doi.org/10.1016/j.envsoft.2014.07.009)
