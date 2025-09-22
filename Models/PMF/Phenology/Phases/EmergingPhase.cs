@@ -30,6 +30,12 @@ namespace Models.PMF.Phen
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction target = null;
 
+        /// <summary>First date in this phase</summary>
+        private DateTime firstDate { get; set; }
+
+        /// <summary>Flag for the first day of this phase</summary>
+        private bool first { get; set; }
+
         // 2. Public properties
         //-----------------------------------------------------------------------------------------------------------------
 
@@ -51,10 +57,19 @@ namespace Models.PMF.Phen
         {
             get
             {
-                if (Target == 0)
-                    return 1;
+                if (String.IsNullOrEmpty(DateToProgress))
+                {
+                    if (Target == 0)
+                        return 1;
+                    else
+                        return ProgressThroughPhase / Target;
+                }
                 else
-                    return ProgressThroughPhase / Target;
+                {
+                    double dayDurationOfPhase = (DateUtilities.GetDate(DateToProgress) - firstDate).Days;
+                    double daysInPhase = (clock.Today - firstDate).Days;
+                    return daysInPhase / dayDurationOfPhase;
+                }
             }
         }
 
@@ -99,6 +114,11 @@ namespace Models.PMF.Phen
             }
             else
             {
+                if (first)
+                {
+                    firstDate = clock.Today;
+                    first = false;
+                }
                 if (DateUtilities.DatesAreEqual(DateToProgress, clock.Today))
                 {
                     proceedToNextPhase = true;
@@ -115,6 +135,7 @@ namespace Models.PMF.Phen
             ProgressThroughPhase = 0;
             Target = 0;
             DateToProgress = null;
+            first = true;
         }
 
         // 4. Private method

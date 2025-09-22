@@ -50,7 +50,11 @@ namespace Models.PMF.Phen
 
         /// <summary>The soil layer in which the seed is sown.</summary>
         private int SowLayer = 0;
+        /// <summary>First date in this phase</summary>
+        private DateTime firstDate { get; set; }
 
+        /// <summary>Flag for the first day of this phase</summary>
+        private bool first { get; set; }
 
         // 3. Public properties
         //-----------------------------------------------------------------------------------------------------------------
@@ -72,11 +76,27 @@ namespace Models.PMF.Phen
 
         /// <summary>Fraction of phase that is complete (0-1).</summary>
         [JsonIgnore]
-        public double FractionComplete { get { return 0; } }
+        public double FractionComplete 
+        { 
+            get 
+            {
+                if (String.IsNullOrEmpty(DateToProgress))
+                {
+                    return 0;
+                }
+                else
+                {
+                    double dayDurationOfPhase = (DateUtilities.GetDate(DateToProgress) - firstDate).Days;
+                    double daysInPhase = (clock.Today - firstDate).Days;
+                    return daysInPhase / dayDurationOfPhase;
+                }
+            } 
+        }
 
         /// <summary>Data to progress.  Is empty by default.  If set by external model, phase will ignore its mechanisum and wait for the specified date to progress</summary>
         [JsonIgnore]
         public string DateToProgress { get; set; } = "";
+
 
         // 4. Public method
         //-----------------------------------------------------------------------------------------------------------------
@@ -90,6 +110,11 @@ namespace Models.PMF.Phen
 
             if (!String.IsNullOrEmpty(DateToProgress))
             {
+                if (first)
+                {
+                    firstDate = clock.Today;
+                    first = false;
+                }
                 if (DateUtilities.DatesAreEqual(DateToProgress, clock.Today))
                 {
                     doGermination(ref proceedToNextPhase, ref propOfDayToUse);
@@ -105,7 +130,11 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>Resets the phase.</summary>
-        public virtual void ResetPhase() { DateToProgress = ""; }
+        public virtual void ResetPhase() 
+        { 
+            DateToProgress = "";
+            first = true;
+        }
 
         // 5. Private methods
         //-----------------------------------------------------------------------------------------------------------------
