@@ -1,14 +1,12 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 0,
   "Version": 201,
   "Name": "Simulations",
+  "ResourceName": null,
   "Children": [
     {
       "$type": "Models.PMF.Plant, Models",
       "PlantType": "Canola",
-      "IsEnding": false,
-      "DaysAfterEnding": 0,
       "Name": "Canola",
       "ResourceName": null,
       "Children": [
@@ -25,7 +23,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "PotentialPartitioningMethods",
                   "ResourceName": null,
                   "Children": [
@@ -68,7 +65,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "AllocationMethods",
                   "ResourceName": null,
                   "Children": [
@@ -112,7 +108,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "PotentialPartitioningMethods",
                   "ResourceName": null,
                   "Children": [
@@ -131,7 +126,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "ActualPartitioningMethods",
                   "ResourceName": null,
                   "Children": [
@@ -158,7 +152,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "AllocationMethods",
                   "ResourceName": null,
                   "Children": [
@@ -237,7 +230,6 @@
                     28.0,
                     0.0
                   ],
-                  "XVariableName": null,
                   "Name": "Response",
                   "ResourceName": null,
                   "Children": [],
@@ -302,7 +294,6 @@
                     0.5,
                     0.0
                   ],
-                  "XVariableName": null,
                   "Name": "Response",
                   "ResourceName": null,
                   "Children": [],
@@ -361,6 +352,7 @@
               "$type": "Models.PMF.Phen.GerminatingPhase, Models",
               "Start": "Sowing",
               "End": "Germination",
+              "IsEmerged": false,
               "Name": "Germinating",
               "ResourceName": null,
               "Children": [
@@ -382,6 +374,7 @@
               "$type": "Models.PMF.Phen.EmergingPhase, Models",
               "Start": "Germination",
               "End": "Emergence",
+              "IsEmerged": false,
               "TTForTimeStep": 0.0,
               "Name": "Emerging",
               "ResourceName": null,
@@ -450,6 +443,7 @@
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "Emergence",
               "End": "FloralInitiation",
+              "IsEmerged": true,
               "Name": "Vegetative",
               "ResourceName": null,
               "Children": [
@@ -477,7 +471,6 @@
                         290.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -505,6 +498,7 @@
               "$type": "Models.PMF.Phen.SimpleLeafAppearancePhase, Models",
               "Start": "FloralInitiation",
               "End": "GreenBud",
+              "IsEmerged": true,
               "Name": "BudDevelopment",
               "ResourceName": null,
               "Children": [
@@ -534,6 +528,7 @@
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "GreenBud",
               "End": "StartFlowering",
+              "IsEmerged": true,
               "Name": "StemElongation",
               "ResourceName": null,
               "Children": [
@@ -591,7 +586,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -627,6 +621,7 @@
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "StartFlowering",
               "End": "StartPodDevelopment",
+              "IsEmerged": true,
               "Name": "EarlyFlowering",
               "ResourceName": null,
               "Children": [
@@ -666,6 +661,7 @@
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "StartPodDevelopment",
               "End": "StartGrainFilling",
+              "IsEmerged": true,
               "Name": "EarlyPodDevelopment",
               "ResourceName": null,
               "Children": [
@@ -714,6 +710,7 @@
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "StartGrainFilling",
               "End": "EndFlowering",
+              "IsEmerged": true,
               "Name": "EarlyGrainFilling",
               "ResourceName": null,
               "Children": [
@@ -771,6 +768,7 @@
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "EndFlowering",
               "End": "EndPodDevelopment",
+              "IsEmerged": true,
               "Name": "MidGrainFilling",
               "ResourceName": null,
               "Children": [
@@ -846,6 +844,7 @@
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "EndPodDevelopment",
               "End": "EndGrainFill",
+              "IsEmerged": true,
               "Name": "LateGrainFilling",
               "ResourceName": null,
               "Children": [
@@ -912,6 +911,7 @@
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "EndGrainFill",
               "End": "Maturity",
+              "IsEmerged": true,
               "Name": "Maturing",
               "ResourceName": null,
               "Children": [
@@ -942,6 +942,7 @@
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "Maturity",
               "End": "HarvestRipe",
+              "IsEmerged": true,
               "Name": "Ripening",
               "ResourceName": null,
               "Children": [
@@ -972,6 +973,7 @@
               "$type": "Models.PMF.Phen.EndPhase, Models",
               "Start": "HarvestRipe",
               "End": "Unused",
+              "IsEmerged": true,
               "Name": "ReadyForHarvesting",
               "ResourceName": null,
               "Children": [
@@ -1194,6 +1196,10 @@
           "DMDemand": null,
           "NDemand": null,
           "potentialDMAllocation": null,
+          "WaterUptakeSupply": null,
+          "NitrogenUptakeSupply": null,
+          "WaterTakenUp": null,
+          "NitrogenTakenUp": null,
           "GrowthRespiration": 0.0,
           "MaintenanceRespiration": 0.0,
           "Name": "Root",
@@ -1222,7 +1228,6 @@
                     1.0,
                     1.0
                   ],
-                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -1260,7 +1265,6 @@
                     1.0,
                     0.0
                   ],
-                  "XVariableName": null,
                   "Name": "Response",
                   "ResourceName": null,
                   "Children": [],
@@ -1457,7 +1461,6 @@
                     0.01,
                     0.01
                   ],
-                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -1492,7 +1495,6 @@
                     0.0,
                     0.0
                   ],
-                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -1514,15 +1516,15 @@
             },
             {
               "$type": "Models.PMF.Library.BiomassRemoval, Models",
+              "HarvestFractionLiveToRemove": 0.0,
+              "HarvestFractionDeadToRemove": 0.0,
+              "HarvestFractionLiveToResidue": 0.2,
+              "HarvestFractionDeadToResidue": 0.0,
               "Name": "BiomassRemovalDefaults",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
-              "ReadOnly": false,
-              "HarvestFractionLiveToRemove": 0.0,
-              "HarvestFractionDeadToRemove": 0.0,
-              "HarvestFractionLiveToResidue": 0.2,
-              "HarvestFractionDeadToResidue": 0.0
+              "ReadOnly": false
             },
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
@@ -1539,7 +1541,6 @@
                     0.0,
                     1.0
                   ],
-                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -1993,9 +1994,7 @@
             }
           ],
           "Enabled": true,
-          "ReadOnly": false,
-          "MaxNConc": null,
-          "MinNConc": null
+          "ReadOnly": false
         },
         {
           "$type": "Models.PMF.Organs.SimpleLeaf, Models",
@@ -2093,7 +2092,6 @@
                         1.0,
                         0.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -2121,7 +2119,6 @@
                         1.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -2158,7 +2155,6 @@
                         1.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -2193,7 +2189,6 @@
                         0.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -2524,7 +2519,6 @@
                     900.0,
                     1000.0
                   ],
-                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -2689,7 +2683,6 @@
                                     0.0,
                                     0.0
                                   ],
-                                  "XVariableName": null,
                                   "Name": "XYPairs",
                                   "ResourceName": null,
                                   "Children": [],
@@ -2747,7 +2740,6 @@
                                 0.0,
                                 1.0
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -2796,7 +2788,6 @@
                                 1.0,
                                 0.0
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -2937,7 +2928,6 @@
                                     0.0,
                                     1.0
                                   ],
-                                  "XVariableName": null,
                                   "Name": "XYPairs",
                                   "ResourceName": null,
                                   "Children": [],
@@ -3024,7 +3014,6 @@
                                 0.0,
                                 0.03
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -3094,6 +3083,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "Units": null,
                                   "Expression": "[Phenology].EarlyFlowering.Target + [Phenology].EarlyPodDevelopment.Target + [Phenology].EarlyGrainFilling.Target+[Phenology].MidGrainFilling.Target",
                                   "Name": "TTRequired",
                                   "ResourceName": null,
@@ -3103,6 +3093,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "Units": null,
                                   "Expression": "[Phenology].EarlyFlowering.ProgressThroughPhase + [Phenology].EarlyPodDevelopment.ProgressThroughPhase + [Phenology].EarlyGrainFilling.ProgressThroughPhase+[Phenology].MidGrainFilling.ProgressThroughPhase",
                                   "Name": "TTComplete",
                                   "ResourceName": null,
@@ -3271,7 +3262,6 @@
                     0.035,
                     0.03
                   ],
-                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -3332,15 +3322,15 @@
             },
             {
               "$type": "Models.PMF.Library.BiomassRemoval, Models",
+              "HarvestFractionLiveToRemove": 0.0,
+              "HarvestFractionDeadToRemove": 0.0,
+              "HarvestFractionLiveToResidue": 1.0,
+              "HarvestFractionDeadToResidue": 1.0,
               "Name": "BiomassRemovalDefaults",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
-              "ReadOnly": false,
-              "HarvestFractionLiveToRemove": 0.0,
-              "HarvestFractionDeadToRemove": 0.0,
-              "HarvestFractionLiveToResidue": 1.0,
-              "HarvestFractionDeadToResidue": 1.0
+              "ReadOnly": false
             },
             {
               "$type": "Models.Functions.Constant, Models",
@@ -3458,7 +3448,6 @@
                                         0.25,
                                         1.0
                                       ],
-                                      "XVariableName": null,
                                       "Name": "XYPairs",
                                       "ResourceName": null,
                                       "Children": [],
@@ -3506,7 +3495,6 @@
                                         1.0,
                                         0.1
                                       ],
-                                      "XVariableName": null,
                                       "Name": "XYPairs",
                                       "ResourceName": null,
                                       "Children": [],
@@ -3609,7 +3597,6 @@
                                         1.0,
                                         0.0
                                       ],
-                                      "XVariableName": null,
                                       "Name": "XYPairs",
                                       "ResourceName": null,
                                       "Children": [],
@@ -3892,7 +3879,6 @@
                     1.0,
                     1.0
                   ],
-                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -3980,7 +3966,6 @@
                     1.0,
                     0.0
                   ],
-                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -4074,6 +4059,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
+              "Units": null,
               "Expression": "[Leaf].Phyllochron * [Leaf].Plastochron.Multiplier",
               "Name": "Plastochron",
               "ResourceName": null,
@@ -4126,7 +4112,6 @@
                         0.45,
                         0.45
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -4152,6 +4137,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
+              "Units": null,
               "Expression": "[Leaf].NodeNumber - 1",
               "Name": "TrueLeafNumber",
               "ResourceName": null,
@@ -4161,10 +4147,7 @@
             }
           ],
           "Enabled": true,
-          "ReadOnly": false,
-          "MaxNConc": null,
-          "MinNConc": null,
-          "CritNConc": null
+          "ReadOnly": false
         },
         {
           "$type": "Models.PMF.Organs.ReproductiveOrgan, Models",
@@ -4269,6 +4252,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "Units": null,
                                   "Expression": "[Grain].PotentialHarvestIndex - [Grain].HarvestIndex",
                                   "Name": "Increase",
                                   "ResourceName": null,
@@ -4297,6 +4281,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "Units": null,
                                   "Expression": "[Phenology].EarlyGrainFilling.Target+[Phenology].MidGrainFilling.Target+[Phenology].LateGrainFilling.Target",
                                   "Name": "ReproductiveTT",
                                   "ResourceName": null,
@@ -4306,6 +4291,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "Units": null,
                                   "Expression": "[Phenology].EarlyGrainFilling.ProgressThroughPhase+[Phenology].MidGrainFilling.ProgressThroughPhase+[Phenology].LateGrainFilling.ProgressThroughPhase",
                                   "Name": "ReproductiveTTComplete",
                                   "ResourceName": null,
@@ -4410,15 +4396,15 @@
             },
             {
               "$type": "Models.PMF.Library.BiomassRemoval, Models",
+              "HarvestFractionLiveToRemove": 1.0,
+              "HarvestFractionDeadToRemove": 1.0,
+              "HarvestFractionLiveToResidue": 0.0,
+              "HarvestFractionDeadToResidue": 0.0,
               "Name": "BiomassRemovalDefaults",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
-              "ReadOnly": false,
-              "HarvestFractionLiveToRemove": 1.0,
-              "HarvestFractionDeadToRemove": 1.0,
-              "HarvestFractionLiveToResidue": 0.0,
-              "HarvestFractionDeadToResidue": 0.0
+              "ReadOnly": false
             },
             {
               "$type": "Models.Functions.Constant, Models",
@@ -4641,9 +4627,7 @@
             }
           ],
           "Enabled": true,
-          "ReadOnly": false,
-          "MaxNConc": null,
-          "MinNConc": null
+          "ReadOnly": false
         },
         {
           "$type": "Models.PMF.Organs.GenericOrgan, Models",
@@ -4798,7 +4782,6 @@
                     0.025,
                     0.02
                   ],
-                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -4879,15 +4862,15 @@
             },
             {
               "$type": "Models.PMF.Library.BiomassRemoval, Models",
+              "HarvestFractionLiveToRemove": 0.5,
+              "HarvestFractionDeadToRemove": 0.0,
+              "HarvestFractionLiveToResidue": 0.1,
+              "HarvestFractionDeadToResidue": 0.0,
               "Name": "BiomassRemovalDefaults",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
-              "ReadOnly": false,
-              "HarvestFractionLiveToRemove": 0.5,
-              "HarvestFractionDeadToRemove": 0.0,
-              "HarvestFractionLiveToResidue": 0.1,
-              "HarvestFractionDeadToResidue": 0.0
+              "ReadOnly": false
             },
             {
               "$type": "Models.Functions.PhaseLookup, Models",
@@ -4927,6 +4910,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "Units": null,
                                   "Expression": "[Phenology].LateGrainFilling.Target+[Phenology].Maturing.Target",
                                   "Name": "PostCanopyTT",
                                   "ResourceName": null,
@@ -4936,6 +4920,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "Units": null,
                                   "Expression": "[Phenology].LateGrainFilling.ProgressThroughPhase+[Phenology].Maturing.ProgressThroughPhase",
                                   "Name": "PostCanopyTTComplete",
                                   "ResourceName": null,
@@ -5293,7 +5278,6 @@
                                 0.75,
                                 0.75
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -5560,10 +5544,7 @@
             }
           ],
           "Enabled": true,
-          "ReadOnly": false,
-          "MaxNConc": null,
-          "MinNConc": null,
-          "CritNConc": null
+          "ReadOnly": false
         },
         {
           "$type": "Models.PMF.Organs.GenericOrgan, Models",
@@ -5718,15 +5699,15 @@
             },
             {
               "$type": "Models.PMF.Library.BiomassRemoval, Models",
+              "HarvestFractionLiveToRemove": 0.0,
+              "HarvestFractionDeadToRemove": 0.0,
+              "HarvestFractionLiveToResidue": 1.0,
+              "HarvestFractionDeadToResidue": 1.0,
               "Name": "BiomassRemovalDefaults",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
-              "ReadOnly": false,
-              "HarvestFractionLiveToRemove": 0.0,
-              "HarvestFractionDeadToRemove": 0.0,
-              "HarvestFractionLiveToResidue": 1.0,
-              "HarvestFractionDeadToResidue": 1.0
+              "ReadOnly": false
             },
             {
               "$type": "Models.Functions.PhaseLookup, Models",
@@ -5766,6 +5747,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "Units": null,
                                   "Expression": "[Phenology].LateGrainFilling.Target + [Phenology].Maturing.Target",
                                   "Name": "ReproductiveTT",
                                   "ResourceName": null,
@@ -5775,6 +5757,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "Units": null,
                                   "Expression": "[Phenology].LateGrainFilling.ProgressThroughPhase + [Phenology].Maturing.ProgressThroughPhase",
                                   "Name": "ReproductiveTT1Complete",
                                   "ResourceName": null,
@@ -5956,6 +5939,7 @@
                                       "Children": [
                                         {
                                           "$type": "Models.Functions.ExpressionFunction, Models",
+                                          "Units": null,
                                           "Expression": "[Shell].PotentialHarvestIndex - [Shell].HarvestIndex",
                                           "Name": "Increase",
                                           "ResourceName": null,
@@ -5984,6 +5968,7 @@
                                       "Children": [
                                         {
                                           "$type": "Models.Functions.ExpressionFunction, Models",
+                                          "Units": null,
                                           "Expression": "[Phenology].EarlyPodDevelopment.Target+[Phenology].EarlyGrainFilling.Target+[Phenology].MidGrainFilling.Target",
                                           "Name": "ShellGrowthTT",
                                           "ResourceName": null,
@@ -5993,6 +5978,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.ExpressionFunction, Models",
+                                          "Units": null,
                                           "Expression": "[Phenology].EarlyPodDevelopment.ProgressThroughPhase+[Phenology].EarlyGrainFilling.ProgressThroughPhase+[Phenology].MidGrainFilling.ProgressThroughPhase",
                                           "Name": "ShellGrowthTTComplete",
                                           "ResourceName": null,
@@ -6350,6 +6336,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
+              "Units": null,
               "Expression": "[Shell].Live.Wt*[Shell].SpecificArea",
               "Name": "Area",
               "ResourceName": null,
@@ -6570,7 +6557,6 @@
                         1.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -6605,7 +6591,6 @@
                         0.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -6649,10 +6634,7 @@
             }
           ],
           "Enabled": true,
-          "ReadOnly": false,
-          "MaxNConc": null,
-          "MinNConc": null,
-          "CritNConc": null
+          "ReadOnly": false
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
@@ -6825,7 +6807,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "CultivarFolder",
           "ResourceName": null,
           "Children": [
@@ -6841,7 +6822,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "GenericCultivars",
               "ResourceName": null,
               "Children": [
@@ -7716,7 +7696,6 @@
       "ReadOnly": false
     }
   ],
-  "IncludeInDocumentation": true,
   "Enabled": true,
   "ReadOnly": false
 }
