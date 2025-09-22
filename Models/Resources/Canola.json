@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 201,
+  "Version": 202,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -7384,8 +7384,8 @@
                 "[Leaf].Photosynthesis.FW.Excess.Today.StartFloweringToStartGrainFill.MidSeason.XYPairs.Y = 1, 1, 0.25",
                 "[Leaf].Photosynthesis.FW.Excess.Today.StartGrainFillToEndCrop.LateSeason.XYPairs.X = 0, 0.5, 1",
                 "[Leaf].Photosynthesis.FW.Excess.Today.StartGrainFillToEndCrop.LateSeason.XYPairs.Y = 1, 1, 0.25",
-                "[Grain].MaximumPotentialGrainSize.GrainSize.FOXgs.XYPairs.X = 0, 5, 10",
-                "[Grain].MaximumPotentialGrainSize.GrainSize.FOXgs.XYPairs.Y = 1, 1, 1.175",
+                "[Grain].MaximumPotentialGrainSize.FOXgs.XYPairs.X = 0, 5, 10",
+                "[Grain].MaximumPotentialGrainSize.FOXgs.XYPairs.Y = 1, 1, 1.175",
                 "[Leaf].SenescenceRate.Vegetative.Rate.FOXSenescence.XYPairs.X = 0, 5, 10",
                 "[Leaf].SenescenceRate.Vegetative.Rate.FOXSenescence.XYPairs.Y = 0, 0.03, 0.3",
                 "[Leaf].SenescenceRate.Reproductive.Rate.MaximumFunction.FOXSenescence.XYPairs.X = 0, 5, 10",
