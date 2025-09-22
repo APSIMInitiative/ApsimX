@@ -525,12 +525,9 @@ namespace Models.PMF.Phen
         {
             foreach (IPhase p in phases) //Iterate through each phase in order
             {
-                if (String.IsNullOrEmpty((p as IPhaseWithSetableCompletionDate).DateToProgress))  //If DateToProgress is not alread set, make it the completionDate.  This ensures all phases prior to the phase to be set will have completed on the day the taret phase is set to complete
-                {
-                    (p as IPhaseWithSetableCompletionDate).DateToProgress = completionDate;
-                }
                 if (p.Name == PhaseName)
                 {
+                    (p as IPhaseWithSetableCompletionDate).DateToProgress = completionDate;
                     break;
                 }
             }
