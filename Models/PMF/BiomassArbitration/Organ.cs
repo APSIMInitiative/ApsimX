@@ -557,11 +557,11 @@ namespace Models.PMF
 
             double liveBal = Math.Abs(live - (startLive + allocated - senesced - reAllocated
                                                         - reTranslocated - liveRemoved - respired));
-            if (MathUtilities.IsGreaterThan(liveBal, 3e-11,0.0))
+            if (MathUtilities.IsGreaterThan(liveBal, Math.Max(live * 1e-13,1e-11),0.0))
                 throw new Exception(element + " mass balance violation in live biomass of " + this.Name + "on " + clock.Today.ToString());
 
             double deadBal = Math.Abs(dead - (startDead + senesced - deadRemoved - detached));
-            if (MathUtilities.IsGreaterThan(deadBal, 3e-11, 0.0))
+            if (MathUtilities.IsGreaterThan(deadBal, Math.Max(dead * 1e-13,1e-11), 0.0))
                 throw new Exception(element + " mass balance violation in dead biomass of " + this.Name + "on " + clock.Today.ToString());
 
         }
