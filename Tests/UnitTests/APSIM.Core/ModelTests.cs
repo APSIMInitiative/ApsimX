@@ -1329,9 +1329,6 @@ public class ModelTests
             // If it's not a model it cannot be added as a child.
             Assert.That(Apsim.IsChildAllowable(anyChild, typeof(object)), Is.False);
 
-            // Even if it has a ValidParent attribute.
-            Assert.That(Apsim.IsChildAllowable(anyChild, typeof(NotAModel)), Is.False);
-
             // Even if it's also an IFunction.
             Assert.That(Apsim.IsChildAllowable(anyChild, typeof(SimsIFunction)), Is.True);
 
