@@ -32,7 +32,7 @@ jobs:
           git remote add upstream https://github.com/APSIMInitiative/ApsimX.git || git remote set-url upstream https://github.com/APSIMInitiative/ApsimX.git
           git fetch upstream master
           git merge --no-ff upstream/master || { echo "Merge conflict detected. Aborting merge and exiting."; git merge --abort; exit 1; }
-        continue-on-error: true  # Fail the job if merge fails
+        continue-on-error: true  # Allow job to continue if merge fails
 
       - name: Merge failure
         if: steps.merge_upstream.outcome == 'failure'
