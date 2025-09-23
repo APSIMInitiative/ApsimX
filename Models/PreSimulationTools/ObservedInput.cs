@@ -4,7 +4,6 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using APSIM.Core;
-using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using ExcelDataReader;
 using Models.Core;
@@ -31,9 +30,23 @@ namespace Models.PreSimulationTools
         [Link]
         private IDataStore storage = null;
 
+        /// <summary>
+        /// List of Excel sheet names to read from.
+        /// </summary>
+        private string[] sheetNames;
+
         private string[] filenames;
 
-        private string[] reservedColumnNames = { "SimulationID", "SimulationName", "CheckpointID", "CheckpointName", "Clock.Today", "_Filename" };
+        private List<ColumnInfo> ColumnData { get; set; }
+        private List<DerivedInfo> DerivedData { get; set; }
+        private List<SimulationInfo> SimulationData { get; set; }
+        private List<MergeInfo> MergeData { get; set; }
+        private List<ZeroInfo> ZeroData { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly string[] RESERVED_COLUMNS = { "SimulationID", "SimulationName", "CheckpointID", "CheckpointName", "Clock.Today", "_Filename" };
 
         /// <summary>
         /// Gets or sets the file name to read from.
@@ -53,10 +66,7 @@ namespace Models.PreSimulationTools
             }
         }
 
-        /// <summary>
-        /// List of Excel sheet names to read from.
-        /// </summary>
-        private string[] sheetNames;
+        
 
         /// <summary>
         /// Gets or sets the list of EXCEL sheet names to read from.
@@ -90,206 +100,39 @@ namespace Models.PreSimulationTools
             }
         }
 
-        /// <summary></summary>
-        public List<ColumnInfo> ColumnData {get; set;}
-
         /// <summary>Returns the ColumnData as a DataTable object</summary>
         [Display]
-        public DataTable ColumnTable {
-            get
-            {
-                DataTable newTable = new DataTable();
-                newTable.Columns.Add("Name");
-                newTable.Columns.Add("APSIM");
-                newTable.Columns.Add("Type");
-                newTable.Columns.Add("Error Bars");
-                newTable.Columns.Add("File");
-
-                if (ColumnData == null)
-                    return newTable;
-
-                foreach (ColumnInfo columnInfo in ColumnData)
-                {
-
-                    DataRow row = newTable.NewRow();
-                    row["Name"] = columnInfo.Name;
-                    row["APSIM"] = columnInfo.IsApsimVariable;
-                    row["Type"] = columnInfo.DataType;
-                    row["Error Bars"] = columnInfo.HasErrorColumn;
-                    row["File"] = columnInfo.File;
-
-                    newTable.Rows.Add(row);
-                }
-
-                for(int i = 0; i < newTable.Columns.Count; i++)
-                    newTable.Columns[i].ReadOnly = true;
-
-                DataView dv = newTable.DefaultView;
-                dv.Sort = "APSIM desc, Name asc";
-
-                return dv.ToTable();
-            }
+        public DataTable ColumnTable
+        {
+            get { return ColumnInfo.CreateDataTable(ColumnData); }
         }
-
-        /// <summary></summary>
-        public List<DerivedInfo> DerivedData {get; set;}
 
         /// <summary>List of variables that can be calculated from existing columns</summary>
         [Display]
         public DataTable DerivedTable
         {
-            get
-            {
-                DataTable newTable = new DataTable();
-                newTable.Columns.Add("Name");
-                newTable.Columns.Add("Function");
-                newTable.Columns.Add("DataType");
-                newTable.Columns.Add("Added");
-                newTable.Columns.Add("Existing");
-
-                if (DerivedData == null)
-                    return newTable;
-
-                foreach (DerivedInfo info in DerivedData)
-                {
-
-                    DataRow row = newTable.NewRow();
-                    row["Name"] = info.Name;
-                    row["Function"] = info.Function;
-                    row["DataType"] = info.DataType;
-                    row["Added"] = info.Added;
-                    row["Existing"] = info.Existing;
-
-                    newTable.Rows.Add(row);
-                }
-
-                for(int i = 0; i < newTable.Columns.Count; i++)
-                    newTable.Columns[i].ReadOnly = true;
-
-                DataView dv = newTable.DefaultView;
-                dv.Sort = "Name asc";
-
-                return dv.ToTable();
-            }
+            get { return DerivedInfo.CreateDataTable(DerivedData); }
         }
-
-        /// <summary></summary>
-        public List<SimulationInfo> SimulationData {get; set;}
 
         /// <summary>List of Simulations that are either missing data in the observed, or missing simulations in apsim</summary>
         [Display]
-        public DataTable SimulationTable 
-        {   
-            get 
-            {
-                DataTable newTable = new DataTable();
-
-                newTable.Columns.Add("Name");
-                newTable.Columns.Add("HasSimulation");
-                newTable.Columns.Add("HasData");
-                newTable.Columns.Add("Rows");
-
-                if (SimulationData == null)
-                    return newTable;
-
-                foreach (SimulationInfo info in SimulationData) 
-                {
-                    DataRow row = newTable.NewRow();
-                    row["Name"] = info.Name;
-                    row["HasSimulation"] = info.HasSimulation;
-                    row["HasData"] = info.HasData;
-                    row["Rows"] = info.Rows;
-                    newTable.Rows.Add(row);
-                }
-
-                for(int i = 0; i < newTable.Columns.Count; i++)
-                    newTable.Columns[i].ReadOnly = true;
-
-                DataView dv = newTable.DefaultView;
-                dv.Sort = "Name asc";
-
-                return dv.ToTable();
-            }
+        public DataTable SimulationTable
+        {
+            get { return SimulationInfo.CreateDataTable(SimulationData); }
         }
-
-        /// <summary></summary>
-        public List<MergeInfo> MergeData {get; set;}
 
         /// <summary>List of merge conflicts encountered</summary>
         [Display]
         public DataTable MergeTable
-        {   
-            get 
-            {
-                DataTable newTable = new DataTable();
-
-                newTable.Columns.Add("Name");
-                newTable.Columns.Add("Date");
-                newTable.Columns.Add("Column");
-                newTable.Columns.Add("Value1");
-                newTable.Columns.Add("Value2");
-                newTable.Columns.Add("File");
-
-                if (SimulationData == null)
-                    return newTable;
-
-                foreach (MergeInfo info in MergeData) 
-                {
-                    DataRow row = newTable.NewRow();
-                    row["Name"] = info.Name;
-                    row["Date"] = info.Date;
-                    row["Column"] = info.Column;
-                    row["Value1"] = info.Value1;
-                    row["Value2"] = info.Value2;
-                    row["File"] = info.File;
-                    newTable.Rows.Add(row);
-                }
-
-                for(int i = 0; i < newTable.Columns.Count; i++)
-                    newTable.Columns[i].ReadOnly = true;
-
-                DataView dv = newTable.DefaultView;
-                dv.Sort = "Name asc";
-
-                return dv.ToTable();
-            }
+        {
+            get { return MergeInfo.CreateDataTable(MergeData); }
         }
 
-        /// <summary></summary>
-        public List<ZeroInfo> ZeroData {get; set;}
-
-        /// <summary>List of merge conflicts encountered</summary>
+        /// <summary>List of zero values found in the data</summary>
         [Display]
         public DataTable ZeroTable
-        {   
-            get 
-            {
-                DataTable newTable = new DataTable();
-
-                newTable.Columns.Add("Name");
-                newTable.Columns.Add("Column");
-                newTable.Columns.Add("File");
-
-                if (SimulationData == null)
-                    return newTable;
-
-                foreach (ZeroInfo info in ZeroData) 
-                {
-                    DataRow row = newTable.NewRow();
-                    row["Name"] = info.Name;
-                    row["Column"] = info.Column;
-                    row["File"] = info.File;
-                    newTable.Rows.Add(row);
-                }
-
-                for(int i = 0; i < newTable.Columns.Count; i++)
-                    newTable.Columns[i].ReadOnly = true;
-
-                DataView dv = newTable.DefaultView;
-                dv.Sort = "Column asc";
-
-                return dv.ToTable();
-            }
+        {
+            get { return ZeroInfo.CreateDataTable(ZeroData); }
         }
 
         /// <summary>Get list of column names found in this input data</summary>
@@ -354,11 +197,60 @@ namespace Models.PreSimulationTools
             {
                 DataTable dt = storage.Reader.GetData(sheet);
 
-                dt = CombineRows(dt);
-                dt = GetAPSIMColumnsFromObserved(dt);
-                dt = GetSimulationsFromObserved(dt);
-                dt = AddDerivedColumnsFromObserved(dt);
-                DetectZeros(dt);
+                MergeData.AddRange(MergeInfo.CombineRows(dt, out DataTable combinedDatatable));
+                ColumnData.AddRange(GetAPSIMColumnsFromObserved(combinedDatatable));
+                GetSimulationsFromObserved(combinedDatatable);
+                DerivedData.AddRange(DerivedInfo.AddDerivedColumns(combinedDatatable));
+                ZeroData.AddRange(ZeroInfo.DetectZeros(combinedDatatable));
+
+                storage.Writer.WriteTable(combinedDatatable, true);
+                storage.Writer.WaitForIdle();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataTable"></param>
+        public List<ColumnInfo> GetAPSIMColumnsFromObserved(DataTable dataTable)
+        {
+            Simulations sims = Structure.FindParent<Simulations>(recurse: true);
+            List<string> knownColumnNames = new List<string>();
+            knownColumnNames.AddRange(ColumnNames);
+            knownColumnNames.AddRange(RESERVED_COLUMNS);
+
+            List<ColumnInfo> infos = ColumnInfo.GetAPSIMColumnsFromObserved(dataTable, sims, knownColumnNames);
+            foreach (ColumnInfo info in infos)
+            {
+                ColumnNames.Add(info.Name);
+            }
+
+            return infos;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataTable"></param>
+        public void GetSimulationsFromObserved(DataTable dataTable)
+        {
+            Simulations sims = Structure.FindParent<Simulations>(recurse: true);
+            List<SimulationInfo> infos = SimulationInfo.GetSimulationsFromObserved(dataTable, sims);
+
+            List<string> existingSims = SimulationData.AsEnumerable().Select(s => s.Name).ToList<string>();
+            foreach (SimulationInfo info in infos)
+            {
+                if (existingSims.Contains(info.Name))
+                {
+                    SimulationInfo existingInfo = SimulationData.FirstOrDefault(s => s.Name == info.Name);
+                    if (info.HasData)
+                        existingInfo.HasData = true;
+                    existingInfo.Rows += info.Rows;
+                }
+                else
+                {
+                    SimulationData.Add(info);
+                }
             }
         }
 
@@ -396,371 +288,6 @@ namespace Models.PreSimulationTools
             return tables;
         }
 
-        /// <summary>From the list of columns read in, get a list of columns that match apsim variables.</summary>
-        public DataTable GetAPSIMColumnsFromObserved(DataTable dataTable)
-        {
-            Simulations sims = Structure.FindParent<Simulations>(recurse: true);
-
-            List<string> allColumnNames = dataTable.GetColumnNames().ToList();
-
-            for (int j = 0; j < dataTable.Columns.Count; j++)
-            {
-                string columnName = dataTable.Columns[j].ColumnName;
-                string columnNameOriginal = columnName;
-                //remove Error from name
-                if (columnName.EndsWith("Error"))
-                    columnName = columnName.Remove(columnName.IndexOf("Error"), 5);
-
-                //check if it has maths
-                bool hasMaths = false;
-                if (columnName.IndexOfAny(new char[] { '+', '-', '*', '/', '=' }) > -1 || columnName.StartsWith("sum"))
-                    hasMaths = true;
-
-                //remove ( ) from name
-                if (!hasMaths && columnName.IndexOf('(') > -1 && columnName.EndsWith(')'))
-                {
-                    int start = columnName.IndexOf('(');
-                    int end = columnName.LastIndexOf(')');
-                    columnName = columnName.Remove(start, end - start + 1);
-                }
-
-                //filter out reserved names
-                bool reservedName = false;
-                if (reservedColumnNames.Contains(columnName))
-                    reservedName = true;
-
-                if (!ColumnNames.Contains(columnName) && !reservedName)
-                {
-                    ColumnNames.Add(columnName);
-
-                    bool nameInAPSIMFormat = this.NameIsAPSIMFormat(columnName);
-                    VariableComposite variable = null;
-                    bool nameIsAPSIMModel = false;
-                    if (nameInAPSIMFormat)
-                    {
-                        variable = this.NameMatchesAPSIMModel(columnName, sims);
-                        if (variable != null)
-                        {
-                            nameIsAPSIMModel = true;
-                        }
-                    }
-
-                    //Get a filename for this property
-                    string filename = "";
-                    for (int k = 0; k < dataTable.Rows.Count && string.IsNullOrEmpty(filename); k++)
-                    {
-                        DataRow row = dataTable.Rows[k];
-                        if (!string.IsNullOrEmpty(row[columnNameOriginal].ToString()))
-                        {
-                            filename = row["_Filename"].ToString();
-                        }
-                    }
-
-                    ColumnInfo colInfo = new ColumnInfo();
-                    colInfo.File = filename;
-                    colInfo.Name = columnName;
-
-                    colInfo.IsApsimVariable = "No";
-                    colInfo.DataType = "";
-                    if (nameInAPSIMFormat)
-                        colInfo.IsApsimVariable = "Not Found";
-                    if (hasMaths)
-                        colInfo.IsApsimVariable = "Maths";
-                    if (nameIsAPSIMModel && variable != null)
-                    {
-                        colInfo.IsApsimVariable = "Yes";
-                        colInfo.DataType = variable.DataType.Name;
-                    }
-
-                    colInfo.HasErrorColumn = false;
-                    if (allColumnNames.Contains(columnName + "Error"))
-                        colInfo.HasErrorColumn = true;
-
-                    ColumnData.Add(colInfo);
-                }
-            }
-            
-            return dataTable;
-        }
-
-        /// <summary></summary>
-        public DataTable AddDerivedColumnsFromObserved(DataTable dataTable)
-        {
-            bool noMoreFound = false;
-
-            while(!noMoreFound)
-            {
-                int count = 0;
-                //Our current list of derived variables
-                count += DeriveColumn(dataTable, ".NConc",     ".N", "/", ".Wt") ? 1 : 0;
-                count += DeriveColumn(dataTable, ".N",     ".NConc", "*", ".Wt") ? 1 : 0;
-                count += DeriveColumn(dataTable, ".Wt",        ".N", "/", ".NConc") ? 1 : 0;
-
-                count += DeriveColumn(dataTable, ".",  ".Live.", "+", ".Dead.") ? 1 : 0;
-                count += DeriveColumn(dataTable, ".Live.",  ".", "-", ".Dead.") ? 1 : 0;
-                count += DeriveColumn(dataTable, ".Dead.",  ".", "-", ".Live.") ? 1 : 0;
-
-                count += DeriveColumn(dataTable, "Leaf.SpecificAreaCanopy",  "Leaf.LAI", "/", "Leaf.Live.Wt") ? 1 : 0;
-                count += DeriveColumn(dataTable, "Leaf.LAI",  "Leaf.SpecificAreaCanopy", "*", "Leaf.Live.Wt") ? 1 : 0;
-                count += DeriveColumn(dataTable, "Leaf.Live.Wt",  "Leaf.LAI", "/", "Leaf.SpecificAreaCanopy") ? 1 : 0;
-
-                if (count == 0)
-                    noMoreFound = true;
-            }
-
-            return dataTable;
-        }
-
-        /// <summary></summary>
-        public DataTable GetSimulationsFromObserved(DataTable dataTable)
-        {
-            Simulations sims = Structure.FindParent<Simulations>(recurse: true);
-
-            List<string> apsimSims = sims.GetAllSimulationAndFactorialNameList();
-            List<string> observedSims = dataTable.AsEnumerable().Select(s => s["SimulationName"].ToString()).Distinct().ToList<string>();
-            List<string> existingSims = SimulationData.AsEnumerable().Select(s => s.Name).ToList<string>();
-
-            List<string> combinedSims = new List<string>();
-            combinedSims.AddRange(apsimSims);
-            combinedSims.AddRange(observedSims);
-            combinedSims = combinedSims.Distinct().ToList<string>();
-            combinedSims.Sort();
-
-            foreach (string name in combinedSims)
-            {
-                bool hasData = false;
-                bool hasSim = false;
-                int rows = 0;
-
-                if (observedSims.Contains(name))
-                {
-                    hasData = true;
-                    rows = dataTable.Select().Where(s => s["SimulationName"].ToString() == name).Count();
-                }
-
-                if (existingSims.Contains(name))
-                {
-                    SimulationInfo info = SimulationData.FirstOrDefault(s => s.Name == name);
-                    if (hasData)
-                        info.HasData = true;
-                    info.Rows += rows;
-                }
-                else
-                {
-                    if (apsimSims.Contains(name))
-                        hasSim = true;
-                        
-                    SimulationInfo info = new SimulationInfo();
-                    info.Name = name;
-                    info.HasData = hasData;
-                    info.HasSimulation = hasSim;
-                    info.Rows = rows;
-                    SimulationData.Add(info);
-                }
-            }
-
-            return dataTable;
-        }
-
-        /// <summary>
-        /// Filter through the given datatable and combine rows that have the same SimulationName and Clock.Today values.
-        /// Will throw if it encounters two rows with different values for a field that should be combined.
-        /// </summary>
-        private DataTable CombineRows(DataTable dataTable)
-        {
-            if (!dataTable.GetColumnNames().ToList().Contains("Clock.Today"))
-                return dataTable;
-
-            //Get a distinct list of rows of SimulationName and Clock.Today
-            var distinctRows = dataTable.AsEnumerable()
-                .Select(s => new
-                {
-                    simulation = s["SimulationName"],
-                    clock = s["Clock.Today"],
-                    clockAsString = s["Clock.Today"].ToString()
-                })
-                .Distinct();
-
-            DataTable newDataTable = dataTable.Clone();
-
-            string errors = "";
-            foreach (var item in distinctRows)
-            {
-                if (!string.IsNullOrEmpty(item.clockAsString))
-                {
-                    //select all rows in original datatable with this distinct values
-                    IEnumerable<DataRow> results = dataTable.Select().Where(p => p["SimulationName"] == item.simulation && p["Clock.Today"].ToString() == item.clockAsString);
-
-                    //store the list of columns in the datatable
-                    List<string> columns = dataTable.GetColumnNames().ToList<string>();
-
-                    //the one or more rows needed to capture the data during merging
-                    //multiple lines may still be needed if there are conflicts in columns when trying to merge the data
-                    List<DataRow> newRows = new List<DataRow>();
-
-                    foreach (DataRow row in results)
-                    {
-                        foreach (string column in columns)
-                        {
-                            if (!string.IsNullOrEmpty(row[column].ToString()))
-                            {
-                                bool merged = false;
-                                foreach (DataRow newRow in newRows)
-                                {
-                                    if (!merged)
-                                    {
-                                        if (CanMergeRows(row, newRow, column) < 0.25)
-                                        {
-                                            newRow[column] = row[column];
-                                            merged = true;
-                                        }
-                                        else
-                                        {
-                                            MergeInfo info = new MergeInfo();
-                                            info.Name = item.simulation.ToString();
-                                            info.Date = Convert.ToDateTime(item.clock).ToString("dd/MM/yyyy");
-                                            info.Column = column;
-                                            info.Value1 = newRow[column].ToString();
-                                            info.Value2 = row[column].ToString();
-                                            info.File = newRow["_Filename"].ToString();
-                                            MergeData.Add(info);
-                                        }
-                                    }
-                                }
-                                if (!merged)
-                                {
-                                    DataRow duplicateRow = newDataTable.NewRow();
-                                    duplicateRow["SimulationName"] = item.simulation;
-                                    duplicateRow["Clock.Today"] = item.clock;
-                                    duplicateRow[column] = row[column];
-                                    newRows.Add(duplicateRow);
-                                }
-                            }
-                        }
-                    }
-
-                    //add the rows to the result dataTable
-                    foreach (DataRow dupilcateRow in newRows)
-                        newDataTable.Rows.Add(dupilcateRow);
-                }
-            }
-
-            if (!string.IsNullOrEmpty(errors))
-                throw new Exception(errors);
-
-            return newDataTable;
-        }
-
-        /// <summary>
-        /// Comparisions to check if the value in the given column can be merged into newRow from row.
-        /// </summary>
-        /// <returns>Returns the percentage difference between values, 0 if equal, 1 if string mismatch, 0-1 for double mismatch.</returns>
-        private double CanMergeRows(DataRow row, DataRow newRow, string column)
-        {
-            if (!string.IsNullOrEmpty(row[column].ToString()))
-            {
-                if (!reservedColumnNames.Contains(column) && !string.IsNullOrEmpty(newRow[column].ToString()))
-                {
-                    bool isDouble1 = double.TryParse(newRow[column].ToString(), out double existing);
-                    bool isDouble2 = double.TryParse(row[column].ToString(), out double other);
-                    if (isDouble1 && isDouble2)
-                    {
-                        if (!MathUtilities.FloatsAreEqual(existing, other))
-                        {
-                            double percent = existing / other;
-                            if (existing > other)
-                                percent = other / existing;
-                            return 1 - percent;
-                        }
-                        else
-                            return 0;
-                    }
-                    else if (newRow[column].ToString() != row[column].ToString())
-                    {
-                        return 1;
-                    }
-                    
-                }
-            }
-            return 0;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        private void DetectZeros(DataTable dataTable)
-        {
-            foreach (string column in dataTable.GetColumnNames())
-            {
-                if (!column.EndsWith("Error")) {
-                    foreach (DataRow row in dataTable.Rows)
-                    {
-                        string value = row[column].ToString();
-                        bool isDouble = double.TryParse(value, out double number);
-                        if (isDouble && MathUtilities.FloatsAreEqual(0, number))
-                        {
-                            ZeroInfo info = new ZeroInfo();
-                            info.Name = row["SimulationName"].ToString();
-                            info.Column = column;
-                            info.File = row["_Filename"].ToString();
-                            ZeroData.Add(info);
-                        }
-                    }
-                }
-                
-            }
-        }
-
-        /// <summary></summary>
-        private bool NameIsAPSIMFormat(string columnName)
-        {
-            if (columnName.Contains('.'))
-                return true;
-            else
-                return false;
-        }
-
-        /// <summary></summary>
-        private VariableComposite NameMatchesAPSIMModel(string columnName, Simulations sims)
-        {
-            string nameWithoutBrackets = columnName;
-            //remove any characters between ( and ) as these are often layers of a model
-            while (nameWithoutBrackets.Contains('(') && nameWithoutBrackets.Contains(')'))
-            {
-                int start = nameWithoutBrackets.IndexOf('(');
-                int end = nameWithoutBrackets.IndexOf(')');
-                nameWithoutBrackets = nameWithoutBrackets.Substring(0, start) + nameWithoutBrackets.Substring(end+1);
-            }
-
-            //if name ends in Error, remove Error before checking
-            if (nameWithoutBrackets.EndsWith("Error"))
-                nameWithoutBrackets = nameWithoutBrackets.Substring(0, nameWithoutBrackets.IndexOf("Error"));
-
-            if (nameWithoutBrackets.Length == 0)
-                return null;
-
-            string[] nameParts = nameWithoutBrackets.Split('.');
-            IModel firstPart = Structure.FindChild<IModel>(nameParts[0], relativeTo:sims);
-            if (firstPart == null)
-                return null;
-
-            sims.Links.Resolve(firstPart, true, true, false);
-            string fullPath = firstPart.FullPath;
-            for (int i = 1; i < nameParts.Length; i++)
-                fullPath += "." + nameParts[i];
-
-            try
-            {
-                VariableComposite variable = Structure.GetObject(fullPath, relativeTo: sims);
-                return variable;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
         private Type GetTypeOfCell(string value)
         {
 
@@ -791,185 +318,6 @@ namespace Models.PreSimulationTools
                 return typeof(bool);
 
             return typeof(string);
-        }
-
-        private string GetNumberOfValuesOfEachType(List<Type> types)
-        {
-            int countString = 0;
-            int countInt = 0;
-            int countDouble = 0;
-            int countDate = 0;
-            int countBool = 0;
-
-            for (int i = 0; i < types.Count; i++)
-            {
-                if (types[i] == typeof(string))
-                    countString += 1;
-                else if (types[i] == typeof(int))
-                    countInt += 1;
-                else if (types[i] == typeof(double))
-                    countDouble += 1;
-                else if (types[i] == typeof(DateTime))
-                    countDate += 1;
-                else if (types[i] == typeof(bool))
-                    countBool += 1;
-            }
-
-            string message = "";
-            if (countString > 0)
-                message += $" Type string read {countString} times.";
-            if (countInt > 0)
-                message += $" Type int read {countInt} times.";
-            if (countDouble > 0)
-                message += $" Type double read {countDouble} times.";
-            if (countDate > 0)
-                message += $" Type DateTime read {countDate} times.";
-            if (countBool > 0)
-                message += $" Type bool read {countBool} times.";
-
-            return message;
-        }
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="derived"></param>
-        /// <param name="variable1"></param>
-        /// <param name="operation"></param>
-        /// <param name="variable2"></param>
-        /// <returns>True if a value was derived, false if not</returns>
-        private bool DeriveColumn(DataTable data, string derived, string variable1, string operation, string variable2)
-        {
-            return DeriveColumn(data, derived, operation, new List<string>() {variable1, variable2});
-        }
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="derived"></param>
-        /// <param name="operation"></param>
-        /// <param name="variables"></param>
-        /// <returns>True if a value was derived, false if not</returns>
-        private bool DeriveColumn(DataTable data, string derived, string operation, List<string> variables)
-        {
-            bool valuesDerived = false;
-            if (variables.Count == 0)
-                return valuesDerived;
-
-            List<string> allColumnNames = data.GetColumnNames().ToList();
-
-            for (int j = 0; j < data.Columns.Count; j++)
-            {
-                string columnName = data.Columns[j].ColumnName;
-                string variable1 = variables[0];
-
-                //exclude error columns
-                if (!columnName.EndsWith("Error") && columnName.LastIndexOf(variable1) > -1)
-                {
-                    //work out the prefix and suffix of the variables to be used
-                    string prefix = columnName.Substring(0, columnName.LastIndexOf(variable1));
-                    string postfix = columnName.Substring(columnName.LastIndexOf(variable1) + variable1.Length);
-
-                    //check all the variables exist
-                    bool foundAllVariables = true;
-                    for (int k = 1; k < variables.Count && foundAllVariables; k++)
-                        if (!allColumnNames.Contains(prefix + variables[k] + postfix))
-                            foundAllVariables = false;
-
-                    if (foundAllVariables)
-                    {
-                        string nameDerived = prefix + derived + postfix;
-                        //create the column if it doesn't exist
-                        if (!data.Columns.Contains(nameDerived))
-                            data.Columns.Add(nameDerived);
-
-                        //for each row in the datastore, see if we can compute the derived value
-                        int added = 0;
-                        int existing = 0;
-                        for (int k = 0; k < data.Rows.Count; k++)
-                        {
-                            DataRow row = data.Rows[k];
-
-                            //if it already exists, we do nothing
-                            if (!string.IsNullOrEmpty(row[nameDerived].ToString()))
-                            {
-                                existing += 1;
-                            }
-                            else
-                            {
-                                double value = 0;
-
-                                //Check that all our variables have values on this row
-                                bool allVariablesHaveValues = true;
-                                for (int m = 0; m < variables.Count && allVariablesHaveValues; m++)
-                                {
-                                    string nameVariable = prefix + variables[m] + postfix;
-                                    if (string.IsNullOrEmpty(row[nameVariable].ToString()))
-                                        allVariablesHaveValues = false;
-                                    else if (m == 0)
-                                        value = Convert.ToDouble(row[nameVariable]);
-                                }
-
-                                if (allVariablesHaveValues)
-                                {
-                                    string nameVariable = prefix + variables[0] + postfix;
-                                    double? result = Convert.ToDouble(row[nameVariable]);
-
-                                    //start at 1 here since our running value has the first value in it
-                                    for (int m = 1; m < variables.Count; m++)
-                                    {
-                                        if (result != null && !double.IsNaN((double)result))
-                                        {
-                                            nameVariable = prefix + variables[m] + postfix;
-                                            double valueVar = Convert.ToDouble(row[nameVariable]);
-
-                                            if (operation == "+" || operation == "sum")
-                                                result = value + valueVar;
-                                            else if (operation == "-")
-                                                result = value - valueVar;
-                                            else if (operation == "*" || operation == "product")
-                                                result = value * valueVar;
-                                            else if (operation == "/" && valueVar != 0)
-                                                result = value / valueVar;
-                                            else
-                                                result = null;
-                                        }
-                                    }
-                                    if (result != null && !double.IsNaN((double)result))
-                                    {
-                                        row[nameDerived] = result;
-                                        added += 1;
-                                    }
-                                }
-                            }
-                        }
-                        //if we added some derived variables, list the stats for the user
-                        if (added > 0)
-                        {
-                            valuesDerived = true;
-                            string functionString = "";
-                            for (int k = 0; k < variables.Count; k++)
-                            {
-                                if (k != 0)
-                                    functionString += " " + operation + " ";
-                                functionString += prefix + variables[k] + postfix;
-                            }
-
-                            DerivedInfo info = new DerivedInfo();
-                            info.Name = nameDerived;
-                            info.Function = functionString;
-                            info.DataType = "Double";
-                            info.Added = added;
-                            info.Existing = existing;
-                            DerivedData.Add(info);
-                        }
-                    }
-                }
-            }
-
-            return valuesDerived;
         }
     }
 }
