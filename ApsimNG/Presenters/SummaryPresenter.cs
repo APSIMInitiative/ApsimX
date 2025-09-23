@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using APSIM.Core;
-using DocumentFormat.OpenXml.Office.CustomXsn;
-using MathNet.Numerics;
-using Microsoft.IdentityModel.Tokens;
+﻿using MathNet.Numerics;
 using Models;
 using Models.Core;
 using Models.Core.Run;
 using Models.Factorial;
 using Models.Logging;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Text;
 using UserInterface.Commands;
 using UserInterface.Views;
 
@@ -286,7 +283,7 @@ namespace UserInterface.Presenters
 
         private void CreateSoluteTableSubHeadings(List<InitialConditionsTable> soluteTables, StringBuilder soluteMarkdownTable)
         {
-            if (!soluteTables.IsNullOrEmpty())
+            if (soluteTables?.Count > 0)
                 soluteMarkdownTable.Append("|**Depth(mm)**|");
 
             foreach (InitialConditionsTable table in soluteTables)

@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 183,
+  "Version": 201,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -15,7 +15,6 @@
     },
     {
       "$type": "Models.Storage.DataStore, Models",
-      "useFirebird": false,
       "CustomFileName": null,
       "Name": "DataStore",
       "ResourceName": null,
@@ -50,7 +49,7 @@
               "$type": "Models.Tests, Models",
               "AcceptedStats": [
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "dltDenitrifiedN",
                   "n": 3840,
                   "Slope": "NaN",
@@ -66,7 +65,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "dltHydrolisedN",
                   "n": 3840,
                   "Slope": "NaN",
@@ -82,7 +81,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "dltMineralisedSoilN",
                   "n": 3840,
                   "Slope": "NaN",
@@ -98,7 +97,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "dltMineralisedSurfOMN",
                   "n": 3840,
                   "Slope": "NaN",
@@ -114,7 +113,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "dltNitrifiedN",
                   "n": 3840,
                   "Slope": "NaN",
@@ -130,7 +129,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "dltSoilDenit",
                   "n": 3840,
                   "Slope": "NaN",
@@ -146,7 +145,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "dltSoilNO3",
                   "n": 3840,
                   "Slope": "NaN",
@@ -162,7 +161,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "dltTotalFOMC",
                   "n": 3840,
                   "Slope": "NaN",
@@ -178,7 +177,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "dltTotalFOMN",
                   "n": 3840,
                   "Slope": "NaN",
@@ -194,7 +193,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "dltTotalHumicC",
                   "n": 3840,
                   "Slope": "NaN",
@@ -210,7 +209,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "dltTotalHumicN",
                   "n": 3840,
                   "Slope": "NaN",
@@ -226,7 +225,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "dltTotalMicrobialC",
                   "n": 3840,
                   "Slope": "NaN",
@@ -242,7 +241,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "dltTotalMicrobialN",
                   "n": 3840,
                   "Slope": "NaN",
@@ -258,7 +257,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "dltTotalNH4",
                   "n": 3840,
                   "Slope": "NaN",
@@ -274,7 +273,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "dltTotalNO3",
                   "n": 3840,
                   "Slope": "NaN",
@@ -290,7 +289,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "dltTotalUrea",
                   "n": 3840,
                   "Slope": "NaN",
@@ -306,7 +305,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "dltTotalWater",
                   "n": 3840,
                   "Slope": "NaN",
@@ -322,7 +321,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ReportingScript.DenitrifiedN1",
                   "n": 3840,
                   "Slope": 12.268940395298767,
@@ -338,7 +337,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ReportingScript.DenitrifiedN2",
                   "n": 3840,
                   "Slope": 12.268940395298767,
@@ -354,7 +353,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ReportingScript.HydrolisedN1",
                   "n": 3840,
                   "Slope": 1.0003679668079897,
@@ -370,7 +369,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ReportingScript.HydrolisedN2",
                   "n": 3840,
                   "Slope": 1.0003679668079897,
@@ -386,7 +385,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ReportingScript.MineralisedSoilN1",
                   "n": 3840,
                   "Slope": 1.0164234072631957,
@@ -402,7 +401,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ReportingScript.MineralisedSoilN2",
                   "n": 3840,
                   "Slope": 1.0164234072631957,
@@ -418,7 +417,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ReportingScript.MineralisedSurfOMN1",
                   "n": 3840,
                   "Slope": 1.4392851463576835,
@@ -434,7 +433,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ReportingScript.MineralisedSurfOMN2",
                   "n": 3840,
                   "Slope": 1.4392851463576835,
@@ -450,7 +449,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ReportingScript.NitrifiedN1",
                   "n": 3840,
                   "Slope": 1.0501487179130244,
@@ -466,7 +465,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ReportingScript.NitrifiedN2",
                   "n": 3840,
                   "Slope": 1.0501487179130244,
@@ -482,7 +481,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ReportingScript.SoilDenit1",
                   "n": 3840,
                   "Slope": 12.268940395298767,
@@ -498,7 +497,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ReportingScript.SoilDenit2",
                   "n": 3840,
                   "Slope": 12.268940395298767,
@@ -514,7 +513,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ReportingScript.SoilNO31",
                   "n": 3840,
                   "Slope": 1.0930647241794071,
@@ -530,7 +529,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ReportingScript.SoilNO32",
                   "n": 3840,
                   "Slope": 1.0930647241794071,
@@ -546,7 +545,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ReportingScript.TotalFOMC1",
                   "n": 3840,
                   "Slope": 0.6116874555655608,
@@ -562,7 +561,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ReportingScript.TotalFOMC2",
                   "n": 3840,
                   "Slope": 0.6116874555655608,
@@ -578,7 +577,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ReportingScript.TotalFOMN1",
                   "n": 3840,
                   "Slope": 0.17282779719019023,
@@ -594,7 +593,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ReportingScript.TotalFOMN2",
                   "n": 3840,
                   "Slope": 0.17282779719019023,
@@ -610,7 +609,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ReportingScript.TotalHumicC1",
                   "n": 3840,
                   "Slope": 1.0000162443657643,
@@ -626,7 +625,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ReportingScript.TotalHumicC2",
                   "n": 3840,
                   "Slope": 1.0000162443657643,
@@ -642,7 +641,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ReportingScript.TotalHumicN1",
                   "n": 3840,
                   "Slope": 1.0000162452369572,
@@ -658,7 +657,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ReportingScript.TotalHumicN2",
                   "n": 3840,
                   "Slope": 1.0000162452369572,
@@ -674,7 +673,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ReportingScript.TotalMicrobialC1",
                   "n": 3840,
                   "Slope": 0.9920514280209984,
@@ -690,7 +689,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ReportingScript.TotalMicrobialC2",
                   "n": 3840,
                   "Slope": 0.9920514280209984,
@@ -706,7 +705,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ReportingScript.TotalMicrobialN1",
                   "n": 3840,
                   "Slope": 0.9920515036675278,
@@ -722,7 +721,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ReportingScript.TotalMicrobialN2",
                   "n": 3840,
                   "Slope": 0.9920515036675278,
@@ -738,7 +737,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ReportingScript.TotalNH41",
                   "n": 3840,
                   "Slope": 1.064713717125889,
@@ -754,7 +753,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ReportingScript.TotalNH42",
                   "n": 3840,
                   "Slope": 1.064713717125889,
@@ -770,7 +769,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ReportingScript.TotalNO31",
                   "n": 3840,
                   "Slope": 1.0930647241794071,
@@ -786,7 +785,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ReportingScript.TotalNO32",
                   "n": 3840,
                   "Slope": 1.0930647241794071,
@@ -802,7 +801,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ReportingScript.TotalUrea1",
                   "n": 3840,
                   "Slope": 0.9992130862561658,
@@ -818,7 +817,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "ReportingScript.TotalUrea2",
                   "n": 3840,
                   "Slope": 0.9992130862561658,
@@ -853,7 +852,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": true,
-      "GraphsPerPage": 6,
       "Name": "DifferenceTesting",
       "ResourceName": null,
       "Children": [
@@ -886,8 +884,8 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1981-01-10",
-                              "Action": "[Fertiliser].Apply(0, Fertiliser.Types.NO3N, 30);",
-                              "Line": "1981-01-10 [Fertiliser].Apply(0, Fertiliser.Types.NO3N, 30);"
+                              "Action": "[Fertiliser].Apply(0, \"NO3N\", 30);",
+                              "Line": "1981-01-10 [Fertiliser].Apply(0, \"NO3N\", 30);"
                             }
                           ],
                           "Name": "None",
@@ -903,8 +901,8 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1981-01-10",
-                              "Action": "[Fertiliser].Apply(100, Fertiliser.Types.NO3N, 30);",
-                              "Line": "1981-01-10 [Fertiliser].Apply(100, Fertiliser.Types.NO3N, 30);"
+                              "Action": "[Fertiliser].Apply(100, \"NO3N\", 30);",
+                              "Line": "1981-01-10 [Fertiliser].Apply(100, \"NO3N\", 30);"
                             }
                           ],
                           "Name": "NO3",
@@ -920,8 +918,8 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1981-01-10",
-                              "Action": "[Fertiliser].Apply(100, Fertiliser.Types.NH4N, 30);",
-                              "Line": "1981-01-10 [Fertiliser].Apply(100, Fertiliser.Types.NH4N, 30);"
+                              "Action": "[Fertiliser].Apply(100, \"NH4N\", 30);",
+                              "Line": "1981-01-10 [Fertiliser].Apply(100, \"NH4N\", 30);"
                             }
                           ],
                           "Name": "NH4",
@@ -937,8 +935,8 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1981-01-10",
-                              "Action": "[Fertiliser].Apply(100, Fertiliser.Types.Urea, 30);",
-                              "Line": "1981-01-10 [Fertiliser].Apply(100, Fertiliser.Types.Urea, 30);"
+                              "Action": "[Fertiliser].Apply(100, \"UreaGranular\", 30);",
+                              "Line": "1981-01-10 [Fertiliser].Apply(100, \"UreaGranular\", 30);"
                             }
                           ],
                           "Name": "Urea",
@@ -1291,9 +1289,6 @@
                   "ConstantsFile": null,
                   "FileName": "%root%/Examples/WeatherFiles/NZ_Lincoln",
                   "ExcelWorkSheetName": null,
-                  "Latitude": -43.624,
-                  "Tav": 11.4,
-                  "Amp": 11.5,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -1311,27 +1306,27 @@
                 {
                   "$type": "Models.Manager, Models",
                   "CodeArray": [
-                    "using Newtonsoft.Json;",
-                    "using System.Linq;",
-                    "using System.Collections.Generic;",
-                    "using APSIM.Shared.Utilities;",
-                    "using System.IO;",
-                    "using System.Xml.Serialization;",
-                    "using Models.AgPasture;",
-                    "using Models.Zones;",
-                    "using Models.PMF;",
-                    "using Models.Soils;",
-                    "using Models.Soils.Nutrients;",
-                    "using Models.Core;",
-                    "using System;",
+                    "using APSIM.Core;",
                     "using Models.Interfaces;",
+                    "using System;",
+                    "using Models.Core;",
                     "using Models.Soils.Nutrients;",
+                    "using Models.Soils;",
+                    "using Models.PMF;",
+                    "using Models.Zones;",
+                    "using Models.AgPasture;",
+                    "using System.Xml.Serialization;",
+                    "using System.IO;",
+                    "using APSIM.Shared.Utilities;",
+                    "using System.Collections.Generic;",
+                    "using System.Linq;",
+                    "using Newtonsoft.Json;",
                     "",
                     "namespace Models",
                     "{",
                     "    [Serializable]",
                     "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
-                    "    public class Script : Model",
+                    "    public class Script : Model, IStructureDependency",
                     "    {",
                     "        [Link] private Clock Clock;",
                     "        [Link] private Soil soil;",
@@ -1343,12 +1338,15 @@
                     "        private ISolute NH4;",
                     "        [Link(ByName = true)]",
                     "        private ISolute Urea;",
-                    "\t\t[Link(Type=LinkType.Path, Path=\"[SurfaceOrganicMatter].SurfaceResidue.Decomposition\")] ",
-                    "\t\tprivate OrganicFlow residueDecomposition;    ",
+                    "        [Link(Type=LinkType.Path, Path=\"[SurfaceOrganicMatter].SurfaceResidue.Decomposition\")]",
+                    "        private OrganicFlow residueDecomposition;",
                     "        [Link]",
                     "        private ISoilWater waterBalance;",
                     "        [Link]",
                     "        private INutrient Nutrient;",
+                    "        public IStructure Structure { private get; set; }",
+                    "        ",
+                    "        ",
                     "        [Link] List<PastureSpecies> Pasture;",
                     "        ",
                     "                ",
@@ -1421,7 +1419,7 @@
                     "        [EventSubscribe(\"StartOfSimulation\")]",
                     "        private void OnSimulationCommencing(object sender, EventArgs e)",
                     "        {    ",
-                    "            zones = this.FindAllInScope<Zone>().OfType<IModel>().ToList();",
+                    "            zones =  Structure.FindAll<Zone>().OfType<IModel>().ToList();",
                     "            ",
                     "            Array.Resize(ref tmpMineralisedN, zones.Count);                    ",
                     "            Array.Resize(ref tmpTotalWater, zones.Count); ",
@@ -1474,10 +1472,10 @@
                     "        [EventSubscribe(\"DoReport\")]",
                     "        private void OnEndOfDay(object sender, EventArgs e)",
                     "        {",
-                    "            zones = this.FindAllInScope<Zone>().OfType<IModel>().ToList();    ",
+                    "            zones =  Structure.FindAll<Zone>().OfType<IModel>().ToList();    ",
                     "            for (int x = 0; x < zones.Count; x++)",
                     "            {",
-                    "                Soil soil = zone.FindInScope<Soil>() as Soil;                                ",
+                    "                Soil soil =  Structure.Find<Soil>(relativeTo: (INodeModel)zone) as Soil;                                ",
                     "                tmpTotalWater[x] = waterBalance.SWmm.Sum();",
                     "                ",
                     "                tmpMineralisedN[x] = Nutrient.MineralisedN.Sum();",
@@ -1577,6 +1575,7 @@
                   "Slope": 0.0,
                   "AspectAngle": 0.0,
                   "Altitude": 50.0,
+                  "CanopyType": null,
                   "Name": "1Patch",
                   "ResourceName": null,
                   "Children": [
@@ -1909,6 +1908,7 @@
                           "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
+                          "CECMetadata": null,
                           "ESPMetadata": null,
                           "PHMetadata": null,
                           "Name": "Chemical",
@@ -1937,18 +1937,8 @@
                             0.457070570557793,
                             0.452331759845006
                           ],
-                          "InitialPAWmm": 361.2454283127387,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -1983,6 +1973,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
@@ -2018,6 +2009,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
@@ -2053,6 +2045,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "Urea",
                           "ResourceName": null,
                           "Children": [],
@@ -2060,8 +2053,17 @@
                           "ReadOnly": false
                         },
                         {
+                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "Thickness": null,
+                          "InitialValues": null,
+                          "Name": "Temperature",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
                           "$type": "Models.Soils.NutrientPatching.NutrientPatchManager, Models",
-                          "MaximumNitrogenAvailableToPlants": 0.0,
                           "NPartitionApproach": 0,
                           "AutoAmalgamationApproach": 0,
                           "basePatchApproach": 0,
@@ -2170,7 +2172,6 @@
                         "                    summary.WriteMessage(this, \"NumPatches at start:\" + patchManager.NumPatches.ToString(), MessageType.Diagnostic);                    ",
                         "                }",
                         "                ",
-                        "                patchManager.MaximumNitrogenAvailableToPlants = 3.0;",
                         "                patchManager.NPartitionApproach = PartitionApproachEnum.BasedOnConcentrationAndDelta;",
                         "                patchManager.AutoAmalgamationApproach = AutoAmalgamationApproachEnum.None;",
                         "                patchManager.basePatchApproach = BaseApproachEnum.IDBased;",
@@ -2225,22 +2226,23 @@
                         "// Defoliates AgPasture on a regular rotation or one-off via a schedule",
                         "// currenty defoliates the amount specified by spreading evenly over the specified period",
                         "",
-                        "using Newtonsoft.Json;",
-                        "using System.Linq;",
-                        "using Models.Interfaces;",
-                        "using APSIM.Shared.Utilities;",
-                        "using Models.Soils;",
-                        "using Models.PMF;",
-                        "using Models.Core;",
-                        "using System.Xml.Serialization;",
-                        "using System.Collections.Generic;",
-                        "using System;",
+                        "using APSIM.Core;",
                         "using Models.Soils.Nutrients;",
+                        "using System;",
+                        "using System.Collections.Generic;",
+                        "using System.Xml.Serialization;",
+                        "using Models.Core;",
+                        "using Models.PMF;",
+                        "using Models.Soils;",
+                        "using APSIM.Shared.Utilities;",
+                        "using Models.Interfaces;",
+                        "using System.Linq;",
+                        "using Newtonsoft.Json;",
                         "",
                         "namespace Models",
                         "{",
                         "    [Serializable]",
-                        "    public class Script : Model",
+                        "    public class Script : Model, IStructureDependency",
                         "    {",
                         "        [Link] private Zone myZone;",
                         "        [Link] private Clock Clock;",
@@ -2257,6 +2259,8 @@
                         "        private double atZ1;",
                         "        [Link]",
                         "        private IPhysical soilPhysical;",
+                        "        [field:NonSerialized]",
+                        "        public IStructure Structure { private get; set; }",
                         "        // - Links to APSIM models",
                         "        ",
                         "        List<AgPasture.PastureSpecies> Pasture = new List<AgPasture.PastureSpecies>();",
@@ -2342,7 +2346,7 @@
                         "        [EventSubscribe(\"StartOfSimulation\")]",
                         "        private void OnSimulationCommencing(object sender, EventArgs e)",
                         "        {",
-                        "            foreach (AgPasture.PastureSpecies species in myZone.FindAllChildren<AgPasture.PastureSpecies>().OfType<IModel>().ToList())",
+                        "            foreach (AgPasture.PastureSpecies species in   Structure.FindChildren<AgPasture.PastureSpecies>(recurse: true, relativeTo: (INodeModel)myZone).OfType<IModel>().ToList())",
                         "                Pasture.Add(species);",
                         "",
                         "            // reset variables",
@@ -2589,7 +2593,7 @@
                         "                    myUrineDeposition[z] = NReturnedInUrine * fractionUrine[z];",
                         "",
                         "                no3.AddKgHaDelta(SoluteSetterType.Fertiliser, myUrineDeposition);",
-                        "                //fertiliser.Apply(NReturnedInUrine * 10, Fertiliser.Types.UreaN, 1.0);",
+                        "                //fertiliser.Apply(NReturnedInUrine * 10, \"UreaN\", 1.0);",
                         "            }",
                         "        }",
                         "",
@@ -2798,8 +2802,8 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "1981-01-10",
-                          "Action": "[Fertiliser].Apply(0, Fertiliser.Types.NO3N, 30);",
-                          "Line": "1981-01-10 [Fertiliser].Apply(0, Fertiliser.Types.NO3N, 30);"
+                          "Action": "[Fertiliser].Apply(0, \"NO3N\", 30);",
+                          "Line": "1981-01-10 [Fertiliser].Apply(0, \"NO3N\", 30);"
                         }
                       ],
                       "Name": "FertiliserSchedule",
@@ -2986,6 +2990,7 @@
                   "Slope": 0.0,
                   "AspectAngle": 0.0,
                   "Altitude": 50.0,
+                  "CanopyType": null,
                   "Name": "10Patch",
                   "ResourceName": null,
                   "Children": [
@@ -3318,6 +3323,7 @@
                           "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
+                          "CECMetadata": null,
                           "ESPMetadata": null,
                           "PHMetadata": null,
                           "Name": "Chemical",
@@ -3346,18 +3352,8 @@
                             0.457070570557793,
                             0.452331759845006
                           ],
-                          "InitialPAWmm": 361.2454283127387,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -3392,6 +3388,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
@@ -3427,6 +3424,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
@@ -3462,6 +3460,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "Urea",
                           "ResourceName": null,
                           "Children": [],
@@ -3469,8 +3468,17 @@
                           "ReadOnly": false
                         },
                         {
+                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "Thickness": null,
+                          "InitialValues": null,
+                          "Name": "Temperature",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
                           "$type": "Models.Soils.NutrientPatching.NutrientPatchManager, Models",
-                          "MaximumNitrogenAvailableToPlants": 0.0,
                           "NPartitionApproach": 0,
                           "AutoAmalgamationApproach": 0,
                           "basePatchApproach": 0,
@@ -3579,7 +3587,6 @@
                         "                    summary.WriteMessage(this, \"NumPatches at start:\" + patchManager.NumPatches.ToString(), MessageType.Diagnostic);                    ",
                         "                }",
                         "                ",
-                        "                patchManager.MaximumNitrogenAvailableToPlants = 3.0;",
                         "                patchManager.NPartitionApproach = PartitionApproachEnum.BasedOnConcentrationAndDelta;",
                         "                patchManager.AutoAmalgamationApproach = AutoAmalgamationApproachEnum.None;",
                         "                patchManager.basePatchApproach = BaseApproachEnum.IDBased;",
@@ -3634,22 +3641,23 @@
                         "// Defoliates AgPasture on a regular rotation or one-off via a schedule",
                         "// currenty defoliates the amount specified by spreading evenly over the specified period",
                         "",
-                        "using Newtonsoft.Json;",
-                        "using System.Linq;",
-                        "using Models.Interfaces;",
-                        "using APSIM.Shared.Utilities;",
-                        "using Models.Soils;",
-                        "using Models.PMF;",
-                        "using Models.Core;",
-                        "using System.Xml.Serialization;",
-                        "using System.Collections.Generic;",
-                        "using System;",
+                        "using APSIM.Core;",
                         "using Models.Soils.Nutrients;",
+                        "using System;",
+                        "using System.Collections.Generic;",
+                        "using System.Xml.Serialization;",
+                        "using Models.Core;",
+                        "using Models.PMF;",
+                        "using Models.Soils;",
+                        "using APSIM.Shared.Utilities;",
+                        "using Models.Interfaces;",
+                        "using System.Linq;",
+                        "using Newtonsoft.Json;",
                         "",
                         "namespace Models",
                         "{",
                         "    [Serializable]",
-                        "    public class Script : Model",
+                        "    public class Script : Model, IStructureDependency",
                         "    {",
                         "        [Link] private Zone myZone;",
                         "        [Link] private Clock Clock;",
@@ -3666,6 +3674,8 @@
                         "        private double atZ1;",
                         "        [Link]",
                         "        private IPhysical soilPhysical;",
+                        "        [field:NonSerialized]",
+                        "        public IStructure Structure { private get; set; }",
                         "        // - Links to APSIM models",
                         "        ",
                         "        List<AgPasture.PastureSpecies> Pasture = new List<AgPasture.PastureSpecies>();",
@@ -3751,7 +3761,7 @@
                         "        [EventSubscribe(\"StartOfSimulation\")]",
                         "        private void OnSimulationCommencing(object sender, EventArgs e)",
                         "        {",
-                        "            foreach (AgPasture.PastureSpecies species in myZone.FindAllChildren<AgPasture.PastureSpecies>().OfType<IModel>().ToList())",
+                        "            foreach (AgPasture.PastureSpecies species in   Structure.FindChildren<AgPasture.PastureSpecies>(recurse: true, relativeTo: (INodeModel)myZone).OfType<IModel>().ToList())",
                         "                Pasture.Add(species);",
                         "",
                         "            // reset variables",
@@ -3998,7 +4008,7 @@
                         "                    myUrineDeposition[z] = NReturnedInUrine * fractionUrine[z];",
                         "",
                         "                no3.AddKgHaDelta(SoluteSetterType.Fertiliser, myUrineDeposition);",
-                        "                //fertiliser.Apply(NReturnedInUrine * 10, Fertiliser.Types.UreaN, 1.0);",
+                        "                //fertiliser.Apply(NReturnedInUrine * 10, \"UreaN\", 1.0);",
                         "            }",
                         "        }",
                         "",
@@ -4085,11 +4095,11 @@
                         },
                         {
                           "Key": "CutRotationStartDate",
-                          "Value": "1900-01-01"
+                          "Value": "01/01/1900 00:00:00"
                         },
                         {
                           "Key": "CutRotationEndDate",
-                          "Value": "2100-12-31"
+                          "Value": "12/31/2100 00:00:00"
                         },
                         {
                           "Key": "IntervalType",
@@ -4207,8 +4217,8 @@
                           "$type": "Models.Operation, Models",
                           "Enabled": true,
                           "Date": "1981-01-10",
-                          "Action": "[Fertiliser].Apply(0, Fertiliser.Types.NO3N, 30);",
-                          "Line": "1981-01-10 [Fertiliser].Apply(0, Fertiliser.Types.NO3N, 30);"
+                          "Action": "[Fertiliser].Apply(0, \"NO3N\", 30);",
+                          "Line": "1981-01-10 [Fertiliser].Apply(0, \"NO3N\", 30);"
                         }
                       ],
                       "Name": "FertiliserSchedule",
@@ -4400,7 +4410,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "Plots01",
           "ResourceName": null,
           "Children": [
@@ -5495,7 +5504,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "Plots02",
           "ResourceName": null,
           "Children": [
@@ -7132,7 +7140,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "Plots03",
           "ResourceName": null,
           "Children": [
@@ -8769,7 +8776,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "Plots04",
           "ResourceName": null,
           "Children": [

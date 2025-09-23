@@ -256,7 +256,6 @@ namespace UnitTests.Core
 
             // If we now add another child, resolve should fail as there are two matches.
             model.Children.Add(new Zone() { Name = "zone2" }); // added to modelWithChildLink
-            sim.ParentAllDescendants();
             Assert.Throws<Exception>(() =>
             {
                 links.Resolve(sim, true);
