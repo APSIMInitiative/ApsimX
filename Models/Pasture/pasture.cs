@@ -2627,6 +2627,8 @@ namespace Models.GrazPlan
             BiomassToFOM(); // evtADD_FOM
 
             BiomassRemoved removed = TransferLitter();  // evtBIOMASS_OUT
+
+            var residueLeaf = ResidueLeaf;
             if (removed != null && surfaceOrganicMatter != null)
             {
                 // leaf and stem
@@ -2704,7 +2706,7 @@ namespace Models.GrazPlan
                     FOMData.Layer[layer].FOM = new FOMType();
                     FOMData.Layer[layer].FOM.amount = removed.FOM[layer + 1][0].Weight;
                     FOMData.Layer[layer].FOM.N = removed.FOM[layer + 1][0].N;
-                    FOMData.Layer[layer].FOM.C = FOMData.Layer[layer].FOM.amount * carbonFractionInDM;
+                    FOMData.Layer[layer].FOM.C = removed.FOM[layer + 1][0].Weight * carbonFractionInDM;
                     FOMData.Layer[layer].FOM.P = removed.FOM[layer + 1][0].P;
                     FOMData.Layer[layer].FOM.AshAlk = removed.FOM[layer + 1][0].AshAlk;
 
@@ -2715,7 +2717,7 @@ namespace Models.GrazPlan
                 // surface residues into first layer
                 FOMData.Layer[0].FOM.amount += removed.FOM[1][1].Weight + removed.FOM[1][2].Weight;
                 FOMData.Layer[0].FOM.N += removed.FOM[1][1].N + removed.FOM[1][2].N;
-                FOMData.Layer[0].FOM.C = FOMData.Layer[0].FOM.amount * carbonFractionInDM;
+                FOMData.Layer[0].FOM.C += removed.FOM[1][1].Weight + removed.FOM[1][2].Weight * carbonFractionInDM;
                 FOMData.Layer[0].FOM.P += removed.FOM[1][1].P + removed.FOM[1][2].P;
                 FOMData.Layer[0].FOM.AshAlk += removed.FOM[1][1].AshAlk + removed.FOM[1][2].AshAlk; // ?
 

@@ -87,7 +87,6 @@ namespace UnitTests
         /// <summary>ResolveLinks in a model</summary>
         public static void ResolveLinks(IModel model)
         {
-            model.ParentAllDescendants();
             var links = new Links();
             links.Resolve(model, true, true);
         }
