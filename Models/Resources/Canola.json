@@ -2442,12 +2442,10 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
-                            0.7,
                             1.0
                           ],
                           "Y": [
                             0.0,
-                            1.0,
                             1.0
                           ],
                           "Name": "XYPairs",
