@@ -7477,8 +7477,7 @@
                 "[Leaf].Photosynthesis.FW.Excess.Today.StartFlowerToStartGF.MidSeason.XYPairs.X = 0, 0.5, 1",
                 "[Leaf].Photosynthesis.FW.Excess.Today.StartFlowerToStartGF.MidSeason.XYPairs.Y = 1, 1, 0.5",
                 "[Leaf].Photosynthesis.FW.Excess.Today.StartGFToEndCrop.LateSeason.XYPairs.X = 0, 0.25, 1",
-                "[Leaf].Photosynthesis.FW.Excess.Today.StartGFToEndCrop.LateSeason.XYPairs.Y = 1, 1, 0.25",
-                "[Leaf].ExtinctionCoefficient.FOXk.XYPairs.Y = 1, 0.85, 0.35"
+                "[Leaf].Photosynthesis.FW.Excess.Today.StartGFToEndCrop.LateSeason.XYPairs.Y = 1, 1, 0.25"
               ],
               "Name": "MG4_Rhine",
               "ResourceName": null,
