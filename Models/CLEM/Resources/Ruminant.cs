@@ -1037,7 +1037,7 @@ namespace Models.CLEM.Resources
         public Ruminant(DateTime date, int id, RuminantFemale mother, IRuminantActivityGrow growActivity)
         {
             double weight = mother.Weight.Fetus.Amount;
-            double expectedWeight = mother.Parameters.General.BirthScalar[mother.NumberOfFetuses - 1] * mother.Weight.StandardReferenceWeight * (0.66 + (0.33 * mother.Weight.RelativeSize));
+            double expectedWeight = mother.Parameters.General.BirthScalar[mother.NumberOfFetuses - 1] * mother.Weight.StandardReferenceWeight * ((1.0 - mother.Parameters.General.EffectRelativeSizeBirthWeight_CP4) + (mother.Parameters.General.EffectRelativeSizeBirthWeight_CP4 * mother.Weight.RelativeSize));
             if (mother.Weight.Fetus.Amount == 0)
                 weight = expectedWeight;
             
@@ -1055,13 +1055,13 @@ namespace Models.CLEM.Resources
 
             // pass to ruminant grow activity to determine how to set protein and fat at birth where the newborn has access to mother's properties
             growActivity?.SetProteinAndFatAtBirth(this, weight);
-            Weight.SetStandardReferenceWeight(Sex, Parameters.General);
+             Weight.SetStandardReferenceWeight(Sex, Parameters.General);
 
-            if (growActivity.IncludeFatAndProtein)
-            {
-                Weight.UpdateEBM(this);
-            }
-            else
+            if (!growActivity.IncludeFatAndProtein)
+            //{
+            //    Weight.UpdateEBM(this);
+            //}
+            //else
             {
                 // Empty body weight to live weight assumes 1.09 conversion factor when no GrowPF parameters provided.
                 Weight.AdjustByLiveWeightChange(weight, this);

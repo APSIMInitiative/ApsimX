@@ -117,6 +117,15 @@ namespace Models.CLEM.Resources
         public double[] BirthScalar { get; set; } = new[] { 0.07, 0.055 };
 
         /// <summary>
+        /// Effect of relative size on birth weight
+        /// </summary>
+        /// <value>Default value for cattle</value>
+        [Description("Effect of relative size on birth weight [CP4]")]
+        [Category("Breed", "Breeding")]
+        [Required, GreaterThanValue(0)]
+        public double EffectRelativeSizeBirthWeight_CP4 { get; set; } = 0.33;
+
+        /// <summary>
         /// Weight(kg) of 1 animal equivalent (e.g. steer, DSE)
         /// </summary>
         [Category("Farm", "General")]
@@ -259,14 +268,6 @@ namespace Models.CLEM.Resources
         [Description("MJ energy per kg protein")]
         [Category("Core", "Energy")]
         public double MJEnergyPerKgProtein { get; set; } = 23.6; // GrowPF, 23.8 Oddy;
-
-        /// <summary>
-        /// The proportion of empty body weight at birth that is fat
-        /// </summary>
-        [Description("Proportion of empty body weight fat at birth")]
-        [Category("Breed:CrossBreed", "Weight")]
-        [Required, Proportion, GreaterThanValue(0)]
-        public double ProportionBirthEmptyBodyFat { get; set; } = 0.05; // 0.024 cattle, 0.023 sheep
 
         /// <summary>
         /// Determine whether wool production is included.

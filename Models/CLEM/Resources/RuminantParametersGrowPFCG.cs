@@ -188,6 +188,21 @@ namespace Models.CLEM.Resources
         public double ProteinContentOfFatFreeTissueGainWetBasis { get; set; } = 0.21;
 
         /// <summary>
+        /// Protein content of fat-free tissue gain on wet basis
+        /// </summary>
+        [Category("Breed:CrossBreed", "Growth:Growth")]
+        [Description("Protein content fat-free issue gain on wet basis")]
+        [Required, GreaterThanValue(0)]
+        public double ProteinContentOfFatFreeTissueGainWetBasisAtBirth { get; set; } = 0.1373; // sheep 0.1484
+
+        /// <summary>
+        /// Days until standard protein content of fat-free tissue gain on wet basis
+        /// </summary>
+        [Description("Days until standard protein content fat-free issue gain on wet basis")]
+        [Required, GreaterThanValue(0)]
+        public double DaysUntilStandardProteinContentOfFatFreeTissueGainWetBasis { get; set; } = 30;
+
+        /// <summary>
         /// Efficiency of releasing dietary protein energy when energy for gain positive
         /// </summary>
         [Description("Dietary protein energy release efficiency (+ve net energy)")]

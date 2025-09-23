@@ -225,7 +225,7 @@ namespace Models.CLEM.Activities
 
             ind.Energy.Protein.Adjust(dprotdt * events.Interval); //mj
             ind.Energy.Fat.Adjust(dfdt * events.Interval); // mj
-            ind.Weight.Protein.Adjust(dprotdt / 23.6 * events.Interval); 
+            ind.Weight.Protein.Adjust(dprotdt / 23.6 * events.Interval, null); 
             ind.Weight.Fat.Adjust(dfdt / 39.3 * events.Interval);
 
             // update weight, protein and fat

@@ -90,7 +90,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Pregnancy")]
         [Description("Conceptus protein percent [CP11]")]
         [Units("%")]
-        public double ConceptusProteinPercent_CP11 { get; set; } = 13.4; // sheep 14.5
+        public double ConceptusProteinContent_CP11 { get; set; } = 0.134; // sheep 0.145
 
         /// <summary>
         /// Conceptus protein parameter (SCA CP12)
@@ -142,7 +142,7 @@ namespace Models.CLEM.Resources
                 ConceptusEnergyContent_CP8 = ConceptusEnergyContent_CP8,
                 ConceptusEnergyParameter_CP9 = ConceptusEnergyParameter_CP9,
                 ConceptusEnergyParameter2_CP10 = ConceptusEnergyParameter2_CP10,
-                ConceptusProteinPercent_CP11 = ConceptusProteinPercent_CP11,
+                ConceptusProteinContent_CP11 = ConceptusProteinContent_CP11,
                 ConceptusProteinParameter_CP12 = ConceptusProteinParameter_CP12,
                 ConceptusProteinParameter2_CP13 = ConceptusProteinParameter2_CP13,
                 FetalGrowthPoorCondition_CP14 = FetalGrowthPoorCondition_CP14

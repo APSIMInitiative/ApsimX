@@ -1,4 +1,6 @@
 ﻿
+using Models.CLEM.Resources;
+
 namespace Models.CLEM.Interfaces
 {
     /// <summary>
@@ -10,7 +12,7 @@ namespace Models.CLEM.Interfaces
         /// <summary>
         /// Current amount
         /// </summary>
-        double Amount { get; set; }
+        double Amount { get; }
         /// <summary>
         /// Recent change
         /// </summary>
@@ -26,8 +28,9 @@ namespace Models.CLEM.Interfaces
         /// <summary>
         /// Adjust this tracking item with change.
         /// </summary>
-        /// <param name="change">Amount to change by.</param>
-        void Adjust(double change);
+        /// <param name="change">Amount to change by</param>
+        /// <param name="ind">Individual to provide age for dry protein</param>
+        void Adjust(double change, Ruminant ind);
         /// <summary>
         /// Reset this tracking item to 0.
         /// </summary>

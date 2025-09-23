@@ -1,4 +1,7 @@
-﻿using Models.CLEM.Interfaces;
+﻿using APSIM.Numerics;
+using Models.CLEM.Interfaces;
+using NetTopologySuite.GeometriesGraph;
+using System;
 
 namespace Models.CLEM.Resources
 {
@@ -10,10 +13,10 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The proportion of dry relative to wet protein mass
         /// </summary>
-        public double ProportionDry { get; set; } = 1.0;
+        public double ProportionDry { get; private set; } = 0.0;
 
         /// <inheritdoc/>
-        public double Amount { get; set; }
+        public double Amount { get; private set; }
 
         /// <summary>
         /// The total mass of wet protein (plus water and ash) as used by Oddy et a Model
@@ -72,19 +75,37 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Constructor
         /// </summary>
-        public RuminantTrackingItemProtein(double proportionDry, double initialAmount = 0)
+        public RuminantTrackingItemProtein(Ruminant ind, double initialAmount = 0)
         {
-            ProportionDry = proportionDry;
+            // ToDo: work out what to do for Oddy and SCA07 that have their own protein content 
+
+            CalculateProportionDry(ind);
             Amount = initialAmount;
         }
 
         /// <inheritdoc/>
-        public void Adjust(double change)
+        public void Adjust(double change, Ruminant ind)
         {
+            CalculateProportionDry(ind);
+
             Change = change;
             if (Amount + change < 0)
                 Change = -Amount;
             Amount += Change;
+        }
+
+        /// <summary>
+        /// Method to calculate the proportion dry of the protein mass based on age of the individual to account for higher water content in younger animals
+        /// </summary>
+        /// <param name="ind"></param>
+        public void CalculateProportionDry(Ruminant ind)
+        {
+            if (MathUtilities.IsGreaterThanOrEqual(ProportionDry, ind.Parameters.GrowPF_CG.ProteinContentOfFatFreeTissueGainWetBasis))
+            {
+                return;
+            }
+            double propAge = Math.Min(1.0, ind.AgeInDays / (double)ind.Parameters.GrowPF_CG.DaysUntilStandardProteinContentOfFatFreeTissueGainWetBasis);
+            ProportionDry = (propAge * ind.Parameters.GrowPF_CG.ProteinContentOfFatFreeTissueGainWetBasis) + ((1.0 - propAge) * ind.Parameters.GrowPF_CG.ProteinContentOfFatFreeTissueGainWetBasisAtBirth);
         }
 
         /// <inheritdoc/>

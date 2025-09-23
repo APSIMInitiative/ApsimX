@@ -51,6 +51,7 @@ namespace Models.CLEM.Activities
 
         /// <inheritdoc/>
         public bool IncludeFatAndProtein { get => true; }
+        
         /// <inheritdoc/>
         public bool IncludeVisceralProteinMass { get => false; }
 
@@ -614,7 +615,7 @@ namespace Models.CLEM.Activities
             // protein mass on protein basis not mass of lean tissue mass. use conversvion XXXX for weight to perform checksum.
 
             ind.Energy.Protein.Adjust(MJProteinChange * daysInTimeStep); // for time step
-            ind.Weight.Protein.Adjust(ind.Energy.Protein.Change / ind.Parameters.General.MJEnergyPerKgProtein); // for time step
+            ind.Weight.Protein.Adjust(ind.Energy.Protein.Change / ind.Parameters.General.MJEnergyPerKgProtein, ind); // for time step
 
             ind.Energy.Fat.Adjust(MJFatChange * daysInTimeStep); // for time step
             ind.Weight.Fat.Adjust(ind.Energy.Fat.Change / ind.Parameters.General.MJEnergyPerKgFat); // for time step
@@ -944,7 +945,7 @@ namespace Models.CLEM.Activities
                 totalMERequired += conceptusME * daysToEnd;
 
                 // kg protein per day
-                double conceptusProteinReq = (ind.Parameters.GrowPF_CP.ConceptusProteinPercent_CP11 / 100.0) * (ind.NumberOfFetuses * ind.Parameters.GrowPF_CP.ConceptusWeightRatio_CP5 * ind.ScaledBirthWeight) * relativeConditionFetus *
+                double conceptusProteinReq = ind.Parameters.GrowPF_CP.ConceptusProteinContent_CP11 * (ind.NumberOfFetuses * ind.Parameters.GrowPF_CP.ConceptusWeightRatio_CP5 * ind.ScaledBirthWeight) * relativeConditionFetus *
                     (ind.Parameters.GrowPF_CP.ConceptusProteinParameter_CP12 * ind.Parameters.GrowPF_CP.ConceptusProteinParameter2_CP13 / (ind.Parameters.General.GestationLength.InDays)) * Math.Exp(ind.Parameters.GrowPF_CP.ConceptusProteinParameter2_CP13 * (1 - ind.ProportionOfPregnancy(currentDays)) + ind.Parameters.GrowPF_CP.ConceptusProteinParameter_CP12 * (1 - Math.Exp(ind.Parameters.GrowPF_CP.ConceptusProteinParameter2_CP13 * (1 - ind.ProportionOfPregnancy(currentDays)))));
 
                 // protein for time-step (kg)
@@ -973,7 +974,7 @@ namespace Models.CLEM.Activities
             {
                 // mother has been through pregnancy and has conceptus fat and protein
                 newborn.Weight.Fat = new(newborn.Mother.Weight.Fetus.Amount / newborn.Mother.Weight.Conceptus.Amount * newborn.Mother.Weight.ConceptusFat.Amount);
-                newborn.Weight.Protein = new(newborn.Parameters.GrowPF_CG.ProteinContentOfFatFreeTissueGainWetBasis, newborn.Mother.Weight.Fetus.Amount / newborn.Mother.Weight.Conceptus.Amount * newborn.Mother.Weight.ConceptusProtein.Amount);
+                newborn.Weight.Protein = new(newborn, newborn.Mother.Weight.Fetus.Amount / newborn.Mother.Weight.Conceptus.Amount * newborn.Mother.Weight.ConceptusProtein.Amount);
             }
             else
             {
@@ -983,8 +984,8 @@ namespace Models.CLEM.Activities
                     throw new ApsimXException(this, "Could not set newborn fat and protein at birth because no birth weight was provided when the mother did not supply conceptus protein and fat.");
                 }
 
-                newborn.Weight.Fat = new(birthWeight * newborn.Parameters.General.ProportionBirthEmptyBodyFat);
-                newborn.Weight.Protein = new(newborn.Parameters.GrowPF_CG.ProteinContentOfFatFreeTissueGainWetBasis, (birthWeight - newborn.Weight.Fat.Amount) * newborn.Parameters.GrowPF_CG.ProteinContentOfFatFreeTissueGainWetBasis);
+                newborn.Weight.Protein = new(newborn, newborn.Parameters.GrowPF_CP.ConceptusProteinContent_CP11 * birthWeight);
+                newborn.Weight.Fat = new(((birthWeight * newborn.Parameters.GrowPF_CP.ConceptusEnergyContent_CP8) - (newborn.Parameters.General.MJEnergyPerKgProtein * newborn.Weight.Protein.Amount)) / newborn.Parameters.General.MJEnergyPerKgFat);
             }
             // set fat and protein energy based on initial amounts
             newborn.Energy.Fat = new(newborn.Weight.Fat.Amount * newborn.Parameters.General.MJEnergyPerKgFat);
@@ -1044,8 +1045,7 @@ namespace Models.CLEM.Activities
                     break;
                 case InitialiseFatProteinAssignmentStyle.EstimateFromRelativeCondition:
                     pFat *= individual.Weight.EmptyBodyMass;
-                    //TODO: should this be individual.Parameters.GrowPF_CG.ProteinContentOfFatFreeTissueGainWetBasis instead of the 0.22??
-                    pProtein = 0.22 * (individual.Weight.EmptyBodyMass - pFat);
+                    pProtein = individual.Parameters.GrowPF_CG.ProteinContentOfFatFreeTissueGainWetBasis * (individual.Weight.EmptyBodyMass - pFat);
                     if (cohort.AssociatedHerd.RuminantGrowActivity.IncludeVisceralProteinMass)
                         throw new NotImplementedException("Cannot estimate required visceral protein mass using the RelativeCondition fat and protein mass assignment style.");
                     break;
@@ -1059,17 +1059,16 @@ namespace Models.CLEM.Activities
 
             if (cohort.AssociatedHerd.RuminantGrowActivity is RuminantActivityGrowOddy)
             {
-                individual.Weight.Protein = new(individual.Parameters.GrowOddy.pPrpM, pProtein);
-                individual.Weight.ProteinViscera = new(individual.Parameters.GrowOddy.pPrpV, vProtein);
-                individual.Energy.ProteinViscera = new(vProtein * individual.Parameters.General.MJEnergyPerKgProtein);
+                throw new NotImplementedException("RuminantActivityGrowOddy is not implemented in CLEM");
+                //individual.Weight.Protein = new(individual.Parameters.GrowOddy.pPrpM, pProtein);
+                //individual.Weight.ProteinViscera = new(individual.Parameters.GrowOddy.pPrpV, vProtein);
+                //individual.Energy.ProteinViscera = new(vProtein * individual.Parameters.General.MJEnergyPerKgProtein);
             }
             else
             {
-                individual.Weight.Protein = new(individual.Parameters.GrowPF_CG.ProteinContentOfFatFreeTissueGainWetBasis, pProtein);
+                individual.Weight.Protein = new(individual, pProtein);
             }
             individual.Energy.Protein = new(pProtein * individual.Parameters.General.MJEnergyPerKgProtein);
-
-            //individual.Weight.Protein.ProteinMassAtSRW = individual.Weight.StandardReferenceWeight * (1.0 / individual.Parameters.General.EBW2LW_CG18) * individual.Parameters.General.ProportionSRWEmptyBodyProtein;
         }
 
         /// <summary>

@@ -44,8 +44,9 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Adjust this tracking item with change.
         /// </summary>
+        /// <param name="ind">Individual to determine age and dry protein content</param>
         /// <param name="change">Amount to change by.</param>
-        public void Adjust(double change)
+        public void Adjust(double change, Ruminant ind = null)
         {
             Change = change;
             if (Amount + change < 0)

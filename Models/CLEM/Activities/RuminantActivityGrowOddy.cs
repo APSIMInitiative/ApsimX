@@ -196,8 +196,8 @@ namespace Models.CLEM.Activities
             ind.Energy.Fat.Adjust(dfdt * events.Interval);
 
             // Currently these are stored in the weight pools, but may not match values expected in validation datasets as different to other CLEM models.
-            ind.Weight.Protein.Adjust(ind.Energy.Protein.Change / ind.Parameters.General.MJEnergyPerKgProtein);
-            ind.Weight.ProteinViscera.Adjust(ind.Energy.ProteinViscera.Change / ind.Parameters.General.MJEnergyPerKgProtein);
+            ind.Weight.Protein.Adjust(ind.Energy.Protein.Change / ind.Parameters.General.MJEnergyPerKgProtein, ind);
+            ind.Weight.ProteinViscera.Adjust(ind.Energy.ProteinViscera.Change / ind.Parameters.General.MJEnergyPerKgProtein, ind);
             ind.Weight.Fat.Adjust(ind.Energy.Fat.Change / ind.Parameters.General.MJEnergyPerKgFat);
 
             if (dwdt > 0)
