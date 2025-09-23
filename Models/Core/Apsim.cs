@@ -86,10 +86,6 @@ namespace Models.Core
             if (childType == typeof(Simulations))
                 return false;
 
-            // If it's not an IModel, it's not a valid child.
-            if (!typeof(IModel).IsAssignableFrom(childType))
-                return false;
-
             //get list of parents for the base model class
             List<Type> modelTypes = new List<Type>();
             foreach (ValidParentAttribute modelParent in ReflectionUtilities.GetAttributes(typeof(Model), typeof(ValidParentAttribute), true))
