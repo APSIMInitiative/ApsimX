@@ -1,9 +1,8 @@
 ﻿using APSIM.Numerics;
-using DocumentFormat.OpenXml.Drawing.Charts;
-using NetTopologySuite.Mathematics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 namespace APSIM.Shared.Utilities
 {
     /// <summary>Various soil utilities.</summary>
