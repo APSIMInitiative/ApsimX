@@ -59,11 +59,6 @@ namespace Models.Core
         bool IsChildAllowable(Type type);
 
         /// <summary>
-        /// Parent all descendant models.
-        /// </summary>
-        void ParentAllDescendants();
-
-        /// <summary>
         /// Called when the model has been newly created in memory whether from
         /// cloning or deserialisation.
         /// </summary>
