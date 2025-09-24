@@ -489,30 +489,15 @@ namespace Models.PMF.Organs
         /// <summary>Returns the Fraction of Available Soil Water across the root system (across zones, constrained by the specified depth)</summary>
         public double CalcFASW(double depth)
         {
-            double fasw = 0;
-            double TotalArea = 0;
-
-            foreach (ZoneState Z in Zones)
+            double totalFASW = 0;
+            double totalArea = 0;
+            foreach (ZoneState zoneState in Zones)
             {
-                Zone zone = Structure.Find<Zone>(Z.Name);
-                var soilCrop = Structure.FindChild<SoilCrop>(parentPlant.Name + "Soil", relativeTo: Z.Soil, recurse: true);
-                var soilPhysical = Structure.FindChild<IPhysical>(relativeTo: Z.Soil);
-
-                double[] pawmm = soilCrop.PAWmm;
-                double[] pawcmm = soilCrop.PAWCmm;
-
-                if (MathUtilities.IsLessThan(depth, MathUtilities.Sum(soilPhysical.Thickness)))
-                {
-                    pawmm = SoilUtilities.KeepTopXmm(pawmm, soilPhysical.Thickness, depth);
-                    pawcmm = SoilUtilities.KeepTopXmm(pawcmm, soilPhysical.Thickness, depth);
-                }
-
-                TotalArea += zone.Area;
-                fasw += MathUtilities.Sum(pawmm) / MathUtilities.Sum(pawcmm) * zone.Area;
+                double area = zoneState.Zone.Area;
+                totalFASW += area * SoilUtilities.CalcFASW(zoneState.Physical.Thickness, zoneState.SoilCrop.PAWmm, zoneState.SoilCrop.PAWCmm, depth);
+                totalArea += area;
             }
-
-            fasw = fasw / TotalArea;
-            return fasw;
+            return totalFASW / totalArea;
         }
 
         /// <summary>Gets or sets the maximum nconc.</summary>
