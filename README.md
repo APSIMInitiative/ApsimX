@@ -37,19 +37,19 @@ Please read on below and review additional information in our [guide](https://ap
 
 ### General Good Practices
 
-#### Things to do :white_check_mark:
+#### Things to Do :white_check_mark:
 
 * As the project follows the agile methodology, short-lived (1-2 weeks max) feature branches are ideal. Branches that are used to develop a new plant are an exception here.
 * Aim to make smaller and more frequent PRs over larger less frequent PRs. Smaller PRs tend to be easier to review. Larger pieces of work can usually be broken into smaller feature branches which are easier to manage.
-* Regularly pull in changes from APSIMInitiative/master branch.
+* Regularly pull in changes from the APSIMInitiative/master branch.
 
-#### Things to avoid :x:
+#### Things to Avoid :x:
 
 * Keeping branches in development for long periods of time. Branches that have been left and need to be brought up to date with the newest changes can be difficult to update.
 * Submitting pull requests that resolve multiple unrelated issues in the one pull request. Doing so increases the difficulty of review.
 * Submitting pull requests that contain multiple new features. This also increases the review time.
 
-### Reporting and creating issues
+### Reporting and Creating Issues
 
 #### Best practices
 
@@ -89,21 +89,84 @@ Please read on below and review additional information in our [guide](https://ap
 
 ### Pull request process
 
+This section describes in detail how a pull request is handled.
+
 1. A pull request is submitted with a `Ready for Software Review` label. If you are unable to apply labels, request to be added to the developers github team by submitting a comment in the pull request.
 2. Validation and user tests are run.
-3. Once status checks all run successfully, a peer review is performed by the software team.
-4. The `High level Review` will be applied while the PR is reviewed from a high level. Details on what a high level review entails are available under the [high level review details section](#high-level-review)
-4. If issues are found or need further discussion the `Ready for Software Review` will be removed and the `More information needed` label will be applied to the PR.
-5. Once the issues have been resolved and discussion is complete the pull request author should reapply the `Ready for Software Review` label.
-6. Once reviewed the pull request will be merged.
+3. Once status checks all run successfully, a peer review is performed by the software team. This is conducted in two distinct steps.
+4. The `High Level Review` will be applied while the PR is reviewed from a high level. Details on what a high level review entails are available under the [high level review details section](#step-4-high-level-review)
+5. Once any issues (if any) are resolved, the `Low Level Review` label will be applied and a low level review conducted. Details on what a low level  review entails are available under the [low level review details section](#step-5-low-level-review)  
+6. If issues are found or need further discussion the `Ready for Software Review` will be removed and the `More information needed` label will be applied to the PR.
+7. Once the issues have been resolved and discussion is complete the pull request author should reapply the `Ready for Software Review` label.
+8. Once reviewed (and if a Reference Panel review is needed and conducted) the pull request will be merged.
 
 ### Changing apsimx files
 
 * When fixing an issue with `.apsimx` files avoid opening files and making changes directly. Instead create a converter so that all affected `.apsimx` files will be changed automatically. Additionally, resource files (models loaded from json files) will need to be changed and this is best done by using the `update resources` button in the main menu.
 
-### Review details
+### Overall Software Processes
 
-#### High level review
+The below steps detail the full process of submitting an issue all the way through to having code submitting to resolve the issue.
+
+#### Step 1 Raising an Issue
+
+* Describe the issue and functionality required
+* Emphasis is on “Why” more than “What”  or “How”
+
+#### Step 2 Issue Review
+
+* Review for Clarity, Accuracy and Priority
+* Allows input from others first
+* Avoid unnecessary effort if issue is already resolved or alternative solutions are preferred.
+
+#### Step 3 Pull Request
+
+* Must link to a clearly described issue
+* May require several iterations
+* When development is complete, label as “Ready for Review”
+
+#### Step 4 High Level Review
+
+* Label as under high level review
+* Check for [style guideline](#style-guidelines) issues
+* Check overall design
+* Check for availability of tests
+* Check against documented [PR Rules](#pull-request-requirements-and-best-practices)
+* Depending on review and communication with developer, either
+  * Move to next step (and label)
+  * Remove “ready for review” label
+  * Close pull request
+
+#### Step 5 Low Level Review
+
+* Code review
+* Review of Tests
+* Review of changes in statistics
+* Co-pilot review
+* Check for inadvertent changes in statistics
+* Check for inadvertent changes in code
+* Depending on review and communication with developer, either
+  * If possible science impacts identified in code review not evident from stats (raise with expert or @ReferencePanel)
+  * If no changes in statistics (merge and close)
+  * If changes in statistics are deemed minor or acceptable ( notify @ReferencePanel, merge and close)
+  * If larger issue, move to step six
+  * Close pull request
+
+#### Step 6 Reference Panel Review
+
+This step only occurs if required
+
+* Put on the agenda for the next meeting
+* Label PR as “Reference Panel Review”
+* All changes, code, issue description, discussions, tests, stats etc should all be ready for evaluation.
+
+### Style Guidelines
+
+APSIM followings many of the [Microsoft C Sharp code conventions](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions) and [C Sharp coding style](https://github.com/dotnet/runtime/blob/main/docs/coding-guidelines/coding-style.md) with some variations taking into account some code has been previously ported from others languages such as Fortran. If you intend on contributing code we recommend following these guides and conventions.
+
+### Definition of Science Issue
+
+A science issue is any issue that changes the statistics within the test set.  This assumes that tests are maintained for all model science, requiring that any PR that changes code and not the stats is evaluated for a deficiency of test data.
 
 ## Publications
 
