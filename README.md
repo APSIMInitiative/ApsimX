@@ -49,15 +49,23 @@ Please read on below and review additional information in our [guide](https://ap
 * Submitting pull requests that resolve multiple unrelated issues in the one pull request. Doing so increases the difficulty of review.
 * Submitting pull requests that contain multiple new features. This also increases the review time.
 
-### Reporting issues
+### Reporting and creating issues
 
 #### Best practices
 
 * When submitting an issue include the apsim file with any required met and input files required to make it run in a zip archive.
 * Describe the steps that lead to the issue occurring so that it can be reproduced. This includes details like where you clicked, what settings were enabled and what operating system it occurred on.
 * For graphical user interface (GUI) issues please submit a minimally reproducible example apsim file, describe the user interface model this issue affects and the steps to reproduce the error.
+* Describe issues with an emphasis on the "Why" more than "What" or "How".
+* Submit issues before you begin creating a solution. This has the advantage of avoiding unnecessary effort if the issue is found to be resolved or in the process of being resolved and allows others to suggest possible approaches and considerations that can improve the subsequent PR.
 
 ### Pull requests and code submissions
+
+#### Pull Request Priorities
+
+* Bug fix PRs that stop APSIM users from being able to use the software are top priority. This is in line with the software teams' zero bug policy.
+* Other bugs that only effect a portion of the software are the next highest priority.
+* New features are then prioritized.
 
 #### Getting a Pull request reviewed
 
@@ -68,7 +76,7 @@ Please read on below and review additional information in our [guide](https://ap
 
 * Each pull request must only do one thing.
 * The requirements for a pull request differ based on the changes submitted.
-  * **Science** changes require observed data to demonstrate that the change does what it intends. Additionally unit test are to be included.
+  * **Science** changes require observed data to demonstrate that the change does what it intends. Additionally unit tests are to be included.
   * **Graphical user interface (GUI)** changes and fixes that include a short video showing the changes working will improve review time.
   * **Bug fixes** should include a unit test to reduce the likelihood of recurrence and to also verify the fix.
 * All pull requests should briefly and concisely describe what the issue was, what changes have been made and the rationale.
@@ -84,13 +92,18 @@ Please read on below and review additional information in our [guide](https://ap
 1. A pull request is submitted with a `Ready for Software Review` label. If you are unable to apply labels, request to be added to the developers github team by submitting a comment in the pull request.
 2. Validation and user tests are run.
 3. Once status checks all run successfully, a peer review is performed by the software team.
-4. If issues are found or need further discussion the `Ready for Software Review` will be removed.
+4. The `High level Review` will be applied while the PR is reviewed from a high level. Details on what a high level review entails are available under the [high level review details section](#high-level-review)
+4. If issues are found or need further discussion the `Ready for Software Review` will be removed and the `More information needed` label will be applied to the PR.
 5. Once the issues have been resolved and discussion is complete the pull request author should reapply the `Ready for Software Review` label.
 6. Once reviewed the pull request will be merged.
 
 ### Changing apsimx files
 
 * When fixing an issue with `.apsimx` files avoid opening files and making changes directly. Instead create a converter so that all affected `.apsimx` files will be changed automatically. Additionally, resource files (models loaded from json files) will need to be changed and this is best done by using the `update resources` button in the main menu.
+
+### Review details
+
+#### High level review
 
 ## Publications
 
