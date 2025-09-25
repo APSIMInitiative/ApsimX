@@ -116,6 +116,26 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// Run commands.
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Run",
+                     AppliesTo = new Type[] { typeof(ModelCommands) })]
+        public void RunCommands(object sender, EventArgs e)
+        {
+            try
+            {
+                var commands = explorerPresenter.CurrentNode as  ModelCommands;
+                commands.Run();
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
+        }
+
+        /// <summary>
         /// Refresh the right-hand panel of the UI.
         /// </summary>
         /// <param name="sender">Sender object.</param>

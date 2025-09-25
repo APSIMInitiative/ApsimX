@@ -35,7 +35,7 @@ public class FileFormat
                 throw new Exception("Cannot read file: " + fileName + ". File does not exist.");
 
             string contents = File.ReadAllText(fileName);
-            return ReadFromStringAndReturnConvertState<T>(contents, errorHandler, initInBackground, fileName);
+            return ReadFromStringAndReturnConvertState(contents, typeof(T), errorHandler, initInBackground, fileName);
         }
         catch (Exception err)
         {
@@ -50,15 +50,16 @@ public class FileFormat
     /// <param name="fileName">The optional filename where the string came from. This is required by the converter, when it needs to modify the .db file.</param>
     public static Node ReadFromString<T>(string st, Action<Exception> errorHandler = null, bool initInBackground = false, string fileName = null)
     {
-        return ReadFromStringAndReturnConvertState<T>(st, errorHandler, initInBackground, fileName).head;
+        return ReadFromStringAndReturnConvertState(st, typeof(T), errorHandler, initInBackground, fileName).head;
     }
 
     /// <summary>Convert a string (json or xml) to a model.</summary>
     /// <param name="st">The string to convert.</param>
+    /// <param name="type">The object type to return</param>
     /// <param name="errorHandler">Error handler to call on exception</param>
     /// <param name="initInBackground">Initialise on a background thread?</param>
     /// <param name="fileName">The optional filename where the string came from. This is required by the converter, when it needs to modify the .db file.</param>
-    public static (Node head, bool didConvert, JObject json) ReadFromStringAndReturnConvertState<T>(string st, Action<Exception> errorHandler = null, bool initInBackground = false, string fileName = null)
+    internal static (Node head, bool didConvert, JObject json) ReadFromStringAndReturnConvertState(string st, Type type, Action<Exception> errorHandler = null, bool initInBackground = false, string fileName = null)
     {
         // Run the converter.
         var converter = Converter.DoConvert(st, -1, fileName);
@@ -68,7 +69,7 @@ public class FileFormat
             TypeNameHandling = TypeNameHandling.Auto,
             DateParseHandling = DateParseHandling.None
         };
-        INodeModel newModel = JsonConvert.DeserializeObject<T>(converter.Root.ToString(), settings) as INodeModel;
+        INodeModel newModel = JsonConvert.DeserializeObject(converter.Root.ToString(), type, settings) as INodeModel;
 
         var head = Node.Create(newModel, errorHandler, initInBackground, fileName);
         return (head, converter.DidConvert, converter.Root);
