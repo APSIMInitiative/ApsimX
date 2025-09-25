@@ -232,12 +232,14 @@ namespace Models.Storage
                 commandRunner.Stop();
                 idle = true;
                 commandRunner = null;
-                commands.Clear();
                 lock (lockObject)
+                {
+                    commands.Clear();
                     simulationIDs.Clear();
-                checkpointIDs.Clear();
-                simulationNamesThatHaveBeenCleanedUp.Clear();
-                units.Clear();
+                    checkpointIDs.Clear();
+                    simulationNamesThatHaveBeenCleanedUp.Clear();
+                    units.Clear();
+                }
             }
         }
 
@@ -265,13 +267,16 @@ namespace Models.Storage
                 {
                     WaitForIdle();
                     stopping = true;
+                    commandRunner.Stop();
                     commandRunner = null;
-                    commands.Clear();
                     lock (lockObject)
+                    {
+                        commands.Clear();
                         simulationIDs.Clear();
-                    checkpointIDs.Clear();
-                    simulationNamesThatHaveBeenCleanedUp.Clear();
-                    units.Clear();
+                        checkpointIDs.Clear();
+                        simulationNamesThatHaveBeenCleanedUp.Clear();
+                        units.Clear();
+                    }
                 }
             }
         }
@@ -291,6 +296,7 @@ namespace Models.Storage
                 {
                     if (commands.Count > 0)
                     {
+                        idle = false;
                         command = commands.Dequeue();
                         // The WaitForIdle() function will wait until there are no jobs
                         // and idle is set to true. Therefore, we should update the value
