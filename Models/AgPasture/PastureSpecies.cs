@@ -1699,6 +1699,16 @@ namespace Models.AgPasture
             get { return MathUtilities.Divide(AboveGroundN, AboveGroundWt, 0.0); }
         }
 
+        /// <summary>
+        /// Crude protien estimated as (N concentration in  plant above grounf * 6.25)
+        /// </summary>
+        [Units("kg/kg")]
+        public double AboveGroundCrudeProtein
+        {
+            get { return AboveGroundNConc * 6.25; }
+        
+        }
+
         /// <summary>Average N concentration in plant's leaves (kgN/kgDM).</summary>
         [Units("kg/kg")]
         public double LeafNConc
@@ -2244,6 +2254,7 @@ namespace Models.AgPasture
                 mass.StructuralWt = (Leaf.StandingHerbageWt + Stem.StandingHerbageWt + Stolon.StandingHerbageWt) / 10.0; // to g/m2
                 mass.StructuralN = (Leaf.StandingHerbageN + Stem.StandingHerbageN + Stolon.StandingHerbageN) / 10.0;    // to g/m2
                 return mass;
+                
             }
         }
 
@@ -2261,6 +2272,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Dry matter and N available for harvesting (kgDM/ha).</summary>
+
         public AGPBiomass Harvestable
         {
             get
@@ -2277,6 +2289,7 @@ namespace Models.AgPasture
                 };
             }
         }
+
 
         /// <summary>Standing dry matter and N (kgDM/ha).</summary>
         public AGPBiomass Standing
