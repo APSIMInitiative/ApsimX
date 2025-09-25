@@ -96,7 +96,7 @@ This section describes in detail how a pull request is handled.
 2. Validation and user tests are run.
 3. Once status checks all run successfully, a peer review is performed by the software team. This is conducted in two distinct steps.
 4. The `High Level Review` will be applied while the PR is reviewed from a high level. Details on what a high level review entails are available under the [high level review details section](#step-4-high-level-review)
-5. Once any issues (if any) are resolved, the `Low Level Review` label will be applied and a low level review conducted. Details on what a low level  review entails are available under the [low level review details section](#step-5-low-level-review)  
+5. Once any issues (if any) are resolved, the `Low Level Review` label will be applied and a low level review conducted. Details on what a low level review entails are available under the [low level review details section](#step-5-low-level-review)  
 6. If issues are found or need further discussion the `Ready for Software Review` will be removed and the `More information needed` label will be applied to the PR.
 7. Once the issues have been resolved and discussion is complete the pull request author should reapply the `Ready for Software Review` label.
 8. Once reviewed (and if a Reference Panel review is needed and conducted) the pull request will be merged.
