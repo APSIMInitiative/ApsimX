@@ -135,6 +135,9 @@ namespace Models
             // from an override like Replacements or factor.
             GetParametersFromScriptModel();
             SetParametersInScriptModel();
+
+            if (CodeForLastSuccessfullCompile == null)
+                throw new Exception($"Errors found in manager model {Name}{Environment.NewLine}{Errors}");
         }
 
         /// <summary>Rebuild the script model and return error message if script cannot be compiled.</summary>

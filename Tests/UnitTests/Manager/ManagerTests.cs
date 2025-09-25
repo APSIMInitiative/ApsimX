@@ -309,6 +309,11 @@ namespace UnitTests.ManagerTests
             testManager = createManager();
             Assert.DoesNotThrow(() => typeof(Manager).InvokeMember("OnStartOfSimulation", reflectionFlagsMethods, null, testManager, new object[] { new object(), new EventArgs() }));
             Assert.That(testManager.Parameters.Count, Is.EqualTo(1));
+
+            //should not work
+            //need to wrap this in a try catch as it will throw an exception for bad code
+            try { testManager.Code = "asdf"; } catch { }
+            Assert.Throws<TargetInvocationException>(() => typeof(Manager).InvokeMember("OnStartOfSimulation", reflectionFlagsMethods, null, testManager, new object[] { new object(), new EventArgs() }));
         }
 
         /// <summary>
