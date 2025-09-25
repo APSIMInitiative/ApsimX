@@ -99,17 +99,17 @@ namespace Models.Core
             // Is allowable if one of the valid parents of this type (t) matches the parent type.
             foreach (ValidParentAttribute validParent in ReflectionUtilities.GetAttributes(childType, typeof(ValidParentAttribute), true))
             {
+                //check if parent is one of the parents provided by Model
+                if (!modelTypes.Contains(validParent.ParentType))
+                    hasParentType = true;
+
                 if (validParent != null)
                 {
                     if (validParent.DropAnywhere)
                         return true;
 
-                    if (validParent.ParentType.IsAssignableFrom(parent.GetType()))
+                    if (validParent.ParentType != null && validParent.ParentType.IsAssignableFrom(parent.GetType()))
                         return true;
-
-                    //check if parent is one of the parents provided by Model
-                    if (!modelTypes.Contains(validParent.ParentType))
-                        hasParentType = true;
                 }
             }
 

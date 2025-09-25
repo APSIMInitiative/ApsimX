@@ -78,6 +78,7 @@ namespace UnitTests
         }
 
         [Serializable]
+        [ValidParent(ParentType = typeof(Simulation))]
         private class SummaryWriter : Model
         {
             [Link] private ISummary summary = null;
