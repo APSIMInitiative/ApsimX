@@ -65,7 +65,7 @@ Please read on below and review additional information in our [guide](https://ap
 #### Pull Request Priorities
 
 * Bug fix PRs that stop APSIM users from being able to use the software are top priority. This is in line with the software teams' zero bug policy.
-* Other bugs that only effect a portion of the software are the next highest priority.
+* Other bugs that only affect a portion of the software are the next highest priority.
 * New features are then prioritized.
 
 #### Getting a Pull request reviewed
