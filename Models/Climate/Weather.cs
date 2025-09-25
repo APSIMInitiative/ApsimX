@@ -190,10 +190,7 @@ namespace Models.Climate
                         return PathUtilities.GetAbsolutePath(this.FileName, "");
                 }
             }
-            set
-            {
-                this.FileName = value;
-            }
+
         }
 
         /// <summary>
