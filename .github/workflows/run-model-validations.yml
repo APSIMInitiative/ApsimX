@@ -151,6 +151,9 @@ jobs:
           echo "Commit SHA: ${{ github.event.pull_request.head.sha }}"
           commitsha=${{ github.event.pull_request.head.sha }}
           author=${{ github.actor }}
+          if [[ "$author" == *"[bot]"* ]]; then
+            author="${author//"[bot]"/}"
+          fi
           # This is used to make a PR specific pool to avoid multiple PRs issues on Azure.
           azure_pool="${DOCKER_METADATA_OUTPUT_VERSION:3}-${commitsha:0:6}"
           echo "azure pool: ${azure_pool}"
