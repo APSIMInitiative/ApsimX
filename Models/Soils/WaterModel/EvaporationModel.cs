@@ -187,7 +187,7 @@ namespace Models.WaterModel
             const double canopy_eos_coef = 1.7;
             const double A_to_evap_fact = 0.44;
 
-            double eos_residue_fract;     //! fraction of potential soil evaporation limited by crop residue (mm)
+            double eos_residue_fract;     // Fraction of potential soil evaporation limited by crop residue (mm)
 
             double coverTotalSum = 0.0;
             for (int i = 0; i < canopies.Count; i++)
@@ -197,8 +197,8 @@ namespace Models.WaterModel
             // Reduction in potential soil evaporation under a canopy is determined
             // the "% shade" (ie cover) of the crop canopy - this should include th
             // green & dead canopy ie. the total canopy cover (but NOT near/on-grou
-            // residues).  From fig. 5 & eqn 2.                       <dms June 95>
-            // Default value for c%canopy_eos_coef = 1.7
+            // residues). From fig. 5 & eqn 2. <dms June 95>
+            // Default value for canopy_eos_coef = 1.7
             //             ...minimum reduction (at cover =0.0) is 1.0
             //             ...maximum reduction (at cover =1.0) is 0.183.
 
@@ -228,7 +228,7 @@ namespace Models.WaterModel
                 //    [DM. Silburn unpublished data, June 95 ]
                 //    <temporary value - will reproduce Adams et al 75 effect>
                 //     c%A_to_evap_fact = 0.00022 / 0.0005 = 0.44
-                eos_residue_fract = Math.Pow((1.0 - surfaceOrganicMatter.Cover), A_to_evap_fact);
+                eos_residue_fract = Math.Pow(1.0 - surfaceOrganicMatter.Cover, A_to_evap_fact);
             }
 
             // Reduce potential soil evap under canopy to that under residue (mulch)
@@ -278,7 +278,7 @@ namespace Models.WaterModel
             // reset sumes2 if infil exceeds sumes1
             if (waterBalance.Infiltration > 0.0)
             {
-                sumes2 = Math.Max(0.0, (sumes2 - Math.Max(0.0, waterBalance.Infiltration - sumes1)));
+                sumes2 = Math.Max(0.0, sumes2 - Math.Max(0.0, waterBalance.Infiltration - sumes1));
                 sumes1 = Math.Max(0.0, sumes1 - waterBalance.Infiltration);
 
                 // update t (incase sumes2 changed)
@@ -305,7 +305,7 @@ namespace Models.WaterModel
                     if (sumes2 > 0.0)
                     {
                         t = t + 1.0;
-                        esoil2 = Math.Min((Eos - esoil1), (CONA * Math.Pow(t, 0.5) - sumes2));
+                        esoil2 = Math.Min(Eos - esoil1, CONA * Math.Pow(t, 0.5) - sumes2);
                     }
                     else
                         esoil2 = 0.6 * (Eos - esoil1);
@@ -331,7 +331,8 @@ namespace Models.WaterModel
                 esoil1 = 0.0;
 
                 t = t + 1.0;
-                esoil2 = Math.Min(Eos, (CONA * Math.Pow(t, 0.5) - sumes2));
+                esoil2 = Math.Min(Eos, CONA * Math.Pow(t, 0.5) - sumes2);
+
 
                 // check with lower limit of evaporative sw.
                 esoil2 = Math.Min(esoil2, avail_sw_top);
