@@ -136,7 +136,7 @@ namespace Models
             GetParametersFromScriptModel();
             SetParametersInScriptModel();
 
-            if (CodeForLastSuccessfullCompile == null)
+            if (CodeForLastSuccessfullCompile == null && !string.IsNullOrEmpty(Code))
                 throw new Exception($"Errors found in manager model {Name}{Environment.NewLine}{Errors}");
         }
 
