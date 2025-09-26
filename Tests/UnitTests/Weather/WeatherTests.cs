@@ -45,7 +45,7 @@ namespace UnitTests.Weather
                     new Models.Climate.Weather()
                     {
                         Name = "Weather",
-                        FullFileName = weatherFilePath,
+                        FileName = weatherFilePath,
                         ExcelWorkSheetName = "Sheet1"
                     },
                     new Clock()
@@ -88,7 +88,7 @@ namespace UnitTests.Weather
                     new Models.Climate.Weather()
                     {
                         Name = "Weather",
-                        FullFileName = weatherFilePath
+                        FileName = weatherFilePath
                     },
                     new Clock()
                     {
@@ -129,7 +129,7 @@ namespace UnitTests.Weather
             Models.Climate.Weather weather = new()
             {
                 Name = "Weather",
-                FullFileName = weatherFilePath,
+                FileName = weatherFilePath,
                 ExcelWorkSheetName = "Sheet1"
             };
             Node.Create(weather);
@@ -159,7 +159,7 @@ namespace UnitTests.Weather
                         new MockSummary(),
                         new Models.Climate.Weather()
                         {
-                            FullFileName = metFile
+                            FileName = metFile
                         },
                         new Models.Report()
                         {
@@ -225,7 +225,7 @@ namespace UnitTests.Weather
                         new Models.Climate.Weather()
                         {
                             Name = "Weather",
-                            FullFileName = weatherFilePath,
+                            FileName = weatherFilePath,
                             ExcelWorkSheetName = "Sheet1"
                         },
                         new Clock()
@@ -278,7 +278,7 @@ namespace UnitTests.Weather
             {
                 Children =
                 [
-                    new Models.Climate.Weather() { FullFileName = metFile }
+                    new Models.Climate.Weather() { FileName = metFile }
                 ]
             };
             var weather = simulations.Children[0] as Models.Climate.Weather;

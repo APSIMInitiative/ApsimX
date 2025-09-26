@@ -254,7 +254,7 @@ namespace Utility
                             else if (dest is Simulation)
                             {
                                 Weather newWeather = new Weather();
-                                newWeather.FullFileName = newWeatherPath;
+                                newWeather.FileName = newWeatherPath;
                                 var command = new AddModelCommand(replaceNode, newWeather, explorerPresenter.GetNodeDescription);
                                 explorerPresenter.CommandHistory.Add(command, true);
                             }
