@@ -35,6 +35,12 @@ namespace UnitTests
             database.OpenDatabase(":memory:", readOnly: false);
         }
 
+        [TearDown]
+        public void Cleanup()
+        {
+            database?.CloseDatabase();
+        }
+
         [Test]
         public void CompareSimulationsOnSingleMatchField()
         {

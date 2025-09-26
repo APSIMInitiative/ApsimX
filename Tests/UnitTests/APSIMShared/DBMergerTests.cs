@@ -69,6 +69,8 @@
                                                            new object[] {              3,  20, "str3" },
                                                            new object[] {              4,  21, "str4" }})
                .IsSame(Utilities.GetTableFromDatabase(database1, "Report")), Is.True);
+            database1.CloseDatabase();
+            database2.CloseDatabase();
         }
 
         /// <summary>Ensure two .db files, which have the same simulation names, can be merged.</summary>
@@ -130,6 +132,8 @@
                                                            new object[] {              2,  11, "str2" },
                                                            new object[] {              2,  21, "str4" }})
                .IsSame(Utilities.GetTableFromDatabase(database1, "Report")), Is.True);
+            database1.CloseDatabase();
+            database2.CloseDatabase();
         }
 
         /// <summary>Ensure two .db files, which have different tables, can be merged.</summary>
@@ -197,6 +201,8 @@
                                       new List<object[]> { new object[] {              3,  20, "str3" },
                                                            new object[] {              4,  21, "str4" }})
                .IsSame(Utilities.GetTableFromDatabase(database1, "Report2")), Is.True);
+            database1.CloseDatabase();
+            database2.CloseDatabase();
         }
 
         /// <summary>Ensure two .db files, which have tables that don't have SimulationID, can be merged.</summary>
@@ -254,6 +260,8 @@
                                       new List<object[]> { new object[] {  "Report",          "A",  "g/m2" },
                                                            new object[] {  "Report",          "B", "kg/ha" }})
                .IsSame(Utilities.GetTableFromDatabase(database1, "_Units")), Is.True);
+            database1.CloseDatabase();
+            database2.CloseDatabase();
         }
 
         /// <summary>Create a table</summary>

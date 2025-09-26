@@ -439,6 +439,7 @@
             DataTable dtActual = storage.Reader.GetData("_Factors");
 
             Assert.That(dtExpected.IsSame(dtActual), Is.True);
+            database.CloseDatabase();
         }
 
         /// <summary>

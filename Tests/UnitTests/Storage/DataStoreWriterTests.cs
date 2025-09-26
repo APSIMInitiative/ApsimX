@@ -7,7 +7,6 @@
     using System.Collections.Generic;
     using System.Data;
     using System.IO;
-    using System.Reflection;
 
     [TestFixture]
     public class DataStoreWriterTests
@@ -21,6 +20,12 @@
         {
             database = new SQLite();
             database.OpenDatabase(":memory:", readOnly: false);
+        }
+
+        [TearDown]
+        public void Cleanup()
+        {
+            database?.CloseDatabase();
         }
 
         /// <summary>Write data for 2 simulations into one table. Ensure data was written correctly.</summary>
@@ -299,7 +304,6 @@
             try
             {
                 writer.AddCheckpoint("Saved2", new string[] { file });
-
                 writer.Stop();
 
                 Assert.That(
@@ -317,8 +321,6 @@
                                                             new object[] {              3,              2, new DateTime(2017, 01, 01),    21 },
                                                             new object[] {              3,              2, new DateTime(2017, 01, 02),    22 }})
                 .IsSame(Utilities.GetTableFromDatabase(database, "Report")), Is.True);
-
-
                 Assert.That(
                     Utilities.CreateTable(new string[]                      { "ID",    "Name" },
                                         new List<object[]> { new object[] {    1, "Current" },
