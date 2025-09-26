@@ -18,7 +18,7 @@ namespace Models.PMF.Phen
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
-    public class LeafAppearancePhase : Model, IPhase
+    public class LeafAppearancePhase : Model, IPhase, IPhaseWithSetableCompletionDate
     {
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
@@ -35,13 +35,19 @@ namespace Models.PMF.Phen
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction InitialisedLeafNumber = null;
 
+        [Link]
+        private IClock clock = null;
+
         //2. Private and protected fields
         //-----------------------------------------------------------------------------------------------------------------
 
-        private double LeafNoAtStart;
-        private bool First = true;
-        private double FractionCompleteYesterday = 0;
-        private double TargetLeafForCompletion = 0;
+        private double leafNoAtStart;
+        /// <summary>Flag for the first day of this phase</summary>
+        private bool first = true;
+        private double fractionCompleteYesterday = 0;
+        private double targetLeafForCompletion = 0;
+        /// <summary>First date in this phase</summary>
+        private DateTime firstDate { get; set; }
 
         //5. Public properties
         //-----------------------------------------------------------------------------------------------------------------
@@ -64,13 +70,25 @@ namespace Models.PMF.Phen
         {
             get
             {
-                double F = 0;
-                F = (LeafNumber.Value() - LeafNoAtStart) / TargetLeafForCompletion;
-                F = MathUtilities.Bound(F, 0, 1);
-                return Math.Max(F, FractionCompleteYesterday); //Set to maximum of FractionCompleteYesterday so on days where final leaf number increases phenological stage is not wound back.
+                if (String.IsNullOrEmpty(DateToProgress))
+                {
+                    double F = 0;
+                    F = (LeafNumber.Value() - leafNoAtStart) / targetLeafForCompletion;
+                    F = MathUtilities.Bound(F, 0, 1);
+                    return Math.Max(F, fractionCompleteYesterday); //Set to maximum of FractionCompleteYesterday so on days where final leaf number increases phenological stage is not wound back.
+                }
+                else 
+                {
+                    double dayDurationOfPhase = (DateUtilities.GetDate(DateToProgress) - firstDate).Days;
+                    double daysInPhase = (clock.Today - firstDate).Days;
+                    return daysInPhase / dayDurationOfPhase;
+                }
             }
         }
 
+        /// <summary>Data to progress.  Is empty by default.  If set by external model, phase will ignore its mechanisum and wait for the specified date to progress</summary>
+        [JsonIgnore]
+        public string DateToProgress { get; set; } = "";
 
         //6. Public method
         //-----------------------------------------------------------------------------------------------------------------
@@ -80,20 +98,36 @@ namespace Models.PMF.Phen
         {
             bool proceedToNextPhase = false;
 
-            if (First)
+            if (String.IsNullOrEmpty(DateToProgress))
             {
-                LeafNoAtStart = LeafNumber.Value();
-                TargetLeafForCompletion = FinalLeafNumber.Value() - LeafNoAtStart;
-                First = false;
+                if (first)
+                {
+                    leafNoAtStart = LeafNumber.Value();
+                    targetLeafForCompletion = FinalLeafNumber.Value() - leafNoAtStart;
+                    first = false;
+                }
+
+                fractionCompleteYesterday = FractionComplete;
+
+                //if (leaf.ExpandedCohortNo >= (leaf.InitialisedCohortNo))
+                if (FullyExpandedLeafNo.Value() >= InitialisedLeafNumber.Value())
+                {
+                    proceedToNextPhase = true;
+                    propOfDayToUse = 0.00001;  //assumes we use most of the Tt today to get to final leaf.  Should be calculated as a function of the phyllochron
+                }
             }
-
-            FractionCompleteYesterday = FractionComplete;
-
-            //if (leaf.ExpandedCohortNo >= (leaf.InitialisedCohortNo))
-            if (FullyExpandedLeafNo.Value() >= InitialisedLeafNumber.Value())
+            else
             {
-                proceedToNextPhase = true;
-                propOfDayToUse = 0.00001;  //assumes we use most of the Tt today to get to final leaf.  Should be calculated as a function of the phyllochron
+                if (first)
+                {
+                    firstDate = clock.Today;
+                    first = false;
+                }
+                if (DateUtilities.DatesAreEqual(DateToProgress, clock.Today))
+                {
+                    proceedToNextPhase = true;
+                    propOfDayToUse = 1;
+                }
             }
 
             return proceedToNextPhase;
@@ -102,10 +136,11 @@ namespace Models.PMF.Phen
         /// <summary>Reset phase</summary>
         public void ResetPhase()
         {
-            LeafNoAtStart = 0;
-            FractionCompleteYesterday = 0;
-            TargetLeafForCompletion = 0;
-            First = true;
+            leafNoAtStart = 0;
+            fractionCompleteYesterday = 0;
+            targetLeafForCompletion = 0;
+            first = true;
+            DateToProgress = "";
         }
 
         //7. Private methode

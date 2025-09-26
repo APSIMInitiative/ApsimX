@@ -18,7 +18,7 @@ namespace Models.PMF.Phen
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
-    public class GerminatingPhase : Model, IPhase
+    public class GerminatingPhase : Model, IPhase, IPhaseWithSetableCompletionDate
     {
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
@@ -50,7 +50,11 @@ namespace Models.PMF.Phen
 
         /// <summary>The soil layer in which the seed is sown.</summary>
         private int SowLayer = 0;
+        /// <summary>First date in this phase</summary>
+        private DateTime firstDate { get; set; }
 
+        /// <summary>Flag for the first day of this phase</summary>
+        private bool first { get; set; }
 
         // 3. Public properties
         //-----------------------------------------------------------------------------------------------------------------
@@ -72,13 +76,27 @@ namespace Models.PMF.Phen
 
         /// <summary>Fraction of phase that is complete (0-1).</summary>
         [JsonIgnore]
-        public double FractionComplete { get { return 0; } }
+        public double FractionComplete 
+        { 
+            get 
+            {
+                if (String.IsNullOrEmpty(DateToProgress))
+                {
+                    return 0;
+                }
+                else
+                {
+                    double dayDurationOfPhase = (DateUtilities.GetDate(DateToProgress) - firstDate).Days;
+                    double daysInPhase = (clock.Today - firstDate).Days;
+                    return daysInPhase / dayDurationOfPhase;
+                }
+            } 
+        }
 
-        /// <summary>
-        /// Date for germination to occur.  null by default so model is used
-        /// </summary>
+        /// <summary>Data to progress.  Is empty by default.  If set by external model, phase will ignore its mechanisum and wait for the specified date to progress</summary>
         [JsonIgnore]
-        public string GerminationDate { get; set; }
+        public string DateToProgress { get; set; } = "";
+
 
         // 4. Public method
         //-----------------------------------------------------------------------------------------------------------------
@@ -90,9 +108,14 @@ namespace Models.PMF.Phen
             bool proceedToNextPhase = false;
             double sowLayerTemperature = soilTemperature.Value[SowLayer];
 
-            if (GerminationDate != null)
+            if (!String.IsNullOrEmpty(DateToProgress))
             {
-                if (DateUtilities.DayMonthIsEqual(GerminationDate, clock.Today))
+                if (first)
+                {
+                    firstDate = clock.Today;
+                    first = false;
+                }
+                if (DateUtilities.DatesAreEqual(DateToProgress, clock.Today))
                 {
                     doGermination(ref proceedToNextPhase, ref propOfDayToUse);
                 }
@@ -107,7 +130,11 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>Resets the phase.</summary>
-        public virtual void ResetPhase() { GerminationDate = null; }
+        public virtual void ResetPhase() 
+        { 
+            DateToProgress = "";
+            first = true;
+        }
 
         // 5. Private methods
         //-----------------------------------------------------------------------------------------------------------------
