@@ -680,34 +680,5 @@ namespace Models.GrazPlan
                     throw new Exception("NaN detected in MoveNutrient");
             }
         }
-
-
-        /// <summary>
-        /// Recursively validates that all numeric values in the enumerable do not contain NaN values.
-        /// </summary>
-        /// <param name="v">The enumerable to check for NaN values.</param>
-        public static void CheckNaN(IEnumerable v)
-        {
-            foreach (var value in v)
-            {
-                if (value is double d)
-                    CheckNaN(d);
-                else if (value is IEnumerable e)
-                    CheckNaN(e);
-                else
-                    throw new Exception("In CheckNaN: Unknown type.");
-            }
-        }
-
-        /// <summary>
-        /// Validates that the double value is not NaN and throws an exception if it is.
-        /// </summary>
-        /// <param name="v"></param>
-        /// <exception cref="Exception"></exception>
-        public static void CheckNaN(double v)
-        {
-            if (double.IsNaN(v))
-                throw new Exception("NaN detected");
-        }
     }
 }

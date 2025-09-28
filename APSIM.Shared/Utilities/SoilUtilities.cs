@@ -1,8 +1,8 @@
 ﻿using APSIM.Numerics;
-using DocumentFormat.OpenXml.Drawing.Charts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 namespace APSIM.Shared.Utilities
 {
     /// <summary>Various soil utilities.</summary>
@@ -253,7 +253,7 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// Plant available water for the specified crop. Will throw if crop not found. Units: mm/mm
+        /// Plant available water for the specified crop. Units: mm/mm
         /// </summary>
         /// <param name="Thickness">The thickness.</param>
         /// <param name="LL">The ll.</param>
@@ -282,6 +282,39 @@ namespace APSIM.Shared.Utilities
                     PAWC[layer] = 0;
                 }
             return PAWC;
+        }
+
+        /// <summary>
+        /// Fraction of Available Soil Water for the specified crop. Units: mm/mm
+        /// </summary>
+        /// <param name="thickness">The thickness.</param>
+        /// <param name="pawmm">PAWmm of the SoilCrop</param>
+        /// <param name="pawcmm">PAWCmm of the SoilCrop</param>
+        /// <param name="depth">Depth to measure to</param>
+        /// <returns></returns>
+        public static double CalcFASW(double[] thickness, double[] pawmm, double[] pawcmm, double depth)
+        {
+            double[] usablePAWmm = pawmm;
+            double[] usablePAWCmm = pawcmm;
+            if (MathUtilities.IsLessThan(depth, MathUtilities.Sum(thickness)))
+            {
+                usablePAWmm = SoilUtilities.KeepTopXmm(pawmm, thickness, depth);
+                usablePAWCmm = SoilUtilities.KeepTopXmm(pawcmm, thickness, depth);
+            }
+
+            double sumOfUsablePAWmm = MathUtilities.Sum(usablePAWmm);
+            double sumOfUsablePAWCmm = MathUtilities.Sum(usablePAWCmm);
+
+            if (double.IsNaN(sumOfUsablePAWmm))
+                throw new Exception("Cannot calculate FASW when the sum of PAWmm is NaN.");
+
+            if (double.IsNaN(sumOfUsablePAWCmm))
+                throw new Exception("Cannot calculate FASW when the sum of PAWCmm is NaN.");
+
+            if (MathUtilities.FloatsAreEqual(sumOfUsablePAWCmm, 0))
+                throw new Exception("Cannot calculate FASW with a PAWC of 0");
+
+            return sumOfUsablePAWmm / sumOfUsablePAWCmm;
         }
 
         /// <summary>
