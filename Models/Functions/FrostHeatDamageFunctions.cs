@@ -422,8 +422,8 @@ namespace Models.Functions
             {
                 return;
             }
-            Phenology phen = (Phenology)Structure.Get("[" + CropType + "].Phenology");
-            ReproductiveOrgan organs = (ReproductiveOrgan)Structure.Get("[" + CropType + "].Grain");
+            Phenology phen = Plant.Phenology;
+            ReproductiveOrgan organs = Plant.Node.FindChild<ReproductiveOrgan>("Grain");
 
             double GrowthStageToday = phen.Stage; ;
             //GrowthStageToday = phen.Zadok;
