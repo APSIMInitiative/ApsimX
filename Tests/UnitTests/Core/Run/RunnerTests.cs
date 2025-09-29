@@ -28,14 +28,6 @@
             RunTypeEnum.SingleThreaded
         };
 
-        /// <summary>Initialisation code for all unit tests in this class</summary>
-        [SetUp]
-        public void Initialise()
-        {
-            database = new SQLite();
-            database.OpenDatabase(":memory:", readOnly: false);
-        }
-
         /// <summary>Ensure that runner can run a single simulation.</summary>
         [Test]
         public void EnsureSimulationRuns()
@@ -755,6 +747,7 @@
                 storage.Reader.Refresh();
                 storedData = storage.Reader.GetData(data.TableName);
                 Assert.That(storedData.Rows.Count, Is.EqualTo(1), "Post-simulation tool data was not cleaned when running only post-simulation tools");
+                database.CloseDatabase();
             }
         }
 
