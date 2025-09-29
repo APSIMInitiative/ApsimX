@@ -317,6 +317,49 @@ namespace UnitTests.Weather
             Assert.That(allFilesHaveRootReference, Is.True);
         }
 
+        [Test]
+        public void TestWeatherFileNameAndFullName()
+        {
+            var tempFile = Path.GetTempFileName().Replace(".tmp", ".met");
+            File.WriteAllText(tempFile, ReflectionUtilities.GetResourceAsString("UnitTests.Weather.CustomMetData.met"));
+            var tempDir = Path.GetDirectoryName(tempFile);
+
+            // Now set the apsimx file name and ensure that the weather file name is still the same but the full file name is now absolute.
+            var sims = new Simulations()
+            {
+                FileName = Path.Combine(tempDir, "temp.apsimx"),
+                Children = new List<IModel>()
+                {
+                    new Simulation()
+                    {
+                        Name = "Base",
+                        FileName = Path.Combine(tempDir, "temp.apsimx"),
+                        Children = new List<IModel>()
+                            {
+                                new Models.Climate.Weather()
+                                {
+                                    Name = "Weather",
+                                    FileName = tempFile,
+                                    ExcelWorkSheetName = "Sheet1"
+                                },
+                                new Clock()
+                                {
+                                    Name = "Clock",
+                                },
+                                new MockSummary()
+                            }
+                    }
+                },
+            };
+            
+            Node.Create(sims, fileName: sims.FileName);
+            sims.Write(sims.FileName);
+            var weather = sims.Node.FindChild<Models.Climate.Weather>(recurse: true);
+            weather.FileName = tempFile;
+            Assert.That(weather.FileName, Is.EqualTo(Path.GetFileName(tempFile)));
+            Assert.That(weather.FullFileName, Is.EqualTo(tempFile));
+        }
+
 
         /*
          * This doesn't make sense to use anymore since weather sensibility tests no longer throw exceptions
