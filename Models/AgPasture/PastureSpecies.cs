@@ -1699,15 +1699,15 @@ namespace Models.AgPasture
             get { return MathUtilities.Divide(AboveGroundN, AboveGroundWt, 0.0); }
         }
 
-        /// <summary>
-        /// Crude protien estimated as (N concentration in  plant above grounf * 6.25)
-        /// </summary>
-        [Units("kg/kg")]
-        public double AboveGroundCrudeProtein
-        {
-            get { return AboveGroundNConc * 6.25; }
+        // <summary>
+        // Crude protien estimated as (N concentration in  plant above grounf * 6.25)
+        // </summary>
+        //[Units("kg/kg")]
+        //public double AboveGroundCrudeProtein
+        //{
+           // get { return AboveGroundNConc * 6.25; }
         
-        }
+        //}
 
         /// <summary>Average N concentration in plant's leaves (kgN/kgDM).</summary>
         [Units("kg/kg")]
