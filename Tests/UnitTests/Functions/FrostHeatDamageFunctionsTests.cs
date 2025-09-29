@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using APSIM.Core;
+using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
 using Models.Core.Run;
@@ -14,19 +18,36 @@ namespace UnitTests.Functions
     {
         /// <summary>Ensure the hold function can deal with exceptions.</summary>
         [Test]
-        public void TestFunctionOnWheat()
+        public void TestFrostHeatFunctionRuns()
         {
-            Simulations simulations = Utilities.GetPlantTestingSimulation(true);
 
-            FrostHeatDamageFunctions fhdf = new FrostHeatDamageFunctions();
-            fhdf.CropType = FrostHeatDamageFunctions.CropTypes.Wheat;
+            string[] crops = { "Wheat", "Canola", "Barley" };
 
-            simulations.Node.FindChild<Plant>(recurse: true).AddChild(fhdf);
+            foreach (string crop in crops)
+            {
+                string path = Path.Combine("%root%", "Examples", $"{crop}.apsimx");
+                path = PathUtilities.GetAbsolutePath(path, null);
+                Simulations simulations = FileFormat.ReadFromFile<Simulations>(path).Model as Simulations;
 
-            Runner runner = new Runner(simulations);
-            List<Exception> errors = runner.Run();
-            if (errors != null && errors.Count > 0)
-                throw errors[0];
+                FrostHeatDamageFunctions fhdf = new FrostHeatDamageFunctions();
+                fhdf.CropType = FrostHeatDamageFunctions.CropTypes.Wheat;
+
+                simulations.Node.FindChild<Plant>(recurse: true).AddChild(fhdf);
+
+                List<string> reportVariables = simulations.Node.FindChild<Models.Report>("Report", recurse: true).VariableNames.ToList();
+                reportVariables.Add("[FrostHeatDamageFunctions].FrostHeatYield");
+                reportVariables.Add("[FrostHeatDamageFunctions].FrostEventNumber");
+                reportVariables.Add("[FrostHeatDamageFunctions].HeatEventNumber");
+                simulations.Node.FindChild<Models.Report>("Report", recurse: true).VariableNames = reportVariables.ToArray();
+                
+                simulations.Node = Node.Create(simulations);
+
+                Runner runner = new Runner(simulations);
+                List<Exception> errors = runner.Run();
+                if (errors != null && errors.Count > 0)
+                    throw errors[0];
+            }
+            
         }
     }
 }

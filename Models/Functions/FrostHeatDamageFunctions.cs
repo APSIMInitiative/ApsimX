@@ -418,10 +418,12 @@ namespace Models.Functions
         [EventSubscribe("DoManagementCalculations")]
         private void OnDoManagementCalculations(object sender, EventArgs e)
         {
+            if (Plant != this.Parent)
+                throw new Exception("Error: FrostHeatDamageFunctions has linked with a Plant that is not its parent");
+
             if (!Plant.IsAlive)
-            {
                 return;
-            }
+
             Phenology phen = Plant.Phenology;
             ReproductiveOrgan organs = Plant.Node.FindChild<ReproductiveOrgan>("Grain");
 
