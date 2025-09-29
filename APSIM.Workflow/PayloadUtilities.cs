@@ -50,6 +50,7 @@ public static class PayloadUtilities
                 "/Prototypes/CroptimizR/template.apsimx",
                 "/Examples/Optimisation/CroptimizRExample.apsimx",
                 "/Tests/Validation/Wheat/Wheat.apsimx", //Leave wheat out for now as it gets split into smaller files automatically.
+                "/Tests/Validation/Wheat/FAR/FAR.apsimx" //Leave FAR out for now as it gets split into smaller files automatically.
             };
 
     // // Development submit azure URL
