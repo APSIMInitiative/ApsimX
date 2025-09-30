@@ -5,7 +5,7 @@ using System.Data;
 using System.Linq;
 using APSIM.Shared.Utilities;
 
-namespace Models.PreSimulationTools.ObservedInfo
+namespace Models.PreSimulationTools.ObservationsInfo
 {
     /// <summary>
     /// Stores information about derived values from the input

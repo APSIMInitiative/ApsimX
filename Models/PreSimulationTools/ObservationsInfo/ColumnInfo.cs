@@ -6,7 +6,7 @@ using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core;
 
-namespace Models.PreSimulationTools.ObservedInfo
+namespace Models.PreSimulationTools.ObservationsInfo
 {
     /// <summary>
     /// Stores information about a column in an observed table

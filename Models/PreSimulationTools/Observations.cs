@@ -9,7 +9,7 @@ using ExcelDataReader;
 using Models.Core;
 using Models.Core.Run;
 using Models.Storage;
-using Models.PreSimulationTools.ObservedInfo;
+using Models.PreSimulationTools.ObservationsInfo;
 
 namespace Models.PreSimulationTools
 {
@@ -20,7 +20,7 @@ namespace Models.PreSimulationTools
     [ViewName("UserInterface.Views.ObservedInputView")]
     [PresenterName("UserInterface.Presenters.ObservedInputPresenter")]
     [ValidParent(ParentType = typeof(DataStore))]
-    public class ObservedInput : Model, IPreSimulationTool, IReferenceExternalFiles, IStructureDependency
+    public class Observations : Model, IPreSimulationTool, IReferenceExternalFiles, IStructureDependency
     {
         /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
@@ -65,8 +65,6 @@ namespace Models.PreSimulationTools
                 this.filenames = value;
             }
         }
-
-        
 
         /// <summary>
         /// Gets or sets the list of EXCEL sheet names to read from.

@@ -6,7 +6,7 @@ using System.Linq;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 
-namespace Models.PreSimulationTools.ObservedInfo
+namespace Models.PreSimulationTools.ObservationsInfo
 {
     /// <summary>
     /// 
@@ -173,7 +173,7 @@ namespace Models.PreSimulationTools.ObservedInfo
         {
             if (!string.IsNullOrEmpty(row[column].ToString()))
             {
-                if (!ObservedInput.RESERVED_COLUMNS.Contains(column) && !string.IsNullOrEmpty(newRow[column].ToString()))
+                if (!Observations.RESERVED_COLUMNS.Contains(column) && !string.IsNullOrEmpty(newRow[column].ToString()))
                 {
                     bool isDouble1 = double.TryParse(newRow[column].ToString(), out double existing);
                     bool isDouble2 = double.TryParse(row[column].ToString(), out double other);

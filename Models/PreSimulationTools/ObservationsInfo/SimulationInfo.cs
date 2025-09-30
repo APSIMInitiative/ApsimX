@@ -4,7 +4,7 @@ using System.Data;
 using System.Linq;
 using Models.Core;
 
-namespace Models.PreSimulationTools.ObservedInfo
+namespace Models.PreSimulationTools.ObservationsInfo
 {
     /// <summary>
     /// 

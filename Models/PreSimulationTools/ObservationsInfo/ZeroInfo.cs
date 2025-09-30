@@ -4,7 +4,7 @@ using System.Data;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 
-namespace Models.PreSimulationTools.ObservedInfo
+namespace Models.PreSimulationTools.ObservationsInfo
 {
     /// <summary>
     /// 
