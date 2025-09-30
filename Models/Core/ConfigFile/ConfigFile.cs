@@ -107,7 +107,8 @@ namespace Models.Core.ConfigFile
 
                     // Determine instruction type.
                     string keywordString = commandSplits[0].ToLower();
-                    if (keywordString.Contains("add")) { keyword = Keyword.Add; }
+                    if (keywordString.Contains("addtotype")) { keyword = Keyword.AddToType; }
+                    else if (keywordString.Contains("add")) { keyword = Keyword.Copy; }
                     else if (keywordString.Contains("copy")) { keyword = Keyword.Copy; }
                     else if (keywordString.Contains("delete")) { keyword = Keyword.Delete; }
                     else if (keywordString.Contains("duplicate")) { keyword = Keyword.Duplicate; }
@@ -126,7 +127,7 @@ namespace Models.Core.ConfigFile
 
                         // Check for required format
                         bool isNode = part2.StartsWith('[') && part2.Contains(']');
-                        if (!isNode)
+                        if (!isNode && keyword != Keyword.AddToType)
                             throw new Exception($"Format of parent model type does not match required format: [ModelName]. The command given was: {command}");
 
                         // Special check to see if the modifiedNodeName = [Simulations] as Simulations node should never be deleted.
@@ -220,11 +221,22 @@ namespace Models.Core.ConfigFile
                 (simulations as Simulations).ResetSimulationFileNames();
 
                 string keyword = instruction.Keyword.ToString();
+                IModel newNode;
+
                 switch (keyword)
                 {
+                    case "AddToType":
+                        IModel[] allParentNode = simulations.Node.FindAll<IModel>().ToList().Where(m => m.GetType().Name == instruction.ActiveNode).ToArray();
+                        foreach (IModel parent in allParentNode)
+                        {
+                            newNode = Structure.Add(instruction.NewNode, parent);
+                            if (instruction.Parameters.Count == 1)
+                                newNode.Name = instruction.Parameters[0];
+                        }
+                        break;
                     case "Add":
                         IModel parentNode = simulations.Node.Get(instruction.ActiveNode) as IModel;
-                        IModel newNode = Structure.Add(instruction.NewNode, parentNode);
+                        newNode = Structure.Add(instruction.NewNode, parentNode);
                         if (instruction.Parameters.Count == 1)
                             newNode.Name = instruction.Parameters[0];
                         break;
@@ -266,15 +278,27 @@ namespace Models.Core.ConfigFile
             {
 
                 //Check for add keyword in instruction.
-                if (instruction.Keyword == Keyword.Add)
+                if (instruction.Keyword == Keyword.Add || instruction.Keyword == Keyword.AddToType)
                 {
                     // Process for adding an existing node from another file.
+                    string pathOfSimWithNodeAbsoluteDirectory = configFileDirectory + Path.DirectorySeparatorChar + pathOfSimWithNode;
+                    Simulations simToCopyFrom = FileFormat.ReadFromFile<Simulations>(pathOfSimWithNodeAbsoluteDirectory).Model as Simulations;
+                    IModel nodeToCopy = simToCopyFrom.Node.Get(instruction.NewNode) as IModel;
+
+                    if (instruction.Keyword == Keyword.Add)
                     {
-                        string pathOfSimWithNodeAbsoluteDirectory = configFileDirectory + Path.DirectorySeparatorChar + pathOfSimWithNode;
-                        Simulations simToCopyFrom = FileFormat.ReadFromFile<Simulations>(pathOfSimWithNodeAbsoluteDirectory).Model as Simulations;
-                        IModel nodeToCopy = simToCopyFrom.Node.Get(instruction.NewNode) as IModel;
                         IModel parentNode = simulations.Node.Get(instruction.ActiveNode) as IModel;
                         Structure.Add(nodeToCopy, parentNode);
+                    }
+                    else if (instruction.Keyword == Keyword.AddToType)
+                    {
+                        IModel[] allParentNode = simulations.Node.FindAll<IModel>().ToList().Where(m => m.GetType().Name == instruction.ActiveNode).ToArray();
+                        foreach (IModel parent in allParentNode)
+                        {
+                            IModel newNode = Structure.Add(nodeToCopy, parent);
+                            if (instruction.Parameters.Count == 1)
+                                newNode.Name = instruction.Parameters[0];
+                        }
                     }
                 }
                 return simulations;
