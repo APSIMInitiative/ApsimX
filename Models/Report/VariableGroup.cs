@@ -16,7 +16,7 @@ namespace Models
     public class VariableGroup
     {
         /// <summary>An instance of a locator service.</summary>
-        private readonly IStructure locator;
+        private IStructure locator;
 
         /// <summary>The values for each report event (e.g. daily) for a group.</summary>
         private readonly List<object> valuesToAggregate = new List<object>();
