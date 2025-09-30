@@ -222,7 +222,7 @@ namespace APSIM.Workflow
                                 if (!allSheetNames.Contains(sheet))
                                     allSheetNames.Add(sheet);
 
-                        foreach (ObservedInput input in copiedSims.Node.FindAll<ObservedInput>())
+                        foreach (Observations input in copiedSims.Node.FindAll<Observations>())
                             foreach (string sheet in input.SheetNames)
                                 if (!allSheetNames.Contains(sheet))
                                     allSheetNames.Add(sheet);

@@ -74,6 +74,9 @@ namespace Models.PreSimulationTools.ObservationsInfo
 
             List<string> allColumnNames = dataTable.GetColumnNames().ToList();
 
+            if (allColumnNames.Count == 0)
+                return infos;
+
             for (int j = 0; j < dataTable.Columns.Count; j++)
             {
                 string columnName = dataTable.Columns[j].ColumnName;
