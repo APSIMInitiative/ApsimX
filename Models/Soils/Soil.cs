@@ -255,7 +255,7 @@ namespace Models.Soils
                         if (physical.KS[layer] == MathUtilities.MissingValue ||
                                                 double.IsNaN(physical.KS[layer]) ||
                                                 MathUtilities.LessThan(physical.KS[layer], 0, 3) ||
-                                                (layer < physical.Thickness.Length - 1 && MathUtilities.FloatsAreEqual(physical.KS[layer], 0, 3)))
+                                                (layer < physical.Thickness.Length - 1 && MathUtilities.FloatsAreEqual(physical.KS[layer], 0)))
                             message.AppendLine($"KS in layer {layerNumber} must be > 0");
                     }
                 }
