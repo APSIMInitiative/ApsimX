@@ -23,11 +23,11 @@ internal static class DeepClonerGenerator
     {
         if (obj == null)
             return null;
-        
+
         var cloner = (Func<object, DeepCloneState, object>)DeepClonerCache.GetOrAddClass(obj.GetType(), t => GenerateCloner(t, true));
 
         // null -> should return same type
-        if (cloner == null) 
+        if (cloner == null)
             return obj;
 
         return cloner(obj, new());
@@ -35,18 +35,18 @@ internal static class DeepClonerGenerator
 
     internal static object? CloneClassInternal(object? obj, DeepCloneState state)
     {
-        if (obj == null) 
+        if (obj == null)
             return null;
 
         var cloner = (Func<object, DeepCloneState, object>)DeepClonerCache.GetOrAddClass(obj.GetType(), t => GenerateCloner(t, true));
 
         // safe object
-        if (cloner == null) 
+        if (cloner == null)
             return obj;
 
         // loop
         var knownRef = state.GetKnownRef(obj);
-        if (knownRef != null) 
+        if (knownRef != null)
             return knownRef;
 
         return cloner(obj, state);
@@ -58,7 +58,7 @@ internal static class DeepClonerGenerator
         var cloner = GetClonerForValueType<T>();
 
         // safe ojbect
-        if (cloner == null) 
+        if (cloner == null)
             return obj;
 
         return cloner(obj, state);
@@ -106,14 +106,14 @@ internal static class DeepClonerGenerator
     {
         // not null from called method, but will check it anyway
         if (obj == null) return null;
-            
+
         // we cannot determine by type multidim arrays (one dimension is possible)
         // so, will check for index here
         var lb1 = obj.GetLowerBound(0);
         var lb2 = obj.GetLowerBound(1);
         if (lb1 != 0 || lb2 != 0)
-            return (T[,]) CloneAbstractArrayInternal(obj, state);
-            
+            return (T[,])CloneAbstractArrayInternal(obj, state);
+
         var l1 = obj.GetLength(0);
         var l2 = obj.GetLength(1);
         var outArray = new T[l1, l2];
@@ -196,7 +196,7 @@ internal static class DeepClonerGenerator
 
     private static object? GenerateCloner(Type t, bool asObject)
     {
-        if (DeepClonerSafeTypes.CanReturnSameObject(t) && (asObject && !t.IsValueType())) 
+        if (DeepClonerSafeTypes.CanReturnSameObject(t) && (asObject && !t.IsValueType()))
             return null;
 
         return DeepClonerExprGenerator.GenerateClonerInternal(t, asObject);
@@ -222,4 +222,9 @@ internal static class DeepClonerGenerator
 
     [ThreadStatic]
     internal static Type[]? SuppressedAttributeTypes = null;
+
+    /// <summary>A list of types to suppress.</summary>
+    [ThreadStatic]
+    internal static Type[]? SuppressedTypes = null;
+
 }
