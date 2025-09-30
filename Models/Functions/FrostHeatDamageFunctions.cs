@@ -427,7 +427,7 @@ namespace Models.Functions
             Phenology phen = Plant.Phenology;
             ReproductiveOrgan organs = Plant.Node.FindChild<ReproductiveOrgan>("Grain");
 
-            double GrowthStageToday = phen.Stage; ;
+            double GrowthStageToday = phen.Stage;
             //GrowthStageToday = phen.Zadok;
 
             // Daily potential yield reduction ratio by a frost event

@@ -16,11 +16,10 @@ namespace UnitTests.Functions
     [TestFixture]
     class FrostHeatDamageFunctionsTests
     {
-        /// <summary>Ensure the hold function can deal with exceptions.</summary>
+        /// <summary>Ensure the FrostHeatDamageFunctions runs without exceptions for supported crop types.</summary>
         [Test]
         public void TestFrostHeatFunctionRuns()
         {
-
             string[] crops = { "Wheat", "Canola", "Barley" };
             FrostHeatDamageFunctions.CropTypes[] types = { FrostHeatDamageFunctions.CropTypes.Wheat, FrostHeatDamageFunctions.CropTypes.Canola, FrostHeatDamageFunctions.CropTypes.Wheat };
 
@@ -48,7 +47,6 @@ namespace UnitTests.Functions
                 if (errors != null && errors.Count > 0)
                     throw errors[0];
             }
-            
         }
     }
 }
