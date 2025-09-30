@@ -182,6 +182,14 @@ internal static class DeepClonerExprGenerator
                     return true;
             }
         }
+        if (DeepClonerGenerator.SuppressedTypes != null)
+        {
+            foreach (Type attrType in DeepClonerGenerator.SuppressedTypes)
+            {
+                if (fieldInfo.FieldType.GetCustomAttribute(attrType, false) != null)
+                    return true;
+            }
+        }
         return false;
     }
 
