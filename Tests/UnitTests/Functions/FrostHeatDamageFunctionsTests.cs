@@ -22,15 +22,16 @@ namespace UnitTests.Functions
         {
 
             string[] crops = { "Wheat", "Canola", "Barley" };
+            FrostHeatDamageFunctions.CropTypes[] types = { FrostHeatDamageFunctions.CropTypes.Wheat, FrostHeatDamageFunctions.CropTypes.Canola, FrostHeatDamageFunctions.CropTypes.Wheat };
 
-            foreach (string crop in crops)
+            for(int i = 0; i < crops.Length; i++)
             {
-                string path = Path.Combine("%root%", "Examples", $"{crop}.apsimx");
+                string path = Path.Combine("%root%", "Examples", $"{crops[i]}.apsimx");
                 path = PathUtilities.GetAbsolutePath(path, null);
                 Simulations simulations = FileFormat.ReadFromFile<Simulations>(path).Model as Simulations;
 
                 FrostHeatDamageFunctions fhdf = new FrostHeatDamageFunctions();
-                fhdf.CropType = FrostHeatDamageFunctions.CropTypes.Wheat;
+                fhdf.CropType = types[i];
 
                 simulations.Node.FindChild<Plant>(recurse: true).AddChild(fhdf);
 
@@ -39,7 +40,7 @@ namespace UnitTests.Functions
                 reportVariables.Add("[FrostHeatDamageFunctions].FrostEventNumber");
                 reportVariables.Add("[FrostHeatDamageFunctions].HeatEventNumber");
                 simulations.Node.FindChild<Models.Report>("Report", recurse: true).VariableNames = reportVariables.ToArray();
-                
+
                 simulations.Node = Node.Create(simulations);
 
                 Runner runner = new Runner(simulations);
