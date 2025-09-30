@@ -23,7 +23,6 @@ namespace Models.Core
         [NonSerialized]
         private IModel modelParent;
 
-        [NonSerialized]
         private Node node;
 
         private bool _enabled = true;
