@@ -1,5 +1,6 @@
 using APSIM.Numerics;
 using APSIM.Shared.Documentation.Extensions;
+using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
 using BruTile.Wmts.Generated;
 using Newtonsoft.Json.Linq;
@@ -16,7 +17,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 201; } }
+    public static int LatestVersion { get { return 202; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -7003,4 +7004,18 @@ internal class Converter
         }
     }
 
+    /// <summary>
+    /// Ensure that when IStructure is stored in Manager scripts as a field, it is marked [NonSerialized]
+    /// </summary>
+    /// <param name="root">The root JSON token.</param>
+    /// <param name="_">The name of the apsimx file.</param>
+    private static void UpgradeToVersion202(JObject root, string _)
+    {
+        foreach (var manager in JsonUtilities.ChildManagers(root))
+        {
+            bool isChanged = manager.Replace("[field:NonSerialized]", string.Empty);
+            if (isChanged)
+                manager.Save();
+        }
+    }
 }
