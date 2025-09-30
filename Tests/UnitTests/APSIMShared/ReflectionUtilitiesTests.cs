@@ -1,8 +1,11 @@
 namespace UnitTests.APSIMShared
 {
+    using APSIM.Core;
     using APSIM.Shared.Utilities;
+    using Models;
     using Models.Core;
     using NUnit.Framework;
+    using NUnit.Framework.Constraints;
     using System;
     using System.IO;
 
@@ -42,7 +45,7 @@ namespace UnitTests.APSIMShared
             string input = "a, b , c";
             object output = ReflectionUtilities.StringToObject(typeof(string[]), input);
             string[] expectedOutput = new string[3] { "a", "b ", "c" };
-            
+
             Assert.That(output, Is.EqualTo(expectedOutput));
         }
 
@@ -75,5 +78,46 @@ namespace UnitTests.APSIMShared
                 Assert.That(cloned.FileName, Is.EqualTo(exception.FileName));
             }
         }
+
+        class ModelWithNode
+        {
+            public Node Node;
+        }
+
+        /// <summary>
+        /// Ensure clone doesn't clone Node instances
+        /// </summary>
+        [Test]
+        public void TestNodeDoesntClone()
+        {
+            ModelWithNode modelA = new()
+            {
+                Node = Node.Create(new Clock())
+            };
+
+            var newModelA = ReflectionUtilities.Clone(modelA) as ModelWithNode;
+            Assert.That(newModelA.Node, Is.Null);
+        }
+
+        class ModelWithStructure
+        {
+            public IStructure Structure;
+        }
+
+        /// <summary>
+        /// Ensure clone doesn't clone Structure instances
+        /// </summary>
+        [Test]
+        public void TestStructureDoesntClone()
+        {
+            ModelWithStructure modelB = new()
+            {
+                Structure = Node.Create(new Clock())
+            };
+
+            var newModelB = ReflectionUtilities.Clone(modelB) as ModelWithStructure;
+            Assert.That(newModelB.Structure, Is.Null);
+        }
+
     }
 }
