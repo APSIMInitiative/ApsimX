@@ -8,4 +8,4 @@ response=$(curl -L -s -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer ${TOKEN}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             https://api.github.com/repos/${REPOSITORY}/commits/${SHA}/pulls)
-echo "pr_number=$(echo $response | jq -r '.[0].number')" >> "$GITHUB_OUTPUT"
+echo "pr_number=$(echo $response | jq -r '.[0].number')"
