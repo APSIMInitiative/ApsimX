@@ -115,7 +115,7 @@ jobs:
           DOCKER_METADATA_OUTPUT_VERSION: ${{ steps.meta_apsimplusr.outputs.tags }}
           INCOMING_COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
           PR_AUTHOR: ${{ github.actor }}
-        run: ./.github/workflows/scripts/submit-azure-validation-jobs.sh 
+        run: ./.github/workflows/scripts/create-azure-jobs.sh 
 
       - name: Print workflow submit success summary markdown
         if: success()
