@@ -107,7 +107,7 @@ namespace Models.Core.ConfigFile
 
                     // Determine instruction type.
                     string keywordString = commandSplits[0].ToLower();
-                    if (keywordString.Contains("addtotype")) { keyword = Keyword.AddToType; }
+                    if (keywordString.Contains("addtoall")) { keyword = Keyword.AddToAll; }
                     else if (keywordString.Contains("add")) { keyword = Keyword.Add; }
                     else if (keywordString.Contains("copy")) { keyword = Keyword.Copy; }
                     else if (keywordString.Contains("delete")) { keyword = Keyword.Delete; }
@@ -127,9 +127,9 @@ namespace Models.Core.ConfigFile
 
                         // Check for required format
                         bool isNode = part2.StartsWith('[') && part2.Contains(']');
-                        if (!isNode && keyword != Keyword.AddToType)
+                        if (!isNode && keyword != Keyword.AddToAll)
                             throw new Exception($"Format of parent model type does not match required format: [ModelName]. The command given was: {command}");
-                        if (isNode && keyword == Keyword.AddToType)
+                        if (isNode && keyword == Keyword.AddToAll)
                             throw new Exception($"Format of parent model type does not match required format: ModelType (no brackets). The command given was: {command}");
 
                         // Special check to see if the modifiedNodeName = [Simulations] as Simulations node should never be deleted.
@@ -227,7 +227,7 @@ namespace Models.Core.ConfigFile
 
                 switch (keyword)
                 {
-                    case "AddToType":
+                    case "AddToAll":
                         IModel[] allParentNode = simulations.Node.FindAll<IModel>().ToList().Where(m => m.GetType().Name == instruction.ActiveNode).ToArray();
                         foreach (IModel parent in allParentNode)
                         {
@@ -280,7 +280,7 @@ namespace Models.Core.ConfigFile
             {
 
                 //Check for add keyword in instruction.
-                if (instruction.Keyword == Keyword.Add || instruction.Keyword == Keyword.AddToType)
+                if (instruction.Keyword == Keyword.Add || instruction.Keyword == Keyword.AddToAll)
                 {
                     // Process for adding an existing node from another file.
                     string pathOfSimWithNodeAbsoluteDirectory = configFileDirectory + Path.DirectorySeparatorChar + pathOfSimWithNode;
@@ -294,7 +294,7 @@ namespace Models.Core.ConfigFile
                         if (instruction.Parameters.Count == 1)
                             nodeToCopy.Name = instruction.Parameters[0];
                     }
-                    else if (instruction.Keyword == Keyword.AddToType)
+                    else if (instruction.Keyword == Keyword.AddToAll)
                     {
                         IModel[] allParentNode = simulations.Node.FindAll<IModel>().ToList().Where(m => m.GetType().Name == instruction.ActiveNode).ToArray();
                         foreach (IModel parent in allParentNode)

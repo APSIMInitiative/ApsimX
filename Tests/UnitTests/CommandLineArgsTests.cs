@@ -344,22 +344,20 @@ ExperimentY2
         // ==================================================================================================
         // ==================================================================================================
         [Test]
-        public void TestApplySwitchAddToType()
+        public void TestApplySwitchAddToAll()
         {
             Simulations file = Utilities.GetRunnableSim();
             Simulations file2 = Utilities.GetRunnableSim();
             Simulations file3 = Utilities.GetRunnableSim();
 
-            Zone fieldNode = file.Node.Find<Zone>();
-
             // Get path string for the config file.
-            string savingFilePath = Path.Combine(Path.GetTempPath(), "savingAddToType.apsimx");
+            string savingFilePath = Path.Combine(Path.GetTempPath(), "savingAddToAll.apsimx");
             string newTempConfigFile = Path.Combine(Path.GetTempPath(), "config7.txt");
             string newApsimFile = file2.FileName;
             string savingApsimFileName = file3.FileName;
             int indexOfNameStart = savingApsimFileName.LastIndexOf(Path.DirectorySeparatorChar) + 1;
             string savingApsimFileNameShort = savingApsimFileName.Substring(indexOfNameStart);
-            string newFileString = $"duplicate [Simulation]\naddtotype Zone Report\naddtotype Zone Report MyReport1\naddtotype Zone {newApsimFile};[Report] MyReport2\nsave savingAddToType.apsimx";
+            string newFileString = $"duplicate [Simulation]\naddtoall Zone Report\naddtoall Zone Report MyReport1\naddtoall Zone {newApsimFile};[Report] MyReport2\nsave savingAddToAll.apsimx";
             File.WriteAllText(newTempConfigFile, newFileString);
 
             bool fileExists = File.Exists(newTempConfigFile);
