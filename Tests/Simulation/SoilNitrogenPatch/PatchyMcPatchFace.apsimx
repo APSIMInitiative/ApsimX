@@ -9227,15 +9227,15 @@
                 },
                 {
                   "Key": "AcceptedIntercept",
-                  "Value": "-10.83"
+                  "Value": "-10.7"
                 },
                 {
                   "Key": "AcceptedRMSE",
-                  "Value": "52.52"
+                  "Value": "52.3"
                 },
                 {
                   "Key": "AcceptedNSE",
-                  "Value": "0.13"
+                  "Value": "0.15"
                 },
                 {
                   "Key": "FailBeyondTolerance",
