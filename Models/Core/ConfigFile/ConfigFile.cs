@@ -290,7 +290,9 @@ namespace Models.Core.ConfigFile
                     if (instruction.Keyword == Keyword.Add)
                     {
                         IModel parentNode = simulations.Node.Get(instruction.ActiveNode) as IModel;
-                        Structure.Add(nodeToCopy, parentNode);
+                        nodeToCopy = Structure.Add(nodeToCopy, parentNode);
+                        if (instruction.Parameters.Count == 1)
+                            nodeToCopy.Name = instruction.Parameters[0];
                     }
                     else if (instruction.Keyword == Keyword.AddToType)
                     {
