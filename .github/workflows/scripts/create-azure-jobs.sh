@@ -37,4 +37,4 @@ fi
 response=$(curl "https://postats2.apsim.info/api/open?pullrequestnumber=${DOCKER_METADATA_OUTPUT_VERSION:3}&commitid=${commitsha}&count=${jobcount}&author=${author}&pool=${azure_pool}")
 echo "POStats2 open response: ${response}"
 echo "Start creating payload..."
-dotnet ./bin/Release/net8.0/APSIM.Workflow.dll --payload-directory "${PAYLOAD_FOLDER_PATH}" -g "$author" -t $DOCKER_METADATA_OUTPUT_VERSION --commit-sha "$commitsha" --pr-number ${DOCKER_METADATA_OUTPUT_VERSION:3} --azure-pool ${azure_pool} -v
+dotnet ./bin/Release/net8.0/APSIM.Workflow.dll --payload-directory ${PAYLOAD_FOLDER_PATH} -g ${author} -t ${DOCKER_METADATA_OUTPUT_VERSION} --commit-sha ${commitsha} --pr-number ${DOCKER_METADATA_OUTPUT_VERSION:3} --azure-pool ${azure_pool} -v
