@@ -59,11 +59,7 @@ jobs:
 
       - name: Get PR number from GitHub API
         id: fetch_pr_number
-        env:
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          GITHUB_SHA: ${{ github.sha }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: bash ./.github/workflows/scripts/get-pr-number.sh "test" $GITHUB_REPOSITORY $GITHUB_SHA $GITHUB_TOKEN
+        run: bash ./.github/workflows/scripts/get-pr-number.sh "${{ github.repository }}" "${{ github.sha }}" "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Extract password protected datasets
         id: extract_password_protected_datasets
