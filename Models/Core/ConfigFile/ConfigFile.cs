@@ -108,7 +108,7 @@ namespace Models.Core.ConfigFile
                     // Determine instruction type.
                     string keywordString = commandSplits[0].ToLower();
                     if (keywordString.Contains("addtotype")) { keyword = Keyword.AddToType; }
-                    else if (keywordString.Contains("add")) { keyword = Keyword.Copy; }
+                    else if (keywordString.Contains("add")) { keyword = Keyword.Add; }
                     else if (keywordString.Contains("copy")) { keyword = Keyword.Copy; }
                     else if (keywordString.Contains("delete")) { keyword = Keyword.Delete; }
                     else if (keywordString.Contains("duplicate")) { keyword = Keyword.Duplicate; }
