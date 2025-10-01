@@ -1,23 +1,22 @@
-# Check payload directory exists and create it if not
-if test -d "${PAYLOAD_FOLDER_PATH}"; then
-    echo "Directory exists."
-else
-    echo "Directory does not exist. Making directory..."
-    mkdir -p "${PAYLOAD_FOLDER_PATH}"
-fi
+
+# Check all the environment variables are set.
+test -z "$PAYLOAD_FOLDER_PATH" && echo "PAYLOAD_FOLDER_PATH is empty" && exit 1 || echo "PAYLOAD_FOLDER_PATH is set"
+test -z "$AZURE_ENV_CONTENTS" && echo "AZURE_ENV_CONTENTS is empty" && exit 1 || echo "AZURE_ENV_CONTENTS is set"
+test -z "$INCOMING_COMMIT_SHA" && echo "INCOMING_COMMIT_SHA is empty" && exit 1 || echo "INCOMING_COMMIT_SHA is set"
+test -z "$PR_AUTHOR" && echo "PR_AUTHOR is empty" && exit 1 || echo "PR_AUTHOR is set"
+test -z "$DOCKER_METADATA_OUTPUT_VERSION" && echo "DOCKER_METADATA_OUTPUT_VERSION is empty" && exit 1 || echo "DOCKER_METADATA_OUTPUT_VERSION is set"
 
 # Add .env to payload directory
 echo "Adding .env file to ${PAYLOAD_FOLDER_PATH}"
-echo "${{ secrets.AZURE_ENV_CONTENTS }}" > "${PAYLOAD_FOLDER_PATH}/.env"
+echo "${AZURE_ENV_CONTENTS}" > "${PAYLOAD_FOLDER_PATH}/.env"
 if test -f "${PAYLOAD_FOLDER_PATH}/.env"; then
     echo ".env successfully added to ${PAYLOAD_FOLDER_PATH}"
 fi
 
 # Tell POStats2 to open and get ready to accept data
 echo "Opening POStats2 to accept data..."
-echo "Commit SHA: ${{ github.event.pull_request.head.sha }}"
-commitsha=${{ github.event.pull_request.head.sha }}
-author=${{ github.actor }}
+commitsha=${INCOMING_COMMIT_SHA}
+author=${PR_AUTHOR}
 if [[ "$author" == *"[bot]"* ]]; then
     author="${author%"[bot]"}"
 fi
