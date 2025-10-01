@@ -60,11 +60,10 @@ jobs:
       - name: Get PR number from GitHub API
         id: fetch_pr_number
         env:
-          TEST_VAR: test
           REPOSITORY: ${{ github.repository }}
           SHA: ${{ github.sha }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./.github/workflows/scripts/get-pr-number.sh "$REPOSITORY" "$SHA" "$TOKEN"
+        run: ./.github/workflows/scripts/get-pr-number.sh
 
 
       - name: Extract password protected datasets
@@ -73,7 +72,7 @@ jobs:
           SOYBEAN_PASSWORD: ${{ secrets.SOYBEAN_PASSWORD }}
           CORNSOY_PASSWORD: ${{ secrets.CORNSOY_PASSWORD }}
           SWIM_PASSWORD: ${{ secrets.SWIM_PASSWORD }}
-        run: bash ./.github/workflows/scripts/extract-protected-datasets.sh
+        run: ./.github/workflows/scripts/extract-protected-datasets.sh
 
       - name: Build Models and APSIM.Workflow projects
         run: |
@@ -114,7 +113,13 @@ jobs:
 
       - name: Create Azure Validation Jobs
         id: submit_azure_jobs
-        run: "bash .github/workflows/scripts/submit-azure-validation-jobs.sh ${PAYLOAD_FOLDER_PATH} ${{ secrets.AZURE_ENV_CONTENTS }} ${{ github.event.pull_request.head.sha }} ${{ github.actor }} ${DOCKER_METADATA_OUTPUT_VERSION}"
+        env:
+          PAYLOAD_FOLDER_PATH: ${PAYLOAD_FOLDER_PATH}
+          AZURE_ENV_CONTENTS: ${{ secrets.AZURE_ENV_CONTENTS }}
+          DOCKER_METADATA_OUTPUT_VERSION: ${{ steps.meta_apsimplusr.outputs.tags }}
+          INCOMING_COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_AUTHOR: ${{ github.actor }}
+        run: ./.github/workflows/scripts/submit-azure-validation-jobs.sh 
 
       - name: Print workflow submit success summary markdown
         if: success()
