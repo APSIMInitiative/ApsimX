@@ -1,8 +1,15 @@
-# Be aware that this script runs in the context of a GitHub Action and includes github workflow variables.
-# See https://docs.github.com/en/actions/learn-github-actions/variables for more information
-repository=$1
-sha=$2
-github_token=$3
+
+example=$1
+
+repository=$2
+sha=$3
+github_token=$4
+
+# test if example arg is missing
+if [ -z "$example" ]; then
+    echo "Example argument is missing."
+    exit 1
+fi
 
 # Test each input arg individually to make sure none are missing
 if [ -z "$repository" ]; then
