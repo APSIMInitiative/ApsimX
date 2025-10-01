@@ -19,6 +19,9 @@ jobs:
     env:
       ALL_APSIM_FILES: ""
     steps:
+
+      - name: see PWD
+        run: echo $PWD
       
       - name: Set git user
         run: |
