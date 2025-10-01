@@ -4,9 +4,19 @@ repository=$1
 sha=$2
 github_token=$3
 
-# Test if any input args are missing
-if [ -z "$repository" ] || [ -z "$sha" ] || [ -z "$github_token" ]; then
-    echo "One or more input arguments are missing."
+# Test each input arg individually to make sure none are missing
+if [ -z "$repository" ]; then
+    echo "Repository is missing as an input argument."
+    exit 1
+fi
+
+if [ -z "$sha" ]; then
+    echo "sha is missing as an input argument."
+    exit 1
+fi
+
+if [ -z "$github_token" ]; then
+    echo "github_token is missing as an input argument."
     exit 1
 fi
 
