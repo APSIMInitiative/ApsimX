@@ -129,6 +129,8 @@ namespace Models.Core.ConfigFile
                         bool isNode = part2.StartsWith('[') && part2.Contains(']');
                         if (!isNode && keyword != Keyword.AddToType)
                             throw new Exception($"Format of parent model type does not match required format: [ModelName]. The command given was: {command}");
+                        if (isNode && keyword == Keyword.AddToType)
+                            throw new Exception($"Format of parent model type does not match required format: ModelType (no brackets). The command given was: {command}");
 
                         // Special check to see if the modifiedNodeName = [Simulations] as Simulations node should never be deleted.
                         if (keyword == Keyword.Delete && part2 == "[Simulations]")
