@@ -54,6 +54,9 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
+      - name: Make github workflow bash scripts executable
+        run: chmod +x ./.github/workflows/scripts/*.sh
+
       - name: Get PR number from GitHub API
         id: fetch_pr_number
         run: bash ./.github/workflows/scripts/get-pr-number.sh
