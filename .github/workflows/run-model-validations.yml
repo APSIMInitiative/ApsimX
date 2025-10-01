@@ -19,10 +19,7 @@ jobs:
     env:
       ALL_APSIM_FILES: ""
     steps:
-
-      - name: see PWD
-        run: echo $PWD
-      
+    
       - name: Set git user
         run: |
           git config --global user.name "github-actions[bot]"
@@ -57,13 +54,13 @@ jobs:
       - name: Make github workflow bash scripts executable
         run: chmod +x ./.github/workflows/scripts/*.sh
 
-      - name: Get PR number from GitHub API
-        id: fetch_pr_number
-        env:
-          REPOSITORY: ${{ github.repository }}
-          SHA: ${{ github.sha }}
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./.github/workflows/scripts/get-pr-number.sh
+      # - name: Get PR number from GitHub API
+      #   id: fetch_pr_number
+      #   env:
+      #     REPOSITORY: ${{ github.repository }}
+      #     SHA: ${{ github.sha }}
+      #     TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: ./.github/workflows/scripts/get-pr-number.sh
 
       - name: Extract password protected datasets
         id: extract_password_protected_datasets
