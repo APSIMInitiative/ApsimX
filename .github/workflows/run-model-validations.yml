@@ -63,8 +63,7 @@ jobs:
           REPOSITORY: ${{ github.repository }}
           SHA: ${{ github.sha }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./.github/workflows/scripts/get-pr-number.sh >> "$GITHUB_OUTPUT"
-
+        run: ./.github/workflows/scripts/get-pr-number.sh
 
       - name: Extract password protected datasets
         id: extract_password_protected_datasets
