@@ -12,7 +12,7 @@ namespace UnitTests.CLEM
 {
     /// <summary>
     /// Test the application of details provided in the RuminantTypeCohort to create individuals in the RuminantHerd
-    /// This does not oconsider newborn individuals created from RuminantFemale.Births
+    /// This does not Consider newborn individuals created from RuminantFemale.Births
     /// </summary>
     [TestFixture]
     public class RuminantInitialiseTests
@@ -25,8 +25,8 @@ namespace UnitTests.CLEM
         public void SetUp()
         {
             singleSheepSim = Utilities.ReadFromResource<Simulations>("UnitTests.CLEM.Resources.SingleSheep.apsimx", e => throw e);
-            sheepCohort = singleSheepSim.FindAllAncestors<RuminantTypeCohort>().First();
-            sheepHerd = singleSheepSim.FindAllAncestors<RuminantHerd>().First();
+            sheepCohort = singleSheepSim.Node.Find<RuminantTypeCohort>();
+            sheepHerd = singleSheepSim.Node.Find<RuminantHerd>();
         }
 
         // Setting initial weight with options
@@ -74,7 +74,7 @@ namespace UnitTests.CLEM
         [Test]
         public void Age_BelowNaturalWean()
         {
-            var sheepType = sheepHerd.FindAllChildren<RuminantType>().First();
+            var sheepType = sheepHerd.Node.Find<RuminantType>();
             var natwean = sheepType.Parameters.General.NaturalWeaningAge.InDays - 1;
             sheepCohort.AgeDetails = new int[] { natwean };
             sheepCohort.Weight = 10;
@@ -87,7 +87,7 @@ namespace UnitTests.CLEM
         [Test]
         public void Age_AboveNaturalWean()
         {
-            var sheepType = sheepHerd.FindAllChildren<RuminantType>().First();
+            var sheepType = sheepHerd.Node.Find<RuminantType>();
             var natwean = sheepType.Parameters.General.NaturalWeaningAge.InDays;
             sheepCohort.AgeDetails = new int[] { natwean };
             sheepCohort.Weight = 10;
