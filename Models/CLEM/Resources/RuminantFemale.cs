@@ -79,10 +79,18 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (IsPregnant)
-                    return "Pregnant";
-                else if (IsLactating)
+                if (IsLactating)
+                {
+                    if (IsPregnant)
+                    {
+                        return "Pregnant:Lactating";
+                    }
                     return "Lactating";
+                }
+                else if (IsPregnant)
+                {
+                    return "Pregnant";
+                }
                 else if (IsBreeder)
                 {
                     if (IsAbleToBreed)
@@ -428,9 +436,8 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                // 0.33 is CP4
                 if (NumberOfFetuses > 0)
-                    return (1 - 0.33 + 0.33 * Weight.RelativeSize) * CurrentBirthScalar * Weight.StandardReferenceWeight;
+                    return (1 - Parameters.General.EffectRelativeSizeBirthWeight_CP4 + (Parameters.General.EffectRelativeSizeBirthWeight_CP4 * Weight.RelativeSize)) * CurrentBirthScalar * Weight.StandardReferenceWeight;
                 return 0;
             }
         }
@@ -443,13 +450,14 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                //(a)Has at least one suckling offspring(i.e.unweaned offspring)
-                //Or
-                //(b) Is being milked
-                //and
-                //(c) Less than Milking days since last birth
-                //return ((SucklingOffspringList.Count != 0 | Milk.MilkingPerformed) && DaysSince(RuminantTimeSpanTypes.GaveBirth, double.PositiveInfinity) <= Parameters.Lactation.MilkingDays);
+                // daysInTimeStepLactating is determined in UpdateBreedingDetails calculated as an individual ages
+                // sucklings, milking and total milking days are accounted for in UpdateBreedingDetails
+                // Births occure before lactation is calculated so there should not be any occassion where lactation days are > 0 with no sucklings present.
 
+                if (daysInTimeStepLactating > 0 && SucklingOffspringList.Count == 0)
+                {
+                    throw new Exception($"Lactation is predicted without births occuring for [{this.HerdName}]. This may arise because a pregnant breeder is present in the initial herd and no [RuminantActivityBreed] activity is available to manage births.");
+                }
                 return daysInTimeStepLactating > 0;
             }
         }
@@ -504,7 +512,7 @@ namespace Models.CLEM.Resources
             // This will occur at the start of each time-step called by the RuminantType resource before any activities.
             // Mother's will always be processed before offstring due to the order of creation in the herd, so we can be assured mothers details are known when considering sucklings.
 
-            if (IsSterilised || BirthDueDate is null)
+            if (IsSterilised) //|| BirthDueDate is null)
             {
                 return;
             }
@@ -813,7 +821,7 @@ namespace Models.CLEM.Resources
                 NumberOfOffspring += CarryingCount;
                 NumberOfBirthsThisTimestep = CarryingCount;
             }
-            base.Weight.Conceptus.Reset();
+            base.Weight.Conceptus.Set(0);
             base.Weight.Fetus.Reset();
             base.Weight.ConceptusFat.Reset();
             base.Weight.ConceptusProtein.Reset();
@@ -843,7 +851,7 @@ namespace Models.CLEM.Resources
             //daysInTimeStepPregnant = (int)TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays;
             //daysInTimeStepPregnant = (int)(Parameters.Details.CurrentTimeStep.TimeStepStart - (BirthDueDate ?? Parameters.Details.CurrentTimeStep.TimeStepStart)).TotalDays;
             //daysInTimeStepLactating = Parameters.Details.CurrentTimeStep.Interval - daysInTimeStepPregnant;
-            BirthDueDate = null;
+            BirthDueDate = default; // null;
         }
 
 

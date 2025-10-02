@@ -80,7 +80,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         public double ForHeatProduction { get { return ForBasalMetabolism + ForHPViscera + ForProductFormationAverage;} } 
 
-
         /// <summary>
         /// Energy available after maintenance
         /// </summary>
@@ -199,7 +198,6 @@ namespace Models.CLEM.Resources
             ForBasalMetabolism = 0;
             ForProductFormation = 0;
             ForHPViscera = 0;
-            ForFetus = 0;
             ForLactation = 0;
             ForWool = 0;
             ToMove = 0;

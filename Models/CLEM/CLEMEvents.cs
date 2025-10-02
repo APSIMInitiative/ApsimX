@@ -49,6 +49,8 @@ namespace Models.CLEM
         public event EventHandler CLEMPastureReady;
         /// <summary>CLEM cut and carry</summary>
         public event EventHandler CLEMDoCutAndCarry;
+        /// <summary>CLEM allow any tasks needed prior to births such as last pregnancy energy calculations</summary>
+        public event EventHandler CLEMAnimalBeforeBreeding;
         /// <summary>CLEM Do Animal (Ruminant and Other) Breeding and milk calculations</summary>
         public event EventHandler CLEMAnimalBreeding;
         /// <summary>Get potential intake. This includes suckling milk consumption</summary>
@@ -312,6 +314,7 @@ namespace Models.CLEM
                 CLEMUpdatePasture?.Invoke(this, args);
                 CLEMPastureReady?.Invoke(this, args);
                 CLEMDoCutAndCarry?.Invoke(this, args);
+                CLEMAnimalBeforeBreeding?.Invoke(this, args);
                 CLEMAnimalBreeding?.Invoke(this, args);
                 CLEMAnimalMilkProduction?.Invoke(this, args);
                 CLEMPotentialIntake?.Invoke(this, args);

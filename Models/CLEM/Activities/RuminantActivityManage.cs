@@ -1,17 +1,19 @@
-using Models.Core;
+using APSIM.Numerics;
+using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Models.CLEM.Groupings;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
+using Models.Core;
+using Models.Core.Attributes;
+using NetTopologySuite.Operation.Relate;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using Models.Core.Attributes;
-using Newtonsoft.Json;
 using System.Globalization;
 using System.IO;
-using Models.CLEM.Interfaces;
-using APSIM.Numerics;
-using NetTopologySuite.Operation.Relate;
+using System.Linq;
 
 namespace Models.CLEM.Activities
 {
@@ -1786,7 +1788,13 @@ namespace Models.CLEM.Activities
                     foreach (var item in unknownPurchases)
                     {
                         string[] memberNames = new string[] { "Invalid purchase details provided" };
-                        yield return new ValidationResult($"The [r=SpecifyRuminant] component [r={item.SpecifyRuminantComponent.Name}] does not represent a breeding {(item.ExampleRuminant.Sex == Sex.Female? "female": "male (sire)")} in [a={Name}].{Environment.NewLine}Check that the provided cohort represents a mature individual based on age and weight criteria of breed parameters and remove from the list if unneeded", memberNames);
+                        double matureWeight = item.ExampleRuminant.Parameters.General.MinimumSizeForMaturityFemale * item.ExampleRuminant.Parameters.General.SRWFemale; 
+                        if (item.ExampleRuminant is RuminantMale male)
+                        {
+                            matureWeight *= item.ExampleRuminant.Parameters.General.SRWMaleMultiplier;
+                        }
+
+                        yield return new ValidationResult($"The [r=SpecifyRuminant] component [r={item.SpecifyRuminantComponent.Name}] does not represent a breeding {(item.ExampleRuminant.Sex == Sex.Female ? "female" : "male (sire)")} in [a={Name}].{Environment.NewLine}Check that the provided cohort represents a mature individual based on age and weight criteria of breed parameters and remove from the list if unneeded. Weight must be >= {matureWeight: 0.0}", memberNames);
                     }
             }
 

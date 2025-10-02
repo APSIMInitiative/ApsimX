@@ -198,7 +198,7 @@ namespace Models.CLEM.Resources
             // go right back to maturity to work out number of births.
             // IS THIS NEEDED OR DOES IT CORRUPT THE MODEL OUTCOMES
 
-            var remainingFemales = parentHerd.Herd.OfType<RuminantFemale>().Where(a => !a.IsLactating && !a.IsPregnant && (a.AgeInDays > a.Parameters.Details.EstimatedAgeAtMaturityFemale + a.Parameters.General.GestationLength.InDays & a.Weight.HighestAttained >= a.Parameters.General.MinimumSizeForMaturityFemale * a.Weight.StandardReferenceWeight));
+            var remainingFemales = parentHerd.Herd.OfType<RuminantFemale>().Where(a => a.DateOfLastConception == default && !a.IsLactating && !a.IsPregnant && (a.AgeInDays > a.Parameters.Details.EstimatedAgeAtMaturityFemale + a.Parameters.General.GestationLength.InDays & a.Weight.HighestAttained >= a.Parameters.General.MinimumSizeForMaturityFemale * a.Weight.StandardReferenceWeight));
             if (remainingFemales.Any() == false || Structure.FindAll<RuminantParametersBreeding>().Any() == false)
             {
                 return;
