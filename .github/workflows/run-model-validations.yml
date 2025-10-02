@@ -88,6 +88,13 @@ jobs:
             type=ref,event=branch
             type=ref,event=pr
 
+      - name: Start Azure pool
+        id: start_azure_pool
+        env:
+          AZURE_ENV_CONTENTS: ${{ secrets.AZURE_ENV_CONTENTS }}
+          DOCKER_METADATA_OUTPUT_VERSION: ${{ steps.meta_apsimplusr.outputs.tags }}
+        run: ./.github/workflows/scripts/start-azure-pool.sh
+
       - name: Build and push apsimplusr Docker image
         id: apsimplusr_push
         uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
