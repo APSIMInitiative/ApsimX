@@ -64,7 +64,7 @@ jobs:
 
       - name: Build Models and APSIM.Workflow projects
         run: |
-          cd Models && dotnet publish -f net8.0 -o ../app && cd ../APSIM.Workflow && dotnet publish -f net8.0 -o ../app
+          cd Models && dotnet publish -f net8.0 -o ../app && cd ../APSIM.Workflow && dotnet publish -f net8.0
 
       - name: Split Wheat Validation
         run: dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -d ./Tests/Validation/Wheat/Wheat.apsimx -s ./Tests/Validation/Wheat/split.json
