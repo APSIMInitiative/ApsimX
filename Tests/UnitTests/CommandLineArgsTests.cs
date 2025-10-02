@@ -318,7 +318,6 @@ ExperimentY2
             string savingApsimFileNameShort = savingApsimFileName.Substring(indexOfNameStart);
             string newFileString = $"add [Zone] {newApsimFile};[Report]\nsave {savingApsimFileNameShort} ";
             string newTempConfigFile = Path.Combine(Path.GetTempPath(), "config2.txt");
-            //string newTempConfigFile = "config2.txt";
             File.WriteAllText(newTempConfigFile, newFileString);
 
             bool fileExists = File.Exists(newTempConfigFile);
@@ -339,10 +338,6 @@ ExperimentY2
             Assert.That(newReportNode, Is.Not.Null);
         }
 
-        // ==================================================================================================
-        // ==================================================================================================
-        // ==================================================================================================
-        // ==================================================================================================
         [Test]
         public void TestApplySwitchAddToAll()
         {
