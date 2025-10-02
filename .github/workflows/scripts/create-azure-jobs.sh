@@ -36,10 +36,10 @@ if test -z "${jobcount}"; then
     echo "The job count was found to be empty. Exiting."
     exit 1
 fi
-url="https://postats2.apsim.info/api/open?pullrequestnumber=${DOCKER_METADATA_OUTPUT_VERSION:3}&commitid=${commitsha}&count=${jobcount}&author=${author}&pool=${azure_pool}"
+pr_number=${DOCKER_METADATA_OUTPUT_VERSION:3}
+url="https://postats2.apsim.info/api/open?pullrequestnumber=${pr_number}&commitid=${commitsha}&count=${jobcount}&author=${author}&pool=${azure_pool}"
 echo "POStats2 open URL: ${url}"
-response=$(curl "${url}")
+response=$(curl -f "${url}" || exit 1)
 echo "POStats2 open response: ${response}"
 echo "Start creating payload..."
-pr_number=${DOCKER_METADATA_OUTPUT_VERSION:3}
 dotnet ./bin/Release/net8.0/APSIM.Workflow.dll --payload-directory $PAYLOAD_FOLDER_PATH -g $author -t $DOCKER_METADATA_OUTPUT_VERSION --commit-sha $commitsha --pr-number $pr_number --azure-pool $azure_pool -v
