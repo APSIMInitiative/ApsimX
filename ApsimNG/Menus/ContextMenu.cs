@@ -711,14 +711,15 @@ namespace UserInterface.Presenters
                     ushort i = 0;
                     foreach (string tableName in storage.Reader.TableNames)
                     {
-                        cts.Token.ThrowIfCancellationRequested();
-                        DataTable table = storage.Reader.GetData(tableName);
-                        table.TableName = tableName;
-                        tables.Add(table);
-
+                        if (!string.IsNullOrEmpty(tableName))
+                        {
+                            cts.Token.ThrowIfCancellationRequested();
+                            DataTable table = storage.Reader.GetData(tableName);
+                            table.TableName = tableName;
+                            tables.Add(table);
+                        }
                         double progress = 0.5 * (i + 1) / storage.Reader.TableNames.Count;
                         explorerPresenter.MainPresenter.ShowProgress(progress);
-
                         i++;
                     }
                 }, cts.Token);

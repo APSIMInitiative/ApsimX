@@ -2,6 +2,7 @@
 using DocumentFormat.OpenXml.Office2010.Excel;
 using Models.Core;
 using Models.Core.Run;
+using Models.PostSimulationTools;
 using Models.PreSimulationTools;
 using Models.Storage;
 using NUnit.Framework;
@@ -19,7 +20,7 @@ namespace UnitTests
         {
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
-            Simulations simulations = Utilities.GetRunnableSim();
+            Simulations simulations = Utilities.GetRunnableSim(useInMemoryDb: true);
             simulations.Node = Node.Create(simulations);
 
             DataStore dataStore = simulations.Node.FindChild<DataStore>();
@@ -29,8 +30,8 @@ namespace UnitTests
                 FileNames = ["%root%/Tests/UnitTests/PreSimulationTools/Input.xlsx"],
                 SheetNames = ["Sheet1"]
             };
-            dataStore.Node.AddChild(observations);
 
+            dataStore.Node.AddChild(observations);
             simulations.Node = Node.Create(simulations);
 
             Runner runner = new Runner(simulations);
@@ -39,10 +40,37 @@ namespace UnitTests
                 throw new AggregateException("Errors: ", errors);
 
             DataTable dt = dataStore.Reader.GetData("Sheet1");
+            dataStore.Reader.Refresh();
 
             Assert.That(dt.Columns[4].DataType, Is.EqualTo(typeof(DateTime)));
             Assert.That(dt.Columns[5].DataType, Is.EqualTo(typeof(string)));
             Assert.That(dt.Columns[6].DataType, Is.EqualTo(typeof(string)));
+        }
+        
+        [Test]
+        public void ObservationsWorksWithBlankLine()
+        {
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+
+            Simulations simulations = Utilities.GetRunnableSim(useInMemoryDb: true);
+            simulations.Node = Node.Create(simulations);
+
+            DataStore dataStore = simulations.Node.FindChild<DataStore>();
+            
+            Observations observations = new Observations()
+            {
+                FileNames = ["%root%/Tests/UnitTests/PreSimulationTools/Input.xlsx", ""],
+                SheetNames = ["Sheet1"]
+            };
+                        
+            dataStore.Node.AddChild(observations);
+            simulations.Node = Node.Create(simulations);
+
+            Runner runner = new Runner(simulations);
+            List<Exception> errors = runner.Run();
+            if (errors != null && errors.Count > 0)
+                throw new AggregateException("Errors: ", errors);
+
         }
     }
 }

@@ -10,6 +10,7 @@ using Models.Core;
 using Models.Core.Run;
 using Models.Storage;
 using Models.PreSimulationTools.ObservationsInfo;
+using System.Threading;
 
 namespace Models.PreSimulationTools
 {
@@ -46,7 +47,7 @@ namespace Models.PreSimulationTools
         /// <summary>
         /// 
         /// </summary>
-        public static readonly string[] RESERVED_COLUMNS = { "SimulationID", "SimulationName", "CheckpointID", "CheckpointName", "Clock.Today", "_Filename" };
+        public static readonly string[] RESERVED_COLUMNS = { "SimulationID", "SimulationName", "CheckpointID", "CheckpointName", "_Filename" };
 
         /// <summary>
         /// Gets or sets the file name to read from.
@@ -155,36 +156,45 @@ namespace Models.PreSimulationTools
         public void Run()
         {
             //Clear the tables at the start, since we need to read into them again
+            storage.Reader.Refresh();
             foreach (string sheet in SheetNames)
                 if (storage.Reader.TableNames.Contains(sheet))
                     storage.Writer.DeleteTable(sheet);
+            storage.Writer.WaitForIdle();
 
             Simulations simulations = Structure.FindParent<Simulations>(recurse: true);
             foreach (string fileName in FileNames)
             {
                 string fullFileName = fileName;
-                if (simulations != null && simulations.FileName != null)
-                    fullFileName = PathUtilities.GetRelativePath(fileName, simulations.FileName);
-
-                string absoluteFileName = PathUtilities.GetAbsolutePath(fullFileName.Trim(), storage.FileName);
-                if (!File.Exists(absoluteFileName))
-                    throw new Exception($"Error in {Name}: file '{absoluteFileName}' does not exist");
-
-                List<DataTable> tables = LoadFromExcel(absoluteFileName);
-                foreach (DataTable table in tables)
+                if (!string.IsNullOrEmpty(fullFileName))
                 {
-                    DataColumn col = table.Columns.Add("_Filename", typeof(string));
-                    for (int i = 0; i < table.Rows.Count; i++)
-                        table.Rows[i][col] = fullFileName;
+                    if (simulations != null && simulations.FileName != null)
+                        fullFileName = PathUtilities.GetRelativePath(fileName, simulations.FileName);
 
-                    // Don't delete previous data existing in this table. Doing so would
-                    // cause problems when merging sheets from multiple excel files.
-                    storage.Writer.WriteTable(table, false);
-                    storage.Writer.WaitForIdle();
+                    string absoluteFileName = PathUtilities.GetAbsolutePath(fullFileName.Trim(), storage.FileName);
+                    if (!File.Exists(absoluteFileName))
+                        throw new Exception($"Error in {Name}: file '{absoluteFileName}' does not exist");
+
+                    List<DataTable> tables = LoadFromExcel(absoluteFileName);
+                    foreach (DataTable table in tables)
+                    {
+                        DataColumn col = table.Columns.Add("_Filename", typeof(string));
+                        for (int i = 0; i < table.Rows.Count; i++)
+                            table.Rows[i][col] = fullFileName;
+
+                        DataTable fixedTable = ColumnInfo.FixColumnTypes(table);
+
+                        // Don't delete previous data existing in this table. Doing so would
+                        // cause problems when merging sheets from multiple excel files.
+                        storage.Writer.WriteTable(fixedTable, false);
+                        storage.Writer.WaitForIdle();
+                    }
                 }
             }
 
-            ColumnNames = new List<string>();
+            storage.Writer.WaitForIdle();
+            storage.Reader.Refresh();
+
             ColumnData = new List<ColumnInfo>();
             DerivedData = new List<DerivedInfo>();
             SimulationData = new List<SimulationInfo>();
@@ -193,16 +203,18 @@ namespace Models.PreSimulationTools
 
             foreach (string sheet in SheetNames)
             {
-                DataTable dt = storage.Reader.GetData(sheet);
+                DataTable dt = storage.Reader.GetData(sheet).Copy();
+                if (dt != null)
+                {
+                    MergeData.AddRange(MergeInfo.CombineRows(dt, out DataTable combinedDatatable));
+                    ColumnData.AddRange(GetAPSIMColumnsFromObserved(combinedDatatable));
+                    GetSimulationsFromObserved(combinedDatatable);
+                    DerivedData.AddRange(DerivedInfo.AddDerivedColumns(combinedDatatable));
+                    ZeroData.AddRange(ZeroInfo.DetectZeros(combinedDatatable));
 
-                MergeData.AddRange(MergeInfo.CombineRows(dt, out DataTable combinedDatatable));
-                ColumnData.AddRange(GetAPSIMColumnsFromObserved(combinedDatatable));
-                GetSimulationsFromObserved(combinedDatatable);
-                DerivedData.AddRange(DerivedInfo.AddDerivedColumns(combinedDatatable));
-                ZeroData.AddRange(ZeroInfo.DetectZeros(combinedDatatable));
-
-                storage.Writer.WriteTable(combinedDatatable, true);
-                storage.Writer.WaitForIdle();
+                    storage.Writer.WriteTable(combinedDatatable, true);
+                    storage.Writer.WaitForIdle();
+                }
             }
         }
 
@@ -212,15 +224,18 @@ namespace Models.PreSimulationTools
         /// <param name="dataTable"></param>
         public List<ColumnInfo> GetAPSIMColumnsFromObserved(DataTable dataTable)
         {
+            ColumnNames = new List<string>();
+
             Simulations sims = Structure.FindParent<Simulations>(recurse: true);
             List<string> knownColumnNames = new List<string>();
-            knownColumnNames.AddRange(ColumnNames);
             knownColumnNames.AddRange(RESERVED_COLUMNS);
+            knownColumnNames.AddRange(ColumnNames);
 
             List<ColumnInfo> infos = ColumnInfo.GetAPSIMColumnsFromObserved(dataTable, sims, knownColumnNames);
             foreach (ColumnInfo info in infos)
             {
-                ColumnNames.Add(info.Name);
+                if (!ColumnNames.Contains(info.Name) && !RESERVED_COLUMNS.Contains(info.Name))
+                    ColumnNames.Add(info.Name);
             }
 
             return infos;
@@ -284,38 +299,6 @@ namespace Models.PreSimulationTools
                 }
             }
             return tables;
-        }
-
-        private Type GetTypeOfCell(string value)
-        {
-
-            if (DateUtilities.ValidateStringHasYear(value)) //try parsing to date
-            {
-                string dateString = DateUtilities.ValidateDateString(value);
-                if (dateString != null)
-                {
-                    DateTime date = DateUtilities.GetDate(value);
-                    if (DateUtilities.CompareDates("1900/01/01", date) >= 0)
-                        return typeof(DateTime);
-                }
-            }
-
-            //try parsing to double
-            bool d = double.TryParse(value, out double num);
-            if (d == true)
-            {
-                double wholeNum = num - Math.Floor(num);
-                if (wholeNum == 0) //try parsing to int
-                    return typeof(int);
-                else
-                    return typeof(double);
-            }
-
-            bool b = bool.TryParse(value.Trim(), out bool boolean);
-            if (b == true)
-                return typeof(bool);
-
-            return typeof(string);
         }
     }
 }

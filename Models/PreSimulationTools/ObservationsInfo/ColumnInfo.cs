@@ -1,9 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using APSIM.Core;
 using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Models.Core;
 
 namespace Models.PreSimulationTools.ObservationsInfo
@@ -20,7 +22,13 @@ namespace Models.PreSimulationTools.ObservationsInfo
         public string IsApsimVariable;
 
         /// <summary></summary>
-        public string DataType;
+        public Type VariableType;
+
+        /// <summary></summary>
+        public Type DataType;
+
+        /// <summary></summary>
+        public bool DataTypesMatch;
 
         /// <summary></summary>
         public bool HasErrorColumn;
@@ -39,6 +47,7 @@ namespace Models.PreSimulationTools.ObservationsInfo
             newTable.Columns.Add("Name");
             newTable.Columns.Add("APSIM");
             newTable.Columns.Add("Type");
+            newTable.Columns.Add("Data Type");
             newTable.Columns.Add("Error Bars");
             newTable.Columns.Add("File");
 
@@ -51,7 +60,14 @@ namespace Models.PreSimulationTools.ObservationsInfo
                 DataRow row = newTable.NewRow();
                 row["Name"] = columnInfo.Name;
                 row["APSIM"] = columnInfo.IsApsimVariable;
-                row["Type"] = columnInfo.DataType;
+                if (columnInfo.VariableType == null)
+                    row["Type"] = "";
+                else
+                    row["Type"] = columnInfo.VariableType.ToString();
+                if (columnInfo.DataType == null)
+                    row["Data Type"] = "";
+                else
+                    row["Data Type"] = columnInfo.DataType.ToString();
                 row["Error Bars"] = columnInfo.HasErrorColumn;
                 row["File"] = columnInfo.File;
 
@@ -130,15 +146,23 @@ namespace Models.PreSimulationTools.ObservationsInfo
                     colInfo.Name = columnName;
 
                     colInfo.IsApsimVariable = "No";
-                    colInfo.DataType = "";
+                    colInfo.VariableType = null;
+                    colInfo.DataType = GetTypeOfColumn(columnNameOriginal, dataTable.Rows);
+
+                    if (colInfo.DataType != dataTable.Columns[j].DataType)
+                        colInfo.DataTypesMatch = false;
+                    else
+                        colInfo.DataTypesMatch = true;
+
                     if (nameInAPSIMFormat)
                         colInfo.IsApsimVariable = "Not Found";
                     if (hasMaths)
                         colInfo.IsApsimVariable = "Maths";
+
                     if (nameIsAPSIMModel && variable != null)
                     {
                         colInfo.IsApsimVariable = "Yes";
-                        colInfo.DataType = variable.DataType.Name;
+                        colInfo.VariableType = variable.DataType;
                     }
 
                     colInfo.HasErrorColumn = false;
@@ -181,7 +205,7 @@ namespace Models.PreSimulationTools.ObservationsInfo
                 return null;
 
             string[] nameParts = nameWithoutBrackets.Split('.');
-            IModel firstPart = sims.Node.FindChild<IModel>(nameParts[0]);
+            IModel firstPart = sims.Node.FindChild<IModel>(nameParts[0], recurse: true);
             if (firstPart == null)
                 return null;
 
@@ -199,6 +223,145 @@ namespace Models.PreSimulationTools.ObservationsInfo
             {
                 return null;
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <returns></returns>
+        public static DataTable FixColumnTypes(DataTable dataTable)
+        {
+            List<string> columnNames = dataTable.GetColumnNames().ToList();
+
+            //Check if any columns that only contain dates are being read in as strings (and won't graph properly because of it)
+            foreach (string name in columnNames)
+            {
+                Type type = GetTypeOfColumn(name, dataTable.Rows);
+                if (type != null)
+                {
+                    DataColumn column = dataTable.Columns[name];
+                    int ordinal = column.Ordinal;
+
+                    DataColumn newColumn = new DataColumn("NewColumn" + name, type);
+                    dataTable.Columns.Add(newColumn);
+                    newColumn.SetOrdinal(ordinal);
+
+                    foreach (DataRow row in dataTable.Rows)
+                    {
+                        string value = row[name].ToString().Trim();
+                        if (value.Length > 0)
+                        {
+                            if (type == typeof(DateTime))
+                            {
+                                row[newColumn.ColumnName] = DateUtilities.GetDate(value);
+                            }
+                            else if (type == typeof(int))
+                            {
+                                row[newColumn.ColumnName] = int.Parse(value);
+                            }
+                            else if (type == typeof(double))
+                            {
+                                row[newColumn.ColumnName] = double.Parse(value);
+                            }
+                            else if (type == typeof(bool))
+                            {
+                                row[newColumn.ColumnName] = bool.Parse(value);
+                            }
+                            else if (type == typeof(string))
+                            {
+                                row[newColumn.ColumnName] = value;
+                            }
+                        }
+                    }
+                    dataTable.Columns.Remove(name);
+                    newColumn.ColumnName = name;
+                }
+                else
+                {
+                    dataTable.Columns.Remove(name);
+                }
+            }
+
+            return dataTable;
+        }
+
+        private static Type GetTypeOfColumn(string columnName, DataRowCollection rows)
+        {
+            Type type = null;
+            foreach (DataRow row in rows)
+            {
+                string value = row[columnName].ToString().Trim();
+                if (!string.IsNullOrEmpty(value))
+                {
+                    Type cellType = GetTypeOfCell(value, type);
+                    if (cellType == typeof(DateTime) && (type == null || type == typeof(DateTime)))
+                    {
+                        type = typeof(DateTime);
+                    }
+                    else if (cellType == typeof(int) && (type == null || type == typeof(DateTime) || type == typeof(int)))
+                    {
+                        type = typeof(int);
+                    }
+                    else if (cellType == typeof(double) && (type == null || type == typeof(DateTime) || type == typeof(int) || type == typeof(double)))
+                    {
+                        type = typeof(double);
+                    }
+                    else if (cellType == typeof(bool) && (type == null || type == typeof(DateTime) || type == typeof(int) || type == typeof(double)) || type == typeof(bool))
+                    {
+                        type = typeof(bool);
+                    }
+                    else if (cellType == typeof(string))
+                    {
+                        return typeof(string);
+                    }
+                }
+            }
+            return type;
+        }
+
+        private static Type GetTypeOfCell(string value, Type knownType = null)
+        {
+            if (knownType == null || knownType == typeof(DateTime))
+            {
+                 string dateTrimmed = value;
+                    if (value.Contains(' '))
+                        dateTrimmed = value.Split(' ')[0];
+                
+                if (DateUtilities.ValidateStringHasYear(dateTrimmed)) //try parsing to date
+                {
+                    string dateString = DateUtilities.ValidateDateString(dateTrimmed);
+                    if (dateString != null)
+                    {
+                        DateTime date = DateUtilities.GetDate(value);
+                        if (DateUtilities.CompareDates("1900/01/01", date) >= 0)
+                            return typeof(DateTime);
+                    }
+                }
+            }
+
+            if (knownType == null || knownType == typeof(int) || knownType == typeof(double) || knownType == typeof(DateTime))
+            {
+                //try parsing to double
+                bool d = double.TryParse(value, out double num);
+                if (d == true)
+                {
+                    double wholeNum = num - Math.Floor(num);
+                    if (wholeNum == 0) //try parsing to int
+                        return typeof(int);
+                    else
+                        return typeof(double);
+                }
+            }
+
+            if (knownType == null || knownType == typeof(DateTime) || knownType == typeof(int) || knownType == typeof(double) || knownType == typeof(bool))
+            {
+                bool b = bool.TryParse(value.Trim(), out bool boolean);
+                if (b == true)
+                    return typeof(bool);
+            }
+
+            return typeof(string);
         }
     }
 }
