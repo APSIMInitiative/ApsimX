@@ -6,10 +6,12 @@ test -z "$INCOMING_COMMIT_SHA" && echo "INCOMING_COMMIT_SHA is empty" && exit 1 
 test -z "$PR_AUTHOR" && echo "PR_AUTHOR is empty" && exit 1 || echo "PR_AUTHOR is set"
 test -z "$DOCKER_METADATA_OUTPUT_VERSION" && echo "DOCKER_METADATA_OUTPUT_VERSION is empty" && exit 1 || echo "DOCKER_METADATA_OUTPUT_VERSION is set"
 
+# Create payload directory
+mkdir -p "${PAYLOAD_FOLDER_PATH}"
 # Add .env to payload directory
 echo "Adding .env file to $PAYLOAD_FOLDER_PATH"
 echo "${AZURE_ENV_CONTENTS}" > "${PAYLOAD_FOLDER_PATH}.env"
-if test -f "${PAYLOAD_FOLDER_PATH}/.env"; then
+if test -f "${PAYLOAD_FOLDER_PATH}.env"; then
     echo ".env successfully added to ${PAYLOAD_FOLDER_PATH}"
 fi
 
