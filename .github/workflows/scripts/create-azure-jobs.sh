@@ -8,7 +8,7 @@ test -z "$DOCKER_METADATA_OUTPUT_VERSION" && echo "DOCKER_METADATA_OUTPUT_VERSIO
 
 # Add .env to payload directory
 echo "Adding .env file to $PAYLOAD_FOLDER_PATH"
-echo "$AZURE_ENV_CONTENTS" > "${PAYLOAD_FOLDER_PATH}/.env"
+echo "${AZURE_ENV_CONTENTS}" > "${PAYLOAD_FOLDER_PATH}.env"
 if test -f "${PAYLOAD_FOLDER_PATH}/.env"; then
     echo ".env successfully added to ${PAYLOAD_FOLDER_PATH}"
 fi
