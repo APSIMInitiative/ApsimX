@@ -224,9 +224,6 @@ namespace Models.CLEM
 
                 table = ExcelUtilities.ReadExcelFileData(fileName, ExcelWorkSheetName, true);
                 // not using APSIM excel reader as it will convert columns to dates and break the age specifiers.
-                //var reader = new ApsimTextFile();
-                //reader.Open(fileName, ExcelWorkSheetName);
-                //table = reader.ToTable();
             }
             else
             {
@@ -247,7 +244,8 @@ namespace Models.CLEM
             foreach (DataRow row in table.Rows)
             {
                 rowCount++;
-                var cohort = new RuminantTypeCohort();
+                RuminantTypeCohort cohort = new RuminantTypeCohort();
+                APSIM.Core.Node.Create(cohort);
                 Sex sex = Sex.Male;
 
                 // Name (Optional) - will be assigned "FileCohort" if not provided
@@ -391,7 +389,9 @@ namespace Models.CLEM
                             SetAttributeWithValue castrate = new();
                             castrate.AttributeName = "Castrated";
                             castrate.Category = RuminantAttributeCategoryTypes.Sterilise_Castrate;
-                            Core.ApsimFile.Structure.Add(castrate, cohort);
+                            APSIM.Core.Node.Create(castrate);
+                            cohort.Node.AddChild(castrate);
+                            //Core.ApsimFile.Structure.Add(castrate, cohort);
                         }
                     }
                     else
@@ -407,7 +407,9 @@ namespace Models.CLEM
                         {
                             SetPreviousConception prevconcep = new();
                             prevconcep.NumberDaysPregnant = daysPregnant;
-                            Core.ApsimFile.Structure.Add(prevconcep, cohort);
+                            APSIM.Core.Node.Create(prevconcep);
+                            cohort.Node.AddChild(prevconcep);
+                            //Core.ApsimFile.Structure.Add(prevconcep, cohort);
                         }
                     }
                     else
