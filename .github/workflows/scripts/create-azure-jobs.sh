@@ -1,10 +1,10 @@
 
 # Check all the environment variables are set.
-test -z "$PAYLOAD_FOLDER_PATH" && echo "PAYLOAD_FOLDER_PATH is empty" && exit 1 || echo "PAYLOAD_FOLDER_PATH is set"
-test -z "$AZURE_ENV_CONTENTS" && echo "AZURE_ENV_CONTENTS is empty" && exit 1 || echo "AZURE_ENV_CONTENTS is set"
-test -z "$INCOMING_COMMIT_SHA" && echo "INCOMING_COMMIT_SHA is empty" && exit 1 || echo "INCOMING_COMMIT_SHA is set"
-test -z "$PR_AUTHOR" && echo "PR_AUTHOR is empty" && exit 1 || echo "PR_AUTHOR is set"
-test -z "$DOCKER_METADATA_OUTPUT_VERSION" && echo "DOCKER_METADATA_OUTPUT_VERSION is empty" && exit 1 || echo "DOCKER_METADATA_OUTPUT_VERSION is set"
+test -z "$PAYLOAD_FOLDER_PATH" && echo "PAYLOAD_FOLDER_PATH is empty" && exit 1 
+test -z "$AZURE_ENV_CONTENTS" && echo "AZURE_ENV_CONTENTS is empty" && exit 1
+test -z "$INCOMING_COMMIT_SHA" && echo "INCOMING_COMMIT_SHA is empty" && exit 1
+test -z "$PR_AUTHOR" && echo "PR_AUTHOR is empty" && exit 1
+test -z "$DOCKER_METADATA_OUTPUT_VERSION" && echo "DOCKER_METADATA_OUTPUT_VERSION is empty" && exit 1
 
 # Create payload directory
 mkdir -p "${PAYLOAD_FOLDER_PATH}"

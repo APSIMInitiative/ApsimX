@@ -93,6 +93,7 @@ jobs:
         env:
           AZURE_ENV_CONTENTS: ${{ secrets.AZURE_ENV_CONTENTS }}
           DOCKER_METADATA_OUTPUT_VERSION: ${{ steps.meta_apsimplusr.outputs.tags }}
+          INCOMING_COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
         run: ./.github/workflows/scripts/start-azure-pool.sh
 
       - name: Build and push apsimplusr Docker image
@@ -115,6 +116,13 @@ jobs:
           INCOMING_COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
           PR_AUTHOR: ${{ github.actor }}
         run: ./.github/workflows/scripts/create-azure-jobs.sh 
+
+      - name: Enable autoscaling on Azure pool
+        env:
+          AZURE_ENV_CONTENTS: ${{ secrets.AZURE_ENV_CONTENTS }}
+          DOCKER_METADATA_OUTPUT_VERSION: ${{ steps.meta_apsimplusr.outputs.tags }}
+          INCOMING_COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
+        run: ./.github/workflows/scripts/enable-azure-pool-autoscaling.sh
 
       - name: Print workflow submit success summary markdown
         if: success()
