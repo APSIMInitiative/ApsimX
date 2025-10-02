@@ -11,7 +11,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Current amount
         /// </summary>
-        public double Amount { get; set; }
+        public double Amount { get; private set; }
 
         /// <summary>
         /// Recent change
@@ -48,10 +48,17 @@ namespace Models.CLEM.Resources
         /// <param name="change">Amount to change by.</param>
         public void Adjust(double change, Ruminant ind = null)
         {
-            Change = change;
             if (Amount + change < 0)
-                Change = -Amount;
-            Amount += Change;
+            {
+                change = -Amount;
+            }
+            
+            if (Amount > 0)
+            {
+                Change = change;
+            }
+
+            Amount += change;
         }
 
         /// <summary>
@@ -70,7 +77,7 @@ namespace Models.CLEM.Resources
         /// <param name="amount">Amount to set.</param>
         public void Set(double amount)
         {
-            Change = 0; // amount-Amount;
+            Change = amount-Amount;
             Amount = amount;
         }
 
@@ -79,7 +86,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         public void Reset()
         {
-            Change = 0 - Amount;
+            Change =  - Amount;
             Amount = 0;
             Net = 0;
         }

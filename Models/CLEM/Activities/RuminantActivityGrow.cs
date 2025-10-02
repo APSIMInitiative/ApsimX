@@ -509,6 +509,8 @@ namespace Models.CLEM.Activities
 
                         //TODO: Check fetus age correct
                         energyFetus = potentialBirthWeight * 349.16 * 0.000058 * Math.Exp(345.67 - 0.000058 * fetusAge - 349.16 * Math.Exp(-0.000058 * fetusAge)) / 0.13;
+                        // account for part of month pregnant
+                        energyFetus *= (femaleind.DaysPregnantInTimeStep / events.Interval);
                         energyBalance -= energyFetus;
                     }
 
@@ -519,6 +521,8 @@ namespace Models.CLEM.Activities
                     {
                         // recalculate milk production based on DMD of food provided
                         energyMilk = CalculateMilkProduction(femaleind);
+                        // account for part of month pregnant
+                        energyMilk *= (femaleind.DaysLactatingInTimeStep / events.Interval);
                         energyBalance -= energyMilk;
                         // reset this. It was previously determined in potential intake as a measure of milk available. This is now the correct calculation
                         femaleind.Milk.Produced = femaleind.Milk.Available;
@@ -563,7 +567,7 @@ namespace Models.CLEM.Activities
             energyPredictedBodyMassChange *= events.Interval;  // Convert to monthly
 
             // this has not applied the 9% live weight change so represents EBM change here.
-            ind.Weight.AdjustByEBMChange(energyPredictedBodyMassChange, ind);
+            ind.Weight.Adjust(energyPredictedBodyMassChange);
         }
 
         /// <inheritdoc/>

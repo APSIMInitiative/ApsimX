@@ -1,4 +1,6 @@
-﻿using DocumentFormat.OpenXml.Wordprocessing;
+﻿using APSIM.Numerics;
+using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
@@ -9,7 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
@@ -29,8 +30,8 @@ namespace Models.CLEM.Activities
     [Description("Performs best available growth and aging of all ruminants based on Frier, 2012.")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGrowPF.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGrowPF) },
-        associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType },
+    [ModelAssociations(associatedModels: [typeof(RuminantParametersGrowPF)],
+        associationStyles: [ModelAssociationStyle.DescendentOfRuminantType],
         SingleInstance = true)]
     public class RuminantActivityGrowPF : CLEMRuminantActivityBase, IValidatableObject, IRuminantActivityGrow
     {
@@ -75,6 +76,28 @@ namespace Models.CLEM.Activities
         {
             InitialiseHerd(true, true);
             manureStore = Resources.FindResourceType<ProductStore, ProductStoreTypeManure>(this, "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
+        }
+
+        /// <summary>Function to handle last of pregancy in the time step before births occur</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMAnimalBeforeBreeding")]
+        private void OnCLEMPregnancyEnergy(object sender, EventArgs e)
+        {
+            CalculateHerdPregnancyEnergy(CurrentHerd(false));
+        }
+
+        /// <summary>
+        /// Method to calculate pregnancy energy for the time step to ensure done before births in CLEMAnimalBreeding.
+        /// </summary>
+        /// <param name="herd">Enumerable of individuals to consider</param>
+        public void CalculateHerdPregnancyEnergy(IEnumerable<Ruminant> herd)
+        {
+            foreach (RuminantFemale female in herd.OfType<RuminantFemale>().Where(a => a.IsMature))
+            {
+                // 0 returned if not pregnant and Energy.Fetus is reset here rather than in Energy.Reset as this needs to be available for energy use later this time step after potential intake resets all stores.
+                female.Energy.ForFetus = CalculatePregnancyEnergy(female) * ((double)female.DaysPregnantInTimeStep/ events.Interval);
+            }
         }
 
         /// <summary>Function to naturally wean individuals on CLEMAnimalBreeding so will beat wean activity on CLEMAnimalBreeding.</summary>
@@ -165,10 +188,11 @@ namespace Models.CLEM.Activities
             double cf = 1.0;
             if (ind.Parameters.GrowPF_CI.RelativeConditionEffect_CI20 > 1 && ind.Weight.RelativeCondition > 1)
             {
-                if (ind.Weight.RelativeCondition >= ind.Parameters.GrowPF_CI.RelativeConditionEffect_CI20)
-                    cf = 0;
-                else
+                cf = 0;
+                if (ind.Weight.RelativeCondition < ind.Parameters.GrowPF_CI.RelativeConditionEffect_CI20)
+                {
                     cf = Math.Min(1.0, ind.Weight.RelativeCondition * Math.Max(0, ind.Parameters.GrowPF_CI.RelativeConditionEffect_CI20 - ind.Weight.RelativeCondition) / (ind.Parameters.GrowPF_CI.RelativeConditionEffect_CI20 - 1));
+                }
             }
 
             // Equation 4 ================================================== The proportion of solid intake sucklings have as function of age.
@@ -198,8 +222,7 @@ namespace Models.CLEM.Activities
                     double dayOfLactation = female.DaysLactating(true);
                     double mi = dayOfLactation / ind.Parameters.GrowPF_CI.PeakLactationIntakeDay_CI8;
                     // trap for suckings not yet defined in month of birth but needed to caclulate peak lactation. Assume 1 individual in the first few days if this is the case.
-                    // int numsucklings = (female.NumberOfSucklings == 0) ? 0 : female.NumberOfSucklings - 1;
-                    lf = 1 + ind.Parameters.GrowPF_CI.PeakLactationIntakeLevel_CI19[female.NumberOfSucklings - 1] * Math.Pow(mi, ind.Parameters.GrowPF_CI.LactationResponseCurvature_CI9) * Math.Exp(ind.Parameters.GrowPF_CI.LactationResponseCurvature_CI9 * (1 - mi)); // SCA Eq.8
+                    lf = 1 + ind.Parameters.GrowPF_CI.PeakLactationIntakeLevel_CI19[Math.Max(female.NumberOfSucklings - 1, 0)] * Math.Pow(mi, ind.Parameters.GrowPF_CI.LactationResponseCurvature_CI9) * Math.Exp(ind.Parameters.GrowPF_CI.LactationResponseCurvature_CI9 * (1 - mi)); // SCA Eq.8
                     double lb = 1.0;
                     // Equation 12  ==================================================
                     double wl = ind.Weight.RelativeSize * ((female.RelativeConditionAtParturition - ind.Weight.RelativeCondition) / dayOfLactation);
@@ -270,7 +293,9 @@ namespace Models.CLEM.Activities
                     AnimalWeightGain(ruminant);
             }
             if (ReportUnfed)
+                {
                 ReportUnfedIndividualsWarning(CurrentHerd(false), Warnings, Summary, this, events);
+            }
             return status;
         }
 
@@ -331,7 +356,9 @@ namespace Models.CLEM.Activities
             double sexEffectME = 1;
             // Sme 1.15 for all non-castrated males.
             if (ind.IsWeaned && ind.Sex == Sex.Male && !ind.IsSterilised)
+            {
                 sexEffectME = 1.15;
+            }
 
             int daysInTimeStep = ind.DaysInTimeStep;
 
@@ -344,8 +371,8 @@ namespace Models.CLEM.Activities
 
                 if (ind is RuminantFemale female)
                 {
-                    ind.Energy.ForFetus = CalculatePregnancyEnergy(female);
-                    ind.Energy.ForLactation = CalculateLactationEnergy(female, Math.Min(female.DaysLactatingInTimeStep, events.Interval));
+                    // energy for fetus is now calculated in previous event to ensure it happens prior to timesetp births to account for energy;
+                    ind.Energy.ForLactation = CalculateLactationEnergy(female, Math.Min(female.DaysLactatingInTimeStep, events.Interval)) * ((double)female.DaysPregnantInTimeStep / events.CustomTimeStep);
                 }
             }
             else // Unweaned
@@ -401,7 +428,9 @@ namespace Models.CLEM.Activities
             CalculateWool(ind, daysInTimeStep);
 
             if (ind.IsWeaned)
+            {
                 CalculateGrowthEfficiency(ind);
+            }
 
             double relativeSizeForWeightGainPurposes = Math.Min(1 - ((1 - (ind.Weight.AtBirth/ind.Weight.StandardReferenceWeight)) * Math.Exp(-(ind.Parameters.General.AgeGrowthRateCoefficient_CN1 * ind.AgeInDays) / Math.Pow(ind.Weight.StandardReferenceWeight, ind.Parameters.General.SRWGrowthScalar_CN2))), (ind.Weight.HighestBaseAttained / ind.Weight.StandardReferenceWeight));
             double sizeFactor1ForGain = 1 / (1 + Math.Exp(-ind.Parameters.GrowPF_CG.GainCurvature_CG4 * (relativeSizeForWeightGainPurposes - ind.Parameters.GrowPF_CG.GainMidpoint_CG5)));
@@ -430,7 +459,9 @@ namespace Models.CLEM.Activities
             // Equation 101 EG1 and EG2  units MJ tissue gain/kg ebg
             double energyAvailableForGain = ind.Energy.AvailableForGain * ind.Energy.Kg;
             if (MathUtilities.IsPositive(energyAvailableForGain))
-                 energyAvailableForGain *= ind.Parameters.GrowPF_CG.BreedGrowthEfficiencyScalar;
+            {
+                energyAvailableForGain *= ind.Parameters.GrowPF_CG.BreedGrowthEfficiencyScalar;
+            }
             // Equation 109  - the amount of protein required for the growth based on energy available
             double proteinNeededForGrowth = Math.Max(0.0, proteinContentOfGain * (energyAvailableForGain / energyEmptyBodyGain));
 
@@ -470,7 +501,9 @@ namespace Models.CLEM.Activities
                     CalculateGrowthEfficiency(ind);
                     energyAvailableForGain = ind.Energy.AvailableForGain * ind.Energy.Kg;
                     if (MathUtilities.IsPositive(energyAvailableForGain))
+                        {
                         energyAvailableForGain *= ind.Parameters.GrowPF_CG.BreedGrowthEfficiencyScalar;
+                    }
 
                     // Equation 111  ================ Adjusted NEG1 based on the protein saved from reduced milk
                     proteinNeededForGrowth = proteinContentOfGain * (energyAvailableForGain / energyEmptyBodyGain); // this actually reduces the energy defecit as energyForGain is -ve or up to zero
@@ -525,7 +558,9 @@ namespace Models.CLEM.Activities
                             kgProteinChange += proteinAdded;
                             proteinToGrow -= proteinAdded;
                             if (MathUtilities.FloatsAreEqual(0.0, proteinToGrow))
+                            {
                                 proteinToGrow = 0.0;
+                            }
 
                             if (MathUtilities.IsPositive(proteinToGrow))
                             {
@@ -607,7 +642,9 @@ namespace Models.CLEM.Activities
                 MJFatChange = energyAvailableForGain * propFatForEnergy;
                 // reduce MJFatChange down to FatEnergyAvailable to ensure full acounting of energy with shortfall required from body protein.
                 if (Math.Abs(MJFatChange) > ind.Energy.Fat.Amount)
+                {
                     MJFatChange = ind.Energy.Fat.Amount;
+                }
 
                 MJProteinChange += (energyAvailableForGain - MJFatChange);
             }
@@ -620,7 +657,7 @@ namespace Models.CLEM.Activities
             ind.Energy.Fat.Adjust(MJFatChange * daysInTimeStep); // for time step
             ind.Weight.Fat.Adjust(ind.Energy.Fat.Change / ind.Parameters.General.MJEnergyPerKgFat); // for time step
 
-            ind.Weight.UpdateEBM(ind);
+            ind.Weight.Adjust();
 
             // Equations 118-120   ==================================================
             ind.Output.NitrogenBalance =  ind.Intake.CrudeProtein/ FoodResourcePacket.FeedProteinToNitrogenFactor - (milkProtein / FoodResourcePacket.MilkProteinToNitrogenFactor) - ((ind.Weight.Protein.ForPregnancy + MJProteinChange / 23.6) / FoodResourcePacket.FeedProteinToNitrogenFactor);
@@ -692,7 +729,7 @@ namespace Models.CLEM.Activities
                 }
                 else
                 {
-                    reductionCount = 999;
+                    reductionCount = int.MaxValue;
                 }
             }
 
@@ -741,17 +778,22 @@ namespace Models.CLEM.Activities
         /// <param name="ind">Ruminant individual.</param>
         /// <param name="daysGrowth">Number of days growth</param>
         /// <returns>Daily energy required for wool production time step.</returns>
-        private void CalculateWool(Ruminant ind, int daysGrowth)
+        private static void CalculateWool(Ruminant ind, int daysGrowth)
         {
             if (!ind.Parameters.General.IncludeWool)
+            {
                 return;
+            }
 
             // age factor for wool
             double ageFactorWool = ind.Parameters.GrowPF_CW.WoolGrowthProportionAtBirth_CW5 + ((1 - ind.Parameters.GrowPF_CW.WoolGrowthProportionAtBirth_CW5) * (1 - Math.Exp(-1 * ind.Parameters.GrowPF_CW.AgeFactorExponent_CW12 * ind.AgeInDays)));
 
             double milkProtein = 0; // just a local store
-            if(ind is RuminantFemale female)
+            if (ind is RuminantFemale female)
+            {
                 milkProtein = female.Milk.Protein;
+            }
+
             double dPLSAvailableForWool = Math.Max(0, ind.Intake.DPLS - (ind.Parameters.GrowPF_CW.PregLactationAdjustment_CW9 * (ind.Weight.Protein.ForPregnancy + milkProtein)));
 
             double mEAvailableForWool = Math.Max(0, ind.Energy.AfterLactation); //  Intake.ME - (ind.Energy.ForFetus + ind.Energy.ForLactation));
@@ -803,8 +845,10 @@ namespace Models.CLEM.Activities
             double DR = 1.0;
             //double MEforMilkPreviousStep = ind.Milk.EnergyForLactationPrevious;
             if (MathUtilities.IsGreaterThan(ind.Milk.MaximumRate, 0.0))
+            {
                 DR = ind.Milk.ProductionRatePrevious / ind.Milk.MaximumRate; // Maximum rate will also be previous as it is not updated until 2nd calc of lactation.
-            
+            }
+
             // todo: MEforMilkPreviousDay += ind.Energy.ForFetus;
 
             // Milk lag . LR
@@ -812,29 +856,42 @@ namespace Models.CLEM.Activities
 
             double nutritionAfterPeakLactationFactor = 1; // LB
             if (MathUtilities.IsGreaterThan(milkTime, 0.7 * ind.Parameters.Lactation.MilkPeakDay))
-                nutritionAfterPeakLactationFactor = ind.Milk.NutritionAfterPeakLactationFactor - ind.Parameters.GrowPF_CKCL.PotentialYieldReduction_CL17 * (ind.Milk.Lag - DR);
+            {
+                nutritionAfterPeakLactationFactor = ind.Milk.NutritionAfterPeakLactationFactor - (ind.Parameters.GrowPF_CKCL.PotentialYieldReduction_CL17 * (ind.Milk.Lag - DR));
+            }
 
             double Mm = (milkTime + ind.Parameters.Lactation.MilkOffsetDay) / ind.Parameters.Lactation.MilkPeakDay;
 
             double milkProductionMax = 0;
+
+            // TODO: need to trap for case where partial time-step has lactation and therefore no sucklings exist before birth so use number of fetuses as the daysLactatingInTimeStep have been determined greater than 0
+            // this is a problem as it is this activity that sets the newborn expected milk intake, but they haven't been created yet.
+
             // This currently assumes either suckling offspring or breeder is being milked by an activity and therefore lactating but with no offspring.
-            if (ind.SucklingOffspringList.Count != 0)
+            if (ind.NumberOfSucklings != 0)
+            {
                 milkProductionMax = ind.Parameters.GrowPF_CKCL.PeakYieldScalar_CL0[ind.NumberOfSucklings - 1] * Math.Pow(ind.Weight.StandardReferenceWeight, 0.75) * ind.Weight.RelativeSize * ind.RelativeConditionAtParturition * nutritionAfterPeakLactationFactor *
                 Math.Pow(Mm, ind.Parameters.GrowPF_CKCL.MilkCurveSuckling_CL3) * Math.Exp(ind.Parameters.GrowPF_CKCL.MilkCurveSuckling_CL3 * (1 - Mm));
+            }
             else
+            {
                 milkProductionMax = 0.94 * ind.Milk.EnergyContent * ind.Parameters.GrowPF_CKCL.ExpectedPeakYield * ind.RelativeConditionAtParturition * nutritionAfterPeakLactationFactor * Math.Pow(Mm, ind.Parameters.GrowPF_CKCL.MilkCurveNonSuckling_CL4) * Math.Exp(ind.Parameters.GrowPF_CKCL.MilkCurveNonSuckling_CL4 * (1 - Mm));
+            }
 
             double ratioMilkProductionME = 1.0;
 
             // ToDo: JD? the first part of next if statement uses Energy.ForLactation but this value is being determined by this method so is currently 0 until final value is returned.
-            // therefore ration will always be 0, and ad will always equal milktime.
+            // therefore ratio will always be 0, and ad will always equal milktime.
 
             if (updateValues)
+            {
                 // calculated after intake, maint and pregnancy
                 ratioMilkProductionME = ind.Energy.ForLactation * 0.94 * ind.Energy.Kl * ind.Parameters.GrowPF_CG.BreedLactationEfficiencyScalar / milkProductionMax;
+            }
             else
-                // calculated at start of timestep to provide suckiling with indication of milk production
+            {   // calculated at start of timestep to provide suckiling with indication of milk production
                 ratioMilkProductionME = (ind.Milk.EnergyForLactationPrevious * 0.94 * ind.Energy.Kl * ind.Parameters.GrowPF_CG.BreedLactationEfficiencyScalar) / milkProductionMax; // Eq. 69
+            }
             
             double ad = Math.Max(milkTime, ratioMilkProductionME / (2 * ind.Parameters.GrowPF_CKCL.PotentialYieldLactationEffect2_CL22));
 
@@ -880,34 +937,47 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="ind">Female individua.l</param>
         /// <returns>Energy required per day for pregnancy</returns>
-        private double CalculatePregnancyEnergy(RuminantFemale ind)
+        private static double CalculatePregnancyEnergy(RuminantFemale ind)
         {
+            if (!ind.IsPregnant)
+            {
+                if (ind.IsLactating)
+                {
+                    ind.Weight.Conceptus.Set(0);
+                }
+                return 0;
+            }
+
             double totalMERequired = 0;
             double conceptusFat = 0;
             double conceptusProtein = 0;
 
-            if (!ind.IsPregnant)
-                return 0;
-
             // smallest allowed interval is 7 days for representative calculations
             const int smallestInterval = 7;
-            int step = Math.Max(events.Interval, smallestInterval);
+            int step = Math.Min(ind.Parameters.Details.CurrentTimeStep.Interval, smallestInterval);
             int currentDays = 0;
 
-            while (currentDays <= events.Interval)
+            while (currentDays < ind.DaysPregnantInTimeStep)
             {
+                double propOfPregnancy = ind.ProportionOfPregnancy(currentDays);
                 // Equations 57-65   ==================================================
-                double normalWeightFetus = ind.ScaledBirthWeight * Math.Exp(ind.Parameters.GrowPF_CP.FetalNormWeightParameter_CP2 * (1 - Math.Exp(ind.Parameters.GrowPF_CP.FetalNormWeightParameter2_CP3 * (1 - ind.ProportionOfPregnancy(currentDays)))));
-                if (ind.ProportionOfPregnancy(currentDays) == 0)
+                double normalWeightFetus = ind.ScaledBirthWeight * Math.Exp(ind.Parameters.GrowPF_CP.FetalNormWeightParameter_CP2 * (1 - Math.Exp(ind.Parameters.GrowPF_CP.FetalNormWeightParameter2_CP3 * (1 - propOfPregnancy))));
+                if (propOfPregnancy == 0 || ind.Weight.Fetus.Amount == 0) // either first day of pregnancy or setting up fetus at initialisation when the breeder has not been through previous pregnancy
+                {
                     ind.Weight.Fetus.Set(normalWeightFetus);
+                }
 
-                if (ind.ProportionOfPregnancy(currentDays) >= 0.7 && ind.WeightAt70PctPregnant == 0)
+                if (propOfPregnancy >= 0.7 && ind.WeightAt70PctPregnant == 0)
+                {
+                    // todo: this is not correct for initially pregnant breeders as the 70% rate has been missed prior to start of the simulation
                     ind.WeightAt70PctPregnant = ind.Weight.Base.Amount;
+                }
 
-                if (ind.NumberOfFetuses >= 2 && ind.ProportionOfPregnancy(currentDays) > 0.7)
+                // toxemia mortality
+                if (ind.NumberOfFetuses >= 2 && propOfPregnancy > 0.7)
                 {
                     double toxaemiaRate = StdMath.SIG((ind.WeightAt70PctPregnant - ind.Weight.Base.Amount) / ind.Weight.NormalisedForAge,
-                     ind.Parameters.GrowPF_CP.ToxaemiaCoefficients);
+                                                       ind.Parameters.GrowPF_CP.ToxaemiaCoefficients);
                     if (MathUtilities.IsLessThan(RandomNumberGenerator.Generator.NextDouble(), toxaemiaRate * ind.DaysPregnantInTimeStep))
                     {
                         ind.Died = true;
@@ -915,51 +985,71 @@ namespace Models.CLEM.Activities
                     }
                 }
 
-                // change in normal fetus weight across time-step
+                // change in normal fetus weight across time step
                 int daysToEnd = Math.Min(ind.DaysPregnantInTimeStep - currentDays, smallestInterval);
-                double deltaChangeNormFetusWeight = ind.ScaledBirthWeight * Math.Exp(ind.Parameters.GrowPF_CP.FetalNormWeightParameter_CP2 * (1 - Math.Exp(ind.Parameters.GrowPF_CP.FetalNormWeightParameter2_CP3 * (1 - ind.ProportionOfPregnancy(daysToEnd))))) - normalWeightFetus;
+                double deltaChangeNormFetusWeight = ind.ScaledBirthWeight * Math.Exp(ind.Parameters.GrowPF_CP.FetalNormWeightParameter_CP2 * (1 - Math.Exp(ind.Parameters.GrowPF_CP.FetalNormWeightParameter2_CP3 * (1 - ind.ProportionOfPregnancy(currentDays + daysToEnd))))) - normalWeightFetus;
 
-                // calculated after growth in time-step to avoild issue of 0 in first step especially for larger time-steps
+                // calculated after growth in time step to avoild issue of 0 in first step especially for larger time steps
                 double relativeConditionFetus = ind.Weight.Fetus.Amount / normalWeightFetus;
 
-                // get stunting factor
-                double stunt = 1;
-                if (MathUtilities.IsLessThan(ind.Weight.RelativeCondition, 1.0))
-                {
-                    stunt = ind.Parameters.GrowPF_CP.FetalGrowthPoorCondition_CP14[ind.NumberOfFetuses - 1];
-                }
                 double CFPreg = (ind.Weight.RelativeCondition - 1) * (normalWeightFetus / (ind.Parameters.General.BirthScalar[ind.NumberOfFetuses - 1] * ind.Weight.StandardReferenceWeight));
 
                 if (MathUtilities.IsGreaterThanOrEqual(ind.Weight.RelativeCondition, 1.0))
+                {
                     ind.Weight.Fetus.Adjust(Math.Max(0.0, deltaChangeNormFetusWeight * (CFPreg + 1)));
+                }
                 else
-                    ind.Weight.Fetus.Adjust(Math.Max(0.0, deltaChangeNormFetusWeight * ((stunt * CFPreg) + 1)));
+                {
+                    // include stunt factor in calculation
+                    ind.Weight.Fetus.Adjust(Math.Max(0.0, deltaChangeNormFetusWeight * ((ind.Parameters.GrowPF_CP.FetalGrowthPoorCondition_CP14[ind.NumberOfFetuses - 1] * CFPreg) + 1)));
+                }
 
-                ind.Weight.Conceptus.Set(ind.NumberOfFetuses * (ind.Parameters.GrowPF_CP.ConceptusWeightRatio_CP5 * ind.ScaledBirthWeight * Math.Exp(ind.Parameters.GrowPF_CP.ConceptusWeightParameter_CP6 * (1 - Math.Exp(ind.Parameters.GrowPF_CP.ConceptusWeightParameter2_CP7 * (1 - ind.ProportionOfPregnancy(currentDays)))))) + (ind.Weight.Fetus.Amount - normalWeightFetus));
+                ind.Weight.Conceptus.Set(ind.NumberOfFetuses * (ind.Parameters.GrowPF_CP.ConceptusWeightRatio_CP5 * ind.ScaledBirthWeight * Math.Exp(ind.Parameters.GrowPF_CP.ConceptusWeightParameter_CP6 * (1 - Math.Exp(ind.Parameters.GrowPF_CP.ConceptusWeightParameter2_CP7 * (1 - propOfPregnancy))))) + (ind.Weight.Fetus.Amount - normalWeightFetus));
+
+                if (propOfPregnancy > 0 && ind.Weight.ConceptusProtein.Amount == 0) 
+                {
+                    // conceptus fat and protein have not been tracked for this breeder to date, so set as default ensuring the number of fetuses are accounted for by using the expected protein content of the conceptus weight just calculated.
+
+                    //
+                    //
+                    //
+                    //  !!!!!!!!!!!!!!!!  NEEDS TO BE FIXED
+                    //
+                    //
+                    //
+                    //
+                    // ToDo: need to also set the amount of fat and protein of the conceptus at the current date as this is used to determine offspring fat and protein mass
+
+                    ind.Weight.ConceptusProtein.Set(ind.Weight.Conceptus.Amount * ind.Parameters.GrowPF_CP.ConceptusProteinContent_CP11);
+                    // ToDo: calculate conceptus energy minus the conceptus protein energy
+                    // convert net energy to fat and update the conceptus fat.
+                    ind.Weight.ConceptusFat.Set(0);
+                }
 
                 // MJ per day
                 double conceptusME = (ind.Parameters.GrowPF_CP.ConceptusEnergyContent_CP8 * (ind.NumberOfFetuses * ind.Parameters.GrowPF_CP.ConceptusWeightRatio_CP5 * ind.ScaledBirthWeight) * relativeConditionFetus *
-                    (ind.Parameters.GrowPF_CP.ConceptusEnergyParameter_CP9 * ind.Parameters.GrowPF_CP.ConceptusEnergyParameter2_CP10 / (ind.Parameters.General.GestationLength.InDays)) *
-                    Math.Exp(ind.Parameters.GrowPF_CP.ConceptusEnergyParameter2_CP10 * (1 - ind.DaysPregnant / ind.Parameters.General.GestationLength.InDays) + ind.Parameters.GrowPF_CP.ConceptusEnergyParameter_CP9 * (1 - Math.Exp(ind.Parameters.GrowPF_CP.ConceptusEnergyParameter2_CP10 * (1 - ind.ProportionOfPregnancy(currentDays)))))) / 0.13;
+                (ind.Parameters.GrowPF_CP.ConceptusEnergyParameter_CP9 * ind.Parameters.GrowPF_CP.ConceptusEnergyParameter2_CP10 / (ind.Parameters.General.GestationLength.InDays)) *
+                Math.Exp(ind.Parameters.GrowPF_CP.ConceptusEnergyParameter2_CP10 * (1 - ind.DaysPregnant / ind.Parameters.General.GestationLength.InDays) + ind.Parameters.GrowPF_CP.ConceptusEnergyParameter_CP9 * (1 - Math.Exp(ind.Parameters.GrowPF_CP.ConceptusEnergyParameter2_CP10 * (1 - propOfPregnancy))))) / 0.13;
 
                 totalMERequired += conceptusME * daysToEnd;
 
                 // kg protein per day
                 double conceptusProteinReq = ind.Parameters.GrowPF_CP.ConceptusProteinContent_CP11 * (ind.NumberOfFetuses * ind.Parameters.GrowPF_CP.ConceptusWeightRatio_CP5 * ind.ScaledBirthWeight) * relativeConditionFetus *
-                    (ind.Parameters.GrowPF_CP.ConceptusProteinParameter_CP12 * ind.Parameters.GrowPF_CP.ConceptusProteinParameter2_CP13 / (ind.Parameters.General.GestationLength.InDays)) * Math.Exp(ind.Parameters.GrowPF_CP.ConceptusProteinParameter2_CP13 * (1 - ind.ProportionOfPregnancy(currentDays)) + ind.Parameters.GrowPF_CP.ConceptusProteinParameter_CP12 * (1 - Math.Exp(ind.Parameters.GrowPF_CP.ConceptusProteinParameter2_CP13 * (1 - ind.ProportionOfPregnancy(currentDays)))));
+                    (ind.Parameters.GrowPF_CP.ConceptusProteinParameter_CP12 * ind.Parameters.GrowPF_CP.ConceptusProteinParameter2_CP13 / (ind.Parameters.General.GestationLength.InDays)) * Math.Exp(ind.Parameters.GrowPF_CP.ConceptusProteinParameter2_CP13 * (1 - propOfPregnancy) + ind.Parameters.GrowPF_CP.ConceptusProteinParameter_CP12 * (1 - Math.Exp(ind.Parameters.GrowPF_CP.ConceptusProteinParameter2_CP13 * (1 - ind.ProportionOfPregnancy(currentDays)))));
 
                 // protein for time-step (kg)
                 conceptusProtein += conceptusProteinReq * daysToEnd;
                 // fat for time-step (kg)
                 conceptusFat += ((conceptusME * 0.13) - (conceptusProteinReq * 23.6)) / 39.3 * daysToEnd;
 
-                if (currentDays < ind.DaysPregnantInTimeStep & currentDays + step > ind.DaysPregnantInTimeStep)
-                    currentDays = ind.DaysPregnantInTimeStep;
-                else
-                    currentDays += step;
+                currentDays += step;
             }
 
             //fetal fat is conceptus fat. per individual. Assumes minimal (0) fat in placenta
+
+            // todo: for breeders that have not been tracked from conception, the conceptus protein and fat will be 0 until the first CalculatePregnancyEnergy call so will be wrong for breeders pregnant at startup or when added as this will only include the last protein and fat added for the last time step.
+            // this may actually suffice of the ratio of protein to fat on the last time step is correct to apply to the newborn
+
             ind.Weight.Protein.ForPregnancy = conceptusProtein;
             ind.Weight.ConceptusProtein.Adjust(conceptusProtein);
             ind.Weight.ConceptusFat.Adjust(conceptusFat);
@@ -978,10 +1068,12 @@ namespace Models.CLEM.Activities
             }
             else
             {
-                // for pregnant females without conceptus fat and protein i.e. pregnant at startup or specified individual
+                // no mother or missing Fetus weight
+                // mother has not been through at least one CalculatePregnancyEnergy() to set fetus weight
+                // this can happen when breeder is pregnant at startup or added to the herd and birth occurred at the start of the time step 
                 if (birthWeight == 0)
                 {
-                    throw new ApsimXException(this, "Could not set newborn fat and protein at birth because no birth weight was provided when the mother did not supply conceptus protein and fat.");
+                    throw new Exception("Could not set newborn fat and protein at birth because no birth weight was provided when the mother did not supply conceptus protein and fat.");
                 }
 
                 newborn.Weight.Protein = new(newborn, newborn.Parameters.GrowPF_CP.ConceptusProteinContent_CP11 * birthWeight);
@@ -1003,11 +1095,15 @@ namespace Models.CLEM.Activities
             {
                 double RC = individual.Weight.RelativeCondition;
                 if (individual.Weight.IsStillGrowing)
+                {
                     RC = 0.9;
+                }
 
                 double sexFactor = 1.0;
-                if (individual.Sex == Sex.Male && (individual as RuminantMale).IsAbleToBreed)
+                if (individual.Sex == Sex.Male && individual.IsAbleToBreed)
+                {
                     sexFactor = 0.85;
+                }
 
                 double RCFatSlope = (individual.Parameters.General.ProportionEBWFatMax - individual.Parameters.General.ProportionEBWFat) / 0.5;
                 pFat = (individual.Parameters.General.ProportionEBWFat + ((RC - 1) * RCFatSlope)) * sexFactor;
@@ -1015,17 +1111,23 @@ namespace Models.CLEM.Activities
             else
             {
                 if (cohort.InitialFatProteinValues == null)
-                    throw new ApsimXException(this, $"Cannot set initial fat and protein for individual [{individual.ID}]. InitialFatProteinValues required for the selected ruminant growth activity were not provided for the cohort [{cohort.Name}].");
+                {
+                    throw new Exception($"Cannot set initial fat and protein for individual [{individual.ID}]. InitialFatProteinValues required for the selected ruminant growth activity were not provided for the cohort [{cohort.Name}].");
+                }
 
                 pFat = cohort.InitialFatProteinValues[0];
                 pProtein = cohort.InitialFatProteinValues[1];
                 if (cohort.InitialFatProteinValues.Length == 3)
                 {
                     if (cohort.AssociatedHerd.RuminantGrowActivity.IncludeVisceralProteinMass)
+                    {
                         vProtein = cohort.InitialFatProteinValues[2];
+                    }
                     else
+                    {
                         // need to convert this visceral protein to non-visceral such that the wet weight conversion is correct and EBM is ok from protein alone
                         pProtein += cohort.InitialFatProteinValues[2] * (individual.Parameters.GrowOddy.pPrpM / individual.Parameters.GrowOddy.pPrpV);
+                    }
                 }
             }
 
@@ -1047,7 +1149,9 @@ namespace Models.CLEM.Activities
                     pFat *= individual.Weight.EmptyBodyMass;
                     pProtein = individual.Parameters.GrowPF_CG.ProteinContentOfFatFreeTissueGainWetBasis * (individual.Weight.EmptyBodyMass - pFat);
                     if (cohort.AssociatedHerd.RuminantGrowActivity.IncludeVisceralProteinMass)
+                        {
                         throw new NotImplementedException("Cannot estimate required visceral protein mass using the RelativeCondition fat and protein mass assignment style.");
+                    }
                     break;
                 default:
                     break;
@@ -1059,10 +1163,9 @@ namespace Models.CLEM.Activities
 
             if (cohort.AssociatedHerd.RuminantGrowActivity is RuminantActivityGrowOddy)
             {
-                throw new NotImplementedException("RuminantActivityGrowOddy is not implemented in CLEM");
-                //individual.Weight.Protein = new(individual.Parameters.GrowOddy.pPrpM, pProtein);
-                //individual.Weight.ProteinViscera = new(individual.Parameters.GrowOddy.pPrpV, vProtein);
-                //individual.Energy.ProteinViscera = new(vProtein * individual.Parameters.General.MJEnergyPerKgProtein);
+                individual.Weight.Protein = new(individual, pProtein);
+                individual.Weight.ProteinViscera = new(individual, vProtein);
+                individual.Energy.ProteinViscera = new(vProtein * individual.Parameters.General.MJEnergyPerKgProtein);
             }
             else
             {
@@ -1090,9 +1193,11 @@ namespace Models.CLEM.Activities
         /// <param name="herd">Individuals <see langword="for"/>production</param>
         public static void CalculateManure(ProductStoreTypeManure manureStore, IEnumerable<Ruminant> herd)
         {
-            // nowhere to place manure so skip
+            // nowhere to place manure
             if (manureStore is null)
+            {
                 return;
+            }
 
             // sort by animal location to ensure correct deposit location.
             foreach (var groupInds in herd.GroupBy(a => a.Location))
@@ -1138,16 +1243,6 @@ namespace Models.CLEM.Activities
             {
                 yield return new ValidationResult($"No [RuminantParametersGrowPF] parameters are provided for [{item.NameWithParent}]", new string[] { "RuminantParametersGrowPF5" });
             }
-
-            // Todo: Now performed in the RuminantTypeCohort and called by CohortList and SpecifyRuminant validation 
-            //var indsWithoutProtein = CurrentHerd(false).Where(a => a.Weight.Protein is null).GroupBy(a => a.HerdName);
-            //foreach (var herd in indsWithoutProtein)
-            //{
-            //    Ruminant firstIndividual = herd.First();
-            //    string warn = $"Individual protein and fat stores required for [a={this.NameWithParent}] growth component";
-            //    string warnfull = $"{warn}{Environment.NewLine}Some individuals of [r={herd.Key}] did not have protein and fat stores created during initialisation (e.g. sex:{firstIndividual.Sex}, age:{firstIndividual.AgeInDays} days).{Environment.NewLine}Check all protein and fat allocation settings in the [r=RuminantCohort] of [r={herd.Key}]";
-            //    Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error, warnfull);
-            //}
         }
 
         #endregion

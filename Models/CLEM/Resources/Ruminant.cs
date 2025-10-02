@@ -273,7 +273,7 @@ namespace Models.CLEM.Resources
             sterilised = true;
             if (Sex == Sex.Male && castration)
             {
-                Weight.SetStandardReferenceWeight(Sex, Parameters.General, true);
+                Weight.SetStandardReferenceWeight();
                 CalculateNormalisedWeight(age);
             }
             if (this is RuminantFemale female)
@@ -934,15 +934,11 @@ namespace Models.CLEM.Resources
             }
             
             // create weight info object and set birth weight
-            Weight = new(birthScalar * Parameters.General.SRWFemale);
+            Weight = new(this, birthScalar * Parameters.General.SRWFemale);
 
-            Weight.SetStandardReferenceWeight(Sex, Parameters.General);
+            Weight.SetStandardReferenceWeight();
 
             Energy = new RuminantInfoEnergy(this);
-
-            AgeInDays = setAge;
-            DateOfBirth = date.AddDays(-1 * setAge);
-            DateEnteredSimulation = date;
 
             int weanAge = AgeToWeanNaturally;
             if ((date - DateOfBirth).TotalDays > weanAge)
@@ -956,13 +952,19 @@ namespace Models.CLEM.Resources
                 setWeight = CalculateNormalisedWeight(setAge, true);
             }
 
+            // can we uppdate age here after weight and setMature?
+            AgeInDays = setAge;
+            DateOfBirth = date.AddDays(-1 * setAge);
+            DateEnteredSimulation = date;
+
+            // This assumes set weight is the fleece free body weight
             // Empty body weight to live weight assumes 1.09 conversion factor when no GrowPF parameters provided.
-            Weight.AdjustByLiveWeightChange(setWeight, this);
+            Weight.SetInitialBaseWeight(setWeight);
 
             // determine fat and protein are required and adjust weight if needed
             cohort?.AssociatedHerd.RuminantGrowActivity?.SetInitialFatProtein(this, cohort, setWeight);
 
-            Weight.SetProteinMassAtSRW(Parameters.General);
+            Weight.SetProteinMassAtSRW();
 
             // add fleece if required, may need weight to be set first so done here
             if (Parameters.General.IncludeWool && cohort.ProportionFleecePresent > 0)
@@ -973,6 +975,12 @@ namespace Models.CLEM.Resources
 
                 // TODO: this adds fleece onto the specified weight, rather than including the specified fleece weight in the supplied weight.
                 // this should be called base weight (no fleece) in cohort.
+            }
+
+            // need to determine if this initial individual is mature before age is set and Ruminant.UpdateBreedingDetails is called to define oestrus, pregnancy and lactation
+            if (IsWeaned && Weight.Live >= Parameters.General.MinimumSizeForMaturityFemale * Weight.StandardReferenceWeight)
+            {
+                SetMature();
             }
 
             Attributes = new IndividualAttributeList();
@@ -993,34 +1001,6 @@ namespace Models.CLEM.Resources
                     Wean(false, string.Empty, date);
             }
 
-            //// set location
-            //if (cohort.)
-
-
-            //string location = string.Empty;
-            //if (string.IsNullOrEmpty(cohort.ManagedPastureName) || cohort.ManagedPastureName == "Not specified")
-            //{
-            //    if (cohort.Parent is RuminantInitialCohorts initCohorts)
-            //    {
-            //        if (string.IsNullOrEmpty(initCohorts.ManagedPastureName) == false && initCohorts.ManagedPastureName != "Not specified")
-            //        {
-            //            location = initCohorts.ManagedPastureName;
-            //        }
-            //    }
-            //}
-            //else
-            //{
-            //    location = cohort.ManagedPastureName;
-            //}
-            //if (location.Contains('.'))
-            //{
-            //    location = location.Split('.')[1]; // remove any pasture name suffix
-            //}
-            //if (string.IsNullOrEmpty(location) == false)
-            //{
-            //    Location = location;
-            //}
-
             // initialise attributes
             foreach (ISetAttribute item in initialAttributes)
                 this.AddNewAttribute(item);
@@ -1037,7 +1017,7 @@ namespace Models.CLEM.Resources
         public Ruminant(DateTime date, int id, RuminantFemale mother, IRuminantActivityGrow growActivity)
         {
             double weight = mother.Weight.Fetus.Amount;
-            double expectedWeight = mother.Parameters.General.BirthScalar[mother.NumberOfFetuses - 1] * mother.Weight.StandardReferenceWeight * ((1.0 - mother.Parameters.General.EffectRelativeSizeBirthWeight_CP4) + (mother.Parameters.General.EffectRelativeSizeBirthWeight_CP4 * mother.Weight.RelativeSize));
+            double expectedWeight = mother.ScaledBirthWeight;
             if (mother.Weight.Fetus.Amount == 0)
                 weight = expectedWeight;
             
@@ -1049,30 +1029,28 @@ namespace Models.CLEM.Resources
             SaleFlag = HerdChangeReason.Born;
 
             // default weight as birth weight is assigned later.
-            Weight = new();
+            Weight = new(this);
 
             Energy = new RuminantInfoEnergy(this);
 
             // pass to ruminant grow activity to determine how to set protein and fat at birth where the newborn has access to mother's properties
             growActivity?.SetProteinAndFatAtBirth(this, weight);
-             Weight.SetStandardReferenceWeight(Sex, Parameters.General);
+            Weight.SetStandardReferenceWeight();
 
             if (!growActivity.IncludeFatAndProtein)
-            //{
-            //    Weight.UpdateEBM(this);
-            //}
-            //else
+            {
+                Weight.Adjust();
+            }
+            else
             {
                 // Empty body weight to live weight assumes 1.09 conversion factor when no GrowPF parameters provided.
-                Weight.AdjustByLiveWeightChange(weight, this);
+                Weight.SetInitialBaseWeight(weight);
             }
-
-            Weight.SetBirthWeightUsingCurrentWeight(this);
 
             // must get set after weight and birth weight are assignedf in order to calculate normalised weight correctly
             AgeInDays = 0;
             DateOfBirth = mother.BirthDueDate??date;
-            DateEnteredSimulation = mother.BirthDueDate ?? date;
+            DateEnteredSimulation = DateOfBirth;
 
             // add attributes inherited from mother
             foreach (var attribute in mother.Attributes.Items.Where(a => a.Value is not null))
@@ -1099,7 +1077,7 @@ namespace Models.CLEM.Resources
             // add fleece expected from 1 day old individual if required
             if (Parameters.General.IncludeWool)
             {
-                Weight.WoolClean.Set(Weight.FleeceWeightExpectedByAge(Parameters, 1));
+                Weight.WoolClean.Set(Weight.FleeceWeightExpectedByAge());
                 Weight.Wool.Set(Weight.WoolClean.Amount / Parameters.GrowPF_CW.CleanToGreasyCRatio_CW3);
             }
 

@@ -9,14 +9,23 @@ namespace Models.CLEM.Resources
     public class RuminantInfoWeight
     {
         private double live = 0;
+        private readonly Ruminant ruminant;
 
         /// <summary>
-        /// Track dry protein weight (kg)
+        /// Track dry and wet protein weight (kg)
         /// </summary>
         /// <remarks>
-        /// Mass of wet protein excluding conceptus and fleece
+        /// Mass of dry and wet protein excluding conceptus and fleece
         /// </remarks>
         public RuminantTrackingItemProtein Protein { get; set; }
+
+        /// <summary>
+        /// Track dry and wet protein weight of viscera (Oddy, kg)
+        /// </summary>
+        /// <remarks>
+        /// Mass of wet visceral protein required for Oddy growth
+        /// </remarks>
+        public RuminantTrackingItemProtein ProteinViscera { get; set; }
 
         /// <summary>
         /// Sum total dry protein accounting for any non-visceral and visceral protein pools
@@ -37,14 +46,6 @@ namespace Models.CLEM.Resources
         /// Sum change in wet protein accounting for any non-visceral and visceral protein pools
         /// </summary>
         public double ProteinWetChange { get { return (Protein?.ChangeWet ?? 0) + (ProteinViscera?.ChangeWet ?? 0); } }
-
-        /// <summary>
-        /// Track dry protein weight of viscera (Oddy, kg)
-        /// </summary>
-        /// <remarks>
-        /// Mass of wet visceral protein required for Oddy growth
-        /// </remarks>
-        public RuminantTrackingItemProtein ProteinViscera { get; set; }
 
         /// <summary>
         /// Track fat weight (kg)
@@ -126,7 +127,7 @@ namespace Models.CLEM.Resources
         public RuminantTrackingItem WoolClean { get; set; } = new();
 
         /// <summary>
-        /// Track wool weight (kg)
+        /// Track cashmere weight (kg). DEPRECIATED FROM IAT
         /// </summary>
         public RuminantTrackingItem Cashmere { get; set; } = new();
 
@@ -222,37 +223,40 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Set the standard reference weight of individual
         /// </summary>
-        /// <param name="sex">Sex of individual</param>
-        /// <param name="parametersGeneral">General breed parameters for individual</param>
-        /// <param name="castrateMale">Flag to specify castrate male</param>
-        public void SetStandardReferenceWeight(Sex sex, RuminantParametersGeneral parametersGeneral, bool castrateMale = false)
+        public void SetStandardReferenceWeight()
         {
-            StandardReferenceWeight = parametersGeneral.SRWFemale;
-            if (sex == Sex.Male)
+            StandardReferenceWeight = ruminant.Parameters.General.SRWFemale;
+            if (ruminant.Sex == Sex.Male)
             {
-                if (castrateMale)
+                if (ruminant.IsSterilised)
                 {
-                    StandardReferenceWeight *= parametersGeneral.SRWCastrateMaleMultiplier;
+                    StandardReferenceWeight *= ruminant.Parameters.General.SRWCastrateMaleMultiplier;
                 }
                 else
                 {
-                    StandardReferenceWeight *= parametersGeneral.SRWMaleMultiplier;
+                    StandardReferenceWeight *= ruminant.Parameters.General.SRWMaleMultiplier;
                 }
             }
-            SetProteinMassAtSRW(parametersGeneral);
+            SetProteinMassAtSRW();
         }
 
         /// <summary>
         /// A method to define the protein mass at SRW
         /// </summary>
-        public void SetProteinMassAtSRW(RuminantParametersGeneral parametersGeneral)
+        public void SetProteinMassAtSRW()
         {
             if (Protein is not null)
             {
                 // update the protein mass at SRW as this only relies on SRW and specified constants.
-                Protein.ProteinMassAtSRW = StandardReferenceWeight * (1.0 / parametersGeneral.EBW2LW_CG18) * parametersGeneral.ProportionSRWEmptyBodyProtein;
+                Protein.ProteinMassAtSRW = StandardReferenceWeight * (1.0 / ruminant.Parameters.General.EBW2LW_CG18) * ruminant.Parameters.General.ProportionSRWEmptyBodyProtein;
             }
         }
+
+        /// <summary>
+        /// Relative size (normalised weight / standard reference weight), Z
+        /// </summary>
+        [FilterByProperty]
+        public double RelativeSize { get { return NormalisedForAge / StandardReferenceWeight; } }
 
         /// <summary>
         /// Relative size based on highest base weight achieved (highest base weight / standard reference weight)
@@ -274,12 +278,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         [FilterByProperty]
         public double ProportionOfNormalisedWeight { get { return NormalisedForAge == 0 ? 1 : Base.Amount / NormalisedForAge; } }
-
-        /// <summary>
-        /// Relative size (normalised weight / standard reference weight), Z
-        /// </summary>
-        [FilterByProperty]
-        public double RelativeSize { get { return  NormalisedForAge / StandardReferenceWeight; }  }
 
         /// <summary>
         /// Is still growing (Z less than or equal to 0.9)
@@ -310,7 +308,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Empty body mass change including fleece weight (kg)
         /// </summary>
-        public double EmptyBodyMassChangeWithFleece { get { return EmptyBodyMassChange + (Wool?.Change ?? 0);  } }
+        public double EmptyBodyMassWithFleeceChange { get { return EmptyBodyMassChange + (Wool?.Change ?? 0);  } }
 
         /// <summary>
         /// Calculate the current fleece weight as a proportion of standard fleece weight
@@ -320,11 +318,9 @@ namespace Models.CLEM.Resources
         /// <returns>Current greasy fleece weight as proportion of  </returns>
         public double FleeceWeightAsProportionOfSFW(RuminantParameters parameters, int ageInDays)
         {
-            if (parameters is null)
-                throw new ArgumentNullException("RuminantParameters object is required to calculate fleece weight");
-            if (parameters.General.IncludeWool == false)
+            if (ruminant.Parameters.General.IncludeWool == false)
                 return 0;   
-            double expectedFleeceWeight = FleeceWeightExpectedByAge(parameters, ageInDays);
+            double expectedFleeceWeight = FleeceWeightExpectedByAge();
             if (expectedFleeceWeight == 0)
                 return 0;
             return Wool.Amount / (expectedFleeceWeight);
@@ -333,80 +329,14 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Calculate the expected fleece weight based on age
         /// </summary>
-        /// <param name="parameters">Access to the parameter set of the ruminant</param>
-        /// <param name="ageInDays">The age of the individual in days</param>
         /// <returns>Current greasy fleece weight as proportion of  </returns>
-        public double FleeceWeightExpectedByAge(RuminantParameters parameters, int ageInDays)
+        public double FleeceWeightExpectedByAge()
         {
-            if (parameters is null)
-                throw new ArgumentNullException("RuminantParameters object is required to calculate fleece weight");
-            return parameters.GrowPF_CW.StandardFleeceWeight * StandardReferenceWeight * parameters.GrowPF_CW.AgeFactorForWool(ageInDays);
+            return ruminant.Parameters.GrowPF_CW.StandardFleeceWeight * StandardReferenceWeight * ruminant.Parameters.GrowPF_CW.AgeFactorForWool(ruminant.AgeInDays);
         }
 
         /// <summary>
-        /// Adjust all weight by a given empty body mass change
-        /// </summary>
-        /// <param name="wtChange">Change in Empty Body Weight (kg)</param>
-        /// <param name="individual">The individual to change</param>
-        private void UpdateWeight(double wtChange, Ruminant individual)
-        {
-            EmptyBodyMassChange = wtChange;
-            EmptyBodyMass += wtChange;
-            if (individual.AgeInDays == 0)
-            {
-                Base.Adjust(wtChange);
-            }
-            else
-            {
-                Base.Adjust(wtChange * (individual.Parameters.General?.EBW2LW_CG18 ?? 1.09));
-            }
-
-            UpdateLiveWeight();
-
-            if (individual is RuminantFemale female)
-            {
-                female.UpdateHighWeightWhenNotPregnant(Live);
-            }
-
-            AdultEquivalent = Math.Pow(Live, 0.75) / Math.Pow(individual.Parameters.General.BaseAnimalEquivalent, 0.75);
-            HighestAttained = Math.Max(HighestAttained, Live);
-            HighestBaseAttained = Math.Max(HighestBaseAttained, Base.Amount);
-        }
-
-        /// <summary>
-        /// Adjust weight by a given live weight change
-        /// </summary>
-        /// <param name="wtChange">Change in live weight (kg)</param>
-        /// <param name="individual">The individual to change</param>
-        public void AdjustByLiveWeightChange(double wtChange, Ruminant individual)
-        {
-            // convert Live to EBM change
-            UpdateWeight(wtChange / (individual.Parameters.General?.EBW2LW_CG18 ?? 1.09), individual);
-        }
-
-        /// <summary>
-        /// Adjust empty body weight. All other weight will also be adjusted accordingly
-        /// </summary>
-        /// <param name="ebmWeightChange">Change in empty body weight using fat and wet protein gain approach (kg)</param>
-        /// <param name="individual">The individual to change</param>
-        public void AdjustByEBMChange(double ebmWeightChange, Ruminant individual)
-        {
-            // change is fat and wet protein
-            UpdateWeight(ebmWeightChange, individual); 
-        }
-
-        /// <summary>
-        /// Update Empty Body Mass and associated weight measure using the current change in protein and fat pools
-        /// </summary>
-        /// <param name="individual">The individual to update</param>
-        public void UpdateEBM(Ruminant individual)
-        {
-            // uses latest change in fat and wet protein pools
-            AdjustByEBMChange(ProteinWetChange + Fat.Change, individual);
-        }
-
-        /// <summary>
-        /// Method to recalculate the live weight based on current base, conceptus and wool weights.
+        /// Method to recalulate the live weight based on current base, conceptus and wool weights.
         /// </summary>
         public void UpdateLiveWeight()
         {
@@ -414,29 +344,141 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Set the birthweight based on current weight.
+        /// Adjust weight
         /// </summary>
-        public void SetBirthWeightUsingCurrentWeight(Ruminant individual)
+        /// <param name="wtChange">Optional change in empty body mass (kg)</param>
+        public void Adjust(double wtChange = 0)
         {
-            // if base has not been set and protien have been defined then use protein and fat to set base weight
-            if (Base.Amount == 0 && Protein is not null)
-                AdjustByEBMChange(Protein.AmountWet + Fat.Amount, individual);
-            AtBirth = Base.Amount;
+            EmptyBodyMassChange = 0;
+
+            if (Protein is not null && wtChange == 0)
+            {
+                // assume change is based on fat and protein mass changes previously calculated for time step
+                wtChange = ProteinWetChange + FatChange;
+            }
+
+            if (Base.Amount > 0) // not new individual
+            {
+                EmptyBodyMassChange = wtChange;
+            }
+            EmptyBodyMass += wtChange;
+
+            // account for gut fill and adjust base weight
+            Base.Adjust(wtChange * (ruminant.Parameters.General?.EBW2LW_CG18 ?? 1.09));
+
+            UpdateLiveWeight();
+
+            if (ruminant is RuminantFemale female)
+            {
+                female.UpdateHighWeightWhenNotPregnant(Live);
+            }
+
+            AdultEquivalent = Math.Pow(Live, 0.75) / Math.Pow(ruminant.Parameters.General.BaseAnimalEquivalent, 0.75);
+            HighestAttained = Math.Max(HighestAttained, Live);
+            HighestBaseAttained = Math.Max(HighestBaseAttained, Base.Amount);
         }
+
+        /// <summary>
+        /// Set fleece and conceptus free body weight at startup
+        /// </summary>
+        /// <param name="weight">Initial base weight (kg)</param>
+        public void SetInitialBaseWeight(double weight)
+        {
+            Adjust(weight / (ruminant.Parameters.General?.EBW2LW_CG18 ?? 1.09));
+        }
+
+        ///// <summary>
+        ///// Adjust all weight by a given empty body mass change
+        ///// </summary>
+        ///// <param name="wtChange">Change in Empty Body Weight (kg)</param>
+        ///// <param name="individual">The individual to change</param>
+        //private void UpdateWeight(double wtChange, Ruminant individual)
+        //{
+        //    EmptyBodyMassChange = wtChange;
+        //    EmptyBodyMass += wtChange;
+        //    //if (individual.AgeInDays == 0)
+        //    //{
+        //    //    Base.Adjust(wtChange);
+        //    //}
+        //    //else
+        //    //{
+        //        Base.Adjust(wtChange * (individual.Parameters.General?.EBW2LW_CG18 ?? 1.09));
+        //    //}
+
+        //    // Recalculate the live weight based on current base, conceptus and wool weights.
+        //    live = Base.Amount + Conceptus.Amount + Wool.Amount;
+
+        //    if (individual is RuminantFemale female)
+        //    {
+        //        female.UpdateHighWeightWhenNotPregnant(Live);
+        //    }
+
+        //    AdultEquivalent = Math.Pow(Live, 0.75) / Math.Pow(individual.Parameters.General.BaseAnimalEquivalent, 0.75);
+        //    HighestAttained = Math.Max(HighestAttained, Live);
+        //    HighestBaseAttained = Math.Max(HighestBaseAttained, Base.Amount);
+        //}
+
+
+
+
+        ///// <summary>
+        ///// Adjust weight by a given live weight change
+        ///// </summary>
+        ///// <param name="wtChange">Change in live weight (kg)</param>
+        ///// <param name="individual">The individual to change</param>
+        //public void AdjustByLiveWeightChange(double wtChange, Ruminant individual)
+        //{
+        //    // convert Live to EBM change
+        //    UpdateWeight(wtChange / (individual.Parameters.General?.EBW2LW_CG18 ?? 1.09), individual);
+        //}
+
+        ///// <summary>
+        ///// Adjust empty body weight. All other weight will also be adjusted accordingly
+        ///// </summary>
+        ///// <param name="ebmWeightChange">Change in empty body weight using fat and wet protein gain approach (kg)</param>
+        ///// <param name="individual">The individual to change</param>
+        //public void AdjustByEBMChange(double ebmWeightChange, Ruminant individual)
+        //{
+        //    // change is fat and wet protein
+        //    UpdateWeight(ebmWeightChange, individual); 
+        //}
+
+        ///// <summary>
+        ///// Update Empty Body Mass and associated weight measure using the current change in protein and fat pools
+        ///// </summary>
+        ///// <param name="individual">The individual to update</param>
+        //public void UpdateEBM(Ruminant individual)
+        //{
+        //    // uses latest change in fat and wet protein pools
+        //    AdjustByEBMChange(ProteinWetChange + Fat.Change, individual);
+        //}
+
+        ///// <summary>
+        ///// Set the birthweight based on current weight.
+        ///// </summary>
+        //public void SetBirthWeightUsingCurrentWeight(Ruminant individual)
+        //{
+        //    // if base has not been set and protein have been defined then use protein and fat to set base weight
+        //    if (Base.Amount == 0 && Protein is not null)
+        //        AdjustByEBMChange(Protein.AmountWet + Fat.Amount, individual);
+        //    AtBirth = Base.Amount;
+        //}
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public RuminantInfoWeight(double weightAtBirth)
+        public RuminantInfoWeight(Ruminant ruminant, double weightAtBirth)
         {
+            this.ruminant = ruminant;
             AtBirth = weightAtBirth;
         }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public RuminantInfoWeight()
+        public RuminantInfoWeight(Ruminant ruminant)
         {
+            this.ruminant = ruminant;
         }
 
     }

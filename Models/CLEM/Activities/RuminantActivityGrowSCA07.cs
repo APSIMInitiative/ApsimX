@@ -229,7 +229,7 @@ namespace Models.CLEM.Activities
             ind.Weight.Fat.Adjust(dfdt / 39.3 * events.Interval);
 
             // update weight, protein and fat
-            ind.Weight.AdjustByEBMChange(dEBWdt * events.Interval, ind);
+            ind.Weight.Adjust(dEBWdt * events.Interval);
             //ind.Weight.AdjustByEBMChange(dEBWdt * events.Interval, ind); // kg
 
             //age << -age + dt / 365

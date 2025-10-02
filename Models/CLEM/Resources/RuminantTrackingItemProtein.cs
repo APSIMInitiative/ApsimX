@@ -95,10 +95,10 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Method to calculate the proportion dry of the protein mass based on age of the individual to account for higher water content in younger animals
+        /// Method to determine the proportion dry of the protein mass and include age of the individual to account for higher water content in younger animals if needed
         /// </summary>
         /// <param name="ind"></param>
-        public void CalculateProportionDry(Ruminant ind)
+        private void CalculateProportionDry(Ruminant ind)
         {
             if (MathUtilities.IsGreaterThanOrEqual(ProportionDry, ind.Parameters.GrowPF_CG.ProteinContentOfFatFreeTissueGainWetBasis))
             {
@@ -117,7 +117,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Performs the resetting of time-step tracking stores
+        /// Performs the resetting of time step tracking stores
         /// </summary>
         public void TimeStepReset()
         {

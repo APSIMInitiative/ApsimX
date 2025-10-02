@@ -207,7 +207,7 @@ namespace Models.CLEM.Activities
                 ind.Weight.Wool.Adjust(ind.Weight.WoolClean.Change / ind.Parameters.GrowPF_CW.CleanToGreasyCRatio_CW3);
             }
 
-            ind.Weight.UpdateEBM(ind);
+            ind.Weight.Adjust();
 
             // manure per time step
             ind.Output.Manure = ind.Intake.SolidsDaily.Actual * (100 - ind.Intake.DMD) / 100 * events.Interval;
