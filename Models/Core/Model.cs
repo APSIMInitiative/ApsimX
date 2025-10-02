@@ -143,51 +143,6 @@ namespace Models.Core
         public virtual void OnPreLink() { }
 
         /// <summary>
-        /// Return true iff a model with the given type can be added to the model.
-        /// </summary>
-        /// <param name="type">The child type.</param>
-        public bool IsChildAllowable(Type type)
-        {
-            // Simulations objects cannot be added to any other models.
-            if (typeof(Simulations).IsAssignableFrom(type))
-                return false;
-
-            // If it's not an IModel, it's not a valid child.
-            if (!typeof(IModel).IsAssignableFrom(type))
-                return false;
-
-            List<Type> modelParentTypes = new();
-            foreach(ValidParentAttribute validParent in ReflectionUtilities.GetAttributes(typeof(Model), typeof(ValidParentAttribute), true))
-                modelParentTypes.Add(validParent.ParentType);
-
-            bool hasValidParents = false;
-
-            // Is allowable if one of the valid parents of this type (t) matches the parent type.
-            foreach (ValidParentAttribute validParent in ReflectionUtilities.GetAttributes(type, typeof(ValidParentAttribute), true))
-            {
-                // Used to make objects that have no explicit ValidParent attributes allowed
-                // to be placed anywhere.
-                if (!modelParentTypes.Contains(validParent.ParentType))
-                    hasValidParents = true;
-
-                if (validParent != null)
-                {
-                    if (validParent.DropAnywhere)
-                        return true;
-
-                    if (validParent.ParentType != null && validParent.ParentType.IsAssignableFrom(GetType()))
-                        return true;
-                }
-            }
-
-            // If it doesn't have any valid parents, it should be able to be placed anywhere.
-            if(hasValidParents)
-                return false;
-            else
-                return true;
-        }
-
-        /// <summary>
         ///
         /// </summary>
         /// <returns></returns>
