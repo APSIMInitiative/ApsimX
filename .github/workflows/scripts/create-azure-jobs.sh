@@ -36,7 +36,9 @@ if test -z "${jobcount}"; then
     echo "The job count was found to be empty. Exiting."
     exit 1
 fi
-response=$(curl "https://postats2.apsim.info/api/open?pullrequestnumber=${DOCKER_METADATA_OUTPUT_VERSION:3}&commitid=${commitsha}&count=${jobcount}&author=${author}&pool=${azure_pool}")
+url="https://postats2.apsim.info/api/open?pullrequestnumber=${DOCKER_METADATA_OUTPUT_VERSION:3}&commitid=${commitsha}&count=${jobcount}&author=${author}&pool=${azure_pool}"
+echo "POStats2 open URL: ${url}"
+response=$(curl "${url}")
 echo "POStats2 open response: ${response}"
 echo "Start creating payload..."
 pr_number=${DOCKER_METADATA_OUTPUT_VERSION:3}
