@@ -110,7 +110,7 @@ jobs:
       - name: Create Azure Validation Jobs
         id: submit_azure_jobs
         env:
-          PAYLOAD_FOLDER_PATH: ${PAYLOAD_FOLDER_PATH}
+          PAYLOAD_FOLDER_PATH: ${{ env.PAYLOAD_FOLDER_PATH }}
           AZURE_ENV_CONTENTS: ${{ secrets.AZURE_ENV_CONTENTS }}
           DOCKER_METADATA_OUTPUT_VERSION: ${{ steps.meta_apsimplusr.outputs.tags }}
           INCOMING_COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
