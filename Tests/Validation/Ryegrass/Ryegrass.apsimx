@@ -51372,7 +51372,9 @@
                                 "[SPRUM].Residue.Wt",
                                 "[SPRUM].AboveGround.Wt",
                                 "[SPRUM].Arbitrator.FN",
-                                "[SPRUM].Leaf.Canopy.FW"
+                                "[SPRUM].Leaf.Canopy.FW",
+                                "",
+                                "[SPRUM].Leaf.Canopy."
                               ],
                               "EventNames": [
                                 "[Clock].EndOfDay"
