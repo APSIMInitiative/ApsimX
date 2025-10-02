@@ -4,6 +4,7 @@ using System.Linq;
 using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
+using BruTile;
 using Models.Core;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
@@ -542,6 +543,13 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>
+        /// Method to check mass balances at the completion of arbitration
+        /// </summary>
+        /// <param name="startLive"></param>
+        /// <param name="startDead"></param>
+        /// <param name="element"></param>
+        /// <exception cref="Exception"></exception>
         private void CheckMassBalance(double startLive, double startDead, string element)
         {
             double live = (double)(Structure.GetObject("Live." + element).Value);
@@ -555,15 +563,33 @@ namespace Models.PMF
             double respired = (double)(Structure.GetObject("Respired." + element).Value);
             double detached = (double)(Structure.GetObject("Detached." + element).Value);
 
-            double liveBal = Math.Abs(live - (startLive + allocated - senesced - reAllocated
-                                                        - reTranslocated - liveRemoved - respired));
-            if (MathUtilities.IsGreaterThan(liveBal, 3e-11,0.0))
+            if (AreDifferent(live,  startLive + allocated - senesced - reAllocated - reTranslocated - liveRemoved - respired))
                 throw new Exception(element + " mass balance violation in live biomass of " + this.Name + "on " + clock.Today.ToString());
 
-            double deadBal = Math.Abs(dead - (startDead + senesced - deadRemoved - detached));
-            if (MathUtilities.IsGreaterThan(deadBal, 3e-11, 0.0))
+            if (AreDifferent(dead, startDead + senesced - deadRemoved - detached))
                 throw new Exception(element + " mass balance violation in dead biomass of " + this.Name + "on " + clock.Today.ToString());
 
+        }
+
+        /// <summary>
+        /// Tests if two values are diffrent beyone a tolerance to allow for floating point errors
+        /// Calculates tolerence relative to the size of the values to allow for multiplication of floating point errors.
+        /// </summary>
+        /// <param name="V1"></param>
+        /// <param name="V2"></param>
+        /// <returns>true or false</returns>
+        private bool AreDifferent(double V1, double V2)
+        {
+            //Express the difference between the two values as a positive
+            double difference = Math.Abs(V1 - V2);
+            //Determine the larger of the two values
+            double largest = Math.Max(Math.Abs(V1), Math.Abs(V2));
+            double floatingPointTolerance = 1e-11;
+            //The size of errors associated with floating point variances multiplies so need to increase tolerence relative to the largest value being compared
+            double largestValueTolerance = largest * floatingPointTolerance;
+            //If largest = zero the tolerance will become zero so need to ensure it does not fall below the floating point tolerence 
+            double tolerance = Math.Max(largestValueTolerance, floatingPointTolerance);
+            return MathUtilities.IsGreaterThan(difference, 0, tolerance);
         }
 
         /// <summary>Called when plant endcrop is called</summary>
