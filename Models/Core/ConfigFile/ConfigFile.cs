@@ -228,7 +228,7 @@ namespace Models.Core.ConfigFile
                 switch (keyword)
                 {
                     case "AddToAll":
-                        IModel[] allParentNode = simulations.Node.FindAll<IModel>().ToList().Where(m => m.GetType().Name == instruction.ActiveNode).ToArray();
+                        IModel[] allParentNode = simulations.Node.FindAll<IModel>().Where(m => m.GetType().Name == instruction.ActiveNode).ToArray();
                         foreach (IModel parent in allParentNode)
                         {
                             newNode = Structure.Add(instruction.NewNode, parent);
