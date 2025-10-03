@@ -296,7 +296,7 @@ namespace Models.Core.ConfigFile
                     }
                     else if (instruction.Keyword == Keyword.AddToAll)
                     {
-                        IModel[] allParentNode = simulations.Node.FindAll<IModel>().ToList().Where(m => m.GetType().Name == instruction.ActiveNode).ToArray();
+                        IModel[] allParentNode = simulations.Node.FindAll<IModel>().Where(m => m.GetType().Name == instruction.ActiveNode).ToArray();
                         foreach (IModel parent in allParentNode)
                         {
                             IModel newNode = Structure.Add(nodeToCopy, parent);
