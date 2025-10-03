@@ -202,6 +202,8 @@ namespace UserInterface.Presenters
                             int spacing = msg.RelativePath.Length + 2;
                             if (previousPath == null || msg.RelativePath != previousPath)
                             {
+                                if (msg != m.First())
+                                    md.AppendLine();
                                 md.Append($"{msg.RelativePath}:".PadRight(spacing));
                                 previousPath = msg.RelativePath;
                             }
