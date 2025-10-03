@@ -366,7 +366,7 @@ ExperimentY2
 
             // Get new values from changed simulation.
             Simulation[] allSims = updatedFile.Node.FindAll<Simulation>().ToArray();
-            Assert.That(allSims.Length == 2);
+            Assert.That(allSims.Length, Is.EqualTo(2));
             Zone[] allZones = updatedFile.Node.FindAll<Zone>().ToArray();
             Assert.That(allZones.Length, Is.EqualTo(2));
 
