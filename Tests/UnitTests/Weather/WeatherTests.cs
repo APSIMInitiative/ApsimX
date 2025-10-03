@@ -45,7 +45,7 @@ namespace UnitTests.Weather
                     new Models.Climate.Weather()
                     {
                         Name = "Weather",
-                        FullFileName = weatherFilePath,
+                        FileName = weatherFilePath,
                         ExcelWorkSheetName = "Sheet1"
                     },
                     new Clock()
@@ -88,7 +88,7 @@ namespace UnitTests.Weather
                     new Models.Climate.Weather()
                     {
                         Name = "Weather",
-                        FullFileName = weatherFilePath
+                        FileName = weatherFilePath
                     },
                     new Clock()
                     {
@@ -129,7 +129,7 @@ namespace UnitTests.Weather
             Models.Climate.Weather weather = new()
             {
                 Name = "Weather",
-                FullFileName = weatherFilePath,
+                FileName = weatherFilePath,
                 ExcelWorkSheetName = "Sheet1"
             };
             Node.Create(weather);
@@ -159,7 +159,7 @@ namespace UnitTests.Weather
                         new MockSummary(),
                         new Models.Climate.Weather()
                         {
-                            FullFileName = metFile
+                            FileName = metFile
                         },
                         new Models.Report()
                         {
@@ -225,7 +225,7 @@ namespace UnitTests.Weather
                         new Models.Climate.Weather()
                         {
                             Name = "Weather",
-                            FullFileName = weatherFilePath,
+                            FileName = weatherFilePath,
                             ExcelWorkSheetName = "Sheet1"
                         },
                         new Clock()
@@ -278,7 +278,7 @@ namespace UnitTests.Weather
             {
                 Children =
                 [
-                    new Models.Climate.Weather() { FullFileName = metFile }
+                    new Models.Climate.Weather() { FileName = metFile }
                 ]
             };
             var weather = simulations.Children[0] as Models.Climate.Weather;
@@ -303,7 +303,7 @@ namespace UnitTests.Weather
             IEnumerable<string> exampleFileNames = Directory.GetFiles(exampleFileDirectory, "*.apsimx", SearchOption.AllDirectories);
             foreach (string exampleFile in exampleFileNames)
             {
-                Simulations sim = FileFormat.ReadFromFile<Simulations>(exampleFile, e => {return;}).Model as Simulations;
+                Simulations sim = FileFormat.ReadFromFile<Simulations>(exampleFile, e => { return; }).Model as Simulations;
                 IEnumerable<Models.Climate.Weather> weatherModels = sim.Node.FindChildren<Models.Climate.Weather>(recurse: true);
                 foreach (Models.Climate.Weather weatherModel in weatherModels)
                 {
@@ -317,6 +317,94 @@ namespace UnitTests.Weather
             Assert.That(allFilesHaveRootReference, Is.True);
         }
 
+        [Test]
+        public void TestWeatherFileNameAndFullName()
+        {
+            var tempFile = Path.GetTempFileName().Replace(".tmp", ".met");
+            File.WriteAllText(tempFile, ReflectionUtilities.GetResourceAsString("UnitTests.Weather.CustomMetData.met"));
+            var tempDir = Path.GetDirectoryName(tempFile);
+
+            // Now set the apsimx file name and ensure that the weather file name is still the same but the full file name is now absolute.
+            var sims = new Simulations()
+            {
+                FileName = Path.Combine(tempDir, "temp.apsimx"),
+                Children = new List<IModel>()
+                {
+                    new Simulation()
+                    {
+                        Name = "Base",
+                        FileName = Path.Combine(tempDir, "temp.apsimx"),
+                        Children = new List<IModel>()
+                            {
+                                new Models.Climate.Weather()
+                                {
+                                    Name = "Weather",
+                                    FileName = tempFile,
+                                    ExcelWorkSheetName = "Sheet1"
+                                },
+                                new Clock()
+                                {
+                                    Name = "Clock",
+                                },
+                                new MockSummary()
+                            }
+                    }
+                },
+            };
+
+            Node.Create(sims, fileName: sims.FileName);
+            sims.Write(sims.FileName);
+            var weather = sims.Node.FindChild<Models.Climate.Weather>(recurse: true);
+            weather.FileName = tempFile;
+            Assert.That(weather.FileName, Is.EqualTo(Path.GetFileName(tempFile)));
+            Assert.That(weather.FullFileName, Is.EqualTo(tempFile));
+        }
+
+        /// <summary>
+        /// Tests that a weather file with %root% in the filename is correctly interpreted.
+        /// </summary>
+        [Test]
+        public void TestFileNameInterpretsRootVariable()
+        {
+            var tempFile = Path.GetTempFileName().Replace(".tmp", ".met");
+            File.WriteAllText(tempFile, ReflectionUtilities.GetResourceAsString("Examples.WeatherFiles.AU_Dalby.met"));
+            var tempDir = Path.GetDirectoryName(tempFile);
+            var apsimxFile = Path.Combine(tempDir, "temp.apsimx");
+
+            var sims = new Simulations()
+            {
+                FileName = apsimxFile,
+                Children = new List<IModel>()
+                {
+                    new Simulation()
+                    {
+                        Name = "Base",
+                        FileName = apsimxFile,
+                        Children = new List<IModel>()
+                            {
+                                new Models.Climate.Weather()
+                                {
+                                    Name = "Weather",
+                                    FileName = "%root%/Examples/WeatherFiles/AU_Dalby.met",
+                                    ExcelWorkSheetName = "Sheet1"
+                                },
+                                new Clock()
+                                {
+                                    Name = "Clock",
+                                },
+                                new MockSummary()
+                            }
+                    }
+                },
+            };
+
+            Node.Create(sims, fileName: sims.FileName);
+            sims.Write(sims.FileName);
+            var weather = sims.Node.FindChild<Models.Climate.Weather>(recurse: true);
+            weather.FileName = "%root%/Examples/WeatherFiles/AU_Dalby.met";
+            Assert.That(weather.FileName, Is.EqualTo(Path.Combine("%root%", "Examples", "WeatherFiles", "AU_Dalby.met")));
+            Assert.That(weather.FullFileName, Does.Not.Contain("%root%"));
+        }
 
         /*
          * This doesn't make sense to use anymore since weather sensibility tests no longer throw exceptions
