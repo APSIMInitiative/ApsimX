@@ -1,32 +1,34 @@
+using DeepCloner.Core;
+
 namespace APSIM.Core;
 
 /// <summary>An add commnd</summary>
-public class AddCommand : IModelCommand
+internal partial class AddCommand : IModelCommand
 {
-    /// <summary>The name of a model to add.</summary>
-    private readonly string modelName;
-
-    /// <summary>The name of a .apsimx file to get new model from.</summary>
-    private readonly string fileName;
+    /// <summary>A reference to a model.</summary>
+    private readonly IModelReference modelReference;
 
     /// <summary>The path of a model to add a model to.</summary>
     private readonly string toPath;
+
+    /// <summary>Do as many replacements as possible?</summary>
+    private readonly bool multiple;
 
     /// <summary>A new name for the added model.</summary>
     private readonly string newName;
 
     /// <summary>
-    /// Constructor.
+    /// Constructor. Add a new model to a parent model and optionally name it.
     /// </summary>
-    /// <param name="modelName">The name of a model to add.</param>
+    /// <param name="modelReference">The model to add.</param>
     /// <param name="toPath">The path of a model to add a model to.</param>
-    /// <param name="fileName">The name of a .apsimx file to get new model from.</param>
+    /// <param name="multiple">Do as many replacements as possible?</param>
     /// <param name="newName">A new name for the added model</param>
-    public AddCommand(string modelName, string toPath, string fileName = null, string newName = null)
+    public AddCommand(IModelReference modelReference, string toPath, bool multiple, string newName = null)
     {
-        this.modelName = modelName;
+        this.modelReference = modelReference;
         this.toPath = toPath;
-        this.fileName = fileName;
+        this.multiple = multiple;
         this.newName = newName;
     }
 
@@ -36,23 +38,28 @@ public class AddCommand : IModelCommand
     /// <param name="relativeTo">The model the commands are relative to.</param>
     void IModelCommand.Run(INodeModel relativeTo)
     {
-        var toModel = (INodeModel) relativeTo.Node.Get(toPath, relativeTo: relativeTo)
-                        ?? throw new Exception($"Cannot find model {toPath}");
-
-        INodeModel modelToAdd;
-        if (fileName == null)
-            modelToAdd = ModelRegistry.CreateModel(modelName);
-        else
-        {
-            var simulationsType = ModelRegistry.ModelNameToType("Simulations");
-            string json = File.ReadAllText(fileName);
-            (var externalRootNode, var didConvert, var jsonObject) = FileFormat.ReadFromStringAndReturnConvertState(json, simulationsType);
-            modelToAdd = (INodeModel) relativeTo.Node.Get(modelName, relativeTo: externalRootNode.Model)
-                            ?? throw new Exception($"Cannot find model {toPath}");
-        }
+        INodeModel modelToAdd = modelReference.GetModel();
         if (!string.IsNullOrEmpty(newName))
             modelToAdd.Rename(newName);
 
-        toModel.Node.AddChild(modelToAdd);
+        IEnumerable<INodeModel> toModels;
+
+        if (multiple)
+        {
+            var toPathWithoutBrackets = toPath.Replace("[", string.Empty)
+                                              .Replace("]", string.Empty);
+            toModels = relativeTo.Node.FindAll<INodeModel>(toPathWithoutBrackets)
+                       ?? throw new Exception($"Cannot find any models that match: {toPath}");
+        }
+        else
+        {
+            var toModel = (INodeModel)relativeTo.Node.Get(toPath, relativeTo: relativeTo)
+                 ?? throw new Exception($"Cannot find model: {toPath}");
+            toModels = [toModel];
+        }
+
+        // Add a model to all toModels.
+        foreach (var toModel in toModels)
+            toModel.Node.AddChild(modelToAdd.DeepClone());
     }
 }
