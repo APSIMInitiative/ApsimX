@@ -26,6 +26,11 @@ namespace Models.Climate
         [field: NonSerialized]
         public IStructure Structure { private get; set; }
 
+
+        [Link]
+        private Simulation simulation = null;
+
+
         /// <summary>
         /// A link to the clock model.
         /// </summary>
@@ -167,7 +172,16 @@ namespace Models.Climate
         public string FileName
         {
             get { return fileName; }
-            set { fileName = value.Replace("\\", "/"); }
+            set
+            {
+                var sim = Structure?.FindParent<Simulation>(recurse: true) ?? null;
+                if (simulation != null)
+                    fileName = PathUtilities.GetRelativePath(value, simulation.FileName);
+                else if (sim != null)
+                    fileName = PathUtilities.GetRelativePath(value, sim.FileName);
+                else
+                    fileName = value;
+            }
         }
 
         /// <summary>
@@ -179,20 +193,7 @@ namespace Models.Climate
             get
             {
                 Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
-                if (simulation != null && simulation.FileName != null)
-                    return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
-                else
-                {
-                    Simulations simulations = Structure.FindParent<Simulations>(recurse: true);
-                    if (simulations != null)
-                        return PathUtilities.GetAbsolutePath(this.FileName, simulations.FileName);
-                    else
-                        return PathUtilities.GetAbsolutePath(this.FileName, "");
-                }
-            }
-            set
-            {
-                this.FileName = value;
+                return PathUtilities.GetAbsolutePath(fileName, (simulation != null) ? simulation.FileName : null);
             }
         }
 

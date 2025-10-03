@@ -27,7 +27,7 @@ namespace UnitTests.SurfaceOrganicMatterTests
             Simulations file = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
             Models.Climate.Weather weather = file.Node.FindChild<Models.Climate.Weather>(recurse: true);
             string properWeatherFilePath = PathUtilities.GetRelativePath(weather.FullFileName, null);
-            weather.FullFileName = properWeatherFilePath;
+            weather.FileName = properWeatherFilePath;
 
 
             // Run the file.
