@@ -368,7 +368,7 @@ ExperimentY2
             Simulation[] allSims = updatedFile.Node.FindAll<Simulation>().ToArray();
             Assert.That(allSims.Length == 2);
             Zone[] allZones = updatedFile.Node.FindAll<Zone>().ToArray();
-            Assert.That(allZones.Length == 2);
+            Assert.That(allZones.Length, Is.EqualTo(2));
 
             Models.Report newReportNode;
             foreach (Zone zone in allZones)
