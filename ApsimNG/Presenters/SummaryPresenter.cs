@@ -199,13 +199,16 @@ namespace UserInterface.Presenters
                     int spacing = m.Max(msg => msg.RelativePath.Length) + 2;
                     foreach (var msg in m)
                     {
-                        if (previousPath == null || msg.RelativePath != previousPath)
+                        if (!string.IsNullOrEmpty(msg.RelativePath))
                         {
-                            md.Append($"{msg.RelativePath}:".PadRight(spacing));
-                            previousPath = msg.RelativePath;
+                            if (previousPath == null || msg.RelativePath != previousPath)
+                            {
+                                md.Append($"{msg.RelativePath}:".PadRight(spacing));
+                                previousPath = msg.RelativePath;
+                            }
+                            else
+                                md.Append(' ', spacing);
                         }
-                        else
-                            md.Append(' ', spacing);
                         md.AppendLine($"{msg.Text}");
                     }
                     md.AppendLine("```");
