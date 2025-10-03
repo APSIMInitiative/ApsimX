@@ -11,4 +11,4 @@ POOL_ID="${DOCKER_METADATA_OUTPUT_VERSION:3}-${INCOMING_COMMIT_SHA:0:6}"
 ENCODED_STRING=$(jq -rn --arg x "$AZURE_ENV_CONTENTS" '$x|@uri')
 # Once the azure env contents are url encoded we can send them via curl
 url="https://digitalag.csiro.au/workflo/enable-autoscale?poolId=${POOL_ID}&envString=${ENCODED_STRING}"
-response=$(curl -f -X 'POST' "$url")
+response=$(curl -f -X POST "$url")
