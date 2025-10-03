@@ -7,6 +7,8 @@ test -z "$DOCKER_METADATA_OUTPUT_VERSION" && echo "DOCKER_METADATA_OUTPUT_VERSIO
 test -z "$INCOMING_COMMIT_SHA" && echo "INCOMING_COMMIT_SHA is empty" && exit 1
 
 POOL_ID="${DOCKER_METADATA_OUTPUT_VERSION:3}-${INCOMING_COMMIT_SHA:0:6}"
+# Make AZURE_ENV_CONTENTS replace windows and linux line endings with a single space.
+AZURE_ENV_CONTENTS=$(echo "$AZURE_ENV_CONTENTS" | tr '\n\r' ' ')
 # The env contents need to be url encoded before they can be sent via curl.
 ENCODED_STRING=$(jq -rn --arg x "$AZURE_ENV_CONTENTS" '$x|@uri')
 # Once the azure env contents are url encoded we can send them via curl
