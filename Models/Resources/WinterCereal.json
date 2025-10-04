@@ -1104,7 +1104,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "\nA function is used to provide flowering date as days after sowing(DAS).\n",
+                  "Text": "\nA function is used to provide DoubleRidge date as days after sowing(DAS).\n",
                   "Name": "memo",
                   "ResourceName": null,
                   "Children": [],
@@ -1143,7 +1143,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "\nA function is used to provide flowering date as days after sowing(DAS).\n",
+                  "Text": "\nA function is used to provide Photoperiod at Double Ridge (hours).\n",
                   "Name": "memo",
                   "ResourceName": null,
                   "Children": [],
