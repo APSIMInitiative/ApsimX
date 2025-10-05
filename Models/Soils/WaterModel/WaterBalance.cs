@@ -229,6 +229,9 @@ namespace Models.WaterModel
             get { return waterMM; }
             set
             {
+                if (value.Any(w => double.IsNaN(w)))
+                    throw new Exception($"Input soil moisture array (Water, mm) contains NaN: {string.Join(", ", value)}");
+
                 waterMM = value;
                 if (value == null)
                     waterVolumetric = null;
@@ -244,6 +247,9 @@ namespace Models.WaterModel
             get { return waterVolumetric; }
             set
             {
+                if (value.Any(w => double.IsNaN(w)))
+                    throw new Exception($"Input soil moisture array (SW, mm/mm) contains NaN: {string.Join(", ", value)}");
+
                 waterVolumetric = value;
                 waterMM = MathUtilities.Multiply(value, soilPhysical.Thickness);
             }
@@ -581,6 +587,9 @@ namespace Models.WaterModel
 
             // Update the variable in the water model.
             water.Volumetric = waterVolumetric;
+
+            if (waterVolumetric.Any(w => double.IsNaN(w)))
+                throw new Exception($"WaterBalance model produced NaN: {string.Join(", ", waterVolumetric)}");
         }
 
         /// <summary>

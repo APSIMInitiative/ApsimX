@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -140,6 +141,9 @@ namespace Models.WaterModel
                     // when calculating theta1 and sw1.
                     w_out = flow[i];
                 }
+
+                if (flow.Any(w => double.IsNaN(w)))
+                    throw new Exception($"UnsaturatedFlow model produced NaN: {string.Join(",", flow)}");
 
                 return flow;
             }

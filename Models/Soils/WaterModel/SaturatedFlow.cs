@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -132,6 +133,9 @@ namespace Models.WaterModel
                     // drainage out of this layer goes into next layer down
                     w_in = w_out;
                 }
+
+                if (flux.Any(w => double.IsNaN(w)))
+                    throw new Exception($"SaturatedFlow model produced NaN: {string.Join(", ", flux)}");
 
                 return flux;
             }
