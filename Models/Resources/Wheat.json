@@ -508,7 +508,7 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 105.0",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 111",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.33",
                     "[Phenology].CAMP.FLNparams.MinLN = 10",
                     "[Phenology].CAMP.FLNparams.PpLN = 12",
@@ -517,7 +517,8 @@
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 8",
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
-                    "[Phenology].GrainFilling.Target.FixedValue = 700"
+                    "[Phenology].GrainFilling.Target.FixedValue = 700",
+                    "[Phenology].Phyllochron.LeafStageFactor.XYPairs.Y = 1,1,1,1,1.4,1.4"
                   ],
                   "Name": "Graham",
                   "ResourceName": null,
@@ -529,7 +530,7 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 105.0",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 111",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.33",
                     "[Phenology].CAMP.FLNparams.MinLN = 10",
                     "[Phenology].CAMP.FLNparams.PpLN = 12",
@@ -538,7 +539,8 @@
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 8",
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
-                    "[Phenology].GrainFilling.Target.FixedValue = 700"
+                    "[Phenology].GrainFilling.Target.FixedValue = 700",
+                    "[Phenology].Phyllochron.LeafStageFactor.XYPairs.Y = 1,1,1,1,1.4,1.4"
                   ],
                   "Name": "Kerrin",
                   "ResourceName": null,
