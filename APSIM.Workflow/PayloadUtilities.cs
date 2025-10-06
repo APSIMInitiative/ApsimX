@@ -49,6 +49,9 @@ public static class PayloadUtilities
     public static string[] EXCLUDED_SIMS_FILEPATHS = {
                 "/Prototypes/CroptimizR/template.apsimx",
                 "/Examples/Optimisation/CroptimizRExample.apsimx",
+                "/Examples/CsvWeather.apsimx", //has no output
+                "/Tests/Simulation/SoilNitrogenPatch/PaddockSims/Edited_v2_BivariateNormal.apsimx", //has no output
+                "/Tests/Simulation/SoilNitrogenPatch/PaddockSims/Edited_v5_BivariateNormal.apsimx", //has no output
                 "/Tests/Validation/Wheat/Wheat.apsimx", //Leave wheat out for now as it gets split into smaller files automatically.
                 "/Tests/Validation/Wheat/FAR/FAR.apsimx" //Leave FAR out for now as it gets split into smaller files automatically.
             };
