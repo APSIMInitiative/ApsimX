@@ -101,7 +101,11 @@ namespace Models.CLEM.Resources
                             case ConceptionStatus.Unsuccessful:
                             case ConceptionStatus.NotMated:
                             case ConceptionStatus.NotAvailable:
+                            case ConceptionStatus.NotReady:
                                 return LastConceptionStatus.ToString();
+                            case ConceptionStatus.Weaned:
+                            case ConceptionStatus.NoBreeding:
+                                return "Unmated";
                             default:
                                 break;
                         }
@@ -351,7 +355,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return DaysSince(RuminantTimeSpanTypes.Conceived, double.NegativeInfinity);
+                return DaysSince(RuminantTimeSpanTypes.Conceived, 0);
             }
         }
 
@@ -368,7 +372,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return daysInTimeStepPregnant > 0;
+                return daysInTimeStepPregnant > 0 || CarryingCount > 0;
             }
         }
 
@@ -454,11 +458,13 @@ namespace Models.CLEM.Resources
                 // sucklings, milking and total milking days are accounted for in UpdateBreedingDetails
                 // Births occure before lactation is calculated so there should not be any occassion where lactation days are > 0 with no sucklings present.
 
-                if (daysInTimeStepLactating > 0 && SucklingOffspringList.Count == 0)
-                {
-                    throw new Exception($"Lactation is predicted without births occuring for [{this.HerdName}]. This may arise because a pregnant breeder is present in the initial herd and no [RuminantActivityBreed] activity is available to manage births.");
-                }
                 return daysInTimeStepLactating > 0;
+
+                //if (daysInTimeStepLactating > 0 && SucklingOffspringList.Count == 0)
+                //{
+                //    throw new Exception($"Lactation is predicted without births occuring for [{this.HerdName}]. This may arise because a pregnant breeder is present in the initial herd and no [RuminantActivityBreed] activity is available to manage births.");
+                //}
+                //return daysInTimeStepLactating > 0;
             }
         }
 

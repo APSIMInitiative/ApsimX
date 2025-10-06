@@ -214,6 +214,8 @@ namespace Models.CLEM.Activities
             {
                 if (female.IsLactating)
                 {
+                    //System.Diagnostics.Debug.WriteLine($"Lactating {female.ID} - {female.Parameters.Details.CurrentTimeStep.TimeStepStart}");
+
                     // ToDo: check turn off cf is appropriate. cf was reducing more than the lactation increase.
                     //cf = 1.0;
 
@@ -221,8 +223,6 @@ namespace Models.CLEM.Activities
                     // Equation 9  ==================================================
                     double dayOfLactation = female.DaysLactating(true);
                     double mi = dayOfLactation / ind.Parameters.GrowPF_CI.PeakLactationIntakeDay_CI8;
-                    // trap for suckings not yet defined in month of birth but needed to caclulate peak lactation. Assume 1 individual in the first few days if this is the case.
-                    lf = 1 + ind.Parameters.GrowPF_CI.PeakLactationIntakeLevel_CI19[Math.Max(female.NumberOfSucklings - 1, 0)] * Math.Pow(mi, ind.Parameters.GrowPF_CI.LactationResponseCurvature_CI9) * Math.Exp(ind.Parameters.GrowPF_CI.LactationResponseCurvature_CI9 * (1 - mi)); // SCA Eq.8
                     double lb = 1.0;
                     // Equation 12  ==================================================
                     double wl = ind.Weight.RelativeSize * ((female.RelativeConditionAtParturition - ind.Weight.RelativeCondition) / dayOfLactation);
@@ -233,6 +233,8 @@ namespace Models.CLEM.Activities
                     }
                     if (female.NumberOfSucklings > 0)
                     {
+                        // todo: trap for suckings not yet defined in month of birth but needed to calculate peak lactation. Assume 1 individual in the first few days if this is the case.
+                        lf = 1 + ind.Parameters.GrowPF_CI.PeakLactationIntakeLevel_CI19[Math.Max(female.NumberOfSucklings - 1, 0)] * Math.Pow(mi, ind.Parameters.GrowPF_CI.LactationResponseCurvature_CI9) * Math.Exp(ind.Parameters.GrowPF_CI.LactationResponseCurvature_CI9 * (1 - mi)); // SCA Eq.8
                         // Equation 10 ==================================================
                         lf *= lb * (1 - ind.Parameters.GrowPF_CI.ConditionAtParturitionAdjustment_CI15 + ind.Parameters.GrowPF_CI.ConditionAtParturitionAdjustment_CI15 * female.RelativeConditionAtParturition);
                     }
@@ -372,7 +374,7 @@ namespace Models.CLEM.Activities
                 if (ind is RuminantFemale female)
                 {
                     // energy for fetus is now calculated in previous event to ensure it happens prior to timesetp births to account for energy;
-                    ind.Energy.ForLactation = CalculateLactationEnergy(female, Math.Min(female.DaysLactatingInTimeStep, events.Interval)) * ((double)female.DaysPregnantInTimeStep / events.CustomTimeStep);
+                    ind.Energy.ForLactation = CalculateLactationEnergy(female, Math.Min(female.DaysLactatingInTimeStep, events.Interval)) * ((double)female.DaysPregnantInTimeStep / events.Interval);
                 }
             }
             else // Unweaned
@@ -482,6 +484,22 @@ namespace Models.CLEM.Activities
                     // ToDo: JD? protein avail for gain less than 0 removes milk production
                     // there is no option to create milk from body stores and so milk won't be produced on the low pasture quality event with concentrate supplementation.
 
+                    //
+                    //
+                    //
+                    //
+                    //
+                    // THIS NEEDS TO BE FIXED
+                    //
+                    //
+                    //
+                    //
+                    // ToDo: limit protein lactation reduction to start taking from body reserves instead of effectively turning off lactation.
+                    // How does this work?
+                    // demand should be met early in lactation and then milk production reduced to zero with defecit later in lactation when offstpring can move to grass
+
+
+
                     double MP = Math.Max(0.0, 1 + (proteinAvailableForGain / indFemale.Milk.Protein)) * indFemale.Milk.ProductionRate;
                     indFemale.Milk.Available = MP * Math.Min(indFemale.DaysLactatingInTimeStep, events.Interval) / indFemale.Milk.EnergyContent;
                     indFemale.Milk.Produced = indFemale.Milk.Available;
@@ -501,7 +519,7 @@ namespace Models.CLEM.Activities
                     CalculateGrowthEfficiency(ind);
                     energyAvailableForGain = ind.Energy.AvailableForGain * ind.Energy.Kg;
                     if (MathUtilities.IsPositive(energyAvailableForGain))
-                        {
+                    {
                         energyAvailableForGain *= ind.Parameters.GrowPF_CG.BreedGrowthEfficiencyScalar;
                     }
 
@@ -584,6 +602,20 @@ namespace Models.CLEM.Activities
 
                         // now we have built all protein and either have +ve or -ve energy remaining to be handled by fat
                     }
+
+                    // handle protein defecit
+                    // allow protein to be taken from the body stores to handle defecit for maintenance, pregnancy and wool
+                    // any defecit should have been reduced by lactation reduction
+
+                    // ToDo: limit protein lactation reduction to start taking from body reserves instead of effectively turning off lactation.
+
+                    if (MathUtilities.IsNegative(proteinToGrow))
+                    {
+                        kgProteinChange += proteinToGrow; // lose from body stores
+                    }
+
+
+
                     break;
                 case 2:
                     if (MathUtilities.IsPositive(proteinAvailableForGain)) // protein available after metabolism, pregnancy, lactation, wool
@@ -705,7 +737,7 @@ namespace Models.CLEM.Activities
             int reductionCount = 0;
             double rumenDegradableProteinIntake = 0;
             double rumenDegradableProteinRequirement = 1;
-            while (rumenDegradableProteinIntake < rumenDegradableProteinRequirement && reductionCount < maxReductionAllowed)
+            while (ind.Parameters.GrowPF_CI.IntakeReductionFromInsufficientRDPIntake > 0 && rumenDegradableProteinIntake < rumenDegradableProteinRequirement && reductionCount < maxReductionAllowed)
             {
                 //ToDo: include adjustment onto maint for activity level which should be an additional 5-25% depending on walking and terrain requirements.
                 ind.Energy.ForBasalMetabolism = ((ind.Parameters.GrowPF_CM.FHPScalar_CM2 * sexEffect * Math.Pow(ind.Weight.Base.Amount, 0.75)) * Math.Max(Math.Exp(-ind.Parameters.GrowPF_CM.MainExponentForAge_CM3 * ind.AgeInDays), ind.Parameters.GrowPF_CM.AgeEffectMin_CM4) * (1.0 + ind.Parameters.GrowPF_CM.MilkScalar_CM5 * ind.Intake.ProportionMilk)) / km;
@@ -1023,6 +1055,7 @@ namespace Models.CLEM.Activities
                     ind.Weight.ConceptusProtein.Set(ind.Weight.Conceptus.Amount * ind.Parameters.GrowPF_CP.ConceptusProteinContent_CP11);
                     // ToDo: calculate conceptus energy minus the conceptus protein energy
                     // convert net energy to fat and update the conceptus fat.
+                    //double fat = ((birthWeight * newborn.Parameters.GrowPF_CP.ConceptusEnergyContent_CP8) - (newborn.Parameters.General.MJEnergyPerKgProtein * newborn.Weight.Protein.Amount)) / newborn.Parameters.General.MJEnergyPerKgFat
                     ind.Weight.ConceptusFat.Set(0);
                 }
 
@@ -1047,9 +1080,6 @@ namespace Models.CLEM.Activities
 
             //fetal fat is conceptus fat. per individual. Assumes minimal (0) fat in placenta
 
-            // todo: for breeders that have not been tracked from conception, the conceptus protein and fat will be 0 until the first CalculatePregnancyEnergy call so will be wrong for breeders pregnant at startup or when added as this will only include the last protein and fat added for the last time step.
-            // this may actually suffice of the ratio of protein to fat on the last time step is correct to apply to the newborn
-
             ind.Weight.Protein.ForPregnancy = conceptusProtein;
             ind.Weight.ConceptusProtein.Adjust(conceptusProtein);
             ind.Weight.ConceptusFat.Adjust(conceptusFat);
@@ -1066,19 +1096,20 @@ namespace Models.CLEM.Activities
                 newborn.Weight.Fat = new(newborn.Mother.Weight.Fetus.Amount / newborn.Mother.Weight.Conceptus.Amount * newborn.Mother.Weight.ConceptusFat.Amount);
                 newborn.Weight.Protein = new(newborn, newborn.Mother.Weight.Fetus.Amount / newborn.Mother.Weight.Conceptus.Amount * newborn.Mother.Weight.ConceptusProtein.Amount);
             }
-            else
-            {
-                // no mother or missing Fetus weight
-                // mother has not been through at least one CalculatePregnancyEnergy() to set fetus weight
-                // this can happen when breeder is pregnant at startup or added to the herd and birth occurred at the start of the time step 
-                if (birthWeight == 0)
-                {
-                    throw new Exception("Could not set newborn fat and protein at birth because no birth weight was provided when the mother did not supply conceptus protein and fat.");
-                }
+            // I don't think this is relevant anymore as conceptus fat and protein should always be set if fetus weight is set.
+            //else
+            //{
+            //    // no mother or missing Fetus weight
+            //    // mother has not been through at least one CalculatePregnancyEnergy() to set fetus weight
+            //    // this can happen when breeder is pregnant at startup or added to the herd and birth occurred at the start of the time step 
+            //    if (birthWeight == 0)
+            //    {
+            //        throw new Exception("Could not set newborn fat and protein at birth because no birth weight was provided when the mother did not supply conceptus protein and fat.");
+            //    }
 
-                newborn.Weight.Protein = new(newborn, newborn.Parameters.GrowPF_CP.ConceptusProteinContent_CP11 * birthWeight);
-                newborn.Weight.Fat = new(((birthWeight * newborn.Parameters.GrowPF_CP.ConceptusEnergyContent_CP8) - (newborn.Parameters.General.MJEnergyPerKgProtein * newborn.Weight.Protein.Amount)) / newborn.Parameters.General.MJEnergyPerKgFat);
-            }
+            //    newborn.Weight.Protein = new(newborn, newborn.Parameters.GrowPF_CP.ConceptusProteinContent_CP11 * birthWeight);
+            //    newborn.Weight.Fat = new(((birthWeight * newborn.Parameters.GrowPF_CP.ConceptusEnergyContent_CP8) - (newborn.Parameters.General.MJEnergyPerKgProtein * newborn.Weight.Protein.Amount)) / newborn.Parameters.General.MJEnergyPerKgFat);
+            //}
             // set fat and protein energy based on initial amounts
             newborn.Energy.Fat = new(newborn.Weight.Fat.Amount * newborn.Parameters.General.MJEnergyPerKgFat);
             newborn.Energy.Protein = new(newborn.Weight.Protein.Amount * newborn.Parameters.General.MJEnergyPerKgProtein);
