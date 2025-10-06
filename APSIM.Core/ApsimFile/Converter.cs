@@ -1,5 +1,6 @@
 using APSIM.Numerics;
 using APSIM.Shared.Documentation.Extensions;
+using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
 using BruTile.Wmts.Generated;
 using Newtonsoft.Json.Linq;
@@ -16,7 +17,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 202; } }
+    public static int LatestVersion { get { return 204; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -7004,13 +7005,55 @@ internal class Converter
     }
 
     /// <summary>
-    /// Replace SetEmergenceDate and SetGerminationDate methods with generic SetPhaseCompletionDate method
+    /// Ensure that when IStructure is stored in Manager scripts as a field, it is marked [NonSerialized]
     /// </summary>
     /// <param name="root">The root JSON token.</param>
     /// <param name="_">The name of the apsimx file.</param>
     private static void UpgradeToVersion202(JObject root, string _)
     {
-        Dictionary<string,Dictionary<string,string>> repDict = new Dictionary<string, Dictionary<string, string>>();
+        foreach (var manager in JsonUtilities.ChildManagers(root))
+        {
+            bool isChanged = manager.Replace("[field:NonSerialized]", string.Empty);
+            if (isChanged)
+                manager.Save();
+        }
+    }
+
+
+    /// <summary>
+    /// Change KS of zero or NaNs to null.
+    /// </summary>
+    /// <param name="root">The root JSON token.</param>
+    /// <param name="_">The name of the apsimx file.</param>
+    private static void UpgradeToVersion203(JObject root, string _)
+    {
+        foreach (var soil in JsonUtilities.ChildrenRecursively(root, "Soil"))
+        {
+            var physical = JsonUtilities.ChildWithName(soil, "Physical");
+
+            if (physical != null)
+            {
+                if (physical["KS"] != null)
+                {
+                    if (physical["KS"].Any())
+                    {
+                        var values = physical["KS"].Values<double>().ToArray();
+                        bool allZeroOrNaN = values.All(x => x == 0 || double.IsNaN(x));
+                        if (allZeroOrNaN) physical["KS"] = null; // set to null if all values are zero or NaN
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Replace SetEmergenceDate and SetGerminationDate methods with generic SetPhaseCompletionDate method
+    /// </summary>
+    /// <param name="root">The root JSON token.</param>
+    /// <param name="_">The name of the apsimx file.</param>
+    private static void UpgradeToVersion204(JObject root, string _)
+    {
+        Dictionary<string, Dictionary<string, string>> repDict = new Dictionary<string, Dictionary<string, string>>();
         repDict["Germination"] = new Dictionary<string, string>
         {
             {"findPattern", @"Phenology\.SetGerminationDate\(\s*((?>[^()]+|\((?<DEPTH>)|\)(?<-DEPTH>))*(?(DEPTH)(?!)))\s*\);" },
@@ -7022,7 +7065,7 @@ internal class Converter
             {"replacePattern", @"Phenology.SetPhaseCompletionDate($1,""Emerging"");" }
         };
 
-        foreach (Dictionary<string,string> stage in repDict.Values)
+        foreach (Dictionary<string, string> stage in repDict.Values)
         {
 
             foreach (var manager in JsonUtilities.ChildManagers(root))
@@ -7050,4 +7093,4 @@ internal class Converter
             }
         }
     }
-}
+    }
