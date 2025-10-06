@@ -940,6 +940,9 @@ namespace Models.CLEM.Resources
 
             Energy = new RuminantInfoEnergy(this);
 
+            DateOfBirth = date.AddDays(-1 * setAge);
+            DateEnteredSimulation = date;
+
             int weanAge = AgeToWeanNaturally;
             if ((date - DateOfBirth).TotalDays > weanAge)
             {
@@ -954,8 +957,6 @@ namespace Models.CLEM.Resources
 
             // can we uppdate age here after weight and setMature?
             AgeInDays = setAge;
-            DateOfBirth = date.AddDays(-1 * setAge);
-            DateEnteredSimulation = date;
 
             // This assumes set weight is the fleece free body weight
             // Empty body weight to live weight assumes 1.09 conversion factor when no GrowPF parameters provided.
@@ -1016,9 +1017,12 @@ namespace Models.CLEM.Resources
         /// <param name="growActivity">Ruminant Grow Activity for fat and protein allocation if neeed</param>
         public Ruminant(DateTime date, int id, RuminantFemale mother, IRuminantActivityGrow growActivity)
         {
-            double weight = mother.Weight.Fetus.Amount;
+            // GrowPF Activity will have the weight.fetus.amount set before births
+            // Grow will not have any fetus or conceptus weight set so needs to use expected weight
+
+            double weight = mother.Weight.Fetus?.Amount??0;
             double expectedWeight = mother.ScaledBirthWeight;
-            if (mother.Weight.Fetus.Amount == 0)
+            if (weight == 0)
                 weight = expectedWeight;
             
             // previous calculation of expected weight, updated code will alter the birthweight calculation for CLEM.Grow
@@ -1028,8 +1032,7 @@ namespace Models.CLEM.Resources
             Mother = mother;
             SaleFlag = HerdChangeReason.Born;
 
-            // default weight as birth weight is assigned later.
-            Weight = new(this);
+            Weight = new(this, weight);
 
             Energy = new RuminantInfoEnergy(this);
 
@@ -1037,7 +1040,7 @@ namespace Models.CLEM.Resources
             growActivity?.SetProteinAndFatAtBirth(this, weight);
             Weight.SetStandardReferenceWeight();
 
-            if (!growActivity.IncludeFatAndProtein)
+            if (growActivity.IncludeFatAndProtein)
             {
                 Weight.Adjust();
             }
@@ -1080,7 +1083,7 @@ namespace Models.CLEM.Resources
                 Weight.WoolClean.Set(Weight.FleeceWeightExpectedByAge());
                 Weight.Wool.Set(Weight.WoolClean.Amount / Parameters.GrowPF_CW.CleanToGreasyCRatio_CW3);
             }
-
+            // need to include wool
             Weight.UpdateLiveWeight();
         }
 

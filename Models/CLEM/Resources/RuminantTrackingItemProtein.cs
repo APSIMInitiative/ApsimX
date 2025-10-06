@@ -79,8 +79,9 @@ namespace Models.CLEM.Resources
         {
             // ToDo: work out what to do for Oddy and SCA07 that have their own protein content 
 
-            CalculateProportionDry(ind);
-            Amount = initialAmount;
+            Adjust(initialAmount, ind);
+            //CalculateProportionDry(ind);
+            //Amount = initialAmount;
         }
 
         /// <inheritdoc/>

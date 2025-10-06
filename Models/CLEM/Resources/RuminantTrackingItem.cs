@@ -38,7 +38,8 @@ namespace Models.CLEM.Resources
         /// </summary>
         public RuminantTrackingItem(double initalAmount = 0)
         {
-            Amount = initalAmount;
+            Adjust(initalAmount);   
+            //Amount = initalAmount; // need to include change for newborns to use the protein and fat change
         }
 
         /// <summary>
@@ -48,17 +49,22 @@ namespace Models.CLEM.Resources
         /// <param name="change">Amount to change by.</param>
         public void Adjust(double change, Ruminant ind = null)
         {
+            Change = change;
             if (Amount + change < 0)
-            {
-                change = -Amount;
-            }
-            
-            if (Amount > 0)
-            {
-                Change = change;
-            }
+                Change = -Amount;
+            Amount += Change;
 
-            Amount += change;
+            //if (Amount + change < 0)
+            //{
+            //    change = -Amount;
+            //}
+            
+            //if (Amount > 0)
+            //{
+            //    Change = change;
+            //}
+
+            //Amount += change;
         }
 
         /// <summary>
