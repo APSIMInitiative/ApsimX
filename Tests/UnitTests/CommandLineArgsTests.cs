@@ -1,19 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using APSIM.Core;
+﻿using APSIM.Core;
 using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
 using Models.Core.ApsimFile;
+using Models.Core.ConfigFile;
 using Models.Factorial;
 using Models.PostSimulationTools;
 using Models.Soils;
 using Models.Storage;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 
 namespace UnitTests
 {
@@ -317,7 +318,6 @@ ExperimentY2
             string savingApsimFileNameShort = savingApsimFileName.Substring(indexOfNameStart);
             string newFileString = $"add [Zone] {newApsimFile};[Report]\nsave {savingApsimFileNameShort} ";
             string newTempConfigFile = Path.Combine(Path.GetTempPath(), "config2.txt");
-            //string newTempConfigFile = "config2.txt";
             File.WriteAllText(newTempConfigFile, newFileString);
 
             bool fileExists = File.Exists(newTempConfigFile);
@@ -336,7 +336,52 @@ ExperimentY2
             // See if the report shows up as a second child of Field with a specific name.
             Models.Report newReportNode = fieldNodeAfterChange.Node.FindChild<Models.Report>("Report1");
             Assert.That(newReportNode, Is.Not.Null);
+        }
 
+        [Test]
+        public void TestApplySwitchAddToAll()
+        {
+            Simulations file = Utilities.GetRunnableSim();
+            Simulations file2 = Utilities.GetRunnableSim();
+            Simulations file3 = Utilities.GetRunnableSim();
+
+            // Get path string for the config file.
+            string savingFilePath = Path.Combine(Path.GetTempPath(), "savingAddToAll.apsimx");
+            string newTempConfigFile = Path.Combine(Path.GetTempPath(), "config7.txt");
+            string newApsimFile = file2.FileName;
+            string savingApsimFileName = file3.FileName;
+            int indexOfNameStart = savingApsimFileName.LastIndexOf(Path.DirectorySeparatorChar) + 1;
+            string savingApsimFileNameShort = savingApsimFileName.Substring(indexOfNameStart);
+            string newFileString = $"duplicate [Simulation]\naddtoall Zone Report\naddtoall Zone Report MyReport1\naddtoall Zone {newApsimFile};[Report] MyReport2\nsave savingAddToAll.apsimx";
+            File.WriteAllText(newTempConfigFile, newFileString);
+
+            bool fileExists = File.Exists(newTempConfigFile);
+            Assert.That(File.Exists(newTempConfigFile), Is.True);
+
+            Utilities.RunModels(file, $"--apply {newTempConfigFile}");
+
+            string text = File.ReadAllText(savingFilePath);
+            // Reload simulation from file text. Needed to see changes made.
+            Simulations updatedFile = FileFormat.ReadFromString<Simulations>(text).Model as Simulations;
+
+            // Get new values from changed simulation.
+            Simulation[] allSims = updatedFile.Node.FindAll<Simulation>().ToArray();
+            Assert.That(allSims.Length, Is.EqualTo(2));
+            Zone[] allZones = updatedFile.Node.FindAll<Zone>().ToArray();
+            Assert.That(allZones.Length, Is.EqualTo(2));
+
+            Models.Report newReportNode;
+            foreach (Zone zone in allZones)
+            {
+                newReportNode = zone.Node.FindChild<Models.Report>("Report");
+                Assert.That(newReportNode, Is.Not.Null);
+                newReportNode = zone.Node.FindChild<Models.Report>("Report1");
+                Assert.That(newReportNode, Is.Not.Null);
+                newReportNode = zone.Node.FindChild<Models.Report>("MyReport1");
+                Assert.That(newReportNode, Is.Not.Null);
+                newReportNode = zone.Node.FindChild<Models.Report>("MyReport2");
+                Assert.That(newReportNode, Is.Not.Null);
+            }
         }
 
         [Test]

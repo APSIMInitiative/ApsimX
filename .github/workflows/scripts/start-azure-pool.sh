@@ -10,6 +10,6 @@ POOL_ID="${DOCKER_METADATA_OUTPUT_VERSION:3}-${INCOMING_COMMIT_SHA:0:6}"
 # The env contents need to be url encoded before they can be sent via curl.
 ENCODED_STRING=$(jq -rn --arg x "$AZURE_ENV_CONTENTS" '$x|@uri')
 # Once the azure env contents are url encoded we can send them via curl
-url="https://digitalag.csiro.au/workflo/create-pool?poolId=$POOL_ID&envString=$ENCODED_STRING&nodeNumber=30&isAutoscaled=false"
+url="https://digitalag.csiro.au/workflo/create-pool?poolId=${POOL_ID}&envString=${ENCODED_STRING}&nodeNumber=30&isAutoscaled=false"
 response=$(curl -f -X 'POST' "$url")
 
