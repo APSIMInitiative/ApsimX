@@ -201,12 +201,13 @@ namespace Models.CLEM.Resources
                 }
             }
 
-            // if sold and unweaned set mothers weaning count + 1 as effectively weaned in process and not death
-            if (!ind.IsWeaned & !ind.SaleFlag.ToString().Contains("Died"))
+            // if sold and unweaned set mothers weaning count + 1 as effectively weaned in process
+            // if died just remove from sucklings
+            if (!ind.IsWeaned && ind.Mother != null)
             {
-                if (ind.Mother != null)
+                ind.Mother.SucklingOffspringList.Remove(ind);
+                if (!ind.Died)
                 {
-                    ind.Mother.SucklingOffspringList.Remove(ind);
                     ind.Mother.NumberOfWeaned++;
                 }
             }
@@ -257,7 +258,14 @@ namespace Models.CLEM.Resources
         {
             // update age in days counter for individuals
             foreach (Ruminant ind in Herd)
+            {
+                if (ind.ID == 2500)
+                {
+                    ind.UpdateAgeInDays(ind.Parameters.Details.CurrentTimeStep.TimeStepStart);
+                }
+
                 ind.UpdateAgeInDays(ind.Parameters.Details.CurrentTimeStep.TimeStepStart);
+            }
 
             // clear purchased individuals at start of time step as there is no carryover
             // this is not the responsibility of any activity as we cannot be assured of what activities will be run.
