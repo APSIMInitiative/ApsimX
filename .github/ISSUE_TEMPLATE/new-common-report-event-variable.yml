@@ -4,7 +4,7 @@ labels: ["Report Variable/Event"]
 body:
   - type: markdown
     attributes:
-      value: "Provide all your events or varibles below. An example of an event is: [Clock].EndOfDay. An example of a report variable is: [Wheat].AboveGround.Wt"
+      value: "Provide all your events or variables below. An example of an event is: [Clock].EndOfDay. An example of a report variable is: [Wheat].AboveGround.Wt"
   - type: textarea
     id: description-area
     attributes:

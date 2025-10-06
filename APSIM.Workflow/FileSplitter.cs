@@ -20,6 +20,7 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using APSIM.Core;
 using APSIM.Shared.Documentation.Extensions;
+using Models.PreSimulationTools;
 
 namespace APSIM.Workflow
 {
@@ -220,7 +221,14 @@ namespace APSIM.Workflow
                             foreach (string sheet in input.SheetNames)
                                 if (!allSheetNames.Contains(sheet))
                                     allSheetNames.Add(sheet);
+
+                        foreach (ObservedInput input in copiedSims.Node.FindAll<ObservedInput>())
+                            foreach (string sheet in input.SheetNames)
+                                if (!allSheetNames.Contains(sheet))
+                                    allSheetNames.Add(sheet);
                         RemoveUnusedPO(copiedSims, allSheetNames);
+
+
                     }
 
                     copiedSims.FileName = fullFilePath;
