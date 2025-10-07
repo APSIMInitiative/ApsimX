@@ -321,7 +321,8 @@ namespace UnitTests.Weather
         public void TestWeatherFileNameAndFullName()
         {
             string tempfile = Path.GetTempFileName().Replace("\\", "/");
-            string tempDir = Path.GetDirectoryName(tempfile).Replace("\\", "/");
+            string tempDir = Path.GetDirectoryName(tempfile).Replace("\\", "/") + "/tempsubfolder";
+            Directory.CreateDirectory(tempDir);
             string tempDirUpOne = tempDir.Remove(tempDir.LastIndexOf('/'));
             string rootPath = PathUtilities.GetAbsolutePath("%root%", tempDir);
             tempDir += "/";
@@ -359,7 +360,6 @@ namespace UnitTests.Weather
 
             List<(string, string)> inputs = new List<(string, string)>();
             inputs.Add(("fileInSameFolder.met", "fileInSameFolder.met"));
-            inputs.Add((tempDir + "fileInSameFolder.met", "fileInSameFolder.met"));
             inputs.Add((tempDir + "fileInSameFolder.met", "fileInSameFolder.met"));
             inputs.Add(("subfolder/fileSubFolder.met", "subfolder/fileSubFolder.met"));
             inputs.Add((tempDir + "subfolder/fileSubFolder.met", "subfolder/fileSubFolder.met"));
