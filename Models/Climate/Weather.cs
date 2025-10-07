@@ -171,17 +171,23 @@ namespace Models.Climate
         [Description("Weather file name")]
         public string FileName
         {
-            get { return fileName; }
-            set
+            get
             {
-                var sim = Structure?.FindParent<Simulation>(recurse: true) ?? null;
+                string apsimFilePath = "";
                 if (simulation != null)
-                    fileName = PathUtilities.GetRelativePath(value, simulation.FileName);
-                else if (sim != null)
-                    fileName = PathUtilities.GetRelativePath(value, sim.FileName);
+                    apsimFilePath = simulation.FileName;
+                else if (Node != null)
+                {
+                    Simulations sims = Node.FindParent<Simulations>(recurse: true);
+                    apsimFilePath = sims.FileName;
+                }
+
+                if (string.IsNullOrEmpty(apsimFilePath))
+                    throw new Exception("Cannot get Weather filename without reference to Simulation or Simulations");
                 else
-                    fileName = value;
+                    return PathUtilities.GetRelativePath(fileName, apsimFilePath);
             }
+            set { fileName = value; }
         }
 
         /// <summary>
@@ -644,13 +650,6 @@ namespace Models.Climate
             if (DiffuseFraction == 0)
                 this.DiffuseFraction = -1;
 
-            Simulations simulations = Structure.FindParent<Simulations>(recurse: true);
-            if (simulations != null)
-                this.constantsFile = PathUtilities.GetRelativePath(constantsFile, simulations.FileName);
-
-            if (simulations != null)
-                FileName = PathUtilities.GetRelativePathAndRootExamples(FileName, simulations.FileName);
-
             if (reader != null)
             {
                 reader.Close();
@@ -792,7 +791,7 @@ namespace Models.Climate
 
             if (this.reader == null)
                 if (!this.OpenDataFile())
-                    throw new ApsimXException(this, "Cannot find weather file '" + this.FullFileName + "'");
+                    throw new ApsimXException(this, "Cannot find weather file '" + this.FileName + "'");
 
             //get weather for that date
             DailyMetDataFromFile readMetData = new DailyMetDataFromFile();
