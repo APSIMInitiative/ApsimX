@@ -370,29 +370,41 @@ namespace UnitTests.Weather
             inputs.Add(("T:/A/Full/Path/to/file.met", "T:/A/Full/Path/to/file.met"));
             inputs.Add(("%root%/file.met", "%root%/file.met"));
             inputs.Add((rootPath + "file.met", "%root%/file.met"));
+            inputs.Add((null, null));
+            inputs.Add(("", ""));
+            inputs.Add(("arandomcollectionofcharacters", "arandomcollectionofcharacters"));
+            inputs.Add(("null", "null"));
+            inputs.Add(("///adf.\\..%%/as", "///adf./..%%/as"));
 
             foreach ((string, string) input in inputs)
             {
                 weather.FileName = input.Item1;
                 Assert.That(weather.FileName, Is.EqualTo(input.Item2));
 
-                weather.FileName = input.Item1.Replace("/", "\\");
+                //run it again but with windows slashs
+                if (input.Item1 != null)
+                    weather.FileName = input.Item1.Replace("/", "\\");
                 Assert.That(weather.FileName, Is.EqualTo(input.Item2));
             }
 
             //now "move" the simulations to under the root path and do the same checks again
             sims.Node = Node.Create(sims, fileName: rootPath + "temp/" + apsimfile);
-
-
             inputs.Add(("%root%/temp/file.met", "file.met"));
             inputs.Add((rootPath + "temp/file.met", "file.met"));
 
             foreach ((string, string) input in inputs)
             {
-                string beforePath = input.Item1.Replace(tempDir, rootPath + "temp/");
-                beforePath = beforePath.Replace(tempDirUpOne, rootPath);
+                //Replace our old directories with the root directory
+                string beforePath = input.Item1;
+                if (input.Item1 != null)
+                {
+                    beforePath = beforePath.Replace(tempDir, rootPath + "temp/");
+                    beforePath = beforePath.Replace(tempDirUpOne, rootPath);
+                }
 
-                string afterPath = input.Item2.Replace(tempDirUpOne, "%root%/");
+                string afterPath = input.Item2;
+                if (input.Item2 != null)
+                    afterPath = afterPath.Replace(tempDirUpOne, "%root%/");
 
                 weather.FileName = beforePath;
                 Assert.That(weather.FileName, Is.EqualTo(afterPath));
