@@ -376,11 +376,12 @@ internal class Locator
     /// <exception cref="Exception"></exception>
     private object GetInternalObjectInfo(object relativeToObject, string name, VariableComposite composite, int remainingNames, bool ignoreCase, bool throwOnError, bool onlyModelChildren, out List<object> argumentsList)
     {
-
         argumentsList = null;
         PropertyInfo propertyInfo = null;
         MethodInfo methodInfo = null;
         INodeModel modelInfo = null;
+        if (relativeToObject == null)
+            return null;
 
         if (!onlyModelChildren)
         {
