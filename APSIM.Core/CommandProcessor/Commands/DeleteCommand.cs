@@ -1,7 +1,7 @@
 namespace APSIM.Core;
 
 /// <summary>A delete model commnd</summary>
-public class DeleteCommand : IModelCommand
+internal partial class DeleteCommand : IModelCommand
 {
     // <summary>The name of the model to delete.</summary>
     private readonly string modelName;

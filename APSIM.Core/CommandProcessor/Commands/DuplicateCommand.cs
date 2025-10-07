@@ -3,7 +3,7 @@ using DeepCloner.Core;
 namespace APSIM.Core;
 
 /// <summary>A duplicate model command</summary>
-public class DuplicateCommand : IModelCommand
+internal partial class DuplicateCommand : IModelCommand
 {
     // <summary>The name of the model to duplicate.</summary>
     private readonly string modelName;

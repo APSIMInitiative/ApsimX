@@ -14,24 +14,19 @@ namespace Models.Core;
 [ValidParent(ParentType = typeof(Simulations))]
 [ValidParent(ParentType = typeof(Simulation))]
 [ValidParent(ParentType = typeof(Folder))]
-public class ModelCommands : Model//, ILineEditor
+public class ModelCommands : Model, ILineEditor
 {
-    //private CommandProcessor commands;
-
-    /*/// <summary>The lines to return to the editor.</summary>
+    /// <summary>The lines to return to the editor.</summary>
     [JsonIgnore]
-    public IEnumerable<string> Lines
-    {
-        get { return commands?.ToStrings(); }
-        set { commands = CommandProcessor.Create(value); }
-    }
-*/
+    public IEnumerable<string> Lines { get; set; }
+
     /// <summary>
     /// Run all commands.
     /// </summary>
     public void Run()
     {
-        //commands?.Run(this);
+        var processor = new CommandProcessor(CommandLanguage.StringToCommands(Lines, this));
+        processor.Run(this);
     }
 
 }

@@ -1,5 +1,6 @@
 using System.Reflection;
 using APSIM.Shared.Utilities;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace APSIM.Core;
 
@@ -20,7 +21,7 @@ internal class ModelRegistry
         DiscoverModels();
         var modelTypes = ReflectionUtilities.GetTypeWithoutNameSpace(modelNameToCreate, modelsAssembly);
         if (modelTypes.Length != 1)
-            throw new Exception($"Cannot create a model of type {modelNameToCreate}");
+            return null;
         Type typeToCreate = modelTypes.First();
         return typeToCreate;
     }

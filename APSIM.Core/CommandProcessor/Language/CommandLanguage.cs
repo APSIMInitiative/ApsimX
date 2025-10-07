@@ -1,0 +1,103 @@
+namespace APSIM.Core;
+
+/// <summary>
+/// Implements the command language
+/// </summary>
+/// <remarks>
+/// add Report to [Zone]
+/// add child Report to [Zone] name MyReport
+/// add Report to all [Zone]
+/// add [Report] from anotherfile.apsimx to [Zone]
+/// replace all [Wheat] with child NewWheat
+/// replace all [Wheat] with NewWheat from anotherfile.apsimx
+/// replace all [Wheat] with child NewWheat
+/// delete [Zone].Report
+/// duplicate [Simulation] name SimulationCopy
+/// [Simulation].Name=NewName
+/// run APSIM
+/// save modifiedSim.apsimx
+///
+/// use [BaseSimulation]
+/// define factor sow
+///     [Sowing].Date = 2020-06-01, 2020-07-01, 2020-08-01
+/// define factor nrate
+///     [FertiliseOnFixedDate].Amount = 0 to 200 step 10
+/// apply sow x nrate
+/// </remarks>
+public class CommandLanguage
+{
+    /// <summary>
+    /// Parse a collection of lines into a collection of model commands.
+    /// </summary>
+    /// <param name="lines">Collection of strings, one for each line.</param>
+    /// <param name="relativeTo">The node owning the collection of strings.</param>
+    /// <returns></returns>
+    public static IEnumerable<IModelCommand> StringToCommands(IEnumerable<string> lines, INodeModel relativeTo)
+    {
+        List<IModelCommand> commands = [];
+
+        // Combine indented lines with above line. e.g. convert lines like:
+        //    define factor sow
+        //       [Sowing].Date = 2020-06-01, 2020-07-01, 2020-08-01
+        // into:
+        //    define factor sow [Sowing].Date = 2020-06-01, 2020-07-01, 2020-08-01
+        // The command and parameters are then converted into a IModelCommand
+
+        string command = null;
+        foreach (var line in lines)
+        {
+            if (line.StartsWith(' '))
+            {
+                // Add to existing command.
+                command += line.Trim();
+            }
+            else
+            {
+                // New command. If there is an existing command then add it to the commands collection.
+                if (command != null)
+                    commands.Add(ConvertCommandParameterToModelCommand(command, relativeTo));
+
+                command = line.Trim();
+            }
+        }
+        if (command != null)
+            commands.Add(ConvertCommandParameterToModelCommand(command, relativeTo));
+
+        return commands;
+    }
+
+    /// <summary>
+    /// Convert a collection of commands into strings.
+    /// </summary>
+    /// <param name="commands">The model commands.</param>
+    /// <returns>A collection of lines.</returns>
+    public static IEnumerable<string> CommandsToStrings(IEnumerable<IModelCommand> commands)
+    {
+        List<string> lines = [];
+        foreach (var command in commands)
+            lines.Add(command.ToString());
+        return lines;
+    }
+
+    /// <summary>
+    /// Create a model command from a string.
+    /// </summary>
+    /// <param name="command">Command string.</param>
+    /// <param name="relativeTo">The node that owns the command string.</param>
+    /// <returns>An instance of a model command.</returns>
+    private static IModelCommand ConvertCommandParameterToModelCommand(string command, INodeModel relativeTo)
+    {
+        if (command.StartsWith("add", StringComparison.InvariantCultureIgnoreCase))
+            return AddCommand.Create(command, relativeTo);
+        else if (command.StartsWith("delete", StringComparison.InvariantCultureIgnoreCase))
+            return DeleteCommand.Create(command, relativeTo);
+        else if (command.StartsWith("duplicate", StringComparison.InvariantCultureIgnoreCase))
+            return DuplicateCommand.Create(command, relativeTo);
+        else if (command.StartsWith("save", StringComparison.InvariantCultureIgnoreCase))
+            return SaveCommand.Create(command, relativeTo);
+        else if (command.Contains("="))
+            return SetPropertiesCommand.Create(command, relativeTo);
+
+        throw new Exception($"Unknown command: {command}");
+    }
+}

@@ -8,7 +8,7 @@ internal partial class AddCommand: IModelCommand
     /// <summary>
     /// Create an add command.
     /// </summary>
-    /// <param name="parameters"></param>
+    /// <param name="command"></param>
     /// <returns></returns>
     /// <remarks>
     /// add new Report to [Zone]
@@ -16,7 +16,7 @@ internal partial class AddCommand: IModelCommand
     /// add child Report to all [Zone]
     /// add [Report] from anotherfile.apsimx to [Zone]
     /// </remarks>
-    public static IModelCommand Create(List<string> parameters, INodeModel parent)
+    public static IModelCommand Create(string command, INodeModel parent)
     {
         string modelNameWithBrackets = @"[\w\d\[\]]+";
         string modelName = @"[\w\d]+";
@@ -30,10 +30,9 @@ internal partial class AddCommand: IModelCommand
                          $@"(?<topath>{modelNameWithBrackets})\s*" +
                          $@"(?:name\s+(?<name>{modelName}))*";
 
-        string st = parameters.Join(" ");
         Match match;
-        if ((match = Regex.Match(st, pattern)) == null)
-            throw new Exception($"Invalid add command: {st}");
+        if ((match = Regex.Match(command, pattern)) == null)
+            throw new Exception($"Invalid add command: {command}");
 
         IModelReference modelReference;
         if (match.Groups["childnew"]?.ToString() == "child")

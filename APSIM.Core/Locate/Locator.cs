@@ -269,8 +269,9 @@ internal class Locator
                 // Didn't find a model with a name matching the square bracketed string so
                 // now try and look for a model with a type matching the square bracketed string.
                 Type modelType = ModelRegistry.ModelNameToType(modelName);
-                foundNode = relativeTo.Node.WalkScoped()
-                                           .FirstOrDefault(n => modelType.IsAssignableFrom(n.Model.GetType()));
+                if (modelType != null)
+                    foundNode = relativeTo.Node.WalkScoped()
+                                               .FirstOrDefault(n => modelType.IsAssignableFrom(n.Model.GetType()));
             }
             if (foundNode == null)
             {

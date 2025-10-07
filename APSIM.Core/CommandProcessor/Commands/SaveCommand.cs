@@ -3,7 +3,7 @@ using NetTopologySuite.Operation.Relate;
 namespace APSIM.Core;
 
 /// <summary>A save command</summary>
-public class SaveCommand : IModelCommand
+internal partial class SaveCommand : IModelCommand
 {
     /// <summary>The name of a .apsimx file to get new model from.</summary>
     private readonly string fileName;
