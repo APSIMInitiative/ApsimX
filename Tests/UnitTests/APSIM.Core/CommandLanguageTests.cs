@@ -16,6 +16,7 @@ public class CommandLanguageTests
     [TestCase("duplicate [Zone].Report")]
     [TestCase("duplicate [Zone].Report name NewName")]
     [TestCase("save C:\\temp\\test.apsimx")]
+    [TestCase("load C:\\temp\\test.apsimx")]
     [TestCase("[Simulation].Name=NewName")]
     public void EnsureAddLanguageParsingWorks(string commandString)
     {

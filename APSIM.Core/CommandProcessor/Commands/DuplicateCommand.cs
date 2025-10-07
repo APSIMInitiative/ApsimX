@@ -26,11 +26,12 @@ internal partial class DuplicateCommand : IModelCommand
     /// Run the command.
     /// </summary>
     /// <param name="relativeTo">The model the commands are relative to.</param>
-    void IModelCommand.Run(INodeModel relativeTo)
+    INodeModel IModelCommand.Run(INodeModel relativeTo)
     {
         var modelToDuplicate = (INodeModel)relativeTo.Node.Get(modelName, relativeTo: relativeTo)
                                ?? throw new Exception($"Cannot find model {modelName}");
         modelToDuplicate.Rename(newName);
         modelToDuplicate.Node.Parent.AddChild(modelToDuplicate.DeepClone());
+        return relativeTo;
     }
 }

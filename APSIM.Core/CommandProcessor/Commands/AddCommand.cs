@@ -36,7 +36,7 @@ internal partial class AddCommand : IModelCommand
     /// Run the command.
     /// </summary>
     /// <param name="relativeTo">The model the commands are relative to.</param>
-    void IModelCommand.Run(INodeModel relativeTo)
+    INodeModel IModelCommand.Run(INodeModel relativeTo)
     {
         INodeModel modelToAdd = modelReference.GetModel();
         if (!string.IsNullOrEmpty(newName))
@@ -61,5 +61,7 @@ internal partial class AddCommand : IModelCommand
         // Add a model to all toModels.
         foreach (var toModel in toModels)
             toModel.Node.AddChild(modelToAdd.DeepClone());
+
+        return relativeTo;
     }
 }

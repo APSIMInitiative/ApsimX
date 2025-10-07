@@ -21,10 +21,11 @@ internal partial class SaveCommand : IModelCommand
     /// Run the command.
     /// </summary>
     /// <param name="relativeTo">The model the commands are relative to.</param>
-    void IModelCommand.Run(INodeModel relativeTo)
+    INodeModel IModelCommand.Run(INodeModel relativeTo)
     {
         // Write to file.
         string json = FileFormat.WriteToString(relativeTo.Node);
         File.WriteAllText(fileName, json);
+        return relativeTo;
     }
 }

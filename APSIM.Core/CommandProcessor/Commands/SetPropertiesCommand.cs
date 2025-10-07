@@ -21,8 +21,9 @@ internal partial class SetPropertiesCommand : IModelCommand
     /// Run the command.
     /// </summary>
     /// <param name="relativeTo">The model the commands are relative to.</param>
-    void IModelCommand.Run(INodeModel relativeTo)
+    INodeModel IModelCommand.Run(INodeModel relativeTo)
     {
         relativeTo.Node.Set(name, value, relativeTo);
+        return relativeTo;
     }
 }

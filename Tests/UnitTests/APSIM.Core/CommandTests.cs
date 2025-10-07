@@ -85,7 +85,7 @@ public class CommandTests
         // Remove external file.
         File.Delete(tempFilePath);
     }
-/*
+
     /// <summary>Ensure the delete command works.</summary>
     [Test]
     public void EnsureDeleteWorks()
@@ -99,9 +99,8 @@ public class CommandTests
         };
         Node.Create(simulation);
 
-        CommandProcessor commands = new([new DeleteCommand(modelName: "Report")]);
-
-        commands.Run(simulation);
+        IModelCommand cmd = new DeleteCommand(modelName: "Report");
+        cmd.Run(simulation);
 
         Assert.That(simulation.Children.Count, Is.EqualTo(0));
     }
@@ -119,9 +118,8 @@ public class CommandTests
         };
         Node.Create(simulation);
 
-        CommandProcessor commands = new([new DuplicateCommand(modelName: "Report", newName: "NewReport")]);
-
-        commands.Run(simulation);
+        IModelCommand cmd = new DuplicateCommand(modelName: "Report", newName: "NewReport");
+        cmd.Run(simulation);
 
         Assert.That(simulation.Children.Count, Is.EqualTo(2));
         Assert.That(simulation.Children[1], Is.InstanceOf<Report>());
@@ -144,8 +142,8 @@ public class CommandTests
 
         // Run the save command.
         string tempFilePath = Path.GetTempFileName();
-        CommandProcessor commands = new([new SaveCommand(fileName: tempFilePath)]);
-        commands.Run(simulations);
+        IModelCommand cmd = new SaveCommand(fileName: tempFilePath);
+        cmd.Run(simulations);
 
         Assert.That(File.Exists(tempFilePath));
         Node simulationsReadIn = FileFormat.ReadFromFile<Simulations>(tempFilePath);
@@ -169,17 +167,36 @@ public class CommandTests
         };
         Node.Create(simulation);
 
-        (string name, string value)[] properties =
-        [
-            ("[Clock].StartDate", "2000-01-01"),
-            ("[Clock].EndDate", "2000-12-31")
-        ];
-
-        CommandProcessor commands = new([new SetPropertiesCommand(properties)]);
-        commands.Run(simulation);
+        IModelCommand cmd = new SetPropertiesCommand("[Clock].StartDate", "2000-01-01");
+        cmd.Run(simulation);
 
         var clock = simulation.Children.First() as Clock;
         Assert.That(clock.StartDate, Is.EqualTo(new System.DateTime(2000, 1, 1)));
-        Assert.That(clock.EndDate, Is.EqualTo(new System.DateTime(2000, 12, 31)));
-    }*/
+    }
+
+    /// <summary>Ensure the load command works.</summary>
+    [Test]
+    public void EnsureLoadWorks()
+    {
+        // Create a simulation in memory.
+        Simulations simulations = new()
+        {
+            Children =
+            [
+                new Report() { Name = "Report" }
+            ]
+        };
+        Node.Create(simulations);
+
+        // Run the save command.
+        string tempFilePath = Path.GetTempFileName();
+        CommandProcessor commands = new([new SaveCommand(fileName: tempFilePath)]);
+        commands.Run(simulations);
+
+        // Run load command. It should return a relativeTo that is from the temp file.
+        IModelCommand loadCommand = new LoadCommand(tempFilePath);
+        var relativeTo = loadCommand.Run(relativeTo: null);
+
+        Assert.That(relativeTo.GetChildren().First().Name, Is.EqualTo("Report"));
+    }
 }

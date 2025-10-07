@@ -21,7 +21,7 @@ internal partial class SaveCommand: IModelCommand
 
         Match match;
         if ((match = Regex.Match(command, pattern)) == null)
-            throw new Exception($"Invalid duplicate command: {command}");
+            throw new Exception($"Invalid save command: {command}");
 
         return new SaveCommand(match.Groups["filename"]?.ToString());
     }

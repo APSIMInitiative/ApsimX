@@ -17,13 +17,18 @@ public class CommandProcessor
         this.commands = commands.ToList();
     }
 
+    /// <summary>The node that the commands are relative to. The load command changes this.</summary>
+    internal INodeModel RelativeTo { get; set; }
+
     /// <summary>
     /// Run all commands.
     /// </summary>
     /// <param name="relativeTo">The commands will be run relative to this argument.</param>
     public void Run(INodeModel relativeTo)
     {
+        RelativeTo = relativeTo;
+
         foreach (var command in commands)
-            command.Run(relativeTo);
+            RelativeTo = command.Run(RelativeTo);
     }
 }

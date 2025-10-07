@@ -15,6 +15,7 @@ namespace APSIM.Core;
 /// duplicate [Simulation] name SimulationCopy
 /// [Simulation].Name=NewName
 /// run APSIM
+/// load base.apsimx
 /// save modifiedSim.apsimx
 ///
 /// use [BaseSimulation]
@@ -95,6 +96,8 @@ public class CommandLanguage
             return DuplicateCommand.Create(command, relativeTo);
         else if (command.StartsWith("save", StringComparison.InvariantCultureIgnoreCase))
             return SaveCommand.Create(command, relativeTo);
+        else if (command.StartsWith("load", StringComparison.InvariantCultureIgnoreCase))
+            return LoadCommand.Create(command, relativeTo);
         else if (command.Contains("="))
             return SetPropertiesCommand.Create(command, relativeTo);
 
