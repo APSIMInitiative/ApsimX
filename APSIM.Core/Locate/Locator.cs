@@ -209,8 +209,6 @@ internal class Locator
                 if (propertiesOnly && j == namePathBits.Length - 1)
                     break;
                 relativeToObject = composite.Value;
-                if (relativeToObject == null)
-                    return null;
             }
             else if ((objectInfo as MethodInfo) != null)
             {
