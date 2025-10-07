@@ -22,6 +22,7 @@ using ModelsMap = Models.Map;
 using APSIM.Core;
 using System.IO;
 using System.Linq;
+using APSIM.Shared.Utilities;
 
 namespace APSIM.Documentation.Models
 {
@@ -149,7 +150,7 @@ namespace APSIM.Documentation.Models
             return newTags;
         }
         
-        /// <summary>Writes only the documentation header to file</summary>
+        /// <summary>Writes only the documentation header</summary>
         /// <param name="model">The model to get documentation for.</param>
         public static List<ITag> DocumentHeader(IModel model)
         {
@@ -159,12 +160,16 @@ namespace APSIM.Documentation.Models
             else
                 model.Node.FindParent<Simulations>(recurse: true);
 
+            string rootPath = PathUtilities.GetAbsolutePath("%root%", null);
+            string filePath = PathUtilities.GetAbsolutePath(sims.FileName, null);
+
             Section all = new Section(Path.GetFileNameWithoutExtension(sims.FileName));
             foreach (IModel child in model.Node.FindChildren<Memo>())
                 all.Children.AddRange(AutoDocumentation.DocumentModel(child).ToList());
 
             List<ITag> tags = new List<ITag>();
-            tags.Add(WebDocs.AddHeaderImageTag());
+            if (filePath.Contains(rootPath))
+                tags.Add(WebDocs.AddHeaderImageTag());
             tags.Add(all);
 
             return tags;
