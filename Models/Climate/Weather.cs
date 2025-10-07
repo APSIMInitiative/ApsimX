@@ -174,12 +174,15 @@ namespace Models.Climate
             get
             {
                 string apsimFilePath = "";
-                if (simulation != null)
+                if (Node != null)
+                    apsimFilePath = Node.FileName;
+                else if (simulation != null)
                     apsimFilePath = simulation.FileName;
-                else if (Node != null)
+                else
                 {
                     Simulations sims = Node.FindParent<Simulations>(recurse: true);
-                    apsimFilePath = sims.FileName;
+                    if (sims != null)
+                        apsimFilePath = sims.FileName;
                 }
 
                 if (string.IsNullOrEmpty(apsimFilePath))
