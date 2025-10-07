@@ -6841,7 +6841,7 @@ internal class Converter
         foreach (var manager in JsonUtilities.ChildManagers(root))
         {
             List<Declaration> declarations = null;
-            string pattern = @"(?<relativeTo>[\w\d\[\].]*)\.*(?<methodName>FindChild|FindSibling|FindDescendant|FindAncestor|FindAllSiblings|FindAllChildren|FindAllDescendants|FindAllAncestors)(?<type>\<[\w\d\.]+\>)*\((?<remainder>.+)";
+            string pattern = @"(?<relativeTo>[\w\d\[\].]*|\([\w\d\[\]\.]*\s*as\s*[\w\d.]*\)\.)\.*(?<methodName>FindChild|FindSibling|FindDescendant|FindAncestor|FindAllSiblings|FindAllChildren|FindAllDescendants|FindAllAncestors)(?<type>\<[\w\d\.]+\>)*\((?<remainder>.+)";
             bool changed = false;
             manager.ReplaceRegex(pattern, match =>
             {
