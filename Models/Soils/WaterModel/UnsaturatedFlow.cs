@@ -142,9 +142,6 @@ namespace Models.WaterModel
                     w_out = flow[i];
                 }
 
-                if (flow.Any(w => double.IsNaN(w)))
-                    throw new Exception($"UnsaturatedFlow model produced NaN: {string.Join(",", flow)}");
-
                 return flow;
             }
         }

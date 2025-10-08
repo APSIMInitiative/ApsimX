@@ -134,9 +134,6 @@ namespace Models.WaterModel
                     w_in = w_out;
                 }
 
-                if (flux.Any(w => double.IsNaN(w)))
-                    throw new Exception($"SaturatedFlow model produced NaN: {string.Join(", ", flux)}");
-
                 return flux;
             }
         }
