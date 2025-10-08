@@ -962,7 +962,8 @@ save {apsimxFileName}
                 $"[Sowing].Script.CultivarName = Hartog{Environment.NewLine}" +
                 $"[TestFolder].Hartog.Command += [Phenology].CAMP.EnvData.VrnTreatTemp = 5.5555, [Leaf].FrostFraction.FixedValue = 0.2222{Environment.NewLine}" +
                 $"[Replacements].TestFolder.Hartog.Command += [Phenology].CAMP.EnvData.VrnTreatDuration = 66.6666{Environment.NewLine}" +
-                $".Simulations.Replacements.TestFolder.Hartog.Command += [Leaf].Photosynthesis.RUE.FixedValue = 1.1111, [Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 0,0,0,0,4,7,12,20{Environment.NewLine}" +                
+                $".Simulations.Replacements.TestFolder.Hartog.Command += [Leaf].Photosynthesis.RUE.FixedValue = 1.1111{Environment.NewLine}" +
+                $".Simulations.Replacements.TestFolder.Hartog.Command += [Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 0,0,0,0,4,7,12,20{Environment.NewLine}" +
                 $".Simulations.Replacements.TestFolder.Janz.Command = \"\"{Environment.NewLine}" +
                 $".Simulations.Experiment.Factors.Factor.CompositeFactor.Specifications += [Sowing].Script.StartDate = 1-Apr{Environment.NewLine}" +
                 $".Simulations.Experiment.Factors.Factor.Specification = [Sowing].Script.StartDate = 1-Apr, 1-May{Environment.NewLine}" +
