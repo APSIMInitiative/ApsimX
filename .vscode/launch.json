@@ -134,9 +134,9 @@
             },
             "args": [
                 "-d",
-                "C:/git/ApsimX/Tests/Validation/Wheat/Wheat.apsimx",
+                "${workspaceFolder}/Tests/Validation/Wheat/FAR/FAR.apsimx",
                 "-s",
-                "C:/git/ApsimX/Tests/Validation/Wheat/split.json"
+                "${workspaceFolder}/Tests/Validation/Wheat/FAR/split.json"
             ]
         },
         {
