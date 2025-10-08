@@ -1232,6 +1232,30 @@ run";
 
         }
 
+        [Test]
+        public void TestApplySwitch_HandlesDateTimeStrings_WithOddFormatting()
+        {
+
+            Simulations file = Utilities.GetRunnableSim();
+            string savingFilePath = Path.Combine(Path.GetTempPath(), "test.apsimx");
+            string newFileString = $"[Clock].Start=02/01/2017\nsave test.apsimx";
+            string newTempConfigFile = Path.Combine(Path.GetTempPath(), "config1.txt");
+            File.WriteAllText(newTempConfigFile, newFileString);
+
+            bool fileExists = File.Exists(newTempConfigFile);
+            Assert.That(File.Exists(newTempConfigFile), Is.True);
+
+            Utilities.RunModels(file, $"--apply {newTempConfigFile}");
+
+            string text = File.ReadAllText(savingFilePath);
+            // Reload simulation from file text. Needed to see changes made.
+            Simulations sim2 = FileFormat.ReadFromString<Simulations>(text).Model as Simulations;
+
+            // Get new values from changed simulation.
+            Clock clockNodeAfterChange = sim2.Node.Find<Clock>();
+            Assert.That(clockNodeAfterChange.Start, Is.EqualTo(new DateTime(2017, 2, 1)));
+        }
+
 
     }
 }

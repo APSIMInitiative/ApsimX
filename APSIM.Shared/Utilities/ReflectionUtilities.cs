@@ -623,7 +623,15 @@
 
             try
             {
-                return Convert.ChangeType(newValue, dataType, format);
+                var changeObject = Convert.ChangeType(newValue, dataType, format);
+                return changeObject;
+            }
+            catch (FormatException fex)
+            {
+                if (dataType == typeof(DateTime))
+                    return DateUtilities.GetDate(newValue);
+                else
+                    throw new FormatException($"Unable to convert {newValue} to type {dataType}", fex);
             }
             catch (Exception err)
             {
