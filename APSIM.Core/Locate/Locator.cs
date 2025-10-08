@@ -175,6 +175,9 @@ internal class Locator
         composite.AddInstance(relativeTo.Model);
         for (int j = 0; j < namePathBits.Length; j++)
         {
+            if (relativeToObject == null)
+                return null;
+
             object objectInfo = null;
             List<object> argumentsList = new List<object>();
 
