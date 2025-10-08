@@ -17,6 +17,7 @@ using Models.Factorial;
 using Models.Storage;
 using Models.Utilities.Extensions;
 using Newtonsoft.Json.Linq;
+using Topten.RichTextKit.Utils;
 
 namespace Models
 {
@@ -331,54 +332,58 @@ namespace Models
                 if (row != null)
                     configured_command = ConfigFile.ReplaceBatchFilePlaceholders(command, row, row.Table.Rows.IndexOf(row));
                 else configured_command = command;
+            }
 
-                string[] splitCommand = configured_command.Split(' ', '=');
+            RunAPSIM runner = new();
+            var commands = CommandLanguage.StringToCommands(commandsList, applyRunManager.TempSim);
+            CommandProcessor processor = new(commands, runner);
+            processor.Run(applyRunManager.TempSim);
+        }
 
-                ConfigureCommandRun(splitCommand, configFileDirectory, ref applyRunManager);
+        /// <summary>
+        /// A class that can run APSIM. It is called from the command system.
+        /// </summary>
+        public class RunAPSIM : IRunAPSIM
+        {
+            bool runTests;
+            Runner.RunTypeEnum runType;
+            int numProcessors;
+            string regex;
 
-                // Set and create if not already a temporary sim to make changes to.
-                // You should never make changes to the original unless specified in save command.
-                if (applyRunManager.SavePath == null && applyRunManager.LoadPath == null)
+
+            public void Run(bool runTests, Runner.RunTypeEnum runType, int numProcessors, string regex)
+            {
+
+            }
+
+            /// <summary>
+            /// Run APSIM
+            /// </summary>
+            /// <param name="relativeTo">The model that defines the scope for running APSIM.</param>
+            public void Run(INodeModel relativeTo)
+            {
+                var runner = new Runner((IModel) relativeTo,
+                                        runSimulations: true,
+                                        runPostSimulationTools: true,
+                                        runTests,
+                                        runType: runType,
+                                        numberOfProcessors: numProcessors,
+                                        simulationNamePatternMatch: regex);
+                runner.SimulationCompleted += OnJobCompleted;
+                if (options.Verbose)
+                    runner.SimulationCompleted += WriteCompleteMessage;
+                if (options.ExportToCsv)
+                    runner.SimulationGroupCompleted += OnSimulationGroupCompleted;
+                runner.AllSimulationsCompleted += OnAllJobsCompleted;
+                runner.Run();
+                runner.DisposeStorage();
+
+                //dispose of temp datastore
+                if (tempSim != null)
                 {
-                    if (applyRunManager.TempSim == null)
-                        applyRunManager.TempSim = CreateTempApsimxFile(configFileDirectory, file, splitCommand);
-                }
-
-                Simulations sim = null;
-
-                if (!string.IsNullOrWhiteSpace(applyRunManager.LoadPath))
-                {
-                    sim = FileFormat.ReadFromFile<Simulations>(applyRunManager.LoadPath).Model as Simulations;
-                    sim = ConfigFile.RunConfigCommands(sim, configured_command, configFileDirectory) as Simulations;
-                }
-                else
-                    sim = ConfigFile.RunConfigCommands(applyRunManager.TempSim, configured_command, configFileDirectory) as Simulations;
-
-                // Write to a specific file, if savePath is set use this instead of the file passed in through arguments.
-                if (!string.IsNullOrWhiteSpace(applyRunManager.SavePath))
-                {
-                    string currentTempFileName = sim.FileName;
-                    sim.Write(applyRunManager.SavePath);
-                    // Needed to keep changes saving to a temp file but not have temp changes written to
-                    // any subsequent files specfied in a save command.
-                    applyRunManager.TempSim.FileName = currentTempFileName;
-                    applyRunManager.LastSaveFilePath = applyRunManager.SavePath;
-                    applyRunManager.SavePath = null;
-                }
-                else sim.Write(applyRunManager.TempSim.FileName);
-
-                if (applyRunManager.IsSimToBeRun)
-                {
-                    // Required to be set to file to ensure running works as intended for both
-                    // variants of --apply runs (in-command file references or in-config file reference runs).
-                    applyRunManager.OriginalFilePath = file;
-                    RunModifiedApsimxFile(options,
-                        file,
-                        applyRunManager.TempSim,
-                        sim,
-                        applyRunManager.OriginalFilePath,
-                        applyRunManager.LastSaveFilePath);
-                    applyRunManager.IsSimToBeRun = false;
+                    DataStore ds = tempSim.Node.FindChild<DataStore>(recurse: true);
+                    if (ds != null)
+                        ds.Dispose();
                 }
             }
         }

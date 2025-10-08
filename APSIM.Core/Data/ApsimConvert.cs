@@ -72,7 +72,7 @@ public static class ApsimConvert
                 return data.ToString();
             else if (targetType == typeof(bool))
                 return System.Convert.ToBoolean(data, CultureInfo.InvariantCulture);
-            else if (targetType == typeof(DateTime) && data is string dateString)
+            else if ((targetType == typeof(DateTime) || targetType == typeof(DateTime?))  && data is string dateString)
                 return DateUtilities.GetDate(dateString);
             else if (targetType.IsEnum && data is string st)
                 return Enum.Parse(targetType, st);

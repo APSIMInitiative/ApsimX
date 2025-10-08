@@ -21,9 +21,13 @@ internal partial class SetPropertiesCommand : IModelCommand
     /// Run the command.
     /// </summary>
     /// <param name="relativeTo">The model the commands are relative to.</param>
-    INodeModel IModelCommand.Run(INodeModel relativeTo)
+    /// <param name="runner">An instance of an APSIM runner.</param>
+    INodeModel IModelCommand.Run(INodeModel relativeTo, IRunAPSIM runner)
     {
-        relativeTo.Node.Set(name, value, relativeTo);
+        // Convert value into correct type.
+        var obj = relativeTo.Node.GetObject(name);
+        var valueOfCorrentType = ApsimConvert.ToType(value, obj.DataType);
+        obj.Value = valueOfCorrentType;
         return relativeTo;
     }
 }

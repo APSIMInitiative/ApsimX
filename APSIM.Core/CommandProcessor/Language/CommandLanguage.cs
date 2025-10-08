@@ -98,6 +98,8 @@ public class CommandLanguage
             return SaveCommand.Create(command, relativeTo);
         else if (command.StartsWith("load", StringComparison.InvariantCultureIgnoreCase))
             return LoadCommand.Create(command, relativeTo);
+        else if (command.StartsWith("run", StringComparison.InvariantCultureIgnoreCase))
+            return RunCommand.Create(command, relativeTo);
         else if (command.Contains("="))
             return SetPropertiesCommand.Create(command, relativeTo);
 

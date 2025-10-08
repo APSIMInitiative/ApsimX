@@ -19,7 +19,8 @@ internal partial class DeleteCommand : IModelCommand
     /// Run the command.
     /// </summary>
     /// <param name="relativeTo">The model the commands are relative to.</param>
-    INodeModel IModelCommand.Run(INodeModel relativeTo)
+    /// <param name="runner">An instance of an APSIM runner.</param>
+    INodeModel IModelCommand.Run(INodeModel relativeTo, IRunAPSIM runner)
     {
         var modelToDelete = (INodeModel)relativeTo.Node.Get(modelName, relativeTo: relativeTo)
                            ?? throw new Exception($"Cannot find model {modelName}");
