@@ -230,7 +230,7 @@ namespace Models.WaterModel
             set
             {
                 if (value.Any(w => double.IsNaN(w)))
-                    throw new Exception($"Input soil moisture array (Water, mm) contains NaN: {string.Join(", ", value)}");
+                    throw new Exception($"Error: Input soil moisture array (Water, mm) contains NaN: {string.Join(", ", value)}");
 
                 waterMM = value;
                 if (value == null)
@@ -247,8 +247,8 @@ namespace Models.WaterModel
             get { return waterVolumetric; }
             set
             {
-                if (value.Any(w => double.IsNaN(w)))
-                    throw new Exception($"Input soil moisture array (SW, mm/mm) contains NaN: {string.Join(", ", value)}");
+                if (value.Any(w => double.IsNaN(w) || MathUtilities.IsLessThan(w, 0) || MathUtilities.IsGreaterThan(w, 1)))
+                    throw new Exception($"Error: Input soil moisture array (SW, mm/mm) contains NaN or out-of-range values [0–1]: {string.Join(", ", value)}");
 
                 waterVolumetric = value;
                 waterMM = MathUtilities.Multiply(value, soilPhysical.Thickness);
