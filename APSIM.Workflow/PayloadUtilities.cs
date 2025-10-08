@@ -329,7 +329,7 @@ public static class PayloadUtilities
             writer.WriteLine("Path,DockerImage");
 
             if (isVerbose)
-                Console.WriteLine($"Creating {validationPaths.Length} validation tasks in grid.csv");
+                Console.WriteLine($"Creating {validationPaths.Length - EXCLUDED_SIMS_FILEPATHS.Length} validation tasks in grid.csv");
 
             foreach (string dir in validationPaths)
             {
