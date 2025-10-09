@@ -75,10 +75,10 @@ interval=60 # in seconds
 until [ ${retry} -ge ${maxRetries} ]
 do
 	upload && break
-	retry=$[${retry}+1]
+	retry=$((retry+1))
 	echo "Retrying [${retry}/${maxRetries}] in ${interval}(s) "
 	sleep ${interval}
-    interval=$[${interval} * 2]
+    interval=$((interval * 2))
 done
 if [ ${retry} -ge ${maxRetries} ]; then
   echo "Failed to upload installer after ${maxRetries} attempts!"
