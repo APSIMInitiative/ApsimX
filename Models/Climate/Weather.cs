@@ -186,7 +186,7 @@ namespace Models.Climate
                 }
 
                 if (string.IsNullOrEmpty(apsimFilePath))
-                    throw new Exception("Cannot get Weather filename without reference to Simulation or Simulations");
+                    throw new Exception("Cannot get Weather filename without reference to Node");
                 else
                     return PathUtilities.GetRelativePath(fileName, apsimFilePath);
             }
@@ -197,24 +197,14 @@ namespace Models.Climate
         /// Gets or sets the full file name (with path). The user interface uses this.
         /// </summary>
         [JsonIgnore]
-        public string FullFileName
+        private string FullFileName
         {
             get
             {
-                Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
-                return PathUtilities.GetAbsolutePath(fileName, (simulation != null) ? simulation.FileName : null);
-            }
-        }
-
-        /// <summary>
-        /// Gets the stored file name. The user interface uses this. Use FullFileName to set.
-        /// </summary>
-        [JsonIgnore]
-        public string RelativeFileName
-        {
-            get
-            {
-                return FileName;
+                if (this.Node != null)
+                    return PathUtilities.GetAbsolutePath(fileName, this.Node.FileName);
+                else
+                    throw new Exception("Cannot get Weather filename without reference to Node");
             }
         }
 
@@ -948,26 +938,27 @@ namespace Models.Climate
         /// <returns>True if the file was successfully opened</returns>
         public bool OpenDataFile()
         {
-            if (!System.IO.File.Exists(this.FullFileName) &&
-                System.IO.Path.GetExtension(FullFileName) == string.Empty)
+            string fullFileName = FullFileName;
+            if (!File.Exists(fullFileName) &&
+                Path.GetExtension(fullFileName) == string.Empty)
                 FileName += ".met";
 
-            if (System.IO.File.Exists(this.FullFileName))
+            if (File.Exists(fullFileName))
             {
                 if (this.reader == null)
                 {
-                    if (ExcelUtilities.IsExcelFile(FullFileName) && string.IsNullOrEmpty(ExcelWorkSheetName))
-                        throw new Exception($"Unable to open excel file {FullFileName}: no sheet name is specified");
+                    if (ExcelUtilities.IsExcelFile(fullFileName) && string.IsNullOrEmpty(ExcelWorkSheetName))
+                        throw new Exception($"Unable to open excel file {fullFileName}: no sheet name is specified");
 
                     this.reader = new ApsimTextFile();
-                    this.reader.Open(this.FullFileName, this.ExcelWorkSheetName);
+                    this.reader.Open(fullFileName, this.ExcelWorkSheetName);
 
                     if (this.reader.Headings == null)
                     {
                         string message = "Cannot find the expected header in ";
-                        if (ExcelUtilities.IsExcelFile(FullFileName))
+                        if (ExcelUtilities.IsExcelFile(fullFileName))
                             message += $"sheet '{ExcelWorkSheetName}' of ";
-                        message += $"weather file: {FullFileName}";
+                        message += $"weather file: {fullFileName}";
                         throw new Exception(message);
                     }
 
@@ -994,19 +985,19 @@ namespace Models.Climate
 
                     if (this.maximumTemperatureIndex == -1)
                         if (this.reader == null || this.reader.Constant("maxt") == null)
-                            throw new Exception("Cannot find MaxT in weather file: " + this.FullFileName);
+                            throw new Exception("Cannot find MaxT in weather file: " + fullFileName);
 
                     if (this.minimumTemperatureIndex == -1)
                         if (this.reader == null || this.reader.Constant("mint") == null)
-                            throw new Exception("Cannot find MinT in weather file: " + this.FullFileName);
+                            throw new Exception("Cannot find MinT in weather file: " + fullFileName);
 
                     if (this.radiationIndex == -1)
                         if (this.reader == null || this.reader.Constant("radn") == null)
-                            throw new Exception("Cannot find Radn in weather file: " + this.FullFileName);
+                            throw new Exception("Cannot find Radn in weather file: " + fullFileName);
 
                     if (this.rainIndex == -1)
                         if (this.reader == null || this.reader.Constant("rain") == null)
-                            throw new Exception("Cannot find Rain in weather file: " + this.FullFileName);
+                            throw new Exception("Cannot find Rain in weather file: " + fullFileName);
                 }
                 else
                 {
