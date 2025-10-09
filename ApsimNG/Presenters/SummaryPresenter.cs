@@ -193,19 +193,23 @@ namespace UserInterface.Presenters
                     string previousPath = null;
                     StringBuilder md = new StringBuilder();
                     md.AppendLine($"### {m.Key.Date:yyyy-MM-dd}");
-                    md.AppendLine();
                     md.AppendLine("```");
 
-                    int spacing = m.Max(msg => msg.RelativePath.Length) + 2;
                     foreach (var msg in m)
                     {
-                        if (previousPath == null || msg.RelativePath != previousPath)
+                        if (!string.IsNullOrEmpty(msg.RelativePath))
                         {
-                            md.Append($"{msg.RelativePath}:".PadRight(spacing));
-                            previousPath = msg.RelativePath;
+                            int spacing = msg.RelativePath.Length + 2;
+                            if (previousPath == null || msg.RelativePath != previousPath)
+                            {
+                                if (msg != m.First())
+                                    md.AppendLine();
+                                md.Append($"{msg.RelativePath}:".PadRight(spacing));
+                                previousPath = msg.RelativePath;
+                            }
+                            else
+                                md.Append(' ', spacing);
                         }
-                        else
-                            md.Append(' ', spacing);
                         md.AppendLine($"{msg.Text}");
                     }
                     md.AppendLine("```");
