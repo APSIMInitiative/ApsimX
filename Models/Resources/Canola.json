@@ -7108,6 +7108,7 @@
                 "[Phenology].Vegetative.Target.XYPairs.X = 0,6",
                 "[Phenology].Vegetative.Target.XYPairs.Y = 500,250",
                 "[Phenology].StemElongation.Target.PPResponse.Amount.FixedValue = 200",
+                "[Phenology].StemElongation.Target.Base.FixedValue = 50",
                 "[Leaf].Photosynthesis.RUE.TriazineToleranceModifier.FixedValue = 0.78",
                 "[Leaf].Phyllochron.Base.FixedValue = 54"
               ],
