@@ -13,13 +13,13 @@ namespace UnitTests.UtilityTests
         [Test]
         public void TestGetRelativePath()
         {
-            string assembly = Assembly.GetExecutingAssembly().Location;
-            string binDir = Path.GetDirectoryName(assembly);
-            string rootDir = Directory.GetParent(binDir).FullName;
-            string subDir = Path.Combine(binDir, "a");
+            string assembly = Assembly.GetExecutingAssembly().Location.Replace("\\", "/");
+            string binDir = Path.GetDirectoryName(assembly).Replace("\\", "/");
+            string rootDir = Directory.GetParent(binDir).FullName.Replace("\\", "/");
+            string subDir = Path.Combine(binDir, "a").Replace("\\", "/");
 
             // string rel = "Bin/a";
-            string rel = Path.Combine(Path.GetFileName(Path.GetDirectoryName(assembly)), "a");
+            string rel = Path.Combine(Path.GetFileName(Path.GetDirectoryName(assembly)), "a").Replace("\\", "/");
 
             Assert.That(PathUtilities.GetRelativePath(subDir, assembly), Is.EqualTo("a"));
             // Passing in a directory name as relative path will give a different
@@ -39,10 +39,10 @@ namespace UnitTests.UtilityTests
         [Test]
         public void TestGetAbsolutePath()
         {
-            string assembly = Assembly.GetExecutingAssembly().Location;
-            string bin = Path.GetDirectoryName(assembly);
-            string subDir = Path.Combine(bin, "a");
-            string apsimxDir = new DirectoryInfo(Path.Combine(bin, "..", "..", "..")).FullName;
+            string assembly = Assembly.GetExecutingAssembly().Location.Replace("\\", "/");
+            string bin = Path.GetDirectoryName(assembly).Replace("\\", "/");
+            string subDir = Path.Combine(bin, "a").Replace("\\", "/");
+            string apsimxDir = new DirectoryInfo(Path.Combine(bin, "..", "..", "..")).FullName.Replace("\\", "/");
             // string rel = "Bin/a";
 
             Assert.That(PathUtilities.GetAbsolutePath("a", assembly), Is.EqualTo(subDir));
@@ -59,7 +59,7 @@ namespace UnitTests.UtilityTests
             Assert.That(PathUtilities.GetAbsolutePath("%root%", bin), Is.EqualTo(apsimxDir));
             Assert.That(PathUtilities.GetAbsolutePath("%root%", null), Is.EqualTo(apsimxDir));
             Assert.That(PathUtilities.GetAbsolutePath("%root%", ""), Is.EqualTo(apsimxDir));
-            Assert.That(PathUtilities.GetAbsolutePath("%root%\\bin", ""), Is.EqualTo(Path.Combine(apsimxDir, "bin")));
+            Assert.That(PathUtilities.GetAbsolutePath("%root%\\bin", ""), Is.EqualTo(Path.Combine(apsimxDir, "bin").Replace("\\", "/")));
         }
 
         [Test]

@@ -320,90 +320,95 @@ namespace UnitTests.Weather
         [Test]
         public void TestWeatherFileNameAndFullName()
         {
-            var tempFile = Path.GetTempFileName().Replace(".tmp", ".met");
-            File.WriteAllText(tempFile, ReflectionUtilities.GetResourceAsString("UnitTests.Weather.CustomMetData.met"));
-            var tempDir = Path.GetDirectoryName(tempFile);
+            string tempfile = Path.GetTempFileName().Replace("\\", "/");
+            string tempDir = Path.GetDirectoryName(tempfile).Replace("\\", "/") + "/tempsubfolder";
+            Directory.CreateDirectory(tempDir);
+            string tempDirUpOne = tempDir.Remove(tempDir.LastIndexOf('/'));
+            string rootPath = PathUtilities.GetAbsolutePath("%root%", tempDir);
+            tempDir += "/";
+            tempDirUpOne += "/";
+            rootPath += "/";
+
+            tempfile = Path.GetFileName(tempfile);
+
+            string metfile = tempfile.Replace(".tmp", ".met");
+            File.WriteAllText(metfile, ReflectionUtilities.GetResourceAsString("UnitTests.Weather.CustomMetData.met"));
+
+            string apsimfile = tempfile.Replace(".tmp", ".apsimx");
 
             // Now set the apsimx file name and ensure that the weather file name is still the same but the full file name is now absolute.
-            var sims = new Simulations()
+            Simulations sims = new Simulations()
             {
-                FileName = Path.Combine(tempDir, "temp.apsimx"),
                 Children = new List<IModel>()
                 {
                     new Simulation()
                     {
-                        Name = "Base",
-                        FileName = Path.Combine(tempDir, "temp.apsimx"),
                         Children = new List<IModel>()
-                            {
-                                new Models.Climate.Weather()
-                                {
-                                    Name = "Weather",
-                                    FileName = tempFile,
-                                    ExcelWorkSheetName = "Sheet1"
-                                },
-                                new Clock()
-                                {
-                                    Name = "Clock",
-                                },
-                                new MockSummary()
-                            }
+                        {
+                            new Models.Climate.Weather(),
+                            new MockClock(),
+                            new MockSummary()
+                        }
                     }
                 },
             };
 
-            Node.Create(sims, fileName: sims.FileName);
-            sims.Write(sims.FileName);
-            var weather = sims.Node.FindChild<Models.Climate.Weather>(recurse: true);
-            weather.FileName = tempFile;
-            Assert.That(weather.FileName, Is.EqualTo(Path.GetFileName(tempFile)));
-            Assert.That(weather.FullFileName, Is.EqualTo(tempFile));
-        }
+            sims.Node = Node.Create(sims, fileName: tempDir + apsimfile);
+            sims.Write(tempDir + apsimfile);
 
-        /// <summary>
-        /// Tests that a weather file with %root% in the filename is correctly interpreted.
-        /// </summary>
-        [Test]
-        public void TestFileNameInterpretsRootVariable()
-        {
-            var tempFile = Path.GetTempFileName().Replace(".tmp", ".met");
-            File.WriteAllText(tempFile, ReflectionUtilities.GetResourceAsString("Examples.WeatherFiles.AU_Dalby.met"));
-            var tempDir = Path.GetDirectoryName(tempFile);
-            var apsimxFile = Path.Combine(tempDir, "temp.apsimx");
+            Models.Climate.Weather weather = sims.Node.FindChild<Models.Climate.Weather>(recurse: true);
 
-            var sims = new Simulations()
+            List<(string, string)> inputs = new List<(string, string)>();
+            inputs.Add(("fileInSameFolder.met", "fileInSameFolder.met"));
+            inputs.Add((tempDir + "fileInSameFolder.met", "fileInSameFolder.met"));
+            inputs.Add(("subfolder/fileSubFolder.met", "subfolder/fileSubFolder.met"));
+            inputs.Add((tempDir + "subfolder/fileSubFolder.met", "subfolder/fileSubFolder.met"));
+            inputs.Add(("../fileInFolderAbove.met", tempDirUpOne + "fileInFolderAbove.met"));
+            inputs.Add((tempDirUpOne + "fileInFolderAbove.met", tempDirUpOne + "fileInFolderAbove.met"));
+            inputs.Add(("../AnotherFolder/fileInAnotherFolder.met", tempDirUpOne + "AnotherFolder/fileInAnotherFolder.met"));
+            inputs.Add((tempDirUpOne + "AnotherFolder/fileInAnotherFolder.met", tempDirUpOne + "AnotherFolder/fileInAnotherFolder.met"));
+            inputs.Add(("T:/A/Full/Path/to/file.met", "T:/A/Full/Path/to/file.met"));
+            inputs.Add(("%root%/file.met", "%root%/file.met"));
+            inputs.Add((rootPath + "file.met", "%root%/file.met"));
+            inputs.Add((null, null));
+            inputs.Add(("", ""));
+            inputs.Add(("arandomcollectionofcharacters", "arandomcollectionofcharacters"));
+            inputs.Add(("null", "null"));
+            inputs.Add(("///adf.\\..%%/as", "///adf./..%%/as"));
+
+            foreach ((string, string) input in inputs)
             {
-                FileName = apsimxFile,
-                Children = new List<IModel>()
-                {
-                    new Simulation()
-                    {
-                        Name = "Base",
-                        FileName = apsimxFile,
-                        Children = new List<IModel>()
-                            {
-                                new Models.Climate.Weather()
-                                {
-                                    Name = "Weather",
-                                    FileName = "%root%/Examples/WeatherFiles/AU_Dalby.met",
-                                    ExcelWorkSheetName = "Sheet1"
-                                },
-                                new Clock()
-                                {
-                                    Name = "Clock",
-                                },
-                                new MockSummary()
-                            }
-                    }
-                },
-            };
+                weather.FileName = input.Item1;
+                Assert.That(weather.FileName, Is.EqualTo(input.Item2));
 
-            Node.Create(sims, fileName: sims.FileName);
-            sims.Write(sims.FileName);
-            var weather = sims.Node.FindChild<Models.Climate.Weather>(recurse: true);
-            weather.FileName = "%root%/Examples/WeatherFiles/AU_Dalby.met";
-            Assert.That(weather.FileName, Is.EqualTo(Path.Combine("%root%", "Examples", "WeatherFiles", "AU_Dalby.met")));
-            Assert.That(weather.FullFileName, Does.Not.Contain("%root%"));
+                //run it again but with windows slashs
+                if (input.Item1 != null)
+                    weather.FileName = input.Item1.Replace("/", "\\");
+                Assert.That(weather.FileName, Is.EqualTo(input.Item2));
+            }
+
+            //now "move" the simulations to under the root path and do the same checks again
+            sims.Node = Node.Create(sims, fileName: rootPath + "temp/" + apsimfile);
+            inputs.Add(("%root%/temp/file.met", "file.met"));
+            inputs.Add((rootPath + "temp/file.met", "file.met"));
+
+            foreach ((string, string) input in inputs)
+            {
+                //Replace our old directories with the root directory
+                string beforePath = input.Item1;
+                if (input.Item1 != null)
+                {
+                    beforePath = beforePath.Replace(tempDir, rootPath + "temp/");
+                    beforePath = beforePath.Replace(tempDirUpOne, rootPath);
+                }
+
+                string afterPath = input.Item2;
+                if (input.Item2 != null)
+                    afterPath = afterPath.Replace(tempDirUpOne, "%root%/");
+
+                weather.FileName = beforePath;
+                Assert.That(weather.FileName, Is.EqualTo(afterPath));
+            }
         }
 
         /*
