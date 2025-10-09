@@ -623,8 +623,7 @@
 
             try
             {
-                var changeObject = Convert.ChangeType(newValue, dataType, format);
-                return changeObject;
+                return Convert.ChangeType(newValue, dataType, format);
             }
             catch (FormatException fex)
             {

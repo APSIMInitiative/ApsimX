@@ -1242,7 +1242,6 @@ run";
             string newTempConfigFile = Path.Combine(Path.GetTempPath(), "config1.txt");
             File.WriteAllText(newTempConfigFile, newFileString);
 
-            bool fileExists = File.Exists(newTempConfigFile);
             Assert.That(File.Exists(newTempConfigFile), Is.True);
 
             Utilities.RunModels(file, $"--apply {newTempConfigFile}");
