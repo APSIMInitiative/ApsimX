@@ -48,7 +48,7 @@ test -z ${PULL_ID:+x} && ( echo "PULL_ID not set"; exit 1 )
 
 # Get the version number for the new release.
 echo Retrieving version info...
-version=$(./.github/workflows/scripts/get-revision.sh $PULL_ID)
+version=$(./.github/workflows/scripts/get-revision.sh)
 revision=$version
 year=$(TZ=Australia/Brisbane date +%-Y)
 month=$(TZ=Australia/Brisbane date +%-m)
