@@ -175,6 +175,9 @@ internal class Locator
         composite.AddInstance(relativeTo.Model);
         for (int j = 0; j < namePathBits.Length; j++)
         {
+            if (relativeToObject == null)
+                return null;
+
             object objectInfo = null;
             List<object> argumentsList = new List<object>();
 
@@ -209,8 +212,6 @@ internal class Locator
                 if (propertiesOnly && j == namePathBits.Length - 1)
                     break;
                 relativeToObject = composite.Value;
-                if (relativeToObject == null)
-                    return null;
             }
             else if ((objectInfo as MethodInfo) != null)
             {
@@ -378,11 +379,12 @@ internal class Locator
     /// <exception cref="Exception"></exception>
     private object GetInternalObjectInfo(object relativeToObject, string name, VariableComposite composite, int remainingNames, bool ignoreCase, bool throwOnError, bool onlyModelChildren, out List<object> argumentsList)
     {
-
         argumentsList = null;
         PropertyInfo propertyInfo = null;
         MethodInfo methodInfo = null;
         INodeModel modelInfo = null;
+        if (relativeToObject == null)
+            return null;
 
         if (!onlyModelChildren)
         {
