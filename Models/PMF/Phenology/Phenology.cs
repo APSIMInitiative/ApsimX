@@ -517,24 +517,20 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>
-        /// Force emergence on the date called if emergence has not occurred already
+        /// Method to set the 
         /// </summary>
-        /// <param name="emergenceDate">Emergence date (dd-mmm)</param>
-        public void SetEmergenceDate(string emergenceDate)
+        /// <param name="completionDate"></param>
+        /// <param name="PhaseName"></param>
+        public void SetPhaseCompletionDate(string completionDate, string PhaseName)
         {
-            foreach (EmergingPhase ep in Structure.FindChildren<EmergingPhase>(recurse: true))
-                ep.EmergenceDate = emergenceDate;
-            SetGerminationDate(plant.SowingDate.ToString("d-MMM", CultureInfo.InvariantCulture));
-        }
-
-        /// <summary>
-        /// Force germination on the date called if germination has not occurred already
-        /// </summary>
-        /// <param name="germinationDate">Germination date (dd-mmm).</param>
-        public void SetGerminationDate(string germinationDate)
-        {
-            foreach (GerminatingPhase gp in Structure.FindChildren<GerminatingPhase>(recurse: true))
-                gp.GerminationDate = germinationDate;
+            foreach (IPhase p in phases) //Iterate through each phase in order
+            {
+                if (p.Name == PhaseName)
+                {
+                    (p as IPhaseWithSetableCompletionDate).DateToProgress = completionDate;
+                    break;
+                }
+            }
         }
 
         /// <summary>
