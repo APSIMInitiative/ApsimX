@@ -648,6 +648,27 @@ namespace APSIM.Core.Tests
         }
 
         /// <summary>
+        /// Specific test for Set
+        /// Sets a value of a property when the property is null before the set.
+        /// </summary>
+        [Test]
+        public void SetTestOnMinimalSimulation()
+        {
+            var sim = new Simulation()
+            {
+                Children = [
+                    new Models.Climate.Weather()
+                ]
+            };
+            Node.Create(sim);
+            sim.Node.Set("[Weather].FileName", "dummy.met");
+
+            //set a read only property
+            var weather = sim.Children.First() as Models.Climate.Weather;
+            Assert.That(weather.FileName, Is.EqualTo("dummy.met"));
+        }
+
+        /// <summary>
         /// Specific test for IsExpression
         /// This function determines if the line is an expression that needs to be calculated or not
         /// I don't think this function is very good at doing that though.
@@ -940,7 +961,7 @@ namespace APSIM.Core.Tests
             //Should find ModelF even though it's not called ModelF
             Assert.That(loc.Get("[Simulation].ModelF"), Is.Not.Null);
         }
-        
+
         /// <summary>
         /// Test to make sure the type of an object can be found even if it has square brackets in it's name
         /// </summary>
