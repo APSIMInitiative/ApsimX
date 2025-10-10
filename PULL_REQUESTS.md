@@ -1,3 +1,9 @@
+---
+layout: page
+title: Pull Requests and Code Submission
+permalink: /pull-requests/
+---
+
 # Pull requests and code submissions
 
 ## Pull Request Priorities

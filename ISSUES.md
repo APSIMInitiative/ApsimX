@@ -1,4 +1,10 @@
-# General Good Practices
+---
+layout: page
+title: Issues
+permalink: /issues/
+---
+
+## General Good Practices
 
 ## Things to Do :white_check_mark:
 

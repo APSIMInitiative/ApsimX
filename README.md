@@ -1,3 +1,8 @@
+---
+layout: page
+title: ApsimX
+---
+
 # ApsimX
 
 ApsimX is the next generation of [APSIM](https://www.apsim.info)
@@ -12,7 +17,7 @@ Please read our [guide](https://apsimnextgeneration.netlify.app/contribute/).
 
 ## Overall Software Processes
 
-The below steps detail the full process of submitting an issue all the way through to having code submitting to resolve the issue.
+The below steps detail the full process of submitting an issue all the way through to having code merged.
 
 ### Step 1 Raising an Issue
 
