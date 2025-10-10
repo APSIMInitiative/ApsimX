@@ -1,7 +1,5 @@
-# ApsimX
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/aff3e00e-23f5-41e7-a721-bc9a171b3199/deploy-status)](https://app.netlify.com/sites/apsimnextgeneration/deploys)
-[![Build Status](https://jenkins.apsim.info/buildStatus/icon?job=apsim)](https://jenkins.apsim.info/user/hol353/my-views/view/all/job/apsim/)
+# ApsimX
 
 ApsimX is the next generation of [APSIM](https://www.apsim.info)
 
@@ -9,32 +7,73 @@ ApsimX is the next generation of [APSIM](https://www.apsim.info)
 * It can simulate a wide range of agricultural systems.
 * It begins its third decade evolving into an agro-ecosystem framework.
 
-## Licencing Conditions
-
-Use of APSIM source code is provided under the terms and conditions provided by either the General Use Licence or the Special Use Licence.  Use in any way is not permitted unless previously agreed to and currently bound by a licence agreement which can be reviewed on [https://www.apsim.info/](https://www.apsim.info/). The General Use licence can be found [here](https://www.apsim.info/wp-content/uploads/2023/09/APSIM_General_Use_Licence.pdf). The Special Use licence can be found [here](https://www.apsim.info/wp-content/uploads/2023/09/APSIM_Special_Use_Licence.pdf)
-Any questions, please email [apsim@csiro.au](mailto:apsim@csiro.au?subject=Licence%20Enquiry).
-
-## Getting Started
-
-**Hardware required**:
-
-Any recent PC with a minimum of 8Gb of RAM.
-
-**Software required**:
-
-64-bit version of Microsoft Windows 10, Windows 11, Linux or macOS.
-
-### Installation
-
-Binary releases are available via our [registration system](https://registration.apsim.info).
-
 ## Contributing
 
-Any individual or organisation (a 3rd party outside of the APSIM Initiative (AI)) who uses APSIM must be licensed do so by the APSIM Initiative. On download of APSIM, the terms and conditions of a General Use Licence are agreed to and binds the user.
-
-Intellectual property rights in APSIM are retained by the APSIM Initiative. If a licensee makes any improvements to APSIM, the intellectual property rights to those improvements belong to the APSIM Initiative. This means that the APSIM Initiative can choose to make the improvements - including source code - and these improvements would then be made available to all licensed users. As part of the submission process, you are complying with this term as well as making it available to all licensed users. Any Improvements to APSIM are required to be unencumbered and the contributing party warrants that the IP being contributed does not and will not infringe any third party IPR rights.
-
 Please read our [guide](https://apsimnextgeneration.netlify.app/contribute/).
+
+## Overall Software Processes
+
+The below steps detail the full process of submitting an issue all the way through to having code merged.
+
+### Step 1 Raising an Issue
+
+* Describe the issue and functionality required
+* Emphasis is on “Why” more than “What”  or “How”
+
+### Step 2 Issue Review
+
+* Review for Clarity, Accuracy and Priority
+* Allows input from others first
+* Avoid unnecessary effort if issue is already resolved or alternative solutions are preferred.
+
+### Step 3 Pull Request
+
+* Must link to a clearly described issue
+* May require several iterations
+* When development is complete, label as “Ready for Review”
+
+### Step 4 High Level Review
+
+* Label as under high level review
+* Check for [style guideline](#style-guidelines) issues
+* Check overall design
+* Check for availability of tests
+* Check against documented [PR Rules](#pull-request-requirements-and-best-practices)
+* Depending on review and communication with developer, either
+  * Move to next step (and label)
+  * Remove “ready for review” label
+  * Close pull request
+
+### Step 5 Low Level Review
+
+* Code review
+* Review of Tests
+* Review of changes in statistics
+* Co-pilot review
+* Check for inadvertent changes in statistics
+* Check for inadvertent changes in code
+* Depending on review and communication with developer, either
+  * If possible science impacts identified in code review not evident from stats (raise with expert or @ReferencePanel)
+  * If no changes in statistics (merge and close)
+  * If changes in statistics are deemed minor or acceptable ( notify @ReferencePanel, merge and close)
+  * If larger issue, move to step six
+  * Close pull request
+
+### Step 6 Reference Panel Review
+
+This step only occurs if required
+
+* Put on the agenda for the next meeting
+* Label PR as “Reference Panel Review”
+* All changes, code, issue description, discussions, tests, stats etc should all be ready for evaluation.
+
+## Style Guidelines
+
+APSIM followings many of the [Microsoft C Sharp code conventions](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions) and [C Sharp coding style](https://github.com/dotnet/runtime/blob/main/docs/coding-guidelines/coding-style.md) with some variations taking into account some code has been previously ported from others languages such as Fortran. If you intend on contributing code we recommend following these guides and conventions.
+
+## Definition of Science Issue
+
+A science issue is any issue that changes the statistics within the test set.  This assumes that tests are maintained for all model science, requiring that any PR that changes code and not the stats is evaluated for a deficiency of test data.
 
 ## Publications
 
