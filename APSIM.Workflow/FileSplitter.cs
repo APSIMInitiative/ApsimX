@@ -20,6 +20,7 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using APSIM.Core;
 using APSIM.Shared.Documentation.Extensions;
+using Models.PreSimulationTools;
 
 namespace APSIM.Workflow
 {
@@ -41,7 +42,7 @@ namespace APSIM.Workflow
 
             if (outputPath == null)
                 throw new ArgumentNullException(nameof(outputPath), "Output path cannot be null.");
-            
+
             List<SplittingGroup>? groups = null;
             bool copyWeatherFiles = false;
             bool copyObservedData = false;
@@ -101,7 +102,7 @@ namespace APSIM.Workflow
 
                     copiedSims.FileName = fullFilePath;
                     copiedSims.ResetSimulationFileNames();
-                    
+
                     copiedSims.Write(fullFilePath);
 
                     newSplitDirectories.Add(subFolder);
@@ -220,7 +221,14 @@ namespace APSIM.Workflow
                             foreach (string sheet in input.SheetNames)
                                 if (!allSheetNames.Contains(sheet))
                                     allSheetNames.Add(sheet);
+
+                        foreach (ObservedInput input in copiedSims.Node.FindAll<ObservedInput>())
+                            foreach (string sheet in input.SheetNames)
+                                if (!allSheetNames.Contains(sheet))
+                                    allSheetNames.Add(sheet);
                         RemoveUnusedPO(copiedSims, allSheetNames);
+
+
                     }
 
                     copiedSims.FileName = fullFilePath;
@@ -237,7 +245,7 @@ namespace APSIM.Workflow
                     throw new Exception("Leftover Experiments");
 
             }
-            
+
             return newSplitDirectories;
         }
 
@@ -280,7 +288,6 @@ namespace APSIM.Workflow
             {
                 Simulations newFile = MakeTemplateSims(template);
                 newFile.Children.Add(folder);
-                newFile.ParentAllDescendants();
 
                 string? newDirectory = Path.GetDirectoryName(filepath);
                 if (newDirectory != null && !Directory.Exists(newDirectory))

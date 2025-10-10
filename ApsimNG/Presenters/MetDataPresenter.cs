@@ -229,10 +229,10 @@ namespace UserInterface.Presenters
                     try
                     {
                         this.weatherData.ExcelWorkSheetName = sheetName;
-                        string newFileName = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
+                        string newFileName = PathUtilities.GetRelativePath(filename, this.explorerPresenter.ApsimXFile.FileName);
                         var changes = new List<ChangeProperty.Property>();
-                        if (weatherData.FullFileName != newFileName)
-                            changes.Add(new ChangeProperty.Property(weatherData, nameof(weatherData.FullFileName), newFileName));
+                        if (weatherData.FileName != newFileName)
+                            changes.Add(new ChangeProperty.Property(weatherData, nameof(weatherData.FileName), newFileName));
                         // Set constants file name to null iff the new file name is not a csv file.
                         if (Path.GetExtension(newFileName) != ".csv" && weatherData.ConstantsFile != null)
                             changes.Add(new ChangeProperty.Property(weatherData, nameof(weatherData.ConstantsFile), null));

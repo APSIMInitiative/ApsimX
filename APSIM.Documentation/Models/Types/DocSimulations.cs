@@ -204,7 +204,8 @@ namespace APSIM.Documentation.Models.Types
                 {"Mungbean", new DocAdditions(videoLink:"https://www.youtube.com/watch?v=nyDZkT1JTXw")},
                 {"Stock", new DocAdditions("https://grazplan.csiro.au/wp-content/uploads/2007/08/TechPaperMay12.pdf")},
                 {"SWIM", new DocAdditions("https://www.apsim.info/wp-content/uploads/2024/12/SWIMv21UserManual.pdf")},
-                {"SorghumDCaPST", new DocAdditions("https://www.apsim.info/wp-content/uploads/2024/12/APSIM-DCaPS.model.documentation.v4_Wu.et.al-1.pdf")}
+                {"SorghumDCaPST", new DocAdditions("https://www.apsim.info/wp-content/uploads/2024/12/APSIM-DCaPS.model.documentation.v4_Wu.et.al-1.pdf")},
+                {"Wheat", new DocAdditions("https://www.apsim.info/wp-content/uploads/2025/09/camp-model-description.docx")}
             };
 
             if(validationAdditions.ContainsKey(name))

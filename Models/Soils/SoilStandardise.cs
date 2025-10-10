@@ -286,6 +286,9 @@ public static class SoilSanitise
     /// <param name="targetThickness"></param>
     private static void SanitisePhysical(Physical physical, double[] targetThickness)
     {
+        if (physical.KS != null && physical.KS.All(ks => Double.IsNaN(ks)))
+            physical.KS = null;
+
         if (!MathUtilities.AreEqual(targetThickness, physical.Thickness))
         {
             foreach (var crop in (physical as IModel).Node.FindChildren<SoilCrop>())
@@ -354,10 +357,6 @@ public static class SoilSanitise
             //if (crop.Name.Equals("WheatSoil", StringComparison.InvariantCultureIgnoreCase))
             //    ModifyKLForSubSoilConstraints(crop);
         }
-
-        // Make sure there are the correct number of KS values.
-        if (physical.KS != null && physical.KS.Length > 0)
-            physical.KS = MathUtilities.FillMissingValues(physical.KS, physical.Thickness.Length, 0.0);
 
         physical.ParticleSizeClay = MathUtilities.SetArrayOfCorrectSize(physical.ParticleSizeClay, physical.Thickness.Length);
         physical.ParticleSizeClayMetadata = MathUtilities.SetArrayOfCorrectSize(physical.ParticleSizeClayMetadata, physical.Thickness.Length);
