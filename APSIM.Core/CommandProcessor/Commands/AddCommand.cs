@@ -37,7 +37,7 @@ internal partial class AddCommand : IModelCommand
     /// </summary>
     /// <param name="relativeTo">The model the commands are relative to.</param>
     /// <param name="runner">An instance of an APSIM runner.</param>
-    INodeModel IModelCommand.Run(INodeModel relativeTo, IRunAPSIM runner)
+    INodeModel IModelCommand.Run(INodeModel relativeTo, IRunner runner)
     {
         INodeModel modelToAdd = modelReference.GetModel();
         if (!string.IsNullOrEmpty(newName))

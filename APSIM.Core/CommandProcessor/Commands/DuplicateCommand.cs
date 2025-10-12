@@ -28,7 +28,7 @@ internal partial class DuplicateCommand : IModelCommand
     /// </summary>
     /// <param name="relativeTo">The model the commands are relative to.</param>
     /// <param name="runner">An instance of an APSIM runner.</param>
-    INodeModel IModelCommand.Run(INodeModel relativeTo, IRunAPSIM runner)
+    INodeModel IModelCommand.Run(INodeModel relativeTo, IRunner runner)
     {
         var modelToDuplicate = (INodeModel)relativeTo.Node.Get(modelName, relativeTo: relativeTo)
                                ?? throw new Exception($"Cannot find model {modelName}");

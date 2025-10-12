@@ -10,6 +10,7 @@ using APSIM.Core;
 using APSIM.Shared.JobRunning;
 using APSIM.Shared.Utilities;
 using CommandLine;
+using DocumentFormat.OpenXml.Office2010.CustomUI;
 using Models.Core;
 using Models.Core.ConfigFile;
 using Models.Core.Run;
@@ -184,8 +185,8 @@ namespace Models
                 {
                     string configFileAbsolutePath = Path.GetFullPath(options.Apply);
                     string configFileDirectory = Directory.GetParent(configFileAbsolutePath).FullName;
-                    List<string> commandsList = ConfigFile.GetConfigFileCommands(options.Apply);
-                    DoCommands(options, files, configFileDirectory, commandsList);
+                    List<string> commandsList = File.ReadAllLines(options.Apply).ToList();
+                    DoCommands(options, files, commandsList);
                     CleanUpTempFiles(configFileDirectory);
                 }
                 else
@@ -254,64 +255,36 @@ namespace Models
         /// </summary>
         /// <param name="options">The flags/switches given when calling models.exe.</param>
         /// <param name="files">the file name strings provided.</param>
-        /// <param name="configFileDirectory">The parent directory where the config file is located.</param>
         /// <param name="commandsList">Contains an string array element for each line in the configFile. </param>
         /// <exception cref="Exception"></exception>
-        private static void DoCommands(Options options, string[] files, string configFileDirectory, List<string> commandsList)
+        private static void DoCommands(Options options, string[] files, List<string> commandsList)
         {
-            if (files.Length > 0)
+            if (options.Batch != null)
             {
-                ApplyRunManager applyRunManager = new();
-
-                if (options.Batch != null)
+                if (File.Exists(options.Batch) && Path.GetExtension(options.Batch).Equals(".csv"))
                 {
-                    BatchFile batchFile = new(options.Batch);
+                    using var streamReader = new StreamReader(options.Batch);
+                    var dataTable = DataTableUtilities.FromCSV(options.Batch, streamReader.ReadToEnd());
+
                     foreach (string file in files)
                     {
-                        foreach (DataRow row in batchFile.DataTable.Rows)
+                        foreach (DataRow row in dataTable.Rows)
                         {
-                            ExecuteCommands(options,
-                            configFileDirectory,
-                            commandsList,
-                            ref applyRunManager,
-                            file,
-                            row);
+                            var dict = row.Table.Columns
+                                          .Cast<DataColumn>()
+                                          .ToDictionary(c => c.ColumnName, c => row[c].ToString());
+
+                            for (int i = 0; i < commandsList.Count; i++)
+                                commandsList[i] = Macro.Replace(commandsList[i], dict);
+                            ExecuteCommands(options, commandsList, file, row);
                         }
                     }
                 }
-                else
-                {
-                    foreach (string file in files)
-                    {
-                        ExecuteCommands(options,
-                        configFileDirectory,
-                        commandsList,
-                        ref applyRunManager,
-                        file);
-                    }
-                }
-
             }
-            // If no apsimx file path included proceeding --apply switch...
-            else if (files.Length < 1)
+            else
             {
-                ApplyRunManager applyRunConfiguration = new();
-                if (options.Batch != null)
-                {
-                    BatchFile batchFile = new(options.Batch);
-                    foreach (DataRow row in batchFile.DataTable.Rows)
-                    {
-                        ExecuteCommands(options,
-                            configFileDirectory,
-                            commandsList,
-                            ref applyRunConfiguration,
-                            row);
-                    }
-                }
-                else ExecuteCommands(options,
-                    configFileDirectory,
-                    commandsList,
-                    ref applyRunConfiguration);
+                foreach (string file in files)
+                    ExecuteCommands(options, commandsList, file);
             }
         }
 
@@ -319,282 +292,43 @@ namespace Models
         /// Executes the list of commands. Used when files are included as an argument in Models call.
         /// </summary>
         /// <param name="options">Arguments from Models call.</param>
-        /// <param name="configFileDirectory">The directory from where Models call was executed.</param>
         /// <param name="commandsList">A list of commands.</param>
-        /// <param name="applyRunManager">An ApplyRunManager object that holds file paths, temporary simulations and settings.</param>
         /// <param name="file">The name of the file.</param>
         /// <param name="row"></param>
-        private static void ExecuteCommands(Options options, string configFileDirectory, List<string> commandsList, ref ApplyRunManager applyRunManager, string file, DataRow row = null)
+        private static void ExecuteCommands(Options options, List<string> commandsList, string file, DataRow row = null)
         {
-            foreach (string command in commandsList)
+            var rowValues = row.Table.Columns
+                                     .Cast<DataColumn>()
+                                     .ToDictionary(c => c.ColumnName, c => row[c].ToString());
+
+            for (int i = 0; i < commandsList.Count; i++)
             {
-                string configured_command = null;
-                if (row != null)
-                    configured_command = ConfigFile.ReplaceBatchFilePlaceholders(command, row, row.Table.Rows.IndexOf(row));
-                else configured_command = command;
-            }
-
-            RunAPSIM runner = new();
-            var commands = CommandLanguage.StringToCommands(commandsList, applyRunManager.TempSim);
-            CommandProcessor processor = new(commands, runner);
-            processor.Run(applyRunManager.TempSim);
-        }
-
-        /// <summary>
-        /// A class that can run APSIM. It is called from the command system.
-        /// </summary>
-        public class RunAPSIM : IRunAPSIM
-        {
-            bool runTests;
-            Runner.RunTypeEnum runType;
-            int numProcessors;
-            string regex;
-
-
-            public void Run(bool runTests, Runner.RunTypeEnum runType, int numProcessors, string regex)
-            {
+                if (row != null && commandsList[i].Contains('$'))
+                    commandsList[i] = Macro.Replace(commandsList[i], rowValues);
 
             }
 
-            /// <summary>
-            /// Run APSIM
-            /// </summary>
-            /// <param name="relativeTo">The model that defines the scope for running APSIM.</param>
-            public void Run(INodeModel relativeTo)
-            {
-                var runner = new Runner((IModel) relativeTo,
-                                        runSimulations: true,
-                                        runPostSimulationTools: true,
-                                        runTests,
-                                        runType: runType,
-                                        numberOfProcessors: numProcessors,
-                                        simulationNamePatternMatch: regex);
-                runner.SimulationCompleted += OnJobCompleted;
-                if (options.Verbose)
-                    runner.SimulationCompleted += WriteCompleteMessage;
-                if (options.ExportToCsv)
-                    runner.SimulationGroupCompleted += OnSimulationGroupCompleted;
-                runner.AllSimulationsCompleted += OnAllJobsCompleted;
-                runner.Run();
-                runner.DisposeStorage();
-
-                //dispose of temp datastore
-                if (tempSim != null)
-                {
-                    DataStore ds = tempSim.Node.FindChild<DataStore>(recurse: true);
-                    if (ds != null)
-                        ds.Dispose();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Executes the list of commands. Used when files are NOT included as an argument in Models call.
-        /// </summary>
-        /// <param name="options"></param>
-        /// <param name="configFileDirectory"></param>
-        /// <param name="commandsList"></param>
-        /// <param name="applyRunManager"></param>
-        /// <param name="row"></param>
-        private static void ExecuteCommands(Options options, string configFileDirectory, List<string> commandsList, ref ApplyRunManager applyRunManager, DataRow row = null)
-        {
-            foreach (string command in commandsList)
-            {
-                string configured_command = null;
-                if (row != null)
-                    configured_command = ConfigFile.ReplaceBatchFilePlaceholders(command, row, row.Table.Rows.IndexOf(row));
-                else configured_command = command;
-
-                string[] splitCommand = configured_command.Split(' ', '=');
-                ConfigureCommandRun(splitCommand, configFileDirectory, ref applyRunManager);
-
-                // Throw if the first command is not a save or load command.
-                if (String.IsNullOrEmpty(applyRunManager.LoadPath) && String.IsNullOrEmpty(applyRunManager.SavePath))
-                {
-                    throw new Exception("First command in a config file can only be either a " +
-                        "save or load command if no apsimx file is included.");
-                }
-
-                // As long as a file can be loaded any other command can be run.
-                if (!String.IsNullOrEmpty(applyRunManager.LoadPath))
-                {
-                    // Temporary sim for holding changes.
-                    Simulations sim = null;
-
-                    if (applyRunManager.TempSim != null)
-                        sim = ConfigFile.RunConfigCommands(applyRunManager.TempSim, configured_command, configFileDirectory) as Simulations;
-
-                    if (!String.IsNullOrEmpty(applyRunManager.LoadPath) && !String.IsNullOrEmpty(applyRunManager.SavePath))
-                    {
-                        sim.Write(sim.FileName, applyRunManager.SavePath);
-                        applyRunManager.LastSaveFilePath = applyRunManager.SavePath;
-                        applyRunManager.SavePath = "";
-                    }
-
-                    if (applyRunManager.IsSimToBeRun)
-                    {
-                        RunModifiedApsimxFile(options, applyRunManager.LoadPath, applyRunManager.TempSim, sim, applyRunManager.OriginalFilePath, applyRunManager.LastSaveFilePath);
-                        applyRunManager.IsSimToBeRun = false;
-                    }
-                }
-                else if (!string.IsNullOrEmpty(applyRunManager.SavePath))
-                {
-                    // Create a new simulation as an existing apsimx file was not included.
-                    Simulations sim = CreateMinimalSimulation();
-                    sim.Write(sim.FileName, applyRunManager.SavePath);
-                    applyRunManager.SavePath = "";
-                }
-                else throw new Exception("--apply switch used without apsimx file and no load command. Include a load command in the config file.");
-            }
-        }
-
-        /// <summary>
-        /// Writes a temporary file into an existing file and runs the file.
-        /// </summary>
-        /// <param name="options">command line flags/switches.</param>
-        /// <param name="filePath">The apsimx file to be overwritten.</param>
-        /// <param name="tempSim">The apsimx file to overwrite original.</param>
-        /// <param name="sim"></param>
-        /// <param name="originalFilePath"></param>
-        /// <param name="lastSaveFilePath"></param>
-        private static void RunModifiedApsimxFile(Options options, string filePath, Simulations tempSim, Simulations sim, string originalFilePath, string lastSaveFilePath)
-        {
-            Runner runner = null;
-            string extension = Path.GetExtension(filePath);
-            if (extension != ".temp" || tempSim.FileName.Equals(originalFilePath))
-            {
-
-                if (lastSaveFilePath != originalFilePath)
-                {
-                    File.Copy(tempSim.FileName, lastSaveFilePath, true);
-                    sim = FileFormat.ReadFromFile<Simulations>(lastSaveFilePath).Model as Simulations;
-                }
-                else
-                {
-                    File.Copy(tempSim.FileName, filePath, true);
-                    sim = FileFormat.ReadFromFile<Simulations>(tempSim.FileName).Model as Simulations;
-                }
-            }
-            else
-            {
-                if (!File.Exists(filePath))
-                    sim.Write(filePath);
-
-                if (string.IsNullOrWhiteSpace(lastSaveFilePath))
-                {
-                    tempSim.Write(filePath);
-                    File.Copy(filePath, originalFilePath, true);
-                    lastSaveFilePath = originalFilePath;
-                }
-                else File.Copy(filePath, lastSaveFilePath, true);
-
-                sim = FileFormat.ReadFromFile<Simulations>(lastSaveFilePath).Model as Simulations;
-
-            }
-
-            if (options.InMemoryDB)
-                sim.Node.FindChild<DataStore>().UseInMemoryDB = true;
-
-            if (!string.IsNullOrEmpty(options.Playlist))
-            {
-                runner = CreateRunnerForPlaylistOption(options, new string[] { sim.FileName });
-            }
-            else
-            {
-                runner = new Runner(sim,
-                                    true,
-                                    true,
+            var runner = new Runner(relativeTo: null as IModel,
+                                    runSimulations: true,
+                                    runPostSimulationTools: true,
                                     options.RunTests,
                                     runType: options.RunType,
                                     numberOfProcessors: options.NumProcessors,
                                     simulationNamePatternMatch: options.SimulationNameRegex);
+            runner.SimulationCompleted += OnJobCompleted;
+            if (options.Verbose)
+                runner.SimulationCompleted += WriteCompleteMessage;
+            if (options.ExportToCsv)
+                runner.SimulationGroupCompleted += OnSimulationGroupCompleted;
+            runner.AllSimulationsCompleted += OnAllJobsCompleted;
 
-            }
+            // Insert a load command at top of commands list.
+            if (file != null)
+                commandsList.Insert(0, $"load {file}");
 
-            RunSimulations(runner, options);
-            runner.DisposeStorage();
-
-            //dispose of temp datastore
-            if (tempSim != null)
-            {
-                DataStore ds = tempSim.Node.FindChild<DataStore>(recurse: true);
-                if (ds != null)
-                    ds.Dispose();
-            }
-        }
-
-        /// <summary>
-        /// Configures settings for running a single command.
-        /// </summary>
-        /// <param name="splitCommand">An array of the command splits.</param>
-        /// <param name="configFileDirectory">A string path to directory housing the config file.</param>
-        /// <param name="applyRunManager"> An ApplyRunManager reference.</param>
-
-        private static void ConfigureCommandRun(string[] splitCommand, string configFileDirectory, ref ApplyRunManager applyRunManager)
-        {
-            if (splitCommand[0] == "save")
-                applyRunManager.SavePath = CreateFullSavePath(configFileDirectory, splitCommand);
-            else if (splitCommand[0] == "load")
-            {
-                applyRunManager.TempSim = CreateTempApsimxFile(configFileDirectory, splitCommand[0], splitCommand);
-                applyRunManager.LoadPath = Path.Combine(configFileDirectory, applyRunManager.TempSim.FileName);
-                applyRunManager.OriginalFilePath = Path.Combine(configFileDirectory, splitCommand[1]);
-            }
-            else if (splitCommand[0] == "run")
-                applyRunManager.IsSimToBeRun = true;
-        }
-
-        /// <summary>
-        /// Creates a temporary apsimx file for holding changes.
-        /// </summary>
-        /// <param name="configFileDirectory"></param>
-        /// <param name="file"></param>
-        /// <param name="splitCommand"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        private static Simulations CreateTempApsimxFile(string configFileDirectory, string file, string[] splitCommand)
-        {
-            Simulations tempSim = null;
-            string fullLoadPath = CreateFullLoadPath(configFileDirectory, file, splitCommand);
-            List<string> filePathSplits = fullLoadPath.Split('.', '/', '\\').ToList();
-            if (filePathSplits.Count >= 2)
-            {
-                tempSim = FileFormat.ReadFromFile<Simulations>(fullLoadPath).Model as Simulations;
-                tempSim.FileName = Path.GetFileNameWithoutExtension(fullLoadPath) + "temp.apsimx.temp";
-                File.WriteAllText(tempSim.FileName, tempSim.Node.ToJSONString());
-            }
-            else
-                throw new Exception($"There was an error creating a new temporary file. The path causing issues was: {file}");
-            return tempSim;
-        }
-
-
-        /// <summary>
-        /// Creates a save path string.
-        /// </summary>
-        /// <param name="configFileDirectory"></param>
-        /// <param name="firstSplitCommand"></param>
-        /// <returns></returns>
-        private static string CreateFullSavePath(string configFileDirectory, string[] firstSplitCommand)
-        {
-            return configFileDirectory + Path.DirectorySeparatorChar + firstSplitCommand[1];
-        }
-
-        /// <summary>
-        /// Creates a full path to an apsimx file.
-        /// </summary>
-        /// <param name="configFileDirectory">The directory where the configFile is located.</param>
-        /// <param name="loadPath">The name of the file or a full path of apsimx file.</param>
-        /// <param name="splitCommand">An array of substrings of a command.</param>
-        /// <returns></returns>
-        private static string CreateFullLoadPath(string configFileDirectory, string loadPath, string[] splitCommand)
-        {
-            string fileName = null;
-            if (splitCommand[0] == "load")
-                fileName = splitCommand[1];
-            else
-                fileName = Path.GetFileName(loadPath);
-            return configFileDirectory + Path.DirectorySeparatorChar + fileName;
+            var commands = CommandLanguage.StringToCommands(commandsList, relativeTo:null);
+            CommandProcessor processor = new(commands, runner);
+            processor.Run(relativeTo: null);
         }
 
         /// <summary>
@@ -783,7 +517,7 @@ namespace Models
         }
 
         /// <summary>All jobs have completed</summary>
-        private static void OnAllJobsCompleted(object sender, Runner.AllJobsCompletedArgs e)
+        private static void OnAllJobsCompleted(object sender, IRunner.AllJobsCompletedArgs e)
         {
             if (sender is Runner runner)
                 (sender as Runner).DisposeStorage();

@@ -22,12 +22,11 @@ internal partial class SetPropertiesCommand : IModelCommand
     /// </summary>
     /// <param name="relativeTo">The model the commands are relative to.</param>
     /// <param name="runner">An instance of an APSIM runner.</param>
-    INodeModel IModelCommand.Run(INodeModel relativeTo, IRunAPSIM runner)
+    INodeModel IModelCommand.Run(INodeModel relativeTo, IRunner runner)
     {
         // Convert value into correct type.
-        var obj = relativeTo.Node.GetObject(name);
-        var valueOfCorrentType = ApsimConvert.ToType(value, obj.DataType);
-        obj.Value = valueOfCorrentType;
+        var obj = relativeTo.Node.GetObject(name) ?? throw new Exception($"Cannot find property {name}");
+        obj.Value = ApsimConvert.ToType(value, obj.DataType);
         return relativeTo;
     }
 }

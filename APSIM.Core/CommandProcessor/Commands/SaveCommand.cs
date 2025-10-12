@@ -22,11 +22,14 @@ internal partial class SaveCommand : IModelCommand
     /// </summary>
     /// <param name="relativeTo">The model the commands are relative to.</param>
     /// <param name="runner">An instance of an APSIM runner.</param>
-    INodeModel IModelCommand.Run(INodeModel relativeTo, IRunAPSIM runner)
+    INodeModel IModelCommand.Run(INodeModel relativeTo, IRunner runner)
     {
         // Write to file.
         string json = FileFormat.WriteToString(relativeTo.Node);
         File.WriteAllText(fileName, json);
+
+        // Change the filename property
+        relativeTo.Node.FileName = fileName;
         return relativeTo;
     }
 }

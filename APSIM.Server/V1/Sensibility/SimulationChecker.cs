@@ -5,6 +5,7 @@ using Models.Core;
 using Models.Core.Run;
 using System.Threading.Tasks;
 using System.Threading;
+using APSIM.Core;
 
 namespace APSIM.Server.Sensibility
 {
@@ -42,6 +43,19 @@ namespace APSIM.Server.Sensibility
             runner.Use(new SimulationCheckerJobRunner());
         }
 
+        event EventHandler<IRunner.AllJobsCompletedArgs> IRunner.AllSimulationsCompleted
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         /// <inheritdoc />
         public Action<Exception> ErrorHandler { get => runner.ErrorHandler; set => runner.ErrorHandler = value; }
 
@@ -49,7 +63,7 @@ namespace APSIM.Server.Sensibility
         public double Progress => finishedFirstRun ? 1 : runner.Progress;
 
         /// <summary>
-        /// Custom status message. If null, the job runner's internal 
+        /// Custom status message. If null, the job runner's internal
         /// status will be retrieved.
         /// </summary>
         private string status;
@@ -58,7 +72,7 @@ namespace APSIM.Server.Sensibility
         public string Status => status ?? runner.Status;
 
         /// <inheritdoc />
-        public event EventHandler<Runner.AllJobsCompletedArgs> AllSimulationsCompleted;
+        public event EventHandler<IRunner.AllJobsCompletedArgs> AllSimulationsCompleted;
 
         /// <summary>
         /// Verify that an .apsimx file correctly zeroes/resets its state
@@ -83,7 +97,7 @@ namespace APSIM.Server.Sensibility
         /// <summary>
         /// Verify that an .apsimx file correctly zeroes/resets its state
         /// between runs.
-        /// 
+        ///
         /// This method will block.
         /// </summary>
         /// <param name="model">
@@ -110,7 +124,7 @@ namespace APSIM.Server.Sensibility
             errors = runner.Run();
             DateTime finishTime = DateTime.Now;
 
-            Runner.AllJobsCompletedArgs args = new Runner.AllJobsCompletedArgs();
+            IRunner.AllJobsCompletedArgs args = new IRunner.AllJobsCompletedArgs();
             args.AllExceptionsThrown = errors;
             args.ElapsedTime = finishTime - startTime;
             AllSimulationsCompleted?.Invoke(this, args);
@@ -123,6 +137,11 @@ namespace APSIM.Server.Sensibility
         {
             cts.Cancel();
             runner.Stop();
+        }
+
+        public void Run(INodeModel relativeTo)
+        {
+            throw new NotImplementedException();
         }
     }
 }

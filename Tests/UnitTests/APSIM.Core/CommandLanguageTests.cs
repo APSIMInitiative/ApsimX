@@ -23,4 +23,13 @@ public class CommandLanguageTests
         var commands = CommandLanguage.StringToCommands([commandString], relativeTo: null);
         Assert.That(commands.First().ToString(), Is.EqualTo(commandString));
     }
+
+    // Ensure commented lines are ignored.
+    [Test]
+    [TestCase("# Commented line")]
+    public void EnsureCommentedLinesAreIgnored(string commandString)
+    {
+        var commands = CommandLanguage.StringToCommands([commandString], relativeTo: null);
+        Assert.That(commands.Any(), Is.False);
+    }
 }

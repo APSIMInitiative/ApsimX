@@ -20,11 +20,10 @@ internal partial class LoadCommand : IModelCommand
     /// </summary>
     /// <param name="relativeTo">The model the commands are relative to.</param>
     /// <param name="runner">An instance of an APSIM runner.</param>
-    INodeModel IModelCommand.Run(INodeModel relativeTo, IRunAPSIM runner)
+    INodeModel IModelCommand.Run(INodeModel relativeTo, IRunner runner)
     {
         var simulationsType = ModelRegistry.ModelNameToType("Simulations");
-        string json = File.ReadAllText(fileName);
-        (var externalRootNode, var didConvert, var jsonObject) = FileFormat.ReadFromStringAndReturnConvertState(json, simulationsType);
+        var externalRootNode = FileFormat.ReadFromFile(fileName, simulationsType);
         return externalRootNode.Model;
     }
 }

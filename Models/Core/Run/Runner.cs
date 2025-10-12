@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.JobRunning;
 using APSIM.Shared.Utilities;
@@ -52,6 +53,21 @@ namespace Models.Core.Run
         /// </summary>
         /// <value></value>
         public Action<Exception> ErrorHandler { get; set; }
+
+        /// <summary>Run simulations?</summary>
+        public bool runSimulations { get; set; }
+
+        /// <summary>Run post simulation tools?</summary>
+        public bool runPostSimulationTools { get; set; }
+
+        /// <summary>Run tests?</summary>
+        public bool runTests { get; set; }
+
+        /// <summary>Only run these simulations.</summary>
+        public IEnumerable<string> simulationNamesToRun { get; set; }
+
+        /// <summary>A regular expression used to match simulation names to run.</summary>
+        public string simulationNamePatternMatch { get; set; }
 
         /// <summary>
         /// Gets the aggregate progress of all jobs as a real number in range [0, 1].
@@ -120,9 +136,14 @@ namespace Models.Core.Run
                       int numberOfProcessors = -1,
                       string simulationNamePatternMatch = null)
         {
+            this.runSimulations = runSimulations;
+            this.runPostSimulationTools = runPostSimulationTools;
+            this.runTests = runTests;
+            this.simulationNamesToRun = simulationNamesToRun;
             this.runType = runType;
             this.wait = wait;
             this.numberOfProcessors = numberOfProcessors;
+            this.simulationNamePatternMatch = simulationNamePatternMatch;
 
             foreach (IModel model in relativeTo)
             {
@@ -152,9 +173,14 @@ namespace Models.Core.Run
                       int numberOfProcessors = -1,
                       string simulationNamePatternMatch = null)
         {
+            this.runSimulations = runSimulations;
+            this.runPostSimulationTools = runPostSimulationTools;
+            this.runTests = runTests;
+            this.simulationNamesToRun = simulationNamesToRun;
             this.runType = runType;
             this.wait = wait;
             this.numberOfProcessors = numberOfProcessors;
+            this.simulationNamePatternMatch = simulationNamePatternMatch;
 
             var simulationGroup = new SimulationGroup(relativeTo, runSimulations, runPostSimulationTools, runTests, simulationNamesToRun, simulationNamePatternMatch);
             simulationGroup.Completed += OnSimulationGroupCompleted;
@@ -230,7 +256,7 @@ namespace Models.Core.Run
         public event EventHandler<EventArgs> SimulationGroupCompleted;
 
         /// <summary>Invoked when all jobs are completed.</summary>
-        public event EventHandler<AllJobsCompletedArgs> AllSimulationsCompleted;
+        public event EventHandler<IRunner.AllJobsCompletedArgs> AllSimulationsCompleted;
 
         /// <summary>A list of exceptions thrown during simulation runs. Will be null when no exceptions found.</summary>
         public List<Exception> ExceptionsThrown { get; private set; }
@@ -343,7 +369,7 @@ namespace Models.Core.Run
                         job.PrePostExceptionsThrown.ForEach(ex => AddException(ex));
 
                 AllSimulationsCompleted?.Invoke(this,
-                    new AllJobsCompletedArgs()
+                    new IRunner.AllJobsCompletedArgs()
                     {
                         AllExceptionsThrown = ExceptionsThrown,
                         ElapsedTime = ElapsedTime
@@ -371,15 +397,6 @@ namespace Models.Core.Run
             }
         }
 
-        /// <summary>Arguments for all jobs completed event.</summary>
-        public class AllJobsCompletedArgs
-        {
-            /// <summary>The exception thrown by the job. Can be null for no exception.</summary>
-            public List<Exception> AllExceptionsThrown { get; set; }
-
-            /// <summary>Amount of time all jobs took to run.</summary>
-            public TimeSpan ElapsedTime { get; set; }
-        }
 
         /// <summary>
         /// Dispose (close) the Datastore. Use with caution!
@@ -391,6 +408,21 @@ namespace Models.Core.Run
             foreach (var job in jobs)
                 if (job is SimulationGroup)
                     (job as SimulationGroup).DisposeStorage();
+        }
+
+        /// <summary>
+        /// Run APSIM for all simulations.
+        /// </summary>
+        /// <param name="relativeTo">The model that defines the scope for running APSIM.</param>
+        public void Run(INodeModel relativeTo)
+        {
+            // Remove old jobs
+            jobs.Clear();
+
+            var simulationGroup = new SimulationGroup((IModel)relativeTo, runSimulations, runPostSimulationTools, runTests, simulationNamesToRun, simulationNamePatternMatch);
+            simulationGroup.Completed += OnSimulationGroupCompleted;
+            jobs.Add(simulationGroup);
+            Run();
         }
     }
 }

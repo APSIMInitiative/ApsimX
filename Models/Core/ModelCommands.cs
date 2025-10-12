@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using APSIM.Core;
+using Models.Core.Run;
 using Newtonsoft.Json;
 
 namespace Models.Core;
@@ -25,7 +26,11 @@ public class ModelCommands : Model, ILineEditor
     /// </summary>
     public void Run()
     {
-        var processor = new CommandProcessor(CommandLanguage.StringToCommands(Lines, this));
+        var runner = new Runner(this);
+        //runner.SimulationCompleted += OnJobCompleted;
+        //runner.AllSimulationsCompleted += OnAllJobsCompleted;
+
+        var processor = new CommandProcessor(CommandLanguage.StringToCommands(Lines, this), runner);
         processor.Run(this);
     }
 

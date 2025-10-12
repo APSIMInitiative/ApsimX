@@ -3,6 +3,7 @@ using Models.Core;
 using NUnit.Framework;
 using System.IO;
 using System.Linq;
+using UnitTests.Core.Run;
 
 namespace APSIM.Core.Tests;
 
@@ -28,7 +29,7 @@ public class CommandTests
         IModelCommand cmd = new AddCommand(modelReference: new NewModelReference("Report"),
                                            toPath: "[Simulation]",
                                            multiple: false);
-        cmd.Run(simulation);
+        cmd.Run(simulation, runner: null);
 
         Assert.That(simulation.Children[0], Is.InstanceOf(typeof(Models.Report)));
     }
@@ -45,7 +46,7 @@ public class CommandTests
                                            multiple: false,
                                            newName: "NewReport");
 
-        cmd.Run(simulation);
+        cmd.Run(simulation, runner: null);
 
         Assert.That(simulation.Children[0].Name, Is.EqualTo("NewReport"));
     }
@@ -77,7 +78,7 @@ public class CommandTests
                                            toPath: "[Simulation]",
                                            multiple: false,
                                            newName: "NewReport");
-        cmd.Run(simulation);
+        cmd.Run(simulation, runner: null);
 
         // Make sure report was added.
         Assert.That(simulation.Children[0].Name, Is.EqualTo("NewReport"));
@@ -100,7 +101,7 @@ public class CommandTests
         Node.Create(simulation);
 
         IModelCommand cmd = new DeleteCommand(modelName: "Report");
-        cmd.Run(simulation);
+        cmd.Run(simulation, runner: null);
 
         Assert.That(simulation.Children.Count, Is.EqualTo(0));
     }
@@ -119,7 +120,7 @@ public class CommandTests
         Node.Create(simulation);
 
         IModelCommand cmd = new DuplicateCommand(modelName: "Report", newName: "NewReport");
-        cmd.Run(simulation);
+        cmd.Run(simulation, runner: null);
 
         Assert.That(simulation.Children.Count, Is.EqualTo(2));
         Assert.That(simulation.Children[1], Is.InstanceOf<Report>());
@@ -143,11 +144,14 @@ public class CommandTests
         // Run the save command.
         string tempFilePath = Path.GetTempFileName();
         IModelCommand cmd = new SaveCommand(fileName: tempFilePath);
-        cmd.Run(simulations);
+        var saveModel = cmd.Run(simulations, runner: null);
 
         Assert.That(File.Exists(tempFilePath));
         Node simulationsReadIn = FileFormat.ReadFromFile<Simulations>(tempFilePath);
         Assert.That(simulationsReadIn.Children.First().Name, Is.EqualTo("Report"));
+
+        // Ensure the save command also changed Node.FileName
+        Assert.That(saveModel.Node.FileName, Is.EqualTo(tempFilePath));
     }
 
     /// <summary>Ensure the set properties command works.</summary>
@@ -168,7 +172,7 @@ public class CommandTests
         Node.Create(simulation);
 
         IModelCommand cmd = new SetPropertiesCommand("[Clock].StartDate", "2000-01-01");
-        cmd.Run(simulation);
+        cmd.Run(simulation, runner: null);
 
         var clock = simulation.Children.First() as Clock;
         Assert.That(clock.StartDate, Is.EqualTo(new System.DateTime(2000, 1, 1)));
@@ -190,13 +194,37 @@ public class CommandTests
 
         // Run the save command.
         string tempFilePath = Path.GetTempFileName();
-        CommandProcessor commands = new([new SaveCommand(fileName: tempFilePath)]);
+        CommandProcessor commands = new([new SaveCommand(fileName: tempFilePath)], runner: null);
         commands.Run(simulations);
 
         // Run load command. It should return a relativeTo that is from the temp file.
         IModelCommand loadCommand = new LoadCommand(tempFilePath);
-        var relativeTo = loadCommand.Run(relativeTo: null);
+        var relativeTo = loadCommand.Run(relativeTo: null, runner: null);
 
         Assert.That(relativeTo.GetChildren().First().Name, Is.EqualTo("Report"));
+    }
+
+    /// <summary>Ensure the load command works.</summary>
+    [Test]
+    public void EnsureRunWorks()
+    {
+        // Create a simulation in memory.
+        Simulations simulations = new()
+        {
+            Children =
+            [
+                new Report() { Name = "Report" }
+            ]
+        };
+        Node.Create(simulations);
+
+        MockRunner mockRunner = new();
+
+        // Run the run command.
+        CommandProcessor commands = new([new RunCommand()], runner: mockRunner);
+        commands.Run(simulations);
+
+        Assert.That(mockRunner.RunCalled, Is.True);
+        Assert.That(mockRunner.RelativeTo, Is.EqualTo(simulations));
     }
 }

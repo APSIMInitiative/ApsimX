@@ -1,3 +1,5 @@
+using APSIM.Shared.Utilities;
+
 namespace APSIM.Core;
 
 /// <summary>
@@ -47,18 +49,22 @@ public class CommandLanguage
         string command = null;
         foreach (var line in lines)
         {
-            if (line.StartsWith(' '))
+            // Strip commented characters.
+            var sanitisedLine = StringUtilities.RemoveAfter(line, '#');
+            sanitisedLine = sanitisedLine.TrimEnd();
+
+            if (sanitisedLine.StartsWith(' '))
             {
                 // Add to existing command.
-                command += line.Trim();
+                command += sanitisedLine.Trim();
             }
-            else
+            else if (sanitisedLine != string.Empty)
             {
                 // New command. If there is an existing command then add it to the commands collection.
                 if (command != null)
                     commands.Add(ConvertCommandParameterToModelCommand(command, relativeTo));
 
-                command = line.Trim();
+                command = sanitisedLine.Trim();
             }
         }
         if (command != null)

@@ -11,7 +11,7 @@ public class CommandProcessor
     private readonly List<IModelCommand> commands;
 
     /// <summary>A collection of commands to run.</summary>
-    private readonly IRunAPSIM runner;
+    private readonly IRunner runner;
 
 
     /// <summary>
@@ -19,7 +19,7 @@ public class CommandProcessor
     /// </summary>
     /// <param name="commands">A collection of commands.</param>
     /// <param name="runner">An instance of a class that can run APSIM</param>
-    public CommandProcessor(IEnumerable<IModelCommand> commands, IRunAPSIM runner)
+    public CommandProcessor(IEnumerable<IModelCommand> commands, IRunner runner)
     {
         this.commands = commands.ToList();
         this.runner = runner;

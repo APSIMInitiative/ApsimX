@@ -10,5 +10,5 @@ public interface IModelCommand
     /// </summary>
     /// <param name="relativeTo">The model the commands are relative to.</param>
     /// <param name="runner">An instance of an APSIM runner.</param>
-    internal INodeModel Run(INodeModel relativeTo, IRunAPSIM runner);
+    internal INodeModel Run(INodeModel relativeTo, IRunner runner);
 }

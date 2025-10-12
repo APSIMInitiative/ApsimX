@@ -25,9 +25,31 @@ public class FileFormat
 
     /// <summary>Create a simulations object by reading the specified filename.</summary>
     /// <param name="fileName">Name of the file.</param>
+    /// <param name="type">The object type to return</param>
+    /// <param name="errorHandler">Error handler to call on exception</param>
+    /// <param name="initInBackground">Initialise on a background thread?</param>
+    /// <returns></returns>
+    public static Node ReadFromFile(string fileName, Type type, Action<Exception> errorHandler = null, bool initInBackground = false)
+    {
+        return ReadFromFileAndReturnConvertState(fileName, type, errorHandler, initInBackground).head;
+    }
+
+    /// <summary>Create a simulations object by reading the specified filename.</summary>
+    /// <param name="fileName">Name of the file.</param>
     /// <param name="errorHandler">Error handler to call on exception</param>
     /// <param name="initInBackground">Initialise on a background thread?</param>
     public static (Node head, bool didConvert, JObject json) ReadFromFileAndReturnConvertState<T>(string fileName, Action<Exception> errorHandler = null, bool initInBackground = false)
+    {
+        return ReadFromFileAndReturnConvertState(fileName, typeof(T), errorHandler, initInBackground);
+    }
+
+
+    /// <summary>Create a simulations object by reading the specified filename.</summary>
+    /// <param name="fileName">Name of the file.</param>
+    /// <param name="type">The object type to return</param>
+    /// <param name="errorHandler">Error handler to call on exception</param>
+    /// <param name="initInBackground">Initialise on a background thread?</param>
+    public static (Node head, bool didConvert, JObject json) ReadFromFileAndReturnConvertState(string fileName, Type type, Action<Exception> errorHandler = null, bool initInBackground = false)
     {
         try
         {
@@ -35,7 +57,7 @@ public class FileFormat
                 throw new Exception("Cannot read file: " + fileName + ". File does not exist.");
 
             string contents = File.ReadAllText(fileName);
-            return ReadFromStringAndReturnConvertState(contents, typeof(T), errorHandler, initInBackground, fileName);
+            return ReadFromStringAndReturnConvertState(contents, type, errorHandler, initInBackground, fileName);
         }
         catch (Exception err)
         {
