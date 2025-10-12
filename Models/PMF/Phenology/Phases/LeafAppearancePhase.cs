@@ -20,9 +20,6 @@ namespace Models.PMF.Phen
     [ValidParent(ParentType = typeof(Phenology))]
     public class LeafAppearancePhase : Model, IPhase, IPhaseWithSetableCompletionDate
     {
-        // 1. Links
-        //----------------------------------------------------------------------------------------------------------------
-
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction FinalLeafNumber = null;
 
@@ -38,19 +35,21 @@ namespace Models.PMF.Phen
         [Link]
         private IClock clock = null;
 
-        //2. Private and protected fields
-        //-----------------------------------------------------------------------------------------------------------------
-
+        /// <summary>Leaves appeared when this phase is entered</summary>
+        [JsonIgnore]
         private double leafNoAtStart;
-        /// <summary>Flag for the first day of this phase</summary>
-        private bool first = true;
+        
+        /// <summary>relative progress through the phase yesterday</summary>
+        [JsonIgnore]
         private double fractionCompleteYesterday = 0;
-        private double targetLeafForCompletion = 0;
-        /// <summary>First date in this phase</summary>
-        private DateTime firstDate { get; set; }
 
-        //5. Public properties
-        //-----------------------------------------------------------------------------------------------------------------
+        /// <summary>The target for progresson to the next phase</summary>
+        [JsonIgnore]
+        private double target = 0;
+
+        /// <summary>First date in this phase</summary>
+        [JsonIgnore]
+        private DateTime startDate;
 
         /// <summary>The start</summary>
         [Description("Start")]
@@ -70,66 +69,42 @@ namespace Models.PMF.Phen
         {
             get
             {
-                if (String.IsNullOrEmpty(DateToProgress))
-                {
-                    double F = 0;
-                    F = (LeafNumber.Value() - leafNoAtStart) / targetLeafForCompletion;
-                    F = MathUtilities.Bound(F, 0, 1);
-                    return Math.Max(F, fractionCompleteYesterday); //Set to maximum of FractionCompleteYesterday so on days where final leaf number increases phenological stage is not wound back.
-                }
-                else 
-                {
-                    double dayDurationOfPhase = (DateUtilities.GetDate(DateToProgress) - firstDate).Days;
-                    double daysInPhase = (clock.Today - firstDate).Days;
-                    return daysInPhase / dayDurationOfPhase;
-                }
+                return Phenology.FractionComplete(DateToProgress, ProgressThroughPhase, target, startDate, clock.Today, fractionCompleteYesterday);
             }
         }
+
+        /// <summary>Accumulated units of progress through this phase.</summary>
+        [JsonIgnore]
+        public double ProgressThroughPhase { get; set; }
 
         /// <summary>Data to progress.  Is empty by default.  If set by external model, phase will ignore its mechanisum and wait for the specified date to progress</summary>
         [JsonIgnore]
         public string DateToProgress { get; set; } = "";
 
-        //6. Public method
-        //-----------------------------------------------------------------------------------------------------------------
-
         /// <summary>Do our timestep development</summary>
         public bool DoTimeStep(ref double propOfDayToUse)
         {
             bool proceedToNextPhase = false;
-
-            if (String.IsNullOrEmpty(DateToProgress))
+            if (!String.IsNullOrEmpty(DateToProgress))
             {
-                if (first)
-                {
-                    leafNoAtStart = LeafNumber.Value();
-                    targetLeafForCompletion = FinalLeafNumber.Value() - leafNoAtStart;
-                    first = false;
-                }
-
-                fractionCompleteYesterday = FractionComplete;
-
-                //if (leaf.ExpandedCohortNo >= (leaf.InitialisedCohortNo))
-                if (FullyExpandedLeafNo.Value() >= InitialisedLeafNumber.Value())
-                {
-                    proceedToNextPhase = true;
-                    propOfDayToUse = 0.00001;  //assumes we use most of the Tt today to get to final leaf.  Should be calculated as a function of the phyllochron
-                }
-            }
-            else
-            {
-                if (first)
-                {
-                    firstDate = clock.Today;
-                    first = false;
-                }
-                if (DateUtilities.DatesAreEqual(DateToProgress, clock.Today))
-                {
-                    proceedToNextPhase = true;
-                    propOfDayToUse = 1;
-                }
+                return Phenology.checkIfCompletionDate(ref startDate, clock.Today, DateToProgress, ref propOfDayToUse);
             }
 
+            if (startDate == DateTime.MinValue)
+            {
+                leafNoAtStart = LeafNumber.Value();
+                target = FinalLeafNumber.Value() - leafNoAtStart;
+                startDate = clock.Today;
+            }
+
+            ProgressThroughPhase = LeafNumber.Value() - leafNoAtStart;
+            fractionCompleteYesterday = FractionComplete;
+
+            if (FullyExpandedLeafNo.Value() >= InitialisedLeafNumber.Value())
+            {
+                proceedToNextPhase = true;
+                propOfDayToUse = 0.00001;  //assumes we use most of the Tt today to get to final leaf.  Should be calculated as a function of the phyllochron
+            }
             return proceedToNextPhase;
         }
 
@@ -138,13 +113,10 @@ namespace Models.PMF.Phen
         {
             leafNoAtStart = 0;
             fractionCompleteYesterday = 0;
-            targetLeafForCompletion = 0;
-            first = true;
+            target = 0;
+            startDate = DateTime.MinValue;
             DateToProgress = "";
         }
-
-        //7. Private methode
-        //-----------------------------------------------------------------------------------------------------------------
 
         /// <summary>Called when [simulation commencing].</summary>
         [EventSubscribe("Commencing")]

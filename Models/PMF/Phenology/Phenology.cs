@@ -4,6 +4,8 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using APSIM.Core;
+using APSIM.Numerics;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
 using Models.PMF.Interfaces;
@@ -534,9 +536,63 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>
-        /// Returns a DataTable with each Phase listed
+        /// Calculates the fraction of completion through the phase if completion date is set
         /// </summary>
-        public DataTable GetPhaseTable()
+        /// <param name="dateToProgress"></param>
+        /// <param name="progressThroughPhase"></param>
+        /// <param name="target"></param>
+        /// <param name="firstDate"></param>
+        /// <param name="today"></param>
+        /// <param name="fractionCompleteYesterday"></param>
+        /// <returns></returns>
+        static public double FractionComplete(string dateToProgress, double progressThroughPhase, double target, DateTime firstDate, DateTime today, double fractionCompleteYesterday)
+        {
+            if (String.IsNullOrEmpty(dateToProgress))
+            {
+                if (target == 0)
+                    return 1;
+                else
+                {
+                    double F = progressThroughPhase / target;
+                    F = MathUtilities.Bound(F, 0, 1);
+                    return Math.Max(F, fractionCompleteYesterday);
+                }
+
+            }
+            else
+            {
+                double dayDurationOfPhase = (DateUtilities.GetDate(dateToProgress) - firstDate).Days;
+                double daysInPhase = (today - firstDate).Days;
+                return daysInPhase / dayDurationOfPhase;
+            }
+        }
+
+        /// <summary>
+        /// calcualates progression if completion date property is set
+        /// </summary>
+        /// <param name="firstDate"></param>
+        /// <param name="today"></param>
+        /// <param name="dateToProgress"></param>
+        /// <param name="propOfDayToUse"></param>
+        static public bool checkIfCompletionDate(ref DateTime firstDate, DateTime today, string dateToProgress, ref double propOfDayToUse)
+        {
+            if (firstDate == DateTime.MinValue)
+            {
+                firstDate = today;
+            }
+            bool proceedToNextPhase = false;
+            if (DateUtilities.DatesAreEqual(dateToProgress, today))
+            {
+                proceedToNextPhase = true;
+                propOfDayToUse = 1;
+            }
+            return proceedToNextPhase;
+        }
+
+/// <summary>
+/// Returns a DataTable with each Phase listed
+/// </summary>
+public DataTable GetPhaseTable()
         {
             DataTable phaseTable = new DataTable();
             phaseTable.Columns.Add("Phase Number", typeof(int));

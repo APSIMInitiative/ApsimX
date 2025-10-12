@@ -18,9 +18,6 @@ namespace Models.PMF.Phen
     [ValidParent(ParentType = typeof(Phenology))]
     public class EmergingPhase : Model, IPhase, IPhaseWithTarget, IPhaseWithSetableCompletionDate
     {
-        // 1. Links
-        //----------------------------------------------------------------------------------------------------------------
-
         [Link]
         Phenology phenology = null;
 
@@ -30,14 +27,13 @@ namespace Models.PMF.Phen
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction target = null;
 
+        /// <summary>Fraction of phase that is complete (0-1).on yesterdays timestep</summary>
+        [JsonIgnore]
+        private double fractionCompleteYesterday { get; set; }
+
         /// <summary>First date in this phase</summary>
-        private DateTime firstDate { get; set; }
-
-        /// <summary>Flag for the first day of this phase</summary>
-        private bool first { get; set; }
-
-        // 2. Public properties
-        //-----------------------------------------------------------------------------------------------------------------
+        [JsonIgnore]
+        private DateTime startDate;
 
         /// <summary>The phenological stage at the start of this phase.</summary>
         [Description("Start")]
@@ -51,27 +47,6 @@ namespace Models.PMF.Phen
         [Description("Is the phase emerged?")]
         public bool IsEmerged { get; set; } = false;
 
-        /// <summary>Fraction of phase that is complete (0-1).</summary>
-        [JsonIgnore]
-        public double FractionComplete
-        {
-            get
-            {
-                if (String.IsNullOrEmpty(DateToProgress))
-                {
-                    if (Target == 0)
-                        return 1;
-                    else
-                        return ProgressThroughPhase / Target;
-                }
-                else
-                {
-                    double dayDurationOfPhase = (DateUtilities.GetDate(DateToProgress) - firstDate).Days;
-                    double daysInPhase = (clock.Today - firstDate).Days;
-                    return daysInPhase / dayDurationOfPhase;
-                }
-            }
-        }
 
         /// <summary>Thermal time target to end this phase.</summary>
         [JsonIgnore]
@@ -88,42 +63,39 @@ namespace Models.PMF.Phen
         [JsonIgnore]
         public string DateToProgress { get; set; } = "";
 
-        // 3. Public methods
-        //-----------------------------------------------------------------------------------------------------------------
+        /// <summary>Fraction of phase that is complete (0-1).</summary>
+        [JsonIgnore]
+        public double FractionComplete
+        {
+            get
+            {
+                return Phenology.FractionComplete(DateToProgress, ProgressThroughPhase, Target, startDate, clock.Today, fractionCompleteYesterday);
+            }
+        }
 
         /// <summary>Computes the phenological development during one time-step.</summary>
         /// <remarks>Returns true when target is met.</remarks>
         public bool DoTimeStep(ref double propOfDayToUse)
         {
-            bool proceedToNextPhase = false;
-            if (String.IsNullOrEmpty(DateToProgress))
-            {
-                TTForTimeStep = phenology.thermalTime.Value() * propOfDayToUse;
 
-                ProgressThroughPhase += TTForTimeStep;
-                if (ProgressThroughPhase > Target)
-                {
-                    if (TTForTimeStep > 0.0)
-                    {
-                        proceedToNextPhase = true;
-                        propOfDayToUse = (ProgressThroughPhase - Target) / TTForTimeStep;
-                        TTForTimeStep *= (1 - propOfDayToUse);
-                    }
-                    ProgressThroughPhase = Target;
-                }
-            }
-            else
+            if (!String.IsNullOrEmpty(DateToProgress))
             {
-                if (first)
-                {
-                    firstDate = clock.Today;
-                    first = false;
-                }
-                if (DateUtilities.DatesAreEqual(DateToProgress, clock.Today))
+                return Phenology.checkIfCompletionDate(ref startDate, clock.Today, DateToProgress, ref propOfDayToUse);
+            }
+
+            bool proceedToNextPhase = false;
+            TTForTimeStep = phenology.thermalTime.Value() * propOfDayToUse;
+            ProgressThroughPhase += TTForTimeStep;
+            fractionCompleteYesterday = FractionComplete;
+            if (ProgressThroughPhase > Target)
+            {
+                if (TTForTimeStep > 0.0)
                 {
                     proceedToNextPhase = true;
-                    propOfDayToUse = 1;
+                    propOfDayToUse = (ProgressThroughPhase - Target) / TTForTimeStep;
+                    TTForTimeStep *= (1 - propOfDayToUse);
                 }
+                ProgressThroughPhase = Target;
             }
             return proceedToNextPhase;
         }
@@ -135,7 +107,7 @@ namespace Models.PMF.Phen
             ProgressThroughPhase = 0;
             Target = 0;
             DateToProgress = null;
-            first = true;
+            startDate = DateTime.MinValue;
         }
 
         // 4. Private method
