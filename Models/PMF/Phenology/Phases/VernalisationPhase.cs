@@ -67,7 +67,7 @@ namespace Models.PMF.Phen
 
         /// <summary>Thermal time target to end this phase.</summary>
         [JsonIgnore]
-        public double Target { get; set; }
+        public double Target { get; set; } = 1.0;
 
         /// <summary>Summarise gene expression from CAMP into phenological progress</summary>
         /// <remarks>Returns true when target is met.</remarks>
@@ -78,8 +78,8 @@ namespace Models.PMF.Phen
                 return Phenology.checkIfCompletionDate(ref startDate, clock.Today, DateToProgress, ref propOfDayToUse);
             }
 
-            Target = 1 + CAMP.Vrn2;
-            double RelativeVernalisation = Math.Min((CAMP.BaseVrn + CAMP.Vrn1 + CAMP.Vrn3) / Target, CAMP.MaxVrn);
+            double vrnTarget = 1 + CAMP.Vrn2;
+            double RelativeVernalisation = Math.Min((CAMP.BaseVrn + CAMP.Vrn1 + CAMP.Vrn3) / vrnTarget, CAMP.MaxVrn);
             if (startDate == DateTime.MinValue)
             {
                 relativeVernalisationAtEmergence = RelativeVernalisation;

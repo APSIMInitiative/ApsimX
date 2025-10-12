@@ -561,7 +561,7 @@ namespace Models.PMF.Phen
             }
             else
             {
-                double dayDurationOfPhase = (DateUtilities.GetDate(dateToProgress) - firstDate).Days;
+                double dayDurationOfPhase = (DateUtilities.GetDate(dateToProgress,today.Year) - firstDate).Days;
                 double daysInPhase = (today - firstDate).Days;
                 return daysInPhase / dayDurationOfPhase;
             }
@@ -584,7 +584,7 @@ namespace Models.PMF.Phen
             if (DateUtilities.DatesAreEqual(dateToProgress, today))
             {
                 proceedToNextPhase = true;
-                propOfDayToUse = 1;
+                propOfDayToUse = 0;
             }
             return proceedToNextPhase;
         }
