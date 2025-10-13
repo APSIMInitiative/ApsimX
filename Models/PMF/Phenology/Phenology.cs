@@ -589,7 +589,7 @@ namespace Models.PMF.Phen
             if (DateUtilities.DatesAreEqual(dateToProgress, today))
             {
                 proceedToNextPhase = true;
-                propOfDayToUse = 0;
+                propOfDayToUse = 1;
             }
             return proceedToNextPhase;
         }
