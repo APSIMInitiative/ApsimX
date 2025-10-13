@@ -4,54 +4,6 @@
 	"CopyObservedData":false,
 	"Groups": [
 		{
-			"Name":"Wheat-NPI2019WaggaWagga",
-			"Folders":["NPIField2019"],
-			"Experiments":["WaggaWagga"],
-			"Simulations":[]
-		},
-		{
-			"Name":"Wheat-NPI2019Callington",
-			"Folders":["NPIField2019"],
-			"Experiments":["Callington"],
-			"Simulations":[]
-		},
-		{
-			"Name":"Wheat-NPI2019Dale",
-			"Folders":["NPIField2019"],
-			"Experiments":["Dale"],
-			"Simulations":[]
-		},
-		{
-			"Name":"Wheat-NPI2019YanYean",
-			"Folders":["NPIField2019"],
-			"Experiments":["YanYean"],
-			"Simulations":[]
-		},
-		{
-			"Name":"Wheat-NPI2020WaggaWagga",
-			"Folders":["NPIField2020"],
-			"Experiments":["WaggaWagga2020"],
-			"Simulations":[]
-		},
-		{
-			"Name":"Wheat-NPI2020Urrbrae",
-			"Folders":["NPIField2020"],
-			"Experiments":["Urrbrae2020"],
-			"Simulations":[]
-		},
-		{
-			"Name":"Wheat-NPI2020Dale",
-			"Folders":["NPIField2020"],
-			"Experiments":["Dale2020"],
-			"Simulations":[]
-		},
-		{
-			"Name":"Wheat-NPI2020YanYean",
-			"Folders":["NPIField2020"],
-			"Experiments":["YanYean2020"],
-			"Simulations":[]
-		},
-		{
 			"Name":"Wheat-NPIValidation",
 			"Folders":["NPIValidation"],
 			"Experiments":[],
