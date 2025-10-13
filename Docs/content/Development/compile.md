@@ -6,9 +6,9 @@ weight: 20
 
 # Windows
 
-APSIM can be compiled using Microsoft Visual Studio 2019 or later. A single solution file exists in the root of the repository (ApsimX.sln). All executables will be built to the bin directory. The exact output path will depend upon whether the solution is built in debug or release mode. The default (debug) will output files to `bin\Debug\net8.0\`. APSIM currently can only be built against .NET 6.
+APSIM can be compiled using Microsoft Visual Studio 2019 or later. A single solution file exists in the root of the repository (ApsimX.sln). All executables will be built to the bin directory. The exact output path will depend upon whether the solution is built in debug or release mode. The default (debug) will output files to `bin\Debug\net8.0\`. APSIM currently can only be built against .NET 8.
 
-Building APSIM requires that version 6.0 of the .NET SDK is installed. This can be installed at the same time as Visual Studio. If Visual Studio is already installed, the installation can be modified by navigating to 'Tools\Get Tools and Features...' in the menu bar and modifying the existing installation by adding either the ".NET desktop development" or "Universal Windows Platform development" workload.
+Building APSIM requires that version 8.0 of the .NET SDK is installed. This can be installed at the same time as Visual Studio. If Visual Studio is already installed, the installation can be modified by navigating to 'Tools\Get Tools and Features...' in the menu bar and modifying the existing installation by adding either the ".NET desktop development" or "Universal Windows Platform development" workload.
 
 ![Install the .NET Core SDK](/images/vs-modify-workload.png)
 
@@ -20,9 +20,9 @@ Building APSIM requires that version 6.0 of the .NET SDK is installed. This can 
 # LINUX
 
 
-Apsim may be built with the .NET SDK - currently version 6.0 is required. When building the solution, assemblies for all projects will be compiled to the bin/ directory. The exact location of a given file will depend upon how it is built - e.g. debug vs release configuration.
+Apsim may be built with the .NET SDK - currently version 8.0 is required. When building the solution, assemblies for all projects will be compiled to the bin/ directory. The exact location of a given file will depend upon how it is built - e.g. debug vs release configuration.
 
-1. Install the .NET Core 6.0 SDK. The [dotnet-install script](https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-install-script) is a simple way to do this. Otherwise, consult [this page](https://docs.microsoft.com/en-us/dotnet/core/install/linux)
+1. Install the .NET Core 8.0 SDK. The [dotnet-install script](https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-install-script) is a simple way to do this. Otherwise, consult [this page](https://docs.microsoft.com/en-us/dotnet/core/install/linux)
 
 2. Install required packages
 
@@ -30,7 +30,7 @@ Apsim may be built with the .NET SDK - currently version 6.0 is required. When b
 	- git (required for obtaining the source code)
     - gtk-sharp3
 	- libgtksourceview-4-0
-	- dotnet-sdk-6.0
+	- dotnet-sdk-8.0
 
 3. Obtain source code
 
@@ -69,7 +69,7 @@ This error can occur on Debian (and its derivatives) when the sqlite3 package is
 When attempting to install apsim from our binary package:
 
 ```
-E: Unable to locate package dotnet-runtime-6.0
+E: Unable to locate package dotnet-runtime-8.0
 ```
 
 This package is not included in the official Debian repositories. You will need to follow the instructions on [this page](https://docs.microsoft.com/en-us/dotnet/core/install/linux) to install the package from microsoft's repositories.
@@ -85,7 +85,7 @@ APSIM can be compiled using Microsoft's [Visual Studio Code](https://code.visual
 
 3. Install [git](https://git-scm.com/downloads) and a git client, we recommend [Fork](https://git-fork.com/).
 
-4. Install the .NET 6 SDK. The SDK can be found [here](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) for your specific operating system.
+4. Install the .NET 8 SDK. The SDK can be found [here](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) for your specific operating system.
 
 5. Check that the SDK is installed by opening a terminal and running the command:
 
@@ -95,7 +95,7 @@ APSIM can be compiled using Microsoft's [Visual Studio Code](https://code.visual
     - You should see at least one line that says:
 
         ```
-        6.X.X
+        8.X.X
         ```
         - `x` is any number. The version numbers of a SDK may change over time.
         - There may be other lines with differing values. This is normal.
