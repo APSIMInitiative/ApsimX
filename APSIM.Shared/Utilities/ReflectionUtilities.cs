@@ -59,7 +59,7 @@
         public static List<PropertyInfo> GetAllProperties(Type type, BindingFlags flags, bool includeBase)
         {
             var list = new List<PropertyInfo>();
-            if (type == typeof(Object) || type == null) 
+            if (type == typeof(Object) || type == null)
                 return list;
 
             if (includeBase)
@@ -385,7 +385,7 @@
         }
 
         /// <summary>
-        /// Convert an object into a json string. 
+        /// Convert an object into a json string.
         /// </summary>
         /// <param name="source">The source object.</param>
         /// <param name="includePrivates">Serialise private members as well as publics?</param>
@@ -402,7 +402,7 @@
         }
 
         /// <summary>
-        /// Convert an object into a json stream. 
+        /// Convert an object into a json stream.
         /// </summary>
         /// <param name="source">The source object.</param>
         /// <returns>The string representation of the object.</returns>
@@ -425,9 +425,9 @@
 
             jStream.Position = 0; ;
             return jStream;
-            
+
         }
-        
+
         /// <summary>
         /// Convert a JSON stream into an object
         /// </summary>
@@ -454,7 +454,7 @@
                 object result = JsonConvert.DeserializeObject(jString, jSettings);
                 // Newtonsoft Json cannot readily determine the object type when
                 // deserializing a DataTable. If the DataTable is a field within another object,
-                // tagging with [JsonConverter(typeof(DataTableConverter))] fixes the problem, but 
+                // tagging with [JsonConverter(typeof(DataTableConverter))] fixes the problem, but
                 // a stand-alone DataTable is problematic, and will just deserialize to a JArray.
                 // This can be a problem in APSIM.Server and associated unit tests. Here we do
                 // a clumsy work-around by assuming a returned JArray should really be treated
@@ -466,7 +466,7 @@
                     return JsonConvert.DeserializeObject<System.Data.DataTable>(jString);
                 else
                     return result;
-            } 
+            }
         }
 
         ///<summary> Custom Contract resolver to stop deseralization of Parent properties </summary>
@@ -532,7 +532,7 @@
         };
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="dataType"></param>
         /// <returns></returns>
@@ -625,6 +625,13 @@
             {
                 return Convert.ChangeType(newValue, dataType, format);
             }
+            catch (FormatException fex)
+            {
+                if (dataType == typeof(DateTime))
+                    return DateUtilities.GetDate(newValue);
+                else
+                    throw new FormatException($"Unable to convert {newValue} to type {dataType}", fex);
+            }
             catch (Exception err)
             {
                 throw new FormatException($"Unable to convert {newValue} to type {dataType}", err);
@@ -675,6 +682,7 @@
         public static object Clone(object sourceObj)
         {
             DeepClonerExtensions.SetSuppressedAttributes(typeof(NonSerializedAttribute));
+            DeepClonerExtensions.SetSuppressedClassAttributes(typeof(NonSerializedClassAttribute));
             return sourceObj.DeepClone();
         }
 
@@ -769,7 +777,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="interfaceType"></param>
         /// <returns></returns>
@@ -784,7 +792,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="assembly"></param>
         /// <param name="interfaceType"></param>

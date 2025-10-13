@@ -121,7 +121,7 @@
 
             // Make sure we have a relative directory 
             string relativeDirectory = Path.GetDirectoryName(relativePath);
-            if (relativeDirectory != null)
+            if (!string.IsNullOrEmpty(relativeDirectory))
             {
                 // Try getting rid of the relative directory.
                 path = path.Replace(relativeDirectory + Path.DirectorySeparatorChar, "");  // the relative path should not have a preceding \

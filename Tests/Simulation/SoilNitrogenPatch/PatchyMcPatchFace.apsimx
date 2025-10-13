@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 200,
+  "Version": 201,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -783,7 +783,6 @@
                             },
                             {
                               "$type": "Models.Soils.NutrientPatching.NutrientPatchManager, Models",
-                              "MaximumNitrogenAvailableToPlants": 3.0,
                               "NPartitionApproach": 0,
                               "AutoAmalgamationApproach": 0,
                               "basePatchApproach": 0,
@@ -1505,7 +1504,6 @@
                             },
                             {
                               "$type": "Models.Soils.NutrientPatching.NutrientPatchManager, Models",
-                              "MaximumNitrogenAvailableToPlants": 3.0,
                               "NPartitionApproach": 0,
                               "AutoAmalgamationApproach": 0,
                               "basePatchApproach": 0,
@@ -2483,7 +2481,6 @@
                             },
                             {
                               "$type": "Models.Soils.NutrientPatching.NutrientPatchManager, Models",
-                              "MaximumNitrogenAvailableToPlants": 3.0,
                               "NPartitionApproach": 0,
                               "AutoAmalgamationApproach": 0,
                               "basePatchApproach": 0,
@@ -3413,7 +3410,6 @@
                             },
                             {
                               "$type": "Models.Soils.NutrientPatching.NutrientPatchManager, Models",
-                              "MaximumNitrogenAvailableToPlants": 3.0,
                               "NPartitionApproach": 0,
                               "AutoAmalgamationApproach": 0,
                               "basePatchApproach": 0,
@@ -4343,7 +4339,6 @@
                             },
                             {
                               "$type": "Models.Soils.NutrientPatching.NutrientPatchManager, Models",
-                              "MaximumNitrogenAvailableToPlants": 3.0,
                               "NPartitionApproach": 0,
                               "AutoAmalgamationApproach": 0,
                               "basePatchApproach": 0,
@@ -5273,7 +5268,6 @@
                             },
                             {
                               "$type": "Models.Soils.NutrientPatching.NutrientPatchManager, Models",
-                              "MaximumNitrogenAvailableToPlants": 3.0,
                               "NPartitionApproach": 0,
                               "AutoAmalgamationApproach": 0,
                               "basePatchApproach": 0,
@@ -6203,7 +6197,6 @@
                             },
                             {
                               "$type": "Models.Soils.NutrientPatching.NutrientPatchManager, Models",
-                              "MaximumNitrogenAvailableToPlants": 3.0,
                               "NPartitionApproach": 0,
                               "AutoAmalgamationApproach": 0,
                               "basePatchApproach": 0,
@@ -6380,7 +6373,7 @@
                 "        [Description(\"Depth of urine penetration (mm)\")]",
                 "        public double UrineDepthPenetration { get; set; }",
                 "        ",
-                "        [Description(\"Maximum effective NO3-N or NH4-N concentration for uptake (g N / Mg soil)\")]",
+                "        [Description(\"Maximum effective NO3-N or NH4-N concentration for uptake for PseudoPatches only (g N / Mg soil)\")]",
                 "        public double MaxEffectiveNConcentration { get; set; }",
                 "",
                 "",
@@ -6526,11 +6519,11 @@
                 "                    for (int i = 0; i <= (soilPhysical.Thickness.Length - 1); i++)",
                 "                        ArrayForMaxEffConc[i] = MaxEffectiveNConcentration;",
                 "                        ",
-                "                    foreach (var patchManager in patchManagers)",
+                "                    /*foreach (var patchManager in patchManagers)",
                 "                    {",
                 "                           patchManager.MaximumNO3AvailableToPlants = ArrayForMaxEffConc;",
                 "                           patchManager.MaximumNH4AvailableToPlants = ArrayForMaxEffConc;",
-                "                    }",
+                "                    }*/",
                 "                } ",
                 "            }",
                 "",
@@ -7811,9 +7804,6 @@
                   "TurnoverDefoliationEffectMin": 0.025,
                   "MinimumGreenLeafProp": 0.8,
                   "MinimumGreenRootProp": 0.5,
-                  "Leaf": null,
-                  "Stem": null,
-                  "Stolon": null,
                   "Name": "AGPRyegrass",
                   "ResourceName": "AGPRyegrass",
                   "Children": [],
@@ -7898,9 +7888,6 @@
                   "TurnoverDefoliationEffectMin": 0.025,
                   "MinimumGreenLeafProp": 0.8,
                   "MinimumGreenRootProp": 0.5,
-                  "Leaf": null,
-                  "Stem": null,
-                  "Stolon": null,
                   "Name": "AGPWhiteClover",
                   "ResourceName": "AGPWhiteClover",
                   "Children": [],
@@ -8848,7 +8835,6 @@
                     },
                     {
                       "$type": "Models.Soils.NutrientPatching.NutrientPatchManager, Models",
-                      "MaximumNitrogenAvailableToPlants": 3.0,
                       "NPartitionApproach": 0,
                       "AutoAmalgamationApproach": 0,
                       "basePatchApproach": 0,
@@ -9050,19 +9036,19 @@
                 },
                 {
                   "Key": "AcceptedSlope",
-                  "Value": "1.02"
+                  "Value": "0.9"
                 },
                 {
                   "Key": "AcceptedIntercept",
-                  "Value": "412.89"
+                  "Value": "1023.37"
                 },
                 {
                   "Key": "AcceptedRMSE",
-                  "Value": "711.44"
+                  "Value": "753.42"
                 },
                 {
                   "Key": "AcceptedNSE",
-                  "Value": "0.96"
+                  "Value": "0.97"
                 },
                 {
                   "Key": "FailBeyondTolerance",
@@ -9237,19 +9223,19 @@
                 },
                 {
                   "Key": "AcceptedSlope",
-                  "Value": "0.96"
+                  "Value": "1.48"
                 },
                 {
                   "Key": "AcceptedIntercept",
-                  "Value": "-14.57"
+                  "Value": "-10.83"
                 },
                 {
                   "Key": "AcceptedRMSE",
-                  "Value": "22.73"
+                  "Value": "52.52"
                 },
                 {
                   "Key": "AcceptedNSE",
-                  "Value": "0.94"
+                  "Value": "0.13"
                 },
                 {
                   "Key": "FailBeyondTolerance",
@@ -9424,19 +9410,19 @@
                 },
                 {
                   "Key": "AcceptedSlope",
-                  "Value": "0.94"
+                  "Value": "1.98"
                 },
                 {
                   "Key": "AcceptedIntercept",
-                  "Value": "-0.04"
+                  "Value": "-0.86"
                 },
                 {
                   "Key": "AcceptedRMSE",
-                  "Value": "0.37"
+                  "Value": "1.53"
                 },
                 {
                   "Key": "AcceptedNSE",
-                  "Value": "0.97"
+                  "Value": "-1.86"
                 },
                 {
                   "Key": "FailBeyondTolerance",
