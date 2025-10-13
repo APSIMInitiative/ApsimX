@@ -40,7 +40,7 @@ The software team will:
 * Ask for additional tests if necessary
 * Ensure PR conforms to the [PR guidelines](/contribute/pullrequests)
 
-This review may take several iterations. Once the team is satisifed, a low level review can take place.
+This review may take several iterations. Once the team is satisfied, a low level review can take place.
 
 ### Step 5 Low Level Review
 
