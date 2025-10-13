@@ -1,7 +1,7 @@
 echo "Extracting password protected datasets..."
-test -z "$SOYBEAN_PASSWORD" && echo "SOYBEAN_PASSWORD is empty" && exit 1 || echo "SOYBEAN_PASSWORD is set"
-test -z "$CORNSOY_PASSWORD" && echo "CORNSOY_PASSWORD is empty" && exit 1 || echo "CORNSOY_PASSWORD is set"
-test -z "$SWIM_PASSWORD" && echo "SWIM_PASSWORD is empty" && exit 1 || echo "SWIM_PASSWORD is set"
+test -z "$SOYBEAN_PASSWORD" && echo "SOYBEAN_PASSWORD is empty" && exit 1
+test -z "$CORNSOY_PASSWORD" && echo "CORNSOY_PASSWORD is empty" && exit 1
+test -z "$SWIM_PASSWORD" && echo "SWIM_PASSWORD is empty" && exit 1
 
 soybean=/home/runner/work/ApsimX/ApsimX/Tests/Validation/Soybean
 cornsoy=/home/runner/work/ApsimX/ApsimX/Tests/Validation/System/FACTS_CornSoy

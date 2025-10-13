@@ -14,7 +14,7 @@ on:
 jobs:
   run-model-validations:
     name: run-model-validations
-    # if: github.repository_owner == 'APSIMInitiative'
+    if: github.repository_owner == 'APSIMInitiative'
     runs-on: ubuntu-latest
     env:
       ALL_APSIM_FILES: ""
@@ -38,7 +38,7 @@ jobs:
           git remote add upstream https://github.com/APSIMInitiative/ApsimX.git || git remote set-url upstream https://github.com/APSIMInitiative/ApsimX.git
           git fetch upstream master
           git merge --no-ff upstream/master || { echo "Merge conflict detected. Aborting merge and exiting."; git merge --abort; exit 1; }
-        continue-on-error: true  # Allow job to continue if merge fails
+        continue-on-error: true  # Allow job to continue if merge fails so it can be captured by next step.
 
       - name: Merge failure
         if: steps.merge_upstream.outcome == 'failure'
@@ -54,14 +54,6 @@ jobs:
       - name: Make github workflow bash scripts executable
         run: chmod +x ./.github/workflows/scripts/*.sh
 
-      # - name: Get PR number from GitHub API
-      #   id: fetch_pr_number
-      #   env:
-      #     REPOSITORY: ${{ github.repository }}
-      #     SHA: ${{ github.sha }}
-      #     TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   run: ./.github/workflows/scripts/get-pr-number.sh
-
       - name: Extract password protected datasets
         id: extract_password_protected_datasets
         env:
@@ -72,7 +64,7 @@ jobs:
 
       - name: Build Models and APSIM.Workflow projects
         run: |
-          cd Models && dotnet publish -f net8.0 -o ../app && cd ../APSIM.Workflow && dotnet publish -f net8.0 -o ../app
+          cd Models && dotnet publish -f net8.0 -o ../app && cd ../APSIM.Workflow && dotnet publish -f net8.0
 
       - name: Split Wheat Validation
         run: dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -d ./Tests/Validation/Wheat/Wheat.apsimx -s ./Tests/Validation/Wheat/split.json
@@ -96,26 +88,41 @@ jobs:
             type=ref,event=branch
             type=ref,event=pr
 
-      # - name: Build and push apsimplusr Docker image
-      #   id: apsimplusr_push
-      #   uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
-      #   with:
-      #     context: .
-      #     file: ./Dockerfiles/models_r_dockerfile
-      #     target: base
-      #     push: true
-      #     tags: ${{ steps.meta_apsimplusr.outputs.tags }}
-      #     labels: ${{ steps.meta_apsimplusr.outputs.labels }}       
+      - name: Start Azure pool
+        id: start_azure_pool
+        env:
+          AZURE_ENV_CONTENTS: ${{ secrets.AZURE_ENV_CONTENTS }}
+          DOCKER_METADATA_OUTPUT_VERSION: ${{ steps.meta_apsimplusr.outputs.tags.version }}
+          INCOMING_COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
+        run: ./.github/workflows/scripts/start-azure-pool.sh
+
+      - name: Build and push apsimplusr Docker image
+        id: apsimplusr_push
+        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        with:
+          context: .
+          file: ./Dockerfiles/models_r_dockerfile
+          target: base
+          push: true
+          tags: ${{ steps.meta_apsimplusr.outputs.tags }}
+          labels: ${{ steps.meta_apsimplusr.outputs.labels }}       
 
       - name: Create Azure Validation Jobs
         id: submit_azure_jobs
         env:
           PAYLOAD_FOLDER_PATH: ${{ env.PAYLOAD_FOLDER_PATH }}
           AZURE_ENV_CONTENTS: ${{ secrets.AZURE_ENV_CONTENTS }}
-          DOCKER_METADATA_OUTPUT_VERSION: ${{ steps.meta_apsimplusr.outputs.tags }}
+          DOCKER_METADATA_OUTPUT_VERSION: ${{ steps.meta_apsimplusr.outputs.tags.version }}
           INCOMING_COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
           PR_AUTHOR: ${{ github.actor }}
         run: ./.github/workflows/scripts/create-azure-jobs.sh 
+
+      - name: Enable autoscaling on Azure pool
+        env:
+          AZURE_ENV_CONTENTS: ${{ secrets.AZURE_ENV_CONTENTS }}
+          DOCKER_METADATA_OUTPUT_VERSION: ${{ steps.meta_apsimplusr.outputs.tags.version }}
+          INCOMING_COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
+        run: ./.github/workflows/scripts/enable-azure-pool-autoscaling.sh
 
       - name: Print workflow submit success summary markdown
         if: success()
