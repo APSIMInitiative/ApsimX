@@ -1,5 +1,8 @@
+using APSIM.Shared;
+
 namespace APSIM.Core;
 
+[NonSerializedClass]
 public interface IStructure
 {
 

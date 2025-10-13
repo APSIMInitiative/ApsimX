@@ -1,4 +1,5 @@
-﻿using APSIM.Numerics;
+﻿using System;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using NUnit.Framework;
 
@@ -91,6 +92,30 @@ namespace UnitTests.APSIMShared
 
             Assert.That(result.values, Is.EqualTo(new double[] { 10, 25, 30}));
             Assert.That(result.metadata, Is.EqualTo(new string[] { null, "Calculated", "Measured"}));
+        }
+
+        /// <summary>Test calculation of FASW from SoilUtilities</summary>
+        [Test]
+        public void TestCalcFASW()
+        {
+            double[] thickness = new double[] { 100, 200, 300 };
+            double[] pawmm = new double[] { 10, 20, 10 };
+            double[] pawcmm = new double[] { 20, 80, 100 };
+
+            Assert.That(SoilUtilities.CalcFASW(thickness, pawmm, pawcmm, 50), Is.EqualTo(0.5));
+            Assert.That(SoilUtilities.CalcFASW(thickness, pawmm, pawcmm, 100), Is.EqualTo(0.5));
+            Assert.That(SoilUtilities.CalcFASW(thickness, pawmm, pawcmm, 300), Is.EqualTo(0.3));
+            Assert.That(SoilUtilities.CalcFASW(thickness, pawmm, pawcmm, 600), Is.EqualTo(0.2));
+            Assert.That(SoilUtilities.CalcFASW(thickness, pawmm, pawcmm, double.MaxValue), Is.EqualTo(0.2));
+
+            Assert.Throws<Exception>(() => SoilUtilities.CalcFASW(thickness, pawmm, pawcmm, 0));
+
+            double[] pawmmNaN = new double[] { 10, double.NaN, 10 };
+            Assert.Throws<Exception>(() => SoilUtilities.CalcFASW(thickness, pawmmNaN, pawcmm, 0));
+
+            double[] pawcmmNaN = new double[] { 20, double.NaN, 100 };
+            Assert.Throws<Exception>(() => SoilUtilities.CalcFASW(thickness, pawmm, pawcmmNaN, 0));
+
         }
     }
 }

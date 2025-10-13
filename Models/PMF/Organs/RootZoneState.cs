@@ -3,7 +3,6 @@ using System.Linq;
 using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Functions;
 using Models.Interfaces;
 using Models.Soils;
 
@@ -15,6 +14,9 @@ namespace Models.PMF.Organs
     {
         /// <summary>Structure instance</summary>
         IStructure structure;
+
+        /// <summary>The soil in this zone</summary>
+        public Zone Zone { get; private set; }
 
         /// <summary>The soil in this zone</summary>
         public Soil Soil { get; set; }
@@ -183,12 +185,12 @@ namespace Models.PMF.Organs
                 throw new Exception($"Cannot find a soil crop parameterisation called {plant.Name + "Soil"}");
 
             Clear();
-            Zone zone = structure.FindParent<Zone>(relativeTo: soil, recurse: true);
-            if (zone == null)
+            Zone = structure.FindParent<Zone>(relativeTo: soil, recurse: true);
+            if (Zone == null)
                 throw new Exception("Soil " + soil + " is not in a zone.");
-            NO3 = structure.Find<ISolute>("NO3", relativeTo: zone);
-            NH4 = structure.Find<ISolute>("NH4", relativeTo: zone);
-            Name = zone.Name;
+            NO3 = structure.Find<ISolute>("NO3", relativeTo: Zone);
+            NH4 = structure.Find<ISolute>("NH4", relativeTo: Zone);
+            Name = Zone.Name;
             Initialise(depth, initialDM, population, maxNConc);
         }
 

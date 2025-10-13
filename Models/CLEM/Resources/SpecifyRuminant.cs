@@ -88,7 +88,7 @@ namespace Models.CLEM.Resources
 
             // create example ruminant
             Details.Number = 1;
-            ExampleIndividual = Details.CreateIndividuals(null, BreedParams).FirstOrDefault();
+            ExampleIndividual = Details.CreateIndividuals(null, BreedParams, getUniqueID:false).FirstOrDefault();
         }
 
         #region validation
