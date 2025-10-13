@@ -68,7 +68,7 @@ __Else if a minor science change__
 
 __Else__
 
-* The software team will merge (e.g. new dataset or addition of new outputs), the PR within 5 business days.
+* The software team will merge (e.g. new dataset or addition of new outputs), the PR within 3 business days.
 
 ### Step 6 Reference Panel Review
 
