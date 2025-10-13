@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 0,
   "Version": 203,
   "Name": "Simulations",
+  "ResourceName": null,
   "Children": [
     {
       "$type": "Models.PMF.Plant, Models",
@@ -1418,42 +1418,6 @@
                         0.0,
                         1.0,
                         0.0
-                      ],
-                      "Name": "XYPairs",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "WaterFactor",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.SoilWaterScale, Models",
-                      "LLModel": 0,
-                      "Name": "XValue",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        0.0,
-                        0.25,
-                        1.0
-                      ],
-                      "Y": [
-                        1.0,
-                        1.0,
-                        1.0
                       ],
                       "Name": "XYPairs",
                       "ResourceName": null,
@@ -7769,7 +7733,6 @@
       "ReadOnly": false
     }
   ],
-  "IncludeInDocumentation": true,
   "Enabled": true,
   "ReadOnly": false
 }
