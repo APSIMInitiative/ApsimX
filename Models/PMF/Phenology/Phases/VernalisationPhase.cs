@@ -2,6 +2,7 @@
 using APSIM.Shared.Utilities;
 using DocumentFormat.OpenXml.Bibliography;
 using Models.Core;
+using Models.PMF.Interfaces;
 using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
@@ -22,14 +23,6 @@ namespace Models.PMF.Phen
         [Link]
         private IClock clock = null;
 
-        private bool firstDay = true;
-        private double relativeVernalisationAtEmergence { get; set; }
-        /// <summary>First date in this phase</summary>
-        private DateTime firstDate { get; set; }
-
-        /// <summary>Flag for the first day of this phase</summary>
-        private bool first { get; set; }
-
         /// <summary>The phenological stage at the start of this phase.</summary>
         [Description("Start")]
         public string Start { get; set; }
@@ -48,18 +41,21 @@ namespace Models.PMF.Phen
         {
             get
             {
-                if (String.IsNullOrEmpty(DateToProgress))
-                {
-                    return ProgressThroughPhase;
-                }
-                else
-                {
-                    double dayDurationOfPhase = (DateUtilities.GetDate(DateToProgress) - firstDate).Days;
-                    double daysInPhase = (clock.Today - firstDate).Days;
-                    return daysInPhase / dayDurationOfPhase;
-                }
+                return Phenology.FractionComplete(DateToProgress,ProgressThroughPhase,Target,startDate, clock.Today, fractionCompleteYesterday);
             }
         }
+
+        /// <summary>First date in this phase</summary>
+        [JsonIgnore]
+        private DateTime startDate;
+
+        /// <summary>Fraction of phase that is complete (0-1).on yesterdays timestep</summary>
+        [JsonIgnore]
+        private double fractionCompleteYesterday { get; set; }
+
+        /// <summary>The relative progress throuh vernalisation that has already happend when the crop emerges</summary>
+        [JsonIgnore]
+        private double relativeVernalisationAtEmergence { get; set; }
 
         /// <summary>Accumulated units of progress through this phase.</summary>
         [JsonIgnore]
@@ -71,49 +67,37 @@ namespace Models.PMF.Phen
 
         /// <summary>Thermal time target to end this phase.</summary>
         [JsonIgnore]
-        public double Target { get; set; }
+        public double Target { get; set; } = 1.0;
 
         /// <summary>Summarise gene expression from CAMP into phenological progress</summary>
         /// <remarks>Returns true when target is met.</remarks>
         public bool DoTimeStep(ref double propOfDayToUse)
         {
-            bool proceedToNextPhase = false;
-            if (String.IsNullOrEmpty(DateToProgress))
+            if (!String.IsNullOrEmpty(DateToProgress))
             {
-                Target = 1 + CAMP.Vrn2;
-                double RelativeVernalisation = Math.Min((CAMP.BaseVrn + CAMP.Vrn1 + CAMP.Vrn3) / Target, CAMP.MaxVrn);
-                if (firstDay)
-                {
-                    relativeVernalisationAtEmergence = RelativeVernalisation;
-                    firstDay = false;
-                }
-                ProgressThroughPhase = Math.Min(1, (RelativeVernalisation - relativeVernalisationAtEmergence) / (1 - relativeVernalisationAtEmergence));
-                proceedToNextPhase = CAMP.IsVernalised;
+                return Phenology.checkIfCompletionDate(ref startDate, clock.Today, DateToProgress, ref propOfDayToUse);
             }
-            else
+
+            double vrnTarget = 1 + CAMP.Vrn2;
+            double RelativeVernalisation = Math.Min((CAMP.BaseVrn + CAMP.Vrn1 + CAMP.Vrn3) / vrnTarget, CAMP.MaxVrn);
+            if (startDate == DateTime.MinValue)
             {
-                if (first)
-                {
-                    firstDate = clock.Today;
-                    first = false;
-                }
-                if (DateUtilities.DatesAreEqual(DateToProgress, clock.Today))
-                {
-                    proceedToNextPhase = true;
-                    propOfDayToUse = 1;
-                }
+                relativeVernalisationAtEmergence = RelativeVernalisation;
+                startDate = clock.Today;
             }
-            return proceedToNextPhase;
+            ProgressThroughPhase = Math.Min(1, (RelativeVernalisation - relativeVernalisationAtEmergence) / (1 - relativeVernalisationAtEmergence));
+            fractionCompleteYesterday = FractionComplete;
+
+            return CAMP.IsVernalised;
         }
 
         /// <summary>Resets the phase.</summary>
         public void ResetPhase()
         {
-            firstDay = true;
             relativeVernalisationAtEmergence = 0.0;
             ProgressThroughPhase = 0.0;
             DateToProgress = "";
-            first = true;
+            startDate = DateTime.MinValue;
         }
 
         /// <summary>Called when [simulation commencing].</summary>

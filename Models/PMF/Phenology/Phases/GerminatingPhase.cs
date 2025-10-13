@@ -45,19 +45,17 @@ namespace Models.PMF.Phen
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction minSoilTemperature = null;
 
-        // 2. Private and protected fields
-        //-----------------------------------------------------------------------------------------------------------------
-
         /// <summary>The soil layer in which the seed is sown.</summary>
         private int SowLayer = 0;
+
+        /// <summary>Fraction of phase that is complete (0-1).on yesterdays timestep</summary>
+        [JsonIgnore]
+        private double fractionCompleteYesterday { get; set; }
+
         /// <summary>First date in this phase</summary>
-        private DateTime firstDate { get; set; }
+        [JsonIgnore]
+        private DateTime startDate;
 
-        /// <summary>Flag for the first day of this phase</summary>
-        private bool first { get; set; }
-
-        // 3. Public properties
-        //-----------------------------------------------------------------------------------------------------------------
 
         /// <summary>Occurs when a plant is about to be sown.</summary>
         public event EventHandler SeedImbibed;
@@ -74,77 +72,73 @@ namespace Models.PMF.Phen
         [Description("Is the phase emerged?")]
         public bool IsEmerged { get; set; } = false;
 
+        /// <summary>Accumulated units of thermal time as progress through phase.</summary>
+        [JsonIgnore]
+        public double ProgressThroughPhase { get; set; }
+
+        /// <summary>Thermal time target to end this phase.</summary>
+        [JsonIgnore]
+        public double Target { get; set; } = 1;
+
         /// <summary>Fraction of phase that is complete (0-1).</summary>
         [JsonIgnore]
-        public double FractionComplete 
-        { 
-            get 
+        public double FractionComplete
+        {
+            get
             {
-                if (String.IsNullOrEmpty(DateToProgress))
-                {
-                    return 0;
-                }
-                else
-                {
-                    double dayDurationOfPhase = (DateUtilities.GetDate(DateToProgress) - firstDate).Days;
-                    double daysInPhase = (clock.Today - firstDate).Days;
-                    return daysInPhase / dayDurationOfPhase;
-                }
-            } 
+                return Phenology.FractionComplete(DateToProgress, ProgressThroughPhase, Target, startDate, clock.Today, fractionCompleteYesterday);
+            }
         }
 
         /// <summary>Data to progress.  Is empty by default.  If set by external model, phase will ignore its mechanisum and wait for the specified date to progress</summary>
         [JsonIgnore]
         public string DateToProgress { get; set; } = "";
 
-
-        // 4. Public method
-        //-----------------------------------------------------------------------------------------------------------------
-
         /// <summary>Compute the phenological development during one time-step.</summary>
         /// <remarks>Returns true when target is met.</remarks>
         public bool DoTimeStep(ref double propOfDayToUse)
         {
             bool proceedToNextPhase = false;
-            double sowLayerTemperature = soilTemperature.Value[SowLayer];
-
             if (!String.IsNullOrEmpty(DateToProgress))
             {
-                if (first)
+                proceedToNextPhase = Phenology.checkIfCompletionDate(ref startDate, clock.Today, DateToProgress, ref propOfDayToUse);
+                if (proceedToNextPhase)
                 {
-                    firstDate = clock.Today;
-                    first = false;
+                    doGermination();
                 }
-                if (DateUtilities.DatesAreEqual(DateToProgress, clock.Today))
-                {
-                    doGermination(ref proceedToNextPhase, ref propOfDayToUse);
-                }
+                return proceedToNextPhase;
             }
+            double sowLayerTemperature = soilTemperature.Value[SowLayer];
 
-            else if (!phenology.OnStartDayOf("Sowing") && waterBalance.SWmm[SowLayer] > soilPhysical.LL15mm[SowLayer] && sowLayerTemperature >= minSoilTemperature.Value())
+            if (!phenology.OnStartDayOf("Sowing") && waterBalance.SWmm[SowLayer] > soilPhysical.LL15mm[SowLayer] && sowLayerTemperature >= minSoilTemperature.Value())
             {
-                doGermination(ref proceedToNextPhase, ref propOfDayToUse);
+                doGermination();
+                proceedToNextPhase = true;
+                propOfDayToUse = 1;
+                ProgressThroughPhase = 1;
             }
-
+            fractionCompleteYesterday = FractionComplete;
             return proceedToNextPhase;
-        }
+        }    
+        
 
         /// <summary>Resets the phase.</summary>
         public virtual void ResetPhase() 
         { 
             DateToProgress = "";
-            first = true;
+            startDate = DateTime.MinValue;
+            ProgressThroughPhase = 0.0;
+            DateToProgress = "";
+            fractionCompleteYesterday = 0;
         }
 
         // 5. Private methods
         //-----------------------------------------------------------------------------------------------------------------
 
-        private void doGermination(ref bool proceedToNextPhase, ref double propOfDayToUse)
+        private void doGermination()
         {
             if (SeedImbibed != null)
                 SeedImbibed.Invoke(this, new EventArgs());
-            proceedToNextPhase = true;
-            propOfDayToUse = 1;
         }
 
         /// <summary>Called when crop is ending.</summary>
