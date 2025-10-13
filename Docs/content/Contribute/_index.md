@@ -15,7 +15,6 @@ This outlines the APSIM review process for all contributions to GitHub.
 
 ### Step 2 Issue is reviewed by software team
 
-
 The software team will:
 
 * Review the issue for clarity
