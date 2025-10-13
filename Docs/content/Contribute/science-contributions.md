@@ -13,7 +13,7 @@ weight: 200
 ### Examples
 
 * Good examples are important in showing the user different ways of configuring and parameterising the model.
-* Asingle example file must be submitted by the model author. When it makes sense to do so it should contain:
+* A single example file must be submitted by the model author. When it makes sense to do so it should contain:
   * A short memo describing the model and example
   * A simple simulation with good manager scripts that show a typical usage of the model. The report model should show the main outputs from the model. The example should also have one or more  graphs showing model outputs.
   * Additional simulations or experiments should be added that show the model in typical usage scenarios. These may include:
@@ -23,9 +23,7 @@ weight: 200
 
 ### Validation tests
 
-Model submissions will provide evidence that the model works. This is normally done via validation tests that show predicted with observed data, along with validation statistics. The validation tests need to be accompanied by [memo](/usage/memo) text that describe the experiment and treatments. The validation .apsimx file is also converted to a PDF via auto documentation.
-
-The auto documentation code will walk through all nodes in the .apsimx file, writing any ‘Memo’ and ‘Graph’ models that it finds. For graphs, the menu option ‘Include in auto-documentation?’ (right click on graph) needs to be checked. This allows the model developer to optionally include validation graphs in the PDF and exclude others.
+Model submissions will provide evidence that the model works. This is normally done via validation tests that show predicted with observed data, along with validation statistics. The validation tests need to be accompanied by [memo](/usage/memo) text that describe the experiment and treatments. The validation .apsimx file is also converted to [HTML via auto documentation](apsimnextgeneration.netlify.app/modeldocumentation/).
 
 ### Sensibility tests
 
@@ -47,17 +45,13 @@ select it and click Add. The file should now appear under Model\Resources.
  (locate under Model/Properties). Copy a node from a similar existing model and change the name
  and value to match the new model.  Note that this is case sensitive.
 ![Add to resX file](/images/Development.Contribute.MoveModelToRelease.AddToResXFile.png)
-7. Add reference to the model into the standard toolbox. For this, open ApsimNG\Resources\Toolboxes\StandardToolbox.apsimx
-in a text editor. Copy a node of an existing similar model and modify it with references to the new model.
-Note that this is also case sensitive.
-![Add to standard toolbox](/images/Development.Contribute.MoveModelToRelease.AddToStandardToolbox.png)
-8. Add icons for the model. For this, create png images, with the same name as the model, and save in
+7. Add icons for the model. For this, create png images, with the same name as the model, and save in
 ApsimNG\Resources\LargeImages (32pixels) and ApsimNG\Resources\TreeViewImages (16 pixels).
 These should be added to the solution (as per step 3 and 4 above).
 After adding the images, locate them in Solution Explorer, right click on each, select properties
 and change Build Action to ‘Embedded Resource’.
-9.	Add an example simulation to Examples folder.
-10.	Copy the prototype simulation from the Prototype folder into its own folder in ApsimX\Tests\Validation\.
+8.	Add an example simulation to Examples folder.
+9.	Copy the prototype simulation from the Prototype folder into its own folder in ApsimX\Tests\Validation\.
 In this simulation, delete the model node in Replacements.
-11.	Delete the model’s simulation and folder from the Prototypes folder
-12.	Commit all, and create a Pull Request to have all these changes merged into the APSIM repository.
+10.	Delete the model’s simulation and folder from the Prototypes folder
+11.	Commit all, and create a Pull Request to have all these changes merged into the APSIM repository.
