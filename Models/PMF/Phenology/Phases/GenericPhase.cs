@@ -39,7 +39,6 @@ namespace Models.PMF.Phen
         private DateTime startDate;
 
         /// <summary>Flag for the first day of this phase</summary>
-        [JsonIgnore]
         private double fractionCompleteYesterday;
 
         /// <summary>Units of progress through phase on this time step.</summary>

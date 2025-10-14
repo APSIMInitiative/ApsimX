@@ -33,15 +33,12 @@ namespace Models.PMF.Phen
         private IClock clock = null;
 
         /// <summary>Leaves appeared when this phase is entered</summary>
-        [JsonIgnore]
         private double leafNoAtStart;
         
         /// <summary>relative progress through the phase yesterday</summary>
-        [JsonIgnore]
         private double fractionCompleteYesterday = 0;
 
         /// <summary>The target for progresson to the next phase</summary>
-        [JsonIgnore]
         private double target = 0;
 
         /// <summary>First date in this phase</summary>

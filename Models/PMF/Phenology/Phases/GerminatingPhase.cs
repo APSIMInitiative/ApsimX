@@ -48,7 +48,6 @@ namespace Models.PMF.Phen
         private int SowLayer = 0;
 
         /// <summary>Fraction of phase that is complete (0-1).on yesterdays timestep</summary>
-        [JsonIgnore]
         private double fractionCompleteYesterday;
 
         /// <summary>First date in this phase</summary>

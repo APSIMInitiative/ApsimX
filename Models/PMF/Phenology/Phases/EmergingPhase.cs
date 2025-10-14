@@ -26,7 +26,6 @@ namespace Models.PMF.Phen
         private IFunction target = null;
 
         /// <summary>Fraction of phase that is complete (0-1).on yesterdays timestep</summary>
-        [JsonIgnore]
         private double fractionCompleteYesterday; 
 
         /// <summary>First date in this phase</summary>
