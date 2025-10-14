@@ -529,7 +529,7 @@ use regular HTML `<img>` tags.
 
 Place these under the `ApsimNG/Resources` directory.
 
-The markdown view searches in this location (among other locations) for images. The URL is simply the relative path from this location so if you put it directly under the ApsimNG/Resources directory it will be the name of the file including its' extension, if its in a sub folder, then it will be `subfolder/<image-name>` where image name is the name of the file including the file extension e.g. `![Picture of wheat crop](wheat-images/wheat.png)`
+The markdown view searches in this location (among other locations) for images. The URL is simply the relative path from this location so if you put it directly under the ApsimNG/Resources directory it will be the name of the file including its extension, if its in a sub folder, then it will be `subfolder/<image-name>` where image name is the name of the file including the file extension e.g. `![Picture of wheat crop](wheat-images/wheat.png)`
 
 ### Superscript
 
