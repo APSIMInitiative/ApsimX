@@ -7067,7 +7067,7 @@ internal class Converter
             @"(?<cast>\([\[\]\w\d\.]+\s+as\s+[\w\d\.]+\))\s+" +
             // NOTE: The type argument below is guaranteed to exist from upgrade to 200 (default an IModel).
             @"(?<invocation>Structure\.\w+<[\w\d\.]+>)" +
-            @"(?<args>\(.*\);)";
+            @"(?<args>\(.*\))";
         foreach (var manager in JsonUtilities.ChildManagers(root))
         {
             var changed = false;
@@ -7076,9 +7076,9 @@ internal class Converter
                 changed = true;
                 var cast = "(INodeModel)" + match.Groups["cast"].ToString();
                 var args = match.Groups["args"].ToString();
-                // NOTE: The args match group includes opening and closing braces of the argument list, as well as the closing semicolon.
-                var optionalComma = args.Length > 3 ? ", " : "";
-                var idx = args.LastIndexOf(')');
+                // NOTE: The args match group includes opening and closing braces of the argument list.
+                var optionalComma = args.Length > 2 ? ", " : "";
+                var idx = StringUtilities.FindMatchingClosingBracket(args, 0, '(', ')');
                 var newArgs = $"{args[..idx]}{optionalComma}relativeTo: {cast}{args[idx..]}";
                 return match.Groups["invocation"] + newArgs;
             });
