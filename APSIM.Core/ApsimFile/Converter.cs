@@ -7050,6 +7050,11 @@ internal class Converter
     /// Searches for managers that may have been impacted by a bug from upgrade to 200, and tries to fix this bug if any are encountered.
     /// Looks for a parenthetic 'as' cast followed by a Structure... invocation, and moves the as cast to the relativeTo argument, with
     /// an additional appropriate cast that was intended to be added in UpgradeToVersion200.
+    ///
+    /// For instance, the text
+    /// <code>(Physical as Model) Structure.FindChild&lt;SoilCrop&gt;(recursive: true);</code>
+    /// should be changed to
+    /// <code>Structure.FindChild&lt;SoilCrop&gt;(recursive: true, relativeTo: (INodeModel)(Physical as Model));</code>
     /// </summary>
     /// <remarks>
     /// The pattern that we match against here is strictly invalid code (two expressions), so this shouldn't impact any working script.
