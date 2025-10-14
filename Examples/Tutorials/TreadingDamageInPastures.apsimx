@@ -5,9 +5,18 @@
   "ResourceName": null,
   "Children": [
     {
+      "$type": "Models.Memo, Models",
+      "Text": "# Enabling Treading Effects on Soil and Pasture\n\nVal Snow and Mike Dodd (New Zealand Bioeconomy Science Institute) and Dean Holzworth (CSIRO, Australia)\n\n(Last updated 30 October 2025)\n\nThe intention is that this documentation is read alongside the simulation that produced it to see the detail of the examples. The simulation is to be found under the \"Examples\" button, then select the “Tutorials” folder and open “TreadingDamageinPastures.apsimx”.\n\n\n## Overview\n\nTreading damage is defined as the (negative) effect of stock hooves on soil properties and pasture growth. Some of the key features of treading damage are that:\n* treading damage compacts the soil mainly affecting the macropores (the soil pores that hold the water between DUL and Saturation) by reducing their prevalence in the soil;\n* the reduced macroporosity reduces the aeration (air content) at DUL and also reduces the saturated hydraulic conductivity;\n* the heavier the stock, the greater the number of stock, and the longer the duration of grazing, the greater the damage; and\n* if the soil is drier than DUL, there is negligible treading damage but as the soil gets wetter it becomes more susceptible to damage.\n\nThese changes in the soil properties indirectly affect pasture growth through lack of aeration to the roots, and various effects of changed soil properties on C and N cycling.\nTreading damage also affects the pasture directly through direct damage to growing points and burial of biomass (including growing points. These effects recover over time - generally in a matter of a few months unless the treading damage is catastrophic (e.g., heavy pugging).\n\nThese effects can be captured in APSIM using the *TreadingDamage* manager - found in the *Management Toolbox* under the *Pasture Graze Stock* folder. This manager will allow the user to link treading damage to grazing events. Alternatively, the user can specify dates for mock grazing (stock pressure but no pasture biomass removal).\n\n# How *TreadingDamage* works\nThe effects of treading damage are coded into *TreadingDamage* which in turn interacts with *SimpleGrazing* module currently used to control pasture harvesting, and with the *Soil Physical* module that describes the relevant properties of the soil profile\n(macroporosity, drained upper limit and infiltration rate). In the current implementation, the user specifies the grazing pressure - that is the liveweight of stock per hectare per hour (t LW /ha /hour) by specifying the stocking density (head /ha /24-hours) and the per head liveweight (kg LW /head). On the days when there is a positive stocking density (meaning that there is either a grazing event from *SimpleGrazing* or the user has specified a mock grazing event) *TreadingDamage* will:\n\n* calculates a water factor that rises from zero at the drained upper limit to a value of one at saturation;\n* calculates an effective grazing pressure by multiplying the grazing pressure by the water factor;\n* calculates an empirically-derived treading effect that rises asymptotically from zero at no effective grazing pressure to a value of 0.95 at about 4800 t LW /ha /24-hours (see Figure 1.)\n\n\n\n![Plot of the effect of Effective Grazing Pressure on Treading Effect](TreadingEffect.jpg)\n\n\n\n\n\n                TreadingEffect = 1.0 - Math.Exp(EffectiveGrazingPressure * PressureMultiplier / 1000.0);\n\n                // finally add this into the dynamic damage units \n    \t        if (DamageRyegrass)\n        \t\t\tDamageUnitsGrass = Math.Max(Math.Min(DamageUnitsGrass + TreadingEffect, 1.0), 0.0);\n    \t\t\tif (DamageClover)\n        \t\t\tDamageUnitsClover = Math.Max(Math.Min(DamageUnitsClover + TreadingEffect, 1.0), 0.0);\n    \t\t\tif (DamageSoil)\n    \t\t\t{\n    \t\t\t    DamageUnitsSoil = Math.Max(Math.Min(DamageUnitsSoil + TreadingEffect, 1.0), 0.0);\n                       for (int i = 0; i < physical.Thickness.Length; i++)\n                           DepthDamageFunction[i] = DamageUnitsSoil * DepthFunctionForDamage[i];\n                }\n\n        \t\t// now have the damage units affect the plants and soil\n        \t\tGrass.GlfGeneric = 1.0 - DamageUnitsGrass;\n    \t\t\tClover.GlfGeneric = 1.0 - DamageUnitsClover;\n            \tfor (int i = 0; i < physical.Thickness.Length; i++)\n                {\n                    physical.KS[i] = UndamagedKSat[i] - MaxPossChangeConductivity[i] * DepthDamageFunction[i];\n                    physical.DUL[i] = UndamagedDUL[i] + MaxPossChangeMacroporosity[i] * DepthDamageFunction[i];\n                }\n\n\n\n# Assumptions\n\n\n## References\n\nSnow VO, Dodd MB, Nichols S, Triadis D (2025) Quantifying the impacts of higher water tables on pasture production. Report for NIWA, Contract CO1X2107. Client Report Number RE450/2025/008\n\nDodd MB, Snow VO, Triadis D (2025) Incorporating treading damage on wet soils in APSIM. MODSIM 2025",
+      "Name": "Overview",
+      "ResourceName": null,
+      "Children": [],
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
       "$type": "Models.Factorial.Experiment, Models",
       "DisabledSimNames": null,
-      "Name": "Experiment",
+      "Name": "CowLiveweight",
       "ResourceName": null,
       "Children": [
         {
@@ -22,47 +31,10 @@
               "Children": [
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[TreadingDamage].Script.CowLiveweight = 450",
+                  "Specification": "[TreadingDamage].Script.CowLiveweight = 0, 450",
                   "Name": "CowLW",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "",
-                  "Name": "Wintering",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Factorial.CompositeFactor, Models",
-                      "Specifications": [
-                        ""
-                      ],
-                      "Paths": null,
-                      "Values": null,
-                      "Name": "On",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Factorial.CompositeFactor, Models",
-                      "Specifications": [
-                        "[SimpleGrazing].NoGrazingStartString = 15-may",
-                        "[SimpleGrazing].NoGrazingEndString = 15-aug"
-                      ],
-                      "Paths": null,
-                      "Values": null,
-                      "Name": "Off",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": false,
-                      "ReadOnly": false
-                    }
-                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -71,6 +43,15 @@
               "ReadOnly": false
             }
           ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Folder, Models",
+          "ShowInDocs": false,
+          "Name": "Folder",
+          "ResourceName": null,
+          "Children": [],
           "Enabled": true,
           "ReadOnly": false
         },
@@ -93,17 +74,6 @@
               "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": null,
               "Position": 0,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            },
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 2,
               "Inverted": false,
               "CrossesAtZero": false,
               "LabelOnOneLine": false,
@@ -144,35 +114,6 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Series",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 2,
-              "ColourArgb": -1663232,
-              "FactorToVaryColours": null,
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "Report",
-              "XFieldName": "Date",
-              "YFieldName": "GrazingPressure",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": true,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Series1",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -831,7 +772,7 @@
                   "Parameters": [
                     {
                       "Key": "GrazingMode",
-                      "Value": "False"
+                      "Value": "True"
                     },
                     {
                       "Key": "EachYear",
