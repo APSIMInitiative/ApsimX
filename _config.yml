@@ -1,0 +1,4 @@
+plugins:
+  - jemoji
+include: ["Docs/content/", "PULL_REQUESTS.md", "ISSUES.md"]
+theme: jekyll-theme-minimal
