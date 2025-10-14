@@ -11,6 +11,6 @@ To create an account head to <a href="https://www.github.com/" target="_blank">G
 
 # Making and getting changes
 
-* [Use Git Fork](/development/git/git-cli)
-* [Use SourceTree](/development/git/sourcetree)
-* [Use the command line](/development/git/cli)
+* [Use Git Fork](/development/git/gitfork)
+* [Use SourceTree](/development/git/git-sourcetree)
+* [Use the command line](/development/git/git-cli)
