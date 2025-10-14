@@ -8,13 +8,16 @@ permissions:
   contents: read # to check out code
 
 on:
-  workflow_run:
-    workflows: ["Build and test", "Model validations"] # Name of the workflow that needs to be successful
+  pull_request:
+    branches:
+      - master
     types:
-      - completed # Trigger when the referenced workflow is completed
+      - closed
+
 
 jobs:
   create-release:
+    if: github.event.pull_request.merged == true
     strategy:
       matrix:
         os: [windows, macos, debian]
