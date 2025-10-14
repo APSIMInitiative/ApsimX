@@ -7076,8 +7076,10 @@ internal class Converter
                 changed = true;
                 var cast = "(INodeModel)" + match.Groups["cast"].ToString();
                 var args = match.Groups["args"].ToString();
+                // NOTE: The args match group includes opening and closing braces of the argument list, as well as the closing semicolon.
+                var optionalComma = args.Length > 3 ? ", " : "";
                 var idx = args.LastIndexOf(')');
-                var newArgs = args[..idx] + ", relativeTo: " + cast + args[idx..];
+                var newArgs = $"{args[..idx]}{optionalComma}relativeTo: {cast}{args[idx..]}";
                 return match.Groups["invocation"] + newArgs;
             });
             if (changed)
