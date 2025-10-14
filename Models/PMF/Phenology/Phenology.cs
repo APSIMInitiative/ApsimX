@@ -7,7 +7,6 @@ using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Functions;
 using Models.PMF.Interfaces;
 using Newtonsoft.Json;
 
@@ -519,7 +518,7 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>
-        /// Method to set the 
+        /// Method to set the DateToProgress property in nominated phase which forces the phase to ignore its own mechanisum and complete on the nominated day
         /// </summary>
         /// <param name="completionDate"></param>
         /// <param name="PhaseName"></param>

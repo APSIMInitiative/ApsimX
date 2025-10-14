@@ -1,8 +1,6 @@
 ﻿using System;
 using APSIM.Core;
-using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Functions;
 using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
@@ -38,12 +36,11 @@ namespace Models.PMF.Phen
         public bool IsEmerged { get; set; } = true;
 
         /// <summary>First date in this phase</summary>
-        [JsonIgnore]
         private DateTime startDate;
 
         /// <summary>Flag for the first day of this phase</summary>
         [JsonIgnore]
-        private double fractionCompleteYesterday { get; set; }
+        private double fractionCompleteYesterday;
 
         /// <summary>Units of progress through phase on this time step.</summary>
         [JsonIgnore]

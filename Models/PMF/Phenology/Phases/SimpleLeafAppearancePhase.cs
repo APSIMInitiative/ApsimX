@@ -1,9 +1,6 @@
 ﻿using System;
 using APSIM.Core;
-using APSIM.Numerics;
-using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Functions;
 using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
@@ -54,7 +51,6 @@ namespace Models.PMF.Phen
         private double target = 0;
 
         /// <summary>First date in this phase</summary>
-        [JsonIgnore]
         private DateTime startDate;
 
         /// <summary>Accumulated units of progress through this phase.</summary>

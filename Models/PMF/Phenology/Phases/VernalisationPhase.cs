@@ -1,8 +1,5 @@
 ﻿using System;
-using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Bibliography;
 using Models.Core;
-using Models.PMF.Interfaces;
 using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
@@ -46,12 +43,11 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>First date in this phase</summary>
-        [JsonIgnore]
         private DateTime startDate;
 
         /// <summary>Fraction of phase that is complete (0-1).on yesterdays timestep</summary>
         [JsonIgnore]
-        private double fractionCompleteYesterday { get; set; }
+        private double fractionCompleteYesterday;
 
         /// <summary>The relative progress throuh vernalisation that has already happend when the crop emerges</summary>
         [JsonIgnore]
