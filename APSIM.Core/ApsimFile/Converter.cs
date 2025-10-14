@@ -7066,7 +7066,7 @@ internal class Converter
         const string pattern =
             @"(?<cast>\([\[\]\w\d\.]+\s+as\s+[\w\d\.]+\))\s+" +
             // NOTE: The type argument below is guaranteed to exist from upgrade to 200 (default an IModel).
-            @"(?<invocation>Structure\.\w+<\w+>)" +
+            @"(?<invocation>Structure\.\w+<[\w\d\.]+>)" +
             @"(?<args>\(.*\);)";
         foreach (var manager in JsonUtilities.ChildManagers(root))
         {
