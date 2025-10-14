@@ -186,7 +186,7 @@ namespace Models.Climate
                 }
 
                 if (string.IsNullOrEmpty(apsimFilePath))
-                    throw new Exception("Cannot get Weather filename without reference to Node");
+                    throw new Exception("Cannot determine weather file path: Weather model is not attached to a simulation node or simulation. Please ensure the weather model is correctly attached to a simulation node.");
                 else
                     return PathUtilities.GetRelativePath(fileName, apsimFilePath);
             }
@@ -204,7 +204,7 @@ namespace Models.Climate
                 if (this.Node != null)
                     return PathUtilities.GetAbsolutePath(fileName, this.Node.FileName);
                 else
-                    throw new Exception("Cannot get Weather filename without reference to Node");
+                    throw new Exception("Cannot determine full weather file path: Weather model is not attached to a simulation node. Ensure the weather model is attached to a simulation node to resolve this error.");
             }
         }
 

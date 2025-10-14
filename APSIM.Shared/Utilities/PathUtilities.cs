@@ -93,7 +93,7 @@
             if (string.IsNullOrEmpty(relativePath))
                 return ConvertSlashes(path);
 
-            // Make sure we have a relative directory 
+            // Make sure we have a relative directory
             string relativeDirectory;
             if (Directory.Exists(relativePath))
                 relativeDirectory = relativePath;
@@ -127,7 +127,7 @@
             //Get the program path to replace %root%
             string programPath = GetAbsolutePath("%root%", null);
             correctedPath = correctedPath.Replace("%root%", programPath);
-            
+
             //check if our path is the same as the absolute path, if it is, see if it contains the relative path to shorten it
             string absolutePath = GetAbsolutePath(correctedPath, correctedRelativePath);
             if (absolutePath == correctedPath)
@@ -204,7 +204,7 @@
 
             return apsimxFiles;
         }
-        
+
         /// <summary>
         /// Compares two filepaths and determines if they are the same. Can compare relative against full path.
         /// </summary>
@@ -214,12 +214,9 @@
             string fullpath1 = PathUtilities.GetAbsolutePath(path1, apsimxFilepath);
             string fullpath2 = PathUtilities.GetAbsolutePath(path2, apsimxFilepath);
 
-            if (fullpath1 == fullpath2)
-                return true;
-            else
-                return false;
+            return fullpath1 == fullpath2;
         }
 
     }
-    
+
 }
