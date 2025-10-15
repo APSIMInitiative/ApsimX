@@ -1,0 +1,52 @@
+# This GitHub Actions workflow creates APSIM releases for Windows, macOS, and Debian
+# after a successful run of the "Build and test" and "Model validations" workflows.
+# This workflow uses scripts originally developed for use within Jenkins
+
+
+name: Create APSIM Releases
+permissions:
+  contents: read # to check out code
+
+on:
+  pull_request:
+    branches:
+      - master
+    types:
+      - closed
+
+
+jobs:
+  create-release:
+    if: github.event.pull_request.merged == true
+    strategy:
+      matrix:
+        os: [windows, macos, debian]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Set script permissions
+        run: chmod +x -R ./.github/workflows/scripts/
+
+      # This is used purely for PR number extraction.
+      - name: Extract metadata (tags, labels) for Docker for apsimplusr
+        id: meta_apsimplusr
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: apsiminitiative/apsimplusr
+          flavor: latest=true
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+
+      - name: Create Windows Release
+        env:
+          PULL_ID: ${DOCKER_METADATA_OUTPUT_VERSION:3}
+          BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
+        run: ./.github/workflows/scripts/deploy-installer.sh ${{ matrix.os }}
