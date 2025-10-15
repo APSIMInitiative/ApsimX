@@ -208,7 +208,7 @@ namespace Models.CLEM.Resources
         [Description("Dietary protein energy release efficiency (+ve net energy)")]
         [Category("Core", "Growth")]
         [Required, Proportion]
-        public double DietaryProteinEnergyReleaseEfficiency { get; set; } = 0; //0.5;
+        public double DietaryProteinEnergyReleaseEfficiency { get; set; } = 0.4;
 
         /// <summary>
         /// Efficiency of releasing dietary protein energy when energy for gain is negative

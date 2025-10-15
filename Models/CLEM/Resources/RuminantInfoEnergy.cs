@@ -101,9 +101,14 @@ namespace Models.CLEM.Resources
         public double ForLactation { get; set; }
 
         /// <summary>
+        /// Energy used for protein mobilisation
+        /// </summary>
+        public double ForProteinMobilisation { get; set; }
+
+        /// <summary>
         /// Energy available after lactation demands
         /// </summary>
-        public double AfterLactation { get { return AfterPregnancy - ForLactation; } }
+        public double AfterLactation { get { return AfterPregnancy - ForLactation - ForProteinMobilisation; } }
 
         /// <summary>
         /// Energy used for wool production
@@ -199,6 +204,7 @@ namespace Models.CLEM.Resources
             ForProductFormation = 0;
             ForHPViscera = 0;
             ForLactation = 0;
+            ForProteinMobilisation = 0;
             ForWool = 0;
             ToMove = 0;
             ToGraze = 0;

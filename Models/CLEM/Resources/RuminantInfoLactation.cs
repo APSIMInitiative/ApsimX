@@ -50,30 +50,6 @@ namespace Models.CLEM.Resources
         [FilterByProperty]
         public double Suckled { get; set; }
         /// <summary>
-        /// Protein required for lactation (kg)
-        /// </summary>
-        public double Protein { get; set; }
-        /// <summary>
-        /// Protein saved by lactation reduction (kg/day)
-        /// </summary>
-        public double ProteinReduced { get; set; }
-        /// <summary>
-        /// The proportion of the protein remaining after accounting for protein limited milk production
-        /// </summary>
-        public double ProteinToReducedProteinScalar 
-        {
-            get
-            {
-                if (MathUtilities.FloatsAreEqual(Protein, 0.0))
-                    return 0.0;
-                return ProteinReduced / Protein; 
-            }
-        }
-        /// <summary>
-        /// The percent protein of the milk produced (kg/kg * 100)
-        /// </summary>
-        public double ProteinPercent { get; set; }
-        /// <summary>
         /// The energy content of the milk produced (MJ)
         /// </summary>
         public double EnergyContent { get; set; }
@@ -124,8 +100,6 @@ namespace Models.CLEM.Resources
             Available = 0;
             Milked = 0;
             Suckled = 0;
-            ProteinReduced = 0;
-            Protein = 0;
             EnergyForLactationPrevious = 0;
         }
     }

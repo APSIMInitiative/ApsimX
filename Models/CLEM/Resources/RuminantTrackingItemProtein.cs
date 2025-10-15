@@ -1,7 +1,9 @@
 ﻿using APSIM.Numerics;
+using DocumentFormat.OpenXml.Drawing.Charts;
 using Models.CLEM.Interfaces;
 using NetTopologySuite.GeometriesGraph;
 using System;
+using System.Security.Cryptography;
 
 namespace Models.CLEM.Resources
 {
@@ -58,19 +60,55 @@ namespace Models.CLEM.Resources
         public double ForPregnancy { get; set; }
 
         /// <summary>
+        /// Report protein for lactation (kg day-1)
+        /// </summary>
+        public double ForLactation { get; set; }
+
+        /// <summary>
+        /// Report protein reduction from lactation (kg day-1)
+        /// </summary>
+        public double FromLactationReduction { get; set; }
+        /// <summary>
+        /// The proportion of the protein remaining after accounting for protein limited milk production
+        /// </summary>
+        public double ProteinToReducedLactationScalar
+        {
+            get
+            {
+                if (MathUtilities.FloatsAreEqual(ForLactation, 0.0))
+                    return 0.0;
+                return FromLactationReduction / ForLactation;
+            }
+        }
+
+        /// <summary>
+        /// Provide protein required for maintenance, pregnancy, lactation, and any protein remobilisation (kg day-1)
+        /// </summary>
+        public double BeforeGrowth { get { return ForMaintenance + ForPregnancy + ForLactation + FromBodyForRemobilisation; } }
+
+        /// <summary>
         /// Report protein required for kg gain defined from net energy (kg day-1)
         /// </summary>
         public double ForGain { get; set; }
 
         /// <summary>
-        /// Report protein avalable after leaving stomach and accounting for other protein use (kg day-1)
+        /// Report protein available after leaving stomach and accounting for other protein use (kg day-1)
         /// </summary>
         public double AvailableForGain { get; set; }
 
         /// <summary>
+        /// Report protein remobilised from body for lactation needs (kg day-1)
+        /// </summary>
+        public double FromBodyForLactation { get; set; }
+        /// <summary>
+        /// Report protein lost in conversion ses during from body for lactation needs (kg day-1)
+        /// </summary>
+        public double FromBodyForRemobilisation { get; set; }
+
+        /// <summary>
         /// Protein mass at mature (kg)
         /// </summary>
-        public double ProteinMassAtSRW { get; set; }
+        public double MassAtSRW { get; set; }
 
         /// <summary>
         /// Constructor
@@ -126,8 +164,13 @@ namespace Models.CLEM.Resources
             ForPregnancy = 0;
             ForGain = 0;
             AvailableForGain = 0;
+            FromBodyForRemobilisation = 0;
             ForWool = 0;
+            ForLactation = 0;
+            FromLactationReduction = 0;
             Net = 0;
+            FromBodyForLactation = 0;
+            FromBodyForRemobilisation = 0;
         }
 
         /// <inheritdoc/>

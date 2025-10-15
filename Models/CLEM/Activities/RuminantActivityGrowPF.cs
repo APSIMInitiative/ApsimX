@@ -346,13 +346,13 @@ namespace Models.CLEM.Activities
         /// <remarks>
         /// All energy calculations are per day and multiplied at end to give weight gain for time-step (e.g. monthly). 
         /// </remarks>
-        /// <param name="ind">Indivudal ruminant for calculation.</param>
+        /// <param name="ind">Individual ruminant for calculation.</param>
         public void CalculateEnergy(Ruminant ind)
         {
             double milkProtein = 0; // just a local store
 
             // The feed quality measures are provided in IFeedType and FoodResourcePackets
-            // The individual tracks the quality of mixed feed types based on broad type (concentrate, hay or sillage, temperate pasture, tropical pasture, or milk) in Ruminant.Intake
+            // The individual tracks the quality of mixed feed types based on broad type (concentrate, hay or silage, temperate pasture, tropical pasture, or milk) in Ruminant.Intake
             // Energy metabolic - have DMD, fat content, % CP as inputs from ind as supplement and forage, do not need ether extract (fat) for forage
 
             double sexEffectME = 1;
@@ -374,7 +374,7 @@ namespace Models.CLEM.Activities
                 if (ind is RuminantFemale female)
                 {
                     // energy for fetus is now calculated in previous event to ensure it happens prior to timesetp births to account for energy;
-                    ind.Energy.ForLactation = CalculateLactationEnergy(female, Math.Min(female.DaysLactatingInTimeStep, events.Interval)) * ((double)female.DaysPregnantInTimeStep / events.Interval);
+                    ind.Energy.ForLactation = CalculateLactationEnergy(female, Math.Min(female.DaysLactatingInTimeStep, events.Interval)) * ((double)female.DaysLactatingInTimeStep / events.Interval);
                 }
             }
             else // Unweaned
@@ -440,20 +440,16 @@ namespace Models.CLEM.Activities
             // Note: the use of ZF2 in proteinContentOfGain has been changed to -ve as opposed to the incorrect +ve in documentation (J.Dougherty, CSIRO, 21/1/2025)
 
             // determine if body protein is below expected for age to adjust protein content of gain for recovery of protein
-            double proteinNormal = ind.Weight.Protein.ProteinMassAtSRW * relativeSizeForWeightGainPurposes;
+            double proteinNormal = ind.Weight.Protein.MassAtSRW * relativeSizeForWeightGainPurposes;
             double proteinNormalShortfall = Math.Max(0, proteinNormal - ind.Weight.Protein.Amount);
 
             // Equation 102, 104 & 105   =======================================
             // Equation 102 - PG1 and PG2 protein available from diet after accounting for maintenance and conceptus and milk
 
-            // ToDO: JD? UsableDPLS is 0.14 for lactating female woth 0.36 needed before growth
-
-            double proteinAvailableForGain = ind.Intake.UsableDPLS - ind.ProteinRequiredBeforeGrowth - (ind.Intake.kDPLS * ind.Weight.Protein.ForWool / ind.Parameters.GrowPF_CG.EfficiencyOfDPLSUseForWool_CG1);
+            double proteinAvailableForGain = ind.Intake.UsableDPLS - ind.Weight.Protein.BeforeGrowth - (ind.Intake.kDPLS * ind.Weight.Protein.ForWool / ind.Parameters.GrowPF_CG.EfficiencyOfDPLSUseForWool_CG1);
             // Equation 104  units = mj/kg gain
             double energyEmptyBodyGain = (ind.Parameters.GrowPF_CG.GrowthEnergyIntercept1_CG8b + adjustedFeedingLevel) + sizeFactor1ForGain * (ind.Parameters.GrowPF_CG.GrowthEnergyIntercept2_CG9 - adjustedFeedingLevel) + sizeFactor2ForGain * (13.8 * (ind.Weight.RelativeCondition - 1));
             
-            // ToDo: JD? adjusted feeding level currently = 595.87
-
             // Equation 105  units = kg protein/kg gain
             double proteinContentOfGain = (ind.Parameters.GrowPF_CG.ProteinGainIntercept1_CG12b - (ind.Parameters.GrowPF_CG.ProteinGainSlope1_CG14b * adjustedFeedingLevel)) - sizeFactor1ForGain * (ind.Parameters.GrowPF_CG.ProteinGainIntercept2_CG13 - (ind.Parameters.GrowPF_CG.ProteinGainSlope1_CG14b * adjustedFeedingLevel)) + (sizeFactor2ForGain * ind.Parameters.GrowPF_CG.ProteinGainSlope2_CG15 * (ind.Weight.RelativeCondition - 1));
 
@@ -476,69 +472,78 @@ namespace Models.CLEM.Activities
                 ind.Weight.Protein.Net = proteinAvailableForGain;
 
                 // reduce milk production to handle any protein shortfall
-                if (ind is RuminantFemale indFemale && MathUtilities.IsPositive(indFemale.Milk.Protein))
+                if (ind is RuminantFemale indFemale && MathUtilities.IsPositive(indFemale.Weight.Protein.ForLactation))
                 {
+                    // adjust lactation to account for protein deficit
+                    double bodyProteinTakenForLactation;
+
+                    // Mobilise body protein to produce milk when CP shortfall - Dougherty et al 2024 ========================================
+                    // Departure from Freer 2012 to allow body protein above 75% of normalised protein to be provided to lactation when less than peak milk days.
+
+                    // if day of lactation (mid point of time step) < peak lactation 
+                    if (indFemale.DaysLactating(true) <= ind.Parameters.Lactation.MilkPeakDay)
+                    {
+                        // get lactation protein deficit
+                        double lactationProteinDeficit = Math.Min(indFemale.Weight.Protein.ForLactation, Math.Abs(proteinAvailableForGain));
+
+                        double bodyProteinAvailable = Math.Max(0.0, ind.Weight.Protein.Amount - (proteinNormal * 0.75));
+
+                        // get protein required from body
+                        bodyProteinTakenForLactation = Math.Min(lactationProteinDeficit / 0.8, bodyProteinAvailable);
+
+                        // calculate energy cost of using body protein for lactation
+                        // account for energy used to convert protein
+                        ind.Energy.ForProteinMobilisation = bodyProteinTakenForLactation * 0.0; // MJ per kg protein remobilised.
+
+                        // account for protein lost in conversion process
+                        ind.Weight.Protein.FromBodyForRemobilisation = bodyProteinTakenForLactation * (1 - 0.8); // kg protein lost in conversion process.
+                        ind.Weight.Protein.FromBodyForLactation = bodyProteinTakenForLactation * 0.8; // kg protein provided for lactation.
+
+                        // reduce CP shortfall by the body protein provided for milk production. This will be removed from the body later in protein and fat updates.
+                        proteinAvailableForGain += ind.Weight.Protein.FromBodyForLactation;
+                    }
+
+                    // reduce milk production based on any deficit
                     // Equations 75-76   ==================================================  Freer et al. (2012) The GRAZPLAN animal biology model
                     // Equation 110 Modified  ================
 
-                    // ToDo: JD? protein avail for gain less than 0 removes milk production
-                    // there is no option to create milk from body stores and so milk won't be produced on the low pasture quality event with concentrate supplementation.
-
-                    //
-                    //
-                    //
-                    //
-                    //
-                    // THIS NEEDS TO BE FIXED
-                    //
-                    //
-                    //
-                    //
-                    // ToDo: limit protein lactation reduction to start taking from body reserves instead of effectively turning off lactation.
-                    // How does this work?
-                    // demand should be met early in lactation and then milk production reduced to zero with defecit later in lactation when offstpring can move to grass
-
-
-
-                    double MP = Math.Max(0.0, 1 + (proteinAvailableForGain / indFemale.Milk.Protein)) * indFemale.Milk.ProductionRate;
+                    double MP = Math.Max(0.0, 1 + (proteinAvailableForGain / indFemale.Weight.Protein.ForLactation)) * indFemale.Milk.ProductionRate;
                     indFemale.Milk.Available = MP * Math.Min(indFemale.DaysLactatingInTimeStep, events.Interval) / indFemale.Milk.EnergyContent;
                     indFemale.Milk.Produced = indFemale.Milk.Available;
 
-                    indFemale.Milk.ProteinReduced = (indFemale.Milk.ProductionRate - MP) * ((ind.Parameters.GrowPF_CKCL.ProteinPercentMilk_CL15 / 100.0) / indFemale.Milk.EnergyContent);
+                    indFemale.Weight.Protein.FromLactationReduction = (indFemale.Milk.ProductionRate - MP) * ((ind.Parameters.GrowPF_CKCL.ProteinPercentMilk_CL15 / 100.0) / indFemale.Milk.EnergyContent);
 
                     indFemale.Milk.ProductionRate = MP;
                     indFemale.Milk.ProductionRatePrevious = MP;
 
-                    indFemale.Milk.Protein = (indFemale.Milk.ProteinPercent / 100.0) * (MP / indFemale.Milk.EnergyContent);
-                    milkProtein = indFemale.Milk.Protein;
+                    indFemale.Weight.Protein.ForLactation = (indFemale.Parameters.GrowPF_CKCL.ProteinPercentMilk_CL15 / 100.0) * (MP / indFemale.Milk.EnergyContent);
+                    //milkProtein = indFemale.Weight.Protein.ForLactation;
 
                     // Equation 75  ================
                     ind.Energy.ForLactation = MP / (0.94 * ind.Energy.Kl) * ind.Parameters.GrowPF_CG.BreedLactationEfficiencyScalar;
 
-                    // if lactation has been turned off due to protein defecit, then we need the other kg (efficiency of gain)
+                    // if lactation has been turned off due to protein deficit, then we need the other kg (efficiency of gain)
                     CalculateGrowthEfficiency(ind);
-                    energyAvailableForGain = ind.Energy.AvailableForGain * ind.Energy.Kg;
+                    energyAvailableForGain = ind.Energy.AvailableForGain * ind.Energy.Kg; // AvailableForGain includes any energy used to remobilise any protein for lactation.
                     if (MathUtilities.IsPositive(energyAvailableForGain))
                     {
                         energyAvailableForGain *= ind.Parameters.GrowPF_CG.BreedGrowthEfficiencyScalar;
                     }
 
                     // Equation 111  ================ Adjusted NEG1 based on the protein saved from reduced milk
-                    proteinNeededForGrowth = proteinContentOfGain * (energyAvailableForGain / energyEmptyBodyGain); // this actually reduces the energy defecit as energyForGain is -ve or up to zero
+                    proteinNeededForGrowth = proteinContentOfGain * (energyAvailableForGain / energyEmptyBodyGain); // this actually reduces the energy deficit as energyForGain is -ve or up to zero
                                                                                                                     // Equation 112  ================
                                                                                                                     // Here we adjust proteinAvailableForGain (PG1) rather than use PG2 from report as we can do these equations where Female object known in this if statement and Pg2 is set to PG1 if there are no lactation limits.
-                    proteinAvailableForGain += indFemale.Milk.ProteinReduced;
+                    proteinAvailableForGain += indFemale.Weight.Protein.FromLactationReduction;
                 }
             }
-
-            // ToDo: JD? example milk prod stopped and protein avail for gain went from -0.22 (Milk reduction 0.18) to -0.03 (3g loss with no lactation)
 
             // Fat and Protein change - Dougherty et al 2024 ========================================
             // Departure from Freer 2012 to allow for fat and protein change to be calculated separately to derive ebm change.
 
             ind.Energy.ForGain = energyAvailableForGain;
 
-            int approach = 1; // decide which code in the following switch to use. Both appear similar, 1 is more process driven and allows excess CP in stomacch to be converted to energy.
+            int approach = 1; // decide which code in the following switch to use. Both appear similar, 1 is more process driven and allows excess CP in stomach to be converted to energy.
 
             double kgProteinChange = 0;
             switch (approach)
@@ -553,48 +558,45 @@ namespace Models.CLEM.Activities
                     while (MathUtilities.IsPositive(proteinToGrow))
                     {
                         // convert excess CP into energy
-                        double extra = 0.0;
-                        if (MathUtilities.IsPositive(energyAvailableForGain))
+                        double extraEnergy = proteinExcess * ind.Parameters.General.MJEnergyPerKgProtein;
+                        if (MathUtilities.IsNegative(energyAvailableForGain))
                         {
-                            extra = proteinExcess * ind.Parameters.General.MJEnergyPerKgProtein * ind.Parameters.GrowPF_CG.DietaryProteinEnergyReleaseEfficiency; // todo: delete this property if this approach is not used
+                            extraEnergy *= ind.Parameters.GrowPF_CG.DietaryProteinEnergyReleaseEfficiencyWhenNetEnergyDeficit; // todo: delete this property if this approach is not used
                         }
-                        else if (MathUtilities.IsNegative(energyAvailableForGain))
+                        else
                         {
-                            extra = proteinExcess * ind.Parameters.General.MJEnergyPerKgProtein * ind.Parameters.GrowPF_CG.DietaryProteinEnergyReleaseEfficiencyWhenNetEnergyDeficit; // todo: delete this property if this approach is not used
+                            extraEnergy *= ind.Parameters.GrowPF_CG.DietaryProteinEnergyReleaseEfficiency; // todo: delete this property if this approach is not used
                         }
 
-                        ind.Energy.Protein.Net += extra;
-                        energyAvailableForGain += extra;
+                        ind.Energy.Protein.Net += extraEnergy;
+                        energyAvailableForGain += extraEnergy;
                         proteinExcess = 0;
 
                         while (MathUtilities.IsPositive(proteinToGrow))
                         {
                             // grow the smaller of CP available or energy to grow
                             double energyToUse = Math.Max(0.0, Math.Min(energyAvailableForGain, proteinToGrow * ind.Parameters.General.MJEnergyPerKgProtein));
-                            energyAvailableForGain -= energyToUse;
+                            energyAvailableForGain = MathUtilities.RoundToZero(energyAvailableForGain - energyToUse, 1e-5);
                             double proteinAdded = energyToUse / ind.Parameters.General.MJEnergyPerKgProtein;
                             kgProteinChange += proteinAdded;
-                            proteinToGrow -= proteinAdded;
-                            if (MathUtilities.FloatsAreEqual(0.0, proteinToGrow))
-                            {
-                                proteinToGrow = 0.0;
-                            }
+                            proteinToGrow = MathUtilities.RoundToZero(proteinToGrow - proteinAdded, 1e-5);
 
                             if (MathUtilities.IsPositive(proteinToGrow))
                             {
                                 // try fill energy shortfall
                                 if (MathUtilities.IsNegative(energyAvailableForGain))
                                 {
-                                    double fillEshortfall = Math.Min(proteinToGrow, Math.Abs(energyAvailableForGain) / (ind.Parameters.General.MJEnergyPerKgProtein * ind.Parameters.GrowPF_CG.DietaryProteinEnergyReleaseEfficiencyWhenNetEnergyDeficit));
-                                    energyAvailableForGain -= fillEshortfall * ind.Parameters.General.MJEnergyPerKgProtein * ind.Parameters.GrowPF_CG.DietaryProteinEnergyReleaseEfficiencyWhenNetEnergyDeficit;
-                                    proteinToGrow -= fillEshortfall;
+                                    double fillEShortfall = Math.Min(proteinToGrow, Math.Abs(energyAvailableForGain) / (ind.Parameters.General.MJEnergyPerKgProtein * ind.Parameters.GrowPF_CG.DietaryProteinEnergyReleaseEfficiencyWhenNetEnergyDeficit));
+                                    energyAvailableForGain -= fillEShortfall * ind.Parameters.General.MJEnergyPerKgProtein * ind.Parameters.GrowPF_CG.DietaryProteinEnergyReleaseEfficiencyWhenNetEnergyDeficit;
+                                    proteinToGrow -= fillEShortfall;
                                 }
                                 if (MathUtilities.IsPositive(proteinToGrow))
                                 {
                                     // total energy from NET protein
                                     // convert some to energy such that remainder can be used to be grown
-                                    proteinToGrow *= 0.5; // todo: what is this factor to get the mix of energy to protein
-                                    energyAvailableForGain += proteinToGrow * ind.Parameters.General.MJEnergyPerKgProtein * ind.Parameters.GrowPF_CG.DietaryProteinEnergyReleaseEfficiency;
+                                    double prop2burn = 1.0 - (1.0 / ((1.0 / ind.Parameters.GrowPF_CG.DietaryProteinEnergyReleaseEfficiency) + 1));
+                                    energyAvailableForGain += (proteinToGrow * prop2burn) * ind.Parameters.General.MJEnergyPerKgProtein * ind.Parameters.GrowPF_CG.DietaryProteinEnergyReleaseEfficiency;
+                                    proteinToGrow = MathUtilities.RoundToZero(proteinToGrow * (1.0 - prop2burn), 0.001);
                                     proteinExcess = proteinToGrow;
                                 }
                             }
@@ -603,18 +605,17 @@ namespace Models.CLEM.Activities
                         // now we have built all protein and either have +ve or -ve energy remaining to be handled by fat
                     }
 
-                    // handle protein defecit
-                    // allow protein to be taken from the body stores to handle defecit for maintenance, pregnancy and wool
-                    // any defecit should have been reduced by lactation reduction
-
-                    // ToDo: limit protein lactation reduction to start taking from body reserves instead of effectively turning off lactation.
+                    // handle protein deficit
+                    // allow protein to be taken from the body stores to handle deficit for maintenance, pregnancy and wool
+                    // any deficit should have been reduced by lactation reduction
 
                     if (MathUtilities.IsNegative(proteinToGrow))
                     {
-                        kgProteinChange += proteinToGrow; // lose from body stores
+                        // ToDo: JD Do we need the additional CP lost in the remobilisation included here 
+                        kgProteinChange += proteinToGrow / 0.7; // lose from body stores
+                        kgProteinChange -= (ind.Weight.Protein.FromBodyForRemobilisation + ind.Weight.Protein.FromBodyForLactation); // add in any protein lost in conversion process
+                        // ToDo: JD do these have different energy content or anything else?
                     }
-
-
 
                     break;
                 case 2:
@@ -630,13 +631,13 @@ namespace Models.CLEM.Activities
                         }
                         else
                         {
-                            // protein available from diet but defecit in energy
+                            // protein available from diet but deficit in energy
                             // This protein from diet needs to be limited based on the condition and proximity to max protein for individual at maturity
                             // we can't assume we can just keep using fat energy stores to put on all available protein
                             // this result in too much protein gain and too much fat loss in the animal
                             // All appears in breeding females.
 
-                            // the protein for gain (actaually all protein remaining Net, can be converted into E  -- This concept is now implemented in approach #1 above
+                            // the protein for gain (actually all protein remaining Net, can be converted into E  -- This concept is now implemented in approach #1 above
                             // 1) use protein to cover energy deficit
                             // 2) any remaining energy can be used to convert the remaining cp into growth
                             // 3) goto 1 while cp remains
@@ -666,13 +667,13 @@ namespace Models.CLEM.Activities
             if (MathUtilities.IsNegative(energyAvailableForGain))
             {
                 double propFatForEnergy = Math.Min(1.0, ind.Parameters.GrowPF_CG.FatPercentToProportionEDeficitTakenFromBodyFatIntercept + ind.Parameters.GrowPF_CG.FatPercentToProportionEDeficitTakenFromBodyFatSlope * (ind.Weight.EBF * 100.0));
-                //todo: make sure this is actually needed... for lactating females or this may have been the very bad initial slope and intercetp used in dev check
+                //todo: make sure this is actually needed... for lactating females or this may have been the very bad initial slope and intercept used in dev check
                 //if ((ind is RuminantFemale indFemale2 && MathUtilities.IsPositive(indFemale2.Milk.Protein)) == false)
                 //{
                 //    propFatForEnergy = Math.Min(1.0, ind.Parameters.GrowPF_CG.FatPercentToProportionEDeficitTakenFromBodyFatIntercept + ind.Parameters.GrowPF_CG.FatPercentToProportionEDeficitTakenFromBodyFatSlope * (ind.Weight.EBF * 100.0));
                 //}
                 MJFatChange = energyAvailableForGain * propFatForEnergy;
-                // reduce MJFatChange down to FatEnergyAvailable to ensure full acounting of energy with shortfall required from body protein.
+                // reduce MJFatChange down to FatEnergyAvailable to ensure full accounting of energy with shortfall required from body protein.
                 if (Math.Abs(MJFatChange) > ind.Energy.Fat.Amount)
                 {
                     MJFatChange = ind.Energy.Fat.Amount;
@@ -681,7 +682,7 @@ namespace Models.CLEM.Activities
                 MJProteinChange += (energyAvailableForGain - MJFatChange);
             }
 
-            // protein mass on protein basis not mass of lean tissue mass. use conversvion XXXX for weight to perform checksum.
+            // protein mass on protein basis not mass of lean tissue mass. use conversion XXXX for weight to perform checksum.
 
             ind.Energy.Protein.Adjust(MJProteinChange * daysInTimeStep); // for time step
             ind.Weight.Protein.Adjust(ind.Energy.Protein.Change / ind.Parameters.General.MJEnergyPerKgProtein, ind); // for time step
@@ -699,7 +700,7 @@ namespace Models.CLEM.Activities
             // + ind.Weight.Protein.Extra
             // todo: it seems TUP is the excess CP so no need to add to the used and subtract from total intake cp
             // todo: do we need to ensure Protein change is positive to be included here?
-            double TUP = ind.Intake.CrudeProtein - (ind.Weight.Protein.ForPregnancy + milkProtein + ind.Weight.Protein.Change) - TFP - DermalProtein;
+            double TUP = ind.Intake.CrudeProtein - (ind.Weight.Protein.ForPregnancy + milkProtein + ind.Weight.Protein.Change) - TFP - DermalProtein;  // ToDo: include ind.Weight.Protein.ForLactation instead of milkProtein?
             ind.Output.NitrogenUrine = TUP / 6.25 * daysInTimeStep;
             ind.Output.NitrogenFaecal = TFP / 6.25 * daysInTimeStep;
 
@@ -712,7 +713,7 @@ namespace Models.CLEM.Activities
             }
 
             // manure per time step
-            ind.Output.Manure = ind.Intake.SolidsDaily.Actual * (100 - ind.Intake.DMD) / 100 * daysInTimeStep;
+            ind.Output.Manure = ind.Intake.SolidsDaily.Actual * (100.0 - ind.Intake.DMD) / 100.0 * daysInTimeStep;
         }
 
         /// <summary>
@@ -726,10 +727,10 @@ namespace Models.CLEM.Activities
             int maxReductionAllowed = 3;
 
             // Calculate maintenance energy then determine the protein requirement of rumen bacteria
-            // Adjust intake proportionally and recalulate maintenance energy with adjusted intake energy
+            // Adjust intake proportionally and recalculate maintenance energy with adjusted intake energy
             km *= ind.Parameters.GrowPF_CG.BreedMainenanceEfficiencyScalar;
 
-            // Note: Energy.ToMove and Energy.ToGraze are calulated in Grazing and Move activities.
+            // Note: Energy.ToMove and Energy.ToGraze are calculated in Grazing and Move activities.
             // Note: Energy.ToMove DOES NOT currently include terrain and slope as per AusFarm.
             ind.Energy.ToMove /= km;
             ind.Energy.ToGraze /= km;
@@ -737,7 +738,7 @@ namespace Models.CLEM.Activities
             int reductionCount = 0;
             double rumenDegradableProteinIntake = 0;
             double rumenDegradableProteinRequirement = 1;
-            while (ind.Parameters.GrowPF_CI.IntakeReductionFromInsufficientRDPIntake > 0 && rumenDegradableProteinIntake < rumenDegradableProteinRequirement && reductionCount < maxReductionAllowed)
+            while (rumenDegradableProteinIntake < rumenDegradableProteinRequirement && reductionCount < maxReductionAllowed)
             {
                 //ToDo: include adjustment onto maint for activity level which should be an additional 5-25% depending on walking and terrain requirements.
                 ind.Energy.ForBasalMetabolism = ((ind.Parameters.GrowPF_CM.FHPScalar_CM2 * sexEffect * Math.Pow(ind.Weight.Base.Amount, 0.75)) * Math.Max(Math.Exp(-ind.Parameters.GrowPF_CM.MainExponentForAge_CM3 * ind.AgeInDays), ind.Parameters.GrowPF_CM.AgeEffectMin_CM4) * (1.0 + ind.Parameters.GrowPF_CM.MilkScalar_CM5 * ind.Intake.ProportionMilk)) / km;
@@ -752,8 +753,15 @@ namespace Models.CLEM.Activities
                 rumenDegradableProteinRequirement = (ind.Parameters.GrowPF_CACRD.RumenDegradableProteinIntercept_CRD4 + ind.Parameters.GrowPF_CACRD.RumenDegradableProteinSlope_CRD5 * (1 - Math.Exp(-ind.Parameters.GrowPF_CACRD.RumenDegradableProteinExponent_CRD6 *
                     (adjustedFeedingLevel + 1)))) * ind.Intake.FMEI;
 
-                // ToDo: JD? this next bit gets a proportion of 2.25 but handled down the chain to not cause any loss
+                if (ind.Parameters.GrowPF_CI.IntakeReductionFromInsufficientRDPIntake == 0)
+                {
+                    // if intake reduction turned off we can break from the loop after the Energy.ForBasalMetabolism and ForHPViscera has been calculated for the time step
+                    break;
+                }
 
+                // reduce intake based on rumen degradable protein limitations.
+                
+                // ToDo: JD? this next bit gets a proportion of 2.25 but handled down the chain to not cause any loss
                 if (rumenDegradableProteinIntake < rumenDegradableProteinRequirement)
                 {
                     ind.Intake.ReduceIntakeByProportion((1 - rumenDegradableProteinIntake / rumenDegradableProteinRequirement) * ind.Parameters.GrowPF_CI.IntakeReductionFromInsufficientRDPIntake);
@@ -820,13 +828,7 @@ namespace Models.CLEM.Activities
             // age factor for wool
             double ageFactorWool = ind.Parameters.GrowPF_CW.WoolGrowthProportionAtBirth_CW5 + ((1 - ind.Parameters.GrowPF_CW.WoolGrowthProportionAtBirth_CW5) * (1 - Math.Exp(-1 * ind.Parameters.GrowPF_CW.AgeFactorExponent_CW12 * ind.AgeInDays)));
 
-            double milkProtein = 0; // just a local store
-            if (ind is RuminantFemale female)
-            {
-                milkProtein = female.Milk.Protein;
-            }
-
-            double dPLSAvailableForWool = Math.Max(0, ind.Intake.DPLS - (ind.Parameters.GrowPF_CW.PregLactationAdjustment_CW9 * (ind.Weight.Protein.ForPregnancy + milkProtein)));
+            double dPLSAvailableForWool = Math.Max(0, ind.Intake.DPLS - (ind.Parameters.GrowPF_CW.PregLactationAdjustment_CW9 * (ind.Weight.Protein.ForPregnancy + ind.Weight.Protein.ForLactation)));
 
             double mEAvailableForWool = Math.Max(0, ind.Energy.AfterLactation); //  Intake.ME - (ind.Energy.ForFetus + ind.Energy.ForLactation));
 
@@ -870,7 +872,6 @@ namespace Models.CLEM.Activities
 
             // milk quality - will be dynamic with milkdays etc when relationships provided
             ind.Milk.EnergyContent = ind.Parameters.GrowPF_CKCL.EnergyContentMilk_CL6;
-            ind.Milk.ProteinPercent = ind.Parameters.GrowPF_CKCL.ProteinPercentMilk_CL15;
 
             // Equations 66-76   ==================================================
             // Equation 74  ===================================================
@@ -918,10 +919,10 @@ namespace Models.CLEM.Activities
             if (updateValues)
             {
                 // calculated after intake, maint and pregnancy
-                ratioMilkProductionME = ind.Energy.ForLactation * 0.94 * ind.Energy.Kl * ind.Parameters.GrowPF_CG.BreedLactationEfficiencyScalar / milkProductionMax;
+                ratioMilkProductionME = ind.Energy.AfterPregnancy * 0.94 * ind.Energy.Kl * ind.Parameters.GrowPF_CG.BreedLactationEfficiencyScalar / milkProductionMax;
             }
             else
-            {   // calculated at start of timestep to provide suckiling with indication of milk production
+            {   // calculated at start of time step to provide suckling with indication of milk production
                 ratioMilkProductionME = (ind.Milk.EnergyForLactationPrevious * 0.94 * ind.Energy.Kl * ind.Parameters.GrowPF_CG.BreedLactationEfficiencyScalar) / milkProductionMax; // Eq. 69
             }
             
@@ -951,7 +952,7 @@ namespace Models.CLEM.Activities
             }
 
             // Equation 76  ================================================== 0.032 -- All milk production is in MJ/day
-            ind.Milk.Protein = (ind.Parameters.GrowPF_CKCL.ProteinPercentMilk_CL15 / 100.0) * MP2 / ind.Milk.EnergyContent;
+            ind.Weight.Protein.ForLactation = (ind.Parameters.GrowPF_CKCL.ProteinPercentMilk_CL15 / 100.0) * MP2 / ind.Milk.EnergyContent;
 
             ind.Milk.Produced = MP2 * timestep / ind.Milk.EnergyContent;
             ind.Milk.PotentialRate = MP1;
@@ -1021,7 +1022,7 @@ namespace Models.CLEM.Activities
                 int daysToEnd = Math.Min(ind.DaysPregnantInTimeStep - currentDays, smallestInterval);
                 double deltaChangeNormFetusWeight = ind.ScaledBirthWeight * Math.Exp(ind.Parameters.GrowPF_CP.FetalNormWeightParameter_CP2 * (1 - Math.Exp(ind.Parameters.GrowPF_CP.FetalNormWeightParameter2_CP3 * (1 - ind.ProportionOfPregnancy(currentDays + daysToEnd))))) - normalWeightFetus;
 
-                // calculated after growth in time step to avoild issue of 0 in first step especially for larger time steps
+                // calculated after growth in time step to avoid issue of 0 in first step especially for larger time steps
                 double relativeConditionFetus = ind.Weight.Fetus.Amount / normalWeightFetus;
 
                 double CFPreg = (ind.Weight.RelativeCondition - 1) * (normalWeightFetus / (ind.Parameters.General.BirthScalar[ind.NumberOfFetuses - 1] * ind.Weight.StandardReferenceWeight));
@@ -1231,9 +1232,9 @@ namespace Models.CLEM.Activities
             }
 
             // sort by animal location to ensure correct deposit location.
-            foreach (var groupInds in herd.GroupBy(a => a.Location))
+            foreach (var groupIndividuals in herd.GroupBy(a => a.Location))
             {
-                manureStore.AddUncollectedManure(groupInds.Key ?? "", groupInds.Sum(a => a.Output.Manure));
+                manureStore.AddUncollectedManure(groupIndividuals.Key ?? "", groupIndividuals.Sum(a => a.Output.Manure));
             }
         }
 
@@ -1243,23 +1244,23 @@ namespace Models.CLEM.Activities
         public static void ReportUnfedIndividualsWarning(IEnumerable<Ruminant> herd, WarningLog warnings, ISummary summary, IModel sender, CLEMEvents events)
         {
             string fix = "\r\nFix: Check feeding strategy and ensure animals are moved to pasture or fed in yards";
-            string styleofind = "individuals";
+            string styleOfIndividual = "individuals";
 
             var unfed = herd.Where(a => a.Intake.IsUnfed)
                 .GroupBy(a => new { breed = a.Parameters.Details.Name, weaned = a.IsWeaned })
                 .Select(a => new { group = a.Key, number = a.Count() });
-            foreach (var unfedgrp in unfed)
+            foreach (var unfedGroup in unfed)
             {
-                if (unfedgrp.number > 0)
+                if (unfedGroup.number > 0)
                 {
-                    if (!unfedgrp.group.weaned)
+                    if (!unfedGroup.group.weaned)
                     {
-                        styleofind = "sucklings";
+                        styleOfIndividual = "sucklings";
                         fix = "\\r\\nFix: Check sucklings are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
                     }
-                    string warn = $"{styleofind} of [r={unfedgrp.group.breed}] not fed";
-                    string warnfull = $"Some {styleofind} of [r={unfedgrp.group.breed}] were not fed in some months (e.g. [{unfedgrp.number}] individuals in [{events.Clock.Today.Month}/{events.Clock.Today.Year}]){fix}";
-                    warnings.CheckAndWrite(warn, summary, sender, MessageType.Warning, warnfull);
+                    string warn = $"{styleOfIndividual} of [r={unfedGroup.group.breed}] not fed";
+                    string warningFull = $"Some {styleOfIndividual} of [r={unfedGroup.group.breed}] were not fed in some months (e.g. [{unfedGroup.number}] individuals in [{events.Clock.Today.Month}/{events.Clock.Today.Year}]){fix}";
+                    warnings.CheckAndWrite(warn, summary, sender, MessageType.Warning, warningFull);
                 }
             }
         }

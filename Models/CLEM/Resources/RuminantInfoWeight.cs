@@ -248,7 +248,7 @@ namespace Models.CLEM.Resources
             if (Protein is not null)
             {
                 // update the protein mass at SRW as this only relies on SRW and specified constants.
-                Protein.ProteinMassAtSRW = StandardReferenceWeight * (1.0 / ruminant.Parameters.General.EBW2LW_CG18) * ruminant.Parameters.General.ProportionSRWEmptyBodyProtein;
+                Protein.MassAtSRW = StandardReferenceWeight * (1.0 / ruminant.Parameters.General.EBW2LW_CG18) * ruminant.Parameters.General.ProportionSRWEmptyBodyProtein;
             }
         }
 
