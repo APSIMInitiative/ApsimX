@@ -1,0 +1,25 @@
+{
+	"OutputPath":"temp/",
+	"CopyWeatherFiles":false,
+	"CopyObservedData":false,
+	"Groups": [
+		{
+			"Name":"Wheat-Phenology-NPIValidation",
+			"Folders":["NPIValidation"],
+			"Experiments":[],
+			"Simulations":[]
+		},
+		{
+			"Name":"Wheat-Phenology-ControlledEnvironment",
+			"Folders":["ControlledEnvironment"],
+			"Experiments":[],
+			"Simulations":[]
+		},
+		{
+			"Name":"Wheat-Phenology-SouthernAustralia",
+			"Folders":["Southern Australia"],
+			"Experiments":[],
+			"Simulations":[]			
+		}
+	]
+}

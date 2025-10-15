@@ -4,14 +4,8 @@
 	"CopyObservedData":false,
 	"Groups": [
 		{
-			"Name":"Wheat-NPIValidation",
-			"Folders":["NPIValidation"],
-			"Experiments":[],
-			"Simulations":[]
-		},
-		{
 			"Name":"Wheat-InternationalSensibility",
-			"Folders":["Turkey", "Europe", "NorthAmerica", "China", "Iran", "Africa", "ControlledEnvironment", "Sensibility"],
+			"Folders":["Turkey", "Europe", "NorthAmerica", "China", "Iran", "Africa", "Sensibility"],
 			"Experiments":[],
 			"Simulations":[]
 		},
@@ -30,12 +24,6 @@
 		{
 			"Name":"Wheat-WA",
 			"Folders":["Western Australia"],
-			"Experiments":[],
-			"Simulations":[]
-		},
-		{
-			"Name":"Wheat-SouthernAustralia",
-			"Folders":["Southern Australia"],
 			"Experiments":[],
 			"Simulations":[]
 		}
