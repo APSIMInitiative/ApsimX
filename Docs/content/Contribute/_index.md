@@ -54,20 +54,18 @@ The software team will:
 * Check for inadvertent changes in statistics
 * Check for inadvertent changes in code
 
-__If this is a significant change to science code or data sets__
+__If this is a software change only__
+* The software team will merge once resolved.
+  
+__Else if a minor science change__
+e.g. addition to test datasets or simple changes or corrections to model or addition of new outputs
+* Tag ```@APSIMInitiative/reference-panel``` FYI
+* The software team will merge the PR within 3 business days.
 
+__Else if this is a significant change to science code or data sets__
 e.g. a new model or significant changes to a published model.
-
 * The software team will tag ```@APSIMInitiative/reference-panel``` for additional review
 * Move to Step 6.
-
-__Else if a minor science change__
-
-* Tag ```@APSIMInitiative/reference-panel``` FYI
-
-__Else__
-
-* The software team will merge (e.g. new dataset or addition of new outputs), the PR within 3 business days.
 
 ### Step 6 Reference Panel Review
 

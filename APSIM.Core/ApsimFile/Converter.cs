@@ -17,7 +17,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 204; } }
+    public static int LatestVersion { get { return 205; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -7047,6 +7047,54 @@ internal class Converter
     }
 
     /// <summary>
+    /// Replace SetEmergenceDate and SetGerminationDate methods with generic SetPhaseCompletionDate method
+    /// </summary>
+    /// <param name="root">The root JSON token.</param>
+    /// <param name="_">The name of the apsimx file.</param>
+    private static void UpgradeToVersion204(JObject root, string _)
+    {
+        Dictionary<string, Dictionary<string, string>> repDict = new Dictionary<string, Dictionary<string, string>>();
+        repDict["Germination"] = new Dictionary<string, string>
+        {
+            {"findPattern", @"Phenology\.SetGerminationDate\(\s*((?>[^()]+|\((?<DEPTH>)|\)(?<-DEPTH>))*(?(DEPTH)(?!)))\s*\);" },
+            {"replacePattern", @"Phenology.SetPhaseCompletionDate($1,""Germinating"");" }
+        };
+        repDict["Emergence"] = new Dictionary<string, string>
+        {
+            {"findPattern", @"Phenology\.SetEmergenceDate\(\s*((?>[^()]+|\((?<DEPTH>)|\)(?<-DEPTH>))*(?(DEPTH)(?!)))\s*\);" },
+            {"replacePattern", @"Phenology.SetPhaseCompletionDate($1,""Emerging"");" }
+        };
+
+        foreach (Dictionary<string, string> stage in repDict.Values)
+        {
+
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                manager.ReplaceRegex(stage["findPattern"], stage["replacePattern"], RegexOptions.IgnoreCase);
+                manager.Save();
+            }
+
+            foreach (var operations in JsonUtilities.ChildrenOfType(root, "Operations"))
+            {
+                var operation = operations["OperationsList"];
+                if (operation != null && operation.HasValues)
+                {
+                    for (int i = 0; i < operation.Count(); i++)
+                    {
+                        var specification = operation[i]["Action"];
+                        if (!String.IsNullOrEmpty(specification.ToString()))
+                        {
+                            var specificationString = specification.ToString();
+                            specificationString = Regex.Replace(specificationString, stage["findPattern"], stage["replacePattern"], RegexOptions.IgnoreCase);
+                            operation[i]["Action"] = specificationString;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
     /// Searches for managers that may have been impacted by a bug from upgrade to 200, and tries to fix this bug if any are encountered.
     /// Looks for a parenthetic 'as' cast followed by a Structure... invocation, and moves the as cast to the relativeTo argument, with
     /// an additional appropriate cast that was intended to be added in UpgradeToVersion200.
@@ -7061,7 +7109,7 @@ internal class Converter
     /// </remarks>
     /// <param name="root">Root json object.</param>
     /// <param name="_">Unused filename.</param>
-    private static void UpgradeToVersion204(JObject root, string _)
+    private static void UpgradeToVersion205(JObject root, string _)
     {
         const string pattern =
             @"(?<cast>\([\[\]\w\d\.]+\s+as\s+[\w\d\.]+\))\s+" +
