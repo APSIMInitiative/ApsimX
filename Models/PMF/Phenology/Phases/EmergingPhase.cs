@@ -1,8 +1,6 @@
 ﻿using System;
 using APSIM.Core;
-using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Functions;
 using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
@@ -28,11 +26,9 @@ namespace Models.PMF.Phen
         private IFunction target = null;
 
         /// <summary>Fraction of phase that is complete (0-1).on yesterdays timestep</summary>
-        [JsonIgnore]
-        private double fractionCompleteYesterday { get; set; }
+        private double fractionCompleteYesterday; 
 
         /// <summary>First date in this phase</summary>
-        [JsonIgnore]
         private DateTime startDate;
 
         /// <summary>The phenological stage at the start of this phase.</summary>

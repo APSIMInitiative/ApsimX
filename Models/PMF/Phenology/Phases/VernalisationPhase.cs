@@ -1,8 +1,5 @@
 ﻿using System;
-using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Bibliography;
 using Models.Core;
-using Models.PMF.Interfaces;
 using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
@@ -46,15 +43,12 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>First date in this phase</summary>
-        [JsonIgnore]
         private DateTime startDate;
 
         /// <summary>Fraction of phase that is complete (0-1).on yesterdays timestep</summary>
-        [JsonIgnore]
-        private double fractionCompleteYesterday { get; set; }
+        private double fractionCompleteYesterday;
 
         /// <summary>The relative progress throuh vernalisation that has already happend when the crop emerges</summary>
-        [JsonIgnore]
         private double relativeVernalisationAtEmergence { get; set; }
 
         /// <summary>Accumulated units of progress through this phase.</summary>
@@ -66,7 +60,6 @@ namespace Models.PMF.Phen
         public string DateToProgress { get; set; } = "";
 
         /// <summary>Thermal time target to end this phase.</summary>
-        [JsonIgnore]
         public double Target { get; set; } = 1.0;
 
         /// <summary>Summarise gene expression from CAMP into phenological progress</summary>

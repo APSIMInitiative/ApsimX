@@ -1,9 +1,6 @@
 ﻿using System;
 using APSIM.Core;
-using APSIM.Numerics;
-using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Functions;
 using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
@@ -42,19 +39,15 @@ namespace Models.PMF.Phen
         public bool IsEmerged { get; set; } = true;
 
         /// <summary>Leaves appeared when this phase is entered</summary>
-        [JsonIgnore] 
         private double leafNoAtStart { get; set; }
 
         /// <summary>relative progress through the phase yesterday</summary>
-        [JsonIgnore] 
         private double fractionCompleteYesterday = 0;
 
         /// <summary>The target for progresson to the next phase</summary>
-        [JsonIgnore] 
         private double target = 0;
 
         /// <summary>First date in this phase</summary>
-        [JsonIgnore]
         private DateTime startDate;
 
         /// <summary>Accumulated units of progress through this phase.</summary>

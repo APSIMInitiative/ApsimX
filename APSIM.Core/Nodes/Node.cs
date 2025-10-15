@@ -443,6 +443,8 @@ public class Node : IStructure
         head.locator = new();
         head.Compiler = compiler;
         head.FileName = fileName;
+        if (head.FileName == null)
+            head.FileName = Path.GetTempFileName().Replace(".tmp", ".apsimx");
         model.Node = head;
         ResolvesDependencies(head);
 
