@@ -26,6 +26,12 @@
 			"Folders":["Western Australia"],
 			"Experiments":[],
 			"Simulations":[]
+		},
+		{
+			"Name":"Wheat-SouthernAustralia",
+			"Folders":["Southern Australia"],
+			"Experiments":[],
+			"Simulations":[]			
 		}
 	]
 }
