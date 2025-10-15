@@ -270,6 +270,20 @@ namespace Models.CLEM
         [EventSubscribe("StartOfSimulation")]
         protected virtual void OnStartOfSimulation(object sender, EventArgs e)
         {
+            SetInterval();
+            SetNextTimeStep(Clock.StartDate);
+
+            CLEMInitialise?.Invoke(this, e);
+            CLEMInitialiseResource?.Invoke(this, e);
+            CLEMInitialiseActivity?.Invoke(this, e);
+            CLEMValidate?.Invoke(this, e);
+        }
+
+        /// <summary>
+        /// Method to define interval in days from TimeStepType
+        /// </summary>
+        public void SetInterval()
+        {
             switch (TimeStep)
             {
                 case TimeStepTypes.Monthly:
@@ -289,12 +303,6 @@ namespace Models.CLEM
                 default:
                     throw new NotImplementedException($"Unknown time-step [{TimeStep}] not supported in [CLEMEvents]");
             }
-            SetNextTimeStep(Clock.StartDate);
-
-            CLEMInitialise?.Invoke(this, e);
-            CLEMInitialiseResource?.Invoke(this, e);
-            CLEMInitialiseActivity?.Invoke(this, e);
-            CLEMValidate?.Invoke(this, e);
         }
 
         /// <summary>Fire all setup CLEM events in order at the StartOfDay of start of time step date</summary>
