@@ -77,8 +77,8 @@ namespace UserInterface.Presenters
             this.weatherDataView.ConstantsFileSelected += OnConstantsFileSelected;
             this.weatherDataView.ExcelSheetChangeClicked += this.ExcelSheetValueChanged;
 
-            this.weatherDataView.ShowConstantsFile(Path.GetExtension(weatherData.FullFileName) == ".csv");
-            this.WriteTableAndSummary(this.weatherData.FullFileName, this.weatherData.ExcelWorkSheetName);
+            this.weatherDataView.ShowConstantsFile(Path.GetExtension(weatherData.FileName) == ".csv");
+            this.WriteTableAndSummary(this.weatherData.FileName, this.weatherData.ExcelWorkSheetName);
             this.weatherDataView.TabIndex = this.weatherData.ActiveTabIndex;
             if (this.weatherData.StartYear >= 0)
                 this.weatherDataView.GraphStartYearValue = this.weatherData.StartYear;
@@ -103,7 +103,8 @@ namespace UserInterface.Presenters
         {
             bool isCsv = Path.GetExtension(fileName) == ".csv";
             this.weatherDataView.ShowConstantsFile(isCsv);
-            if (this.weatherData.FullFileName != PathUtilities.GetAbsolutePath(fileName, this.explorerPresenter.ApsimXFile.FileName))
+
+            if (!PathUtilities.ComparePaths(this.weatherData.FileName, fileName, this.explorerPresenter.ApsimXFile.FileName))
             {
                 if (ExcelUtilities.IsExcelFile(fileName))
                 {
@@ -111,10 +112,6 @@ namespace UserInterface.Presenters
                     this.weatherDataView.ShowExcelSheets(true);
                     this.sheetNames = ExcelUtilities.GetWorkSheetNames(fileName);
                     this.weatherDataView.PopulateDropDownData(this.sheetNames);
-
-                    // We want to attempt to update the table/summary now. This may fail if the
-                    // sheet name is incorrect/not set.
-                    this.WriteTableAndSummary(fileName);
                 }
                 else
                 {
@@ -123,8 +120,9 @@ namespace UserInterface.Presenters
 
                     // as a precaution, set this to nothing
                     this.weatherData.ExcelWorkSheetName = string.Empty;
-                    this.WriteTableAndSummary(fileName);
+
                 }
+                this.WriteTableAndSummary(fileName);
             }
         }
 
@@ -171,10 +169,9 @@ namespace UserInterface.Presenters
         /// <param name="sheetName">The sheet name</param>
         public void ExcelSheetValueChanged(string fileName, string sheetName)
         {
-            if (!string.IsNullOrEmpty(sheetName))
+            if (!string.IsNullOrEmpty(fileName) && !string.IsNullOrEmpty(sheetName))
             {
-                if ((this.weatherData.FullFileName != PathUtilities.GetAbsolutePath(fileName, this.explorerPresenter.ApsimXFile.FileName)) ||
-                    (this.weatherData.ExcelWorkSheetName != sheetName))
+                if (!PathUtilities.ComparePaths(this.weatherData.FileName, fileName, this.explorerPresenter.ApsimXFile.FileName) || (this.weatherData.ExcelWorkSheetName != sheetName))
                 {
                     this.WriteTableAndSummary(fileName, sheetName);
                 }
@@ -357,7 +354,7 @@ namespace UserInterface.Presenters
         private void WriteSummary(DataTable table)
         {
             StringBuilder summary = new StringBuilder();
-            summary.AppendLine("File name : " + Path.GetFileName(this.weatherData.FileName));
+            summary.AppendLine("File name : " + this.weatherData.FileName);
             if (!string.IsNullOrEmpty(this.weatherData.ExcelWorkSheetName))
             {
                 summary.AppendLine("Sheet Name: " + this.weatherData.ExcelWorkSheetName.ToString());
