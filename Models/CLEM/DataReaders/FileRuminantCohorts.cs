@@ -303,7 +303,7 @@ namespace Models.CLEM
                 }
 
                 // Weight (optional) - if missing CLEM moved to using normalised weight for age.
-                if (!string.IsNullOrWhiteSpace(WeightSDColumnName) && table.Columns.Contains(WeightSDColumnName))
+                if (!string.IsNullOrWhiteSpace(WeightColumnName) && table.Columns.Contains(WeightColumnName))
                 {
                     if (double.TryParse(row[WeightColumnName]?.ToString(), out double weight))
                         cohort.Weight = weight;
