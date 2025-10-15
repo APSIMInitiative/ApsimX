@@ -156,6 +156,12 @@ namespace Models.CLEM.Timers
             }
             else
             {
+                if (dateParts.month == 0 || dateParts.year == 0)
+                {
+                    ErrorMessages.Add("Invalid date parts. Days cannot be 0 without year and month (y,m,0)");
+                    return (0, 0, 0); // will be treated as error in validation
+                }
+
                 // if no day provided then set to first or last day of month depending on startOfMonth flag
                 dateParts.day = IsStartOfRange ? 1 : DateTime.DaysInMonth(yearToUse, details.Parts[1]);
             }

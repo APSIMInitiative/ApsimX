@@ -202,6 +202,7 @@ namespace Models.CLEM.Timers
         {
             Clock clock = Structure.Find<Clock>();
             CLEMEvents clemEvents = Structure.Find<CLEMEvents>();
+            clemEvents.SetInterval();
             clemEvents.Clock = clock;
             if (clock is null || clemEvents is null)
                 return $"<div class=\"filter\"><span class=\"errorlink\">No CLEM Events component provided below Clock</span></div>";
