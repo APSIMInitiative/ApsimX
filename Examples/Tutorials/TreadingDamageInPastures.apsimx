@@ -369,7 +369,7 @@
                     "\t\t[Link] private Swim3 swim3;",
                     "\t\t",
                     "\t\t",
-                    "        [Separator(\"This Manager must be placed after SimpleGrazing\")]",
+                    "        [Separator(\"This Manager must be placed after SimpleGrazing. See the tutorial for information about this manager.\")]",
                     "        [Separator(\"Chose if the damage will be based on grazing events or on specified days\")]",
                     "",
                     "\t\t[Description(\"Damage based on grazing events (true/ticked)? The alternative (false) will be based on specifed days\")]",
@@ -595,11 +595,11 @@
                     },
                     {
                       "Key": "EachYear",
-                      "Value": "False"
+                      "Value": "True"
                     },
                     {
                       "Key": "Dates",
-                      "Value": "15-mar-2002"
+                      "Value": "1-jan"
                     },
                     {
                       "Key": "CowLiveweight",
@@ -2807,9 +2807,9 @@
                     "\t\t[Link] private Swim3 swim3;",
                     "\t\t",
                     "\t\t",
-                    "        [Separator(\"This Manager must be placed after SimpleGrazing\")]",
+                    "        [Separator(\"This Manager must be placed after SimpleGrazing. See the tutorial for information about this manager.\")]",
                     "        [Separator(\"Chose if the damage will be based on grazing events or on specified days\")]",
-                    "",
+                    "        ",
                     "\t\t[Description(\"Damage based on grazing events (true/ticked)? The alternative (false) will be based on specifed days\")]",
                     "\t\tpublic bool GrazingMode {get; set;}",
                     "\t\t",
