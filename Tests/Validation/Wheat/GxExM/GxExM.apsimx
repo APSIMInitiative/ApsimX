@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 203,
+  "Version": 204,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -1363,10 +1363,53 @@
               "Children": [
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[Sowing].Script.CultivarName = Hartog, Corack, Mace",
+                  "Specification": "",
                   "Name": "Cv",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Sowing].Script.CultivarName = Hartog",
+                        "[SetPhaseCompletionDates].Script.EmergDate = 2-jun-2014"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Hartog",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Sowing].Script.CultivarName = Corack",
+                        "[SetPhaseCompletionDates].Script.EmergDate = 2-jun-2014"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Corack",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Sowing].Script.CultivarName = Mace",
+                        "[SetPhaseCompletionDates].Script.EmergDate = 2-jun-2014"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Mace",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -2371,46 +2414,6 @@
                     {
                       "$type": "Models.Manager, Models",
                       "CodeArray": [
-                        "using System;",
-                        "using Models.Core;",
-                        "using Models.PMF;",
-                        "",
-                        "namespace Models",
-                        "{",
-                        "    [Serializable]",
-                        "    public class Script : Model",
-                        "    {          ",
-                        "        [Link] Plant crop;",
-                        "",
-                        "        [Description(\"Emergence Date:\")]",
-                        "        public string EmergenceDate { get; set; }",
-                        "",
-                        "        [EventSubscribe(\"PlantSowing\")]",
-                        "        private void OnPlantSowing(object sender, EventArgs e)",
-                        "        {",
-                        "            if (!string.IsNullOrEmpty(EmergenceDate))",
-                        "            {",
-                        "                crop.Phenology.SetEmergenceDate(EmergenceDate);",
-                        "            }",
-                        "        }",
-                        "    }",
-                        "}"
-                      ],
-                      "Parameters": [
-                        {
-                          "Key": "EmergenceDate",
-                          "Value": "2-jun"
-                        }
-                      ],
-                      "Name": "Set Emergence Date",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Manager, Models",
-                      "CodeArray": [
                         "using APSIM.Core;",
                         "using Models.Soils.Nutrients;",
                         "using System;",
@@ -2529,6 +2532,111 @@
                         }
                       ],
                       "Name": "SoilWaterCalculation",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "CodeArray": [
+                        "using Models.Soils.Nutrients;",
+                        "using System;",
+                        "using Models.Core;",
+                        "using Models.PMF;",
+                        "using Models.Soils;",
+                        "using Models.Soils.Nutrients;",
+                        "using Models.Utilities;",
+                        "using APSIM.Shared.Utilities;",
+                        "",
+                        "namespace Models",
+                        "{",
+                        "    [Serializable]",
+                        "    public class Script : Model",
+                        "    {",
+                        "        [Link] Plant Wheat;",
+                        "        ",
+                        "        [Description(\"Germination Date (d-mmm)\")]",
+                        "        public string GermDate { get; set;} ",
+                        "        [Description(\"Emergence Date (d-mmm)\")]",
+                        "        public string EmergDate { get; set;}",
+                        "        [Description(\"Vernalisation Date (d-mmm)\")]",
+                        "        public string VernDate { get; set;}",
+                        "        [Description(\"Terminal Spikelet Date (d-mmm)\")]",
+                        "        public string TSDate { get; set;}",
+                        "        [Description(\"FlagLeaf Date (d-mmm)\")]",
+                        "        public string FlagDate { get; set;}",
+                        "        [Description(\"Anthesis Date (d-mmm)\")]",
+                        "        public string AnthDate { get; set;}",
+                        "        [Description(\"Ripe Date (d-mmm)\")]",
+                        "        public string RipeDate { get; set;}",
+                        "        ",
+                        "        [EventSubscribe(\"PlantSowing\")]",
+                        "        private void OnPlantSowing(object sender, SowingParameters data)",
+                        "        {",
+                        "            if (!String.IsNullOrEmpty(GermDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(GermDate,\"Germinating\");",
+                        "            }",
+                        "            if (!String.IsNullOrEmpty(EmergDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(EmergDate,\"Emerging\");",
+                        "            }",
+                        "            if (!String.IsNullOrEmpty(VernDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(VernDate,\"LeavesInitiating\");",
+                        "            }",
+                        "            if (!String.IsNullOrEmpty(TSDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(TSDate,\"SpikeletsDifferentiating\");",
+                        "            }",
+                        "            if (!String.IsNullOrEmpty(FlagDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(FlagDate,\"StemElongating\");",
+                        "            }",
+                        "            if (!String.IsNullOrEmpty(AnthDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(AnthDate,\"Flowering\");",
+                        "            }",
+                        "            if (!String.IsNullOrEmpty(RipeDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(RipeDate,\"GrainRipening\");",
+                        "            }",
+                        "        }",
+                        "    }",
+                        "}"
+                      ],
+                      "Parameters": [
+                        {
+                          "Key": "GermDate",
+                          "Value": ""
+                        },
+                        {
+                          "Key": "EmergDate",
+                          "Value": ""
+                        },
+                        {
+                          "Key": "VernDate",
+                          "Value": ""
+                        },
+                        {
+                          "Key": "TSDate",
+                          "Value": ""
+                        },
+                        {
+                          "Key": "FlagDate",
+                          "Value": ""
+                        },
+                        {
+                          "Key": "AnthDate",
+                          "Value": ""
+                        },
+                        {
+                          "Key": "RipeDate",
+                          "Value": ""
+                        }
+                      ],
+                      "Name": "SetPhaseCompletionDates",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -5086,10 +5194,53 @@
               "Children": [
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[Sowing].Script.CultivarName = Hartog, Corack, Mace",
+                  "Specification": "",
                   "Name": "Cv",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Sowing].Script.CultivarName = Hartog",
+                        "[SetPhaseCompletionDates].Script.EmergDate = 2-jun-2014"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Hartog",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Sowing].Script.CultivarName = Corack",
+                        "[SetPhaseCompletionDates].Script.EmergDate = 2-jun-2014"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Corack",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Sowing].Script.CultivarName = Mace",
+                        "[SetPhaseCompletionDates].Script.EmergDate = 2-jun-2014"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Mace",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -5916,19 +6067,19 @@
                         "",
                         "                if(SowDate == \"11-Apr\")",
                         "                {",
-                        "                    Wheat.Phenology.SetEmergenceDate(\"16-Apr\");",
+                        "                    Wheat.Phenology.SetPhaseCompletionDate(\"16-Apr\",\"Emerging\");",
                         "                }",
                         "                if(SowDate == \"13-May\")",
                         "                {",
-                        "                    Wheat.Phenology.SetEmergenceDate(\"20-May\");",
+                        "                    Wheat.Phenology.SetPhaseCompletionDate(\"20-May\",\"Emerging\");",
                         "                }",
                         "                if(SowDate == \"16-Jul\")",
                         "                {",
-                        "                    Wheat.Phenology.SetEmergenceDate(\"23-Jul\");",
+                        "                    Wheat.Phenology.SetPhaseCompletionDate(\"23-Jul\",\"Emerging\");",
                         "                }",
                         "                if(SowDate == \"12-Aug\")",
                         "                {",
-                        "                    Wheat.Phenology.SetEmergenceDate(\"19-Aug\");",
+                        "                    Wheat.Phenology.SetPhaseCompletionDate(\"19-Aug\",\"Emerging\");",
                         "                }",
                         "            }",
                         "        ",
@@ -6064,46 +6215,6 @@
                     {
                       "$type": "Models.Manager, Models",
                       "CodeArray": [
-                        "using System;",
-                        "using Models.Core;",
-                        "using Models.PMF;",
-                        "",
-                        "namespace Models",
-                        "{",
-                        "    [Serializable]",
-                        "    public class Script : Model",
-                        "    {          ",
-                        "        [Link] Plant crop;",
-                        "",
-                        "        [Description(\"Emergence Date:\")]",
-                        "        public string EmergenceDate { get; set; }",
-                        "",
-                        "        [EventSubscribe(\"PlantSowing\")]",
-                        "        private void OnPlantSowing(object sender, EventArgs e)",
-                        "        {",
-                        "            if (!string.IsNullOrEmpty(EmergenceDate))",
-                        "            {",
-                        "                crop.Phenology.SetEmergenceDate(EmergenceDate);",
-                        "            }",
-                        "        }",
-                        "    }",
-                        "}"
-                      ],
-                      "Parameters": [
-                        {
-                          "Key": "EmergenceDate",
-                          "Value": "2-jun"
-                        }
-                      ],
-                      "Name": "Set Emergence Date",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Manager, Models",
-                      "CodeArray": [
                         "using APSIM.Core;",
                         "using Models.Soils.Nutrients;",
                         "using System;",
@@ -6222,6 +6333,111 @@
                         }
                       ],
                       "Name": "SoilWaterCalculation",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "CodeArray": [
+                        "using Models.Soils.Nutrients;",
+                        "using System;",
+                        "using Models.Core;",
+                        "using Models.PMF;",
+                        "using Models.Soils;",
+                        "using Models.Soils.Nutrients;",
+                        "using Models.Utilities;",
+                        "using APSIM.Shared.Utilities;",
+                        "",
+                        "namespace Models",
+                        "{",
+                        "    [Serializable]",
+                        "    public class Script : Model",
+                        "    {",
+                        "        [Link] Plant Wheat;",
+                        "        ",
+                        "        [Description(\"Germination Date (d-mmm)\")]",
+                        "        public string GermDate { get; set;} ",
+                        "        [Description(\"Emergence Date (d-mmm)\")]",
+                        "        public string EmergDate { get; set;}",
+                        "        [Description(\"Vernalisation Date (d-mmm)\")]",
+                        "        public string VernDate { get; set;}",
+                        "        [Description(\"Terminal Spikelet Date (d-mmm)\")]",
+                        "        public string TSDate { get; set;}",
+                        "        [Description(\"FlagLeaf Date (d-mmm)\")]",
+                        "        public string FlagDate { get; set;}",
+                        "        [Description(\"Anthesis Date (d-mmm)\")]",
+                        "        public string AnthDate { get; set;}",
+                        "        [Description(\"Ripe Date (d-mmm)\")]",
+                        "        public string RipeDate { get; set;}",
+                        "        ",
+                        "        [EventSubscribe(\"PlantSowing\")]",
+                        "        private void OnPlantSowing(object sender, SowingParameters data)",
+                        "        {",
+                        "            if (!String.IsNullOrEmpty(GermDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(GermDate,\"Germinating\");",
+                        "            }",
+                        "            if (!String.IsNullOrEmpty(EmergDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(EmergDate,\"Emerging\");",
+                        "            }",
+                        "            if (!String.IsNullOrEmpty(VernDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(VernDate,\"LeavesInitiating\");",
+                        "            }",
+                        "            if (!String.IsNullOrEmpty(TSDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(TSDate,\"SpikeletsDifferentiating\");",
+                        "            }",
+                        "            if (!String.IsNullOrEmpty(FlagDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(FlagDate,\"StemElongating\");",
+                        "            }",
+                        "            if (!String.IsNullOrEmpty(AnthDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(AnthDate,\"Flowering\");",
+                        "            }",
+                        "            if (!String.IsNullOrEmpty(RipeDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(RipeDate,\"GrainRipening\");",
+                        "            }",
+                        "        }",
+                        "    }",
+                        "}"
+                      ],
+                      "Parameters": [
+                        {
+                          "Key": "GermDate",
+                          "Value": ""
+                        },
+                        {
+                          "Key": "EmergDate",
+                          "Value": ""
+                        },
+                        {
+                          "Key": "VernDate",
+                          "Value": ""
+                        },
+                        {
+                          "Key": "TSDate",
+                          "Value": ""
+                        },
+                        {
+                          "Key": "FlagDate",
+                          "Value": ""
+                        },
+                        {
+                          "Key": "AnthDate",
+                          "Value": ""
+                        },
+                        {
+                          "Key": "RipeDate",
+                          "Value": ""
+                        }
+                      ],
+                      "Name": "SetPhaseCompletionDates",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -8181,7 +8397,8 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Hartog"
+                        "[Sowing].Script.CultivarName = Hartog",
+                        "[SetPhaseCompletionDates].Script.EmergDate = 25-may-2015"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -8195,7 +8412,8 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Corack",
-                        "[Sowing].Script.Population = 60"
+                        "[Sowing].Script.Population = 60",
+                        "[SetPhaseCompletionDates].Script.EmergDate = 25-may-2015"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -8209,7 +8427,8 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Hartog",
-                        "[Sowing].Script.Population = 90"
+                        "[Sowing].Script.Population = 90",
+                        "[SetPhaseCompletionDates].Script.EmergDate = 25-may-2015"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -8918,19 +9137,19 @@
                         "",
                         "                if(SowDate == \"11-Apr\")",
                         "                {",
-                        "                    Wheat.Phenology.SetEmergenceDate(\"16-Apr\");",
+                        "                    Wheat.Phenology.SetPhaseCompletionDate(\"16-Apr\",\"Emerging\");",
                         "                }",
                         "                if(SowDate == \"13-May\")",
                         "                {",
-                        "                    Wheat.Phenology.SetEmergenceDate(\"20-May\");",
+                        "                    Wheat.Phenology.SetPhaseCompletionDate(\"20-May\",\"Emerging\");",
                         "                }",
                         "                if(SowDate == \"16-Jul\")",
                         "                {",
-                        "                    Wheat.Phenology.SetEmergenceDate(\"23-Jul\");",
+                        "                    Wheat.Phenology.SetPhaseCompletionDate(\"23-Jul\",\"Emerging\");",
                         "                }",
                         "                if(SowDate == \"12-Aug\")",
                         "                {",
-                        "                    Wheat.Phenology.SetEmergenceDate(\"19-Aug\");",
+                        "                    Wheat.Phenology.SetPhaseCompletionDate(\"19-Aug\",\"Emerging\");",
                         "                }",
                         "            }",
                         "        ",
@@ -9047,46 +9266,6 @@
                         }
                       ],
                       "Name": "NDVIModel",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Manager, Models",
-                      "CodeArray": [
-                        "using System;",
-                        "using Models.Core;",
-                        "using Models.PMF;",
-                        "",
-                        "namespace Models",
-                        "{",
-                        "    [Serializable]",
-                        "    public class Script : Model",
-                        "    {          ",
-                        "        [Link] Plant crop;",
-                        "",
-                        "        [Description(\"Emergence Date:\")]",
-                        "        public string EmergenceDate { get; set; }",
-                        "",
-                        "        [EventSubscribe(\"PlantSowing\")]",
-                        "        private void OnPlantSowing(object sender, EventArgs e)",
-                        "        {",
-                        "            if (!string.IsNullOrEmpty(EmergenceDate))",
-                        "            {",
-                        "                crop.Phenology.SetEmergenceDate(EmergenceDate);",
-                        "            }",
-                        "        }",
-                        "    }",
-                        "}"
-                      ],
-                      "Parameters": [
-                        {
-                          "Key": "EmergenceDate",
-                          "Value": "25-May"
-                        }
-                      ],
-                      "Name": "Set Emergence Date",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -9224,6 +9403,111 @@
                         }
                       ],
                       "Name": "SoilWaterCalculation",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "CodeArray": [
+                        "using Models.Soils.Nutrients;",
+                        "using System;",
+                        "using Models.Core;",
+                        "using Models.PMF;",
+                        "using Models.Soils;",
+                        "using Models.Soils.Nutrients;",
+                        "using Models.Utilities;",
+                        "using APSIM.Shared.Utilities;",
+                        "",
+                        "namespace Models",
+                        "{",
+                        "    [Serializable]",
+                        "    public class Script : Model",
+                        "    {",
+                        "        [Link] Plant Wheat;",
+                        "        ",
+                        "        [Description(\"Germination Date (d-mmm)\")]",
+                        "        public string GermDate { get; set;} ",
+                        "        [Description(\"Emergence Date (d-mmm)\")]",
+                        "        public string EmergDate { get; set;}",
+                        "        [Description(\"Vernalisation Date (d-mmm)\")]",
+                        "        public string VernDate { get; set;}",
+                        "        [Description(\"Terminal Spikelet Date (d-mmm)\")]",
+                        "        public string TSDate { get; set;}",
+                        "        [Description(\"FlagLeaf Date (d-mmm)\")]",
+                        "        public string FlagDate { get; set;}",
+                        "        [Description(\"Anthesis Date (d-mmm)\")]",
+                        "        public string AnthDate { get; set;}",
+                        "        [Description(\"Ripe Date (d-mmm)\")]",
+                        "        public string RipeDate { get; set;}",
+                        "        ",
+                        "        [EventSubscribe(\"PlantSowing\")]",
+                        "        private void OnPlantSowing(object sender, SowingParameters data)",
+                        "        {",
+                        "            if (!String.IsNullOrEmpty(GermDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(GermDate,\"Germinating\");",
+                        "            }",
+                        "            if (!String.IsNullOrEmpty(EmergDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(EmergDate,\"Emerging\");",
+                        "            }",
+                        "            if (!String.IsNullOrEmpty(VernDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(VernDate,\"LeavesInitiating\");",
+                        "            }",
+                        "            if (!String.IsNullOrEmpty(TSDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(TSDate,\"SpikeletsDifferentiating\");",
+                        "            }",
+                        "            if (!String.IsNullOrEmpty(FlagDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(FlagDate,\"StemElongating\");",
+                        "            }",
+                        "            if (!String.IsNullOrEmpty(AnthDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(AnthDate,\"Flowering\");",
+                        "            }",
+                        "            if (!String.IsNullOrEmpty(RipeDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(RipeDate,\"GrainRipening\");",
+                        "            }",
+                        "        }",
+                        "    }",
+                        "}"
+                      ],
+                      "Parameters": [
+                        {
+                          "Key": "GermDate",
+                          "Value": ""
+                        },
+                        {
+                          "Key": "EmergDate",
+                          "Value": ""
+                        },
+                        {
+                          "Key": "VernDate",
+                          "Value": ""
+                        },
+                        {
+                          "Key": "TSDate",
+                          "Value": ""
+                        },
+                        {
+                          "Key": "FlagDate",
+                          "Value": ""
+                        },
+                        {
+                          "Key": "AnthDate",
+                          "Value": ""
+                        },
+                        {
+                          "Key": "RipeDate",
+                          "Value": ""
+                        }
+                      ],
+                      "Name": "SetPhaseCompletionDates",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -11435,10 +11719,53 @@
               "Children": [
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[Sowing].Script.CultivarName = Hartog, Corack, Mace",
+                  "Specification": "",
                   "Name": "Cv",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Sowing].Script.CultivarName = Hartog",
+                        "[SetPhaseCompletionDates].Script.EmergDate = 28-may-2014"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Hartog",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Sowing].Script.CultivarName = Corack",
+                        "[SetPhaseCompletionDates].Script.EmergDate = 28-may-2014"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Corack",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Sowing].Script.CultivarName = Mace",
+                        "[SetPhaseCompletionDates].Script.EmergDate = 28-may-2014"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Mace",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -11688,19 +12015,19 @@
                         "",
                         "                if(SowDate == \"11-Apr\")",
                         "                {",
-                        "                    Wheat.Phenology.SetEmergenceDate(\"16-Apr\");",
+                        "                    Wheat.Phenology.SetPhaseCompletionDate(\"16-Apr\",\"Emerging\");",
                         "                }",
                         "                if(SowDate == \"13-May\")",
                         "                {",
-                        "                    Wheat.Phenology.SetEmergenceDate(\"20-May\");",
+                        "                    Wheat.Phenology.SetPhaseCompletionDate(\"20-May\",\"Emerging\");",
                         "                }",
                         "                if(SowDate == \"16-Jul\")",
                         "                {",
-                        "                    Wheat.Phenology.SetEmergenceDate(\"23-Jul\");",
+                        "                    Wheat.Phenology.SetPhaseCompletionDate(\"23-Jul\",\"Emerging\");",
                         "                }",
                         "                if(SowDate == \"12-Aug\")",
                         "                {",
-                        "                    Wheat.Phenology.SetEmergenceDate(\"19-Aug\");",
+                        "                    Wheat.Phenology.SetPhaseCompletionDate(\"19-Aug\",\"Emerging\");",
                         "                }",
                         "            }",
                         "        ",
@@ -12648,46 +12975,6 @@
                     {
                       "$type": "Models.Manager, Models",
                       "CodeArray": [
-                        "using System;",
-                        "using Models.Core;",
-                        "using Models.PMF;",
-                        "",
-                        "namespace Models",
-                        "{",
-                        "    [Serializable]",
-                        "    public class Script : Model",
-                        "    {          ",
-                        "        [Link] Plant crop;",
-                        "",
-                        "        [Description(\"Emergence Date:\")]",
-                        "        public string EmergenceDate { get; set; }",
-                        "",
-                        "        [EventSubscribe(\"PlantSowing\")]",
-                        "        private void OnPlantSowing(object sender, EventArgs e)",
-                        "        {",
-                        "            if (!string.IsNullOrEmpty(EmergenceDate))",
-                        "            {",
-                        "                crop.Phenology.SetEmergenceDate(EmergenceDate);",
-                        "            }",
-                        "        }",
-                        "    }",
-                        "}"
-                      ],
-                      "Parameters": [
-                        {
-                          "Key": "EmergenceDate",
-                          "Value": "28-May"
-                        }
-                      ],
-                      "Name": "Set Emergence Date",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Manager, Models",
-                      "CodeArray": [
                         "using APSIM.Core;",
                         "using Models.Soils.Nutrients;",
                         "using System;",
@@ -12891,6 +13178,111 @@
                         }
                       ],
                       "Name": "SoilWaterCalculation",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "CodeArray": [
+                        "using Models.Soils.Nutrients;",
+                        "using System;",
+                        "using Models.Core;",
+                        "using Models.PMF;",
+                        "using Models.Soils;",
+                        "using Models.Soils.Nutrients;",
+                        "using Models.Utilities;",
+                        "using APSIM.Shared.Utilities;",
+                        "",
+                        "namespace Models",
+                        "{",
+                        "    [Serializable]",
+                        "    public class Script : Model",
+                        "    {",
+                        "        [Link] Plant Wheat;",
+                        "        ",
+                        "        [Description(\"Germination Date (d-mmm)\")]",
+                        "        public string GermDate { get; set;} ",
+                        "        [Description(\"Emergence Date (d-mmm)\")]",
+                        "        public string EmergDate { get; set;}",
+                        "        [Description(\"Vernalisation Date (d-mmm)\")]",
+                        "        public string VernDate { get; set;}",
+                        "        [Description(\"Terminal Spikelet Date (d-mmm)\")]",
+                        "        public string TSDate { get; set;}",
+                        "        [Description(\"FlagLeaf Date (d-mmm)\")]",
+                        "        public string FlagDate { get; set;}",
+                        "        [Description(\"Anthesis Date (d-mmm)\")]",
+                        "        public string AnthDate { get; set;}",
+                        "        [Description(\"Ripe Date (d-mmm)\")]",
+                        "        public string RipeDate { get; set;}",
+                        "        ",
+                        "        [EventSubscribe(\"PlantSowing\")]",
+                        "        private void OnPlantSowing(object sender, SowingParameters data)",
+                        "        {",
+                        "            if (!String.IsNullOrEmpty(GermDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(GermDate,\"Germinating\");",
+                        "            }",
+                        "            if (!String.IsNullOrEmpty(EmergDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(EmergDate,\"Emerging\");",
+                        "            }",
+                        "            if (!String.IsNullOrEmpty(VernDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(VernDate,\"LeavesInitiating\");",
+                        "            }",
+                        "            if (!String.IsNullOrEmpty(TSDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(TSDate,\"SpikeletsDifferentiating\");",
+                        "            }",
+                        "            if (!String.IsNullOrEmpty(FlagDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(FlagDate,\"StemElongating\");",
+                        "            }",
+                        "            if (!String.IsNullOrEmpty(AnthDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(AnthDate,\"Flowering\");",
+                        "            }",
+                        "            if (!String.IsNullOrEmpty(RipeDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(RipeDate,\"GrainRipening\");",
+                        "            }",
+                        "        }",
+                        "    }",
+                        "}"
+                      ],
+                      "Parameters": [
+                        {
+                          "Key": "GermDate",
+                          "Value": ""
+                        },
+                        {
+                          "Key": "EmergDate",
+                          "Value": ""
+                        },
+                        {
+                          "Key": "VernDate",
+                          "Value": ""
+                        },
+                        {
+                          "Key": "TSDate",
+                          "Value": ""
+                        },
+                        {
+                          "Key": "FlagDate",
+                          "Value": ""
+                        },
+                        {
+                          "Key": "AnthDate",
+                          "Value": ""
+                        },
+                        {
+                          "Key": "RipeDate",
+                          "Value": ""
+                        }
+                      ],
+                      "Name": "SetPhaseCompletionDates",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -14746,10 +15138,53 @@
               "Children": [
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[Sowing].Script.CultivarName = Hartog, Corack, Mace",
+                  "Specification": "",
                   "Name": "Cv",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Sowing].Script.CultivarName = Hartog",
+                        "[SetPhaseCompletionDates].Script.EmergDate = 20-may-2015"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Hartog",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Sowing].Script.CultivarName = Corack",
+                        "[SetPhaseCompletionDates].Script.EmergDate = 20-may-2015"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Corack",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Sowing].Script.CultivarName = Mace",
+                        "[SetPhaseCompletionDates].Script.EmergDate = 20-may-2015"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Mace",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -14999,19 +15434,19 @@
                         "",
                         "                if(SowDate == \"11-Apr\")",
                         "                {",
-                        "                    Wheat.Phenology.SetEmergenceDate(\"16-Apr\");",
+                        "                    Wheat.Phenology.SetPhaseCompletionDate(\"16-Apr\",\"Emerging\");",
                         "                }",
                         "                if(SowDate == \"13-May\")",
                         "                {",
-                        "                    Wheat.Phenology.SetEmergenceDate(\"20-May\");",
+                        "                    Wheat.Phenology.SetPhaseCompletionDate(\"20-May\",\"Emerging\");",
                         "                }",
                         "                if(SowDate == \"16-Jul\")",
                         "                {",
-                        "                    Wheat.Phenology.SetEmergenceDate(\"23-Jul\");",
+                        "                    Wheat.Phenology.SetPhaseCompletionDate(\"23-Jul\",\"Emerging\");",
                         "                }",
                         "                if(SowDate == \"12-Aug\")",
                         "                {",
-                        "                    Wheat.Phenology.SetEmergenceDate(\"19-Aug\");",
+                        "                    Wheat.Phenology.SetPhaseCompletionDate(\"19-Aug\",\"Emerging\");",
                         "                }",
                         "            }",
                         "        ",
@@ -15043,46 +15478,6 @@
                         }
                       ],
                       "Name": "Sowing",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Manager, Models",
-                      "CodeArray": [
-                        "using System;",
-                        "using Models.Core;",
-                        "using Models.PMF;",
-                        "",
-                        "namespace Models",
-                        "{",
-                        "    [Serializable]",
-                        "    public class Script : Model",
-                        "    {          ",
-                        "        [Link] Plant crop;",
-                        "",
-                        "        [Description(\"Emergence Date:\")]",
-                        "        public string EmergenceDate { get; set; }",
-                        "",
-                        "        [EventSubscribe(\"PlantSowing\")]",
-                        "        private void OnPlantSowing(object sender, EventArgs e)",
-                        "        {",
-                        "            if (!string.IsNullOrEmpty(EmergenceDate))",
-                        "            {",
-                        "                crop.Phenology.SetEmergenceDate(EmergenceDate);",
-                        "            }",
-                        "        }",
-                        "    }",
-                        "}"
-                      ],
-                      "Parameters": [
-                        {
-                          "Key": "EmergenceDate",
-                          "Value": "20-May"
-                        }
-                      ],
-                      "Name": "Set Emergence Date",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -16170,6 +16565,111 @@
                         }
                       ],
                       "Name": "SoilWaterCalculation",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "CodeArray": [
+                        "using Models.Soils.Nutrients;",
+                        "using System;",
+                        "using Models.Core;",
+                        "using Models.PMF;",
+                        "using Models.Soils;",
+                        "using Models.Soils.Nutrients;",
+                        "using Models.Utilities;",
+                        "using APSIM.Shared.Utilities;",
+                        "",
+                        "namespace Models",
+                        "{",
+                        "    [Serializable]",
+                        "    public class Script : Model",
+                        "    {",
+                        "        [Link] Plant Wheat;",
+                        "        ",
+                        "        [Description(\"Germination Date (d-mmm)\")]",
+                        "        public string GermDate { get; set;} ",
+                        "        [Description(\"Emergence Date (d-mmm)\")]",
+                        "        public string EmergDate { get; set;}",
+                        "        [Description(\"Vernalisation Date (d-mmm)\")]",
+                        "        public string VernDate { get; set;}",
+                        "        [Description(\"Terminal Spikelet Date (d-mmm)\")]",
+                        "        public string TSDate { get; set;}",
+                        "        [Description(\"FlagLeaf Date (d-mmm)\")]",
+                        "        public string FlagDate { get; set;}",
+                        "        [Description(\"Anthesis Date (d-mmm)\")]",
+                        "        public string AnthDate { get; set;}",
+                        "        [Description(\"Ripe Date (d-mmm)\")]",
+                        "        public string RipeDate { get; set;}",
+                        "        ",
+                        "        [EventSubscribe(\"PlantSowing\")]",
+                        "        private void OnPlantSowing(object sender, SowingParameters data)",
+                        "        {",
+                        "            if (!String.IsNullOrEmpty(GermDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(GermDate,\"Germinating\");",
+                        "            }",
+                        "            if (!String.IsNullOrEmpty(EmergDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(EmergDate,\"Emerging\");",
+                        "            }",
+                        "            if (!String.IsNullOrEmpty(VernDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(VernDate,\"LeavesInitiating\");",
+                        "            }",
+                        "            if (!String.IsNullOrEmpty(TSDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(TSDate,\"SpikeletsDifferentiating\");",
+                        "            }",
+                        "            if (!String.IsNullOrEmpty(FlagDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(FlagDate,\"StemElongating\");",
+                        "            }",
+                        "            if (!String.IsNullOrEmpty(AnthDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(AnthDate,\"Flowering\");",
+                        "            }",
+                        "            if (!String.IsNullOrEmpty(RipeDate))",
+                        "            {",
+                        "               Wheat.Phenology.SetPhaseCompletionDate(RipeDate,\"GrainRipening\");",
+                        "            }",
+                        "        }",
+                        "    }",
+                        "}"
+                      ],
+                      "Parameters": [
+                        {
+                          "Key": "GermDate",
+                          "Value": ""
+                        },
+                        {
+                          "Key": "EmergDate",
+                          "Value": ""
+                        },
+                        {
+                          "Key": "VernDate",
+                          "Value": ""
+                        },
+                        {
+                          "Key": "TSDate",
+                          "Value": ""
+                        },
+                        {
+                          "Key": "FlagDate",
+                          "Value": ""
+                        },
+                        {
+                          "Key": "AnthDate",
+                          "Value": ""
+                        },
+                        {
+                          "Key": "RipeDate",
+                          "Value": ""
+                        }
+                      ],
+                      "Name": "SetPhaseCompletionDates",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -18760,7 +19260,7 @@
                         "        {",
                         "            if (!string.IsNullOrEmpty(EmergenceDate))",
                         "            {",
-                        "                crop.Phenology.SetEmergenceDate(EmergenceDate);",
+                        "                crop.Phenology.SetPhaseCompletionDate(EmergenceDate,\"Emerging\");",
                         "            }",
                         "        }",
                         "    }",
@@ -20857,19 +21357,19 @@
                         "",
                         "                if(SowDate == \"11-Apr\")",
                         "                {",
-                        "                    Wheat.Phenology.SetEmergenceDate(\"16-Apr\");",
+                        "                    Wheat.Phenology.SetPhaseCompletionDate(\"16-Apr\",\"Emerging\");",
                         "                }",
                         "                if(SowDate == \"13-May\")",
                         "                {",
-                        "                    Wheat.Phenology.SetEmergenceDate(\"20-May\");",
+                        "                    Wheat.Phenology.SetPhaseCompletionDate(\"20-May\",\"Emerging\");",
                         "                }",
                         "                if(SowDate == \"16-Jul\")",
                         "                {",
-                        "                    Wheat.Phenology.SetEmergenceDate(\"23-Jul\");",
+                        "                    Wheat.Phenology.SetPhaseCompletionDate(\"23-Jul\",\"Emerging\");",
                         "                }",
                         "                if(SowDate == \"12-Aug\")",
                         "                {",
-                        "                    Wheat.Phenology.SetEmergenceDate(\"19-Aug\");",
+                        "                    Wheat.Phenology.SetPhaseCompletionDate(\"19-Aug\",\"Emerging\");",
                         "                }",
                         "            }",
                         "        ",
@@ -21458,7 +21958,7 @@
                         "        {",
                         "            if (!string.IsNullOrEmpty(EmergenceDate))",
                         "            {",
-                        "                crop.Phenology.SetEmergenceDate(EmergenceDate);",
+                        "                crop.Phenology.SetPhaseCompletionDate(EmergenceDate,\"Emerging\");",
                         "            }",
                         "        }",
                         "    }",
