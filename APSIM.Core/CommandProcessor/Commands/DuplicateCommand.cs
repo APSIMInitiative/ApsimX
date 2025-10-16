@@ -32,8 +32,10 @@ internal partial class DuplicateCommand : IModelCommand
     {
         var modelToDuplicate = (INodeModel)relativeTo.Node.Get(modelName, relativeTo: relativeTo)
                                ?? throw new Exception($"Cannot find model {modelName}");
-        modelToDuplicate.Rename(newName);
-        modelToDuplicate.Node.Parent.AddChild(modelToDuplicate.DeepClone());
+        var duplicatedModel = modelToDuplicate.DeepClone();
+        if (!string.IsNullOrEmpty(newName))
+            duplicatedModel.Rename(newName);
+        modelToDuplicate.Node.Parent.AddChild(duplicatedModel);
         return relativeTo;
     }
 }

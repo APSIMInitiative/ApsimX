@@ -24,6 +24,11 @@ internal partial class DeleteCommand : IModelCommand
     {
         var modelToDelete = (INodeModel)relativeTo.Node.Get(modelName, relativeTo: relativeTo)
                            ?? throw new Exception($"Cannot find model {modelName}");
+
+        // Throw exception if root node.
+        if (modelToDelete.Node.Parent == null)
+            throw new Exception($"Command 'delete [Simulations]' is an invalid command. [Simulations] node is the top-level node and cannot be deleted. Remove the command from your config file.");
+
         modelToDelete.Node.Parent.RemoveChild(modelToDelete);
         return relativeTo;
     }

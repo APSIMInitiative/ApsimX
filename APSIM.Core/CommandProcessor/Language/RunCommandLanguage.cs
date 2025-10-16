@@ -16,8 +16,8 @@ internal partial class RunCommand: IModelCommand
     {
         string pattern = $@"run";
 
-        Match match;
-        if ((match = Regex.Match(command, pattern)) == null)
+        Match match = Regex.Match(command, pattern);
+        if (match == null || !match.Success)
             throw new Exception($"Invalid run command: {command}");
 
         return new RunCommand();

@@ -20,9 +20,9 @@ internal partial class DuplicateCommand: IModelCommand
         string pattern = $@"duplicate (?<modelname>{modelNameWithBrackets})" +
                          $@"(?:\s+name\s+(?<name>{modelName}))*";
 
-        Match match;
-        if ((match = Regex.Match(command, pattern)) == null)
-            throw new Exception($"Invalid duplicate command: {command}");
+        Match match = Regex.Match(command, pattern);
+        if (match == null || !match.Success)
+            throw new Exception($"Invalid command: {command}");
 
         return new DuplicateCommand(match.Groups["modelname"]?.ToString(),
                                     match.Groups["name"]?.ToString());

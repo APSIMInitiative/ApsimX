@@ -7,23 +7,29 @@ internal partial class LoadCommand: IModelCommand
     /// <summary>
     /// Create a load command.
     /// </summary>
-    /// <param name="parameters"></param>
+    /// <param name="command">The full command string.</param>
+    /// <param name="relativeToDirectory">Directory name that the command filenames are relative to</param>
     /// <returns></returns>
     /// <remarks>
     /// load base.apsimx
     /// </remarks>
-    public static IModelCommand Create(string command, INodeModel parent)
+    public static IModelCommand Create(string command, string relativeToDirectory)
     {
-        string fileName = @"[\w\d\.\\:]+";
+        string fileNamePattern = @"[\w\d-_\.\\:]+";
 
         string pattern = $@"load\s+" +
-                         $@"(?<filename>{fileName})";
+                         $@"(?<filename>{fileNamePattern})";
 
-        Match match;
-        if ((match = Regex.Match(command, pattern)) == null)
-            throw new Exception($"Invalid load command: {command}");
+        Match match = Regex.Match(command, pattern);
+        if (match == null || !match.Success)
+            throw new Exception($"Invalid command: {command}");
 
-        return new LoadCommand(match.Groups["filename"]?.ToString());
+        // Get filename to convert to absolute path if necessary.
+        string fileName = match.Groups["filename"].ToString();
+        if (relativeToDirectory != null)
+            fileName = Path.GetFullPath(fileName, relativeToDirectory);
+
+        return new LoadCommand(fileName);
     }
 
     /// <summary>s

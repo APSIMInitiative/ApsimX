@@ -34,8 +34,9 @@ public class CommandLanguage
     /// </summary>
     /// <param name="lines">Collection of strings, one for each line.</param>
     /// <param name="relativeTo">The node owning the collection of strings.</param>
+    /// <param name="relativeToDirectory">Directory that file names are relative to.</param>
     /// <returns></returns>
-    public static IEnumerable<IModelCommand> StringToCommands(IEnumerable<string> lines, INodeModel relativeTo)
+    public static IEnumerable<IModelCommand> StringToCommands(IEnumerable<string> lines, INodeModel relativeTo, string relativeToDirectory)
     {
         List<IModelCommand> commands = [];
 
@@ -62,13 +63,13 @@ public class CommandLanguage
             {
                 // New command. If there is an existing command then add it to the commands collection.
                 if (command != null)
-                    commands.Add(ConvertCommandParameterToModelCommand(command, relativeTo));
+                    commands.Add(ConvertCommandParameterToModelCommand(command, relativeTo, relativeToDirectory));
 
                 command = sanitisedLine.Trim();
             }
         }
         if (command != null)
-            commands.Add(ConvertCommandParameterToModelCommand(command, relativeTo));
+            commands.Add(ConvertCommandParameterToModelCommand(command, relativeTo, relativeToDirectory));
 
         return commands;
     }
@@ -91,23 +92,25 @@ public class CommandLanguage
     /// </summary>
     /// <param name="command">Command string.</param>
     /// <param name="relativeTo">The node that owns the command string.</param>
+    /// <param name="relativeToDirectory">Directory name that the command filenames are relative to</param>
     /// <returns>An instance of a model command.</returns>
-    private static IModelCommand ConvertCommandParameterToModelCommand(string command, INodeModel relativeTo)
+    private static IModelCommand ConvertCommandParameterToModelCommand(string command, INodeModel relativeTo, string relativeToDirectory)
     {
+        command = command.Trim();
         if (command.StartsWith("add", StringComparison.InvariantCultureIgnoreCase))
-            return AddCommand.Create(command, relativeTo);
+            return AddCommand.Create(command, relativeTo, relativeToDirectory);
         else if (command.StartsWith("delete", StringComparison.InvariantCultureIgnoreCase))
             return DeleteCommand.Create(command, relativeTo);
         else if (command.StartsWith("duplicate", StringComparison.InvariantCultureIgnoreCase))
             return DuplicateCommand.Create(command, relativeTo);
         else if (command.StartsWith("save", StringComparison.InvariantCultureIgnoreCase))
-            return SaveCommand.Create(command, relativeTo);
+            return SaveCommand.Create(command, relativeToDirectory);
         else if (command.StartsWith("load", StringComparison.InvariantCultureIgnoreCase))
-            return LoadCommand.Create(command, relativeTo);
+            return LoadCommand.Create(command, relativeToDirectory);
         else if (command.StartsWith("run", StringComparison.InvariantCultureIgnoreCase))
             return RunCommand.Create(command, relativeTo);
         else if (command.Contains("="))
-            return SetPropertiesCommand.Create(command, relativeTo);
+            return SetPropertiesCommand.Create(command, relativeToDirectory);
 
         throw new Exception($"Unknown command: {command}");
     }

@@ -5,6 +5,7 @@ using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.JobRunning;
 using APSIM.Shared.Utilities;
+using Models.Storage;
 
 namespace Models.Core.Run
 {
@@ -264,6 +265,12 @@ namespace Models.Core.Run
         /// <summary>The time the run took.</summary>
         public TimeSpan ElapsedTime { get; private set; }
 
+        /// <summary>The playlist to run.</summary>
+        public string Playlist { get; set; }
+
+        /// <summary>The UseInMemoryDB setting to use when running.</summary>
+        public bool UseInMemoryDB { get; set; }
+
         /// <summary>An enumerator for simulations in the collection.</summary>
         public IEnumerable<Simulation> Simulations()
         {
@@ -418,6 +425,14 @@ namespace Models.Core.Run
         {
             // Remove old jobs
             jobs.Clear();
+
+            //
+            if (!string.IsNullOrEmpty(Playlist))
+                relativeTo = relativeTo.Node.FindInScope<Playlist>(Playlist)
+                             ?? throw new Exception($"Cannot find playlist {Playlist}");
+            // Set in memory db setting.
+            foreach (var dataStore in relativeTo.Node.FindAll<DataStore>())
+                dataStore.UseInMemoryDB = UseInMemoryDB;
 
             var simulationGroup = new SimulationGroup((IModel)relativeTo, runSimulations, runPostSimulationTools, runTests, simulationNamesToRun, simulationNamePatternMatch);
             simulationGroup.Completed += OnSimulationGroupCompleted;

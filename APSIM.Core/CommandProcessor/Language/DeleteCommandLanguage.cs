@@ -18,9 +18,9 @@ internal partial class DeleteCommand: IModelCommand
 
         string pattern = $@"delete (?<modelname>{modelNameWithBrackets})";
 
-        Match match;
-        if ((match = Regex.Match(command, pattern)) == null)
-            throw new Exception($"Invalid delete command: {command}");
+        Match match = Regex.Match(command, pattern);
+        if (match == null || !match.Success)
+            throw new Exception($"Invalid command: {command}");
 
         return new DeleteCommand(match.Groups["modelname"]?.ToString());
     }

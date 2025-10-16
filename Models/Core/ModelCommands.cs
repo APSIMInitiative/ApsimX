@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using APSIM.Core;
 using Models.Core.Run;
 using Newtonsoft.Json;
@@ -17,6 +18,9 @@ namespace Models.Core;
 [ValidParent(ParentType = typeof(Folder))]
 public class ModelCommands : Model, ILineEditor
 {
+    [Link]
+    private Simulation simulation = null;
+
     /// <summary>The lines to return to the editor.</summary>
     [JsonIgnore]
     public IEnumerable<string> Lines { get; set; }
@@ -30,7 +34,7 @@ public class ModelCommands : Model, ILineEditor
         //runner.SimulationCompleted += OnJobCompleted;
         //runner.AllSimulationsCompleted += OnAllJobsCompleted;
 
-        var processor = new CommandProcessor(CommandLanguage.StringToCommands(Lines, this), runner);
+        var processor = new CommandProcessor(CommandLanguage.StringToCommands(Lines, this, Path.GetDirectoryName(simulation.FileName)), runner);
         processor.Run(this);
     }
 

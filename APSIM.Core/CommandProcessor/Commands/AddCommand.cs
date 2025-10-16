@@ -60,7 +60,7 @@ internal partial class AddCommand : IModelCommand
         }
 
         // Add a model to all toModels.
-        foreach (var toModel in toModels)
+        foreach (var toModel in toModels.ToArray())  // Need the ToArray because toModels changes because of the AddChild.
             toModel.Node.AddChild(modelToAdd.DeepClone());
 
         return relativeTo;

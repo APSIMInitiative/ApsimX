@@ -34,7 +34,8 @@ internal class ModelRegistry
     internal static INodeModel CreateModel(string modelNameToCreate)
     {
         DiscoverModels();
-        Type typeToCreate = ModelNameToType(modelNameToCreate);
+        Type typeToCreate = ModelNameToType(modelNameToCreate)
+                            ?? throw new Exception($"Unknown model type {modelNameToCreate}");
 
         var model = (INodeModel)Activator.CreateInstance(typeToCreate, true)
                     ?? throw new Exception($"Cannot create a model of type {typeToCreate.Name}");

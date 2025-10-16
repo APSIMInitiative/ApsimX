@@ -8,22 +8,28 @@ internal partial class SaveCommand: IModelCommand
     /// Create a save command.
     /// </summary>
     /// <param name="command">Command string.</param>
+    /// <param name="relativeToDirectory">Directory name that the command filenames are relative to</param>
     /// <returns>A new model instance</returns>
     /// <remarks>
     /// save modifiedSim.apsimx
     /// </remarks>
-    public static IModelCommand Create(string command, INodeModel _)
+    public static IModelCommand Create(string command, string relativeToDirectory)
     {
-        string fileName = @"[\w\d\.\\:]+";
+        string fileNamePattern = @"[\w\d-_\.\\:]+";
 
         string pattern = $@"save\s+" +
-                         $@"(?<filename>{fileName})";
+                         $@"(?<filename>{fileNamePattern})";
 
-        Match match;
-        if ((match = Regex.Match(command, pattern)) == null)
-            throw new Exception($"Invalid save command: {command}");
+        Match match = Regex.Match(command, pattern);
+        if (match == null || !match.Success)
+            throw new Exception($"Invalid command: {command}");
 
-        return new SaveCommand(match.Groups["filename"]?.ToString());
+        // Get filename to convert to absolute path if necessary.
+        string fileName = match.Groups["filename"].ToString();
+        if (relativeToDirectory != null)
+            fileName = Path.GetFullPath(fileName, relativeToDirectory);
+
+        return new SaveCommand(fileName);
     }
 
     /// <summary>

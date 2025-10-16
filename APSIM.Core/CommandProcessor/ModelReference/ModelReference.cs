@@ -1,6 +1,6 @@
 namespace APSIM.Core;
 
-internal class ChildModelReference : IModelReference
+internal class ModelReference : IModelReference
 {
     /// <summary>Parent node containing commands..</summary>
     private readonly INodeModel parent;
@@ -13,7 +13,7 @@ internal class ChildModelReference : IModelReference
     /// </summary>
     /// <param name="parent">Parent model.</param>
     /// <param name="childModelName">Name of child model.</param>
-    public ChildModelReference(INodeModel parent, string childModelName)
+    public ModelReference(INodeModel parent, string childModelName)
     {
         this.parent = parent;
         this.childModelName = childModelName;
@@ -25,7 +25,7 @@ internal class ChildModelReference : IModelReference
     /// <returns>The model</returns>
     INodeModel IModelReference.GetModel()
     {
-        return parent.Node.FindChild<INodeModel>(childModelName)
+        return parent.Node.Get(childModelName) as INodeModel
             ?? throw new Exception($"Cannot find a child model named {childModelName} with a parent named {parent.Name}");
     }
 }

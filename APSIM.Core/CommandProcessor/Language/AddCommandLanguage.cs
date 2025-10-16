@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
 using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.EMMA;
 
 namespace APSIM.Core;
 
@@ -9,6 +10,7 @@ internal partial class AddCommand: IModelCommand
     /// Create an add command.
     /// </summary>
     /// <param name="command"></param>
+    /// <param name="relativeToDirectory">Directory name that the command filenames are relative to</param>
     /// <returns></returns>
     /// <remarks>
     /// add new Report to [Zone]
@@ -16,32 +18,43 @@ internal partial class AddCommand: IModelCommand
     /// add child Report to all [Zone]
     /// add [Report] from anotherfile.apsimx to [Zone]
     /// </remarks>
-    public static IModelCommand Create(string command, INodeModel parent)
+    public static IModelCommand Create(string command, INodeModel parent, string relativeToDirectory)
     {
-        string modelNameWithBrackets = @"[\w\d\[\]]+";
-        string modelName = @"[\w\d]+";
-        string fileName = @"[\w\d\.]+";
+        string modelNameWithBrackets = @"[\w\d\[\]\.]+";
+        string modelNamePattern = @"[\w\d]+";
+        string fileNamePattern = @"[\w\d-_\.\\:]+";
 
-        string pattern = $@"(?<childnew>child|new)*" + @"\s*" +
+        string pattern = $@"add (?<new>new)*" + @"\s*" +
                          $@"(?<modelname>{modelNameWithBrackets})" + @"\s+" +
-                         $@"(?:from\s+(?<filename>{fileName})\s+)*" +
+                         $@"(?:from\s+(?<filename>{fileNamePattern})\s+)*" +
                          $@"to\s+" +
                          $@"(?<all>all)*\s*" +
                          $@"(?<topath>{modelNameWithBrackets})\s*" +
-                         $@"(?:name\s+(?<name>{modelName}))*";
+                         $@"(?:name\s+(?<name>{modelNamePattern}))*";
 
         Match match;
-        if ((match = Regex.Match(command, pattern)) == null)
-            throw new Exception($"Invalid add command: {command}");
+        if ((match = Regex.Match(command, pattern)) == null || !match.Success ||
+             command.Length != match.Length)
+            throw new Exception($"Invalid command: {command}");
 
         IModelReference modelReference;
-        if (match.Groups["childnew"]?.ToString() == "child")
-            modelReference = new ChildModelReference(parent, match.Groups["modelname"]?.ToString());
-        else if (!string.IsNullOrEmpty(match.Groups["filename"]?.ToString()))
-            modelReference = new ModelInFileReference(match.Groups["filename"]?.ToString(), match.Groups["modelname"]?.ToString());
-        else
+        if (match.Groups["new"]?.ToString() == "new")
             modelReference = new NewModelReference(match.Groups["modelname"]?.ToString());
-
+        else if (!string.IsNullOrEmpty(match.Groups["filename"]?.ToString()))
+        {
+            // If filename is relative, make it absolute
+            string fileName = match.Groups["filename"].ToString();
+            if (relativeToDirectory != null)
+                fileName = Path.GetFullPath(fileName, relativeToDirectory);
+            modelReference = new ModelInFileReference(fileName, match.Groups["modelname"]?.ToString());
+        }
+        else
+        {
+            string modelName = match.Groups["modelname"].ToString().Trim();
+            if (!modelName.StartsWith('[') && !modelName.EndsWith(']'))
+                modelName = $"[{modelName}]";
+            modelReference = new ModelReference(parent, modelName);
+        }
 
         return new AddCommand(modelReference,
                               toPath: match.Groups["topath"]?.ToString(),
@@ -58,11 +71,8 @@ internal partial class AddCommand: IModelCommand
     {
         List<string> parts = ["add"];
 
-        if (modelReference is ChildModelReference childModelReference)
-        {
-            parts.Add("child");
+        if (modelReference is ModelReference childModelReference)
             parts.Add(childModelReference.childModelName);
-        }
         else if (modelReference is NewModelReference newModelReference)
         {
             parts.Add("new");

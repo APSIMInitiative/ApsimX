@@ -171,7 +171,7 @@ public class CommandTests
         };
         Node.Create(simulation);
 
-        IModelCommand cmd = new SetPropertiesCommand("[Clock].StartDate", "2000-01-01");
+        IModelCommand cmd = new SetPropertiesCommand("[Clock].StartDate", "2000-01-01", fileName: null);
         cmd.Run(simulation, runner: null);
 
         var clock = simulation.Children.First() as Clock;

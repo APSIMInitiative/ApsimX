@@ -528,6 +528,7 @@ public class Node : IStructure
         childNode.FileName = childNode.Parent.FileName;
         childNode.Compiler = childNode.Parent.Compiler;
         children.Add(childNode);
+        childNode.EnsureNameIsUnique();
 
         // Give the child our services.
         childNode.FileName = FileName;

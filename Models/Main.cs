@@ -10,15 +10,12 @@ using APSIM.Core;
 using APSIM.Shared.JobRunning;
 using APSIM.Shared.Utilities;
 using CommandLine;
-using DocumentFormat.OpenXml.Office2010.CustomUI;
 using Models.Core;
-using Models.Core.ConfigFile;
 using Models.Core.Run;
 using Models.Factorial;
 using Models.Storage;
 using Models.Utilities.Extensions;
 using Newtonsoft.Json.Linq;
-using Topten.RichTextKit.Utils;
 
 namespace Models
 {
@@ -185,8 +182,7 @@ namespace Models
                 {
                     string configFileAbsolutePath = Path.GetFullPath(options.Apply);
                     string configFileDirectory = Directory.GetParent(configFileAbsolutePath).FullName;
-                    List<string> commandsList = File.ReadAllLines(options.Apply).ToList();
-                    DoCommands(options, files, commandsList);
+                    DoCommands(options, files, options.Apply);
                     CleanUpTempFiles(configFileDirectory);
                 }
                 else
@@ -255,10 +251,20 @@ namespace Models
         /// </summary>
         /// <param name="options">The flags/switches given when calling models.exe.</param>
         /// <param name="files">the file name strings provided.</param>
-        /// <param name="commandsList">Contains an string array element for each line in the configFile. </param>
+        /// <param name="commandFileName">Name of command file.</param>
         /// <exception cref="Exception"></exception>
-        private static void DoCommands(Options options, string[] files, List<string> commandsList)
+        private static void DoCommands(Options options, string[] files, string commandFileName)
         {
+            // Ensure there is always a files array with at least one element so that ExecuteCommands
+            // always gets called.
+            if (files.Length == 0)
+                files = [null];
+
+            // Calculate the directory relative to the command file.
+            string relativeToDirectory = Path.GetDirectoryName(commandFileName)
+                                         ?? Directory.GetCurrentDirectory();
+            List<string> commandsList = File.ReadAllLines(commandFileName).ToList();
+
             if (options.Batch != null)
             {
                 if (File.Exists(options.Batch) && Path.GetExtension(options.Batch).Equals(".csv"))
@@ -266,25 +272,24 @@ namespace Models
                     using var streamReader = new StreamReader(options.Batch);
                     var dataTable = DataTableUtilities.FromCSV(options.Batch, streamReader.ReadToEnd());
 
-                    foreach (string file in files)
+                    foreach (DataRow row in dataTable.Rows)
                     {
-                        foreach (DataRow row in dataTable.Rows)
-                        {
-                            var dict = row.Table.Columns
-                                          .Cast<DataColumn>()
-                                          .ToDictionary(c => c.ColumnName, c => row[c].ToString());
+                        var dict = row.Table.Columns
+                                        .Cast<DataColumn>()
+                                        .ToDictionary(c => c.ColumnName, c => row[c].ToString());
 
-                            for (int i = 0; i < commandsList.Count; i++)
-                                commandsList[i] = Macro.Replace(commandsList[i], dict);
-                            ExecuteCommands(options, commandsList, file, row);
-                        }
+                        for (int i = 0; i < commandsList.Count; i++)
+                            commandsList[i] = Macro.Replace(commandsList[i], dict);
+
+                        foreach (string file in files)
+                            ExecuteCommands(options, commandsList, file, relativeToDirectory, row);
                     }
                 }
             }
             else
             {
                 foreach (string file in files)
-                    ExecuteCommands(options, commandsList, file);
+                    ExecuteCommands(options, commandsList, file, relativeToDirectory);
             }
         }
 
@@ -294,20 +299,11 @@ namespace Models
         /// <param name="options">Arguments from Models call.</param>
         /// <param name="commandsList">A list of commands.</param>
         /// <param name="file">The name of the file.</param>
+        /// <param name="relativeToDirectory">Directory name that the command filenames are relative to</param>
         /// <param name="row"></param>
-        private static void ExecuteCommands(Options options, List<string> commandsList, string file, DataRow row = null)
+        private static void ExecuteCommands(Options options, List<string> commandsList, string file, string relativeToDirectory, DataRow row = null)
         {
-            var rowValues = row.Table.Columns
-                                     .Cast<DataColumn>()
-                                     .ToDictionary(c => c.ColumnName, c => row[c].ToString());
-
-            for (int i = 0; i < commandsList.Count; i++)
-            {
-                if (row != null && commandsList[i].Contains('$'))
-                    commandsList[i] = Macro.Replace(commandsList[i], rowValues);
-
-            }
-
+            // Create am APSIM runner for a commands.
             var runner = new Runner(relativeTo: null as IModel,
                                     runSimulations: true,
                                     runPostSimulationTools: true,
@@ -315,6 +311,9 @@ namespace Models
                                     runType: options.RunType,
                                     numberOfProcessors: options.NumProcessors,
                                     simulationNamePatternMatch: options.SimulationNameRegex);
+            runner.Playlist = options.Playlist;
+            runner.UseInMemoryDB = options.InMemoryDB;
+
             runner.SimulationCompleted += OnJobCompleted;
             if (options.Verbose)
                 runner.SimulationCompleted += WriteCompleteMessage;
@@ -323,12 +322,34 @@ namespace Models
             runner.AllSimulationsCompleted += OnAllJobsCompleted;
 
             // Insert a load command at top of commands list.
-            if (file != null)
-                commandsList.Insert(0, $"load {file}");
+            INodeModel relativeTo = null;
+            if (file == null)
+            {
+                // Start the commands from an empty Simulations instance.
+                relativeTo = new Simulations()
+                {
+                    Children = [
+                        new DataStore(),
+                        /*new Simulation()
+                        {
+                            Children = [
+                                new Summary()
+                            ]
+                        }*/
+                    ]
+                };
+                Node.Create(relativeTo);
+            }
+            else
+            {
+                Node rootNode = FileFormat.ReadFromFile<Simulations>(file);
+                relativeTo = rootNode.Model;
+                //commandsList.Insert(0, $"load {file}");
+            }
 
-            var commands = CommandLanguage.StringToCommands(commandsList, relativeTo:null);
+            var commands = CommandLanguage.StringToCommands(commandsList, relativeTo, relativeToDirectory);
             CommandProcessor processor = new(commands, runner);
-            processor.Run(relativeTo: null);
+            processor.Run(relativeTo);
         }
 
         /// <summary>
