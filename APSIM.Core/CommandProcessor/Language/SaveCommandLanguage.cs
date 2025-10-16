@@ -7,7 +7,7 @@ internal partial class SaveCommand: IModelCommand
     /// <summary>
     /// Create a save command.
     /// </summary>
-    /// <param name="command">Command string.</param>
+    /// <param name="command">The command to parse.</param>
     /// <param name="relativeToDirectory">Directory name that the command filenames are relative to</param>
     /// <returns>A new model instance</returns>
     /// <remarks>

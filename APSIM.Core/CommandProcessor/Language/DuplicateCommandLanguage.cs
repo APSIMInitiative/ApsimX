@@ -7,12 +7,12 @@ internal partial class DuplicateCommand: IModelCommand
     /// <summary>
     /// Create a duplicate command.
     /// </summary>
-    /// <param name="command">Command string.</param>
+    /// <param name="command">The command to parse.</param>
     /// <returns>A new model instance</returns>
     /// <remarks>
     /// duplicate [Simulation] name SimulationCopy
     /// </remarks>
-    public static IModelCommand Create(string command, INodeModel _)
+    public static IModelCommand Create(string command)
     {
         string modelNameWithBrackets = @"[\w\d\[\]\.]+";
         string modelName = @"[\w\d]+";
@@ -31,7 +31,6 @@ internal partial class DuplicateCommand: IModelCommand
     /// <summary>
     /// Convert an Duplicate command instance to a string.
     /// </summary>
-    /// <param name="command">The DuplicateCommand instance.</param>
     /// <returns>A command language string.</returns>
     public override string ToString()
     {

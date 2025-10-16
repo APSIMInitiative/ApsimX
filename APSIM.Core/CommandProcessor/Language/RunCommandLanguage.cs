@@ -7,12 +7,8 @@ internal partial class RunCommand: IModelCommand
     /// <summary>
     /// Create a run command.
     /// </summary>
-    /// <param name="command">Command string.</param>
-    /// <returns>A new model instance</returns>
-    /// <remarks>
-    /// run
-    /// </remarks>
-    public static IModelCommand Create(string command, INodeModel _)
+    /// <param name="command">The command to parse.</param>
+    public static IModelCommand Create(string command)
     {
         string pattern = $@"run";
 

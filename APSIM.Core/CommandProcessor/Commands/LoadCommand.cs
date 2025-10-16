@@ -1,9 +1,9 @@
 namespace APSIM.Core;
 
-/// <summary>A load model commnd</summary>
+/// <summary>A load file commnd</summary>
 internal partial class LoadCommand : IModelCommand
 {
-    // <summary>The name of the model to delete.</summary>
+    // <summary>The name of the file to load into memory.</summary>
     private readonly string fileName;
 
     /// <summary>

@@ -1,8 +1,8 @@
 namespace APSIM.Core;
 
 /// <summary>
-/// An interface for a class which runs things. This is used to abstract
-/// runner implementations away from the GUI.
+/// An interface for a class which runs APSIM. This is used to abstract
+/// runner implementations.
 /// </summary>
 public interface IRunner
 {

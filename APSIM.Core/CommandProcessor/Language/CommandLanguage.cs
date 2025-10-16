@@ -19,13 +19,6 @@ namespace APSIM.Core;
 /// run APSIM
 /// load base.apsimx
 /// save modifiedSim.apsimx
-///
-/// use [BaseSimulation]
-/// define factor sow
-///     [Sowing].Date = 2020-06-01, 2020-07-01, 2020-08-01
-/// define factor nrate
-///     [FertiliseOnFixedDate].Amount = 0 to 200 step 10
-/// apply sow x nrate
 /// </remarks>
 public class CommandLanguage
 {
@@ -100,17 +93,17 @@ public class CommandLanguage
         if (command.StartsWith("add", StringComparison.InvariantCultureIgnoreCase))
             return AddCommand.Create(command, relativeTo, relativeToDirectory);
         else if (command.StartsWith("delete", StringComparison.InvariantCultureIgnoreCase))
-            return DeleteCommand.Create(command, relativeTo);
+            return DeleteCommand.Create(command);
         else if (command.StartsWith("duplicate", StringComparison.InvariantCultureIgnoreCase))
-            return DuplicateCommand.Create(command, relativeTo);
+            return DuplicateCommand.Create(command);
         else if (command.StartsWith("save", StringComparison.InvariantCultureIgnoreCase))
             return SaveCommand.Create(command, relativeToDirectory);
         else if (command.StartsWith("load", StringComparison.InvariantCultureIgnoreCase))
             return LoadCommand.Create(command, relativeToDirectory);
         else if (command.StartsWith("run", StringComparison.InvariantCultureIgnoreCase))
-            return RunCommand.Create(command, relativeTo);
-        else if (command.Contains("="))
-            return SetPropertiesCommand.Create(command, relativeToDirectory);
+            return RunCommand.Create(command);
+        else if (command.Contains('='))
+            return SetPropertyCommand.Create(command, relativeToDirectory);
 
         throw new Exception($"Unknown command: {command}");
     }

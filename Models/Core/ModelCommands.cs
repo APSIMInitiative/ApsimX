@@ -31,11 +31,9 @@ public class ModelCommands : Model, ILineEditor
     public void Run()
     {
         var runner = new Runner(this);
-        //runner.SimulationCompleted += OnJobCompleted;
-        //runner.AllSimulationsCompleted += OnAllJobsCompleted;
 
-        var processor = new CommandProcessor(CommandLanguage.StringToCommands(Lines, this, Path.GetDirectoryName(simulation.FileName)), runner);
-        processor.Run(this);
+        var commands = CommandLanguage.StringToCommands(Lines, this, Path.GetDirectoryName(simulation.FileName));
+        CommandProcessor.Run(commands, this, runner);
     }
 
 }

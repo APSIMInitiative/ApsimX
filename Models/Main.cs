@@ -321,22 +321,15 @@ namespace Models
                 runner.SimulationGroupCompleted += OnSimulationGroupCompleted;
             runner.AllSimulationsCompleted += OnAllJobsCompleted;
 
-            // Insert a load command at top of commands list.
+            // Get a node that the commands are relative to. If a file wasn't specified on the command line
+            // then create an empty Simulations node and use that as the node. Otherwise use the root node
+            // in the specified file.
             INodeModel relativeTo = null;
             if (file == null)
             {
-                // Start the commands from an empty Simulations instance.
                 relativeTo = new Simulations()
                 {
-                    Children = [
-                        new DataStore(),
-                        /*new Simulation()
-                        {
-                            Children = [
-                                new Summary()
-                            ]
-                        }*/
-                    ]
+                    Children = [ new DataStore() ]
                 };
                 Node.Create(relativeTo);
             }
@@ -344,12 +337,11 @@ namespace Models
             {
                 Node rootNode = FileFormat.ReadFromFile<Simulations>(file);
                 relativeTo = rootNode.Model;
-                //commandsList.Insert(0, $"load {file}");
             }
 
+            // Convert all command strings into commands and run them.
             var commands = CommandLanguage.StringToCommands(commandsList, relativeTo, relativeToDirectory);
-            CommandProcessor processor = new(commands, runner);
-            processor.Run(relativeTo);
+            CommandProcessor.Run(commands, relativeTo, runner);
         }
 
         /// <summary>

@@ -20,6 +20,8 @@ public class CommandLanguageTests
     [TestCase("load C:\\temp\\test.apsimx")]
     [TestCase("[Simulation].Name=NewName")]
     [TestCase("[Simulation].Name=<test.txt")]
+    [TestCase("[Cultivar].Commands-=NewName")]
+    [TestCase("[Cultivar].Commands+=NewName")]
     public void EnsureAddLanguageParsingWorks(string commandString)
     {
         var commands = CommandLanguage.StringToCommands([commandString], relativeTo: null, relativeToDirectory: null);

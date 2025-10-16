@@ -1,15 +1,13 @@
 using System.Text.RegularExpressions;
-using APSIM.Shared.Utilities;
-using SQLitePCL;
 
 namespace APSIM.Core;
 
-internal partial class SetPropertiesCommand: IModelCommand
+internal partial class SetPropertyCommand: IModelCommand
 {
     /// <summary>
     /// Create a set properties command.
     /// </summary>
-    /// <param name="command">Command string.</param>
+    /// <param name="command">The command to parse.</param>
     /// <param name="relativeToDirectory">Directory name that the command filenames are relative to</param>
     /// <returns>A new model instance</returns>
     /// <remarks>
@@ -19,7 +17,7 @@ internal partial class SetPropertiesCommand: IModelCommand
     {
         string modelNameWithBrackets = @"[\w\d\[\]\.]+";
 
-        string pattern = $@"(?<keyword>{modelNameWithBrackets})\s*=\s*(?<pipe>\<)*\s*(?<value>[^\<]+)";
+        string pattern = $@"(?<keyword>{modelNameWithBrackets})\s*(?<operator>[-+=]+)\s*(?<pipe>\<)*\s*(?<value>[^\<]+)";
 
         Match match = Regex.Match(command, pattern);
         if (match == null || !match.Success)
@@ -35,7 +33,8 @@ internal partial class SetPropertiesCommand: IModelCommand
                 fileName = Path.GetFullPath(fileName, relativeToDirectory);
         }
 
-        return new SetPropertiesCommand(match.Groups["keyword"]?.ToString(),
+        return new SetPropertyCommand(match.Groups["keyword"]?.ToString(),
+                                        match.Groups["operator"]?.ToString(),
                                         value,
                                         fileName);
     }
@@ -47,7 +46,7 @@ internal partial class SetPropertiesCommand: IModelCommand
     public override string ToString()
     {
         if (fileName == null)
-            return $"{name}={value}";
+            return $"{name}{oper}{value}";
         else
             return $"{name}=<{fileName}";
     }

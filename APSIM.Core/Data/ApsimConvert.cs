@@ -36,7 +36,14 @@ public static class ApsimConvert
                     values.SetValue(arrayElement, i);
                     i++;
                 }
-                return values;
+
+                if (targetType.Name == "List`1")
+                {
+                    Type concreteListType = typeof(List<>).MakeGenericType(targetElementType);
+                    return Activator.CreateInstance(concreteListType, new object[] { values });
+                }
+                else
+                    return values;
             }
             else
             {
@@ -87,7 +94,7 @@ public static class ApsimConvert
     /// </summary>
     /// <param name="type">The type of the Array or List (e.g. int[] or List<int>)</param>
     /// <returns>True if Array or List.</returns>
-    private static bool IsIList(Type type)
+    internal static bool IsIList(Type type)
     {
         return type.IsArray || type.Name == "List`1";
     }

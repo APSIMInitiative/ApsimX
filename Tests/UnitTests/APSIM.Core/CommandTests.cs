@@ -1,5 +1,6 @@
 ﻿using Models;
 using Models.Core;
+using Models.PMF;
 using NUnit.Framework;
 using System.IO;
 using System.Linq;
@@ -171,11 +172,83 @@ public class CommandTests
         };
         Node.Create(simulation);
 
-        IModelCommand cmd = new SetPropertiesCommand("[Clock].StartDate", "2000-01-01", fileName: null);
+        IModelCommand cmd = new SetPropertyCommand("[Clock].StartDate", "=", "2000-01-01", fileName: null);
         cmd.Run(simulation, runner: null);
 
         var clock = simulation.Children.First() as Clock;
         Assert.That(clock.StartDate, Is.EqualTo(new System.DateTime(2000, 1, 1)));
+    }
+
+
+    /// <summary>Ensure the set property += command works.</summary>
+    [Test]
+    public void EnsureSetPropertyAddToArrayWorks()
+    {
+        Simulations simulation = new()
+        {
+            Children =
+            [
+                new Cultivar()
+                {
+                    Command = [ "a" ]
+                }
+            ]
+        };
+        Node.Create(simulation);
+
+        IModelCommand cmd = new SetPropertyCommand("[Cultivar].Command", "+=", "b", fileName: null);
+        cmd.Run(simulation, runner: null);
+
+        var cultivar = simulation.Children.First() as Cultivar;
+        Assert.That(cultivar.Command, Is.EqualTo(["a", "b"]));
+    }
+
+
+    /// <summary>Ensure the set property -= command works.</summary>
+    [Test]
+    public void EnsureSetPropertyDeleteFromArrayWorks()
+    {
+        Simulations simulation = new()
+        {
+            Children =
+            [
+                new Cultivar()
+                {
+                    Command = [ "a", "b" ]
+                }
+            ]
+        };
+        Node.Create(simulation);
+
+        IModelCommand cmd = new SetPropertyCommand("[Cultivar].Command", "-=", "b", fileName: null);
+        cmd.Run(simulation, runner: null);
+
+        var cultivar = simulation.Children.First() as Cultivar;
+        Assert.That(cultivar.Command, Is.EqualTo(["a"]));
+    }
+
+
+    /// <summary>Ensure the set property -= command doesn't throw when element to delete cannot be found.</summary>
+    [Test]
+    public void EnsureSetPropertyDeleteDoesntThrowWhenMissingElement()
+    {
+        Simulations simulation = new()
+        {
+            Children =
+            [
+                new Cultivar()
+                {
+                    Command = [ "a", "b" ]
+                }
+            ]
+        };
+        Node.Create(simulation);
+
+        IModelCommand cmd = new SetPropertyCommand("[Cultivar].Command", "-=", "c", fileName: null);
+        cmd.Run(simulation, runner: null);
+
+        var cultivar = simulation.Children.First() as Cultivar;
+        Assert.That(cultivar.Command, Is.EqualTo(["a", "b"]));
     }
 
     /// <summary>Ensure the load command works.</summary>
@@ -194,8 +267,8 @@ public class CommandTests
 
         // Run the save command.
         string tempFilePath = Path.GetTempFileName();
-        CommandProcessor commands = new([new SaveCommand(fileName: tempFilePath)], runner: null);
-        commands.Run(simulations);
+        IModelCommand saveCommand = new SaveCommand(fileName: tempFilePath);
+        saveCommand.Run(relativeTo: simulations, runner: null);
 
         // Run load command. It should return a relativeTo that is from the temp file.
         IModelCommand loadCommand = new LoadCommand(tempFilePath);
@@ -221,8 +294,8 @@ public class CommandTests
         MockRunner mockRunner = new();
 
         // Run the run command.
-        CommandProcessor commands = new([new RunCommand()], runner: mockRunner);
-        commands.Run(simulations);
+        IModelCommand cmd = new RunCommand();
+        cmd.Run(simulations, runner: mockRunner);
 
         Assert.That(mockRunner.RunCalled, Is.True);
         Assert.That(mockRunner.RelativeTo, Is.EqualTo(simulations));

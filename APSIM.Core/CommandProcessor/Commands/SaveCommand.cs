@@ -1,5 +1,3 @@
-using NetTopologySuite.Operation.Relate;
-
 namespace APSIM.Core;
 
 /// <summary>A save command</summary>

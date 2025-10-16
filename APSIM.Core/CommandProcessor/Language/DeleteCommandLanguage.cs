@@ -7,12 +7,11 @@ internal partial class DeleteCommand: IModelCommand
     /// <summary>
     /// Create a delete command.
     /// </summary>
-    /// <param name="parameters"></param>
-    /// <returns></returns>
+    /// <param name="command">The command to parse.</param>
     /// <remarks>
     /// delete [Zone].Report
     /// </remarks>
-    public static IModelCommand Create(string command, INodeModel parent)
+    public static IModelCommand Create(string command)
     {
         string modelNameWithBrackets = @"[\w\d\[\]\.]+";
 
@@ -28,7 +27,6 @@ internal partial class DeleteCommand: IModelCommand
     /// <summary>s
     /// Convert an DeleteCommand instance to a string.
     /// </summary>
-    /// <param name="command">The DeleteCommand instance.</param>
     /// <returns>A command language string.</returns>
     public override string ToString() => $"delete {modelName}";
 }

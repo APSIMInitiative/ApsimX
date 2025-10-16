@@ -1,6 +1,4 @@
 using System.Text.RegularExpressions;
-using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.EMMA;
 
 namespace APSIM.Core;
 
@@ -9,16 +7,17 @@ internal partial class AddCommand: IModelCommand
     /// <summary>
     /// Create an add command.
     /// </summary>
-    /// <param name="command"></param>
+    /// <param name="command">The command to parse.</param>
+    /// <param name="relativeTo">The node that owns the command string.</param>
     /// <param name="relativeToDirectory">Directory name that the command filenames are relative to</param>
     /// <returns></returns>
     /// <remarks>
     /// add new Report to [Zone]
-    /// add child Report to [Zone] name MyReport
-    /// add child Report to all [Zone]
+    /// add Report to [Zone] name MyReport
+    /// add Report to all [Zone]
     /// add [Report] from anotherfile.apsimx to [Zone]
     /// </remarks>
-    public static IModelCommand Create(string command, INodeModel parent, string relativeToDirectory)
+    public static IModelCommand Create(string command, INodeModel relativeTo, string relativeToDirectory)
     {
         string modelNameWithBrackets = @"[\w\d\[\]\.]+";
         string modelNamePattern = @"[\w\d]+";
@@ -53,7 +52,7 @@ internal partial class AddCommand: IModelCommand
             string modelName = match.Groups["modelname"].ToString().Trim();
             if (!modelName.StartsWith('[') && !modelName.EndsWith(']'))
                 modelName = $"[{modelName}]";
-            modelReference = new ModelReference(parent, modelName);
+            modelReference = new ModelReference(relativeTo, modelName);
         }
 
         return new AddCommand(modelReference,
@@ -65,14 +64,13 @@ internal partial class AddCommand: IModelCommand
     /// <summary>
     /// Convert an AddCommand instance to a string.
     /// </summary>
-    /// <param name="command">The AddCommand instance.</param>
     /// <returns>A command language string.</returns>
     public override string ToString()
     {
         List<string> parts = ["add"];
 
         if (modelReference is ModelReference childModelReference)
-            parts.Add(childModelReference.childModelName);
+            parts.Add(childModelReference.modelName);
         else if (modelReference is NewModelReference newModelReference)
         {
             parts.Add("new");

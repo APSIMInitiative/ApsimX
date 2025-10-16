@@ -7,7 +7,7 @@ internal partial class LoadCommand: IModelCommand
     /// <summary>
     /// Create a load command.
     /// </summary>
-    /// <param name="command">The full command string.</param>
+    /// <param name="command">The command to parse.</param>
     /// <param name="relativeToDirectory">Directory name that the command filenames are relative to</param>
     /// <returns></returns>
     /// <remarks>
@@ -35,7 +35,6 @@ internal partial class LoadCommand: IModelCommand
     /// <summary>s
     /// Convert an LoadCommand instance to a string.
     /// </summary>
-    /// <param name="command">The LoadCommand instance.</param>
     /// <returns>A command language string.</returns>
     public override string ToString() => $"load {fileName}";
 }
