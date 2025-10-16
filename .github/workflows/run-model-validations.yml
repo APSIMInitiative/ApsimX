@@ -72,6 +72,10 @@ jobs:
       - name: Split FAR Validation
         run: dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -d ./Tests/Validation/Wheat/FAR/FAR.apsimx -s ./Tests/Validation/Wheat/FAR/split.json
 
+      - name: Split Wheat Phenology Validation
+        run: dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -d ./Tests/Validation/Wheat/Phenology/Phenology.apsimx -s ./Tests/Validation/Wheat/Phenology/split.json
+        continue-on-error: true  # Allow job to continue if the phenology split fails. This may occur for other PRs before the Phenology split is merged.
+        
       - name: Log in to Docker Hub
         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
         with:
