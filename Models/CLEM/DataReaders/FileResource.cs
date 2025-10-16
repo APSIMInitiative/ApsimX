@@ -131,14 +131,20 @@ namespace Models.CLEM
             get
             {
                 if ((FileName == null) || (FileName == ""))
+                {
                     return "";
+                }
                 else
                 {
                     Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
                     if (simulation != null)
+                    {
                         return PathUtilities.GetAbsolutePath(FileName, simulation.FileName);
+                    }
                     else
+                    {
                         return FileName;
+                    }
                 }
             }
         }
@@ -160,8 +166,11 @@ namespace Models.CLEM
             if (!FileExists)
             {
                 string filename = FullFileName.Replace("\\", "\\&shy;");
-                if(filename == "")
+                if (filename == "")
+                {
                     filename = "Not set";
+                }
+
                 string errorMsg = String.Format("Could not locate file [o={0}] for [x={1}]", filename, Name);
                 throw new ApsimXException(this, errorMsg);
             }
@@ -237,23 +246,20 @@ namespace Models.CLEM
 
                 DataTable table = reader.ToTable(cropProps);
 
-                DataColumn[] primarykeys = new DataColumn[5];
-                primarykeys[0] = table.Columns[ResourceNameColumnName];
+                DataColumn[] primaryKeys = new DataColumn[5];
+                primaryKeys[0] = table.Columns[ResourceNameColumnName];
 
                 if (StyleOfDateEntry == DateStyle.DateStamp)
                 {
-                    primarykeys[1] = table.Columns[DateColumnName];
+                    primaryKeys[1] = table.Columns[DateColumnName];
                 }
                 else
                 {
-                    primarykeys[1] = table.Columns[YearColumnName];
-                    primarykeys[2] = table.Columns[MonthColumnName];
+                    primaryKeys[1] = table.Columns[YearColumnName];
+                    primaryKeys[2] = table.Columns[MonthColumnName];
                 }
-                //primarykeys[2] = table.Columns[YearColumnName];
-                //if (StyleOfDateEntry == DateStyle.YearAndMonth)
-                //    primarykeys[3] = table.Columns[MonthColumnName];
 
-                table.PrimaryKey = primarykeys;
+                table.PrimaryKey = primaryKeys;
                 CloseDataFile();
                 return table;
             }
@@ -275,23 +281,23 @@ namespace Models.CLEM
         /// Searches the DataTable created from the Resource File using the specified parameters.
         /// <returns></returns>
         /// </summary>
-        /// <param name="startdate">Start of range to consider</param>
-        /// <param name="enddate">End of range to consider</param>
+        /// <param name="startDate">Start of range to consider</param>
+        /// <param name="endDate">End of range to consider</param>
         /// <param name="resourceNames">Ienumerable of strings representing resource columns to include</param>
         /// <param name="includeZeroAmounts">Include entries where amount equals zero</param>
         /// <returns>
-        /// A dataview with all data for the month.
+        /// A DataView with all data for the month.
         /// </returns>
-        public DataView GetCurrentResourceData(DateTime startdate, DateTime enddate, IEnumerable<string> resourceNames = null, bool includeZeroAmounts = false)
+        public DataView GetCurrentResourceData(DateTime startDate, DateTime endDate, IEnumerable<string> resourceNames = null, bool includeZeroAmounts = false)
         {
             string filter = "(";
             switch (StyleOfDateEntry)
             {
                 case DateStyle.DateStamp:
-                    filter = $"{filter}({DateColumnName} >= {startdate} AND {DateColumnName} <= {enddate})";
+                    filter = $"{filter}({DateColumnName} >= {startDate} AND {DateColumnName} <= {endDate})";
                     throw new NotImplementedException();
                 case DateStyle.YearAndMonth:
-                    filter = $"{filter}({YearColumnName} >= {startdate.Year} AND {MonthColumnName} >= {startdate.Month})";
+                    filter = $"{filter}({YearColumnName} >= {startDate.Year} AND {MonthColumnName} >= {startDate.Month})";
                     break;
             }
             DataView dataView = new DataView(resourceFileAsTable);
@@ -300,8 +306,11 @@ namespace Models.CLEM
                 filter = $"{filter} AND (";
                 foreach (var resourceName in resourceNames)
                 {
-                    if(!filter.EndsWith("("))
+                    if (!filter.EndsWith("("))
+                    {
                         filter = $"{filter} OR ";
+                    }
+
                     filter = $"{filter} {ResourceNameColumnName} = '{resourceName.Trim()}'";
                 }
                 filter = $"{filter} )";
@@ -335,7 +344,9 @@ namespace Models.CLEM
                         string fileType = "Text file";
                         string extra = "\r\nExpecting Header row followed by units row in brackets.\r\nHeading1      Heading2      Heading3\r\n( )         ( )        ( )";
                         if (reader.IsCSVFile)
+                        {
                             fileType = "Comma delimited text file (csv)";
+                        }
 
                         if (reader.IsExcelFile)
                         {
@@ -346,32 +357,54 @@ namespace Models.CLEM
                     }
 
                     if (StringUtilities.IndexOfCaseInsensitive(reader.Headings, ResourceNameColumnName) == -1)
+                    {
                         if (reader == null || reader.Constant(ResourceNameColumnName) == null)
+                        {
                             throw new Exception($"Cannot find ResourceName column [o={ResourceNameColumnName ?? "Empty"}] in resource file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={Name}]");
+                        }
+                    }
 
                     if (StringUtilities.IndexOfCaseInsensitive(reader.Headings, YearColumnName) == -1)
+                    {
                         if (reader == null || reader.Constant(YearColumnName) == null)
+                        {
                             throw new Exception($"Cannot find Year column [o={YearColumnName ?? "Empty"}] in resource file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={Name}]");
+                        }
+                    }
 
                     if (StyleOfDateEntry == DateStyle.YearAndMonth)
+                    {
                         if (StringUtilities.IndexOfCaseInsensitive(reader.Headings, MonthColumnName) == -1)
+                        {
                             if (reader == null || reader.Constant(MonthColumnName) == null)
+                            {
                                 throw new Exception($"Cannot find Month column [o={MonthColumnName ?? "Empty"}] in resource file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={Name}]");
+                            }
+                        }
+                    }
 
                     if (StringUtilities.IndexOfCaseInsensitive(reader.Headings, AmountColumnName) == -1)
+                    {
                         if (reader == null || reader.Constant(AmountColumnName) == null)
+                        {
                             throw new Exception($"Cannot find Amount column [o={AmountColumnName}] in resource file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={Name}]");
+                        }
+                    }
                 }
                 else
                 {
                     if (reader.IsExcelFile != true)
+                    {
                         reader.SeekToDate(reader.FirstDate);
+                    }
                 }
 
                 return true;
             }
             else
+            {
                 return false;
+            }
         }
 
         /// <summary>Close the datafile.</summary>

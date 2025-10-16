@@ -12,7 +12,6 @@ namespace Models.CLEM.Activities
 {
     /// <summary>Activity to arrange and pay an enterprise expenses
     /// </summary>
-    /// <version>1.0</version>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -73,7 +72,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void PerformTasksForTimestep(double argument = 0)
         {
-            if(ResourceRequestList.Any())
+            if (ResourceRequestList.Count != 0)
             {
                 var finRequest = ResourceRequestList.Where(a => a.ResourceType == typeof(Finance)).FirstOrDefault<ResourceRequest>();
                 if (finRequest != null)

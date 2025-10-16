@@ -76,7 +76,9 @@ namespace Models.CLEM.Activities
             if (TimingOK)
             {
                 if (Structure.FindParent<CropActivityManageProduct>(recurse: true).CurrentlyManaged)
+                {
                     Status = ActivityStatus.Success;
+                }
                 else
                 {
                     Status = ActivityStatus.Warning;
@@ -144,7 +146,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void PerformTasksForTimestep(double argument = 0)
         {
-            if(ResourceRequestList.Any())
+            if (ResourceRequestList.Count != 0)
             {
                 SetStatusSuccessOrPartial(amountToSkip > 0);
             }
@@ -156,12 +158,14 @@ namespace Models.CLEM.Activities
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             IModel follow = Parent;
-            while (!(follow is ActivitiesHolder))
+            while (follow is not Activities.ActivitiesHolder)
             {
-                if(follow is CropActivityManageProduct)
+                if (follow is CropActivityManageProduct)
+                {
                     break;
+                }
 
-                if(follow is not ActivityFolder)
+                if (follow is not ActivityFolder)
                 {
                     yield return new ValidationResult("A [a=CropActivityTask] must be placed immediately below, or within nested [a=ActivityFolders] below, a [a=CropActivityManageProduct] component", new string[] { "Parent model" });
                 }

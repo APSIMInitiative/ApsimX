@@ -14,8 +14,6 @@ namespace Models.CLEM.Activities
     /// <summary>Ruminant graze activity</summary>
     /// <summary>This activity determines how a ruminant group will graze</summary>
     /// <summary>It is designed to request food via a food store arbitrator</summary>
-    /// <version>1.0</version>
-    /// <updates>1.0 First implementation of this activity using NABSA processes</updates>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -45,7 +43,9 @@ namespace Models.CLEM.Activities
             bool buildTransactionFromTree = Structure.FindParent<ZoneCLEM>(recurse: true).BuildTransactionCategoryFromTree;
             string transCat = "";
             if (!buildTransactionFromTree)
+            {
                 transCat = TransactionCategory;
+            }
 
             GrazeFoodStore grazeFoodStore = Resources.FindResourceGroup<GrazeFoodStore>();
             if (grazeFoodStore is null)
@@ -73,8 +73,11 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void PerformTasksForTimestep(double argument = 0)
         {
-            if(Status != ActivityStatus.Partial && Status != ActivityStatus.Critical)
+            if (Status != ActivityStatus.Partial && Status != ActivityStatus.Critical)
+            {
                 Status = ActivityStatus.NoTask;
+            }
+
             return;
         }
 
@@ -98,9 +101,13 @@ namespace Models.CLEM.Activities
             using StringWriter htmlWriter = new();
             htmlWriter.Write("\r\n<div class=\"activityentry\">All individuals in managed pastures will graze for ");
             if (HoursGrazed <= 0)
+            {
                 htmlWriter.Write($"<span class=\"errorlink\">{HoursGrazed:0.#}</span> hours of ");
+            }
             else
+            {
                 htmlWriter.Write(((HoursGrazed == 8) ? "" : $"<span class=\"setvalue\">{HoursGrazed:0.#}</span> hours of "));
+            }
 
             htmlWriter.Write("the maximum 8 hours each day</span>");
             htmlWriter.Write("</div>");

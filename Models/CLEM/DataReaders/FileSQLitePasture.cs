@@ -212,7 +212,9 @@ namespace Models.CLEM
             // look for a shuffler
             shuffler = Structure.FindChildren<RainfallShuffler>().FirstOrDefault();
             if (shuffler != null)
+            {
                 rndClem = Structure.Find<RandomNumberGenerator>();
+            }
         }
 
         /// <summary>
@@ -320,16 +322,30 @@ namespace Models.CLEM
 
                 // add extra data columns if specified
                 if (ErosionColumnName != null || ErosionColumnName != "")
+                {
                     expectedColumns.Add(ErosionColumnName);
+                }
+
                 if (RunoffColumnName != null || RunoffColumnName != "")
+                {
                     expectedColumns.Add(RunoffColumnName);
+                }
+
                 if (RainfallColumnName != null || RainfallColumnName != "")
+                {
                     expectedColumns.Add(RainfallColumnName);
+                }
+
                 if (CoverColumnName != null || CoverColumnName != "")
+                {
                     expectedColumns.Add(CoverColumnName);
+                }
+
                 if (TBAColumnName != null || TBAColumnName != "")
+                {
                     expectedColumns.Add(TBAColumnName);
- 
+                }
+
                 try
                 {
                     DataTable res = SQLiteReader.ExecuteQuery($"PRAGMA table_info({ TableName})");
@@ -392,7 +408,7 @@ namespace Models.CLEM
         /// <summary>
         /// Gets a years worth of data from database into table
         /// </summary>
-        /// <returns>A datatable with pasture growth data</returns>
+        /// <returns>A data table with pasture growth data</returns>
         public DataTable GetTable(int startYear, int endYear)
         {
             if (OpenSQLiteDB() == false)
@@ -609,16 +625,29 @@ namespace Models.CLEM
             sqlQuery.Write($"{GrowthColumnName}");
 
             if (ErosionColumnName != null && ErosionColumnName != "")
+            {
                 sqlQuery.Write($", {ErosionColumnName}");
-            if (RunoffColumnName != null || RunoffColumnName != "")
-                sqlQuery.Write($", {RunoffColumnName}");
-            if (RainfallColumnName != null || RainfallColumnName != "")
-                sqlQuery.Write($", {RainfallColumnName}");
-            if (CoverColumnName != null || CoverColumnName != "")
-                sqlQuery.Write($", {CoverColumnName}");
-            if (TBAColumnName != null || TBAColumnName != "")
-                sqlQuery.Write($", {TBAColumnName}");
+            }
 
+            if (RunoffColumnName != null || RunoffColumnName != "")
+            {
+                sqlQuery.Write($", {RunoffColumnName}");
+            }
+
+            if (RainfallColumnName != null || RainfallColumnName != "")
+            {
+                sqlQuery.Write($", {RainfallColumnName}");
+            }
+
+            if (CoverColumnName != null || CoverColumnName != "")
+            {
+                sqlQuery.Write($", {CoverColumnName}");
+            }
+
+            if (TBAColumnName != null || TBAColumnName != "")
+            {
+                sqlQuery.Write($", {TBAColumnName}");
+            }
 
             sqlQuery.Write($" FROM { TableName}");
             sqlQuery.Write($" WHERE {RegionColumnName} = {region}");
@@ -636,18 +665,21 @@ namespace Models.CLEM
                 DateTime currentDate = ecolCalculationDate;
                 sqlQuery.Write(" AND (");
                 bool firstEntry = true;
-                int indx = 0;
+                int index = 0;
                 while (currentDate <= endDate)
                 {
-                    indx++;
-                    if(!firstEntry)
+                    index++;
+                    if (!firstEntry)
+                    {
                         sqlQuery.Write(" OR ");
+                    }
+
                     firstEntry = false;
                     var foundEntry = shuffler.ShuffledYears.Where(a => a.Year == currentDate.Year && a.Month == currentDate.Month).FirstOrDefault();
                     if (foundEntry != null)
                     {
                         sqlQuery.Write($"( {YearColumnName} = { foundEntry.RandomYear} AND { MonthColumnName} = { currentDate.Month}");
-                        orderOfYears.Add(foundEntry.RandomYear * 100 + currentDate.Month, indx);
+                        orderOfYears.Add(foundEntry.RandomYear * 100 + currentDate.Month, index);
                     }
 
                     currentDate = currentDate.AddMonths(1);
@@ -747,9 +779,13 @@ namespace Models.CLEM
                         string warn = $"Missing pasture production entry for [{tempdate.Month}/{tempdate.Year}] in [x={Name}]";
                         string warnfull = warn + $"\r\nGiven Region id: [{region}], Land id: [{soil}], Grass Basal Area: [{grassBasalArea}], Land Condition: [{landCondition}] & Stocking Rate: [{stockingRate}]\r\nAssume [0] for pasture production and all associated values such as rainfall";
                         if (MissingDataAction == OnMissingResourceActionTypes.ReportWarning)
+                        {
                             Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
-                        else if(MissingDataAction == OnMissingResourceActionTypes.ReportErrorAndStop)
+                        }
+                        else if (MissingDataAction == OnMissingResourceActionTypes.ReportErrorAndStop)
+                        {
                             throw new ApsimXException(this, warnfull);
+                        }
                     }
                     tempdate = tempdate.AddMonths(1);
                 }
@@ -866,7 +902,10 @@ namespace Models.CLEM
                 }
             }
             if (MissingDataAction == OnMissingResourceActionTypes.Ignore)
+            {
                 htmlWriter.Write("\r\n<div class=\"warningbanner\">CAUTION: The simulation will assume no production and associated monthly values such as rainfall if any monthly pasture production entries are missing. You will not be alerted to this possible problem with the pasture database. It is suggested that you run your simulation with another setting of MissingDataAction to check the database when setting up your simulation.</div>");
+            }
+
             return htmlWriter.ToString();
         }
         #endregion

@@ -28,7 +28,7 @@ namespace Models.CLEM.Activities
         [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
         private GrazeFoodStoreType pasture;
-        private AnimalFoodStoreType foodstore;
+        private AnimalFoodStoreType foodStore;
         private ActivityCarryLimiter limiter;
         private double amountToDo;
         private double amountToSkip;
@@ -93,13 +93,8 @@ namespace Models.CLEM.Activities
             // activity is performed in CLEMDoCutAndCarry not CLEMGetResources
             this.AllocationStyle = ResourceAllocationStyle.Manual;
 
-            // get pasture
             pasture = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, PaddockName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
-
-            // get food store
-            foodstore = Resources.FindResourceType<AnimalFoodStore, AnimalFoodStoreType>(this, AnimalFoodStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
-
-            // locate a cut and carry limiter associarted with this event.
+            foodStore = Resources.FindResourceType<AnimalFoodStore, AnimalFoodStoreType>(this, AnimalFoodStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
             limiter = ActivityCarryLimiter.Locate(this, Structure);
 
             switch (CutStyle)
@@ -243,7 +238,7 @@ namespace Models.CLEM.Activities
                     DryMatterDigestibility = pasture.EstimateDMD(pasture.SwardNitrogenPercent)
                 };
 
-                foodstore.Add(packet, this, null, TransactionCategory);
+                foodStore.Add(packet, this, null, TransactionCategory);
                 limiter?.AddWeightCarried(amountToDo - amountToSkip);
                 SetStatusSuccessOrPartial(amountToSkip > 0);
             }

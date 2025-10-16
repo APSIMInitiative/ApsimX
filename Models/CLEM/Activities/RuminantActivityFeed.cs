@@ -15,7 +15,6 @@ namespace Models.CLEM.Activities
 {
     /// <summary>Ruminant feed activity</summary>
     /// <summary>This activity provides food to specified ruminants based on a feeding style</summary>
-    /// <version>1.1</version>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -25,7 +24,7 @@ namespace Models.CLEM.Activities
     [Description("Feed ruminants by a feeding style.")]
     [Version(1, 1, 0, "Implements event based activity control")]
     [Version(1, 0, 4, "Added smart feeding switch to stop feeding when animals are satisfied and avoid overfeed wastage")]
-    [Version(1, 0, 3, "User defined PotentialIntake modifer and reporting of trampling and overfed wastage in ledger")]
+    [Version(1, 0, 3, "User defined PotentialIntake modifier and reporting of trampling and overfed wastage in ledger")]
     [Version(1, 0, 2, "Manages feeding whole herd a specified daily amount or proportion of available feed")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantFeed.htm")]
@@ -34,16 +33,16 @@ namespace Models.CLEM.Activities
     {
         [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
+        private IEnumerable<Ruminant> uniqueIndividuals;
+        private IEnumerable<RuminantGroup> filterGroups;
         private int numberToDo;
         private int numberToSkip;
         private double amountToDo;
         private double amountToSkip;
         private double wasted;
         private double excessFed;
-        private IEnumerable<Ruminant> uniqueIndividuals;
-        private IEnumerable<RuminantGroup> filterGroups;
         private double feedEstimated = 0;
-        private double excessreduction = 1;
+        private double excessReduction = 1;
 
         /// <summary>
         /// Name of Feed to use (with Resource Group name appended to the front [separated with a '.'])
@@ -155,9 +154,14 @@ namespace Models.CLEM.Activities
             filterGroups = GetCompanionModelsByIdentifier<RuminantFeedGroup>(true, false);
 
             if (ForceIntakeAllowed() == false)
+            {
                 ForceFeed = false;
+            }
+
             if (RestrictIntakeAllowed() == false)
+            {
                 StopFeedingWhenSatisfied = false;
+            }
 
             // locate FeedType resource
             FeedDetails = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeed;
@@ -266,8 +270,8 @@ namespace Models.CLEM.Activities
             
             // number and kg based shortfalls of labour and finance etc will affect lower feeding groups
             int numberNotAllowed = numberToSkip;
-            double totalfed = 0;
-            excessreduction = 1;
+            double totalFed = 0;
+            excessReduction = 1;
 
             foreach (var iChild in filterGroups.OfType<RuminantFeedGroup>().Reverse())
             {
@@ -309,7 +313,7 @@ namespace Models.CLEM.Activities
                 if (MathUtilities.IsGreaterThan(Math.Min(iChild.CurrentResourceRequest.Available, iChild.CurrentResourceRequest.Required), iChild.FeedToSatisfy))
                 {
                     double excess = Math.Min(iChild.CurrentResourceRequest.Available, iChild.CurrentResourceRequest.Required) - iChild.FeedToSatisfy;
-                    totalfed += Math.Min(iChild.CurrentResourceRequest.Available, iChild.CurrentResourceRequest.Required);
+                    totalFed += Math.Min(iChild.CurrentResourceRequest.Available, iChild.CurrentResourceRequest.Required);
                     excessFed += excess;
                     if (!ForceFeed)
                     {
@@ -346,7 +350,7 @@ namespace Models.CLEM.Activities
                     }
                     else
                     {
-                        excessreduction = 1 - excessFed / totalfed;
+                        excessReduction = 1 - excessFed / totalFed;
                         ResourceRequest excessRequest = new()
                         {
                             AllowTransmutation = false,
@@ -376,7 +380,7 @@ namespace Models.CLEM.Activities
                 double feedLimit = Math.Min(1.0, iChild.CurrentResourceRequest.Provided / iChild.CurrentResourceRequest.Required);
 
                 double totalWeight = 0;
-                if(FeedStyle == RuminantFeedActivityTypes.SpecifiedDailyAmount || FeedStyle == RuminantFeedActivityTypes.ProportionOfFeedAvailable)
+                if (FeedStyle == RuminantFeedActivityTypes.SpecifiedDailyAmount || FeedStyle == RuminantFeedActivityTypes.ProportionOfFeedAvailable)
                 {  
                     totalWeight = iChild.CurrentIndividualsToFeed.Sum(a => a.Weight.Live);
                 }
@@ -412,7 +416,7 @@ namespace Models.CLEM.Activities
                         default:
                             throw new Exception($"FeedStyle [{FeedStyle}] is not supported in [a={Name}]");
                     }
-                    details.Amount *= excessreduction;
+                    details.Amount *= excessReduction;
                     // convert to daily intake for the ruminant intake store. 
                     details.Amount /= (double)events.Interval;
                     // try to feed. excess will be returned.
@@ -420,7 +424,9 @@ namespace Models.CLEM.Activities
                 }
             }
             if (numberToDo > 0)
+            {
                 SetStatusSuccessOrPartial(numberFed != numberToDo);
+            }
         }
 
         #region validation
@@ -440,7 +446,7 @@ namespace Models.CLEM.Activities
                 double propOfFeed = Structure.FindChildren<RuminantFeedGroup>().Sum(a => a.Value);
                 if(MathUtilities.IsGreaterThan(propOfFeed, 1.0))
                 {
-                    yield return new ValidationResult($"The sum of Proportions of total feed available excceds 1 across all [RuminantFeedGroups] in [a={Name}].{Environment.NewLine}Choose a different feeding style or ensure the sum of proportions specified do not exceed 1 when using ProportionOfFeedAvailable feeding style", new string[] { "Total proportion exceeds 1" });
+                    yield return new ValidationResult($"The sum of Proportions of total feed available exceeds 1 across all [RuminantFeedGroups] in [a={Name}].{Environment.NewLine}Choose a different feeding style or ensure the sum of proportions specified do not exceed 1 when using ProportionOfFeedAvailable feeding style", new string[] { "Total proportion exceeds 1" });
                 }
             }
         }
@@ -456,7 +462,10 @@ namespace Models.CLEM.Activities
             htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(FeedTypeName, "Feed not set", HTMLSummaryStyle.Resource));
             htmlWriter.Write("</div>");
             if (ProportionTramplingWastage > 0)
+            {
                 htmlWriter.Write($"\r\n<div class=\"activityentry\"> <span class=\"setvalue\">{ProportionTramplingWastage:0.##%}</span> is lost through trampling</div>");
+            }
+
             return htmlWriter.ToString();
         } 
         #endregion

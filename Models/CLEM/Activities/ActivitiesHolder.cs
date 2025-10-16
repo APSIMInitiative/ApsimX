@@ -30,7 +30,7 @@ namespace Models.CLEM.Activities
         private bool foundReportActivitiesPerformed = false;
 
         /// <summary>
-        /// Last resource request that was in defecit
+        /// Last resource request that was in deficit
         /// </summary>
         [JsonIgnore]
         public ResourceRequest LastShortfallResourceRequest { get; set; }
@@ -72,7 +72,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Create a GuID object based on next unique ID available.
         /// </summary>
-        /// <returns>CLEM formated GuID object.</returns>
+        /// <returns>CLEM formatted GuID object.</returns>
         public Guid NextGuID
         {
             get
@@ -99,7 +99,9 @@ namespace Models.CLEM.Activities
                 return Guid.Parse(string.Join('-', parts));
             }
             else
+            {
                 throw new ArgumentException("Add to GuID only supports levels 1 to 3");
+            }
         }
 
 
@@ -125,7 +127,9 @@ namespace Models.CLEM.Activities
         private void ReportActivityStatusAtEndOfTimestep(object sender, EventArgs e)
         {
             if (foundReportActivitiesPerformed)
+            {
                 ReportAllActivityStatus();
+            }
         }
 
         /// <summary>A method to allow all activities to perform actions during the last stage of initialisation.</summary>
@@ -136,14 +140,18 @@ namespace Models.CLEM.Activities
         {
             // call after FinalInitialise
             if (foundReportActivitiesPerformed)
+            {
                 ReportAllActivityStatus(true);
+            }
         }
 
         private void ReportAllActivityStatus(bool fromSetup = false)
         {
             // fire all activity performed triggers at end of time step
             foreach (CLEMActivityBase child in Structure.FindChildren<CLEMActivityBase>())
+            {
                 child.ReportActivityStatus(0, fromSetup);
+            }
 
             // add timestep activity for reporting
             ActivityPerformedEventArgs ea = new()

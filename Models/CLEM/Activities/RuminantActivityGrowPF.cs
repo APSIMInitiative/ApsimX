@@ -17,7 +17,7 @@ namespace Models.CLEM.Activities
     /// <summary>Ruminant growth activity (PF, Protein and Fat version)</summary>
     /// <summary>This class represents the CLEM activity responsible for determining potential intake from the quality of all food eaten, and providing energy and protein for all needs (e.g. wool production, pregnancy, lactation and growth).</summary>
     /// <summary>Full documentation and equations required for this component are available in Dougherty et al, 2025 (in prep).</summary>
-    /// <remarks>Rumiant death activity controls mortality, while the Breed activity is responsible for conception and births.</remarks>
+    /// <remarks>Ruminant death activity controls mortality, while the Breed activity is responsible for conception and births.</remarks>
     /// <authors>Summary and implementation of best methods in predicting ruminant growth based on Frier 2012 (AusFarm) and latest research, James Dougherty, CSIRO</authors>
     /// <authors>CLEM upgrade and implementation, Adam Liedloff, CSIRO</authors>
     /// <acknowledgements>This animal production continues to develop upon the equations provided by Frier (2007, 2012), implemented in GRAZPLAN (Moore, CSIRO) and APSFARM (CSIRO)</acknowledgements>
@@ -214,8 +214,6 @@ namespace Models.CLEM.Activities
             {
                 if (female.IsLactating)
                 {
-                    //System.Diagnostics.Debug.WriteLine($"Lactating {female.ID} - {female.Parameters.Details.CurrentTimeStep.TimeStepStart}");
-
                     // ToDo: check turn off cf is appropriate. cf was reducing more than the lactation increase.
                     //cf = 1.0;
 
@@ -292,10 +290,12 @@ namespace Models.CLEM.Activities
                     }
                 }
                 else
+                {
                     AnimalWeightGain(ruminant);
+                }
             }
             if (ReportUnfed)
-                {
+            {
                 ReportUnfedIndividualsWarning(CurrentHerd(false), Warnings, Summary, this, events);
             }
             return status;
@@ -517,7 +517,6 @@ namespace Models.CLEM.Activities
                     indFemale.Milk.ProductionRatePrevious = MP;
 
                     indFemale.Weight.Protein.ForLactation = (indFemale.Parameters.GrowPF_CKCL.ProteinPercentMilk_CL15 / 100.0) * (MP / indFemale.Milk.EnergyContent);
-                    //milkProtein = indFemale.Weight.Protein.ForLactation;
 
                     // Equation 75  ================
                     ind.Energy.ForLactation = MP / (0.94 * ind.Energy.Kl) * ind.Parameters.GrowPF_CG.BreedLactationEfficiencyScalar;
@@ -668,10 +667,6 @@ namespace Models.CLEM.Activities
             {
                 double propFatForEnergy = Math.Min(1.0, ind.Parameters.GrowPF_CG.FatPercentToProportionEDeficitTakenFromBodyFatIntercept + ind.Parameters.GrowPF_CG.FatPercentToProportionEDeficitTakenFromBodyFatSlope * (ind.Weight.EBF * 100.0));
                 //todo: make sure this is actually needed... for lactating females or this may have been the very bad initial slope and intercept used in dev check
-                //if ((ind is RuminantFemale indFemale2 && MathUtilities.IsPositive(indFemale2.Milk.Protein)) == false)
-                //{
-                //    propFatForEnergy = Math.Min(1.0, ind.Parameters.GrowPF_CG.FatPercentToProportionEDeficitTakenFromBodyFatIntercept + ind.Parameters.GrowPF_CG.FatPercentToProportionEDeficitTakenFromBodyFatSlope * (ind.Weight.EBF * 100.0));
-                //}
                 MJFatChange = energyAvailableForGain * propFatForEnergy;
                 // reduce MJFatChange down to FatEnergyAvailable to ensure full accounting of energy with shortfall required from body protein.
                 if (Math.Abs(MJFatChange) > ind.Energy.Fat.Amount)
@@ -740,7 +735,7 @@ namespace Models.CLEM.Activities
             double rumenDegradableProteinRequirement = 1;
             while (rumenDegradableProteinIntake < rumenDegradableProteinRequirement && reductionCount < maxReductionAllowed)
             {
-                //ToDo: include adjustment onto maint for activity level which should be an additional 5-25% depending on walking and terrain requirements.
+                //ToDo: include adjustment onto maintenance for activity level which should be an additional 5-25% depending on walking and terrain requirements.
                 ind.Energy.ForBasalMetabolism = ((ind.Parameters.GrowPF_CM.FHPScalar_CM2 * sexEffect * Math.Pow(ind.Weight.Base.Amount, 0.75)) * Math.Max(Math.Exp(-ind.Parameters.GrowPF_CM.MainExponentForAge_CM3 * ind.AgeInDays), ind.Parameters.GrowPF_CM.AgeEffectMin_CM4) * (1.0 + ind.Parameters.GrowPF_CM.MilkScalar_CM5 * ind.Intake.ProportionMilk)) / km;
                 ind.Energy.ForHPViscera = ind.Parameters.GrowPF_CM.HPVisceraFL_CM1 * ind.Energy.FromIntake;
 
@@ -918,7 +913,7 @@ namespace Models.CLEM.Activities
 
             if (updateValues)
             {
-                // calculated after intake, maint and pregnancy
+                // calculated after intake, maintenance and pregnancy
                 ratioMilkProductionME = ind.Energy.AfterPregnancy * 0.94 * ind.Energy.Kl * ind.Parameters.GrowPF_CG.BreedLactationEfficiencyScalar / milkProductionMax;
             }
             else

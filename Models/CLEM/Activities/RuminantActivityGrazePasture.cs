@@ -15,8 +15,6 @@ namespace Models.CLEM.Activities
     /// <summary>Ruminant graze activity</summary>
     /// <summary>This activity determines how a ruminant group will graze</summary>
     /// <summary>It is designed to request food via a food store arbitrator</summary>
-    /// <version>1.0</version>
-    /// <updates>1.0 First implementation of this activity using NABSA processes</updates>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -88,7 +86,9 @@ namespace Models.CLEM.Activities
             bool buildTransactionFromTree = Structure.FindParent<ZoneCLEM>(recurse: true).BuildTransactionCategoryFromTree;
             string transCat = "";
             if (!buildTransactionFromTree)
+            {
                 transCat = TransactionCategory;
+            }
 
             InitialiseHerd(true, true);
             Guid nextUID = ActivitiesHolder.AddToGuID(UniqueID, 2);
@@ -115,13 +115,18 @@ namespace Models.CLEM.Activities
             double potentialIntakeLimiter = -1;
             foreach (RuminantActivityGrazePastureHerd item in grazeHerdChildren)
             {
-                if(MathUtilities.IsNegative(potentialIntakeLimiter))
+                if (MathUtilities.IsNegative(potentialIntakeLimiter))
+                {
                     potentialIntakeLimiter = item.CalculatePotentialIntakePastureQualityLimiter();
+                }
+
                 item.ResourceRequestList = null;
                 item.PotentialIntakePastureQualityLimiter = potentialIntakeLimiter;
                 var resourceRequest = item.RequestDetermineResources().Where(a => a.Resource is GrazeFoodStoreType).FirstOrDefault();
-                if(resourceRequest != null)
+                if (resourceRequest != null)
+                {
                     totalNeeded += resourceRequest.Required;
+                }
             }
 
             // Check available resources
@@ -129,12 +134,16 @@ namespace Models.CLEM.Activities
             // It does not truly account for how the pasture is provided from pools but will suffice unless more detailed model required
             double available = GrazeFoodStoreModel.Amount;
             double limit = 1.0;
-            if(MathUtilities.IsPositive(totalNeeded))
+            if (MathUtilities.IsPositive(totalNeeded))
+            {
                 limit = Math.Min(1.0, available / totalNeeded);
+            }
 
             // apply limits to children
             foreach (RuminantActivityGrazePastureHerd item in grazeHerdChildren)
+            {
                 item.SetupPoolsAndLimits(limit);
+            }
 
             return ResourceRequestList;
         }
@@ -143,7 +152,10 @@ namespace Models.CLEM.Activities
         public override void PerformTasksForTimestep(double argument = 0)
         {
             if (Status != ActivityStatus.Partial && Status != ActivityStatus.Critical)
+            {
                 Status = ActivityStatus.NoTask;
+            }
+
             return;
         }
 
@@ -173,9 +185,14 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(GrazeFoodStoreTypeName, "Pasture not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write(" will graze for ");
                 if (HoursGrazed <= 0)
+                {
                     htmlWriter.Write("<span class=\"errorlink\">" + HoursGrazed.ToString("0.#") + "</span> hours of ");
+                }
                 else
+                {
                     htmlWriter.Write(((HoursGrazed == 8) ? "" : "<span class=\"setvalue\">" + HoursGrazed.ToString("0.#") + "</span> hours of "));
+                }
+
                 htmlWriter.Write("the maximum 8 hours each day</span>");
                 htmlWriter.Write("</div>");
                 return htmlWriter.ToString();

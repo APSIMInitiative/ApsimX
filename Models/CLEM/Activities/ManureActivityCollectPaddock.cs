@@ -13,8 +13,7 @@ using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Ruminant collec manure activity</summary>
-    /// <summary>This occurs from a specified paddock</summary>
+    /// <summary>Collect ruminant manure from specified paddock activity</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -57,8 +56,6 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             manureStore = Resources.FindResourceType<ProductStore, ProductStoreTypeManure>(this, "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
-
-            // locate a cut and carry limiter associated with this event.
             limiter = ActivityCarryLimiter.Locate(this, Structure);
         }
 

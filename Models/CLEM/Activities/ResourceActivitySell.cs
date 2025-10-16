@@ -90,23 +90,29 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            // get bank account object to use
-            if(AccountName != "No finance required")
+            if (AccountName != "No finance required")
+            {
                 bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.ReportWarning, OnMissingResourceActionTypes.ReportErrorAndStop);
+            }
 
-            // get resource type to sell
             resourceToSell = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ResourceTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
             // find market if present
             Market market = Resources.FoundMarket;
             // find a suitable store to place resource
-            if(market != null)
+            if (market != null)
+            {
                 resourceToPlace = market.Resources.LinkToMarketResourceType(resourceToSell as CLEMResourceTypeBase) as IResourceType;
+            }
 
-            if(resourceToPlace != null)
+            if (resourceToPlace != null)
+            {
                 price = resourceToPlace.Price(PurchaseOrSalePricingStyleType.Purchase);
+            }
 
-            if(price is null && resourceToSell.Price(PurchaseOrSalePricingStyleType.Sale) != null)
+            if (price is null && resourceToSell.Price(PurchaseOrSalePricingStyleType.Sale) != null)
+            {
                 price = resourceToSell.Price(PurchaseOrSalePricingStyleType.Sale);
+            }
         }
 
         /// <summary>
@@ -139,8 +145,10 @@ namespace Models.CLEM.Activities
                 }
                 amount = Math.Max(0, amount);
                 double units = amount / price.PacketSize;
-                if(price.UseWholePackets)
+                if (price.UseWholePackets)
+                {
                     units = Math.Truncate(units);
+                }
 
                 return units;
             }
@@ -152,7 +160,9 @@ namespace Models.CLEM.Activities
             unitsToSkip = 0;
             unitsToDo = unitsAvailableForSale;
             if (price.UseWholePackets)
+            {
                 unitsToDo = Math.Truncate(unitsToDo);
+            }
 
             // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels)

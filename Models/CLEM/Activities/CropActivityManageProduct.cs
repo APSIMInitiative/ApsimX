@@ -68,7 +68,7 @@ namespace Models.CLEM.Activities
         public string StoreItemName { get; set; }
 
         /// <summary>
-        /// Style used to addd new product to the store
+        /// Style used to add new product to the store
         /// </summary>
         [Description("Add new product style")]
         public AddNewCropProductStyle AddProductStyle { get; set; } = AddNewCropProductStyle.Add;
@@ -206,10 +206,12 @@ namespace Models.CLEM.Activities
 
             fileCrop = simulation.Node.FindChildren<IModel>(recurse: true).Where(a => a.Name == ModelNameFileCrop).FirstOrDefault() as IFileCrop;
             if (fileCrop == null)
+            {
                 throw new ApsimXException(this, $"Unable to locate crop data reader [x={ModelNameFileCrop ?? "Unknown"}] requested by [a={NameWithParent}]");
+            }
 
             LinkedResourceItem = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, StoreItemName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
-            if((LinkedResourceItem as Model).Parent is GrazeFoodStore)
+            if ((LinkedResourceItem as Model).Parent is GrazeFoodStore)
             {
                 // set manager of graze food store if linked
                 (LinkedResourceItem as GrazeFoodStoreType).Manager = Parent as IPastureManager;
@@ -224,7 +226,9 @@ namespace Models.CLEM.Activities
             HarvestData = fileCrop.GetCropDataForEntireRun(parentManagementActivity.LinkedLandItem.SoilType, CropName,
                                                                events.Clock.StartDate, events.Clock.EndDate).Where(a => a.AmtKg > 0).OrderBy(a => a.Year * 100 + a.Month).ToList<CropDataType>();
             if ((HarvestData == null) || (HarvestData.Count == 0))
+            {
                 Summary.WriteMessage(this, $"Unable to locate any harvest data in [x={fileCrop.Name}] using [x={fileCrop.FileName}] for land id [{parentManagementActivity.LinkedLandItem.SoilType}] and crop name [{CropName}] between the dates [{events.Clock.StartDate.ToShortDateString()}] and [{events.Clock.EndDate.ToShortDateString()}]", MessageType.Warning);
+            }
 
             IsTreeCrop = TreesPerHa != 0;  //using this boolean just makes things more readable.
 
@@ -252,8 +256,9 @@ namespace Models.CLEM.Activities
                 double firstMonthsGrowth = 0;
                 CropDataType cropData = HarvestData.Where(a => a.Year == events.Clock.StartDate.Year && a.Month == events.Clock.StartDate.Month).FirstOrDefault();
                 if (cropData != null)
+                {
                     firstMonthsGrowth = cropData.AmtKg;
-
+                }
                 (LinkedResourceItem as GrazeFoodStoreType).SetupStartingPasturePools((Parent as CropActivityManageCrop).Area * UnitsToHaConverter, firstMonthsGrowth);
                 addReason = "Growth";
             }
@@ -295,8 +300,10 @@ namespace Models.CLEM.Activities
         private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
             // set currently managed based on the parent. Nested (mixed) crops will happily occir with their parent, even if the parent is in rotation.
-            if(Parent is CropActivityManageProduct cropProductParent)
-               CurrentlyManaged = cropProductParent.CurrentlyManaged;
+            if (Parent is CropActivityManageProduct cropProductParent)
+            {
+                CurrentlyManaged = cropProductParent.CurrentlyManaged;
+            }
 
             harvests.current = null;
             rotationReady = false;
@@ -309,13 +316,24 @@ namespace Models.CLEM.Activities
 
             int clockYrMth = CalculateYearMonth(events.Clock.Today);
             if (harvests.previous != null)
+            {
                 harvestOffset.previous = clockYrMth - CalculateYearMonth(harvests.previous.HarvestDate) as int?;
+            }
+
             if (harvests.first != null)
+            {
                 harvestOffset.first = clockYrMth - CalculateYearMonth(harvests.first.HarvestDate) as int?;
+            }
+
             if (harvests.next != null)
+            {
                 harvestOffset.current = clockYrMth - CalculateYearMonth(harvests.next.HarvestDate) as int?;
+            }
+
             if (harvests.last != null)
+            {
                 harvestOffset.last = clockYrMth - CalculateYearMonth(harvests.last.HarvestDate) as int?;
+            }
 
             // change setting at time of harvest
             if (harvestOffset.current == 0)
@@ -341,18 +359,22 @@ namespace Models.CLEM.Activities
                         if (harvests.last != null)
                         {
                             if (harvests.last.HarvestDate > HarvestData.Skip(1).FirstOrDefault().HarvestDate)
+                            {
                                 harvests.next = HarvestData.Skip(1).FirstOrDefault();
+                            }
                             else
+                            {
                                 harvests.next = harvests.last;
+                            }
                         }
                         else
+                        {
                             harvests.next = HarvestData.Skip(1).FirstOrDefault();
-
+                        }
                     }
                     else
                     {
-                        // if the "last" tag has not been found keep checking as new data may have been loaded
-                        // otherwise this crop will run until end of simulation.
+                        // if the "last" tag has not been found keep checking as new data may have been loaded otherwise this crop will run until end of simulation.
                         harvests.last ??= HarvestData.Where(a => a.HarvestType == "last").FirstOrDefault();
                         harvests.current = harvests.next;
                         harvests.next = HarvestData.Skip(1).FirstOrDefault();
@@ -393,7 +415,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMUpdatePasture")]
         private void OnCLEMUpdatePasture(object sender, EventArgs e)
         {
-            if(parentManagementActivity.ActivityEnabled && LinkedResourceItem.GetType() == typeof(GrazeFoodStoreType) && TimingOK)
+            if (parentManagementActivity.ActivityEnabled && LinkedResourceItem.GetType() == typeof(GrazeFoodStoreType) && TimingOK)
             {
                 Status = ActivityStatus.NotNeeded;
                 ManageActivityResourcesAndTasks();
@@ -409,7 +431,9 @@ namespace Models.CLEM.Activities
             // get resources needed such as labour before DoActivity
             // when not going to a GrazeFoodStore that uses CLEMUpdatePasture
             if (parentManagementActivity.ActivityEnabled && LinkedResourceItem.GetType() != typeof(GrazeFoodStoreType))
+            {
                 ManageActivityResourcesAndTasks();
+            }
         }
 
         /// <summary>
@@ -432,12 +456,9 @@ namespace Models.CLEM.Activities
                 // add this months stocking rate to running total
                 stockingRateSummed += PastureActivityManage.CalculateStockingRateRightNow(Resources.FindResourceGroup<RuminantHerd>(), StoreItemName, area);
 
-                //If it is time to do yearly calculation
                 if (events.IsEcologicalIndicatorsCalculationDue())
                 {
                     PastureActivityManage.CalculateEcologicalIndicators(LinkedResourceItem as GrazeFoodStoreType, null, null, stockingRateSummed, events.EcologicalIndicatorsCalculationInterval, events.Clock.StartDate, events.EcologicalIndicatorsNextDueDate);
-
-                    // Reset running total for stocking rate
                     stockingRateSummed = 0;
                 }
             }
@@ -456,9 +477,13 @@ namespace Models.CLEM.Activities
                 if (harvests.current != null)
                 {
                     if (IsTreeCrop)
+                    {
                         amountToDo = harvests.current.AmtKg * TreesPerHa * parentManagementActivity.Area * UnitsToHaConverter * ProportionKept;
+                    }
                     else
+                    {
                         amountToDo = harvests.current.AmtKg * parentManagementActivity.Area * UnitsToHaConverter * ProportionKept;
+                    }
 
                     if (limiter != null)
                     {
@@ -493,9 +518,14 @@ namespace Models.CLEM.Activities
                         break;
                     case "per hectare harvested":
                         if (amountToDo > 0)
+                        {
                             valuesForCompanionModels[valueToSupply.Key] = parentManagementActivity.Area * UnitsToHaConverter;
+                        }
                         else
+                        {
                             valuesForCompanionModels[valueToSupply.Key] = 0;
+                        }
+
                         break;
                     default:
                         throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
@@ -513,7 +543,9 @@ namespace Models.CLEM.Activities
                 // find shortfall by identifiers as these may have different influence on outcome
                 var tagsShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "").FirstOrDefault();
                 if (tagsShort != null)
+                {
                     amountToSkip = Convert.ToInt32(amountToDo * (1 - tagsShort.Available / tagsShort.Required));
+                }
 
                 Status = ActivityStatus.Partial;
             }
@@ -527,7 +559,9 @@ namespace Models.CLEM.Activities
                 AmountHarvested = Math.Max(AmountHarvested, canBeCarried);
 
                 if (MathUtilities.IsLessThan(canBeCarried, AmountHarvested))
+                {
                     Status = ActivityStatus.Partial;
+                }
 
                 limiter.AddWeightCarried(AmountHarvested);
             }
@@ -563,11 +597,15 @@ namespace Models.CLEM.Activities
                         if (double.IsNaN(harvests.current.Npct))
                         {
                             if (LinkedResourceItem is GrazeFoodStoreType)
+                            {
                                 // grazed pasture with no N read assumes the green biomass N content
                                 percentN = (LinkedResourceItem as GrazeFoodStoreType).GreenNitrogenPercent;
+                            }
                         }
                         else
+                        {
                             percentN = harvests.current.Npct;
+                        }
 
                         if (MathUtilities.FloatsAreEqual(percentN, 0.0))
                         {
@@ -583,7 +621,10 @@ namespace Models.CLEM.Activities
                                 NitrogenPercent = percentN
                             };
                             if (LinkedResourceItem is GrazeFoodStoreType)
+                            {
                                 packet.DryMatterDigestibility = (LinkedResourceItem as GrazeFoodStoreType).EstimateDMD(packet.NitrogenPercent);
+                            }
+
                             LinkedResourceItem.Add(packet, this, null, addReason);
                         }
                         SetStatusSuccessOrPartial(MathUtilities.IsPositive(amountToSkip));

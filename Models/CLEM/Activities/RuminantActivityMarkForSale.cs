@@ -11,8 +11,6 @@ namespace Models.CLEM.Activities
 {
     /// <summary>Mark specified individual ruminants for sale.</summary>
     /// <summary>This activity is in addition to those identified in RuminantActivityManage</summary>
-    /// <version>1.0</version>
-    /// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]

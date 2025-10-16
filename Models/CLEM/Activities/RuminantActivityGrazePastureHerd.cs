@@ -16,7 +16,7 @@ namespace Models.CLEM.Activities
 {
     /// <summary>Ruminant grazing activity</summary>
     /// <summary>Specific version where pasture and breed is specified</summary>
-    /// <summary>This activity determines how a ruminant breed will graze on a particular pasture (GrazeFoodSotreType)</summary>
+    /// <summary>This activity determines how a ruminant breed will graze on a particular pasture (GrazeFoodStoreType)</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -253,11 +253,15 @@ namespace Models.CLEM.Activities
             // Reduce potential intake based on pasture quality for the proportion consumed (zero legume).
             // TODO: check that this doesn't need to be performed for each breed based on how pasture taken
             // this will still occur when grazing on improved, irrigated or crops.
-            // CLEM does not allow grazing on two pastures in the month, whereas NABSA allowed irrigated pasture and supplemented with native for remainder needed.
+            // CLEM does not allow grazing on two pastures in the time step (i.e. month), whereas NABSA allowed irrigated pasture and supplemented with native for remainder needed.
             if (MathUtilities.IsGreaterThanOrEqual(0.8 - GrazeFoodStoreModel.IntakeTropicalQualityCoefficient - pastureDMD / 100, 0))
+            {
                 return 1 - GrazeFoodStoreModel.IntakeQualityCoefficient * (0.8 - GrazeFoodStoreModel.IntakeTropicalQualityCoefficient - pastureDMD / 100);
+            }
             else
+            {
                 return 1;
+            }
         }
 
         /// <summary>
@@ -368,7 +372,7 @@ namespace Models.CLEM.Activities
 
             if (MathUtilities.IsPositive(totalPastureRequired))
             {
-                // the activity automatically filters by the assigned breen and pasture.
+                // the activity automatically filters by the assigned green and pasture.
                 IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm);
 
                 // shortfall already takes into account competition (AdjustResourcesForActivity) and availability
@@ -434,7 +438,9 @@ namespace Models.CLEM.Activities
 
                     // only allow the stop error if this is a shortfall in required not desired.
                     if (MathUtilities.IsLessThan(Math.Round(shortfall, 4), 1) && OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
+                    {
                         throw new ApsimXException(this, $"Insufficient pasture available for grazing in paddock ({GrazeFoodStoreModel.Name}) in {events.Clock.Today:dd\\yyyy}");
+                    }
                 }
             }
         }
@@ -451,31 +457,41 @@ namespace Models.CLEM.Activities
 
             // calculate breed feed limits
             if (PoolFeedLimits == null)
+            {
                 PoolFeedLimits = new List<GrazeBreedPoolLimit>();
+            }
             else
+            {
                 PoolFeedLimits.Clear();
+            }
 
             foreach (var pool in GrazeFoodStoreModel.Pools)
+            {
                 PoolFeedLimits.Add(new GrazeBreedPoolLimit() { Limit = 1.0, Pool = pool });
+            }
 
             // if Jan-March then use first three months otherwise use 2
             int greenage = (events.Clock.Today.Month <= 3) ? 2 : 1;
 
             double green = GrazeFoodStoreModel.Pools.Where(a => (a.Age <= greenage)).Sum(b => b.Amount);
-            double propgreen = green / GrazeFoodStoreModel.Amount;
+            double proportionGreen = green / GrazeFoodStoreModel.Amount;
 
             // All values are now proportions.
             // Convert to percentage before calculation
 
-            double greenlimit = (RuminantTypeModel.Parameters.Grazing.GreenDietMax * 100) * (1 - Math.Exp(-RuminantTypeModel.Parameters.Grazing.GreenDietCoefficient * ((propgreen * 100) - (RuminantTypeModel.Parameters.Grazing.GreenDietZero * 100))));
-            greenlimit = Math.Max(0.0, greenlimit);
-            if (MathUtilities.IsGreaterThan(propgreen, 0.9))
-                greenlimit = 100;
+            double greenLimit = (RuminantTypeModel.Parameters.Grazing.GreenDietMax * 100) * (1 - Math.Exp(-RuminantTypeModel.Parameters.Grazing.GreenDietCoefficient * ((proportionGreen * 100) - (RuminantTypeModel.Parameters.Grazing.GreenDietZero * 100))));
+            greenLimit = Math.Max(0.0, greenLimit);
+            if (MathUtilities.IsGreaterThan(proportionGreen, 0.9))
+            {
+                greenLimit = 100;
+            }
 
             foreach (var pool in PoolFeedLimits.Where(a => a.Pool.Age <= greenage))
-                pool.Limit = greenlimit / 100.0;
+            {
+                pool.Limit = greenLimit / 100.0;
+            }
 
-            // order feedpools by age so that diet is taken from youngest greenest first
+            // order feedPools by age so that diet is taken from youngest greenest first
             PoolFeedLimits = PoolFeedLimits.OrderBy(a => a.Pool.Age).ToList();
         }
 
@@ -507,9 +523,14 @@ namespace Models.CLEM.Activities
             htmlWriter.Write(" will graze for ");
             htmlWriter.Write("\r\n<div class=\"activityentry\">All individuals in managed pastures will graze for ");
             if (HoursGrazed <= 0)
+            {
                 htmlWriter.Write($"<span class=\"errorlink\">{HoursGrazed:0.#}</span> hours of ");
+            }
             else
+            {
                 htmlWriter.Write(((HoursGrazed == 8) ? "" : $"<span class=\"setvalue\">{HoursGrazed:0.#}</span> hours of "));
+            }
+
             htmlWriter.Write("the maximum 8 hours each day</span>");
             htmlWriter.Write("</div>");
             return htmlWriter.ToString();

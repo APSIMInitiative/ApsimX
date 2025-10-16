@@ -74,7 +74,10 @@ namespace Models.CLEM.Activities
             htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(Multiplier, "Not set", HTMLSummaryStyle.Default, warnZero: true));
             htmlWriter.Write("</div>");
             if (!Enabled & !FormatForParentControl)
+            {
                 htmlWriter.Write(" - DISABLED!");
+            }
+
             return htmlWriter.ToString();
         }
 

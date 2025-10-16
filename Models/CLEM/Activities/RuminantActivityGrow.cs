@@ -95,7 +95,7 @@ namespace Models.CLEM.Activities
             List<Ruminant> herd = ruminantHerd.Herd;
 
             // Calculate potential intake and reset stores
-            // Order isSuckling (0 false and adults, 1 suckling) so breeder females calculate milkproduction before suckings grow
+            // Order isSuckling (0 false and adults, 1 suckling) so breeder females calculate milk production before sucklings grow
             foreach (var ind in herd.GroupBy(a => a.IsSucklingWithMother).OrderBy(a => a.Key))
             {
                 foreach (var indi in ind)
@@ -117,11 +117,11 @@ namespace Models.CLEM.Activities
         {
             // calculate daily potential intake for the selected individual/cohort
             double standardReferenceWeight = ind.Weight.StandardReferenceWeight;
-
             double liveWeightForIntake = ind.Weight.NormalisedForAge;
-            // now performed at allocation of weight in Ruminant
             if (MathUtilities.IsLessThan(ind.Weight.HighestAttained, ind.Weight.NormalisedForAge))
+            {
                 liveWeightForIntake = ind.Weight.HighestAttained;
+            }
 
             // Calculate potential intake based on current weight compared to SRW and previous highest weight
             double potentialIntake = 0;
@@ -134,16 +134,16 @@ namespace Models.CLEM.Activities
                 // potential milk intake/animal/day
                 ind.Intake.MilkDaily.Expected = ind.Parameters.Grow.MilkIntakeIntercept + ind.Parameters.Grow.MilkIntakeCoefficient * ind.Weight.Live;
 
-                // get estimated milk available
-                // this will be updated to the corrected milk available in the calculate energy section.
+                // get estimated milk available. This will be updated to the corrected milk available in the calculate energy section.
                 ind.Intake.MilkDaily.Received = Math.Min(ind.Intake.MilkDaily.Expected, ind.MothersMilkProductionAvailable);
 
-                // if milk supply low, suckling will subsitute forage up to a specified % of bodyweight (R_C60)
+                // if milk supply low, suckling will substitute forage up to a specified % of bodyweight (R_C60)
                 if (MathUtilities.IsLessThan(ind.Intake.MilkDaily.Received, ind.Weight.Live * ind.Parameters.Grow.MilkLWTFodderSubstitutionProportion))
+                {
                     potentialIntake = Math.Max(0.0, ind.Weight.Live * ind.Parameters.Grow.MaxJuvenileIntake - ind.Intake.MilkDaily.Received * ind.Parameters.Grow.ProportionalDiscountDueToMilk);
+                }
 
                 ind.Intake.MilkDaily.Received *= events.Interval;
-                //ind.Intake.Milk.Expected *= events.Interval;
             }
             else
             {
@@ -161,17 +161,16 @@ namespace Models.CLEM.Activities
 
                 if (ind.Sex == Sex.Female)
                 {
-                    RuminantFemale femaleind = ind as RuminantFemale;
+                    RuminantFemale femaleIndividual = ind as RuminantFemale;
                     // Increase potential intake for lactating breeder
-                    if (femaleind.IsLactating)
+                    if (femaleIndividual.IsLactating)
                     {
                         // move to half way through timestep
-                        double dayOfLactation = femaleind.DaysLactating(true);
+                        double dayOfLactation = femaleIndividual.DaysLactating(true);
                         // Reference: Intake multiplier for lactating cow (M.Freer)
-                        // double intakeMilkMultiplier = 1 + 0.57 * Math.Pow((dayOfLactation / 81.0), 0.7) * Math.Exp(0.7 * (1 - (dayOfLactation / 81.0)));
                         double intakeMilkMultiplier = 1 + ind.Parameters.Grow.LactatingPotentialModifierConstantA * Math.Pow((dayOfLactation / ind.Parameters.Grow.LactatingPotentialModifierConstantB), ind.Parameters.Grow.LactatingPotentialModifierConstantC) * Math.Exp(ind.Parameters.Grow.LactatingPotentialModifierConstantC * (1 - (dayOfLactation / ind.Parameters.Grow.LactatingPotentialModifierConstantB))) * (1 - 0.5 + 0.5 * (ind.Weight.Live / ind.Weight.NormalisedForAge));
 
-                        // To make this flexible for sheep and goats, added three new Ruminant Coeffs
+                        // To make this flexible for sheep and goats, added three new Ruminant coefficients
                         // Feeding standard values for Beef, Dairy suck, Dairy non-suck and sheep are:
                         // For 0.57 (A) use .42, .58, .85 and .69; for 0.7 (B) use 1.7, 0.7, 0.7 and 1.4, for 81 (C) use 62, 81, 81, 28
                         // added LactatingPotentialModifierConstantA, LactatingPotentialModifierConstantB and LactatingPotentialModifierConstantC
@@ -181,33 +180,30 @@ namespace Models.CLEM.Activities
                         // calculate estimated milk production for time step here
                         // assuming average feed quality if no previous diet values
                         // This need to happen before suckling potential intake can be determined.
-                        CalculateMilkProduction(femaleind);
-                        femaleind.Milk.Produced = femaleind.Milk.Available;
+                        CalculateMilkProduction(femaleIndividual);
+                        femaleIndividual.Milk.Produced = femaleIndividual.Milk.Available;
                     }
                     else
                     {
-                        femaleind.Milk.PotentialRate = 0;
-                        femaleind.Milk.ProductionRate = 0;
-                        femaleind.Milk.ProductionRatePrevious = 0;
-                        femaleind.Milk.Available = 0;
-                        femaleind.Milk.Milked = 0;
-                        femaleind.Milk.Suckled = 0;
-                        femaleind.Milk.Produced = 0;
+                        femaleIndividual.Milk.PotentialRate = 0;
+                        femaleIndividual.Milk.ProductionRate = 0;
+                        femaleIndividual.Milk.ProductionRatePrevious = 0;
+                        femaleIndividual.Milk.Available = 0;
+                        femaleIndividual.Milk.Milked = 0;
+                        femaleIndividual.Milk.Suckled = 0;
+                        femaleIndividual.Milk.Produced = 0;
                     }
                 }
 
                 //TODO: option to restrict potential further due to stress (e.g. heat, cold, rain)
 
             }
-            // get monthly intake
-            // 4/6/2025 I think this should be daily for now.
-            //potentialIntake *= events.Interval;
             ind.Intake.SolidsDaily.MaximumExpected = potentialIntake;
             ind.Intake.SolidsDaily.Expected = potentialIntake;
         }
 
         /// <summary>
-        /// Set the milk production of the selected female given diet drymatter digesibility
+        /// Set the milk production of the selected female given diet dry matter digestibility
         /// </summary>
         /// <param name="ind">Female individual</param>
         /// <returns>energy of milk</returns>
@@ -225,9 +221,14 @@ namespace Models.CLEM.Activities
             // if milking is taking place use the non-suckling curve for duration of lactation
             // otherwise use the suckling curve where there is a larger drop off in milk production
             if (ind.SucklingOffspringList.Count == 0)
+            {
                 milkCurve = ind.Parameters.Lactation.MilkCurveNonSuckling;
+            }
             else // no milking
+            {
                 milkCurve = ind.Parameters.Lactation.MilkCurveSuckling;
+            }
+
             ind.Milk.PotentialRate = ind.Parameters.Lactation.MilkPeakYield * ind.Weight.Live / ind.Weight.NormalisedForAge * (Math.Pow(((milkTime + ind.Parameters.Lactation.MilkOffsetDay) / ind.Parameters.Lactation.MilkPeakDay), milkCurve)) * Math.Exp(milkCurve * (1 - (milkTime + ind.Parameters.Lactation.MilkOffsetDay) / ind.Parameters.Lactation.MilkPeakDay));
             ind.Milk.PotentialRate = Math.Max(ind.Milk.PotentialRate, 0.0);
             // Reference: Potential milk prodn, 3.2 MJ/kg milk - Jouven et al 2008
@@ -235,7 +236,9 @@ namespace Models.CLEM.Activities
             // adjust last time step's energy balance
             double adjustedEnergyBalance = ind.Energy.AfterLactation;
             if (adjustedEnergyBalance < (-0.5936 / 0.322 * energyMilk))
+            {
                 adjustedEnergyBalance = (-0.5936 / 0.322 * energyMilk);
+            }
 
             // set milk production in lactating females for consumption.
             // ToDo: can the adjustment be >1 or does this need to be constrained to the previous calculation of milk production.
@@ -254,9 +257,6 @@ namespace Models.CLEM.Activities
         private void OnCLEMAnimalWeightGain(object sender, EventArgs e)
         {
             List<Ruminant> herd = ruminantHerd.Herd;
-
-            //int cmonth = events.Clock.Today.Month;
-
             int total = herd.Count;
             int indWithIntake = 0;
 
@@ -265,7 +265,7 @@ namespace Models.CLEM.Activities
             foreach (var breed in herd.GroupBy(a => a.Breed))
             {
                 int unfed = 0;
-                int unfedcalves = 0;
+                int unfedSucklings = 0;
                 foreach (Ruminant ind in breed.OrderByDescending(a => a.AgeInDays))
                 {
                     ind.MetabolicIntake = ind.Intake.SolidsDaily.Actual;
@@ -278,7 +278,7 @@ namespace Models.CLEM.Activities
 
                         // calculate protein concentration
 
-                        // Calculate diet dry matter digestibilty from the %N of the current diet intake.
+                        // Calculate diet dry matter digestibility from the %N of the current diet intake.
                         // Reference: Ash and McIvor
                         // ind.DietDryMatterDigestibility = 36.7 + 9.36 * ind.PercentNOfIntake / 62.5;
                         // Now tracked via incoming food DMD values
@@ -288,8 +288,8 @@ namespace Models.CLEM.Activities
                         // Maybe this limit should be placed on some feed to limit DMD to 75% for non supp feeds
                         // A Ash stated that the 75% limit is no longer required and DMD above 75% is possible even if unlikely.
 
-                        // Crude protein required generally 130g per kg of digestable feed.
-                        // WRONG! this is actually the CP provided by the rumen per kg digested. 
+                        // Crude protein required generally 130g per kg of digestible feed.
+                        // WRONG! this is actually the CP provided by the rumen per kg digested.
 
                         // JD - discussion
                         // Assume energy is limiting intake before protein
@@ -297,13 +297,13 @@ namespace Models.CLEM.Activities
                         // Recommend this is turned off - parameter = 0;
                         // Better to flag a warning if protein is limiting intake
                         
-                        //double crudeProteinRequired = 0.0;
+                        // double crudeProteinRequired = 0.0;
                         // //double crudeProteinRequired = ind.Parameters.Grow.ProteinCoefficient / 100.0 * ind.Intake.DMD / 100 * ind.Intake.SolidsDaily.ActualForTimeStep(events.Interval);
                         // //double crudeProteinRequired = ind.Parameters.Grow.ProteinCoefficient * ind.Intake.DMD / 100;
 
                         // // adjust for efficiency of use of protein, (default 90%) degradable. now user param.
                         //double crudeProteinSupply = (ind.Intake.CrudeProtein) * ind.Parameters.Grow.ProteinDegradability; //  PercentNOfIntake * 62.5
-                        //// This was proteinconcentration * 0.9
+                        //// This was protein concentration * 0.9
 
                         //// prevent future divide by zero issues.
                         //if (MathUtilities.FloatsAreEqual(crudeProteinSupply, 0.0))
@@ -338,7 +338,9 @@ namespace Models.CLEM.Activities
                         // no potential * 1.2 as potential has been fixed based on suckling individuals.
 
                         if (MathUtilities.IsLessThanOrEqual(ind.Intake.MilkDaily.Actual + ind.Intake.SolidsDaily.Received, 0))
-                            unfedcalves++;
+                        {
+                            unfedSucklings++;
+                        }
                     }
 
                     // TODO: nabsa adjusts potential intake for digestibility of fodder here.
@@ -353,6 +355,8 @@ namespace Models.CLEM.Activities
 
                     // grow wool and cashmere
                     ind.Weight.Wool.Adjust(ind.Parameters.Grow.WoolCoefficient * ind.MetabolicIntake);
+
+                    // ToDo: check with JD if cashmere needs to be handled differently to wool
                     //ind.CashmereWeight += ind.Parameters.Grow.CashmereCoefficient * ind.MetabolicIntake;
                 }
 
@@ -360,17 +364,17 @@ namespace Models.CLEM.Activities
                 if (unfed > 0)
                 {
                     string warn = $"individuals of [r={breed.FirstOrDefault().HerdName}] not fed";
-                    string warnfull = $"Some individuals of [r={breed.FirstOrDefault().HerdName}] were not fed in some months (e.g. [{unfed}] individuals in interval [{events.IntervalIndex}])\r\nFix: Check feeding strategy and ensure animals are moved to pasture or fed in yards";
-                    Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
+                    string warningFull = $"Some individuals of [r={breed.FirstOrDefault().HerdName}] were not fed in some months (e.g. [{unfed}] individuals in interval [{events.IntervalIndex}])\r\nFix: Check feeding strategy and ensure animals are moved to pasture or fed in yards";
+                    Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warningFull);
                     AddStatusMessage($"[{unfed}] individuals of [r={breed.Key}] not fed");
                     Status = ActivityStatus.Warning;
 
                 }
-                if (unfedcalves > 0)
+                if (unfedSucklings > 0)
                 {
                     string warn = $"calves of [r={breed.FirstOrDefault().HerdName}] not fed";
-                    string warnfull = $"Some calves of [r={breed.FirstOrDefault().HerdName}] were not fed in some months (e.g. [{unfedcalves}] individuals in interval [{events.IntervalIndex}])\r\nFix: Check calves are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
-                    Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
+                    string warningFull = $"Some calves of [r={breed.FirstOrDefault().HerdName}] were not fed in some months (e.g. [{unfedSucklings}] individuals in interval [{events.IntervalIndex}])\r\nFix: Check calves are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
+                    Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warningFull);
                     AddStatusMessage($"[{unfed}] sucklings of [r={breed}] not fed");
                     Status = ActivityStatus.Warning;
                 }
@@ -401,7 +405,7 @@ namespace Models.CLEM.Activities
         {
             // all energy calculations are per day and multiplied at end to give monthly weight gain
 
-            double intakeDaily = ind.MetabolicIntake; // / events.Interval;
+            double intakeDaily = ind.MetabolicIntake; 
             // now stored as daily value.
             //double intakeDaily = ind.MetabolicIntake / events.Interval;
 
@@ -409,7 +413,9 @@ namespace Models.CLEM.Activities
             double sme = 1;
             // Sme 1.15 for all non-castrated males.
             if (ind.IsWeaned && ind.Sex == Sex.Male && (ind as RuminantMale).IsCastrated == false)
+            {
                 sme = 1.15;
+            }
 
             double energyDiet = EnergyGross * ind.Intake.DMD / 100.0;
             // Reference: Nutrient Requirements of domesticated ruminants (p7)
@@ -428,7 +434,7 @@ namespace Models.CLEM.Activities
                 // unweaned individuals are assumed to be suckling as natural weaning rate set regardless of inclusion of wean activity
                 // unweaned individuals without mother or milk from mother will need to try and survive on limited pasture until weaned.
 
-                // calculate engergy and growth from milk intake
+                // calculate energy and growth from milk intake
                 // recalculate milk intake based on mothers updated milk production for the time step using the previous monthly potential milk intake
                 ind.Intake.MilkDaily.Received = Math.Min(ind.Intake.MilkDaily.Expected, ind.MothersMilkProductionAvailable);
                 ind.Mother?.Milk.Take(ind.Intake.MilkDaily.Received, MilkUseReason.Suckling);
@@ -485,7 +491,7 @@ namespace Models.CLEM.Activities
                 double energyMilk = 0;
                 double energyFetus = 0;
 
-                // set maintenance age to maximum of 6 years (2190 days). Now uses EnergeyMaintenanceMaximumAge
+                // set maintenance age to maximum of 6 years (2190 days). Now uses EnergyMaintenanceMaximumAge
                 double maintenanceAge = Math.Min(ind.AgeInDays, ind.Parameters.Grow.EnergyMaintenanceMaximumAge.InDays);
                 // Reference: SCA p.24
                 // Reference p19 (1.20). Does not include MEgraze or Ecold, also skips M,
@@ -496,36 +502,35 @@ namespace Models.CLEM.Activities
 
                 if (ind.Sex == Sex.Female)
                 {
-                    RuminantFemale femaleind = ind as RuminantFemale;
+                    RuminantFemale femaleIndividual = ind as RuminantFemale;
 
                     // Determine energy required for fetal development
-                    if (femaleind.IsPregnant)
+                    if (femaleIndividual.IsPregnant)
                     {
                         double standardReferenceWeight = ind.Weight.StandardReferenceWeight;
                         // Potential birth weight
                         // Reference: Freer
-                        double potentialBirthWeight = femaleind.CurrentBirthScalar * standardReferenceWeight * (1 - 0.33 * (1 - ind.Weight.Live / standardReferenceWeight));
-                        double fetusAge = femaleind.DaysSince(RuminantTimeSpanTypes.Conceived, 0.0);
+                        double potentialBirthWeight = femaleIndividual.CurrentBirthScalar * standardReferenceWeight * (1 - 0.33 * (1 - ind.Weight.Live / standardReferenceWeight));
+                        double fetusAge = femaleIndividual.DaysSince(RuminantTimeSpanTypes.Conceived, 0.0);
 
                         //TODO: Check fetus age correct
                         energyFetus = potentialBirthWeight * 349.16 * 0.000058 * Math.Exp(345.67 - 0.000058 * fetusAge - 349.16 * Math.Exp(-0.000058 * fetusAge)) / 0.13;
                         // account for part of month pregnant
-                        energyFetus *= (femaleind.DaysPregnantInTimeStep / events.Interval);
+                        energyFetus *= (femaleIndividual.DaysPregnantInTimeStep / events.Interval);
                         energyBalance -= energyFetus;
                     }
 
                     // calculate energy for lactation
                     // look for milk production calculated before offspring may have been weaned
-
-                    if (femaleind.IsLactating | MathUtilities.IsPositive(femaleind.Milk.PotentialRate))
+                    if (femaleIndividual.IsLactating | MathUtilities.IsPositive(femaleIndividual.Milk.PotentialRate))
                     {
                         // recalculate milk production based on DMD of food provided
-                        energyMilk = CalculateMilkProduction(femaleind);
+                        energyMilk = CalculateMilkProduction(femaleIndividual);
                         // account for part of month pregnant
-                        energyMilk *= (femaleind.DaysLactatingInTimeStep / events.Interval);
+                        energyMilk *= (femaleIndividual.DaysLactatingInTimeStep / events.Interval);
                         energyBalance -= energyMilk;
                         // reset this. It was previously determined in potential intake as a measure of milk available. This is now the correct calculation
-                        femaleind.Milk.Produced = femaleind.Milk.Available;
+                        femaleIndividual.Milk.Produced = femaleIndividual.Milk.Available;
                     }
                 }
 
@@ -559,10 +564,14 @@ namespace Models.CLEM.Activities
 
                 // Determine Empty body change from Eebg and Ebal, and increase by 9% for LW change
                 if (MathUtilities.IsPositive(energyBalance))
+                {
                     energyPredictedBodyMassChange = ind.Parameters.Grow.GrowthEfficiency * kg * energyBalance / energyEmptyBodyGain;
+                }
                 else
+                {
                     // Reference: from Hirata model
                     energyPredictedBodyMassChange = ind.Parameters.Grow.GrowthEfficiency * km * energyBalance / (0.8 * energyEmptyBodyGain);
+                }
             }
             energyPredictedBodyMassChange *= events.Interval;  // Convert to monthly
 
@@ -616,9 +625,14 @@ namespace Models.CLEM.Activities
             htmlWriter.Write("\r\n<div class=\"activityentry\">The gross energy content of forage is ");
 
             if (MathUtilities.FloatsAreEqual(EnergyGross, 0))
+            {
                 htmlWriter.Write("<span class=\"errorlink\">[NOT SET]</span>");
+            }
             else
+            {
                 htmlWriter.Write("<span class=\"setvalue\">" + EnergyGross.ToString() + "</span>");
+            }
+
             htmlWriter.Write(" MJ/kg dry matter</div>");
 
             return htmlWriter.ToString();

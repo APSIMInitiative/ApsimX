@@ -68,9 +68,14 @@ namespace Models.CLEM.Activities
             htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(FoodStoreName, "Store not set"));
             htmlWriter.Write(" will be purchased to provide ");
             if (TargetProportion == 0)
+            {
                 htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>: ");
+            }
             else
+            {
                 htmlWriter.Write($"<span class=\"setvalue\">{TargetProportion:0.0%}</span>");
+            }
+
             htmlWriter.Write(" of remaining intake needed to meet current targets");
             htmlWriter.Write("</div>");
             return htmlWriter.ToString();

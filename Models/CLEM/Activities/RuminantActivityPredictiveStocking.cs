@@ -14,7 +14,7 @@ using APSIM.Numerics;
 namespace Models.CLEM.Activities
 {
     /// <summary>Ruminant predictive stocking activity</summary>
-    /// <summary>This activity ensures the total herd size is acceptible to graze the dry season pasture</summary>
+    /// <summary>This activity ensures the total herd size is acceptable to graze the dry season pasture</summary>
     /// <summary>It is designed to consider individuals already marked for sale and add additional individuals before transport and sale.</summary>
     /// <summary>It will check all paddocks that the specified herd are grazing</summary>
     [Serializable]
@@ -132,7 +132,10 @@ namespace Models.CLEM.Activities
             filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>(true, false);
             var grazeFoodStore = Resources.FindResourceGroup<GrazeFoodStore>();
             if (grazeFoodStore != null)
+            {
                 paddocks =Structure.FindChildren<GrazeFoodStoreType>(relativeTo: grazeFoodStore);
+            }
+
             paddockShortfalls = new List<(string paddockName, double number, double AE, double AeShortfall)>();
         }
 
@@ -159,9 +162,13 @@ namespace Models.CLEM.Activities
 
             int monthsToAssess = 0;
             if (events.Clock.Today.Month > (int)LastAssessmentMonth)
+            {
                 monthsToAssess = 12 - events.Clock.Today.Month + (int)LastAssessmentMonth;
+            }
             else
+            {
                 monthsToAssess  = (int)LastAssessmentMonth - events.Clock.Today.Month;
+            }
 
             foreach (GrazeFoodStoreType pasture in paddocks)
             {
@@ -181,17 +188,21 @@ namespace Models.CLEM.Activities
 
                     // Adjust fodder balance for detachment rate (6%/month in NABSA, user defined in CLEM, 3%)
                     // AL found the best estimate for AAsh Barkly example was 2/3 difference between detachment and carryover detachment rate with average 12month pool ranging from 10 to 96% and average 46% of total pasture.
-                    double detachrate = pasture.DetachRate + ((pasture.CarryoverDetachRate - pasture.DetachRate) * 0.66);
+                    double detachRate = pasture.DetachRate + ((pasture.CarryoverDetachRate - pasture.DetachRate) * 0.66);
                     // Assume a consumption rate of 2% of body weight.
                     double feedRequiredAE = paddockIndividuals.FirstOrDefault().Parameters.General.BaseAnimalEquivalent * 0.02 * events.Interval; //  2% of AE animal per day
                     for (int i = 0; i < monthsToAssess; i++)
                     {
-                        // only include detachemnt if current biomass is positive, not already overeaten
+                        // only include detachment if current biomass is positive, not already overeaten
                         if (MathUtilities.IsPositive(pastureBiomass))
-                            pastureBiomass *= (1.0 - detachrate);
+                        {
+                            pastureBiomass *= (1.0 - detachRate);
+                        }
 
                         if (i > 0) // not in current month as already consumed by this time.
+                        {
                             pastureBiomass -= (feedRequiredAE * totalAE);
+                        }
                     }
 
                     // Shortfall in Fodder in kg per hectare
@@ -348,7 +359,10 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write(LastAssessmentMonth.ToString());
             }
             else
+            {
                 htmlWriter.Write("<span class=\"errorlink\">No month set");
+            }
+
             htmlWriter.Write("</span></div>");
 
             htmlWriter.Write("\r\n<div class=\"activityentry\">The herd will be sold to maintain ");

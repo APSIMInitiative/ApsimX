@@ -161,21 +161,27 @@ namespace Models.CLEM
                     { "HarvestType", PercentNitrogenColumnName }
                 };
                 foreach (var item in columnLinks)
+                {
                     // check each column name exists
                     if (!(item.Key == "N" & item.Value == "" & item.Value == "HarvestType"))
+                    {
                         if (!sQLiteReader.GetColumnNames(TableName).Contains(item.Value))
                         {
                             string errorMsg = "The specified column [o=" + item.Key + "] does not exist in the table named [" + TableName + "] for [x="+this.Name+"]\r\nEnsure the column name is present in the table. Please not these column names are case sensitive.";
                             throw new ApsimXException(this, errorMsg);
                         }
+                    }
+                }
             }
             catch (Exception ex)
             {
                 string errorMsg = "There was a problem with the SQLite database [o=" + FileName + "] for [x=" + this.Name + "]\r\n" + ex.Message;
                 throw new ApsimXException(this, errorMsg);
             }
-            if(sQLiteReader.IsOpen)
+            if (sQLiteReader.IsOpen)
+            {
                 sQLiteReader.CloseDatabase();
+            }
         }
 
         /// <summary>
@@ -253,7 +259,9 @@ namespace Models.CLEM
 
                 // convert to list<CropDataType>
                 foreach (DataRowView row in results.DefaultView)
+                {
                     cropDetails.Add(DataRow2CropData(row.Row));
+                }
             }
 
             return cropDetails;
@@ -268,13 +276,19 @@ namespace Models.CLEM
                 HarvestDate = DateTime.Parse(dr[DateColumnName].ToString(), CultureInfo.InvariantCulture),
                 AmtKg = double.Parse(dr[AmountColumnName].ToString())
             };
-            if(nitrogenColumnExists)
+            if (nitrogenColumnExists)
+            {
                 cropdata.Npct = double.Parse(dr[PercentNitrogenColumnName].ToString(), CultureInfo.InvariantCulture);
+            }
             else
+            {
                 cropdata.Npct = double.NaN;
+            }
 
-            if(harvestTypeColumnExists)
+            if (harvestTypeColumnExists)
+            {
                 cropdata.HarvestType = dr[HarvestTypeColumnName].ToString();
+            }
 
             cropdata.HarvestDate = new DateTime(cropdata.Year, cropdata.Month, 1);
 
@@ -305,7 +319,9 @@ namespace Models.CLEM
                     htmlWriter.Write($"Using <span class=\"filelink\">{ FileName}</span>");
 
                     if (TableName == null || TableName == "")
+                    {
                         htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"Margin-left:15px;\">Using table <span class=\"errorlink\">[TABLE NOT SET]</span></div>");
+                    }
                     else
                     {
                         // Add table name
@@ -319,14 +335,22 @@ namespace Models.CLEM
                         htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Growth</span> is {CLEMModel.DisplaySummaryValueSnippet(AmountColumnName)}");
 
                         if (PercentNitrogenColumnName is null || PercentNitrogenColumnName == "")
+                        {
                             htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">NOT NEEDED</span></div>");
+                        }
                         else
+                        {
                             htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">{PercentNitrogenColumnName}</span></div>");
+                        }
 
                         if (HarvestTypeColumnName is null || HarvestTypeColumnName == "")
+                        {
                             htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Harvest</span> is <span class=\"setvalue\">NOT NEEDED</span></div>");
+                        }
                         else
+                        {
                             htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Harvest</span> is <span class=\"setvalue\">{HarvestTypeColumnName}</span></div>");
+                        }
 
                         htmlWriter.Write("\r\n</div>");
                     }

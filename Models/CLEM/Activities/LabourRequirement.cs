@@ -151,7 +151,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Calcuate the limits for people and groups using the style
+        /// Calculate the limits for people and groups using the style
         /// </summary>
         public void CalculateLimits(double amountRequested)
         {
@@ -205,8 +205,10 @@ namespace Models.CLEM.Activities
                 {
                     int numberOfPpl = 1;
                     if (ApplyToAll)
-                        // how many matches
+                    {
                         numberOfPpl = fg.Filter(labourResource.Items).Count();
+                    }
+
                     for (int i = 0; i < numberOfPpl; i++)
                     {
                         resourceList.Add(new ResourceRequest()
@@ -229,8 +231,10 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void PerformTasksForTimestep(double argument = 0)
         {
-            if(resourceList.Any())
+            if (resourceList.Count != 0)
+            {
                 SetStatusSuccessOrPartial(resourceList.Where(a => a.ResourceType == typeof(Labour) && a.Provided > a.Required).Any());
+            }
         }
 
         #region validation
@@ -244,9 +248,13 @@ namespace Models.CLEM.Activities
             // ensure labour resource added
             Labour lab = Resources.FindResource<Labour>();
             if (lab == null)
+            {
                 Summary.WriteMessage(this, "No [r=Labour] resources in simulation. All [LabourRequirement] will be ignored.", MessageType.Warning);
+            }
             else if (lab.Children.Count <= 0)
+            {
                 Summary.WriteMessage(this, "No [r=LabourResourceTypes] are provided in the [r=Labour] resource. All [LabourRequirement] will be ignored.", MessageType.Warning);
+            }
 
             // check filter groups present
             if (!Structure.FindChildren<LabourGroup>().Any())
@@ -255,16 +263,16 @@ namespace Models.CLEM.Activities
             }
 
             // check for individual nesting.
-            foreach (LabourGroup fg in Structure.FindChildren<LabourGroup>())
+            foreach (LabourGroup labourGroup in Structure.FindChildren<LabourGroup>())
             {
-                LabourGroup currentfg = fg;
-                while (currentfg != null && Structure.FindChildren<LabourGroup>(relativeTo: currentfg).Any())
+                LabourGroup currentFilterGroup = labourGroup;
+                while (currentFilterGroup != null && Structure.FindChildren<LabourGroup>(relativeTo: currentFilterGroup).Any())
                 {
-                    if (Structure.FindChildren<LabourGroup>(relativeTo: currentfg).Count() > 1)
+                    if (Structure.FindChildren<LabourGroup>(relativeTo: currentFilterGroup).Count() > 1)
                     {
-                        yield return new ValidationResult($"Invalid nested labour filter groups in [f={currentfg.Name}] for [a={Name}]. Only one nested filter group is permitted each branch. Additional filtering will be ignored.", new string[] { "Labour filter group" });
+                        yield return new ValidationResult($"Invalid nested labour filter groups in [f={currentFilterGroup.Name}] for [a={Name}]. Only one nested filter group is permitted each branch. Additional filtering will be ignored.", new string[] { "Labour filter group" });
                     }
-                    currentfg = Structure.FindChildren<LabourGroup>(relativeTo: currentfg).FirstOrDefault();
+                    currentFilterGroup = Structure.FindChildren<LabourGroup>(relativeTo: currentFilterGroup).FirstOrDefault();
                 }
             }
         }
@@ -303,7 +311,9 @@ namespace Models.CLEM.Activities
 
                 htmlWriter.Write($"per {CLEMModel.DisplaySummaryValueSnippet(Measure, "Measure not set")}");
                 if (ApplyToAll)
+                {
                     htmlWriter.Write($" applied to each person specified");
+                }
             }
             htmlWriter.Write($".</div>");
 
@@ -329,16 +339,24 @@ namespace Models.CLEM.Activities
             }
 
             if (MaximumPerGroup > 0)
+            {
                 htmlWriter.Write($"\r\n<div class=\"activityentry\">Labour will be supplied for each filter group up to <span class=\"setvalue\">{MaximumPerGroup}</span>{extraLimit}</div>");
+            }
 
             if (MinimumPerPerson > 0)
+            {
                 htmlWriter.Write($"\r\n<div class=\"activityentry\">Labour will not be supplied if less than <span class=\"setvalue\">{MinimumPerPerson}</span>{extraLimit}</div>");
+            }
 
             if (MaximumPerPerson > 0 && MaximumPerPerson < 31)
+            {
                 htmlWriter.Write($"\r\n<div class=\"activityentry\">No individual can provide more than <span class=\"setvalue\">{MaximumPerPerson}</span>{extraLimit}</div>");
+            }
 
             if (ApplyToAll)
+            {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">All people matching the below criteria (first level) will perform this task. (e.g. all children)</div>");
+            }
 
             return htmlWriter.ToString();
         }

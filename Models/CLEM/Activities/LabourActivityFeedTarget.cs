@@ -103,7 +103,9 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write(TargetValue.ToString("#,##0.##"));
             }
             else
+            {
                 htmlWriter.Write("<span class=\"errorlink\">VALUE NOT SET");
+            }
 
             htmlWriter.Write("</span> units per AE per day ");
 
@@ -113,7 +115,9 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write(TargetMaximumValue.ToString("#,##0.##"));
             }
             else
+            {
                 htmlWriter.Write("<span class=\"errorlink\">VALUE NOT SET");
+            }
 
             htmlWriter.Write("</span></div>");
 

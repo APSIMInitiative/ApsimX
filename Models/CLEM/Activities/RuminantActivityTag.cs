@@ -12,7 +12,6 @@ using System.Linq;
 namespace Models.CLEM.Activities
 {
     /// <summary>Add or remove a tag to specified individual ruminants</summary>
-    /// <version>1.0</version>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]

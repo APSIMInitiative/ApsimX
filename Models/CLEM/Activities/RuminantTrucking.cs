@@ -228,8 +228,9 @@ namespace Models.CLEM.Activities
             truckDetails = EstimateTrucking();
 
             foreach (var iChild in Structure.FindChildren<IActivityCompanionModel>().OfType<CLEMActivityBase>())
+            {
                 iChild.Status = (Status == ActivityStatus.Skipped)? ActivityStatus.NotNeeded: ((parentNumberToDo > 0) ? ActivityStatus.NotNeeded : ActivityStatus.NoTask);
-            //iChild.Status = (Status == ActivityStatus.Skipped) ? ActivityStatus.Skipped : ((parentNumberToDo > 0) ? ActivityStatus.NotNeeded : ActivityStatus.NoTask);
+            }
 
             parentBuySellActivity.IndividualsToBeTrucked = parentBuySellActivity.IndividualsToBeTrucked.Except(individualsToBeTrucked.Take(truckDetails.individualsTransported));
 
@@ -336,12 +337,16 @@ namespace Models.CLEM.Activities
             int trailerCnt = 0;
             int trailerId = 0;
 
-            if(!individualsToBeTrucked.Any())
+            if (individualsToBeTrucked.Count == 0)
+            {
                 return (0, 0, 0, 0, 0);
+            }
 
             double loadsRemaining = individualsToBeTrucked.Count / NumberPerLoadUnit;
             if (weightToNumberPerLoadUnit != null)
+            {
                 loadsRemaining = individualsToBeTrucked.Sum(a => 1 / weightToNumberPerLoadUnit.SolveY(a.Weight.Live));
+            }
 
             if (MathUtilities.IsGreaterThanOrEqual(loadsRemaining, MinimumLoadUnitsBeforeTransporting))
             {
@@ -361,7 +366,9 @@ namespace Models.CLEM.Activities
                             vehicleMass += TruckTareMass;
                         }
                         else
+                        {
                             break;
+                        }
                     }
                     else
                     {
@@ -385,7 +392,9 @@ namespace Models.CLEM.Activities
                                 }
                             }
                             else
+                            {
                                 break;
+                            }
                         }
                         else
                         {
@@ -430,7 +439,9 @@ namespace Models.CLEM.Activities
                 individualsToBeTrucked = individualsToBeTrucked.Take(indCnt).ToList();
 
                 if (OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
+                {
                     throw new ApsimXException(this, $"Unable to truck all required individuals [a={NameWithParent}]{Environment.NewLine}Adjust trucking rules or set OnPartialResourcesAvailableAction to [UseResourcesAvailable]");
+                }
                 else if (OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.SkipActivity && (indCnt == 0 || individualsToBeTrucked.Count > indCnt))
                 {
                     AddStatusMessage("No individuals loaded");
@@ -454,7 +465,9 @@ namespace Models.CLEM.Activities
                 }
 
                 if (numberToDo == truckDetails.individualsTransported)
+                {
                     SetStatusSuccessOrPartial();
+                }
                 else
                 {
                     if (truckDetails.individualsTransported == 0)
@@ -463,11 +476,15 @@ namespace Models.CLEM.Activities
                         AddStatusMessage("No individuals loaded");
                     }
                     else
+                    {
                         Status = ActivityStatus.Partial;
+                    }
                 }
             }
             else
+            {
                 Status = ActivityStatus.NoTask;
+            }
         }
 
         #region descriptive summary
@@ -483,26 +500,43 @@ namespace Models.CLEM.Activities
 
             htmlWriter.Write($"\r\n<div class=\"activityentry\">Each truck ");
             if (MinimumLoadUnitsPerTruck > 0)
+            {
                 htmlWriter.Write($" requires a minimum of {DisplaySummaryValueSnippet(MinimumLoadUnitsPerTruck, warnZero: true)} load units and ");
+            }
+
             htmlWriter.Write($"has a maximum of {DisplaySummaryValueSnippet(MinimumLoadUnitsPerTruck, warnZero: true)} load units permitted");
             if (MinimumLoadUnitsBeforeTransporting > 0)
+            {
                 htmlWriter.Write($" and requires at least {DisplaySummaryValueSnippet(MinimumLoadUnitsBeforeTransporting, warnZero: true)} load units before transporting.");
+            }
+
             htmlWriter.Write("</div>");
 
-            if (LoadUnitsPerTrailer.Count() > 1)
+            if (LoadUnitsPerTrailer.Length > 1)
+            {
                 htmlWriter.Write($"\r\n<div class=\"activityentry\">Trailers from first to last hold ");
+            }
             else
+            {
                 htmlWriter.Write($"\r\n<div class=\"activityentry\">The trailer holds ");
+            }
+
             htmlWriter.Write($"{DisplaySummaryValueSnippet<double>(LoadUnitsPerTrailer, warnZero: true)} load units");
 
             if (MinimumLoadUnitsBeforeAddTrailer.Max() > 0)
+            {
                 htmlWriter.Write($" and requires {DisplaySummaryValueSnippet(MinimumLoadUnitsBeforeAddTrailer, warnZero: true)} load units before adding each trailer");
+            }
+
             htmlWriter.Write(".</div>");
 
             htmlWriter.Write($"\r\n<div class=\"activityentry\">Each truck has a Tare Mass (with average fuel) of {DisplaySummaryValueSnippet(TruckTareMass.ToString("0.##"), warnZero: true)} kg ");
             htmlWriter.Write($"with an Aggregate Trailer Mass {DisplaySummaryValueSnippet<double>(AggregateTrailerMass, warnZero: true)} (kg)");
-            if (AggregateTrailerMass.Count() > 1)
+            if (AggregateTrailerMass.Length > 1)
+            {
                 htmlWriter.Write($" from first to last trailer");
+            }
+
             htmlWriter.Write("</div>");
             return htmlWriter.ToString();
         }

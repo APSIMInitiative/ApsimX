@@ -23,28 +23,6 @@ namespace Models.CLEM.Activities
     {
         private double amountToSkip = 0;
 
-        //<<<<<<< HEAD
-        //        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
-        //        {
-        //            // provide updated measure for companion models
-        //            foreach (var valueToSupply in valuesForCompanionModels)
-        //            {
-        //                switch (valueToSupply.Key.unit)
-        //                {
-        //                    case "fixed":
-        //                        valuesForCompanionModels[valueToSupply.Key] = 1;
-        //                        break;
-        //                    default:
-        //                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-        //                }
-        //            }
-        //            return null;
-        //        }
-
-        //        /// <inheritdoc/>
-        //=======
-        //>>>>>>> 061c434f97cdade592be48eda4db9f790b4b4cc8
-
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
@@ -91,7 +69,6 @@ namespace Models.CLEM.Activities
             {
                 // find shortfall by identifiers as these may have different influence on outcome
                 var tagsShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "").FirstOrDefault();
-                //if (tagsShort != null)
                 amountToSkip = (1 - tagsShort.Available / tagsShort.Required);
             }
         }
@@ -99,7 +76,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void PerformTasksForTimestep(double argument = 0)
         {
-            if (ResourceRequestList.Any())
+            if (ResourceRequestList.Count != 0)
             {
                 SetStatusSuccessOrPartial(amountToSkip > 0);
             }

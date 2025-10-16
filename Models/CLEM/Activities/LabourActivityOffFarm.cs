@@ -37,18 +37,16 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "LabourRequirement":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>() {
-                            "fixed",
-                        }
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "LabourRequirement" => new LabelsForCompanionModels(
+                                        identifiers: new List<string>(),
+                                        measures: new List<string>() {
+                                            "fixed",
+                                        }
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -95,7 +93,9 @@ namespace Models.CLEM.Activities
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (bankType == null && Resources.FindResource<Finance>() != null)
+            {
                 Summary.WriteMessage(this, $"No bank account has been specified for [a={Name}]. No funds will be earned!", MessageType.Warning);
+            }
 
             var labour = Structure.FindChildren<LabourRequirement>();
             // get check labour required

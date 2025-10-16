@@ -13,8 +13,7 @@ namespace Models.CLEM.Activities
 {
     /// <summary>Pasture management activity</summary>
     /// <summary>This activity provides a pasture based on land unit, area and pasture type</summary>
-    /// <summary>Ruminant move activities place individuals in the paddack after which they will graze pasture for the paddock stored in the Pasture Pools</summary>
-    /// <version>1.0</version>
+    /// <summary>Ruminant move activities place individuals in the paddock, after which they will graze pasture for the paddock stored in the Pasture Pools</summary>
     /// <updates>First implementation of this activity using NABSA grazing processes</updates>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -143,7 +142,7 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>An event handler to intitalise this activity just once at start of simulation</summary>
+        /// <summary>An event handler to initialise this activity just once at start of simulation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseResource")]
@@ -157,16 +156,22 @@ namespace Models.CLEM.Activities
 
             relationshipLC = Structure.FindChildren<Relationship>().Where(a => a.Identifier == "Utilisation % to change in Land condition index").FirstOrDefault();
             if (relationshipLC != null)
+            {
                 LandConditionIndex = Structure.FindChild<RelationshipRunningValue>(relativeTo: relationshipLC);
+            }
 
             relationshipGBA = Structure.FindChildren<Relationship>().Where(a => a.Identifier == "Utilisation % to change in Grass basal area").FirstOrDefault();
             if (relationshipGBA != null)
+            {
                 GrassBasalArea = Structure.FindChild<RelationshipRunningValue>(relativeTo: relationshipGBA);
+            }
 
             filePasture = Structure.FindAll<CLEMModel>().Where(a => a.Name == PastureDataReader).FirstOrDefault() as IFilePasture;
 
             if (LandConditionIndex is null || GrassBasalArea is null || filePasture is null)
+            {
                 return;
+            }
 
             LandType land = null;
             if (filePasture != null)
@@ -175,19 +180,25 @@ namespace Models.CLEM.Activities
                 ZoneCLEM clem = Structure.FindParent<ZoneCLEM>(recurse: true);
                 int recs = filePasture.RecordsFound((filePasture as FileSQLitePasture).RegionColumnName, clem.ClimateRegion);
                 if (recs == 0)
+                {
                     throw new ApsimXException(this, $"No pasture production records were located by [x={(filePasture as Model).Name}] for [a={Name}] given [Region id] = [{clem.ClimateRegion}] as specified in [{clem.Name}]");
+                }
 
                 land = Resources.FindResourceType<Land, LandType>(this, LandTypeNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
                 if (land != null)
                 {
                     recs = filePasture.RecordsFound((filePasture as FileSQLitePasture).LandIdColumnName, land.SoilType);
                     if (recs == 0)
+                    {
                         throw new ApsimXException(this, $"No pasture production records were located by [x={(filePasture as Model).Name}] for [a={Name}] given [Land id] = [{land.SoilType}] as specified in [{land.Name}] used to manage the pasture");
+                    }
                 }
             }
 
             if (UseAreaAvailable)
+            {
                 LinkedLandItem.TransactionOccurred += LinkedLandItem_TransactionOccurred;
+            }
 
             ResourceRequestList = new()
             {
@@ -212,23 +223,23 @@ namespace Models.CLEM.Activities
             {
                 //get the units of area for this run from the Land resource parent.
                 unitsOfArea2Ha = Resources.FindResourceGroup<Land>().UnitsOfAreaToHaConversion;
-
                 // locate Pasture Type resource
                 LinkedNativeFoodType = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
-
                 //Assign the area actually got after taking it. It might be less than AreaRequested (if partial)
                 Area = ResourceRequestList.FirstOrDefault().Provided;
-
                 // ensure no other activity has set the area of this GrazeFoodStore
                 LinkedNativeFoodType.Manager = this as IPastureManager;
-
                 soilIndex = ((LandType)ResourceRequestList.FirstOrDefault().Resource).SoilType;
 
                 if (LandConditionIndex is not null)
+                {
                     LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex = LandConditionIndex.StartingValue;
+                }
 
                 if (GrassBasalArea is not null)
+                {
                     LinkedNativeFoodType.CurrentEcologicalIndicators.GrassBasalArea = GrassBasalArea.StartingValue;
+                }
 
                 LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate = StartingStockingRate;
                 stockingRateSummed = StartingStockingRate;
@@ -237,13 +248,13 @@ namespace Models.CLEM.Activities
                 //get the starting pasture data list from Pasture reader
                 if (filePasture != null & LinkedNativeFoodType != null)
                 {
-                    GetPastureDataList_TodayToNextEcolCalculation();
+                    GetPastureDataList_TodayToNextEcologicalCalculation();
 
                     double firstMonthsGrowth = 0;
                     if (pastureDataList != null)
                     {
-                        PastureDataType pasturedata = pastureDataList.Where(a => a.Year == events.Clock.StartDate.Year && a.Month == events.Clock.StartDate.Month).FirstOrDefault();
-                        firstMonthsGrowth = pasturedata.Growth;
+                        PastureDataType pastureData = pastureDataList.Where(a => a.Year == events.Clock.StartDate.Year && a.Month == events.Clock.StartDate.Month).FirstOrDefault();
+                        firstMonthsGrowth = pastureData.Growth;
                     }
 
                     LinkedNativeFoodType.SetupStartingPasturePools(Area * unitsOfArea2Ha, firstMonthsGrowth);
@@ -258,7 +269,9 @@ namespace Models.CLEM.Activities
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
             if (LinkedLandItem != null && UseAreaAvailable)
+            {
                 LinkedLandItem.TransactionOccurred -= LinkedLandItem_TransactionOccurred;
+            }
         }
 
         /// <summary>An event handler to allow us to get next supply of pasture</summary>
@@ -332,8 +345,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMCalculateEcologicalState")]
         private void OnCLEMCalculateEcologicalState(object sender, EventArgs e)
         {
-            // This event happens after growth and pasture consumption and animal death
-            // But before any management, buying and selling of animals.
+            // This event happens after growth and pasture consumption and animal death but before any management, buying and selling of animals.
 
             // add this months stocking rate to running total
             stockingRateSummed += CalculateStockingRateRightNow(Resources.FindResourceGroup<RuminantHerd>(), FeedTypeName, Area * unitsOfArea2Ha * ha2sqkm);
@@ -342,17 +354,16 @@ namespace Models.CLEM.Activities
             if (events.IsEcologicalIndicatorsCalculationDue())
             {
                 CalculateEcologicalIndicators(LinkedNativeFoodType, LandConditionIndex, GrassBasalArea, stockingRateSummed, events.EcologicalIndicatorsCalculationInterval, events.Clock.StartDate, events.EcologicalIndicatorsNextDueDate);
-                //Get the new Pasture Data using the new Ecological Indicators (ie. GrassBA, LandCon, StRate)
 
                 // Reset running total for stocking rate
                 stockingRateSummed = 0;
 
-                GetPastureDataList_TodayToNextEcolCalculation();
+                GetPastureDataList_TodayToNextEcologicalCalculation();
             }
         }
 
         /// <summary>
-        /// Calulate the current stocking rate
+        /// Calculate the current stocking rate
         /// </summary>
         /// <param name="herd">Herd to consider</param>
         /// <param name="paddockName">Name of paddock with animals</param>
@@ -379,7 +390,7 @@ namespace Models.CLEM.Activities
         /// <param name="grassBasalAreaIndex">Grass basal area value</param>
         /// <param name="summedStockRate">Running sum of stocking rate</param>
         /// <param name="interval">Ecological indicator interval</param>
-        /// <param name="NextDueDate">Next ecological indicator calulation date</param>
+        /// <param name="NextDueDate">Next ecological indicator calculation date</param>
         /// <param name="startDate">Simulation start date</param>
         public static void CalculateEcologicalIndicators(GrazeFoodStoreType grazeFoodStore, RelationshipRunningValue landConIndex, RelationshipRunningValue grassBasalAreaIndex, double summedStockRate, int interval, DateTime startDate, DateTime NextDueDate )
         {
@@ -402,22 +413,24 @@ namespace Models.CLEM.Activities
 
                 // Calculate average monthly stocking rate
                 // Check number of months to use
-                int monthdiff = ((NextDueDate.Year - startDate.Year) * 12) + NextDueDate.Month - startDate.Month + 1;
-                if (monthdiff >= interval)
-                    monthdiff = interval;
+                int monthDifference = ((NextDueDate.Year - startDate.Year) * 12) + NextDueDate.Month - startDate.Month + 1;
+                if (monthDifference >= interval)
+                    monthDifference = interval;
 
-                grazeFoodStore.CurrentEcologicalIndicators.StockingRate = summedStockRate / monthdiff;
+                grazeFoodStore.CurrentEcologicalIndicators.StockingRate = summedStockRate / monthDifference;
 
                 //perennials
                 if (landConIndex != null)
+                {
                     grazeFoodStore.CurrentEcologicalIndicators.Perennials = 92.2 * (1 - Math.Pow(landConIndex.Value, 3.35) / Math.Pow(landConIndex.Value, 3.35 + 137.7)) - 2.2;
+                }
 
                 //%utilisation
                 grazeFoodStore.CurrentEcologicalIndicators.Utilisation = utilisation;
 
                 // calculate averages
-                grazeFoodStore.CurrentEcologicalIndicators.Cover /= monthdiff;
-                grazeFoodStore.CurrentEcologicalIndicators.TreeBasalArea /= monthdiff;
+                grazeFoodStore.CurrentEcologicalIndicators.Cover /= monthDifference;
+                grazeFoodStore.CurrentEcologicalIndicators.TreeBasalArea /= monthDifference;
 
                 //TreeC
                 // I didn't include the / area as tba is already per ha. I think NABSA has this wrong
@@ -434,7 +447,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// From Pasture File get all the Pasture Data from today to the next Ecological Calculation
         /// </summary>
-        private void GetPastureDataList_TodayToNextEcolCalculation()
+        private void GetPastureDataList_TodayToNextEcologicalCalculation()
         {
             // In IAT it only updates the GrassBA, LandCon and StockingRate (Ecological Indicators)
             // every so many months (specified by user, not every month).
@@ -510,16 +523,24 @@ namespace Models.CLEM.Activities
             htmlWriter.Write(" occupies ");
             Land parentLand = null;
             if (LandTypeNameToUse != null && LandTypeNameToUse != "")
+            {
                 parentLand = Structure.Find<Land>(LandTypeNameToUse.Split('.')[0]);
+            }
 
             if (UseAreaAvailable)
+            {
                 htmlWriter.Write("the unallocated portion of ");
+            }
             else
             {
                 if (parentLand == null)
+                {
                     htmlWriter.Write($"<span class=\"setvalue\">{AreaRequested:#,##0.###}</span> <span class=\"errorlink\">[UNITS NOT SET]</span> of ");
+                }
                 else
+                {
                     htmlWriter.Write($"<span class=\"setvalue\">{AreaRequested:#,##0.###}</span> {parentLand.UnitsOfArea} of ");
+                }
             }
             htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(LandTypeNameToUse, "Land not set", HTMLSummaryStyle.Resource));
             htmlWriter.Write("</div>");

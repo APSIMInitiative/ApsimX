@@ -62,7 +62,7 @@ namespace Models.CLEM
         [NonSerialized]
         private DataRowCollection priceFileAsRows;
         [NonSerialized]
-        private List<IResourcePricing> pricingComonentsFound;
+        private List<IResourcePricing> pricingComponentsFound;
 
         /// <summary>
         /// Gets or sets the full file name (with path).
@@ -75,14 +75,20 @@ namespace Models.CLEM
             get
             {
                 if ((this.FileName == null) || (this.FileName == ""))
+                {
                     return "";
+                }
                 else
                 {
                     Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
                     if (simulation != null)
+                    {
                         return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
+                    }
                     else
+                    {
                         return this.FileName;
+                    }
                 }
             }
         }
@@ -105,7 +111,9 @@ namespace Models.CLEM
             {
                 string filename = FullFileName.Replace("\\", "\\&shy;");
                 if (filename == "")
+                {
                     filename = "Not set";
+                }
 
                 string errorMsg = String.Format("Could not locate file [o={0}] for [x={1}]", filename, this.Name);
                 throw new ApsimXException(this, errorMsg);
@@ -115,7 +123,9 @@ namespace Models.CLEM
             // put in a list that provides a link to the object so we can use this to set values
             var resources = Structure.FindParents<Zone>().FirstOrDefault();
             if (resources != null)
-                pricingComonentsFound = Structure.FindChildren<IResourcePricing>(relativeTo: resources, recurse: true).ToList();
+            {
+                pricingComponentsFound = Structure.FindChildren<IResourcePricing>(relativeTo: resources, recurse: true).ToList();
+            }
 
             DataView dataView = new DataView(GetAllData())
             {
@@ -161,14 +171,16 @@ namespace Models.CLEM
                     if (!column.ToString().Equals(DateColumnName, StringComparison.OrdinalIgnoreCase) && double.TryParse(priceFileAsRows[0][cnt].ToString(), out double res))
                     {
                         // update
-                        var components = pricingComonentsFound.Where(a => (a as IModel).Parent.Name == column.ToString());
+                        var components = pricingComponentsFound.Where(a => (a as IModel).Parent.Name == column.ToString());
                         if (components.Count() > 1)
                         {
                             string warn = $"Multiple resource [r=PricingComponents] named [{column}] were found when applying pricing by [a={this.Name}]. \r\n Ensure input price applies to all these components or provide unique component names";
                             Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                         }
                         foreach (IResourcePricing resourcePricing in components)
+                        {
                             resourcePricing.SetPrice(res, this);
+                        }
                     }
                     cnt++;
                 }
@@ -210,7 +222,7 @@ namespace Models.CLEM
                     DateColumnName
                 };
 
-                pricingColumns.AddRange(pricingComonentsFound.Select(a => (a as IModel).Name).Distinct());
+                pricingColumns.AddRange(pricingComponentsFound.Select(a => (a as IModel).Name).Distinct());
 
                 // Add all other column names
 
@@ -244,7 +256,10 @@ namespace Models.CLEM
                         string fileType = "Text file";
                         string extra = "\r\nExpecting Header row followed by units row in brackets.\r\nHeading1      Heading2      Heading3\r\n( )         ( )        ( )";
                         if (reader.IsCSVFile)
+                        {
                             fileType = "Comma delimited text file (csv)";
+                        }
+
                         if (reader.IsExcelFile)
                         {
                             fileType = "Excel file";
@@ -254,18 +269,26 @@ namespace Models.CLEM
                     }
 
                     if (StringUtilities.IndexOfCaseInsensitive(reader.Headings, DateColumnName) == -1)
+                    {
                         if (reader == null || reader.Constant(DateColumnName) == null)
+                        {
                             throw new Exception($"Cannot find Date column [o={DateColumnName ?? "Empty"}] in Pricing file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
+                        }
+                    }
                 }
                 else
                 {
                     if (reader.IsExcelFile != true)
+                    {
                         reader.SeekToDate(reader.FirstDate);
+                    }
                 }
                 return true;
             }
             else
+            {
                 return false;
+            }
         }
 
         /// <summary>Close the datafile.</summary>
@@ -286,17 +309,30 @@ namespace Models.CLEM
             using StringWriter htmlWriter = new();
             htmlWriter.Write("\r\n<div class=\"activityentry\">");
             if (FileName == null || FileName == "")
+            {
                 htmlWriter.Write("Using <span class=\"errorlink\">FILE NOT SET</span>");
+            }
             else if (!this.FileExists)
+            {
                 htmlWriter.Write($"The file <span class=\"errorlink\">{FullFileName}</span> could not be found");
+            }
             else
+            {
                 htmlWriter.Write($"Using <span class=\"filelink\">{FileName}</span>");
+            }
 
             if (FileName != null && FileName.Contains(".xls"))
+            {
                 if (ExcelWorkSheetName == null || ExcelWorkSheetName == "")
+                {
                     htmlWriter.Write(" with <span class=\"errorlink\">WORKSHEET NOT SET</span>");
+                }
                 else
+                {
                     htmlWriter.Write($" with worksheet <span class=\"filelink\">{ExcelWorkSheetName}</span>");
+                }
+            }
+
             htmlWriter.Write("</div>");
             return htmlWriter.ToString();
         }

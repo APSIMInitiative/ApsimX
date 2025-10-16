@@ -46,12 +46,18 @@ namespace Models.CLEM.Activities
 
             var animalTypesPresent = cohorts.Select(a => a.AnimalTypeName.Split('.')[1]).Distinct();
             if (!animalTypesPresent.Any())
+            {
                 return;
+            }
 
             if (animalTypesPresent.Count() == 1)
+            {
                 PredictedAnimalType = string.Join(',', animalTypesPresent);
+            }
             else
+            {
                 PredictedAnimalType = "Mixed types";
+            }
         }
 
         /// <inheritdoc/>
@@ -98,7 +104,10 @@ namespace Models.CLEM.Activities
         public override void PrepareForTimestep()
         {
             foreach (var cohort in cohorts)
+            {
                 cohort.AdjustedNumber = cohort.Number;
+            }
+
             numberToBuy = cohorts.Sum(a => a.Number);
             purchaseValue = cohorts.Sum(a => a.Number * a.AnimalType.GetPriceGroupOfCohort(a, PurchaseOrSalePricingStyleType.Sale)?.Value ?? 0);
         }
@@ -191,10 +200,14 @@ namespace Models.CLEM.Activities
                 {
                     cohort.AnimalType.Add(cohort, this, null, "Purchase");
                 }
-                if(numberAdjusted == numberToBuy)
+                if (numberAdjusted == numberToBuy)
+                {
                     Status = ActivityStatus.Success;
+                }
                 else
+                {
                     Status = ActivityStatus.Partial;
+                }
             }
         }
     }

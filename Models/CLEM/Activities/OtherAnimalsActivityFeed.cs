@@ -54,7 +54,7 @@ namespace Models.CLEM.Activities
         public IFeed FeedType { get; set; }
 
         /// <summary>
-        /// Provides the redicted other animal name based on filtering 
+        /// Provides the predicted other animal name based on filtering 
         /// </summary>
         public string PredictedAnimalName { get; set; } = "NA";
 
@@ -72,8 +72,6 @@ namespace Models.CLEM.Activities
         {
             otherAnimals = Resources.FindResourceGroup<OtherAnimals>();
             filterGroups = GetCompanionModelsByIdentifier<OtherAnimalsFeedGroup>(true, false);
-
-            // locate FeedType resource
             FeedType = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeed;
         }
 

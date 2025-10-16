@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/OtherAnimals/OtherAnimalsActivityBreed.htm")]
     public class OtherAnimalsActivityBreed : CLEMActivityBase, IHandlesActivityCompanionModels
     {
-        private int malebreeders = 0;
+        private int maleBreeders = 0;
         private int breeders = 0;
 
         /// <summary>
@@ -83,7 +83,6 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            // get other animal type model
             SelectedOtherAnimalsType = Resources.FindResourceType<OtherAnimals, OtherAnimalsType>(this, AnimalTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
         }
 
@@ -113,9 +112,9 @@ namespace Models.CLEM.Activities
         public override void PrepareForTimestep()
         {
             IEnumerable<OtherAnimalsTypeCohort> cohorts = SelectedOtherAnimalsType.GetCohorts(null, false).ToList();
-            malebreeders = cohorts.Where(a => a.AgeDetails.InDays >= this.BreedingAge.InDays && a.Sex == Sex.Male).Sum(b => b.Number);
+            maleBreeders = cohorts.Where(a => a.AgeDetails.InDays >= this.BreedingAge.InDays && a.Sex == Sex.Male).Sum(b => b.Number);
             breeders = 0;
-            if (!UseLocalMales | malebreeders > 0)
+            if (!UseLocalMales | maleBreeders > 0)
             {
                 breeders = cohorts.Where(a => a.AgeDetails.InDays >= this.BreedingAge.InDays && a.Sex == Sex.Female).Sum(b => b.Number);
             }
@@ -184,51 +183,63 @@ namespace Models.CLEM.Activities
 
                 if (breeders > 0)
                 {
-                    double newbysex = breeders * this.OffspringPerBreeder / 2.0;
-                    int singlesex = 0;
+                    double newBySex = breeders * this.OffspringPerBreeder / 2.0;
+                    int singleSex = 0;
 
                     // apply stochasticity to determine proportional numbers to integers
-                    if (newbysex - Math.Truncate(newbysex) > RandomNumberGenerator.Generator.Next())
-                        singlesex = Convert.ToInt32(Math.Ceiling(newbysex));
+                    if (newBySex - Math.Truncate(newBySex) > RandomNumberGenerator.Generator.Next())
+                    {
+                        singleSex = Convert.ToInt32(Math.Ceiling(newBySex));
+                    }
                     else
-                        singlesex = Convert.ToInt32(Math.Floor(newbysex));
+                    {
+                        singleSex = Convert.ToInt32(Math.Floor(newBySex));
+                    }
 
-                    double newweight = SelectedOtherAnimalsType.AgeWeightRelationship?.SolveY(0.0) ?? 0.0;
-                    if (singlesex > 1)
+                    double newWeight = SelectedOtherAnimalsType.AgeWeightRelationship?.SolveY(0.0) ?? 0.0;
+                    if (singleSex > 1)
                     {
                         OtherAnimalsTypeCohort newmales = new OtherAnimalsTypeCohort()
                         {
                             AgeDetails = new(0),
-                            Weight = newweight,
+                            Weight = newWeight,
                             Sex = Sex.Male,
-                            Number = singlesex,
-                            AdjustedNumber = singlesex,
+                            Number = singleSex,
+                            AdjustedNumber = singleSex,
                             SaleFlag = HerdChangeReason.Born
                         };
                         SelectedOtherAnimalsType.Add(newmales, this, null, "Births");
                         if (Status != ActivityStatus.Partial)
+                        {
                             Status = ActivityStatus.Success;
+                        }
                     }
 
-                    if (newbysex - Math.Truncate(newbysex) > RandomNumberGenerator.Generator.NextDouble())
-                        singlesex = Convert.ToInt32(Math.Ceiling(newbysex));
-                    else
-                        singlesex = Convert.ToInt32(Math.Floor(newbysex));
-
-                    if (singlesex > 1)
+                    if (newBySex - Math.Truncate(newBySex) > RandomNumberGenerator.Generator.NextDouble())
                     {
-                        OtherAnimalsTypeCohort newfemales = new OtherAnimalsTypeCohort()
+                        singleSex = Convert.ToInt32(Math.Ceiling(newBySex));
+                    }
+                    else
+                    {
+                        singleSex = Convert.ToInt32(Math.Floor(newBySex));
+                    }
+
+                    if (singleSex > 1)
+                    {
+                        OtherAnimalsTypeCohort newFemales = new OtherAnimalsTypeCohort()
                         {
                             AgeDetails = new(0),
-                            Weight = newweight,
+                            Weight = newWeight,
                             Sex = Sex.Female,
-                            Number = singlesex,
-                            AdjustedNumber = singlesex,
+                            Number = singleSex,
+                            AdjustedNumber = singleSex,
                             SaleFlag = HerdChangeReason.Born
                         };
-                        SelectedOtherAnimalsType.Add(newfemales, this, null, "Births");
+                        SelectedOtherAnimalsType.Add(newFemales, this, null, "Births");
                         if (Status != ActivityStatus.Partial)
+                        {
                             Status = ActivityStatus.Success;
+                        }
                     }
                 }
             }
@@ -247,9 +258,14 @@ namespace Models.CLEM.Activities
 
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 if (UseLocalMales)
+                {
                     htmlWriter.Write("Breeding will only occur when adult males are present in the local population.");
+                }
                 else
+                {
                     htmlWriter.Write("Breeding will only regardless of whether adult males are present in the local population.");
+                }
+
                 htmlWriter.Write("</div>");
 
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");

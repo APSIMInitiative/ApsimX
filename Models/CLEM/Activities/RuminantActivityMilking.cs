@@ -79,7 +79,6 @@ namespace Models.CLEM.Activities
             this.InitialiseHerd(false, true);
             filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>( false, true);
 
-            // find milk store
             milkStore = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ResourceTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
@@ -91,8 +90,10 @@ namespace Models.CLEM.Activities
         {
             // this method will ensure the milking status is defined for females after births when lactation is set and before milk production is determined
             foreach (RuminantFemale item in this.CurrentHerd(true).OfType<RuminantFemale>().Where(a => a.IsLactating))
+            {
                 // set these females to state milking performed so they switch to the non-suckling milk production curves.
                 item.Milk.MilkingPerformed = true;
+            }
         }
 
         /// <inheritdoc/>

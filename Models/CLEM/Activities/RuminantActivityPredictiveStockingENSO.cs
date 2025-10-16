@@ -16,7 +16,7 @@ using APSIM.Numerics;
 namespace Models.CLEM.Activities
 {
     /// <summary>Ruminant predictive stocking activity using ENSO predictions</summary>
-    /// <summary>This activity will undertake stocking and destocking based on future season predictions (La Nini or El Nino)</summary>
+    /// <summary>This activity will undertake stocking and destocking based on future season predictions (La Nina or El Nino)</summary>
     /// <summary>It is designed to consider individuals already marked for sale and add additional individuals before transport and sale.</summary>
     /// <summary>It will check all paddocks that the specified herd are grazing</summary>
     [Serializable]
@@ -135,11 +135,17 @@ namespace Models.CLEM.Activities
             // get average SIOIndex
             ensoValue /= monthsAvailable;
             if (ensoValue <= SOIForElNino)
+            {
                 return ENSOState.ElNino;
+            }
             else if (ensoValue >= SOIForLaNina)
+            {
                 return ENSOState.LaNina;
+            }
             else
+            {
                 return ENSOState.Neutral;
+            }
         }
 
         /// <inheritdoc/>
@@ -187,9 +193,13 @@ namespace Models.CLEM.Activities
 
             Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
             if (simulation != null)
+            {
                 fullFilename = PathUtilities.GetAbsolutePath(MonthlySOIFile, simulation.FileName);
+            }
             else
+            {
                 fullFilename = MonthlySOIFile;
+            }
 
             //check file exists
             if (File.Exists(fullFilename))
@@ -215,7 +225,9 @@ namespace Models.CLEM.Activities
                 }
             }
             else
+            {
                 Summary.WriteMessage(this, String.Format("Could not find ENSO-SOI datafile [x={0}] for [a={1}]", MonthlySOIFile, Name), MessageType.Error);
+            }
 
             InitialiseHerd(false, true);
 
@@ -226,7 +238,10 @@ namespace Models.CLEM.Activities
             filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>(true, false);
             var grazeFoodStore = Resources.FindResourceGroup<GrazeFoodStore>();
             if (grazeFoodStore != null)
+            {
                 paddocks = Structure.FindChildren<GrazeFoodStoreType>(relativeTo: grazeFoodStore);
+            }
+
             paddockChanges = new List<(string paddockName, double AE, double AeShortfall)>();
         }
 
@@ -252,7 +267,7 @@ namespace Models.CLEM.Activities
             IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => (a.Location ?? "") != "");
             uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd, Structure);
 
-            // Get ENSO forcase for current time
+            // Get ENSO forecast for current time
             ENSOState forecastEnsoState = GetENSOMeasure();
 
             foreach (GrazeFoodStoreType pasture in paddocks)

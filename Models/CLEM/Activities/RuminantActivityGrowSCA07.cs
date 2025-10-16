@@ -13,7 +13,7 @@ namespace Models.CLEM.Activities
 {
     /// <summary>Ruminant growth activity (SCA 2007 version)</summary>
     /// <summary>This class represents the CLEM activity responsible for determining potential intake, determining the quality of all food eaten, and providing energy and protein for all needs (e.g. wool production, pregnancy, lactation and growth).</summary>
-    /// <remarks>Rumiant death activity controls mortality, while the Breed activity is responsible for conception and births.</remarks>
+    /// <remarks>Ruminant death activity controls mortality, while the Breed activity is responsible for conception and births.</remarks>
     /// <authors>Animal physiology and SCA 2007 equations for this methodology, James Dougherty, CSIRO</authors>
     /// <authors>Implementation of R script based equations, Adam Liedloff, CSIRO</authors>
     /// <authors>Quality control, Thomas Keogh, CSIRO</authors>

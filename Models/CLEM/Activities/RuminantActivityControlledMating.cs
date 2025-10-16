@@ -118,11 +118,11 @@ namespace Models.CLEM.Activities
 
             milkingTimer = Structure.FindChild<ActivityTimerBreedForMilking>();
 
-            // check that timer exists for controlled mating
             if (!TimingExists)
+            {
                 Summary.WriteMessage(this, $"Breeding with controlled mating [a={Parent.Name}].[a={Name}] requires a Timer otherwise breeding will be undertaken every time-step", MessageType.Warning);
+            }
 
-            // get details from parent breeding activity
             breedingParent = Parent as RuminantActivityBreed;
         }
 
@@ -155,11 +155,13 @@ namespace Models.CLEM.Activities
             amountToDo = numberToDo;
 
             // ensure a conception rate is provided for all females
-            // calculate conception rate for all individuals
             foreach (RuminantFemale female in uniqueIndividuals)
             {
                 if (female.Parameters.Details.ConceptionModel is null)
+                {
                     throw new ApsimXException(this, $"No conception details were found for [r={female.Parameters.Details.Name}]\r\nPlease add a conception component below the [r=RuminantType]");
+                }
+
                 female.ActivityDeterminedConceptionRate = female.Parameters.Details.ConceptionModel.ConceptionRate(female);
                 // identify successful matings by a positive value of rate
                 female.ActivityDeterminedConceptionRate *= (RandomNumberGenerator.Generator.NextDouble() <= female.ActivityDeterminedConceptionRate) ? 1 : -1;
@@ -228,9 +230,11 @@ namespace Models.CLEM.Activities
                         AddStatusMessage("Resource shortfall prevented any mating");
                     }
 
-                    // set skipped individual activitymanagedconception to 0 // unmated
+                    // set skipped individual activity managed conception to 0 // unmated
                     foreach (RuminantFemale female in uniqueIndividuals.Skip(numberToDo - numberToSkip))
+                    {
                         female.ActivityDeterminedConceptionRate = 0;
+                    }
                 }
 
                 var amountShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Number conceived").FirstOrDefault();
@@ -259,7 +263,9 @@ namespace Models.CLEM.Activities
                 if (conceived > 0)
                 {
                     if (MathUtilities.IsPositive(ruminant.ActivityDeterminedConceptionRate ?? -1))
+                    {
                         conceived--;
+                    }
                 }
                 else
                     ruminant.ActivityDeterminedConceptionRate = 0;
@@ -307,7 +313,7 @@ namespace Models.CLEM.Activities
             if (attributeSetters.Any())
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write($"The Attributes of the sire are {(attributeSetters.Any() ? "specified below" : "selected at random ofrm the herd")} to ensure inheritance to offpsring");
+                htmlWriter.Write($"The Attributes of the sire are {(attributeSetters.Any() ? "specified below" : "selected at random from the herd")} to ensure inheritance to offspring");
                 htmlWriter.Write("</div>");
             }
             else
@@ -318,7 +324,7 @@ namespace Models.CLEM.Activities
                 if (mandatoryAttributes.Any())
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write($"The mandatory attributes <span class=\"setvalue\">{string.Join("</span>,<span class=\"setvalue\">", mandatoryAttributes)}</span> required from the breeding males will be randomally selected from the herd");
+                    htmlWriter.Write($"The mandatory attributes <span class=\"setvalue\">{string.Join("</span>,<span class=\"setvalue\">", mandatoryAttributes)}</span> required from the breeding males will be randomly selected from the herd");
                     htmlWriter.Write("</div>");
                 }
             }

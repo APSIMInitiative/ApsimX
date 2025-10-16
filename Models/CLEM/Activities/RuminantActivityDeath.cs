@@ -76,12 +76,6 @@ namespace Models.CLEM.Activities
 
             CurrentIndividuals = CurrentHerd().ToList();
 
-            //handled where applied. left here in case there is an issue
-            //foreach (var individual in CurrentIndividuals.Where(a => a.Died && a.Attributes.Exists("Dystocia")))
-            //{
-            //    individual.SaleFlag = HerdChangeReason.DiedDystocia;
-            //}
-
             foreach (var group in filterGroups)
             {
                 IEnumerable<Ruminant> individualsToCheck = (group as RuminantGroup).Filter(CurrentIndividuals); 
@@ -98,7 +92,7 @@ namespace Models.CLEM.Activities
             }
 
             // if any individuals not checked
-            if (CurrentIndividuals.Any())
+            if (CurrentIndividuals.Count != 0)
             {
                 string warn = $"Some specified individuals not considered in {NameWithParent}{Environment.NewLine}SOLUTION: Ensure [FilterGroups] include all individuals";
                 Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
@@ -110,8 +104,8 @@ namespace Models.CLEM.Activities
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             // if no filter groups error
-            var filtergroups = Structure.FindChildren<IRuminantDeathGroup>();
-            if(!filtergroups.Any())
+            var filterGroups = Structure.FindChildren<IRuminantDeathGroup>();
+            if(!filterGroups.Any())
             {
                 yield return new ValidationResult($"At least one [RuminantDeathGroup] is required as a child of the [a=RuminantActivityDeath] component [{NameWithParent}]", new string[] { "Missing FilterGroup" });
             }

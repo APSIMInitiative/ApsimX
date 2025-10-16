@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Ruminant enteric methane calulator (Charmley equation)</summary>
+    /// <summary>Ruminant enteric methane calculator (Charmley equation)</summary>
     /// <version>1.0</version>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -40,7 +40,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            // find first GreenhouseGasType flagged to autocollect methane. 
+            // find first GreenhouseGasType flagged to auto collect methane. 
             methaneEmissions = Structure.FindAll<GreenhouseGasesType>().Where(a => a.AutoCollectType == GreenhouseGasTypes.CH4).FirstOrDefault();
             if(methaneEmissions is not null)
                 InitialiseHerd(false, true);
@@ -56,17 +56,6 @@ namespace Models.CLEM.Activities
             if (methaneEmissions is null)
                 return;
             Status = ActivityStatus.NotNeeded;
-
-            // Blaxter and Claperton 1965
-            //ind.Output.Methane = ind.Paramaters.GrowPF_CH.CH1 * (ind.Intake.Feed.Actual) * ((ind.GrowPF_CH.CH2 + ind.GrowPF_CH.CH3 * ind.Intake.MDSolid) + (feedingLevel + 1) * (ind.GrowPF_CH.CH4 + ind.GrowPF_CH.CH5 * ind.Intake.MDSolid));
-
-            // Function to calculate approximate methane produced by animal, based on feed intake based on Freer spreadsheet
-            // methaneproduced is  0.02 * intakeDaily * ((13 + 7.52 * energyMetabolic) + energyMetablicFromIntake / energyMaintenance * (23.7 - 3.36 * energyMetabolic)); // MJ per day
-            // methane is methaneProduced / 55.28 * 1000; // grams per day
-
-            // Charmley et al 2016 can be substituted by intercept = 0 and coefficient = 20.7
-            // per day at this point.
-            //ind.Output.Methane = ind.Parameters.General.MethaneProductionCoefficient * intakeDaily * events.Interval;
 
             var herd = CurrentHerd(true);
             foreach (var ruminant in herd)

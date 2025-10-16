@@ -129,8 +129,10 @@ namespace Models.CLEM.Activities
                     {
                         grazeStore = "";
                         ActivitiesHolder ah = Structure.Find<ActivitiesHolder>();
-                        if (Structure.FindChildren<PastureActivityManage>(relativeTo: ah, recurse: true).Count() != 0)
+                        if (Structure.FindChildren<PastureActivityManage>(relativeTo: ah, recurse: true).Any())
+                        {
                             Summary.WriteMessage(this, $"Individuals weaned by [a={NameWithParent}] will be placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place weaners in] located in the properties.", MessageType.Warning);
+                        }
                     }
                 }
             }
@@ -150,8 +152,8 @@ namespace Models.CLEM.Activities
         {
             numberToSkip = 0;
             sucklingToSkip = 0;
-            IEnumerable<Ruminant> sucklingherd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.IsWeaned == false);
-            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, sucklingherd, Structure);
+            IEnumerable<Ruminant> sucklingHerd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.IsWeaned == false);
+            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, sucklingHerd, Structure);
             sucklingsToCheck = uniqueIndividuals?.Count() ?? 0;
             numberToDo = uniqueIndividuals.Where(a => (a.AgeInDays >= WeaningAge.InDays && (Style == WeaningStyle.AgeOrWeight || Style == WeaningStyle.AgeOnly)) || (a.Weight.Live >= WeaningWeight && (Style == WeaningStyle.AgeOrWeight || Style == WeaningStyle.WeightOnly)))?.Count() ?? 0;
 
@@ -160,7 +162,9 @@ namespace Models.CLEM.Activities
             {
                 int number = numberToDo;
                 if (valueToSupply.Key.identifier == "Number sucklings checked")
+                {
                     number = sucklingsToCheck;
+                }
 
                 switch (valueToSupply.Key.unit)
                 {
@@ -185,12 +189,16 @@ namespace Models.CLEM.Activities
             {
                 // find shortfall by identifiers as these may have different influence on outcome
                 var sucklingShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Number sucklings checked").FirstOrDefault();
-                if(sucklingShort != null)
+                if (sucklingShort != null)
+                {
                     sucklingToSkip = Convert.ToInt32(sucklingsToCheck * (1 - sucklingShort.Available / sucklingShort.Required));
+                }
 
                 var weanShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Number weaned").FirstOrDefault();
                 if (weanShort != null)
+                {
                     numberToSkip = Convert.ToInt32(numberToDo * (1 - weanShort.Available / weanShort.Required));
+                }
 
                 if (numberToSkip == numberToDo || sucklingsToCheck == sucklingToSkip)
                 {
@@ -233,10 +241,16 @@ namespace Models.CLEM.Activities
 
                         // leave where weaned or move to specified location
                         if (GrazeFoodStoreName != "Leave at current location")
+                        {
                             if (GrazeFoodStoreName == "Not specified - general yards")
+                            {
                                 ind.Location = "";
+                            }
                             else
+                            {
                                 ind.Location = grazeStore;
+                            }
+                        }
 
                         // report wean. If mother has died create temp female with the mother's ID for reporting only
                         conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.MotherID), clock.Today, ind);
@@ -244,7 +258,9 @@ namespace Models.CLEM.Activities
 
                         weaned++;
                         if (weaned > numberToDo - numberToSkip)
+                        {
                             break;
+                        }
                     }
                 }
                 SetStatusSuccessOrPartial(weaned != numberToDo);
@@ -278,18 +294,26 @@ namespace Models.CLEM.Activities
             {
                 htmlWriter.Write($"{DisplaySummaryValueSnippet(WeaningAge.InDays)} days");
                 if (Style == WeaningStyle.AgeOrWeight)
+                {
                     htmlWriter.Write(" or  ");
+                }
             }
             if (Style == WeaningStyle.AgeOrWeight | Style == WeaningStyle.WeightOnly)
+            {
                 htmlWriter.Write($"{DisplaySummaryValueSnippet(WeaningWeight)} kg");
+            }
 
             htmlWriter.Write("</div>");
 
             htmlWriter.Write("\r\n<div class=\"activityentry\">Weaned individuals will ");
             if (GrazeFoodStoreName == "Leave at current location")
+            {
                 htmlWriter.Write("remain at the location they were weaned");
+            }
             else
+            {
                 htmlWriter.Write($"be place in {DisplaySummaryResourceTypeSnippet(GrazeFoodStoreName, nullGeneralYards: true)}");
+            }
 
             htmlWriter.Write("</div>");
             // ToDo: warn if natural weaning will take place

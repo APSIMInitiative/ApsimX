@@ -61,7 +61,7 @@ namespace Models.CLEM.Activities
         public string NitrousOxideStoreName { get; set; } = "Use store named N2O if present";
 
         /// <summary>
-        /// Burning efficency
+        /// Burning efficiency
         /// </summary>
         [Description("Biomass burning efficiency")]
         [Required, GreaterThanValue(0)]
@@ -85,14 +85,22 @@ namespace Models.CLEM.Activities
             pasture = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, PaddockName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             if (MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
+            {
                 methaneStore = Resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, "Methane", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
+            }
             else
+            {
                 methaneStore = Resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, MethaneStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+            }
 
             if (NitrousOxideStoreName is null || NitrousOxideStoreName == "Use store named N2O if present")
+            {
                 n2oStore = Resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, "N2O", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
+            }
             else
+            {
                 n2oStore = Resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, NitrousOxideStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+            }
         }
 
         /// <inheritdoc/>
@@ -168,11 +176,10 @@ namespace Models.CLEM.Activities
                 );
 
                 // add emissions
-                double burnkg = pastureToDo * BurningEfficiency * (CarbonPercent / 100.0); // burnkg * burning efficiency * carbon content
-                                                                                 //TODO change emissions for green material
-                methaneStore?.Add(burnkg * 1.333 * 0.0035, this, PaddockName, TransactionCategory); // * 21; // methane emissions from fire (CO2 eq)
-
-                n2oStore?.Add(burnkg * 1.571 * 0.0076 * 0.12, this, PaddockName, TransactionCategory); // * 21; // N20 emissions from fire (CO2 eq)
+                double burnKg = pastureToDo * BurningEfficiency * (CarbonPercent / 100.0); // burnkg * burning efficiency * carbon content
+                //TODO: change emissions for green material
+                methaneStore?.Add(burnKg * 1.333 * 0.0035, this, PaddockName, TransactionCategory); // * 21; // methane emissions from fire (CO2 eq)
+                n2oStore?.Add(burnKg * 1.571 * 0.0076 * 0.12, this, PaddockName, TransactionCategory); // * 21; // N20 emissions from fire (CO2 eq)
 
                 // TODO: add fertilisation to pasture for given period.
 
@@ -194,17 +201,25 @@ namespace Models.CLEM.Activities
 
             htmlWriter.Write("\r\n<div class=\"activityentry\">Methane emissions will be placed in ");
             if (MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
+            {
                 htmlWriter.Write("<span class=\"resourcelink\">[GreenhouseGases].Methane</span> if present");
+            }
             else
+            {
                 htmlWriter.Write($"<span class=\"resourcelink\">{MethaneStoreName}</span>");
+            }
 
             htmlWriter.Write("</div>");
 
             htmlWriter.Write("\r\n<div class=\"activityentry\">Nitrous oxide emissions will be placed in ");
             if (NitrousOxideStoreName is null || NitrousOxideStoreName == "Use store named N2O if present")
+            {
                 htmlWriter.Write("<span class=\"resourcelink\">[GreenhouseGases].N2O</span> if present");
+            }
             else
+            {
                 htmlWriter.Write($"<span class=\"resourcelink\">{NitrousOxideStoreName}</span>");
+            }
 
             htmlWriter.Write("</div>");
             return htmlWriter.ToString();

@@ -213,9 +213,13 @@ namespace Models.CLEM
             {
                 Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
                 if (simulation != null && this.FileName != null)
+                {
                     return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
+                }
                 else
+                {
                     return this.FileName;
+                }
             }
         }
 
@@ -231,8 +235,10 @@ namespace Models.CLEM
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             // check filename exists
-            if(!this.FileExists)
+            if (!this.FileExists)
+            {
                 throw new ApsimXException(this, "The database[o="+FullFileName+"] could not be found for [x="+this.Name+"]");
+            }
 
             this.regionIndex = 0;
             this.soilIndex = 0;
@@ -367,7 +373,9 @@ namespace Models.CLEM
                 return table;
             }
             else
+            {
                 return null;
+            }
         }
 
         /// <summary>
@@ -440,12 +448,15 @@ namespace Models.CLEM
 
             string filter;
             if (startYear == endYear)
+            {
                 filter = "( Region = " + region + ") AND (Soil = " + soil + ")"
                 + " AND (GrassBA = " + grassBasalArea + ") AND (LandCon = " + landCondition + ") AND (StkRate = " + stkRateCategory + ")"
                 + " AND ("
                 + "( Year = " + startYear + " AND Month >= " + startMonth + " AND Month < " + endMonth + ")"
                 + ")";
+            }
             else
+            {
                 filter = "( Region = " + region + ") AND (Soil = " + soil + ")"
                 + " AND (GrassBA = " + grassBasalArea + ") AND (LandCon = " + landCondition + ") AND (StkRate = " + stkRateCategory + ")"
                 + " AND ("
@@ -453,13 +464,16 @@ namespace Models.CLEM
                 + " OR  ( Year > " + startYear + " AND Year < " + endYear + ")"
                 + " OR  ( Year = " + endYear + " AND Month < " + endMonth + ")"
                 + ")";
+            }
 
             DataRow[] foundRows = this.pastureFileAsTable.Select(filter);
 
             List<PastureDataType> filtered = new List<PastureDataType>();
 
             foreach (DataRow dr in foundRows)
+            {
                 filtered.Add(DataRow2PastureDataType(dr));
+            }
 
             filtered.Sort((r, s) => DateTime.Compare(r.CutDate, s.CutDate));
 
@@ -483,27 +497,34 @@ namespace Models.CLEM
         private void CheckAllMonthsWereRetrieved(List<PastureDataType> filtered, DateTime startDate, DateTime endDate,
             int region, string soil, double grassBasalArea, double landCondition, double stockingRate)
         {
-            string errormessageStart = "Problem with Pasture database file." + System.Environment.NewLine
+            string errorMessageStart = "Problem with Pasture database file." + System.Environment.NewLine
                         + "For Region: " + region + ", Soil: " + soil
                         + ", GrassBA: " + grassBasalArea + ", LandCon: " + landCondition + ", StkRate: " + stockingRate + System.Environment.NewLine;
 
             if (clock.EndDate == clock.Today)
+            {
                 return;
+            }
 
             //Check no gaps in the months
             DateTime tempdate = startDate;
             foreach (PastureDataType month in filtered)
             {
                 if ((tempdate.Year != month.Year) || (tempdate.Month != month.Month))
-                    throw new ApsimXException(this, errormessageStart
+                {
+                    throw new ApsimXException(this, errorMessageStart
                         + "Missing entry for Year: " + month.Year + " and Month: " + month.Month);
+                }
+
                 tempdate = tempdate.AddMonths(1);
             }
 
             //Check months go right up until EndDate
-            if ((tempdate.Month != endDate.Month)&&(tempdate.Year != endDate.Year))
-                throw new ApsimXException(this, errormessageStart
+            if ((tempdate.Month != endDate.Month) && (tempdate.Year != endDate.Year))
+            {
+                throw new ApsimXException(this, errorMessageStart
                         + "Missing entry for Year: " + tempdate.Year + " and Month: " + tempdate.Month);
+            }
         }
 
         /// <summary>
@@ -589,7 +610,9 @@ namespace Models.CLEM
         public bool OpenDataFile()
         {
             if (this.FullFileName == null || this.FullFileName == "")
+            {
                 return false;
+            }
 
             if (File.Exists(this.FullFileName))
             {
@@ -697,13 +720,17 @@ namespace Models.CLEM
                 else
                 {
                     if (this.reader.IsExcelFile != true)
+                    {
                         this.reader.SeekToDate(this.reader.FirstDate);
+                    }
                 }
 
                 return true;
             }
             else
+            {
                 return false;
+            }
         }
 
         /// <summary>Close the datafile.</summary>
@@ -724,13 +751,19 @@ namespace Models.CLEM
             using StringWriter htmlWriter = new();
             htmlWriter.Write("\r\n<div class=\"activityentry\">");
             if (FileName == null || FileName == "")
+            {
                 htmlWriter.Write("Using <span class=\"errorlink\">[FILE NOT SET]</span>");
+            }
             else
             {
                 if (!this.FileExists)
+                {
                     htmlWriter.Write($"The file <span class=\"errorlink\">{FullFileName}</span> could not be found");
+                }
                 else
+                {
                     htmlWriter.Write($"Using <span class=\"filelink\">{FileName}</span>");
+                }
             }
             htmlWriter.Write("\r\n</div>");
             return htmlWriter.ToString();

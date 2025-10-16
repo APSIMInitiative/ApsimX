@@ -84,7 +84,9 @@ namespace Models.CLEM.Activities
         {
             BankAccount = resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, BankAccountName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
             if (BankAccount is not null)
+            {
                 ResourceStore = (BankAccount as IModel).Parent as ResourceBaseWithTransactions;
+            }
         }
 
         /// <inheritdoc/>
@@ -95,11 +97,19 @@ namespace Models.CLEM.Activities
             {
                 string relatesTo = null;
                 if (Parent as CLEMRuminantActivityBase != null)
+                {
                     relatesTo = (Parent as CLEMRuminantActivityBase).PredictedHerdNameToDisplay;
+                }
+
                 if (Parent as ResourceActivityBuy != null)
+                {
                     relatesTo = (Parent as ResourceActivityBuy).ResourceName;
+                }
+
                 if (Parent is OtherAnimalsActivityBuy otherParentBuy)
+                {
                     relatesTo = otherParentBuy.PredictedAnimalType;
+                }
 
                 double charge = argument * Amount;
                 resourceRequest = new ResourceRequest()
@@ -137,7 +147,10 @@ namespace Models.CLEM.Activities
             using StringWriter htmlWriter = new();
             htmlWriter.Write($"\r\n<div class=\"activityentry\">Pay {CLEMModel.DisplaySummaryValueSnippet(Amount, "Rate not set")} ");
             if (Measure?.ToLower() != "")
+            {
                 htmlWriter.Write($"per {CLEMModel.DisplaySummaryValueSnippet(Measure, "Measure not set")} ");
+            }
+
             htmlWriter.Write($"from {DisplaySummaryResourceTypeSnippet(BankAccountName)}</div>");
             return htmlWriter.ToString();
         }

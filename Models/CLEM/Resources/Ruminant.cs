@@ -539,7 +539,7 @@ namespace Models.CLEM.Resources
 
             double normMax = Weight.StandardReferenceWeight - (Weight.StandardReferenceWeight - Weight.AtBirth) * Math.Exp(-(Parameters.General.AgeGrowthRateCoefficient_CN1 * age) / Math.Pow(Weight.StandardReferenceWeight, Parameters.General.SRWGrowthScalar_CN2));
 
-            // ToDo: ensure this is appropriate for intervals greater than 1 day as cummulative effect should be considered.
+            // ToDo: ensure this is appropriate for intervals greater than 1 day as cumulative effect should be considered.
             // ToDo: check that this needs to use Previous weight and not weight before modified
 
             // ========================================================================================================================
@@ -596,8 +596,8 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                double bcscore = Parameters.General.BCScoreRange[1] + (Weight.RelativeCondition - 1) / Parameters.General.RelBCToScoreRate;
-                return Math.Max(Parameters.General.BCScoreRange[0], Math.Min(bcscore, Parameters.General.BCScoreRange[2]));
+                double bCScore = Parameters.General.BCScoreRange[1] + (Weight.RelativeCondition - 1) / Parameters.General.RelBCToScoreRate;
+                return Math.Max(Parameters.General.BCScoreRange[0], Math.Min(bCScore, Parameters.General.BCScoreRange[2]));
             }
         }
 
@@ -616,7 +616,7 @@ namespace Models.CLEM.Resources
 
         #region Classification properties
 
-        // Ruminant classification provides a means of undertsanding the state of individuals in the model
+        // Ruminant classification provides a means of understanding the state of individuals in the model
         // The various Ruminant.Class properties are used primarily for reporting at the end of the time-step and are based on the underlying properties to determine status
         // The class is calculated for every call as the status may have changed during the time step. 
         // A flag is set if the status (broad ruminant class) changes in a time step which permits the tracking of individuals moving between classes.
@@ -925,7 +925,7 @@ namespace Models.CLEM.Resources
 
             if (birthScalar <= 0 || birthScalar > 1)
             {
-                throw new Exception($"Attempted to create a ruminant from [r={cohort.NameWithParent}] with invalid birthscalar [{birthScalar}].{Environment.NewLine}Expected 0 > birth scalar <= 1. Check BirthScalar property of [r={cohort.Parent.Parent.Name}] ");
+                throw new Exception($"Attempted to create a ruminant from [r={cohort.NameWithParent}] with invalid birth scalar [{birthScalar}].{Environment.NewLine}Expected 0 > birth scalar <= 1. Check BirthScalar property of [r={cohort.Parent.Parent.Name}] ");
             }
             
             // create weight info object and set birth weight
@@ -944,7 +944,7 @@ namespace Models.CLEM.Resources
                 dateOfWeaning = DateOfBirth.AddDays(weanAge);
             }
 
-            // if setweight is zero we need to set weight to normalised weight.
+            // if setWeight is zero we need to set weight to normalised weight.
             if (setWeight <= 0)
             {
                 setWeight = CalculateNormalisedWeight(setAge, true);
@@ -985,8 +985,8 @@ namespace Models.CLEM.Resources
             {
                 if (AgeInDays >= ((setParams.General.NaturalWeaningAge.InDays == 0) ? setParams.General.GestationLength.InDays : setParams.General.NaturalWeaningAge.InDays))
                 {
-                    string limitstring = (setParams.General.NaturalWeaningAge.InDays == 0) ? $"gestation length [{setParams.General?.GestationLength ?? "Unknown"}]" : $"natural weaning age [{setParams.General.NaturalWeaningAge.InDays}]";
-                    string warn = $"Individuals older than {limitstring} cannot be assigned as suckling [r={cohort.NameWithParent}]{Environment.NewLine}These individuals have not been assigned suckling.";
+                    string limitString = (setParams.General.NaturalWeaningAge.InDays == 0) ? $"gestation length [{setParams.General?.GestationLength ?? "Unknown"}]" : $"natural weaning age [{setParams.General.NaturalWeaningAge.InDays}]";
+                    string warn = $"Individuals older than {limitString} cannot be assigned as suckling [r={cohort.NameWithParent}]{Environment.NewLine}These individuals have not been assigned suckling.";
                     cohort.Warnings.CheckAndWrite(warn, cohort.Summary, cohort, MessageType.Warning);
                 }
             }
@@ -1009,7 +1009,7 @@ namespace Models.CLEM.Resources
         /// <param name="date">The date of creation</param>
         /// <param name="id">Unique id for individual (null if id not required e.g. purchases)</param>
         /// <param name="mother">The mother of newborn</param>
-        /// <param name="growActivity">Ruminant Grow Activity for fat and protein allocation if neeed</param>
+        /// <param name="growActivity">Ruminant Grow Activity for fat and protein allocation if needed</param>
         public Ruminant(DateTime date, int id, RuminantFemale mother, IRuminantActivityGrow growActivity)
         {
             // GrowPF Activity will have the weight.fetus.amount set before births
@@ -1045,7 +1045,7 @@ namespace Models.CLEM.Resources
                 Weight.SetInitialBaseWeight(weight);
             }
 
-            // must get set after weight and birth weight are assignedf in order to calculate normalised weight correctly
+            // must get set after weight and birth weight are assigned in order to calculate normalised weight correctly
             AgeInDays = 0;
             DateOfBirth = mother.BirthDueDate??date;
             DateEnteredSimulation = DateOfBirth;
@@ -1155,15 +1155,15 @@ namespace Models.CLEM.Resources
             // get inherited value
             IIndividualAttribute indAttribute = attribute.GetAttribute(true);
 
-            // if it requires a property modifier then create new modified breedparams
+            // if it requires a property modifier then create new modified breed parameters
 
-            // if breedparams equals mother's create deep copy
+            // if breed parameters equals mother's create deep copy
 
-            // update breedparams
+            // update breed parameters
 
             // save breed params to individual
 
-            Attributes.Add(attribute.AttributeName, indAttribute); //.Value.GetInheritedAttribute() as IIndividualAttribute);
+            Attributes.Add(attribute.AttributeName, indAttribute); 
         }
 
         /// <summary>

@@ -118,7 +118,9 @@ namespace Models.CLEM.Activities
                 if (ruminant is RuminantFemale female)
                 {
                     if (female.IsPregnant | female.IsLactating)
+                    {
                         throw new NotImplementedException("[a=RuminantActivityGrowSCA2007] does not support pregnancy or lactation.");
+                    }
 
                     GetReadyAndCalculateEnergy(ruminant);
 
@@ -128,7 +130,9 @@ namespace Models.CLEM.Activities
                     }
                 }
                 else
+                {
                     GetReadyAndCalculateEnergy(ruminant);
+                }
             }
             RuminantActivityGrowPF.ReportUnfedIndividualsWarning(CurrentHerd(false), Warnings, Summary, this, events);
             return;
@@ -138,7 +142,10 @@ namespace Models.CLEM.Activities
         {
             // spin-up to get change in mass working. 
             if (events.IntervalIndex == 1)
+            {
                 CalculateEnergy(ind, true);
+            }
+
             ind.Intake.AdjustIntakeBasedOnFeedQuality(false, ind);
             CalculateEnergy(ind);
         }
@@ -164,7 +171,7 @@ namespace Models.CLEM.Activities
         /// B model with combined data file now used for MODNUT and ISEP phase simulations
         /// Based on version as of Dec 1, new kp and kf, new v*, new pv, new lp and lf
         /// </remarks>
-        /// <param name="ind">Indivudal ruminant for calculation.</param>
+        /// <param name="ind">Individual ruminant for calculation.</param>
         /// <param name="performSetupOnly">Allows the calculations to fill the change in fat, protein energy from timestep before simulation.</param>
         public virtual void CalculateEnergy(Ruminant ind, bool performSetupOnly = false)
         {
@@ -232,9 +239,13 @@ namespace Models.CLEM.Activities
             {
                 double WInst = CalculateWool(ind);
                 if (ind.Energy.ForWool == 0)
+                {
                     dwdt = WInst; //no previous wool change so just use this step, units MJ/d
+                }
                 else
+                {
                     dwdt = (ind.Energy.ForWool / events.Interval) * 0.96 + WInst * 0.04; //units MJ/d
+                }
             }
 
             double bf = 1 / ind.Parameters.GrowOddy.kf - 1;

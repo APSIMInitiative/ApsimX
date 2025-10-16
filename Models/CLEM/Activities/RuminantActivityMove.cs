@@ -13,7 +13,6 @@ namespace Models.CLEM.Activities
 {
     /// <summary>Ruminant moving activity</summary>
     /// <summary>This activity moves specified ruminants to a given pasture</summary>
-    /// <version>1.0</version>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -97,16 +96,20 @@ namespace Models.CLEM.Activities
             this.InitialiseHerd(true, true);
             filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>(true, false);
 
-            // activity is performed depends on the within time-step timing style
+            // activity is performed depends on the within time step timing style
             this.AllocationStyle = ResourceAllocationStyle.Manual;
 
             // link to graze food store type (pasture) to move to
             // "Not specified" is general yards.
             pastureName = "";
             if (ManagedPastureName.StartsWith("Not specified"))
+            {
                 pastureName = "";
+            }
             else
+            {
                 pastureName = ManagedPastureName.Split('.')[1];
+            }
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -135,7 +138,9 @@ namespace Models.CLEM.Activities
         protected void OnCLEMAnimalMarkLate(object sender, EventArgs e)
         {
             if (TimeStepTiming == WithinTimeStepTimingStyle.Late)
+            {
                 ManageActivityResourcesAndTasks();
+            }
         }
 
         /// <inheritdoc/>
@@ -143,7 +148,9 @@ namespace Models.CLEM.Activities
         protected override void OnGetResourcesPerformActivity(object sender, EventArgs e)
         {
             if (TimeStepTiming == WithinTimeStepTimingStyle.Normal)
+            {
                 ManageActivityResourcesAndTasks();
+            }
         }
 
         /// <inheritdoc/>
@@ -151,7 +158,9 @@ namespace Models.CLEM.Activities
         protected void OnCLEMAnimalMarkEarly(object sender, EventArgs e)
         {
             if (TimeStepTiming == WithinTimeStepTimingStyle.Early)
+            {
                 ManageActivityResourcesAndTasks();
+            }
         }
 
         /// <inheritdoc/>
@@ -214,9 +223,12 @@ namespace Models.CLEM.Activities
 
                     // check if sucklings are to be moved with mother
                     if (MoveSucklings && ruminant is RuminantFemale)
-                        // check if mother with sucklings
+                    {
                         foreach (var suckling in (ruminant as RuminantFemale).SucklingOffspringList)
+                        {
                             suckling.Location = pastureName;
+                        }
+                    }
 
                     moved++;
                 }

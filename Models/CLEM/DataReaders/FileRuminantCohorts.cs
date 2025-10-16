@@ -157,14 +157,20 @@ namespace Models.CLEM
             get
             {
                 if ((FileName == null) || (FileName == ""))
+                {
                     return "";
+                }
                 else
                 {
                     Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
                     if (simulation != null)
+                    {
                         return PathUtilities.GetAbsolutePath(FileName, simulation.FileName);
+                    }
                     else
+                    {
                         return FileName;
+                    }
                 }
             }
         }
@@ -205,7 +211,10 @@ namespace Models.CLEM
             if (!FileExists)
             {
                 if (fileName == "")
+                {
                     fileName = "Not set";
+                }
+
                 string errorMsg = $"Could not locate file [o={fileName}] for [x={Name}]";
                 throw new ApsimXException(this, errorMsg);
             }
@@ -220,7 +229,9 @@ namespace Models.CLEM
             {
                 // Excel file
                 if (string.IsNullOrWhiteSpace(ExcelWorkSheetName))
+                {
                     throw new ApsimXException(this, $"Worksheet name must be specified for Excel file: {fileName}");
+                }
 
                 table = ExcelUtilities.ReadExcelFileData(fileName, ExcelWorkSheetName, true);
                 // not using APSIM excel reader as it will convert columns to dates and break the age specifiers.
@@ -237,7 +248,7 @@ namespace Models.CLEM
             }
 
             // Check required columns
-            // Number will defaul to 1 if not provided.
+            // Number will default to 1 if not provided.
             // Weight will use normalised weight for age if not provided.
 
             // Read each row and create a cohort
@@ -263,39 +274,61 @@ namespace Models.CLEM
 
                 // Sex (Required field)
                 if (!table.Columns.Contains(SexColumnName))
+                {
                     throw new ApsimXException(this, $"Missing required column '{SexColumnName}' in file: {fileName} {ExcelWorkSheetName}");
+                }
+
                 if (row[SexColumnName] is string sexStr && Enum.TryParse<Sex>(sexStr, true, out sex))
+                {
                     cohort.Sex = sex;
+                }
                 else if (row[SexColumnName] is Sex sexEnum)
+                {
                     cohort.Sex = sexEnum;
+                }
                 else
+                {
                     throw new ApsimXException(this, $"Invalid value for '{SexColumnName}' in file: {fileName} at line: {rowCount}");
+                }
 
                 // Age (Required field)
                 if (!table.Columns.Contains(AgeColumnName))
+                {
                     throw new ApsimXException(this, $"Missing required column '{AgeColumnName}' in file: {fileName} {ExcelWorkSheetName}");
+                }
+
                 if (!string.IsNullOrWhiteSpace(AgeColumnName) && table.Columns.Contains(AgeColumnName))
                 {
                     if (TryParseIntArray(row[AgeColumnName]?.ToString(), out int[] age, true))
+                    {
                         cohort.AgeDetails.Parts = age;
+                    }
                     else
+                    {
                         throw new ApsimXException(this, $"Invalid value for '{AgeColumnName}' in file: {fileName} at line: {rowCount}. Expecting {{y,m,d}}");
+                    }
                 }
 
                 // Age SD (optional)
                 if (!string.IsNullOrWhiteSpace(AgeSDColumnName) && table.Columns.Contains(AgeSDColumnName))
                 {
                     if (double.TryParse(row[AgeSDColumnName]?.ToString(), out double ageSD))
+                    {
                         cohort.AgeSD = ageSD;
+                    }
                 }
 
                 // Number (optional) will be assigned 1 by default if not provided.
                 if (!string.IsNullOrWhiteSpace(NumberColumnName) && table.Columns.Contains(NumberColumnName))
                 {
                     if (int.TryParse(row[NumberColumnName]?.ToString(), out int number))
+                    {
                         cohort.Number = number;
+                    }
                     else
+                    {
                         throw new ApsimXException(this, $"Invalid value for '{NumberColumnName}' in file: {fileName} at line: {rowCount}");
+                    }
                 }
                 else
                 {
@@ -306,25 +339,35 @@ namespace Models.CLEM
                 if (!string.IsNullOrWhiteSpace(WeightColumnName) && table.Columns.Contains(WeightColumnName))
                 {
                     if (double.TryParse(row[WeightColumnName]?.ToString(), out double weight))
+                    {
                         cohort.Weight = weight;
+                    }
                     else
+                    {
                         throw new ApsimXException(this, $"Invalid value for '{WeightColumnName}' in file: {fileName} at line: {rowCount}");
+                    }
                 }
 
                 // Weight SD (optional)
                 if (!string.IsNullOrWhiteSpace(WeightSDColumnName) && table.Columns.Contains(WeightSDColumnName))
                 {
                     if (double.TryParse(row[WeightSDColumnName]?.ToString(), out double weightsd))
+                    {
                         cohort.WeightSD = weightsd;
+                    }
                     else
+                    {
                         throw new ApsimXException(this, $"Invalid value for '{WeightSDColumnName}' in file: {fileName} at line: {rowCount}. Expecting array of fat and protein (see user guide)");
+                    }
                 }
 
                 // FatProteinAllocation (optional) - assumes estimated from relative condition if missing as this is best case for activities requiring fat and protein and usual style for initial herd
                 if (!string.IsNullOrWhiteSpace(FatProteinAllocationColumnName) && table.Columns.Contains(FatProteinAllocationColumnName))
                 {
                     if (Enum.TryParse<InitialiseFatProteinAssignmentStyle>(row[FatProteinAllocationColumnName]?.ToString(), true, out var fpassignment))
-                    cohort.InitialFatProteinStyle = fpassignment;
+                    {
+                        cohort.InitialFatProteinStyle = fpassignment;
+                    }
                 }
                 else
                 {
@@ -336,36 +379,52 @@ namespace Models.CLEM
                 {
                     double[] fatProtein = null;
                     if (TryParseDoubleArray(row[FatProteinColumnName]?.ToString(), out double[] fatprotein))
+                    {
                         cohort.InitialFatProteinValues = fatProtein;
+                    }
                     else
+                    {
                         throw new ApsimXException(this, $"Invalid value for '{FatProteinColumnName}' in file: {fileName} at line: {rowCount}. Expecting array of fat and protein (see user guide)");
+                    }
                 }
 
                 // Sire (optional)
                 if (!string.IsNullOrWhiteSpace(SireColumnName) && table.Columns.Contains(SireColumnName))
                 {
                     if (Boolean.TryParse(row[SireColumnName]?.ToString(), out var sireStatus))
+                    {
                         cohort.Sire = sireStatus;
+                    }
                     else
+                    {
                         throw new ApsimXException(this, $"Invalid value for '{SireColumnName}' in file: {fileName} at line: {rowCount}");
+                    }
                 }
 
                 // Suckling (optional)
                 if (!string.IsNullOrWhiteSpace(SucklingColumnName) && table.Columns.Contains(SucklingColumnName))
                 {
                     if (Boolean.TryParse(row[SucklingColumnName]?.ToString(), out var sucklingStatus))
+                    {
                         cohort.Suckling = sucklingStatus;
+                    }
                     else
+                    {
                         throw new ApsimXException(this, $"Invalid value for '{SucklingColumnName}' in file: {fileName} at line: {rowCount}");
+                    }
                 }
 
                 // ProportionFleece (optional) - default is 1 and not considered for breeds with no fleece
                 if (!string.IsNullOrWhiteSpace(ProportionFleeceColumnName) && table.Columns.Contains(ProportionFleeceColumnName))
                 {
                     if (double.TryParse(row[ProportionFleeceColumnName]?.ToString(), out double fleece))
+                    {
                         cohort.ProportionFleecePresent = fleece;
+                    }
                     else
+                    {
                         throw new ApsimXException(this, $"Invalid value for '{ProportionFleeceColumnName}' in file: {fileName} at line: {rowCount}");
+                    }
                 }
                 else
                 {
@@ -376,7 +435,9 @@ namespace Models.CLEM
                 if (!string.IsNullOrWhiteSpace(LocationColumnName) && table.Columns.Contains(LocationColumnName))
                 {
                     if (row[ProportionFleeceColumnName]?.ToString() != "")
+                    {
                         cohort.ManagedPastureName = row[LocationColumnName]?.ToString();
+                    }
                 }
 
                 // Castrated (optional)
@@ -391,11 +452,12 @@ namespace Models.CLEM
                             castrate.Category = RuminantAttributeCategoryTypes.Sterilise_Castrate;
                             APSIM.Core.Node.Create(castrate);
                             cohort.Node.AddChild(castrate);
-                            //Core.ApsimFile.Structure.Add(castrate, cohort);
                         }
                     }
                     else
+                    {
                         throw new ApsimXException(this, $"Invalid value for '{SireColumnName}' in file: {fileName} at line: {rowCount}");
+                    }
                 }
 
                 // Days pregnant (optional) - provides the SetConception component functionality
@@ -413,7 +475,9 @@ namespace Models.CLEM
                         }
                     }
                     else
+                    {
                         throw new ApsimXException(this, $"Invalid value for '{DaysPregnantColumnName}' in file: {fileName} at line: {rowCount}");
+                    }
                 }
                 result.Add(cohort);
             }
@@ -426,20 +490,33 @@ namespace Models.CLEM
         {
             result = null;
             if (string.IsNullOrWhiteSpace(input))
+            {
                 return false;
+            }
+
             var parts = input.Split(new[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries);
             if (isAgeSpecifier && parts.Length == 0 || parts.Length > 3)
+            {
                 return false;
+            }
+
             var temp = new List<int>();
             foreach (var part in parts)
             {
                 if (int.TryParse(part.Trim(), out int value))
+                {
                     temp.Add(value);
+                }
                 else
+                {
                     return false;
+                }
             }
             while (isAgeSpecifier && temp.Count < 3)
+            {
                 temp.Insert(0, 0);
+            }
+
             result = temp.ToArray();
             return true;
         }
@@ -449,15 +526,22 @@ namespace Models.CLEM
         {
             result = null;
             if (string.IsNullOrWhiteSpace(input))
+            {
                 return false;
+            }
+
             var parts = input.Split(new[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries);
             var temp = new List<double>();
             foreach (var part in parts)
             {
                 if (double.TryParse(part.Trim(), out double value))
+                {
                     temp.Add(value);
+                }
                 else
+                {
                     return false;
+                }
             }
             result = temp.ToArray();
             return true;
@@ -470,13 +554,17 @@ namespace Models.CLEM
         public static void EnsureUniqueCohortNames(List<RuminantTypeCohort> cohorts)
         {
             if (cohorts == null)
+            {
                 return;
+            }
 
             var nameCounts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
             foreach (var cohort in cohorts)
             {
                 if (string.IsNullOrWhiteSpace(cohort.Name))
+                {
                     cohort.Name = "FileCohort";
+                }
 
                 var baseName = cohort.Name;
                 if (!nameCounts.ContainsKey(baseName))

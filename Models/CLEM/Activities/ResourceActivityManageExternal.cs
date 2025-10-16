@@ -97,19 +97,23 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            // get bank account object to use if provided
             if (AccountName != "No financial transactions")
+            {
                 bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
+            }
 
-            // get reader
             Model parentZone = Structure.FindParents<Zone>().FirstOrDefault();
-            if(parentZone != null)
+            if (parentZone != null)
+            {
                 fileResource = Structure.FindChild<FileResource>(ResourceDataReader, recurse: true);
+            }
 
             resourcesForMonth = new List<(IResourceType resource, double amount)>();
 
-            if ((ResourceColumnsToUse??"") != "")
+            if ((ResourceColumnsToUse ?? "") != "")
+            {
                 resourceTypesToInclude = ResourceColumnsToUse.Split(",").Select(x => x.Trim());
+            }
 
             // find all resources and check if related multiplier is available
             // place in dictionary for easy access during simulation
@@ -122,9 +126,13 @@ namespace Models.CLEM.Activities
                     {
                         IResourceType resource;
                         if (resourceName.Contains("."))
+                        {
                             resource = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, resourceName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+                        }
                         else
+                        {
                             resource = Structure.FindChildren<IResourceType>(resourceName, relativeTo: Resources, recurse: true).FirstOrDefault();
+                        }
 
                         switch (resource.GetType().ToString())
                         {
@@ -148,7 +156,7 @@ namespace Models.CLEM.Activities
                             var matchingResources = Structure.FindChildren<ResourceActivityExternalMultiplier>().Where(a => a.ResourceTypeName == (resource as CLEMModel).NameWithParent || a.ResourceTypeName == (resource as CLEMModel).Name);
                             if (matchingResources.Count() > 1)
                             {
-                                warn = $"[a={Name}] could not distinguish between multiple occurences of resource [r={resourceName}] provided by [x={fileResource.Name}] in the local [r=ResourcesHolder]\r\nEnsure all resource names are unique across stores, or use ResourceStore.ResourceType notation to specify resources in the input file";
+                                warn = $"[a={Name}] could not distinguish between multiple occurrences of resource [r={resourceName}] provided by [x={fileResource.Name}] in the local [r=ResourcesHolder]\r\nEnsure all resource names are unique across stores, or use ResourceStore.ResourceType notation to specify resources in the input file";
                                 Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
                             }
                             resourceMultiplier = Structure.FindChildren<ResourceActivityExternalMultiplier>().Where(a => a.ResourceTypeName == (resource as CLEMModel).NameWithParent || a.ResourceTypeName == (resource as CLEMModel).Name).FirstOrDefault()?.Multiplier ?? 1;
@@ -194,7 +202,9 @@ namespace Models.CLEM.Activities
 
                         double packets = amountAvailable / price.PacketSize;
                         if (price.UseWholePackets)
+                        {
                             packets = Math.Truncate(packets);
+                        }
 
                         if (MathUtilities.IsNegative(amount))
                         {
@@ -296,7 +306,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public override void PerformTasksForTimestep(double argument = 0)
         {
-            if (resourcesForMonth.Any())
+            if (resourcesForMonth.Count != 0)
             {
                 double[] amountPerformed = new double[2] { 0, 0 };
                 // loop through all resources to exchange and make transactions
@@ -307,7 +317,9 @@ namespace Models.CLEM.Activities
                     amount = Math.Abs(amount);
                     ResourcePricing price = null;
                     if (bankAccount != null && !(resourceItem.resource is FinanceType))
+                    {
                         price = resourceItem.resource.Price((amount > 0 ? PurchaseOrSalePricingStyleType.Purchase : PurchaseOrSalePricingStyleType.Sale));
+                    }
 
                     // transactions
                     if (isSale)
@@ -316,7 +328,9 @@ namespace Models.CLEM.Activities
                         double amountPossible = amountToDo[0, 0] - amountToDo[0, 1];
                         double amountRemaining = 0;
                         if (amountPossible > amountPerformed[0])
+                        {
                             amountRemaining = amountPossible - amountPerformed[0];
+                        }
 
                         amount = Math.Min(amountRemaining, Math.Min(amount, resourceItem.resource.Amount));
                         if (amount > 0)
@@ -347,7 +361,9 @@ namespace Models.CLEM.Activities
                         double amountPossible = amountToDo[1, 0] - amountToDo[1, 1];
                         double amountRemaining = 0;
                         if (amountPossible > amountPerformed[1])
+                        {
                             amountRemaining = amountPossible - amountPerformed[1];
+                        }
 
                         amount = Math.Min(amountRemaining, amount);
 
@@ -359,7 +375,9 @@ namespace Models.CLEM.Activities
                                 // need to limit amount by financial constraints
                                 double packets = amount / price.PacketSize;
                                 if (price.UseWholePackets)
+                                {
                                     packets = Math.Truncate(packets);
+                                }
 
                                 amount = packets * price.PacketSize;
                                 ResourceRequest sellRequestDollars = new ResourceRequest
@@ -380,7 +398,10 @@ namespace Models.CLEM.Activities
             else
             {
                 if (MathUtilities.IsPositive(currentEntries.Count))
+                {
                     Status = ActivityStatus.Warning;
+                }
+
                 return;
             }
 

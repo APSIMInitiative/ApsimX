@@ -67,8 +67,6 @@ namespace Models.CLEM.Activities
         public override void PrepareForTimestep()
         {
             numberToDo = 0;
-
-            // get all cohorts
             IEnumerable<OtherAnimalsTypeCohort> CohortsToReport = otherAnimals.GetCohorts(filterGroups, true);
             numberToDo = CohortsToReport.Sum(a => a.Number);
         }
@@ -125,7 +123,9 @@ namespace Models.CLEM.Activities
                 this.Status = ActivityStatus.Partial;
             }
             else
+            {
                 this.Status = ActivityStatus.Success;
+            }
         }
 
         #region descriptive summary

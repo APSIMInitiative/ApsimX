@@ -10,7 +10,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Models.CLEM.Activities
 {
     /// <summary>Greenhouse gas emission</summary>
-    /// <summary>This component will create a greenouse gas emmission</summary>
+    /// <summary>This component will create a greenhouse gas emission</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -20,7 +20,7 @@ namespace Models.CLEM.Activities
     [Description("Define an emission based on parent activity details")]
     [Version(1, 1, 0, "Implements event based activity control")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Activities/GreenhouseGases/GreehnouseGasActivityEmission.htm")]
+    [HelpUri(@"Content/Features/Activities/GreenhouseGases/GreenhouseGasActivityEmission.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class GreenhouseGasActivityEmission : CLEMModel, IActivityCompanionModel
     {
@@ -101,7 +101,9 @@ namespace Models.CLEM.Activities
             }
 
             if (emissionStore != null && MathUtilities.IsPositive(amountOfEmission))
+            {
                 emissionStore.Add(amountOfEmission, this.Parent as CLEMModel, null, TransactionCategory);
+            }
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -113,9 +115,13 @@ namespace Models.CLEM.Activities
             if (MathUtilities.IsPositive(Amount))
             {
                 if (GreenhouseGasStoreName is null || GreenhouseGasStoreName == "Use store with same name as this component if present")
+                {
                     emissionStore = resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, Name, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
+                }
                 else
+                {
                     emissionStore = resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, GreenhouseGasStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GreenhouseGasesType;
+                }
             }
         }
 

@@ -61,21 +61,26 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            // get bank account object to use
-            if(AccountName != "No finance required")
+            if (AccountName != "No finance required")
+            {
                 bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.ReportWarning, OnMissingResourceActionTypes.ReportErrorAndStop);
-            
-            // get resource type to buy
+            }
+
             resourceToBuy = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ResourceTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
-            // get pricing
             if ((resourceToBuy as CLEMResourceTypeBase).MarketStoreExists)
+            {
                 if ((resourceToBuy as CLEMResourceTypeBase).EquivalentMarketStore.PricingExists(PurchaseOrSalePricingStyleType.Sale))
+                {
                     price = (resourceToBuy as CLEMResourceTypeBase).EquivalentMarketStore.Price(PurchaseOrSalePricingStyleType.Sale);
+                }
+            }
 
             // no market price found... look in local resources and allow 0 price if not found
             if (price is null)
+            {
                 price = resourceToBuy.Price(PurchaseOrSalePricingStyleType.Purchase);
+            }
         }
 
         /// <inheritdoc/>
@@ -106,11 +111,13 @@ namespace Models.CLEM.Activities
 
             // calculate units
             unitsToDo = Units;
-            if (price!=null && price.UseWholePackets)
+            if (price != null && price.UseWholePackets)
+            {
                 unitsToDo = Math.Truncate(unitsToDo);
+            }
 
             // if market then ensure then try and take request from market to determine shortfalls
-            if(unitsToDo > 0)
+            if (unitsToDo > 0)
             {
                 if ((resourceToBuy as CLEMResourceTypeBase).MarketStoreExists)
                 {
@@ -128,7 +135,7 @@ namespace Models.CLEM.Activities
                     requests.Add(marketRequest);
                 }
                 // request funds
-                if(bankAccount != null)
+                if (bankAccount != null)
                 {
                     requests.Add(new ResourceRequest()
                     {
@@ -183,7 +190,9 @@ namespace Models.CLEM.Activities
                 }
 
                 if (marketRequest != null)
+                {
                     marketRequest.Required *= (1 - unitShort.Available / unitShort.Required);
+                }
             }
         }
 

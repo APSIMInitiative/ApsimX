@@ -118,16 +118,16 @@ namespace Models.CLEM.Activities
             if (grazeStore == "")
             {
                 var ah = Structure.Find<ActivitiesHolder>();
-                { 
-                    Summary.WriteMessage(this, String.Format("Trade animals purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name), MessageType.Warning);
-                }
+                Summary.WriteMessage(this, String.Format("Trade animals purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name), MessageType.Warning);
             }
 
             numberToStock = Structure.FindChildren<Relationship>().Where(a => a.Identifier == "Number to stock vs pasture").FirstOrDefault();
             if(numberToStock != null)
             {
                 if (grazeStore != "")
+                {
                     foodStore = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+                }
             }
         }
 
@@ -144,8 +144,10 @@ namespace Models.CLEM.Activities
             numberToSkip = 0;
             numberToDo = NumberToPurchase;
             if (numberToStock != null && foodStore != null)
+            {
                 //NOTE: ensure calculation method in relationship is fixed values
                 numberToDo = Convert.ToInt32(numberToStock.SolveY(foodStore.TonnesPerHectare), CultureInfo.InvariantCulture);
+            }
 
             // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels)
@@ -174,7 +176,9 @@ namespace Models.CLEM.Activities
                 // find shortfall by identifiers as these may have different influence on outcome
                 var purchaseShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Number to purchase").FirstOrDefault();
                 if (purchaseShort != null)
+                {
                     numberToSkip = Convert.ToInt32(numberToDo * (1 - purchaseShort.Available / purchaseShort.Required));
+                }
 
                 if (numberToSkip == numberToDo)
                 {
@@ -282,9 +286,14 @@ namespace Models.CLEM.Activities
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 if (GrazeFoodStoreName != null && !GrazeFoodStoreName.StartsWith("Not specified"))
+                {
                     htmlWriter.Write("The relationship <span class=\"activitylink\">" + numberRelationship.Name + "</span> will be used to calculate numbers purchased based on pasture biomass (t\\ha)");
+                }
                 else
-                    htmlWriter.Write("The number of individuals in the Ruminant Cohort supplied will be used as no paddock has been supplied for the relationship <span class=\"resourcelink\">" + numberRelationship.Name + "</span> will be used to calulate numbers purchased based on pasture biomass (t//ha)");
+                {
+                    htmlWriter.Write("The number of individuals in the Ruminant Cohort supplied will be used as no paddock has been supplied for the relationship <span class=\"resourcelink\">" + numberRelationship.Name + "</span> will be used to calculate numbers purchased based on pasture biomass (t//ha)");
+                }
+
                 htmlWriter.Write("</div>");
             }
             return htmlWriter.ToString();

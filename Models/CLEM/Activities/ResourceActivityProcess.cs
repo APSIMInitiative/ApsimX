@@ -189,9 +189,14 @@ namespace Models.CLEM.Activities
             htmlWriter.Write(DisplaySummaryValueSnippet(ResourceTypeCreatedName, entryStyle: HTMLSummaryStyle.Resource));
             htmlWriter.Write(" at a rate of ");
             if (ConversionRate <= 0)
+            {
                 htmlWriter.Write("<span class=\"errorlink\">RATE NOT SET</span>");
+            }
             else
+            {
                 htmlWriter.Write($"1:<span class=\"resourcelink\">{ConversionRate:0.###}</span>");
+            }
+
             htmlWriter.Write("</div>");
             if (Reserve > 0)
             {

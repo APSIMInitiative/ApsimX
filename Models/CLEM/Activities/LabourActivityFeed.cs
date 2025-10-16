@@ -68,33 +68,29 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "LabourFeedGroup":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>()
-                        {
+                "LabourFeedGroup" => new LabelsForCompanionModels(
+                                        identifiers: new List<string>(),
+                                        measures: new List<string>()
+                                        {
                             "SpecifiedDailyAmountPerIndividual",
                             "SpecifiedDailyAmountPerAE"
-                        }
-                        );
-                case "ActivityFee":
-                case "LabourRequirement":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
+                                        }
+                                        ),
+                "ActivityFee" or "LabourRequirement" => new LabelsForCompanionModels(
+                                        identifiers: new List<string>() {
                             "Number fed",
                             "Feed provided"
-                        },
-                        measures: new List<string>() {
+                                        },
+                                        measures: new List<string>() {
                             "fixed",
                             "per head",
                             "per kg feed"
-                        }
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                                        }
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -111,7 +107,9 @@ namespace Models.CLEM.Activities
             ResourcesHolder resourcesHolder = Structure.Find<ResourcesHolder>();
             Labour labour = resourcesHolder.FindResource<Labour>();
             if (labour != null)
+            {
                 population = labour.Items;
+            }
         }
 
         /// <summary>
@@ -127,13 +125,15 @@ namespace Models.CLEM.Activities
             {
                 return population;
             }
-            // check that no filters will filter all groups otherwise return all
-            // account for any sorting or reduced takes
-            var emptyfilters = filters.Where(a => a.Structure.FindChildren<Filter>(relativeTo: a).Any() == false);
-            if (emptyfilters.Any())
+            // check that no filters will filter all groups otherwise return all accounting for any sorting or reduced takes
+            var emptyFilters = filters.Where(a => a.Structure.FindChildren<Filter>(relativeTo: a).Any() == false);
+            if (emptyFilters.Any())
             {
-                foreach (var empty in emptyfilters.Where(a => a.Structure.FindChildren<ISort>(relativeTo: a).Any() || a.Structure.FindChildren<TakeFromFiltered>(relativeTo: a).Any()))
+                foreach (var empty in emptyFilters.Where(a => a.Structure.FindChildren<ISort>(relativeTo: a).Any() || a.Structure.FindChildren<TakeFromFiltered>(relativeTo: a).Any()))
+                {
                     population = empty.Filter(population);
+                }
+
                 return population;
             }
             else
@@ -143,7 +143,10 @@ namespace Models.CLEM.Activities
                 {
                     IEnumerable<T> unique = new List<T>();
                     foreach (var selectFilter in filters)
+                    {
                         unique = unique.Union(selectFilter.Filter(population)).DistinctBy(a => a.Name);
+                    }
+
                     return unique;
                 }
                 else
@@ -270,8 +273,6 @@ namespace Models.CLEM.Activities
                 double propFed = resourceRequest.Required / resourceRequest.Provided;
 
                 // feed with any modification
-                // walk througth the indfed list
-
                 foreach (var item in indFed)
                 {
                     item.Item1.AddIntake(new LabourDietComponent()

@@ -9,8 +9,7 @@ using System.Linq;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Ruminant enteric methane calulator</summary>
-    /// <version>1.0</version>
+    /// <summary>Ruminant enteric methane calculator</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -46,7 +45,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            // find first GreenhouseGasType flagged to autocollect methane. 
+            // find first GreenhouseGasType flagged to auto collect methane. 
             methaneEmissions = Structure.FindAll<GreenhouseGasesType>().Where(a => a.AutoCollectType == GreenhouseGasTypes.CH4).FirstOrDefault();
             InitialiseHerd(false, true);
         }
@@ -69,15 +68,15 @@ namespace Models.CLEM.Activities
                 {
                     case MethaneEmissionEquations.Charmleyetal2016:
                         // Charmley et al 2016
-                        // g per time-step
+                        // g per time step
                         ruminant.Output.Methane = ruminant.Parameters.EntericMethaneCharmley.MethaneProductionCoefficient * ruminant.Intake.SolidsDaily.ActualForTimeStep(events.Interval);
                         break;
                     case MethaneEmissionEquations.BlaxterAndClaperton1965:
                         // Blaxter and Claperton 1965
-                        double mdsolid = ruminant.Intake.MDSolid;
+                        double mdSolid = ruminant.Intake.MDSolid;
                         ruminant.Output.Methane = ruminant.Parameters.GrowPF_CI.MethaneEmissionsParameter1 * ruminant.Intake.SolidsDaily.ActualForTimeStep(events.Interval) 
-                            * ((ruminant.Parameters.GrowPF_CI.MethaneEmissionsParameter2 + ruminant.Parameters.GrowPF_CI.MethaneEmissionsParameter3 * mdsolid) 
-                            + ((ruminant.Energy.FromIntake / ruminant.Energy.ForMaintenance)) * (ruminant.Parameters.GrowPF_CI.MethaneEmissionsParameter4 - ruminant.Parameters.GrowPF_CI.MethaneEmissionsParameter5 * mdsolid))
+                            * ((ruminant.Parameters.GrowPF_CI.MethaneEmissionsParameter2 + ruminant.Parameters.GrowPF_CI.MethaneEmissionsParameter3 * mdSolid) 
+                            + ((ruminant.Energy.FromIntake / ruminant.Energy.ForMaintenance)) * (ruminant.Parameters.GrowPF_CI.MethaneEmissionsParameter4 - ruminant.Parameters.GrowPF_CI.MethaneEmissionsParameter5 * mdSolid))
                             / 55.28 * 1000; // converts from MJ -> g per time-step
                         break;
                     default:
