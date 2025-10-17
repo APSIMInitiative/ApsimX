@@ -64,6 +64,7 @@ Array or list properties should be specified as comma-separated values. It is al
 [Physical].BD = 1,2,3,4,5,6,7
 [Physical].AirDry[1] = 8
 [Physical].LL15[3:5] = 9
+[Physical].BD =                # sets to an empty array.
 ```
 
 ## What does an example config file look like?

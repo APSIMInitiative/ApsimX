@@ -1,4 +1,5 @@
 ﻿using Models;
+using Models.Climate;
 using Models.Core;
 using Models.PMF;
 using NUnit.Framework;
@@ -179,6 +180,29 @@ public class CommandTests
         Assert.That(clock.StartDate, Is.EqualTo(new System.DateTime(2000, 1, 1)));
     }
 
+    /// <summary>Ensure can set a string property to "".</summary>
+    [Test]
+    public void EnsureSetPropertyToEmpty()
+    {
+        Simulations simulation = new()
+        {
+            Children =
+            [
+                new Weather()
+                {
+                    FileName = "file1.apsimx"
+                }
+            ]
+        };
+        Node.Create(simulation);
+
+        IModelCommand cmd = new SetPropertyCommand("[Weather].FileName", "=", "", fileName: null);
+        cmd.Run(simulation, runner: null);
+
+        var weather = simulation.Children.First() as Weather;
+        Assert.That(weather.FileName, Is.Empty);
+    }
+
 
     /// <summary>Ensure the set property += command works.</summary>
     [Test]
@@ -203,6 +227,75 @@ public class CommandTests
         Assert.That(cultivar.Command, Is.EqualTo(["a", "b"]));
     }
 
+    /// <summary>Ensure the set array property works.</summary>
+    [Test]
+    public void EnsureSetArrayPropertyWorks()
+    {
+        Simulations simulation = new()
+        {
+            Children =
+            [
+                new Cultivar()
+                {
+                    Command = [ "a" ]
+                }
+            ]
+        };
+        Node.Create(simulation);
+
+        IModelCommand cmd = new SetPropertyCommand("[Cultivar].Command", "=", "b,c", fileName: null);
+        cmd.Run(simulation, runner: null);
+
+        var cultivar = simulation.Children.First() as Cultivar;
+        Assert.That(cultivar.Command, Is.EqualTo(["b", "c"]));
+    }
+
+    /// <summary>Ensure the set array element property works.</summary>
+    [Test]
+    public void EnsureSetArrayElementWorks()
+    {
+        Simulations simulation = new()
+        {
+            Children =
+            [
+                new Cultivar()
+                {
+                    Command = [ "a", "b" ]
+                }
+            ]
+        };
+        Node.Create(simulation);
+
+        IModelCommand cmd = new SetPropertyCommand("[Cultivar].Command[1]", "=", "b", fileName: null);
+        cmd.Run(simulation, runner: null);
+
+        var cultivar = simulation.Children.First() as Cultivar;
+        Assert.That(cultivar.Command, Is.EqualTo(["b", "b"]));
+    }
+
+
+    /// <summary>Ensure the set array to an empty array works.</summary>
+    [Test]
+    public void EnsureSetArrayToEmptyWorks()
+    {
+        Simulations simulation = new()
+        {
+            Children =
+            [
+                new Cultivar()
+                {
+                    Command = [ "a", "b" ]
+                }
+            ]
+        };
+        Node.Create(simulation);
+
+        IModelCommand cmd = new SetPropertyCommand("[Cultivar].Command", "=", "", fileName: null);
+        cmd.Run(simulation, runner: null);
+
+        var cultivar = simulation.Children.First() as Cultivar;
+        Assert.That(cultivar.Command.Length, Is.EqualTo(0));
+    }
 
     /// <summary>Ensure the set property -= command works.</summary>
     [Test]

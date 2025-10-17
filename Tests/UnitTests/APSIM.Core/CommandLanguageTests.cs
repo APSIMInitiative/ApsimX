@@ -22,6 +22,10 @@ public class CommandLanguageTests
     [TestCase("[Simulation].Name=<test.txt")]
     [TestCase("[Cultivar].Commands-=NewName")]
     [TestCase("[Cultivar].Commands+=NewName")]
+    [TestCase("[Physical].BD=1,2,3,4,5,6,7")]
+    [TestCase("[Physical].AirDry[1]=8")]
+    [TestCase("[Physical].LL15[3:5]=9")]
+    [TestCase("[Physical].BD=")]
     public void EnsureAddLanguageParsingWorks(string commandString)
     {
         var commands = CommandLanguage.StringToCommands([commandString], relativeTo: null, relativeToDirectory: null);
@@ -46,7 +50,6 @@ public class CommandLanguageTests
     [TestCase("duplicate", ExpectedResult = "Invalid command: duplicate")]
     [TestCase("save", ExpectedResult = "Invalid command: save")]
     [TestCase("load", ExpectedResult = "Invalid command: load")]
-    [TestCase("[Simulation].Filename=", ExpectedResult = "Invalid command: [Simulation].Filename=")]
     [TestCase("[Simulation].Filename", ExpectedResult = "Unknown command: [Simulation].Filename")]
     [TestCase("[Simulation].Filename=<", ExpectedResult = "Invalid command: [Simulation].Filename=<")]
     public string EnsureInvalidCommandsThrow(string commandString)
