@@ -1371,7 +1371,9 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Hartog",
-                        "[SetPhaseCompletionDates].Script.EmergDate = 2-jun-2014"
+                        "[SetPhaseCompletionDates].Script.EmergDate = 2-jun-2014",
+                        "[SetPhaseCompletionDates].Script.FlagDate = 7-aug-2014",
+                        "[SetPhaseCompletionDates].Script.AnthDate = 9-sep-2014"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1385,7 +1387,9 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Corack",
-                        "[SetPhaseCompletionDates].Script.EmergDate = 2-jun-2014"
+                        "[SetPhaseCompletionDates].Script.EmergDate = 2-jun-2014",
+                        "[SetPhaseCompletionDates].Script.FlagDate = 9-aug-2014",
+                        "[SetPhaseCompletionDates].Script.AnthDate = 9-sep-2014"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1399,7 +1403,9 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Mace",
-                        "[SetPhaseCompletionDates].Script.EmergDate = 2-jun-2014"
+                        "[SetPhaseCompletionDates].Script.EmergDate = 2-jun-2014",
+                        "[SetPhaseCompletionDates].Script.FlagDate = 9-aug-2014",
+                        "[SetPhaseCompletionDates].Script.AnthDate = 9-sep-2014"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -5202,7 +5208,9 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Hartog",
-                        "[SetPhaseCompletionDates].Script.EmergDate = 2-jun-2014"
+                        "[SetPhaseCompletionDates].Script.EmergDate = 2-jun-2014",
+                        "[SetPhaseCompletionDates].Script.FlagDate = 4-aug-2014",
+                        "[SetPhaseCompletionDates].Script.AnthDate = 1-sep-2014"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -5216,7 +5224,9 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Corack",
-                        "[SetPhaseCompletionDates].Script.EmergDate = 2-jun-2014"
+                        "[SetPhaseCompletionDates].Script.EmergDate = 2-jun-2014",
+                        "[SetPhaseCompletionDates].Script.FlagDate = 7-aug-2014",
+                        "[SetPhaseCompletionDates].Script.AnthDate = 1-sep-2014"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -5230,7 +5240,9 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Mace",
-                        "[SetPhaseCompletionDates].Script.EmergDate = 2-jun-2014"
+                        "[SetPhaseCompletionDates].Script.EmergDate = 2-jun-2014",
+                        "[SetPhaseCompletionDates].Script.FlagDate = 29-jul-2014",
+                        "[SetPhaseCompletionDates].Script.AnthDate = 9-sep-2014"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -8398,7 +8410,9 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Hartog",
-                        "[SetPhaseCompletionDates].Script.EmergDate = 25-may-2015"
+                        "[SetPhaseCompletionDates].Script.EmergDate = 25-may-2015",
+                        "[SetPhaseCompletionDates].Script.FlagDate = 24-jul-2015",
+                        "[SetPhaseCompletionDates].Script.AnthDate = 7-oct-2015"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -8413,7 +8427,9 @@
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Corack",
                         "[Sowing].Script.Population = 60",
-                        "[SetPhaseCompletionDates].Script.EmergDate = 25-may-2015"
+                        "[SetPhaseCompletionDates].Script.EmergDate = 25-may-2015",
+                        "[SetPhaseCompletionDates].Script.FlagDate = 25-jul-2015",
+                        "[SetPhaseCompletionDates].Script.AnthDate = 13-oct-2015"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -8428,7 +8444,9 @@
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Hartog",
                         "[Sowing].Script.Population = 90",
-                        "[SetPhaseCompletionDates].Script.EmergDate = 25-may-2015"
+                        "[SetPhaseCompletionDates].Script.EmergDate = 25-may-2015",
+                        "[SetPhaseCompletionDates].Script.FlagDate = 31-jul-2015",
+                        "[SetPhaseCompletionDates].Script.AnthDate = 13-oct-2015"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -11727,7 +11745,9 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Hartog",
-                        "[SetPhaseCompletionDates].Script.EmergDate = 28-may-2014"
+                        "[SetPhaseCompletionDates].Script.EmergDate = 28-may-2014",
+                        "[SetPhaseCompletionDates].Script.FlagDate = 15-sep-2014",
+                        "[SetPhaseCompletionDates].Script.AnthDate = 11-oct-2014"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -11741,7 +11761,9 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Corack",
-                        "[SetPhaseCompletionDates].Script.EmergDate = 28-may-2014"
+                        "[SetPhaseCompletionDates].Script.EmergDate = 28-may-2014",
+                        "[SetPhaseCompletionDates].Script.FlagDate = 12-sep-2014",
+                        "[SetPhaseCompletionDates].Script.AnthDate = 6-oct-2014"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -11755,7 +11777,9 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Mace",
-                        "[SetPhaseCompletionDates].Script.EmergDate = 28-may-2014"
+                        "[SetPhaseCompletionDates].Script.EmergDate = 28-may-2014",
+                        "[SetPhaseCompletionDates].Script.FlagDate = 12-sep-2014",
+                        "[SetPhaseCompletionDates].Script.AnthDate = 6-oct-2014"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -15146,7 +15170,9 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Hartog",
-                        "[SetPhaseCompletionDates].Script.EmergDate = 20-may-2015"
+                        "[SetPhaseCompletionDates].Script.EmergDate = 20-may-2015",
+                        "[SetPhaseCompletionDates].Script.FlagDate = 3-sep-2015",
+                        "[SetPhaseCompletionDates].Script.AnthDate = 9-oct-2015"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -15160,7 +15186,9 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Corack",
-                        "[SetPhaseCompletionDates].Script.EmergDate = 20-may-2015"
+                        "[SetPhaseCompletionDates].Script.EmergDate = 20-may-2015",
+                        "[SetPhaseCompletionDates].Script.FlagDate = 29-aug-2015",
+                        "[SetPhaseCompletionDates].Script.AnthDate = 4-oct-2014"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -15174,7 +15202,9 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Mace",
-                        "[SetPhaseCompletionDates].Script.EmergDate = 20-may-2015"
+                        "[SetPhaseCompletionDates].Script.EmergDate = 20-may-2015",
+                        "[SetPhaseCompletionDates].Script.FlagDate = 4-sep-2015",
+                        "[SetPhaseCompletionDates].Script.AnthDate = 5-oct-2014"
                       ],
                       "Paths": null,
                       "Values": null,
