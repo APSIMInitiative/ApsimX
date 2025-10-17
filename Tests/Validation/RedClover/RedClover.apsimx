@@ -399,7 +399,7 @@
             "               if (tokens.Length != 2)",
             "                  throw new Exception($\"Unknown defoliation fraction string: {fractionString}\");            ",
             "            ",
-            "               fractions.Add(tokens[0], Convert.ToDouble(tokens[1]));",
+            "               fractions.Add(tokens[0].Trim(), Convert.ToDouble(tokens[1].Trim()));",
             "            }",
             "",
             "            // check the type of amount given",
