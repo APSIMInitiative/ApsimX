@@ -8,6 +8,8 @@ The APSIM command language is a way for the user to change the structure of a si
 
 An example use case for the command language is: "Replace the soil, weather file, clock start/end dates in a .apsimx file and run APSIM i.e. run an APSIM simulation for a grid point". The user can create a command file to do the replacements and have it applied from the command line. They can then call this from a batch/bash file to do this repeatedly for multiple grid points. Prior to the command language, the user would have had to write Python/R scripts to directly manipulate the JSON in the .apsimx file. The problem with this approach is that the structure of the JSON changes over time which breaks the user's scripts.
 
+This language replaces an older version of the language. If you have command files written using the old syntax, [see here](/usage/commandline/commandlanguage-old-to-new) for details on how to convert the syntax.
+
 ## What commands can you perform?
 
 - __load__ - loads a .apsimx file into memory. Subsequent commands will then apply to the contents of the file.

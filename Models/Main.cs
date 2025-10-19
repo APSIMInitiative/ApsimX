@@ -188,49 +188,34 @@ namespace Models
                 else
                 {
                     Runner runner = null;
-                    if (string.IsNullOrEmpty(options.EditFilePath))
+                    if (!string.IsNullOrWhiteSpace(options.Playlist))
                     {
-                        if (!string.IsNullOrWhiteSpace(options.Playlist))
-                        {
-                            runner = CreateRunnerForPlaylistOption(options, files);
-                        }
-                        else
-                        {
-                            if (options.InMemoryDB)
-                            {
-                                List<Simulations> sims = new();
-                                sims = CreateSimsList(files);
-                                foreach (Simulations sim in sims)
-                                    sim.Node.FindChild<DataStore>().UseInMemoryDB = true;
-                                runner = new Runner(sims,
-                                                options.RunTests,
-                                                runType: options.RunType,
-                                                numberOfProcessors: options.NumProcessors,
-                                                simulationNamePatternMatch: options.SimulationNameRegex);
-                            }
-                            else
-                            {
-                                runner = new Runner(files,
-                                                options.RunTests,
-                                                runType: options.RunType,
-                                                numberOfProcessors: options.NumProcessors,
-                                                simulationNamePatternMatch: options.SimulationNameRegex);
-                            }
-                        }
-                        RunSimulations(runner, options);
+                        runner = CreateRunnerForPlaylistOption(options, files);
                     }
-                    else if (!string.IsNullOrEmpty(options.EditFilePath))
+                    else
                     {
-                        runner = new Runner(files.Select(f => ApplyConfigToApsimFile(f, options.EditFilePath)),
-                                            true,
-                                            true,
+                        if (options.InMemoryDB)
+                        {
+                            List<Simulations> sims = new();
+                            sims = CreateSimsList(files);
+                            foreach (Simulations sim in sims)
+                                sim.Node.FindChild<DataStore>().UseInMemoryDB = true;
+                            runner = new Runner(sims,
                                             options.RunTests,
                                             runType: options.RunType,
                                             numberOfProcessors: options.NumProcessors,
                                             simulationNamePatternMatch: options.SimulationNameRegex);
-
-                        RunSimulations(runner, options);
+                        }
+                        else
+                        {
+                            runner = new Runner(files,
+                                            options.RunTests,
+                                            runType: options.RunType,
+                                            numberOfProcessors: options.NumProcessors,
+                                            simulationNamePatternMatch: options.SimulationNameRegex);
+                        }
                     }
+                    RunSimulations(runner, options);
 
                     // If errors occurred, write them to the console.
                     if (exitCode != 0)
