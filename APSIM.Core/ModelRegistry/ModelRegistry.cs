@@ -11,6 +11,8 @@ internal class ModelRegistry
 {
     private static Assembly modelsAssembly;
 
+    private static object lockObject = new object();
+
     /// <summary>
     /// Convert a model name to a .NET type. Will throw if not found.
     /// </summary>
@@ -49,8 +51,14 @@ internal class ModelRegistry
     {
         if (modelsAssembly == null)
         {
-            string binPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            modelsAssembly = Assembly.LoadFrom(Path.Combine(binPath, "Models.dll"));
+            lock (lockObject)
+            {
+                if (modelsAssembly == null)
+                {
+                    string binPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                    modelsAssembly = Assembly.LoadFrom(Path.Combine(binPath, "Models.dll"));
+                }
+            }
         }
     }
 
