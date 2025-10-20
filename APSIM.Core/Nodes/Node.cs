@@ -1,6 +1,5 @@
 using APSIM.Shared;
 using APSIM.Shared.Utilities;
-using DeepCloner.Core;
 
 namespace APSIM.Core;
 
@@ -18,6 +17,7 @@ public class Node : IStructure
     private readonly List<Node> children = [];
     private ScopingRules scope;
     private Locator locator;
+    private string fileName;
 
     /// <summary>The node name.</summary>
     public string Name { get; private set; }
@@ -45,7 +45,18 @@ public class Node : IStructure
     public IEnumerable<Node> Children => children;
 
     /// <summary>Name of the .apsimx file the node tree came from.</summary>
-    public string FileName { get; set; }
+    public string FileName
+    {
+        get
+        {
+            return fileName;
+        }
+        set
+        {
+            foreach (var node in Root().Walk())
+                node.fileName = value;
+        }
+    }
 
     /// <summary>Is initialisation underway?</summary>
     public bool IsInitialising { get; private set; }
@@ -426,6 +437,12 @@ public class Node : IStructure
         Model = model;
     }
 
+    /// <summary>Find and return the root node</summary>
+    internal Node Root()
+    {
+        return WalkParents().FirstOrDefault(n => n.Parent == null)
+               ?? this;
+    }
 
     /// <summary>
     /// Build the parent / child map.
@@ -509,6 +526,7 @@ public class Node : IStructure
         childNode.FileName = childNode.Parent.FileName;
         childNode.Compiler = childNode.Parent.Compiler;
         children.Add(childNode);
+        childNode.EnsureNameIsUnique();
 
         // Give the child our services.
         childNode.FileName = FileName;
