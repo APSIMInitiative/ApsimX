@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 203,
+  "Version": 205,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -2584,7 +2584,7 @@
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
               "Units": null,
-              "Expression": "([Grain].Live.N + [Grain].Dead.N)/([Grain].Live.Wt + [Grain].Dead.Wt) * 100 * 5.71",
+              "Expression": "divide(([Grain].Live.N + [Grain].Dead.N),([Grain].Live.Wt + [Grain].Dead.Wt)) * 100 * 5.71",
               "Name": "Protein",
               "ResourceName": null,
               "Children": [],

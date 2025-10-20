@@ -72,6 +72,10 @@ jobs:
       - name: Split FAR Validation
         run: dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -d ./Tests/Validation/Wheat/FAR/FAR.apsimx -s ./Tests/Validation/Wheat/FAR/split.json
 
+      - name: Split Wheat Phenology Validation
+        run: dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -d ./Tests/Validation/Wheat/Phenology/Phenology.apsimx -s ./Tests/Validation/Wheat/Phenology/split.json
+        continue-on-error: true  # Allow job to continue if the phenology split fails. This may occur for other PRs before the Phenology split is merged.
+        
       - name: Log in to Docker Hub
         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
         with:
@@ -92,7 +96,7 @@ jobs:
         id: start_azure_pool
         env:
           AZURE_ENV_CONTENTS: ${{ secrets.AZURE_ENV_CONTENTS }}
-          DOCKER_METADATA_OUTPUT_VERSION: ${{ steps.meta_apsimplusr.outputs.tags }}
+          DOCKER_METADATA_OUTPUT_VERSION: ${{ fromJSON(steps.meta_apsimplusr.outputs.json).labels['org.opencontainers.image.version'] }}
           INCOMING_COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
         run: ./.github/workflows/scripts/start-azure-pool.sh
 
@@ -112,15 +116,20 @@ jobs:
         env:
           PAYLOAD_FOLDER_PATH: ${{ env.PAYLOAD_FOLDER_PATH }}
           AZURE_ENV_CONTENTS: ${{ secrets.AZURE_ENV_CONTENTS }}
-          DOCKER_METADATA_OUTPUT_VERSION: ${{ steps.meta_apsimplusr.outputs.tags }}
+          DOCKER_METADATA_OUTPUT_VERSION: ${{ fromJSON(steps.meta_apsimplusr.outputs.json).labels['org.opencontainers.image.version'] }}
           INCOMING_COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
           PR_AUTHOR: ${{ github.actor }}
         run: ./.github/workflows/scripts/create-azure-jobs.sh 
 
+      # This is required to give the Azure jobs time to start before enabling autoscaling on the pool.
+      # If we don't do this, the autoscaling script may run before the jobs have started, resulting in the pool being scaled down to 0 nodes.
+      - name: Give Azure jobs time to start
+        run: sleep 60
+
       - name: Enable autoscaling on Azure pool
         env:
           AZURE_ENV_CONTENTS: ${{ secrets.AZURE_ENV_CONTENTS }}
-          DOCKER_METADATA_OUTPUT_VERSION: ${{ steps.meta_apsimplusr.outputs.tags }}
+          DOCKER_METADATA_OUTPUT_VERSION: ${{ fromJSON(steps.meta_apsimplusr.outputs.json).labels['org.opencontainers.image.version'] }}
           INCOMING_COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
         run: ./.github/workflows/scripts/enable-azure-pool-autoscaling.sh
 
