@@ -48336,11 +48336,11 @@
                                       "Name": "IrrigationEvents",
                                       "ResourceName": null,
                                       "Children": [],
-                                      "Enabled": false,
+                                      "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -50368,11 +50368,11 @@
                                       "Name": "IrrigationEvents",
                                       "ResourceName": null,
                                       "Children": [],
-                                      "Enabled": false,
+                                      "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
@@ -50746,19 +50746,19 @@
                                     0.12
                                   ],
                                   "LL15": [
-                                    0.1,
+                                    0.063,
                                     0.12,
-                                    0.1,
-                                    0.08,
+                                    0.14,
+                                    0.155,
                                     0.08,
                                     0.12,
                                     0.18,
-                                    0.12
+                                    0.22
                                   ],
                                   "DUL": [
-                                    0.35,
-                                    0.32,
                                     0.31,
+                                    0.31,
+                                    0.29,
                                     0.32,
                                     0.33,
                                     0.33,
@@ -50864,21 +50864,21 @@
                                     {
                                       "$type": "Models.Soils.SoilCrop, Models",
                                       "LL": [
-                                        0.1,
+                                        0.063,
                                         0.12,
-                                        0.1,
-                                        0.08,
-                                        0.08,
+                                        0.14,
+                                        0.155,
+                                        0.148,
                                         0.182,
-                                        0.18,
-                                        0.165
+                                        0.27,
+                                        0.22
                                       ],
                                       "KL": [
-                                        0.1,
-                                        0.1,
-                                        0.1,
-                                        0.1,
-                                        0.1,
+                                        0.05,
+                                        0.05,
+                                        0.03,
+                                        0.02,
+                                        0.02,
                                         0.01,
                                         0.01,
                                         0.01
@@ -51325,6 +51325,9 @@
                                 "[Clock].Today",
                                 "[SurfaceOrganicMatter].Wt",
                                 "[Soil].Output.SW",
+                                "sum([Soil].NO3.kgha)",
+                                "[Soil].SoilWater.Eo",
+                                "",
                                 "sum([Soil].Output.SWmm) ",
                                 "[Soil].SoilWater.Es",
                                 "[Soil].SoilWater.Eos",
@@ -51342,7 +51345,10 @@
                                 "[AgPRyegrass].LAI",
                                 "[AgPRyegrass].RootWt",
                                 "[AgPRyegrass].InitialRootDepth",
-                                "[AgPRyegrass].Root.Depth"
+                                "[AgPRyegrass].Root.Depth",
+                                "[AgPRyegrass].PotentialEP",
+                                "[AgPRyegrass].PotentialEPa",
+                                "[AgPRyegrass].PotentialEPr"
                               ],
                               "EventNames": [
                                 "[Clock].EndOfDay"
@@ -53142,6 +53148,288 @@
                               "Name": "Series",
                               "ResourceName": null,
                               "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": null,
+                              "Position": 3,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null
+                            },
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": null,
+                              "Position": 0,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "AnnotationLocation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "WaterDemand",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": 0,
+                              "FactorToVaryColours": "Irrigation",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "Report",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "AgPRyegrass.PotentialEP",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "PotentialEP",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Core.Folder, Models",
+                          "ShowInDocs": false,
+                          "Name": "WaterDemand1",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Graph, Models",
+                              "Caption": null,
+                              "Axis": [
+                                {
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                                  "Title": null,
+                                  "Position": 3,
+                                  "Inverted": false,
+                                  "CrossesAtZero": false,
+                                  "LabelOnOneLine": false,
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null
+                                },
+                                {
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                                  "Title": null,
+                                  "Position": 0,
+                                  "Inverted": false,
+                                  "CrossesAtZero": false,
+                                  "LabelOnOneLine": false,
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null
+                                }
+                              ],
+                              "LegendPosition": 0,
+                              "LegendOrientation": 0,
+                              "AnnotationLocation": 0,
+                              "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
+                              "Name": "PotentialEP",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": 0,
+                                  "FactorToVaryColours": "Irrigation",
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": null,
+                                  "Marker": 11,
+                                  "MarkerSize": 0,
+                                  "Line": 0,
+                                  "LineThickness": 0,
+                                  "TableName": "Report",
+                                  "XFieldName": "Clock.Today",
+                                  "YFieldName": "AgPRyegrass.PotentialEP",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": false,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "PotentialEP",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Graph, Models",
+                              "Caption": null,
+                              "Axis": [
+                                {
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                                  "Title": null,
+                                  "Position": 3,
+                                  "Inverted": false,
+                                  "CrossesAtZero": false,
+                                  "LabelOnOneLine": false,
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null
+                                },
+                                {
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                                  "Title": null,
+                                  "Position": 0,
+                                  "Inverted": false,
+                                  "CrossesAtZero": false,
+                                  "LabelOnOneLine": false,
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null
+                                }
+                              ],
+                              "LegendPosition": 0,
+                              "LegendOrientation": 0,
+                              "AnnotationLocation": 0,
+                              "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
+                              "Name": "PotentialEPa",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": 0,
+                                  "FactorToVaryColours": "Irrigation",
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": null,
+                                  "Marker": 11,
+                                  "MarkerSize": 0,
+                                  "Line": 0,
+                                  "LineThickness": 0,
+                                  "TableName": "Report",
+                                  "XFieldName": "Clock.Today",
+                                  "YFieldName": "AgPRyegrass.PotentialEPa",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": false,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Series",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Graph, Models",
+                              "Caption": null,
+                              "Axis": [
+                                {
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                                  "Title": null,
+                                  "Position": 3,
+                                  "Inverted": false,
+                                  "CrossesAtZero": false,
+                                  "LabelOnOneLine": false,
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null
+                                },
+                                {
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                                  "Title": null,
+                                  "Position": 0,
+                                  "Inverted": false,
+                                  "CrossesAtZero": false,
+                                  "LabelOnOneLine": false,
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null
+                                }
+                              ],
+                              "LegendPosition": 0,
+                              "LegendOrientation": 0,
+                              "AnnotationLocation": 0,
+                              "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
+                              "Name": "PotentialEPr",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": 0,
+                                  "FactorToVaryColours": "Irrigation",
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": null,
+                                  "Marker": 11,
+                                  "MarkerSize": 0,
+                                  "Line": 0,
+                                  "LineThickness": 0,
+                                  "TableName": "Report",
+                                  "XFieldName": "Clock.Today",
+                                  "YFieldName": "AgPRyegrass.PotentialEPr",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": false,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Series",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "Enabled": true,
                               "ReadOnly": false
                             }
