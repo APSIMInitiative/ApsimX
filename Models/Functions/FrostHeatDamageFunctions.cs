@@ -211,6 +211,22 @@ namespace Models.Functions
         /// [Units("g/m2")]
         public double FrostHeatYield { get; set; }
 
+        /// <summary>Start of frost sensitive period in days after sowing.</summary>
+        [Units("days")]
+        public double FrostSensitivePeriodStartDAS { get; set; }
+
+        /// <summary>End of frost sensitive period in days after sowing.</summary>
+        [Units("days")]
+        public double FrostSensitivePeriodEndDAS { get; set; }
+
+        /// <summary>Start of heat sensitive period in days after sowing.</summary>
+        [Units("days")]
+        public double HeatSensitivePeriodStartDAS { get; set; }
+
+        /// <summary>End of heat sensitive period in days after sowing.</summary>
+        [Units("days")]
+        public double HeatSensitivePeriodEndDAS { get; set; }
+
         // Dictionary to hold default values for each crop type
         private readonly Dictionary<CropTypes, Dictionary<string, double>> cropDefaults = new Dictionary<CropTypes, Dictionary<string, double>>()
         {
@@ -302,6 +318,10 @@ namespace Models.Functions
             FrostHeatYield = 0;
             FrostEventNumber = 0;
             HeatEventNumber = 0;
+            FrostSensitivePeriodStartDAS = -1;
+            FrostSensitivePeriodEndDAS = -1;
+            HeatSensitivePeriodStartDAS = -1;
+            HeatSensitivePeriodEndDAS = -1;
         }
 
         /// <summary>Caculates daily potential yield reduction ratio induced by a frost event.</summary>
@@ -429,6 +449,27 @@ namespace Models.Functions
 
             double GrowthStageToday = phen.Stage;
             //GrowthStageToday = phen.Zadok;
+            double DaysAfterSowingToday = Plant.DaysAfterSowing;
+
+            // Track frost sensitive period start and end
+            if (GrowthStageToday >= FrostStartSensitiveGS && FrostSensitivePeriodStartDAS < 0)
+            {
+                FrostSensitivePeriodStartDAS = DaysAfterSowingToday;
+            }
+            if (GrowthStageToday >= FrostEndSensitiveGS && FrostSensitivePeriodEndDAS < 0)
+            {
+                FrostSensitivePeriodEndDAS = DaysAfterSowingToday;
+            }
+
+            // Track heat sensitive period start and end
+            if (GrowthStageToday >= HeatStartSensitiveGS && HeatSensitivePeriodStartDAS < 0)
+            {
+                HeatSensitivePeriodStartDAS = DaysAfterSowingToday;
+            }
+            if (GrowthStageToday >= HeatEndSensitiveGS && HeatSensitivePeriodEndDAS < 0)
+            {
+                HeatSensitivePeriodEndDAS = DaysAfterSowingToday;
+            }
 
             // Daily potential yield reduction ratio by a frost event
             FrostPotentialReductionRatio = FrostPotentialReductionRatioFun(Weather.MinT);
