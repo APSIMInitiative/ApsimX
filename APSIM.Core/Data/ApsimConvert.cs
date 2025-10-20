@@ -36,6 +36,7 @@ public static class ApsimConvert
                     values.SetValue(arrayElement, i);
                     i++;
                 }
+                return values;
             }
             else
             {
