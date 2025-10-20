@@ -1,7 +1,5 @@
 using APSIM.Shared;
 using APSIM.Shared.Utilities;
-using DeepCloner.Core;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace APSIM.Core;
 
