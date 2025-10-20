@@ -21,7 +21,7 @@ jobs:
     strategy:
       matrix:
         os: [windows, macos, debian]
-    runs-on: ubuntu-latest
+    runs-on: [windows-latest, macos-latest, ubuntu-latest]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
