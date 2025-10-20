@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 204,
+  "Version": 205,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -47969,11 +47969,11 @@
                                       "Name": "IrrigationEvents",
                                       "ResourceName": null,
                                       "Children": [],
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -48336,11 +48336,11 @@
                                       "Name": "IrrigationEvents",
                                       "ResourceName": null,
                                       "Children": [],
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -49018,11 +49018,11 @@
                                       "Name": "IrrigationEvents",
                                       "ResourceName": null,
                                       "Children": [],
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -49700,11 +49700,11 @@
                                       "Name": "IrrigationEvents",
                                       "ResourceName": null,
                                       "Children": [],
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -50368,11 +50368,11 @@
                                       "Name": "IrrigationEvents",
                                       "ResourceName": null,
                                       "Children": [],
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
