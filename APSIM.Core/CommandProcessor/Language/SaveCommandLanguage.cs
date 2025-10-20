@@ -15,7 +15,7 @@ internal partial class SaveCommand: IModelCommand
     /// </remarks>
     public static IModelCommand Create(string command, string relativeToDirectory)
     {
-        string fileNamePattern = @"[\w\d-_\.\\:]+";
+        string fileNamePattern = @"[\w\d-_\.\\:/]+";
 
         string pattern = $@"save\s+" +
                          $@"(?<filename>{fileNamePattern})";

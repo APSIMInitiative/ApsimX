@@ -15,7 +15,7 @@ internal partial class LoadCommand: IModelCommand
     /// </remarks>
     public static IModelCommand Create(string command, string relativeToDirectory)
     {
-        string fileNamePattern = @"[\w\d-_\.\\:]+";
+        string fileNamePattern = @"[\w\d-_\.\\:/]+";
 
         string pattern = $@"load\s+" +
                          $@"(?<filename>{fileNamePattern})";

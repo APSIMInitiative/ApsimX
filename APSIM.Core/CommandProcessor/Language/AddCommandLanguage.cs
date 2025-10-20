@@ -21,7 +21,7 @@ internal partial class AddCommand: IModelCommand
     {
         string modelNameWithBrackets = @"[\w\d\[\]\.]+";
         string modelNamePattern = @"[\w\d]+";
-        string fileNamePattern = @"[\w\d-_\.\\:]+";
+        string fileNamePattern = @"[\w\d-_\.\\:/]+";
 
         string pattern = $@"add (?<new>new)*" + @"\s*" +
                          $@"(?<modelname>{modelNameWithBrackets})" + @"\s+" +
