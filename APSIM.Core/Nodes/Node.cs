@@ -53,8 +53,9 @@ public class Node : IStructure
         }
         set
         {
-            foreach (var node in Root().Walk())
-                node.fileName = value;
+            //foreach (var node in Root().Walk())
+            //    node.fileName = value;
+            fileName = value;
         }
     }
 
