@@ -36,7 +36,14 @@ public static class ApsimConvert
                     values.SetValue(arrayElement, i);
                     i++;
                 }
-                return values;
+
+                if (targetType.Name == "List`1")
+                {
+                    Type concreteListType = typeof(List<>).MakeGenericType(targetElementType);
+                    return Activator.CreateInstance(concreteListType, new object[] { values });
+                }
+                else
+                    return values;
             }
             else
             {
