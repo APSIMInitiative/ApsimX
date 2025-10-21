@@ -49,12 +49,11 @@ public class Node : IStructure
     {
         get
         {
-            return fileName;
+            return Root().fileName;
         }
         set
         {
-            foreach (var node in Root().Walk())
-                node.fileName = value;
+            fileName = value;
         }
     }
 
@@ -523,13 +522,11 @@ public class Node : IStructure
         // Create a child node to contain the child model.
         var childNode = new Node(childModel, FullNameAndPath);
         childNode.Parent = this;
-        childNode.FileName = childNode.Parent.FileName;
         childNode.Compiler = childNode.Parent.Compiler;
         children.Add(childNode);
         childNode.EnsureNameIsUnique();
 
         // Give the child our services.
-        childNode.FileName = FileName;
         childNode.Compiler = Compiler;
         childNode.scope = scope;
         childNode.locator = locator;

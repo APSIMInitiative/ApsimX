@@ -53,12 +53,12 @@
             "name": "Models: Debug",
             "type": "coreclr",
             "request": "launch",
+            "preLaunchTask": "Clean Debug",
             "program": "${workspaceFolder}/bin/Debug/net8.0/Models.exe",
             "args": [
-                "--apply=commands.txt",
-                "minimalSim.apsimx"
+                "C:\\Work\\Repos\\APSIMInitiative\\ApsimX\\Examples\\Stock.apsimx"
             ],
-            "cwd": "C:\\Work\\Temp",
+            "cwd": "${workspaceFolder}",
             "console": "internalConsole",
             "stopAtEntry": false
         },

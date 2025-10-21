@@ -1,3 +1,4 @@
+using APSIM.Shared.Utilities;
 using DeepCloner.Core;
 
 namespace APSIM.Core;
@@ -61,7 +62,7 @@ internal partial class AddCommand : IModelCommand
 
         // Add a model to all toModels.
         foreach (var toModel in toModels.ToArray())  // Need the ToArray because toModels changes because of the AddChild.
-            toModel.Node.AddChild(modelToAdd.DeepClone());
+            toModel.Node.AddChild(ReflectionUtilities.Clone(modelToAdd) as INodeModel);
 
         return relativeTo;
     }

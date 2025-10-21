@@ -43,19 +43,6 @@ namespace APSIM.Server.Sensibility
             runner.Use(new SimulationCheckerJobRunner());
         }
 
-        event EventHandler<IRunner.AllJobsCompletedArgs> IRunner.AllSimulationsCompleted
-        {
-            add
-            {
-                throw new NotImplementedException();
-            }
-
-            remove
-            {
-                throw new NotImplementedException();
-            }
-        }
-
         /// <inheritdoc />
         public Action<Exception> ErrorHandler { get => runner.ErrorHandler; set => runner.ErrorHandler = value; }
 
