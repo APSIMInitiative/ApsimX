@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 204,
+  "Version": 205,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -15188,7 +15188,7 @@
                         "[Sowing].Script.CultivarName = Corack",
                         "[SetPhaseCompletionDates].Script.EmergDate = 20-may-2015",
                         "[SetPhaseCompletionDates].Script.FlagDate = 29-aug-2015",
-                        "[SetPhaseCompletionDates].Script.AnthDate = 4-oct-2014"
+                        "[SetPhaseCompletionDates].Script.AnthDate = 4-oct-2015"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -15204,7 +15204,7 @@
                         "[Sowing].Script.CultivarName = Mace",
                         "[SetPhaseCompletionDates].Script.EmergDate = 20-may-2015",
                         "[SetPhaseCompletionDates].Script.FlagDate = 4-sep-2015",
-                        "[SetPhaseCompletionDates].Script.AnthDate = 5-oct-2014"
+                        "[SetPhaseCompletionDates].Script.AnthDate = 5-oct-2015"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -17965,6 +17965,114 @@
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Wheat.AboveGround.N",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Observed",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
+                          "Minimum": -80.5193018473227,
+                          "Maximum": 1483.8193018473225,
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "AboveGroundWt1",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": 0,
+                          "FactorToVaryColours": "Cv",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "DailyReport",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Wheat.Grain.Wt",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.EventNamesOnGraph, Models",
+                              "ColumnName": "Wheat.Phenology.CurrentStageName",
+                              "SimulationName": "Temora2015CvHartog",
+                              "Name": "EventNamesOnGraph",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": 0,
+                          "FactorToVaryColours": "Cv",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "Observed",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Wheat.Grain.Wt",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
