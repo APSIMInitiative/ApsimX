@@ -53156,77 +53156,9 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                              "Title": null,
-                              "Position": 3,
-                              "Inverted": false,
-                              "CrossesAtZero": false,
-                              "LabelOnOneLine": false,
-                              "Minimum": null,
-                              "Maximum": null,
-                              "Interval": null
-                            },
-                            {
-                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                              "Title": null,
-                              "Position": 0,
-                              "Inverted": false,
-                              "CrossesAtZero": false,
-                              "LabelOnOneLine": false,
-                              "Minimum": null,
-                              "Maximum": null,
-                              "Interval": null
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "LegendOrientation": 0,
-                          "AnnotationLocation": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "WaterDemand",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": 0,
-                              "FactorToVaryColours": "Irrigation",
-                              "FactorToVaryMarkers": null,
-                              "FactorToVaryLines": null,
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 0,
-                              "LineThickness": 0,
-                              "TableName": "Report",
-                              "XFieldName": "Clock.Today",
-                              "YFieldName": "AgPRyegrass.PotentialEP",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "PotentialEP",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Core.Folder, Models",
                           "ShowInDocs": false,
-                          "Name": "WaterDemand1",
+                          "Name": "WaterDemand",
                           "ResourceName": null,
                           "Children": [
                             {
@@ -57559,7 +57491,7 @@
                               "LightProfile": null,
                               "InitialShootDM": 1.0,
                               "InitialRootDM": 1.0,
-                              "InitialRootDepth": 750.0,
+                              "InitialRootDepth": 50.0,
                               "initialDMFractionsGrasses": [
                                 0.15,
                                 0.25,
