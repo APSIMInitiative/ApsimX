@@ -552,6 +552,42 @@ save {apsimxFileName}";
         }
 
         [Test]
+        public void TestApplySwitchLoadFromConfigFileNoPath()
+        {
+            Simulations file = Utilities.GetRunnableSim();
+
+            Simulation simulationNode = file.Node.Find<Simulation>();
+
+            string apsimxFileName = file.FileName.Split('\\', '/').ToList().Last();
+
+            // create commands with no path on load/save
+            string newFileString = @$"load {Path.GetFileName(apsimxFileName)}
+add new Report to [Zone]
+save {Path.GetFileName(apsimxFileName)}";
+
+            string newTempConfigFile = Path.Combine(Path.GetTempPath(), "command.txt");
+            File.WriteAllText(newTempConfigFile, newFileString);
+
+            bool fileExists = File.Exists(newTempConfigFile);
+            Assert.That(File.Exists(newTempConfigFile), Is.True);
+
+            // Don't pass a path to the command file. Force main to use working directory.
+            Directory.SetCurrentDirectory(Path.GetDirectoryName(newTempConfigFile));
+            Utilities.RunModels($"--apply {Path.GetFileName(newTempConfigFile)}");
+
+            string text = File.ReadAllText(file.FileName);
+            // Reload simulation from file text. Needed to see changes made.
+            Simulations sim2 = FileFormat.ReadFromString<Simulations>(text).Model as Simulations;
+
+            // Get new values from changed simulation.
+            Zone fieldNodeAfterChange = sim2.Node.Find<Zone>();
+
+            // See if the report shows up as a second child of Field with a specific name.
+            Models.Report secondReportNodeThatShouldBePresent = fieldNodeAfterChange.Node.FindChild<Models.Report>("Report1");
+            Assert.That(secondReportNodeThatShouldBePresent, Is.Not.Null);
+        }
+
+        [Test]
         public void TestApplySwitchCreateFromConfigFile()
         {
             string newApsimxFileName = "newSim.apsimx";

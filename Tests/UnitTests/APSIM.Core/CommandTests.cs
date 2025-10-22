@@ -307,17 +307,17 @@ public class CommandTests
             [
                 new Cultivar()
                 {
-                    Command = [ "a", "b" ]
+                    Command = [ "a=1", "b=2" ]
                 }
             ]
         };
         Node.Create(simulation);
 
-        IModelCommand cmd = new SetPropertyCommand("[Cultivar].Command", "-=", "b", fileName: null);
+        IModelCommand cmd = new SetPropertyCommand("[Cultivar].Command", "-=", "b=2", fileName: null);
         cmd.Run(simulation, runner: null);
 
         var cultivar = simulation.Children.First() as Cultivar;
-        Assert.That(cultivar.Command, Is.EqualTo(["a"]));
+        Assert.That(cultivar.Command, Is.EqualTo(["a=1"]));
     }
 
 

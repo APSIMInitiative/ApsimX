@@ -246,8 +246,10 @@ namespace Models
                 files = [null];
 
             // Calculate the directory relative to the command file.
-            string relativeToDirectory = Path.GetDirectoryName(commandFileName)
-                                         ?? Directory.GetCurrentDirectory();
+            string relativeToDirectory = Path.GetDirectoryName(commandFileName);
+            if (string.IsNullOrEmpty(relativeToDirectory))
+                relativeToDirectory = Directory.GetCurrentDirectory();
+
             List<string> commandsList = File.ReadAllLines(commandFileName).ToList();
 
             if (options.Batch != null)

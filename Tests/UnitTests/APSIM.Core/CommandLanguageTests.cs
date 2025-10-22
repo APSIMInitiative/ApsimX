@@ -35,6 +35,7 @@ public class CommandLanguageTests
     // Ensure commented lines are ignored.
     [Test]
     [TestCase("# Commented line")]
+    [TestCase("#############################")]
     public void EnsureCommentedLinesAreIgnored(string commandString)
     {
         var commands = CommandLanguage.StringToCommands([commandString], relativeTo: null, relativeToDirectory: null);

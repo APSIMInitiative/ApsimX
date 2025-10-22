@@ -44,7 +44,10 @@ public class CommandLanguage
         foreach (var line in lines)
         {
             // Strip commented characters.
-            var sanitisedLine = StringUtilities.RemoveAfter(line, '#');
+            var sanitisedLine = line;
+            int posComment = sanitisedLine.IndexOf('#');
+            if (posComment != -1)
+                sanitisedLine = sanitisedLine.Remove(posComment);
             sanitisedLine = sanitisedLine.TrimEnd();
 
             if (sanitisedLine.StartsWith(' '))
