@@ -6,6 +6,7 @@ using Models.PMF.Organs;
 using Models.Climate;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using APSIM.Core;
 
 namespace Models.Functions
@@ -35,6 +36,10 @@ namespace Models.Functions
     /// <item><description><em>FrostEventNnumber</em>: Number of frost events during sensitive period</description></item>
     /// <item><description><em>HeatEventNumber</em>: Number of heat events during sensitive period</description></item>
     /// <item><description><em>FrostHeatYield</em>: Frost- and heat-limited yield</description></item>
+    /// <item><description><em>FrostSensitivePeriodStartDAS</em>: Start of frost sensitive period in days after sowing</description></item>
+    /// <item><description><em>FrostSensitivePeriodEndDAS</em>: End of frost sensitive period in days after sowing</description></item>
+    /// <item><description><em>HeatSensitivePeriodStartDAS</em>: Start of heat sensitive period in days after sowing</description></item>
+    /// <item><description><em>HeatSensitivePeriodEndDAS</em>: End of heat sensitive period in days after sowing</description></item>
     /// </list>
     /// </para>
     /// </remarks>
@@ -172,59 +177,76 @@ namespace Models.Functions
 
         // Output variables
         /// <summary>Daily potential yield reduction ratio by a frost event.</summary>
+        [JsonIgnore]
         public double FrostPotentialReductionRatio { get; set; }
 
         /// <summary>Daily sensitivity of yield reduction to growth stage when the frost event occurs.</summary>
+        [JsonIgnore]
         public double FrostSensitivity { get; set; }
 
         /// <summary>Daily actual yield reduction ratio by frost stress.</summary>
+        [JsonIgnore]
         public double FrostReductionRatio { get; set; }
 
         /// <summary>Daily potential yiled reduction ratio by a heat event.</summary>
+        [JsonIgnore]
         public double HeatPotentialReductionRatio { get; set; }
 
         /// <summary>Daily sensitivity of yield reduction to growth stage when the heat event occurs.</summary>
+        [JsonIgnore]
         public double HeatSensitivity { get; set; }
 
         /// <summary>Daily actual yield reduction ratio by heat stress.</summary>
+        [JsonIgnore]
         public double HeatReductionRatio { get; set; }
 
         /// <summary>Daily actual yield reduction ratio by frost and heat stress.</summary>
+        [JsonIgnore]
         public double FrostHeatReductionRatio { get; set; }
 
         /// <summary>Cumulative actual yield reduction ratio induced by frost stress.</summary>
+        [JsonIgnore]
         public double CumulativeFrostReductionRatio { get; set; }
 
         /// <summary>Cumulative actual yield reduction ratio induced by heat stress.</summary>
+        [JsonIgnore]
         public double CumulativeHeatReductionRatio { get; set; }
 
         /// <summary>Number of frost events during sensitive period.</summary>
+        [JsonIgnore]
         public double FrostEventNumber { get; set; }
 
         /// <summary>Number of heat events during sensitive period.</summary>
+        [JsonIgnore]
         public double HeatEventNumber { get; set; }
 
         /// <summary>Cumulative actual yield reduction ratio induced by frost and heat stress.</summary>
+        [JsonIgnore]
         public double CumulativeFrostHeatReductionRatio { get; set; }
 
         /// <summary>Frost- and heat-limiated yield.</summary>
         /// [Units("g/m2")]
+        [JsonIgnore]
         public double FrostHeatYield { get; set; }
 
         /// <summary>Start of frost sensitive period in days after sowing.</summary>
         [Units("days")]
+        [JsonIgnore]
         public double FrostSensitivePeriodStartDAS { get; set; }
 
         /// <summary>End of frost sensitive period in days after sowing.</summary>
         [Units("days")]
+        [JsonIgnore]
         public double FrostSensitivePeriodEndDAS { get; set; }
 
         /// <summary>Start of heat sensitive period in days after sowing.</summary>
         [Units("days")]
+        [JsonIgnore]
         public double HeatSensitivePeriodStartDAS { get; set; }
 
         /// <summary>End of heat sensitive period in days after sowing.</summary>
         [Units("days")]
+        [JsonIgnore]
         public double HeatSensitivePeriodEndDAS { get; set; }
 
         // Dictionary to hold default values for each crop type
