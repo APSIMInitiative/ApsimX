@@ -124,13 +124,27 @@ public class Node : IStructure
     /// <returns>All matching models.</returns>
     public IEnumerable<T> FindAll<T>(string name = null, INodeModel relativeTo = null)
     {
+        foreach (var model in FindAll(name, typeof(T).Name, relativeTo))
+            yield return (T)model;
+    }
+
+
+    /// <summary>
+    /// Get models in scope.
+    /// </summary>
+    /// <param name="name">The name of the model to return. Can be null.</param>
+    /// <param name="relativeTo">The model to use when determining scope.</param>
+    /// <returns>All matching models.</returns>
+    internal IEnumerable<INodeModel> FindAll(string name = null, string typeName = null, INodeModel relativeTo = null)
+    {
         Node relativeToNode = this;
         if (relativeTo != null)
             relativeToNode = relativeTo.Node;
 
         foreach (var node in relativeToNode.WalkScoped())
-            if (node.Model is T && (name == null || node.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
-                yield return (T)node.Model;
+            if ((name == null || node.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)) &&
+                (typeName == null || node.Model.GetType().Name == typeName))
+                yield return node.Model;
     }
 
     /// <summary>

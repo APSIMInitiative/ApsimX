@@ -11,6 +11,7 @@ public class CommandLanguageTests
     [Test]
     [TestCase("add new Report to [Zone]")]
     [TestCase("add new Report to all [Zone]")]
+    [TestCase("add new Report to all [Zone] name MyReport")]
     [TestCase("add [Report] to [Zone] name MyReport")]
     [TestCase("add [Report] from anotherfile.apsimx to all [Zone]")]
     [TestCase("delete [Zone].Report")]

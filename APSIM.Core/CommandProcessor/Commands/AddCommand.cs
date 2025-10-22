@@ -50,8 +50,9 @@ internal partial class AddCommand : IModelCommand
         {
             var toPathWithoutBrackets = toPath.Replace("[", string.Empty)
                                               .Replace("]", string.Empty);
-            toModels = relativeTo.Node.FindAll<INodeModel>(toPathWithoutBrackets)
-                       ?? throw new Exception($"Cannot find any models that match: {toPath}");
+            toModels = relativeTo.Node.FindAll(typeName: toPathWithoutBrackets);
+            if (!toModels.Any())
+                throw new Exception($"Cannot find any models that match: {toPath}");
         }
         else
         {

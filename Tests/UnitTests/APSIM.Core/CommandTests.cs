@@ -1,4 +1,5 @@
-﻿using Models;
+﻿using Atk;
+using Models;
 using Models.Climate;
 using Models.Core;
 using Models.PMF;
@@ -34,6 +35,28 @@ public class CommandTests
         cmd.Run(simulation, runner: null);
 
         Assert.That(simulation.Children[0], Is.InstanceOf(typeof(Models.Report)));
+    }
+
+    /// <summary>Ensure the add command works when multiple=true</summary>
+    [Test]
+    public void EnsureAddMultipleWorks()
+    {
+        var simulations = new Simulations()
+        {
+            Children = [
+                new Simulation(),
+                new Simulation()
+            ]
+        };
+        Node.Create(simulations);
+
+        IModelCommand cmd = new AddCommand(modelReference: new NewModelReference("Report"),
+                                           toPath: "[Simulation]",
+                                           multiple: true);
+        cmd.Run(simulations, runner: null);
+
+        Assert.That(simulations.Children[0].Children[0], Is.InstanceOf(typeof(Models.Report)));
+        Assert.That(simulations.Children[1].Children[0], Is.InstanceOf(typeof(Models.Report)));
     }
 
     /// <summary>Ensure the add command works and that the child model is renamed.</summary>
@@ -214,17 +237,40 @@ public class CommandTests
             [
                 new Cultivar()
                 {
-                    Command = [ "a" ]
+                    Command = [ "a=1" ]
                 }
             ]
         };
         Node.Create(simulation);
 
-        IModelCommand cmd = new SetPropertyCommand("[Cultivar].Command", "+=", "b", fileName: null);
+        IModelCommand cmd = new SetPropertyCommand("[Cultivar].Command", "+=", "b=2", fileName: null);
         cmd.Run(simulation, runner: null);
 
         var cultivar = simulation.Children.First() as Cultivar;
-        Assert.That(cultivar.Command, Is.EqualTo(["a", "b"]));
+        Assert.That(cultivar.Command, Is.EqualTo(["a=1", "b=2"]));
+    }
+
+    /// <summary>Ensure the set property += command overwrites existing value when it exists.</summary>
+    [Test]
+    public void EnsureSetPropertyAddOverwritesExisting()
+    {
+        Simulations simulation = new()
+        {
+            Children =
+            [
+                new Cultivar()
+                {
+                    Command = [ "a=1" ]
+                }
+            ]
+        };
+        Node.Create(simulation);
+
+        IModelCommand cmd = new SetPropertyCommand("[Cultivar].Command", "+=", "a=2", fileName: null);
+        cmd.Run(simulation, runner: null);
+
+        var cultivar = simulation.Children.First() as Cultivar;
+        Assert.That(cultivar.Command, Is.EqualTo(["a=2"]));
     }
 
     /// <summary>Ensure the set array property works.</summary>
@@ -237,17 +283,17 @@ public class CommandTests
             [
                 new Cultivar()
                 {
-                    Command = [ "a" ]
+                    Command = [ "a=1" ]
                 }
             ]
         };
         Node.Create(simulation);
 
-        IModelCommand cmd = new SetPropertyCommand("[Cultivar].Command", "=", "b,c", fileName: null);
+        IModelCommand cmd = new SetPropertyCommand("[Cultivar].Command", "=", "b=2,c=3", fileName: null);
         cmd.Run(simulation, runner: null);
 
         var cultivar = simulation.Children.First() as Cultivar;
-        Assert.That(cultivar.Command, Is.EqualTo(["b", "c"]));
+        Assert.That(cultivar.Command, Is.EqualTo(["b=2", "c=3"]));
     }
 
     /// <summary>Ensure the set array element property works.</summary>
@@ -260,17 +306,17 @@ public class CommandTests
             [
                 new Cultivar()
                 {
-                    Command = [ "a", "b" ]
+                    Command = [ "a=1", "b=2" ]
                 }
             ]
         };
         Node.Create(simulation);
 
-        IModelCommand cmd = new SetPropertyCommand("[Cultivar].Command[1]", "=", "b", fileName: null);
+        IModelCommand cmd = new SetPropertyCommand("[Cultivar].Command[1]", "=", "b=1", fileName: null);
         cmd.Run(simulation, runner: null);
 
         var cultivar = simulation.Children.First() as Cultivar;
-        Assert.That(cultivar.Command, Is.EqualTo(["b", "b"]));
+        Assert.That(cultivar.Command, Is.EqualTo(["b=1", "b=2"]));
     }
 
 
@@ -313,7 +359,7 @@ public class CommandTests
         };
         Node.Create(simulation);
 
-        IModelCommand cmd = new SetPropertyCommand("[Cultivar].Command", "-=", "b=2", fileName: null);
+        IModelCommand cmd = new SetPropertyCommand("[Cultivar].Command", "-=", "b", fileName: null);
         cmd.Run(simulation, runner: null);
 
         var cultivar = simulation.Children.First() as Cultivar;
@@ -331,7 +377,7 @@ public class CommandTests
             [
                 new Cultivar()
                 {
-                    Command = [ "a", "b" ]
+                    Command = [ "a=1", "b=2" ]
                 }
             ]
         };
@@ -341,7 +387,7 @@ public class CommandTests
         cmd.Run(simulation, runner: null);
 
         var cultivar = simulation.Children.First() as Cultivar;
-        Assert.That(cultivar.Command, Is.EqualTo(["a", "b"]));
+        Assert.That(cultivar.Command, Is.EqualTo(["a=1", "b=2"]));
     }
 
     /// <summary>Ensure the load command works.</summary>

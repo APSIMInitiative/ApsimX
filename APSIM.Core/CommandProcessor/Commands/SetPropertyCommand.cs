@@ -57,11 +57,22 @@ internal partial class SetPropertyCommand : IModelCommand
             object valueAsObject = obj.Value ?? throw new Exception($" Cannot use += or -= operators on a null array.");
             List<string> strings = ApsimConvert.ToType(valueAsObject, typeof(List<string>)) as List<string>;
 
+            string[] tokens = [.. value.Split('=').Select(part => part.Trim())];
+
             // Add or remove a string.
             if (oper == "+=")
-                strings.Add(value);
+            {
+                int index = strings.FindIndex(s => s.Split('=')[0].Trim() == tokens.First());
+                if (index >= 0)
+                    strings[index] = value;
+                else
+                    strings.Add(value);
+
+            }
             else
-                strings.Remove(value);
+            {
+                strings.RemoveAll(s => s.Split('=')[0].Trim() == tokens.First());
+            }
 
             // Give the modifed array back to the object.
             var objValue = ApsimConvert.ToType(strings, obj.DataType);
