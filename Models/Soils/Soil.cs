@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -162,6 +163,7 @@ namespace Models.Soils
             const double min_sw = 0.0;
             const double min_bd = 0.1;
             const double specific_bd = 2.65; // (g/cc)
+            List<string> warning = new List<string>();
             StringBuilder message = new StringBuilder();
 
             //Weirdo is an experimental soil water model that does not have the same soil water parameters
@@ -215,6 +217,11 @@ namespace Models.Soils
                 {
                     double max_sw = MathUtilities.Round(1.0 - physical.BD[layer] / specific_bd, 3);
                     int layerNumber = layer + 1;
+
+                    if (MathUtilities.GreaterThan(physical.ParticleSizeClay[layer] + physical.ParticleSizeSilt[layer] + physical.ParticleSizeSand[layer] - 100, 0, 1))
+                        warning.Add($"Clay, silt and sand percentages in layer {layerNumber} add up to more than 100%");
+                    else if (MathUtilities.LessThan(physical.ParticleSizeClay[layer] + physical.ParticleSizeSilt[layer] + physical.ParticleSizeSand[layer] - 100, 0, 1))
+                        warning.Add($"Clay, silt and sand percentages in layer {layerNumber} add up to less than 100%");
 
                     if (physical.AirDry[layer] == MathUtilities.MissingValue || double.IsNaN(physical.AirDry[layer]))
                         message.AppendLine($"Air dry value missing in layer {layerNumber}");
@@ -319,6 +326,12 @@ namespace Models.Soils
                             message.AppendLine($"SWCON value of {waterBalance.SWCON[layer].ToString("f3")} in layer {layerNumber} is not between 0 and 1");
                     }
                 }
+            }
+
+            if (summary != null && warning.Count > 0)
+            {
+                foreach(string line in warning)
+                    summary.WriteMessage((IModel)physical, line, MessageType.Warning);
             }
 
             if (message.Length > 0)
