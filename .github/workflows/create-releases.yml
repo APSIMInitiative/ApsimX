@@ -7,17 +7,29 @@ name: Create APSIM Releases
 permissions:
   contents: read # to check out code
 
+# # Replace when releases work
+# on:
+#   pull_request:
+#     branches:
+#       - master
+#     types:
+#       - closed
 on:
   workflow_run:
     workflows: ["Build and test", "Model validations"] # Name of the workflow that needs to be successful
     types:
       - completed # Trigger when the referenced workflow is completed
 
+
 jobs:
   create-release:
+    # Replace when releases work
+    # if: github.event.pull_request.merged == true
     strategy:
       matrix:
-        os: [windows, macos, debian]
+        # os: [windows, macos, debian]
+        os: [debian]
+    # runs-on: [windows-latest, macos-latest, ubuntu-latest]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -29,7 +41,7 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Set script permissions
-        run: chmod +x ./.github/workflows/scripts/deploy-installer.sh
+        run: chmod +x -R ./.github/workflows/scripts/
 
       # This is used purely for PR number extraction.
       - name: Extract metadata (tags, labels) for Docker for apsimplusr
@@ -42,7 +54,7 @@ jobs:
             type=ref,event=branch
             type=ref,event=pr
 
-      - name: Create Windows Release
+      - name: Create Release
         env:
           PULL_ID: ${DOCKER_METADATA_OUTPUT_VERSION:3}
           BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
