@@ -124,7 +124,7 @@ public class Node : IStructure
     /// <returns>All matching models.</returns>
     public IEnumerable<T> FindAll<T>(string name = null, INodeModel relativeTo = null)
     {
-        foreach (var model in FindAll(name, typeof(T).Name, relativeTo))
+        foreach (var model in FindAll(name, typeof(T), relativeTo))
             yield return (T)model;
     }
 
@@ -135,7 +135,7 @@ public class Node : IStructure
     /// <param name="name">The name of the model to return. Can be null.</param>
     /// <param name="relativeTo">The model to use when determining scope.</param>
     /// <returns>All matching models.</returns>
-    internal IEnumerable<INodeModel> FindAll(string name = null, string typeName = null, INodeModel relativeTo = null)
+    internal IEnumerable<INodeModel> FindAll(string name = null, Type type = null, INodeModel relativeTo = null)
     {
         Node relativeToNode = this;
         if (relativeTo != null)
@@ -143,7 +143,7 @@ public class Node : IStructure
 
         foreach (var node in relativeToNode.WalkScoped())
             if ((name == null || node.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)) &&
-                (typeName == null || node.Model.GetType().Name == typeName))
+                (type == null || node.Model.GetType().IsAssignableTo(type)))
                 yield return node.Model;
     }
 
