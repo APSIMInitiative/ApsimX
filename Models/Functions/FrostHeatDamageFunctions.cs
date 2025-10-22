@@ -225,7 +225,7 @@ namespace Models.Functions
         public double CumulativeFrostHeatReductionRatio { get; set; }
 
         /// <summary>Frost- and heat-limiated yield.</summary>
-        /// [Units("g/m2")]
+        [Units("g/m2")]
         [JsonIgnore]
         public double FrostHeatYield { get; set; }
 
