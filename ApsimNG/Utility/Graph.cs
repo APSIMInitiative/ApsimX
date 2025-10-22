@@ -21,7 +21,6 @@
                 Models.Graph graph = FileFormat.ReadFromString<Models.Graph>(graphXmL).Model as Models.Graph;
                 if (errors != null && errors.Any())
                     throw errors.First();
-                graph.ParentAllDescendants();
                 return graph;
             }
             return null;

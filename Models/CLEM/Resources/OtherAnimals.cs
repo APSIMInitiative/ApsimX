@@ -11,7 +11,7 @@ namespace Models.CLEM.Resources
 {
     ///<summary>
     /// Parent model of Ruminant Types.
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -34,11 +34,11 @@ namespace Models.CLEM.Resources
         public IEnumerable<OtherAnimalsTypeCohort> GetCohorts(IEnumerable<OtherAnimalsGroup> filtergroups, bool includeTakeFilters)
         {
             IEnumerable<OtherAnimalsType> otherAnimalTypes;
-            
+
             if(filtergroups != null && filtergroups.Any())
-                otherAnimalTypes = FindAllChildren<OtherAnimalsType>().Where(a => filtergroups.Any(b => b.SelectedOtherAnimalsType == a));
+                otherAnimalTypes = Structure.FindChildren<OtherAnimalsType>().Where(a => filtergroups.Any(b => b.SelectedOtherAnimalsType == a));
             else
-                otherAnimalTypes = FindAllChildren<OtherAnimalsType>();
+                otherAnimalTypes = Structure.FindChildren<OtherAnimalsType>();
 
             foreach (OtherAnimalsType otherAnimalType in otherAnimalTypes)
             {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -11,7 +12,9 @@ using Models.PMF.Library;
 using Models.Soils;
 using Models.Soils.Arbitrator;
 using Newtonsoft.Json;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("UnitTests")]
 namespace Models.PMF.Organs
 {
 
@@ -22,8 +25,12 @@ namespace Models.PMF.Organs
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class Root : Model, IWaterNitrogenUptake, IArbitration, IOrgan, IOrganDamage, IRoot, IHasDamageableBiomass
+    public class Root : Model, IWaterNitrogenUptake, IArbitration, IOrgan, IOrganDamage, IRoot, IHasDamageableBiomass, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>Tolerance for biomass comparisons</summary>
         private double BiomassToleranceValue = 0.0000000001;
 
@@ -169,7 +176,20 @@ namespace Models.PMF.Organs
         public BiomassPoolType potentialDMAllocation { get; set; }
 
         /// <summary>Link to the soilCrop</summary>
-        public SoilCrop SoilCrop {get; private set;} = null;
+        public SoilCrop SoilCrop { get; private set; } = null;
+
+        /// <summary>Water supplied by root network to soil arbitrator for this plant instance</summary>
+        public PlantWaterOrNDelta WaterUptakeSupply { get; set; }
+
+        /// <summary>Nitrogen supplied by the root network to the soil arbitrator for this plant instance</summary>
+        public PlantWaterOrNDelta NitrogenUptakeSupply { get; set; }
+
+        /// <summary>The water uptake allocated to the plant instance by the soil arbitrator</summary>
+        public PlantWaterOrNDelta WaterTakenUp { get; set; }
+
+        /// <summary>The Nitrogen uptake allocated to the plant instance by the soil arbitrator</summary>
+        public PlantWaterOrNDelta NitrogenTakenUp { get; set; }
+
 
         /// <summary>The DM supply for retranslocation</summary>
         private double dmRetranslocationSupply = 0.0;
@@ -401,25 +421,8 @@ namespace Models.PMF.Organs
         {
             get
             {
-                double fasw = 0;
-                double TotalArea = 0;
-
-                foreach (ZoneState Z in Zones)
-                {
-                    Zone zone = this.FindInScope(Z.Name) as Zone;
-                    var soilPhysical = Z.Soil.FindChild<IPhysical>();
-                    var waterBalance = Z.Soil.FindChild<ISoilWater>();
-                    var soilCrop = Z.Soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
-                    double[] paw = APSIM.Shared.APSoil.APSoilUtilities.CalcPAWC(soilPhysical.Thickness, soilCrop.LL, waterBalance.SW, soilCrop.XF);
-                    double[] pawmm = MathUtilities.Multiply(paw, soilPhysical.Thickness);
-                    double[] pawc = APSIM.Shared.APSoil.APSoilUtilities.CalcPAWC(soilPhysical.Thickness, soilCrop.LL, soilPhysical.DUL, soilCrop.XF);
-                    double[] pawcmm = MathUtilities.Multiply(pawc, soilPhysical.Thickness);
-                    TotalArea += zone.Area;
-
-                    fasw += MathUtilities.Sum(pawmm) / MathUtilities.Sum(pawcmm) * zone.Area;
-                }
-                fasw = fasw / TotalArea;
-                return fasw;
+                // FAWS across the root system (no constraint).
+                return CalcFASW(double.MaxValue);
             }
         }
 
@@ -438,8 +441,8 @@ namespace Models.PMF.Organs
                 if (liveWt > 0)
                     foreach (ZoneState Z in Zones)
                     {
-                        var soilPhysical = Z.Soil.FindChild<IPhysical>();
-                        var waterBalance = Z.Soil.FindChild<ISoilWater>();
+                        var soilPhysical = Structure.FindChild<IPhysical>(relativeTo: Z.Soil);
+                        var waterBalance = Structure.FindChild<ISoilWater>(relativeTo: Z.Soil);
                         double[] paw = waterBalance.PAW;
                         double[] pawc = soilPhysical.PAWC;
                         Biomass[] layerLiveForZone = Z.LayerLive;
@@ -469,8 +472,8 @@ namespace Models.PMF.Organs
                 if (liveWt > 0)
                     foreach (ZoneState Z in Zones)
                     {
-                        var soilPhysical = Z.Soil.FindChild<IPhysical>();
-                        var waterBalance = Z.Soil.FindChild<ISoilWater>();
+                        var soilPhysical = Structure.FindChild<IPhysical>(relativeTo: Z.Soil);
+                        var waterBalance = Structure.FindChild<ISoilWater>(relativeTo: Z.Soil);
 
                         double[] paw = waterBalance.PAW;
                         double[] pawc = soilPhysical.PAWC;
@@ -481,6 +484,20 @@ namespace Models.PMF.Organs
 
                 return MeanWTF;
             }
+        }
+
+        /// <summary>Returns the Fraction of Available Soil Water across the root system (across zones, constrained by the specified depth)</summary>
+        public double CalcFASW(double depth)
+        {
+            double totalFASW = 0;
+            double totalArea = 0;
+            foreach (ZoneState zoneState in Zones)
+            {
+                double area = zoneState.Zone.Area;
+                totalFASW += area * SoilUtilities.CalcFASW(zoneState.Physical.Thickness, zoneState.SoilCrop.PAWmm, zoneState.SoilCrop.PAWCmm, depth);
+                totalArea += area;
+            }
+            return totalFASW / totalArea;
         }
 
         /// <summary>Gets or sets the maximum nconc.</summary>
@@ -892,7 +909,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Initialise all zones.</summary>
-        private void InitialiseZones()
+        internal void InitialiseZones()
         {
             Zones.Clear();
             Zones.Add(PlantZone);
@@ -902,14 +919,14 @@ namespace Models.PMF.Organs
 
             for (int i = 0; i < ZoneNamesToGrowRootsIn.Count; i++)
             {
-                Zone zone = this.FindInScope(ZoneNamesToGrowRootsIn[i]) as Zone;
+                Zone zone = Structure.Find<Zone>(ZoneNamesToGrowRootsIn[i]);
                 if (zone != null)
                 {
-                    Soil soil = zone.FindInScope<Soil>();
+                    Soil soil = Structure.Find<Soil>(relativeTo: zone);
                     if (soil == null)
                         throw new Exception("Cannot find soil in zone: " + zone.Name);
                     ZoneState newZone = new ZoneState(parentPlant, this, soil, ZoneRootDepths[i], ZoneInitialDM[i], parentPlant.Population, MaxNConc,
-                                                      rootFrontVelocity, maximumRootDepth, remobilisationCost);
+                                                      rootFrontVelocity, maximumRootDepth, remobilisationCost, Structure);
                     Zones.Add(newZone);
                 }
             }
@@ -1029,15 +1046,15 @@ namespace Models.PMF.Organs
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         /// <exception cref="ApsimXException">Cannot find a soil crop parameterisation for  + Name</exception>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        internal void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Soil soil = this.FindInScope<Soil>();
+            Soil soil = Structure.Find<Soil>();
             if (soil == null)
                 throw new Exception("Cannot find soil");
             PlantZone = new ZoneState(parentPlant, this, soil, 0, InitialWt, parentPlant.Population, MaxNConc,
-                                      rootFrontVelocity, maximumRootDepth, remobilisationCost);
+                                      rootFrontVelocity, maximumRootDepth, remobilisationCost, Structure);
 
-            SoilCrop = soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
+            SoilCrop = Structure.FindChild<SoilCrop>(parentPlant.Name + "Soil", relativeTo: soil, recurse: true);
             if (SoilCrop == null)
                 throw new Exception("Cannot find a soil crop parameterisation for " + parentPlant.Name);
 

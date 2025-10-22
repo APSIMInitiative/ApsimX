@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using APSIM.Core;
+using DocumentFormat.OpenXml.Office.CustomXsn;
 
 namespace Models.Soils.Nutrients
 {
@@ -34,8 +35,13 @@ namespace Models.Soils.Nutrients
     [ValidParent(ParentType = typeof(Soil))]
     [ViewName("UserInterface.Views.DirectedGraphView")]
     [PresenterName("UserInterface.Presenters.DirectedGraphPresenter")]
-    public class Nutrient : Model, INutrient, IVisualiseAsDirectedGraph, IScopedModel
+    public class Nutrient : Model, INutrient, IVisualiseAsDirectedGraph, IScopedModel, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
+
         private readonly double CinFOM = 0.4;      // Carbon content of FOM
         private double[] totalOrganicN;
         private double[] fomCNRFactor;
@@ -277,6 +283,15 @@ namespace Models.Soils.Nutrients
         }
 
         /// <summary>
+        /// Add a solute.
+        /// </summary>
+        /// <param name="solute">The solute to add.</param>
+        public void AddSolute(Solute solute)
+        {
+            Structure.AddChild(solute);
+        }
+
+        /// <summary>
         /// Perform initialisation so that instance is valid.
         /// </summary>
         /// <param name="sender">The sender.</param>
@@ -297,9 +312,9 @@ namespace Models.Soils.Nutrients
 
             // Try getting solutes from children first. This happens when using NutrientPatchManager.
             // If not found, use scope to locate solutes.
-            solutes = FindAllChildren<ISolute>();
+            solutes = Structure.FindChildren<ISolute>();
             if (!solutes.Any())
-                solutes = FindAllInScope<ISolute>();
+                solutes = Structure.FindAll<ISolute>();
 
             Inert = nutrientPools.First(pool => pool.Name == "Inert");
             Microbial = nutrientPools.First(pool => pool.Name == "Microbial");
@@ -313,7 +328,7 @@ namespace Models.Soils.Nutrients
             hydrolysis = nutrientFlows.First(flow => flow.Name == "Hydrolysis");
             denitrification = nutrientFlows.First(flow => flow.Name == "Denitrification");
             nitrification = nutrientFlows.First(flow => flow.Name == "Nitrification");
-            organicFlows = FindAllDescendants<OrganicFlow>().ToList();
+            organicFlows = Structure.FindChildren<OrganicFlow>(recurse: true).ToList();
 
             Reset();
             FOM = new CompositeNutrientPool(new IOrganicPool[] { FOMCarbohydrate, FOMCellulose, FOMLignin });

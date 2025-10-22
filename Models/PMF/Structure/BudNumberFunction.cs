@@ -1,13 +1,14 @@
 ﻿using System;
+using APSIM.Core;
 using Models.Core;
 using Models.Functions;
 using Models.PMF.Phen;
 
 namespace Models.PMF.Struct
 {
-    /// <summary> 
+    /// <summary>
     /// Each time the specified event occurs, bud number on each main-stem is set to:
-    /// 
+    ///
     /// *FractionOfBudBurst* * *BudNumber*
     /// </summary>
     [Serializable]

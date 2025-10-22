@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 187,
+  "Version": 205,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -16,7 +16,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Replacements",
       "ResourceName": null,
       "Children": [
@@ -37,7 +36,7 @@
             "[Wheat].AboveGroundDead.N",
             "[Wheat].AboveGroundDead.Wt",
             "[Wheat].Ear.N",
-            "[Wheat].Ear.Nconc",
+            "[Wheat].Ear.NConc",
             "[Wheat].Ear.Wt",
             "[Wheat].Grain.N",
             "[Wheat].Grain.NConc",
@@ -51,13 +50,10 @@
             "[Wheat].Leaf.Dead.N",
             "[Wheat].Leaf.Dead.NConc",
             "[Wheat].Leaf.Dead.Wt",
-            "[Wheat].Leaf.DeadCohortNo",
-            "[Wheat].Leaf.SenescingCohortNo",
             "[Wheat].Leaf.Ligules",
             "[Wheat].Leaf.Fn",
             "[Wheat].Leaf.Fw",
             "[Wheat].Leaf.Height",
-            "[Wheat].Leaf.InitialisedCohortNo",
             "[Wheat].Leaf.LAI",
             "[Wheat].Leaf.Live.N",
             "[Wheat].Leaf.Live.NConc",
@@ -74,7 +70,7 @@
             "[Wheat].Root.Depth",
             "[Wheat].Root.N",
             "[Wheat].Root.Wt",
-            "[Wheat].Root.Nconc",
+            "[Wheat].Root.NConc",
             "[Wheat].Spike.N",
             "[Wheat].Spike.NConc",
             "[Wheat].Spike.Wt",
@@ -153,7 +149,11 @@
             "[Wheat].Phenology.FloweringDAS",
             "[Wheat].Phenology.MaturityDAS",
             "[Wheat].AboveGround.Wt",
-            "[FrostHeatDamageFunctions].FrostHeatYield as Wheat.Grain.Wt"
+            "[FrostHeatDamageFunctions].FrostHeatYield as Wheat.Grain.Wt",
+            "[FrostHeatDamageFunctions].FrostSensitivePeriodStartDAS",
+            "[FrostHeatDamageFunctions].FrostSensitivePeriodEndDAS",
+            "[FrostHeatDamageFunctions].HeatSensitivePeriodStartDAS",
+            "[FrostHeatDamageFunctions].HeatSensitivePeriodEndDAS"
           ],
           "EventNames": [
             "[Wheat].Harvesting"
@@ -189,19 +189,6 @@
               "HeatStartMostSensitiveGS": 7.483232,
               "HeatEndMostSensitiveGS": 8.9709024,
               "HeatEndSensitiveGS": 9.0945434,
-              "FrostPotentialReductionRatio": 0.0,
-              "FrostSensitivity": 0.0,
-              "FrostReductionRatio": 0.0,
-              "HeatPotentialReductionRatio": 0.0,
-              "HeatSensitivity": 0.0,
-              "HeatReductionRatio": 0.0,
-              "FrostHeatReductionRatio": 0.0,
-              "CumulativeFrostReductionRatio": 0.0,
-              "CumulativeHeatReductionRatio": 0.0,
-              "FrostEventNumber": 0.0,
-              "HeatEventNumber": 0.0,
-              "CumulativeFrostHeatReductionRatio": 0.0,
-              "FrostHeatYield": 0.0,
               "Name": "FrostHeatDamageFunctions",
               "ResourceName": null,
               "Children": [],
@@ -218,7 +205,6 @@
     },
     {
       "$type": "Models.Storage.DataStore, Models",
-      "useFirebird": false,
       "CustomFileName": null,
       "Name": "DataStore",
       "ResourceName": null,
@@ -253,7 +239,7 @@
               "$type": "Models.Tests, Models",
               "AcceptedStats": [
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.AboveGround.N",
                   "n": 67,
                   "Slope": 1.1280904534578085,
@@ -269,7 +255,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.AboveGround.Wt",
                   "n": 211,
                   "Slope": 1.0191066175782881,
@@ -285,7 +271,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Grain.N",
                   "n": 135,
                   "Slope": 1.0763868671174144,
@@ -301,7 +287,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Grain.Nconc",
                   "n": 136,
                   "Slope": 0.5254798158825499,
@@ -317,7 +303,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Grain.Number",
                   "n": 195,
                   "Slope": 0.8191525023189203,
@@ -333,7 +319,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Grain.Protein",
                   "n": 114,
                   "Slope": 0.42415733625769736,
@@ -349,7 +335,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Grain.Wt",
                   "n": 233,
                   "Slope": 0.9787134586486216,
@@ -365,7 +351,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(1)",
                   "n": 10,
                   "Slope": 0.027075886918992778,
@@ -381,7 +367,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(10)",
                   "n": 10,
                   "Slope": 1.1191854214996504,
@@ -397,7 +383,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(11)",
                   "n": 10,
                   "Slope": 0.8252117524934399,
@@ -413,7 +399,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(12)",
                   "n": 10,
                   "Slope": 0.8484037258375314,
@@ -429,7 +415,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(13)",
                   "n": 10,
                   "Slope": 1.0970819304884163,
@@ -445,7 +431,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(14)",
                   "n": 10,
                   "Slope": 1.3067646134053752,
@@ -461,7 +447,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(15)",
                   "n": 9,
                   "Slope": -0.26026988353576314,
@@ -477,7 +463,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(16)",
                   "n": 3,
                   "Slope": -0.6458388438986998,
@@ -493,7 +479,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(17)",
                   "n": 2,
                   "Slope": 3.1965,
@@ -509,7 +495,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(18)",
                   "n": 1,
                   "Slope": "NaN",
@@ -525,7 +511,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(2)",
                   "n": 10,
                   "Slope": 0.06305547533110663,
@@ -541,7 +527,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(3)",
                   "n": 10,
                   "Slope": 0.2892907236612946,
@@ -557,7 +543,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(4)",
                   "n": 10,
                   "Slope": 0.3455807885321512,
@@ -573,7 +559,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(5)",
                   "n": 10,
                   "Slope": 0.24925861568219287,
@@ -589,7 +575,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(6)",
                   "n": 10,
                   "Slope": 0.34590482974790016,
@@ -605,7 +591,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(7)",
                   "n": 10,
                   "Slope": 0.4419494879442229,
@@ -621,7 +607,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(8)",
                   "n": 10,
                   "Slope": 0.5897656671802585,
@@ -637,7 +623,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(9)",
                   "n": 10,
                   "Slope": 0.7930676940458707,
@@ -653,7 +639,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Phenology.FlagLeafDAS.Value()",
                   "n": 255,
                   "Slope": 0.9741457115155049,
@@ -669,7 +655,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Phenology.FloweringDAS.Value()",
                   "n": 299,
                   "Slope": 0.9436441955215764,
@@ -713,7 +699,7 @@
               "$type": "Models.Tests, Models",
               "AcceptedStats": [
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.AboveGround.N",
                   "n": 67,
                   "Slope": 1.1280904534578085,
@@ -729,7 +715,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.AboveGround.Wt",
                   "n": 211,
                   "Slope": 1.0191066175782881,
@@ -745,7 +731,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Grain.N",
                   "n": 135,
                   "Slope": 1.0763868671174144,
@@ -761,7 +747,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Grain.Nconc",
                   "n": 136,
                   "Slope": 0.5254798158825499,
@@ -777,7 +763,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Grain.Number",
                   "n": 195,
                   "Slope": 0.8191525023189203,
@@ -793,7 +779,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Grain.Protein",
                   "n": 114,
                   "Slope": 0.42415733625769736,
@@ -809,7 +795,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Grain.Wt",
                   "n": 233,
                   "Slope": 0.9787134586486216,
@@ -825,7 +811,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(1)",
                   "n": 10,
                   "Slope": 0.027075886918992778,
@@ -841,7 +827,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(10)",
                   "n": 10,
                   "Slope": 1.1191854214996504,
@@ -857,7 +843,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(11)",
                   "n": 10,
                   "Slope": 0.8252117524934399,
@@ -873,7 +859,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(12)",
                   "n": 10,
                   "Slope": 0.8484037258375314,
@@ -889,7 +875,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(13)",
                   "n": 10,
                   "Slope": 1.0970819304884163,
@@ -905,7 +891,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(14)",
                   "n": 10,
                   "Slope": 1.3067646134053752,
@@ -921,7 +907,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(15)",
                   "n": 9,
                   "Slope": -0.26026988353576314,
@@ -937,7 +923,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(16)",
                   "n": 3,
                   "Slope": -0.6458388438986998,
@@ -953,7 +939,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(17)",
                   "n": 2,
                   "Slope": 3.1965,
@@ -969,7 +955,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(18)",
                   "n": 1,
                   "Slope": "NaN",
@@ -985,7 +971,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(2)",
                   "n": 10,
                   "Slope": 0.06305547533110663,
@@ -1001,7 +987,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(3)",
                   "n": 10,
                   "Slope": 0.2892907236612946,
@@ -1017,7 +1003,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(4)",
                   "n": 10,
                   "Slope": 0.3455807885321512,
@@ -1033,7 +1019,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(5)",
                   "n": 10,
                   "Slope": 0.24925861568219287,
@@ -1049,7 +1035,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(6)",
                   "n": 10,
                   "Slope": 0.34590482974790016,
@@ -1065,7 +1051,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(7)",
                   "n": 10,
                   "Slope": 0.4419494879442229,
@@ -1081,7 +1067,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(8)",
                   "n": 10,
                   "Slope": 0.5897656671802585,
@@ -1097,7 +1083,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Leaf.CohortMaxSize(9)",
                   "n": 10,
                   "Slope": 0.7930676940458707,
@@ -1113,7 +1099,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Phenology.FlagLeafDAS.Value()",
                   "n": 255,
                   "Slope": 0.9741457115155049,
@@ -1129,7 +1115,7 @@
                   "RMR": 0.0
                 },
                 {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
                   "Name": "Wheat.Phenology.FloweringDAS.Value()",
                   "n": 299,
                   "Slope": 0.9436441955215764,
@@ -1164,7 +1150,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": true,
-      "GraphsPerPage": 6,
       "Name": "Combined Results",
       "ResourceName": null,
       "Children": [
@@ -1415,7 +1400,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "FrostTrials",
       "ResourceName": null,
       "Children": [
@@ -1907,11 +1891,8 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "Met\\Dale.met",
+                  "FileName": "Met/Dale.met",
                   "ExcelWorkSheetName": "",
-                  "Latitude": -32.21,
-                  "Tav": 17.14,
-                  "Amp": 14.73,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -1932,6 +1913,7 @@
                   "Slope": 0.0,
                   "AspectAngle": 0.0,
                   "Altitude": 50.0,
+                  "CanopyType": null,
                   "Name": "Field",
                   "ResourceName": null,
                   "Children": [
@@ -2358,6 +2340,7 @@
                           "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
+                          "CECMetadata": null,
                           "ESPMetadata": null,
                           "PHMetadata": [
                             "Unknown source or quality of data",
@@ -2404,18 +2387,8 @@
                             0.117,
                             0.116
                           ],
-                          "InitialPAWmm": 13.500000000000004,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "CERESSoilTemperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -2456,6 +2429,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
@@ -2497,6 +2471,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
@@ -2538,7 +2513,18 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "Urea",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "Thickness": null,
+                          "InitialValues": null,
+                          "Name": "CERESSoilTemperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -2861,19 +2847,21 @@
                     {
                       "$type": "Models.Manager, Models",
                       "CodeArray": [
-                        "using Models.Soils;",
-                        "using System;",
-                        "using Models.Core;",
+                        "using APSIM.Core;",
                         "using Models.PMF;",
+                        "using Models.Core;",
+                        "using System;",
+                        "using Models.Soils;",
                         "namespace Models",
                         "{",
                         "    [Serializable] ",
-                        "    public class Script : Model",
+                        "    public class Script : Model, IStructureDependency",
                         "    {",
-                        "        [Link] Clock Clock;",
-                        "        [Link] Fertiliser Fertiliser;",
-                        "        [Link] Summary Summary;",
-                        "        [Link] Plant Wheat;",
+                        "        [Link] private Clock Clock;",
+                        "        [Link] private Fertiliser Fertiliser;",
+                        "        [Link] private Summary Summary;",
+                        "        [Link] private Plant Wheat;",
+                        "        public IStructure Structure { private get; set; }",
                         " ",
                         "        private bool hasFertilised = false;",
                         "",
@@ -2886,10 +2874,13 @@
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")] ",
                         "        public double Amount { get; set; }",
                         "     ",
+                        "",
+                        "        ",
+                        "",
                         "        [EventSubscribe(\"DoManagement\")] ",
                         "        private void OnDoManagement(object sender, EventArgs e)",
                         "        { ",
-                        "            double zadok = (double)Wheat.FindByPath(\"Phenology.Zadok.Stage\").Value; ",
+                        "            double zadok = (double)Structure.GetObject(\"Phenology.Zadok.Stage\", relativeTo: Wheat).Value; ",
                         " ",
                         "            if (zadok >= Stage && !hasFertilised)",
                         "            { ",
@@ -2930,19 +2921,21 @@
                     {
                       "$type": "Models.Manager, Models",
                       "CodeArray": [
-                        "using Models.Soils;",
-                        "using System;",
-                        "using Models.Core;",
+                        "using APSIM.Core;",
                         "using Models.PMF;",
+                        "using Models.Core;",
+                        "using System;",
+                        "using Models.Soils;",
                         "namespace Models",
                         "{",
                         "    [Serializable] ",
-                        "    public class Script : Model",
+                        "    public class Script : Model, IStructureDependency",
                         "    {",
-                        "        [Link] Clock Clock;",
-                        "        [Link] Fertiliser Fertiliser;",
-                        "        [Link] Summary Summary;",
-                        "        [Link] Plant Wheat;",
+                        "        [Link] private Clock Clock;",
+                        "        [Link] private Fertiliser Fertiliser;",
+                        "        [Link] private Summary Summary;",
+                        "        [Link] private Plant Wheat;",
+                        "        public IStructure Structure { private get; set; }",
                         " ",
                         "        private bool hasFertilised = false;",
                         "",
@@ -2955,10 +2948,13 @@
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")] ",
                         "        public double Amount { get; set; }",
                         "     ",
+                        "",
+                        "        ",
+                        "",
                         "        [EventSubscribe(\"DoManagement\")] ",
                         "        private void OnDoManagement(object sender, EventArgs e)",
                         "        { ",
-                        "            double zadok = (double)Wheat.FindByPath(\"Phenology.Zadok.Stage\").Value; ",
+                        "            double zadok = (double)Structure.GetObject(\"Phenology.Zadok.Stage\", relativeTo: Wheat).Value; ",
                         " ",
                         "            if (zadok >= Stage && !hasFertilised)",
                         "            { ",
@@ -3129,7 +3125,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
@@ -3843,11 +3838,8 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "Met\\LakeGrace.met",
+                  "FileName": "Met/LakeGrace.met",
                   "ExcelWorkSheetName": "",
-                  "Latitude": -32.86,
-                  "Tav": 16.89,
-                  "Amp": 13.82,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -3868,6 +3860,7 @@
                   "Slope": 0.0,
                   "AspectAngle": 0.0,
                   "Altitude": 50.0,
+                  "CanopyType": null,
                   "Name": "Field",
                   "ResourceName": null,
                   "Children": [
@@ -4320,6 +4313,7 @@
                           "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
+                          "CECMetadata": null,
                           "ESPMetadata": null,
                           "PHMetadata": [
                             "Unknown source or quality of data",
@@ -4364,18 +4358,8 @@
                             0.141,
                             0.14
                           ],
-                          "InitialPAWmm": 6.999999999999996,
-                          "RelativeTo": "Wheat",
                           "FilledFromTop": false,
                           "Name": "Water",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "CERESSoilTemperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -4414,6 +4398,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
@@ -4453,6 +4438,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
@@ -4492,7 +4478,18 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "Urea",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "Thickness": null,
+                          "InitialValues": null,
+                          "Name": "CERESSoilTemperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -4934,7 +4931,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
@@ -5680,11 +5676,8 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "Met\\Loxton_2017.met",
+                  "FileName": "Met/Loxton_2017.met",
                   "ExcelWorkSheetName": "",
-                  "Latitude": -34.47,
-                  "Tav": 16.8,
-                  "Amp": 14.46,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -5705,6 +5698,7 @@
                   "Slope": 0.0,
                   "AspectAngle": 0.0,
                   "Altitude": 50.0,
+                  "CanopyType": null,
                   "Name": "Field",
                   "ResourceName": null,
                   "Children": [
@@ -6107,6 +6101,7 @@
                             "Unknown source or quality of data",
                             "Unknown source or quality of data"
                           ],
+                          "CECMetadata": null,
                           "ESPMetadata": null,
                           "PHMetadata": [
                             "Unknown source or quality of data",
@@ -6151,18 +6146,8 @@
                             0.07,
                             0.07
                           ],
-                          "InitialPAWmm": 11.8,
-                          "RelativeTo": "Wheat",
                           "FilledFromTop": false,
                           "Name": "Water",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "CERESSoilTemperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -6195,6 +6180,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
@@ -6230,6 +6216,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
@@ -6265,7 +6252,18 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "Urea",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "Thickness": null,
+                          "InitialValues": null,
+                          "Name": "CERESSoilTemperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -6810,7 +6808,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
@@ -7430,11 +7427,8 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "Met\\Mintaro.met",
+                  "FileName": "Met/Mintaro.met",
                   "ExcelWorkSheetName": "",
-                  "Latitude": -33.86,
-                  "Tav": 14.93,
-                  "Amp": 14.58,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -7455,6 +7449,7 @@
                   "Slope": 0.0,
                   "AspectAngle": 0.0,
                   "Altitude": 50.0,
+                  "CanopyType": null,
                   "Name": "Field",
                   "ResourceName": null,
                   "Children": [
@@ -7847,6 +7842,7 @@
                             "Measured",
                             "Measured"
                           ],
+                          "CECMetadata": null,
                           "ESPMetadata": [
                             "C",
                             "C",
@@ -7895,18 +7891,8 @@
                             0.21,
                             0.21
                           ],
-                          "InitialPAWmm": 71.4,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": true,
                           "Name": "Water",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "CERESSoilTemperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -7939,6 +7925,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
@@ -7972,6 +7959,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
@@ -8005,7 +7993,18 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "Urea",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "Thickness": null,
+                          "InitialValues": null,
+                          "Name": "CERESSoilTemperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -8411,7 +8410,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
@@ -9031,11 +9029,8 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "Met\\Birchip_2018.met",
+                  "FileName": "Met/Birchip_2018.met",
                   "ExcelWorkSheetName": "",
-                  "Latitude": -35.94,
-                  "Tav": 15.89,
-                  "Amp": 15.09,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -9056,6 +9051,7 @@
                   "Slope": 0.0,
                   "AspectAngle": 0.0,
                   "Altitude": 50.0,
+                  "CanopyType": null,
                   "Name": "Field",
                   "ResourceName": null,
                   "Children": [
@@ -9581,6 +9577,7 @@
                             "Measured",
                             "Measured"
                           ],
+                          "CECMetadata": null,
                           "ESPMetadata": [
                             "C",
                             "C",
@@ -9629,8 +9626,6 @@
                             0.268,
                             0.272
                           ],
-                          "InitialPAWmm": 32.70000000000003,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
                           "ResourceName": null,
@@ -9661,6 +9656,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
@@ -9688,6 +9684,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
@@ -9721,6 +9718,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "Urea",
                           "ResourceName": null,
                           "Children": [],
@@ -9728,7 +9726,9 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.CERESSoilTemperature, Models",
+                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "Thickness": null,
+                          "InitialValues": null,
                           "Name": "CERESSoilTemperature",
                           "ResourceName": null,
                           "Children": [],
@@ -10074,19 +10074,21 @@
                     {
                       "$type": "Models.Manager, Models",
                       "CodeArray": [
-                        "using Models.Soils;",
-                        "using System;",
-                        "using Models.Core;",
+                        "using APSIM.Core;",
                         "using Models.PMF;",
+                        "using Models.Core;",
+                        "using System;",
+                        "using Models.Soils;",
                         "namespace Models",
                         "{",
                         "    [Serializable] ",
-                        "    public class Script : Model",
+                        "    public class Script : Model, IStructureDependency",
                         "    {",
-                        "        [Link] Clock Clock;",
-                        "        [Link] Fertiliser Fertiliser;",
-                        "        [Link] Summary Summary;",
-                        "        [Link] Plant Wheat;",
+                        "        [Link] private Clock Clock;",
+                        "        [Link] private Fertiliser Fertiliser;",
+                        "        [Link] private Summary Summary;",
+                        "        [Link] private Plant Wheat;",
+                        "        public IStructure Structure { private get; set; }",
                         " ",
                         "        private bool hasFertilised = false;",
                         "",
@@ -10099,10 +10101,13 @@
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")] ",
                         "        public double Amount { get; set; }",
                         "     ",
+                        "",
+                        "        ",
+                        "",
                         "        [EventSubscribe(\"DoManagement\")] ",
                         "        private void OnDoManagement(object sender, EventArgs e)",
                         "        { ",
-                        "            double zadok = (double)Wheat.FindByPath(\"Phenology.Zadok.Stage\").Value; ",
+                        "            double zadok = (double)Structure.GetObject(\"Phenology.Zadok.Stage\", relativeTo: Wheat).Value; ",
                         " ",
                         "            if (zadok >= Stage && !hasFertilised)",
                         "            { ",
@@ -10271,7 +10276,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
@@ -11003,11 +11007,8 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "Met\\Canowindra_2018.met",
+                  "FileName": "Met/Canowindra_2018.met",
                   "ExcelWorkSheetName": "",
-                  "Latitude": -33.39,
-                  "Tav": 15.51,
-                  "Amp": 16.47,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -11028,6 +11029,7 @@
                   "Slope": 0.0,
                   "AspectAngle": 0.0,
                   "Altitude": 50.0,
+                  "CanopyType": null,
                   "Name": "Field",
                   "ResourceName": null,
                   "Children": [
@@ -11498,6 +11500,7 @@
                             "",
                             "Unknown source or quality of data"
                           ],
+                          "CECMetadata": null,
                           "ESPMetadata": [
                             "Unknown source or quality of data",
                             "Unknown source or quality of data",
@@ -11550,8 +11553,6 @@
                             0.263,
                             0.267
                           ],
-                          "InitialPAWmm": 152.55000000000004,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
                           "ResourceName": null,
@@ -11584,6 +11585,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
@@ -11615,6 +11617,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
@@ -11650,6 +11653,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "Urea",
                           "ResourceName": null,
                           "Children": [],
@@ -11657,7 +11661,9 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.CERESSoilTemperature, Models",
+                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "Thickness": null,
+                          "InitialValues": null,
                           "Name": "CERESSoilTemperature",
                           "ResourceName": null,
                           "Children": [],
@@ -12179,7 +12185,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
@@ -12901,11 +12906,8 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "Met\\Dale_2018.met",
+                  "FileName": "Met/Dale_2018.met",
                   "ExcelWorkSheetName": "",
-                  "Latitude": -32.21,
-                  "Tav": 17.14,
-                  "Amp": 14.73,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -12926,6 +12928,7 @@
                   "Slope": 0.0,
                   "AspectAngle": 0.0,
                   "Altitude": 50.0,
+                  "CanopyType": null,
                   "Name": "Field",
                   "ResourceName": null,
                   "Children": [
@@ -13364,6 +13367,7 @@
                           "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
+                          "CECMetadata": null,
                           "ESPMetadata": null,
                           "PHMetadata": [
                             "Unknown source or quality of data",
@@ -13410,18 +13414,8 @@
                             0.117,
                             0.116
                           ],
-                          "InitialPAWmm": 13.500000000000004,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "CERESSoilTemperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -13462,6 +13456,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
@@ -13503,6 +13498,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
@@ -13544,7 +13540,18 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "Urea",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "Thickness": null,
+                          "InitialValues": null,
+                          "Name": "CERESSoilTemperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -13867,19 +13874,21 @@
                     {
                       "$type": "Models.Manager, Models",
                       "CodeArray": [
-                        "using Models.Soils;",
-                        "using System;",
-                        "using Models.Core;",
+                        "using APSIM.Core;",
                         "using Models.PMF;",
+                        "using Models.Core;",
+                        "using System;",
+                        "using Models.Soils;",
                         "namespace Models",
                         "{",
                         "    [Serializable] ",
-                        "    public class Script : Model",
+                        "    public class Script : Model, IStructureDependency",
                         "    {",
-                        "        [Link] Clock Clock;",
-                        "        [Link] Fertiliser Fertiliser;",
-                        "        [Link] Summary Summary;",
-                        "        [Link] Plant Wheat;",
+                        "        [Link] private Clock Clock;",
+                        "        [Link] private Fertiliser Fertiliser;",
+                        "        [Link] private Summary Summary;",
+                        "        [Link] private Plant Wheat;",
+                        "        public IStructure Structure { private get; set; }",
                         " ",
                         "        private bool hasFertilised = false;",
                         "",
@@ -13892,10 +13901,13 @@
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")] ",
                         "        public double Amount { get; set; }",
                         "     ",
+                        "",
+                        "        ",
+                        "",
                         "        [EventSubscribe(\"DoManagement\")] ",
                         "        private void OnDoManagement(object sender, EventArgs e)",
                         "        { ",
-                        "            double zadok = (double)Wheat.FindByPath(\"Phenology.Zadok.Stage\").Value; ",
+                        "            double zadok = (double)Structure.GetObject(\"Phenology.Zadok.Stage\", relativeTo: Wheat).Value; ",
                         " ",
                         "            if (zadok >= Stage && !hasFertilised)",
                         "            { ",
@@ -13936,19 +13948,21 @@
                     {
                       "$type": "Models.Manager, Models",
                       "CodeArray": [
-                        "using Models.Soils;",
-                        "using System;",
-                        "using Models.Core;",
+                        "using APSIM.Core;",
                         "using Models.PMF;",
+                        "using Models.Core;",
+                        "using System;",
+                        "using Models.Soils;",
                         "namespace Models",
                         "{",
                         "    [Serializable] ",
-                        "    public class Script : Model",
+                        "    public class Script : Model, IStructureDependency",
                         "    {",
-                        "        [Link] Clock Clock;",
-                        "        [Link] Fertiliser Fertiliser;",
-                        "        [Link] Summary Summary;",
-                        "        [Link] Plant Wheat;",
+                        "        [Link] private Clock Clock;",
+                        "        [Link] private Fertiliser Fertiliser;",
+                        "        [Link] private Summary Summary;",
+                        "        [Link] private Plant Wheat;",
+                        "        public IStructure Structure { private get; set; }",
                         " ",
                         "        private bool hasFertilised = false;",
                         "",
@@ -13961,10 +13975,13 @@
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")] ",
                         "        public double Amount { get; set; }",
                         "     ",
+                        "",
+                        "        ",
+                        "",
                         "        [EventSubscribe(\"DoManagement\")] ",
                         "        private void OnDoManagement(object sender, EventArgs e)",
                         "        { ",
-                        "            double zadok = (double)Wheat.FindByPath(\"Phenology.Zadok.Stage\").Value; ",
+                        "            double zadok = (double)Structure.GetObject(\"Phenology.Zadok.Stage\", relativeTo: Wheat).Value; ",
                         " ",
                         "            if (zadok >= Stage && !hasFertilised)",
                         "            { ",
@@ -14133,7 +14150,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
@@ -14837,11 +14853,8 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "Met\\Kulin_2018.met",
+                  "FileName": "Met/Kulin_2018.met",
                   "ExcelWorkSheetName": "",
-                  "Latitude": -32.75,
-                  "Tav": 16.97,
-                  "Amp": 14.02,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -14862,6 +14875,7 @@
                   "Slope": 0.0,
                   "AspectAngle": 0.0,
                   "Altitude": 50.0,
+                  "CanopyType": null,
                   "Name": "Field",
                   "ResourceName": null,
                   "Children": [
@@ -15278,6 +15292,7 @@
                           "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
+                          "CECMetadata": null,
                           "ESPMetadata": null,
                           "PHMetadata": [
                             "Unknown source or quality of data",
@@ -15322,18 +15337,8 @@
                             0.121,
                             0.12
                           ],
-                          "InitialPAWmm": 7.699999999999995,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": false,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "CERESSoilTemperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": false,
@@ -15372,6 +15377,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
@@ -15411,6 +15417,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
@@ -15450,10 +15457,21 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "Urea",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": false,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "Thickness": null,
+                          "InitialValues": null,
+                          "Name": "CERESSoilTemperature",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
@@ -15767,6 +15785,7 @@
                             "Measured"
                           ],
                           "CLMetadata": null,
+                          "CECMetadata": null,
                           "ESPMetadata": null,
                           "PHMetadata": [
                             "Measured",
@@ -15802,18 +15821,8 @@
                             0.139,
                             0.136
                           ],
-                          "InitialPAWmm": 7.273809172527532,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": true,
                           "Name": "Water",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "CERESSoilTemperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -15852,6 +15861,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
@@ -15891,6 +15901,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
@@ -15920,7 +15931,18 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "Urea",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "Thickness": null,
+                          "InitialValues": null,
+                          "Name": "CERESSoilTemperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -16308,7 +16330,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
@@ -16928,11 +16949,8 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "Met\\Loxton_2018.met",
+                  "FileName": "Met/Loxton_2018.met",
                   "ExcelWorkSheetName": "",
-                  "Latitude": -34.47,
-                  "Tav": 16.75,
-                  "Amp": 14.48,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -16953,6 +16971,7 @@
                   "Slope": 0.0,
                   "AspectAngle": 0.0,
                   "Altitude": 50.0,
+                  "CanopyType": null,
                   "Name": "Field",
                   "ResourceName": null,
                   "Children": [
@@ -17419,6 +17438,7 @@
                             "Unknown source or quality of data",
                             "Unknown source or quality of data"
                           ],
+                          "CECMetadata": null,
                           "ESPMetadata": null,
                           "PHMetadata": [
                             "Unknown source or quality of data",
@@ -17463,18 +17483,8 @@
                             0.07,
                             0.07
                           ],
-                          "InitialPAWmm": 11.8,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "CERESSoilTemperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -17509,6 +17519,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
@@ -17544,6 +17555,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
@@ -17579,7 +17591,18 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "Urea",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "Thickness": null,
+                          "InitialValues": null,
+                          "Name": "CERESSoilTemperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -17848,21 +17871,23 @@
                     {
                       "$type": "Models.Manager, Models",
                       "CodeArray": [
-                        "using Models.Soils;",
-                        "using System;",
-                        "using System.Linq;",
-                        "using Models.Core;",
+                        "using APSIM.Core;",
                         "using Models.PMF;",
+                        "using Models.Core;",
+                        "using System.Linq;",
+                        "using System;",
+                        "using Models.Soils;",
                         "namespace Models",
                         "{",
                         "    [Serializable] ",
-                        "    public class Script : Model",
+                        "    public class Script : Model, IStructureDependency",
                         "    {",
-                        "        [Link] Clock Clock;",
-                        "        [Link] Summary Summary;",
-                        "        [Link] Plant Wheat;",
-                        "        [Link] Irrigation Irrigation;",
-                        "        [Link] Water Water;",
+                        "        [Link] private Clock Clock;",
+                        "        [Link] private Summary Summary;",
+                        "        [Link] private Plant Wheat;",
+                        "        [Link] private Irrigation Irrigation;",
+                        "        [Link] private Water Water;",
+                        "        public IStructure Structure { private get; set; }",
                         " ",
                         " ",
                         "        private bool hasIrrigated = false;",
@@ -17882,10 +17907,13 @@
                         "        [Description(\"Will the irrigation runoff?\")] ",
                         "        public bool WillRunoff { get; set; }",
                         "     ",
+                        "",
+                        "        ",
+                        "",
                         "        [EventSubscribe(\"DoManagement\")] ",
                         "        private void OnDoManagement(object sender, EventArgs e)",
                         "        { ",
-                        "            double zadok = (double)Wheat.FindByPath(\"Phenology.Zadok.Stage\").Value; ",
+                        "            double zadok = (double)Structure.GetObject(\"Phenology.Zadok.Stage\", relativeTo: Wheat).Value; ",
                         " ",
                         "            if (zadok >= Stage && !hasIrrigated)",
                         "            { ",
@@ -17934,20 +17962,22 @@
                     {
                       "$type": "Models.Manager, Models",
                       "CodeArray": [
-                        "using Models.Soils;",
-                        "using System;",
-                        "using System.Linq;",
-                        "using Models.Core;",
+                        "using APSIM.Core;",
                         "using Models.PMF;",
+                        "using Models.Core;",
+                        "using System.Linq;",
+                        "using System;",
+                        "using Models.Soils;",
                         "namespace Models",
                         "{",
                         "    [Serializable] ",
-                        "    public class Script : Model",
+                        "    public class Script : Model, IStructureDependency",
                         "    {",
-                        "        [Link] Clock Clock;",
-                        "        [Link] Fertiliser Fertiliser;",
-                        "        [Link] Summary Summary;",
-                        "        [Link] Plant Wheat;",
+                        "        [Link] private Clock Clock;",
+                        "        [Link] private Fertiliser Fertiliser;",
+                        "        [Link] private Summary Summary;",
+                        "        [Link] private Plant Wheat;",
+                        "        public IStructure Structure { private get; set; }",
                         " ",
                         "        private bool hasFertilised = false;",
                         "",
@@ -17960,10 +17990,13 @@
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")] ",
                         "        public double Amount { get; set; }",
                         "     ",
+                        "",
+                        "        ",
+                        "",
                         "        [EventSubscribe(\"DoManagement\")] ",
                         "        private void OnDoManagement(object sender, EventArgs e)",
                         "        { ",
-                        "            double zadok = (double)Wheat.FindByPath(\"Phenology.Zadok.Stage\").Value; ",
+                        "            double zadok = (double)Structure.GetObject(\"Phenology.Zadok.Stage\", relativeTo: Wheat).Value; ",
                         " ",
                         "            if (zadok >= Stage && !hasFertilised)",
                         "            { ",
@@ -18004,21 +18037,23 @@
                     {
                       "$type": "Models.Manager, Models",
                       "CodeArray": [
-                        "using Models.Soils;",
-                        "using System;",
-                        "using System.Linq;",
-                        "using Models.Core;",
+                        "using APSIM.Core;",
                         "using Models.PMF;",
+                        "using Models.Core;",
+                        "using System.Linq;",
+                        "using System;",
+                        "using Models.Soils;",
                         "namespace Models",
                         "{",
                         "    [Serializable] ",
-                        "    public class Script : Model",
+                        "    public class Script : Model, IStructureDependency",
                         "    {",
-                        "        [Link] Clock Clock;",
-                        "        [Link] Summary Summary;",
-                        "        [Link] Plant Wheat;",
-                        "        [Link] Irrigation Irrigation;",
-                        "        [Link] Water Water;",
+                        "        [Link] private Clock Clock;",
+                        "        [Link] private Summary Summary;",
+                        "        [Link] private Plant Wheat;",
+                        "        [Link] private Irrigation Irrigation;",
+                        "        [Link] private Water Water;",
+                        "        public IStructure Structure { private get; set; }",
                         " ",
                         "        private bool hasIrrigated = false;",
                         "",
@@ -18037,10 +18072,13 @@
                         "        [Description(\"Will the irrigation runoff?\")] ",
                         "        public bool WillRunoff { get; set; }",
                         "     ",
+                        "",
+                        "        ",
+                        "",
                         "        [EventSubscribe(\"DoManagement\")] ",
                         "        private void OnDoManagement(object sender, EventArgs e)",
                         "        { ",
-                        "            double zadok = (double)Wheat.FindByPath(\"Phenology.Zadok.Stage\").Value; ",
+                        "            double zadok = (double)Structure.GetObject(\"Phenology.Zadok.Stage\", relativeTo: Wheat).Value; ",
                         " ",
                         "            if (zadok >= Stage && !hasIrrigated)",
                         "            { ",
@@ -18089,21 +18127,23 @@
                     {
                       "$type": "Models.Manager, Models",
                       "CodeArray": [
-                        "using Models.Soils;",
-                        "using System;",
-                        "using System.Linq;",
-                        "using Models.Core;",
+                        "using APSIM.Core;",
                         "using Models.PMF;",
+                        "using Models.Core;",
+                        "using System.Linq;",
+                        "using System;",
+                        "using Models.Soils;",
                         "namespace Models",
                         "{",
                         "    [Serializable] ",
-                        "    public class Script : Model",
+                        "    public class Script : Model, IStructureDependency",
                         "    {",
-                        "        [Link] Clock Clock;",
-                        "        [Link] Summary Summary;",
-                        "        [Link] Plant Wheat;",
-                        "        [Link] Irrigation Irrigation;",
-                        "        [Link] Water Water;",
+                        "        [Link] private Clock Clock;",
+                        "        [Link] private Summary Summary;",
+                        "        [Link] private Plant Wheat;",
+                        "        [Link] private Irrigation Irrigation;",
+                        "        [Link] private Water Water;",
+                        "        public IStructure Structure { private get; set; }",
                         " ",
                         "        private bool hasIrrigated = false;",
                         "",
@@ -18122,10 +18162,13 @@
                         "        [Description(\"Will the irrigation runoff?\")] ",
                         "        public bool WillRunoff { get; set; }",
                         "     ",
+                        "",
+                        "        ",
+                        "",
                         "        [EventSubscribe(\"DoManagement\")] ",
                         "        private void OnDoManagement(object sender, EventArgs e)",
                         "        { ",
-                        "            double zadok = (double)Wheat.FindByPath(\"Phenology.Zadok.Stage\").Value; ",
+                        "            double zadok = (double)Structure.GetObject(\"Phenology.Zadok.Stage\", relativeTo: Wheat).Value; ",
                         " ",
                         "            if (zadok >= Stage && !hasIrrigated)",
                         "            { ",
@@ -18302,7 +18345,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
@@ -18922,11 +18964,8 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "Met\\Quairading_2018.met",
+                  "FileName": "Met/Quairading_2018.met",
                   "ExcelWorkSheetName": "",
-                  "Latitude": -31.94,
-                  "Tav": 17.69,
-                  "Amp": 15.11,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -18947,6 +18986,7 @@
                   "Slope": 0.0,
                   "AspectAngle": 0.0,
                   "Altitude": 50.0,
+                  "CanopyType": null,
                   "Name": "Field",
                   "ResourceName": null,
                   "Children": [
@@ -19315,6 +19355,7 @@
                             "Measured",
                             "Measured"
                           ],
+                          "CECMetadata": null,
                           "ESPMetadata": [
                             "C",
                             "C",
@@ -19359,18 +19400,8 @@
                             0.15,
                             0.148
                           ],
-                          "InitialPAWmm": 6.5999999999999766,
-                          "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "CERESSoilTemperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -19401,6 +19432,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
@@ -19432,6 +19464,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
@@ -19463,7 +19496,18 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "Urea",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "Thickness": null,
+                          "InitialValues": null,
+                          "Name": "CERESSoilTemperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -19786,19 +19830,21 @@
                     {
                       "$type": "Models.Manager, Models",
                       "CodeArray": [
-                        "using Models.Soils;",
-                        "using System;",
-                        "using Models.Core;",
+                        "using APSIM.Core;",
                         "using Models.PMF;",
+                        "using Models.Core;",
+                        "using System;",
+                        "using Models.Soils;",
                         "namespace Models",
                         "{",
                         "    [Serializable] ",
-                        "    public class Script : Model",
+                        "    public class Script : Model, IStructureDependency",
                         "    {",
-                        "        [Link] Clock Clock;",
-                        "        [Link] Fertiliser Fertiliser;",
-                        "        [Link] Summary Summary;",
-                        "        [Link] Plant Wheat;",
+                        "        [Link] private Clock Clock;",
+                        "        [Link] private Fertiliser Fertiliser;",
+                        "        [Link] private Summary Summary;",
+                        "        [Link] private Plant Wheat;",
+                        "        public IStructure Structure { private get; set; }",
                         " ",
                         "        private bool hasFertilised = false;",
                         "",
@@ -19811,10 +19857,13 @@
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")] ",
                         "        public double Amount { get; set; }",
                         "     ",
+                        "",
+                        "        ",
+                        "",
                         "        [EventSubscribe(\"DoManagement\")] ",
                         "        private void OnDoManagement(object sender, EventArgs e)",
                         "        { ",
-                        "            double zadok = (double)Wheat.FindByPath(\"Phenology.Zadok.Stage\").Value; ",
+                        "            double zadok = (double)Structure.GetObject(\"Phenology.Zadok.Stage\", relativeTo: Wheat).Value; ",
                         " ",
                         "            if (zadok >= Stage && !hasFertilised)",
                         "            { ",
@@ -19855,19 +19904,21 @@
                     {
                       "$type": "Models.Manager, Models",
                       "CodeArray": [
-                        "using Models.Soils;",
-                        "using System;",
-                        "using Models.Core;",
+                        "using APSIM.Core;",
                         "using Models.PMF;",
+                        "using Models.Core;",
+                        "using System;",
+                        "using Models.Soils;",
                         "namespace Models",
                         "{",
                         "    [Serializable] ",
-                        "    public class Script : Model",
+                        "    public class Script : Model, IStructureDependency",
                         "    {",
-                        "        [Link] Clock Clock;",
-                        "        [Link] Fertiliser Fertiliser;",
-                        "        [Link] Summary Summary;",
-                        "        [Link] Plant Wheat;",
+                        "        [Link] private Clock Clock;",
+                        "        [Link] private Fertiliser Fertiliser;",
+                        "        [Link] private Summary Summary;",
+                        "        [Link] private Plant Wheat;",
+                        "        public IStructure Structure { private get; set; }",
                         " ",
                         "        private bool hasFertilised = false;",
                         "",
@@ -19880,10 +19931,13 @@
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")] ",
                         "        public double Amount { get; set; }",
                         "     ",
+                        "",
+                        "        ",
+                        "",
                         "        [EventSubscribe(\"DoManagement\")] ",
                         "        private void OnDoManagement(object sender, EventArgs e)",
                         "        { ",
-                        "            double zadok = (double)Wheat.FindByPath(\"Phenology.Zadok.Stage\").Value; ",
+                        "            double zadok = (double)Structure.GetObject(\"Phenology.Zadok.Stage\", relativeTo: Wheat).Value; ",
                         " ",
                         "            if (zadok >= Stage && !hasFertilised)",
                         "            { ",
@@ -20052,7 +20106,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
@@ -20672,11 +20725,8 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "Met\\Wickepin_2018.met",
+                  "FileName": "Met/Wickepin_2018.met",
                   "ExcelWorkSheetName": "",
-                  "Latitude": -32.68,
-                  "Tav": 16.65,
-                  "Amp": 14.07,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
@@ -20697,6 +20747,7 @@
                   "Slope": 0.0,
                   "AspectAngle": 0.0,
                   "Altitude": 50.0,
+                  "CanopyType": null,
                   "Name": "Field",
                   "ResourceName": null,
                   "Children": [
@@ -21117,6 +21168,7 @@
                             "Measured"
                           ],
                           "CLMetadata": null,
+                          "CECMetadata": null,
                           "ESPMetadata": [
                             "Measured",
                             "Measured",
@@ -21169,18 +21221,8 @@
                             0.15,
                             0.16
                           ],
-                          "InitialPAWmm": 7.499999999999989,
-                          "RelativeTo": "Wheat",
                           "FilledFromTop": false,
                           "Name": "Water",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "CERESSoilTemperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -21215,6 +21257,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
@@ -21250,6 +21293,7 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
@@ -21285,7 +21329,18 @@
                           "MaxDepthSoluteAccessible": 0.0,
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
+                          "ConcInSolution": null,
                           "Name": "Urea",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "Thickness": null,
+                          "InitialValues": null,
+                          "Name": "CERESSoilTemperature",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -21608,19 +21663,21 @@
                     {
                       "$type": "Models.Manager, Models",
                       "CodeArray": [
-                        "using Models.Soils;",
-                        "using System;",
-                        "using Models.Core;",
+                        "using APSIM.Core;",
                         "using Models.PMF;",
+                        "using Models.Core;",
+                        "using System;",
+                        "using Models.Soils;",
                         "namespace Models",
                         "{",
                         "    [Serializable] ",
-                        "    public class Script : Model",
+                        "    public class Script : Model, IStructureDependency",
                         "    {",
-                        "        [Link] Clock Clock;",
-                        "        [Link] Fertiliser Fertiliser;",
-                        "        [Link] Summary Summary;",
-                        "        [Link] Plant Wheat;",
+                        "        [Link] private Clock Clock;",
+                        "        [Link] private Fertiliser Fertiliser;",
+                        "        [Link] private Summary Summary;",
+                        "        [Link] private Plant Wheat;",
+                        "        public IStructure Structure { private get; set; }",
                         " ",
                         "        private bool hasFertilised = false;",
                         "",
@@ -21633,10 +21690,13 @@
                         "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")] ",
                         "        public double Amount { get; set; }",
                         "     ",
+                        "",
+                        "        ",
+                        "",
                         "        [EventSubscribe(\"DoManagement\")] ",
                         "        private void OnDoManagement(object sender, EventArgs e)",
                         "        { ",
-                        "            double zadok = (double)Wheat.FindByPath(\"Phenology.Zadok.Stage\").Value; ",
+                        "            double zadok = (double)Structure.GetObject(\"Phenology.Zadok.Stage\", relativeTo: Wheat).Value; ",
                         " ",
                         "            if (zadok >= Stage && !hasFertilised)",
                         "            { ",
@@ -21806,7 +21866,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
-              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [

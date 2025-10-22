@@ -27,7 +27,7 @@ class NodeTreeTests
         public void Initialise()
         {
             Name = "poco";
-            Children = [ new DummyPOCOChildAdapter() { Obj = Obj.Child } ];
+            Children = [new DummyPOCOChildAdapter() { Obj = Obj.Child }];
         }
     }
 
@@ -56,7 +56,7 @@ class NodeTreeTests
 
     /// <summary>Ensure that calling Node.Create sets up the parent child relationship correctly.</summary>
     [Test]
-    public void NodeTreeCreate_EstablishesParentChildRelationship()
+    public void NodeCreate_EstablishesParentChildRelationship()
     {
         // Create a simulation
         var simulation = new Simulation()
@@ -128,7 +128,7 @@ class NodeTreeTests
 
     /// <summary>Ensure NodeTree.Add adds a model and node.</summary>
     [Test]
-    public void NodeTreeAdd_AddsNodeNodeAndModel()
+    public void NodeAdd_AddsNodeNodeAndModel()
     {
         // Create a simulation
         var simulation = new Simulation()
@@ -169,7 +169,7 @@ class NodeTreeTests
 
     /// <summary>Ensure NodeTree.Remove removes a model and node as well as child nodes and models.</summary>
     [Test]
-    public void NodeTreeRemove_RemovesNodeAndModel()
+    public void NodeRemove_RemovesNodeAndModel()
     {
         // Create a simulation
         var simulation = new Simulation()
@@ -205,7 +205,7 @@ class NodeTreeTests
 
     /// <summary>Ensure NodeTree.Replace replaces a model and node.</summary>
     [Test]
-    public void NodeTreeReplace_ReplacesNodeAndModel()
+    public void NodeReplace_ReplacesNodeAndModel()
     {
         // Create a simulation
         var simulation = new Simulation()
@@ -251,7 +251,7 @@ class NodeTreeTests
 
     /// <summary>Ensure NodeTree.Insert replaces a model and node.</summary>
     [Test]
-    public void NodeTreeInsert_InsertsNodeAndModelAtCorrectPosition()
+    public void NodeInsert_InsertsNodeAndModelAtCorrectPosition()
     {
         // Create a simulation
         var simulation = new Simulation()
@@ -297,5 +297,49 @@ class NodeTreeTests
 
         // Check OnCreated was called.
         Assert.That(mockModel.OnCreatedCalled, Is.True);
+    }
+
+    /// <summary>Ensure Node.Rename renames sucessfully.</summary>
+    [Test]
+    public void NodeRename_RenamesSuccessfully()
+    {
+        // Create a simulation
+        var simulation = new Simulation()
+        {
+            Name = "Sim",
+            Children =
+            [
+                new Zone() { Name = "Zone1" },
+                new Zone() { Name = "Zone2" },
+            ]
+        };
+
+        var sim = Node.Create(simulation);
+        var zone1 = sim.Children.First();
+        zone1.Rename("NewName");
+        Assert.That(zone1.Name, Is.EqualTo("NewName"));
+        Assert.That(zone1.Model.Name, Is.EqualTo("NewName"));
+    }
+
+    /// <summary>Ensure Node.Rename successfully renames and avoids name clash with sibling.</summary>
+    [Test]
+    public void NodeRename_AvoidsNameClash()
+    {
+        // Create a simulation
+        var simulation = new Simulation()
+        {
+            Name = "Sim",
+            Children =
+            [
+                new Zone() { Name = "Zone1" },
+                new Zone() { Name = "Zone2" },
+            ]
+        };
+
+        var sim = Node.Create(simulation);
+        var zone1 = sim.Children.First();
+        zone1.Rename("Zone2");
+        Assert.That(zone1.Name, Is.EqualTo("Zone21"));
+        Assert.That(zone1.Model.Name, Is.EqualTo("Zone21"));
     }
 }

@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using APSIM.Core;
-using DocumentFormat.OpenXml.Office.CustomXsn;
-using MathNet.Numerics;
-using Microsoft.IdentityModel.Tokens;
+﻿using MathNet.Numerics;
 using Models;
 using Models.Core;
 using Models.Core.Run;
 using Models.Factorial;
 using Models.Logging;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Text;
 using UserInterface.Commands;
 using UserInterface.Views;
 
@@ -121,10 +118,10 @@ namespace UserInterface.Presenters
             }
             else
             {
-                List<ISimulationDescriptionGenerator> simulations = summaryModel.FindAllInScope<ISimulationDescriptionGenerator>().Cast<ISimulationDescriptionGenerator>().ToList();
+                List<ISimulationDescriptionGenerator> simulations = summaryModel.Node.FindAll<ISimulationDescriptionGenerator>().Cast<ISimulationDescriptionGenerator>().ToList();
                 simulations.RemoveAll(s => s is Simulation && (s as IModel).Parent is Experiment);
                 List<string> simulationNames = simulations.SelectMany(m => m.GenerateSimulationDescriptions()).Select(m => m.Name).ToList();
-                simulationNames.AddRange(summaryModel.FindAllInScope<Models.Optimisation.CroptimizR>().Select(x => x.Name));
+                simulationNames.AddRange(summaryModel.Node.FindAll<Models.Optimisation.CroptimizR>().Select(x => x.Name));
                 summaryView.SimulationDropDown.Values = simulationNames.ToArray();
                 if (simulationNames != null && simulationNames.Count > 0)
                     summaryView.SimulationDropDown.SelectedValue = simulationNames[0];
@@ -196,19 +193,23 @@ namespace UserInterface.Presenters
                     string previousPath = null;
                     StringBuilder md = new StringBuilder();
                     md.AppendLine($"### {m.Key.Date:yyyy-MM-dd}");
-                    md.AppendLine();
                     md.AppendLine("```");
 
-                    int spacing = m.Max(msg => msg.RelativePath.Length) + 2;
                     foreach (var msg in m)
                     {
-                        if (previousPath == null || msg.RelativePath != previousPath)
+                        if (!string.IsNullOrEmpty(msg.RelativePath))
                         {
-                            md.Append($"{msg.RelativePath}:".PadRight(spacing));
-                            previousPath = msg.RelativePath;
+                            int spacing = msg.RelativePath.Length + 2;
+                            if (previousPath == null || msg.RelativePath != previousPath)
+                            {
+                                if (msg != m.First())
+                                    md.AppendLine();
+                                md.Append($"{msg.RelativePath}:".PadRight(spacing));
+                                previousPath = msg.RelativePath;
+                            }
+                            else
+                                md.Append(' ', spacing);
                         }
-                        else
-                            md.Append(' ', spacing);
                         md.AppendLine($"{msg.Text}");
                     }
                     md.AppendLine("```");
@@ -286,7 +287,7 @@ namespace UserInterface.Presenters
 
         private void CreateSoluteTableSubHeadings(List<InitialConditionsTable> soluteTables, StringBuilder soluteMarkdownTable)
         {
-            if (!soluteTables.IsNullOrEmpty())
+            if (soluteTables?.Count > 0)
                 soluteMarkdownTable.Append("|**Depth(mm)**|");
 
             foreach (InitialConditionsTable table in soluteTables)

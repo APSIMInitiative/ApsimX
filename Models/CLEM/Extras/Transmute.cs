@@ -97,7 +97,7 @@ namespace Models.CLEM
             {
                 ResourceGroup = (TransmuteResourceType as IModel).Parent as ResourceBaseWithTransactions;
 
-                var shortfallResourceType = (this as IModel).FindAncestor<IResourceType>();
+                var shortfallResourceType = Structure.FindParent<IResourceType>(recurse: true);
                 shortfallPacketSize = (Parent as Transmutation).TransmutationPacketSize;
                 shortfallWholePackets = (Parent as Transmutation).UseWholePackets;
 
@@ -250,7 +250,7 @@ namespace Models.CLEM
             }
 
             // get pricing if available
-            IResourceType parentResource = FindAncestor<CLEMResourceTypeBase>() as IResourceType;
+            IResourceType parentResource = Structure.FindParent<CLEMResourceTypeBase>(recurse: true) as IResourceType;
             if (TransmuteStyle == TransmuteStyle.UsePricing)
             {
                 if (shortfallPricing is null)

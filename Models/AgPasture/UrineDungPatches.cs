@@ -1,5 +1,10 @@
 using System;
 using System.Linq;
+using APSIM.Core;
+using APSIM.Numerics;
+using APSIM.Shared.Utilities;
+using MathNet.Numerics.Distributions;
+using MathNet.Numerics.LinearAlgebra;
 using Models.Core;
 using Models.Core.ApsimFile;
 using Models.Soils;
@@ -14,14 +19,13 @@ namespace Models.AgPasture
     /// </summary>
     public class UrineDungPatches
     {
+        [NonSerialized]
+        private IStructure structure;
         private readonly SimpleGrazing simpleGrazing;
         private readonly bool pseudoPatches;
-        private double[] monthlyUrineNAmt;                 // breaks the N balance but useful for testing
-        private double[] urineDepthPenetrationArray;
         private Random pseudoRandom;
         private int pseudoRandomSeed;
         private readonly ISummary summary;
-        private readonly Clock clock;
         private readonly Physical physical;
 
         // User properties.
@@ -34,9 +38,6 @@ namespace Models.AgPasture
 
         /// <summary>Urine return pattern.</summary>
         private readonly UrineReturnPatterns urineReturnPattern;
-
-        /// <summary>Depth of urine penetration (mm)</summary>
-        private readonly double urineDepthPenetration;
 
         /// <summary>Maximum effective NO3-N or NH4-N concentration</summary>
         private readonly double maxEffectiveNConcentration;
@@ -56,32 +57,32 @@ namespace Models.AgPasture
         /// Constructor
         /// </summary>
         /// <param name="simpleGrazing">Parent SimpleGrazing model</param>
+        /// <param name="structure">Scope instance</param>
         /// <param name="pseudoPatches">Use pseudo patches?</param>
         /// <param name="zoneCount"></param>
         /// <param name="urineReturnType"></param>
         /// <param name="urineReturnPattern"></param>
         /// <param name="pseudoRandomSeed"></param>
-        /// <param name="urineDepthPenetration"></param>
         /// <param name="maxEffectiveNConcentration"></param>
-        public UrineDungPatches(SimpleGrazing simpleGrazing, bool pseudoPatches,
+        public UrineDungPatches(SimpleGrazing simpleGrazing,
+                                IStructure structure,
+                                bool pseudoPatches,
                                 int zoneCount,
                                 UrineReturnTypes urineReturnType,
                                 UrineReturnPatterns urineReturnPattern,
                                 int pseudoRandomSeed,
-                                double urineDepthPenetration,
                                 double maxEffectiveNConcentration)
         {
             this.simpleGrazing = simpleGrazing;
+            this.structure = structure;
             this.pseudoPatches = pseudoPatches;
             this.zoneCount = zoneCount;
             this.urineReturnType = urineReturnType;
             this.urineReturnPattern = urineReturnPattern;
             this.pseudoRandomSeed = pseudoRandomSeed;
-            this.urineDepthPenetration = urineDepthPenetration;
             this.maxEffectiveNConcentration = maxEffectiveNConcentration;
-            summary = simpleGrazing.FindInScope<ISummary>();
-            clock = simpleGrazing.FindInScope<Clock>();
-            physical = simpleGrazing.FindInScope<Physical>();
+            summary = structure.Find<ISummary>(relativeTo: simpleGrazing);
+            physical = structure.Find<Physical>(relativeTo: simpleGrazing);
         }
 
         /// <summary>
@@ -90,8 +91,8 @@ namespace Models.AgPasture
         /// </summary>
         public void OnPreLink()
         {
-            var simulation = simpleGrazing.FindAncestor<Simulation>() as Simulation;
-            var zone = simulation.FindChild<Zone>();
+            var simulation = simpleGrazing.Node.FindParent<Simulation>(recurse: true) as Simulation;
+            var zone = simulation.Node.FindChild<Zone>();
 
             if (zoneCount == 0)
                 throw new Exception("Number of patches/zones in urine patches is zero.");
@@ -100,10 +101,10 @@ namespace Models.AgPasture
             {
                 zone.Area = 1.0;
 
-                var patchManager = simpleGrazing.FindInScope<NutrientPatchManager>();
+                var patchManager = structure.Find<NutrientPatchManager>(relativeTo: simpleGrazing);
                 if (patchManager == null)
                     throw new Exception("Cannot find NutrientPatchManager");
-                var soilPhysical = simpleGrazing.FindInScope<Physical>();
+                var soilPhysical = structure.Find<Physical>(relativeTo: simpleGrazing);
                 if (patchManager == null)
                     throw new Exception("Cannot find Physical");
 
@@ -120,30 +121,28 @@ namespace Models.AgPasture
                 patchManager.AllowPatchAmalgamationByAge = false;
                 patchManager.PatchAgeForForcedMerge = 1000000.0;  // ie don't merge
 
-                int[] PatchToAddTo = new int[1];  //need an array variable for this
-                string[] PatchNmToAddTo = new string[1];
                 int nPatchesAdded = 0;
                 double NewArea = 1.0 / zoneCount;
 
                 while (nPatchesAdded < zoneCount - 1)
                 {
-                    AddSoilCNPatchType NewPatch = new AddSoilCNPatchType();
-                    NewPatch.DepositionType = DepositionTypeEnum.ToNewPatch;
-                    NewPatch.AreaFraction = NewArea;
-                    PatchToAddTo[0] = 0;
-                    PatchNmToAddTo[0] = "0";
-                    NewPatch.AffectedPatches_id = PatchToAddTo;
-                    NewPatch.AffectedPatches_nm = PatchNmToAddTo;
-                    NewPatch.SuppressMessages = false;
-                    patchManager.Add(NewPatch);
+                    AddSoilCNPatchType newPatch = new AddSoilCNPatchType
+                    {
+                        DepositionType = DepositionTypeEnum.ToNewPatch,
+                        AreaFraction = NewArea,
+                        AffectedPatches_id = [0],
+                        AffectedPatches_nm = ["0"],
+                        SuppressMessages = false
+                    };
+                    patchManager.Add(newPatch);
                     nPatchesAdded += 1;
                 }
-
             }
-            else //(!PseudoPatches)  // so now this is zones - possibly multiple zones
+            else
             {
+                // explicit patches
                 zone.Area = 1.0 / zoneCount;  // and then this will apply to all the new zones
-                for (int i = 0; i < zoneCount-1; i++)
+                for (int i = 0; i < zoneCount - 1; i++)
                 {
                     var newZone = Apsim.Clone(zone);
                     Structure.Add(newZone, simulation);
@@ -152,7 +151,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Invoked at start of simulation.</summary>
-        public void OnStartOfSimulation()
+        public void OnStartOfSimulation(IStructure structure)
         {
             if (!pseudoPatches)
                 summary.WriteMessage(simpleGrazing, "Created " + zoneCount + " identical zones, each of area " + (1.0 / zoneCount) + " ha", MessageType.Diagnostic);
@@ -166,25 +165,21 @@ namespace Models.AgPasture
             else
                 DivisorForReporting = zoneCount;
 
-            monthlyUrineNAmt = new double[] { 24, 19, 17, 12, 8, 5, 5, 10, 16, 19, 23, 25 }; //This is to get a pattern of return that varies with month but removes the variation that might be caused by small changes in herbage growth
-            //MonthlyUrineNAmt = new double[] { 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25 }; //This is to get a pattern of return that varies with month but removes the variation that might be caused by small changes in herbage growth
-            //MonthlyUrineNAmt = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }; //This is to get a pattern of return that varies with month but removes the variation that might be caused by small changes in herbage growth
-
             if (pseudoPatches)
             {
-                var patchManager = simpleGrazing.FindInScope<NutrientPatchManager>();
+                var patchManager = structure.Find<NutrientPatchManager>(relativeTo: simpleGrazing);
 
                 //var patchManager = FindInScope<NutrientPatchManager>();
                 summary.WriteMessage(simpleGrazing, patchManager.NumPatches.ToString() + " pseudopatches have been created", MessageType.Diagnostic);
             }
             else
             {
-                var simulation = simpleGrazing.FindAncestor<Simulation>();
-                var physical = simpleGrazing.FindInScope<IPhysical>();
+                var simulation = structure.FindParent<Simulation>(relativeTo: simpleGrazing, recurse: true);
+                var physical = structure.Find<IPhysical>(relativeTo: simpleGrazing);
                 double[] arrayForMaxEffConc = Enumerable.Repeat(maxEffectiveNConcentration, physical.Thickness.Length).ToArray();
-                foreach (Zone zone in simulation.FindAllInScope<Zone>())
+                foreach (Zone zone in structure.FindAll<Zone>(relativeTo: simulation))
                 {
-                    foreach (var patchManager in zone.FindAllInScope<NutrientPatchManager>())
+                    foreach (var patchManager in structure.FindAll<NutrientPatchManager>(relativeTo: zone))
                     {
                         patchManager.MaximumNO3AvailableToPlants = arrayForMaxEffConc;
                         patchManager.MaximumNH4AvailableToPlants = arrayForMaxEffConc;
@@ -196,87 +191,93 @@ namespace Models.AgPasture
 
             NumZonesForUrine = 1;  // in the future this might be > 1
             ZoneNumForUrine = -1;  // this will be incremented to 0 (first zone) below
-
-            UrinePenetration();
-        }
-
-        /// <summary>Invoked to do trampling and dung return.</summary>
-        public void DoTramplingAndDungReturn(double amountDungCReturned, double amountDungNReturned)
-        {
-            // Note that dung is assumed to be spread uniformly over the paddock (patches or sones).
-            // There is no need to bring zone area into the calculations here but zone area must be included for variables reported FROM the zone to the upper level
-
-            int i = -1;  // patch or paddock counter
-            foreach (Zone zone in simpleGrazing.FindAllInScope<Zone>())
-            {
-                i += 1;
-                SurfaceOrganicMatter surfaceOM = zone.FindInScope<SurfaceOrganicMatter>() as SurfaceOrganicMatter;
-
-                // do some trampling of litter
-                // accelerate the movement of surface litter into the soil - do this before the dung is added
-                double temp = surfaceOM.Wt * 0.1;
-
-                surfaceOM.Incorporate(fraction: (double) 0.1, depth: (double)100.0, doOutput: true);
-
-                summary.WriteMessage(simpleGrazing, "For patch " + i + " the amount of litter trampled was " + temp + " and the remaining litter is " + (surfaceOM.Wt), MessageType.Diagnostic);
-
-                // move the dung to litter
-                AddFaecesType dung = new()
-                {
-                    OMWeight = amountDungCReturned / 0.4,  //assume dung C is 40% of OM
-                    OMN = amountDungNReturned
-                };
-                surfaceOM.Add(dung.OMWeight, dung.OMN, 0.0, "RuminantDung_PastureFed", null);
-                summary.WriteMessage(simpleGrazing, "For patch " + i + " the amount of dung DM added to the litter was " + (amountDungCReturned / 0.4) + " and the amount of N added in the dung was " + (amountDungNReturned), MessageType.Diagnostic);
-
-            }
         }
 
         /// <summary>Invoked to do urine return</summary>
-        public void DoUrineReturn(double amountUrineNReturned)
+        public void DoUrineReturn(int numUrinations, double meanLoad)
         {
-            GetZoneForUrineReturn();
+            // meanLoad is coming in as kg N excreted by the herd
+            // convert the herd value to a per urination value in g
+            meanLoad = meanLoad  / numUrinations; // to g/urination
 
             summary.WriteMessage(simpleGrazing, "The Zone for urine return is " + ZoneNumForUrine, MessageType.Diagnostic);
 
-            if (!pseudoPatches)
-            {
-                Zone zone = simpleGrazing.FindAllInScope<Zone>().ToArray()[ZoneNumForUrine];
-                Fertiliser thisFert = zone.FindInScope<Fertiliser>() as Fertiliser;
+            //(double[] urineLoad, double[] urineVolume) = CalculateLoadVolume(numUrinations, meanLoad);
 
-                thisFert.Apply(amount: amountUrineNReturned * zoneCount,
+
+
+            double[] ureaToAdd = new double[physical.Thickness.Length];
+            double gridArea = 10000 / zoneCount;   // m2/patch
+            double gridAreaUsed = 0;
+            double totalUrineAdded = 0;  // kg
+            for (int i = 0; i < numUrinations; i++)
+            {
+                //urineLoad[i] = urineLoad[i] * Constants.g2kg;
+
+                // THIS IS TEMPORARY - DELETE !!!!!!!!
+                //urineLoad[i] = meanLoad;
+
+                // use the Beatson data for wetted area, convert to radius, add 0.1 m edge and then convert back to an area. Note this is a natural log
+                // check 2L should give a area of 0.3866 m2
+                //double urinationArea = Math.PI * Math.Pow(Math.Sqrt((0.135 * Math.Log(urineVolume[i]) + 0.104) / Math.PI) + 0.1, 2.0);
+                double urinationArea = 0.5;
+                gridAreaUsed += urinationArea; // m2
+                //double urinationDepth = urineVolume[i] / urinationArea / 0.05;    // 0.05 is the assumed increase in water content from the urineation
+                double urinationDepth = 250;
+
+                // convert urineLoad for this urination into a depth profile.
+                double[] depthPenetration = UrinePenetration(urinationDepth);
+                for (int ii = 0; ii <= (physical.Thickness.Length - 1); ii++)
+                    ureaToAdd[ii] += depthPenetration[ii] * meanLoad;   // kg
+
+                if (gridAreaUsed - 0.5 * urinationArea >= gridArea || i == numUrinations-1)
+                {
+                    GetZoneForUrineReturn();
+                    AddUrineToGrid(ureaToAdd, urinationDepth);
+                    totalUrineAdded += ureaToAdd.Sum();
+                    Array.Clear(ureaToAdd);   // zero out the depth array
+                    gridAreaUsed = 0.0;
+                }
+            }
+            if (!MathUtilities.FloatsAreEqual(meanLoad * numUrinations, totalUrineAdded))
+                throw new Exception($"The amount of urine added ({totalUrineAdded}) does not equal the amount that should have been added ({meanLoad * numUrinations})");
+        }
+
+        /// <summary>
+        /// Add urine to grid (patch), pseudo or explicit.
+        /// </summary>
+        /// <param name="ureaToAddByLayer">Amount of urine to add - layered (kg/ha)</param>
+        /// <param name="urineDepthPenetration">Urine depth penetration (mm)</param>
+        private void AddUrineToGrid(double[] ureaToAddByLayer, double urineDepthPenetration)
+        {
+            double ureaToAdd = ureaToAddByLayer.Sum();
+            if (pseudoPatches)
+            {
+                ureaToAddByLayer = MathUtilities.Multiply_Value(ureaToAddByLayer, zoneCount);
+                var patchManager = structure.Find<NutrientPatchManager>(relativeTo: simpleGrazing);
+                AddSoilCNPatchType patch = new()
+                {
+                    Sender = "manager",
+                    DepositionType = DepositionTypeEnum.ToSpecificPatch,
+                    AffectedPatches_id = [ZoneNumForUrine],
+                    AffectedPatches_nm = [],
+                    Urea = ureaToAddByLayer
+                };
+                patchManager.Add(patch);
+            }
+            else
+            {
+                // Explicit patches
+                Zone zone = structure.FindAll<Zone>(relativeTo: simpleGrazing).ToArray()[ZoneNumForUrine];
+                Fertiliser thisFert = structure.Find<Fertiliser>(relativeTo: zone) as Fertiliser;
+
+                thisFert.Apply(amount: ureaToAdd * zoneCount,
                         type: "UreaN",
                         depth: 0.0,   // when depthBottom is specified then this means depthTop
                         depthBottom: urineDepthPenetration,
                         doOutput: true);
-
-                summary.WriteMessage(simpleGrazing, amountUrineNReturned + " urine N added to Zone " + ZoneNumForUrine + ", the local load was " + amountUrineNReturned / zone.Area + " kg N /ha", MessageType.Diagnostic);
             }
-            else // PseudoPatches
-            {
-                int[] PatchToAddTo = new int[1];  //because need an array variable for this
-                string[] PatchNmToAddTo = new string[0];  //need an array variable for this
-                double[] UreaToAdd = new double[physical.Thickness.Length];
-
-                for (int ii = 0; ii <= (physical.Thickness.Length - 1); ii++)
-                    UreaToAdd[ii] = urineDepthPenetrationArray[ii]  * amountUrineNReturned * zoneCount;
-
-                // needed??   UreaReturned += AmountFertNReturned;
-
-                AddSoilCNPatchType CurrentPatch = new();
-                CurrentPatch.Sender = "manager";
-                CurrentPatch.DepositionType = DepositionTypeEnum.ToSpecificPatch;
-                PatchToAddTo[0] = ZoneNumForUrine;
-                CurrentPatch.AffectedPatches_id = PatchToAddTo;
-                CurrentPatch.AffectedPatches_nm = PatchNmToAddTo;
-                CurrentPatch.Urea = UreaToAdd;
-
-                var patchManager = simpleGrazing.FindInScope<NutrientPatchManager>();
-
-                summary.WriteMessage(simpleGrazing, "Patch MinN prior to urine return: " + patchManager.MineralNEachPatch[ZoneNumForUrine], MessageType.Diagnostic);
-                patchManager.Add(CurrentPatch);
-                summary.WriteMessage(simpleGrazing, "Patch MinN after urine return: " + patchManager.MineralNEachPatch[ZoneNumForUrine], MessageType.Diagnostic);
-            }
+            summary.WriteMessage(simpleGrazing, ureaToAdd + " urine N added to Zone " + ZoneNumForUrine + ", the local load was " + ureaToAdd + " kg N /ha", MessageType.Diagnostic);
         }
 
         /// <summary>Determine and return the zone for urine return.</summary>
@@ -304,11 +305,11 @@ namespace Models.AgPasture
         }
 
         /// <summary>Calculate the urine penetration array.</summary>
-        private void UrinePenetration()
+        private double[] UrinePenetration(double urineDepthPenetration)
         {
             // note this assumes that all the paddocks are the same
             double tempDepth = 0.0;
-            urineDepthPenetrationArray = new double[physical.Thickness.Length];
+            var urineDepthPenetrationArray = new double[physical.Thickness.Length];
             for (int i = 0; i <= (physical.Thickness.Length - 1); i++)
             {
                 tempDepth += physical.Thickness[i];
@@ -321,8 +322,100 @@ namespace Models.AgPasture
                     urineDepthPenetrationArray[i] = (urineDepthPenetration - (tempDepth - physical.Thickness[i])) / (tempDepth - (tempDepth - physical.Thickness[i])) * physical.Thickness[i] / urineDepthPenetration;
                     urineDepthPenetrationArray[i] = Math.Max(0.0, Math.Min(1.0, urineDepthPenetrationArray[i]));
                 }
-                summary.WriteMessage(simpleGrazing, "The proportion of urine applied to the " + i + "th layer will be " + urineDepthPenetrationArray[i], MessageType.Diagnostic);
             }
+            return urineDepthPenetrationArray;
+        }
+
+        [NonSerialized]
+        private Random RandomNumGenerator = new Random(10);
+
+        //////////////////// PARAMETERS ///////////////////////
+
+        /// <summary>Means of the original distributions in log space, mu_i load (gN) first and then mu_j volume (L)</summary>
+        public double[] VectorOfMeans { get; set; } = [1.1567018157972, 0.400851532821705];
+
+        /// <summary>Covariance matrix - in order of E_ii, E_ij, E_ij, E_jj</summary>
+        public double[] CovarianceMatrix { get; set; } = [0.047123025480434, 0.033361752139528, 0.033361752139528, 0.033598852595467];
+
+        /// <summary>Constrain the sampling?</summary>
+        public bool DoConstraints { get; set; } = true;
+
+        /// <summary>Choose constraint probability</summary>
+        public double OneMinusAlpha { get; set; } = 0.9;
+
+        //////////////////// OUTPUTS ///////////////////////
+
+        /// <summary>Normal mean load to generate</summary>
+        public double NormalMeanLoadToGenerate { get; set; }
+
+        /// <summary>
+        /// Calculate load and volume.
+        /// </summary>
+        /// <param name="numUrinations">Number of animal urinations.</param>
+        /// <param name="meanLoad">Mean urination load (g N).</param>
+        /// <returns></returns>
+        private (double[] load, double[] volume) CalculateLoadVolume(int numUrinations, double meanLoad)
+        {
+            // I (VOS) don't understand what the subtraction is here but the second version gives an actual mean much closer to the intended mean
+            NormalMeanLoadToGenerate = Math.Log10(meanLoad) - 0.5 * CovarianceMatrix[0];
+            //NormalMeanLoadToGenerate = Math.Log10(MeanLoadToGenerate) - 1.0 * CovarianceMatrix[0];
+
+            double[,] TransformedMu = { { NormalMeanLoadToGenerate },
+                                        { VectorOfMeans[1] }};
+
+            double[,] SigmaRows = { { CovarianceMatrix[0], CovarianceMatrix[1] },
+                                    { CovarianceMatrix[2], CovarianceMatrix[3] } };
+
+            double[,] SigmaColumns = { { 1 } };
+
+            // Converts parameters to MathNet matrices.
+            Matrix<double> TransformedMuMatrix = Matrix<double>.Build.DenseOfArray(TransformedMu);
+            Matrix<double> SigmaRowsMatrix = Matrix<double>.Build.DenseOfArray(SigmaRows);
+            Matrix<double> SigmaColumnsMatrix = Matrix<double>.Build.DenseOfArray(SigmaColumns);
+
+            // Initialises transformed distribution.
+            var TransformedMVN = new MatrixNormal(TransformedMuMatrix,
+                                                  SigmaRowsMatrix,
+                                                  SigmaColumnsMatrix,
+                                                  RandomNumGenerator);
+
+            // Generates samples and transforms them back to lognormal space.
+            double[] LogNormalLoadSamples = new double[numUrinations];
+            double[] LogNormalVolumeSamples = new double[numUrinations];
+
+            // This is a value from the chi squared distribution, used to check whether the generated sample is within the confidence interval.
+            double ChiSqMax = ChiSquared.InvCDF(2, OneMinusAlpha);
+
+            for (int i = 0; i < numUrinations; i++)
+            {
+
+                bool reject = true;
+                while (reject)
+                {
+                    // Calculates the sample's chi squared score.
+                    Matrix<double> LoadVolumeSample = TransformedMVN.Sample();
+                    Matrix<double> Deviation = LoadVolumeSample.Subtract(TransformedMuMatrix);
+                    Matrix<double> DeviationT = Deviation.Transpose();
+                    Matrix<double> SigmaRowsMatrixInv = SigmaRowsMatrix.Inverse();
+                    Matrix<double> ChiSqScore = (DeviationT.Multiply(SigmaRowsMatrixInv)).Multiply(Deviation);
+
+                    // If constrained and sample is outside confidence interval, discards sample and tries again.
+                    if ((ChiSqScore[0,0] > ChiSqMax) && DoConstraints)
+                    {
+                        reject = true;
+                    }
+                    else
+                    {
+                        reject = false;
+                        LogNormalLoadSamples[i] = Math.Pow(10.0, LoadVolumeSample[0,0]);
+                        LogNormalVolumeSamples[i] = Math.Pow(10.0, LoadVolumeSample[1,0]);
+                    }
+                }
+            }
+
+            // Return load and volume.
+            return (load: LogNormalLoadSamples,       // could aim to correct this against the intended??? Not the best solution
+                    volume: LogNormalVolumeSamples);
         }
     }
 }

@@ -9,7 +9,7 @@
     using System.Collections.Generic;
     using System.Data;
     using System.IO;
-    using System.Reflection;
+    using System.Linq;
 
     [TestFixture]
     public class DataStoreReaderTests
@@ -17,30 +17,20 @@
         private IDatabaseConnection database;
         //private string sqliteFileName;
 
-        /// <summary>Find and return the file name of SQLite runtime .dll</summary>
-        public static string FindSqlite3DLL()
-        {
-            string directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string[] files = Directory.GetFiles(directory, "sqlite3.dll");
-            if (files.Length == 1)
-                return files[0];
-
-            throw new Exception("Cannot find sqlite3 dll directory");
-        }
-
         /// <summary>Initialisation code for all unit tests in this class</summary>
         [SetUp]
         public void Initialise()
         {
-            if (ProcessUtilities.CurrentOS.IsWindows)
-            {
-                string sqliteSourceFileName = FindSqlite3DLL();
-                Directory.SetCurrentDirectory(Path.GetDirectoryName(sqliteSourceFileName));
-            }
-
             database = new SQLite();
             database.OpenDatabase(":memory:", readOnly: false);
         }
+
+        [TearDown]
+        public void Cleanup()
+        {
+            database?.CloseDatabase();
+        }
+
 
         /// <summary>Read all data from a table</summary>
         [Test]
@@ -203,50 +193,55 @@
             sims.FileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".apsimx");
             sims.Write(sims.FileName);
 
-            Simulation sim = sims.FindInScope<Simulation>();
-            IDataStore storage = sims.FindInScope<IDataStore>();
+            Simulation sim = sims.Node.Find<Simulation>();
+            IDataStore storage = sims.Node.Find<IDataStore>();
 
-            // Record checkpoint names before and after running the simulation,
-            // and ensure that they are not the same.
-            string[] checkpointNamesBeforeRun = storage.Reader.CheckpointNames.ToArray();
-
-            // Run the simulation
-            var runner = new Runner(sims);
-            runner.Run();
-            string[] checkpointNamesAfterRun = storage.Reader.CheckpointNames.ToArray();
-
-            Assert.That(checkpointNamesAfterRun, Is.Not.EqualTo(checkpointNamesBeforeRun), "Storage reader failed to update checkpoint names after simulation was run.");
+            try
+            {
+                // Record checkpoint names before and after running the simulation,
+                // and ensure that they are not the same.
+                string[] checkpointNamesBeforeRun = storage.Reader.CheckpointNames.ToArray();
+                // Run the simulation
+                var runner = new Runner(sims);
+                runner.Run();
+                string[] checkpointNamesAfterRun = storage.Reader.CheckpointNames.ToArray();
+                Assert.That(checkpointNamesAfterRun, Is.Not.EqualTo(checkpointNamesBeforeRun), "Storage reader failed to update checkpoint names after simulation was run.");
+            }
+            finally
+            {
+                storage.Close();
+            }
         }
 
         /// <summary>Create a table that we can test</summary>
-        public static void CreateTable(IDatabaseConnection database)
+        public static void CreateTable(IDatabaseConnection dBase)
         {
             // Create a _Checkpoints table.
             List<string> columnNames = new List<string>() { "ID", "Name", "Version", "Date", "OnGraphs" };
             List<string> columnTypes = new List<string>() { "integer", "char(50)", "char(50)", "date", "integer" };
-            database.CreateTable("_Checkpoints", columnNames, columnTypes);
+            dBase.CreateTable("_Checkpoints", columnNames, columnTypes);
             List<object[]> rows = new List<object[]>
             {
-                new object[] { 1, "Current", string.Empty, string.Empty },
-                new object[] { 2, "Saved1", string.Empty, string.Empty }
+                new object[] { 1, "Current", string.Empty, string.Empty, 0 },
+                new object[] { 2, "Saved1", string.Empty, string.Empty, 0 }
             };
-            database.InsertRows("_Checkpoints", columnNames, rows);
+            dBase.InsertRows("_Checkpoints", columnNames, rows);
 
             // Create a _Simulations table.
             columnNames = new List<string>() { "ID", "Name", "FolderName" };
             columnTypes = new List<string>() { "integer", "char(50)", "char(50)" };
-            database.CreateTable("_Simulations", columnNames, columnTypes);
+            dBase.CreateTable("_Simulations", columnNames, columnTypes);
             rows = new List<object[]>
             {
                 new object[] { 1, "Sim1", string.Empty },
                 new object[] { 2, "Sim2", string.Empty }
             };
-            database.InsertRows("_Simulations", columnNames, rows);
+            dBase.InsertRows("_Simulations", columnNames, rows);
 
             // Create a Report table.
             columnNames = new List<string>() { "CheckpointID", "SimulationID", "Col1", "Col2" };
             columnTypes = new List<string>() { "integer", "integer", "date", "real" };
-            database.CreateTable("Report", columnNames, columnTypes);
+            dBase.CreateTable("Report", columnNames, columnTypes);
             rows = new List<object[]>
             {
                 new object[] { 1, 1, new DateTime(2017, 1, 1), 1.0 },
@@ -258,7 +253,7 @@
                 new object[] { 2, 2, new DateTime(2017, 1, 1), 31.0 },
                 new object[] { 2, 2, new DateTime(2017, 1, 2), 32.0 }
             };
-            database.InsertRows("Report", columnNames, rows);
+            dBase.InsertRows("Report", columnNames, rows);
 
         }
     }

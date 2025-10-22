@@ -100,7 +100,7 @@ namespace Models.CLEM.Activities
             foodstore = Resources.FindResourceType<AnimalFoodStore, AnimalFoodStoreType>(this, AnimalFoodStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             // locate a cut and carry limiter associarted with this event.
-            limiter = ActivityCarryLimiter.Locate(this);
+            limiter = ActivityCarryLimiter.Locate(this, Structure);
 
             switch (CutStyle)
             {

@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -141,14 +142,19 @@ namespace Models
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Factorial.CompositeFactor))]
     [ValidParent(ParentType = typeof(Factorial.Factor))]
-    public class Operations : Model
+    public class Operations : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>The clock</summary>
         [Link] IClock Clock = null;
 
         /// <summary>Gets or sets the schedule.</summary>
         /// <value>The schedule.</value>
         public List<Operation> OperationsList { get; set; }
+
 
         /// <summary>
         /// Invoked at start of simulation.
@@ -257,7 +263,7 @@ namespace Models
                         string variableName = st;
                         string value = StringUtilities.SplitOffAfterDelimiter(ref variableName, "=").Trim();
                         variableName = variableName.Trim();
-                        var ivariable = this.FindByPath(variableName);
+                        var ivariable = Structure.GetObject(variableName);
                         if (ivariable.Writable)
                             ivariable.Value = value;
                         else
@@ -274,7 +280,7 @@ namespace Models
                         string modelName = st.Substring(0, posPeriod);
                         string methodName = st.Substring(posPeriod + 1).Replace(";", "").Trim();
 
-                        Model model = this.FindByPath(modelName)?.Value as Model;
+                        Model model = Structure.GetObject(modelName)?.Value as Model;
                         if (model == null)
                             throw new ApsimXException(this, "Cannot find model: " + modelName);
 

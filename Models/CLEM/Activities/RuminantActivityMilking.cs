@@ -70,6 +70,14 @@ namespace Models.CLEM.Activities
             }
         }
 
+        /// <summary>
+        /// Constructor for milking activity
+        /// </summary>
+        public RuminantActivityMilking()
+        {
+            AllocationStyle = ResourceAllocationStyle.Manual;
+        }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -96,6 +104,13 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
+        [EventSubscribe("CLEMAnimalMilking")]
+        protected override void OnGetResourcesPerformActivity(object sender, EventArgs e)
+        {
+            ManageActivityResourcesAndTasks();
+        }
+
+        /// <inheritdoc/>
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
             amountToDo = 0;
@@ -103,7 +118,7 @@ namespace Models.CLEM.Activities
             numberToDo = 0;
             numberToSkip = 0;
             IEnumerable<RuminantFemale> herd = GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.IsLactating);
-            uniqueIndividuals = GetUniqueIndividuals<RuminantFemale>(filterGroups, herd);
+            uniqueIndividuals = GetUniqueIndividuals<RuminantFemale>(filterGroups, herd, Structure);
             numberToDo = uniqueIndividuals?.Count() ?? 0;
 
             // provide updated measure for companion models

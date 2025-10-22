@@ -39,7 +39,7 @@ namespace Models.Core
             if (recurse)
             {
                 List<IModel> allModels = new List<IModel>() { rootNode };
-                allModels.AddRange(rootNode.FindAllDescendants());
+                allModels.AddRange(rootNode.Node.FindChildren<IModel>(recurse: true));
                 foreach (IModel modelNode in allModels)
                 {
                     if (modelNode.Enabled)
@@ -58,7 +58,7 @@ namespace Models.Core
         public void Resolve(object obj, bool throwOnFail = true)
         {
             // Go looking for [Link]s
-            foreach (IVariable field in GetAllDeclarations(obj, obj.GetType(),
+            foreach (var field in GetAllDeclarations(obj, obj.GetType(),
                                                            BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public,
                                                            allLinks: true))
             {
@@ -84,14 +84,14 @@ namespace Models.Core
         public void Unresolve(IModel model, bool allLinks)
         {
             List<IModel> allModels = new List<IModel>() { model };
-            allModels.AddRange(model.FindAllDescendants());
+            allModels.AddRange(model.Node.FindChildren<IModel>(recurse: true));
             foreach (IModel modelNode in allModels)
             {
                 // Go looking for private [Link]s
-                foreach (IVariable declaration in GetAllDeclarations(modelNode,
-                                                                     modelNode.GetType(),
-                                                                     BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public,
-                                                                     allLinks))
+                foreach (var declaration in GetAllDeclarations(modelNode,
+                                                               modelNode.GetType(),
+                                                               BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public,
+                                                               allLinks))
                 {
                     LinkAttribute link = declaration.GetAttribute(typeof(LinkAttribute)) as LinkAttribute;
                     if (link != null)
@@ -107,10 +107,10 @@ namespace Models.Core
         /// <param name="throwOnFail">Should all links be considered optional?</param>
         private void ResolveInternal(object obj, bool throwOnFail)
         {
-            foreach (IVariable field in GetAllDeclarations(obj,
-                                                     obj.GetType(),
-                                                     BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public,
-                                                     allLinks: true))
+            foreach (var  field in GetAllDeclarations(obj,
+                                                      obj.GetType(),
+                                                      BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public,
+                                                      allLinks: true))
             {
                 LinkAttribute link = field.GetAttribute(typeof(LinkAttribute)) as LinkAttribute;
                 if (link != null)
@@ -124,10 +124,8 @@ namespace Models.Core
                     matches = services.FindAll(s => fieldType.IsAssignableFrom(s.GetType()));
                     if (matches.Count == 0 && obj is IModel)
                     {
-                        Simulation parentSimulation = (obj as IModel).FindAncestor<Simulation>();
-                        if (typeof(ILocator).IsAssignableFrom(fieldType) && parentSimulation != null)
-                            matches.Add(new Locator(obj as IModel));
-                        else if (typeof(IEvent).IsAssignableFrom(fieldType) && parentSimulation != null)
+                        Simulation parentSimulation = (obj as IModel).Node.FindParent<Simulation>(recurse: true);
+                        if (typeof(IEvent).IsAssignableFrom(fieldType) && parentSimulation != null)
                             matches.Add(new Events(obj as IModel));
                     }
                     if (matches.Count == 0)
@@ -140,7 +138,7 @@ namespace Models.Core
                                 IModel ancestor = GetParent(model, fieldType);
                                 if (ancestor == null)
                                 {
-                                    if (throwOnFail)
+                                    if (throwOnFail && !link.IsOptional)
                                         throw new Exception($"Unable to resolve link {field.Name} in model {model.FullPath}: {model.Name} has no ancestors of type {fieldType.Name}");
                                     continue;
                                 }
@@ -151,7 +149,7 @@ namespace Models.Core
                         }
                         else if (link.Type == LinkType.Path)
                         {
-                            var locator = new Locator(obj as Model);
+                            var locator = (obj as Model).Node;
                             object match = null;
                             if (fieldType.IsSubclassOf(typeof(Model)))
                                 match = locator.Get(link.Path, LocatorFlags.ModelsOnly);
@@ -188,7 +186,7 @@ namespace Models.Core
                     {
                         string errorMsg = "Cannot find a match for link " + field.Name + " in model " + GetFullName(obj);
                         if (obj is IScript)
-                            if ((obj as Model).FindAncestor<Folder>() != null)
+                            if ((obj as Model).Node.FindParent<Folder>(recurse: true) != null)
                                 errorMsg += "\nIf the manager script is within a folder, it's linking scope will be limited to that folder.";
 
                         if (throwOnFail && !link.IsOptional)
@@ -210,7 +208,7 @@ namespace Models.Core
         /// <returns>The matching parent</returns>
         private IModel GetParent(IModel model, Type type)
         {
-            return model.FindAllAncestors().FirstOrDefault(m => type.IsAssignableFrom(m.GetType()));
+            return model.Node.FindParents<IModel>().FirstOrDefault(m => type.IsAssignableFrom(m.GetType()));
         }
 
         /// <summary>
@@ -230,9 +228,9 @@ namespace Models.Core
         /// Return all fields. The normal .NET reflection doesn't return private fields in base classes.
         /// This function does.
         /// </summary>
-        public static List<IVariable> GetAllDeclarations(object obj, Type type, BindingFlags flags, bool allLinks)
+        private static List<Declaration> GetAllDeclarations(object obj, Type type, BindingFlags flags, bool allLinks)
         {
-            if (type == typeof(Object) || type == typeof(Model)) return new List<IVariable>();
+            if (type == typeof(Object) || type == typeof(Model)) return new List<Declaration>();
 
             var list = GetAllDeclarations(obj, type.BaseType, flags, allLinks);
             // in order to avoid duplicates, force BindingFlags.DeclaredOnly
@@ -243,7 +241,7 @@ namespace Models.Core
                     if (link != null)
                     {
                         if (allLinks || !link.GetType().Name.StartsWith("Child"))
-                            list.Add(new VariableField(obj, field));
+                            list.Add(new Declaration(obj, field));
                     }
                 }
             foreach (PropertyInfo property in type.GetProperties(flags | BindingFlags.DeclaredOnly))
@@ -253,14 +251,58 @@ namespace Models.Core
                     if (link != null)
                     {
                         if (allLinks || !link.GetType().Name.StartsWith("Child"))
-                            list.Add(new VariableProperty(obj, property));
+                            list.Add(new Declaration(obj, property));
                     }
                 }
 
             return list;
         }
 
+        private class Declaration
+        {
+            private readonly object obj;
+            private readonly MemberInfo member;
 
+            public Declaration(object obj, MemberInfo member)
+            {
+                this.obj = obj;
+                this.member = member;
+            }
+
+            /// <summary>
+            /// Return an attribute
+            /// </summary>
+            /// <param name="attributeType">Type of attribute to find</param>
+            /// <returns>The attribute or null if not found</returns>
+            public Attribute GetAttribute(Type attributeType)
+            {
+                return ReflectionUtilities.GetAttribute(this.member, attributeType, false);
+            }
+
+            public Type DataType => member is PropertyInfo p
+                                        ? p.PropertyType
+                                        : (member as FieldInfo).FieldType;
+
+            public string Name => member.Name;
+
+            public object Value
+            {
+                get
+                {
+                    return member is PropertyInfo p
+                                  ? p.GetValue(obj)
+                                  : (member as FieldInfo).GetValue(obj);
+                }
+                set
+                {
+                    if (member is PropertyInfo p)
+                        p.SetValue(obj, value);
+                    else
+                        (member as FieldInfo).SetValue(obj, value);
+                }
+            }
+
+        }
 
     }
 }

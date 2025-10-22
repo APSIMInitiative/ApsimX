@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Core;
 using Models.Core;
 
 namespace Models.Soils.Arbitrator
@@ -14,15 +15,17 @@ namespace Models.Soils.Arbitrator
         private IEnumerable<Zone> allZones;
 
         /// <summary>Initializes a new instance of the <see cref="SoilState"/> class.</summary>
-        public SoilState(IEnumerable<Zone> allZones)
+        /// <param name="allZones">Collection of all zones</param>
+        /// <param name="structure">Structure instance</param>
+        public SoilState(IEnumerable<Zone> allZones, IStructure structure)
         {
             this.allZones = allZones;
             Zones = new List<ZoneWaterAndN>();
             foreach (Zone Z in allZones)
             {
-                Soil soil = Z.FindChild<Soil>();
+                Soil soil = structure.FindChild<Soil>(relativeTo: Z);
                 if (soil != null)
-                    Zones.Add(new ZoneWaterAndN(Z, soil));
+                    Zones.Add(new ZoneWaterAndN(Z, soil, structure));
             }
         }
 

@@ -95,7 +95,7 @@ namespace APSIM.Cli
                     sims.Links.Resolve(sims, true, true, false);
                 if (!string.IsNullOrEmpty(options.Path))
                 {
-                    IVariable variable = model.FindByPath(options.Path);
+                    var variable = model.Node.GetObject(options.Path);
                     if (variable == null)
                         throw new Exception($"Unable to resolve path {options.Path}");
                     object value = variable.Value;

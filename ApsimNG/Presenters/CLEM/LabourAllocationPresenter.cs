@@ -131,7 +131,7 @@ namespace UserInterface.Presenters
             }
             else
             {
-                htmlString = !Utility.Configuration.Settings.DarkTheme ? ModifyHTMLStyle(htmlString, true) : ModifyHTMLStyle(htmlString, false);         
+                htmlString = !Utility.Configuration.Settings.DarkTheme ? ModifyHTMLStyle(htmlString, true) : ModifyHTMLStyle(htmlString, false);
             }
 
             // get CLEM Zone
@@ -154,7 +154,7 @@ namespace UserInterface.Presenters
                 htmlWriter.WriteLine("\n</div>");
 
                 // Get Labour resources
-                labour = clem.FindAllDescendants<Labour>().FirstOrDefault() as Labour;
+                labour = clem.Node.FindChildren<Labour>(recurse: true).FirstOrDefault();
                 if (labour == null)
                 {
                     htmlWriter.Write("No Labour supplied in resources");
@@ -162,7 +162,7 @@ namespace UserInterface.Presenters
                     return htmlWriter.ToString();
                 }
 
-                numberLabourTypes = labour.FindAllChildren<LabourType>().Count();
+                numberLabourTypes = labour.Node.FindChildren<LabourType>().Count();
                 if (numberLabourTypes == 0)
                 {
                     htmlWriter.Write("No Labour types supplied in Labour resource");
@@ -172,7 +172,7 @@ namespace UserInterface.Presenters
 
                 // create labour list
                 labourList.Clear();
-                foreach (LabourType lt in labour.FindAllChildren<LabourType>())
+                foreach (LabourType lt in labour.Node.FindChildren<LabourType>())
                 {
                     var newLabour = new LabourType()
                     {
@@ -199,7 +199,7 @@ namespace UserInterface.Presenters
 
                 // walk through all activities
                 // check if LabourRequirement can be added
-                ActivitiesHolder activities = clem.FindDescendant<ActivitiesHolder>();
+                ActivitiesHolder activities = clem.Node.FindChild<ActivitiesHolder>(recurse: true);
                 if (activities == null)
                 {
                     htmlWriter.Write("Could not find an Activities Holder");
@@ -211,7 +211,7 @@ namespace UserInterface.Presenters
                 {
                     tableHtml.WriteLine("<table class=\"main\">");
                     tableHtml.Write("<tr><th>Activity</th>");
-                    foreach (LabourType lt in labour.FindAllChildren<LabourType>())
+                    foreach (LabourType lt in labour.Node.FindChildren<LabourType>())
                         tableHtml.Write($"<th><span>{lt.Name}</span></th>");
 
                     tableHtml.WriteLine("</tr>");
@@ -253,7 +253,7 @@ namespace UserInterface.Presenters
                     htmlWriter.WriteLine("\n</div>");
                 }
                 htmlWriter.Write("\n</body>\n</html>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
@@ -266,9 +266,9 @@ namespace UserInterface.Presenters
             {
                 if (validpAtt.Select(a => a.ParentType).Contains(model.GetType()))
                 {
-                    if (model.FindAllChildren<LabourRequirement>().Any())
+                    if (model.Node.FindChildren<LabourRequirement>().Any())
                     {
-                        foreach (LabourRequirement labourRequirement in model.FindAllChildren<LabourRequirement>())
+                        foreach (LabourRequirement labourRequirement in model.Node.FindChildren<LabourRequirement>())
                         {
                             tblstr.Write("<tr" + ((labourRequirement == null) ? " class=\"disabled\"" : "") + "><td" + ((labourRequirement == null) ? " class=\"disabled\"" : "") + ">" + model.Name + "</td>");
                             // for each labour type
@@ -276,12 +276,12 @@ namespace UserInterface.Presenters
                             {
                                 tblstr.WriteLine("<td>");
                                 // for each filter group
-                                foreach (var item in labourRequirement.FindAllChildren<LabourGroup>())
+                                foreach (var item in labourRequirement.Node.FindChildren<LabourGroup>())
                                 {
                                     tblstr.Write("<div>");
                                     int level = 0;
-                                    // while nested 
-                                    var nested = labourRequirement.FindChild<LabourGroup>();
+                                    // while nested
+                                    var nested = labourRequirement.Node.FindChild<LabourGroup>();
                                     bool found = false;
                                     while (nested != null)
                                     {
@@ -293,7 +293,7 @@ namespace UserInterface.Presenters
                                             break;
                                         }
                                         nested.ClearRules();
-                                        nested = nested.FindAllChildren<LabourGroup>().FirstOrDefault();
+                                        nested = nested.Node.FindChildren<LabourGroup>().FirstOrDefault();
                                     }
                                     if (found)
                                         tblstr.Write($"<span class=\"dot dot{((level < 5) ? level.ToString() : "4")}\"></span>");
@@ -331,17 +331,17 @@ namespace UserInterface.Presenters
             using (StringWriter markdownString = new StringWriter())
             {
                 // Start building table
-                IModel clem = model.FindAncestor<ZoneCLEM>() as IModel;
+                IModel clem = model.Node.FindParent<ZoneCLEM>(recurse: true) as IModel;
 
                 // Get Labour resources
-                labour = clem.FindAllDescendants<Labour>().FirstOrDefault() as Labour;
+                labour = clem.Node.FindChildren<Labour>(recurse: true).FirstOrDefault();
                 if (labour == null)
                 {
                     markdownString.Write("No Labour supplied in resources");
                     return markdownString.ToString();
                 }
 
-                numberLabourTypes = labour.FindAllChildren<LabourType>().Count();
+                numberLabourTypes = labour.Node.FindChildren<LabourType>().Count();
                 if (numberLabourTypes == 0)
                 {
                     markdownString.Write("No Labour types supplied in Labour resource");
@@ -349,7 +349,7 @@ namespace UserInterface.Presenters
                 }
 
                 labourList.Clear();
-                foreach (LabourType lt in labour.FindAllChildren<LabourType>())
+                foreach (LabourType lt in labour.Node.FindChildren<LabourType>())
                 {
                     var newLabour = new LabourType()
                     {
@@ -375,7 +375,7 @@ namespace UserInterface.Presenters
 
                 // walk through all activities
                 // check if LabourRequirement can be added
-                ActivitiesHolder activities = clem.FindAllDescendants<ActivitiesHolder>().FirstOrDefault() as ActivitiesHolder;
+                ActivitiesHolder activities = clem.Node.FindChildren<ActivitiesHolder>(recurse: true).FirstOrDefault();
                 if (activities == null)
                 {
                     markdownString.Write("Could not find an Activities Holder");
@@ -388,7 +388,7 @@ namespace UserInterface.Presenters
                     {
                         tableHeader.Write("| Activity");
                         tableSpacer.Write("| :---");
-                        foreach (LabourType lt in labour.FindAllChildren<LabourType>())
+                        foreach (LabourType lt in labour.Node.FindChildren<LabourType>())
                         {
                             tableHeader.Write(" | " + lt.Name.Replace("_", " "));
                             tableSpacer.Write(" | :---:");
@@ -419,7 +419,7 @@ namespace UserInterface.Presenters
                 }
 
                 markdownString.Write("  \n***  \n");
-                return markdownString.ToString(); 
+                return markdownString.ToString();
             }
         }
 
@@ -432,9 +432,9 @@ namespace UserInterface.Presenters
                 if (validpAtt.Select(a => a.ParentType).Contains(model.GetType()))
                 {
                     string emph = "_";
-                    if (model.FindAllChildren<LabourRequirement>().Any())
+                    if (model.Node.FindChildren<LabourRequirement>().Any())
                     {
-                        foreach (LabourRequirement labourRequirement in model.FindAllChildren<LabourRequirement>())
+                        foreach (LabourRequirement labourRequirement in model.Node.FindChildren<LabourRequirement>())
                         {
                             emph = "";
                             tblstr.Write($"| {emph}{model.Name.Replace("_", " ")}{emph} |");
@@ -442,12 +442,12 @@ namespace UserInterface.Presenters
                             foreach (LabourType lt in labourList)
                             {
                                 // for each filter group
-                                foreach (var item in labourRequirement.FindAllChildren<LabourGroup>())
+                                foreach (var item in labourRequirement.Node.FindChildren<LabourGroup>())
                                 {
                                     string levelstring = "";
                                     bool found = false;
                                     int level = 0;
-                                    // while nested 
+                                    // while nested
                                     var nested = item;
                                     while (nested != null)
                                     {
@@ -460,7 +460,7 @@ namespace UserInterface.Presenters
                                             break;
                                         }
                                         nested.ClearRules();
-                                        nested = nested.FindChild<LabourGroup>();
+                                        nested = nested.Node.FindChild<LabourGroup>();
                                     }
                                     tblstr.Write($" {(found ? levelstring : "0")} |");
                                 }
@@ -476,7 +476,7 @@ namespace UserInterface.Presenters
                 foreach (var child in model.Children.Where(a => a.Enabled))
                     tblstr.Write(TableRowMarkdown(child));
 
-                return tblstr.ToString(); 
+                return tblstr.ToString();
             }
         }
 
