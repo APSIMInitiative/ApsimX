@@ -154,7 +154,6 @@ namespace Models.CLEM.Resources
                 //IndividualAttribute att = new() { StoredValue = labourChildModel.Name };
                 if (UseCohorts | labourChildModel.Individuals <= 1)
                 {
-<<<<<<< HEAD
                     Items.Add(CreateNewLabour(labourChildModel));
                 }
                 else
@@ -182,7 +181,6 @@ namespace Models.CLEM.Resources
         {
             IndividualAttribute att = new() { StoredValue = labourType.Name };
             LabourType newLabourType = labourType.Clone() as LabourType;
-            newLabourType.CohortName = labourType.Name;
             if (individualIndex is not null)
             {
                 newLabourType.Individuals = 1;
@@ -192,50 +190,7 @@ namespace Models.CLEM.Resources
             newLabourType.SetParentResourceBaseWithTransactions(this);
             newLabourType.Attributes.Add("Cohort", att);
             newLabourType.TransactionOccurred += Resource_TransactionOccurred;
-            newLabourType.SetAdultEquivalent(adultEquivalentRelationship);
             return newLabourType;
-=======
-                    LabourType labour = new LabourType()
-                    {
-                        Sex = labourChildModel.Sex,
-                        Individuals = labourChildModel.Individuals,
-                        Parent = this,
-                        InitialAge = labourChildModel.InitialAge,
-                        AgeInMonths = labourChildModel.InitialAge * 12,
-                        LabourAvailability = labourChildModel.LabourAvailability,
-                        Name = labourChildModel.Name,
-                        IsHired = labourChildModel.IsHired
-                    };
-                    labour.SetParentResourceBaseWithTransactions(this);
-                    labour.Attributes.Add("Group", att);
-                    labour.TransactionOccurred += Resource_TransactionOccurred;
-                    Items.Add(labour);
-                }
-                else
-                {
-                    for (int i = 0; i < labourChildModel.Individuals; i++)
-                    {
-                        // get the availability from provided list
-                        LabourType labour = new LabourType()
-                        {
-                            Sex = labourChildModel.Sex,
-                            Individuals = 1,
-                            Parent = this,
-                            InitialAge = labourChildModel.InitialAge,
-                            AgeInMonths = labourChildModel.InitialAge * 12,
-                            LabourAvailability = labourChildModel.LabourAvailability,
-                            Name = labourChildModel.Name + ((labourChildModel.Individuals > 1) ? "_" + (i + 1).ToString() : ""),
-                            IsHired = labourChildModel.IsHired
-                        };
-                        labour.SetParentResourceBaseWithTransactions(this);
-                        labour.Attributes.Add("Group", att);
-                        labour.TransactionOccurred += Resource_TransactionOccurred;
-                        Items.Add(labour);
-                    }
-                }
-            }
-            PayList = Structure.FindChild<LabourPricing>();
->>>>>>> a199a7c3ecc19c92592c333635604b314b5717a0
         }
 
         /// <summary>
@@ -261,11 +216,11 @@ namespace Models.CLEM.Resources
         {
             foreach (LabourType item in Items)
             {
-                if (AllowAgeing)
-                {
-                    if (adultEquivalentRelationship != null)
-                        item.SetAdultEquivalent(adultEquivalentRelationship);
-                }
+                //if (AllowAgeing)
+                //{
+                 //   if (adultEquivalentRelationship != null)
+                //        item.SetAdultEquivalent(adultEquivalentRelationship);
+                //}
 
                 item.AvailabilityLimiter = 1.0;
                 CheckAssignLabourAvailability(item);
@@ -322,7 +277,7 @@ namespace Models.CLEM.Resources
                 if (labour.LabourAvailability == null)
                 {
                     string msg = $"Unable to find labour availability suitable for labour type" +
-                        $" [f=Name:{labour.Name}] [f=Gender:{labour.Sex}] [f=Age:{labour.AgeInYears}]" +
+                        $" [f=Name:{labour.Name}] [f=Gender:{labour.Sex}] [f=Age:{labour.Age}]" +
                         $"\r\nAdd additional labour availability item to " +
                         $"[r={availabilityList.Name}] under [r={Name}]";
 
@@ -331,15 +286,13 @@ namespace Models.CLEM.Resources
             }
         }
 
-<<<<<<< HEAD
-=======
         /// <summary>Age individuals</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMAgeResources")]
         private void ONCLEMAgeResources(object sender, EventArgs e)
         {
-            if (AllowAging)
+            if (AllowAgeing)
             {
                 foreach (LabourType item in Items)
                 {
@@ -373,7 +326,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public double AdultEquivalents(bool includeHired)
         {
-            return Items.Where(p => !p.Hired | includeHired).Sum(p => p.AdultEquivalent * Convert.ToDouble(p.Individuals, System.Globalization.CultureInfo.InvariantCulture));
+            return Items.Where(p => !p.IsHired | includeHired).Sum(p => p.AdultEquivalent * Convert.ToDouble(p.Individuals, System.Globalization.CultureInfo.InvariantCulture));
         }
 
         /// <summary>
@@ -392,7 +345,7 @@ namespace Models.CLEM.Resources
                 if(reportWarningIfNoPrice)
                 {
                     // no price match found.
-                    string warningString = $"No [Pay] price entry was found for individual [r={ind.Name}] with details [f=age: {Convert.ToInt32(ind.AgeInYears)}] [f=sex: {ind.Sex}]";
+                    string warningString = $"No [Pay] price entry was found for individual [r={ind.Name}] with details [f=age: {Convert.ToInt32(ind.Age)}] [f=sex: {ind.Sex}]";
                     if (!warningsNotFound.Contains(warningString))
                     {
                         warningsNotFound.Add(warningString);
@@ -502,7 +455,7 @@ namespace Models.CLEM.Resources
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 htmlWriter.Write("Individuals age with time");
-                htmlWriter.Write("</div>")
+                htmlWriter.Write("</div>");
             }
             if(Structure.FindChildren<Relationship>().Where(a => a.Identifier == "Adult equivalent").Any() == false)
             {

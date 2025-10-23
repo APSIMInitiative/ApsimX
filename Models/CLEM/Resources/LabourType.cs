@@ -239,7 +239,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         public LabourType()
         {
-            this.SetDefaults();
         }
 
         /// <summary>
@@ -247,7 +246,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="activityID">Unique activity ID</param>
         /// <param name="maxLabourAllowed">Max labour allowed</param>
-        /// <param name="takeMode">Logical specifiying whether this is a availability check or resource take request</param>
+        /// <param name="takeMode">Logical specifying whether this is a availability check or resource take request</param>
         /// <returns></returns>
         public double LabourCurrentlyAvailableForActivity(Guid activityID, double maxLabourAllowed, bool takeMode)
         {
