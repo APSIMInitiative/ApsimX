@@ -12,13 +12,13 @@ namespace Models.PMF.Phen
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
-    public class VernalisationPhase : Model, IPhase, IPhaseWithTarget
+    public class VernalisationPhase : Model, IPhase, IPhaseWithTarget, IPhaseWithSetableCompletionDate
     {
         [Link]
         private IVrnExpression CAMP = null;
 
-        private bool firstDay = true;
-        private double relativeVernalisationAtEmergence { get; set; }
+        [Link]
+        private IClock clock = null;
 
         /// <summary>The phenological stage at the start of this phase.</summary>
         [Description("Start")]
@@ -34,37 +34,63 @@ namespace Models.PMF.Phen
 
         /// <summary>Fraction of phase that is complete (0-1).</summary>
         [JsonIgnore]
-        public double FractionComplete { get; set; }
+        public double FractionComplete 
+        {
+            get
+            {
+                return Phenology.FractionComplete(DateToProgress,ProgressThroughPhase,Target,startDate, clock.Today, fractionCompleteYesterday);
+            }
+        }
+
+        /// <summary>First date in this phase</summary>
+        private DateTime startDate;
+
+        /// <summary>Fraction of phase that is complete (0-1).on yesterdays timestep</summary>
+        private double fractionCompleteYesterday;
+
+        /// <summary>The relative progress throuh vernalisation that has already happend when the crop emerges</summary>
+        private double relativeVernalisationAtEmergence { get; set; }
 
         /// <summary>Accumulated units of progress through this phase.</summary>
         [JsonIgnore]
         public double ProgressThroughPhase { get; set; }
 
-        /// <summary>Thermal time target to end this phase.</summary>
+        /// <summary>Data to progress.  Is empty by default.  If set by external model, phase will ignore its mechanisum and wait for the specified date to progress</summary>
         [JsonIgnore]
-        public double Target { get; set; }
+        public string DateToProgress { get; set; } = "";
+
+        /// <summary>Thermal time target to end this phase.</summary>
+        public double Target { get; set; } = 1.0;
 
         /// <summary>Summarise gene expression from CAMP into phenological progress</summary>
         /// <remarks>Returns true when target is met.</remarks>
         public bool DoTimeStep(ref double propOfDayToUse)
         {
-            Target = 1 + CAMP.Vrn2;
-            double RelativeVernalisation = Math.Min((CAMP.BaseVrn + CAMP.Vrn1 + CAMP.Vrn3) / Target, CAMP.MaxVrn);
-            if (firstDay)
+            if (!String.IsNullOrEmpty(DateToProgress))
+            {
+                return Phenology.checkIfCompletionDate(ref startDate, clock.Today, DateToProgress, ref propOfDayToUse);
+            }
+
+            double vrnTarget = 1 + CAMP.Vrn2;
+            double RelativeVernalisation = Math.Min((CAMP.BaseVrn + CAMP.Vrn1 + CAMP.Vrn3) / vrnTarget, CAMP.MaxVrn);
+            if (startDate == DateTime.MinValue)
             {
                 relativeVernalisationAtEmergence = RelativeVernalisation;
-                firstDay = false;
+                startDate = clock.Today;
             }
-            double ProgressThroughPhase = Math.Min(1, (RelativeVernalisation - relativeVernalisationAtEmergence) / (1 - relativeVernalisationAtEmergence));
-            FractionComplete = ProgressThroughPhase;
+            ProgressThroughPhase = Math.Min(1, (RelativeVernalisation - relativeVernalisationAtEmergence) / (1 - relativeVernalisationAtEmergence));
+            fractionCompleteYesterday = FractionComplete;
+
             return CAMP.IsVernalised;
         }
 
         /// <summary>Resets the phase.</summary>
         public void ResetPhase()
         {
-            firstDay = true;
             relativeVernalisationAtEmergence = 0.0;
+            ProgressThroughPhase = 0.0;
+            DateToProgress = "";
+            startDate = DateTime.MinValue;
         }
 
         /// <summary>Called when [simulation commencing].</summary>

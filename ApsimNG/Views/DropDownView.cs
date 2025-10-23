@@ -1,5 +1,5 @@
-﻿using System;
-using Gtk;
+﻿using Gtk;
+using System;
 
 namespace UserInterface.Views
 {
@@ -70,6 +70,8 @@ namespace UserInterface.Views
             combobox1.Model = comboModel;
             combobox1.PackStart(comboRender, false);
             combobox1.AddAttribute(comboRender, "text", 0);
+            comboRender.FixedHeightFromFont = 1;
+            combobox1.PoppedUp += OnCombobox1PoppedUp;
             combobox1.Changed += OnSelectionChanged;
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
@@ -84,6 +86,7 @@ namespace UserInterface.Views
             try
             {
                 combobox1.Changed -= OnSelectionChanged;
+                combobox1.PoppedUp -= OnCombobox1PoppedUp;
                 comboModel.Dispose();
                 comboRender.Dispose();
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
@@ -236,6 +239,35 @@ namespace UserInterface.Views
             {
                 ShowError(err);
             }
+        }
+
+        /// <summary>
+        /// The first time a GtkComboBox is popped up, it can be rather slow to
+        /// appear if the number of items is "large". This handler detects the initial
+        /// popup and displays a wait cursor. The ShowWaitCursor routine also runs
+        /// the GLib/Gtk iterator loop, handling all waiting events before returning.
+        /// This gives the widget an opportunity to get itself set up before we return
+        /// to the normal cursor.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnCombobox1PoppedUp(object sender, EventArgs e)
+        {
+            if (comboModel.IterNChildren() > 20)
+            {
+                ViewBase view = Owner;
+                while (view != null)
+                {
+                    if (view is MainView mainView)
+                    {
+                        mainView.ShowWaitCursor(true);
+                        mainView.ShowWaitCursor(false);
+                        break;
+                    }
+                    view = view.Owner;
+                }
+            }
+            combobox1.PoppedUp -= OnCombobox1PoppedUp;
         }
 
         /// <summary>

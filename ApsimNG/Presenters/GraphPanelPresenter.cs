@@ -226,7 +226,7 @@ namespace UserInterface.Presenters
         {
             graph = (Graph)ReflectionUtilities.Clone(graph);
             graph.Parent = panel;
-            graph.ParentAllDescendants();
+            APSIM.Core.Node.Create(graph);
 
             // Apply transformation to graph.
             panel.Script.TransformGraph(graph, simulationName);

@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Interfaces;
+using Models.Core;
 using Models.Core.Attributes;
 using Newtonsoft.Json;
 using System;

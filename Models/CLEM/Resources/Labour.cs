@@ -47,7 +47,7 @@ namespace Models.CLEM.Resources
         public bool UseCohorts { get; set; }
 
         /// <summary>
-        /// Allows indiviuals to age each month
+        /// Allows individuals to age each month
         /// </summary>
         [Description("Allow individuals to age")]
         [Required]
@@ -64,6 +64,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <returns>boolean</returns>
         public bool PricingAvailable { get { return (PayList != null); } }
+
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -85,8 +86,10 @@ namespace Models.CLEM.Resources
         public double GetDietaryValue(string metric, bool includeHiredLabour, bool reportPerAE)
         {
             double value = 0;
-            foreach (LabourType ind in Items.Where(a => includeHiredLabour | (a.Hired == false)))
+            foreach (LabourType ind in Items.Where(a => includeHiredLabour | (a.IsHired == false)))
+            {
                 value += ind.GetDietDetails(metric); // / (reportPerAE?ind.TotalAdultEquivalents:1);
+            }
             return value / (reportPerAE ? AdultEquivalents(includeHiredLabour) : 1);
         }
 
@@ -151,6 +154,7 @@ namespace Models.CLEM.Resources
                 //IndividualAttribute att = new() { StoredValue = labourChildModel.Name };
                 if (UseCohorts | labourChildModel.Individuals <= 1)
                 {
+<<<<<<< HEAD
                     Items.Add(CreateNewLabour(labourChildModel));
                 }
                 else
@@ -190,6 +194,48 @@ namespace Models.CLEM.Resources
             newLabourType.TransactionOccurred += Resource_TransactionOccurred;
             newLabourType.SetAdultEquivalent(adultEquivalentRelationship);
             return newLabourType;
+=======
+                    LabourType labour = new LabourType()
+                    {
+                        Sex = labourChildModel.Sex,
+                        Individuals = labourChildModel.Individuals,
+                        Parent = this,
+                        InitialAge = labourChildModel.InitialAge,
+                        AgeInMonths = labourChildModel.InitialAge * 12,
+                        LabourAvailability = labourChildModel.LabourAvailability,
+                        Name = labourChildModel.Name,
+                        IsHired = labourChildModel.IsHired
+                    };
+                    labour.SetParentResourceBaseWithTransactions(this);
+                    labour.Attributes.Add("Group", att);
+                    labour.TransactionOccurred += Resource_TransactionOccurred;
+                    Items.Add(labour);
+                }
+                else
+                {
+                    for (int i = 0; i < labourChildModel.Individuals; i++)
+                    {
+                        // get the availability from provided list
+                        LabourType labour = new LabourType()
+                        {
+                            Sex = labourChildModel.Sex,
+                            Individuals = 1,
+                            Parent = this,
+                            InitialAge = labourChildModel.InitialAge,
+                            AgeInMonths = labourChildModel.InitialAge * 12,
+                            LabourAvailability = labourChildModel.LabourAvailability,
+                            Name = labourChildModel.Name + ((labourChildModel.Individuals > 1) ? "_" + (i + 1).ToString() : ""),
+                            IsHired = labourChildModel.IsHired
+                        };
+                        labour.SetParentResourceBaseWithTransactions(this);
+                        labour.Attributes.Add("Group", att);
+                        labour.TransactionOccurred += Resource_TransactionOccurred;
+                        Items.Add(labour);
+                    }
+                }
+            }
+            PayList = Structure.FindChild<LabourPricing>();
+>>>>>>> a199a7c3ecc19c92592c333635604b314b5717a0
         }
 
         /// <summary>
@@ -199,7 +245,9 @@ namespace Models.CLEM.Resources
         private new void OnSimulationCompleted(object sender, EventArgs e)
         {
             foreach (LabourType childModel in Structure.FindChildren<LabourType>())
+            {
                 childModel.TransactionOccurred -= Resource_TransactionOccurred;
+            }
 
             Items?.Clear();
             Items = null;
@@ -241,8 +289,10 @@ namespace Models.CLEM.Resources
         private void OnCLEMUpdateLabourAvailability(object sender, EventArgs e)
         {
             foreach (LabourType item in Items)
-                // set available days from availabilityitem
+            {
+                // set available days from availability item
                 item.SetAvailableDays(Math.Min(events.Interval, events.Interval));
+            }
         }
 
         private void CheckAssignLabourAvailability(LabourType labour)
@@ -252,7 +302,9 @@ namespace Models.CLEM.Resources
             {
                 // check labour availability still ok
                 if (!(labour.LabourAvailability as IFilterGroup).Filter(checkList).Any())
+                {
                     labour.LabourAvailability = null;
+                }
             }
 
             // if not assign new value
@@ -277,6 +329,41 @@ namespace Models.CLEM.Resources
                     throw new ApsimXException(this, msg);
                 }
             }
+        }
+
+<<<<<<< HEAD
+=======
+        /// <summary>Age individuals</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMAgeResources")]
+        private void ONCLEMAgeResources(object sender, EventArgs e)
+        {
+            if (AllowAging)
+            {
+                foreach (LabourType item in Items)
+                {
+                    if (!item.IsHired)
+                        item.AgeInMonths++;
+
+                    //Update labour available if needed.
+                    CheckAssignLabourAvailability(item);
+
+                }
+            }
+        }
+
+        /// <summary>
+        /// Calculate the AE of an individual based on provided relationship
+        /// </summary>
+        /// <returns>value</returns>
+        public double? CalculateAE(double ageInMonths)
+        {
+            if (adultEquivalentRelationship != null)
+                return adultEquivalentRelationship.SolveY(ageInMonths);
+            else
+                // no AE relationship provided.
+                return null;
         }
 
         /// <summary>
@@ -415,7 +502,7 @@ namespace Models.CLEM.Resources
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 htmlWriter.Write("Individuals age with time");
-                htmlWriter.Write("</div>");
+                htmlWriter.Write("</div>")
             }
             if(Structure.FindChildren<Relationship>().Where(a => a.Identifier == "Adult equivalent").Any() == false)
             {
@@ -435,7 +522,7 @@ namespace Models.CLEM.Resources
                 htmlWriter.Write($"<td><span class=\"setvalue\">{labourType.Sex}</span></td>");
                 htmlWriter.Write($"<td><span class=\"setvalue\">{labourType.InitialAge}</span></td>");
                 htmlWriter.Write($"<td><span class=\"setvalue\">{labourType.Individuals}</span></td>");
-                htmlWriter.Write("<td" + ((labourType.Hired) ? " class=\"fill\"" : "") + "></td>");
+                htmlWriter.Write("<td" + ((labourType.IsHired) ? " class=\"fill\"" : "") + "></td>");
                 htmlWriter.Write("</tr>");
             }
             htmlWriter.Write("</table>");

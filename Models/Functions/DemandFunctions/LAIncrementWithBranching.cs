@@ -1,16 +1,28 @@
-﻿using System;
+﻿using Models.Core;
+using Models.PMF;
+using System;
 using System.Linq;
 using APSIM.Core;
-using Models.Core;
 
 namespace Models.Functions.DemandFunctions
 {
-    /// <summary>Daily increment in leaf area is calculated from plant population, number of nodes on the main stem, number of branches,
-    /// area of the largest leaf (or leaf pair), rate of leaf appearance, and relative leaf area. It is assumed that the main stem and all
-    /// branches are similar when fully grown.</summary>
+    /// <summary>
+    /// Daily leaf area increment is calculated based on plant population, number of main stem nodes, number of branches, largest leaf 
+    /// (or leaf pair) area, leaf appearance rate, and relative leaf area. The model assumes that, once fully developed, the main stem 
+    /// and all branches exhibit similar characteristics. This function tracks branch appearance but relative growth is simulated at the
+    /// branch level only (i.e., no tracking of individual leaves) assuming all leaves on a branch are the same size and growth at the 
+    /// same rate. Branches appear at different times (i.e., node numbers) and each branch has its own series of leaf sizes. The lag 
+    /// between each branch and the main stem is specified in terms of node number. The lag for the main stem is zero.
+    /// </summary>
     [Serializable]
+    [ViewName("UserInterface.Views.PropertyView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class LAIncrementWithBranching : Model, IFunction
     {
+        /// <summary>The plant</summary>
+        [Link]
+        protected Plant parentPlant = null;
+
         /// <summary>The plant population</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction plantNumber = null;
@@ -42,10 +54,19 @@ namespace Models.Functions.DemandFunctions
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
         {
+            double largestLeafArea = areaLargestLeaf.Value();
             double currNodeNumber = nodeNumber.Value();
             int numBranches = (int)branchNumber.Value();
 
+            if (!parentPlant.IsAlive)
+            {
+                branchNodeLag = Enumerable.Repeat(-1, 20).ToArray();
+                return 0;
+            }
+
+            // Main stem doesn't have a lag, so set it to 0.
             branchNodeLag[0] = 0;
+
             double cumDelta = relativeArea.ValueIndexed(currNodeNumber - branchNodeLag[0]);
 
             for (int i = 1; i < numBranches + 1; i++)
@@ -55,7 +76,7 @@ namespace Models.Functions.DemandFunctions
 
                 cumDelta += relativeArea.ValueIndexed(currNodeNumber - branchNodeLag[i]);
             }
-            return cumDelta * plantNumber.Value() * areaLargestLeaf.Value() * lAR.Value();
+            return cumDelta * plantNumber.Value() * largestLeafArea * lAR.Value();
         }
     }
 }

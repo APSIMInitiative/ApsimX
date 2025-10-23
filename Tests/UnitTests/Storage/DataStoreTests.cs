@@ -28,6 +28,7 @@ namespace UnitTests.Storage
 
             // The new file name should not be the same as the old one.
             Assert.That(oldDbFileName, Is.Not.EqualTo(newDbFileName));
+            storage.Close();
         }
     }
 }

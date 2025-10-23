@@ -175,13 +175,33 @@ internal class Locator
         composite.AddInstance(relativeTo.Model);
         for (int j = 0; j < namePathBits.Length; j++)
         {
+            if (relativeToObject == null)
+                return null;
+
+            object objectInfo = null;
+            List<object> argumentsList = new List<object>();
+
             // look for an array specifier e.g. sw[2]
-            //need to do this first as the [ ] will screw up matching to a property
+            //need to do this first as the [ ] will screw up matching to a property if its an array
             string arraySpecifier = null;
             if (!onlyModelChildren && namePathBits[j].Contains("["))
+            {
+                string[] copyOfNamePathBits = namePathBits.Clone() as string[];
                 arraySpecifier = StringUtilities.SplitOffBracketedValue(ref namePathBits[j], '[', ']');
 
-            object objectInfo = GetInternalObjectInfo(relativeToObject, namePathBits[j], composite, namePathBits.Length-j-1, ignoreCase, throwOnError, onlyModelChildren, out List<object> argumentsList);
+                objectInfo = GetInternalObjectInfo(relativeToObject, namePathBits[j], composite, namePathBits.Length - j - 1, ignoreCase, throwOnError, onlyModelChildren, out argumentsList);
+
+                //we found and stripped [] for an array, but then didnt find the object, prehaps the object had [] in the name but wasn't an array, so let's check again
+                if (objectInfo == null)
+                {
+                    argumentsList = new List<object>();
+                    objectInfo = GetInternalObjectInfo(relativeToObject, copyOfNamePathBits[j], composite, copyOfNamePathBits.Length - j - 1, ignoreCase, throwOnError, onlyModelChildren, out argumentsList);
+                }
+            }
+            else
+            {
+                objectInfo = GetInternalObjectInfo(relativeToObject, namePathBits[j], composite, namePathBits.Length - j - 1, ignoreCase, throwOnError, onlyModelChildren, out argumentsList);
+            }
 
             //Depending on the type we found, handle it
             bool propertiesOnly = (flags & LocatorFlags.PropertiesOnly) == LocatorFlags.PropertiesOnly;
@@ -192,8 +212,6 @@ internal class Locator
                 if (propertiesOnly && j == namePathBits.Length - 1)
                     break;
                 relativeToObject = composite.Value;
-                if (relativeToObject == null)
-                    return null;
             }
             else if ((objectInfo as MethodInfo) != null)
             {
@@ -361,11 +379,12 @@ internal class Locator
     /// <exception cref="Exception"></exception>
     private object GetInternalObjectInfo(object relativeToObject, string name, VariableComposite composite, int remainingNames, bool ignoreCase, bool throwOnError, bool onlyModelChildren, out List<object> argumentsList)
     {
-
         argumentsList = null;
         PropertyInfo propertyInfo = null;
         MethodInfo methodInfo = null;
         INodeModel modelInfo = null;
+        if (relativeToObject == null)
+            return null;
 
         if (!onlyModelChildren)
         {
@@ -481,6 +500,10 @@ internal class Locator
                 compareType = StringComparison.OrdinalIgnoreCase;
 
             modelInfo = model.GetChildren().FirstOrDefault(m => m.Name.Equals(name, compareType));
+
+            //If matching by name did not work, try matching by type
+            if (modelInfo == null)
+                modelInfo = model.GetChildren().FirstOrDefault(m => m.GetType().Name.Equals(name, compareType));
         }
 
         if (methodInfo != null) //if we found a method, return it

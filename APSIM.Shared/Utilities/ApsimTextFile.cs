@@ -8,6 +8,7 @@ using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace APSIM.Shared.Utilities
 {
@@ -100,6 +101,9 @@ namespace APSIM.Shared.Utilities
         /// <summary>Is the file a CSV file</summary>
         public bool IsCSVFile { get; set; } = false;
 
+        /// <summary>Is the file a Binary file</summary>
+        public bool IsBinaryFile { get; set; } = false;
+
         /// <summary>The inStreamReader - used for text and csv files</summary>
         private StreamReaderRandomAccess inStreamReader;
 
@@ -180,8 +184,16 @@ namespace APSIM.Shared.Utilities
 
             IsCSVFile = Path.GetExtension(fileName).ToLower() == ".csv";
             IsExcelFile = ExcelUtilities.IsExcelFile(fileName);
+            IsBinaryFile = Path.GetExtension(fileName).ToLower() == ".bin";
 
-            if (IsExcelFile)
+            //convert to text file so it fits into current reader
+            if (IsBinaryFile)
+            {
+                Stream metFileStream = MetBinaryReader.Load(fileName);
+                inStreamReader = new StreamReaderRandomAccess(metFileStream);
+                Open();
+            }
+            else if (IsExcelFile)
             {
                 OpenExcelReader();
             }

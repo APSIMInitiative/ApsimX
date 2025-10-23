@@ -100,6 +100,7 @@ namespace Models.Factorial
             foreach (var val in values)
             {
                 var newFactor = new CompositeFactor(this, path.Trim(), val.Trim());
+                newFactor.Structure = Structure;
                 newFactor.Children.AddRange(Children);
                 returnValues.Add(newFactor);
             }

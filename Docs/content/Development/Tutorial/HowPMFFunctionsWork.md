@@ -1,6 +1,7 @@
 ---
 title: "How PMF functions work"
 draft: false
+weight: 220
 ---
 
 In this tutorial we will explain how Plant Modelling Framework (PMF) functions work. We will use the wheat leaf photosynthesis model as an example.
@@ -13,7 +14,7 @@ There are multiple PMF leaf organs that different crops use. For this tutorial w
 
 ```c#
 /// <summary>The photosynthesis</summary>
-[Link(Type = LinkType.Child, ByName = true)] 
+[Link(Type = LinkType.Child, ByName = true)]
 IFunction Photosynthesis = null;
 ```
 
@@ -39,7 +40,7 @@ public interface IFunction
 
 # 3. Where is the implementation of photosynthesis?
 
-Most crop models in APSIM use the same implementation of photosynthesis but parameterise it in different ways. The flexibility exists though for the model developer to use a different implementation. 
+Most crop models in APSIM use the same implementation of photosynthesis but parameterise it in different ways. The flexibility exists though for the model developer to use a different implementation.
 
 To determine what implementation and parameterisation are used for a particular crop model:
 
@@ -92,11 +93,11 @@ The source code of the *RUEModel* looks like this:
         {
             get
             {
-                double RueReductionFactor = Math.Min(FT.Value(), Math.Min(FN.Value(), FVPD.Value())) 
+                double RueReductionFactor = Math.Min(FT.Value(), Math.Min(FN.Value(), FVPD.Value()))
                 * FW.Value() * FCO2.Value();
                 return RUE.Value() * RueReductionFactor;
             }
-        }        
+        }
 
         /// <summary>Daily growth increment of total plant biomass</summary>
         /// <returns>g dry matter/m2 soil/day</returns>

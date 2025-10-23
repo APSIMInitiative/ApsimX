@@ -23,6 +23,7 @@
     <EmbeddedResource Include="**\*.apsimx" />
     <EmbeddedResource Include="Weather\*.xlsx" />
     <EmbeddedResource Include="**\*.met" />
+    <EmbeddedResource Include="Weather\*.bin" />
     <EmbeddedResource Include="**\*.Expected.txt" />
     <EmbeddedResource Include="APSIMShared/Resources/*.csv" />
     <EmbeddedResource Include="**\*.soil" />

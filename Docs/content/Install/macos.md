@@ -2,8 +2,8 @@
 title: "MacOS Installation"
 draft: false
 ---
-Last Updated 4/4/2024
-Please alert us at our [github page](https://github.com/APSIMInitiative/ApsimX/issues) if these instructions become outdated or incorrect.
+
+##### Last Updated 4/4/2024 - Please alert us at our [github page](https://github.com/APSIMInitiative/ApsimX/issues) if these instructions become outdated or incorrect
 
 Be aware that these instructions will require administrator privileges to be completed.
 

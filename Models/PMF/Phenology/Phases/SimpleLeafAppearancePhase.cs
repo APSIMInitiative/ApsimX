@@ -1,9 +1,6 @@
 ﻿using System;
 using APSIM.Core;
-using APSIM.Numerics;
-using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Functions;
 using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
@@ -17,7 +14,7 @@ namespace Models.PMF.Phen
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
-    public class SimpleLeafAppearancePhase : Model, IPhase
+    public class SimpleLeafAppearancePhase : Model, IPhase, IPhaseWithSetableCompletionDate
     {
 
         [Link(Type = LinkType.Child, ByName = true)]
@@ -26,10 +23,8 @@ namespace Models.PMF.Phen
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction currentLeafNumber = null;
 
-        private double LeafNoAtStart;
-        private bool First = true;
-        private double FractionCompleteYesterday = 0;
-        private double TargetLeafForCompletion = 0;
+        [Link]
+        private IClock clock = null;
 
         /// <summary>The start</summary>
         [Description("Start")]
@@ -43,49 +38,70 @@ namespace Models.PMF.Phen
         [Description("Is the phase emerged?")]
         public bool IsEmerged { get; set; } = true;
 
+        /// <summary>Leaves appeared when this phase is entered</summary>
+        private double leafNoAtStart { get; set; }
+
+        /// <summary>relative progress through the phase yesterday</summary>
+        private double fractionCompleteYesterday = 0;
+
+        /// <summary>The target for progresson to the next phase</summary>
+        private double target = 0;
+
+        /// <summary>First date in this phase</summary>
+        private DateTime startDate;
+
+        /// <summary>Accumulated units of progress through this phase.</summary>
+        [JsonIgnore]
+        public double ProgressThroughPhase { get; set; }
+
+        /// <summary>Data to progress.  Is empty by default.  If set by external model, phase will ignore its mechanisum and wait for the specified date to progress</summary>
+        [JsonIgnore]
+        public string DateToProgress { get; set; } = "";
+
         /// <summary>Return a fraction of phase complete.</summary>
         [JsonIgnore]
         public double FractionComplete
         {
             get
             {
-                double F = 0;
-                F = (currentLeafNumber.Value() - LeafNoAtStart) / TargetLeafForCompletion;
-                F = MathUtilities.Bound(F, 0, 1);
-                return Math.Max(F, FractionCompleteYesterday); //Set to maximum of FractionCompleteYesterday so on days where final leaf number increases phenological stage is not wound back.
+                return Phenology.FractionComplete(DateToProgress, ProgressThroughPhase, target, startDate, clock.Today, fractionCompleteYesterday);
             }
         }
 
         /// <summary>Do our timestep development</summary>
         public bool DoTimeStep(ref double propOfDayToUse)
         {
-            bool proceedToNextPhase = false;
-
-            if (First)
+            if (!String.IsNullOrEmpty(DateToProgress))
             {
-                LeafNoAtStart = currentLeafNumber.Value();
-                TargetLeafForCompletion = targetLeafNumber.Value() - LeafNoAtStart;
-                First = false;
+                return Phenology.checkIfCompletionDate(ref startDate, clock.Today, DateToProgress, ref propOfDayToUse);
             }
 
-            FractionCompleteYesterday = FractionComplete;
+            if (leafNoAtStart == 0)
+            {
+                leafNoAtStart = currentLeafNumber.Value();
+                target = targetLeafNumber.Value() - leafNoAtStart;
+            }
 
+            ProgressThroughPhase = currentLeafNumber.Value() - leafNoAtStart;
+            fractionCompleteYesterday = FractionComplete;
+
+            bool proceedToNextPhase = false;
             if (FractionComplete >= 1)
             {
-                proceedToNextPhase = true;
                 propOfDayToUse = 0.00001;  //assumes we use most of the Tt today to get to final leaf.  Should be calculated as a function of the phyllochron
+                proceedToNextPhase = true;
             }
-
             return proceedToNextPhase;
         }
 
         /// <summary>Reset phase</summary>
         public void ResetPhase()
         {
-            LeafNoAtStart = 0;
-            FractionCompleteYesterday = 0;
-            TargetLeafForCompletion = 0;
-            First = true;
+            leafNoAtStart = 0;
+            fractionCompleteYesterday = 0;
+            target = 0;
+            ProgressThroughPhase = 0;
+            DateToProgress = "";
         }
 
         //7. Private methode

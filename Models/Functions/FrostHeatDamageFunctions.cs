@@ -418,14 +418,16 @@ namespace Models.Functions
         [EventSubscribe("DoManagementCalculations")]
         private void OnDoManagementCalculations(object sender, EventArgs e)
         {
-            if (!Plant.IsAlive)
-            {
-                return;
-            }
-            Phenology phen = (Phenology)Structure.Get("[" + CropType + "].Phenology");
-            ReproductiveOrgan organs = (ReproductiveOrgan)Structure.Get("[" + CropType + "].Grain");
+            if (Plant != this.Parent)
+                throw new Exception("Error: FrostHeatDamageFunctions has linked with a Plant that is not its parent");
 
-            double GrowthStageToday = phen.Stage; ;
+            if (!Plant.IsAlive)
+                return;
+
+            Phenology phen = Plant.Phenology;
+            ReproductiveOrgan organs = Plant.Node.FindChild<ReproductiveOrgan>("Grain");
+
+            double GrowthStageToday = phen.Stage;
             //GrowthStageToday = phen.Zadok;
 
             // Daily potential yield reduction ratio by a frost event

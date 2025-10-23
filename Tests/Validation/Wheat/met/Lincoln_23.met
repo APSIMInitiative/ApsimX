@@ -1,8 +1,6 @@
 [weather.met.weather]
 latitude = -43.65
 longitude = 172.48333
-tav (oC)
-amp(oC)
 
 year    day       rain    maxt    mint    radn
 ()      ()        (mm)    (oC)    (oC)    (MJ/m2/d)

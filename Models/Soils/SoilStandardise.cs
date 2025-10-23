@@ -51,7 +51,7 @@ public static class SoilSanitise
         // Determine the target layer structure.
         if (targetThickness == null)
         {
-            targetThickness = physical.Thickness;
+            targetThickness = physical?.Thickness;
             if (layerStructure != null)
             {
                 targetThickness = layerStructure.Thickness;
@@ -60,26 +60,28 @@ public static class SoilSanitise
             }
         }
 
-        if (physical != null)
-            SanitisePhysical(physical, targetThickness);
-        if (organic != null)
-            SanitiseOrganic(organic, targetThickness);
-        if (chemical != null)
-            SanitiseChemical(chemical, physical, organic, targetThickness);
-        if (water != null && physical != null)
-            SanitiseWater(water, physical, targetThickness);
-        if (waterBalance != null)
+        if (targetThickness != null)
         {
-            if (waterBalance is WaterBalance wb)
-                SanitiseWaterBalance(wb, physical, targetThickness);
-            else if (waterBalance is WEIRDO weirdo)
-                SanitiseWeirdo(weirdo, targetThickness);
-        }
-        if (temperature != null)
-            SanitiseSoilTemperature(temperature, targetThickness);
+            SanitisePhysical(physical, targetThickness);
+            if (organic != null && organic.Thickness != null)
+                SanitiseOrganic(organic, targetThickness);
+            if (chemical != null && chemical.Thickness != null)
+                SanitiseChemical(chemical, physical, organic, targetThickness);
+            if (water != null && water.Thickness != null)
+                SanitiseWater(water, physical, targetThickness);
+            if (waterBalance != null)
+            {
+                if (waterBalance is WaterBalance wb)
+                    SanitiseWaterBalance(wb, physical, targetThickness);
+                else if (waterBalance is WEIRDO weirdo)
+                    SanitiseWeirdo(weirdo, targetThickness);
+            }
+            if (temperature != null)
+                SanitiseSoilTemperature(temperature, targetThickness);
 
-        foreach (var solute in soil.Node.FindChildren<Solute>())
-            SanitiseSolute(solute, targetThickness);
+            foreach (var solute in soil.Node.FindChildren<Solute>())
+                SanitiseSolute(solute, targetThickness);
+        }
     }
 
 
@@ -284,6 +286,9 @@ public static class SoilSanitise
     /// <param name="targetThickness"></param>
     private static void SanitisePhysical(Physical physical, double[] targetThickness)
     {
+        if (physical.KS != null && physical.KS.All(ks => Double.IsNaN(ks)))
+            physical.KS = null;
+
         if (!MathUtilities.AreEqual(targetThickness, physical.Thickness))
         {
             foreach (var crop in (physical as IModel).Node.FindChildren<SoilCrop>())
@@ -352,10 +357,6 @@ public static class SoilSanitise
             //if (crop.Name.Equals("WheatSoil", StringComparison.InvariantCultureIgnoreCase))
             //    ModifyKLForSubSoilConstraints(crop);
         }
-
-        // Make sure there are the correct number of KS values.
-        if (physical.KS != null && physical.KS.Length > 0)
-            physical.KS = MathUtilities.FillMissingValues(physical.KS, physical.Thickness.Length, 0.0);
 
         physical.ParticleSizeClay = MathUtilities.SetArrayOfCorrectSize(physical.ParticleSizeClay, physical.Thickness.Length);
         physical.ParticleSizeClayMetadata = MathUtilities.SetArrayOfCorrectSize(physical.ParticleSizeClayMetadata, physical.Thickness.Length);

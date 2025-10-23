@@ -54,6 +54,8 @@ namespace UnitTests
             Assert.That(dt.Columns[4].DataType, Is.EqualTo(typeof(DateTime)));
             Assert.That(dt.Columns[5].DataType, Is.EqualTo(typeof(string)));
             Assert.That(dt.Columns[6].DataType, Is.EqualTo(typeof(string)));
+
+            database.CloseDatabase();
         }
     }
 }

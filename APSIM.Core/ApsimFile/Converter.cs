@@ -1,6 +1,7 @@
 using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Documentation.Extensions;
+using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
 using BruTile.Wmts.Generated;
 using Newtonsoft.Json.Linq;
@@ -18,7 +19,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 202; } }
+    public static int LatestVersion { get { return 205; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -7005,27 +7006,118 @@ internal class Converter
     }
 
     /// <summary>
-    /// Change CLEM to work with new custom time-step rather than months
+    /// Ensure that when IStructure is stored in Manager scripts as a field, it is marked [NonSerialized]
     /// </summary>
     /// <param name="root">The root JSON token.</param>
     /// <param name="_">The name of the apsimx file.</param>
     private static void UpgradeToVersion202(JObject root, string _)
     {
 
+        foreach (var manager in JsonUtilities.ChildManagers(root))
+        {
+            bool isChanged = manager.Replace("[field:NonSerialized]", string.Empty);
+            if (isChanged)
+                manager.Save();
+        }
+    }
+
+
+    /// <summary>
+    /// Change KS of zero or NaNs to null.
+    /// </summary>
+    /// <param name="root">The root JSON token.</param>
+    /// <param name="_">The name of the apsimx file.</param>
+    private static void UpgradeToVersion203(JObject root, string _)
+    {
+        foreach (var soil in JsonUtilities.ChildrenRecursively(root, "Soil"))
+        {
+            var physical = JsonUtilities.ChildWithName(soil, "Physical");
+
+            if (physical != null)
+            {
+                if (physical["KS"] != null)
+                {
+                    if (physical["KS"].Any())
+                    {
+                        var values = physical["KS"].Values<double>().ToArray();
+                        bool allZeroOrNaN = values.All(x => x == 0 || double.IsNaN(x));
+                        if (allZeroOrNaN) physical["KS"] = null; // set to null if all values are zero or NaN
+                    }
+                }
+            }
+        }
+
+    }
+
+    /// <summary>
+    /// Replace SetEmergenceDate and SetGerminationDate methods with generic SetPhaseCompletionDate method
+    /// </summary>
+    /// <param name="root">The root JSON token.</param>
+    /// <param name="_">The name of the apsimx file.</param>
+    private static void UpgradeToVersion204(JObject root, string _)
+    {
+        Dictionary<string, Dictionary<string, string>> repDict = new Dictionary<string, Dictionary<string, string>>();
+        repDict["Germination"] = new Dictionary<string, string>
+        {
+            {"findPattern", @"Phenology\.SetGerminationDate\(\s*((?>[^()]+|\((?<DEPTH>)|\)(?<-DEPTH>))*(?(DEPTH)(?!)))\s*\);" },
+            {"replacePattern", @"Phenology.SetPhaseCompletionDate($1,""Germinating"");" }
+        };
+        repDict["Emergence"] = new Dictionary<string, string>
+        {
+            {"findPattern", @"Phenology\.SetEmergenceDate\(\s*((?>[^()]+|\((?<DEPTH>)|\)(?<-DEPTH>))*(?(DEPTH)(?!)))\s*\);" },
+            {"replacePattern", @"Phenology.SetPhaseCompletionDate($1,""Emerging"");" }
+        };
+
+        foreach (Dictionary<string, string> stage in repDict.Values)
+        {
+
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                manager.ReplaceRegex(stage["findPattern"], stage["replacePattern"], RegexOptions.IgnoreCase);
+                manager.Save();
+            }
+
+            foreach (var operations in JsonUtilities.ChildrenOfType(root, "Operations"))
+            {
+                var operation = operations["OperationsList"];
+                if (operation != null && operation.HasValues)
+                {
+                    for (int i = 0; i < operation.Count(); i++)
+                    {
+                        var specification = operation[i]["Action"];
+                        if (!String.IsNullOrEmpty(specification.ToString()))
+                        {
+                            var specificationString = specification.ToString();
+                            specificationString = Regex.Replace(specificationString, stage["findPattern"], stage["replacePattern"], RegexOptions.IgnoreCase);
+                            operation[i]["Action"] = specificationString;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Change CLEM to work with new custom time-step rather than months
+    /// </summary>
+    /// <param name="root">The root JSON token.</param>
+    /// <param name="_">The name of the apsimx file.</param>
+    private static void UpgradeToVersion205(JObject root, string _)
+    {
         // replace all Grow24 with GrowPF
 
         var rumCompUpdated = new Tuple<string, string, string>[]
         {
-                new("Activities", "RuminantActivityGrow24", "RuminantActivityGrowPF"),
-                new("Resources", "RuminantParametersGrow24", "RuminantParametersGrowPF"),
-                new("Resources", "RuminantParametersGrow24CACRD", "RuminantParametersGrowPFCACRD"),
-                new("Resources", "RuminantParametersGrow24CD", "RuminantParametersGrowPFCD"),
-                new("Resources", "RuminantParametersGrow24CG", "RuminantParametersGrowPFCG"),
-                new("Resources", "RuminantParametersGrow24CI", "RuminantParametersGrowPFCI"),
-                new("Resources", "RuminantParametersGrow24CKCL", "RuminantParametersGrowPFCKCL"),
-                new("Resources", "RuminantParametersGrow24CM", "RuminantParametersGrowPFCM"),
-                new("Resources", "RuminantParametersGrow24CP", "RuminantParametersGrowPFCP"),
-                new("Resources", "RuminantParametersGrow24CW", "RuminantParametersGrowPFCW"),
+                new ("Activities", "RuminantActivityGrow24", "RuminantActivityGrowPF"),
+                new ("Resources", "RuminantParametersGrow24", "RuminantParametersGrowPF"),
+                new ("Resources", "RuminantParametersGrow24CACRD", "RuminantParametersGrowPFCACRD"),
+                new ("Resources", "RuminantParametersGrow24CD", "RuminantParametersGrowPFCD"),
+                new ("Resources", "RuminantParametersGrow24CG", "RuminantParametersGrowPFCG"),
+                new ("Resources", "RuminantParametersGrow24CI", "RuminantParametersGrowPFCI"),
+                new ("Resources", "RuminantParametersGrow24CKCL", "RuminantParametersGrowPFCKCL"),
+                new ("Resources", "RuminantParametersGrow24CM", "RuminantParametersGrowPFCM"),
+                new ("Resources", "RuminantParametersGrow24CP", "RuminantParametersGrowPFCP"),
+                new ("Resources", "RuminantParametersGrow24CW", "RuminantParametersGrowPFCW"),
         };
 
         foreach (var update in rumCompUpdated)
@@ -7155,7 +7247,6 @@ internal class Converter
             node.Add(new JProperty("EndDetails", JContainer.FromObject(createCLEMAgeSpecifier(endMonth)))); //new AgeSpecifier(endMonth))));
         }
     }
-
     private static JObject createCLEMAgeSpecifier(decimal value)
     {
         int[] parts;
@@ -7185,7 +7276,3 @@ internal class Converter
     }
 
 }
-
-
-
-

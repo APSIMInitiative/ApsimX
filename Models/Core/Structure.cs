@@ -25,7 +25,7 @@ namespace Models.Core.ApsimFile
             if (modelToAdd is Simulations s && s.Children.Count == 1)
                 modelToAdd = s.Children[0];
 
-            if(!parent.IsChildAllowable(modelToAdd.GetType()))
+            if(!Apsim.IsChildAllowable(parent, modelToAdd.GetType()))
                 throw new ArgumentException($"A {modelToAdd.GetType().Name} cannot be added to a {parent.GetType().Name}.");
 
             var parentNode = (parent as Model).Node;

@@ -70,6 +70,14 @@ namespace Models.CLEM.Activities
             }
         }
 
+        /// <summary>
+        /// Constructor for milking activity
+        /// </summary>
+        public RuminantActivityMilking()
+        {
+            AllocationStyle = ResourceAllocationStyle.Manual;
+        }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -94,6 +102,13 @@ namespace Models.CLEM.Activities
                 // set these females to state milking performed so they switch to the non-suckling milk production curves.
                 item.Milk.MilkingPerformed = true;
             }
+        }
+
+        /// <inheritdoc/>
+        [EventSubscribe("CLEMAnimalMilking")]
+        protected override void OnGetResourcesPerformActivity(object sender, EventArgs e)
+        {
+            ManageActivityResourcesAndTasks();
         }
 
         /// <inheritdoc/>

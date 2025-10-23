@@ -60,6 +60,10 @@ namespace Models.Core.ConfigFile
         /// </summary>
         Add,
         /// <summary>
+        /// Makes instruction an AddToAll type.
+        /// </summary>
+        AddToAll,
+        /// <summary>
         /// Makes instruction a Copy type.
         /// </summary>
         Copy,

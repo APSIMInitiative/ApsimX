@@ -111,6 +111,10 @@ namespace Models.CLEM
         [JsonIgnore]
         public new double Altitude { get; set; } = 50;
 
+        ///<summary>What kind of canopy</summary>
+        [JsonIgnore]
+        public new string CanopyType { get; set; }
+
         /// <summary>
         /// Constructor
         /// </summary>

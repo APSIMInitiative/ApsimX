@@ -49,8 +49,6 @@ namespace Models.Soils.NutrientPatching
     /// </summary>
     public interface INutrientPatchManager
     {
-        /// <summary>The maximum amount of N that is made available to plants in one day (kg/ha/day).</summary>
-        double MaximumNitrogenAvailableToPlants { get; set; }
 
         /// <summary>The approach used for partitioning the N between patches.</summary>
         PartitionApproachEnum NPartitionApproach { get; set; }

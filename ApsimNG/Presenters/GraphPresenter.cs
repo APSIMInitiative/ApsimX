@@ -29,7 +29,6 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The storage object
         /// </summary>
-        [Link]
         private IDataStore storage = null;
 
         /// <summary>The graph view</summary>

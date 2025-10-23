@@ -33,7 +33,7 @@ namespace UnitTests.Core
             // prepare the simulation to run
             Simulations sims = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
             Models.Climate.Weather weather = sims.Node.FindChild<Models.Climate.Weather>(recurse: true);
-            weather.FullFileName = metFile;
+            weather.FileName = metFile;
 
             // run the simulation and get list of errors
             Runner runner = new Runner(sims);

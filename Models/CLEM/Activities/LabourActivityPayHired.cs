@@ -25,7 +25,7 @@ namespace Models.CLEM.Activities
     public class LabourActivityPayHired : CLEMActivityBase, IValidatableObject, IHandlesActivityCompanionModels
     {
         [Link]
-        private readonly IClock clock = null;
+        private IClock clock = null;
         private double amountToDo;
         private double amountToSkip;
         private string task = "";
@@ -43,22 +43,24 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            return type switch
+            switch (type)
             {
-                "ActivityFee" => new LabelsForCompanionModels(
-                                        identifiers: new List<string>()
-                                        {
+                case "ActivityFee":
+                    return new LabelsForCompanionModels(
+                        identifiers: new List<string>()
+                        {
                             "labour available",
                             "labour used"
-                                        },
-                                        measures: new List<string>() {
+                        },
+                        measures: new List<string>() {
                             "fixed",
                             "per day",
                             "per total charged"
-                                        }
-                                        ),
-                _ => new LabelsForCompanionModels(),
-            };
+                        }
+                        );
+                default:
+                    return new LabelsForCompanionModels();
+            }
         }
 
         /// <summary>An event handler to allow us to initialise</summary>
@@ -97,25 +99,25 @@ namespace Models.CLEM.Activities
         {
             amountToSkip = 0;
 
-            int currentMonth = clock.Today.Month;
-            double totalDays = 0;
-            double totalFees = 0;
-            foreach (LabourType item in labour.Items.Where(a => a.Hired))
+            int currentmonth = clock.Today.Month;
+            double totaldays = 0;
+            double totalfees = 0;
+            foreach (LabourType item in labour.Items.Where(a => a.IsHired))
             {
                 double days = 0;
                 switch (task)
                 {
                     case "available":
-                        days = item.LabourAvailability.GetAvailability(currentMonth - 1);
+                        days = item.LabourAvailability.GetAvailability(currentmonth - 1);
                         break;
                     case "used":
-                        days = item.LabourAvailability.GetAvailability(currentMonth - 1) - item.AvailableDays;
+                        days = item.LabourAvailability.GetAvailability(currentmonth - 1) - item.AvailableDays;
                         break;
                 }
-                totalDays += days;
-                totalFees += days * item.PayRate(true);
+                totaldays += days;
+                totalfees += days * item.PayRate();
             }
-            amountToDo = totalDays;
+            amountToDo = totaldays;
 
             // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels)
@@ -126,10 +128,10 @@ namespace Models.CLEM.Activities
                         valuesForCompanionModels[valueToSupply.Key] = 1;
                         break;
                     case "per day":
-                        valuesForCompanionModels[valueToSupply.Key] = totalDays;
+                        valuesForCompanionModels[valueToSupply.Key] = totaldays;
                         break;
                     case "per total charged":
-                        valuesForCompanionModels[valueToSupply.Key] = totalFees;
+                        valuesForCompanionModels[valueToSupply.Key] = totalfees;
                         break;
                     default:
                         throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
@@ -159,35 +161,43 @@ namespace Models.CLEM.Activities
         public override void PerformTasksForTimestep(double argument = 0)
         {
             if (amountToDo > 0)
-            {
                 SetStatusSuccessOrPartial(amountToSkip > 0);
-            }
         }
 
         #region validation
-        /// <inheritdoc/>
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
+            var results = new List<ValidationResult>();
+
             // make sure finance present
-            // this is performed in the assignment of bank account in InitialiseActivity
+            // this is performed in the assignment of bankaccount in InitialiseActivity
 
             if (labour is null)
             {
-                yield return new ValidationResult("No [r=Labour] is provided in resources\r\nThis activity will not be performed without labour.", new string[] { "Labour" });
+                string[] memberNames = new string[] { "Labour" };
+                results.Add(new ValidationResult("No [r=Labour] is provided in resources\r\nThis activity will not be performed without labour.", memberNames));
             }
             else
             {
                 // make sure labour hired present
-                if (!labour.Items.Where(a => a.Hired).Any())
+                if (labour.Items.Where(a => a.IsHired).Count() == 0)
                 {
-                    yield return new ValidationResult("No [r=LabourType] of hired labour has been defined in [r=Labour]\r\nThis activity will not be performed without hired labour.", new string[] { "Hired labour" });
+                    string[] memberNames = new string[] { "Hired labour" };
+                    results.Add(new ValidationResult("No [r=LabourType] of hired labour has been defined in [r=Labour]\r\nThis activity will not be performed without hired labour.", memberNames));
                 }
                 // make sure pay rates present
                 if (!labour.PricingAvailable)
                 {
-                    yield return new ValidationResult("No [r=LabourPricing] is available for [r=Labour]\r\nThis activity will not be performed without labour pay rates.", new string[] { "Labour pay rate" });
+                    string[] memberNames = new string[] { "Labour pay rate" };
+                    results.Add(new ValidationResult("No [r=LabourPricing] is available for [r=Labour]\r\nThis activity will not be performed without labour pay rates.", memberNames));
                 }
             }
+            return results;
         }
         #endregion
 
@@ -195,9 +205,11 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">Pay all hired labour based on associated Fee components</div>");
-            return htmlWriter.ToString();
+            using (StringWriter htmlWriter = new StringWriter())
+            {
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Pay all hired labour based on associated Fee components</div>");
+                return htmlWriter.ToString();
+            }
         }
         #endregion
 

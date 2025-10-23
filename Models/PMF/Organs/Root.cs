@@ -12,7 +12,9 @@ using Models.PMF.Library;
 using Models.Soils;
 using Models.Soils.Arbitrator;
 using Newtonsoft.Json;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("UnitTests")]
 namespace Models.PMF.Organs
 {
 
@@ -174,7 +176,7 @@ namespace Models.PMF.Organs
         public BiomassPoolType potentialDMAllocation { get; set; }
 
         /// <summary>Link to the soilCrop</summary>
-        public SoilCrop SoilCrop {get; private set;} = null;
+        public SoilCrop SoilCrop { get; private set; } = null;
 
         /// <summary>Water supplied by root network to soil arbitrator for this plant instance</summary>
         public PlantWaterOrNDelta WaterUptakeSupply { get; set; }
@@ -419,25 +421,8 @@ namespace Models.PMF.Organs
         {
             get
             {
-                double fasw = 0;
-                double TotalArea = 0;
-
-                foreach (ZoneState Z in Zones)
-                {
-                    Zone zone = Structure.Find<Zone>(Z.Name);
-                    var soilPhysical = Structure.FindChild<IPhysical>(relativeTo: Z.Soil);
-                    var waterBalance = Structure.FindChild<ISoilWater>(relativeTo: Z.Soil);
-                    var soilCrop = Structure.FindChild<SoilCrop>(parentPlant.Name + "Soil", relativeTo: Z.Soil, recurse: true);
-                    double[] paw = APSIM.Shared.APSoil.APSoilUtilities.CalcPAWC(soilPhysical.Thickness, soilCrop.LL, waterBalance.SW, soilCrop.XF);
-                    double[] pawmm = MathUtilities.Multiply(paw, soilPhysical.Thickness);
-                    double[] pawc = APSIM.Shared.APSoil.APSoilUtilities.CalcPAWC(soilPhysical.Thickness, soilCrop.LL, soilPhysical.DUL, soilCrop.XF);
-                    double[] pawcmm = MathUtilities.Multiply(pawc, soilPhysical.Thickness);
-                    TotalArea += zone.Area;
-
-                    fasw += MathUtilities.Sum(pawmm) / MathUtilities.Sum(pawcmm) * zone.Area;
-                }
-                fasw = fasw / TotalArea;
-                return fasw;
+                // FAWS across the root system (no constraint).
+                return CalcFASW(double.MaxValue);
             }
         }
 
@@ -499,6 +484,20 @@ namespace Models.PMF.Organs
 
                 return MeanWTF;
             }
+        }
+
+        /// <summary>Returns the Fraction of Available Soil Water across the root system (across zones, constrained by the specified depth)</summary>
+        public double CalcFASW(double depth)
+        {
+            double totalFASW = 0;
+            double totalArea = 0;
+            foreach (ZoneState zoneState in Zones)
+            {
+                double area = zoneState.Zone.Area;
+                totalFASW += area * SoilUtilities.CalcFASW(zoneState.Physical.Thickness, zoneState.SoilCrop.PAWmm, zoneState.SoilCrop.PAWCmm, depth);
+                totalArea += area;
+            }
+            return totalFASW / totalArea;
         }
 
         /// <summary>Gets or sets the maximum nconc.</summary>
@@ -910,7 +909,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Initialise all zones.</summary>
-        private void InitialiseZones()
+        internal void InitialiseZones()
         {
             Zones.Clear();
             Zones.Add(PlantZone);
@@ -1047,7 +1046,7 @@ namespace Models.PMF.Organs
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         /// <exception cref="ApsimXException">Cannot find a soil crop parameterisation for  + Name</exception>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        internal void OnSimulationCommencing(object sender, EventArgs e)
         {
             Soil soil = Structure.Find<Soil>();
             if (soil == null)

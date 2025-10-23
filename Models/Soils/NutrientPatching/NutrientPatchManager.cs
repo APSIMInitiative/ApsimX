@@ -44,9 +44,6 @@ namespace Models.Soils.NutrientPatching
         /// <summary>Minimum allowable relative area for a CNpatch (0-1).</summary>
         private double minimumPatchArea = 0.000001;
 
-        /// <summary>The maximum amount of N that is made available to plants in one day (kg/ha/day).</summary>
-        public double MaximumNitrogenAvailableToPlants { get; set; } = 3;
-
         /// <summary>The approach used for partitioning the N between patches.</summary>
         public PartitionApproachEnum NPartitionApproach { get; set; } = PartitionApproachEnum.BasedOnConcentrationAndDelta;
 

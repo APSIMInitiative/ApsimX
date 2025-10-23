@@ -11,6 +11,9 @@ namespace APSIM.Workflow
         /// <summary>Name of the group.</summary>
         public string? Name { get; set; }
 
+        /// <summary>List of folders to be included in this group.</summary>
+        public List<string>? Folders { get; set; }
+
         /// <summary>List of experiments to be included in this group.</summary>
         public List<string>? Experiments { get; set; }
 

@@ -20,12 +20,9 @@ namespace Models.CLEM.Resources
     [Description("This resource represents a labour type (i.e. individual or cohort)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Labour/LabourType.htm")]
-    public class LabourType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType, IFilterable, IAttributable, ICloneable
+    public class LabourType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType, IFilterable, IAttributable
     {
-        [Link]
-        private readonly CLEMEvents events = new CLEMEvents();
-
-        private DateTime birthDate;
+        private double ageInMonths = 0;
 
         /// <summary>
         /// A list of attributes added to this individual
@@ -37,15 +34,14 @@ namespace Models.CLEM.Resources
         /// Unit type
         /// </summary>
         [JsonIgnore]
-        public string Units { get { return "Days available"; } }
+        public string Units { get { return "NA"; } }
 
         /// <summary>
-        /// Initial age of individuals.
+        /// Age in years.
         /// </summary>
         [Description("Initial Age")]
-        [Core.Display(SubstituteSubPropertyName = "Parts")]
-        [Units("years, months, days")]
-        public AgeSpecifier InitialAge { get; set; } = new int[] { 18, 0, 0 };
+        [Required, GreaterThanEqualValue(0)]
+        public double InitialAge { get; set; }
 
         /// <summary>
         /// Male or Female
@@ -56,37 +52,40 @@ namespace Models.CLEM.Resources
         public Sex Sex { get; set; }
 
         /// <summary>
-        /// Name of the labour component
-        /// </summary>
-        [FilterByProperty]
-        public string IndividualName { get { return Name; } }
-
-        /// <summary>
-        /// Name of the labour cohort
-        /// </summary>
-        [FilterByProperty]
-        public string CohortName { get; set; }
-
-        /// <summary>
         /// Age in years.
         /// </summary>
         [JsonIgnore]
         [FilterByProperty]
-        public double AgeInYears 
-        { 
-            get 
-            { 
-                if(AllowAgeing)
-                    return (events.TimeStepStart - birthDate).TotalDays/365.0; 
-                return InitialAge.InDays / 365.0;
-            } 
+        public double Age { get { return Math.Floor(AgeInMonths / 12); } }
+
+        /// <summary>
+        /// Age in months.
+        /// </summary>
+        [JsonIgnore]
+        [FilterByProperty]
+        public double AgeInMonths
+        {
+            get
+            {
+                return ageInMonths;
+            }
+            set
+            {
+                if (ageInMonths != value)
+                {
+                    ageInMonths = value;
+                    // update AE
+                    adultEquivalent = (Parent as Labour).CalculateAE(value);
+                }
+            }
         }
 
         /// <summary>
-        /// Allow ageing of this individual
+        /// The name of the individuals which may include an index at end for LabourTypes initialised with more than one individual
         /// </summary>
         [JsonIgnore]
-        public bool AllowAgeing { get; private set; } = false;
+        [FilterByProperty]
+        public string NameOfIndividual {  get { return Name; } }
 
         private double? adultEquivalent = null;
 
@@ -95,23 +94,29 @@ namespace Models.CLEM.Resources
         /// </summary>
         [JsonIgnore]
         [FilterByProperty]
-        public double AdultEquivalent{ get { return adultEquivalent?? 1; } }
-
-        /// <summary>
-        /// Method for controlling model to set the Adult Equivalent measurement for this individual
-        /// </summary>
-        /// <param name="aeRelationship">Relationship model providing the AE relationship</param>
-        public void SetAdultEquivalent(Relationship aeRelationship)
+        public double AdultEquivalent
         {
-            if (aeRelationship is not null)
-                adultEquivalent = aeRelationship.SolveY(AgeInYears);
+            get
+            {
+                // if null then report warning that no AE relationship has been provided.
+                if (adultEquivalent == null)
+                {
+                    CLEMModel parent = (Parent as CLEMModel);
+                    string warning = "No Adult Equivalent (AE) relationship has been added to [r=" + this.Parent.Name + "]. All individuals assumed to be 1 AE.\r\nAdd a suitable relationship with the Identifier with [Adult equivalent] below the [r=Labour] resource group.";
+                    if (!parent.Warnings.Exists(warning))
+                    {
+                        parent.Warnings.Add(warning);
+                        parent.Summary.WriteMessage(this, warning, MessageType.Warning);
+                    }
+                }
+                return adultEquivalent ?? 1;
+            }
         }
 
         /// <summary>
         /// Adult equivalents of all individuals.
         /// </summary>
         [JsonIgnore]
-        [FilterByProperty]
         public double TotalAdultEquivalents
         {
             get
@@ -119,6 +124,7 @@ namespace Models.CLEM.Resources
                 return (adultEquivalent ?? 1) * Convert.ToDouble(Individuals, System.Globalization.CultureInfo.InvariantCulture);
             }
         }
+
 
         /// <summary>
         /// Total value of resource
@@ -130,6 +136,7 @@ namespace Models.CLEM.Resources
                 return null;
             }
         }
+
 
         /// <summary>
         /// Monthly dietary components
@@ -194,7 +201,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("Hired labour")]
         [FilterByProperty]
-        public bool Hired { get; set; }
+        public bool IsHired { get; set; }
 
         /// <summary>
         /// The unique id of the last activity request for this labour type
@@ -228,6 +235,14 @@ namespace Models.CLEM.Resources
         public double AvailabilityLimiter { get; set; }
 
         /// <summary>
+        /// Constructor
+        /// </summary>
+        public LabourType()
+        {
+            this.SetDefaults();
+        }
+
+        /// <summary>
         /// Determines the amount of labour up to a max available for the specified Activity.
         /// </summary>
         /// <param name="activityID">Unique activity ID</param>
@@ -251,21 +266,13 @@ namespace Models.CLEM.Resources
                 AvailableDays = Math.Min(30.4, LabourAvailability.GetAvailability(month - 1) * AvailabilityLimiter);
         }
 
-        /// <inheritdoc/>
-        [EventSubscribe("OnInitialiseResources")]
-        private void OnInitialiseResources(object sender, EventArgs e)
-        {
-            birthDate = events.Clock.StartDate.AddDays(-1 * InitialAge.InDays);
-            AllowAgeing = (!Hired && (Parent as Labour).AllowAgeing);
-        }
-
         /// <summary>
         /// Get value of this individual
         /// </summary>
         /// <returns>value</returns>
-        public double PayRate(bool reportWarningIfNoPrice = false)
+        public double PayRate()
         {
-            return (Parent as Labour).PayRate(this, reportWarningIfNoPrice);
+            return (Parent as Labour).PayRate(this);
         }
 
         #region Transactions
@@ -280,13 +287,13 @@ namespace Models.CLEM.Resources
         public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             if (resourceAmount.GetType().ToString() != "System.Double")
-                throw new Exception(String.Format("ResourceAmount object of type {0} does not support Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
+                throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
 
             double amountAdded = (double)resourceAmount;
 
             if (amountAdded > 0)
             {
-                AvailableDays += amountAdded;
+                this.AvailableDays += amountAdded;
                 ReportTransaction(TransactionType.Gain, amountAdded, activity, relatesToResource, category, this);
             }
         }
@@ -297,7 +304,8 @@ namespace Models.CLEM.Resources
         /// <param name="dietComponent"></param>
         public void AddIntake(LabourDietComponent dietComponent)
         {
-            DietaryComponentList ??= new List<LabourDietComponent>();
+            if (DietaryComponentList == null)
+                DietaryComponentList = new List<LabourDietComponent>();
 
             LabourDietComponent alreadyEaten = DietaryComponentList.Where(a => a.FoodStore != null && a.FoodStore.Name == dietComponent.FoodStore.Name).FirstOrDefault();
             if (alreadyEaten != null)
@@ -315,13 +323,13 @@ namespace Models.CLEM.Resources
             if (request.Required == 0)
                 return;
 
-            if (Individuals > 1)
+            if (this.Individuals > 1)
                 throw new NotImplementedException("Cannot currently use labour transactions while using cohort-based style labour");
 
             double amountRemoved = request.Required;
             // avoid taking too much
-            amountRemoved = Math.Min(AvailableDays, amountRemoved);
-            AvailableDays -= amountRemoved;
+            amountRemoved = Math.Min(this.AvailableDays, amountRemoved);
+            this.AvailableDays -= amountRemoved;
             request.Provided = amountRemoved;
 
             ReportTransaction(TransactionType.Loss, amountRemoved, request.ActivityModel, request.RelatesToResource, request.Category, this);
@@ -333,7 +341,7 @@ namespace Models.CLEM.Resources
         /// <param name="newValue">New value to set food store to</param>
         public new void Set(double newValue)
         {
-            AvailableDays = newValue;
+            this.AvailableDays = newValue;
         }
 
         #endregion
@@ -355,7 +363,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return AvailableDays;
+                return this.AvailableDays;
             }
         }
 
@@ -366,27 +374,29 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using StringWriter htmlWriter = new();
-            if (!FormatForParentControl)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("<div class=\"activityentry\">");
-                if (Individuals == 0)
-                    htmlWriter.Write("No individuals are provided for this labour type");
-                else
+                if (!FormatForParentControl)
                 {
-                    if (Individuals > 1)
-                        htmlWriter.Write($"<span class=\"setvalue\">{Individuals}</span> x ");
-                    htmlWriter.Write($"<span class=\"setvalue\">{InitialAge}</span> year old ");
-                    htmlWriter.Write($"<span class=\"setvalue\">{Sex}</span>");
-                    if (Hired)
-                        htmlWriter.Write(" as hired labour");
-                }
-                htmlWriter.Write("</div>");
+                    htmlWriter.Write("<div class=\"activityentry\">");
+                    if (this.Individuals == 0)
+                        htmlWriter.Write("No individuals are provided for this labour type");
+                    else
+                    {
+                        if (this.Individuals > 1)
+                            htmlWriter.Write($"<span class=\"setvalue\">{this.Individuals}</span> x ");
+                        htmlWriter.Write($"<span class=\"setvalue\">{this.InitialAge}</span> year old ");
+                        htmlWriter.Write($"<span class=\"setvalue\">{this.Sex}</span>");
+                        if (IsHired)
+                            htmlWriter.Write(" as hired labour");
+                    }
+                    htmlWriter.Write("</div>");
 
-                if (Individuals > 1)
-                    htmlWriter.Write($"<div class=\"warningbanner\">You will be unable to identify these individuals with <span class=\"setvalue\">Name</div> but need to use the Attribute with tag <span class=\"setvalue\">Group</span> and value <span class=\"setvalue\">{Name}</span></div>");
+                    if (this.Individuals > 1)
+                        htmlWriter.Write($"<div class=\"warningbanner\">You will be unable to identify these individuals with <span class=\"setvalue\">Name</div> but need to use the Attribute with tag <span class=\"setvalue\">Group</span> and value <span class=\"setvalue\">{Name}</span></div>");
+                }
+                return htmlWriter.ToString();
             }
-            return htmlWriter.ToString();
         }
 
         /// <inheritdoc/>
@@ -405,23 +415,6 @@ namespace Models.CLEM.Resources
                 return "";
             else
                 return base.ModelSummaryOpeningTags();
-        }
-
-        /// <inheritdoc/>
-        public object Clone()
-        {
-            return new LabourType()
-            {
-                InitialAge = this.InitialAge,
-                Sex = this.Sex,
-                Individuals = this.Individuals,
-                Hired = this.Hired,
-                Name = this.Name,
-                CohortName = this.CohortName,
-                LabourAvailability = this.LabourAvailability,
-                AvailabilityLimiter = this.AvailabilityLimiter,
-                DietaryComponentList = this.DietaryComponentList
-            };
         }
 
         #endregion

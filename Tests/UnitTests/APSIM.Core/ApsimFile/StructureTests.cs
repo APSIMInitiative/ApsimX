@@ -167,6 +167,7 @@
         }
 
         [Serializable]
+        [ValidParent(ParentType = typeof(Zone))]
         private class Model0 : Model
         {
             [EventSubscribe("StartOfSimulation")]

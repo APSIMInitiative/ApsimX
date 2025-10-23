@@ -77,7 +77,7 @@ namespace Models
     public class ReportColumn : IReportColumn
     {
         /// <summary>An instance of a locator service.</summary>
-        private readonly IStructure structure;
+        private IStructure structure;
 
         /// <summary>Are we in the capture window?</summary>
         private bool inCaptureWindow;
