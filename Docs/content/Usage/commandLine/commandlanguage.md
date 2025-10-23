@@ -31,14 +31,16 @@ This language replaces an older version of the language. If you have command fil
       ```[Weather].FileName=Dalby.met```
 - __property set__ - Change the property of a model using the value read from a file (contents of value.txt).
       ```[Weather].FileName=<value.txt```
-- __property add to array__ - Add a string to a model array property
+- __property add to array__ - Add a string to a model array property or update it if it already exists.
       ```[Janz].Command += [Phenology].CAMP.EnvData.VrnTreatTemp = 5.5```
 - __property delete from array__ - Remove a string from a model array property
-      ```[Janz].Command -= [Phenology].CAMP.EnvData.VrnTreatTemp = 5.5```
+      ```[Janz].Command -= [Phenology].CAMP.EnvData.VrnTreatTemp```
 - __comment lines__ - you can comment out command lines
       ```# Add Soil1 from the soils database file```
 
-    _note: all file name references can either have an absolute path or no path making the file relative to the command file._
+    _note 1: all file name references can either have an absolute path or no path making the file relative to the command file._
+
+    _note 2: a property set/add/remove/update is only applied to the first occurence of it in the simulation tree. For example, if there are multiple occurences of ```Janz```  and you are setting ```[Janz].Command``` then the change will only be applied to the first occurence._
 
 ## Property formatting when setting property values
 
