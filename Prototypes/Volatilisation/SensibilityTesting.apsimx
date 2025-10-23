@@ -1623,14 +1623,14 @@
                         200.0
                       ],
                       "PH": [
-                        7.0,
-                        7.0,
-                        7.0,
-                        7.0,
-                        7.0,
-                        7.0,
-                        7.0,
-                        7.0
+                        6.5,
+                        6.5,
+                        6.5,
+                        6.5,
+                        6.5,
+                        6.5,
+                        6.5,
+                        6.5
                       ],
                       "PHUnits": 0,
                       "EC": null,
@@ -1658,7 +1658,16 @@
                         null
                       ],
                       "ESPMetadata": null,
-                      "PHMetadata": null,
+                      "PHMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
                       "Name": "Chemical",
                       "ResourceName": null,
                       "Children": [],
@@ -3414,7 +3423,7 @@
     {
       "$type": "Models.Factorial.Experiment, Models",
       "DisabledSimNames": null,
-      "Name": "UreaRate",
+      "Name": "Rate",
       "ResourceName": null,
       "Children": [
         {
@@ -3424,8 +3433,8 @@
           "Children": [
             {
               "$type": "Models.Factorial.Factor, Models",
-              "Specification": "[FertiliseFixedDates].Script.Amount = 0, 10, 25, 50, 100",
-              "Name": "Rate",
+              "Specification": "[FertiliseFixedDates].Script.Amount = 0 to 100 step 20",
+              "Name": "Urea",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -3444,7 +3453,7 @@
             {
               "$type": "Models.Clock, Models",
               "Start": "2000-01-01T00:00:00",
-              "End": "2000-12-31T00:00:00",
+              "End": "2000-02-28T00:00:00",
               "Name": "Clock",
               "ResourceName": null,
               "Children": [],
@@ -3454,8 +3463,8 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "%root%/Tests/Simulation/Volatilisation/FakeWeather.xlsx",
-              "ExcelWorkSheetName": "CoolAdd2WeeklyOsc",
+              "FileName": "%root%/Examples/WeatherFiles/NZ_Hamilton.met",
+              "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -3628,7 +3637,7 @@
                   "IsCutAndCarry": false,
                   "FractionClippingsReturned": 0.0,
                   "FractionIntakeNToAnimal": [
-                    0.0
+                    100.0
                   ],
                   "DungNConc": 2.6,
                   "FractionOfDungUrineOffPaddock": [
@@ -3802,7 +3811,7 @@
                     },
                     {
                       "Key": "Dates",
-                      "Value": "5-jan"
+                      "Value": "2-jan"
                     },
                     {
                       "Key": "UseCritNThreshold",
@@ -4027,15 +4036,15 @@
                     },
                     {
                       "Key": "triggerDeficit",
-                      "Value": "75"
-                    },
-                    {
-                      "Key": "targetDeficit",
                       "Value": "95"
                     },
                     {
+                      "Key": "targetDeficit",
+                      "Value": "100"
+                    },
+                    {
                       "Key": "returndays",
-                      "Value": "3"
+                      "Value": "10"
                     },
                     {
                       "Key": "maximumAmount",
@@ -4256,8 +4265,19 @@
                   "$type": "Models.Report, Models",
                   "VariableNames": [
                     "[Clock].Today as Date",
-                    "sum([Nutrient].NH3Volatilisation.EmissionNH3) as Volat",
-                    "sum([Nutrient].Urea.kgha[1:2]) as Urea30mm"
+                    "[FertiliseFixedDates].Script.Amount as NInput",
+                    "sum([Soil].NH3Volatilisation.EmissionNH3) as Volatilisation",
+                    "sum([Soil].NH3Volatilisation.EmissionNH3[:])/([FertiliseFixedDates].Script.Amount + 0.0001) as PropFertVolatilised",
+                    "",
+                    "",
+                    "sum([Nutrient].Urea.kgha[1:5]) as Urea100mm",
+                    "sum([Nutrient].NH4.kgha[1:5]) as NH4100mm",
+                    "sum([Nutrient].NO3.kgha[1:5]) as NO3100mm",
+                    "mean([NH3Volatilisation].pH[1:5]) as pH",
+                    "",
+                    "",
+                    "sum([Soil].Water.PAWmm[1:5]) as PAW100mm",
+                    "[MicroClimate].PetTotal as PET"
                   ],
                   "EventNames": [
                     "[Clock].EndOfDay"
@@ -4695,15 +4715,15 @@
                       ],
                       "InitialValues": [
                         0.465,
-                        0.448,
-                        0.437,
-                        0.425,
+                        0.44799999999999995,
+                        0.43700000000000006,
+                        0.42499999999999993,
                         0.387,
                         0.333,
-                        0.333,
-                        0.333
+                        0.33299999999999996,
+                        0.33299999999999996
                       ],
-                      "FilledFromTop": true,
+                      "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
                       "Children": [],
@@ -4723,10 +4743,10 @@
                         200.0
                       ],
                       "InitialValues": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
+                        10.0,
+                        10.0,
+                        5.0,
+                        1.0,
                         0.0,
                         0.0,
                         0.0,
@@ -4779,9 +4799,9 @@
                         200.0
                       ],
                       "InitialValues": [
-                        0.0,
-                        0.0,
-                        0.0,
+                        2.0,
+                        1.0,
+                        0.5,
                         0.0,
                         0.0,
                         0.0,
@@ -4941,14 +4961,14 @@
                         0.993
                       ],
                       "FOM": [
-                        361.11,
-                        361.11,
-                        304.65,
-                        117.23,
-                        38.06,
-                        12.36,
-                        4.01,
-                        1.48
+                        361.1,
+                        361.1,
+                        304.6,
+                        117.2,
+                        38.1,
+                        12.4,
+                        4.0,
+                        1.5
                       ],
                       "CarbonMetadata": [
                         null,
@@ -4989,14 +5009,14 @@
                         200.0
                       ],
                       "PH": [
-                        7.0,
-                        7.0,
-                        7.0,
-                        7.0,
-                        7.0,
-                        7.0,
-                        7.0,
-                        7.0
+                        6.5,
+                        6.5,
+                        6.5,
+                        6.5,
+                        6.5,
+                        6.5,
+                        6.5,
+                        6.5
                       ],
                       "PHUnits": 0,
                       "EC": null,
@@ -5024,7 +5044,16 @@
                         null
                       ],
                       "ESPMetadata": null,
-                      "PHMetadata": null,
+                      "PHMetadata": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                      ],
                       "Name": "Chemical",
                       "ResourceName": null,
                       "Children": [],
@@ -5073,6 +5102,24 @@
                       ],
                       "InitialValues": null,
                       "Name": "Temperature",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Nutrients.NH3Volatilisation, Models",
+                      "DepthEmissable1": 30.0,
+                      "DepthEmissable2": 100.0,
+                      "k_BC": 0.03,
+                      "k_pH_hyd": 1.0,
+                      "k_pH_nit": 1.0,
+                      "k_pH_x": 0.2,
+                      "k_AFPV": 300.0,
+                      "f_AV": 0.5,
+                      "CritRain1": 3.0,
+                      "CritRain2": 10.0,
+                      "Name": "NH3Volatilisation",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -5128,7 +5175,7 @@
               "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
-              "Name": "VolatilisationWarm",
+              "Name": "Volatilisation",
               "ResourceName": null,
               "Children": [
                 {
@@ -5146,15 +5193,15 @@
                   "LineThickness": 0,
                   "TableName": "Report",
                   "XFieldName": "Date",
-                  "YFieldName": "Volat",
+                  "YFieldName": "Volatilisation",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": "[SimulationName] LIKE '%Hamilton%'",
-                  "Name": "Volat",
+                  "Filter": "",
+                  "Name": "Volatilisation",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -5181,7 +5228,7 @@
                 },
                 {
                   "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": "Volat",
+                  "Title": null,
                   "Position": 2,
                   "Inverted": false,
                   "CrossesAtZero": false,
@@ -5196,7 +5243,7 @@
               "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
-              "Name": "VolatilisationCumWarm",
+              "Name": "Volatilisation Proportion",
               "ResourceName": null,
               "Children": [
                 {
@@ -5204,8 +5251,8 @@
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 2,
-                  "ColourArgb": 0,
-                  "FactorToVaryColours": "Season",
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "SimulationName",
                   "FactorToVaryMarkers": null,
                   "FactorToVaryLines": null,
                   "Marker": 11,
@@ -5214,15 +5261,15 @@
                   "LineThickness": 0,
                   "TableName": "Report",
                   "XFieldName": "Date",
-                  "YFieldName": "Volat",
+                  "YFieldName": "PropFertVolatilised",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": true,
                   "CumulativeX": false,
-                  "Filter": "[SimulationName] LIKE '%Hamilton%'",
-                  "Name": "Volat",
+                  "Filter": "NInput > 0",
+                  "Name": "Volatilisation",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -5264,7 +5311,7 @@
               "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
-              "Name": "VolatilisationCool",
+              "Name": "NH4",
               "ResourceName": null,
               "Children": [
                 {
@@ -5282,15 +5329,15 @@
                   "LineThickness": 0,
                   "TableName": "Report",
                   "XFieldName": "Date",
-                  "YFieldName": "Volat",
+                  "YFieldName": "NH4100mm",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": "[SimulationName] LIKE '%Lincoln%'",
-                  "Name": "Volat",
+                  "Filter": "",
+                  "Name": "Series",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -5317,7 +5364,154 @@
                 },
                 {
                   "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": "Volat",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "pH",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Date",
+                  "YFieldName": "pH",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": "",
+                  "Name": "Series",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "Volatilisation Cumulative",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Date",
+                  "YFieldName": "Volatilisation",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": true,
+                  "CumulativeX": false,
+                  "Filter": "",
+                  "Name": "Volatilisation",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "PET",
                   "Position": 2,
                   "Inverted": false,
                   "CrossesAtZero": false,
@@ -5332,16 +5526,16 @@
               "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
-              "Name": "VolatilisationCumCool",
+              "Name": "Water",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
-                  "YAxis": 2,
-                  "ColourArgb": 0,
-                  "FactorToVaryColours": "Season",
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": null,
                   "FactorToVaryMarkers": null,
                   "FactorToVaryLines": null,
                   "Marker": 11,
@@ -5350,15 +5544,44 @@
                   "LineThickness": 0,
                   "TableName": "Report",
                   "XFieldName": "Date",
-                  "YFieldName": "Volat",
+                  "YFieldName": "PAW100mm",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
-                  "Cumulative": true,
+                  "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": "[SimulationName] LIKE '%Lincoln%'",
-                  "Name": "Volat",
+                  "Filter": "NInput = 60",
+                  "Name": "PAW",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 2,
+                  "ColourArgb": -11094807,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Date",
+                  "YFieldName": "PET",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": "NInput = 60",
+                  "Name": "PET",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
