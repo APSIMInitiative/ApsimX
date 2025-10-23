@@ -1,5 +1,6 @@
+using APSIM.Shared;
 using APSIM.Shared.Utilities;
-using Topten.RichTextKit;
+using DeepCloner.Core;
 
 namespace APSIM.Core;
 
@@ -11,6 +12,7 @@ namespace APSIM.Core;
 /// contains the child nodes and a _Parent_ property that links to the parent node.
 /// There are also methods for adding, removing and replace child nodes and for walking the node tree.
 /// </summary>
+[NonSerializedClass]
 public class Node : IStructure
 {
     private readonly List<Node> children = [];
@@ -441,6 +443,8 @@ public class Node : IStructure
         head.locator = new();
         head.Compiler = compiler;
         head.FileName = fileName;
+        if (head.FileName == null)
+            head.FileName = Path.GetTempFileName().Replace(".tmp", ".apsimx");
         model.Node = head;
         ResolvesDependencies(head);
 
