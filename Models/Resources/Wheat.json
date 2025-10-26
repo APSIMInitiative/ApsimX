@@ -2669,7 +2669,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0123,
+                      "FixedValue": 0.0459,
                       "Units": null,
                       "Name": "MinimumNConc",
                       "ResourceName": null,
@@ -2702,8 +2702,8 @@
                             10
                           ],
                           "Y": [
-                            0.0223,
-                            0.0223,
+                            0.0459,
+                            0.0459,
                             0.00000001,
                             0.00000001
                           ],
