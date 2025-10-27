@@ -1,11 +1,11 @@
-﻿using ClosedXML.Excel;
-using System;
+﻿using System;
 using System.Data;
+using ClosedXML.Excel;
 
 namespace Utility
 {
     /// <summary>
-    /// TODO: Update summary.
+    /// A class for writing a collection of DataTables to an excel file, where each table is a different sheet.
     /// </summary>
     public class Excel
     {
@@ -14,10 +14,10 @@ namespace Utility
         /// </summary>
         /// <param name="tables">The array of tables to write</param>
         /// <param name="fileName">The file name to write to</param>
-        public static void WriteToEXCEL(System.Data.DataTable[] tables, string fileName)
+        public static void WriteToEXCEL(DataTable[] tables, string fileName)
         {
             XLWorkbook workbook = new XLWorkbook();
-            foreach (System.Data.DataTable table in tables)
+            foreach (DataTable table in tables)
             {
                 DataTable sortedTable = table;
 
