@@ -422,7 +422,7 @@ namespace Models.AgPasture
                         zones.Add(UptakeDemands);
 
                         // get the N amount available in the soil
-                        myRoot.EvaluateSoilNitrogenAvailability(zone);
+                        myRoot.EvaluateSoilNitrogenAvailability(zone, mySoilWaterUptake);
 
                         UptakeDemands.NO3N = myRoot.mySoilNO3Available;
                         UptakeDemands.NH4N = myRoot.mySoilNH4Available;
@@ -494,7 +494,7 @@ namespace Models.AgPasture
             foreach (ZoneWaterAndN zone in zones)
             {
                 PastureBelowGroundOrgan myRoot = roots.Find(root => root.IsInZone(zone.Zone.Name));
-                myRoot?.EvaluateSoilNitrogenAvailability(zone);
+                myRoot?.EvaluateSoilNitrogenAvailability(zone, mySoilWaterUptake);
             }
             EvaluateNitrogenFixation();
             EvaluateSoilNitrogenDemand();
@@ -1706,7 +1706,7 @@ namespace Models.AgPasture
         public double AboveGroundCrudeProtein
         {
             get { return AboveGroundNConc * 6.25; }
-        
+
         }
 
         /// <summary>Average N concentration in plant's leaves (kgN/kgDM).</summary>
@@ -2254,7 +2254,7 @@ namespace Models.AgPasture
                 mass.StructuralWt = (Leaf.StandingHerbageWt + Stem.StandingHerbageWt + Stolon.StandingHerbageWt) / 10.0; // to g/m2
                 mass.StructuralN = (Leaf.StandingHerbageN + Stem.StandingHerbageN + Stolon.StandingHerbageN) / 10.0;    // to g/m2
                 return mass;
-                
+
             }
         }
 
