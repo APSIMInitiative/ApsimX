@@ -1,17 +1,11 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 202,
+  "Version": 205,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
     {
       "$type": "Models.PMF.Plant, Models",
-      "Phenology": null,
-      "Arbitrator": null,
-      "structure": null,
-      "Leaf": null,
-      "Root": null,
-      "AboveGround": null,
       "PlantType": "Wheat",
       "Name": "Wheat",
       "ResourceName": null,
@@ -233,14 +227,22 @@
         },
         {
           "$type": "Models.PMF.Phen.Phenology, Models",
-          "thermalTime": null,
           "Name": "Phenology",
           "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "Wheat exhibits a range of developmental responses to environment and these are strongly influenced by genotype characteristics. \nTemperature is the primary driver of development, increasing development rates and decreasing phase durations as it increases.  These affects are captured by thermal time.  However, wheat also exhibits cold and photoperiod sensitivities in its Vernalisaing phase and further photoperiod sensitivity in the SpikeletDifferenation and HeadEmergence phases.  Photoperiod responses are seen as a reduction in the length of a phase for a photoperiod sensitive genotype in response to a longer photoperiod.  Vernalisation responses are more complicated as they are driven by cool temperature but interact with photoperiod.  For vernalisation sensitive varieties (Winter types), exposure to cool temperatures and/or short photoperiods during the Vernalising phase may reduce its thermal time duration.  \n\nAPSIM wheat implements the Cereal Anthesis Molecular Phenology (CAMP) model to simulate development.  It is based on the Kirby Framework which assumes the timing of anthesis is a result of the timing of flag leaf and an additional thermal time passage from there to heading then anthesis.  It also assumes the timing of flag leaf is a result of the Final Leaf Number (which sets a target) and leaf appearance rate (which sets the rate of progress toward the target).  Leaf appearance rate is a function of Thermal time and a genotype specific Phyllochron which changes with Haun stage as described by [Jamieson_LeafAppearance_1995].  \n\nFinal Leaf Number (FLN) is set on the day that terminal spikelet occurs as: \n\nFLN = 2.85 + 1.1 * TSHS  \n\nWhere TSHS is the Haun stage on the day terminal spikelet stage occurs.  Terminal spikelet is at the end of the SpikeletDifferentaiation phase which is preceeded by the Emerging and Vernalising phases.  The mechanisums for progress through each of these phase are described below",
-              "Name": "Memo",
+              "Text": "The wheat models outputs of phase names (Phenology.CurrentPhase.Name), stage names (Phenology.CurrentStageName) and decimal stage (Phenology.Stage) are consistent with the population culm development score (PCSD) as described by [Celestina2023]. \nObservations recorded following the protocole outlined by [Celestina2023] are suitable for testing model accuracy and calibrating cultivar coefficients.",
+              "Name": "PCDS (development stages)",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "Wheat exhibits a range of developmental responses to environment and these are strongly influenced by genotype characteristics. \nTemperature is the primary driver of development, increasing development rates and decreasing phase durations as it increases.  These affects are captured by thermal time.  However, wheat also exhibits cold and photoperiod sensitivities in its Vernalisaing phase and further photoperiod sensitivity in the SpikeletDifferenation and HeadEmergence phases.  Photoperiod responses are seen as a reduction in the length of a phase for a photoperiod sensitive genotype in response to a longer photoperiod.  Vernalisation responses are more complicated as they are driven by cool temperature but interact with photoperiod.  For vernalisation sensitive varieties (Winter types), exposure to cool temperatures and/or short photoperiods during the Vernalising phase may reduce its thermal time duration.  \n\nAPSIM wheat implements the Cereal Anthesis Molecular Phenology (<a href=\"https://www.apsim.info/wp-content/uploads/2025/09/camp-model-description-1.pdf\">CAMP</a>) model to simulate development.  It is based on the Kirby Framework which assumes the timing of anthesis is a result of the timing of flag leaf and an additional thermal time passage from there to heading then anthesis.  It also assumes the timing of flag leaf is a result of the Final Leaf Number (which sets a target) and leaf appearance rate (which sets the rate of progress toward the target).  Leaf appearance rate is a function of Thermal time and a genotype specific Phyllochron which changes with Haun stage as described by [Jamieson_LeafAppearance_1995].  \n\nFinal Leaf Number (FLN) is set on the day that terminal spikelet occurs as: \n\nFLN = 2.85 + 1.1 * TSHS  \n\nWhere TSHS is the Haun stage on the day terminal spikelet stage occurs.  Terminal spikelet is at the end of the SpikeletDifferentaiation phase which is preceeded by the Emerging and Vernalising phases.  The mechanisums for progress through each of these phase are described below",
+              "Name": "Environmental responses",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -248,7 +250,6 @@
             },
             {
               "$type": "Models.Functions.SubDailyInterpolation, Models",
-              "InterpolationMethod": null,
               "agregationMethod": 0,
               "Name": "ThermalTime",
               "ResourceName": null,
@@ -743,9 +744,9 @@
             {
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "FlagLeafAppearance",
-              "End": "Heading",
+              "End": "HeadEmergence",
               "IsEmerged": true,
-              "Name": "HeadEmergence",
+              "Name": "Heading",
               "ResourceName": null,
               "Children": [
                 {
@@ -846,7 +847,7 @@
             },
             {
               "$type": "Models.PMF.Phen.GenericPhase, Models",
-              "Start": "Heading",
+              "Start": "HeadEmergence",
               "End": "Anthesis",
               "IsEmerged": true,
               "Name": "Flowering",
@@ -947,7 +948,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 300.0,
+                  "FixedValue": 335.0,
                   "Units": null,
                   "Name": "Target",
                   "ResourceName": null,
@@ -991,8 +992,6 @@
             },
             {
               "$type": "Models.PMF.Phen.ZadokPMFWheat, Models",
-              "TillerNumber": null,
-              "haunStage": null,
               "Name": "Zadok",
               "ResourceName": null,
               "Children": [
@@ -1059,6 +1058,123 @@
             },
             {
               "$type": "Models.Functions.OnEventFunction, Models",
+              "SetEvent": "Emergence",
+              "ReSetEvent": "never",
+              "Name": "EmergenceDAS",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "\nA function is used to provide flowering date as days after sowing(DAS).\n",
+                  "Name": "memo",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "PreEventValue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Plant].DaysAfterSowing",
+                  "Name": "PostEventValue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.OnEventFunction, Models",
+              "SetEvent": "DoubleRidge",
+              "ReSetEvent": "never",
+              "Name": "DoubleRidgeDAS",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "\nA function is used to provide DoubleRidge date as days after sowing(DAS).\n",
+                  "Name": "memo",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "PreEventValue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Plant].DaysAfterSowing",
+                  "Name": "PostEventValue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.OnEventFunction, Models",
+              "SetEvent": "DoubleRidge",
+              "ReSetEvent": "never",
+              "Name": "DoubleRidgePhotoperiod",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "\nA function is used to provide Photoperiod at Double Ridge (hours).\n",
+                  "Name": "memo",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "PreEventValue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].Photoperiod",
+                  "Name": "PostEventValue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.OnEventFunction, Models",
               "SetEvent": "FlagLeafAppearance",
               "ReSetEvent": "never",
               "Name": "FlagLeafDAS",
@@ -1098,7 +1214,7 @@
             },
             {
               "$type": "Models.Functions.OnEventFunction, Models",
-              "SetEvent": "Heading",
+              "SetEvent": "HeadEmergence",
               "ReSetEvent": "never",
               "Name": "HeadingDAS",
               "ResourceName": null,
@@ -1176,7 +1292,7 @@
             },
             {
               "$type": "Models.Functions.OnEventFunction, Models",
-              "SetEvent": "EndGrainFill",
+              "SetEvent": "HarvestRipe",
               "ReSetEvent": "never",
               "Name": "MaturityDAS",
               "ResourceName": null,
@@ -1184,45 +1300,6 @@
                 {
                   "$type": "Models.Memo, Models",
                   "Text": "\nA function is used to provide maturity date as days after sowing(DAS).",
-                  "Name": "memo",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "PreEventValue",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Plant].DaysAfterSowing",
-                  "Name": "PostEventValue",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.OnEventFunction, Models",
-              "SetEvent": "Emergence",
-              "ReSetEvent": "never",
-              "Name": "EmergenceDAS",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Memo, Models",
-                  "Text": "\nA function is used to provide flowering date as days after sowing(DAS).\n",
                   "Name": "memo",
                   "ResourceName": null,
                   "Children": [],
@@ -1328,7 +1405,6 @@
             },
             {
               "$type": "Models.PMF.Phen.CAMP, Models",
-              "PpResponse": null,
               "Name": "CAMP",
               "ResourceName": null,
               "Children": [
@@ -1381,7 +1457,6 @@
                 },
                 {
                   "$type": "Models.Functions.SubDailyInterpolation, Models",
-                  "InterpolationMethod": null,
                   "agregationMethod": 1,
                   "Name": "ColdVrnResponse",
                   "ResourceName": null,
@@ -1534,12 +1609,6 @@
         },
         {
           "$type": "Models.PMF.Organs.ReproductiveOrgan, Models",
-          "SurfaceOrganicMatter": null,
-          "Summary": null,
-          "biomassRemovalModel": null,
-          "DMConversionEfficiency": null,
-          "MaintenanceRespirationFunction": null,
-          "RemobilisationCost": null,
           "GrowthRespiration": 0.0,
           "MaintenanceRespiration": 0.0,
           "DMDemand": null,
@@ -2107,6 +2176,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
+              "Units": null,
               "Expression": "divide(([Grain].Live.N + [Grain].Dead.N),([Grain].Live.Wt + [Grain].Dead.Wt)) * 100 * 5.71",
               "Name": "Protein",
               "ResourceName": null,
@@ -2138,9 +2208,6 @@
             },
             {
               "$type": "Models.PMF.NutrientPoolFunctions, Models",
-              "Structural": null,
-              "Metabolic": null,
-              "Storage": null,
               "Name": "DMDemandPriorityFactors",
               "ResourceName": null,
               "Children": [
@@ -2180,9 +2247,6 @@
             },
             {
               "$type": "Models.PMF.NutrientPoolFunctions, Models",
-              "Structural": null,
-              "Metabolic": null,
-              "Storage": null,
               "Name": "NDemandPriorityFactors",
               "ResourceName": null,
               "Children": [
@@ -2253,9 +2317,6 @@
         },
         {
           "$type": "Models.PMF.Organs.Root, Models",
-          "SurfaceOrganicMatter": null,
-          "RootShape": null,
-          "InitialWt": null,
           "DMSupply": null,
           "NSupply": null,
           "DMDemand": null,
@@ -2607,12 +2668,6 @@
             },
             {
               "$type": "Models.PMF.NutrientDemandFunctions, Models",
-              "Structural": null,
-              "Metabolic": null,
-              "Storage": null,
-              "QStructuralPriority": null,
-              "QMetabolicPriority": null,
-              "QStoragePriority": null,
               "Name": "DMDemands",
               "ResourceName": null,
               "Children": [
@@ -2827,12 +2882,6 @@
             },
             {
               "$type": "Models.PMF.NutrientDemandFunctions, Models",
-              "Structural": null,
-              "Metabolic": null,
-              "Storage": null,
-              "QStructuralPriority": null,
-              "QMetabolicPriority": null,
-              "QStoragePriority": null,
               "Name": "NDemands",
               "ResourceName": null,
               "Children": [
@@ -2980,9 +3029,6 @@
             },
             {
               "$type": "Models.PMF.NutrientPoolFunctions, Models",
-              "Structural": null,
-              "Metabolic": null,
-              "Storage": null,
               "Name": "InitialWt",
               "ResourceName": null,
               "Children": [
@@ -3026,7 +3072,6 @@
         },
         {
           "$type": "Models.PMF.Organs.SimpleLeaf, Models",
-          "MetData": null,
           "Albedo": 0.25,
           "Gsmax350": 0.015,
           "R50": 150.0,
@@ -3050,9 +3095,6 @@
           "Children": [
             {
               "$type": "Models.Functions.SupplyFunctions.RUEModel, Models",
-              "FT": null,
-              "FVPD": null,
-              "RadnInt": null,
               "Name": "Photosynthesis",
               "ResourceName": null,
               "Children": [
@@ -3412,6 +3454,83 @@
                           ],
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.AccumulateAtEvent, Models",
+                          "StartStageName": "FlagLeafAppearance",
+                          "EndStageName": "Anthesis",
+                          "AccumulateEventName": "[Clock].DoReportCalculations",
+                          "Name": "AreaShrinkage",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "DeltaArea",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Leaf].Live.StructuralWt",
+                                  "Name": "CurrentWt",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Leaf].SpecificAreaCanopy",
+                                  "Name": "SLA",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 0.2,
+                                  "Units": null,
+                                  "Name": "Fraction",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.DivideFunction, Models",
+                                  "Name": "FractionOfPhase",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Phenology].ThermalTime",
+                                      "Name": "DailyTT",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
+                                      "Expression": "[Heading].Target + [Flowering].Target",
+                                      "Name": "PhaseLength",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "Enabled": true,
@@ -3715,12 +3834,14 @@
                         3.0,
                         4.0,
                         5.0,
-                        6.0
+                        6.0,
+                        8.8
                       ],
                       "Y": [
                         10.0,
-                        200.0,
-                        200.0,
+                        100.0,
+                        300.0,
+                        600.0,
                         1000.0
                       ],
                       "Name": "XYPairs",
@@ -4017,69 +4138,6 @@
                               "Name": "TilleringRate",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.MinimumFunction, Models",
-                              "Name": "StressFactors",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                  "Name": "CoverEffect",
-                                  "ResourceName": null,
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Memo, Models",
-                                      "Text": "Tillering is said to cease once a threshold fraction of incoming radiation has been achieved.  This captures shading effects on tillering described by [evers2006cessation].",
-                                      "Name": "Memo",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.XYPairs, Models",
-                                      "X": [
-                                        0.0,
-                                        0.1,
-                                        0.5
-                                      ],
-                                      "Y": [
-                                        1.0,
-                                        1.0,
-                                        0.0
-                                      ],
-                                      "Name": "XYPairs",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Leaf].CoverTotal",
-                                      "Name": "XValue",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].ExpansionStress",
-                                  "Name": "ExpansionStress",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -4942,7 +5000,8 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.ExpressionFunction, Models",
-                                  "Expression": "[Phenology].HeadEmergence.Target + [Phenology].Flowering.Target + [Phenology].GrainExpanding.Target",
+                                  "Units": null,
+                                  "Expression": "[Phenology].Heading.Target  + [Phenology].Flowering.Target + [Phenology].GrainExpanding.Target",
                                   "Name": "TTRequired",
                                   "ResourceName": null,
                                   "Children": [],
@@ -4951,7 +5010,8 @@
                                 },
                                 {
                                   "$type": "Models.Functions.ExpressionFunction, Models",
-                                  "Expression": "[Phenology].HeadEmergence.ProgressThroughPhase + [Phenology].Flowering.ProgressThroughPhase + [Phenology].GrainExpanding.ProgressThroughPhase",
+                                  "Units": null,
+                                  "Expression": "[Phenology].Heading.ProgressThroughPhase + [Phenology].Flowering.ProgressThroughPhase + [Phenology].GrainExpanding.ProgressThroughPhase",
                                   "Name": "TTComplete",
                                   "ResourceName": null,
                                   "Children": [],
@@ -5046,6 +5106,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "Units": null,
                                   "Expression": "[Phenology].GrainFilling.Target + [Phenology].GrainRipening.Target",
                                   "Name": "TTRequired",
                                   "ResourceName": null,
@@ -5055,6 +5116,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "Units": null,
                                   "Expression": "[Phenology].GrainFilling.ProgressThroughPhase + [Phenology].GrainRipening.ProgressThroughPhase",
                                   "Name": "TTComplete",
                                   "ResourceName": null,
@@ -5258,12 +5320,6 @@
             },
             {
               "$type": "Models.PMF.NutrientDemandFunctions, Models",
-              "Structural": null,
-              "Metabolic": null,
-              "Storage": null,
-              "QStructuralPriority": null,
-              "QMetabolicPriority": null,
-              "QStoragePriority": null,
               "Name": "DMDemands",
               "ResourceName": null,
               "Children": [
@@ -5503,12 +5559,6 @@
             },
             {
               "$type": "Models.PMF.NutrientDemandFunctions, Models",
-              "Structural": null,
-              "Metabolic": null,
-              "Storage": null,
-              "QStructuralPriority": null,
-              "QMetabolicPriority": null,
-              "QStoragePriority": null,
               "Name": "NDemands",
               "ResourceName": null,
               "Children": [
@@ -5648,6 +5698,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
+              "Units": null,
               "Expression": "floor([Phenology].HaunStage)",
               "Name": "Ligules",
               "ResourceName": null,
@@ -5666,6 +5717,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
+              "Units": null,
               "Expression": "[Plant].SowingData.Population * [Leaf].StemNumberPerPlant",
               "Name": "StemPopulation",
               "ResourceName": null,
@@ -5723,6 +5775,7 @@
                     },
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Units": null,
                       "Expression": "[Leaf].Ligules + 1",
                       "Name": "LigulesPlusOne",
                       "ResourceName": null,
@@ -5802,13 +5855,6 @@
         },
         {
           "$type": "Models.PMF.Organs.GenericOrgan, Models",
-          "SenescenceRate": null,
-          "NRetranslocationFactor": null,
-          "DMRetranslocationFactor": null,
-          "InitialWt": null,
-          "DMConversionEfficiency": null,
-          "CarbonConcentration": null,
-          "RetranslocateNitrogen": null,
           "StartLive": null,
           "DMSupply": null,
           "NSupply": null,
@@ -6098,12 +6144,6 @@
             },
             {
               "$type": "Models.PMF.NutrientDemandFunctions, Models",
-              "Structural": null,
-              "Metabolic": null,
-              "Storage": null,
-              "QStructuralPriority": null,
-              "QMetabolicPriority": null,
-              "QStoragePriority": null,
               "Name": "DMDemands",
               "ResourceName": null,
               "Children": [
@@ -6268,12 +6308,6 @@
             },
             {
               "$type": "Models.PMF.NutrientDemandFunctions, Models",
-              "Structural": null,
-              "Metabolic": null,
-              "Storage": null,
-              "QStructuralPriority": null,
-              "QMetabolicPriority": null,
-              "QStoragePriority": null,
               "Name": "NDemands",
               "ResourceName": null,
               "Children": [
@@ -6385,9 +6419,6 @@
             },
             {
               "$type": "Models.PMF.NutrientPoolFunctions, Models",
-              "Structural": null,
-              "Metabolic": null,
-              "Storage": null,
               "Name": "InitialWt",
               "ResourceName": null,
               "Children": [
@@ -6482,6 +6513,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "Units": null,
                                   "Expression": "[Phenology].GrainFilling.Target",
                                   "Name": "GrainFillingTT",
                                   "ResourceName": null,
@@ -6491,6 +6523,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "Units": null,
                                   "Expression": "[Phenology].GrainFilling.ProgressThroughPhase",
                                   "Name": "GrainFillingTTComplete",
                                   "ResourceName": null,
@@ -6692,13 +6725,6 @@
         },
         {
           "$type": "Models.PMF.Organs.GenericOrgan, Models",
-          "SenescenceRate": null,
-          "NRetranslocationFactor": null,
-          "DMRetranslocationFactor": null,
-          "InitialWt": null,
-          "DMConversionEfficiency": null,
-          "CarbonConcentration": null,
-          "RetranslocateNitrogen": null,
           "StartLive": null,
           "DMSupply": null,
           "NSupply": null,
@@ -6747,6 +6773,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "Units": null,
                                   "Expression": "[Phenology].GrainRipening.Target",
                                   "Name": "GrainFillingTT",
                                   "ResourceName": null,
@@ -7134,12 +7161,6 @@
             },
             {
               "$type": "Models.PMF.NutrientDemandFunctions, Models",
-              "Structural": null,
-              "Metabolic": null,
-              "Storage": null,
-              "QStructuralPriority": null,
-              "QMetabolicPriority": null,
-              "QStoragePriority": null,
               "Name": "DMDemands",
               "ResourceName": null,
               "Children": [
@@ -7304,12 +7325,6 @@
             },
             {
               "$type": "Models.PMF.NutrientDemandFunctions, Models",
-              "Structural": null,
-              "Metabolic": null,
-              "Storage": null,
-              "QStructuralPriority": null,
-              "QMetabolicPriority": null,
-              "QStoragePriority": null,
               "Name": "NDemands",
               "ResourceName": null,
               "Children": [
@@ -7538,9 +7553,6 @@
             },
             {
               "$type": "Models.PMF.NutrientPoolFunctions, Models",
-              "Structural": null,
-              "Metabolic": null,
-              "Storage": null,
               "Name": "InitialWt",
               "ResourceName": null,
               "Children": [
@@ -7624,12 +7636,40 @@
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.26,
-                          "Units": null,
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
                           "Name": "StemFraction",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                0.0,
+                                5.0,
+                                6.0,
+                                10.0
+                              ],
+                              "Y": [
+                                0.08,
+                                0.08,
+                                0.25,
+                                0.25
+                              ],
+                              "Name": "XYPairs",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Phenology].HaunStage",
+                              "Name": "XValue",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }

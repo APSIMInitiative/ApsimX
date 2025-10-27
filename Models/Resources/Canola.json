@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 202,
+  "Version": 205,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -1331,7 +1331,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.PhaseLookup, Models",
-                  "Name": "PotentialRootFrontVelocity",
+                  "Name": "PotentialRate",
                   "ResourceName": null,
                   "Children": [
                     {
@@ -1344,7 +1344,7 @@
                         {
                           "$type": "Models.Functions.Constant, Models",
                           "FixedValue": 5.0,
-                          "Units": "mm/d",
+                          "Units": null,
                           "Name": "Function",
                           "ResourceName": null,
                           "Children": [],
@@ -1365,7 +1365,7 @@
                         {
                           "$type": "Models.Functions.Constant, Models",
                           "FixedValue": 44.0,
-                          "Units": "mm/d",
+                          "Units": null,
                           "Name": "Function",
                           "ResourceName": null,
                           "Children": [],
@@ -1386,7 +1386,7 @@
                         {
                           "$type": "Models.Functions.Constant, Models",
                           "FixedValue": 0.0,
-                          "Units": "mm/d",
+                          "Units": null,
                           "Name": "Function",
                           "ResourceName": null,
                           "Children": [],
@@ -1394,6 +1394,34 @@
                           "ReadOnly": false
                         }
                       ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.WeightedTemperatureFunction, Models",
+                  "MaximumTemperatureWeighting": 0.5,
+                  "Name": "TemperatureFactor",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        20.0,
+                        32.0
+                      ],
+                      "Y": [
+                        0.0,
+                        1.0,
+                        0.0
+                      ],
+                      "Name": "XYPairs",
+                      "ResourceName": null,
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -7607,6 +7635,7 @@
                 "[Phenology].Vegetative.Target.XYPairs.X = 0,6",
                 "[Phenology].Vegetative.Target.XYPairs.Y = 500,250",
                 "[Phenology].StemElongation.Target.PPResponse.Amount.FixedValue = 200",
+                "[Phenology].StemElongation.Target.Base.FixedValue = 50",
                 "[Leaf].Photosynthesis.RUE.TriazineToleranceModifier.FixedValue = 0.78",
                 "[Leaf].Phyllochron.Base.FixedValue = 54"
               ],
