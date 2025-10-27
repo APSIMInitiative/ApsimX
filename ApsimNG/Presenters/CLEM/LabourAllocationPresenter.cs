@@ -372,7 +372,7 @@ namespace UserInterface.Presenters
                         Name = lt.Name,
                         InitialAge = lt.InitialAge,
                         Sex = lt.Sex,
-                        Hired = lt.Hired,
+                        IsHired = lt.IsHired,
                         Individuals = lt.Individuals
                     };
                     IndividualAttribute att = new IndividualAttribute() { StoredValue = lt.Name };
