@@ -68,6 +68,12 @@ namespace Models.CLEM.Resources
         /// Report protein reduction from lactation (kg day-1)
         /// </summary>
         public double FromLactationReduction { get; set; }
+
+        /// <summary>
+        /// Report protein taken from intake to meet energy deficit (kg day-1)
+        /// </summary>
+        public double FromIntakeForEnergy { get; set; }
+
         /// <summary>
         /// The proportion of the protein remaining after accounting for protein limited milk production
         /// </summary>
@@ -84,7 +90,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Provide protein required for maintenance, pregnancy, lactation, and any protein remobilisation (kg day-1)
         /// </summary>
-        public double BeforeGrowth { get { return ForMaintenance + ForPregnancy + ForLactation + FromBodyForRemobilisation; } }
+        public double BeforeGrowth { get { return ForMaintenance + ForPregnancy + ForLactation + FromBodyForMobilisation; } }
 
         /// <summary>
         /// Report protein required for kg gain defined from net energy (kg day-1)
@@ -97,13 +103,13 @@ namespace Models.CLEM.Resources
         public double AvailableForGain { get; set; }
 
         /// <summary>
-        /// Report protein remobilised from body for lactation needs (kg day-1)
+        /// Report protein mobilised from body for lactation needs (kg day-1)
         /// </summary>
         public double FromBodyForLactation { get; set; }
         /// <summary>
         /// Report protein lost in conversion ses during from body for lactation needs (kg day-1)
         /// </summary>
-        public double FromBodyForRemobilisation { get; set; }
+        public double FromBodyForMobilisation { get; set; }
 
         /// <summary>
         /// Protein mass at mature (kg)
@@ -164,13 +170,14 @@ namespace Models.CLEM.Resources
             ForPregnancy = 0;
             ForGain = 0;
             AvailableForGain = 0;
-            FromBodyForRemobilisation = 0;
+            FromBodyForMobilisation = 0;
             ForWool = 0;
             ForLactation = 0;
             FromLactationReduction = 0;
             Net = 0;
             FromBodyForLactation = 0;
-            FromBodyForRemobilisation = 0;
+            FromBodyForMobilisation = 0;
+            FromIntakeForEnergy = 0;
         }
 
         /// <inheritdoc/>

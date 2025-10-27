@@ -66,7 +66,7 @@ namespace Models.CLEM.Resources
         public double FatChange { get { return (Fat?.Change ?? 0); } }
 
         /// <summary>
-        /// Percentage of fat in the empty body (EBF, %)
+        /// Proportion of fat in the empty body (EBF)
         /// </summary>
         public double EBF { get { return (Fat?.Amount ?? 0)/ EmptyBodyMass; } }
 

@@ -65,7 +65,7 @@ namespace Models.CLEM.Resources
         public double ForProductFormationAverage { get; set; } = 0.0;
 
         /// <summary>
-        /// Method to calulate running ME Average for today and last timestep
+        /// Method to calculate running ME Average for today and last timestep
         /// </summary>
         public void UpdateProductFormationAverage()
         {

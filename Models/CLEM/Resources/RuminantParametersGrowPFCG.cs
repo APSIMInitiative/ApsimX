@@ -216,7 +216,7 @@ namespace Models.CLEM.Resources
         [Description("Dietary protein energy release efficiency (-ve net energy)")]
         [Category("Core", "Growth")]
         [Required, Proportion]
-        public double DietaryProteinEnergyReleaseEfficiencyWhenNetEnergyDeficit { get; set; } = 0; //0.8;
+        public double DietaryProteinEnergyReleaseEfficiencyWhenNetEnergyDeficit { get; set; } = 0.8; //0.8;
 
         /// <summary>
         /// Body fat percentage to proportion of energy deficit that is taken from fat intercept
@@ -224,7 +224,7 @@ namespace Models.CLEM.Resources
         [Description("Body fat to Proportion energy deficit from fat intercept")]
         [Category("Core", "Growth")]
         [Required, Proportion]
-        public double FatPercentToProportionEDeficitTakenFromBodyFatIntercept { get; set; } = 0.875; //0.8;
+        public double FatPercentToProportionEDeficitTakenFromBodyFatIntercept { get; set; } = 0.875;
 
         /// <summary>
         /// Body fat percentage to proportion of energy deficit that is taken from fat slope
@@ -232,7 +232,7 @@ namespace Models.CLEM.Resources
         [Description("Body fat to proportion energy deficit from fat slope")]
         [Category("Core", "Growth")]
         [Required, Proportion]
-        public double FatPercentToProportionEDeficitTakenFromBodyFatSlope { get; set; } = 0.033; //0.8;
+        public double FatPercentToProportionEDeficitTakenFromBodyFatSlope { get; set; } = 0.033; 
 
 
         #endregion
