@@ -15,7 +15,6 @@ using UserInterface.Commands;
 using UserInterface.EventArguments;
 using UserInterface.Interfaces;
 using UserInterface.Views;
-using static AutoMapper.QueryableExtensions.LetPropertyMaps;
 
 namespace UserInterface.Presenters
 {
