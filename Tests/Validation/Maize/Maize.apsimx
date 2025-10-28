@@ -42606,7 +42606,7 @@
                             },
                             {
                               "Key": "SowingDepth",
-                              "Value": "50"
+                              "Value": "60"
                             },
                             {
                               "Key": "RowSpacing",
@@ -42704,7 +42704,7 @@
                           "Parameters": [
                             {
                               "Key": "ApplicationAmount",
-                              "Value": "20"
+                              "Value": "22"
                             }
                           ],
                           "Name": "DumpWater",
