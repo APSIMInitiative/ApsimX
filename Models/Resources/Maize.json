@@ -1,6 +1,5 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 0,
   "Version": 205,
   "Name": "Simulations",
   "ResourceName": null,
@@ -3904,6 +3903,61 @@
                             {
                               "$type": "Models.Functions.VariableReference, Models",
                               "VariableName": "[Root].WaterTensionFactor",
+                              "Name": "XValue",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "FOXStress",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "StressResponseCoefficient",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "Name": "FOXsenecence",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                0.0,
+                                5.0,
+                                10.0
+                              ],
+                              "Y": [
+                                0.0,
+                                0.0,
+                                0.0
+                              ],
+                              "Name": "XYPairs",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[CumulativeExcessWaterStress]",
                               "Name": "XValue",
                               "ResourceName": null,
                               "Children": [],
