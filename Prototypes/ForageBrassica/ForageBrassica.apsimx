@@ -261,7 +261,7 @@
           "$type": "Models.Core.ModelOverrides, Models",
           "Overrides": [
             "[ForageBrassica].PlantType=ForageBrassica",
-            "[ForageBrassica].Leaf.ExtinctionCoefficient.FixedValue=0.5"
+            "[ForageBrassica].Leaf.ExtinctionCoefficient.PotentialExtinctionCoefficient.FixedValue=0.5"
           ],
           "Name": "SpeciesParameters",
           "ResourceName": null,
