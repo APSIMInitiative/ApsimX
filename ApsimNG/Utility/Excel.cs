@@ -27,14 +27,20 @@ namespace Utility
                 //set any infinity or NaN values to DBNull so that closedXML can write them
                 foreach (DataColumn column in table.Columns)
                 {
-                    string columnName = column.ColumnName;
                     if (column.DataType == typeof(double) || column.DataType == typeof(object))
+                    {
                         foreach (DataRow row in table.Rows)
-                            if (double.IsNaN((double)row[columnName]) || (double)row[columnName] == double.NegativeInfinity || (double)row[columnName] == double.PositiveInfinity)
-                                row[column.ColumnName] = DBNull.Value;
+                        {
+                            string columnName = column.ColumnName;
+                            var value = row[columnName];
+                            if (value != DBNull.Value && value is double valueDouble)
+                                if (double.IsNaN(valueDouble) || valueDouble == double.NegativeInfinity || valueDouble == double.PositiveInfinity)
+                                    row[columnName] = DBNull.Value;
+                        }
+                    }
                 }
 
-                //Sort Rows by SimulationNatableme in alphabetical order
+                //Sort Rows by SimulationName in alphabetical order
                 if (table.Columns.Contains("SimulationName"))
                 {
                     DataView dv = table.DefaultView;
