@@ -7349,7 +7349,8 @@
                 "[Leaf].SenescenceRate.Vegetative.Rate.FOXSenescence.XYPairs.X = 0, 5, 10",
                 "[Leaf].SenescenceRate.Vegetative.Rate.FOXSenescence.XYPairs.Y = 0, 0.03, 0.3",
                 "[Leaf].SenescenceRate.Reproductive.Rate.MaximumFunction.FOXSenescence.XYPairs.X = 0, 5, 10",
-                "[Leaf].SenescenceRate.Reproductive.Rate.MaximumFunction.FOXSenescence.XYPairs.Y = 0, 0.03, 0.3"
+                "[Leaf].SenescenceRate.Reproductive.Rate.MaximumFunction.FOXSenescence.XYPairs.Y = 0, 0.03, 0.3",
+                "[Leaf].Photosynthesis.FW.Excess.PersistentReduction.MovingSumFunction.NumberOfDays = 15"
               ],
               "Name": "Hyola575",
               "ResourceName": null,
