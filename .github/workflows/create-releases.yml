@@ -14,11 +14,13 @@ permissions:
 #       - master
 #     types:
 #       - closed
+
 on:
-  workflow_run:
-    workflows: ["Build and test", "Model validations"] # Name of the workflow that needs to be successful
-    types:
-      - completed # Trigger when the referenced workflow is completed
+   workflow_dispatch:
+#  workflow_run:
+#    workflows: ["Build and test", "Model validations"] # Name of the workflow that needs to be successful
+#    types:
+#      - completed # Trigger when the referenced workflow is completed
 
 
 jobs:
