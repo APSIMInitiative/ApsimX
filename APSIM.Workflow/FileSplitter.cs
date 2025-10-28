@@ -313,7 +313,7 @@ namespace APSIM.Workflow
         {
             foreach(Weather weather in model.Node.FindChildren<Weather>(recurse: true))
             {
-                string fullpath = weather.FullFileName;
+                string fullpath = PathUtilities.GetAbsolutePath(weather.FileName, weather.Node.FileName);
                 try
                 {
                     string weatherFileName = Path.GetFileName(fullpath);
@@ -321,7 +321,7 @@ namespace APSIM.Workflow
 
                     if (!File.Exists(newFilepath))
                         if (File.Exists(fullpath))
-                            File.Copy(weather.FullFileName, newFilepath);
+                            File.Copy(fullpath, newFilepath);
 
                     weather.FileName = newFilepath;
                 }
