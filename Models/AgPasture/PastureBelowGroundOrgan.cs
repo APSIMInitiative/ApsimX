@@ -463,9 +463,10 @@ namespace Models.AgPasture
                     // get the fraction of this layer that is within the root zone
                     double layerFraction = MathUtilities.Bound((Depth - depthAtTopOfLayer) / thickness[layer], 0.0, 1.0);
 
-                    // get the soil moisture factor (less N available in drier soil)
-                    double rwc = MathUtilities.Bound((swMM[layer] - llMM[layer]) / (dulMM[layer] - llMM[layer]), 0.0, 1.0);
-                    double moistureFactor = 1.0 - Math.Pow(1.0 - rwc, ExponentSoilMoisture);
+                // get the soil moisture factor (less N available in drier soil)
+                double rwc = MathUtilities.Bound(MathUtilities.Divide(swMM[layer] - llMM[layer], dulMM[layer] - llMM[layer], 0),
+                                                 0.0, 1.0);
+                double moistureFactor = 1.0 - Math.Pow(1.0 - rwc, ExponentSoilMoisture);
 
                     // get NH4 available
                     double nh4ppm = nh4[layer] * 100.0 / (thickness[layer] * bd[layer]);
@@ -485,7 +486,7 @@ namespace Models.AgPasture
             double potentialAvailableN = mySoilNH4Available.Sum() + mySoilNO3Available.Sum();
             if (potentialAvailableN > MaximumNUptake)
             {
-                double upFraction = MaximumNUptake / potentialAvailableN;
+                double upFraction = MathUtilities.Divide(MaximumNUptake, potentialAvailableN, 0);
                 for (int layer = 0; layer <= BottomLayer; layer++)
                 {
                     mySoilNH4Available[layer] *= upFraction;
