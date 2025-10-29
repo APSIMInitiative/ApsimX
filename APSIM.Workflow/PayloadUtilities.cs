@@ -54,8 +54,7 @@ public static class PayloadUtilities
                 "/Tests/Simulation/SoilNitrogenPatch/PaddockSims/Edited_v5_BivariateNormal.apsimx", //has no output
                 "/Tests/Validation/Wheat/Wheat.apsimx", //TODO: Leave wheat out for now as it gets split into smaller files automatically.
                 "/Tests/Validation/Wheat/FAR/FAR.apsimx", //TODO: Leave FAR out for now as it gets split into smaller files automatically.
-                "/Tests/Validation/Wheat/Phenology/Phenology.apsimx", //TODO: Leave Phenology out for now as it gets split into smaller files automatically.
-                "/Tests/Validation/Eucalyptus/Eucalyptus.apsimx" //TODO: Leave Eucalyptus out for now as it gets split into smaller files automatically.
+                "/Tests/Validation/Wheat/Phenology/Phenology.apsimx" //TODO: Leave Phenology out for now as it gets split into smaller files automatically.
             };
 
     // // Development submit azure URL
