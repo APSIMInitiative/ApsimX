@@ -23,6 +23,9 @@ internal partial class SetPropertyCommand : IModelCommand
         this.fileName = fileName;
     }
 
+    /// <summary>Property value.</summary>
+    internal object Value => value;
+
     /// <summary>
     /// Run the command.
     /// </summary>
@@ -41,8 +44,12 @@ internal partial class SetPropertyCommand : IModelCommand
         var obj = relativeTo.Node.GetObject(name) ?? throw new Exception($"Cannot find property {name}");
         if (oper == "=")
         {
-            // Convert value into correct type.
-            obj.Value = ApsimConvert.ToType(propertyValue, obj.DataType);
+            // If "null" was specified then set the object value to null. Otherwise convert
+            // the value into correct type.
+            if (propertyValue == "null")
+                obj.Value = null;
+            else
+                obj.Value = ApsimConvert.ToType(propertyValue, obj.DataType);
         }
         else
         {

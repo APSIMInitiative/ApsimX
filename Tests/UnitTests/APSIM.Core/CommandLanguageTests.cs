@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Models.Climate;
+using NUnit.Framework;
 using System;
 using System.Linq;
 
@@ -27,6 +28,8 @@ public class CommandLanguageTests
     [TestCase("[Physical].AirDry[1]=8")]
     [TestCase("[Physical].LL15[3:5]=9")]
     [TestCase("[Physical].BD=")]
+    [TestCase("[Physical].BD=null")]
+
     public void EnsureAddLanguageParsingWorks(string commandString)
     {
         var commands = CommandLanguage.StringToCommands([commandString], relativeTo: null, relativeToDirectory: null);
@@ -37,10 +40,23 @@ public class CommandLanguageTests
     [Test]
     [TestCase("# Commented line")]
     [TestCase("#############################")]
+    [TestCase("     # Indented comment")]
     public void EnsureCommentedLinesAreIgnored(string commandString)
     {
         var commands = CommandLanguage.StringToCommands([commandString], relativeTo: null, relativeToDirectory: null);
         Assert.That(commands.Any(), Is.False);
+    }
+
+    // Ensure inline commented lines are ignored.
+    [Test]
+    [TestCase("[Weather].FileName=NewName    # comment", ExpectedResult = "NewName")]
+    [TestCase("[Manager].Script.St=St1#St2", ExpectedResult = "St1")]
+    public string EnsureInlineCommentIsIgnored(string commandString)
+    {
+        var setPropertyCommand = CommandLanguage.StringToCommands([commandString], relativeTo: null, relativeToDirectory: null)
+                                                .First() as SetPropertyCommand;
+
+        return setPropertyCommand.Value.ToString();
     }
 
     /// <summary>Test that invalid commands throw.</summary>
