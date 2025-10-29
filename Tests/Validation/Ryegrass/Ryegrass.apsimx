@@ -57799,7 +57799,8 @@
                                 "[AgPRyegrass].CoverTotal",
                                 "[AgPRyegrass].LAI",
                                 "[AgPRyegrass].RootWt",
-                                "[AgPRyegrass].Root.Depth"
+                                "[AgPRyegrass].Root.Depth",
+                                "[AgPRyegrass].RootDepth"
                               ],
                               "EventNames": [
                                 "[Clock].EndOfDay"
