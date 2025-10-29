@@ -1,6 +1,7 @@
 using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Data;
 using System.Globalization;
 using System.Linq;
@@ -13,11 +14,6 @@ namespace APSIM.Shared.Utilities
     [Serializable]
     public class SQLite : IDatabaseConnection
     {
-        /// <summary>
-        /// Connection of SQLite database
-        /// </summary>
-        [NonSerialized]
-        private SqliteConnection _connection;
         /// <summary>Indicates whether or not the database is open</summary>
         [NonSerialized]
         private bool _open;
@@ -36,7 +32,21 @@ namespace APSIM.Shared.Utilities
         public bool IsInMemory { get; private set; } = false;
 
         /// <summary>A lock object to prevent multiple threads from starting a transaction at the same time</summary>
+        [NonSerialized]
         private readonly object transactionLock = new object();
+
+        /// <summary>
+        /// String for establishing a connection
+        /// </summary>
+        private string connectionString;
+
+        /// <summary>
+        /// A dictionary of connections, using Threads as the key. This allows
+        /// us to use a different connection for each thread, as SqliteConnection
+        /// is not thread-safe.
+        /// </summary>
+        [NonSerialized]
+        private ConcurrentDictionary<Thread, SqliteConnection> connectionPool = new ConcurrentDictionary<Thread, SqliteConnection>();
 
         /// <summary>Begin a transaction. Any code between begin and end needs to be in a try-finally so that the lock
         /// is unlocked if there is an exception thrown.</summary>
@@ -70,24 +80,40 @@ namespace APSIM.Shared.Utilities
             }
         }
 
-        /// <summary>Opens or creates SQLite database with the specified path</summary>
+        /// <summary>Builds a connection string for an SQLite database 
+        /// with the specified path. The connection is not actually
+        /// opened unti GetConnection is called.</summary>
         /// <param name="path">Path to SQLite database</param>
         /// <param name="readOnly">if set to <c>true</c> [read only].</param>
         public void OpenDatabase(string path, bool readOnly)
         {
-            SqliteConnectionStringBuilder builder = new SqliteConnectionStringBuilder
+            IsInMemory = path.ToLower().Contains(":memory:");
+            SqliteConnectionStringBuilder builder;
+            // In-memory databases are treated a bit diffently, since we need to
+            // ensure that connections for mulitiple threads are all accessing
+            // the same database. Hence the shared cache and explicit, unique, datasource name
+            if (IsInMemory)
             {
-                DataSource = path,
-                Mode = readOnly ? SqliteOpenMode.ReadOnly : SqliteOpenMode.ReadWriteCreate,
-                DefaultTimeout = 40000
-            };
-            _connection = new SqliteConnection(builder.ToString());
-            _connection.Open();
-
-            _open = true;
+                builder = new SqliteConnectionStringBuilder
+                {
+                    DataSource = Guid.NewGuid().ToString(),
+                    Mode = SqliteOpenMode.Memory,
+                    Cache = SqliteCacheMode.Shared,
+                    DefaultTimeout = 1000
+                };
+            }
+            else
+            {
+                builder = new SqliteConnectionStringBuilder
+                {
+                    DataSource = path,
+                    Mode = readOnly ? SqliteOpenMode.ReadOnly : SqliteOpenMode.ReadWriteCreate,
+                    DefaultTimeout = 40000
+                };
+            }
+            connectionString = builder.ToString();
             dbPath = path;
             IsReadOnly = readOnly;
-            IsInMemory = path.ToLower().Contains(":memory:");
         }
 
         /// <summary>Closes the SQLite database</summary>
@@ -95,22 +121,26 @@ namespace APSIM.Shared.Utilities
         {
             if (_open)
             {
-                if (_connection != null)
+                SqliteConnection connection;
+                foreach (Thread thread in connectionPool.Keys)
                 {
-                    _connection?.Close();
-                    SqliteConnection.ClearPool(_connection);
-                    _connection?.Dispose();
-                    _connection = null;
+                    if (connectionPool.Remove(thread, out connection))
+                    {
+                        connection.Close();
+                        SqliteConnection.ClearPool(connection);
+                        connection.Dispose();
+                    }
                 }
                 _open = false;
             }
         }
 
+
         /// <summary>Executes a query that returns no results</summary>
         /// <param name="query">SQL query to execute</param>
         public void ExecuteNonQuery(string query)
         {
-            using (SqliteCommand command = new SqliteCommand(query, _connection))
+            using (SqliteCommand command = new SqliteCommand(query, GetConnection()))
             {
                 command.ExecuteNonQuery();
             }
@@ -125,72 +155,62 @@ namespace APSIM.Shared.Utilities
         public System.Data.DataTable ExecuteQuery(string query)
         {
             DataTable table = new DataTable();
-            SqliteCommand cmd = new SqliteCommand(query, _connection);
-            SqliteDataReader reader = cmd.ExecuteReader();
-            if (reader.HasRows)
+            using (SqliteCommand cmd = new SqliteCommand(query, GetConnection()))
             {
-                // "Load" would be really simple to use here, but because SQLite doesn't support
-                // true DATE fields, it doesn't handle returned dates well.
-                //
-                // The approach taken here is to examine the "type" of each column as it was
-                // defined when the SQLite table was created, and create a DataColumn of a
-                // compatible type. We then read the returned data row by row and add the values
-                // to the resulting DataTable. Note that DataTables have stricter expectations
-                // about "type" than does SQLite, and errors may occur if the data values do not
-                // match the expected type. This may occur when column names were used
-                // inconsistently across multiple simulations or across multiple files of
-                // obeserved data imported from Excel.
-                // We could possibly just treat all DataColumns as being of type "Object", but it's
-                // probably better to let any dataype inconsistencies raise exceptions so that they
-                // can be identified and corrected.
-                // table.Load(reader);
-
-                //get the number of returned columns
-                int columnCount = reader.FieldCount;
-
-                Type[] colTypes = new Type[columnCount];
-                // Add datatable columns of appropriate type
-                for (int i = 0; i < columnCount; i++)
+                using (SqliteDataReader reader = cmd.ExecuteReader())
                 {
-                    colTypes[i] = GetTypeFromSQLiteType(reader.GetDataTypeName(i));
-                    table.Columns.Add(reader.GetName(i), colTypes[i]);
-                }
-
-                // Add the data rows
-                object[] values = new object[columnCount];
-                while (reader.Read())
-                {
-                    DataRow row = table.NewRow();
-                    reader.GetValues(values);
-
-                    for (int i = 0; i < values.Length; i++)
+                    if (reader.HasRows)
                     {
-                        // This test is needed to handle some odd things that can happen
-                        // when values are imported from multiple Excel files and column
-                        // data types cannot be determined by the importer.
-                        if (colTypes[i] != typeof(string) && (values[i] is string) && String.IsNullOrEmpty(values[i] as string))
-                            row[i] = DBNull.Value;
-                        else
-                            row[i] = values[i];
+                        // "Load" would be really simple to use here, but because SQLite doesn't support
+                        // true DATE fields, it doesn't handle returned dates well.
+                        //
+                        // The approach taken here is to examine the "type" of each column as it was
+                        // defined when the SQLite table was created, and create a DataColumn of a
+                        // compatible type. We then read the returned data row by row and add the values
+                        // to the resulting DataTable. Note that DataTables have stricter expectations
+                        // about "type" than does SQLite, and errors may occur if the data values do not
+                        // match the expected type. This may occur when column names were used
+                        // inconsistently across multiple simulations or across multiple files of
+                        // obeserved data imported from Excel.
+                        // We could possibly just treat all DataColumns as being of type "Object", but it's
+                        // probably better to let any dataype inconsistencies raise exceptions so that they
+                        // can be identified and corrected.
+                        // table.Load(reader);
 
+                        //get the number of returned columns
+                        int columnCount = reader.FieldCount;
+
+                        Type[] colTypes = new Type[columnCount];
+                        // Add datatable columns of appropriate type
+                        for (int i = 0; i < columnCount; i++)
+                        {
+                            colTypes[i] = GetTypeFromSQLiteType(reader.GetDataTypeName(i));
+                            table.Columns.Add(reader.GetName(i), colTypes[i]);
+                        }
+
+                        // Add the data rows
+                        object[] values = new object[columnCount];
+                        while (reader.Read())
+                        {
+                            DataRow row = table.NewRow();
+                            reader.GetValues(values);
+
+                            for (int i = 0; i < values.Length; i++)
+                            {
+                                // This test is needed to handle some odd things that can happen
+                                // when values are imported from multiple Excel files and column
+                                // data types cannot be determined by the importer.
+                                if (colTypes[i] != typeof(string) && (values[i] is string) && String.IsNullOrEmpty(values[i] as string))
+                                    row[i] = DBNull.Value;
+                                else
+                                    row[i] = values[i];
+
+                            }
+                            table.Rows.Add(row);
+                        }
                     }
-                    table.Rows.Add(row);
                 }
             }
-
-            try
-            {
-                reader.Close();
-                reader.DisposeAsync();
-
-                cmd.DisposeAsync();
-            }
-            catch
-            {
-                Console.WriteLine("SQLite failed to dispse correctly.");
-            }
-            
-
             return table;
         }
         
@@ -203,7 +223,7 @@ namespace APSIM.Shared.Utilities
         /// <returns></returns>
         public int ExecuteQueryReturnInt(string query, int columnNumber)
         {
-            using (SqliteCommand cmd = new SqliteCommand(query, _connection))
+            using (SqliteCommand cmd = new SqliteCommand(query, GetConnection()))
             {
                 using (SqliteDataReader reader = cmd.ExecuteReader(CommandBehavior.SingleRow))
                 {
@@ -260,7 +280,7 @@ namespace APSIM.Shared.Utilities
         {
             List<string> colNames = new List<string>();
             string sql = $"select * from [{tableName}] LIMIT 0";
-            using (SqliteCommand cmd = new SqliteCommand(sql, _connection))
+            using (SqliteCommand cmd = new SqliteCommand(sql, GetConnection()))
             {
                 using (SqliteDataReader reader = cmd.ExecuteReader())
                 {
@@ -450,7 +470,7 @@ namespace APSIM.Shared.Utilities
         private SqliteCommand CreateInsertQuery(string tableName, List<string> columnNames)
         {
             string sql = CreateInsertSQL(tableName, columnNames);
-            return new SqliteCommand(sql, _connection);
+            return new SqliteCommand(sql, GetConnection());
         }
 
         /// <summary>
@@ -482,7 +502,7 @@ namespace APSIM.Shared.Utilities
             // Get a list of column names.
             var columnNames = table.Columns.Cast<DataColumn>().Select(col => col.ColumnName);
             var sql = CreateInsertSQL(table.TableName, columnNames);
-            SqliteCommand command = new SqliteCommand(sql, _connection);
+            SqliteCommand command = new SqliteCommand(sql, GetConnection());
             command.Prepare();
             return command;
         }
@@ -683,5 +703,47 @@ namespace APSIM.Shared.Utilities
         {
             return value.ToString("yyyy-MM-dd HH:mm:ss"); 
         }
+
+        /// <summary>
+        /// Get separate connection for each thread
+        /// Unfortunately, SqliteConnection is not thread-safe (with problems
+        /// most likely to occur when the connection is closed).
+        /// Based on code at https://stackoverflow.com/questions/64169084/ensuring-exactly-one-sqlite-connection-per-thread
+        /// </summary>
+        /// <returns>An open SqliteConnection unique to the current thread</returns>
+        private SqliteConnection GetConnection()
+        {
+            Thread currentThread = Thread.CurrentThread;
+            SqliteConnection connection;
+
+            // If this thread already owns a connection, just retrieve it.
+            if (connectionPool.TryGetValue(currentThread, out connection))
+            {
+                return connection;
+            }
+
+            // Looking for a thread that doesn't need its connection anymore.
+            (Thread inactiveThread, SqliteConnection availableConnection) = connectionPool.Where(p => p.Key.ThreadState == ThreadState.Stopped)
+                .Select(p => (p.Key, p.Value))
+                .FirstOrDefault();
+
+            // If an existing connection is not being used, reassign it to this thread.
+            if (availableConnection != null)
+            {
+                if (connectionPool.TryRemove(inactiveThread, out availableConnection))
+                {
+                    connectionPool[currentThread] = availableConnection;
+                    return availableConnection;
+                }
+            }
+
+            // Otherwise create a new connection and open it
+            connection = new SqliteConnection(connectionString);
+            connectionPool[currentThread] = connection;
+            connection.Open();
+            _open = true;
+            return connection;
+        }
+
     }
 }

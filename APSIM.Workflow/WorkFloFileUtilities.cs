@@ -35,6 +35,7 @@ public static class WorkFloFileUtilities
             ];
             string workFloFileContents = $"""
             name: workflo_apsim_validation_pr_{options.PullRequestNumber}
+            pool: {options.AzurePool}
             inputfiles:
             - .env
             - workflow.yml
@@ -47,10 +48,10 @@ public static class WorkFloFileUtilities
               grid: grid.csv
               steps:
                 - uses: apsiminitiative/apsimplusr:{options.DockerImageTag}
-                  args: '"$Path"'
+                  args: '"$Path" --verbose'
               finally:
                 - uses: apsiminitiative/postats2-collector:latest
-                  args: upload {currentBuildNumber} {options.CommitSHA} {options.GitHubAuthorID} {brisbaneDatetimeNow.ToString(timeFormat)} ""$Path""
+                  args: 'upload {currentBuildNumber} {options.CommitSHA} {options.GitHubAuthorID} {brisbaneDatetimeNow.ToString(timeFormat)} {options.AzurePool} "$Path"'
             """;
             File.WriteAllText(Path.Combine(options.DirectoryPath, workFloFileName), workFloFileContents);
             Console.WriteLine($"Workflow.yml contents:\n{workFloFileContents}");
