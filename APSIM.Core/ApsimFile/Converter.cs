@@ -7004,6 +7004,7 @@ internal class Converter
         }
     }
 
+    /// <summary>
     /// Ensure that when IStructure is stored in Manager scripts as a field, it is marked [NonSerialized]
     /// </summary>
     /// <param name="root">The root JSON token.</param>
@@ -7045,6 +7046,7 @@ internal class Converter
         }
     }
 
+    /// <summary>
     /// Replace SetEmergenceDate and SetGerminationDate methods with generic SetPhaseCompletionDate method
     /// </summary>
     /// <param name="root">The root JSON token.</param>
