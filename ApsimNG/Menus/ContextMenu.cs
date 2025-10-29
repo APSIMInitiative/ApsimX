@@ -126,7 +126,8 @@ namespace UserInterface.Presenters
         {
             try
             {
-                var commands = explorerPresenter.CurrentNode as  ModelCommands;
+                var commands = explorerPresenter.CurrentNode as ModelCommands
+                                ?? throw new Exception($"{explorerPresenter.CurrentNode.Name} is not a ModelCommands. Cannot run");
                 commands.Run();
             }
             catch (Exception err)

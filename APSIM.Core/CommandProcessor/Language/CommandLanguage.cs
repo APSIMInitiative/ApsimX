@@ -1,3 +1,4 @@
+using System.Text;
 using APSIM.Shared.Utilities;
 
 namespace APSIM.Core;
@@ -40,32 +41,37 @@ public class CommandLanguage
         //    define factor sow [Sowing].Date = 2020-06-01, 2020-07-01, 2020-08-01
         // The command and parameters are then converted into a IModelCommand
 
-        string command = null;
+        StringBuilder command = null;
         foreach (var line in lines)
         {
             // Strip commented characters.
-            var sanitisedLine = line;
-            int posComment = sanitisedLine.IndexOf('#');
-            if (posComment != -1)
-                sanitisedLine = sanitisedLine.Remove(posComment);
+            string sanitisedLine;
+            int posComment = line.IndexOf('#');
+            if (posComment == -1)
+                sanitisedLine = line;
+            else
+                sanitisedLine = line.Remove(posComment);
             sanitisedLine = sanitisedLine.TrimEnd();
 
             if (sanitisedLine.StartsWith(' '))
             {
                 // Add to existing command.
-                command += sanitisedLine.Trim();
+                command.Append(sanitisedLine.Trim());
             }
             else if (sanitisedLine != string.Empty)
             {
                 // New command. If there is an existing command then add it to the commands collection.
-                if (command != null)
-                    commands.Add(ConvertCommandParameterToModelCommand(command, relativeTo, relativeToDirectory));
+                if (command == null)
+                    command = new();
+                else
+                    commands.Add(ConvertCommandParameterToModelCommand(command.ToString(), relativeTo, relativeToDirectory));
 
-                command = sanitisedLine.Trim();
+                command.Clear();
+                command.Append(sanitisedLine.Trim());
             }
         }
         if (command != null)
-            commands.Add(ConvertCommandParameterToModelCommand(command, relativeTo, relativeToDirectory));
+            commands.Add(ConvertCommandParameterToModelCommand(command.ToString(), relativeTo, relativeToDirectory));
 
         return commands;
     }

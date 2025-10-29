@@ -1,9 +1,8 @@
 using APSIM.Shared.Utilities;
-using DeepCloner.Core;
 
 namespace APSIM.Core;
 
-/// <summary>An add commnd</summary>
+/// <summary>An add command</summary>
 internal partial class AddCommand : IModelCommand
 {
     /// <summary>A reference to a model.</summary>

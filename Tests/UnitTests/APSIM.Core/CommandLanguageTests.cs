@@ -58,7 +58,7 @@ public class CommandLanguageTests
     {
         try
         {
-            var commands = CommandLanguage.StringToCommands([commandString], relativeTo: null, relativeToDirectory: null);
+            CommandLanguage.StringToCommands([commandString], relativeTo: null, relativeToDirectory: null);
         }
         catch (Exception ex)
         {

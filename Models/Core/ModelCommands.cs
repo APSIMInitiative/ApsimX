@@ -19,7 +19,7 @@ namespace Models.Core;
 public class ModelCommands : Model, ILineEditor
 {
     [Link]
-    private Simulation simulation = null;
+    private readonly Simulation simulation = null;
 
     /// <summary>The lines to return to the editor.</summary>
     [JsonIgnore]

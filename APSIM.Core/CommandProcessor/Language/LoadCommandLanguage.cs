@@ -32,7 +32,7 @@ internal partial class LoadCommand: IModelCommand
         return new LoadCommand(fileName);
     }
 
-    /// <summary>s
+    /// <summary>
     /// Convert an LoadCommand instance to a string.
     /// </summary>
     /// <returns>A command language string.</returns>

@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace UnitTests.APSIMShared;
 
 /// <summary>
-/// Tests for Macro class/>.
+/// Tests for Macro class.
 /// </summary>
 [TestFixture]
 public class MacroTests

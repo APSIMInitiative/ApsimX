@@ -196,8 +196,7 @@ namespace Models
                     {
                         if (options.InMemoryDB)
                         {
-                            List<Simulations> sims = new();
-                            sims = CreateSimsList(files);
+                            List<Simulations> sims = CreateSimsList(files);
                             foreach (Simulations sim in sims)
                                 sim.Node.FindChild<DataStore>().UseInMemoryDB = true;
                             runner = new Runner(sims,

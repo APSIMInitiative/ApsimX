@@ -5,7 +5,7 @@ namespace APSIM.Core;
 /// <summary>A duplicate model command</summary>
 internal partial class DuplicateCommand : IModelCommand
 {
-    // <summary>The name of the model to duplicate.</summary>
+    /// <summary>The name of the model to duplicate.</summary>
     private readonly string modelName;
 
     /// <summary>The name of the new model.</summary>

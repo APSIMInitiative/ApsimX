@@ -30,7 +30,7 @@ internal class ModelInFileReference : IModelReference
     {
         var simulationsType = ModelRegistry.ModelNameToType("Simulations");
         string json = File.ReadAllText(fileName);
-        (var externalRootNode, var didConvert, var jsonObject) = FileFormat.ReadFromStringAndReturnConvertState(json, simulationsType);
+        (var externalRootNode, _, _) = FileFormat.ReadFromStringAndReturnConvertState(json, simulationsType);
         return (INodeModel)externalRootNode.Get(modelName)
             ?? throw new Exception($"Cannot find model {modelName} in file {fileName}");
     }

@@ -556,8 +556,6 @@ save {apsimxFileName}";
         {
             Simulations file = Utilities.GetRunnableSim();
 
-            Simulation simulationNode = file.Node.Find<Simulation>();
-
             string apsimxFileName = file.FileName.Split('\\', '/').ToList().Last();
 
             // create commands with no path on load/save
@@ -568,7 +566,6 @@ save {Path.GetFileName(apsimxFileName)}";
             string newTempConfigFile = Path.Combine(Path.GetTempPath(), "command.txt");
             File.WriteAllText(newTempConfigFile, newFileString);
 
-            bool fileExists = File.Exists(newTempConfigFile);
             Assert.That(File.Exists(newTempConfigFile), Is.True);
 
             // Don't pass a path to the command file. Force main to use working directory.

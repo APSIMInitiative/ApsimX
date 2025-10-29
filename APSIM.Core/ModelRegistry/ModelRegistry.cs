@@ -11,7 +11,7 @@ internal class ModelRegistry
 {
     private static Assembly modelsAssembly;
 
-    private static object lockObject = new object();
+    private static readonly object lockObject = new object();
 
     /// <summary>
     /// Convert a model name to a .NET type. Will throw if not found.
@@ -56,6 +56,8 @@ internal class ModelRegistry
                 if (modelsAssembly == null)
                 {
                     string binPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                    if (string.IsNullOrEmpty(binPath))
+                        throw new InvalidOperationException("Could not determine the directory of the executing assembly. Cannot locate Models.dll.");
                     modelsAssembly = Assembly.LoadFrom(Path.Combine(binPath, "Models.dll"));
                 }
             }

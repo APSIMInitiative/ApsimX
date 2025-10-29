@@ -24,7 +24,7 @@ internal partial class DeleteCommand: IModelCommand
         return new DeleteCommand(match.Groups["modelname"]?.ToString());
     }
 
-    /// <summary>s
+    /// <summary>
     /// Convert an DeleteCommand instance to a string.
     /// </summary>
     /// <returns>A command language string.</returns>
