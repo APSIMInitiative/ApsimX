@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 174,
+  "Version": 205,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -689,7 +689,6 @@
                         28.0,
                         0.0
                       ],
-                      "XVariableName": null,
                       "Name": "Response",
                       "ResourceName": null,
                       "Children": [],
@@ -754,7 +753,6 @@
                         0.5,
                         0.0
                       ],
-                      "XVariableName": null,
                       "Name": "Response",
                       "ResourceName": null,
                       "Children": [],
@@ -932,7 +930,6 @@
                             290.0,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -1048,7 +1045,6 @@
                                     1.0,
                                     0.0
                                   ],
-                                  "XVariableName": null,
                                   "Name": "XYPairs",
                                   "ResourceName": null,
                                   "Children": [],
@@ -1659,6 +1655,10 @@
               "DMDemand": null,
               "NDemand": null,
               "potentialDMAllocation": null,
+              "WaterUptakeSupply": null,
+              "NitrogenUptakeSupply": null,
+              "WaterTakenUp": null,
+              "NitrogenTakenUp": null,
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
               "Name": "Root",
@@ -1687,7 +1687,6 @@
                         1.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -1725,7 +1724,6 @@
                         1.0,
                         0.0
                       ],
-                      "XVariableName": null,
                       "Name": "Response",
                       "ResourceName": null,
                       "Children": [],
@@ -1922,7 +1920,6 @@
                         0.01,
                         0.01
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -1957,7 +1954,6 @@
                         0.0,
                         0.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -2004,7 +2000,6 @@
                         0.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -2556,7 +2551,6 @@
                             1.0,
                             0.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -2584,7 +2578,6 @@
                             1.0,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -2621,7 +2614,6 @@
                             1.0,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -2656,7 +2648,6 @@
                             0.0,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -2987,7 +2978,6 @@
                         900.0,
                         1000.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -3152,7 +3142,6 @@
                                         0.0,
                                         0.0
                                       ],
-                                      "XVariableName": null,
                                       "Name": "XYPairs",
                                       "ResourceName": null,
                                       "Children": [],
@@ -3210,7 +3199,6 @@
                                     0.0,
                                     1.0
                                   ],
-                                  "XVariableName": null,
                                   "Name": "XYPairs",
                                   "ResourceName": null,
                                   "Children": [],
@@ -3259,7 +3247,6 @@
                                     1.0,
                                     0.0
                                   ],
-                                  "XVariableName": null,
                                   "Name": "XYPairs",
                                   "ResourceName": null,
                                   "Children": [],
@@ -3400,7 +3387,6 @@
                                         0.0,
                                         1.0
                                       ],
-                                      "XVariableName": null,
                                       "Name": "XYPairs",
                                       "ResourceName": null,
                                       "Children": [],
@@ -3487,7 +3473,6 @@
                                     0.0,
                                     0.03
                                   ],
-                                  "XVariableName": null,
                                   "Name": "XYPairs",
                                   "ResourceName": null,
                                   "Children": [],
@@ -3557,6 +3542,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
                                       "Expression": "[Phenology].EarlyFlowering.Target + [Phenology].EarlyPodDevelopment.Target + [Phenology].EarlyGrainFilling.Target+[Phenology].MidGrainFilling.Target",
                                       "Name": "TTRequired",
                                       "ResourceName": null,
@@ -3566,6 +3552,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
                                       "Expression": "[Phenology].EarlyFlowering.ProgressThroughPhase + [Phenology].EarlyPodDevelopment.ProgressThroughPhase + [Phenology].EarlyGrainFilling.ProgressThroughPhase+[Phenology].MidGrainFilling.ProgressThroughPhase",
                                       "Name": "TTComplete",
                                       "ResourceName": null,
@@ -3734,7 +3721,6 @@
                         0.035,
                         0.03
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -3969,7 +3955,6 @@
                                                     0.25,
                                                     1.0
                                                   ],
-                                                  "XVariableName": null,
                                                   "Name": "XYPairs",
                                                   "ResourceName": null,
                                                   "Children": [],
@@ -4035,7 +4020,6 @@
                                             1.0,
                                             0.1
                                           ],
-                                          "XVariableName": null,
                                           "Name": "XYPairs",
                                           "ResourceName": null,
                                           "Children": [],
@@ -4138,7 +4122,6 @@
                                             1.0,
                                             0.0
                                           ],
-                                          "XVariableName": null,
                                           "Name": "XYPairs",
                                           "ResourceName": null,
                                           "Children": [],
@@ -4431,7 +4414,6 @@
                         1.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -4519,7 +4501,6 @@
                         1.0,
                         0.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -4613,6 +4594,7 @@
                 },
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Units": null,
                   "Expression": "[Leaf].Phyllochron * [Leaf].Plastochron.Multiplier",
                   "Name": "Plastochron",
                   "ResourceName": null,
@@ -4665,7 +4647,6 @@
                             0.45,
                             0.45
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -4691,6 +4672,7 @@
                 },
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Units": null,
                   "Expression": "[Leaf].NodeNumber - 1",
                   "Name": "TrueLeafNumber",
                   "ResourceName": null,
@@ -4805,6 +4787,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
                                       "Expression": "[Grain].PotentialHarvestIndex - [Grain].HarvestIndex",
                                       "Name": "Increase",
                                       "ResourceName": null,
@@ -4833,6 +4816,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
                                       "Expression": "[Phenology].EarlyGrainFilling.Target+[Phenology].MidGrainFilling.Target+[Phenology].LateGrainFilling.Target",
                                       "Name": "ReproductiveTT",
                                       "ResourceName": null,
@@ -4842,6 +4826,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
                                       "Expression": "[Phenology].EarlyGrainFilling.ProgressThroughPhase+[Phenology].MidGrainFilling.ProgressThroughPhase+[Phenology].LateGrainFilling.ProgressThroughPhase",
                                       "Name": "ReproductiveTTComplete",
                                       "ResourceName": null,
@@ -5332,7 +5317,6 @@
                         0.025,
                         0.02
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -5461,6 +5445,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
                                       "Expression": "[Phenology].LateGrainFilling.Target+[Phenology].Maturing.Target",
                                       "Name": "PostCanopyTT",
                                       "ResourceName": null,
@@ -5470,6 +5455,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
                                       "Expression": "[Phenology].LateGrainFilling.ProgressThroughPhase+[Phenology].Maturing.ProgressThroughPhase",
                                       "Name": "PostCanopyTTComplete",
                                       "ResourceName": null,
@@ -5827,7 +5813,6 @@
                                     0.75,
                                     0.75
                                   ],
-                                  "XVariableName": null,
                                   "Name": "XYPairs",
                                   "ResourceName": null,
                                   "Children": [],
@@ -6297,6 +6282,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
                                       "Expression": "[Phenology].LateGrainFilling.Target + [Phenology].Maturing.Target",
                                       "Name": "ReproductiveTT",
                                       "ResourceName": null,
@@ -6306,6 +6292,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
                                       "Expression": "[Phenology].LateGrainFilling.ProgressThroughPhase + [Phenology].Maturing.ProgressThroughPhase",
                                       "Name": "ReproductiveTT1Complete",
                                       "ResourceName": null,
@@ -6487,6 +6474,7 @@
                                           "Children": [
                                             {
                                               "$type": "Models.Functions.ExpressionFunction, Models",
+                                              "Units": null,
                                               "Expression": "[Shell].PotentialHarvestIndex - [Shell].HarvestIndex",
                                               "Name": "Increase",
                                               "ResourceName": null,
@@ -6515,6 +6503,7 @@
                                           "Children": [
                                             {
                                               "$type": "Models.Functions.ExpressionFunction, Models",
+                                              "Units": null,
                                               "Expression": "[Phenology].EarlyPodDevelopment.Target+[Phenology].EarlyGrainFilling.Target+[Phenology].MidGrainFilling.Target",
                                               "Name": "ShellGrowthTT",
                                               "ResourceName": null,
@@ -6524,6 +6513,7 @@
                                             },
                                             {
                                               "$type": "Models.Functions.ExpressionFunction, Models",
+                                              "Units": null,
                                               "Expression": "[Phenology].EarlyPodDevelopment.ProgressThroughPhase+[Phenology].EarlyGrainFilling.ProgressThroughPhase+[Phenology].MidGrainFilling.ProgressThroughPhase",
                                               "Name": "ShellGrowthTTComplete",
                                               "ResourceName": null,
@@ -6881,6 +6871,7 @@
                 },
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Units": null,
                   "Expression": "[Shell].Live.Wt*[Shell].SpecificArea",
                   "Name": "Area",
                   "ResourceName": null,
@@ -7101,7 +7092,6 @@
                             1.0,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -7136,7 +7126,6 @@
                             0.0,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -8243,17 +8232,6 @@
               "HeatStartMostSensitiveGS": 6.260291,
               "HeatEndMostSensitiveGS": 9.200536,
               "HeatEndSensitiveGS": 9.428058,
-              "FrostPotentialReductionRatio": 0.0,
-              "FrostSensitivity": 0.0,
-              "FrostReductionRatio": 0.0,
-              "HeatPotentialReductionRatio": 0.0,
-              "HeatSensitivity": 0.0,
-              "HeatReductionRatio": 0.0,
-              "FrostHeatReductionRatio": 0.0,
-              "CumulativeFrostReductionRatio": 0.0,
-              "CumulativeHeatReductionRatio": 0.0,
-              "CumulativeFrostHeatReductionRatio": 0.0,
-              "FrostHeatYield": 0.0,
               "Name": "FrostHeatDamageFunctions",
               "ResourceName": null,
               "Children": [],
@@ -8322,7 +8300,11 @@
             "[Canola].Phenology.StartFloweringDAS",
             "[Canola].Phenology.MaturityDAS",
             "[Canola].AboveGround.Wt",
-            "[FrostHeatDamageFunctions].FrostHeatYield as Canola.Grain.Wt"
+            "[FrostHeatDamageFunctions].FrostHeatYield as Canola.Grain.Wt",
+            "[FrostHeatDamageFunctions].FrostSensitivePeriodStartDAS",
+            "[FrostHeatDamageFunctions].FrostSensitivePeriodEndDAS",
+            "[FrostHeatDamageFunctions].HeatSensitivePeriodStartDAS",
+            "[FrostHeatDamageFunctions].HeatSensitivePeriodEndDAS"
           ],
           "EventNames": [
             "[Canola].Harvesting"
@@ -8340,7 +8322,6 @@
     },
     {
       "$type": "Models.Storage.DataStore, Models",
-      "useFirebird": false,
       "CustomFileName": null,
       "Name": "DataStore",
       "ResourceName": null,
@@ -8839,7 +8820,7 @@
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
-              "ResourceName": null,
+              "ResourceName": "MicroClimate",
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -8850,6 +8831,7 @@
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 50.0,
+              "CanopyType": null,
               "Name": "Zone",
               "ResourceName": null,
               "Children": [
@@ -8892,9 +8874,9 @@
                         200.0,
                         200.0
                       ],
-                      "ParticleSizeClay": null,
                       "ParticleSizeSand": null,
                       "ParticleSizeSilt": null,
+                      "ParticleSizeClay": null,
                       "Rocks": null,
                       "Texture": null,
                       "BD": [
@@ -9145,14 +9127,6 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "Temperature",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Soils.Solute, Models",
                       "Thickness": [
                         100.0,
@@ -9191,6 +9165,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -9236,6 +9211,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -9281,6 +9257,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "UREA",
                       "ResourceName": null,
                       "Children": [],
@@ -9419,6 +9396,7 @@
                       "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
+                      "CECMetadata": null,
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
@@ -9457,8 +9435,6 @@
                         0.202,
                         0.21
                       ],
-                      "InitialPAWmm": 43.70000000000001,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -9470,6 +9446,16 @@
                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
                       "Name": "Nutrient",
                       "ResourceName": "Nutrient",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "Thickness": null,
+                      "InitialValues": null,
+                      "Name": "Temperature",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -9572,20 +9558,20 @@
                       "Value": "21-mar"
                     },
                     {
-                      "Key": "Population",
-                      "Value": "60"
+                      "Key": "CultivarName",
+                      "Value": "Garnet"
                     },
                     {
                       "Key": "SowingDepth",
                       "Value": "15"
                     },
                     {
-                      "Key": "CultivarName",
-                      "Value": "Garnet"
-                    },
-                    {
                       "Key": "RowSpacing",
                       "Value": "200"
+                    },
+                    {
+                      "Key": "Population",
+                      "Value": "60"
                     }
                   ],
                   "Name": "SowingFixedDate",
@@ -9641,12 +9627,12 @@
                   ],
                   "Parameters": [
                     {
-                      "Key": "Amount",
-                      "Value": "0"
-                    },
-                    {
                       "Key": "IrrigateDates",
                       "Value": "24-jan"
+                    },
+                    {
+                      "Key": "Amount",
+                      "Value": "0"
                     },
                     {
                       "Key": "Depth",
@@ -9714,12 +9700,12 @@
                   ],
                   "Parameters": [
                     {
-                      "Key": "Amount",
-                      "Value": "0"
-                    },
-                    {
                       "Key": "IrrigateDates",
                       "Value": "24-jan"
+                    },
+                    {
+                      "Key": "Amount",
+                      "Value": "0"
                     },
                     {
                       "Key": "Depth",
@@ -9787,12 +9773,12 @@
                   ],
                   "Parameters": [
                     {
-                      "Key": "Amount",
-                      "Value": "0"
-                    },
-                    {
                       "Key": "IrrigateDates",
                       "Value": "24-jan"
+                    },
+                    {
+                      "Key": "Amount",
+                      "Value": "0"
                     },
                     {
                       "Key": "Depth",
@@ -9832,7 +9818,7 @@
                     "        public IPlant Crop { get; set; }",
                     "",
                     "        [Description(\"Type of fertiliser to apply? \")] ",
-                    "        public Fertiliser.Types FertiliserType { get; set; }",
+                    "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                     "    ",
                     "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
                     "        public double Amount { get; set; }",
@@ -9842,16 +9828,12 @@
                     "        {",
                     "            Model crop = sender as Model;",
                     "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-                    "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                    "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                     "        }",
                     "    }",
                     "}"
                   ],
                   "Parameters": [
-                    {
-                      "Key": "Amount",
-                      "Value": "150"
-                    },
                     {
                       "Key": "Crop",
                       "Value": "[Canola]"
@@ -9859,6 +9841,10 @@
                     {
                       "Key": "FertiliserType",
                       "Value": "NH4N"
+                    },
+                    {
+                      "Key": "Amount",
+                      "Value": "150"
                     }
                   ],
                   "Name": "FertiliseAtSowing",
@@ -10251,14 +10237,15 @@
                 {
                   "$type": "Models.Manager, Models",
                   "CodeArray": [
-                    "using Models.Soils;",
-                    "using APSIM.Shared.Utilities;",
+                    "using APSIM.Numerics;",
                     "using Models.Soils.Nutrients;",
-                    "using Models.PMF;",
-                    "using Models.Core;",
-                    "using System;",
                     "using System.Linq;",
+                    "using System;",
+                    "using Models.Core;",
+                    "using Models.PMF;",
                     "using Models.Soils.Nutrients;",
+                    "using APSIM.Shared.Utilities;",
+                    "using Models.Soils;",
                     "namespace Models",
                     "{",
                     "    [Serializable]",
@@ -10269,7 +10256,7 @@
                     "        [Link(ByName=true)] Solute NO3;",
                     "",
                     "        [Description(\"Type of fertiliser to apply? \")] ",
-                    "        public Fertiliser.Types FertiliserType { get; set; }",
+                    "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                     "    ",
                     "        [Description(\"Threshold amount of NO3 to topup to (kg/ha)\")]",
                     "        public double Threshold { get; set;}",
@@ -10278,7 +10265,7 @@
                     "        private void OnDoManagement(object sender, EventArgs e)",
                     "        {",
                     "            double Amount = Threshold - MathUtilities.Sum(NO3.kgha);",
-                    "            Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                    "            Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                     "        }",
                     "    }",
                     "}"
@@ -12882,7 +12869,7 @@
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
-              "ResourceName": null,
+              "ResourceName": "MicroClimate",
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -12893,6 +12880,7 @@
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 50.0,
+              "CanopyType": null,
               "Name": "Zone",
               "ResourceName": null,
               "Children": [
@@ -12983,9 +12971,9 @@
                         100.0,
                         100.0
                       ],
-                      "ParticleSizeClay": null,
                       "ParticleSizeSand": null,
                       "ParticleSizeSilt": null,
+                      "ParticleSizeClay": null,
                       "Rocks": null,
                       "Texture": null,
                       "BD": [
@@ -13280,14 +13268,6 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "Temperature",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.WaterModel.WaterBalance, Models",
                       "SummerDate": "1-nov",
                       "SummerU": 6.0,
@@ -13545,8 +13525,6 @@
                         0.285,
                         0.285
                       ],
-                      "InitialPAWmm": 15.699999999999957,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -13606,6 +13584,7 @@
                       "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
+                      "CECMetadata": null,
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
@@ -13647,6 +13626,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -13686,6 +13666,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -13725,7 +13706,18 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "Urea",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "Thickness": null,
+                      "InitialValues": null,
+                      "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -13789,20 +13781,20 @@
                       "Value": "4-apr"
                     },
                     {
-                      "Key": "Population",
-                      "Value": "55"
+                      "Key": "CultivarName",
+                      "Value": "Garnet"
                     },
                     {
                       "Key": "SowingDepth",
                       "Value": "15"
                     },
                     {
-                      "Key": "CultivarName",
-                      "Value": "Garnet"
-                    },
-                    {
                       "Key": "RowSpacing",
                       "Value": "180"
+                    },
+                    {
+                      "Key": "Population",
+                      "Value": "55"
                     }
                   ],
                   "Name": "SowingFixedDate",
@@ -13830,7 +13822,7 @@
                     "        public IPlant Crop { get; set; }",
                     "",
                     "        [Description(\"Type of fertiliser to apply? \")] ",
-                    "        public Fertiliser.Types FertiliserType { get; set; }",
+                    "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                     "    ",
                     "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
                     "        public double Amount { get; set; }",
@@ -13840,16 +13832,12 @@
                     "        {",
                     "            Model crop = sender as Model;",
                     "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-                    "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                    "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                     "        }",
                     "    }",
                     "}"
                   ],
                   "Parameters": [
-                    {
-                      "Key": "Amount",
-                      "Value": "30"
-                    },
                     {
                       "Key": "Crop",
                       "Value": "[Canola]"
@@ -13857,6 +13845,10 @@
                     {
                       "Key": "FertiliserType",
                       "Value": "NH4N"
+                    },
+                    {
+                      "Key": "Amount",
+                      "Value": "30"
                     }
                   ],
                   "Name": "FertiliseAtSowing",
@@ -13912,12 +13904,12 @@
                   ],
                   "Parameters": [
                     {
-                      "Key": "Amount",
-                      "Value": "38"
-                    },
-                    {
                       "Key": "IrrigateDates",
                       "Value": "8-sep, 4-oct, 18-oct"
+                    },
+                    {
+                      "Key": "Amount",
+                      "Value": "38"
                     },
                     {
                       "Key": "Depth",
@@ -13985,12 +13977,12 @@
                   ],
                   "Parameters": [
                     {
-                      "Key": "Amount",
-                      "Value": "22"
-                    },
-                    {
                       "Key": "IrrigateDates",
                       "Value": "5-apr"
+                    },
+                    {
+                      "Key": "Amount",
+                      "Value": "22"
                     },
                     {
                       "Key": "Depth",
@@ -14058,12 +14050,12 @@
                   ],
                   "Parameters": [
                     {
-                      "Key": "Amount",
-                      "Value": "25"
-                    },
-                    {
                       "Key": "IrrigateDates",
                       "Value": "31-mar"
+                    },
+                    {
+                      "Key": "Amount",
+                      "Value": "25"
                     },
                     {
                       "Key": "Depth",
@@ -14174,23 +14166,25 @@
                 {
                   "$type": "Models.Manager, Models",
                   "CodeArray": [
-                    "using APSIM.Shared.Utilities;",
-                    "using Models.Utilities;",
-                    "using Models.Soils;",
-                    "using Models.PMF;",
-                    "using Models.Core;",
-                    "using Models.Climate;",
-                    "using System;",
-                    "using Models.PMF.Phen;",
+                    "using APSIM.Core;",
                     "using Models.PMF.Organs;",
+                    "using Models.PMF.Phen;",
+                    "using System;",
+                    "using Models.Climate;",
+                    "using Models.Core;",
+                    "using Models.PMF;",
+                    "using Models.Soils;",
+                    "using Models.Utilities;",
+                    "using APSIM.Shared.Utilities;",
                     "namespace Models",
                     "{",
                     "    [Serializable] ",
-                    "    public class Script : Model",
+                    "    public class Script : Model, IStructureDependency",
                     "    {",
+                    "        [Link] private Weather Weather;",
+                    "        [Link] private Zone zone;",
+                    "        public IStructure Structure { private get; set; }",
                     "",
-                    "        [Link] Weather Weather;",
-                    "        [Link] Zone zone;",
                     "        ",
                     "        [Description(\"Crop Type\")]",
                     "        public string CropType {get; set;}",
@@ -14229,6 +14223,9 @@
                     "        public double YieldFrostHeat {get; set;}",
                     "",
                     "         ",
+                    "",
+                    "        ",
+                    "",
                     "        [EventSubscribe(\"Sowing\")]",
                     "        private void OnDoSowing(object sender, EventArgs e)",
                     "        {",
@@ -14254,8 +14251,8 @@
                     "            FinalHeatMultipler = 1;",
                     "            DamageIndex = 1;",
                     "        //link with the specific crop    ",
-                    "            Phenology phen = (Phenology)zone.Get(\"[\" + CropType +\"].Phenology\");",
-                    "            ReproductiveOrgan Organs = (ReproductiveOrgan)zone.Get(\"[\" + CropType +\"].Grain\");",
+                    "            Phenology phen = (Phenology)Structure.Get(\"[\" + CropType +\"].Phenology\", relativeTo: zone);",
+                    "            ReproductiveOrgan Organs = (ReproductiveOrgan)Structure.Get(\"[\" + CropType +\"].Grain\", relativeTo: zone);",
                     "       ",
                     "          if (phen.Stage >= CriticalStageStart && phen.Stage <= CriticalStageEnd) ",
                     "            {",
@@ -15472,7 +15469,7 @@
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
-              "ResourceName": null,
+              "ResourceName": "MicroClimate",
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -15483,6 +15480,7 @@
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 50.0,
+              "CanopyType": null,
               "Name": "Zone",
               "ResourceName": null,
               "Children": [
@@ -15573,9 +15571,9 @@
                         100.0,
                         100.0
                       ],
-                      "ParticleSizeClay": null,
                       "ParticleSizeSand": null,
                       "ParticleSizeSilt": null,
+                      "ParticleSizeClay": null,
                       "Rocks": null,
                       "Texture": null,
                       "BD": [
@@ -15853,14 +15851,6 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "Temperature",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Soils.Solute, Models",
                       "Thickness": [
                         100.0,
@@ -15915,6 +15905,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -15976,6 +15967,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -16037,6 +16029,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "UREA",
                       "ResourceName": null,
                       "Children": [],
@@ -16239,6 +16232,7 @@
                       "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
+                      "CECMetadata": null,
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
@@ -16293,8 +16287,6 @@
                         0.171,
                         0.171
                       ],
-                      "InitialPAWmm": 0.0,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -16306,6 +16298,16 @@
                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
                       "Name": "Nutrient",
                       "ResourceName": "Nutrient",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "Thickness": null,
+                      "InitialValues": null,
+                      "Name": "Temperature",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -16455,20 +16457,20 @@
                       "Value": "16-apr"
                     },
                     {
-                      "Key": "Population",
-                      "Value": "50"
+                      "Key": "CultivarName",
+                      "Value": "46Y78"
                     },
                     {
                       "Key": "SowingDepth",
                       "Value": "15"
                     },
                     {
-                      "Key": "CultivarName",
-                      "Value": "46Y78"
-                    },
-                    {
                       "Key": "RowSpacing",
                       "Value": "180"
+                    },
+                    {
+                      "Key": "Population",
+                      "Value": "50"
                     }
                   ],
                   "Name": "SowingFixedDate",
@@ -16496,7 +16498,7 @@
                     "        public IPlant Crop { get; set; }",
                     "",
                     "        [Description(\"Type of fertiliser to apply? \")] ",
-                    "        public Fertiliser.Types FertiliserType { get; set; }",
+                    "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                     "    ",
                     "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
                     "        public double Amount { get; set; }",
@@ -16506,16 +16508,12 @@
                     "        {",
                     "            Model crop = sender as Model;",
                     "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-                    "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                    "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                     "        }",
                     "    }",
                     "}"
                   ],
                   "Parameters": [
-                    {
-                      "Key": "Amount",
-                      "Value": "34.2"
-                    },
                     {
                       "Key": "Crop",
                       "Value": "[Canola]"
@@ -16523,6 +16521,10 @@
                     {
                       "Key": "FertiliserType",
                       "Value": "NH4N"
+                    },
+                    {
+                      "Key": "Amount",
+                      "Value": "34.2"
                     }
                   ],
                   "Name": "FertiliseAtSowing",
@@ -16550,7 +16552,7 @@
                     "        [Separator(\"A component to apply fertiliser on one or more dates on every year of the simulation\")]",
                     "",
                     "        [Description(\"Type of fertiliser to apply? \")] ",
-                    "        public Fertiliser.Types FertiliserType { get; set; }",
+                    "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                     "",
                     "        [Description(\"Enter the fertilisation dates as dd-mmm with comma separation (any year information entered will be ignored): \")] ",
                     "        public string[] FertiliserDates { get; set; } ",
@@ -16569,9 +16571,9 @@
                     "                if (DateUtilities.DatesEqual(ddMMM, Clock.Today))",
                     "                {",
                     "                    if (AmountType)",
-                    "                        Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                    "                        Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                     "                    else",
-                    "                        Fertiliser.Apply(Amount: Amount / FertiliserDates.Length, Type: FertiliserType);",
+                    "                        Fertiliser.Apply(amount: Amount / FertiliserDates.Length, type: FertiliserType);",
                     "                }",
                     "            }",
                     "        }",
@@ -16713,23 +16715,25 @@
                 {
                   "$type": "Models.Manager, Models",
                   "CodeArray": [
-                    "using APSIM.Shared.Utilities;",
-                    "using Models.Utilities;",
-                    "using Models.Soils;",
-                    "using Models.PMF;",
-                    "using Models.Core;",
-                    "using Models.Climate;",
-                    "using System;",
-                    "using Models.PMF.Phen;",
+                    "using APSIM.Core;",
                     "using Models.PMF.Organs;",
+                    "using Models.PMF.Phen;",
+                    "using System;",
+                    "using Models.Climate;",
+                    "using Models.Core;",
+                    "using Models.PMF;",
+                    "using Models.Soils;",
+                    "using Models.Utilities;",
+                    "using APSIM.Shared.Utilities;",
                     "namespace Models",
                     "{",
                     "    [Serializable] ",
-                    "    public class Script : Model",
+                    "    public class Script : Model, IStructureDependency",
                     "    {",
+                    "        [Link] private Weather Weather;",
+                    "        [Link] private Zone zone;",
+                    "        public IStructure Structure { private get; set; }",
                     "",
-                    "        [Link] Weather Weather;",
-                    "        [Link] Zone zone;",
                     "        ",
                     "        [Description(\"Crop Type\")]",
                     "        public string CropType {get; set;}",
@@ -16768,6 +16772,9 @@
                     "        public double YieldFrostHeat {get; set;}",
                     "",
                     "         ",
+                    "",
+                    "        ",
+                    "",
                     "        [EventSubscribe(\"Sowing\")]",
                     "        private void OnDoSowing(object sender, EventArgs e)",
                     "        {",
@@ -16793,8 +16800,8 @@
                     "            FinalHeatMultipler = 1;",
                     "            DamageIndex = 1;",
                     "        //link with the specific crop    ",
-                    "            Phenology phen = (Phenology)zone.Get(\"[\" + CropType +\"].Phenology\");",
-                    "            ReproductiveOrgan Organs = (ReproductiveOrgan)zone.Get(\"[\" + CropType +\"].Grain\");",
+                    "            Phenology phen = (Phenology)Structure.Get(\"[\" + CropType +\"].Phenology\", relativeTo: zone);",
+                    "            ReproductiveOrgan Organs = (ReproductiveOrgan)Structure.Get(\"[\" + CropType +\"].Grain\", relativeTo: zone);",
                     "       ",
                     "          if (phen.Stage >= CriticalStageStart && phen.Stage <= CriticalStageEnd) ",
                     "            {",
@@ -16873,14 +16880,15 @@
                 {
                   "$type": "Models.Manager, Models",
                   "CodeArray": [
-                    "using Models.Soils;",
-                    "using APSIM.Shared.Utilities;",
+                    "using APSIM.Numerics;",
                     "using Models.Soils.Nutrients;",
-                    "using Models.PMF;",
-                    "using Models.Core;",
-                    "using System;",
                     "using System.Linq;",
+                    "using System;",
+                    "using Models.Core;",
+                    "using Models.PMF;",
                     "using Models.Soils.Nutrients;",
+                    "using APSIM.Shared.Utilities;",
+                    "using Models.Soils;",
                     "namespace Models",
                     "{",
                     "    [Serializable]",
@@ -16891,7 +16899,7 @@
                     "        [Link(ByName=true)] Solute NO3;",
                     "",
                     "        [Description(\"Type of fertiliser to apply? \")] ",
-                    "        public Fertiliser.Types FertiliserType { get; set; }",
+                    "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                     "    ",
                     "        [Description(\"Threshold amount of NO3 to topup to (kg/ha)\")]",
                     "        public double Threshold { get; set;}",
@@ -16900,7 +16908,7 @@
                     "        private void OnDoManagement(object sender, EventArgs e)",
                     "        {",
                     "            double Amount = Threshold - MathUtilities.Sum(NO3.kgha);",
-                    "            Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                    "            Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                     "        }",
                     "    }",
                     "}"
@@ -18041,7 +18049,7 @@
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
-              "ResourceName": null,
+              "ResourceName": "MicroClimate",
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -18052,6 +18060,7 @@
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 50.0,
+              "CanopyType": null,
               "Name": "Zone",
               "ResourceName": null,
               "Children": [
@@ -18142,9 +18151,9 @@
                         100.0,
                         100.0
                       ],
-                      "ParticleSizeClay": null,
                       "ParticleSizeSand": null,
                       "ParticleSizeSilt": null,
+                      "ParticleSizeClay": null,
                       "Rocks": null,
                       "Texture": null,
                       "BD": [
@@ -18422,14 +18431,6 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "Temperature",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Soils.Solute, Models",
                       "Thickness": [
                         100.0,
@@ -18484,6 +18485,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -18545,6 +18547,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -18606,6 +18609,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "UREA",
                       "ResourceName": null,
                       "Children": [],
@@ -18808,6 +18812,7 @@
                       "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
+                      "CECMetadata": null,
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
@@ -18862,8 +18867,6 @@
                         0.171,
                         0.171
                       ],
-                      "InitialPAWmm": 41.0,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -18875,6 +18878,16 @@
                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
                       "Name": "Nutrient",
                       "ResourceName": "Nutrient",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "Thickness": null,
+                      "InitialValues": null,
+                      "Name": "Temperature",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -19024,20 +19037,20 @@
                       "Value": "17-apr"
                     },
                     {
-                      "Key": "Population",
-                      "Value": "30"
+                      "Key": "CultivarName",
+                      "Value": "Beacon"
                     },
                     {
                       "Key": "SowingDepth",
                       "Value": "15"
                     },
                     {
-                      "Key": "CultivarName",
-                      "Value": "Beacon"
-                    },
-                    {
                       "Key": "RowSpacing",
                       "Value": "230"
+                    },
+                    {
+                      "Key": "Population",
+                      "Value": "30"
                     }
                   ],
                   "Name": "SowingFixedDate",
@@ -19065,7 +19078,7 @@
                     "        public IPlant Crop { get; set; }",
                     "",
                     "        [Description(\"Type of fertiliser to apply? \")] ",
-                    "        public Fertiliser.Types FertiliserType { get; set; }",
+                    "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                     "    ",
                     "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
                     "        public double Amount { get; set; }",
@@ -19075,16 +19088,12 @@
                     "        {",
                     "            Model crop = sender as Model;",
                     "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-                    "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                    "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                     "        }",
                     "    }",
                     "}"
                   ],
                   "Parameters": [
-                    {
-                      "Key": "Amount",
-                      "Value": "44"
-                    },
                     {
                       "Key": "Crop",
                       "Value": "[Canola]"
@@ -19092,6 +19101,10 @@
                     {
                       "Key": "FertiliserType",
                       "Value": "NH4N"
+                    },
+                    {
+                      "Key": "Amount",
+                      "Value": "44"
                     }
                   ],
                   "Name": "FertiliseAtSowing",
@@ -19211,23 +19224,25 @@
                 {
                   "$type": "Models.Manager, Models",
                   "CodeArray": [
-                    "using APSIM.Shared.Utilities;",
-                    "using Models.Utilities;",
-                    "using Models.Soils;",
-                    "using Models.PMF;",
-                    "using Models.Core;",
-                    "using Models.Climate;",
-                    "using System;",
-                    "using Models.PMF.Phen;",
+                    "using APSIM.Core;",
                     "using Models.PMF.Organs;",
+                    "using Models.PMF.Phen;",
+                    "using System;",
+                    "using Models.Climate;",
+                    "using Models.Core;",
+                    "using Models.PMF;",
+                    "using Models.Soils;",
+                    "using Models.Utilities;",
+                    "using APSIM.Shared.Utilities;",
                     "namespace Models",
                     "{",
                     "    [Serializable] ",
-                    "    public class Script : Model",
+                    "    public class Script : Model, IStructureDependency",
                     "    {",
+                    "        [Link] private Weather Weather;",
+                    "        [Link] private Zone zone;",
+                    "        public IStructure Structure { private get; set; }",
                     "",
-                    "        [Link] Weather Weather;",
-                    "        [Link] Zone zone;",
                     "        ",
                     "        [Description(\"Crop Type\")]",
                     "        public string CropType {get; set;}",
@@ -19266,6 +19281,9 @@
                     "        public double YieldFrostHeat {get; set;}",
                     "",
                     "         ",
+                    "",
+                    "        ",
+                    "",
                     "        [EventSubscribe(\"Sowing\")]",
                     "        private void OnDoSowing(object sender, EventArgs e)",
                     "        {",
@@ -19291,8 +19309,8 @@
                     "            FinalHeatMultipler = 1;",
                     "            DamageIndex = 1;",
                     "        //link with the specific crop    ",
-                    "            Phenology phen = (Phenology)zone.Get(\"[\" + CropType +\"].Phenology\");",
-                    "            ReproductiveOrgan Organs = (ReproductiveOrgan)zone.Get(\"[\" + CropType +\"].Grain\");",
+                    "            Phenology phen = (Phenology)Structure.Get(\"[\" + CropType +\"].Phenology\", relativeTo: zone);",
+                    "            ReproductiveOrgan Organs = (ReproductiveOrgan)Structure.Get(\"[\" + CropType +\"].Grain\", relativeTo: zone);",
                     "       ",
                     "          if (phen.Stage >= CriticalStageStart && phen.Stage <= CriticalStageEnd) ",
                     "            {",
@@ -20023,7 +20041,7 @@
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
-              "ResourceName": null,
+              "ResourceName": "MicroClimate",
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -20034,6 +20052,7 @@
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 50.0,
+              "CanopyType": null,
               "Name": "Zone",
               "ResourceName": null,
               "Children": [
@@ -20111,9 +20130,9 @@
                         300.0,
                         300.0
                       ],
-                      "ParticleSizeClay": null,
                       "ParticleSizeSand": null,
                       "ParticleSizeSilt": null,
+                      "ParticleSizeClay": null,
                       "Rocks": null,
                       "Texture": null,
                       "BD": [
@@ -20577,14 +20596,6 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "Temperature",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Soils.Organic, Models",
                       "FOMCNRatio": 40.0,
                       "Thickness": [
@@ -20676,6 +20687,7 @@
                       "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
+                      "CECMetadata": null,
                       "ESPMetadata": null,
                       "PHMetadata": [
                         "Estimated based on local knowledge",
@@ -20721,6 +20733,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -20756,6 +20769,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -20791,6 +20805,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
@@ -20817,8 +20832,6 @@
                         0.24,
                         0.24
                       ],
-                      "InitialPAWmm": 282.6,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": true,
                       "Name": "Water",
                       "ResourceName": null,
@@ -20830,6 +20843,16 @@
                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
                       "Name": "Nutrient",
                       "ResourceName": "Nutrient",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "Thickness": null,
+                      "InitialValues": null,
+                      "Name": "Temperature",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -20979,20 +21002,20 @@
                       "Value": "13-apr"
                     },
                     {
-                      "Key": "Population",
-                      "Value": "12"
+                      "Key": "CultivarName",
+                      "Value": "Garnet"
                     },
                     {
                       "Key": "SowingDepth",
                       "Value": "15"
                     },
                     {
-                      "Key": "CultivarName",
-                      "Value": "Garnet"
-                    },
-                    {
                       "Key": "RowSpacing",
                       "Value": "180"
+                    },
+                    {
+                      "Key": "Population",
+                      "Value": "12"
                     }
                   ],
                   "Name": "SowingFixedDate",
@@ -21020,7 +21043,7 @@
                     "        public IPlant Crop { get; set; }",
                     "",
                     "        [Description(\"Type of fertiliser to apply? \")] ",
-                    "        public Fertiliser.Types FertiliserType { get; set; }",
+                    "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                     "    ",
                     "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
                     "        public double Amount { get; set; }",
@@ -21030,16 +21053,12 @@
                     "        {",
                     "            Model crop = sender as Model;",
                     "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-                    "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                    "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                     "        }",
                     "    }",
                     "}"
                   ],
                   "Parameters": [
-                    {
-                      "Key": "Amount",
-                      "Value": "75"
-                    },
                     {
                       "Key": "Crop",
                       "Value": "[Canola]"
@@ -21047,6 +21066,10 @@
                     {
                       "Key": "FertiliserType",
                       "Value": "UreaN"
+                    },
+                    {
+                      "Key": "Amount",
+                      "Value": "75"
                     }
                   ],
                   "Name": "FertiliseAtSowing",
@@ -21074,7 +21097,7 @@
                     "        [Separator(\"A component to apply fertiliser on one or more dates on every year of the simulation\")]",
                     "",
                     "        [Description(\"Type of fertiliser to apply? \")] ",
-                    "        public Fertiliser.Types FertiliserType { get; set; }",
+                    "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                     "",
                     "        [Description(\"Enter the fertilisation dates as dd-mmm with comma separation (any year information entered will be ignored): \")] ",
                     "        public string[] FertiliserDates { get; set; } ",
@@ -21093,9 +21116,9 @@
                     "                if (DateUtilities.DatesEqual(ddMMM, Clock.Today))",
                     "                {",
                     "                    if (AmountType)",
-                    "                        Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                    "                        Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                     "                    else",
-                    "                        Fertiliser.Apply(Amount: Amount / FertiliserDates.Length, Type: FertiliserType);",
+                    "                        Fertiliser.Apply(amount: Amount / FertiliserDates.Length, type: FertiliserType);",
                     "                }",
                     "            }",
                     "        }",
@@ -22476,7 +22499,7 @@
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
-              "ResourceName": null,
+              "ResourceName": "MicroClimate",
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -22487,6 +22510,7 @@
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 50.0,
+              "CanopyType": null,
               "Name": "Zone",
               "ResourceName": null,
               "Children": [
@@ -22557,6 +22581,7 @@
                       "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
+                      "CECMetadata": null,
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
@@ -22585,9 +22610,9 @@
                         100.0,
                         100.0
                       ],
-                      "ParticleSizeClay": null,
                       "ParticleSizeSand": null,
                       "ParticleSizeSilt": null,
+                      "ParticleSizeClay": null,
                       "Rocks": null,
                       "Texture": null,
                       "BD": [
@@ -22890,14 +22915,6 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "Temperature",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Soils.Solute, Models",
                       "Thickness": [
                         100.0,
@@ -22944,6 +22961,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -22997,6 +23015,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -23050,6 +23069,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "UREA",
                       "ResourceName": null,
                       "Children": [],
@@ -23214,8 +23234,6 @@
                         0.304,
                         0.304
                       ],
-                      "InitialPAWmm": 112.40000000000003,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -23227,6 +23245,16 @@
                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
                       "Name": "Nutrient",
                       "ResourceName": "Nutrient",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "Thickness": null,
+                      "InitialValues": null,
+                      "Name": "Temperature",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -23503,20 +23531,20 @@
                       "Value": "21-mar"
                     },
                     {
-                      "Key": "Population",
-                      "Value": "30"
+                      "Key": "CultivarName",
+                      "Value": "Rainbow"
                     },
                     {
                       "Key": "SowingDepth",
                       "Value": "15"
                     },
                     {
-                      "Key": "CultivarName",
-                      "Value": "Rainbow"
-                    },
-                    {
                       "Key": "RowSpacing",
                       "Value": "180"
+                    },
+                    {
+                      "Key": "Population",
+                      "Value": "30"
                     }
                   ],
                   "Name": "SowingFixedDate",
@@ -23572,12 +23600,12 @@
                   ],
                   "Parameters": [
                     {
-                      "Key": "Amount",
-                      "Value": "52"
-                    },
-                    {
                       "Key": "IrrigateDates",
                       "Value": "15-apr"
+                    },
+                    {
+                      "Key": "Amount",
+                      "Value": "52"
                     },
                     {
                       "Key": "Depth",
@@ -23645,12 +23673,12 @@
                   ],
                   "Parameters": [
                     {
-                      "Key": "Amount",
-                      "Value": "22"
-                    },
-                    {
                       "Key": "IrrigateDates",
                       "Value": "15-aug"
+                    },
+                    {
+                      "Key": "Amount",
+                      "Value": "22"
                     },
                     {
                       "Key": "Depth",
@@ -23690,7 +23718,7 @@
                     "        public IPlant Crop { get; set; }",
                     "",
                     "        [Description(\"Type of fertiliser to apply? \")] ",
-                    "        public Fertiliser.Types FertiliserType { get; set; }",
+                    "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                     "    ",
                     "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
                     "        public double Amount { get; set; }",
@@ -23700,16 +23728,12 @@
                     "        {",
                     "            Model crop = sender as Model;",
                     "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-                    "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                    "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                     "        }",
                     "    }",
                     "}"
                   ],
                   "Parameters": [
-                    {
-                      "Key": "Amount",
-                      "Value": "13"
-                    },
                     {
                       "Key": "Crop",
                       "Value": "[Canola]"
@@ -23717,6 +23741,10 @@
                     {
                       "Key": "FertiliserType",
                       "Value": "NH4N"
+                    },
+                    {
+                      "Key": "Amount",
+                      "Value": "13"
                     }
                   ],
                   "Name": "FertiliseAtSowing",
@@ -23836,14 +23864,15 @@
                 {
                   "$type": "Models.Manager, Models",
                   "CodeArray": [
-                    "using Models.Soils;",
-                    "using APSIM.Shared.Utilities;",
+                    "using APSIM.Numerics;",
                     "using Models.Soils.Nutrients;",
-                    "using Models.PMF;",
-                    "using Models.Core;",
-                    "using System;",
                     "using System.Linq;",
+                    "using System;",
+                    "using Models.Core;",
+                    "using Models.PMF;",
                     "using Models.Soils.Nutrients;",
+                    "using APSIM.Shared.Utilities;",
+                    "using Models.Soils;",
                     "namespace Models",
                     "{",
                     "    [Serializable]",
@@ -23854,7 +23883,7 @@
                     "        [Link(ByName=true)] Solute NO3;",
                     "",
                     "        [Description(\"Type of fertiliser to apply? \")] ",
-                    "        public Fertiliser.Types FertiliserType { get; set; }",
+                    "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                     "    ",
                     "        [Description(\"Threshold amount of NO3 to topup to (kg/ha)\")]",
                     "        public double Threshold { get; set;}",
@@ -23863,7 +23892,7 @@
                     "        private void OnDoManagement(object sender, EventArgs e)",
                     "        {",
                     "            double Amount = Threshold - MathUtilities.Sum(NO3.kgha);",
-                    "            Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                    "            Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                     "        }",
                     "    }",
                     "}"
@@ -25117,7 +25146,7 @@
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
-              "ResourceName": null,
+              "ResourceName": "MicroClimate",
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -25128,6 +25157,7 @@
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 50.0,
+              "CanopyType": null,
               "Name": "Zone",
               "ResourceName": null,
               "Children": [
@@ -25206,6 +25236,7 @@
                       "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
+                      "CECMetadata": null,
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
@@ -25234,9 +25265,9 @@
                         100.0,
                         100.0
                       ],
-                      "ParticleSizeClay": null,
                       "ParticleSizeSand": null,
                       "ParticleSizeSilt": null,
+                      "ParticleSizeClay": null,
                       "Rocks": null,
                       "Texture": null,
                       "BD": [
@@ -25539,14 +25570,6 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "Temperature",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Soils.Solute, Models",
                       "Thickness": [
                         100.0,
@@ -25593,6 +25616,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -25646,6 +25670,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -25682,6 +25707,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "UREA",
                       "ResourceName": null,
                       "Children": [],
@@ -25846,8 +25872,6 @@
                         0.228,
                         0.228
                       ],
-                      "InitialPAWmm": 29.000000000000025,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -25859,6 +25883,16 @@
                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
                       "Name": "Nutrient",
                       "ResourceName": "Nutrient",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "Thickness": null,
+                      "InitialValues": null,
+                      "Name": "Temperature",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -26096,20 +26130,20 @@
                       "Value": "21-mar"
                     },
                     {
-                      "Key": "Population",
-                      "Value": "30"
+                      "Key": "CultivarName",
+                      "Value": "Rainbow"
                     },
                     {
                       "Key": "SowingDepth",
                       "Value": "15"
                     },
                     {
-                      "Key": "CultivarName",
-                      "Value": "Rainbow"
-                    },
-                    {
                       "Key": "RowSpacing",
                       "Value": "230"
+                    },
+                    {
+                      "Key": "Population",
+                      "Value": "30"
                     }
                   ],
                   "Name": "SowingFixedDate",
@@ -26165,12 +26199,12 @@
                   ],
                   "Parameters": [
                     {
-                      "Key": "Amount",
-                      "Value": "70"
-                    },
-                    {
                       "Key": "IrrigateDates",
                       "Value": "1-apr"
+                    },
+                    {
+                      "Key": "Amount",
+                      "Value": "70"
                     },
                     {
                       "Key": "Depth",
@@ -26238,12 +26272,12 @@
                   ],
                   "Parameters": [
                     {
-                      "Key": "Amount",
-                      "Value": "30"
-                    },
-                    {
                       "Key": "IrrigateDates",
                       "Value": "15-jul, 8-sep"
+                    },
+                    {
+                      "Key": "Amount",
+                      "Value": "30"
                     },
                     {
                       "Key": "Depth",
@@ -26283,7 +26317,7 @@
                     "        public IPlant Crop { get; set; }",
                     "",
                     "        [Description(\"Type of fertiliser to apply? \")] ",
-                    "        public Fertiliser.Types FertiliserType { get; set; }",
+                    "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                     "    ",
                     "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
                     "        public double Amount { get; set; }",
@@ -26293,16 +26327,12 @@
                     "        {",
                     "            Model crop = sender as Model;",
                     "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-                    "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                    "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                     "        }",
                     "    }",
                     "}"
                   ],
                   "Parameters": [
-                    {
-                      "Key": "Amount",
-                      "Value": "13"
-                    },
                     {
                       "Key": "Crop",
                       "Value": "[Canola]"
@@ -26310,6 +26340,10 @@
                     {
                       "Key": "FertiliserType",
                       "Value": "NH4N"
+                    },
+                    {
+                      "Key": "Amount",
+                      "Value": "13"
                     }
                   ],
                   "Name": "FertiliseAtSowing",
@@ -27572,7 +27606,7 @@
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
-              "ResourceName": null,
+              "ResourceName": "MicroClimate",
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -27583,6 +27617,7 @@
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 50.0,
+              "CanopyType": null,
               "Name": "Zone",
               "ResourceName": null,
               "Children": [
@@ -27660,15 +27695,6 @@
                         300.0,
                         300.0
                       ],
-                      "ParticleSizeClay": [
-                        44.343848832,
-                        48.423848832,
-                        50.871848832,
-                        47.8744752,
-                        47.4664752,
-                        43.7944752,
-                        42.5704752
-                      ],
                       "ParticleSizeSand": [
                         42.320164432,
                         38.362216,
@@ -27686,6 +27712,15 @@
                         8.05130880000001,
                         7.35736036800001,
                         7.888020672
+                      ],
+                      "ParticleSizeClay": [
+                        44.343848832,
+                        48.423848832,
+                        50.871848832,
+                        47.8744752,
+                        47.4664752,
+                        43.7944752,
+                        42.5704752
                       ],
                       "Rocks": null,
                       "Texture": null,
@@ -27872,14 +27907,6 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "Temperature",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Soils.Solute, Models",
                       "Thickness": [
                         150.0,
@@ -27908,6 +27935,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -27943,6 +27971,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -27978,6 +28007,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "UREA",
                       "ResourceName": null,
                       "Children": [],
@@ -28092,6 +28122,7 @@
                       "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
+                      "CECMetadata": null,
                       "ESPMetadata": null,
                       "PHMetadata": [
                         "Unknown source or quality of data",
@@ -28128,8 +28159,6 @@
                         0.339,
                         0.302
                       ],
-                      "InitialPAWmm": 238.35807391247343,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -28141,6 +28170,16 @@
                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
                       "Name": "Nutrient",
                       "ResourceName": "Nutrient",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "Thickness": null,
+                      "InitialValues": null,
+                      "Name": "Temperature",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -28346,20 +28385,20 @@
                       "Value": "13-apr"
                     },
                     {
-                      "Key": "Population",
-                      "Value": "20"
+                      "Key": "CultivarName",
+                      "Value": "Garnet"
                     },
                     {
                       "Key": "SowingDepth",
                       "Value": "15"
                     },
                     {
-                      "Key": "CultivarName",
-                      "Value": "Garnet"
-                    },
-                    {
                       "Key": "RowSpacing",
                       "Value": "180"
+                    },
+                    {
+                      "Key": "Population",
+                      "Value": "20"
                     }
                   ],
                   "Name": "SowingFixedDate",
@@ -28387,7 +28426,7 @@
                     "        public IPlant Crop { get; set; }",
                     "",
                     "        [Description(\"Type of fertiliser to apply? \")] ",
-                    "        public Fertiliser.Types FertiliserType { get; set; }",
+                    "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                     "    ",
                     "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
                     "        public double Amount { get; set; }",
@@ -28397,16 +28436,12 @@
                     "        {",
                     "            Model crop = sender as Model;",
                     "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-                    "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                    "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                     "        }",
                     "    }",
                     "}"
                   ],
                   "Parameters": [
-                    {
-                      "Key": "Amount",
-                      "Value": "50"
-                    },
                     {
                       "Key": "Crop",
                       "Value": "[Canola]"
@@ -28414,6 +28449,10 @@
                     {
                       "Key": "FertiliserType",
                       "Value": "UreaN"
+                    },
+                    {
+                      "Key": "Amount",
+                      "Value": "50"
                     }
                   ],
                   "Name": "FertiliseAtSowing",
@@ -28441,7 +28480,7 @@
                     "        [Separator(\"A component to apply fertiliser on one or more dates on every year of the simulation\")]",
                     "",
                     "        [Description(\"Type of fertiliser to apply? \")] ",
-                    "        public Fertiliser.Types FertiliserType { get; set; }",
+                    "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                     "",
                     "        [Description(\"Enter the fertilisation dates as dd-mmm with comma separation (any year information entered will be ignored): \")] ",
                     "        public string[] FertiliserDates { get; set; } ",
@@ -28460,9 +28499,9 @@
                     "                if (DateUtilities.DatesEqual(ddMMM, Clock.Today))",
                     "                {",
                     "                    if (AmountType)",
-                    "                        Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                    "                        Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                     "                    else",
-                    "                        Fertiliser.Apply(Amount: Amount / FertiliserDates.Length, Type: FertiliserType);",
+                    "                        Fertiliser.Apply(amount: Amount / FertiliserDates.Length, type: FertiliserType);",
                     "                }",
                     "            }",
                     "        }",
@@ -29734,7 +29773,7 @@
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
-              "ResourceName": null,
+              "ResourceName": "MicroClimate",
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -29745,6 +29784,7 @@
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 50.0,
+              "CanopyType": null,
               "Name": "Zone",
               "ResourceName": null,
               "Children": [
@@ -29822,15 +29862,6 @@
                         300.0,
                         300.0
                       ],
-                      "ParticleSizeClay": [
-                        44.344,
-                        48.424,
-                        50.872,
-                        47.874,
-                        47.466,
-                        43.794,
-                        42.57
-                      ],
                       "ParticleSizeSand": [
                         42.32,
                         38.362,
@@ -29848,6 +29879,15 @@
                         8.051,
                         7.357,
                         7.888
+                      ],
+                      "ParticleSizeClay": [
+                        44.344,
+                        48.424,
+                        50.872,
+                        47.874,
+                        47.466,
+                        43.794,
+                        42.57
                       ],
                       "Rocks": null,
                       "Texture": null,
@@ -30034,14 +30074,6 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "Temperature",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Soils.Solute, Models",
                       "Thickness": [
                         150.0,
@@ -30070,6 +30102,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -30105,6 +30138,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -30140,6 +30174,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
                       "Name": "UREA",
                       "ResourceName": null,
                       "Children": [],
@@ -30254,6 +30289,7 @@
                       "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
+                      "CECMetadata": null,
                       "ESPMetadata": null,
                       "PHMetadata": [
                         "Unknown source or quality of data",
@@ -30290,8 +30326,6 @@
                         0.25,
                         0.25
                       ],
-                      "InitialPAWmm": 71.40000000000002,
-                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -30303,6 +30337,16 @@
                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
                       "Name": "Nutrient",
                       "ResourceName": "Nutrient",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "Thickness": null,
+                      "InitialValues": null,
+                      "Name": "Temperature",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -30508,20 +30552,20 @@
                       "Value": "21-apr"
                     },
                     {
-                      "Key": "Population",
-                      "Value": "20"
+                      "Key": "CultivarName",
+                      "Value": "Garnet"
                     },
                     {
                       "Key": "SowingDepth",
                       "Value": "15"
                     },
                     {
-                      "Key": "CultivarName",
-                      "Value": "Garnet"
-                    },
-                    {
                       "Key": "RowSpacing",
                       "Value": "180"
+                    },
+                    {
+                      "Key": "Population",
+                      "Value": "20"
                     }
                   ],
                   "Name": "SowingFixedDate",
@@ -30549,7 +30593,7 @@
                     "        public IPlant Crop { get; set; }",
                     "",
                     "        [Description(\"Type of fertiliser to apply? \")] ",
-                    "        public Fertiliser.Types FertiliserType { get; set; }",
+                    "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                     "    ",
                     "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
                     "        public double Amount { get; set; }",
@@ -30559,16 +30603,12 @@
                     "        {",
                     "            Model crop = sender as Model;",
                     "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-                    "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                    "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                     "        }",
                     "    }",
                     "}"
                   ],
                   "Parameters": [
-                    {
-                      "Key": "Amount",
-                      "Value": "50"
-                    },
                     {
                       "Key": "Crop",
                       "Value": "[Canola]"
@@ -30576,6 +30616,10 @@
                     {
                       "Key": "FertiliserType",
                       "Value": "UreaN"
+                    },
+                    {
+                      "Key": "Amount",
+                      "Value": "50"
                     }
                   ],
                   "Name": "FertiliseAtSowing",
