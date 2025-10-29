@@ -14,5 +14,3 @@ weight: 10
   * Defect issues must be reproducible. Include a simulation file with required met and input files in a zip archive.
   * Describe the steps to reproduce the defect. This includes details like where you clicked, what settings were enabled and what operating system it occurred on.
   * For graphical user interface (GUI) issues please submit a minimally reproducible example apsim file, describe the user interface model this issue affects and the steps to reproduce the error.
-* Inactive issues that are left for 60 days will be marked as stale and will be closed after 7 days.
-
