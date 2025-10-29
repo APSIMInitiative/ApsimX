@@ -66,14 +66,8 @@ jobs:
         run: |
           cd Models && dotnet publish -f net8.0 -o ../app && cd ../APSIM.Workflow && dotnet publish -f net8.0
 
-      - name: Split Wheat Validation
-        run: dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -d ./Tests/Validation/Wheat/Wheat.apsimx -s ./Tests/Validation/Wheat/split.json
-
-      - name: Split FAR Validation
-        run: dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -d ./Tests/Validation/Wheat/FAR/FAR.apsimx -s ./Tests/Validation/Wheat/FAR/split.json
-
-      - name: Split Wheat Phenology Validation
-        run: dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -d ./Tests/Validation/Wheat/Phenology/Phenology.apsimx -s ./Tests/Validation/Wheat/Phenology/split.json
+      - name: Split Large Validation Files
+        run: ./.github/workflows/scripts/split-large-files.sh
         continue-on-error: true  # Allow job to continue if the phenology split fails. This may occur for other PRs before the Phenology split is merged.
         
       - name: Log in to Docker Hub
