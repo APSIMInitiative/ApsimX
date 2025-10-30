@@ -36,7 +36,14 @@ public static class ApsimConvert
                     values.SetValue(arrayElement, i);
                     i++;
                 }
-                return values;
+
+                if (targetType.Name == "List`1")
+                {
+                    Type concreteListType = typeof(List<>).MakeGenericType(targetElementType);
+                    return Activator.CreateInstance(concreteListType, new object[] { values });
+                }
+                else
+                    return values;
             }
             else
             {
@@ -72,7 +79,7 @@ public static class ApsimConvert
                 return data.ToString();
             else if (targetType == typeof(bool))
                 return System.Convert.ToBoolean(data, CultureInfo.InvariantCulture);
-            else if (targetType == typeof(DateTime) && data is string dateString)
+            else if ((targetType == typeof(DateTime) || targetType == typeof(DateTime?))  && data is string dateString)
                 return DateUtilities.GetDate(dateString);
             else if (targetType.IsEnum && data is string st)
                 return Enum.Parse(targetType, st);
@@ -87,7 +94,7 @@ public static class ApsimConvert
     /// </summary>
     /// <param name="type">The type of the Array or List (e.g. int[] or List<int>)</param>
     /// <returns>True if Array or List.</returns>
-    private static bool IsIList(Type type)
+    internal static bool IsIList(Type type)
     {
         return type.IsArray || type.Name == "List`1";
     }
