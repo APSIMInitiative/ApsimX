@@ -124,6 +124,15 @@ namespace Models.Surface
         /// <summary>Sets the potential evapotranspiration.</summary>
         public double PotentialEP { get; set; }
 
+        /// <summary>Sets the min canopy temperature.</summary>
+        public double MinCanopyTemperature { get; set; }
+
+        /// <summary>Sets the max canopy temperature.</summary>
+        public double MaxCanopyTemperature { get; set; }
+
+        /// <summary>Sets the mean canopy temperature.</summary>
+        public double MeanCanopyTemperature { get; set; }
+
         /// <summary>Sets the actual water demand.</summary>
         public double WaterDemand { get; set; }
 
