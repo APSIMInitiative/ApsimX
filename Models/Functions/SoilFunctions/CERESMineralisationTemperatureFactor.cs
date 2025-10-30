@@ -55,6 +55,8 @@ namespace Models.Functions
             {
                 if (temperature[i] > MineralisationSTBase)
                     tf[i] = Math.Pow(temperature[i] - MineralisationSTBase, 2) / Math.Pow(MineralisationSTOpt - MineralisationSTBase, 2);
+                else
+                    tf[i] = 0.0;
                 if (tf[i] > 1) tf[i] = 1;
             }
         }
