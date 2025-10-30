@@ -6,8 +6,8 @@ using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Graph = Models.Graph;
+using System;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -188,8 +188,7 @@ namespace APSIM.Documentation.Models.Types
             else
             {
                 extraLinkDir = assemblyDir + Path.DirectorySeparatorChar +
-                    directory + Path.DirectorySeparatorChar +
-                    "AgPasture" + Path.DirectorySeparatorChar;
+                    directory + Path.DirectorySeparatorChar;
             }
 
             List<ITag> additionsTags = new();
@@ -205,7 +204,8 @@ namespace APSIM.Documentation.Models.Types
                 {"Mungbean", new DocAdditions(videoLink:"https://www.youtube.com/watch?v=nyDZkT1JTXw")},
                 {"Stock", new DocAdditions("https://grazplan.csiro.au/wp-content/uploads/2007/08/TechPaperMay12.pdf")},
                 {"SWIM", new DocAdditions("https://www.apsim.info/wp-content/uploads/2024/12/SWIMv21UserManual.pdf")},
-                {"SorghumDCaPST", new DocAdditions("https://www.apsim.info/wp-content/uploads/2024/12/APSIM-DCaPS.model.documentation.v4_Wu.et.al-1.pdf")}
+                {"SorghumDCaPST", new DocAdditions("https://www.apsim.info/wp-content/uploads/2024/12/APSIM-DCaPS.model.documentation.v4_Wu.et.al-1.pdf")},
+                {"Wheat", new DocAdditions("https://www.apsim.info/wp-content/uploads/2025/09/camp-model-description.docx")}
             };
 
             if(validationAdditions.ContainsKey(name))
@@ -225,9 +225,18 @@ namespace APSIM.Documentation.Models.Types
 
                 if(additions.ExtraLink != null)
                 {
-                    Simulations speciesSims = FileFormat.ReadFromFile<Simulations>(additions.ExtraLink).Model as Simulations;
+                    // Remove new build system prefix. /wd/ gets added to help with Azure compute node pathing but is
+                    // not necessary for local paths, and especially not here.
+                    string extraLink = additions.ExtraLink;
+                    Console.WriteLine($"Removing new build system prefix from {additions.ExtraLink}");
+                    if (additions.ExtraLink.StartsWith("/wd/"))
+                    {
+                        extraLink = additions.ExtraLink.Substring(4).Replace("//", "/");
+                    }
+                    Simulations speciesSims = FileFormat.ReadFromFile<Simulations>(extraLink).Model as Simulations;
                     Section extraSection = new($"{additions.ExtraLinkName}", AutoDocumentation.Document(speciesSims));
                     additionsTags.Add(extraSection);
+                    
                 }
             }
             return additionsTags;
