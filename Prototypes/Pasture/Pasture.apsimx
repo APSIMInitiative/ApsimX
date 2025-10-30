@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 201,
+  "Version": 205,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -62,6 +62,15 @@
       "Name": "SoilT",
       "ResourceName": null,
       "Children": [
+        {
+          "$type": "Models.Memo, Models",
+          "Text": "This experiment demonstrates the difference that changing soil temperature models has on pasture growth.",
+          "Name": "Memo",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
         {
           "$type": "Models.Factorial.Factors, Models",
           "Name": "Factors",
