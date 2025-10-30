@@ -7,26 +7,16 @@ name: Create APSIM Releases
 permissions:
   contents: read # to check out code
 
-# # Replace when releases work
-# on:
-#   pull_request:
-#     branches:
-#       - master
-#     types:
-#       - closed
-
 on:
-   workflow_dispatch:
-#  workflow_run:
-#    workflows: ["Build and test", "Model validations"] # Name of the workflow that needs to be successful
-#    types:
-#      - completed # Trigger when the referenced workflow is completed
-
+  pull_request:
+    branches:
+      - master
+    types:
+      - closed
 
 jobs:
   create-release:
-    # Replace when releases work
-    # if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true
     strategy:
       matrix:
         # os: [windows, macos, debian]
