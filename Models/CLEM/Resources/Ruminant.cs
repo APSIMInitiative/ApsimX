@@ -772,6 +772,7 @@ namespace Models.CLEM.Resources
             }
         }
 
+        // to do: remove this old Grow property and replace with ind.Intake.Solids.Actual
         /// <summary>
         /// Current monthly metabolic intake after crude protein adjustment (Grow v1)
         /// </summary>
@@ -950,7 +951,7 @@ namespace Models.CLEM.Resources
                 setWeight = CalculateNormalisedWeight(setAge, true);
             }
 
-            // can we uppdate age here after weight and setMature?
+            // can we update age here after weight and setMature?
             AgeInDays = setAge;
 
             // This assumes set weight is the fleece free body weight

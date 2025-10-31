@@ -309,7 +309,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="index">index to use</param>
         /// <param name="getByAge">return where index is age</param>
-        /// <returns>GraxeFoodStore pool</returns>
+        /// <returns>GrazeFoodStore pool</returns>
         public IEnumerable<GrazeFoodStorePool> Pool(int index, bool getByAge)
         {
             if (getByAge)

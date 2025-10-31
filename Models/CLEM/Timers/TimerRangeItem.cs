@@ -62,21 +62,32 @@ namespace Models.CLEM.Timers
         /// <inheritdoc/>
         public override string ToString()
         {
-            string dateString = "";
-
-            if (ErrorMessages.Any())
+            if (ErrorMessages.Count != 0)
+            {
                 return string.Join(", ", ErrorMessages);
- 
+            }
+
+            string dateString;
             if (ymd.month > 0)
+            {
                 if (ymd.day > 0 & IsMonthOnly == false)
+                {
                     dateString = $"{ymd.day} {DateTimeFormatInfo.CurrentInfo.GetAbbreviatedMonthName(ymd.month)}";
+                }
                 else
+                {
                     dateString = $"{DateTimeFormatInfo.CurrentInfo.GetAbbreviatedMonthName(ymd.month)}";
+                }
+            }
             else
+            { 
                 dateString = new DateTime(1999, 1, 1).AddDays(ymd.day - 1).ToString("dd MMM", CultureInfo.CurrentCulture);
+            }
 
             if (ymd.year > 0)
+            {
                 dateString += $" {ymd.year}";
+            }
 
             return dateString;
         }
@@ -84,7 +95,9 @@ namespace Models.CLEM.Timers
         private void UpdateDate(CLEMEvents events, bool wholeTimeStepInRange)
         {
             if (ErrorMessages.Count > 0)
+            {
                 return;
+            }
 
             if (ymd.year == 0 && ymd.month == 0 && ymd.day == 0)
             {
@@ -93,13 +106,21 @@ namespace Models.CLEM.Timers
             }
 
             if (ymd.year > 0)
+            {
                 Date = new DateTime(ymd.year, ymd.month, ymd.day);
+            }
             else if (ymd.month > 0)
+            {
                 Date = new DateTime(events.Clock.StartDate.Year, ymd.month, ymd.day);
+            }
             else if (ymd.day > 0)
+            {
                 Date = new DateTime(events.Clock.StartDate.Year, events.Clock.StartDate.Month, ymd.day);
+            }
             else
+            {
                 Date = new DateTime(1900,0,0);
+            }
         }
 
         private (int year, int month, int day) GetDateParts(AgeSpecifier details, CLEMEvents events)
@@ -156,9 +177,9 @@ namespace Models.CLEM.Timers
             }
             else
             {
-                if (dateParts.month == 0 || dateParts.year == 0)
+                if (dateParts.year == 0 && dateParts.month == 0)
                 {
-                    ErrorMessages.Add("Invalid date parts. Days cannot be 0 without year and month (y,m,0)");
+                    ErrorMessages.Add("Invalid date parts. Days cannot be 0 with year and month (y,m,0)");
                     return (0, 0, 0); // will be treated as error in validation
                 }
 
