@@ -1469,8 +1469,8 @@
                       ],
                       "Y": [
                         1.0,
-                        1.0,
-                        1.0
+                        0.95,
+                        0.90
                       ],
                       "Name": "XYPairs",
                       "ResourceName": null,
@@ -2477,7 +2477,7 @@
                         1.0
                       ],
                       "Y": [
-                        1.0,
+                        0.0,
                         1.0,
                         1.0
                       ],
@@ -3924,7 +3924,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
+                          "FixedValue": 1.0,
                           "Units": null,
                           "Name": "StressResponseCoefficient",
                           "ResourceName": null,
@@ -3941,13 +3941,11 @@
                               "$type": "Models.Functions.XYPairs, Models",
                               "X": [
                                 0.0,
-                                5.0,
-                                10.0
+                                5.0
                               ],
                               "Y": [
                                 0.0,
-                                0.0,
-                                0.0
+                                5.0
                               ],
                               "Name": "XYPairs",
                               "ResourceName": null,
@@ -4333,13 +4331,13 @@
                                       "$type": "Models.Functions.XYPairs, Models",
                                       "X": [
                                         0.0,
-                                        0.9,
+                                        0.85,
                                         1.0
                                       ],
                                       "Y": [
                                         1.0,
                                         1.0,
-                                        1.0
+                                        0.1
                                       ],
                                       "Name": "XYPairs",
                                       "ResourceName": null,
@@ -4386,7 +4384,7 @@
                                       "Y": [
                                         1.0,
                                         1.0,
-                                        1.0
+                                        0.3
                                       ],
                                       "Name": "XYPairs",
                                       "ResourceName": null,
@@ -4427,13 +4425,13 @@
                                       "$type": "Models.Functions.XYPairs, Models",
                                       "X": [
                                         0.0,
-                                        0.9,
+                                        0.95,
                                         1.0
                                       ],
                                       "Y": [
                                         1.0,
                                         1.0,
-                                        1.0
+                                        0.5
                                       ],
                                       "Name": "XYPairs",
                                       "ResourceName": null,
@@ -4466,13 +4464,13 @@
                           "$type": "Models.Functions.ExponentialFunction, Models",
                           "A": 0.0,
                           "B": 1.0,
-                          "C": -0.1,
+                          "C": -0.05,
                           "Name": "PersistentReduction",
                           "ResourceName": null,
                           "Children": [
                             {
                               "$type": "Models.Functions.MovingSumFunction, Models",
-                              "NumberOfDays": 25,
+                              "NumberOfDays": 15,
                               "Name": "MovingSumFunction",
                               "ResourceName": null,
                               "Children": [

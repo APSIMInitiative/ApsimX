@@ -1346,7 +1346,7 @@
                                       "Y": [
                                         1.0,
                                         1.0,
-                                        1.0
+                                        0.5
                                       ],
                                       "Name": "XYPairs",
                                       "ResourceName": null,
@@ -1387,13 +1387,13 @@
                                       "$type": "Models.Functions.XYPairs, Models",
                                       "X": [
                                         0.0,
-                                        0.9,
+                                        0.7,
                                         1.0
                                       ],
                                       "Y": [
                                         1.0,
                                         1.0,
-                                        1.0
+                                        0.2
                                       ],
                                       "Name": "XYPairs",
                                       "ResourceName": null,
@@ -1434,8 +1434,8 @@
                                       "$type": "Models.Functions.XYPairs, Models",
                                       "X": [
                                         0.0,
-                                        0.9,
-                                        1.0
+                                        0.7,
+                                        0.2
                                       ],
                                       "Y": [
                                         1.0,
@@ -1479,7 +1479,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.MovingSumFunction, Models",
-                              "NumberOfDays": 25,
+                              "NumberOfDays": 15,
                               "Name": "MovingSumFunction",
                               "ResourceName": null,
                               "Children": [
@@ -1853,13 +1853,11 @@
                               "$type": "Models.Functions.XYPairs, Models",
                               "X": [
                                 0.0,
-                                5.0,
-                                10.0
+                                5.0
                               ],
                               "Y": [
                                 0.0,
-                                0.0,
-                                0.0
+                                0.02
                               ],
                               "Name": "XYPairs",
                               "ResourceName": null,
@@ -1984,13 +1982,11 @@
                               "$type": "Models.Functions.XYPairs, Models",
                               "X": [
                                 0.0,
-                                5.0,
-                                10.0
+                                5.0
                               ],
                               "Y": [
                                 0.0,
-                                0.0,
-                                0.0
+                                0.03
                               ],
                               "Name": "XYPairs",
                               "ResourceName": null,
@@ -2922,8 +2918,8 @@
                       ],
                       "Y": [
                         1.0,
-                        1.0,
-                        1.0
+                        0.95,
+                        0.9
                       ],
                       "Name": "XYPairs",
                       "ResourceName": null,
@@ -3466,7 +3462,7 @@
                         1.0
                       ],
                       "Y": [
-                        1.0,
+                        0.0,
                         1.0,
                         1.0
                       ],
