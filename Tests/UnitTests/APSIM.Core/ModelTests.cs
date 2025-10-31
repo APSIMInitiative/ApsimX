@@ -538,7 +538,7 @@ public class ModelTests
         var folder4 = new Folder() { Name = "folder1", Parent = folder1.Parent };
         container.Node.AddChild(folder4);
         Assert.That(folder2.Node.FindSibling<Folder>("folder1"), Is.EqualTo(folder1));
-        Assert.That(folder1.Node.FindSibling<Folder>("folder1"), Is.EqualTo(folder4));
+        Assert.That(folder1.Node.FindSibling<Folder>("folder11"), Is.EqualTo(folder4));
 
         // Test case-insensitive search.
         Assert.That(folder1.Node.FindSibling<Folder>("fOlDeR2"), Is.EqualTo(folder2));
@@ -927,12 +927,10 @@ public class ModelTests
         Assert.That(simpleModel.Node.FindChildren<IModel>("Container", recurse: true).ToArray(), Is.EqualTo(new[] { container }));
 
         // Many descendants with correct name - expect results in depth-first order.
-        var folder4 = new MockModel2() { Parent = container, Name = "folder1" };
-        container.Node.AddChild(folder4);
-        var folder5 = new MockModel() { Parent = folder1, Name = "folder1" };
-        folder1.Node.AddChild(folder5);
+        var newFolder1 = new MockModel() { Name = "folder1" };
+        folder1.Node.AddChild(newFolder1);
 
-        Assert.That(simpleModel.Node.FindChildren<IModel>("folder1", recurse: true).ToArray(), Is.EqualTo(new[] { folder1, folder5, folder4 }));
+        Assert.That(simpleModel.Node.FindChildren<IModel>("folder1", recurse: true).ToArray(), Is.EqualTo(new[] { folder1, newFolder1 }));
     }
 
     /// <summary>
@@ -961,9 +959,9 @@ public class ModelTests
         Assert.That(folder1.Node.FindSiblings<IModel>("folder2").ToArray(), Is.EqualTo(new[] { folder2 }));
 
         // Many siblings of correct name, expect them in indexed order.
-        var folder4 = new Folder() { Name = "folder2", Parent = container };
+        var folder4 = new Folder() { Name = "folder2", Parent = container };  // this will get renamed.
         folder1.Parent.Node.AddChild(folder4);
-        Assert.That(folder1.Node.FindSiblings<IModel>("folder2").ToArray(), Is.EqualTo(new[] { folder2, folder4 }));
+        Assert.That(folder1.Node.FindSiblings<IModel>("folder2").ToArray(), Is.EqualTo(new[] { folder2 }));
     }
 
     /// <summary>
@@ -987,13 +985,13 @@ public class ModelTests
         Assert.That(simpleModel.Node.FindChildren<IModel>("Container").ToArray(), Is.EqualTo(new[] { container }));
 
         // Many (but not all) children of correct name, expect them in indexed order.
-        var folder4 = new Folder() { Name = "folder2", Parent = container };
+        var folder4 = new Folder() { Name = "folder2", Parent = container }; // this will get renamed
         container.Node.AddChild(folder4);
-        Assert.That(container.Node.FindChildren<IModel>("folder2").ToArray(), Is.EqualTo(new[] { folder2, folder4 }));
+        Assert.That(container.Node.FindChildren<IModel>("folder2").ToArray(), Is.EqualTo(new[] { folder2 }));
 
         // All (>1) children have correct name.
         container.Node.RemoveChild(folder1 as INodeModel);
-        Assert.That(container.Node.FindChildren<IModel>("folder2").ToArray(), Is.EqualTo(new[] { folder2, folder4 }));
+        Assert.That(container.Node.FindChildren<IModel>("folder2").ToArray(), Is.EqualTo(new[] { folder2}));
     }
 
     /// <summary>
@@ -1122,12 +1120,12 @@ public class ModelTests
         var folder6 = new Folder() { Name = "folder1", Parent = container };
         folder1.Node.AddChild(folder4);
         folder4.Node.AddChild(folder5);
-        container.Node.AddChild(folder6);
+        container.Node.AddChild(folder6);   // folder6 renamed to folder11
         folder3.Node.Rename("folder1");
         noSiblings.Node.Rename("folder1");
 
-        Assert.That(simpleModel.Node.FindChildren<Folder>("folder1", recurse: true).ToArray(), Is.EqualTo(new[] { folder1, folder4, folder5, folder6, folder3 }));
-        Assert.That(container.Node.FindChildren<Folder>("folder1", recurse: true).ToArray(), Is.EqualTo(new[] { folder1, folder4, folder5, folder6 }));
+        Assert.That(simpleModel.Node.FindChildren<Folder>("folder1", recurse: true).ToArray(), Is.EqualTo(new[] { folder1, folder4, folder5, folder3 }));
+        Assert.That(container.Node.FindChildren<Folder>("folder1", recurse: true).ToArray(), Is.EqualTo(new[] { folder1, folder4, folder5 }));
         Assert.That(folder1.Node.FindChildren<Folder>("folder1", recurse: true).ToArray(), Is.EqualTo(new[] { folder4, folder5 }));
         Assert.That(folder4.Node.FindChildren<Folder>("folder1", recurse: true).ToArray(), Is.EqualTo(new[] { folder5 }));
 
@@ -1168,9 +1166,9 @@ public class ModelTests
 
         // Many siblings of correct type and name - expect indexed order.
         var folder4 = new Folder() { Name = "folder1", Parent = container };
-        container.Node.AddChild(folder4);
-        Assert.That(folder2.Node.FindSiblings<Folder>("folder1").ToArray(), Is.EqualTo(new[] { folder1, folder4 }));
-        Assert.That(folder1.Node.FindSiblings<Folder>("folder1").ToArray(), Is.EqualTo(new[] { folder4 }));
+        container.Node.AddChild(folder4); // renamed to folder11
+        Assert.That(folder2.Node.FindSiblings<Folder>("folder1").ToArray(), Is.EqualTo(new[] { folder1 }));
+        Assert.That(folder1.Node.FindSiblings<Folder>("folder1").ToArray(), Is.Empty);
 
         // Test case-insensitive search.
         Assert.That(folder1.Node.FindSiblings<Folder>("fOlDeR2").ToArray(), Is.EqualTo(new[] { folder2 }));
@@ -1203,8 +1201,8 @@ public class ModelTests
 
         // Many siblings of correct type and name - expect indexed order.
         var folder4 = new Folder() { Name = "folder1", Parent = container };
-        container.Node.AddChild(folder4);
-        Assert.That(container.Node.FindChildren<Folder>("folder1").ToArray(), Is.EqualTo(new[] { folder1, folder4 }));
+        container.Node.AddChild(folder4);  // renamed to folder11
+        Assert.That(container.Node.FindChildren<Folder>("folder1").ToArray(), Is.EqualTo(new[] { folder1 }));
 
         // Test case-insensitive search.
         Assert.That(container.Node.FindChildren<Folder>("fOlDeR2").ToArray(), Is.EqualTo(new[] { folder2 }));
@@ -1416,20 +1414,8 @@ public class ModelTests
     {
         MockModel3 model = new MockModel3("Parent");
         model.Children.Add(new MockModel3("Child"));
-        model.Children.Add(new MockModel3("Child"));
-        Assert.Throws<Exception>(() => Node.Create(model));
-    }
-
-    /// <summary>
-    /// Ensure that duplicate models (ie siblings with the same name) but
-    /// with different types cause an exception to be thrown.
-    /// </summary>
-    [Test]
-    public void TestDuplicateModelsWithDifferentTypes()
-    {
-        MockModel3 model = new MockModel3("Some model");
-        model.Children.Add(new MockModel3("A child"));
-        model.Children.Add(new MockModel2() { Name = "A child" });
-        Assert.Throws<Exception>(() => Node.Create(model));
+        model.Children.Add(new MockModel3("Child"));  // will be renamed to Child1
+        Node.Create(model);
+        Assert.That(model.Children.Last().Name, Is.EqualTo("Child1"));
     }
 }
