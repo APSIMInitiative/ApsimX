@@ -207,6 +207,13 @@ namespace APSIM.Workflow
                         Directory.CreateDirectory(weatherFilesDirectory);
                         CopyWeatherFiles(copiedSims, weatherFilesDirectory);
                     }
+                    else
+                    {
+                        List<Weather> weathers = copiedSims.Node.FindAll<Weather>().ToList();
+                        foreach (Weather weather in weathers)
+                            if (!weather.FileName.Contains("%root%"))
+                                weather.FileName = inputPath + weather.FileName;
+                    }
 
                     if (copyObservedData)
                     {
@@ -218,17 +225,40 @@ namespace APSIM.Workflow
                     {
                         List<string> allSheetNames = new List<string>();
                         foreach (ExcelInput input in copiedSims.Node.FindAll<ExcelInput>())
+                        {
                             foreach (string sheet in input.SheetNames)
                                 if (!allSheetNames.Contains(sheet))
                                     allSheetNames.Add(sheet);
+                                    
+                            List<string> files = new List<string>();
+                            foreach (string file in input.FileNames)
+                            {
+                                if (!file.Contains("%root%"))
+                                    files.Add(inputPath + file);
+                                else
+                                    files.Add(file);
+                            }
+                            input.FileNames = files.ToArray();
+                        }
 
                         foreach (ObservedInput input in copiedSims.Node.FindAll<ObservedInput>())
+                        {
                             foreach (string sheet in input.SheetNames)
                                 if (!allSheetNames.Contains(sheet))
                                     allSheetNames.Add(sheet);
+                            
+                            List<string> files = new List<string>();
+                            foreach (string file in input.FileNames)
+                            {
+                                if (!file.Contains("%root%"))
+                                    files.Add(inputPath + file);
+                                else
+                                    files.Add(file);
+                            }
+                            input.FileNames = files.ToArray();
+                        }
+                        
                         RemoveUnusedPO(copiedSims, allSheetNames);
-
-
                     }
 
                     copiedSims.FileName = fullFilePath;
