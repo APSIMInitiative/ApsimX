@@ -1,12 +1,14 @@
 namespace APSIM.Core;
 
 /// <summary>A command that can set the property of a model.</summary>
-internal partial class SetPropertyCommand : IModelCommand
+public partial class SetPropertyCommand : IModelCommand
 {
     private readonly string name;
     private readonly string value;
     private readonly string fileName;
     private readonly string oper;
+    private VariableComposite obj;
+    private object oldValue;
 
     /// <summary>
     /// Constructor.
@@ -41,7 +43,11 @@ internal partial class SetPropertyCommand : IModelCommand
             propertyValue = File.ReadAllText(fileName);
         }
 
-        var obj = relativeTo.Node.GetObject(name) ?? throw new Exception($"Cannot find property {name}");
+        obj = relativeTo.Node.GetObject(name) ?? throw new Exception($"Cannot find property {name}");
+
+        // Capture the old value so that we can perform an undo if necessary.
+        oldValue = obj.Value;
+
         if (oper == "=")
         {
             // If "null" was specified then set the object value to null. Otherwise convert
@@ -90,5 +96,13 @@ internal partial class SetPropertyCommand : IModelCommand
         }
 
         return relativeTo;
+    }
+
+    /// <summary>
+    /// Revert the value of the property to its original value.
+    /// </summary>
+    public void Undo()
+    {
+        obj.Value = oldValue;
     }
 }

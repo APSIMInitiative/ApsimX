@@ -45,12 +45,11 @@ public class CommandLanguage
         foreach (var line in lines)
         {
             // Strip commented characters.
-            string sanitisedLine;
-            int posComment = line.IndexOf('#');
-            if (posComment == -1)
-                sanitisedLine = line;
-            else
-                sanitisedLine = line.Remove(posComment);
+            string sanitisedLine = line.Replace("//", "#");
+            int posComment = sanitisedLine.IndexOf('#');
+            if (posComment != -1)
+                sanitisedLine = sanitisedLine.Remove(posComment);
+
             sanitisedLine = sanitisedLine.TrimEnd();
 
             if (sanitisedLine.StartsWith(' '))
