@@ -143,17 +143,17 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Energy of protein (non-viscera protein in Oddy)
         /// </summary>
-        public RuminantTrackingItem Protein { get; set; }
+        public RuminantTrackingItemBodyStore Protein { get; set; }
 
         /// <summary>
         /// Energy of visceral protein (empty gut, liver, kidneys, heart, and lungs) used in Oddy
         /// </summary>
-        public RuminantTrackingItem ProteinViscera { get; set; }
+        public RuminantTrackingItemBodyStore ProteinViscera { get; set; }
 
         /// <summary>
         /// Energy used for fat
         /// </summary>
-        public RuminantTrackingItem Fat { get; set; }
+        public RuminantTrackingItemBodyStore Fat { get; set; }
 
         /// <summary>
         /// Sum total protein energy accounting for any non-visceral and visceral protein pools
@@ -209,6 +209,16 @@ namespace Models.CLEM.Resources
             ToMove = 0;
             ToGraze = 0;
             ForGain = 0;
+        }
+
+        /// <summary>
+        /// Reset all BodyStore Tracking items for time step
+        /// </summary>
+        public void TimeStepReset()
+        {
+            Protein?.TimeStepReset();
+            ProteinViscera?.TimeStepReset();
+            Fat?.TimeStepReset();
         }
 
     }

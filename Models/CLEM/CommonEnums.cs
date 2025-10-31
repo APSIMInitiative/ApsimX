@@ -1331,4 +1331,28 @@
         /// </summary>
         NotProvided
     }
+
+    /// <summary>
+    /// Destination types for mobilisation
+    /// </summary>
+    public enum MobilisationReasonType
+    {
+        /// <summary>
+        /// Energy shortfall
+        /// </summary>
+        EnergyShortfall,
+        /// <summary>
+        /// Protein shortfall
+        /// </summary>
+        ProteinShortfall,
+        /// <summary>
+        /// Energy needed for protein
+        /// </summary>
+        EnergyForProtein,
+        /// <summary>
+        /// Lactation protein
+        /// </summary>
+        LactationProtein,
+
+    }
 }

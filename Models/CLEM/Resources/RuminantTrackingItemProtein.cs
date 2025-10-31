@@ -1,78 +1,101 @@
 ﻿using APSIM.Numerics;
-using DocumentFormat.OpenXml.Drawing.Charts;
 using Models.CLEM.Interfaces;
-using NetTopologySuite.GeometriesGraph;
 using System;
-using System.Security.Cryptography;
 
 namespace Models.CLEM.Resources
 {
     /// <summary>
     /// Ruminant tracking item with protein functionality
     /// </summary>
-    public class RuminantTrackingItemProtein: IRuminantTrackingItem
+    public class RuminantTrackingItemProtein: RuminantTrackingItemBodyStore
     {
+        private RuminantIntake intake;
+
         /// <summary>
         /// The proportion of dry relative to wet protein mass
         /// </summary>
         public double ProportionDry { get; private set; } = 0.0;
 
-        /// <inheritdoc/>
-        public double Amount { get; private set; }
-
         /// <summary>
-        /// The total mass of wet protein (plus water and ash) as used by Oddy et a Model
+        /// The total mass of wet protein (plus water and ash) as used by Oddy et a Model and live weight calculations
         /// </summary>
         public double AmountWet { get { return Amount / ProportionDry; } }
 
-        /// <inheritdoc/>
-        public double Change { get; private set; }
-
         /// <summary>
-        /// Change in the total mass of wet protein (kg timestep-1)
+        /// Change in the total mass of wet protein (kg time step-1)
         /// </summary>
         public double ChangeWet { get { return Change / ProportionDry; } }
 
-        /// <inheritdoc/>
-        public double Previous { get { return Amount - Change; } }
-
         /// <summary>
-        /// Previous total mass of wet protein (kg timestep-1)
+        /// Previous total mass of wet protein (kg time step-1)
         /// </summary>
         public double PreviousWet { get { return Previous / ProportionDry; } }
 
+        // Time step pools
+
+        // todo: this needs to be completed, checked and tested
         /// <inheritdoc/>
-        public double Net { get; set; }
+        public new double Net { get { return FromIntake - ForUrinary - ForFaecal - ForPregnancy - ForWool - ForLactationFromIntake; } }
 
         /// <summary>
-        /// Report protein for maintenance (kg day-1)
+        /// Used as Endogenous Urinary Protein (kg day-1)
         /// </summary>
-        public double ForMaintenance { get; set; }
+        public double ForEndogenousUrinary { get; set; }
 
         /// <summary>
-        /// Report protein for wool (kg day-1)
+        /// Used as Urinary Protein (kg day-1). Set in Grow Activities if needed.
+        /// </summary>
+        public double ForUrinary { get; set; }
+
+        /// <summary>
+        /// Used as Endogenous Fecal Protein (kg day-1)
+        /// </summary>
+        public double ForEndogenousFaecal { get; set; }
+
+        /// <summary>
+        /// Used as fecal Protein (kg day-1). Set in Grow Activities if needed.
+        /// </summary>
+        public double ForFaecal { get; set; }
+
+        /// <summary>
+        /// Used as Dermal Protein (kg day-1)
+        /// </summary>
+        public double ForDermal { get; set; }
+
+        /// <summary>
+        /// Used for maintenance (kg day-1)
+        /// </summary>
+        public double ForMaintenance { get { return ForEndogenousUrinary + ForEndogenousFaecal + ForDermal; } }
+
+        /// <summary>
+        /// Used for wool (kg day-1)
         /// </summary>
         public double ForWool { get; set; }
 
         /// <summary>
-        /// Report protein for pregnancy (kg day-1)
+        /// Used for pregnancy (fetus + conceptus) (kg day-1)
         /// </summary>
         public double ForPregnancy { get; set; }
 
         /// <summary>
-        /// Report protein for lactation (kg day-1)
+        /// Net used for lactation (kg day-1)
         /// </summary>
         public double ForLactation { get; set; }
 
         /// <summary>
-        /// Report protein reduction from lactation (kg day-1)
+        /// Total used for lactation (kg day-1)
         /// </summary>
-        public double FromLactationReduction { get; set; }
+        public double TotalNeededForLactation { get { return ForLactation + LactationReduction; } }
 
         /// <summary>
-        /// Report protein taken from intake to meet energy deficit (kg day-1)
+        /// Total used from intake for lactation (kg day-1)
         /// </summary>
-        public double FromIntakeForEnergy { get; set; }
+        public double ForLactationFromIntake { get { return ForLactation - GetMobilisationProvidedByReason(MobilisationReasonType.LactationProtein); } }
+
+        /// <summary>
+        /// Protein freed from reduced lactation when protein deficit (kg day-1)
+        /// </summary>
+        public double LactationReduction { get; set; }
 
         /// <summary>
         /// The proportion of the protein remaining after accounting for protein limited milk production
@@ -83,14 +106,15 @@ namespace Models.CLEM.Resources
             {
                 if (MathUtilities.FloatsAreEqual(ForLactation, 0.0))
                     return 0.0;
-                return FromLactationReduction / ForLactation;
+                return LactationReduction / ForLactation;
             }
         }
 
         /// <summary>
-        /// Provide protein required for maintenance, pregnancy, lactation, and any protein remobilisation (kg day-1)
+        /// Provide protein required for maintenance, pregnancy, lactation (kg day-1)
+        /// Protein mobilised from body to meet minimum lactation will be accounted for at growth
         /// </summary>
-        public double BeforeGrowth { get { return ForMaintenance + ForPregnancy + ForLactation + FromBodyForMobilisation; } }
+        public double BeforeGrowth { get { return ForMaintenance + ForPregnancy + ForLactation; } }
 
         /// <summary>
         /// Report protein required for kg gain defined from net energy (kg day-1)
@@ -103,18 +127,24 @@ namespace Models.CLEM.Resources
         public double AvailableForGain { get; set; }
 
         /// <summary>
-        /// Report protein mobilised from body for lactation needs (kg day-1)
+        /// Report protein required for kg gain defined from net energy (kg day-1)
         /// </summary>
-        public double FromBodyForLactation { get; set; }
-        /// <summary>
-        /// Report protein lost in conversion ses during from body for lactation needs (kg day-1)
-        /// </summary>
-        public double FromBodyForMobilisation { get; set; }
+        public double FromIntake { get { return intake.CrudeProtein; } }
 
         /// <summary>
         /// Protein mass at mature (kg)
         /// </summary>
-        public double MassAtSRW { get; set; }
+        public double MassAtSRW { get; private set; }
+
+        /// <summary>
+        /// Set the protein mass expected at Standard Reference Weight
+        /// </summary>
+        /// <param name="standardReferenceWeight">Standard reference weight of individual accounting for sex and sterility</param>
+        /// <param name="parameters">Ruminant general parameters</param>
+        public void SetProteinMassAtSRW(double standardReferenceWeight, RuminantParametersGeneral parameters)
+        {
+            MassAtSRW = standardReferenceWeight * (1.0 / parameters.EBW2LW_CG18) * parameters.ProportionSRWEmptyBodyProtein;
+        }
 
         /// <summary>
         /// Constructor
@@ -122,14 +152,12 @@ namespace Models.CLEM.Resources
         public RuminantTrackingItemProtein(Ruminant ind, double initialAmount = 0)
         {
             // ToDo: work out what to do for Oddy and SCA07 that have their own protein content 
-
+            intake = ind.Intake;
             Adjust(initialAmount, ind);
-            //CalculateProportionDry(ind);
-            //Amount = initialAmount;
         }
 
         /// <inheritdoc/>
-        public void Adjust(double change, Ruminant ind)
+        public new void Adjust(double change, Ruminant ind)
         {
             CalculateProportionDry(ind);
 
@@ -154,34 +182,38 @@ namespace Models.CLEM.Resources
         }
 
         /// <inheritdoc/>
-        public void Reset()
+        public new void Reset()
         {
             Amount = 0;
             Change = 0;
-            Net = 0;
-        }
-
-        /// <summary>
-        /// Performs the resetting of time step tracking stores
-        /// </summary>
-        public void TimeStepReset()
-        {
-            ForMaintenance = 0;
-            ForPregnancy = 0;
-            ForGain = 0;
-            AvailableForGain = 0;
-            FromBodyForMobilisation = 0;
-            ForWool = 0;
-            ForLactation = 0;
-            FromLactationReduction = 0;
-            Net = 0;
-            FromBodyForLactation = 0;
-            FromBodyForMobilisation = 0;
-            FromIntakeForEnergy = 0;
+            //Net = 0;
         }
 
         /// <inheritdoc/>
-        public void Set(double amount)
+        public new void TimeStepReset()
+        {
+            ForEndogenousFaecal = 0;
+            ForEndogenousUrinary = 0;
+            ForDermal = 0;
+            ForPregnancy = 0;
+            ForGain = 0;
+            AvailableForGain = 0;
+            ForWool = 0;
+            ForLactation = 0;
+            LactationReduction = 0;
+            //Net = 0;
+            ForUrinary = 0;
+            ForFaecal = 0;
+
+            // clear values in mobilisation pools
+            foreach (var pool in mobilisationPools)
+            {
+                pool.Value.Reset();
+            }
+        }
+
+        /// <inheritdoc/>
+        public new void Set(double amount)
         {
             Change = 0;
             Amount = amount;

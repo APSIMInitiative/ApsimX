@@ -1,5 +1,6 @@
 ﻿using Models.CLEM.Interfaces;
 using System;
+using System.Collections.Generic;
 
 namespace Models.CLEM.Resources
 {
@@ -11,12 +12,12 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Current amount
         /// </summary>
-        public double Amount { get; private set; }
+        public double Amount { get; protected set; }
 
         /// <summary>
         /// Recent change
         /// </summary>
-        public double Change { get; private set; }
+        public double Change { get; protected set; }
 
         /// <summary>
         /// Previous amount
@@ -36,10 +37,9 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Ruminant tracking item Constructor
         /// </summary>
-        public RuminantTrackingItem(double initalAmount = 0)
+        public RuminantTrackingItem(double initialAmount = 0)
         {
-            Adjust(initalAmount);   
-            //Amount = initalAmount; // need to include change for newborns to use the protein and fat change
+            Adjust(initialAmount);   
         }
 
         /// <summary>
@@ -53,18 +53,6 @@ namespace Models.CLEM.Resources
             if (Amount + change < 0)
                 Change = -Amount;
             Amount += Change;
-
-            //if (Amount + change < 0)
-            //{
-            //    change = -Amount;
-            //}
-            
-            //if (Amount > 0)
-            //{
-            //    Change = change;
-            //}
-
-            //Amount += change;
         }
 
         /// <summary>
@@ -97,4 +85,5 @@ namespace Models.CLEM.Resources
             Net = 0;
         }
     }
+
 }

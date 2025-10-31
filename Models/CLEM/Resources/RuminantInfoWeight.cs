@@ -53,7 +53,7 @@ namespace Models.CLEM.Resources
         /// <remarks>
         /// Mass of fat excluding conceptus
         /// </remarks>
-        public RuminantTrackingItem Fat { get; set; }
+        public RuminantTrackingItemBodyStore Fat { get; set; }
 
         /// <summary>
         /// Total fat energy accounting for missing Fat pool
@@ -237,7 +237,7 @@ namespace Models.CLEM.Resources
                     StandardReferenceWeight *= ruminant.Parameters.General.SRWMaleMultiplier;
                 }
             }
-            SetProteinMassAtSRW();
+            Protein?.SetProteinMassAtSRW(StandardReferenceWeight, ruminant.Parameters.General);
         }
 
         /// <summary>
@@ -245,11 +245,10 @@ namespace Models.CLEM.Resources
         /// </summary>
         public void SetProteinMassAtSRW()
         {
-            if (Protein is not null)
-            {
-                // update the protein mass at SRW as this only relies on SRW and specified constants.
-                Protein.MassAtSRW = StandardReferenceWeight * (1.0 / ruminant.Parameters.General.EBW2LW_CG18) * ruminant.Parameters.General.ProportionSRWEmptyBodyProtein;
-            }
+            // todo: not sure this is needed anymore as moved to protein and calculated in SetSWR(), but is used one other time in new Ruminant constructor
+
+            // update the protein mass at SRW as this only relies on SRW and specified constants.
+            Protein?.SetProteinMassAtSRW(StandardReferenceWeight, ruminant.Parameters.General);
         }
 
         /// <summary>
@@ -336,7 +335,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Method to recalulate the live weight based on current base, conceptus and wool weights.
+        /// Method to recalculate the live weight based on current base, conceptus and wool weights.
         /// </summary>
         public void UpdateLiveWeight()
         {
@@ -387,83 +386,6 @@ namespace Models.CLEM.Resources
             Adjust(weight / (ruminant.Parameters.General?.EBW2LW_CG18 ?? 1.09));
         }
 
-        ///// <summary>
-        ///// Adjust all weight by a given empty body mass change
-        ///// </summary>
-        ///// <param name="wtChange">Change in Empty Body Weight (kg)</param>
-        ///// <param name="individual">The individual to change</param>
-        //private void UpdateWeight(double wtChange, Ruminant individual)
-        //{
-        //    EmptyBodyMassChange = wtChange;
-        //    EmptyBodyMass += wtChange;
-        //    //if (individual.AgeInDays == 0)
-        //    //{
-        //    //    Base.Adjust(wtChange);
-        //    //}
-        //    //else
-        //    //{
-        //        Base.Adjust(wtChange * (individual.Parameters.General?.EBW2LW_CG18 ?? 1.09));
-        //    //}
-
-        //    // Recalculate the live weight based on current base, conceptus and wool weights.
-        //    live = Base.Amount + Conceptus.Amount + Wool.Amount;
-
-        //    if (individual is RuminantFemale female)
-        //    {
-        //        female.UpdateHighWeightWhenNotPregnant(Live);
-        //    }
-
-        //    AdultEquivalent = Math.Pow(Live, 0.75) / Math.Pow(individual.Parameters.General.BaseAnimalEquivalent, 0.75);
-        //    HighestAttained = Math.Max(HighestAttained, Live);
-        //    HighestBaseAttained = Math.Max(HighestBaseAttained, Base.Amount);
-        //}
-
-
-
-
-        ///// <summary>
-        ///// Adjust weight by a given live weight change
-        ///// </summary>
-        ///// <param name="wtChange">Change in live weight (kg)</param>
-        ///// <param name="individual">The individual to change</param>
-        //public void AdjustByLiveWeightChange(double wtChange, Ruminant individual)
-        //{
-        //    // convert Live to EBM change
-        //    UpdateWeight(wtChange / (individual.Parameters.General?.EBW2LW_CG18 ?? 1.09), individual);
-        //}
-
-        ///// <summary>
-        ///// Adjust empty body weight. All other weight will also be adjusted accordingly
-        ///// </summary>
-        ///// <param name="ebmWeightChange">Change in empty body weight using fat and wet protein gain approach (kg)</param>
-        ///// <param name="individual">The individual to change</param>
-        //public void AdjustByEBMChange(double ebmWeightChange, Ruminant individual)
-        //{
-        //    // change is fat and wet protein
-        //    UpdateWeight(ebmWeightChange, individual); 
-        //}
-
-        ///// <summary>
-        ///// Update Empty Body Mass and associated weight measure using the current change in protein and fat pools
-        ///// </summary>
-        ///// <param name="individual">The individual to update</param>
-        //public void UpdateEBM(Ruminant individual)
-        //{
-        //    // uses latest change in fat and wet protein pools
-        //    AdjustByEBMChange(ProteinWetChange + Fat.Change, individual);
-        //}
-
-        ///// <summary>
-        ///// Set the birthweight based on current weight.
-        ///// </summary>
-        //public void SetBirthWeightUsingCurrentWeight(Ruminant individual)
-        //{
-        //    // if base has not been set and protein have been defined then use protein and fat to set base weight
-        //    if (Base.Amount == 0 && Protein is not null)
-        //        AdjustByEBMChange(Protein.AmountWet + Fat.Amount, individual);
-        //    AtBirth = Base.Amount;
-        //}
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -479,6 +401,16 @@ namespace Models.CLEM.Resources
         public RuminantInfoWeight(Ruminant ruminant)
         {
             this.ruminant = ruminant;
+        }
+
+        /// <summary>
+        /// Reset all BodyStore Tracking items for time step
+        /// </summary>
+        public void TimeStepReset()
+        {
+            Protein?.TimeStepReset();
+            ProteinViscera?.TimeStepReset();
+            Fat?.TimeStepReset();
         }
 
     }

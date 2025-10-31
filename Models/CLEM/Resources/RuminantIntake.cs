@@ -92,10 +92,12 @@ namespace Models.CLEM.Resources
                 double offered_adj = (item.Value.Details.Amount/SolidsDaily.Expected)/RQ;
                 double unsatisfied_adj = Math.Max(0, 1-sumFs);
                 double quality_adj = (islactating? ind.Parameters.GrowPF_CI.QualityIntakeSubsititutionFactorLactating_CR20:ind.Parameters.GrowPF_CI.QualityIntakeSubsititutionFactorNonLactating_CR11)/item.Value.Details.MEContent;
-                        
+
                 // Added to remove heavy reduction on concentrates when the only item in the intake pool. but leave the RQ quality reduction.
                 if (feedTypeStoreDict.Count() == 1)
+                {
                     quality_adj = 1.0;
+                }
 
                 FS =  Math.Min(offered_adj, Math.Min(unsatisfied_adj, quality_adj));
                 RS = FS * RQ;
@@ -225,28 +227,6 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Total degradable protein (kg/timestep).
-        /// </summary>
-        public double DegradableProtein 
-        {
-            get
-            {
-                return feedTypeStoreDict.Sum(a => a.Value.DegradableCrudeProtein); 
-            } 
-        }
-
-        /// <summary>
-        /// Total crude protein (kg/timestep).
-        /// </summary>
-        public double CrudeProtein
-        {
-            get
-            {
-                return feedTypeStoreDict.Sum(a => a.Value.CrudeProtein);
-            }
-        }
-
-        /// <summary>
         /// Metabolisable energy from intake.
         /// </summary>
         public double ME
@@ -258,7 +238,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Method to calulate running ME Average for today and last timestep
+        /// Method to calculate running ME Average for today and last time step
         /// </summary>
         public void UpdateMEAverage()
         {
@@ -344,6 +324,28 @@ namespace Models.CLEM.Resources
                 if(total > 0)
                     return totalN / total;
                 return 0;
+            }
+        }
+
+        /// <summary>
+        /// Total degradable protein (kg/timestep).
+        /// </summary>
+        public double DegradableProtein
+        {
+            get
+            {
+                return feedTypeStoreDict.Sum(a => a.Value.DegradableCrudeProtein);
+            }
+        }
+
+        /// <summary>
+        /// Total crude protein (kg/timestep).
+        /// </summary>
+        public double CrudeProtein
+        {
+            get
+            {
+                return feedTypeStoreDict.Sum(a => a.Value.CrudeProtein);
             }
         }
 
