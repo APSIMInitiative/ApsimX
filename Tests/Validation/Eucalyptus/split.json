@@ -1,0 +1,25 @@
+{
+	"OutputPath":"temp/",
+	"CopyWeatherFiles":false,
+	"CopyObservedData":false,
+	"Groups": [
+		{
+			"Name":"Eucalyptus-TropicalAndSubtropical",
+			"Folders":["Australia Egrandis","Brazil Egrandis and others"],
+			"Experiments":[],
+			"Simulations":[]
+		},
+		{
+			"Name":"Eucalyptus-Temperate",
+			"Folders":["DroughtRiskSites","Forico", "FSAGrowthPlots","Furadouro","Lewisham","Shepparton","Westfield"],
+			"Experiments":[],
+			"Simulations":[]
+		},
+		{
+			"Name":"Eucalyptus-Sensibility",
+			"Folders":["MAI in SE Australia","Response to Rainfall", "Response to Soil Fertility", "Reponse to N Fertilizer", "GXE Brazil", "ScottRiverNResponse"],
+			"Experiments":[],
+			"Simulations":[]
+		}
+	]
+}
