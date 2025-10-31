@@ -92,7 +92,7 @@ namespace Models.PMF
 
             relativeToModel = model as INodeModel;
 
-            commands = CommandLanguage.StringToCommands(Command, relativeToModel, relativeToDirectory: null);
+            commands = CommandLanguage.StringToCommands(Command.Select(c => c.Trim()), relativeToModel, relativeToDirectory: null);
             CommandProcessor.Run(commands, relativeToModel, runner: null);
         }
 
