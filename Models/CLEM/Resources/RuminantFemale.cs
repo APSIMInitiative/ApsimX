@@ -81,10 +81,10 @@ namespace Models.CLEM.Resources
             {
                 if (IsLactating)
                 {
-                    if (IsPregnant)
-                    {
-                        return "Pregnant:Lactating";
-                    }
+                    //if (IsPregnant)
+                    //{
+                    //    return "Pregnant:Lactating";
+                    //}
                     return "Lactating";
                 }
                 else if (IsPregnant)

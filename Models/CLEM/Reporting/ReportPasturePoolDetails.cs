@@ -173,7 +173,10 @@ namespace Models.CLEM.Reporting
             VariableNames = variableNames.ToArray();
 
             if (EventNames == null || EventNames.Count() == 0)
-                EventNames = new string[] { "[Clock].CLEMEvents.CLEMEndOfTimeStep" }; //CLEMEvents.CLEMHerdSummary
+            {
+                EventNames = new string[] { "[Clock].CLEMEvents.CLEMAnimalSell" }; //CLEMEvents.CLEMHerdSummary
+            }
+            //EventNames = new string[] { "[Clock].CLEMEvents.CLEMEndOfTimeStep" }; //CLEMEvents.CLEMHerdSummary
 
             SubscribeToEvents();
         }
