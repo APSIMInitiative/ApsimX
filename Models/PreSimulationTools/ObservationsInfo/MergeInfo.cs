@@ -70,7 +70,7 @@ namespace Models.PreSimulationTools.ObservationsInfo
 
             return dv.ToTable();
         }
-        
+
         /// <summary>
         /// Filter through the given datatable and combine rows that have the same SimulationName and Clock.Today values.
         /// Will throw if it encounters two rows with different values for a field that should be combined.
@@ -91,7 +91,8 @@ namespace Models.PreSimulationTools.ObservationsInfo
                 {
                     simulation = s["SimulationName"],
                     clock = s["Clock.Today"],
-                    clockAsString = s["Clock.Today"].ToString()
+                    clockAsString = s["Clock.Today"].ToString(),
+                    filename = s["_Filename"].ToString()
                 })
                 .Distinct();
 
@@ -100,63 +101,60 @@ namespace Models.PreSimulationTools.ObservationsInfo
             string errors = "";
             foreach (var item in distinctRows)
             {
-                if (!string.IsNullOrEmpty(item.clockAsString))
+                //select all rows in original datatable with this distinct values
+                IEnumerable<DataRow> results = dataTable.Select().Where(p => p["SimulationName"] == item.simulation && p["Clock.Today"].ToString() == item.clockAsString);
+
+                //store the list of columns in the datatable
+                List<string> columns = dataTable.GetColumnNames().ToList<string>();
+
+                //the one or more rows needed to capture the data during merging
+                //multiple lines may still be needed if there are conflicts in columns when trying to merge the data
+                List<DataRow> newRows = new List<DataRow>();
+
+                foreach (DataRow row in results)
                 {
-                    //select all rows in original datatable with this distinct values
-                    IEnumerable<DataRow> results = dataTable.Select().Where(p => p["SimulationName"] == item.simulation && p["Clock.Today"].ToString() == item.clockAsString);
-
-                    //store the list of columns in the datatable
-                    List<string> columns = dataTable.GetColumnNames().ToList<string>();
-
-                    //the one or more rows needed to capture the data during merging
-                    //multiple lines may still be needed if there are conflicts in columns when trying to merge the data
-                    List<DataRow> newRows = new List<DataRow>();
-
-                    foreach (DataRow row in results)
+                    foreach (string column in columns)
                     {
-                        foreach (string column in columns)
+                        if (!string.IsNullOrEmpty(row[column].ToString()))
                         {
-                            if (!string.IsNullOrEmpty(row[column].ToString()))
+                            bool merged = false;
+                            foreach (DataRow newRow in newRows)
                             {
-                                bool merged = false;
-                                foreach (DataRow newRow in newRows)
-                                {
-                                    if (!merged)
-                                    {
-                                        if (CanMergeRows(row, newRow, column) < 0.25)
-                                        {
-                                            newRow[column] = row[column];
-                                            merged = true;
-                                        }
-                                        else
-                                        {
-                                            MergeInfo info = new MergeInfo();
-                                            info.Name = item.simulation.ToString();
-                                            info.Date = Convert.ToDateTime(item.clock).ToString("dd/MM/yyyy");
-                                            info.Column = column;
-                                            info.Value1 = newRow[column].ToString();
-                                            info.Value2 = row[column].ToString();
-                                            info.File = newRow["_Filename"].ToString();
-                                            infos.Add(info);
-                                        }
-                                    }
-                                }
                                 if (!merged)
                                 {
-                                    DataRow duplicateRow = combinedDataTable.NewRow();
-                                    duplicateRow["SimulationName"] = item.simulation;
-                                    duplicateRow["Clock.Today"] = item.clock;
-                                    duplicateRow[column] = row[column];
-                                    newRows.Add(duplicateRow);
+                                    if (CanMergeRows(row, newRow, column) < 0.25)
+                                    {
+                                        newRow[column] = row[column];
+                                        merged = true;
+                                    }
+                                    else
+                                    {
+                                        MergeInfo info = new MergeInfo();
+                                        info.Name = item.simulation.ToString();
+                                        info.Date = Convert.ToDateTime(item.clock).ToString("dd/MM/yyyy");
+                                        info.Column = column;
+                                        info.Value1 = newRow[column].ToString();
+                                        info.Value2 = row[column].ToString();
+                                        info.File = newRow["_Filename"].ToString();
+                                        infos.Add(info);
+                                    }
                                 }
+                            }
+                            if (!merged)
+                            {
+                                DataRow duplicateRow = combinedDataTable.NewRow();
+                                duplicateRow["SimulationName"] = item.simulation;
+                                duplicateRow["Clock.Today"] = item.clock;
+                                duplicateRow[column] = row[column];
+                                newRows.Add(duplicateRow);
                             }
                         }
                     }
-
-                    //add the rows to the result dataTable
-                    foreach (DataRow dupilcateRow in newRows)
-                        combinedDataTable.Rows.Add(dupilcateRow);
                 }
+
+                //add the rows to the result dataTable
+                foreach (DataRow dupilcateRow in newRows)
+                    combinedDataTable.Rows.Add(dupilcateRow);
             }
 
             if (!string.IsNullOrEmpty(errors))

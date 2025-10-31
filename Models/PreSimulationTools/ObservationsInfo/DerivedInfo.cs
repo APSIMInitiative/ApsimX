@@ -63,8 +63,8 @@ namespace Models.PreSimulationTools.ObservationsInfo
 
             return dv.ToTable();
         }
-        
-         /// <summary></summary>
+
+        /// <summary></summary>
         public static List<DerivedInfo> AddDerivedColumns(DataTable dataTable)
         {
             List<DerivedInfo> infos = new List<DerivedInfo>();
@@ -93,7 +93,7 @@ namespace Models.PreSimulationTools.ObservationsInfo
 
             return infos;
         }
-        
+
         /// <summary>
         ///
         /// </summary>
@@ -224,7 +224,7 @@ namespace Models.PreSimulationTools.ObservationsInfo
                             DerivedInfo info = new DerivedInfo();
                             info.Name = nameDerived;
                             info.Function = functionString;
-                            info.DataType = "Double";
+                            info.DataType = "double";
                             info.Added = added;
                             info.Existing = existing;
                             infos.Add(info);

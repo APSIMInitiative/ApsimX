@@ -5,7 +5,6 @@ using System.Data;
 using System.Linq;
 using APSIM.Core;
 using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Spreadsheet;
 using Models.Core;
 
 namespace Models.PreSimulationTools.ObservationsInfo
@@ -135,7 +134,7 @@ namespace Models.PreSimulationTools.ObservationsInfo
                     for (int k = 0; k < dataTable.Rows.Count && string.IsNullOrEmpty(filename); k++)
                     {
                         DataRow row = dataTable.Rows[k];
-                        if (!string.IsNullOrEmpty(row[columnNameOriginal].ToString()))
+                        if (!string.IsNullOrEmpty(row[columnNameOriginal].ToString()) && !string.IsNullOrEmpty(row["_Filename"].ToString()))
                         {
                             filename = row["_Filename"].ToString();
                         }
@@ -226,7 +225,7 @@ namespace Models.PreSimulationTools.ObservationsInfo
         }
 
         /// <summary>
-        /// 
+        /// Corrects the column types to match the type of data. Really important for making sure dates are stored as DateTimes instead of as strings.
         /// </summary>
         /// <param name="dataTable"></param>
         /// <returns></returns>
@@ -324,10 +323,10 @@ namespace Models.PreSimulationTools.ObservationsInfo
         {
             if (knownType == null || knownType == typeof(DateTime))
             {
-                 string dateTrimmed = value;
-                    if (value.Contains(' '))
-                        dateTrimmed = value.Split(' ')[0];
-                
+                string dateTrimmed = value;
+                if (value.Contains(' '))
+                    dateTrimmed = value.Split(' ')[0];
+
                 if (DateUtilities.ValidateStringHasYear(dateTrimmed)) //try parsing to date
                 {
                     string dateString = DateUtilities.ValidateDateString(dateTrimmed);

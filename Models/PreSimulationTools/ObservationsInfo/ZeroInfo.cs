@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using APSIM.Numerics;
@@ -13,6 +14,9 @@ namespace Models.PreSimulationTools.ObservationsInfo
     {
         /// <summary></summary>
         public string Name;
+
+        /// <summary></summary>
+        public string Date;
 
         /// <summary></summary>
         public string Column;
@@ -30,6 +34,7 @@ namespace Models.PreSimulationTools.ObservationsInfo
             DataTable newTable = new DataTable();
 
             newTable.Columns.Add("Name");
+            newTable.Columns.Add("Date");
             newTable.Columns.Add("Column");
             newTable.Columns.Add("File");
 
@@ -40,6 +45,7 @@ namespace Models.PreSimulationTools.ObservationsInfo
             {
                 DataRow row = newTable.NewRow();
                 row["Name"] = info.Name;
+                row["Date"] = info.Date;
                 row["Column"] = info.Column;
                 row["File"] = info.File;
                 newTable.Rows.Add(row);
@@ -73,6 +79,7 @@ namespace Models.PreSimulationTools.ObservationsInfo
                         {
                             ZeroInfo info = new ZeroInfo();
                             info.Name = row["SimulationName"].ToString();
+                            info.Date = Convert.ToDateTime(row["Clock.Today"].ToString()).ToString("dd/MM/yyyy");
                             info.Column = column;
                             info.File = row["_Filename"].ToString();
                             data.Add(info);

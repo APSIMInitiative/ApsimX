@@ -10,8 +10,9 @@ using Models.Core;
 using Models.Core.Run;
 using Models.Storage;
 using Models.PreSimulationTools.ObservationsInfo;
-using System.Threading;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("UnitTests")]
 namespace Models.PreSimulationTools
 {
     /// <summary>
@@ -34,15 +35,15 @@ namespace Models.PreSimulationTools
         /// <summary>
         /// List of Excel sheet names to read from.
         /// </summary>
-        private string[] sheetNames;
+        internal string[] sheetNames;
 
-        private string[] filenames;
+        internal string[] filenames;
 
-        private List<ColumnInfo> ColumnData { get; set; }
-        private List<DerivedInfo> DerivedData { get; set; }
-        private List<SimulationInfo> SimulationData { get; set; }
-        private List<MergeInfo> MergeData { get; set; }
-        private List<ZeroInfo> ZeroData { get; set; }
+        internal List<ColumnInfo> ColumnData { get; set; }
+        internal List<DerivedInfo> DerivedData { get; set; }
+        internal List<SimulationInfo> SimulationData { get; set; }
+        internal List<MergeInfo> MergeData { get; set; }
+        internal List<ZeroInfo> ZeroData { get; set; }
 
         /// <summary>
         /// 
