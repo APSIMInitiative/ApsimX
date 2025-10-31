@@ -144,6 +144,8 @@ namespace Models.CLEM.Activities
                 }
 
                 ind.Intake.MilkDaily.Received *= events.Interval;
+                ind.Intake.SolidsDaily.MaximumExpected = potentialIntake;
+                ind.Intake.SolidsDaily.Expected = potentialIntake;
             }
             else
             {
@@ -158,6 +160,9 @@ namespace Models.CLEM.Activities
                     // Reference: SCA based actual LWTs
                     potentialIntake = ind.Parameters.Grow.IntakeCoefficient * liveWeightForIntake * (ind.Parameters.Grow.IntakeIntercept - liveWeightForIntake / standardReferenceWeight);
                 }
+
+                ind.Intake.SolidsDaily.MaximumExpected = potentialIntake;
+                ind.Intake.SolidsDaily.Expected = potentialIntake;
 
                 if (ind.Sex == Sex.Female)
                 {
@@ -176,6 +181,8 @@ namespace Models.CLEM.Activities
                         // added LactatingPotentialModifierConstantA, LactatingPotentialModifierConstantB and LactatingPotentialModifierConstantC
                         // replaces (A), (B) and (C)
                         potentialIntake *= intakeMilkMultiplier;
+
+                        ind.Intake.SolidsDaily.Expected = potentialIntake;
 
                         // calculate estimated milk production for time step here
                         // assuming average feed quality if no previous diet values
@@ -198,8 +205,6 @@ namespace Models.CLEM.Activities
                 //TODO: option to restrict potential further due to stress (e.g. heat, cold, rain)
 
             }
-            ind.Intake.SolidsDaily.MaximumExpected = potentialIntake;
-            ind.Intake.SolidsDaily.Expected = potentialIntake;
         }
 
         /// <summary>

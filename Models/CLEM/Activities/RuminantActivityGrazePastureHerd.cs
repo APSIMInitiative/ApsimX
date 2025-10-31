@@ -245,7 +245,7 @@ namespace Models.CLEM.Activities
         /// <returns>Limiter as proportion</returns>
         public double CalculatePotentialIntakePastureQualityLimiter()
         {
-            // Grow Frier 2012 will do the feed quality adjustment in greater detail (Intake.AdjustByFeedQuality)
+            // GrowPF (Dougherty 2025 and Frier 2012) will do the feed quality adjustment in greater detail (Intake.AdjustByFeedQuality)
             if (usingGrowPF) return 1;
 
             // determine pasture quality from all pools (DMD) at start of grazing
@@ -254,14 +254,14 @@ namespace Models.CLEM.Activities
             // TODO: check that this doesn't need to be performed for each breed based on how pasture taken
             // this will still occur when grazing on improved, irrigated or crops.
             // CLEM does not allow grazing on two pastures in the time step (i.e. month), whereas NABSA allowed irrigated pasture and supplemented with native for remainder needed.
-            if (MathUtilities.IsGreaterThanOrEqual(0.8 - GrazeFoodStoreModel.IntakeTropicalQualityCoefficient - pastureDMD / 100, 0))
-            {
-                return 1 - GrazeFoodStoreModel.IntakeQualityCoefficient * (0.8 - GrazeFoodStoreModel.IntakeTropicalQualityCoefficient - pastureDMD / 100);
-            }
-            else
-            {
-                return 1;
-            }
+            //if (MathUtilities.IsGreaterThanOrEqual(0.8 - GrazeFoodStoreModel.IntakeTropicalQualityCoefficient - pastureDMD / 100, 0))
+            //{
+                return 1 - Math.Max(0.0, GrazeFoodStoreModel.IntakeQualityCoefficient * (0.8 - GrazeFoodStoreModel.IntakeTropicalQualityCoefficient - pastureDMD / 100));
+            //}
+            //else
+            //{
+            //    return 1;
+            //}
         }
 
         /// <summary>
@@ -306,9 +306,17 @@ namespace Models.CLEM.Activities
                             // Reduce potential intake (monthly) based on pasture quality for the proportion consumed calculated in GrazePasture.
                             // calculate intake from potential modified by pasture availability and hours grazed
                             // min of grazed and potential remaining
-                            totalPastureRequired += Math.Min(Math.Max(0, ind.Intake.SolidsDaily.Required), ind.Intake.SolidsDaily.Expected * PotentialIntakePastureQualityLimiter * PotentialIntakePastureBiomassLimiter * PotentialIntakeGrazingTimeLimiter);
+
+                            // potential grazing limited by time and low pasture biomass
+                            totalPastureRequired += Math.Min(Math.Max(0, ind.Intake.SolidsDaily.Required), ind.Intake.SolidsDaily.Expected * PotentialIntakePastureBiomassLimiter * PotentialIntakeGrazingTimeLimiter);
+                            // potential grazing minus low biomass limiter so just limited by time
+                            totalPastureDesired += Math.Min(Math.Max(0, ind.Intake.SolidsDaily.Required), ind.Intake.SolidsDaily.Expected * PotentialIntakeGrazingTimeLimiter);
+                            // quality reduction will be applied aftwer eating when individuals fed
+
+                            // original CLEM with quality included.
+                            //totalPastureRequired += Math.Min(Math.Max(0, ind.Intake.SolidsDaily.Required), ind.Intake.SolidsDaily.Expected * PotentialIntakePastureQualityLimiter * PotentialIntakePastureBiomassLimiter * PotentialIntakeGrazingTimeLimiter);
                             // potential grazing minus low biomass limiter
-                            totalPastureDesired += Math.Min(Math.Max(0, ind.Intake.SolidsDaily.Required), ind.Intake.SolidsDaily.Expected * PotentialIntakePastureQualityLimiter * PotentialIntakeGrazingTimeLimiter);
+                            //totalPastureDesired += Math.Min(Math.Max(0, ind.Intake.SolidsDaily.Required), ind.Intake.SolidsDaily.Expected * PotentialIntakePastureQualityLimiter * PotentialIntakeGrazingTimeLimiter);
                         }
                         else
                         {
@@ -386,10 +394,30 @@ namespace Models.CLEM.Activities
                 foreach (Ruminant ind in herd)
                 {
                     double eaten;
+                    double nonDigested = 0;
                     if (ind.IsWeaned)
-                        eaten = Math.Min(Math.Max(0,ind.Intake.SolidsDaily.Required), ind.Intake.SolidsDaily.Expected * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-ind.Parameters.Grazing.IntakeCoefficientBiomass * GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8));
+                    {
+                        eaten = Math.Min(Math.Max(0, ind.Intake.SolidsDaily.Required), ind.Intake.SolidsDaily.Expected * (1 - Math.Exp(-ind.Parameters.Grazing.IntakeCoefficientBiomass * GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8));
+                        if (usingGrowPF == false)
+                        {
+                            // handled in Intake in GrowPF
+                            nonDigested = eaten * (1 - PotentialIntakePastureQualityLimiter); // account for quality reduction during digestion as unneeded intake, but still taken from pasture.
+                            ind.Intake.SolidsDaily.Unneeded += nonDigested;
+                        }
+
+                        // reduce expected by pasture biomass and grazing time.
+                        //double amountAvailableToEat = Math.Min(ind.Intake.SolidsDaily.Required, ind.Intake.SolidsDaily.Expected * PotentialIntakePastureBiomassLimiter * PotentialIntakeGrazingTimeLimiter);
+                        //double qualityReduction = (1 - PotentialIntakePastureQualityLimiter) * amountAvailableToEat;
+
+                        //totalPastureRequired += eaten; // Required is the total eaten accounting for biomass and grazing time limiters
+
+                        eaten = Math.Max(0, eaten - nonDigested);
+                        //eaten = Math.Min(Math.Max(0, ind.Intake.SolidsDaily.Required), ind.Intake.SolidsDaily.Expected * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-ind.Parameters.Grazing.IntakeCoefficientBiomass * GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8));
+                    }
                     else
-                        eaten = Math.Max(0, ind.Intake.SolidsDaily.Required); ;
+                    {
+                        eaten = Math.Max(0, ind.Intake.SolidsDaily.Required);
+                    }
 
                     ConsumedPasturePoolsPacket.Amount = eaten * shortfall;
 
@@ -400,7 +428,7 @@ namespace Models.CLEM.Activities
                 }
                 Status = ActivityStatus.Success;
 
-                if (MathUtilities.IsLessThan(shortfall, 1) || MathUtilities.IsGreaterThan(totalPastureDesired - (pastureRequest?.Provided??0), totalPastureDesired* shortfallReportingCutoff))
+                if (MathUtilities.IsLessThan(shortfall, 1) || MathUtilities.IsGreaterThan(totalPastureDesired - (pastureRequest?.Provided??0), totalPastureDesired * shortfallReportingCutoff))
                 {
                     ResourceRequest shortfallRequest = pastureRequest;
                     shortfallRequest.Required = totalPastureRequired;
