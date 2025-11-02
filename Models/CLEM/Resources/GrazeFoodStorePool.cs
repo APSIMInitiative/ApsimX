@@ -41,9 +41,6 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public double CrudeProteinPercent { get; set; }
 
-        ///// <inheritdoc/>
-        //public double CPDegradability { get; set; }
-
         /// <summary>
         /// Style of providing the dry matter digestibility of pasture
         /// </summary>
@@ -65,12 +62,12 @@ namespace Models.CLEM.Resources
             set
             {
                 rumenDegradableProteinPercent = value;
-                AcidDetergentInsoluableProtein = FoodResourcePacket.CalculateAcidDetergentInsoluableProtein(rumenDegradableProteinPercent, TypeOfFeed);
+                AcidDetergentInsolubleProtein = FoodResourcePacket.CalculateAcidDetergentInsolubleProtein(rumenDegradableProteinPercent, TypeOfFeed);
             }
         }
 
         /// <inheritdoc/>
-        public double AcidDetergentInsoluableProtein { get; set; }
+        public double AcidDetergentInsolubleProtein { get; set; }
 
         /// <summary>
         /// Amount (kg)

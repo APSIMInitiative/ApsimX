@@ -400,7 +400,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to calulate the year month integer for this date
+        /// Method to calculate the year month integer for this date
         /// </summary>
         /// <param name="date">date to process</param>
         /// <returns>year month integer</returns>

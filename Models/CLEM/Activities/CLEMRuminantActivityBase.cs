@@ -78,15 +78,15 @@ namespace Models.CLEM.Activities
             IModel current = this;
             while (current.GetType() != typeof(ZoneCLEM))
             {
-                var filteGroup = current.Children.OfType<RuminantActivityGroup>();
-                if (filteGroup.Count() > 1)
+                var filterGroup = current.Children.OfType<RuminantActivityGroup>();
+                if (filterGroup.Count() > 1)
                 {
                     Summary.WriteMessage(this, "Multiple [f=RuminantActivityGroups] have been supplied as children of [a=" + current.Name +"]"+ Environment.NewLine + ". Only the first [f=RuminantActivityGroup] will be used.", MessageType.Warning);
                 }
 
-                if (filteGroup.FirstOrDefault() != null)
+                if (filterGroup.FirstOrDefault() != null)
                 {
-                    HerdFilters.Insert(0, filteGroup.FirstOrDefault());
+                    HerdFilters.Insert(0, filterGroup.FirstOrDefault());
                 }
 
                 current = current.Parent;

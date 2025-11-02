@@ -101,7 +101,7 @@ namespace Models.CLEM.Activities
                 resourcesHolder = Structure.FindChild<ResourcesHolder>(relativeTo: Market);
 
             // set the food store linked in any TargetPurchase if target proportion set > 0
-            // check that all purchase resources have transmutation or recalulate the proportion
+            // check that all purchase resources have transmutation or recalculate the proportion
             var targetPurchases = Structure.FindChildren<LabourActivityFeedTargetPurchase>().Where(a => a.TargetProportion > 0).ToList();
             if (targetPurchases.Any())
             {
@@ -136,7 +136,7 @@ namespace Models.CLEM.Activities
                     adjusted = true;
                 }
 
-                // recalculate proportions to buy based on transmuation of resource allowed
+                // recalculate proportions to buy based on transmutation of resource allowed
                 if (adjusted)
                     foreach (var item in targetPurchases.Where(a => a.FoodStore.TransmutationDefined))
                         item.ProportionToPurchase = item.TargetProportion / totPropAvailable;
@@ -262,7 +262,7 @@ namespace Models.CLEM.Activities
             }
 
             int parcelIndex = 0;
-            double metricneeded = 0;
+            double metricNeeded = 0;
             double intake = otherIntake;
             // start eating food from list from that about to expire first
 
@@ -276,7 +276,7 @@ namespace Models.CLEM.Activities
                 if (intake < intakeLimit & (labourActivityFeedTargets.Where(a => ((isHousehold)? !a.TargetMaximumAchieved: !a.TargetAchieved)).Count() > 0 | foodParcels[parcelIndex].Expires == 0))
                 {
                     // still able to eat and target not met or food about to expire this timestep
-                    // reduce by amout that can be eaten
+                    // reduce by amount that can be eaten
                     double propCanBeEaten = Math.Min(1, (intakeLimit - intake) / (foodParcels[parcelIndex].FoodStore.EdibleProportion * foodParcels[parcelIndex].Pool.Amount));
                     // reduce to target limits
                     double propToTarget = 1;
@@ -289,10 +289,10 @@ namespace Models.CLEM.Activities
                         if (targetUnfilled != null)
                         {
                             // calculate reduction to metric target
-                            metricneeded = Math.Max(0, (isHousehold ? targetUnfilled.TargetMaximum : targetUnfilled.Target) - targetUnfilled.CurrentAchieved);
-                            double amountneeded = metricneeded / foodParcels[parcelIndex].FoodStore.ConversionFactor(targetUnfilled.Metric);
+                            metricNeeded = Math.Max(0, (isHousehold ? targetUnfilled.TargetMaximum : targetUnfilled.Target) - targetUnfilled.CurrentAchieved);
+                            double amountNeeded = metricNeeded / foodParcels[parcelIndex].FoodStore.ConversionFactor(targetUnfilled.Metric);
 
-                            propToTarget = Math.Min(1, amountneeded / (foodParcels[parcelIndex].FoodStore.EdibleProportion * foodParcels[parcelIndex].Pool.Amount));
+                            propToTarget = Math.Min(1, amountNeeded / (foodParcels[parcelIndex].FoodStore.EdibleProportion * foodParcels[parcelIndex].Pool.Amount));
                         }
                     }
 
@@ -385,8 +385,8 @@ namespace Models.CLEM.Activities
 
             // if still hungry and funds available, try buy food in excess of what stores (private or market) offered using transmutation if present.
             // This will force the market or private sources to purchase more food to meet demand if transmutation available.
-            // if no market is present it will look to transmutating from its own stores if possible.
-            // this means that other than a purchase from market (above) this activity doesn't need to worry about financial tranactions.
+            // if no market is present it will look to transmuting from its own stores if possible.
+            // this means that other than a purchase from market (above) this activity doesn't need to worry about financial transactions.
             int testType = 0;
             // test is limited to 1 for now so only to metric target NOT intake limit as we use maximum and target values now
             while (testType < 1 && intake < intakeLimit && (labourActivityFeedTargets.Where(a => !a.TargetAchieved).Any()) && fundsAvailable > 0)
@@ -396,22 +396,22 @@ namespace Models.CLEM.Activities
                 // 1. to assign based on energy
                 // 2. if still need food assign based on intake still needed
 
-                metricneeded = 0;
+                metricNeeded = 0;
                 LabourActivityFeedTarget targetUnfilled = labourActivityFeedTargets.Where(a => !a.TargetAchieved).FirstOrDefault();
                 if (targetUnfilled != null)
                 {
-                    metricneeded = Math.Max(0, (targetUnfilled.Target - targetUnfilled.CurrentAchieved));
+                    metricNeeded = Math.Max(0, (targetUnfilled.Target - targetUnfilled.CurrentAchieved));
                     double amountToFull = intakeLimit - intake;
 
                     foreach (LabourActivityFeedTargetPurchase purchase in Structure.FindChildren<LabourActivityFeedTargetPurchase>())
                     {
-                        HumanFoodStoreType foodtype = purchase.FoodStore;
-                        if (purchase.ProportionToPurchase > 0 && foodtype != null && (foodtype.TransmutationDefined & intake < intakeLimit))
+                        HumanFoodStoreType foodType = purchase.FoodStore;
+                        if (purchase.ProportionToPurchase > 0 && foodType != null && (foodType.TransmutationDefined & intake < intakeLimit))
                         {
                             double amountEaten = 0;
                             if (testType == 0)
                                 // metric target based on purchase proportion
-                                amountEaten = metricneeded / foodtype.ConversionFactor(targetUnfilled.Metric) * purchase.ProportionToPurchase;
+                                amountEaten = metricNeeded / foodType.ConversionFactor(targetUnfilled.Metric) * purchase.ProportionToPurchase;
                             else
                                 // amount to satisfy limited by proportion of purchases
                                 amountEaten = amountToFull * purchase.ProportionToPurchase;
@@ -421,15 +421,15 @@ namespace Models.CLEM.Activities
 
                             if (amountEaten > 0)
                             {
-                                targetUnfilled.CurrentAchieved += amountEaten * foodtype.ConversionFactor(targetUnfilled.Metric);
-                                double amountPurchased = amountEaten / foodtype.EdibleProportion;
+                                targetUnfilled.CurrentAchieved += amountEaten * foodType.ConversionFactor(targetUnfilled.Metric);
+                                double amountPurchased = amountEaten / foodType.EdibleProportion;
 
                                 // update intake.. needed is the amount edible, not the amount purchased.
                                 intake += amountEaten;
 
                                 // add financial transactions to purchase from market
                                 // if obtained from the market make financial transaction before taking
-                                ResourcePricing price = foodtype.Price(PurchaseOrSalePricingStyleType.Sale);
+                                ResourcePricing price = foodType.Price(PurchaseOrSalePricingStyleType.Sale);
                                 if (bankAccount != null)
                                 {
                                     if (price.PricePerPacket > 0)
@@ -441,23 +441,23 @@ namespace Models.CLEM.Activities
                                             AllowTransmutation = false,
                                             Category = "Import",
                                             MarketTransactionMultiplier = 1,
-                                            RelatesToResource = foodtype.NameWithParent
+                                            RelatesToResource = foodType.NameWithParent
                                         };
                                         bankAccount.Remove(marketRequest);
                                     }
                                     else
                                     {
-                                        string warn = $"No price set [{price.PricePerPacket}] for [r={foodtype.Name}] at time of transaction for [a={this.Name}]{Environment.NewLine}No financial transactions will occur.{Environment.NewLine}Ensure price is set or resource pricing file contains entries before this transaction or start of simulation.";
+                                        string warn = $"No price set [{price.PricePerPacket}] for [r={foodType.Name}] at time of transaction for [a={this.Name}]{Environment.NewLine}No financial transactions will occur.{Environment.NewLine}Ensure price is set or resource pricing file contains entries before this transaction or start of simulation.";
                                         Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                                     }
                                 }
 
                                 // find in requests or create a new one
-                                ResourceRequest foodRequestFound = requests.Find(a => a.Resource == foodtype);
+                                ResourceRequest foodRequestFound = requests.Find(a => a.Resource == foodType);
                                 if (foodRequestFound is null)
                                     requests.Add(new ResourceRequest()
                                     {
-                                        Resource = foodtype,
+                                        Resource = foodType,
                                         ResourceType = typeof(HumanFoodStore),
                                         AllowTransmutation = true,
                                         Required = amountPurchased,
@@ -513,7 +513,7 @@ namespace Models.CLEM.Activities
             // finished eating, so this household is now free to sell the resources
             // assumes all households above in the tree supply this level.
             // if sibling above relies on food from this household it own't work
-            // selling is perfomed in the next method called in this same event
+            // selling is performed in the next method called in this same event
 
         }
 
@@ -533,13 +533,10 @@ namespace Models.CLEM.Activities
                 double[] target = new double[MonthsStorage + 1];
                 int[] daysInMonth = new int[MonthsStorage + 1];
 
-                // determine AEs to be fed - NOTE does not account for aging in reserve calcualtion
+                // determine AEs to be fed - NOTE does not account for aging in reserve calculation.
                 double aE = people.AdultEquivalents(IncludeHiredLabour);
 
                 LabourActivityFeedTarget feedTarget = Structure.FindChildren<LabourActivityFeedTarget>().FirstOrDefault();
-
-                // amount to store
-                //double amountToStore = daysInMonth[i] * aE * (feedTarget.TargetValue - feedTarget.OtherSourcesValue);
 
                 for (int i = 1; i <= MonthsStorage; i++)
                 {

@@ -199,8 +199,6 @@ namespace Models.CLEM.Activities
 
             if (MathUtilities.IsPositive(daysNeeded))
             {
-                //CLEMActivityBase handlesActivityComponents = Parent as CLEMActivityBase;
-
                 foreach (LabourGroup fg in Structure.FindChildren<LabourGroup>())
                 {
                     int numberOfPpl = 1;

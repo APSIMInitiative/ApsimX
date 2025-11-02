@@ -234,7 +234,7 @@ namespace Models.CLEM.Activities
 
             // get list of all pregnant females
             // determine all fetus and newborn mortality of all pregnant females.
-            bool pregLost = false;
+            bool pregnancyLost = false;
             bool birthOccurred = false;
 
             //// only perform prenatal mortality if using RuminantGrow as GrowPF will use toxaemia and dystocia to determine this mortality.
@@ -264,7 +264,7 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            if (pregLost)
+            if (pregnancyLost)
             {
                 AddStatusMessage("Lost pregnancy");
                 Status = ActivityStatus.Success;

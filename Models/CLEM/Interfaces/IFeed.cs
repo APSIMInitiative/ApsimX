@@ -53,8 +53,8 @@ namespace Models.CLEM.Interfaces
         public double RumenDegradableProteinPercent { get; set; }
 
         /// <summary>
-        /// Acid detergent insoluable protein
+        /// Acid detergent insoluble protein
         /// </summary>
-        public double AcidDetergentInsoluableProtein { get; set; }
+        public double AcidDetergentInsolubleProtein { get; set; }
     }
 }

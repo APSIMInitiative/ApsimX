@@ -41,7 +41,7 @@ namespace Models.CLEM.Activities
         private Dictionary<string, object> companionModelsPresent = new Dictionary<string, object>();
         private protected Dictionary<(string type, string identifier, string unit), double?> valuesForCompanionModels = new Dictionary<(string type, string identifier, string unit), double?>();
         private Dictionary<string, LabelsForCompanionModels> companionModelLabels = new Dictionary<string, LabelsForCompanionModels>();
-        private List<string> statusMessageList = new List<string>();
+        private readonly List<string> statusMessageList = new List<string>();
 
         /// <summary>
         /// Label to assign each transaction created by this activity in ledgers
@@ -258,9 +258,9 @@ namespace Models.CLEM.Activities
             if (this is IHandlesActivityCompanionModels)
             {
                 LabelsForCompanionModels labels;
-                if (companionModelLabels.ContainsKey(typeof(T).Name))
+                if (companionModelLabels.TryGetValue(typeof(T).Name, out LabelsForCompanionModels value))
                 {
-                    labels = companionModelLabels[typeof(T).Name];
+                    labels = value;
                 }
                 else
                 {
@@ -492,7 +492,7 @@ namespace Models.CLEM.Activities
         /// Return a formatted error message for an unknown companion model.
         /// </summary>
         /// <param name="model">Model throwing the error.</param>
-        /// <param name="companionLabels">The details of labels saught based on type, identifier and unit.</param>
+        /// <param name="companionLabels">The details of labels sought based on type, identifier and unit.</param>
         /// <returns>Formatted string for exception.</returns>
         public static string UnknownCompanionModelErrorText(CLEMActivityBase model, (string type, string identifier, string unit) companionLabels)
         {
@@ -503,7 +503,7 @@ namespace Models.CLEM.Activities
         /// Return a formatted error message for an unknown identifier.
         /// </summary>
         /// <param name="model">Model throwing the error.</param>
-        /// <param name="companionLabels">The details of labels saught.</param>
+        /// <param name="companionLabels">The details of labels sought.</param>
         /// <returns>Formatted string for exception.</returns>
         public static string UnknownIdentifierErrorText(CLEMActivityBase model, (string type, string identifier, string unit) companionLabels)
         {
@@ -514,7 +514,7 @@ namespace Models.CLEM.Activities
         /// Return a formatted error message for unknown units.
         /// </summary>
         /// <param name="model">Model throwing the error.</param>
-        /// <param name="companionLabels">The details of labels saught.</param>
+        /// <param name="companionLabels">The details of labels sought.</param>
         /// <returns>Formatted string for exception.</returns>
         public static string UnknownUnitsErrorText(CLEMActivityBase model, (string type, string identifier, string unit) companionLabels)
         {
@@ -760,7 +760,7 @@ namespace Models.CLEM.Activities
         public IEnumerable<ResourceRequest> MinimumShortfallProportion()
         {
             double min = 1;
-            if (ResourceRequestList != null && ResourceRequestList.Any())
+            if (ResourceRequestList != null && ResourceRequestList.Count != 0)
             {
                 // does shortfall work by resource?
                 var shortfallRequests =  ResourceRequestList.Where(a => MathUtilities.IsNegative(a.Available - a.Required) && (a.ActivityModel as IReportPartialResourceAction).OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications);

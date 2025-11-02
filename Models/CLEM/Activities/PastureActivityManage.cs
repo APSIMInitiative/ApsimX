@@ -373,8 +373,8 @@ namespace Models.CLEM.Activities
         {
             if (herd != null)
             {
-                if(paddockName.Contains("."))
-                    paddockName = paddockName.Substring(paddockName.IndexOf(".")+1);
+                if (paddockName.Contains('.'))
+                    paddockName = paddockName.Substring(paddockName.IndexOf('.') + 1);
 
                 return herd.Herd.Where(a => a.Location == paddockName).Sum(a => a.Weight.AdultEquivalent) / areaSqKm;
             }
@@ -438,7 +438,7 @@ namespace Models.CLEM.Activities
 
                 //methane
                 //soilC
-                //Burnkg
+                //Burn kg
                 //methaneFire
                 //N2OFire
             }

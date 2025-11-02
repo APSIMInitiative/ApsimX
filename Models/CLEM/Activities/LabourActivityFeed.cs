@@ -166,12 +166,12 @@ namespace Models.CLEM.Activities
             numberToDo = uniqueIndividuals?.Count() ?? 0;
             IndividualsToBeFed = uniqueIndividuals;
 
-            List<LabourType> inds = uniqueIndividuals.ToList();
+            List<LabourType> individuals = uniqueIndividuals.ToList();
             indFed = new List<(LabourType, double)>();
 
             foreach (LabourFeedGroup child in filterGroups)
             {
-                var filteredInd = child.Filter(inds);
+                var filteredInd = child.Filter(individuals);
                 // get list from filters
                 foreach (LabourType ind in filteredInd)
                 {
@@ -191,7 +191,7 @@ namespace Models.CLEM.Activities
                             throw new Exception(String.Format("FeedStyle {0} is not supported in {1}", FeedStyle, this.Name));
                     }
                 }
-                inds.RemoveAll(a => filteredInd.Contains(a));
+                individuals.RemoveAll(a => filteredInd.Contains(a));
             }
 
             foreach (var valueToSupply in valuesForCompanionModels)

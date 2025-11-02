@@ -105,12 +105,12 @@ namespace Models.CLEM.Resources
             set
             {
                 rumenDegradableProteinPercent = value;
-                AcidDetergentInsoluableProtein = FoodResourcePacket.CalculateAcidDetergentInsoluableProtein(rumenDegradableProteinPercent, TypeOfFeed);
+                AcidDetergentInsolubleProtein = FoodResourcePacket.CalculateAcidDetergentInsolubleProtein(rumenDegradableProteinPercent, TypeOfFeed);
             }
         }
 
         /// <inheritdoc/>
-        public double AcidDetergentInsoluableProtein { get; set; }
+        public double AcidDetergentInsolubleProtein { get; set; }
 
         /// <summary>
         /// Starting Amount (kg)
@@ -184,7 +184,7 @@ namespace Models.CLEM.Resources
                 CrudeProteinPercent = UserCrudeProteinPercent;
             }
 
-            AcidDetergentInsoluableProtein = FoodResourcePacket.CalculateAcidDetergentInsoluableProtein(RumenDegradableProteinPercent, TypeOfFeed);
+            AcidDetergentInsolubleProtein = FoodResourcePacket.CalculateAcidDetergentInsolubleProtein(RumenDegradableProteinPercent, TypeOfFeed);
 
             // initialise the current state and details of this store
             CurrentStoreDetails = new FoodResourcePacket(this);

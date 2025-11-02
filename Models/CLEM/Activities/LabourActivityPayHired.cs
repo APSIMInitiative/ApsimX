@@ -25,7 +25,7 @@ namespace Models.CLEM.Activities
     public class LabourActivityPayHired : CLEMActivityBase, IValidatableObject, IHandlesActivityCompanionModels
     {
         [Link]
-        private IClock clock = null;
+        private readonly IClock clock = null;
         private double amountToDo;
         private double amountToSkip;
         private string task = "";
@@ -99,25 +99,25 @@ namespace Models.CLEM.Activities
         {
             amountToSkip = 0;
 
-            int currentmonth = clock.Today.Month;
-            double totaldays = 0;
-            double totalfees = 0;
+            int currentMonth = clock.Today.Month;
+            double totalDays = 0;
+            double totalFees = 0;
             foreach (LabourType item in labour.Items.Where(a => a.IsHired))
             {
                 double days = 0;
                 switch (task)
                 {
                     case "available":
-                        days = item.LabourAvailability.GetAvailability(currentmonth - 1);
+                        days = item.LabourAvailability.GetAvailability(currentMonth - 1);
                         break;
                     case "used":
-                        days = item.LabourAvailability.GetAvailability(currentmonth - 1) - item.AvailableDays;
+                        days = item.LabourAvailability.GetAvailability(currentMonth - 1) - item.AvailableDays;
                         break;
                 }
-                totaldays += days;
-                totalfees += days * item.PayRate();
+                totalDays += days;
+                totalFees += days * item.PayRate();
             }
-            amountToDo = totaldays;
+            amountToDo = totalDays;
 
             // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels)
@@ -128,10 +128,10 @@ namespace Models.CLEM.Activities
                         valuesForCompanionModels[valueToSupply.Key] = 1;
                         break;
                     case "per day":
-                        valuesForCompanionModels[valueToSupply.Key] = totaldays;
+                        valuesForCompanionModels[valueToSupply.Key] = totalDays;
                         break;
                     case "per total charged":
-                        valuesForCompanionModels[valueToSupply.Key] = totalfees;
+                        valuesForCompanionModels[valueToSupply.Key] = totalFees;
                         break;
                     default:
                         throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));

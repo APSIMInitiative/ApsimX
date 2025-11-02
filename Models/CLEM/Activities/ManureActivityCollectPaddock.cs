@@ -28,7 +28,6 @@ namespace Models.CLEM.Activities
     {
         [Link]
         private readonly IClock clock = null;
-
         private ProductStoreTypeManure manureStore;
         private ActivityCarryLimiter limiter;
         private double amountToDo;

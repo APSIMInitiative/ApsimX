@@ -365,7 +365,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Category("Restock", "Pasture")]
         [Description("Minimum pasture (kg/ha) before restocking if placed in paddock")]
-        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greter than or equal to 0")]
+        [Required, Range(0, double.MaxValue, ErrorMessage = "Value must be a greater than or equal to 0")]
         [Core.Display(EnabledCallback = "EnableStockProperties")]
         public double MinimumPastureBeforeRestock { get; set; }
 
@@ -528,13 +528,13 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>An event handler to allow us to reset initial cohort sizes before crearting the herd.</summary>
+        /// <summary>An event handler to allow us to reset initial cohort sizes before creating the herd.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialise")]
         private void AdjustHerdCohorts(object sender, EventArgs e)
         {
-            // called in onInitialise as needs to be before OnInitialiseResources when the herd is created as this may adjust initial chohort sizes.
+            // called in onInitialise as needs to be before OnInitialiseResources when the herd is created as this may adjust initial cohort sizes.
             // no access to the herd in this method as it is yet to be created in CLEMInitialiseResources but this method may need to adjust initial cohort numbers before building the herd.
 
             grazeStoreBreeders = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, GrazeFoodStoreNameBreeders, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
@@ -1154,7 +1154,7 @@ namespace Models.CLEM.Activities
                 // individuals marked for sale are not considered as they will be lost by sales and we assume all sales will take place
 
                 // remove excess sires from purchases if any
-                // this value may exceed those in purchases, but that's ok as first step before remiving from herd
+                // this value may exceed those in purchases, but that's ok as first step before removing from herd
                 int numberToRemove = numberMaleSiresInHerd + numberMaleSiresInPurchases - SiresKept;
 
                 // remove suitable individuals from the purchase list 
@@ -1199,7 +1199,7 @@ namespace Models.CLEM.Activities
             {
                 // need to assign/buy sires
 
-                // get suitable sires marked for sale if not maxage sale
+                // get suitable sires marked for sale if not manage sale
                 foreach (var selectFilter in GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "SelectSiresFromSales"))
                 {
                     foreach (var male in selectFilter.Filter(GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.MarkedForSale, new List<HerdChangeReason>() { HerdChangeReason.MaxAgeSale }).Where(a => a.IsSire)).Take(maleBreedersRequired))
@@ -1275,7 +1275,7 @@ namespace Models.CLEM.Activities
                         {
                             int purchaseIndex = 0;
                             double rndNumber = RandomNumberGenerator.Generator.NextDouble();
-                            while (rndNumber > selectedPurchaseDetails[purchaseIndex].CummulativeProbability)
+                            while (rndNumber > selectedPurchaseDetails[purchaseIndex].CumulativeProbability)
                             {
                                 if (purchaseIndex == selectedPurchaseDetails.Count)
                                 {
@@ -1492,7 +1492,7 @@ namespace Models.CLEM.Activities
                             for (int i = 0; i < numberToBuy; i++)
                             {
                                 int purchaseIndex = 0;
-                                while (RandomNumberGenerator.Generator.NextDouble() > purchaseBreederDetails[purchaseIndex].CummulativeProbability)
+                                while (RandomNumberGenerator.Generator.NextDouble() > purchaseBreederDetails[purchaseIndex].CumulativeProbability)
                                 {
                                     if (purchaseIndex == purchaseBreederDetails.Count)
                                     {
@@ -1676,8 +1676,6 @@ namespace Models.CLEM.Activities
         {
             // assumed Timing is OK from base class handling of resource provision.
 
-            //List<Ruminant> nonGrowOutHerd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.NotMarkedForSale, includeCheckHerdMeetsCriteria: true).Where(a => !a.Attributes.Exists("GrowOut")).ToList();
-
             PerformGrowOutManagement();
             SellOldIndividuals();
 
@@ -1703,8 +1701,6 @@ namespace Models.CLEM.Activities
             if (!TimingOK)
             {
                 // allow sale of grow outs in any month
-                //List<Ruminant> nonGrowOutHerd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.NotMarkedForSale, includeCheckHerdMeetsCriteria: true).Where(a => !a.Attributes.Exists("GrowOut")).ToList();
-
                 if (ContinuousGrowOutSales)
                 {
                     if (PerformMaleDestocking & GrowOutYoungMales)
@@ -1734,9 +1730,9 @@ namespace Models.CLEM.Activities
                     }
                 }
 
-                // This is not a managment month based on timers 
+                // This is not a management month based on timers 
                 // Need to see if any suitable breeder replacements have emerged from herd that are due to be sold this time-step
-                // These will only be from births and weaning males or females being sold or truckout out as normally weaners would be maintained 
+                // These will only be from births and weaning males or females being sold or trucked out as normally weaners would be maintained 
                 // and castration and grow-out is only handled in this activity in the management month. 
 
                 if (PerformFemaleStocking & RetainFemaleReplacementBreedersFromSaleHerd)
@@ -1914,7 +1910,7 @@ namespace Models.CLEM.Activities
                 foreach (var item in purchases)
                 {
                     sumProportions += item.SpecifyRuminantComponent.Proportion;
-                    item.CummulativeProbability = sumProportions;
+                    item.CumulativeProbability = sumProportions;
                 }
                 if (Math.Round(sumProportions, 4) != 1)
                 {
@@ -1941,7 +1937,7 @@ namespace Models.CLEM.Activities
                 foreach (var item in purchases)
                 {
                     sumProportions += item.SpecifyRuminantComponent.Proportion;
-                    item.CummulativeProbability = sumProportions;
+                    item.CumulativeProbability = sumProportions;
                 }
                 if (Math.Round(sumProportions, 4) != 1)
                 {

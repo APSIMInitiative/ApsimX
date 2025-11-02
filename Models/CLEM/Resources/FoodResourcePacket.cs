@@ -52,20 +52,20 @@ namespace Models.CLEM.Resources
             set
             {
                 rumenDegradableProteinPercent = value;
-                AcidDetergentInsoluableProtein = FoodResourcePacket.CalculateAcidDetergentInsoluableProtein(rumenDegradableProteinPercent, TypeOfFeed);
+                AcidDetergentInsolubleProtein = FoodResourcePacket.CalculateAcidDetergentInsolubleProtein(rumenDegradableProteinPercent, TypeOfFeed);
             }
         }
 
         /// <inheritdoc/>
-        public double AcidDetergentInsoluableProtein { get; set; }
+        public double AcidDetergentInsolubleProtein { get; set; }
 
         /// <summary>
-        /// Method to calculate the Acid Detergent Insoluable Protein based on the rumen degradable protein and type of feed
+        /// Method to calculate the Acid Detergent Insoluble Protein based on the rumen degradable protein and type of feed
         /// </summary>
         /// <param name="rumenDegradableProteinPercent">RDP of feed</param>
         /// <param name="typeOfFeed">Type of feed to identify forage</param>
         /// <returns>The proportion of crude protein that is ADIP</returns>
-        public static double CalculateAcidDetergentInsoluableProtein(double rumenDegradableProteinPercent, FeedType typeOfFeed)
+        public static double CalculateAcidDetergentInsolubleProtein(double rumenDegradableProteinPercent, FeedType typeOfFeed)
         {
             if (typeOfFeed == FeedType.Concentrate | typeOfFeed == FeedType.Milk)
                 return Math.Max(0.03, 0.87 - (1.09 * rumenDegradableProteinPercent / 100));
@@ -114,7 +114,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Fermetable Metabolic Energy Content of the food resource packet
+        /// Fermentable Metabolic Energy Content of the food resource packet
         /// </summary>
         public double FMEContent
         {
@@ -158,7 +158,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                // Return from non-concetrate is taken from APSIM
+                // Return from non-concentrate is taken from APSIM
                 // It assumes we don't know RDPContent for non-concentrates and will estimate based on DMD
                 // New approach assumes RDPContent is 0.7 (used in concentrate and may be user altered)
 
@@ -186,7 +186,7 @@ namespace Models.CLEM.Resources
             Amount = 0;
             MetabolisableEnergyContent = 0;
             RumenDegradableProteinPercent = 0;
-            AcidDetergentInsoluableProtein = 0;
+            AcidDetergentInsolubleProtein = 0;
             GrossEnergyContent = 0;
         }
 
@@ -223,7 +223,7 @@ namespace Models.CLEM.Resources
             NitrogenPercent = packet.NitrogenPercent;
             CrudeProteinPercent = packet.CrudeProteinPercent;
             RumenDegradableProteinPercent = packet.RumenDegradableProteinPercent;
-            AcidDetergentInsoluableProtein = packet.AcidDetergentInsoluableProtein;
+            AcidDetergentInsolubleProtein = packet.AcidDetergentInsolubleProtein;
             GrossEnergyContent = packet.GrossEnergyContent;
         }
 

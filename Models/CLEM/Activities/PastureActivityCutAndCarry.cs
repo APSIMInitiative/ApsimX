@@ -65,7 +65,7 @@ namespace Models.CLEM.Activities
         public double Supply { get; set; }
 
         /// <summary>
-        /// Amount harvested this timestep after limiter accounted for
+        /// Amount harvested this time step after limiter accounted for
         /// </summary>
         [JsonIgnore]
         public double AmountHarvested { get; set; }

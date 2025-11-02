@@ -79,7 +79,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void PerformTasksForTimestep(double argument = 0)
         {
-            // days provided from labour set in the requests in the resourceResquestList
+            // days provided from labour set in the requests in the resourceRequestList
             // receive payment for labour if bank type exists
             if (bankType != null)
             {

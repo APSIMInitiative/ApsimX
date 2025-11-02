@@ -118,7 +118,7 @@ namespace Models.CLEM.Resources
             set
             {
                 rumenDegradableProteinPercent = value;
-                AcidDetergentInsoluableProtein = FoodResourcePacket.CalculateAcidDetergentInsoluableProtein(rumenDegradableProteinPercent, TypeOfFeed);
+                AcidDetergentInsolubleProtein = FoodResourcePacket.CalculateAcidDetergentInsolubleProtein(rumenDegradableProteinPercent, TypeOfFeed);
             }
         } 
 
@@ -208,7 +208,7 @@ namespace Models.CLEM.Resources
         public double CarryoverDetachRate { get; set; } = 0.12;
 
         /// <inheritdoc/>
-        public double AcidDetergentInsoluableProtein { get; set; }
+        public double AcidDetergentInsolubleProtein { get; set; }
 
         /// <inheritdoc/>
         public double CrudeProteinPercent { get; set; }
@@ -531,7 +531,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            AcidDetergentInsoluableProtein = FoodResourcePacket.CalculateAcidDetergentInsoluableProtein(RumenDegradableProteinPercent, TypeOfFeed);
+            AcidDetergentInsolubleProtein = FoodResourcePacket.CalculateAcidDetergentInsolubleProtein(RumenDegradableProteinPercent, TypeOfFeed);
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

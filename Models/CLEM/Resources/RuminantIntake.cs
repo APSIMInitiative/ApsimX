@@ -64,7 +64,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Adjust intake consumed based on feed quality
         /// </summary>
-        public void AdjustIntakeBasedOnFeedQuality(bool islactating, Ruminant ind)
+        public void AdjustIntakeBasedOnFeedQuality(bool isLactating, Ruminant ind)
         {
             if (ind.Parameters.GrowPF_CI.IgnoreFeedQualityIntakeAdustment)
                 return;
@@ -73,6 +73,8 @@ namespace Models.CLEM.Resources
             // Freer et al. (2012) The GRAZPLAN animal biology model for sheep and cattle and the GrazFeed decision support tool
             // Equations 14-21
             // ========================================================================================================================
+
+            // CLEM does not currently include legumes in pastures so there is no need to differentiate feed types when applying quality affect.
             double sumFs = 0;
             double iReduction = 0;
 
@@ -91,7 +93,7 @@ namespace Models.CLEM.Resources
                 double RQ = Math.Min(1.0, 1 - ind.Parameters.GrowPF_CI.DigestibilitySlope_CR3 * (ind.Parameters.GrowPF_CI.DigestibilityPeak_CR1 - (item.Value.Details.DryMatterDigestibility/100.0)));
                 double offered_adj = (item.Value.Details.Amount/SolidsDaily.Expected)/RQ;
                 double unsatisfied_adj = Math.Max(0, 1-sumFs);
-                double quality_adj = (islactating? ind.Parameters.GrowPF_CI.QualityIntakeSubsititutionFactorLactating_CR20:ind.Parameters.GrowPF_CI.QualityIntakeSubsititutionFactorNonLactating_CR11)/item.Value.Details.MEContent;
+                double quality_adj = (isLactating? ind.Parameters.GrowPF_CI.QualityIntakeSubsititutionFactorLactating_CR20:ind.Parameters.GrowPF_CI.QualityIntakeSubsititutionFactorNonLactating_CR11)/item.Value.Details.MEContent;
 
                 // Added to remove heavy reduction on concentrates when the only item in the intake pool. but leave the RQ quality reduction.
                 if (feedTypeStoreDict.Count() == 1)
@@ -208,9 +210,9 @@ namespace Models.CLEM.Resources
             // * clearing would allow smallest number of feed types each step and variable feeding rules to be efficient
             // * reduce looping for kg and FMEI (across number of types fed in time-step)
             // * multiple garbage collection required for all ruminants every time-step (expensive, memory and cpu)
-            // * ? how much are time-step feed types really likely to vary?
+            // * ? how much are time step feed types really likely to vary?
             // * just how many feed types are expected in most runs? I expect only few.
-            // leaving them only means they don't have be be recreated each time fed (time-step), but 
+            // leaving them only means they don't have be be recreated each time fed (time step), but 
             // * check if exists (happens regardless, may be faster with fewer entries), dictionary should be optimised
             // * saves .. if not present create object and add to dictionary
             // * saves loops over types and resetting
