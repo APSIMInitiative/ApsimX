@@ -26,7 +26,7 @@ namespace Models.CLEM.Interfaces
         void OnActivityPerformed(EventArgs e);
 
         /// <summary>
-        /// A status message to provide with this perfromed item
+        /// A status message to provide with this performed item
         /// </summary>
         string StatusMessage { get; set; }
     }

@@ -108,7 +108,7 @@ namespace Models.CLEM
             {
                 structure = clemModel.Structure;
             }
-            else if(model is ZoneCLEM zoneModel)
+            else if (model is ZoneCLEM zoneModel)
             {
                 structure = zoneModel.Structure;
             }
@@ -127,15 +127,24 @@ namespace Models.CLEM
                     {
                         case ModelAssociationStyle.InScope:
                             if (structure.FindAll<Model>(relativeTo: model).Where(a => a.GetType() == requiredAttribte.AssociatedModels[i]).Any() == false)
+                            {
                                 errors.Add($"Cannot find required component [x={requiredAttribte.AssociatedModels[i].Name}] in scope for [x={model.FullPath}]");
+                            }
+
                             break;
                         case ModelAssociationStyle.Descendent:
-                            if (structure.FindChildren<CLEMModel>(relativeTo: model, recurse:true).Where(a => a.GetType() == requiredAttribte.AssociatedModels[i]).Any() == false)
+                            if (structure.FindChildren<CLEMModel>(relativeTo: model, recurse: true).Where(a => a.GetType() == requiredAttribte.AssociatedModels[i]).Any() == false)
+                            {
                                 errors.Add($"Cannot find required component [x={requiredAttribte.AssociatedModels[i].Name}] as descendent of [x={model.FullPath}]");
+                            }
+
                             break;
                         case ModelAssociationStyle.Child:
                             if (structure.FindChildren<CLEMModel>(relativeTo: model).Where(a => a.GetType() == requiredAttribte.AssociatedModels[i]).Any() == false)
+                            {
                                 errors.Add($"Cannot find required component [x={requiredAttribte.AssociatedModels[i].Name}] as child of [x={model.FullPath}]");
+                            }
+
                             break;
                         case ModelAssociationStyle.DescendentOfRuminantType:
                             // find Ruminant Types
@@ -144,7 +153,9 @@ namespace Models.CLEM
                             foreach (var rumType in rumTypes)
                             {
                                 if (structure.FindChildren<CLEMModel>(relativeTo: rumType, recurse: true).Where(a => a.GetType() == requiredAttribte.AssociatedModels[i]).Any() == false)
+                                {
                                     errors.Add($"Cannot find required component [x={requiredAttribte.AssociatedModels[i].Name}] as descendent of [r={rumType.Name}] as required by [x={model.FullPath}]");
+                                }
                             }
                             break;
                     }
@@ -152,9 +163,11 @@ namespace Models.CLEM
 
                 if (requiredAttribte.SingleInstance)
                 {
-                    var allfound = structure.FindAll<Model>(relativeTo: model).Where(a => a.GetType() == model.GetType());
-                    if (allfound.Count() > 1 && allfound.FirstOrDefault() == model)
+                    var allFound = structure.FindAll<Model>(relativeTo: model).Where(a => a.GetType() == model.GetType());
+                    if (allFound.Count() > 1 && allFound.FirstOrDefault() == model)
+                    {
                         errors.Add($"Only one instance of [x={model.GetType().Name}] is allowed in scope of [CLEM].");
+                    }
                 }
 
                 if (errors.Any())
@@ -176,9 +189,13 @@ namespace Models.CLEM
                     Summary summary = structure.FindChild<Summary>(relativeTo: sim, recurse: true);
                     var zone = structure.FindParent<Zone>(relativeTo: model, recurse: true);
                     if (validParents.Count() > 1)
+                    {
                         summary.WriteMessage(zone, $"Only a component of type {string.Join(',', validParents.Select(a => $"[{a.ParentType.Name}]"))} is permitted as a parent of [x={model.FullPath}]", MessageType.Error);
+                    }
                     else
+                    {
                         summary.WriteMessage(zone, $"Only components of types {string.Join("", validParents.Select(a => $"[{a.ParentType.Name}]"))} are permitted as a parent of [x={model.FullPath}]", MessageType.Error);
+                    }
                 }
             }   
         }
@@ -192,7 +209,10 @@ namespace Models.CLEM
             get
             {
                 if (activityTimers is null)
+                {
                     activityTimers = Structure.FindChildren<IActivityTimer>();
+                }
+
                 return activityTimers;
             }
         }
@@ -226,16 +246,23 @@ namespace Models.CLEM
                     foreach (object type in typesToFind)
                     {
                         if (type is string)
+                        {
                             results.Add(type as string);
+                        }
                         else if (type is Type)
                         {
                             var res = resources.FindResource(type as Type);
                             IEnumerable<string> list = null;
                             if (res != null)
+                            {
                                 list = Structure.FindChildren<IResourceType>(relativeTo: res).Select(a => (a as CLEMModel).NameWithParent) ?? null;
+                            }
+
                             if (list != null)
+                            {
                                 results.AddRange(Structure.FindChildren<IResourceType>(relativeTo: res)
                                        .Select(a => (a as CLEMModel).NameWithParent));
+                            }
                         }
                     }
                 }
@@ -252,7 +279,9 @@ namespace Models.CLEM
         {
             Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
             if (simulation is null)
+            {
                 return new List<string>().AsEnumerable();
+            }
             else
             {
                 List<Type> types = new();
@@ -277,9 +306,13 @@ namespace Models.CLEM
         public List<string> ParentSuppliedIdentifiers()
         {
             if (this is IActivityCompanionModel && Parent != null && Parent is IHandlesActivityCompanionModels)
+            {
                 return (Parent as IHandlesActivityCompanionModels).DefineCompanionModelLabels(GetType().Name).Identifiers;
+            }
             else
+            {
                 return new List<string>();
+            }
         }
 
         /// <summary>
@@ -300,9 +333,13 @@ namespace Models.CLEM
         public List<string> ParentSuppliedMeasures()
         {
             if (this is IActivityCompanionModel && Parent != null && Parent is IHandlesActivityCompanionModels)
+            {
                 return (Parent as IHandlesActivityCompanionModels).DefineCompanionModelLabels(GetType().Name).Measures;
+            }
             else
+            {
                 return new List<string>();
+            }
         }
 
         /// <summary>
@@ -324,10 +361,14 @@ namespace Models.CLEM
         {
             // monthly time-step is assumed if no MinimumTimeStepPermittedAttribute has been provided.
             var timestepAtt = ReflectionUtilities.GetAttributes(this.GetType(), typeof(MinimumTimeStepPermittedAttribute), false).Cast<MinimumTimeStepPermittedAttribute>().FirstOrDefault();
-            if(events.TimeStep == TimeStepTypes.Custom)
+            if (events.TimeStep == TimeStepTypes.Custom)
+            {
                 return (int)(timestepAtt?.TimeStep??TimeStepTypes.Monthly) > events.Interval;
+            }
             else
+            {
                 return (int)(timestepAtt?.TimeStep ?? TimeStepTypes.Monthly) <= (int)events.TimeStep;
+            }
         }
 
         #region descriptive summary
@@ -399,13 +440,17 @@ namespace Models.CLEM
             {
                 valueString = value.ToString();
                 if (htmlTags)
+                {
                     htmlStart = $"<span class=\"{spanClass}\">";
+                }
             }
             else
             {
                 valueString = errorString;
                 if (htmlTags)
+                {
                     htmlStart = $"<span class=\"{errorClass}\">";
+                }
             }
 
             return $"{htmlStart}{valueString}{htmlEnd}";
@@ -426,10 +471,15 @@ namespace Models.CLEM
             if (value.Any())
             {
                 foreach (T item in value)
+                {
                     result += DisplaySummaryValueSnippet<T>(item, errorString, entryStyle, htmlTags, warnZero) + " ";
+                }
             }
             else
+            {
                 result = DisplaySummaryValueSnippet<T>(null, errorString, entryStyle, htmlTags, warnZero);
+            }
+
             return result.TrimEnd();
         }
 
@@ -462,7 +512,9 @@ namespace Models.CLEM
                 }
             }
             else
+            {
                 valueString = value;
+            }
 
             return $"{htmlStart}{valueString}{htmlEnd}";
         }
@@ -489,7 +541,10 @@ namespace Models.CLEM
             // add all remaining models not specified above
             IEnumerable<IModel> unique = new List<IModel>();
             foreach (var selectFilter in modelsToSummarise.Select(a => a.models))
+            {
                 unique = unique.Union(selectFilter);
+            }
+
             modelsToSummarise.Add((Structure.FindChildren<IModel>().Where(a => !unique.Contains(a)), true, "", "", ""));
 
             return modelsToSummarise;
@@ -526,31 +581,39 @@ namespace Models.CLEM
                     htmlWriter.Write(cm.ModelSummaryInnerOpeningTagsBeforeSummary());
 
                     if (ReportMemosType == DescriptiveSummaryMemoReportingType.AtTop)
+                    {
                         htmlWriter.Write(AddMemosToSummary(model, Structure, markdown2Html));
+                    }
 
                     if (model is IActivityCompanionModel)
                     {
                         if (!FormatForParentControl && (model as IActivityCompanionModel).Identifier != null)
+                        {
                             htmlWriter.Write($"\r\n<div class=\"activityentry\">Applies to {CLEMModel.DisplaySummaryValueSnippet((model as IActivityCompanionModel).Identifier)}</div>");
+                        }
                     }
 
                     htmlWriter.Write(cm.ModelSummary());
 
                     htmlWriter.Write(cm.ModelSummaryInnerOpeningTags());
 
-                    // TODO: think through the various model types that do not support memos being writen within children
+                    // TODO: think through the various model types that do not support memos being written within children
                     // for example all the filters in a filter group and timers and cohorts
-                    // basically anyting that does special actions with all the children
+                    // basically anything that does special actions with all the children
                     // if the current model supports memos in place set reportMemosInPlace to true.
 
                     if (ReportMemosType == DescriptiveSummaryMemoReportingType.AtBottom)
+                    {
                         htmlWriter.Write(AddMemosToSummary(model, Structure, markdown2Html));
+                    }
 
                     var childrenToSummarise = HandleChildrenInSummary();
                     foreach (var item in childrenToSummarise)
                     {
                         if (item.include)
+                        {
                             htmlWriter.Write(GetChildDescriptiveSummaries(item.models, item.introText, item.missingText, item.borderClass, htmlString, cm, markdown2Html));
+                        }
                     }
 
                     htmlWriter.Write(cm.ModelSummaryInnerClosingTags());
@@ -569,10 +632,14 @@ namespace Models.CLEM
                 using (StringWriter htmlWriter = new StringWriter())
                 {
                     if (borderClass != "")
+                    {
                         htmlWriter.Write($"\r\n<div class=\"{borderClass}\">");
+                    }
 
                     if (introText != "")
+                    {
                         htmlWriter.Write($"<div class=\"childgrouplabel\">{introText}</div>");
+                    }
 
                     foreach (var item in models)
                     {
@@ -582,7 +649,10 @@ namespace Models.CLEM
                             {
                                 string markdownMemo = (item as Memo).Text;
                                 if (markdown2Html != null)
+                                {
                                     markdownMemo = markdown2Html(markdownMemo);
+                                }
+
                                 markdownMemo = markdownMemo.Replace("\n", "<br />").Replace("</p><br />", "</p>");
                                 string memoContainerClass = (ModelSummaryStyle == HTMLSummaryStyle.Filter) ? "memo-container-simple" : "memo-container";
                                 string memoHeadClass = (ModelSummaryStyle == HTMLSummaryStyle.Filter) ? "memo-head-simple" : "memo-head";
@@ -594,15 +664,21 @@ namespace Models.CLEM
                         else
                         {
                             if (item is CLEMModel)
+                            {
                                 htmlWriter.Write((item as CLEMModel).GetFullSummary(item, cm.CurrentAncestorList.ToList(), htmlString));
+                            }
                         }
                     }
                     if (!models.Any() && MissingText != "")
+                    {
                         // write models not found error
                         htmlWriter.Write($"<div class=\"errorbanner clearfix><div class=\"filtererror\">{MissingText}</div></div>");
+                    }
 
                     if (borderClass != "")
+                    {
                         htmlWriter.Write("</div>");
+                    }
 
                     return htmlWriter.ToString();
                 }
@@ -647,7 +723,10 @@ namespace Models.CLEM
 
                 string memoText = memo.Text;
                 if (markdown2Html != null)
+                {
                     memoText = markdown2Html(memoText);
+                }
+
                 memoText = memoText.Replace("\n\n", "\n").Replace("\n", "<br />").Replace("</p><br />", "</p>");
 
                 html += $"<div class='{memoTextClass}'>{memoText}</div></div>";
@@ -735,11 +814,17 @@ namespace Models.CLEM
                     // add units when completed
                     string units = (this as IResourceType).Units;
                     if (units != "NA")
+                    {
                         htmlWriter.Write($"\r\n<div class=\"activityentry\">This resource is measured in {CLEMModel.DisplaySummaryValueSnippet(units)}</div>");
+                    }
                 }
                 if (this.GetType().IsSubclassOf(typeof(ResourceBaseWithTransactions)))
+                {
                     if (Children.Count == 0)
+                    {
                         htmlWriter.Write("\r\n<div class=\"activityentry\">Empty</div>");
+                    }
+                }
 
                 return htmlWriter.ToString();
             }
@@ -789,7 +874,9 @@ namespace Models.CLEM
                     {
                         string transCat = CLEMActivityBase.UpdateTransactionCategory(this as CLEMActivityBase, Structure);
                         if (transCat != "")
+                        {
                             htmlWriter.Write($"<div class=\"partialdiv\">tag: {transCat}</div>");
+                        }
                     }
                 }
                 return htmlWriter.ToString();
@@ -993,18 +1080,26 @@ namespace Models.CLEM
                     htmlWriter.Write(htmlString);
 
                     if (apsimFilename == "")
+                    {
                         htmlWriter.Write("\r\n<span style=\"font-size:0.8em; font-weight:bold\">You will need to keep refreshing this page to see changes relating to the last component selected</span><br /><br />");
+                    }
                 }
                 htmlWriter.Write("\r\n<div class=\"clearfix defaultbanner\">");
 
                 string fullname = modelToSummarise.Name;
                 if (modelToSummarise is CLEMModel)
+                {
                     fullname = (modelToSummarise as CLEMModel).NameWithParent;
+                }
 
                 if (apsimFilename != "")
+                {
                     htmlWriter.Write($"<div class=\"namediv\">Full simulation settings</div>");
+                }
                 else
+                {
                     htmlWriter.Write($"<div class=\"namediv\">Component {modelToSummarise.GetType().Name} named {fullname}</div>");
+                }
 
                 htmlWriter.Write($"<br /><div class=\"typediv\">Details</div>");
                 htmlWriter.Write("</div>");
@@ -1021,18 +1116,30 @@ namespace Models.CLEM
                 htmlWriter.Write("\r\n</div>");
 
                 if (modelToSummarise is ZoneCLEM)
+                {
                     htmlWriter.Write((modelToSummarise as ZoneCLEM).GetFullSummary(modelToSummarise, new List<string>(), htmlWriter.ToString(), markdown2Html));
+                }
                 else if (modelToSummarise is Market)
+                {
                     htmlWriter.Write((modelToSummarise as Market).GetFullSummary(modelToSummarise, new List<string>(), markdown2Html));
+                }
                 else if (modelToSummarise is CLEMModel)
+                {
                     htmlWriter.Write((modelToSummarise as CLEMModel).GetFullSummary(modelToSummarise, new List<string>(), htmlWriter.ToString(), markdown2Html));
+                }
                 else if (modelToSummarise is ICLEMDescriptiveSummary)
+                {
                     htmlWriter.Write((modelToSummarise as ICLEMDescriptiveSummary).GetFullSummary(modelToSummarise, new List<string>(), htmlWriter.ToString(), markdown2Html));
+                }
                 else
+                {
                     htmlWriter.Write("<b>This component has no descriptive summary</b>");
+                }
 
                 if (!bodyOnly)
+                {
                     htmlWriter.WriteLine("\r\n</body>\r\n</html>");
+                }
 
                 if (htmlWriter.ToString().Contains("<canvas"))
                 {

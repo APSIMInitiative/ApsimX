@@ -57,12 +57,16 @@ namespace Models.CLEM.Groupings
         {
             string html = "";
             if (Parent.GetType() == typeof(LabourGroup))
+            {
                 html += "<div class=\"labournote\" style=\"clear: both;\">If insufficient labour use the specifications below</div>";
+            }
 
             html += "\r\n<div class=\"filterborder clearfix\">";
 
-            if (Structure.FindChildren<Filter>().Count() < 1)
+            if (!Structure.FindChildren<Filter>().Any())
+            {
                 html += "<div class=\"filter\">Any labour</div>";
+            }
 
             return html;
         }

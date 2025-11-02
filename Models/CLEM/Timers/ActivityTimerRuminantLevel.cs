@@ -121,7 +121,9 @@ namespace Models.CLEM.Timers
             if (TimerStyle != ActivityTimerRuminantLevelStyle.NumberOfIndividuals)
             {
                 if ((RuminantProperty ?? "") != "")
+                {
                     propertyInfo = typeof(Ruminant).GetProperty(RuminantProperty);
+                }
 
                 if ((RuminantProperty ?? "") == "" || propertyInfo is null)
                 {
@@ -138,11 +140,13 @@ namespace Models.CLEM.Timers
             {
                 if (clock.Today != checkDate)
                 {
-                    // filter based on all filtergroups
+                    // filter based on all filter groups
                     uniqueIndividuals = CLEMRuminantActivityBase.GetUniqueIndividuals<Ruminant>(filterGroups, parentRuminantBase.CurrentHerd(), Structure);
 
                     if (TimerStyle == ActivityTimerRuminantLevelStyle.NumberOfIndividuals)
+                    {
                         amountAtFirstCheck = uniqueIndividuals.Count();
+                    }
                     else
                     {
                         var individualProperty = uniqueIndividuals.Select(a => Convert.ToDouble(propertyInfo.GetValue(a)));
@@ -221,7 +225,9 @@ namespace Models.CLEM.Timers
             htmlWriter.Write("\r\n<div class=\"clearfix\"><div class=\"filter\">");
             htmlWriter.Write("Perform when ");
             if (TimerStyle == ActivityTimerRuminantLevelStyle.NumberOfIndividuals)
+            {
                 htmlWriter.Write($"{DisplaySummaryValueSnippet("the number of individuals", "Not set", HTMLSummaryStyle.Default)}");
+            }
             else
             {
                 string stl = "[Unknown]";
@@ -245,7 +251,10 @@ namespace Models.CLEM.Timers
             htmlWriter.Write($" {DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Default)}");
             htmlWriter.Write($" {DisplaySummaryValueSnippet(Amount, "Not set", HTMLSummaryStyle.Default)}</div></div>");
             if (!Enabled & !FormatForParentControl)
+            {
                 htmlWriter.Write(" - DISABLED!");
+            }
+
             return htmlWriter.ToString();
         }
 
@@ -299,7 +308,10 @@ namespace Models.CLEM.Timers
             using StringWriter htmlWriter = new();
             htmlWriter.Write("<div class=\"filtername\">");
             if (!Name.Contains(GetType().Name.Split('.').Last()))
+            {
                 htmlWriter.Write(Name);
+            }
+
             htmlWriter.Write($"</div>");
             htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
             return htmlWriter.ToString();

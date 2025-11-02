@@ -34,11 +34,11 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (Structure.FindChildren<LabourPriceGroup>(relativeTo: this).Count() == 0)
+            if (!Structure.FindChildren<LabourPriceGroup>(relativeTo: this).Any())
             {
                 yield return new ValidationResult($"No [LabourPriceGroups] have been provided for [r={Name}].\r\nAdd [LabourPriceGroups] to include labour pricing.", new string[] { "Labour pricing" });
             }
-            else if (Structure.FindChildren<LabourPriceGroup>(relativeTo: this).Where(a => a.Value == 0).Count() > 0)
+            else if (Structure.FindChildren<LabourPriceGroup>(relativeTo: this).Count(a => a.Value == 0) > 0)
             {
                 yield return new ValidationResult($"No price [Value] has been set for some of the [LabourPriceGroup] in [r={Name}]\r\nThese will not result in price calculations and can be deleted.", new string[] { "Labour pricing" });
             }
@@ -68,7 +68,10 @@ namespace Models.CLEM.Resources
         public override string ModelSummaryInnerOpeningTags()
         {
             if (Children.OfType<LabourPriceGroup>().Any())
+            {
                 return "<table><tr><th>Name</th><th>Filter</th><th>Rate per day</th></tr>";
+            }
+
             return "";
         }
 

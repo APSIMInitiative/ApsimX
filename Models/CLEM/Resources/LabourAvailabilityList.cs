@@ -48,7 +48,10 @@ namespace Models.CLEM.Resources
         {
             string html = "";
             if (Children.OfType<LabourAvailabilityItem>().Count() + this.Children.OfType<LabourAvailabilityItemMonthly>().Count() > 0)
+            {
                 html += "<table><tr><th>Filter</th><th>J</th><th>F</th><th>M</th><th>A</th><th>M</th><th>J</th><th>J</th><th>A</th><th>S</th><th>O</th><th>N</th><th>D</th></tr>";
+            }
+
             return html;
         }
 

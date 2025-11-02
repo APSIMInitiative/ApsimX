@@ -92,9 +92,13 @@ namespace Models.CLEM.Groupings
             {
                 string errorMsg;
                 if (ExistingGroupName is null)
+                {
                     errorMsg = "No existing filter group has been specified";
+                }
                 else
+                {
                     errorMsg = $"The filter group [f={ExistingGroupName}] could not be found.{Environment.NewLine}Ensure the name matches the name of an enabled group in the simulation tree below the same ZoneCLEM";
+                }
 
                 yield return new ValidationResult(errorMsg, new string[] { "Linked filter group" });
             }
@@ -132,16 +136,20 @@ namespace Models.CLEM.Groupings
         {
             using StringWriter htmlWriter = new();
             htmlWriter.Write("<div class=\"filtername\">");
-            //if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
             htmlWriter.Write($"{Name}");
             if ((Identifier ?? "") != "")
+            {
                 htmlWriter.Write($" - applies to {Identifier} and");
+            }
+
             htmlWriter.Write($" linked to </div>");
 
             var zone = Structure.FindParent<Zone>(recurse: true);
             var foundGroup = Structure.FindChildren<RuminantGroup>(relativeTo: zone, recurse: true).Where(a => a.Enabled).Cast<Model>().Where(a => $"{a.Parent.Name}.{a.Name}" == ExistingGroupName).FirstOrDefault() as RuminantGroup;
             if (foundGroup != null)
+            {
                 htmlWriter.Write(foundGroup.GetFullSummary(foundGroup, new List<string>(), ""));
+            }
             else
             {
                 if ((ExistingGroupName ?? "") == "")

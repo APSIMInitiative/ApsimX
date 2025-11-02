@@ -62,8 +62,10 @@ namespace Models.CLEM.Resources
         public override string ModelSummaryInnerClosingTags()
         {
             string html = "";
-            if (Structure.FindChildren<AnimalPriceGroup>().Count() >= 1)
+            if (Structure.FindChildren<AnimalPriceGroup>().Any())
+            {
                 html += "</table></div>";
+            }
 
             return html;
         }
@@ -72,10 +74,14 @@ namespace Models.CLEM.Resources
         public override string ModelSummaryInnerOpeningTags()
         {
             string html = "";
-            if (Structure.FindChildren<AnimalPriceGroup>().Count() >= 1)
+            if (Structure.FindChildren<AnimalPriceGroup>().Any())
+            {
                 html += "<div class=\"topspacing\"><table><tr><th>Name</th><th>Filter</th><th>Value</th><th>Style</th><th>Type</th></tr>";
+            }
             else
+            {
                 html += "<span class=\"errorlink\">No Animal Price Groups defined!</span>";
+            }
 
             return html;
         }

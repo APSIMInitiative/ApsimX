@@ -75,7 +75,10 @@ namespace Models.CLEM
             get
             {
                 if (resources == null)
+                {
                     resources = Structure.FindChildren<ResourcesHolder>().FirstOrDefault();
+                }
+
                 return resources;
             }
         }
@@ -92,7 +95,9 @@ namespace Models.CLEM
                 {
                     var finance = Resources.FindResourceGroup<Finance>();
                     if (finance != null)
+                    {
                         bankAccount = Structure.FindChildren<FinanceType>(relativeTo: finance).FirstOrDefault();
+                    }
                 }
                 return bankAccount;
             }
@@ -109,7 +114,9 @@ namespace Models.CLEM
             CLEMEvents events = Structure.Find<CLEMEvents>();
 
             if (!ZoneCLEM.Validate(this, "", this, summary, events))
+            {
                 ZoneCLEM.ReportInvalidParameters(this, dataStore, summary, simulation.Name);
+            }
         }
 
         /// <summary>An event handler to catch file association errors before moving to initialisation of resources and activities</summary>
@@ -172,7 +179,10 @@ namespace Models.CLEM
 
             htmlWriter.Write($"\r\n<div class=\"holdermain\" style=\"opacity: {((!this.Enabled) ? "0.4" : "1")}\">");
             foreach (CLEMModel cm in Structure.FindChildren<CLEMModel>())
+            {
                 htmlWriter.Write(cm.GetFullSummary(cm, parents, "", markdown2Html));
+            }
+
             htmlWriter.Write("</div>");
 
             return htmlWriter.ToString();

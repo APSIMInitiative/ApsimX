@@ -68,14 +68,14 @@ namespace Models.CLEM
             IModel current = this;
             while (current.GetType() != typeof(ZoneCLEM))
             {
-                var filtergroup = current.Children.OfType<OtherAnimalsGroup>();
-                if (filtergroup.Count() > 1)
+                var filterGroup = current.Children.OfType<OtherAnimalsGroup>();
+                if (filterGroup.Count() > 1)
                 {
                     Summary.WriteMessage(this, "Multiple other animal filter groups have been supplied for [" + current.Name + "]" + Environment.NewLine + "Only the first filter group will be used.", MessageType.Warning);
                 }
-                if (filtergroup.FirstOrDefault() != null)
+                if (filterGroup.FirstOrDefault() != null)
                 {
-                    cohortFilters.Insert(0, filtergroup.FirstOrDefault());
+                    cohortFilters.Insert(0, filterGroup.FirstOrDefault());
                 }
                 current = current.Parent as IModel;
             }

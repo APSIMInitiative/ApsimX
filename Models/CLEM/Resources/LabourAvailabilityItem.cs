@@ -57,11 +57,15 @@ namespace Models.CLEM.Resources
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 if (Value <= 0)
+                {
                     htmlWriter.Write("<span class=\"errorlink\">" + Value.ToString() + "</span>");
+                }
                 else
                 {
                     if (Value > 0)
+                    {
                         htmlWriter.Write("<span class=\"setvalue\">" + Value.ToString() + "</span> x ");
+                    }
                 }
                 htmlWriter.Write(" days available each month</div>");
             }
@@ -74,19 +78,25 @@ namespace Models.CLEM.Resources
             using StringWriter htmlWriter = new();
             if (FormatForParentControl)
             {
-                string classstr = "setvalue";
+                string classStr = "setvalue";
                 if (Value == 0)
-                    classstr = "errorlink";
+                {
+                    classStr = "errorlink";
+                }
 
                 htmlWriter.Write("</td>");
-                htmlWriter.Write("<td><span class=\"" + classstr + "\">" + this.Value.ToString() + "</span></td>");
+                htmlWriter.Write("<td><span class=\"" + classStr + "\">" + this.Value.ToString() + "</span></td>");
                 for (int i = 1; i < 12; i++)
+                {
                     htmlWriter.Write("<td><span class=\"disabled\">" + this.Value.ToString() + "</span></td>");
+                }
 
                 htmlWriter.Write("</tr>");
             }
             else
+            {
                 htmlWriter.Write("\r\n</div>");
+            }
 
             return htmlWriter.ToString();
         }
@@ -97,12 +107,18 @@ namespace Models.CLEM.Resources
             using (StringWriter htmlWriter = new())
             {
                 if (FormatForParentControl)
+                {
                     htmlWriter.Write("<tr><td>");
+                }
                 else
+                {
                     htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
+                }
 
-                if (Structure.FindChildren<Filter>().Count() < 1)
+                if (!Structure.FindChildren<Filter>().Any())
+                {
                     htmlWriter.Write("<div class=\"filter\">Any labour</div>");
+                }
 
                 return htmlWriter.ToString();
             }

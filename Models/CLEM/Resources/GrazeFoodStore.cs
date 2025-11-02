@@ -61,7 +61,9 @@ namespace Models.CLEM.Resources
         private new void OnSimulationCompleted(object sender, EventArgs e)
         {
             foreach (GrazeFoodStoreType childModel in Structure.FindChildren<GrazeFoodStoreType>())
+            {
                 childModel.EcologicalIndicatorsCalculated -= Resource_EcologicalIndicatorsCalculated;
+            }
 
             Items?.Clear();
             Items = null;

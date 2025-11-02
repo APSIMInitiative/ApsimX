@@ -159,9 +159,13 @@ namespace Models.CLEM
         public bool IsDateInTimeStep(DateTime date)
         {
             if (date >= timeStepStart && date <= timeStepEnd)
+            {
                 return true;
+            }
             else
+            {
                 return false;
+            }
         }
 
         /// <summary>
@@ -173,11 +177,18 @@ namespace Models.CLEM
         public int DaysToDate(DateTime date, bool fromStart = true)
         {
             if (!IsDateInTimeStep(date))
+            {
                 return -1;
+            }
+
             if (fromStart)
+            {
                 return (date - timeStepStart).Days;
+            }
             else
+            {
                 return (timeStepEnd-date).Days;
+            }
         }
 
         /// <summary>
@@ -223,7 +234,9 @@ namespace Models.CLEM
         public int CalculateTimeStepIntervalIndex(DateTime date)
         {
             if (date < Clock.StartDate)
+            {
                 return -1;
+            }
 
             // todo: if months then get month count as integer
             if (TimeStep == TimeStepTypes.Monthly)
@@ -311,8 +324,8 @@ namespace Models.CLEM
         [EventSubscribe("StartOfDay")]
         protected virtual void OnStartOfDay(object sender, EventArgs args)
         {
-            // CLEM events performed at the StartOfDay at start of the current time-step
-            // Firing setup at start of day on the first day of the time step means we can influence other models for the remainder of the time-step
+            // CLEM events performed at the StartOfDay at start of the current time step
+            // Firing setup at start of day on the first day of the time step means we can influence other models for the remainder of the time step
             if (Clock.Today == timeStepStart)
             {
                 IntervalIndex++;
@@ -336,8 +349,8 @@ namespace Models.CLEM
         [EventSubscribe("EndOfDay")]
         protected virtual void OnEndOfDay(object sender, EventArgs args)
         {
-            // CLEM events performed at the EndOfDay at end of the current tinme-step
-            // APSIM is now happy that the time-step is over and so we can clean up CLEM and this will report all at end of time-step as previously occured in monthly time-steps.
+            // CLEM events performed at the EndOfDay at end of the current time step
+            // APSIM is now happy that the time step is over and so we can clean up CLEM and this will report all at end of time-step as previously occurred in monthly time steps.
             if (Clock.Today == timeStepEnd)
             {
                 CLEMAnimalWeightGain?.Invoke(this, args);
@@ -386,12 +399,12 @@ namespace Models.CLEM
             if (TimeStep == TimeStepTypes.Monthly & Clock.StartDate.Day != 1)
             {
                 string[] memberNames = new string[] { "Clock.StartDate" };
-                yield return new ValidationResult($"CLEM must commence on the first day of a month when using monthly time-step. Invalid start date {Clock.StartDate.ToShortDateString()}", memberNames);
+                yield return new ValidationResult($"CLEM must commence on the first day of a month when using monthly time step. Invalid start date {Clock.StartDate.ToShortDateString()}", memberNames);
             }
             if (TimeStep == TimeStepTypes.Custom & CustomTimeStep <= 0)
             {
                 string[] memberNames = new string[] { "Custom time-step" };
-                yield return new ValidationResult($"A custom time-step greater than [0] must be supplied when using the custom time-step style", memberNames);
+                yield return new ValidationResult($"A custom time-step greater than [0] must be supplied when using the custom time step style", memberNames);
             }
         }
 
@@ -409,14 +422,19 @@ namespace Models.CLEM
                 {
                     DateTime trackDate = new DateTime(Clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
                     while (trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval) >= Clock.Today)
+                    {
                         trackDate = trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval);
+                    }
+
                     EcologicalIndicatorsNextDueDate = trackDate;
                 }
                 else
                 {
                     EcologicalIndicatorsNextDueDate = new DateTime(Clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
                     while (Clock.StartDate > EcologicalIndicatorsNextDueDate)
+                    {
                         EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);
+                    }
                 }
             }
         }

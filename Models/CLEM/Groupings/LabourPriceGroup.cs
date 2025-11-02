@@ -70,12 +70,18 @@ namespace Models.CLEM.Groupings
         {
             using StringWriter htmlWriter = new();
             if (FormatForParentControl)
+            {
                 htmlWriter.Write("<tr><td>" + this.Name + "</td><td>");
+            }
             else
+            {
                 htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
+            }
 
-            if (Structure.FindChildren<Filter>().Count() < 1)
+            if (!Structure.FindChildren<Filter>().Any())
+            {
                 htmlWriter.Write("<div class=\"filter\">All individuals</div>");
+            }
 
             return htmlWriter.ToString();
         }

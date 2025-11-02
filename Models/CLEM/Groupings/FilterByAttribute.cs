@@ -66,8 +66,8 @@ namespace Models.CLEM.Groupings
 
             var falseConstant = Expression.Constant(false, typeof(bool));
 
-            var existsmethod = typeof(IndividualAttributeList).GetMethod("Exists");
-            var exists = Expression.Call(attProperty, existsmethod, tag);
+            var existsMethod = typeof(IndividualAttributeList).GetMethod("Exists");
+            var exists = Expression.Call(attProperty, existsMethod, tag);
 
             Expression simpleBinary;
             ConditionalExpression block;
@@ -141,7 +141,9 @@ namespace Models.CLEM.Groupings
         public override void BuildRule()
         {
             if (Rule is null)
+            {
                 Rule = Compile<IFilterable>();
+            }
         }
 
         /// <summary>
@@ -166,18 +168,23 @@ namespace Models.CLEM.Groupings
         {
             using StringWriter filterWriter = new();
             filterWriter.Write($"Filter:");
-            bool truefalse = IsOperatorTrueFalseTest();
-            if (FilterStyle == AttributeFilterStyle.Exists | truefalse)
+            bool trueFalse = IsOperatorTrueFalseTest();
+            if (FilterStyle == AttributeFilterStyle.Exists | trueFalse)
             {
                 bool nothingAdded = true;
-                if (truefalse)
+                if (trueFalse)
+                {
                     if (Operator == ExpressionType.IsFalse | Value?.ToString().ToLower() == "false")
                     {
                         filterWriter.Write(" does not have");
                         nothingAdded = false;
                     }
+                }
+
                 if (nothingAdded)
+                {
                     filterWriter.Write(" has");
+                }
 
                 filterWriter.Write($" attribute {CLEMModel.DisplaySummaryValueSnippet(AttributeTag, "No tag", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)}");
             }
@@ -210,20 +217,26 @@ namespace Models.CLEM.Groupings
                     case ExpressionType.Equal:
                     case ExpressionType.NotEqual:
                         if (!(Value is null || Value.ToString() == ""))
+                        {
                             if (!bool.TryParse(Value.ToString(), out _))
                             {
                                 memberNames = new string[] { "Invalid value" };
                                 yield return new ValidationResult($"The value [{Value}] is not valid for the [{Operator}] operator selected for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}].{Environment.NewLine}Expecting True or False", memberNames);
                             }
+                        }
+
                         break;
                     case ExpressionType.IsTrue:
                     case ExpressionType.IsFalse:
                         if (!(Value is null || Value.ToString() == ""))
+                        {
                             if (!bool.TryParse(Value.ToString(), out _))
                             {
                                 memberNames = new string[] { "Invalid value" };
                                 yield return new ValidationResult($"The value [{Value}] is not valid for the [{Operator}] operator selected for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}].{Environment.NewLine}Expecting True or False, or blank entry", memberNames);
                             }
+                        }
+
                         break;
                     default:
                         memberNames = new string[] { "Invalid operator" };

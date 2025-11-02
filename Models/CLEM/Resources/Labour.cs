@@ -72,7 +72,6 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            // locate resources
             availabilityList = Structure.FindChildren<LabourAvailabilityList>().FirstOrDefault();
         }
 
@@ -159,15 +158,19 @@ namespace Models.CLEM.Resources
                 else
                 {
                     for (int i = 1; i <= labourChildModel.Individuals; i++)
+                    {
                         Items.Add(CreateNewLabour(labourChildModel, i));
+                    }
                 }
             }
             // clone pricelist so model can modify if needed and not affect initial parameterisation
-            if (Structure.FindChildren<LabourPricing>().Count() > 0)
+            if (Structure.FindChildren<LabourPricing>().Any())
             {
                 PayList = Apsim.Clone(Structure.FindChildren<LabourPricing>().FirstOrDefault());
                 foreach (LabourPriceGroup item in Structure.FindChildren<LabourPriceGroup>(relativeTo: PayList))
+                {
                     item.InitialiseFilters();
+                }
             }
         }
 
@@ -218,8 +221,10 @@ namespace Models.CLEM.Resources
             {
                 //if (AllowAgeing)
                 //{
-                 //   if (adultEquivalentRelationship != null)
+                //    if (adultEquivalentRelationship != null)
+                //    {
                 //        item.SetAdultEquivalent(adultEquivalentRelationship);
+                //    }
                 //}
 
                 item.AvailabilityLimiter = 1.0;
@@ -339,10 +344,14 @@ namespace Models.CLEM.Resources
             {
                 // search through RuminantPriceGroups for first match with desired purchase or sale flag
                 foreach (LabourPriceGroup item in Structure.FindChildren<LabourPriceGroup>(relativeTo: PayList))
+                {
                     if (item.Filter(ind))
+                    {
                         return item.Value;
+                    }
+                }
 
-                if(reportWarningIfNoPrice)
+                if (reportWarningIfNoPrice)
                 {
                     // no price match found.
                     string warningString = $"No [Pay] price entry was found for individual [r={ind.Name}] with details [f=age: {Convert.ToInt32(ind.Age)}] [f=sex: {ind.Sex}]";
@@ -373,7 +382,9 @@ namespace Models.CLEM.Resources
                 foreach (LabourPriceGroup priceGroup in Structure.FindChildren<LabourPriceGroup>(relativeTo: PayList))
                 {
                     if (priceGroup.Filter(ind) && matchIndividual == null)
+                    {
                         matchIndividual = priceGroup;
+                    }
 
                     // check that pricing item meets the specified criteria.
                     var items = Structure.FindChildren<FilterByProperty>(relativeTo: priceGroup)
@@ -393,7 +404,9 @@ namespace Models.CLEM.Resources
                     if (suitableFilters)
                     {
                         if (matchCriteria == null)
+                        {
                             matchCriteria = priceGroup;
+                        }
                         else
                         {
                             // multiple price entries were found. using first. value = xxx.
@@ -418,7 +431,9 @@ namespace Models.CLEM.Resources
                         price = matchIndividual.Value;
                     }
                     else
+                    {
                         Summary.WriteMessage(this, "\r\nNo alternate pay rate for individuals could be found for the individuals. Add a new [r=LabourPriceGroup] entry in the [r=LabourPricing]", MessageType.Warning);
+                    }
 
                     if (!warningsNotFound.Contains(criteria))
                     {
@@ -440,9 +455,13 @@ namespace Models.CLEM.Resources
         public double GetAvailabilityForEntry(int index)
         {
             if (index < Items.Count)
+            {
                 return Items[index].AvailableDays;
+            }
             else
+            {
                 return 0;
+            }
         }
 
         #region descriptive summary

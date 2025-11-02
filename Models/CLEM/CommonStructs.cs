@@ -13,6 +13,7 @@ namespace Models.CLEM
         /// List of available identifiers
         /// </summary>
         public List<string> Identifiers;
+        
         /// <summary>
         /// List of available measures
         /// </summary>

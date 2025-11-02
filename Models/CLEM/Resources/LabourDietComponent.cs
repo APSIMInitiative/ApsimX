@@ -18,7 +18,7 @@ namespace Models.CLEM.Resources
         public double AmountConsumed { get; set; }
 
         /// <summary>
-        /// Inital metric values from other food sources
+        /// Initial metric values from other food sources
         /// </summary>
         private Dictionary<string, double> otherMetricAmounts = new();
 
@@ -30,9 +30,13 @@ namespace Models.CLEM.Resources
         public void AddOtherSource(string metric, double amount)
         {
             if (otherMetricAmounts.TryGetValue(metric, out double val))
+            {
                 otherMetricAmounts[metric] = val + amount;
+            }
             else
+            {
                 otherMetricAmounts.Add(metric, amount);
+            }
         }
 
         /// <summary>
@@ -44,14 +48,18 @@ namespace Models.CLEM.Resources
         {
             double result = 0;
             if (FoodStore is null)
+            {
                 // check if initial value provided
                 otherMetricAmounts.TryGetValue(metric, out result);
+            }
             else
             {
                 // convert to metric if possible
                 var amount = FoodStore.ConvertTo(metric, AmountConsumed);
                 if (amount != null)
+                {
                     _ = double.TryParse(amount.ToString(), out result);
+                }
             }
             return result;
         }

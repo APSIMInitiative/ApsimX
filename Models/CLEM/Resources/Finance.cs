@@ -45,9 +45,13 @@ namespace Models.CLEM.Resources
             get
             {
                 if (Clock.Today.Month < (int)FirstMonthOfFinancialYear)
+                {
                     return Clock.Today.Year - 1;
+                }
                 else
+                {
                     return Clock.Today.Year;
+                }
             }
         }
 
@@ -60,7 +64,9 @@ namespace Models.CLEM.Resources
             htmlWriter.Write($"<div class=\"activityentry\">Currency is {CLEMModel.DisplaySummaryValueSnippet(CurrencyName, "Not specified")}</div>");
             htmlWriter.Write($"<div class=\"activityentry\">The financial year starts in ");
             if (FirstMonthOfFinancialYear == 0)
+            {
                 htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
+            }
             else
             {
                 htmlWriter.Write("<span class=\"setvalueextra\">");

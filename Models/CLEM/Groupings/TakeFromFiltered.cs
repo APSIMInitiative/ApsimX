@@ -42,7 +42,7 @@ namespace Models.CLEM.Groupings
         public float Value { get; set; } = 1.0f;
 
         /// <summary>
-        /// Metod to calculate the number required based on style and population size
+        /// Method to calculate the number required based on style and population size
         /// </summary>
         /// <param name="groupSize">The number of individuals in the group</param>
         /// <returns>Number to take</returns>
@@ -74,13 +74,13 @@ namespace Models.CLEM.Groupings
             return takeString(true);
         }
 
-        private string takeString(bool htmltags)
+        private string takeString(bool htmlTags)
         {
             using StringWriter takeWriter = new();
             string cssSet = "";
             string cssError = "";
             string cssClose = "";
-            if (htmltags)
+            if (htmlTags)
             {
                 cssSet = "<span class = \"filterset\">";
                 cssError = "<span class = \"filtererror\">";
@@ -91,10 +91,14 @@ namespace Models.CLEM.Groupings
             takeWriter.Write((isTake) ? $"Take: " : "Skip: ");
             string errorString = "";
             if (Value < 0 || (isIndividuals & Value > 1))
+            {
                 errorString = "Invalid";
+            }
 
             if (errorString != "")
+            {
                 takeWriter.Write($"{cssError}{errorString}{cssClose}");
+            }
             else
             {
                 takeWriter.Write(cssSet);

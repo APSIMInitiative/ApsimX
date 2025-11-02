@@ -183,8 +183,10 @@ namespace Models.CLEM.Timers
                 htmlWriter.Write(" month" + (Math.Abs(OffsetMonthHarvestStop) == 1 ? "" : "s") + " ");
                 htmlWriter.Write((OffsetMonthHarvestStop > 0) ? "after \"last\" (if using HarvestType)" : "before \"first\" (if using HarvestType)</div>");
             }
-            if (!this.Enabled & !FormatForParentControl)
+            if (!Enabled & !FormatForParentControl)
+            {
                 htmlWriter.Write(" - DISABLED!");
+            }
 
             return htmlWriter.ToString();
         }
@@ -200,7 +202,7 @@ namespace Models.CLEM.Timers
         {
             using StringWriter htmlWriter = new();
             htmlWriter.Write("<div class=\"filtername\">");
-            if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+            if (!Name.Contains(this.GetType().Name.Split('.').Last()))
             {
                 htmlWriter.Write(this.Name);
             }

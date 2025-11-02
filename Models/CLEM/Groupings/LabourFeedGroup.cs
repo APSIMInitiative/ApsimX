@@ -63,7 +63,9 @@ namespace Models.CLEM.Groupings
                 ResourcesHolder resHolder = Structure.FindChild<ResourcesHolder>(relativeTo: zoneCLEM);
                 HumanFoodStoreType food = resHolder.FindResourceType<HumanFoodStore, HumanFoodStoreType>(this, (this.Parent as LabourActivityFeed).FeedTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
                 if (food != null)
+                {
                     htmlWriter.Write(" " + food.Units + " ");
+                }
 
                 htmlWriter.Write("<span class=\"setvalue\">");
                 switch (ft)

@@ -152,9 +152,10 @@ namespace Models.CLEM.Reporting
                                 if ((item.Field<int>("Type") != 1))
                                 {
                                     // look for no task controller activities
-                                    //var testc = filteredData.Where(a => a.Field<String>("UniqueID") == currentID && a.Field<String>("Status") != "NoTask").Skip(1);
                                     if (filteredData.Where(a => a.Field<String>("UniqueID") == currentID && a.Field<String>("Status") != "NoTask").Skip(1).Any() == false)
+                                    {
                                         item.SetField<String>("Status", "Controller");
+                                    }
 
                                     // look for no task timers
                                     // mark and message any with nothing to do.
@@ -203,13 +204,13 @@ namespace Models.CLEM.Reporting
 
             for (int i = 0; i < dt.Rows.Count; i++)
             {
-                string columnname = dt.Rows[i].ItemArray[0].ToString();
+                string columnName = dt.Rows[i].ItemArray[0].ToString();
                 int cnt = 0;
-                while (dtNew.Columns.Contains(columnname + (cnt == 0 ? "" : $"_{cnt}")))
+                while (dtNew.Columns.Contains(columnName + (cnt == 0 ? "" : $"_{cnt}")))
                 {
                     cnt++;
                 }
-                dtNew.Columns[i + 1].ColumnName = columnname + (cnt == 0 ? "" : $"_{cnt}");
+                dtNew.Columns[i + 1].ColumnName = columnName + (cnt == 0 ? "" : $"_{cnt}");
             }
 
             //Adding Row Data
@@ -264,9 +265,13 @@ namespace Models.CLEM.Reporting
                     foreach (var item in dates)
                     {
                         if (item == first)
+                        {
                             tbl.Columns.Add("00\r\n" + item.ToString("yy"));
+                        }
                         else
+                        {
                             tbl.Columns.Add(item.Month.ToString("00") + "\r\n" + item.ToString("yy"));
+                        }
                     }
                     // add blank column for resize row height of pixelbuf with font size change
                     tbl.Columns.Add(" ");
@@ -287,10 +292,14 @@ namespace Models.CLEM.Reporting
 
                                 string monthID = "00";
                                 if (dte.Day == DateTime.DaysInMonth(dte.Year, dte.Month))
+                                {
                                     monthID = dte.Month.ToString("00");
+                                }
 
                                 if (!(monthID == "00" && status == "Timer"))
+                                {
                                     dr[monthID + "\r\n" + dte.ToString("yy")] = $"{status}:{tooltip}";
+                                }
                             }
                             dr[" "] = " ";
                             tbl.Rows.Add(dr);
@@ -298,7 +307,10 @@ namespace Models.CLEM.Reporting
                     }
                 }
                 if (CreateHTML)
+                {
                     CreateHTMLVersion(tbl, directoryPath, darkTheme);
+                }
+
                 return tbl;
             }
         }
@@ -442,9 +454,14 @@ namespace Models.CLEM.Reporting
                     {
                         string rowClass = "";
                         if (row.ItemArray.Where(a => a.ToString().StartsWith("Folder")).Any())
+                        {
                             rowClass = "class=\"folder\"";
+                        }
+
                         if (row.ItemArray.Where(a => a.ToString().StartsWith("Controller")).Any())
+                        {
                             rowClass = "class=\"controller\"";
+                        }
 
                         htmlString.WriteLine($"<tr {rowClass}>");
                         foreach (var item in row.ItemArray)
@@ -499,7 +516,7 @@ namespace Models.CLEM.Reporting
 
                 if (CreateHTML | AutoCreateHTML)
                 {
-                    System.IO.File.WriteAllText(Path.Combine(directoryPath, this.HtmlOutputFilename), htmlString.ToString());
+                    File.WriteAllText(Path.Combine(directoryPath, this.HtmlOutputFilename), htmlString.ToString());
                 }
             }
         }

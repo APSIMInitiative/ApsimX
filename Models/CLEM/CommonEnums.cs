@@ -135,7 +135,7 @@
         /// </summary>
         ExcessSireSale,
         /// <summary>
-        /// Individual reached maximim age and sold
+        /// Individual reached maximum age and sold
         /// </summary>
         MaxAgeSale,
         /// <summary>
@@ -626,7 +626,7 @@
     public enum AttributeInheritanceStyle
     {
         /// <summary>
-        /// Not inheritated
+        /// Not inherited
         /// </summary>
         None = 0,
         /// <summary>
@@ -718,7 +718,7 @@
     public enum DateStyle
     {
         /// <summary>
-        /// Accept single datestamp (CulturalInvariant)
+        /// Accept single date stamp (CulturalInvariant)
         /// </summary>
         DateStamp,
         /// <summary>
@@ -954,7 +954,7 @@
         /// </summary>
         Days,
         /// <summary>
-        /// Age in years with decimale fractions
+        /// Age in years with decimal fractions
         /// </summary>
         FractionOfYears,
         /// <summary>
@@ -1040,7 +1040,7 @@
         /// </summary>
         EmptyBodyFatProportion,
         /// <summary>
-        /// No condition based calulation
+        /// No condition based calculation
         /// </summary>
         None
     }
@@ -1051,7 +1051,7 @@
     public enum WithinTimeStepTimingStyle
     {
         /// <summary>
-        /// Early in ythe time-step before related activities
+        /// Early in the time step before related activities
         /// </summary>
         Early,
         /// <summary>
@@ -1059,7 +1059,7 @@
         /// </summary>
         Normal,
         /// <summary>
-        /// Late in the time-step after related activites
+        /// Late in the time step after related activities
         /// </summary>
         Late
     }
@@ -1082,7 +1082,7 @@
         /// </summary>
         Weekly = 7,
         /// <summary>
-        /// Everty day
+        /// Every day
         /// </summary>
         Daily = 1,
         /// <summary>

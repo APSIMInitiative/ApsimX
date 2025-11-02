@@ -80,9 +80,13 @@ namespace Models.CLEM.Groupings
             {
                 string errorMsg;
                 if (ExistingGroupName is null)
+                {
                     errorMsg = "No existing filter group has been specified";
+                }
                 else
+                {
                     errorMsg = $"The filter group [f={ExistingGroupName}] could not be found.{Environment.NewLine}Ensure the name matches the name of an enabled group in the simulation tree below the same [ZoneCLEM]";
+                }
 
                 yield return new ValidationResult(errorMsg, new string[] { "Linked filter group" });
             }
@@ -124,13 +128,19 @@ namespace Models.CLEM.Groupings
             var zone = Structure.FindParent<Zone>(recurse: true);
             var foundGroup = Structure.FindChildren<LabourGroup>(relativeTo: zone, recurse: true).Where(a => a.Enabled).Cast<Model>().Where(a => $"{a.Parent.Name}.{a.Name}" == ExistingGroupName).FirstOrDefault() as LabourGroup;
             if (foundGroup != null)
+            {
                 htmlWriter.Write(foundGroup.GetFullSummary(foundGroup, new List<string>(), ""));
+            }
             else
             {
                 if ((ExistingGroupName ?? "") == "")
+                {
                     htmlWriter.Write("<div class=\"errorbanner\">Linked LabourGroup not specified</div>");
+                }
                 else
+                {
                     htmlWriter.Write($"<div class=\"errorbanner\">Linked LabourGroup <span class=\"setvalue\">{ExistingGroupName}</span> not found</div>");
+                }
             }
             return htmlWriter.ToString();
         }

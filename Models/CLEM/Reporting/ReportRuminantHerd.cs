@@ -35,7 +35,7 @@ namespace Models.CLEM.Reporting
         public bool ReportAtStart { get; set; } = true;
 
         /// <summary>
-        /// Specifiy when the report will be generated within time step events
+        /// Specify when the report will be generated within time step events
         /// </summary>
         [Description("Within time step reporting style")]
         public WithinTimeStepTimingStyle WithinTimeStepTiming { get; set; } = WithinTimeStepTimingStyle.Normal;
@@ -69,7 +69,9 @@ namespace Models.CLEM.Reporting
         private void OnCLEMLate(object sender, EventArgs e)
         {
             if (WithinTimeStepTiming == WithinTimeStepTimingStyle.Late && TimingOK)
+            {
                 ReportHerd();
+            }
         }
 
         /// <summary>
@@ -81,9 +83,10 @@ namespace Models.CLEM.Reporting
         private void OnCLEMNormal(object sender, EventArgs e)
         {
             if (WithinTimeStepTiming == WithinTimeStepTimingStyle.Normal && TimingOK)
+            {
                 ReportHerd();
+            }
         }
-
 
         /// <summary>
         /// Function to report herd individuals each month
@@ -94,7 +97,9 @@ namespace Models.CLEM.Reporting
         private void OnCLEMEarly(object sender, EventArgs e)
         {
             if (WithinTimeStepTiming == WithinTimeStepTimingStyle.Early && TimingOK)
+            {
                 ReportHerd();
+            }
         }
 
         #region validation
@@ -124,7 +129,9 @@ namespace Models.CLEM.Reporting
         private void OnCLEMValidate(object sender, EventArgs e)
         {
             if (ReportAtStart)
+            {
                 ReportHerd();
+            }
         }
 
         /// <summary>
@@ -142,9 +149,14 @@ namespace Models.CLEM.Reporting
                 {
                     ReportDetails = new RuminantReportItemEventArgs();
                     if (item is RuminantFemale)
+                    {
                         ReportDetails.RumObj = item as RuminantFemale;
+                    }
                     else
+                    {
                         ReportDetails.RumObj = item as RuminantMale;
+                    }
+
                     ReportItemGenerated(ReportDetails);
                 }
             }

@@ -115,8 +115,11 @@ namespace Models.CLEM.Timers
             htmlWriter.Write("\r\n<div class=\"filter\">");
             htmlWriter.Write($"Linked to {CLEMModel.DisplaySummaryValueSnippet(ExistingTimerName, errorString: "No timer selected")}");
             htmlWriter.Write("</span></div>");
-            if (!this.Enabled & !FormatForParentControl)
+            if (!Enabled & !FormatForParentControl)
+            {
                 htmlWriter.Write(" - DISABLED!");
+            }
+
             return htmlWriter.ToString();
         }
 
@@ -131,8 +134,10 @@ namespace Models.CLEM.Timers
         {
             using StringWriter htmlWriter = new();
             htmlWriter.Write("<div class=\"filtername\">");
-            if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
-                htmlWriter.Write(this.Name);
+            if (!Name.Contains(GetType().Name.Split('.').Last()))
+            {
+                htmlWriter.Write(Name);
+            }
 
             htmlWriter.Write($"</div>");
             htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
@@ -149,9 +154,13 @@ namespace Models.CLEM.Timers
             {
                 string errorMsg;
                 if (ExistingTimerName is null)
+                {
                     errorMsg = "No existing timer has been specified";
+                }
                 else
+                {
                     errorMsg = $"The timer {ExistingTimerName} could not be found.{Environment.NewLine}Ensure the name matches the name of an enabled timer in the simulation tree below the same ZoneCLEM";
+                }
 
                 yield return new ValidationResult(errorMsg, new string[] { "Linked timer" });
             }

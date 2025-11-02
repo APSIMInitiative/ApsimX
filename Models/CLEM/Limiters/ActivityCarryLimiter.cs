@@ -95,7 +95,9 @@ namespace Models.CLEM.Limiters
             using StringWriter htmlWriter = new();
             htmlWriter.Write("<div class=\"filtername\">");
             if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+            {
                 htmlWriter.Write(this.Name);
+            }
 
             htmlWriter.Write($"</div>");
             htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
@@ -107,7 +109,9 @@ namespace Models.CLEM.Limiters
                 htmlWriter.Write(WeightLimitPerDay.ToString());
             }
             else
+            {
                 htmlWriter.Write("<span class=\"errorlink\">Not Set");
+            }
 
             htmlWriter.Write("</span> dry kg/day ");
             htmlWriter.Write("</div>");

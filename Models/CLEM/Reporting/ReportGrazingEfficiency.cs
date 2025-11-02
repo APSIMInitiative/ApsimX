@@ -92,7 +92,9 @@ namespace Models.CLEM.Reporting
             VariableNames = variableNames.ToArray();
 
             if (EventNames == null || EventNames.Count() == 0)
+            {
                 EventNames = new string[] { "[Clock].CLEMEvents.CLEMEndOfTimeStep" };
+            }
 
             SubscribeToEvents();
         }
@@ -101,9 +103,14 @@ namespace Models.CLEM.Reporting
         {
             var nameParts = modelName.Split('_').Select(a => a.Replace(" ", "")).Skip(1).ToList();
             if (!multiPasture)
+            {
                 nameParts[0] = "";
+            }
+
             if (!multiHerd)
+            {
                 nameParts[1] = "";
+            }
 
             nameParts.Add(propertyName);
             return nameParts.Where(a => a != "").Join("_");

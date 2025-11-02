@@ -104,11 +104,17 @@ namespace Models.CLEM
                 {
                     // get pricing
                     if ((shortfallResourceType as CLEMResourceTypeBase).MarketStoreExists)
+                    {
                         if ((shortfallResourceType as CLEMResourceTypeBase).EquivalentMarketStore.PricingExists(PurchaseOrSalePricingStyleType.Purchase))
+                        {
                             shortfallPricing = (shortfallResourceType as CLEMResourceTypeBase).EquivalentMarketStore.Price(PurchaseOrSalePricingStyleType.Purchase);
+                        }
+                    }
 
-                    if(shortfallPricing is null)
+                    if (shortfallPricing is null)
+                    {
                         shortfallPricing = shortfallResourceType.Price(PurchaseOrSalePricingStyleType.Purchase);
+                    }
 
                     shortfallPacketSize = shortfallPricing.PacketSize;
                     shortfallWholePackets = shortfallPricing.UseWholePackets;
@@ -122,7 +128,9 @@ namespace Models.CLEM
                             financeType = resources.FindResourceType<Finance, FinanceType>(this, FinanceTypeForTransactionsName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportWarning);
                     }
                     else
+                    {
                         transmutePricing = shortfallPricing;
+                    }
                 }
 
                 shortfallPricePacketMultiplier = (Parent as Transmutation).TransmutationPacketSize / shortfallPacketSize;
@@ -139,7 +147,10 @@ namespace Models.CLEM
             {
                 case TransmuteStyle.Direct:
                     if ((Parent as Transmutation).UseWholePackets)
+                    {
                         shortfallPackets = Math.Ceiling(shortfallPackets);
+                    }
+
                     request.Required = shortfallPackets * AmountPerPacket;
                     break;
                 case TransmuteStyle.UsePricing:
@@ -151,14 +162,19 @@ namespace Models.CLEM
                         else
                         {
                             if (shortfallWholePackets)
+                            {
                                 shortfallPackets = Math.Ceiling(shortfallPackets);
+                            }
+
                             request.Required = shortfallPackets * shortfallPricing.CurrentPrice;
 
                             if(transmutePricing != shortfallPricing && transmutePricing.UseWholePackets)
                             {
                                 transPackets = shortfall / transmutePricing.PacketSize;
                                 if (transmutePricing.UseWholePackets)
+                                {
                                     transPackets = Math.Ceiling(transPackets);
+                                }
                             }
                         }
                     }
@@ -206,7 +222,9 @@ namespace Models.CLEM
 
             double unitsNeeded = amount / (shortfallPacketSize==0?1: shortfallPacketSize);
             if (shortfallWholePackets)
+            {
                 unitsNeeded = Math.Ceiling(unitsNeeded);
+            }
 
             return unitsNeeded / shortfallPricePacketMultiplier;
         }
@@ -282,13 +300,19 @@ namespace Models.CLEM
             using StringWriter htmlWriter = new();
             htmlWriter.WriteLine((transmute as IModel).Name);
             if (transmute.TransmuteStyle == TransmuteStyle.Direct)
+            {
                 htmlWriter.WriteLine(": B&#8594;A");
+            }
             else
             {
                 if (transmute.FinanceTypeForTransactionsName != null && transmute.FinanceTypeForTransactionsName != "")
+                {
                     htmlWriter.WriteLine(": B&#8594;$ $&#8594;A");
+                }
                 else
+                {
                     htmlWriter.WriteLine(": B&#8594;$&#8594;A");
+                }
             }
             return htmlWriter.ToString();
         }
@@ -304,15 +328,21 @@ namespace Models.CLEM
             }
 
             if (TransmuteResourceTypeName != null && TransmuteResourceTypeName != "")
+            {
                 htmlWriter.Write($"<span class=\"resourcelink\">{TransmuteResourceTypeName}</span>");
+            }
             else
+            {
                 htmlWriter.Write("<span class=\"errorlink\">No Transmute resource (B) set</span>");
+            }
 
             if (TransmuteStyle == TransmuteStyle.UsePricing)
             {
                 htmlWriter.Write($" using the resource pricing details");
                 if (FinanceTypeForTransactionsName != null && FinanceTypeForTransactionsName != "")
+                {
                     htmlWriter.Write($" and all financial Transactions of sales and purchases using <span class=\"resourcelink\">{TransmuteResourceTypeName}</span>");
+                }
             }
             htmlWriter.WriteLine("</div>");
             return htmlWriter.ToString();

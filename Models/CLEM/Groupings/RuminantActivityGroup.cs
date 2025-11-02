@@ -55,7 +55,7 @@ namespace Models.CLEM.Groupings
         {
             using StringWriter htmlWriter = new();
             htmlWriter.Write("\r\n<div class=\"filterborder filteractivityborder clearfix\">");
-            if (Structure.FindChildren<Filter>().Count() < 1)
+            if (!Structure.FindChildren<Filter>().Any())
             {
                 htmlWriter.Write("<div class=\"filter\">All individuals</div>");
             }

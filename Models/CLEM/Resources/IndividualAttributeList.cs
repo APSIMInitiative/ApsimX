@@ -57,9 +57,13 @@ namespace Models.CLEM.Resources
             attributes ??= new Dictionary<string, IIndividualAttribute>();
 
             if (!attributes.ContainsKey(tag))
+            {
                 attributes.Add(tag, value);
+            }
             else
+            {
                 attributes[tag] = value;
+            }
         }
 
         /// <summary>
@@ -70,9 +74,13 @@ namespace Models.CLEM.Resources
         public IIndividualAttribute GetValue(string tag)
         {
             if (attributes is null || !attributes.ContainsKey(tag))
+            {
                 return null;
+            }
             else
+            {
                 return attributes[tag];
+            }
         }
 
         /// <summary>
@@ -82,7 +90,9 @@ namespace Models.CLEM.Resources
         public void Remove(string tag)
         {
             if (attributes != null && attributes.ContainsKey(tag))
+            {
                 attributes.Remove(tag);
+            }
         }
 
     }

@@ -107,7 +107,6 @@ namespace Models.CLEM.Reporting
         [Core.Display(Type = DisplayType.MultiLineText)]
         public string[] CustomVariableNames { get; set; }
 
-
         /// <summary>
         /// Include herd ledger property: Age
         /// </summary>
@@ -228,7 +227,9 @@ namespace Models.CLEM.Reporting
         {
             int lossModifier = -1;
             if (ReportLossesAsNegative)
+            {
                 lossModifier = 1;
+            }
 
             // check if running from a CLEM.Market
             bool market = (Structure.FindParent<Zone>(recurse: true).GetType() == typeof(Market));
@@ -368,7 +369,9 @@ namespace Models.CLEM.Reporting
                         variableNames.Add($"[Resources].{this.ResourceGroupsToReport}.LastTransaction.Activity.Name as Activity");
                         variableNames.Add($"[Resources].{this.ResourceGroupsToReport}.LastTransaction.RelatesToResource as RelatesTo");
                         if (TransactionCategoryLevels == 0)
+                        {
                             variableNames.Add($"[Resources].{this.ResourceGroupsToReport}.LastTransaction.Category as Category");
+                        }
                         else
                         {
                             for (int i = 1; i <= TransactionCategoryLevels; i++)
@@ -376,7 +379,10 @@ namespace Models.CLEM.Reporting
                                 string colname = $"Category{i}";
                                 string[] parts = TransactionCategoryLevelColumnNames.Split(',').Distinct().ToArray();
                                 if (parts.Length >= i && parts[i - 1].Trim() != "")
+                                {
                                     colname = parts[i - 1].Replace(" ", "");
+                                }
+
                                 variableNames.Add($"[Resources].{this.ResourceGroupsToReport}.LastTransaction.CategoryByLevel({i}) as {colname}");
                             }
                         }
@@ -386,7 +392,9 @@ namespace Models.CLEM.Reporting
             }
 
             if (CustomVariableNames != null)
+            {
                 variableNames.AddRange(CustomVariableNames);
+            }
 
             VariableNames = variableNames.ToArray();
             EventNames = eventNames.ToArray();
@@ -394,7 +402,7 @@ namespace Models.CLEM.Reporting
         }
 
         /// <summary>
-        /// return a list of resource group cpmponents available
+        /// return a list of resource group components available
         /// </summary>
         /// <returns>A list of names of components</returns>
         public IEnumerable<string> GetResourceGroupsAvailable()

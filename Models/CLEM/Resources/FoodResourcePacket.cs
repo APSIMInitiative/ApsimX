@@ -68,9 +68,13 @@ namespace Models.CLEM.Resources
         public static double CalculateAcidDetergentInsolubleProtein(double rumenDegradableProteinPercent, FeedType typeOfFeed)
         {
             if (typeOfFeed == FeedType.Concentrate | typeOfFeed == FeedType.Milk)
+            {
                 return Math.Max(0.03, 0.87 - (1.09 * rumenDegradableProteinPercent / 100));
+            }
             else
+            {
                 return 0.19 * (1 - rumenDegradableProteinPercent / 100);
+            }
         }
 
         /// <summary>
@@ -81,7 +85,10 @@ namespace Models.CLEM.Resources
             get
             {
                 if (TypeOfFeed == FeedType.Milk)
+                {
                     return MilkProteinToNitrogenFactor;
+                }
+
                 return FeedProteinToNitrogenFactor;
             }
         }
@@ -248,43 +255,43 @@ namespace Models.CLEM.Resources
         private double WeightedAverage(string Property, IFeed packet, double amount)
         {
             double value = 0;
-            double newvalue = 0;
+            double newValue = 0;
             switch (Property)
             {
                 case "MetabolisableEnergyContent":
                     value = MetabolisableEnergyContent;
-                    newvalue = packet.MetabolisableEnergyContent;
+                    newValue = packet.MetabolisableEnergyContent;
                     break;
                 case "DryMatterDigestibility":
                     value = DryMatterDigestibility;
-                    newvalue = packet.DryMatterDigestibility;
+                    newValue = packet.DryMatterDigestibility;
                     break;
                 case "FatPercent":
                     value = FatPercent;
-                    newvalue = packet.FatPercent;
+                    newValue = packet.FatPercent;
                     break;
                 case "NitrogenPercent":
                     value = NitrogenPercent;
-                    newvalue = packet.NitrogenPercent;
+                    newValue = packet.NitrogenPercent;
                     break;
                 case "CrudeProteinPercent":
                     value = CrudeProteinPercent;
-                    newvalue = packet.CrudeProteinPercent;
+                    newValue = packet.CrudeProteinPercent;
                     break;
                 case "RumenDegradableProteinPercent":
                     value = RumenDegradableProteinPercent;
-                    newvalue = packet.RumenDegradableProteinPercent;
+                    newValue = packet.RumenDegradableProteinPercent;
                     break;
                 case "GrossEnergyContent":
                     value = GrossEnergyContent;
-                    newvalue = packet.GrossEnergyContent;
+                    newValue = packet.GrossEnergyContent;
                     break;
             }
             if (amount == 0)
                 return value;
-            if (value == 0 && newvalue == 0)
+            if (value == 0 && newValue == 0)
                 return 0;
-            return ((value * Amount) + (newvalue * amount)) / (Amount + amount);
+            return ((value * Amount) + (newValue * amount)) / (Amount + amount);
         }
     }
 }

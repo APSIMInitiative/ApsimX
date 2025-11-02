@@ -61,7 +61,9 @@ namespace Models.CLEM.Groupings
                     IndividualAttributeList indAttList = ((IAttributable)t).Attributes;
                     bool exists = (indAttList.AttributesPresent) ? indAttList.Exists(AttributeTag) : false;
                     if (exists)
+                    {
                         return indAttList.GetValue(AttributeTag).StoredValue;
+                    }
                     else
                         switch (indAttList.GetValue(AttributeTag))
                         {
@@ -93,11 +95,11 @@ namespace Models.CLEM.Groupings
             return SortString(true);
         }
 
-        private string SortString(bool htmltags)
+        private string SortString(bool htmlTags)
         {
             string cssSet = "";
             string cssClose = "";
-            if (htmltags)
+            if (htmlTags)
             {
                 cssSet = "<span class = \"filterset\">";
                 cssClose = "</span>";
@@ -105,8 +107,8 @@ namespace Models.CLEM.Groupings
 
             using (StringWriter sortWriter = new StringWriter())
             {
-                sortWriter.Write($"Sort: Atrribute-");
-                sortWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(AttributeTag, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+                sortWriter.Write($"Sort: Attribute-");
+                sortWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(AttributeTag, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmlTags)}");
                 sortWriter.Write($" {cssSet}{FilterStyle.ToString().ToLower()}{cssClose}");
                 sortWriter.Write($" {cssSet}{SortDirection.ToString().ToLower()}{cssClose}");
                 return sortWriter.ToString();

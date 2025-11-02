@@ -120,8 +120,6 @@ namespace Models.CLEM.Groupings
                         // by setting this during the OtherAnimalsActivityFeed it will ensure these fed cohorts are not considered again as they will not be in the IEnumerable on next call.
                         cohort.Considered = true;
                     }
-                    // remove fed cohorts from temp list to avoid double handling of a cohort in the parent activity
-                    //feedActivityParent.CohortsToBeFed = feedActivityParent.CohortsToBeFed.Where(a => !selectedCohorts.Contains(a));
                 }
             }
         }

@@ -185,7 +185,9 @@ namespace Models.CLEM.Timers
             }
             htmlWriter.Write(str);
             if (Amount == 0)
+            {
                 htmlWriter.Write(" <span class=\"errorlink\">NOT SET</span>");
+            }
             else
             {
                 htmlWriter.Write(" <span class=\"setvalueextra\">");
@@ -194,7 +196,10 @@ namespace Models.CLEM.Timers
             }
             htmlWriter.Write("</div>");
             if (!Enabled & !FormatForParentControl)
+            {
                 htmlWriter.Write(" - DISABLED!");
+            }
+
             return htmlWriter.ToString();
         }
 
@@ -210,7 +215,10 @@ namespace Models.CLEM.Timers
             using StringWriter htmlWriter = new();
             htmlWriter.Write("<div class=\"filtername\">");
             if (!Name.Contains(GetType().Name.Split('.').Last()))
+            {
                 htmlWriter.Write(Name);
+            }
+
             htmlWriter.Write($"</div>");
             htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
             return htmlWriter.ToString();

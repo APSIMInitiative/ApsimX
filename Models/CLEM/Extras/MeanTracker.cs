@@ -25,7 +25,7 @@ namespace Models.CLEM.Extras
         /// <summary>
         /// Constructor for MeanTracker with an initial value.
         /// </summary>
-        /// <param name="initialValue">Intial value</param>
+        /// <param name="initialValue">Initial value</param>
         public MeanTracker(double initialValue)
         {
             AddValue(initialValue);

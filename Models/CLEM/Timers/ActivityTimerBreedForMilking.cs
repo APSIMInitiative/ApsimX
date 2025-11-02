@@ -116,8 +116,6 @@ namespace Models.CLEM.Timers
             int numberNeeded = 0;
             IndividualsToBreed = null;
 
-            //int breedingSpreadMonths = 2;
-
             // get all breeders currently in the population
             // TODO: remove oftype when sex determination fixed
             var females = controlledMatingParent.CurrentHerd(true).OfType<RuminantFemale>();
@@ -126,7 +124,9 @@ namespace Models.CLEM.Timers
 
             int tooOldToMate = int.MaxValue;
             if (controlledMatingParent != null)
+            {
                 tooOldToMate = controlledMatingParent.MaximumAgeMating.InDays;
+            }
 
             var breedersNotTooOldToMate = breedersList.Where(a => a.AgeInDays <= tooOldToMate);
             if (!breedersNotTooOldToMate.Any())
@@ -219,14 +219,20 @@ namespace Models.CLEM.Timers
                 {
                     htmlWriter.Write($"\r\nAllowing <span class=\"setvalueextra\">{RestMonths}</span> month{((RestMonths > 1) ? "s" : "")} rest after lactation");
                     if (ShortenLactationMonths > 0)
+                    {
                         htmlWriter.Write(" and ");
+                    }
                 }
                 if (ShortenLactationMonths > 0)
+                {
                     htmlWriter.Write($" breeding {ShortenLactationMonths}</span> month{((ShortenLactationMonths > 1) ? "s" : "")} before end of lactation");
+                }
             }
             htmlWriter.Write("\r\n</div>");
-            if (!this.Enabled & !FormatForParentControl)
+            if (!Enabled & !FormatForParentControl)
+            {
                 htmlWriter.Write(" - DISABLED!");
+            }
 
             return htmlWriter.ToString();
         }
@@ -242,9 +248,9 @@ namespace Models.CLEM.Timers
         {
             using StringWriter htmlWriter = new();
             htmlWriter.Write("<div class=\"filtername\">");
-            if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+            if (!Name.Contains(GetType().Name.Split('.').Last()))
             {
-                htmlWriter.Write(this.Name);
+                htmlWriter.Write(Name);
             }
             htmlWriter.Write($"</div>");
             htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");

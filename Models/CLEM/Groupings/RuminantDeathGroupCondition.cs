@@ -13,7 +13,7 @@ using System.Linq;
 namespace Models.CLEM.Groupings
 {
     ///<summary>
-    /// Contains a group of filters to identify individual ruminants for determining death by a currcent condition
+    /// Contains a group of filters to identify individual ruminants for determining death by a current condition
     ///</summary> 
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]

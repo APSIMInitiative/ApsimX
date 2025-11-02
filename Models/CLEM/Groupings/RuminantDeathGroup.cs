@@ -47,12 +47,16 @@ namespace Models.CLEM.Groupings
                 {
                     // ToDo: see if we can remove the breed parameter from grow below
                     if (ind.Mother == null)
+                    {
                         // if no mother assigned
                         // removed the old additional check usiong critical cow weight (now deleted)
                         mortalityRate = ind.Parameters.GrowMortality.JuvenileMortalityMaximum;
+                    }
                     else
+                    {
                         // if mother's weight >= criticalCowWeight * SFR
                         mortalityRate = Math.Exp(-Math.Pow(ind.Parameters.GrowMortality.JuvenileMortalityCoefficient * (ind.Mother.Weight.Live / ind.Mother.Weight.NormalisedForAge), ind.Parameters.GrowMortality.JuvenileMortalityExponent));
+                    }
 
                     mortalityRate += ind.Parameters.Grow.MortalityBase;
                     mortalityRate = Math.Min(mortalityRate, ind.Parameters.GrowMortality.JuvenileMortalityMaximum);

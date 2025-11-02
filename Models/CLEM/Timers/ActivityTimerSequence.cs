@@ -139,7 +139,9 @@ namespace Models.CLEM.Timers
                         seqIndex = seqIndex - Convert.ToInt32(Math.Floor(seqIndex / (double)seq.Sequence.Length) * seq.Sequence.Length);
                     }
                     if (sequence.Substring(seqIndex, 1) == "0")
+                    {
                         return false;
+                    }
                 }
                 return (index != null);
             }

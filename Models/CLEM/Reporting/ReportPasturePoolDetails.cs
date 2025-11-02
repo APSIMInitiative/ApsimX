@@ -129,7 +129,7 @@ namespace Models.CLEM.Reporting
         {
             List<string> variableNames = new List<string>();
 
-            // for each grazefoodstore
+            // for each graze food store
 
             ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
             if (resHolder is null)
@@ -155,7 +155,9 @@ namespace Models.CLEM.Reporting
             {
                 // pasture based measures
                 foreach (string pastureVariable in pastureEntries)
+                {
                     variableNames.Add($"[{resHolder.Name}].{pasture.NameWithParent}.Report(\"{pastureVariable}\", {ReportInTonnes.ToString().ToLower()}, {ReportPerHectare.ToString().ToLower()}, -1) as {pasture.Name}.{pastureVariable}");
+                }
 
                 // by pool measures
                 foreach (string poolVariable in poolEntries)

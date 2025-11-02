@@ -62,12 +62,13 @@ namespace Models.CLEM.Timers
         /// <inheritdoc/>
         public override string ToString()
         {
-            if (ErrorMessages.Count != 0)
+            string dateString;
+
+            if (ErrorMessages.Count > 0)
             {
                 return string.Join(", ", ErrorMessages);
             }
 
-            string dateString;
             if (ymd.month > 0)
             {
                 if (ymd.day > 0 & IsMonthOnly == false)
@@ -80,7 +81,7 @@ namespace Models.CLEM.Timers
                 }
             }
             else
-            { 
+            {
                 dateString = new DateTime(1999, 1, 1).AddDays(ymd.day - 1).ToString("dd MMM", CultureInfo.CurrentCulture);
             }
 

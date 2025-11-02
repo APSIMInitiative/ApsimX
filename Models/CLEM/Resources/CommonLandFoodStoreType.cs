@@ -219,7 +219,9 @@ namespace Models.CLEM.Resources
                     missing.Add("NToDMDCoefficient");
 
                 if (NToDMDIntercept == 0)
+                {
                     missing.Add("NToDMDIntercept");
+                }
 
                 if (missing.Count() > 0)
                 {
@@ -310,10 +312,14 @@ namespace Models.CLEM.Resources
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("<div class=\"activityentry\">");
-                if (this.Parent.GetType() == typeof(AnimalFoodStore))
+                if (Parent.GetType() == typeof(AnimalFoodStore))
+                {
                     htmlWriter.Write("This common land can be used by animal feed activities only");
+                }
                 else
+                {
                     htmlWriter.Write("This common land can be used by grazing and cut and carry activities");
+                }
 
                 htmlWriter.Write("</div>");
                 if (PastureLink != null)

@@ -43,12 +43,12 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Detemrines if an equivalent resource has been found in the market
+        /// Determines if an equivalent resource has been found in the market
         /// </summary>
         protected bool EquivalentMarketStoreDetermined { get; set; }
 
         /// <summary>
-        /// Determine whether transmutation has been defined for this foodtype
+        /// Determine whether transmutation has been defined for this food type
         /// </summary>
         [JsonIgnore]
         public bool TransmutationDefined
@@ -96,9 +96,13 @@ namespace Models.CLEM.Resources
 
             // if market exists look for market pricing to override local pricing as all transactions will be through the market
             if ((Parent.Parent as ResourcesHolder).FoundMarket is not null && MarketStoreExists)
+            {
                 price = Structure.FindChildren<ResourcePricing>(relativeTo: EquivalentMarketStore).FirstOrDefault(a => a.Enabled && (a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both || a.PurchaseOrSale == priceType) && a.TimingOK);
+            }
             else
+            {
                 price = Structure.FindChildren<ResourcePricing>().FirstOrDefault(a => (a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | a.PurchaseOrSale == priceType) && a.TimingOK);
+            }
 
             if (price == null)
             {
@@ -108,18 +112,27 @@ namespace Models.CLEM.Resources
                     string market = "";
                     if((Parent.Parent as ResourcesHolder).MarketPresent)
                     {
-                        if(!(EquivalentMarketStore is null))
+                        if (!(EquivalentMarketStore is null))
+                        {
                             market = EquivalentMarketStore.CLEMParentName + ".";
+                        }
                         else
+                        {
                             market = CLEMParentName + ".";
+                        }
                     }
                     string warn = $"No pricing is available for [r={market}{Parent.Name}.{Name}]";
                     if (clock != null && Structure.FindChildren<ResourcePricing>().Any())
+                    {
                         warn += " in month [" + clock.Today.ToString("MM yyyy") + "]";
+                    }
+
                     warn += "\r\nAdd [r=ResourcePricing] component to [r=" + market + Parent.Name + "." + Name + "] to include financial transactions for purchases and sales.";
 
                     if (Summary != null)
+                    {
                         Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
+                    }
                 }
                 return new ResourcePricing() { PricePerPacket = 0, PacketSize = 1, UseWholePackets = true };
             }
@@ -171,16 +184,22 @@ namespace Models.CLEM.Resources
                         if ((Parent.Parent as ResourcesHolder).MarketPresent)
                         {
                             if (!(EquivalentMarketStore is null))
+                            {
                                 market = EquivalentMarketStore.CLEMParentName + ".";
+                            }
                             else
+                            {
                                 market = CLEMParentName + ".";
+                            }
                         }
 
                         string warn = $"Cannot report the value of {((converterName.Contains("gain"))?"gains":"losses")} for [r={market}{Parent.Name}.{Name}]";
                         warn += $" in [o=ResourceLedger] as no [{((converterName.Contains("gain")) ? "purchase" : "sale")}] pricing has been provided.";
                         warn += $"\r\nInclude [r=ResourcePricing] component with [{((converterName.Contains("gain")) ? "purchases" : "sales")}] to resource to include all finance conversions";
                         if (Summary != null)
+                        {
                             Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
+                        }
                     }
                 }
                 return null;
@@ -193,8 +212,10 @@ namespace Models.CLEM.Resources
                     double result = amount;
                     // convert to edible proportion for all HumanFoodStore converters
                     // this assumes these are all nutritional. Price will be handled above.
-                    if(GetType() == typeof(HumanFoodStoreType))
+                    if (GetType() == typeof(HumanFoodStoreType))
+                    {
                         result *= (this as HumanFoodStoreType).EdibleProportion;
+                    }
 
                     return result * converter.Factor;
                 }
@@ -227,9 +248,13 @@ namespace Models.CLEM.Resources
         {
             ResourceUnitsConverter converter = Structure.FindChildren<ResourceUnitsConverter>().Where(a => a.Name.ToLower() == converterName.ToLower()).FirstOrDefault() as ResourceUnitsConverter;
             if (converter is null)
+            {
                 return 0;
+            }
             else
+            {
                 return converter.Factor;
+            }
         }
 
         /// <summary>
@@ -262,7 +287,9 @@ namespace Models.CLEM.Resources
                     {
                         IResourceWithTransactionType store = holder.FoundMarket.Resources.LinkToMarketResourceType(this);
                         if (store != null)
+                        {
                             EquivalentMarketStore = store as CLEMResourceTypeBase;
+                        }
                     }
                 }
                 EquivalentMarketStoreDetermined = true;
@@ -310,7 +337,9 @@ namespace Models.CLEM.Resources
                 parent.LastTransaction.ResourceType = resource;
 
                 if (type == TransactionType.Gain)
+                {
                     LastGain = amount;
+                }
 
                 LastTransaction = parent.LastTransaction;
                 TransactionOccurred?.Invoke(this, null);

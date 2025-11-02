@@ -13,13 +13,13 @@ using System.Linq;
 namespace Models.CLEM
 {
     ///<summary>
-    /// Determines the individual ruminans required for the transmutation
+    /// Determines the individual ruminants required for the transmutation
     ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Transmutation))]
-    [Description("Identifies how rumiants (as resource B) are transmuted into a shortfall resource (A, e.g.food)")]
+    [Description("Identifies how ruminants (as resource B) are transmuted into a shortfall resource (A, e.g.food)")]
     [HelpUri(@"Content/Features/Transmutation/TransmuteRuminant.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class TransmuteRuminant : CLEMModel, ITransmute, IValidatableObject
@@ -50,7 +50,7 @@ namespace Models.CLEM
         /// Style for direct exchange
         /// </summary>
         [Description("Measure of ruminant (for direct transmute)")]
-        public PricingStyleType DirectExhangeStyle { get; set; }
+        public PricingStyleType DirectExchangeStyle { get; set; }
 
         /// <inheritdoc/>
         [Description("Amount (B) per packet (A)")]
@@ -98,7 +98,7 @@ namespace Models.CLEM
                     switch (TransmuteStyle)
                     {
                         case TransmuteStyle.Direct:
-                            switch (DirectExhangeStyle)
+                            switch (DirectExchangeStyle)
                             {
                                 case PricingStyleType.perHead:
                                     available += 1;
@@ -121,13 +121,18 @@ namespace Models.CLEM
                     }
 
                     if (!queryOnly)
+                    {
                         // remove individual from herd immediately
                         (ResourceGroup as RuminantHerd).Herd.Remove(ind);
+                    }
 
                     if (MathUtilities.IsGreaterThanOrEqual(available, needed))
                     {
                         if (queryOnly)
+                        {
                             return true;
+                        }
+
                         break;
                     }
                 }
@@ -161,7 +166,10 @@ namespace Models.CLEM
         {
             double unitsNeeded = amount / shortfallPacketSize;
             if (shortfallWholePackets)
+            {
                 unitsNeeded = Math.Ceiling(unitsNeeded);
+            }
+
             return unitsNeeded;
         }
 
@@ -191,8 +199,10 @@ namespace Models.CLEM
             {
                 shortfallPricing = shortfallResourceType.Price(PurchaseOrSalePricingStyleType.Purchase);
                 if (FinanceTypeForTransactionsName != "No transactions")
+                {
                     // link to first bank account
                     financeType = resources.FindResourceType<Finance, FinanceType>(this, FinanceTypeForTransactionsName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportWarning);
+                }
             }
         }
 
@@ -224,7 +234,7 @@ namespace Models.CLEM
             if (TransmuteStyle == TransmuteStyle.Direct)
             {
                 string directexchangeStyleText = "";
-                switch (DirectExhangeStyle)
+                switch (DirectExchangeStyle)
                 {
                     case PricingStyleType.perHead:
                         directexchangeStyleText = "head of ";
@@ -239,16 +249,24 @@ namespace Models.CLEM
                         break;
                 }
                 if (AmountPerPacket > 0)
+                {
                     htmlWriter.Write($"<span class=\"setvalue\">{AmountPerPacket:#,##0.##}</span> {directexchangeStyleText} ");
+                }
                 else
+                {
                     htmlWriter.Write($"<span class=\"errorlink\">Not set</span> {directexchangeStyleText} ");
+                }
             }
 
             IModel ruminants = Structure.FindParent<ResourcesHolder>(recurse: true).FindResourceGroup<RuminantHerd>();
             if (ruminants is null)
+            {
                 htmlWriter.Write("<span class=\"errorlink\">Herd not found</span>");
+            }
             else
+            {
                 htmlWriter.Write($"<span class=\"resourcelink\">{ruminants.Name}</span>");
+            }
 
             htmlWriter.Write($" (B) are taken from the following groups to supply shortfall resource (A) ");
 
@@ -256,7 +274,9 @@ namespace Models.CLEM
             {
                 htmlWriter.Write($" using the herd pricing details");
                 if (FinanceTypeForTransactionsName != null && FinanceTypeForTransactionsName != "")
+                {
                     htmlWriter.Write($" with all financial Transactions of sales and purchases using <span class=\"resourcelink\">{TransmuteResourceTypeName}</span>");
+                }
             }
             htmlWriter.WriteLine("</div>");
             return htmlWriter.ToString();

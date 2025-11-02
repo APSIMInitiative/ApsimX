@@ -95,7 +95,9 @@ namespace Models.CLEM.Resources
         private void OnStartOfMonth(object sender, EventArgs e)
         {
             if (clock.Today.Month == (int)AnnualYieldStartMonth)
+            {
                 annualNUsed = 0;
+            }
         }
 
         #region descriptive summary

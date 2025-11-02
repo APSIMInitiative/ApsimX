@@ -128,7 +128,9 @@ namespace Models.CLEM.Reporting
         private void OnCLEMHerdSummary(object sender, EventArgs e)
         {
             if (TimingOK)
+            {
                 ReportHerd();
+            }
         }
 
         #region validation
@@ -165,7 +167,9 @@ namespace Models.CLEM.Reporting
         private void OncCLEMValidate(object sender, EventArgs e)
         {
             if (ReportAtStart)
+            {
                 ReportHerd();
+            }
         }
 
         /// <summary>
@@ -197,13 +201,19 @@ namespace Models.CLEM.Reporting
         {
             ListStatistics listStatistics = new ListStatistics();
             if (ruminantHerd is null)
+            {
                 return listStatistics;
+            }
 
             IEnumerable<Ruminant> herd = null;
             if (herdGroup != null)
+            {
                 herd = herdGroup.Filter(ruminantHerd.Herd);
+            }
             else
+            {
                 herd = ruminantHerd.Herd;
+            }
 
             // do not report mate if greater than max months since conception
             // if not valid report NAN that is filtered out in calculations below
@@ -212,7 +222,9 @@ namespace Models.CLEM.Reporting
                 (a.Sex == Sex.Female && a.DaysSince(RuminantTimeSpanTypes.Conceived, 0.0) <= MaxMonthsToReportMate) ? Single.NaN : (a.Attributes.GetValue(tag)?.StoredMateValue is null) ? Single.NaN : Convert.ToSingle(a.Attributes.GetValue(tag)?.StoredMateValue))
                 ).ToList();
             if (values.Count == 0)
+            {
                 return listStatistics;
+            }
 
             double sd = 0;
             Single mean = 0;

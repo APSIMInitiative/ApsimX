@@ -117,7 +117,9 @@ namespace Models.CLEM.Reporting
             var report = storage.Reader.GetData(Parent.Name);
 
             if (report is null)
+            {
                 return new string[] { "No available data" };
+            }
 
             // Find the columns that meet our criteria
             var columns = report.Columns.Cast<DataColumn>();
@@ -140,11 +142,15 @@ namespace Models.CLEM.Reporting
         {
             // Assume no value types are represented in string form
             if (col.DataType.Name == "String")
+            {
                 return false;
+            }
 
             // We are looking for data values, not IDs
             if (col.ColumnName.EndsWith("ID"))
+            {
                 return false;
+            }
 
             // DateTime is handled separately from other value types
             return col.DataType != typeof(DateTime);
@@ -157,9 +163,7 @@ namespace Models.CLEM.Reporting
         {
             var storage = Structure.Find<IDataStore>() ?? datastore;
             string viewSQL = storage.GetViewSQL(Name);
-            if (viewSQL != "")
-                return storage.Reader.GetData(Name);
-            return new DataTable();
+            return viewSQL != "" ? storage.Reader.GetData(Name) : new DataTable();
         }
 
         private void CreateView()
@@ -172,15 +176,22 @@ namespace Models.CLEM.Reporting
             var report = storage.Reader.GetData(Parent.Name);
 
             if (report is null)
+            {
                 storage.Reader.Refresh();
+            }
 
             report = storage.Reader.GetData(Parent.Name);
 
             // Check sensibility
             if (report is null || Row is null || Column is null || Value is null || Aggregator is null)
+            {
                 return;
+            }
+
             if (report.Columns.Count == 0)
+            {
                 return;
+            }
 
             // Set up date handling
             bool isDate = report.Columns[Column].DataType == typeof(DateTime);
@@ -201,7 +212,9 @@ namespace Models.CLEM.Reporting
             // Set up the rows in the pivot
             var rows = $"[{Row}]";
             if (report.Columns[Row].DataType == typeof(DateTime))
+            {
                 rows = Time == "Day" ? $"[{Row}]" : $"datetime(strftime('{sql_format}', [{Row}]))";
+            }
 
             // Construct the SQL statement
             var builder = new StringBuilder();

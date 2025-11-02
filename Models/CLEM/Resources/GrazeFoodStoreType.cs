@@ -223,10 +223,6 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public double OverallPastureBiomass { get; set; }
 
-        ////ToDo: NOT SURE THIS IS USED!
-        ///// <inheritdoc/>
-        //public double CPDegradability { get; set; }
-
         /// <summary>
         /// Coefficient to adjust intake for tropical herbage quality
         /// </summary>
@@ -296,9 +292,13 @@ namespace Models.CLEM.Resources
                 if (manager != null && manager != value)
                 {
                     if (manager is CropActivityManageCrop)
+                    {
                         Summary.WriteMessage(this, $"Each [r=GrazeStoreType] can only be managed by a single activity.{Environment.NewLine}Two managing activities (a=[{(manager as CLEMModel).NameWithParent}] and [a={(value as CLEMModel).NameWithParent}]) are trying to manage [r={this.NameWithParent}]. Ensure the [CropActivityManageProduct] children have timers that prevent them running in the same time-step", MessageType.Warning);
+                    }
                     else
+                    {
                         throw new ApsimXException(this, $"Each [r=GrazeStoreType] can only be managed by a single activity.{Environment.NewLine}Two managing activities (a=[{(manager as CLEMModel).NameWithParent}] and [a={(value as CLEMModel).NameWithParent}]) are trying to manage [r={this.NameWithParent}]. Ensure they hvae timers");
+                    }
                 }
                 manager = value;
             }
@@ -394,7 +394,9 @@ namespace Models.CLEM.Resources
             get
             {
                 if (biomassAddedThisYear == 0)
+                {
                     return (biomassConsumed > 0) ? 100 : 0;
+                }
 
                 return biomassConsumed == 0 ? 0 : Math.Min(biomassConsumed / biomassAddedThisYear * 100, 100);
             }
@@ -408,8 +410,10 @@ namespace Models.CLEM.Resources
             get
             {
                 double dmd = 0;
-                if (this.Amount > 0)
-                    dmd = Pools.Sum(a => a.Amount * a.DryMatterDigestibility) / this.Amount;
+                if (Amount > 0)
+                {
+                    dmd = Pools.Sum(a => a.Amount * a.DryMatterDigestibility) / Amount;
+                }
 
                 return Math.Max(MinimumDMD, dmd);
             }
@@ -423,8 +427,10 @@ namespace Models.CLEM.Resources
             get
             {
                 double n = 0;
-                if (this.Amount > 0)
-                    n = Pools.Sum(a => a.Amount * a.NitrogenPercent) / this.Amount;
+                if (Amount > 0)
+                {
+                    n = Pools.Sum(a => a.Amount * a.NitrogenPercent) / Amount;
+                }
 
                 return Math.Max(MinimumNitrogen, n);
             }
@@ -448,7 +454,9 @@ namespace Models.CLEM.Resources
         public double Report(string grazeProperty, bool tonnes = false, bool hectares = false, int age = -1)
         {
             if ((hectares && Manager is null) | (age > 11))
+            {
                 return 0;
+            }
 
             double convert = (tonnes ? 1000 : 1) * (hectares ? Manager.Area : 1);
             double valueToUse = 0;
@@ -456,52 +464,82 @@ namespace Models.CLEM.Resources
             {
                 case "Amount":
                     if (age < 0)
+                    {
                         valueToUse = Pools.Sum(a => a.Amount);
+                    }
                     else
+                    {
                         valueToUse = Pool(age, true).Sum(a => a.Amount);
+                    }
+
                     break;
                 case "Growth":
                     valueToUse = Pool(0, true).Sum(a => a.Growth);
                     break;
                 case "Consumed":
                     if (age < 0)
+                    {
                         valueToUse = Pools.Sum(a => a.Consumed);
+                    }
                     else
+                    {
                         valueToUse = Pool(age, true).Sum(a => a.Consumed);
+                    }
+
                     break;
                 case "Detached":
                     if (age < 0)
+                    {
                         valueToUse = Pools.Sum(a => a.Detached);
+                    }
                     else
+                    {
                         valueToUse = Pool(age, true).Sum(a => a.Detached);
+                    }
+
                     break;
                 case "Nitrogen":
                     if (age < 0)
-                        return SwardNitrogenPercent;
-                    else
                     {
-                        IEnumerable<GrazeFoodStorePool> pools = Pool(age, true);
-                        if(pools.Count() == 1)
-                            valueToUse = pools.FirstOrDefault().NitrogenPercent;
-                        else
-                            valueToUse = pools.Sum(a => a.NitrogenPercent * a.Amount) / pools.Sum(a => a.Amount);
+                        return SwardNitrogenPercent;
                     }
-                    return valueToUse;
-                case "DMD":
-                    if (age < 0)
-                        return SwardDryMatterDigestibility;
                     else
                     {
                         IEnumerable<GrazeFoodStorePool> pools = Pool(age, true);
                         if (pools.Count() == 1)
-                            valueToUse = pools.FirstOrDefault().DryMatterDigestibility;
+                        {
+                            valueToUse = pools.FirstOrDefault().NitrogenPercent;
+                        }
                         else
+                        {
+                            valueToUse = pools.Sum(a => a.NitrogenPercent * a.Amount) / pools.Sum(a => a.Amount);
+                        }
+                    }
+                    return valueToUse;
+                case "DMD":
+                    if (age < 0)
+                    {
+                        return SwardDryMatterDigestibility;
+                    }
+                    else
+                    {
+                        IEnumerable<GrazeFoodStorePool> pools = Pool(age, true);
+                        if (pools.Count() == 1)
+                        {
+                            valueToUse = pools.FirstOrDefault().DryMatterDigestibility;
+                        }
+                        else
+                        {
                             valueToUse = pools.Sum(a => a.DryMatterDigestibility * a.Amount) / pools.Sum(a => a.Amount);
+                        }
                     }
                     return valueToUse;
                 case "Age":
                     if (age < 0)
+                    {
                         return Pools.Sum(a => a.Amount * a.Age) / this.Amount;
+                    }
+
                     return valueToUse;
                 default:
                     throw new ApsimXException(this, $"Property [{grazeProperty}] not available for reporting pools");
@@ -639,9 +677,6 @@ namespace Models.CLEM.Resources
 
                     int age = Convert.ToInt32((events.Clock.Today - pool.GrowthDate).TotalDays / 30.4);
                     pool.Age = age;
-
-                    //if (pool.Age < 12)
-                    //    pool.Age++;
                 }
                 // remove all pools with less than 10g of food
                 Pools.RemoveAll(a => a.Amount < 0.01);

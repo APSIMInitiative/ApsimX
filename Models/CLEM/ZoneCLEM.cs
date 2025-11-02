@@ -136,7 +136,9 @@ namespace Models.CLEM
             string[] filebits = (sender as Simulation).FileName.Split('.');
             wholeSimulationSummaryFile = $"{filebits.First()}.html";
             if (File.Exists(wholeSimulationSummaryFile))
+            {
                 File.Delete(wholeSimulationSummaryFile);
+            }
         }
 
         [EventSubscribe("Completed")]
@@ -146,7 +148,9 @@ namespace Models.CLEM
             if (AutoCreateDescriptiveSummary && !Structure.FindParents<Experiment>().Any())
             {
                 if (!File.Exists(wholeSimulationSummaryFile))
+                {
                     File.WriteAllText(wholeSimulationSummaryFile, CLEMModel.CreateDescriptiveSummaryHTML(this, Structure, false, false, (sender as Simulation).FileName));
+                }
                 else
                 {
                     string html = File.ReadAllText(wholeSimulationSummaryFile);
@@ -206,7 +210,7 @@ namespace Models.CLEM
         public static void ReportInvalidParameters(IModel model, DataStore dataStore, Summary summary, string simulationId)
         {
             // force summary to write messages
-            // if not included the messages table isn't propogated to exit model on errors detected.
+            // if not included the messages table isn't propagated to exit model on errors detected.
             summary.WriteMessagesToDataStore();
             dataStore .Writer.WaitForIdle();
 
@@ -231,7 +235,9 @@ namespace Models.CLEM
                 // create combined inner exception
                 StringBuilder innerExceptionString = new StringBuilder();
                 foreach (var error in messages)
+                {
                     innerExceptionString.Append($"{error.Text}{Environment.NewLine}");
+                }
 
                 Exception innerException = new Exception(innerExceptionString.ToString());
                 throw new ApsimXException(model, $"{messages.Count()} error{(messages.Count() == 1 ? "" : "s")} occurred during start up.{Environment.NewLine}See CLEM component [{model.GetType().Name}] Messages tab for details{Environment.NewLine}", innerException);
@@ -277,7 +283,9 @@ namespace Models.CLEM
             var validationResults = new List<ValidationResult>();
             Validator.TryValidateObject(model, validationContext, validationResults, true);
             if (model.Name.EndsWith(" "))
+            {
                 validationResults.Add(new ValidationResult("Component name cannot end with a space character", new string[] { "Name" }));
+            }
 
             if (model is CLEMModel clemModel)
             {
@@ -311,7 +319,10 @@ namespace Models.CLEM
                     }
                     string error = $"Invalid parameter value in {modelPath}{Environment.NewLine}PARAMETER: {validateError.MemberNames.FirstOrDefault()}";
                     if (text != "")
+                    {
                         error += $"{Environment.NewLine}DESCRIPTION: {text}";
+                    }
+
                     error += $"{Environment.NewLine}PROBLEM: {validateError.ErrorMessage}{Environment.NewLine}";
                     summary.WriteMessage(parentZone, error, MessageType.Error);
                 }
@@ -320,7 +331,9 @@ namespace Models.CLEM
             {
                 bool result = Validate(child, modelPath, parentZone, summary, events);
                 if (valid && !result)
+                {
                     valid = false;
+                }
             }
             return valid;
         }
@@ -380,9 +393,14 @@ namespace Models.CLEM
                 htmlWriter.Write("\r\n<div class=\"defaultcontent\">");
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Random numbers are provided for this simultion with ");
                 if (rnd.Seed == 0)
+                {
                     htmlWriter.Write("every run using a different sequence.");
+                }
                 else
+                {
                     htmlWriter.Write("each run identical by using the seed <span class=\"setvalue\">" + rnd.Seed.ToString() + "</span>");
+                }
+
                 htmlWriter.Write("\r\n</div>");
 
                 htmlWriter.Write(CLEMModel.AddMemosToSummary(rnd, Structure, markdown2Html));
@@ -400,14 +418,24 @@ namespace Models.CLEM
                 htmlWriter.Write("\r\n<div class=\"defaultcontent\">");
                 htmlWriter.Write("\r\n<div class=\"activityentry\">This simulation runs from ");
                 if (clk.Start == null)
+                {
                     htmlWriter.Write("<span class=\"errorlink\">[START DATE NOT SET]</span>");
+                }
                 else
+                {
                     htmlWriter.Write("<span class=\"setvalue\">" + clk.StartDate.ToShortDateString() + "</span>");
+                }
+
                 htmlWriter.Write(" to ");
                 if (clk.End == null)
+                {
                     htmlWriter.Write("<span class=\"errorlink\">[END DATE NOT SET]</span>");
+                }
                 else
+                {
                     htmlWriter.Write("<span class=\"setvalue\">" + clk.EndDate.ToShortDateString() + "</span>");
+                }
+
                 htmlWriter.Write("\r\n</div>");
 
                 htmlWriter.Write(CLEMModel.AddMemosToSummary(clk, Structure, markdown2Html));
@@ -417,7 +445,9 @@ namespace Models.CLEM
             }
 
             foreach (CLEMModel cm in Structure.FindChildren<CLEMModel>())
+            {
                 htmlWriter.Write(cm.GetFullSummary(cm, CurrentAncestorList, "", markdown2Html));
+            }
 
             CurrentAncestorList = null;
 

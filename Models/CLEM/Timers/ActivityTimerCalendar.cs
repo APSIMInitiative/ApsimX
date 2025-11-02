@@ -122,14 +122,18 @@ namespace Models.CLEM.Timers
             get
             {
                 if (events is null)
+                {
                     return true;
+                }
 
                 if (events.IntervalIndex == lastAssessedTimeStepIndex)
+                {
                     return lastAssessedOutcome;
+                }
 
-                bool inrange = Range.IsInRange();
-                inrange = (Invert) ? !inrange : inrange;
-                if (inrange)
+                bool inRange = Range.IsInRange();
+                inRange = (Invert) ? !inRange : inRange;
+                if (inRange)
                 {
                     // report activity performed.
                     ActivityPerformedEventArgs activitye = new()
@@ -141,23 +145,23 @@ namespace Models.CLEM.Timers
                     OnActivityPerformed(activitye);
                 }
                 lastAssessedTimeStepIndex = events.IntervalIndex;
-                lastAssessedOutcome = inrange;
+                lastAssessedOutcome = inRange;
 
-                return inrange;
+                return inRange;
             }
         }
 
         /// <inheritdoc/>
         public bool Check(DateTime dateToCheck)
         {
-            bool inrange = IsInRange(dateToCheck);
-            return (Invert) ? !inrange : inrange;
+            bool inRange = IsInRange(dateToCheck);
+            return (Invert) ? !inRange : inRange;
         }
 
         private bool IsInRange(DateTime date)
         {
-            bool inrange = Range?.IsInRange()??false;
-            return (Invert) ? !inrange : inrange;
+            bool inRange = Range?.IsInRange()??false;
+            return (Invert) ? !inRange : inRange;
         }
 
         /// <inheritdoc/>
@@ -205,7 +209,9 @@ namespace Models.CLEM.Timers
             clemEvents.SetInterval();
             clemEvents.Clock = clock;
             if (clock is null || clemEvents is null)
+            {
                 return $"<div class=\"filter\"><span class=\"errorlink\">No CLEM Events component provided below Clock</span></div>";
+            }
 
             if (StartDetails.Parts[0] > 0 & StartDetails.Parts[1] == 0)
             {
@@ -222,9 +228,13 @@ namespace Models.CLEM.Timers
             if (range.Start.ymd.month == range.End.ymd.month & (range.Start.IsMonthOnly | range.Start.ymd.day == range.End.ymd.day))
             {
                 if (range.Start.ymd.month > 0 & range.Start.IsMonthOnly)
+                {
                     htmlWriter.Write($"Perform {invertString} in ");
+                }
                 else
+                {
                     htmlWriter.Write($"Perform {invertString} on ");
+                }
             }
             else
             {
@@ -232,28 +242,43 @@ namespace Models.CLEM.Timers
             }
 
             if (range.Start.ErrorMessages.Count() > 0)
+            {
                 htmlWriter.Write($"<span class=\"errorlink\">{range.Start.ErrorMessages.First()}</span>");
+            }
             else
+            {
                 htmlWriter.Write($"<span class=\"setvalueextra\">{range.Start.ToString()}</span>");
+            }
 
             if (range.Start.ymd.month != range.End.ymd.month | (range.Start.IsMonthOnly == false & range.Start.ymd.day != range.End.ymd.day))
             {
                 htmlWriter.Write($" and ");
                 if (range.End.ErrorMessages.Count() > 0)
+                {
                     htmlWriter.Write($"<span class=\"errorlink\">{range.End.ErrorMessages.First()}</span>");
+                }
                 else
+                {
                     htmlWriter.Write($"<span class=\"setvalueextra\">{range.End.ToString()}</span>");
+                }
             }
 
             if (range.IsFloatingRange)
+            {
                 htmlWriter.Write($"<span class=\"setvalueextra\">{range.RepeatIntervalToString()}</span>");
+            }
 
             if (range.WholeTimeStepInRange)
+            {
                 htmlWriter.Write($"<span class=\"setvalueextra\">where whole time-step must be in range</span>");
+            }
 
             htmlWriter.Write("</div>");
-            if (!this.Enabled & !FormatForParentControl)
+            if (!Enabled & !FormatForParentControl)
+            {
                 htmlWriter.Write(" - DISABLED!");
+            }
+
             return htmlWriter.ToString();
         }
 
@@ -268,8 +293,11 @@ namespace Models.CLEM.Timers
         {
             using StringWriter htmlWriter = new();
             htmlWriter.Write("<div class=\"filtername\">");
-            if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+            if (!Name.Contains(this.GetType().Name.Split('.').Last()))
+            {
                 htmlWriter.Write(this.Name);
+            }
+
             htmlWriter.Write($"</div>");
             htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
             return htmlWriter.ToString();

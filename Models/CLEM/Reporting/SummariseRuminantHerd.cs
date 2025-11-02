@@ -97,14 +97,14 @@ namespace Models.CLEM
             IModel current = this;
             while (current.GetType() != typeof(ZoneCLEM))
             {
-                var filtergroup = current.Children.OfType<RuminantGroup>();
-                if (filtergroup.Count() > 1)
+                var filterGroup = current.Children.OfType<RuminantGroup>();
+                if (filterGroup.Count() > 1)
                 {
                     Summary.WriteMessage(this, "Multiple ruminant filter groups have been supplied for [" + current.Name + "]" + Environment.NewLine + "Only the first filter group will be used.", MessageType.Warning);
                 }
-                if (filtergroup.FirstOrDefault() != null)
+                if (filterGroup.FirstOrDefault() != null)
                 {
-                    herdFilters.Insert(0, filtergroup.FirstOrDefault());
+                    herdFilters.Insert(0, filterGroup.FirstOrDefault());
                 }
                 current = current.Parent as IModel;
             }
@@ -134,7 +134,9 @@ namespace Models.CLEM
 
             IEnumerable<Ruminant> herd = ruminantHerd?.Herd;
             foreach (RuminantGroup group in herdFilters)
+            {
                 herd = group.Filter(herd);
+            }
 
             IEnumerable<IGrouping<Tuple<string, string, string, Sex, string>, Ruminant>> groups = null;
 
@@ -160,8 +162,6 @@ namespace Models.CLEM
                 }
 
                 // decide what groups to use
-                //groups = herd.GroupBy(a => new Tuple<string, string, Sex, string>(a.Breed, a.HerdName, a.Sex, a.Class)) as IEnumerable<IGrouping<Tuple<string, string, string, Sex, string>, Ruminant>>;
-
                 var result = groups.Select(group => new
                 {
                     Group = group.Key,
@@ -303,7 +303,9 @@ namespace Models.CLEM
             using StringWriter htmlWriter = new();
             htmlWriter.Write("\r\n<div class=\"activityentry\">This will report individuals ");
             if (AddGroupByLocation)
+            {
                 htmlWriter.Write("based on location and ");
+            }
 
             switch (GroupStyle)
             {

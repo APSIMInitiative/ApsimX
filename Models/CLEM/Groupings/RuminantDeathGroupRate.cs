@@ -73,8 +73,10 @@ namespace Models.CLEM.Groupings
             foreach (var ind in individuals.Where(a => a.Died == false))
             {
                 if (Style == ParameterStyle.GetFromParameters)
-                    mortalityRate = ind.Parameters.FindBaseMortalityRate  * events.Interval; 
-                
+                {
+                    mortalityRate = ind.Parameters.FindBaseMortalityRate  * events.Interval;
+                }
+
                 //ToDo: fix so this is calculated to daily once elsewhere.
                 //ToDo: check CD1 is daily rate
 
@@ -126,11 +128,17 @@ namespace Models.CLEM.Groupings
                     {
                         htmlWriter.Write(rumtype.Name);
                         if (rumtype.Parameters.GrowPF is not null)
+                        {
                             htmlWriter.Write($".Parameters.GrowPF.BasalMortalityRate_CD1 = {rumtype.Parameters.GrowPF_CD.BasalMortalityRate_CD1}");
+                        }
                         else if (rumtype.Parameters.Grow is not null)
+                        {
                             htmlWriter.Write($".Parameters.Grow.MortalityBase = {rumtype.Parameters.Grow.MortalityBase}");
+                        }
                         else
+                        {
                             htmlWriter.Write($"<span=\"errorlink\">Missing Grow or GrowPF parameters</span>");
+                        }
                     }
                     htmlWriter.Write("</div>");
                     break;

@@ -104,7 +104,10 @@ namespace Models.CLEM
         {
             double unitsNeeded = amount / shortfallPacketSize;
             if (shortfallWholePackets)
+            {
                 unitsNeeded = Math.Ceiling(unitsNeeded);
+            }
+
             return unitsNeeded;
         }
 
@@ -122,7 +125,10 @@ namespace Models.CLEM
             if (TransmuteStyle == TransmuteStyle.UsePricing)
             {
                 if (parentResource is null)
+                {
                     parentResource = Structure.FindParent<CLEMResourceTypeBase>(recurse: true) as IResourceType;
+                }
+
                 yield return new ValidationResult($"The UsePricing Transmute style is not supported in the [{this.Name}] of [{parentResource.Name}]", new string[] { "Transmte pricing" });
             }
         }
@@ -142,7 +148,9 @@ namespace Models.CLEM
             using StringWriter htmlWriter = new();
             htmlWriter.Write("<div class=\"activityentry\">");
             if (TransmuteStyle == TransmuteStyle.Direct)
+            {
                 htmlWriter.Write($"<span class=\"setvalue\">{AmountPerPacket:#,##0.##}</span> days labour ");
+            }
 
             htmlWriter.Write(" ruminants (B) are taken from the following groups to supply shortfall resource (A) ");
 
@@ -150,7 +158,9 @@ namespace Models.CLEM
             {
                 htmlWriter.Write($" using the herd pricing details");
                 if (FinanceTypeForTransactionsName != null && FinanceTypeForTransactionsName != "")
+                {
                     htmlWriter.Write($" with all financial Transactions of sales and purchases using <span class=\"resourcelink\">{TransmuteResourceTypeName}</span>");
+                }
             }
             htmlWriter.WriteLine("</div>");
             return htmlWriter.ToString();

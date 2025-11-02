@@ -243,11 +243,15 @@ namespace Models.CLEM.Resources
         public new void Remove(ResourceRequest request)
         {
             if (request.Required == 0)
+            {
                 return;
+            }
 
             // if this request aims to trade with a market see if we need to set up details for the first time
             if (request.MarketTransactionMultiplier > 0)
+            {
                 FindEquivalentMarketStore();
+            }
 
             double amountRemoved = request.Required;
             // avoid taking too much
@@ -283,12 +287,16 @@ namespace Models.CLEM.Resources
             if (CPContentStyle == CrudeProteinContentStyle.EstimateFromNitrogenContent)
             {
                 if (UserNitrogenPercent <= 0)
+                {
                     yield return new ValidationResult($"Percent nitrogen content must be supplied for [r={NameWithParent}] when using [{CPContentStyle}]", new string[] { "UserNitrogenPercent" });
+                }
             }
             else if (CPContentStyle == CrudeProteinContentStyle.SpecifyCrudeProteinContent)
             {
                 if (UserCrudeProteinPercent <= 0)
+                {
                     yield return new ValidationResult($"Percent crude protein content must be supplied for [r={NameWithParent}] when using [{CPContentStyle}]", new string[] { "UserCrudeProteinPercent" });
+                }
             }
         }
 

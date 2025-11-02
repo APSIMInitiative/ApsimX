@@ -41,7 +41,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Adds a FoodResourcePacket to this store and adjusts pool qualtities.
+        /// Adds a FoodResourcePacket to this store and adjusts pool qualities.
         /// </summary>
         /// <param name="packet">Packet to add.</param>
         public void Add(FoodResourcePacket packet)
@@ -131,7 +131,10 @@ namespace Models.CLEM.Resources
             get 
             { 
                 if (MathUtilities.IsLessThanOrEqual(Details.Amount, 0.0))
+                {
                     return 0;
+                }
+
                 return Details.MEContent * Details.Amount; 
             } 
         }

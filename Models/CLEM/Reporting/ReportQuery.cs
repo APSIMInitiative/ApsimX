@@ -51,14 +51,19 @@ namespace Models.CLEM.Reporting
             var storage = Structure.Find<IDataStore>() ?? dataStore;
             string viewSQL = storage.GetViewSQL(Name);
             if (viewSQL != "")
+            {
                 return storage.Reader.GetData(Name);
+            }
+
             return new DataTable();
         }
 
         private void SaveView(IDataStore store)
         {
             if (Name.Any(c => c == ' '))
+            {
                 throw new Exception($"Invalid name: [{Name}]\n[ReportQuery] names cannot contain spaces as they are used to name the database tables");
+            }
 
             if (SQL != null && SQL != "")
             {

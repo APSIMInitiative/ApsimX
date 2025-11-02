@@ -64,8 +64,10 @@ namespace Models.CLEM.Groupings
             {
                 //if(propertyInfo is null)
                 propertyInfo = Parent.GetProperty(PropertyOfIndividual);
-                if(propertyInfo.Any())
+                if (propertyInfo.Any())
+                {
                     validOperator = CheckValidOperator(propertyInfo.Last(), out string _);
+                }
             }
         }
 
@@ -78,7 +80,11 @@ namespace Models.CLEM.Groupings
         /// <inheritdoc/>
         public override Func<T, bool> Compile<T>()
         {
-            if (!validOperator || !propertyInfo.Any()) return f => false;
+            if (!validOperator || !propertyInfo.Any())
+            {
+                return f => false;
+            }
+
             return CompileComplex<T>();
         }
 
@@ -113,8 +119,11 @@ namespace Models.CLEM.Groupings
             switch (propertyInfo.Last().PropertyType.Name)
             {
                 case "Boolean":
-                    if(Value != null && !bool.TryParse(Value.ToString(), out _))
+                    if (Value != null && !bool.TryParse(Value.ToString(), out _))
+                    {
                         propError = $"The value to compare [{Value}] provided for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}] is not valid for the property type [Boolean]{System.Environment.NewLine}Valid entries are [True, true, False, false, 1, 0]";
+                    }
+
                     break;
                 default:
                     break;
@@ -138,7 +147,9 @@ namespace Models.CLEM.Groupings
                 binary = Expression.MakeBinary(ExpressionType.Equal, key, Expression.Constant(ce));
             }
             else
+            {
                 binary = Expression.MakeBinary(Operator, key, value);
+            }
 
             // only perform if the type is a match to the type of property
             var body = Expression.Condition(
@@ -254,33 +265,38 @@ namespace Models.CLEM.Groupings
             if (propertyInfo.Any() == false)
             {
                 filterWriter.Write($"Filter:");
-                string errorlink = (htmltags) ? " <span class=\"errorlink\">" : " ";
-                string spanclose = (htmltags) ? "</span>" : "";
+                string errorLink = (htmltags) ? " <span class=\"errorlink\">" : " ";
+                string spanClose = (htmltags) ? "</span>" : "";
                 string message = (PropertyOfIndividual == null || PropertyOfIndividual == "") ? "Not Set" : $"Unknown: {PropertyOfIndividual}";
-                filterWriter.Write($"{errorlink}{message}{spanclose}");
+                filterWriter.Write($"{errorLink}{message}{spanClose}");
                 return filterWriter.ToString();
             }
 
             filterWriter.Write($"Filter:");
-            bool truefalse = IsOperatorTrueFalseTest();
-            if (truefalse | (propertyInfo != null && propertyInfo.Last().PropertyType.IsEnum))
+            bool trueFalse = IsOperatorTrueFalseTest();
+            if (trueFalse | (propertyInfo != null && propertyInfo.Last().PropertyType.IsEnum))
             {
                 if (propertyInfo.Last().PropertyType == typeof(bool))
                 {
                     if (Operator == ExpressionType.IsFalse || Value?.ToString().ToLower() == "false")
+                    {
                         filterWriter.Write(" not");
+                    }
+
                     filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
                 }
                 else
                 {
                     filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
                     if (validOperator)
+                    {
                         filterWriter.Write((Operator == ExpressionType.IsFalse || Value?.ToString().ToLower() == "false") ? " not" : " is");
+                    }
                     else
                     {
-                        string errorlink = (htmltags) ? "<span class=\"errorlink\">" : "";
-                        string spanclose = (htmltags) ? "</span>" : "";
-                        filterWriter.Write($"{errorlink}invalid operator {OperatorToSymbol()}{spanclose}");
+                        string errorLink = (htmltags) ? "<span class=\"errorlink\">" : "";
+                        string spanClose = (htmltags) ? "</span>" : "";
+                        filterWriter.Write($"{errorLink}invalid operator {OperatorToSymbol()}{spanClose}");
                     }
                     filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(Value?.ToString(), "No value", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
                 }
@@ -292,16 +308,20 @@ namespace Models.CLEM.Groupings
                 if (propertyInfo != null)
                 {
                     if (validOperator)
+                    {
                         filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+                    }
                     else
                     {
-                        string errorlink = (htmltags) ? "<span class=\"errorlink\">" : "";
-                        string spanclose = (htmltags) ? "</span>" : "";
-                        filterWriter.Write($"{errorlink}invalid operator {OperatorToSymbol()}{propertyInfo.Last().PropertyType.Name}{spanclose}");
+                        string errorLink = (htmltags) ? "<span class=\"errorlink\">" : "";
+                        string spanClose = (htmltags) ? "</span>" : "";
+                        filterWriter.Write($"{errorLink}invalid operator {OperatorToSymbol()}{propertyInfo.Last().PropertyType.Name}{spanClose}");
                     }
                 }
                 else
+                {
                     filterWriter.Write($" {DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+                }
 
                 filterWriter.Write($" {DisplaySummaryValueSnippet(Value?.ToString(), "No value", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
             }
@@ -316,11 +336,11 @@ namespace Models.CLEM.Groupings
             if ((PropertyOfIndividual is null || PropertyOfIndividual == "") == false)
             { 
 
-            if((Value is null || Value.ToString() == "") & !(Operator == ExpressionType.IsTrue | Operator == ExpressionType.IsFalse))
-            {
-                string[] memberNames = new string[] { "Missing filter compare value" };
-                yield return new ValidationResult($"A value to compare with the Property [{PropertyOfIndividual}] is required for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}]", memberNames);
-            }
+                if((Value is null || Value.ToString() == "") & !(Operator == ExpressionType.IsTrue | Operator == ExpressionType.IsFalse))
+                {
+                    string[] memberNames = new string[] { "Missing filter compare value" };
+                    yield return new ValidationResult($"A value to compare with the Property [{PropertyOfIndividual}] is required for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}]", memberNames);
+                }
 
                 if (propertyInfo is null || !propertyInfo.Any())
                 {
@@ -362,7 +382,7 @@ namespace Models.CLEM.Groupings
                         }
                     }
 
-                    // valid for istrue / isfalse
+                    // valid for isTrue / isFalse
                     if (Value != null & IsOperatorTrueFalseTest())
                     {
                         if (!bool.TryParse(Value.ToString(), out _))

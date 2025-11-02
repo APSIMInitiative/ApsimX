@@ -73,9 +73,13 @@ namespace Models.CLEM.Timers
                         repeatString += $"{(repeatString == "" ? "" : "and ")}{(repeatInterval.Parts[1] > 1 ? repeatInterval.Parts[1] : "")} month{(repeatInterval.Parts[1] > 1 ? "s" : "")}";
                     if (repeatInterval.Parts[2] > 0)
                         repeatString += $"{(repeatString == "" ? "" : "and ")}{(repeatInterval.Parts[2] > 1 ? repeatInterval.Parts[2] : "")} day{(repeatInterval.Parts[2] > 1 ? "s" : "")}";
+                    
                     string moreThanYearly = "";
                     if (repeatInterval.Parts[0] == 0 & repeatInterval.Parts.Sum() > 0)
+                    {
                         moreThanYearly = " then";
+                    }
+
                     repeatString = $"{moreThanYearly} every {repeatString}";
                 }
                 else
@@ -142,14 +146,16 @@ namespace Models.CLEM.Timers
         {
             // if not floating range then return
             if (!IsFloatingRange)
+            {
                 return;
+            }
 
             // if floating range then move start and end dates forward by interval specified
             Start.Date = Start.Date.AddYears(repeatInterval.Parts[0]).AddMonths(repeatInterval.Parts[1]).AddDays(repeatInterval.Parts[2]); // shift end date by interval
             End.Date = End.Date.AddYears(repeatInterval.Parts[0]).AddMonths(repeatInterval.Parts[1]).AddDays(repeatInterval.Parts[2]); // shift end date by interval
 
-            // if monthly increment (no daily commponent)
-            // and if enddate month is february
+            // if monthly increment (no daily component)
+            // and if endDate month is February
             if (repeatInterval.Parts[2] == 0 && End.Date.Month == 2)
             {
                 // set end day to account for leap years
@@ -160,17 +166,17 @@ namespace Models.CLEM.Timers
         }
 
         /// <summary>
-        /// Shift the range to the next defined occurence
+        /// Shift the range to the next defined occurrence
         /// </summary>
         private void TrimAndIdentifyTimeStepIndex()
         {
             // alter start and end dates to be in range if whole time step in range required
-            var startend = events.GetTimeStepRangeContainingDate(Start.Date);
-            if (WholeTimeStepInRange && startend.start < Start.Date)
-                Start.Date = startend.end;
-            startend = events.GetTimeStepRangeContainingDate(End.Date);
-            if (WholeTimeStepInRange && startend.end > End.Date)
-                End.Date = startend.start;
+            var startEnd = events.GetTimeStepRangeContainingDate(Start.Date);
+            if (WholeTimeStepInRange && startEnd.start < Start.Date)
+                Start.Date = startEnd.end;
+            startEnd = events.GetTimeStepRangeContainingDate(End.Date);
+            if (WholeTimeStepInRange && startEnd.end > End.Date)
+                End.Date = startEnd.start;
 
             // get time-step index for start and end
             Start.TimeStepIndex = events.CalculateTimeStepIntervalIndex(Start.Date);
@@ -193,8 +199,12 @@ namespace Models.CLEM.Timers
                 // if in range true
             }
             else
+            {
                 if (date < Start.Date || date > End.Date)
-                return true;
+                {
+                    return true;
+                }
+            }
             return false;
         }
 
@@ -205,7 +215,10 @@ namespace Models.CLEM.Timers
         public bool IsInRange()
         {
             if (events is null)
+            {
                 return false;
+            }
+
             return IsInRange(events.IntervalIndex);
         }
 
@@ -217,7 +230,10 @@ namespace Models.CLEM.Timers
         public bool IsInRange(int timeStepIndex)
         {
             if (events is null)
+            {
                 return false;
+            }
+
             if (timeStepIndex >= Start.TimeStepIndex && timeStepIndex <= End.TimeStepIndex)
             {
                 return ActivityTimerSequence.IsInSequence(sequenceTimerList, timeStepIndex - Start.TimeStepIndex);

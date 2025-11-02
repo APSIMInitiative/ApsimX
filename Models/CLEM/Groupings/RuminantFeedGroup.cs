@@ -305,7 +305,9 @@ namespace Models.CLEM.Groupings
 
             string forceFedString = "fed";
             if (feedActivity.ForceFeed && feedActivity.ForceIntakeAllowed())
+            {
                 forceFedString = "force-fed";
+            }
 
             switch (ft)
             {

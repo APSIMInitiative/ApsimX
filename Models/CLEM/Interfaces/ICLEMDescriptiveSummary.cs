@@ -38,7 +38,7 @@ namespace Models.CLEM.Interfaces
         List<string> CurrentAncestorList { get; set; }
 
         /// <summary>
-        /// Determines if this discription is below a parent model
+        /// Determines if this description is below a parent model
         /// </summary>
         bool FormatForParentControl { get; }
 

@@ -59,7 +59,9 @@ namespace Models.CLEM
         public IEnumerable<string> GetParameterNames()
         {
             if (properties is null)
+            {
                 InitialiseFilters(false);
+            }
 
             return properties.Keys.OrderBy(k => k);
         }
@@ -76,12 +78,18 @@ namespace Models.CLEM
         public IEnumerable<PropertyInfo> GetProperty(string name) 
         {
             if (properties is null)
+            {
                 InitialiseFilters(false);
+            }
 
-            if(properties.ContainsKey(name))
-                return properties[name]; 
+            if (properties.ContainsKey(name))
+            {
+                return properties[name];
+            }
             else
+            {
                 return new List<PropertyInfo>();
+            }
         }
 
         /// <summary>
@@ -90,7 +98,9 @@ namespace Models.CLEM
         public void ClearRules()
         {
             foreach (Filter filter in Structure.FindChildren<Filter>())
+            {
                 filter.ClearRule();
+            }
         }
 
         ///<inheritdoc/>
@@ -99,8 +109,10 @@ namespace Models.CLEM
         {
             filterRules = null;
             sortList = null;
-            if(!GetType().Name.Contains("Linked"))
+            if (!GetType().Name.Contains("Linked"))
+            {
                 InitialiseFilters();
+            }
         }
 
         /// <summary>
@@ -120,7 +132,9 @@ namespace Models.CLEM
             foreach (var subtype in types)
             {
                 foreach (var sub in GetNestedPropertiesYield(subtype, new List<PropertyInfo>()))
+                {
                     properties.Add($"{subtype.Name[8..]}.{sub.Key}", sub.Value);
+                }
             }
 
             properties =  properties.OrderBy(x => x.Key).ToDictionary(pair => pair.Key, pair => pair.Value);
@@ -128,7 +142,9 @@ namespace Models.CLEM
             {
                 filter.Initialise();
                 if (includeBuildRules)
+                {
                     filter.BuildRule();
+                }
             }
 
             sortList = Structure.FindChildren<ISort>();
@@ -146,7 +162,9 @@ namespace Models.CLEM
                .Where(prop => Attribute.IsDefined(prop, typeof(FilterByPropertyAttribute)));
 
             if (!props.Any())
+            {
                 yield return new KeyValuePair<string, List<PropertyInfo>>(string.Join('.', nestedPropertyList.Select(a => a.Name)) , nestedPropertyList);
+            }
 
             foreach (var prop in props)
             {
@@ -161,15 +179,19 @@ namespace Models.CLEM
         public virtual IEnumerable<T> Filter<T>(IEnumerable<T> source) where T : IFilterable
         {
             if (source is null)
+            {
                 throw new NullReferenceException("Cannot filter a null object");
+            }
 
             filterRules ??= Structure.FindChildren<Filter>().Select(filter => filter.Rule);
 
             var filtered = filterRules.Any() ? source.Where(item => filterRules.All(rule => rule is null ? false : rule(item))) : source;
 
-            if(sortList?.Any()??false)
+            if (sortList?.Any() ?? false)
+            {
                 // add sorting and take specified
                 filtered = filtered.Sort(sortList, RandomiseBeforeSorting);
+            }
 
             // do all takes and skips
             foreach (var take in Structure.FindChildren<TakeFromFiltered>())
@@ -191,16 +213,26 @@ namespace Models.CLEM
                     case TakeFromFilterStyle.TakeProportion:
                     case TakeFromFilterStyle.TakeIndividuals:
                         if (take.TakePositionStyle == TakeFromFilteredPositionStyle.Start)
+                        {
                             filtered = filtered.Take(number);
+                        }
                         else
+                        {
                             filtered = filtered.TakeLast(number);
+                        }
+
                         break;
                     case TakeFromFilterStyle.SkipProportion:
                     case TakeFromFilterStyle.SkipIndividuals:
                         if (take.TakePositionStyle == TakeFromFilteredPositionStyle.Start)
+                        {
                             filtered = filtered.Skip(number);
+                        }
                         else
+                        {
                             filtered = filtered.SkipLast(number);
+                        }
+
                         break;
                 }
             }
@@ -211,7 +243,9 @@ namespace Models.CLEM
         public virtual bool Filter<T>(T item) where T : IFilterable
         {
             if (item == null)
+            {
                 throw new NullReferenceException("Cannot filter a null object");
+            }
 
             filterRules ??= Structure.FindChildren<Filter>().Select(filter => filter.Rule);
 
@@ -253,8 +287,10 @@ namespace Models.CLEM
         {
             using StringWriter htmlWriter = new();
             htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
-            if (Structure.FindChildren<Filter>().Count() == 0)
+            if (!Structure.FindChildren<Filter>().Any())
+            {
                 htmlWriter.Write("<div class=\"filter\">All individuals</div>");
+            }
 
             return htmlWriter.ToString();
         }

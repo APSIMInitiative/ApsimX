@@ -66,7 +66,9 @@ namespace Models.CLEM
         public string CategoryByLevel(int level)
         {
             if (level == 0)
+            {
                 return Category;
+            }
             else
             {
                 string[] parts = Category.Split('.');
@@ -96,7 +98,7 @@ namespace Models.CLEM
         }
 
         /// <summary>
-        /// Object to sotre specific extra information such as cohort details
+        /// Object to store specific extra information such as cohort details
         /// </summary>
         public object ExtraInformation { get; set; }
 

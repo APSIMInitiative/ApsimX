@@ -128,7 +128,9 @@ namespace Models.CLEM.Timers
             htmlWriter.Write(MinimumPastureLevel.ToString());
             htmlWriter.Write("</span> and ");
             if (MaximumPastureLevel <= MinimumPastureLevel)
+            {
                 htmlWriter.Write("<span class=\"resourcelink\">must be > MinimumPastureLevel</span> ");
+            }
             else
             {
                 htmlWriter.Write("<span class=\"setvalueextra\">");
@@ -136,7 +138,7 @@ namespace Models.CLEM.Timers
                 htmlWriter.Write("</span> ");
             }
             htmlWriter.Write(" kg per hectare</div>");
-            if (!this.Enabled & !FormatForParentControl)
+            if (!Enabled & !FormatForParentControl)
                 htmlWriter.Write(" - DISABLED!");
             return htmlWriter.ToString();
         }
@@ -152,8 +154,11 @@ namespace Models.CLEM.Timers
         {
             using StringWriter htmlWriter = new();
             htmlWriter.Write("<div class=\"filtername\">");
-            if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
-                htmlWriter.Write(this.Name);
+            if (!Name.Contains(GetType().Name.Split('.').Last()))
+            {
+                htmlWriter.Write(Name);
+            }
+
             htmlWriter.Write($"</div>");
             htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
             return htmlWriter.ToString();
