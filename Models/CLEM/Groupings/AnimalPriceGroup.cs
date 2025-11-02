@@ -46,7 +46,7 @@ namespace Models.CLEM.Groupings
         public PurchaseOrSalePricingStyleType PurchaseOrSale { get; set; }
 
         /// <summary>
-        /// Calulate the value of an individual
+        /// Calculate the value of an individual
         /// </summary>
         /// <param name="ind"></param>
         /// <returns></returns>

@@ -269,7 +269,7 @@ namespace Models.CLEM
 
         private CropDataType DataRow2CropData(DataRow dr)
         {
-            CropDataType cropdata = new CropDataType
+            CropDataType cropData = new CropDataType
             {
                 SoilNum = dr[SoilTypeColumnName].ToString(),
                 CropName = dr[CropNameColumnName].ToString(),
@@ -278,21 +278,21 @@ namespace Models.CLEM
             };
             if (nitrogenColumnExists)
             {
-                cropdata.Npct = double.Parse(dr[PercentNitrogenColumnName].ToString(), CultureInfo.InvariantCulture);
+                cropData.Npct = double.Parse(dr[PercentNitrogenColumnName].ToString(), CultureInfo.InvariantCulture);
             }
             else
             {
-                cropdata.Npct = double.NaN;
+                cropData.Npct = double.NaN;
             }
 
             if (harvestTypeColumnExists)
             {
-                cropdata.HarvestType = dr[HarvestTypeColumnName].ToString();
+                cropData.HarvestType = dr[HarvestTypeColumnName].ToString();
             }
 
-            cropdata.HarvestDate = new DateTime(cropdata.Year, cropdata.Month, 1);
+            cropData.HarvestDate = new DateTime(cropData.Year, cropData.Month, 1);
 
-            return cropdata;
+            return cropData;
         }
 
         #region descriptive summary

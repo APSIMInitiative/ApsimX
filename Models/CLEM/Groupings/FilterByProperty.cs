@@ -91,9 +91,9 @@ namespace Models.CLEM.Groupings
             // this will not allow females to check male properties
             // convert parameter to the type of the property, null if fails
             var filterInherit = Expression.TypeAs(filterParam, propertyInfo.First().DeclaringType);
-            var typeis = Expression.TypeIs(filterParam, propertyInfo.First().DeclaringType);
+            var typeIs = Expression.TypeIs(filterParam, propertyInfo.First().DeclaringType);
 
-            // now using the Ienumerable of property info, build the expression as this allows nested properties to be used. 
+            // now using the IEnumerable of property info, build the expression as this allows nested properties to be used. 
             Expression key = null;
             foreach (var property in propertyInfo)
             {
@@ -106,9 +106,6 @@ namespace Models.CLEM.Groupings
                     key = Expression.Property(key, property.Name);
                 }
             }
-
-            // Look for the property
-            //var key = Expression.Property(filterInherit, propertyInfo.Last().Name);
 
             // Try convert the Value into the same data type as the property
 
@@ -145,7 +142,7 @@ namespace Models.CLEM.Groupings
 
             // only perform if the type is a match to the type of property
             var body = Expression.Condition(
-                typeis,
+                typeIs,
                 binary,
                 Expression.Constant(false)
                 );

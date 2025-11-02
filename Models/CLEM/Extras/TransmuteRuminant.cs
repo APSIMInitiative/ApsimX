@@ -179,7 +179,7 @@ namespace Models.CLEM
         [EventSubscribe("CLEMInitialise")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            // get herd for transmutating
+            // get herd for transmuting
             ResourceGroup = resources.FindResourceGroup<RuminantHerd>();
             TransmuteResourceTypeName = ResourceGroup.Name;
             shortfallPacketSize = (Parent as Transmutation).TransmutationPacketSize;

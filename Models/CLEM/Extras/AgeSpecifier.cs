@@ -9,7 +9,7 @@ using System.Text.Json.Serialization;
 namespace Models.CLEM
 {
     /// <summary>
-    /// A  class to allow the user to easily define the age of individuals in a convienient y,m,d format
+    /// A  class to allow the user to easily define the age of individuals in a convenient y,m,d format
     /// </summary>
     [Serializable]
     public class AgeSpecifier: ICloneable
@@ -91,13 +91,13 @@ namespace Models.CLEM
             {
                 decimal years = Math.Floor(months / 12);
                 decimal remainingMonths = months - (years * 12);
-                decimal partmonths = months - decimal.Floor(months);
-                Parts = new int[] { Convert.ToInt32(years), Convert.ToInt32(remainingMonths), Convert.ToInt32(partmonths*30.4M) };
+                decimal partMonths = months - decimal.Floor(months);
+                Parts = new int[] { Convert.ToInt32(years), Convert.ToInt32(remainingMonths), Convert.ToInt32(partMonths*30.4M) };
             }
             else
             {
-                decimal partmonths = months - decimal.Floor(months);
-                Parts = new int[] { 0, Convert.ToInt32(months), Convert.ToInt32(partmonths * 30.4M) };
+                decimal partMonths = months - decimal.Floor(months);
+                Parts = new int[] { 0, Convert.ToInt32(months), Convert.ToInt32(partMonths * 30.4M) };
             }
             //Parts = new int[] { Convert.ToInt32(months), Convert.ToInt32(30.4m * (months - Convert.ToDecimal(Math.Floor(months)))) };
         }

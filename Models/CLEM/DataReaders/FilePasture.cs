@@ -538,7 +538,7 @@ namespace Models.CLEM
         /// <param name="stockingRate"></param>
         /// <param name="year"></param>
         /// <param name="month"></param>
-        /// <returns>CropDataType containg the crop data for this month</returns>
+        /// <returns>CropDataType containing the crop data for this month</returns>
         public PastureDataType GetMonthsPastureData(int region, int soil, int forageNo, int grassBasalArea, int landCondition, int stockingRate,
                                          int year, int month)
         {
@@ -556,9 +556,9 @@ namespace Models.CLEM
 
             if (dr != null)
             {
-                PastureDataType pasturedata = DataRow2PastureDataType(dr);
+                PastureDataType pastureData = DataRow2PastureDataType(dr);
 
-                return pasturedata;
+                return pastureData;
             }
             else
             {
@@ -577,7 +577,7 @@ namespace Models.CLEM
 
         private static PastureDataType DataRow2PastureDataType(DataRow dr)
         {
-            PastureDataType pasturedata = new PastureDataType
+            PastureDataType pastureData = new PastureDataType
             {
                 Region = int.Parse(dr["Region"].ToString(), CultureInfo.InvariantCulture),
                 Soil = int.Parse(dr["Soil"].ToString(), CultureInfo.InvariantCulture),
@@ -599,8 +599,8 @@ namespace Models.CLEM
                 Rainfall = double.Parse(dr["Rainfall"].ToString(), CultureInfo.InvariantCulture),
                 Runoff = double.Parse(dr["Runoff"].ToString(), CultureInfo.InvariantCulture)
             };
-            pasturedata.CutDate = new DateTime(pasturedata.Year, pasturedata.Month, 1);
-            return pasturedata;
+            pastureData.CutDate = new DateTime(pastureData.Year, pastureData.Month, 1);
+            return pastureData;
         }
 
         /// <summary>

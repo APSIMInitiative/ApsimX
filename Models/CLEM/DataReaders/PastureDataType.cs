@@ -60,7 +60,7 @@ namespace Models.CLEM
         public int Month;
 
         /// <summary>
-        /// Amout in Kg of Biomass of the pasture
+        /// Amount in Kg of Biomass of the pasture
         /// </summary>
         public double Growth;
 

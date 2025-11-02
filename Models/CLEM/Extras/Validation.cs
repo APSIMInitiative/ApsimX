@@ -76,10 +76,10 @@ namespace Models.CLEM
         /// <returns></returns>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            double maxvalue = Convert.ToDouble(value, CultureInfo.InvariantCulture);
+            double maxValue = Convert.ToDouble(value, CultureInfo.InvariantCulture);
             string[] memberNames = new string[] { validationContext.MemberName };
 
-            if ((MathUtilities.IsGreaterThanOrEqual(maxvalue, 0)) && MathUtilities.IsLessThanOrEqual(maxvalue, 100))
+            if ((MathUtilities.IsGreaterThanOrEqual(maxValue, 0)) && MathUtilities.IsLessThanOrEqual(maxValue, 100))
                 return ValidationResult.Success;
             else
                 return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
@@ -113,14 +113,14 @@ namespace Models.CLEM
         {
             string[] memberNames = new string[] { validationContext.MemberName };
 
-            double[] listvalues;
+            double[] listValues;
             if (value != null && value.GetType().IsArray)
-                listvalues = value as double[];
+                listValues = value as double[];
             else
-                listvalues = new double[] { Convert.ToDouble(value, CultureInfo.InvariantCulture) };
+                listValues = new double[] { Convert.ToDouble(value, CultureInfo.InvariantCulture) };
 
             // allow for arrays of values to be checked
-            foreach (double item in listvalues)
+            foreach (double item in listValues)
                 if (MathUtilities.IsNegative(item) | MathUtilities.IsGreaterThan(item, 1))
                     return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
 
@@ -153,16 +153,16 @@ namespace Models.CLEM
         /// <returns></returns>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            int monthvalue;
+            int monthValue;
 
             if(value.GetType().IsEnum)
-                monthvalue = (int)value;
+                monthValue = (int)value;
             else
-                monthvalue = Convert.ToInt32(value, CultureInfo.InvariantCulture);
+                monthValue = Convert.ToInt32(value, CultureInfo.InvariantCulture);
 
             string[] memberNames = new string[] { validationContext.MemberName };
 
-            if ((monthvalue >= 1) && (monthvalue <= 12))
+            if ((monthValue >= 1) && (monthValue <= 12))
                 return ValidationResult.Success;
             else
                 return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
@@ -196,19 +196,19 @@ namespace Models.CLEM
         /// <returns></returns>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            double maxvalue;
+            double maxValue;
             if (value.GetType().IsArray)
-                maxvalue = (value as double[]).Min();
+                maxValue = (value as double[]).Min();
             else
-                maxvalue = Convert.ToDouble(value);
+                maxValue = Convert.ToDouble(value);
 
             string[] memberNames = new string[] { validationContext.MemberName };
 
-            if (MathUtilities.IsGreaterThan(maxvalue, compareValue))
+            if (MathUtilities.IsGreaterThan(maxValue, compareValue))
                 return ValidationResult.Success;
             else
             {
-                DefaultErrorMessage = $"Value [{maxvalue}] must be greater than [{compareValue}]";
+                DefaultErrorMessage = $"Value [{maxValue}] must be greater than [{compareValue}]";
                 return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
             }
         }
@@ -244,19 +244,19 @@ namespace Models.CLEM
             if (value is null   )
                 return ValidationResult.Success;
 
-            double maxvalue;
+            double maxValue;
             if (value.GetType().IsArray)
-                maxvalue = (value as double[]).Min();
+                maxValue = (value as double[]).Min();
             else
-                maxvalue = Convert.ToDouble(value);
+                maxValue = Convert.ToDouble(value);
 
             string[] memberNames = new string[] { validationContext.MemberName };
 
-            if (MathUtilities.IsGreaterThanOrEqual(maxvalue, compareValue))
+            if (MathUtilities.IsGreaterThanOrEqual(maxValue, compareValue))
                 return ValidationResult.Success;
             else
             {
-                DefaultErrorMessage = $"Value [{maxvalue}] must be greater than or equal to [{compareValue}]";
+                DefaultErrorMessage = $"Value [{maxValue}] must be greater than or equal to [{compareValue}]";
                 return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
             }
         }
@@ -282,7 +282,7 @@ namespace Models.CLEM
         private string compareStyle { get; set; }
 
         /// <summary>
-        /// Perfom validation method
+        /// Perform validation method
         /// </summary>
         /// <param name="value"></param>
         /// <param name="validationContext"></param>
@@ -356,20 +356,20 @@ namespace Models.CLEM
         /// <returns></returns>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            double maxvalue = Convert.ToDouble(value, CultureInfo.InvariantCulture);
+            double maxValue = Convert.ToDouble(value, CultureInfo.InvariantCulture);
             string[] memberNames = new string[] { validationContext.MemberName };
 
             // check valid property name
             if(validationContext.ObjectType.GetProperty(compareToFieldName) == null)
                 throw new Exception(String.Format("Invalid property name [{0}] provided for validation attribute [GreaterThan] on property [{1}] in [{2}]", compareToFieldName, validationContext.MemberName, validationContext.ObjectInstance.ToString()));
 
-            double minvalue = Convert.ToDouble(validationContext.ObjectType.GetProperty(compareToFieldName).GetValue(validationContext.ObjectInstance, null), CultureInfo.InvariantCulture);
+            double minValue = Convert.ToDouble(validationContext.ObjectType.GetProperty(compareToFieldName).GetValue(validationContext.ObjectInstance, null), CultureInfo.InvariantCulture);
 
-            if (MathUtilities.IsGreaterThan(maxvalue, minvalue))
+            if (MathUtilities.IsGreaterThan(maxValue, minValue))
                 return ValidationResult.Success;
             else
             {
-                DefaultErrorMessage = $"Value [{maxvalue}] must be greater than {compareToFieldName} [{minvalue}]";
+                DefaultErrorMessage = $"Value [{maxValue}] must be greater than {compareToFieldName} [{minValue}]";
                 return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
             }
         }
@@ -402,20 +402,20 @@ namespace Models.CLEM
         /// <returns></returns>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            double maxvalue = Convert.ToDouble(value);
+            double maxValue = Convert.ToDouble(value);
             string[] memberNames = new string[] { validationContext.MemberName };
 
             // check valid property name
             if (validationContext.ObjectType.GetProperty(compareToFieldName) == null)
                 throw new Exception(String.Format("Invalid property name [{0}] provided for validation attribute [DateGreaterThan] on property [{1}] in [{2}]", compareToFieldName, validationContext.MemberName, validationContext.ObjectInstance.ToString()));
 
-            double minvalue = Convert.ToDouble(validationContext.ObjectType.GetProperty(compareToFieldName).GetValue(validationContext.ObjectInstance, null), CultureInfo.InvariantCulture);
+            double minValue = Convert.ToDouble(validationContext.ObjectType.GetProperty(compareToFieldName).GetValue(validationContext.ObjectInstance, null), CultureInfo.InvariantCulture);
 
-            if (MathUtilities.IsGreaterThanOrEqual(maxvalue, minvalue))
+            if (MathUtilities.IsGreaterThanOrEqual(maxValue, minValue))
                 return ValidationResult.Success;
             else
             {
-                DefaultErrorMessage = $"Value [{maxvalue}] must be greater than or equal to {compareToFieldName} [{minvalue}]";
+                DefaultErrorMessage = $"Value [{maxValue}] must be greater than or equal to {compareToFieldName} [{minValue}]";
                 return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
             }
         }
@@ -441,7 +441,7 @@ namespace Models.CLEM
         }
 
         /// <summary>
-        /// Test for set number of itesma in array
+        /// Test for set number of items in array
         /// </summary>
         /// <param name="minArrayItems">The minimum number of array items allowed</param>
         /// <param name="maxArrayItems">The maximum number of array items allowed</param>

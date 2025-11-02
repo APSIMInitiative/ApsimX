@@ -220,7 +220,7 @@ namespace Models.CLEM
         /// <summary>
         /// Opens the SQLite database if necessary
         /// </summary>
-        /// <returns>true if open suceeded, false if the opening failed </returns>
+        /// <returns>true if open succeeded, false if the opening failed </returns>
         private bool OpenSQLiteDB()
         {
             if (SQLiteReader == null)
@@ -376,7 +376,7 @@ namespace Models.CLEM
 
         /// <summary>
         /// Gets or sets the full file name (with path). The user interface uses this.
-        /// Must be a property so that the Prsenter can use a  Commands.ChangeProperty() on it.
+        /// Must be a property so that the Presenter can use a  Commands.ChangeProperty() on it.
         /// ChangeProperty does not work on fields.
         /// </summary>
         [JsonIgnore]
@@ -523,7 +523,7 @@ namespace Models.CLEM
         /// It will find the category with the next largest value to the actual value supplied.
         /// So if the value is 0 the category with the next largest value will normally be the first entry
         /// </summary>
-        /// <param name="category">The name of the distict categories to use</param>
+        /// <param name="category">The name of the district categories to use</param>
         /// <param name="value">The value to search for</param>
         /// <returns></returns>
         private double FindClosestCategory(string category, double value)
