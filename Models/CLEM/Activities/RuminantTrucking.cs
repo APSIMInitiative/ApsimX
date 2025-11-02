@@ -223,7 +223,7 @@ namespace Models.CLEM.Activities
             individualsToBeTrucked = GetUniqueIndividuals<Ruminant>(filterGroups.OfType<RuminantGroup>(), parentBuySellActivity.IndividualsToBeTrucked, Structure).ToList();
             numberToDo = individualsToBeTrucked?.Count() ?? 0;
 
-            // work out how many can be trucked and return to parent of untrucked for next trucking settings if available.
+            // work out how many can be trucked and return to parent of not trucked for next trucking settings if available.
 
             truckDetails = EstimateTrucking();
 
@@ -380,7 +380,7 @@ namespace Models.CLEM.Activities
                                 {
                                     loadingTruck = false;
                                 }
-                                else if (truckLoadCnt < MaximumLoadUnitsPerTruck) // LoadUnitsPerTrailer[trailerId])
+                                else if (truckLoadCnt < MaximumLoadUnitsPerTruck)
                                 {
                                     // add trailer
                                     trailerCnt++;

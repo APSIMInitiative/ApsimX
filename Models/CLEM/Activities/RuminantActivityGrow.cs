@@ -236,7 +236,7 @@ namespace Models.CLEM.Activities
 
             ind.Milk.PotentialRate = ind.Parameters.Lactation.MilkPeakYield * ind.Weight.Live / ind.Weight.NormalisedForAge * (Math.Pow(((milkTime + ind.Parameters.Lactation.MilkOffsetDay) / ind.Parameters.Lactation.MilkPeakDay), milkCurve)) * Math.Exp(milkCurve * (1 - (milkTime + ind.Parameters.Lactation.MilkOffsetDay) / ind.Parameters.Lactation.MilkPeakDay));
             ind.Milk.PotentialRate = Math.Max(ind.Milk.PotentialRate, 0.0);
-            // Reference: Potential milk prodn, 3.2 MJ/kg milk - Jouven et al 2008
+            // Reference: Potential milk production, 3.2 MJ/kg milk - Jouven et al 2008
             double energyMilk = ind.Milk.PotentialRate * 3.2 / kl;
             // adjust last time step's energy balance
             double adjustedEnergyBalance = ind.Energy.AfterLactation;
@@ -348,7 +348,7 @@ namespace Models.CLEM.Activities
                         }
                     }
 
-                    // TODO: nabsa adjusts potential intake for digestibility of fodder here.
+                    // TODO: NABSA adjusts potential intake for digestibility of fodder here.
                     // This is now done in RuminantActivityGrazePasture
 
                     // calculate energy

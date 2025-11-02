@@ -165,7 +165,7 @@ namespace Models.CLEM.Activities
         {
             // add ruminant activity filter group to ensure correct individuals are selected
             string location = GrazeFoodStoreModel.Name;
-            if (location.Contains("."))
+            if (location.Contains('.'))
             {
                 location = location.Split('.')[1];
             }

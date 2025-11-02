@@ -22,7 +22,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityEntericCH4Charmley: CLEMRuminantActivityBase
     {
         [Link(IsOptional = true)]
-        private CLEMEvents events = null;
+        private readonly CLEMEvents events = null;
 
         private GreenhouseGasesType methaneEmissions;
 

@@ -119,7 +119,7 @@ namespace Models.CLEM.Activities
             grazeStore = "";
             if (GrazeFoodStoreName != null)
             {
-                if (GrazeFoodStoreName.Contains("."))
+                if (GrazeFoodStoreName.Contains('.'))
                 {
                     grazeStore = GrazeFoodStoreName.Split('.').Last();
                 }

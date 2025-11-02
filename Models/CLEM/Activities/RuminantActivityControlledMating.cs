@@ -29,7 +29,6 @@ namespace Models.CLEM.Activities
     {
         private List<ISetAttribute> attributeList;
         private ActivityTimerBreedForMilking milkingTimer;
-        private RuminantActivityBreed breedingParent;
         private IEnumerable<RuminantFemale> uniqueIndividuals;
         private IEnumerable<RuminantGroup> filterGroups;
 
@@ -122,8 +121,6 @@ namespace Models.CLEM.Activities
             {
                 Summary.WriteMessage(this, $"Breeding with controlled mating [a={Parent.Name}].[a={Name}] requires a Timer otherwise breeding will be undertaken every time-step", MessageType.Warning);
             }
-
-            breedingParent = Parent as RuminantActivityBreed;
         }
 
         /// <summary>

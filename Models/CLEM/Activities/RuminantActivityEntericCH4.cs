@@ -21,7 +21,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityEntericCH4: CLEMRuminantActivityBase
     {
         [Link(IsOptional = true)]
-        private CLEMEvents events = null;
+        private readonly CLEMEvents events = null;
 
         private GreenhouseGasesType methaneEmissions;
 
@@ -83,7 +83,7 @@ namespace Models.CLEM.Activities
                         break;
                         // ToDo: Not implemented, but same as Baxter and Claperton 1965
                         // Function to calculate approximate methane produced by animal, based on feed intake based on Freer spreadsheet
-                        // methaneproduced is  0.02 * intakeDaily * ((13 + 7.52 * energyMetabolic) + (energyMetablicFromIntake / energyMaintenance) * (23.7 - 3.36 * energyMetabolic)); // MJ per day
+                        // methaneProduced is  0.02 * intakeDaily * ((13 + 7.52 * energyMetabolic) + (energyMetabolicFromIntake / energyMaintenance) * (23.7 - 3.36 * energyMetabolic)); // MJ per day
                         // methane is methaneProduced / 55.28 * 1000; // grams per day
                 }
                 Status = ActivityStatus.Calculation;

@@ -237,6 +237,9 @@ namespace Models.CLEM.Activities
             bool pregnancyLost = false;
             bool birthOccurred = false;
 
+            // todo: add prenatal mortality based on trimester
+
+
             //// only perform prenatal mortality if using RuminantGrow as GrowPF will use toxaemia and dystocia to determine this mortality.
             //if (CurrentHerd(true).FirstOrDefault().Parameters.Details.ParentHerd.RuminantGrowActivity.GetType() == typeof(RuminantActivityGrow))
             //{
@@ -245,12 +248,12 @@ namespace Models.CLEM.Activities
             //        // THIS HAS BEEN TURNED OFF AS NOT SURE THIS FUNCTIONALITY FROM IAT/NABSA IS CORRECT
             //        // calculate fetus and newborn mortality
             //        // total mortality / (gestation months + 1) to get monthly mortality
-            //        // done here before births to account for post birth motality as well..
+            //        // done here before births to account for post birth mortality as well..
             //        // needs to be calculated for each offspring carried.
 
             //        if (female.FetusNewBornMortality(events, conceptionArgs))
             //        {
-            //            preglost = true;
+            //            pregnancyLost = true;
             //        }
             //    }
             //}
@@ -396,8 +399,8 @@ namespace Models.CLEM.Activities
                             // conception rate will be -ve for unsuccessful matings from controlled mating. a value of 0 still represents not mated
                             if (Math.Abs(conceptionRate) > 0)
                             {
-                                // if controlled mating (ActiDetConcepRate not null and rate > 0 then successful mating), otherwise compare with random and conception rate for natural mating.
-                                // ActivitydeterminedConception rate > 0, otherwise rate calculated above versus the random number approach
+                                // if controlled mating (ActivityConceptionRate not null and rate > 0 then successful mating), otherwise compare with random and conception rate for natural mating.
+                                // ActivityDeterminedConception rate > 0, otherwise rate calculated above versus the random number approach
                                 if ((female.ActivityDeterminedConceptionRate != null) ? conceptionRate > 0 : RandomNumberGenerator.Generator.NextDouble() <= conceptionRate)
                                 {
                                     female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0, timeStepDate);
