@@ -436,8 +436,8 @@ namespace Models.CLEM.Activities
             // Note: the use of ZF2 in proteinContentOfGain has been changed to -ve as opposed to the incorrect +ve in documentation (J.Dougherty, CSIRO, 21/1/2025)
 
             // determine if body protein is below expected for age to adjust protein content of gain for recovery of protein
-            double proteinNormal = ind.Weight.Protein.MassAtSRW * relativeSizeForWeightGainPurposes;
-            ind.Weight.Protein.NormalShortfall = Math.Max(0, proteinNormal - ind.Weight.Protein.Amount);
+            ind.Weight.Protein.Normal = ind.Weight.Protein.MassAtSRW * relativeSizeForWeightGainPurposes;
+            ind.Weight.Protein.NormalShortfall = Math.Max(0, ind.Weight.Protein.Normal - ind.Weight.Protein.Amount);
 
             // Equation 102, 104 & 105   =======================================
             // Equation 102 - PG1 and PG2 protein available from diet after accounting for maintenance and conceptus and milk
@@ -464,7 +464,7 @@ namespace Models.CLEM.Activities
             ind.Weight.Protein.ForGain = proteinNeededForGrowthAllowableByEnergy;
             ind.Weight.Protein.AvailableForGain = proteinAvailableForGainFromIntake;
 
-            AdjustLactationForProteinDeficit(ind, proteinNormal, ref proteinAvailableForGainFromIntake, energyEmptyBodyGain, proteinContentOfGain, ref energyAvailableForGain, ref proteinNeededForGrowthAllowableByEnergy);
+            AdjustLactationForProteinDeficit(ind, ind.Weight.Protein.Normal, ref proteinAvailableForGainFromIntake, energyEmptyBodyGain, proteinContentOfGain, ref energyAvailableForGain, ref proteinNeededForGrowthAllowableByEnergy);
 
             // Fat and Protein change - Dougherty et al 2024 ========================================
             // Departure from Freer 2012 to allow for fat and protein change to be calculated separately to derive ebm change.

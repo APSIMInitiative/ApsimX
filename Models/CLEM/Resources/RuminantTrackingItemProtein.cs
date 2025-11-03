@@ -35,7 +35,12 @@ namespace Models.CLEM.Resources
 
         // todo: this needs to be completed, checked and tested
         /// <inheritdoc/>
-        public new double Net { get { return FromIntake - ForUrinary - ForFaecal - ForPregnancy - ForWool - ForLactationFromIntake; } }
+        public new double Net { get { return FromIntakeAvailable - ForUrinary - ForFaecal - ForPregnancy - ForWool - ForLactationFromIntake; } }
+
+        /// <summary>
+        /// Normal protein mass by body size
+        /// </summary>
+        public double Normal { get; set; }
 
         /// <summary>
         /// Protein needed to reach normal protein mass by body size
@@ -132,9 +137,15 @@ namespace Models.CLEM.Resources
         public double AvailableForGain { get; set; }
 
         /// <summary>
-        /// Report protein required for kg gain defined from net energy (kg day-1)
+        /// Total protein provided from intake (kg day-1)
         /// </summary>
-        public double FromIntake { get { return intake.CrudeProtein; } }
+        public double FromIntakeTotal { get { return intake.CrudeProtein; } }
+
+        /// <summary>
+        /// Protein available from intake (kg day-1)
+        /// </summary>
+        public double FromIntakeAvailable { get { return intake.DPLS; } }
+
 
         /// <summary>
         /// Protein mass at mature (kg)

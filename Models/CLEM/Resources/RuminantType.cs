@@ -284,7 +284,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Determins whether a specified attribute is mandatory
+        /// Determines whether a specified attribute is mandatory
         /// </summary>
         /// <param name="name">name of attribute</param>
         public bool IsMandatoryAttribute(string name)
@@ -293,7 +293,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Check whether an individual has all mandotory attributes
+        /// Check whether an individual has all mandatory attributes
         /// </summary>
         /// <param name="ind">Individual ruminant to check</param>
         /// <param name="model">Model adding individuals</param>
