@@ -42,7 +42,7 @@ namespace UnitTests
             Observations observations = new Observations()
             {
                 FileNames = ["%root%/Tests/UnitTests/PreSimulationTools/Input.xlsx"],
-                SheetNames = ["Sheet1"]
+                SheetNames = ["Observed"]
             };
 
             dataStore.Node.AddChild(observations);
@@ -53,8 +53,9 @@ namespace UnitTests
             if (errors != null && errors.Count > 0)
                 throw new AggregateException("Errors: ", errors);
 
-            DataTable dt = dataStore.Reader.GetData("Sheet1");
+            dataStore.Writer.Stop();
             dataStore.Reader.Refresh();
+            DataTable dt = dataStore.Reader.GetData("Observed");
 
             Assert.That(dt.Columns[4].DataType, Is.EqualTo(typeof(DateTime)));
             Assert.That(dt.Columns[5].DataType, Is.EqualTo(typeof(string)));
@@ -103,7 +104,7 @@ namespace UnitTests
             }
 
             //Check Simulations information
-            //
+            //This cannot be tested correct in a unit test, another within an apsim file is created to test this.
             string[] simName = ["", "Simulation1"];
             bool[] simHas = [false, true];
             bool[] simData = [true, false];
