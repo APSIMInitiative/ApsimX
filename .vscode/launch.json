@@ -120,8 +120,8 @@
             "type": "coreclr",
             "request": "launch",
             "program": "${workspaceFolder}/bin/Debug/net8.0/Apsim.Workflow.dll",
-            "preLaunchTask": "Build Debug",            
-            "cwd": "${workspaceFolder}",            
+            "preLaunchTask": "Build Debug",
+            "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
             "justMyCode": false,
             "requireExactSource": false,
@@ -133,13 +133,10 @@
                 "searchMicrosoftSymbolServer": false
             },
             "args": [
-                // "C:/git/ApsimX/Tests/Validation/Chickpea/Chickpea.apsimx",
-                // "-s",
-                // "C:/git/ApsimX/APSIM.Workflow/Resources/chickpea.json"
                 "-d",
-                "C:/Users/RIC394/source/repos/ApsimX/Tests/Validation/Canola/",
+                "${workspaceFolder}/Tests/Validation/Wheat/FAR/FAR.apsimx",
                 "-s",
-                ""
+                "${workspaceFolder}/Tests/Validation/Wheat/FAR/split.json"
             ]
         },
         {
@@ -147,8 +144,8 @@
             "type": "coreclr",
             "request": "launch",
             "program": "${workspaceFolder}/bin/Debug/net8.0/Apsim.Workflow.dll",
-            "preLaunchTask": "Build Debug",            
-            "cwd": "${workspaceFolder}",            
+            "preLaunchTask": "Build Debug",
+            "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
             "justMyCode": false,
             "requireExactSource": false,
@@ -169,8 +166,8 @@
             "type": "coreclr",
             "request": "launch",
             "program": "${workspaceFolder}/bin/Debug/net8.0/Apsim.Workflow.dll",
-            "preLaunchTask": "Build Debug",            
-            "cwd": "${workspaceFolder}",            
+            "preLaunchTask": "Build Debug",
+            "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
             "justMyCode": false,
             "requireExactSource": false,

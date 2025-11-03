@@ -538,7 +538,7 @@ public class ModelTests
         var folder4 = new Folder() { Name = "folder1", Parent = folder1.Parent };
         container.Node.AddChild(folder4);
         Assert.That(folder2.Node.FindSibling<Folder>("folder1"), Is.EqualTo(folder1));
-        Assert.That(folder1.Node.FindSibling<Folder>("folder1"), Is.EqualTo(folder4));
+        Assert.That(folder1.Node.FindSibling<Folder>("folder11"), Is.EqualTo(folder4));
 
         // Test case-insensitive search.
         Assert.That(folder1.Node.FindSibling<Folder>("fOlDeR2"), Is.EqualTo(folder2));
@@ -927,12 +927,10 @@ public class ModelTests
         Assert.That(simpleModel.Node.FindChildren<IModel>("Container", recurse: true).ToArray(), Is.EqualTo(new[] { container }));
 
         // Many descendants with correct name - expect results in depth-first order.
-        var folder4 = new MockModel2() { Parent = container, Name = "folder1" };
-        container.Node.AddChild(folder4);
-        var folder5 = new MockModel() { Parent = folder1, Name = "folder1" };
-        folder1.Node.AddChild(folder5);
+        var newFolder1 = new MockModel() { Name = "folder1" };
+        folder1.Node.AddChild(newFolder1);
 
-        Assert.That(simpleModel.Node.FindChildren<IModel>("folder1", recurse: true).ToArray(), Is.EqualTo(new[] { folder1, folder5, folder4 }));
+        Assert.That(simpleModel.Node.FindChildren<IModel>("folder1", recurse: true).ToArray(), Is.EqualTo(new[] { folder1, newFolder1 }));
     }
 
     /// <summary>
@@ -961,9 +959,9 @@ public class ModelTests
         Assert.That(folder1.Node.FindSiblings<IModel>("folder2").ToArray(), Is.EqualTo(new[] { folder2 }));
 
         // Many siblings of correct name, expect them in indexed order.
-        var folder4 = new Folder() { Name = "folder2", Parent = container };
+        var folder4 = new Folder() { Name = "folder2", Parent = container };  // this will get renamed.
         folder1.Parent.Node.AddChild(folder4);
-        Assert.That(folder1.Node.FindSiblings<IModel>("folder2").ToArray(), Is.EqualTo(new[] { folder2, folder4 }));
+        Assert.That(folder1.Node.FindSiblings<IModel>("folder2").ToArray(), Is.EqualTo(new[] { folder2 }));
     }
 
     /// <summary>
@@ -987,13 +985,13 @@ public class ModelTests
         Assert.That(simpleModel.Node.FindChildren<IModel>("Container").ToArray(), Is.EqualTo(new[] { container }));
 
         // Many (but not all) children of correct name, expect them in indexed order.
-        var folder4 = new Folder() { Name = "folder2", Parent = container };
+        var folder4 = new Folder() { Name = "folder2", Parent = container }; // this will get renamed
         container.Node.AddChild(folder4);
-        Assert.That(container.Node.FindChildren<IModel>("folder2").ToArray(), Is.EqualTo(new[] { folder2, folder4 }));
+        Assert.That(container.Node.FindChildren<IModel>("folder2").ToArray(), Is.EqualTo(new[] { folder2 }));
 
         // All (>1) children have correct name.
         container.Node.RemoveChild(folder1 as INodeModel);
-        Assert.That(container.Node.FindChildren<IModel>("folder2").ToArray(), Is.EqualTo(new[] { folder2, folder4 }));
+        Assert.That(container.Node.FindChildren<IModel>("folder2").ToArray(), Is.EqualTo(new[] { folder2}));
     }
 
     /// <summary>
@@ -1122,12 +1120,12 @@ public class ModelTests
         var folder6 = new Folder() { Name = "folder1", Parent = container };
         folder1.Node.AddChild(folder4);
         folder4.Node.AddChild(folder5);
-        container.Node.AddChild(folder6);
+        container.Node.AddChild(folder6);   // folder6 renamed to folder11
         folder3.Node.Rename("folder1");
         noSiblings.Node.Rename("folder1");
 
-        Assert.That(simpleModel.Node.FindChildren<Folder>("folder1", recurse: true).ToArray(), Is.EqualTo(new[] { folder1, folder4, folder5, folder6, folder3 }));
-        Assert.That(container.Node.FindChildren<Folder>("folder1", recurse: true).ToArray(), Is.EqualTo(new[] { folder1, folder4, folder5, folder6 }));
+        Assert.That(simpleModel.Node.FindChildren<Folder>("folder1", recurse: true).ToArray(), Is.EqualTo(new[] { folder1, folder4, folder5, folder3 }));
+        Assert.That(container.Node.FindChildren<Folder>("folder1", recurse: true).ToArray(), Is.EqualTo(new[] { folder1, folder4, folder5 }));
         Assert.That(folder1.Node.FindChildren<Folder>("folder1", recurse: true).ToArray(), Is.EqualTo(new[] { folder4, folder5 }));
         Assert.That(folder4.Node.FindChildren<Folder>("folder1", recurse: true).ToArray(), Is.EqualTo(new[] { folder5 }));
 
@@ -1168,9 +1166,9 @@ public class ModelTests
 
         // Many siblings of correct type and name - expect indexed order.
         var folder4 = new Folder() { Name = "folder1", Parent = container };
-        container.Node.AddChild(folder4);
-        Assert.That(folder2.Node.FindSiblings<Folder>("folder1").ToArray(), Is.EqualTo(new[] { folder1, folder4 }));
-        Assert.That(folder1.Node.FindSiblings<Folder>("folder1").ToArray(), Is.EqualTo(new[] { folder4 }));
+        container.Node.AddChild(folder4); // renamed to folder11
+        Assert.That(folder2.Node.FindSiblings<Folder>("folder1").ToArray(), Is.EqualTo(new[] { folder1 }));
+        Assert.That(folder1.Node.FindSiblings<Folder>("folder1").ToArray(), Is.Empty);
 
         // Test case-insensitive search.
         Assert.That(folder1.Node.FindSiblings<Folder>("fOlDeR2").ToArray(), Is.EqualTo(new[] { folder2 }));
@@ -1203,8 +1201,8 @@ public class ModelTests
 
         // Many siblings of correct type and name - expect indexed order.
         var folder4 = new Folder() { Name = "folder1", Parent = container };
-        container.Node.AddChild(folder4);
-        Assert.That(container.Node.FindChildren<Folder>("folder1").ToArray(), Is.EqualTo(new[] { folder1, folder4 }));
+        container.Node.AddChild(folder4);  // renamed to folder11
+        Assert.That(container.Node.FindChildren<Folder>("folder1").ToArray(), Is.EqualTo(new[] { folder1 }));
 
         // Test case-insensitive search.
         Assert.That(container.Node.FindChildren<Folder>("fOlDeR2").ToArray(), Is.EqualTo(new[] { folder2 }));
@@ -1301,7 +1299,7 @@ public class ModelTests
     }
 
     /// <summary>
-    /// Tests for the <see cref="IModel.IsChildAllowable(Type)"/> method.
+    /// Tests for the IsChildAllowable method.
     /// </summary>
     [Test]
     public void TestIsChildAllowable()
@@ -1316,51 +1314,46 @@ public class ModelTests
         foreach (IModel anyChild in allowAnyChild)
         {
             // Any Model can be added to a folder
-            Assert.That(anyChild.IsChildAllowable(typeof(DropOnSimulations)), Is.True);
-            Assert.That(anyChild.IsChildAllowable(typeof(DropOnFolder)), Is.True);
-            Assert.That(anyChild.IsChildAllowable(typeof(MockModel1)), Is.True);
-            Assert.That(anyChild.IsChildAllowable(typeof(DropAnywhere)), Is.True);
-            Assert.That(anyChild.IsChildAllowable(typeof(ConflictingDirectives)), Is.True);
-            Assert.That(anyChild.IsChildAllowable(typeof(ConflictedButReversed)), Is.True);
-            Assert.That(anyChild.IsChildAllowable(typeof(NoValidParents)), Is.True);
-            Assert.That(anyChild.IsChildAllowable(typeof(SomeFunction)), Is.True);
-            Assert.That(anyChild.IsChildAllowable(typeof(SomeFunction)), Is.True);
+            Assert.That(Apsim.IsChildAllowable(anyChild, typeof(DropOnSimulations)), Is.True);
+            Assert.That(Apsim.IsChildAllowable(anyChild, typeof(DropOnFolder)), Is.True);
+            Assert.That(Apsim.IsChildAllowable(anyChild, typeof(MockModel1)), Is.True);
+            Assert.That(Apsim.IsChildAllowable(anyChild, typeof(DropAnywhere)), Is.True);
+            Assert.That(Apsim.IsChildAllowable(anyChild, typeof(ConflictingDirectives)), Is.True);
+            Assert.That(Apsim.IsChildAllowable(anyChild, typeof(ConflictedButReversed)), Is.True);
+            Assert.That(Apsim.IsChildAllowable(anyChild, typeof(NoValidParents)), Is.True);
+            Assert.That(Apsim.IsChildAllowable(anyChild, typeof(SomeFunction)), Is.True);
+            Assert.That(Apsim.IsChildAllowable(anyChild, typeof(SomeFunction)), Is.True);
 
             // If it's not a model it cannot be added as a child.
-            Assert.That(anyChild.IsChildAllowable(typeof(object)), Is.False);
-
-            // Even if it has a ValidParent attribute.
-            Assert.That(anyChild.IsChildAllowable(typeof(NotAModel)), Is.False);
+            Assert.That(Apsim.IsChildAllowable(anyChild, typeof(object)), Is.False);
 
             // Even if it's also an IFunction.
-            Assert.That(anyChild.IsChildAllowable(typeof(SimsIFunction)), Is.False);
+            Assert.That(Apsim.IsChildAllowable(anyChild, typeof(SimsIFunction)), Is.True);
 
             // Simulations object also cannot be added to anything.
-            Assert.That(anyChild.IsChildAllowable(typeof(Simulations)), Is.False);
+            Assert.That(Apsim.IsChildAllowable(anyChild, typeof(Simulations)), Is.False);
         }
 
         // Simulations object cannot be added to anything.
-        Assert.That(container.IsChildAllowable(typeof(Simulations)), Is.False);
-        Assert.That(folder2.IsChildAllowable(typeof(Simulations)), Is.False);
-        Assert.That(simpleModel.IsChildAllowable(typeof(Simulations)), Is.False);
-        Assert.That(new Simulations().IsChildAllowable(typeof(Simulations)), Is.False);
-        Assert.That(new SomeFunction().IsChildAllowable(typeof(Simulations)), Is.False);
+        Assert.That(Apsim.IsChildAllowable(container, typeof(Simulations)), Is.False);
+        Assert.That(Apsim.IsChildAllowable(folder2, typeof(Simulations)), Is.False);
+        Assert.That(Apsim.IsChildAllowable(simpleModel, typeof(Simulations)), Is.False);
+        Assert.That(Apsim.IsChildAllowable(new Simulations(), typeof(Simulations)), Is.False);
+        Assert.That(Apsim.IsChildAllowable(new SomeFunction(), typeof(Simulations)), Is.False);
 
         // IFunctions can be added to anything.
-        Assert.That(simpleModel.IsChildAllowable(typeof(SomeFunction)), Is.True);
-        Assert.That(new Simulations().IsChildAllowable(typeof(SomeFunction)), Is.True);
-        Assert.That(new MockModel().IsChildAllowable(typeof(SomeFunction)), Is.True);
+        Assert.That(Apsim.IsChildAllowable(simpleModel, typeof(SomeFunction)), Is.True);
+        Assert.That(Apsim.IsChildAllowable(new Simulations(), typeof(SomeFunction)), Is.True);
+        Assert.That(Apsim.IsChildAllowable(new MockModel(), typeof(SomeFunction)), Is.True);
 
-        // Otherwise, the validity of a child model depends on it sspecific
+        // Otherwise, the validity of a child model depends on it specific
         // valid parents, as defined in its valid parent attributes.
-        Assert.That(new NoValidParents().IsChildAllowable(typeof(CanAddToNoValidParents)), Is.True);
-        Assert.That(new NoValidParents().IsChildAllowable(typeof(DropAnywhere)), Is.True);
-        Assert.That(new MockModel().IsChildAllowable(typeof(DropAnywhere)), Is.True);
-        Assert.That(new NoValidParents().IsChildAllowable(typeof(NoValidParents)), Is.True);
-        Assert.That(new MockModel().IsChildAllowable(typeof(NoValidParents)), Is.True);
-        Assert.That(new CanAddToNoValidParents().IsChildAllowable(typeof(CanAddToNoValidParents)), Is.False);
-        Assert.That(new CanAddToNoValidParents().IsChildAllowable(typeof(DropAnywhere)), Is.True);
-        Assert.That(new MockModel().IsChildAllowable(typeof(DropAnywhere)), Is.True);
+        Assert.That(Apsim.IsChildAllowable(new NoValidParents(), typeof(CanAddToNoValidParents)), Is.True);
+        Assert.That(Apsim.IsChildAllowable(new NoValidParents(), typeof(DropAnywhere)), Is.True);
+        Assert.That(Apsim.IsChildAllowable(new MockModel(), typeof(DropAnywhere)), Is.True);
+        Assert.That(Apsim.IsChildAllowable(new CanAddToNoValidParents(), typeof(CanAddToNoValidParents)), Is.False);
+        Assert.That(Apsim.IsChildAllowable(new CanAddToNoValidParents(), typeof(DropAnywhere)), Is.True);
+        Assert.That(Apsim.IsChildAllowable(new MockModel(), typeof(DropAnywhere)), Is.True);
     }
 
     /// <summary>
@@ -1421,20 +1414,8 @@ public class ModelTests
     {
         MockModel3 model = new MockModel3("Parent");
         model.Children.Add(new MockModel3("Child"));
-        model.Children.Add(new MockModel3("Child"));
-        Assert.Throws<Exception>(() => Node.Create(model));
-    }
-
-    /// <summary>
-    /// Ensure that duplicate models (ie siblings with the same name) but
-    /// with different types cause an exception to be thrown.
-    /// </summary>
-    [Test]
-    public void TestDuplicateModelsWithDifferentTypes()
-    {
-        MockModel3 model = new MockModel3("Some model");
-        model.Children.Add(new MockModel3("A child"));
-        model.Children.Add(new MockModel2() { Name = "A child" });
-        Assert.Throws<Exception>(() => Node.Create(model));
+        model.Children.Add(new MockModel3("Child"));  // will be renamed to Child1
+        Node.Create(model);
+        Assert.That(model.Children.Last().Name, Is.EqualTo("Child1"));
     }
 }

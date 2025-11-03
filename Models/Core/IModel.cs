@@ -53,17 +53,6 @@ namespace Models.Core
         string FullPath { get; }
 
         /// <summary>
-        /// Return true iff a model with the given type can be added to the model.
-        /// </summary>
-        /// <param name="type">The child type.</param>
-        bool IsChildAllowable(Type type);
-
-        /// <summary>
-        /// Parent all descendant models.
-        /// </summary>
-        void ParentAllDescendants();
-
-        /// <summary>
         /// Called when the model has been newly created in memory whether from
         /// cloning or deserialisation.
         /// </summary>

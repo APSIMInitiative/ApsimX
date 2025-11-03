@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using APSIM.Shared.Utilities;
 
 namespace APSIM.Workflow
 {
@@ -23,15 +24,19 @@ namespace APSIM.Workflow
         ];
 
         /// <summary>
-        /// Get the names of all directories in the validation locations that contain an .apsimx file.
+        /// Get the paths of all apsimx files in the validation locations that contain an .apsimx file.
         /// </summary>
         /// <returns>A string array</returns>
-        public static string[] GetDirectoryPaths()
+        public static string[] GetValidationFilePaths()
         {
             List<string> validation_directories = [];
             foreach (string location in VALIDATION_LOCATIONS)
             {
                 var directory = Path.GetFullPath(RELATIVE_PATH_PREFIX + location);
+                if (!Directory.Exists(directory))
+                {
+                    directory = PathUtilities.GetAbsolutePath(RELATIVE_PATH_PREFIX + location, PathUtilities.GetApsimXDirectory());
+                }
                 if (Directory.GetFiles(directory, "*.apsimx", SearchOption.AllDirectories).Any())
                 {
                     var apsimxFiles = Directory.GetFiles(directory, "*.apsimx", SearchOption.AllDirectories);
@@ -62,7 +67,7 @@ namespace APSIM.Workflow
         /// </summary>
         public static int GetSimulationCount()
         {
-            return GetDirectoryPaths().Length;
+            return GetValidationFilePaths().Length - PayloadUtilities.EXCLUDED_SIMS_FILEPATHS.Length;
         }
         
         /// <summary>Normalize a file path to use forward slashes instead of backslashes.</summary>
