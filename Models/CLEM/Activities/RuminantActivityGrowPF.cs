@@ -549,11 +549,11 @@ namespace Models.CLEM.Activities
             ind.Weight.Adjust();
 
             // Equations 118-120   ==================================================
-            ind.Output.NitrogenBalance =  ind.Intake.CrudeProtein/ FoodResourcePacket.FeedProteinToNitrogenFactor - (ind.Weight.Protein.ForLactation / FoodResourcePacket.MilkProteinToNitrogenFactor) - ((ind.Weight.Protein.ForPregnancy + ind.Weight.Protein.ForWool + ind.Weight.Protein.Change) / FoodResourcePacket.FeedProteinToNitrogenFactor);
+            ind.Output.NitrogenBalance =  ind.Intake.CrudeProtein/ FoodResourcePacket.FeedProteinToNitrogenFactor - (ind.Weight.Protein.ForLactationActual / FoodResourcePacket.MilkProteinToNitrogenFactor) - ((ind.Weight.Protein.ForPregnancy + ind.Weight.Protein.ForWool + ind.Weight.Protein.Change) / FoodResourcePacket.FeedProteinToNitrogenFactor);
             // Total fecal protein
             ind.Weight.Protein.ForFaecal = ind.Intake.IndigestibleUDP + ind.Parameters.GrowPF_CACRD.FaecalProteinFromMCP_CA8 * ind.Intake.RDPRequired + (1 - ind.Parameters.GrowPF_CACRD.MilkProteinDigestibility_CA5) * milkStore?.CrudeProtein??0 + ind.Weight.Protein.ForEndogenousFaecal;
             // Total urinary protein
-            ind.Weight.Protein.ForUrinary = ind.Intake.CrudeProtein - (ind.Weight.Protein.ForPregnancy + ind.Weight.Protein.ForLactation + ind.Weight.Protein.Change + ind.Weight.Protein.ForWool) - ind.Weight.Protein.ForFaecal - ind.Weight.Protein.ForDermal;
+            ind.Weight.Protein.ForUrinary = ind.Intake.CrudeProtein - (ind.Weight.Protein.ForPregnancy + ind.Weight.Protein.ForLactationActual + ind.Weight.Protein.Change + ind.Weight.Protein.ForWool) - ind.Weight.Protein.ForFaecal - ind.Weight.Protein.ForDermal;
             ind.Output.NitrogenUrine = ind.Weight.Protein.ForUrinary / 6.25 * daysInTimeStep;
             ind.Output.NitrogenFaecal = ind.Weight.Protein.ForFaecal / 6.25 * daysInTimeStep;
 
@@ -573,7 +573,7 @@ namespace Models.CLEM.Activities
         {
             // ignore if protein from intake 0 or positive
             // ignore if Protein.ForLactation is zero (non-lactating females and any males
-            if (MathUtilities.IsNegative(proteinAvailableForGainFromIntake) == false || MathUtilities.IsPositive(ind.Weight.Protein.ForLactation) == false)
+            if (MathUtilities.IsNegative(proteinAvailableForGainFromIntake) == false || MathUtilities.IsPositive(ind.Weight.Protein.ForLactationActual) == false)
             {
                 return;
             }
@@ -587,7 +587,7 @@ namespace Models.CLEM.Activities
             if (indFemale.DaysLactating(true) <= ind.Parameters.Lactation.MilkPeakDay)
             {
                 // get lactation protein deficit
-                double lactationProteinDeficit = Math.Min(indFemale.Weight.Protein.ForLactation, Math.Abs(proteinAvailableForGainFromIntake));
+                double lactationProteinDeficit = Math.Min(indFemale.Weight.Protein.ForLactationActual, Math.Abs(proteinAvailableForGainFromIntake));
 
                 double bodyProteinAvailable = Math.Max(0.0, ind.Weight.Protein.Amount - (proteinNormal * 0.75));
 
@@ -611,7 +611,7 @@ namespace Models.CLEM.Activities
                 return;
             }
 
-            double MP = Math.Max(0.0, 1 + (proteinAvailableForGainFromIntake / indFemale.Weight.Protein.ForLactation)) * indFemale.Milk.ProductionRate;
+            double MP = Math.Max(0.0, 1 + (proteinAvailableForGainFromIntake / indFemale.Weight.Protein.ForLactationActual)) * indFemale.Milk.ProductionRate;
             indFemale.Milk.Available = MP * Math.Min(indFemale.DaysLactatingInTimeStep, events.Interval) / indFemale.Milk.EnergyContent;
             indFemale.Milk.Produced = indFemale.Milk.Available;
 
@@ -620,7 +620,7 @@ namespace Models.CLEM.Activities
             indFemale.Milk.ProductionRate = MP;
             indFemale.Milk.ProductionRatePrevious = MP;
 
-            indFemale.Weight.Protein.ForLactation = (indFemale.Parameters.GrowPF_CKCL.ProteinPercentMilk_CL15 / 100.0) * (MP / indFemale.Milk.EnergyContent);
+            indFemale.Weight.Protein.ForLactationActual = (indFemale.Parameters.GrowPF_CKCL.ProteinPercentMilk_CL15 / 100.0) * (MP / indFemale.Milk.EnergyContent);
 
             // Equation 75  ================
             ind.Energy.ForLactation = MP / (0.94 * ind.Energy.Kl) * ind.Parameters.GrowPF_CG.BreedLactationEfficiencyScalar;
@@ -752,7 +752,7 @@ namespace Models.CLEM.Activities
             // age factor for wool
             double ageFactorWool = ind.Parameters.GrowPF_CW.WoolGrowthProportionAtBirth_CW5 + ((1 - ind.Parameters.GrowPF_CW.WoolGrowthProportionAtBirth_CW5) * (1 - Math.Exp(-1 * ind.Parameters.GrowPF_CW.AgeFactorExponent_CW12 * ind.AgeInDays)));
 
-            double dPLSAvailableForWool = Math.Max(0, ind.Intake.DPLS - (ind.Parameters.GrowPF_CW.PregLactationAdjustment_CW9 * (ind.Weight.Protein.ForPregnancy + ind.Weight.Protein.ForLactation)));
+            double dPLSAvailableForWool = Math.Max(0, ind.Intake.DPLS - (ind.Parameters.GrowPF_CW.PregLactationAdjustment_CW9 * (ind.Weight.Protein.ForPregnancy + ind.Weight.Protein.ForLactationActual)));
 
             double mEAvailableForWool = Math.Max(0, ind.Energy.AfterLactation); //  Intake.ME - (ind.Energy.ForFetus + ind.Energy.ForLactation));
 
@@ -875,7 +875,7 @@ namespace Models.CLEM.Activities
             }
 
             // Equation 76  ================================================== 0.032 -- All milk production is in MJ/day
-            ind.Weight.Protein.ForLactation = (ind.Parameters.GrowPF_CKCL.ProteinPercentMilk_CL15 / 100.0) * MP2 / ind.Milk.EnergyContent;
+            ind.Weight.Protein.ForLactationActual = (ind.Parameters.GrowPF_CKCL.ProteinPercentMilk_CL15 / 100.0) * MP2 / ind.Milk.EnergyContent;
 
             ind.Milk.Produced = MP2 * timestep / ind.Milk.EnergyContent;
             ind.Milk.PotentialRate = MP1;

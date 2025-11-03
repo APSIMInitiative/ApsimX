@@ -90,17 +90,17 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Net used for lactation (kg day-1)
         /// </summary>
-        public double ForLactation { get; set; }
+        public double ForLactationActual { get; set; }
 
         /// <summary>
-        /// Total used for lactation (kg day-1)
+        /// Total demanded for lactation (kg day-1)
         /// </summary>
-        public double TotalNeededForLactation { get { return ForLactation + LactationReduction; } }
+        public double ForLactationTotalRequired { get { return ForLactationActual + LactationReduction; } }
 
         /// <summary>
-        /// Total used from intake for lactation (kg day-1)
+        /// Amount used for lactation from intake and excluding that achieved by mobilisation (kg day-1)
         /// </summary>
-        public double ForLactationFromIntake { get { return ForLactation - GetMobilisationProvidedByReason(MobilisationReasonType.LactationProtein); } }
+        public double ForLactationFromIntake { get { return ForLactationActual - GetMobilisationProvidedByReason(MobilisationReasonType.LactationProtein); } }
 
         /// <summary>
         /// Protein freed from reduced lactation when protein deficit (kg day-1)
@@ -114,9 +114,9 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (MathUtilities.FloatsAreEqual(ForLactation, 0.0))
+                if (MathUtilities.FloatsAreEqual(ForLactationActual, 0.0))
                     return 0.0;
-                return LactationReduction / ForLactation;
+                return LactationReduction / ForLactationActual;
             }
         }
 
@@ -124,7 +124,7 @@ namespace Models.CLEM.Resources
         /// Provide protein required for maintenance, pregnancy, lactation (kg day-1)
         /// Protein mobilised from body to meet minimum lactation will be accounted for at growth
         /// </summary>
-        public double BeforeGrowth { get { return ForMaintenance + ForPregnancy + ForLactation; } }
+        public double BeforeGrowth { get { return ForMaintenance + ForPregnancy + ForLactationActual; } }
 
         /// <summary>
         /// Report protein required for kg gain defined from net energy (kg day-1)
@@ -137,12 +137,12 @@ namespace Models.CLEM.Resources
         public double AvailableForGain { get; set; }
 
         /// <summary>
-        /// Total protein provided from intake (kg day-1)
+        /// Total crude protein provided from intake (kg day-1)
         /// </summary>
         public double FromIntakeTotal { get { return intake.CrudeProtein; } }
 
         /// <summary>
-        /// Protein available from intake (kg day-1)
+        /// Protein available from intake (DPLS, kg day-1)
         /// </summary>
         public double FromIntakeAvailable { get { return intake.DPLS; } }
 
@@ -215,7 +215,7 @@ namespace Models.CLEM.Resources
             ForGain = 0;
             AvailableForGain = 0;
             ForWool = 0;
-            ForLactation = 0;
+            ForLactationActual = 0;
             LactationReduction = 0;
             //Net = 0;
             ForUrinary = 0;

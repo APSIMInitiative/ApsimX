@@ -362,7 +362,8 @@ namespace Models.CLEM.Activities
             {
                 // reduce the amount provided by the grazing competition limiter
                 // accounts for reduction based on other herds of ruminants in the paddock
-                ResourceRequestList.Where(a => a.Resource is GrazeFoodStoreType).FirstOrDefault().Required *= GrazingCompetitionLimiter; ;
+                ResourceRequestList.Where(a => a.Resource is GrazeFoodStoreType).FirstOrDefault().Required *= GrazingCompetitionLimiter;
+
             }
         }
 
