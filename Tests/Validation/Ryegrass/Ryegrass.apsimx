@@ -3923,7 +3923,7 @@
                             "[AgPRyegrass].AboveGroundWt",
                             "[AgPRyegrass].AboveGround.Wt",
                             "[AgPRyegrass].AboveGroundNConc",
-                            "[AgPRyegrass].AboveGroundHarvestable.StructuralWt",
+                            "[AgPRyegrass].AboveGroundHarvestable.Wt",
                             "[AgPRyegrass].Leaf.DigestibilityLive",
                             "[AgPRyegrass].Stem.DigestibilityLive",
                             "[AgPRyegrass].Harvestable.Digestibility",
@@ -5473,7 +5473,7 @@
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "AgPRyegrass.AboveGroundHarvestable.StructuralWt",
+                          "YFieldName": "AgPRyegrass.AboveGroundHarvestable.Wt",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -7977,64 +7977,64 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1995-08-30",
-                              "Action": "[AgPRyegrass].RemoveBiomass(amount: 500, type: \"SetResidueAmount\")",
-                              "Line": "1995-08-30 [AgPRyegrass].RemoveBiomass(amount: 500, type: \"SetResidueAmount\")"
+                              "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")",
+                              "Line": "1995-08-30 [AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1995-09-26",
-                              "Action": "[AgPRyegrass].RemoveBiomass(amount: 500, type: \"SetResidueAmount\")",
-                              "Line": "1995-09-26 [AgPRyegrass].RemoveBiomass(amount: 500, type: \"SetResidueAmount\")"
+                              "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")",
+                              "Line": "1995-09-26 [AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1995-10-19",
-                              "Action": "[AgPRyegrass].RemoveBiomass(amount: 500, type: \"SetResidueAmount\")",
-                              "Line": "1995-10-19 [AgPRyegrass].RemoveBiomass(amount: 500, type: \"SetResidueAmount\")"
+                              "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")",
+                              "Line": "1995-10-19 [AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1995-11-10",
-                              "Action": "[AgPRyegrass].RemoveBiomass(amount: 500, type: \"SetResidueAmount\")",
-                              "Line": "1995-11-10 [AgPRyegrass].RemoveBiomass(amount: 500, type: \"SetResidueAmount\")"
+                              "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")",
+                              "Line": "1995-11-10 [AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1995-12-27",
-                              "Action": "[AgPRyegrass].RemoveBiomass(amount: 500, type: \"SetResidueAmount\")",
-                              "Line": "1995-12-27 [AgPRyegrass].RemoveBiomass(amount: 500, type: \"SetResidueAmount\")"
+                              "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")",
+                              "Line": "1995-12-27 [AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1995-02-16",
-                              "Action": "[AgPRyegrass].RemoveBiomass(amount: 500, type: \"SetResidueAmount\")",
-                              "Line": "1995-02-16 [AgPRyegrass].RemoveBiomass(amount: 500, type: \"SetResidueAmount\")"
+                              "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")",
+                              "Line": "1995-02-16 [AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1996-03-18",
-                              "Action": "[AgPRyegrass].RemoveBiomass(amount: 500, type: \"SetResidueAmount\")",
-                              "Line": "1996-03-18 [AgPRyegrass].RemoveBiomass(amount: 500, type: \"SetResidueAmount\")"
+                              "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")",
+                              "Line": "1996-03-18 [AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1996-05-18",
-                              "Action": "[AgPRyegrass].RemoveBiomass(amount: 500, type: \"SetResidueAmount\")",
-                              "Line": "1996-05-18 [AgPRyegrass].RemoveBiomass(amount: 500, type: \"SetResidueAmount\")"
+                              "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")",
+                              "Line": "1996-05-18 [AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1996-05-05",
-                              "Action": "[AgPRyegrass].RemoveBiomass(amount: 500, type: \"SetResidueAmount\")",
-                              "Line": "1996-05-05 [AgPRyegrass].RemoveBiomass(amount: 500, type: \"SetResidueAmount\")"
+                              "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")",
+                              "Line": "1996-05-05 [AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")"
                             }
                           ],
                           "Name": "DefoliationSchedule",
@@ -8126,35 +8126,6 @@
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": -16777216,
-                              "FactorToVaryColours": null,
-                              "FactorToVaryMarkers": null,
-                              "FactorToVaryLines": null,
-                              "Marker": 0,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "Observed",
-                              "XFieldName": "Clock.Today",
-                              "YFieldName": "AgPRyegrass.Leaf.Live.Wt",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
-                              "ShowInLegend": false,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Observed",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
                             }
                           ],
                           "Enabled": true,
@@ -8195,35 +8166,6 @@
                           "Name": "StemWt",
                           "ResourceName": null,
                           "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": -16777216,
-                              "FactorToVaryColours": null,
-                              "FactorToVaryMarkers": null,
-                              "FactorToVaryLines": null,
-                              "Marker": 0,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "Observed",
-                              "XFieldName": "Clock.Today",
-                              "YFieldName": "AgPRyegrass.Stem.Live.Wt",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
-                              "ShowInLegend": false,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Observed",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
                             {
                               "$type": "Models.Series, Models",
                               "Type": 1,
@@ -8320,35 +8262,6 @@
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": 0,
-                              "FactorToVaryColours": null,
-                              "FactorToVaryMarkers": null,
-                              "FactorToVaryLines": null,
-                              "Marker": 0,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "Observed",
-                              "XFieldName": "Clock.Today",
-                              "YFieldName": "AgPRyegrass.Leaf.Dead.Wt",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
-                              "ShowInLegend": false,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Observed",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
                             }
                           ],
                           "Enabled": true,
@@ -8404,7 +8317,7 @@
                               "LineThickness": 0,
                               "TableName": "Report",
                               "XFieldName": "Clock.Today",
-                              "YFieldName": "AgPRyegrass.AboveGround.Wt",
+                              "YFieldName": "AgPRyegrass.AboveGroundHarvestable.Wt",
                               "X2FieldName": null,
                               "Y2FieldName": null,
                               "ShowInLegend": false,
@@ -8424,7 +8337,7 @@
                               "XAxis": 3,
                               "YAxis": 0,
                               "ColourArgb": -16777216,
-                              "FactorToVaryColours": null,
+                              "FactorToVaryColours": "Cultivar",
                               "FactorToVaryMarkers": null,
                               "FactorToVaryLines": null,
                               "Marker": 0,
@@ -8433,10 +8346,10 @@
                               "LineThickness": 0,
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
-                              "YFieldName": "AgPRyegrass.AboveGround.Wt",
+                              "YFieldName": "AgPRyegrass.AboveGroundHarvestable.Wt",
                               "X2FieldName": null,
                               "Y2FieldName": null,
-                              "ShowInLegend": false,
+                              "ShowInLegend": true,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
                               "CumulativeX": false,
@@ -8573,7 +8486,7 @@
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "AgPRyegrass.AboveGroundHarvestable.StructuralWt",
+                          "YFieldName": "AgPRyegrass.AboveGroundHarvestable.Wt",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -8602,7 +8515,7 @@
                           "LineThickness": 0,
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "AgPRyegrass.AboveGroundHarvestable.StructuralWt",
+                          "YFieldName": "AgPRyegrass.AboveGroundHarvestable.Wt",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -9605,7 +9518,7 @@
                           "Children": [
                             {
                               "$type": "Models.Factorial.Factor, Models",
-                              "Specification": "[Irrigated]",
+                              "Specification": "[FertilisationSchedule]",
                               "Name": "Fertiliser",
                               "ResourceName": null,
                               "Children": [
@@ -12255,6 +12168,7 @@
                                     "[AgPRyegrass].AboveGroundNConc",
                                     "//[AgPRyegrass].AboveGroundHarvestable.StructuralWt",
                                     "//[AgPRyegrass].AboveGroundHarvestable.wt",
+                                    "",
                                     "//Sum([AGPRyegrass].HarvestedWt",
                                     "//[AgPRyegrass].HarvestedWt.wt",
                                     "Sum of [AgPRyegrass].HarvestedWt *0.1 from 1-Jan to 31-Dec as AnnualPastureYield",
@@ -12488,7 +12402,7 @@
                                     },
                                     {
                                       "Key": "depthPAWC",
-                                      "Value": "1200"
+                                      "Value": "600"
                                     }
                                   ],
                                   "Name": "Irrigated",
@@ -12511,64 +12425,64 @@
                                       "$type": "Models.Operation, Models",
                                       "Enabled": true,
                                       "Date": "1993-05-01",
-                                      "Action": "[AgPRyegrass].RemoveBiomass(amount: 200, type: \"SetResidueAmount\")",
-                                      "Line": "1993-05-01 [AgPRyegrass].RemoveBiomass(amount: 200, type: \"SetResidueAmount\")"
+                                      "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")",
+                                      "Line": "1993-05-01 [AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
                                       "Enabled": true,
                                       "Date": "1993-06-01",
-                                      "Action": "[AgPRyegrass].RemoveBiomass(amount: 200, type: \"SetResidueAmount\")",
-                                      "Line": "1993-06-01 [AgPRyegrass].RemoveBiomass(amount: 200, type: \"SetResidueAmount\")"
+                                      "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")",
+                                      "Line": "1993-06-01 [AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
                                       "Enabled": true,
                                       "Date": "1993-07-01",
-                                      "Action": "[AgPRyegrass].RemoveBiomass(amount: 200, type: \"SetResidueAmount\")",
-                                      "Line": "1993-07-01 [AgPRyegrass].RemoveBiomass(amount: 200, type: \"SetResidueAmount\")"
+                                      "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")",
+                                      "Line": "1993-07-01 [AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
                                       "Enabled": true,
                                       "Date": "1993-08-01",
-                                      "Action": "[AgPRyegrass].RemoveBiomass(amount: 200, type: \"SetResidueAmount\")",
-                                      "Line": "1993-08-01 [AgPRyegrass].RemoveBiomass(amount: 200, type: \"SetResidueAmount\")"
+                                      "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")",
+                                      "Line": "1993-08-01 [AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
                                       "Enabled": true,
                                       "Date": "1993-09-01",
-                                      "Action": "[AgPRyegrass].RemoveBiomass(amount: 200, type: \"SetResidueAmount\")",
-                                      "Line": "1993-09-01 [AgPRyegrass].RemoveBiomass(amount: 200, type: \"SetResidueAmount\")"
+                                      "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")",
+                                      "Line": "1993-09-01 [AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
                                       "Enabled": true,
                                       "Date": "1993-09-22",
-                                      "Action": "[AgPRyegrass].RemoveBiomass(amount: 200, type: \"SetResidueAmount\")",
-                                      "Line": "1993-09-22 [AgPRyegrass].RemoveBiomass(amount: 200, type: \"SetResidueAmount\")"
+                                      "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")",
+                                      "Line": "1993-09-22 [AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
                                       "Enabled": true,
                                       "Date": "1993-10-13",
-                                      "Action": "[AgPRyegrass].RemoveBiomass(amount: 200, type: \"SetResidueAmount\")",
-                                      "Line": "1993-10-13 [AgPRyegrass].RemoveBiomass(amount: 200, type: \"SetResidueAmount\")"
+                                      "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")",
+                                      "Line": "1993-10-13 [AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
                                       "Enabled": true,
                                       "Date": "1993-11-03",
-                                      "Action": "[AgPRyegrass].RemoveBiomass(amount: 200, type: \"SetResidueAmount\")",
-                                      "Line": "1993-11-03 [AgPRyegrass].RemoveBiomass(amount: 200, type: \"SetResidueAmount\")"
+                                      "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")",
+                                      "Line": "1993-11-03 [AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
                                       "Enabled": true,
                                       "Date": "1993-12-02",
-                                      "Action": "[AgPRyegrass].RemoveBiomass(amount: 200, type: \"SetResidueAmount\")",
-                                      "Line": "1993-12-02 [AgPRyegrass].RemoveBiomass(amount: 200, type: \"SetResidueAmount\")"
+                                      "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")",
+                                      "Line": "1993-12-02 [AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")"
                                     }
                                   ],
                                   "Name": "DefoliationSchedule",
@@ -13252,6 +13166,15 @@
                                   ],
                                   "Enabled": true,
                                   "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Operations, Models",
+                                  "OperationsList": null,
+                                  "Name": "FertilisationSchedule",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
                                 }
                               ],
                               "Enabled": true,
@@ -13599,7 +13522,7 @@
                                   "LineThickness": 0,
                                   "TableName": "Report",
                                   "XFieldName": "Clock.Today",
-                                  "YFieldName": "AGPRyegrass.GlfNContent",
+                                  "YFieldName": "AgPRyegrass.GlfNContent",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -13684,6 +13607,74 @@
                               ],
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Graph, Models",
+                              "Caption": null,
+                              "Axis": [
+                                {
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                                  "Title": null,
+                                  "Position": 3,
+                                  "Inverted": false,
+                                  "CrossesAtZero": false,
+                                  "LabelOnOneLine": false,
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null
+                                },
+                                {
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                                  "Title": null,
+                                  "Position": 0,
+                                  "Inverted": false,
+                                  "CrossesAtZero": false,
+                                  "LabelOnOneLine": false,
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null
+                                }
+                              ],
+                              "LegendPosition": 0,
+                              "LegendOrientation": 0,
+                              "AnnotationLocation": 0,
+                              "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
+                              "Name": "Irrigation",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Series, Models",
+                                  "Type": 0,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -11094807,
+                                  "FactorToVaryColours": null,
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": null,
+                                  "Marker": 11,
+                                  "MarkerSize": 0,
+                                  "Line": 0,
+                                  "LineThickness": 0,
+                                  "TableName": "Report",
+                                  "XFieldName": "Clock.Today",
+                                  "YFieldName": "Irrigation.IrrigationApplied",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": false,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Series",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
                           "Enabled": true,
@@ -13706,7 +13697,7 @@
                           "Children": [
                             {
                               "$type": "Models.Factorial.Factor, Models",
-                              "Specification": "[Irrigated]",
+                              "Specification": "[FertilisationSchedule]",
                               "Name": "Fertiliser",
                               "ResourceName": null,
                               "Children": [
@@ -17385,6 +17376,15 @@
                                   ],
                                   "Enabled": true,
                                   "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Operations, Models",
+                                  "OperationsList": null,
+                                  "Name": "FertilisationSchedule",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
                                 }
                               ],
                               "Enabled": true,
@@ -17839,7 +17839,7 @@
                           "Children": [
                             {
                               "$type": "Models.Factorial.Factor, Models",
-                              "Specification": "[Irrigated]",
+                              "Specification": "[FertilisationSchedule]",
                               "Name": "Fertiliser",
                               "ResourceName": null,
                               "Children": [
@@ -21474,6 +21474,15 @@
                                   ],
                                   "Enabled": true,
                                   "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Operations, Models",
+                                  "OperationsList": null,
+                                  "Name": "FertilisationSchedule",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
                                 }
                               ],
                               "Enabled": true,
@@ -21938,7 +21947,7 @@
                           "Children": [
                             {
                               "$type": "Models.Factorial.Factor, Models",
-                              "Specification": "[Irrigated]",
+                              "Specification": "[FertilisationSchedule]",
                               "Name": "Fertiliser",
                               "ResourceName": null,
                               "Children": [
@@ -25585,6 +25594,15 @@
                                   ],
                                   "Enabled": true,
                                   "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Operations, Models",
+                                  "OperationsList": null,
+                                  "Name": "FertilisationSchedule",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
                                 }
                               ],
                               "Enabled": true,
@@ -26017,6 +26035,74 @@
                               ],
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Graph, Models",
+                              "Caption": null,
+                              "Axis": [
+                                {
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                                  "Title": null,
+                                  "Position": 3,
+                                  "Inverted": false,
+                                  "CrossesAtZero": false,
+                                  "LabelOnOneLine": false,
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null
+                                },
+                                {
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                                  "Title": null,
+                                  "Position": 0,
+                                  "Inverted": false,
+                                  "CrossesAtZero": false,
+                                  "LabelOnOneLine": false,
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null
+                                }
+                              ],
+                              "LegendPosition": 0,
+                              "LegendOrientation": 0,
+                              "AnnotationLocation": 0,
+                              "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
+                              "Name": "Irrigation",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Series, Models",
+                                  "Type": 0,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": 0,
+                                  "FactorToVaryColours": "Fertiliser",
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": null,
+                                  "Marker": 10,
+                                  "MarkerSize": 0,
+                                  "Line": 4,
+                                  "LineThickness": 0,
+                                  "TableName": "Report",
+                                  "XFieldName": "Clock.Today",
+                                  "YFieldName": "Irrigation.IrrigationApplied",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": false,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Series",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
                           "Enabled": true,
@@ -26039,7 +26125,7 @@
                           "Children": [
                             {
                               "$type": "Models.Factorial.Factor, Models",
-                              "Specification": "[Irrigated]",
+                              "Specification": "[FertilisationSchedule]",
                               "Name": "Fertiliser",
                               "ResourceName": null,
                               "Children": [
@@ -29721,6 +29807,15 @@
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Operations, Models",
+                                  "OperationsList": null,
+                                  "Name": "FertilisationSchedule",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
                                 }
                               ],
                               "Enabled": true,
@@ -30068,7 +30163,7 @@
                                   "LineThickness": 0,
                                   "TableName": "Report",
                                   "XFieldName": "Clock.Today",
-                                  "YFieldName": "AGPRyegrass.GlfNContent",
+                                  "YFieldName": "AgPRyegrass.GlfNContent",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": true,
@@ -30175,7 +30270,7 @@
                           "Children": [
                             {
                               "$type": "Models.Factorial.Factor, Models",
-                              "Specification": "[Irrigated]",
+                              "Specification": "[FertilisationSchedule]",
                               "Name": "Fertiliser",
                               "ResourceName": null,
                               "Children": [
@@ -33808,6 +33903,15 @@
                                   ],
                                   "Enabled": true,
                                   "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Operations, Models",
+                                  "OperationsList": null,
+                                  "Name": "FertilisationSchedule",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
                                 }
                               ],
                               "Enabled": true,
@@ -34272,7 +34376,7 @@
                           "Children": [
                             {
                               "$type": "Models.Factorial.Factor, Models",
-                              "Specification": "[Irrigated]",
+                              "Specification": "[FertilisationSchedule]",
                               "Name": "Fertiliser",
                               "ResourceName": null,
                               "Children": [
@@ -37919,6 +38023,15 @@
                                   ],
                                   "Enabled": true,
                                   "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Operations, Models",
+                                  "OperationsList": null,
+                                  "Name": "FertilisationSchedule",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
                                 }
                               ],
                               "Enabled": true,
@@ -38209,114 +38322,6 @@
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Graph, Models",
-                              "Caption": null,
-                              "Axis": [
-                                {
-                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                                  "Title": null,
-                                  "Position": 3,
-                                  "Inverted": false,
-                                  "CrossesAtZero": false,
-                                  "LabelOnOneLine": false,
-                                  "Minimum": null,
-                                  "Maximum": null,
-                                  "Interval": null
-                                },
-                                {
-                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                                  "Title": null,
-                                  "Position": 2,
-                                  "Inverted": false,
-                                  "CrossesAtZero": false,
-                                  "LabelOnOneLine": false,
-                                  "Minimum": null,
-                                  "Maximum": null,
-                                  "Interval": null
-                                },
-                                {
-                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                                  "Title": null,
-                                  "Position": 0,
-                                  "Inverted": false,
-                                  "CrossesAtZero": false,
-                                  "LabelOnOneLine": false,
-                                  "Minimum": null,
-                                  "Maximum": null,
-                                  "Interval": null
-                                }
-                              ],
-                              "LegendPosition": 0,
-                              "LegendOrientation": 0,
-                              "AnnotationLocation": 0,
-                              "DisabledSeries": [],
-                              "LegendOutsideGraph": false,
-                              "Name": "FertiliserVsDMY",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Series, Models",
-                                  "Type": 1,
-                                  "XAxis": 3,
-                                  "YAxis": 2,
-                                  "ColourArgb": 0,
-                                  "FactorToVaryColours": "Fertiliser",
-                                  "FactorToVaryMarkers": null,
-                                  "FactorToVaryLines": null,
-                                  "Marker": 11,
-                                  "MarkerSize": 0,
-                                  "Line": 0,
-                                  "LineThickness": 0,
-                                  "TableName": "Report",
-                                  "XFieldName": "Clock.Today",
-                                  "YFieldName": "AnnualPastureYield",
-                                  "X2FieldName": null,
-                                  "Y2FieldName": null,
-                                  "ShowInLegend": true,
-                                  "IncludeSeriesNameInLegend": false,
-                                  "Cumulative": false,
-                                  "CumulativeX": false,
-                                  "Filter": null,
-                                  "Name": "Series1",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Series, Models",
-                                  "Type": 1,
-                                  "XAxis": 3,
-                                  "YAxis": 0,
-                                  "ColourArgb": 0,
-                                  "FactorToVaryColours": "Fertiliser",
-                                  "FactorToVaryMarkers": null,
-                                  "FactorToVaryLines": null,
-                                  "Marker": 0,
-                                  "MarkerSize": 0,
-                                  "Line": 4,
-                                  "LineThickness": 0,
-                                  "TableName": "Report",
-                                  "XFieldName": "Clock.Today",
-                                  "YFieldName": "Fertiliser.NitrogenApplied",
-                                  "X2FieldName": null,
-                                  "Y2FieldName": null,
-                                  "ShowInLegend": true,
-                                  "IncludeSeriesNameInLegend": false,
-                                  "Cumulative": false,
-                                  "CumulativeX": false,
-                                  "Filter": "[Fertiliser.NitrogenApplied]>0",
-                                  "Name": "Series",
-                                  "ResourceName": null,
-                                  "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
@@ -42160,6 +42165,15 @@
                                   ],
                                   "Enabled": true,
                                   "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Operations, Models",
+                                  "OperationsList": null,
+                                  "Name": "FertilisationSchedule",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
                                 }
                               ],
                               "Enabled": true,
@@ -42722,7 +42736,7 @@
                           "Children": [
                             {
                               "$type": "Models.Factorial.Factor, Models",
-                              "Specification": "[Irrigated]",
+                              "Specification": "[FertilisationSchedule]",
                               "Name": "Fertiliser",
                               "ResourceName": null,
                               "Children": [
@@ -46353,6 +46367,15 @@
                                       "ReadOnly": false
                                     }
                                   ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Operations, Models",
+                                  "OperationsList": null,
+                                  "Name": "FertilisationSchedule",
+                                  "ResourceName": null,
+                                  "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
@@ -51337,7 +51360,7 @@
                                 "[AgPRyegrass].GlfNContent",
                                 "[AgPRyegrass].GlfWaterSupply",
                                 "[AgPRyegrass].Leaf.Live.Wt",
-                                "[AgPRyegrass].AboveGround.Wt",
+                                "[AgPRyegrass].AboveGroundHarvestable.Wt",
                                 "[AgPRyegrass].Leaf.Dead.Wt",
                                 "[AgPRyegrass].Height",
                                 "[AgPRyegrass].CoverGreen",
@@ -51621,103 +51644,6 @@
                               "Name": "Sowing",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Graph, Models",
-                              "Caption": null,
-                              "Axis": [
-                                {
-                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                                  "Title": null,
-                                  "Position": 3,
-                                  "Inverted": false,
-                                  "CrossesAtZero": false,
-                                  "LabelOnOneLine": false,
-                                  "Minimum": null,
-                                  "Maximum": null,
-                                  "Interval": null
-                                },
-                                {
-                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                                  "Title": null,
-                                  "Position": 0,
-                                  "Inverted": false,
-                                  "CrossesAtZero": false,
-                                  "LabelOnOneLine": false,
-                                  "Minimum": null,
-                                  "Maximum": null,
-                                  "Interval": null
-                                }
-                              ],
-                              "LegendPosition": 0,
-                              "LegendOrientation": 0,
-                              "AnnotationLocation": 0,
-                              "DisabledSeries": [],
-                              "LegendOutsideGraph": false,
-                              "Name": "150_300mm",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Series, Models",
-                                  "Type": 1,
-                                  "XAxis": 3,
-                                  "YAxis": 0,
-                                  "ColourArgb": -32768,
-                                  "FactorToVaryColours": "Irrigation",
-                                  "FactorToVaryMarkers": null,
-                                  "FactorToVaryLines": null,
-                                  "Marker": 11,
-                                  "MarkerSize": 0,
-                                  "Line": 0,
-                                  "LineThickness": 0,
-                                  "TableName": "Report",
-                                  "XFieldName": "Clock.Today",
-                                  "YFieldName": "Soil.Output.SW(2)",
-                                  "X2FieldName": null,
-                                  "Y2FieldName": null,
-                                  "ShowInLegend": true,
-                                  "IncludeSeriesNameInLegend": false,
-                                  "Cumulative": false,
-                                  "CumulativeX": false,
-                                  "Filter": "",
-                                  "Name": "Predicted",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Series, Models",
-                                  "Type": 1,
-                                  "XAxis": 3,
-                                  "YAxis": 0,
-                                  "ColourArgb": -16776961,
-                                  "FactorToVaryColours": "Irrigation",
-                                  "FactorToVaryMarkers": null,
-                                  "FactorToVaryLines": null,
-                                  "Marker": 0,
-                                  "MarkerSize": 0,
-                                  "Line": 4,
-                                  "LineThickness": 0,
-                                  "TableName": "Observed",
-                                  "XFieldName": "Clock.Today",
-                                  "YFieldName": "Soil.Output.SW(2)",
-                                  "X2FieldName": null,
-                                  "Y2FieldName": null,
-                                  "ShowInLegend": false,
-                                  "IncludeSeriesNameInLegend": false,
-                                  "Cumulative": false,
-                                  "CumulativeX": false,
-                                  "Filter": "",
-                                  "Name": "Observed",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -52739,7 +52665,7 @@
                               "LineThickness": 0,
                               "TableName": "Report",
                               "XFieldName": "Clock.Today",
-                              "YFieldName": "AgPRyegrass.AboveGround.Wt",
+                              "YFieldName": "AgPRyegrass.AboveGroundHarvestable.wt",
                               "X2FieldName": null,
                               "Y2FieldName": null,
                               "ShowInLegend": false,
@@ -53508,9 +53434,7 @@
                                 {
                                   "$type": "Models.Factorial.CompositeFactor, Models",
                                   "Specifications": [
-                                    "[IrrigationEvents]",
-                                    "[FertiliserSchedule]",
-                                    "[DefoliationEvents]"
+                                    "[IrrigationEvents]"
                                   ],
                                   "Paths": null,
                                   "Values": null,
@@ -54156,348 +54080,6 @@
                                       "Children": [],
                                       "Enabled": false,
                                       "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Operations, Models",
-                                      "OperationsList": [
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-03-25",
-                                          "Action": "[Fertiliser].Apply(amount:40 , type:NO3N)",
-                                          "Line": "25-Mar-11\t[Fertiliser].Apply(amount:40 , type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-08-12",
-                                          "Action": "[Fertiliser].Apply(amount:100, type:NO3N)",
-                                          "Line": "12-Aug-11\t[Fertiliser].Apply(amount:100, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-10-01",
-                                          "Action": "[Fertiliser].Apply(amount:100, type:NO3N)",
-                                          "Line": "1-Oct-11\t[Fertiliser].Apply(amount:100, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-11-02",
-                                          "Action": "[Fertiliser].Apply(amount:122, type:NO3N)",
-                                          "Line": "2-Nov-11\t[Fertiliser].Apply(amount:122, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-12-05",
-                                          "Action": "[Fertiliser].Apply(amount:79 , type:NO3N)",
-                                          "Line": "5-Dec-11\t[Fertiliser].Apply(amount:79 , type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-12-29",
-                                          "Action": "[Fertiliser].Apply(amount:81 , type:NO3N)",
-                                          "Line": "29-Dec-11\t[Fertiliser].Apply(amount:81 , type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-02-01",
-                                          "Action": "[Fertiliser].Apply(amount:100, type:NO3N)",
-                                          "Line": "1-Feb-12\t[Fertiliser].Apply(amount:100, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-03-02",
-                                          "Action": "[Fertiliser].Apply(amount:115, type:NO3N)",
-                                          "Line": "2-Mar-12\t[Fertiliser].Apply(amount:115, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-04-10",
-                                          "Action": "[Fertiliser].Apply(amount:102, type:NO3N)",
-                                          "Line": "10-Apr-12\t[Fertiliser].Apply(amount:102, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-09-11",
-                                          "Action": "[Fertiliser].Apply(amount:100, type:NO3N)",
-                                          "Line": "11-Sep-12\t[Fertiliser].Apply(amount:100, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-10-18",
-                                          "Action": "[Fertiliser].Apply(amount:102, type:NO3N)",
-                                          "Line": "18-Oct-12\t[Fertiliser].Apply(amount:102, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-11-29",
-                                          "Action": "[Fertiliser].Apply(amount:115, type:NO3N)",
-                                          "Line": "29-Nov-12\t[Fertiliser].Apply(amount:115, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-01-14",
-                                          "Action": "[Fertiliser].Apply(amount:81 , type:NO3N)",
-                                          "Line": "14-Jan-13\t[Fertiliser].Apply(amount:81 , type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-02-28",
-                                          "Action": "[Fertiliser].Apply(amount:93 , type:NO3N)",
-                                          "Line": "28-Feb-13\t[Fertiliser].Apply(amount:93 , type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-04-02",
-                                          "Action": "[Fertiliser].Apply(amount:84 , type:NO3N)",
-                                          "Line": "2-Apr-13\t[Fertiliser].Apply(amount:84 , type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-09-12",
-                                          "Action": "[Fertiliser].Apply(amount:100, type:NO3N)",
-                                          "Line": "12-Sep-13\t[Fertiliser].Apply(amount:100, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-10-14",
-                                          "Action": "[Fertiliser].Apply(amount:81 , type:NO3N)",
-                                          "Line": "14-Oct-13\t[Fertiliser].Apply(amount:81 , type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-12-24",
-                                          "Action": "[Fertiliser].Apply(amount:71 , type:NO3N)",
-                                          "Line": "24-Dec-13\t[Fertiliser].Apply(amount:71 , type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2014-02-28",
-                                          "Action": "[Fertiliser].Apply(amount:117, type:NO3N)",
-                                          "Line": "28-Feb-14\t[Fertiliser].Apply(amount:117, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2014-04-04",
-                                          "Action": "[Fertiliser].Apply(amount:74 , type:NO3N)",
-                                          "Line": "4-Apr-14\t[Fertiliser].Apply(amount:74 , type:NO3N)"
-                                        }
-                                      ],
-                                      "Name": "FertiliserSchedule",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": false,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Operations, Models",
-                                      "OperationsList": [
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": false,
-                                          "Date": null,
-                                          "Action": null,
-                                          "Line": ""
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-07-01",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2011-07-01 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-09-30",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2011-09-30 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-11-02",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2011-11-02 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-12-01",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2011-12-01 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-12-21",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2011-12-21 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-01-26",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2012-01-26 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-03-01",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2012-03-01 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-04-04",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2012-04-04 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-05-24",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2012-05-24 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-09-08",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2012-09-08 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-10-17",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2012-10-17 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-11-20",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2012-11-20 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-12-20",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2012-12-20 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-01-24",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2013-01-24 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-02-28",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2013-02-28 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-03-28",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2013-03-28 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-05-10",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2013-05-10 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-09-11",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2013-09-11 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-10-18",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2013-10-18 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-11-21",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2013-11-21 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-12-17",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2013-12-17 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2014-01-23",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2014-01-23 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2014-02-27",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2014-02-27 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2014-03-26",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2014-03-26 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2014-05-03",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2014-05-03 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        }
-                                      ],
-                                      "Name": "DefoliationEvents",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": false,
-                                      "ReadOnly": false
                                     }
                                   ],
                                   "Enabled": false,
@@ -54506,9 +54088,7 @@
                                 {
                                   "$type": "Models.Factorial.CompositeFactor, Models",
                                   "Specifications": [
-                                    "[IrrigationEvents]",
-                                    "[FertiliserSchedule]",
-                                    "[DefoliationEvents]"
+                                    "[IrrigationEvents]"
                                   ],
                                   "Paths": null,
                                   "Values": null,
@@ -54797,348 +54377,6 @@
                                       "Children": [],
                                       "Enabled": true,
                                       "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Operations, Models",
-                                      "OperationsList": [
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-03-25",
-                                          "Action": "[Fertiliser].Apply(amount:40 , type:NO3N)",
-                                          "Line": "25-Mar-11\t[Fertiliser].Apply(amount:40 , type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-08-12",
-                                          "Action": "[Fertiliser].Apply(amount:100, type:NO3N)",
-                                          "Line": "12-Aug-11\t[Fertiliser].Apply(amount:100, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-10-01",
-                                          "Action": "[Fertiliser].Apply(amount:100, type:NO3N)",
-                                          "Line": "1-Oct-11\t[Fertiliser].Apply(amount:100, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-11-02",
-                                          "Action": "[Fertiliser].Apply(amount:122, type:NO3N)",
-                                          "Line": "2-Nov-11\t[Fertiliser].Apply(amount:122, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-12-05",
-                                          "Action": "[Fertiliser].Apply(amount:79 , type:NO3N)",
-                                          "Line": "5-Dec-11\t[Fertiliser].Apply(amount:79 , type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-12-29",
-                                          "Action": "[Fertiliser].Apply(amount:81 , type:NO3N)",
-                                          "Line": "29-Dec-11\t[Fertiliser].Apply(amount:81 , type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-02-01",
-                                          "Action": "[Fertiliser].Apply(amount:100, type:NO3N)",
-                                          "Line": "1-Feb-12\t[Fertiliser].Apply(amount:100, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-03-02",
-                                          "Action": "[Fertiliser].Apply(amount:115, type:NO3N)",
-                                          "Line": "2-Mar-12\t[Fertiliser].Apply(amount:115, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-04-10",
-                                          "Action": "[Fertiliser].Apply(amount:102, type:NO3N)",
-                                          "Line": "10-Apr-12\t[Fertiliser].Apply(amount:102, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-09-11",
-                                          "Action": "[Fertiliser].Apply(amount:100, type:NO3N)",
-                                          "Line": "11-Sep-12\t[Fertiliser].Apply(amount:100, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-10-18",
-                                          "Action": "[Fertiliser].Apply(amount:102, type:NO3N)",
-                                          "Line": "18-Oct-12\t[Fertiliser].Apply(amount:102, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-11-29",
-                                          "Action": "[Fertiliser].Apply(amount:115, type:NO3N)",
-                                          "Line": "29-Nov-12\t[Fertiliser].Apply(amount:115, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-01-14",
-                                          "Action": "[Fertiliser].Apply(amount:81 , type:NO3N)",
-                                          "Line": "14-Jan-13\t[Fertiliser].Apply(amount:81 , type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-02-28",
-                                          "Action": "[Fertiliser].Apply(amount:93 , type:NO3N)",
-                                          "Line": "28-Feb-13\t[Fertiliser].Apply(amount:93 , type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-04-02",
-                                          "Action": "[Fertiliser].Apply(amount:84 , type:NO3N)",
-                                          "Line": "2-Apr-13\t[Fertiliser].Apply(amount:84 , type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-09-12",
-                                          "Action": "[Fertiliser].Apply(amount:100, type:NO3N)",
-                                          "Line": "12-Sep-13\t[Fertiliser].Apply(amount:100, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-10-14",
-                                          "Action": "[Fertiliser].Apply(amount:81 , type:NO3N)",
-                                          "Line": "14-Oct-13\t[Fertiliser].Apply(amount:81 , type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-12-24",
-                                          "Action": "[Fertiliser].Apply(amount:71 , type:NO3N)",
-                                          "Line": "24-Dec-13\t[Fertiliser].Apply(amount:71 , type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2014-02-28",
-                                          "Action": "[Fertiliser].Apply(amount:117, type:NO3N)",
-                                          "Line": "28-Feb-14\t[Fertiliser].Apply(amount:117, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2014-04-04",
-                                          "Action": "[Fertiliser].Apply(amount:74 , type:NO3N)",
-                                          "Line": "4-Apr-14\t[Fertiliser].Apply(amount:74 , type:NO3N)"
-                                        }
-                                      ],
-                                      "Name": "FertiliserSchedule",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Operations, Models",
-                                      "OperationsList": [
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": false,
-                                          "Date": null,
-                                          "Action": null,
-                                          "Line": ""
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-07-01",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2011-07-01 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-09-30",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2011-09-30 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-11-02",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2011-11-02 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-12-01",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2011-12-01 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-12-21",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2011-12-21 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-01-26",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2012-01-26 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-03-01",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2012-03-01 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-04-04",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2012-04-04 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-05-24",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2012-05-24 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-09-08",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2012-09-08 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-10-17",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2012-10-17 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-11-20",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2012-11-20 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-12-20",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2012-12-20 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-01-24",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2013-01-24 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-02-28",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2013-02-28 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-03-28",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2013-03-28 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-05-10",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2013-05-10 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-09-11",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2013-09-11 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-10-18",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2013-10-18 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-11-21",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2013-11-21 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-12-17",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2013-12-17 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2014-01-23",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2014-01-23 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2014-02-27",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2014-02-27 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2014-03-26",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2014-03-26 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2014-05-03",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2014-05-03 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        }
-                                      ],
-                                      "Name": "DefoliationEvents",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
                                     }
                                   ],
                                   "Enabled": true,
@@ -55147,9 +54385,7 @@
                                 {
                                   "$type": "Models.Factorial.CompositeFactor, Models",
                                   "Specifications": [
-                                    "[IrrigationEvents]",
-                                    "[FertiliserSchedule]",
-                                    "[DefoliationEvents]"
+                                    "[IrrigationEvents]"
                                   ],
                                   "Paths": null,
                                   "Values": null,
@@ -55347,348 +54583,6 @@
                                       "Children": [],
                                       "Enabled": false,
                                       "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Operations, Models",
-                                      "OperationsList": [
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-03-25",
-                                          "Action": "[Fertiliser].Apply(amount:40 , type:NO3N)",
-                                          "Line": "25-Mar-11\t[Fertiliser].Apply(amount:40 , type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-08-12",
-                                          "Action": "[Fertiliser].Apply(amount:100, type:NO3N)",
-                                          "Line": "12-Aug-11\t[Fertiliser].Apply(amount:100, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-10-01",
-                                          "Action": "[Fertiliser].Apply(amount:100, type:NO3N)",
-                                          "Line": "1-Oct-11\t[Fertiliser].Apply(amount:100, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-11-02",
-                                          "Action": "[Fertiliser].Apply(amount:122, type:NO3N)",
-                                          "Line": "2-Nov-11\t[Fertiliser].Apply(amount:122, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-12-05",
-                                          "Action": "[Fertiliser].Apply(amount:79 , type:NO3N)",
-                                          "Line": "5-Dec-11\t[Fertiliser].Apply(amount:79 , type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-12-29",
-                                          "Action": "[Fertiliser].Apply(amount:81 , type:NO3N)",
-                                          "Line": "29-Dec-11\t[Fertiliser].Apply(amount:81 , type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-02-01",
-                                          "Action": "[Fertiliser].Apply(amount:100, type:NO3N)",
-                                          "Line": "1-Feb-12\t[Fertiliser].Apply(amount:100, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-03-02",
-                                          "Action": "[Fertiliser].Apply(amount:115, type:NO3N)",
-                                          "Line": "2-Mar-12\t[Fertiliser].Apply(amount:115, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-04-10",
-                                          "Action": "[Fertiliser].Apply(amount:102, type:NO3N)",
-                                          "Line": "10-Apr-12\t[Fertiliser].Apply(amount:102, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-09-11",
-                                          "Action": "[Fertiliser].Apply(amount:100, type:NO3N)",
-                                          "Line": "11-Sep-12\t[Fertiliser].Apply(amount:100, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-10-18",
-                                          "Action": "[Fertiliser].Apply(amount:102, type:NO3N)",
-                                          "Line": "18-Oct-12\t[Fertiliser].Apply(amount:102, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-11-29",
-                                          "Action": "[Fertiliser].Apply(amount:115, type:NO3N)",
-                                          "Line": "29-Nov-12\t[Fertiliser].Apply(amount:115, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-01-14",
-                                          "Action": "[Fertiliser].Apply(amount:81 , type:NO3N)",
-                                          "Line": "14-Jan-13\t[Fertiliser].Apply(amount:81 , type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-02-28",
-                                          "Action": "[Fertiliser].Apply(amount:93 , type:NO3N)",
-                                          "Line": "28-Feb-13\t[Fertiliser].Apply(amount:93 , type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-04-02",
-                                          "Action": "[Fertiliser].Apply(amount:84 , type:NO3N)",
-                                          "Line": "2-Apr-13\t[Fertiliser].Apply(amount:84 , type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-09-12",
-                                          "Action": "[Fertiliser].Apply(amount:100, type:NO3N)",
-                                          "Line": "12-Sep-13\t[Fertiliser].Apply(amount:100, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-10-14",
-                                          "Action": "[Fertiliser].Apply(amount:81 , type:NO3N)",
-                                          "Line": "14-Oct-13\t[Fertiliser].Apply(amount:81 , type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-12-24",
-                                          "Action": "[Fertiliser].Apply(amount:71 , type:NO3N)",
-                                          "Line": "24-Dec-13\t[Fertiliser].Apply(amount:71 , type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2014-02-28",
-                                          "Action": "[Fertiliser].Apply(amount:117, type:NO3N)",
-                                          "Line": "28-Feb-14\t[Fertiliser].Apply(amount:117, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2014-04-04",
-                                          "Action": "[Fertiliser].Apply(amount:74 , type:NO3N)",
-                                          "Line": "4-Apr-14\t[Fertiliser].Apply(amount:74 , type:NO3N)"
-                                        }
-                                      ],
-                                      "Name": "FertiliserSchedule",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": false,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Operations, Models",
-                                      "OperationsList": [
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": false,
-                                          "Date": null,
-                                          "Action": null,
-                                          "Line": ""
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-07-01",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2011-07-01 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-09-30",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2011-09-30 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-11-02",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2011-11-02 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-12-01",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2011-12-01 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-12-21",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2011-12-21 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-01-26",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2012-01-26 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-03-01",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2012-03-01 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-04-04",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2012-04-04 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-05-24",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2012-05-24 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-09-08",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2012-09-08 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-10-17",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2012-10-17 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-11-20",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2012-11-20 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-12-20",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2012-12-20 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-01-24",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2013-01-24 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-02-28",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2013-02-28 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-03-28",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2013-03-28 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-05-10",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2013-05-10 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-09-11",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2013-09-11 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-10-18",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2013-10-18 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-11-21",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2013-11-21 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-12-17",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2013-12-17 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2014-01-23",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2014-01-23 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2014-02-27",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2014-02-27 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2014-03-26",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2014-03-26 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2014-05-03",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2014-05-03 [AgPRyegrass].RemoveBiomass(amount: 500,\ttype: \"SetResidueAmount\")"
-                                        }
-                                      ],
-                                      "Name": "DefoliationEvents",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": false,
-                                      "ReadOnly": false
                                     }
                                   ],
                                   "Enabled": false,
@@ -55697,9 +54591,7 @@
                                 {
                                   "$type": "Models.Factorial.CompositeFactor, Models",
                                   "Specifications": [
-                                    "[IrrigationEvents]",
-                                    "[FertiliserSchedule]",
-                                    "[DefoliationEvents]"
+                                    "[IrrigationEvents]"
                                   ],
                                   "Paths": null,
                                   "Values": null,
@@ -55718,348 +54610,6 @@
                                         }
                                       ],
                                       "Name": "IrrigationEvents",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Operations, Models",
-                                      "OperationsList": [
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-03-25",
-                                          "Action": "[Fertiliser].Apply(amount:40 , type:NO3N)",
-                                          "Line": "25-Mar-11\t[Fertiliser].Apply(amount:40 , type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-08-12",
-                                          "Action": "[Fertiliser].Apply(amount:100, type:NO3N)",
-                                          "Line": "12-Aug-11\t[Fertiliser].Apply(amount:100, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-10-01",
-                                          "Action": "[Fertiliser].Apply(amount:100, type:NO3N)",
-                                          "Line": "1-Oct-11\t[Fertiliser].Apply(amount:100, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-11-02",
-                                          "Action": "[Fertiliser].Apply(amount:122, type:NO3N)",
-                                          "Line": "2-Nov-11\t[Fertiliser].Apply(amount:122, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-12-05",
-                                          "Action": "[Fertiliser].Apply(amount:79 , type:NO3N)",
-                                          "Line": "5-Dec-11\t[Fertiliser].Apply(amount:79 , type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-12-29",
-                                          "Action": "[Fertiliser].Apply(amount:81 , type:NO3N)",
-                                          "Line": "29-Dec-11\t[Fertiliser].Apply(amount:81 , type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-02-01",
-                                          "Action": "[Fertiliser].Apply(amount:100, type:NO3N)",
-                                          "Line": "1-Feb-12\t[Fertiliser].Apply(amount:100, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-03-02",
-                                          "Action": "[Fertiliser].Apply(amount:115, type:NO3N)",
-                                          "Line": "2-Mar-12\t[Fertiliser].Apply(amount:115, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-04-10",
-                                          "Action": "[Fertiliser].Apply(amount:102, type:NO3N)",
-                                          "Line": "10-Apr-12\t[Fertiliser].Apply(amount:102, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-09-11",
-                                          "Action": "[Fertiliser].Apply(amount:100, type:NO3N)",
-                                          "Line": "11-Sep-12\t[Fertiliser].Apply(amount:100, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-10-18",
-                                          "Action": "[Fertiliser].Apply(amount:102, type:NO3N)",
-                                          "Line": "18-Oct-12\t[Fertiliser].Apply(amount:102, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-11-29",
-                                          "Action": "[Fertiliser].Apply(amount:115, type:NO3N)",
-                                          "Line": "29-Nov-12\t[Fertiliser].Apply(amount:115, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-01-14",
-                                          "Action": "[Fertiliser].Apply(amount:81 , type:NO3N)",
-                                          "Line": "14-Jan-13\t[Fertiliser].Apply(amount:81 , type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-02-28",
-                                          "Action": "[Fertiliser].Apply(amount:93 , type:NO3N)",
-                                          "Line": "28-Feb-13\t[Fertiliser].Apply(amount:93 , type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-04-02",
-                                          "Action": "[Fertiliser].Apply(amount:84 , type:NO3N)",
-                                          "Line": "2-Apr-13\t[Fertiliser].Apply(amount:84 , type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-09-12",
-                                          "Action": "[Fertiliser].Apply(amount:100, type:NO3N)",
-                                          "Line": "12-Sep-13\t[Fertiliser].Apply(amount:100, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-10-14",
-                                          "Action": "[Fertiliser].Apply(amount:81 , type:NO3N)",
-                                          "Line": "14-Oct-13\t[Fertiliser].Apply(amount:81 , type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-12-24",
-                                          "Action": "[Fertiliser].Apply(amount:71 , type:NO3N)",
-                                          "Line": "24-Dec-13\t[Fertiliser].Apply(amount:71 , type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2014-02-28",
-                                          "Action": "[Fertiliser].Apply(amount:117, type:NO3N)",
-                                          "Line": "28-Feb-14\t[Fertiliser].Apply(amount:117, type:NO3N)"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2014-04-04",
-                                          "Action": "[Fertiliser].Apply(amount:74 , type:NO3N)",
-                                          "Line": "4-Apr-14\t[Fertiliser].Apply(amount:74 , type:NO3N)"
-                                        }
-                                      ],
-                                      "Name": "FertiliserSchedule",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Operations, Models",
-                                      "OperationsList": [
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": false,
-                                          "Date": null,
-                                          "Action": null,
-                                          "Line": ""
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-07-01",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2011-07-01 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-09-30",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2011-09-30 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-11-02",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2011-11-02 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-12-01",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2011-12-01 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2011-12-21",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2011-12-21 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-01-26",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2012-01-26 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-03-01",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2012-03-01 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-04-04",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2012-04-04 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-05-24",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2012-05-24 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-09-08",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2012-09-08 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-10-17",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2012-10-17 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-11-20",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2012-11-20 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2012-12-20",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2012-12-20 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-01-24",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2013-01-24 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-02-28",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2013-02-28 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-03-28",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2013-03-28 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-05-10",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2013-05-10 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-09-11",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2013-09-11 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-10-18",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2013-10-18 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-11-21",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2013-11-21 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2013-12-17",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2013-12-17 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2014-01-23",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2014-01-23 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2014-02-27",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2014-02-27 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2014-03-26",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2014-03-26 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Enabled": true,
-                                          "Date": "2014-05-03",
-                                          "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
-                                          "Line": "2014-05-03 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
-                                        }
-                                      ],
-                                      "Name": "DefoliationEvents",
                                       "ResourceName": null,
                                       "Children": [],
                                       "Enabled": true,
@@ -57749,32 +56299,6 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Operations, Models",
-                              "OperationsList": [
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": false,
-                                  "Date": null,
-                                  "Action": null,
-                                  "Line": ""
-                                }
-                              ],
-                              "Name": "IrrigationEvents",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Operations, Models",
-                              "OperationsList": null,
-                              "Name": "FertiliserSchedule",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
                               "$type": "Models.Report, Models",
                               "VariableNames": [
                                 "[Clock].Today",
@@ -57792,7 +56316,7 @@
                                 "[AgPRyegrass].GlfNContent",
                                 "[AgPRyegrass].GlfWaterSupply",
                                 "[AgPRyegrass].Leaf.Live.Wt",
-                                "[AgPRyegrass].AboveGround.Wt",
+                                "[AgPRyegrass].AboveGroundHarvestable.wt",
                                 "[AgPRyegrass].Leaf.Dead.Wt",
                                 "[AgPRyegrass].Height",
                                 "[AgPRyegrass].CoverGreen",
@@ -57854,25 +56378,359 @@
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Operations, Models",
-                          "OperationsList": [
+                            },
                             {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": false,
-                              "Date": null,
-                              "Action": null,
-                              "Line": ""
+                              "$type": "Models.Operations, Models",
+                              "OperationsList": [
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": false,
+                                  "Date": null,
+                                  "Action": null,
+                                  "Line": ""
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2011-07-01",
+                                  "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
+                                  "Line": "2011-07-01 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2011-09-30",
+                                  "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
+                                  "Line": "2011-09-30 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2011-11-02",
+                                  "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
+                                  "Line": "2011-11-02 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2011-12-01",
+                                  "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
+                                  "Line": "2011-12-01 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2011-12-21",
+                                  "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
+                                  "Line": "2011-12-21 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2012-01-26",
+                                  "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
+                                  "Line": "2012-01-26 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2012-03-01",
+                                  "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
+                                  "Line": "2012-03-01 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2012-04-04",
+                                  "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
+                                  "Line": "2012-04-04 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2012-05-24",
+                                  "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
+                                  "Line": "2012-05-24 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2012-09-08",
+                                  "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
+                                  "Line": "2012-09-08 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2012-10-17",
+                                  "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
+                                  "Line": "2012-10-17 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2012-11-20",
+                                  "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
+                                  "Line": "2012-11-20 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2012-12-20",
+                                  "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
+                                  "Line": "2012-12-20 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2013-01-24",
+                                  "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
+                                  "Line": "2013-01-24 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2013-02-28",
+                                  "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
+                                  "Line": "2013-02-28 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2013-03-28",
+                                  "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
+                                  "Line": "2013-03-28 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2013-05-10",
+                                  "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
+                                  "Line": "2013-05-10 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2013-09-11",
+                                  "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
+                                  "Line": "2013-09-11 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2013-10-18",
+                                  "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
+                                  "Line": "2013-10-18 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2013-11-21",
+                                  "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
+                                  "Line": "2013-11-21 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2013-12-17",
+                                  "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
+                                  "Line": "2013-12-17 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2014-01-23",
+                                  "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
+                                  "Line": "2014-01-23 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2014-02-27",
+                                  "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
+                                  "Line": "2014-02-27 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2014-03-26",
+                                  "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
+                                  "Line": "2014-03-26 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2014-05-03",
+                                  "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")",
+                                  "Line": "2014-05-03 [AgPRyegrass].RemoveBiomass(amount: 1500,\ttype: \"SetResidueAmount\")"
+                                }
+                              ],
+                              "Name": "DefoliationEvents",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Operations, Models",
+                              "OperationsList": [
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2011-03-25",
+                                  "Action": "[Fertiliser].Apply(amount:40 , type:NO3N)",
+                                  "Line": "2011-03-25 [Fertiliser].Apply(amount:40 , type:NO3N)"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2011-08-12",
+                                  "Action": "[Fertiliser].Apply(amount:100, type:NO3N)",
+                                  "Line": "2011-08-12 [Fertiliser].Apply(amount:100, type:NO3N)"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2011-10-01",
+                                  "Action": "[Fertiliser].Apply(amount:100, type:NO3N)",
+                                  "Line": "2011-10-01 [Fertiliser].Apply(amount:100, type:NO3N)"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2011-11-02",
+                                  "Action": "[Fertiliser].Apply(amount:122, type:NO3N)",
+                                  "Line": "2011-11-02 [Fertiliser].Apply(amount:122, type:NO3N)"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2011-12-05",
+                                  "Action": "[Fertiliser].Apply(amount:79 , type:NO3N)",
+                                  "Line": "2011-12-05 [Fertiliser].Apply(amount:79 , type:NO3N)"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2011-12-29",
+                                  "Action": "[Fertiliser].Apply(amount:81 , type:NO3N)",
+                                  "Line": "2011-12-29 [Fertiliser].Apply(amount:81 , type:NO3N)"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2012-02-01",
+                                  "Action": "[Fertiliser].Apply(amount:100, type:NO3N)",
+                                  "Line": "2012-02-01 [Fertiliser].Apply(amount:100, type:NO3N)"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2012-03-02",
+                                  "Action": "[Fertiliser].Apply(amount:115, type:NO3N)",
+                                  "Line": "2012-03-02 [Fertiliser].Apply(amount:115, type:NO3N)"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2012-04-10",
+                                  "Action": "[Fertiliser].Apply(amount:102, type:NO3N)",
+                                  "Line": "2012-04-10 [Fertiliser].Apply(amount:102, type:NO3N)"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2012-09-11",
+                                  "Action": "[Fertiliser].Apply(amount:100, type:NO3N)",
+                                  "Line": "2012-09-11 [Fertiliser].Apply(amount:100, type:NO3N)"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2012-10-18",
+                                  "Action": "[Fertiliser].Apply(amount:102, type:NO3N)",
+                                  "Line": "2012-10-18 [Fertiliser].Apply(amount:102, type:NO3N)"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2012-11-29",
+                                  "Action": "[Fertiliser].Apply(amount:115, type:NO3N)",
+                                  "Line": "2012-11-29 [Fertiliser].Apply(amount:115, type:NO3N)"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2013-01-14",
+                                  "Action": "[Fertiliser].Apply(amount:81 , type:NO3N)",
+                                  "Line": "2013-01-14 [Fertiliser].Apply(amount:81 , type:NO3N)"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2013-02-28",
+                                  "Action": "[Fertiliser].Apply(amount:93 , type:NO3N)",
+                                  "Line": "2013-02-28 [Fertiliser].Apply(amount:93 , type:NO3N)"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2013-04-02",
+                                  "Action": "[Fertiliser].Apply(amount:84 , type:NO3N)",
+                                  "Line": "2013-04-02 [Fertiliser].Apply(amount:84 , type:NO3N)"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2013-09-12",
+                                  "Action": "[Fertiliser].Apply(amount:100, type:NO3N)",
+                                  "Line": "2013-09-12 [Fertiliser].Apply(amount:100, type:NO3N)"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2013-10-14",
+                                  "Action": "[Fertiliser].Apply(amount:81 , type:NO3N)",
+                                  "Line": "2013-10-14 [Fertiliser].Apply(amount:81 , type:NO3N)"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2013-12-24",
+                                  "Action": "[Fertiliser].Apply(amount:71 , type:NO3N)",
+                                  "Line": "2013-12-24 [Fertiliser].Apply(amount:71 , type:NO3N)"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2014-02-28",
+                                  "Action": "[Fertiliser].Apply(amount:117, type:NO3N)",
+                                  "Line": "2014-02-28 [Fertiliser].Apply(amount:117, type:NO3N)"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2014-04-04",
+                                  "Action": "[Fertiliser].Apply(amount:74 , type:NO3N)",
+                                  "Line": "2014-04-04 [Fertiliser].Apply(amount:74 , type:NO3N)"
+                                }
+                              ],
+                              "Name": "FertiliserSchedule",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Operations, Models",
+                              "OperationsList": null,
+                              "Name": "IrrigationEvents",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
-                          "Name": "DefoliationEvents",
-                          "ResourceName": null,
-                          "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -59213,7 +58071,7 @@
                                   "LineThickness": 0,
                                   "TableName": "Report",
                                   "XFieldName": "Clock.Today",
-                                  "YFieldName": "AgPRyegrass.AboveGround.Wt",
+                                  "YFieldName": "AgPRyegrass.AboveGroundHarvestable.wt",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": false,
@@ -59317,7 +58175,7 @@
                               "YFieldName": "AgPRyegrass.LAI",
                               "X2FieldName": null,
                               "Y2FieldName": null,
-                              "ShowInLegend": false,
+                              "ShowInLegend": true,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
                               "CumulativeX": false,
