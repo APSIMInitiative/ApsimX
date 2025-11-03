@@ -4,6 +4,7 @@ using Models.Climate;
 using Models.Core;
 using Models.PMF;
 using NUnit.Framework;
+using System;
 using System.IO;
 using System.Linq;
 using UnitTests.Core.Run;
@@ -511,5 +512,120 @@ public class CommandTests
 
         Assert.That(mockRunner.RunCalled, Is.True);
         Assert.That(mockRunner.RelativeTo, Is.EqualTo(simulations));
+    }
+
+    /// <summary>Ensure the replace command works when matching on name and type.</summary>
+    [Test]
+    public void EnsureReplaceOnNameAndTypeWorks()
+    {
+        Simulations simulation = new()
+        {
+            Children =
+            [
+                new Report() { Name = "Report" }
+            ]
+        };
+        Node.Create(simulation);
+
+
+        var newModel = new Report() { Name = "NewReport" };
+        IModelCommand cmd = new ReplaceCommand(new ModelReference(newModel),
+                                               replacementPath: "Report", multiple: false, matchOnNameAndType: true);
+        cmd.Run(simulation, runner: null);
+
+        Assert.That(simulation.Children[0].Name, Is.EqualTo("NewReport"));
+    }
+
+    /// <summary>Ensure the replace command works when matching on name only.</summary>
+    [Test]
+    public void EnsureReplaceOnNameWorks()
+    {
+        Simulations simulation = new()
+        {
+            Children =
+            [
+                new Report() { Name = "Report" }
+            ]
+        };
+        Node.Create(simulation);
+
+
+        var newModel = new Report() { Name = "NewReport" };
+        IModelCommand cmd = new ReplaceCommand(new ModelReference(newModel),
+                                               replacementPath: "Report", multiple: false, matchOnNameAndType: false);
+        cmd.Run(simulation, runner: null);
+
+        Assert.That(simulation.Children.First().Name, Is.EqualTo("NewReport"));
+    }
+
+    /// <summary>Ensure the replace command works when matching on name only and when a name is specified.</summary>
+    [Test]
+    public void EnsureReplaceOnNameWWithNewNameWorks()
+    {
+        Simulations simulation = new()
+        {
+            Children =
+            [
+                new Report() { Name = "Report" }
+            ]
+        };
+        Node.Create(simulation);
+
+
+        var newModel = new Report() { Name = "NewReport" };
+        IModelCommand cmd = new ReplaceCommand(new ModelReference(newModel),
+                                               replacementPath: "Report", multiple: false, matchOnNameAndType: false, newName: "NewName");
+        cmd.Run(simulation, runner: null);
+
+        Assert.That(simulation.Children.First().Name, Is.EqualTo("NewName"));
+    }
+
+    /// <summary>Ensure the replace command works when multiple matching on name and type.</summary>
+    [Test]
+    public void EnsureMultipleReplaceOnNameWorks()
+    {
+        Simulations simulation = new()
+        {
+            Children =
+            [
+                new Zone() { Children = [new Clock() { Name = "Report" }] },
+                new Zone() { Children = [new Report() { Name = "Report" }] }
+            ]
+        };
+        Node.Create(simulation);
+
+        var newModel = new Report() { Name = "NewReport" };
+        IModelCommand cmd = new ReplaceCommand(new ModelReference(newModel),
+                                               replacementPath: "Report", multiple: true, matchOnNameAndType: false);
+        cmd.Run(simulation, runner: null);
+
+        var reports = simulation.Node.FindChildren<Report>(recurse: true).ToArray();
+        Assert.That(reports[0].Name, Is.EqualTo("NewReport"));
+        Assert.That(reports[1].Name, Is.EqualTo("NewReport"));
+    }
+
+    /// <summary>Ensure the replace command works when multiple matching on name and type.</summary>
+    [Test]
+    public void EnsureMultipleReplaceOnNameAndTypeWorks()
+    {
+        Simulations simulation = new()
+        {
+            Children =
+            [
+                new Zone() { Children = [new Report() { Name = "Report" }] },
+                new Zone() { Children = [new Report() { Name = "Report" }] }
+            ]
+        };
+        Node.Create(simulation);
+
+        var newModel = new Report() { Name = "NewReport" };
+        IModelCommand cmd = new ReplaceCommand(new ModelReference(newModel),
+                                               replacementPath: "Report", multiple: false, matchOnNameAndType: false);
+
+        cmd.Run(simulation, runner: null);
+
+        var reports = simulation.Node.FindChildren<Report>(recurse: true).ToArray();
+        Assert.That(reports[0].Name, Is.EqualTo("NewReport"));
+        Assert.That(reports[1].Name, Is.EqualTo("Report"));
     }
 }

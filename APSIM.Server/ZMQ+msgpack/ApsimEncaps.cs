@@ -132,9 +132,9 @@ namespace APSIM.ZMQServer
         {
             errors = null;
             if (changes != null)
-                jobRunner.Replacements = Overrides.ParseStrings(changes);
+                jobRunner.Replacements = CommandLanguage.StringToCommands(changes, sims, relativeToDirectory: null);
             else
-                jobRunner.Replacements = Enumerable.Empty<Override>();
+                jobRunner.Replacements = Enumerable.Empty<IModelCommand>();
 
             Action onWorkerExit = () =>
             {

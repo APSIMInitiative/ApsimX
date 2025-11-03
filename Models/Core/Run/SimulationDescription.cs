@@ -25,7 +25,7 @@ namespace Models.Core.Run
 
         /// <summary>A list of all replacements to apply to simulation to run.</summary>
         [NonSerialized]
-        private List<Override> replacementsToApply = new List<Override>();
+        private List<IModelCommand> replacementsToApply = new();
 
         /// <summary>
         /// The actual simulation object to run
@@ -87,7 +87,7 @@ namespace Models.Core.Run
         /// Add an override to replace an existing value
         /// </summary>
         /// <param name="change">The override to addd.</param>
-        public void AddOverride(Override change)
+        public void AddOverride(IModelCommand change)
         {
             replacementsToApply.Add(change);
         }
@@ -106,9 +106,9 @@ namespace Models.Core.Run
         /// </summary>
         /// <param name="cancelToken"></param>
         /// <param name="changes"></param>
-        public void Run(CancellationTokenSource cancelToken, IEnumerable<Override> changes)
+        public void Run(CancellationTokenSource cancelToken, IEnumerable<IModelCommand> changes)
         {
-            Overrides.Apply(SimulationToRun, changes);
+            CommandProcessor.Run(changes, SimulationToRun, runner: null);
             Run(cancelToken);
         }
 
@@ -158,7 +158,7 @@ namespace Models.Core.Run
 
                 Simulation newSimulation = newNode.Model as Simulation;
                 newSimulation.Parent = null;
-                Overrides.Apply(newSimulation, replacementsToApply);
+                CommandProcessor.Run(replacementsToApply, newSimulation, runner: null);
 
                 // Give the simulation the descriptors.
                 if (newSimulation.Descriptors == null || Descriptors.Count > 0)
@@ -213,8 +213,9 @@ namespace Models.Core.Run
                 IModel replacements = Folder.FindReplacementsFolder(topLevelModel);
                 if (replacements != null && replacements.Enabled)
                 {
-                    foreach (IModel replacement in replacements.Children.Where(m => m.Enabled))
-                        replacementsToApply.Insert(0, new Override(replacement.Name, replacement, Override.MatchTypeEnum.Name));
+                    foreach (INodeModel replacement in replacements.Children.Where(m => m.Enabled))
+                        replacementsToApply.Insert(0, new ReplaceCommand(new ModelReference(replacement), replacement.Name,
+                                                                         multiple: true, matchOnNameAndType: false));
                 }
             }
         }
