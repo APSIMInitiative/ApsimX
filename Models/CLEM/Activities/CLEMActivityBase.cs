@@ -632,37 +632,95 @@ namespace Models.CLEM.Activities
         /// </summary>
         protected virtual void ManageActivityResourcesAndTasks(string identifier = "")
         {
-            if (Enabled)
+            if (!Enabled)
             {
-                if (TimingOK)
-                {
-                    // get ready for time step
-                    PrepareForTimestep();
+                Status = ActivityStatus.Ignored;
+                return;
+            }
 
-                    // allow all companion models to prepare after initial parent info calculated
-                    if (this is IHandlesActivityCompanionModels)
+            if (!TimingOK)
+            {
+                return;
+            }
+
+            // get ready for time step
+            PrepareForTimestep();
+
+            // allow all companion models to prepare after initial parent info calculated
+            if (this is IHandlesActivityCompanionModels)
+            {
+                // get all companion models except filter groups
+                foreach (IActivityCompanionModel companionChild in Structure.FindChildren<IActivityCompanionModel>().Where(a => identifier != "" ? (a.Identifier ?? "") == identifier : true))
+                {
+                    if (companionChild is CLEMActivityBase cChild)
                     {
-                        // get all companion models except filter groups
-                        foreach (IActivityCompanionModel companionChild in Structure.FindChildren<IActivityCompanionModel>().Where(a => identifier != "" ? (a.Identifier ?? "") == identifier : true))
+                        cChild.Status = ActivityStatus.Ignored;
+                    }
+
+                    companionChild.PrepareForTimestep();
+                }
+            }
+
+            // add resources needed based on method supplied by activity
+            // set the metric values for identifiable children as they will follow in next loop
+            var requests = RequestResourcesForTimestep();
+            if (requests != null)
+            {
+                ResourceRequestList.AddRange(requests);
+            }
+
+            // get all companion related expense requests
+            if (this is IHandlesActivityCompanionModels)
+            {
+                // get all companion models except filter groups
+                foreach (IActivityCompanionModel companionChild in Structure.FindChildren<IActivityCompanionModel>().Where(a => identifier != "" ? (a.Identifier ?? "") == identifier : true))
+                {
+                    if (valuesForCompanionModels.Any() && valuesForCompanionModels.Where(a => a.Key.type == companionChild.GetType().Name).Any())
+                    {
+                        var unitsProvided = ValueForCompanionModel(companionChild);
+                        if (MathUtilities.IsPositive(unitsProvided))
                         {
                             if (companionChild is CLEMActivityBase cChild)
                             {
-                                cChild.Status = ActivityStatus.Ignored;
+                                cChild.Status = ActivityStatus.Success;
                             }
 
-                            companionChild.PrepareForTimestep();
+                            foreach (ResourceRequest request in companionChild.RequestResourcesForTimestep(unitsProvided))
+                            {
+                                if (request.ActivityModel is null)
+                                {
+                                    request.ActivityModel = this;
+                                }
+
+                                request.CompanionModelDetails = (companionChild.GetType().Name, companionChild.Identifier, companionChild.Measure);
+                                ResourceRequestList.Add(request);
+                            }
                         }
                     }
+                }
+            }
 
-                    // add resources needed based on method supplied by activity
-                    // set the metric values for identifiable children as they will follow in next loop
-                    var requests = RequestResourcesForTimestep();
-                    if (requests != null)
-                    {
-                        ResourceRequestList.AddRange(requests);
-                    }
+            // check availability and ok to proceed
+            CheckResources(ResourceRequestList, Guid.NewGuid());
 
-                    // get all companion related expense requests
+            if(Status == ActivityStatus.Skipped)
+            {
+                return;
+            }
+
+            // adjust if needed using method supplied by activity
+            AdjustResourcesForTimestep();
+
+            if (ReportShortfalls(ResourceRequestList) == false)
+            {
+                // take resources
+                // if no resources required perform Activity if code is present.
+                // if resources are returned (all available or UseResourcesAvailable action) perform Activity
+                if (TakeResources(ResourceRequestList, false) || (ResourceRequestList.Count == 0))
+                {
+                    PerformTasksForTimestep(); //based on method supplied by activity
+
+                    // for all companion models to generate create resources where needed
                     if (this is IHandlesActivityCompanionModels)
                     {
                         // get all companion models except filter groups
@@ -671,84 +729,26 @@ namespace Models.CLEM.Activities
                             if (valuesForCompanionModels.Any() && valuesForCompanionModels.Where(a => a.Key.type == companionChild.GetType().Name).Any())
                             {
                                 var unitsProvided = ValueForCompanionModel(companionChild);
-                                if (MathUtilities.IsPositive(unitsProvided))
+                                // negative unit value (-99999) means the units were ok, but the model has alerted us to a problem that should be reported as an error.
+                                if (MathUtilities.IsNegative(unitsProvided))
                                 {
-                                    if (companionChild is CLEMActivityBase cChild)
+                                    if (companionChild is CLEMActivityBase)
                                     {
-                                        cChild.Status = ActivityStatus.Success;
+                                        (companionChild as CLEMActivityBase).Status = ActivityStatus.Warning;
                                     }
-
-                                    foreach (ResourceRequest request in companionChild.RequestResourcesForTimestep(unitsProvided))
+                                }
+                                else
+                                {
+                                    if (companionChild is CLEMActivityBase && (companionChild as CLEMActivityBase).Status != ActivityStatus.Skipped)
                                     {
-                                        if (request.ActivityModel is null)
-                                        {
-                                            request.ActivityModel = this;
-                                        }
-
-                                        request.CompanionModelDetails = (companionChild.GetType().Name, companionChild.Identifier, companionChild.Measure);
-                                        ResourceRequestList.Add(request);
+                                        companionChild.PerformTasksForTimestep(unitsProvided);
                                     }
                                 }
                             }
                         }
                     }
 
-                    // check availability and ok to proceed
-                    CheckResources(ResourceRequestList, Guid.NewGuid());
-
-                    if(Status == ActivityStatus.Skipped)
-                    {
-                        return;
-                    }
-
-                    // adjust if needed using method supplied by activity
-                    AdjustResourcesForTimestep();
-
-                    if (ReportShortfalls(ResourceRequestList) == false)
-                    {
-                        // take resources
-                        // if no resources required perform Activity if code is present.
-                        // if resources are returned (all available or UseResourcesAvailable action) perform Activity
-                        if (TakeResources(ResourceRequestList, false) || (ResourceRequestList.Count == 0))
-                        {
-                            PerformTasksForTimestep(); //based on method supplied by activity
-
-                            // for all companion models to generate create resources where needed
-                            if (this is IHandlesActivityCompanionModels)
-                            {
-                                // get all companion models except filter groups
-                                foreach (IActivityCompanionModel companionChild in Structure.FindChildren<IActivityCompanionModel>().Where(a => identifier != "" ? (a.Identifier ?? "") == identifier : true))
-                                {
-                                    if (valuesForCompanionModels.Any() && valuesForCompanionModels.Where(a => a.Key.type == companionChild.GetType().Name).Any())
-                                    {
-                                        var unitsProvided = ValueForCompanionModel(companionChild);
-                                        // negative unit value (-99999) means the units were ok, but the model has alerted us to a problem that should be reported as an error.
-                                        if (MathUtilities.IsNegative(unitsProvided))
-                                        {
-                                            if (companionChild is CLEMActivityBase)
-                                            {
-                                                (companionChild as CLEMActivityBase).Status = ActivityStatus.Warning;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if (companionChild is CLEMActivityBase && (companionChild as CLEMActivityBase).Status != ActivityStatus.Skipped)
-                                            {
-                                                companionChild.PerformTasksForTimestep(unitsProvided);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                        }
-                    }
-                    return;
                 }
-            }
-            else
-            {
-                Status = ActivityStatus.Ignored;
             }
         }
 
