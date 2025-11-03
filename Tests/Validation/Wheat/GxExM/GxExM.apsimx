@@ -11,7 +11,7 @@
       "ResourceName": null,
       "Children": [
         {
-          "$type": "Models.PreSimulationTools.ObservedInput, Models",
+          "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
             "NDVI.xlsx",
             "PAR.xlsx",
@@ -26,10 +26,7 @@
           "SheetNames": [
             "Observed"
           ],
-          "ColumnData": null,
-          "DerivedData": null,
-          "ColumnNames": null,
-          "Name": "ObservedInput",
+          "Name": "ExcelMultiInput",
           "ResourceName": null,
           "Children": [],
           "Enabled": true,
