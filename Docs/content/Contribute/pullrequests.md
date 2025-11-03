@@ -1,7 +1,6 @@
 ---
 layout: page
 title: Pull request guidelines
-permalink: /pull-requests/
 weight: 20
 ---
 
@@ -28,3 +27,4 @@ weight: 20
 * Keeping branches in development for long periods of time. Branches that have been left and need to be brought up to date with the newest changes can be difficult to update.
 * Submitting pull requests that resolve multiple unrelated issues in the one pull request. Doing so increases the difficulty of review.
 * Submitting pull requests that contain multiple new features. This also increases the review time.
+* Leaving PRs inactive for long lengths of time (60+ days). PRs not marked with the following labels will be closed automatically to help with PR review efforts: `Ready for Reference Panel Comment, Do Not Merge, High Level Review, Low Level Review, Ready for Software Review`

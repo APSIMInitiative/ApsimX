@@ -1,7 +1,6 @@
 ---
 layout: page
 title: Issue guidelines
-permalink: /issues/
 weight: 10
 ---
 
