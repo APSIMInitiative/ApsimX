@@ -38,6 +38,11 @@ namespace Models.CLEM.Resources
         public new double Net { get { return FromIntake - ForUrinary - ForFaecal - ForPregnancy - ForWool - ForLactationFromIntake; } }
 
         /// <summary>
+        /// Protein needed to reach normal protein mass by body size
+        /// </summary>
+        public double NormalShortfall { get; set; }
+
+        /// <summary>
         /// Used as Endogenous Urinary Protein (kg day-1)
         /// </summary>
         public double ForEndogenousUrinary { get; set; }

@@ -437,7 +437,7 @@ namespace Models.CLEM.Activities
 
             // determine if body protein is below expected for age to adjust protein content of gain for recovery of protein
             double proteinNormal = ind.Weight.Protein.MassAtSRW * relativeSizeForWeightGainPurposes;
-            double proteinNormalShortfall = Math.Max(0, proteinNormal - ind.Weight.Protein.Amount);
+            ind.Weight.Protein.NormalShortfall = Math.Max(0, proteinNormal - ind.Weight.Protein.Amount);
 
             // Equation 102, 104 & 105   =======================================
             // Equation 102 - PG1 and PG2 protein available from diet after accounting for maintenance and conceptus and milk
@@ -475,7 +475,7 @@ namespace Models.CLEM.Activities
 
             // 1. if protein from intake available AND insufficient energy to grow protein to normal limit AND lactating, mobilise fat to provide energy to grow protein from diet
 
-            double proteinToMeetNormal = Math.Min(proteinNormalShortfall, Math.Max(0.0, proteinAvailableForGainFromIntake));
+            double proteinToMeetNormal = Math.Min(ind.Weight.Protein.NormalShortfall, Math.Max(0.0, proteinAvailableForGainFromIntake));
             double energyNeededToMeetNormal = proteinToMeetNormal * ind.Parameters.General.MJEnergyPerKgProtein;
             double energyShortfall = Math.Min(0, Math.Max(energyAvailableForGain - energyNeededToMeetNormal, energyNeededToMeetNormal * -1));
             double efficiencyToGetEnergy = Math.Min(1.0, ind.Energy.Km / 0.8);
