@@ -203,6 +203,34 @@ public class CommandTests
         Assert.That(clock.StartDate, Is.EqualTo(new System.DateTime(2000, 1, 1)));
     }
 
+    /// <summary>Ensure we can undo a set properties command.</summary>
+    [Test]
+    public void EnsureUndoSetPropertiesWorks()
+    {
+        Simulations simulation = new()
+        {
+            Children =
+            [
+                new Clock()
+                {
+                    StartDate = new(1900, 1, 1),
+                    EndDate = new(2000, 1, 1)
+                }
+            ]
+        };
+        Node.Create(simulation);
+
+        IModelCommand cmd = new SetPropertyCommand("[Clock].StartDate", "=", "2000-01-01", fileName: null);
+        cmd.Run(simulation, runner: null);
+
+        var clock = simulation.Children.First() as Clock;
+        Assert.That(clock.StartDate, Is.EqualTo(new System.DateTime(2000, 1, 1)));
+
+        // Now undo the command.
+        (cmd as SetPropertyCommand).Undo();
+        Assert.That(clock.StartDate, Is.EqualTo(new System.DateTime(1900, 1, 1)));
+    }
+
     /// <summary>Ensure can set a string property to "".</summary>
     [Test]
     public void EnsureSetPropertyToEmpty()
