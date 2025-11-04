@@ -3,7 +3,6 @@ using APSIM.Server.Commands;
 using APSIM.Server.IO;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;

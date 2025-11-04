@@ -1,23 +1,32 @@
 using APSIM.Shared.Utilities;
+using Newtonsoft.Json;
 
 namespace APSIM.Core;
 
 /// <summary>A replace command</summary>
+/// <remarks>
+/// The JsonProperty attributes below are needed for JSON serialisation which the APSIM.Server uses.
+/// </remarks>
 public partial class ReplaceCommand : IModelCommand
 {
     /// <summary>A reference to a model.</summary>
+    [JsonProperty]
     private readonly IModelReference modelReference;
 
     /// <summary>The path of models to replace.</summary>
+    [JsonProperty]
     private readonly string replacementPath;
 
     /// <summary>Do as many replacements as possible?</summary>
+    [JsonProperty]
     private readonly bool multiple;
 
     /// <summary>Match on name and type? If false, will only match when names match.</summary>
+    [JsonProperty]
     private readonly bool matchOnNameAndType;
 
     /// <summary>Name given to model after replacement</summary>
+    [JsonProperty]
     private readonly string newName;
 
 
@@ -80,5 +89,13 @@ public partial class ReplaceCommand : IModelCommand
         }
 
         return relativeTo;
+    }
+
+    /// <summary>
+    /// Return a hash code - useful for unit testing.
+    /// </summary>
+    public override int GetHashCode()
+    {
+        return (modelReference.GetHashCode(), replacementPath, multiple, matchOnNameAndType, newName).GetHashCode();
     }
 }

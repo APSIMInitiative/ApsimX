@@ -61,6 +61,59 @@ internal class Locator
         return GetInternal(relativeTo, namePath, flags);
     }
 
+
+    /// <summary>
+    /// Find and return multiple matches (e.g. a soil in multiple zones) for a given path.
+    /// Note that this can be a variable/property or a model. NOTE: Can't use locator
+    /// because it returns a single match - not multiple.
+    /// </summary>
+    /// <param name="model">Relative to</param>
+    /// <param name="path">The path of the variable/model.</param>
+    /// <returns>A collection of VariableComposite instances. Of null if no matches.</returns>
+    public IEnumerable<VariableComposite> GetAllObjects(Node relativeTo, string path, LocatorFlags flags = LocatorFlags.None)
+    {
+        IEnumerable<INodeModel> matches = null;
+
+        // Remove a square bracketed model name and change our relativeTo model to
+        // the referenced model.
+        if (path.StartsWith("["))
+        {
+            int posCloseBracket = path.IndexOf(']');
+            if (posCloseBracket != -1)
+            {
+                string modelName = path.Substring(1, posCloseBracket - 1);
+                path = path.Remove(0, posCloseBracket + 1).TrimStart('.');
+                matches = relativeTo.FindAll<INodeModel>(modelName);
+                if (!matches.Any())
+                {
+                    // Didn't find a model with a name matching the square bracketed string so
+                    // now try and look for a model with a type matching the square bracketed string.
+                    Type[] modelTypes = ReflectionUtilities.GetTypeWithoutNameSpace(modelName, Assembly.GetExecutingAssembly());
+                    if (modelTypes.Length == 1)
+                        matches = relativeTo.FindAll<INodeModel>().Where(m => modelTypes[0].IsAssignableFrom(m.GetType()));
+                }
+            }
+        }
+        else
+            matches = [relativeTo.Model];
+
+        foreach (var match in matches)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                var composite = new VariableComposite(path);
+                composite.AddInstance(match);
+                yield return composite;
+            }
+            else
+            {
+                var variable = match.Node.GetObject(path, LocatorFlags.PropertiesOnly | LocatorFlags.CaseSensitive | LocatorFlags.IncludeDisabled);
+                if (variable != null)
+                    yield return variable;
+            }
+        }
+    }
+
     /// <summary>
     /// Set the value of a variable. Will throw if variable doesn't exist.
     /// </summary>

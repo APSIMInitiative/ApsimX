@@ -85,8 +85,9 @@ namespace APSIM.Server.Commands
                     return false;
                 if (changes.Count() != command.changes.Count())
                     return false;
-                if (changes.Zip(command.changes, (x, y) => !x.Equals(y)).Any(x => x))
-                    return false;
+                for (int i = 0;  i != changes.Count; i++)
+                    if (changes[i].GetHashCode() != command.changes[i].GetHashCode())
+                        return false;
                 return true;
             }
             return false;
@@ -94,7 +95,7 @@ namespace APSIM.Server.Commands
 
         public override int GetHashCode()
         {
-            return (runPostSimulationTools, runTests, numberOfProcessors, simulationNamesToRun, changes).GetHashCode();
+            return (runPostSimulationTools, runTests, numberOfProcessors, simulationNamesToRun, changes[0], changes[1]).GetHashCode();
         }
 
         public override string ToString()

@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 namespace APSIM.Core;
 
 /// <summary>
@@ -5,12 +7,16 @@ namespace APSIM.Core;
 /// As such the model will be located in scope if it has square brackets around it,
 /// or it will follow a path if one is specified.
 /// </summary>
+/// <remarks>
+/// The JsonProperty attribute below is needed for JSON serialisation which the APSIM.Server uses.
+/// </remarks>
 public class ModelLocatorReference : IModelReference
 {
     /// <summary>The node the model reference is relative to.</summary>
     private readonly INodeModel relativeTo;
 
     /// <summary>Parent node containing commands..</summary>
+    [JsonProperty]
     internal readonly string modelName;
 
     /// <summary>
@@ -32,5 +38,13 @@ public class ModelLocatorReference : IModelReference
     {
         return relativeTo.Node.Get(modelName) as INodeModel
             ?? throw new Exception($"Cannot find a child model named {modelName} with a parent named {relativeTo.Name}");
+    }
+
+    /// <summary>
+    /// Return a hash code - useful for unit testing.
+    /// </summary>
+    public override int GetHashCode()
+    {
+        return modelName.GetHashCode();
     }
 }

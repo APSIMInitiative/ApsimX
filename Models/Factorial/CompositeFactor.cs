@@ -75,7 +75,13 @@ namespace Models.Factorial
 
             // Add a simulation override for each path / value combination.
             for (int i = 0; i != allPaths.Count; i++)
-                simulationDescription.AddOverride(new Override(allPaths[i], allValues[i], Override.MatchTypeEnum.NameAndType));
+            {
+                if (allValues[i] is INodeModel)
+                    simulationDescription.AddOverride(new ReplaceCommand(new ModelReference(allValues[i] as INodeModel),
+                                                                         allPaths[i], multiple: true, matchOnNameAndType: true));
+                else
+                    simulationDescription.AddOverride(new SetPropertyCommand(allPaths[i], "=", allValues[i].ToString(), multiple: true));
+            }
 
             if (!(Parent is Factors))
             {

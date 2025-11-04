@@ -217,6 +217,22 @@ public class Node : IStructure
     }
 
     /// <summary>
+    /// Find and return multiple variables (e.g. a soil in multiple zones) for a given path.
+    /// Note that this can be a variable/property or a model.
+    /// </summary>
+    /// <param name="namePath">The name of the object to return</param>
+    /// <param name="flags">Flags controlling the search</param>
+    /// <param name="relativeTo">Make the get relative>/param>
+    /// <returns>The found object or null if not found</returns>
+    public IEnumerable<VariableComposite> GetAllObjects(string path, LocatorFlags flags = LocatorFlags.None, INodeModel relativeTo = null)
+    {
+        var relativeToNode = this;
+        if (relativeTo != null)
+            relativeToNode = relativeTo.Node;
+        return locator.GetAllObjects(relativeToNode, path, flags);
+    }
+
+    /// <summary>
     /// Set the value of a variable. Will throw if variable doesn't exist.
     /// </summary>
     /// <param name="namePath">The name of the object to set</param>
