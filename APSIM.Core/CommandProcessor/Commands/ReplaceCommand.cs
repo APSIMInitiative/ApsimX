@@ -36,7 +36,7 @@ public partial class ReplaceCommand : IModelCommand
     /// <param name="modelReference">The model to add.</param>
     /// <param name="replacementPath">The path of models to replace.</param>
     /// <param name="multiple">Do as many replacements as possible?</param>
-    /// <param name="matchOnNameAndType">Match on name and type? If false, will only match when names match.</param>
+    /// <param name="matchOnNameAndType">Match on name AND type? If false, will match on type OR name.</param>
     /// <param name="newName">Name given to model after replacement.</param>
     public ReplaceCommand(IModelReference modelReference, string replacementPath, bool multiple, bool matchOnNameAndType, string newName = null)
     {
@@ -73,6 +73,13 @@ public partial class ReplaceCommand : IModelCommand
             if (matchOnNameAndType)
             {
                 modelsToReplace = modelsToReplace.Where(model => model.GetType().IsAssignableFrom(modelToAdd.GetType()));
+            }
+            else if (!modelsToReplace.Any())
+            {
+                // didn't find any matches using name so try by type.
+                Type t = ModelRegistry.ModelNameToType(replacementPathWithoutBrackets);
+                if (t != null)
+                    modelsToReplace = relativeTo.Node.FindAll(type: t);
             }
         }
 

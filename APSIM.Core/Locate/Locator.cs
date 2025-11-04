@@ -88,9 +88,9 @@ internal class Locator
                 {
                     // Didn't find a model with a name matching the square bracketed string so
                     // now try and look for a model with a type matching the square bracketed string.
-                    Type[] modelTypes = ReflectionUtilities.GetTypeWithoutNameSpace(modelName, Assembly.GetExecutingAssembly());
-                    if (modelTypes.Length == 1)
-                        matches = relativeTo.FindAll<INodeModel>().Where(m => modelTypes[0].IsAssignableFrom(m.GetType()));
+                    Type modelType = ModelRegistry.ModelNameToType(modelName);
+                    if (modelType != null)
+                        matches = relativeTo.FindAll<INodeModel>().Where(m => modelType.IsAssignableFrom(m.GetType()));
                 }
             }
         }

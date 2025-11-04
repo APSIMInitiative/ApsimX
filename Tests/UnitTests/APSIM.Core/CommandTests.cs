@@ -3,6 +3,7 @@ using Models;
 using Models.Climate;
 using Models.Core;
 using Models.PMF;
+using Models.Soils;
 using NUnit.Framework;
 using System;
 using System.IO;
@@ -598,16 +599,43 @@ public class CommandTests
         };
         Node.Create(simulation);
 
-        var newModel = new Report() { Name = "NewReport", VariableNames = [ "2" ] };
+        var newModel = new Report() { Name = "NewReport", VariableNames = ["2"] };
         IModelCommand cmd = new ReplaceCommand(new ModelReference(newModel),
                                                replacementPath: "Report", multiple: true, matchOnNameAndType: false);
         cmd.Run(simulation, runner: null);
 
         var reports = simulation.Node.FindChildren<Report>(recurse: true).ToArray();
         Assert.That(reports[0].Name, Is.EqualTo("Report"));
-        Assert.That(reports[0].VariableNames, Is.EqualTo([ "2" ]));
+        Assert.That(reports[0].VariableNames, Is.EqualTo(["2"]));
         Assert.That(reports[1].Name, Is.EqualTo("Report"));
-        Assert.That(reports[1].VariableNames, Is.EqualTo([ "2" ]));
+        Assert.That(reports[1].VariableNames, Is.EqualTo(["2"]));
+    }
+
+    /// <summary>Ensure the replace command works when multiple matching on name OR type.</summary>
+    /// <remarks>
+    /// Composite factors rely on matching on name OR type e.g. a specification of [Soil]
+    /// should match any soil regardless of its name.
+    /// </remarks>
+    [Test]
+    public void EnsureMultipleReplaceOnNameORTypeWorks()
+    {
+        Simulations simulation = new()
+        {
+            Children =
+            [
+                new Zone() { Children = [new Soil() { Name = "SandyClayLoam", ApsoilNumber = "1" }] },
+            ]
+        };
+        Node.Create(simulation);
+
+        var newModel = new Soil() { Name = "NewSoil", ApsoilNumber = "2" };
+        IModelCommand cmd = new ReplaceCommand(new ModelReference(newModel),
+                                               replacementPath: "[Soil]", multiple: true, matchOnNameAndType: false);
+        cmd.Run(simulation, runner: null);
+
+        var soil = simulation.Node.FindChild<Soil>(recurse: true);
+        Assert.That(soil.Name, Is.EqualTo("SandyClayLoam"));
+        Assert.That(soil.ApsoilNumber, Is.EqualTo("2"));
     }
 
     /// <summary>Ensure the replace command works when multiple matching on name and type.</summary>
