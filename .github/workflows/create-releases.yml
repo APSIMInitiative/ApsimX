@@ -2,7 +2,6 @@
 # Only runs after a PR to master branch is closed and merged.
 # This workflow uses scripts originally developed for use within Jenkins
 
-
 name: Create APSIM Releases
 permissions:
   contents: read # to check out code
@@ -51,8 +50,8 @@ jobs:
           BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
         run: ./.github/workflows/scripts/deploy-installer.sh ${{ matrix.os }}
 
-        
     create-windows-release:
+      if: github.event.pull_request.merged == true
       runs-on: ubuntu-latest
       container:
         image: apsiminitiative/apsimng-build:latest
@@ -80,11 +79,15 @@ jobs:
             type=ref,event=branch
             type=ref,event=pr
 
+      - name: Create APSIM Signing Certificate
+        run: |
+          echo -n "$APSIM_CERT_BASE64" | base64 -d -o ./apsim_signing_cert.p12
+          APSIM_CERT="./apsim_signing_cert.p12"
+
       - name: Create Release
         env:
           PULL_ID: ${DOCKER_METADATA_OUTPUT_VERSION:3}
           BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
+          APSIM_CERT_PWD: ${{ secrets.APSIM_CERT_PWD }}
+          APSIM_CERT_BASE64: ${{ secrets.APSIM_CERT }}
         run: ./.github/workflows/scripts/deploy-installer.sh windows
-
-
-    
