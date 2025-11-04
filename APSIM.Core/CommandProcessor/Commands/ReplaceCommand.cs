@@ -83,7 +83,9 @@ public partial class ReplaceCommand : IModelCommand
         foreach (var modelToReplace in modelsToReplace.ToArray())  // Need the ToArray because modelsToReplace changes because of the ReplaceChild call.
         {
             var newModel = ReflectionUtilities.Clone(modelToAdd) as INodeModel;
-            if (!string.IsNullOrEmpty(newName))
+            if (string.IsNullOrEmpty(newName))
+                newModel.Rename(modelToReplace.Name);
+            else
                 newModel.Rename(newName);
             modelToReplace.Node.Parent.ReplaceChild(modelToReplace, newModel);
         }

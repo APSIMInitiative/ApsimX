@@ -522,18 +522,20 @@ public class CommandTests
         {
             Children =
             [
-                new Report() { Name = "Report" }
+                new Report() { Name = "Report", VariableNames = [ "1" ] }
             ]
         };
         Node.Create(simulation);
 
 
-        var newModel = new Report() { Name = "NewReport" };
+        var newModel = new Report() { Name = "NewReport", VariableNames = [ "2" ] };
         IModelCommand cmd = new ReplaceCommand(new ModelReference(newModel),
                                                replacementPath: "Report", multiple: false, matchOnNameAndType: true);
         cmd.Run(simulation, runner: null);
 
-        Assert.That(simulation.Children[0].Name, Is.EqualTo("NewReport"));
+        var report = simulation.Children[0] as Report;
+        Assert.That(report.Name, Is.EqualTo("Report"));
+        Assert.That(report.VariableNames, Is.EqualTo([ "2" ]));
     }
 
     /// <summary>Ensure the replace command works when matching on name only.</summary>
@@ -544,18 +546,20 @@ public class CommandTests
         {
             Children =
             [
-                new Report() { Name = "Report" }
+                new Report() { Name = "Report", VariableNames = [ "1" ] }
             ]
         };
         Node.Create(simulation);
 
 
-        var newModel = new Report() { Name = "NewReport" };
+        var newModel = new Report() { Name = "NewReport", VariableNames = [ "2" ] };
         IModelCommand cmd = new ReplaceCommand(new ModelReference(newModel),
                                                replacementPath: "Report", multiple: false, matchOnNameAndType: false);
         cmd.Run(simulation, runner: null);
 
-        Assert.That(simulation.Children.First().Name, Is.EqualTo("NewReport"));
+        var report = simulation.Children[0] as Report;
+        Assert.That(report.Name, Is.EqualTo("Report"));
+        Assert.That(report.VariableNames, Is.EqualTo([ "2" ]));
     }
 
     /// <summary>Ensure the replace command works when matching on name only and when a name is specified.</summary>
@@ -594,14 +598,16 @@ public class CommandTests
         };
         Node.Create(simulation);
 
-        var newModel = new Report() { Name = "NewReport" };
+        var newModel = new Report() { Name = "NewReport", VariableNames = [ "2" ] };
         IModelCommand cmd = new ReplaceCommand(new ModelReference(newModel),
                                                replacementPath: "Report", multiple: true, matchOnNameAndType: false);
         cmd.Run(simulation, runner: null);
 
         var reports = simulation.Node.FindChildren<Report>(recurse: true).ToArray();
-        Assert.That(reports[0].Name, Is.EqualTo("NewReport"));
-        Assert.That(reports[1].Name, Is.EqualTo("NewReport"));
+        Assert.That(reports[0].Name, Is.EqualTo("Report"));
+        Assert.That(reports[0].VariableNames, Is.EqualTo([ "2" ]));
+        Assert.That(reports[1].Name, Is.EqualTo("Report"));
+        Assert.That(reports[1].VariableNames, Is.EqualTo([ "2" ]));
     }
 
     /// <summary>Ensure the replace command works when multiple matching on name and type.</summary>
@@ -612,20 +618,22 @@ public class CommandTests
         {
             Children =
             [
-                new Zone() { Children = [new Report() { Name = "Report" }] },
-                new Zone() { Children = [new Report() { Name = "Report" }] }
+                new Zone() { Children = [new Report() { Name = "Report", VariableNames = [ "1" ] }] },
+                new Zone() { Children = [new Report() { Name = "Report", VariableNames = [ "1" ] }] }
             ]
         };
         Node.Create(simulation);
 
-        var newModel = new Report() { Name = "NewReport" };
+        var newModel = new Report() { Name = "NewReport", VariableNames = [ "2" ] };
         IModelCommand cmd = new ReplaceCommand(new ModelReference(newModel),
                                                replacementPath: "Report", multiple: false, matchOnNameAndType: false);
 
         cmd.Run(simulation, runner: null);
 
         var reports = simulation.Node.FindChildren<Report>(recurse: true).ToArray();
-        Assert.That(reports[0].Name, Is.EqualTo("NewReport"));
+        Assert.That(reports[0].Name, Is.EqualTo("Report"));
+        Assert.That(reports[0].VariableNames, Is.EqualTo([ "2" ]));
         Assert.That(reports[1].Name, Is.EqualTo("Report"));
+        Assert.That(reports[1].VariableNames, Is.EqualTo([ "1" ]));
     }
 }
