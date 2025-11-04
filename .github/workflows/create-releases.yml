@@ -8,23 +8,19 @@ permissions:
   contents: read # to check out code
 
 on:
-  pull_request:
+  pull_request_target:
     branches:
       - master
     types:
       - closed
 
 jobs:
-  
-    create-debian-release:
-      env:
-        BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
+    create-debian-and-macos-releases:
       if: github.event.pull_request.merged == true
       strategy:
         fail-fast: false # allow other jobs to complete if one fails
         matrix:
           os: [macos, debian]
-          # os: [macos, debian]
       runs-on: ubuntu-latest
       steps:
       - name: Checkout code
@@ -52,51 +48,11 @@ jobs:
       - name: Create Release
         env:
           PULL_ID: ${DOCKER_METADATA_OUTPUT_VERSION:3}
-          BUILDS_JWT: ${{ env.BUILDS_JWT }}
-        run: ./.github/workflows/scripts/deploy-installer.sh debian
+          BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
+        run: ./.github/workflows/scripts/deploy-installer.sh ${{ matrix.os }}
 
-    create-macos-release:
-      env:
-        BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
-      if: github.event.pull_request.merged == true
-      strategy:
-        fail-fast: false # allow other jobs to complete if one fails
-        matrix:
-          os: [macos, debian]
-          # os: [macos, debian]
-      runs-on: ubuntu-latest
-      steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-
-      - name: Set script permissions
-        run: chmod +x -R ./.github/workflows/scripts/
-
-      # This is used purely for PR number extraction.
-      - name: Get PR number
-        id: meta_apsimplusr
-        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
-        with:
-          images: apsiminitiative/apsimplusr
-          flavor: latest=true
-          tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-
-      - name: Create Release
-        env:
-          PULL_ID: ${DOCKER_METADATA_OUTPUT_VERSION:3}
-          BUILDS_JWT: ${{ env.BUILDS_JWT }}
-        run: ./.github/workflows/scripts/deploy-installer.sh macos
         
     create-windows-release:
-      env:
-        BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
       runs-on: ubuntu-latest
       container:
         image: apsiminitiative/apsimng-build:latest
@@ -127,7 +83,7 @@ jobs:
       - name: Create Release
         env:
           PULL_ID: ${DOCKER_METADATA_OUTPUT_VERSION:3}
-          BUILDS_JWT: ${{ env.BUILDS_JWT }}
+          BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
         run: ./.github/workflows/scripts/deploy-installer.sh windows
 
 
