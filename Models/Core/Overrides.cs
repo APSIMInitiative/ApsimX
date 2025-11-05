@@ -133,7 +133,12 @@ namespace Models.Core
         {
             List<Override> undos = new List<Override>();
             foreach (var replacement in overrides)
-                undos.InsertRange(0, Apply(model, replacement.Path, replacement.Value, replacement.MatchType));
+            {
+                var replacementUndos = Apply(model, replacement.Path, replacement.Value, replacement.MatchType);
+                if (replacement.MatchType == Override.MatchTypeEnum.NameAndType && !replacementUndos.Any())
+                    throw new Exception($"Unable to find match for path {replacement.Path} in {model.FullPath}!");
+                undos.InsertRange(0, replacementUndos);
+            }
             return undos;
         }
 

@@ -655,6 +655,7 @@
               "Start": "Emergence",
               "End": "DoubleRidge",
               "IsEmerged": true,
+              "Target": 1.0,
               "Name": "LeavesInitiating",
               "ResourceName": null,
               "Children": [
@@ -716,7 +717,7 @@
               "Start": "MaximumSpikeletPrimordia",
               "End": "FlagLeafAppearance",
               "IsEmerged": true,
-              "Name": "StemElongation",
+              "Name": "StemElongating",
               "ResourceName": null,
               "Children": [
                 {
@@ -4012,7 +4013,7 @@
                                   "X": [
                                     0.0,
                                     0.2,
-                                    0.5,
+                                    0.8,
                                     1.0
                                   ],
                                   "Y": [
@@ -4980,39 +4981,58 @@
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.DivideFunction, Models",
+                          "$type": "Models.Functions.MaximumFunction, Models",
                           "Name": "Fraction",
                           "ResourceName": null,
                           "Children": [
                             {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].ThermalTime",
-                              "Name": "TT",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.SubtractFunction, Models",
-                              "Name": "TTRemaining",
+                              "$type": "Models.Functions.DivideFunction, Models",
+                              "Name": "Aging",
                               "ResourceName": null,
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.ExpressionFunction, Models",
-                                  "Units": null,
-                                  "Expression": "[Phenology].Heading.Target  + [Phenology].Flowering.Target + [Phenology].GrainExpanding.Target",
-                                  "Name": "TTRequired",
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Phenology].ThermalTime",
+                                  "Name": "TT",
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "$type": "Models.Functions.SubtractFunction, Models",
+                                  "Name": "TTRemaining",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
+                                      "Expression": "[Phenology].Heading.Target  + [Phenology].Flowering.Target + [Phenology].GrainExpanding.Target",
+                                      "Name": "TTRequired",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
+                                      "Expression": "[Phenology].Heading.ProgressThroughPhase + [Phenology].Flowering.ProgressThroughPhase + [Phenology].GrainExpanding.ProgressThroughPhase",
+                                      "Name": "TTComplete",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 20.0,
                                   "Units": null,
-                                  "Expression": "[Phenology].Heading.ProgressThroughPhase + [Phenology].Flowering.ProgressThroughPhase + [Phenology].GrainExpanding.ProgressThroughPhase",
-                                  "Name": "TTComplete",
+                                  "Name": "Modifier",
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
@@ -5023,12 +5043,38 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 20.0,
-                              "Units": null,
-                              "Name": "Modifier",
+                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                              "Name": "WaterStress",
                               "ResourceName": null,
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "X": [
+                                    0.0,
+                                    0.5,
+                                    1.0
+                                  ],
+                                  "Y": [
+                                    0.15,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "Name": "XYPairs",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Root].WaterTensionFactor",
+                                  "Name": "XValue",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -5086,39 +5132,58 @@
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.DivideFunction, Models",
+                          "$type": "Models.Functions.MaximumFunction, Models",
                           "Name": "Fraction",
                           "ResourceName": null,
                           "Children": [
                             {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].ThermalTime",
-                              "Name": "TT",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.SubtractFunction, Models",
-                              "Name": "TTRemaining",
+                              "$type": "Models.Functions.DivideFunction, Models",
+                              "Name": "Aging",
                               "ResourceName": null,
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.ExpressionFunction, Models",
-                                  "Units": null,
-                                  "Expression": "[Phenology].GrainFilling.Target + [Phenology].GrainRipening.Target",
-                                  "Name": "TTRequired",
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Phenology].ThermalTime",
+                                  "Name": "TT",
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "$type": "Models.Functions.SubtractFunction, Models",
+                                  "Name": "TTRemaining",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
+                                      "Expression": "[Phenology].GrainFilling.Target + [Phenology].GrainRipening.Target",
+                                      "Name": "TTRequired",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
+                                      "Expression": "[Phenology].GrainFilling.ProgressThroughPhase + [Phenology].GrainRipening.ProgressThroughPhase",
+                                      "Name": "TTComplete",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 2.0,
                                   "Units": null,
-                                  "Expression": "[Phenology].GrainFilling.ProgressThroughPhase + [Phenology].GrainRipening.ProgressThroughPhase",
-                                  "Name": "TTComplete",
+                                  "Name": "Modifier",
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
@@ -5129,10 +5194,9 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 2.0,
-                              "Units": null,
-                              "Name": "Modifier",
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].SenescenceRate.Reproductive.Rate.Fraction.WaterStress",
+                              "Name": "WaterStress",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,

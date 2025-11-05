@@ -1,0 +1,25 @@
+name: Mark stale issues and pull requests
+
+permissions:
+    actions: write
+    contents: write
+    issues: write
+    pull-requests: write
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Run daily at midnight UTC
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v10
+        with:
+          days-before-stale: 60
+          days-before-close: 7
+          stale-pr-label: 'Stale'
+          stale-pr-message: 'This Pull Request has been automatically marked as stale because it has not had activity in the last 60 days. Please leave a comment if this should stay open, otherwise this pull request will be closed in 7 days. This helps keep our list of active projects separate from work that is on hold.'
+          close-pr-message: 'This Pull Request was closed because it has been inactive for 60 days. Feel free to re-open when you are ready to continue.'
+          exempt-pr-labels: 'Ready for Reference Panel Comment, Do Not Merge, High Level Review, Low Level Review, Ready for Software Review'
+          remove-stale-when-updated: true

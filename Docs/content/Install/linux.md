@@ -7,7 +7,7 @@ draft: false
 
 ## Download debian binary
 
-1. Download the debian file from the <a href="https://apsim.info/download-apsim/" target="_blank" >APSIM website</a>.
+1. Download the debian file from the <a href="https://www.apsim.info/download-apsim/" target="_blank" >APSIM website</a>.
 
 ## Installing
 
@@ -20,4 +20,3 @@ draft: false
 ## Install using docker
 
 * To do this see the instructions <a href="../../../usage/commandline/command-line-linux">here</a>
-

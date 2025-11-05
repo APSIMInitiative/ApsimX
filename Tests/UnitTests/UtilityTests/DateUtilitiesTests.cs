@@ -8,7 +8,7 @@ using System.Text;
 namespace UnitTests.UtilityTests
 {
     [TestFixture]
-    public class DataUtilitiesTests
+    public class DateUtilitiesTests
     {
         [Test]
         public void TestValidDateFormats()

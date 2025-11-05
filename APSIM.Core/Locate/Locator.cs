@@ -16,19 +16,8 @@ namespace APSIM.Core;
 /// </summary>
 internal class Locator
 {
-    private readonly Assembly modelsAssembly;
-
     /// <summary>Cache for speeding up look ups.</summary>
     private Dictionary<(object relativeTo, string path), VariableComposite> cache = new();
-
-    private List<IVariableSupplier> variableSuppliers = new();
-
-    /// <summary>Constructor</summary>
-    internal Locator()
-    {
-        string binPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        modelsAssembly = Assembly.LoadFrom(Path.Combine(binPath, "Models.dll"));
-    }
 
     /// <summary>Clear the cache</summary>
     public void Clear()
@@ -280,10 +269,10 @@ internal class Locator
             {
                 // Didn't find a model with a name matching the square bracketed string so
                 // now try and look for a model with a type matching the square bracketed string.
-                Type[] modelTypes = ReflectionUtilities.GetTypeWithoutNameSpace(modelName, modelsAssembly);
-                if (modelTypes.Length == 1)
+                Type modelType = ModelRegistry.ModelNameToType(modelName);
+                if (modelType != null)
                     foundNode = relativeTo.Node.WalkScoped()
-                                               .FirstOrDefault(n => modelTypes[0].IsAssignableFrom(n.Model.GetType()));
+                                               .FirstOrDefault(n => modelType.IsAssignableFrom(n.Model.GetType()));
             }
             if (foundNode == null)
             {

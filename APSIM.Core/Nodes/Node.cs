@@ -1,6 +1,5 @@
 using APSIM.Shared;
 using APSIM.Shared.Utilities;
-using DeepCloner.Core;
 
 namespace APSIM.Core;
 
@@ -18,6 +17,7 @@ public class Node : IStructure
     private readonly List<Node> children = [];
     private ScopingRules scope;
     private Locator locator;
+    private string fileName;
 
     /// <summary>The node name.</summary>
     public string Name { get; private set; }
@@ -45,7 +45,17 @@ public class Node : IStructure
     public IEnumerable<Node> Children => children;
 
     /// <summary>Name of the .apsimx file the node tree came from.</summary>
-    public string FileName { get; set; }
+    public string FileName
+    {
+        get
+        {
+            return Root().fileName;
+        }
+        set
+        {
+            fileName = value;
+        }
+    }
 
     /// <summary>Is initialisation underway?</summary>
     public bool IsInitialising { get; private set; }
@@ -114,13 +124,27 @@ public class Node : IStructure
     /// <returns>All matching models.</returns>
     public IEnumerable<T> FindAll<T>(string name = null, INodeModel relativeTo = null)
     {
+        foreach (var model in FindAll(name, typeof(T), relativeTo))
+            yield return (T)model;
+    }
+
+
+    /// <summary>
+    /// Get models in scope.
+    /// </summary>
+    /// <param name="name">The name of the model to return. Can be null.</param>
+    /// <param name="relativeTo">The model to use when determining scope.</param>
+    /// <returns>All matching models.</returns>
+    internal IEnumerable<INodeModel> FindAll(string name = null, Type type = null, INodeModel relativeTo = null)
+    {
         Node relativeToNode = this;
         if (relativeTo != null)
             relativeToNode = relativeTo.Node;
 
         foreach (var node in relativeToNode.WalkScoped())
-            if (node.Model is T && (name == null || node.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
-                yield return (T)node.Model;
+            if ((name == null || node.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)) &&
+                (type == null || node.Model.GetType().IsAssignableTo(type)))
+                yield return node.Model;
     }
 
     /// <summary>
@@ -426,6 +450,12 @@ public class Node : IStructure
         Model = model;
     }
 
+    /// <summary>Find and return the root node</summary>
+    internal Node Root()
+    {
+        return WalkParents().FirstOrDefault(n => n.Parent == null)
+               ?? this;
+    }
 
     /// <summary>
     /// Build the parent / child map.
@@ -506,12 +536,11 @@ public class Node : IStructure
         // Create a child node to contain the child model.
         var childNode = new Node(childModel, FullNameAndPath);
         childNode.Parent = this;
-        childNode.FileName = childNode.Parent.FileName;
         childNode.Compiler = childNode.Parent.Compiler;
         children.Add(childNode);
+        childNode.EnsureNameIsUnique();
 
         // Give the child our services.
-        childNode.FileName = FileName;
         childNode.Compiler = Compiler;
         childNode.scope = scope;
         childNode.locator = locator;
