@@ -39,18 +39,20 @@ namespace APSIM.Workflow
             string inputPath = Path.GetDirectoryName(apsimFilepath) + "/";
             string fullPath = Path.GetFullPath(inputPath);
 
-            // Remove any %root% macro (even if relative path is null).
-            string bin = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            DirectoryInfo directory = new DirectoryInfo(bin).Parent;
-            while (directory.Name == "Debug" || directory.Name == "Release" || directory.Name == "bin")
-                directory = directory.Parent;
+            //add %root% to fullpath to get root path for later
+            string? bin = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            if (bin == null)
+                throw new Exception("Could not find bin folder");
 
+            DirectoryInfo? directory = new DirectoryInfo(bin).Parent ?? throw new Exception("Could not find parent directory of bin folder");
+            string directoryName = directory.Name;
+
+            while (directoryName == "Debug" || directoryName == "Release" || directoryName == "bin")
+            {
+                directory = directory.Parent ?? throw new Exception("Could not find parent directory of bin folder");
+                directoryName = directory.Name;
+            }
             string rootPath = fullPath.Replace(directory.FullName, "%root%");
-
-            logger.LogInformation("  bin:" + bin);
-            logger.LogInformation("  directory:" + directory);
-            logger.LogInformation("  fullPath:" + fullPath);
-            logger.LogInformation("  root:" + rootPath);
 
             if (inputPath == null)
                 throw new ArgumentNullException(nameof(inputPath), "Current directory path cannot be null.");
@@ -253,7 +255,7 @@ namespace APSIM.Workflow
                             foreach (string file in input.FileNames)
                             {
                                 if (!file.Contains("%root%"))
-                                    files.Add(inputPath + file);
+                                    files.Add(rootPath + file);
                                 else
                                     files.Add(file);
                             }
@@ -270,7 +272,7 @@ namespace APSIM.Workflow
                             foreach (string file in input.FileNames)
                             {
                                 if (!file.Contains("%root%"))
-                                    files.Add(inputPath + file);
+                                    files.Add(rootPath + file);
                                 else
                                     files.Add(file);
                             }
