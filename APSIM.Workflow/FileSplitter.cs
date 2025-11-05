@@ -21,6 +21,7 @@ using Microsoft.Extensions.Logging;
 using APSIM.Core;
 using APSIM.Shared.Documentation.Extensions;
 using Models.PreSimulationTools;
+using System.Reflection;
 
 namespace APSIM.Workflow
 {
@@ -37,10 +38,18 @@ namespace APSIM.Workflow
 
             string inputPath = Path.GetDirectoryName(apsimFilepath) + "/";
             string fullPath = Path.GetFullPath(inputPath);
-            string rootPath = PathUtilities.GetRelativePath(fullPath, null);
 
-            logger.LogInformation("  input:" + inputPath);
-            logger.LogInformation("  full:" + fullPath);
+            // Remove any %root% macro (even if relative path is null).
+            string bin = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            DirectoryInfo directory = new DirectoryInfo(bin).Parent;
+            while (directory.Name == "Debug" || directory.Name == "Release" || directory.Name == "bin")
+                directory = directory.Parent;
+
+            string rootPath = fullPath.Replace(directory.FullName, "%root%");
+
+            logger.LogInformation("  bin:" + bin);
+            logger.LogInformation("  directory:" + directory);
+            logger.LogInformation("  fullPath:" + fullPath);
             logger.LogInformation("  root:" + rootPath);
 
             if (inputPath == null)
