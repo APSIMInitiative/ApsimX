@@ -102,22 +102,6 @@ namespace UnitTests
                 Assert.That(info.Added, Is.EqualTo(derivedAdded[i]));
                 Assert.That(info.Existing, Is.EqualTo(derivedExisting[i]));
             }
-
-            //Check Simulations information
-            //This cannot be tested correct in a unit test, another within an apsim file is created to test this.
-            string[] simName = ["", "Simulation1"];
-            bool[] simHas = [false, true];
-            bool[] simData = [true, false];
-            int[] simRows = [5, 0];
-
-            for (int i = 0; i < observations.SimulationData.Count; i++)
-            {
-                SimulationInfo info = observations.SimulationData[i];
-                Assert.That(info.Name, Is.EqualTo(simName[i]));
-                Assert.That(info.HasSimulation, Is.EqualTo(simHas[i]));
-                Assert.That(info.HasData, Is.EqualTo(simData[i]));
-                Assert.That(info.Rows, Is.EqualTo(simRows[i]));
-            }
             
             //Check Merge information
             //
@@ -178,6 +162,67 @@ namespace UnitTests
             List<Exception> errors = runner.Run();
             if (errors != null && errors.Count > 0)
                 throw new AggregateException("Errors: ", errors);
+
+        }
+
+        [Test]
+        public void ObservationsDerivedStats()
+        {
+            DataTable dataTable = new DataTable();
+            dataTable.Columns.Add("SimulationName");
+            dataTable.Columns.Add("Plant.Leaf.NConc");
+            dataTable.Columns.Add("Plant.Leaf.NC");
+            dataTable.Columns.Add("Plant.Leaf.Wt");
+
+            dataTable.Columns.Add("Plant.Leaf.Dead.Wt");
+            dataTable.Columns.Add("Plant.Leaf.Live.Wt");
+
+            dataTable.Columns.Add("Plant.Leaf.SpecificAreaCanopy");
+            dataTable.Columns.Add("Plant.Leaf.LAI");
+
+            DataRow row;
+
+            row = dataTable.NewRow();
+            row["SimulationName"] = "Test1";
+            row["Plant.Leaf.NConc"] = 5;
+            row["Plant.Leaf.NC"] = "Test1";
+            row["Plant.Leaf.Wt"] = "Test1";
+            row["Plant.Leaf.Dead.Wt"] = "Test1";
+            row["Plant.Leaf.Live.Wt"] = "Test1";
+            row["Plant.Leaf.SpecificAreaCanopy"] = "Test1";
+            row["Plant.Leaf.LAI"] = "Test1";
+            dataTable.Rows.Add(row);
+
+            List<DerivedInfo> infos = DerivedInfo.AddDerivedColumns(dataTable);
+
+/*
+            infos.AddRange(DeriveColumn(dataTable, ".NConc", ".N", "/", ".Wt"));
+            infos.AddRange(DeriveColumn(dataTable, ".N", ".NConc", "*", ".Wt"));
+            infos.AddRange(DeriveColumn(dataTable, ".Wt", ".N", "/", ".NConc"));
+
+            infos.AddRange(DeriveColumn(dataTable, ".", ".Live.", "+", ".Dead."));
+            infos.AddRange(DeriveColumn(dataTable, ".Live.", ".", "-", ".Dead."));
+            infos.AddRange(DeriveColumn(dataTable, ".Dead.", ".", "-", ".Live."));
+
+            infos.AddRange(DeriveColumn(dataTable, "Leaf.SpecificAreaCanopy", "Leaf.LAI", "/", "Leaf.Live.Wt"));
+            infos.AddRange(DeriveColumn(dataTable, "Leaf.LAI", "Leaf.SpecificAreaCanopy", "*", "Leaf.Live.Wt"));
+            infos.AddRange(DeriveColumn(dataTable, "Leaf.Live.Wt", "Leaf.LAI", "/", "Leaf.SpecificAreaCanopy"));
+*/
+            string[] derivedName = ["Plant.Leaf.NConc", "Plant.Leaf.NC", "Plant.Leaf.Wt", "Plant.Leaf.Dead.Wt", "Plant.Leaf.Live.Wt", "Plant.Leaf.SpecificAreaCanopy", "Plant.Leaf.LAI"];
+            string[] derivedFunction = ["Wheat.Grain.N / Wheat.Grain.Wt"];
+            string[] derivedVariable = ["double"];
+            int[] derivedAdded = [3];
+            int[] derivedExisting = [0];
+
+            for (int i = 0; i < infos.Count; i++)
+            {
+                DerivedInfo info = observations.DerivedData[i];
+                Assert.That(info.Name, Is.EqualTo(derivedName[i]));
+                Assert.That(info.Function, Is.EqualTo(derivedFunction[i]));
+                Assert.That(info.DataType, Is.EqualTo(derivedVariable[i]));
+                Assert.That(info.Added, Is.EqualTo(derivedAdded[i]));
+                Assert.That(info.Existing, Is.EqualTo(derivedExisting[i]));
+            }
 
         }
     }
