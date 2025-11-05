@@ -213,6 +213,8 @@ namespace APSIM.Workflow
                         List<Weather> weathers = copiedSims.Node.FindAll<Weather>().ToList();
                         foreach (Weather weather in weathers)
                         {
+                            logger.LogInformation("Root:" + rootPath);
+                            logger.LogInformation("filename:" + weather.FileName);
                             if (!weather.FileName.Contains("%root%"))
                             {
                                 weather.FileName = rootPath + weather.FileName;
