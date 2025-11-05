@@ -36,10 +36,8 @@ namespace APSIM.Workflow
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
             string inputPath = Path.GetDirectoryName(apsimFilepath) + "/";
-            string fullPath = PathUtilities.GetAbsolutePath(inputPath, null);
-            string rootPath = PathUtilities.GetRelativePath(inputPath, null);
-
-            logger.LogInformation("  test1:" + Path.GetFullPath(inputPath));
+            string fullPath = Path.GetFullPath(inputPath);
+            string rootPath = PathUtilities.GetRelativePath(fullPath, null);
 
             logger.LogInformation("  input:" + inputPath);
             logger.LogInformation("  full:" + fullPath);
