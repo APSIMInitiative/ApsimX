@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 199,
+  "Version": 205,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -2008,22 +2008,23 @@
                         "// Defoliates AgPasture on a regular rotation or one-off via a schedule",
                         "// currenty defoliates the amount specified by spreading evenly over the specified period",
                         "",
-                        "using Newtonsoft.Json;",
-                        "using System.Linq;",
-                        "using Models.Interfaces;",
-                        "using APSIM.Shared.Utilities;",
-                        "using Models.Soils;",
-                        "using Models.PMF;",
-                        "using Models.Core;",
-                        "using System.Xml.Serialization;",
-                        "using System.Collections.Generic;",
-                        "using System;",
+                        "using APSIM.Core;",
                         "using Models.Soils.Nutrients;",
+                        "using System;",
+                        "using System.Collections.Generic;",
+                        "using System.Xml.Serialization;",
+                        "using Models.Core;",
+                        "using Models.PMF;",
+                        "using Models.Soils;",
+                        "using APSIM.Shared.Utilities;",
+                        "using Models.Interfaces;",
+                        "using System.Linq;",
+                        "using Newtonsoft.Json;",
                         "",
                         "namespace Models",
                         "{",
                         "    [Serializable]",
-                        "    public class Script : Model",
+                        "    public class Script : Model, IStructureDependency",
                         "    {",
                         "        [Link] private Zone myZone;",
                         "        [Link] private Clock Clock;",
@@ -2040,6 +2041,8 @@
                         "        private double atZ1;",
                         "        [Link]",
                         "        private IPhysical soilPhysical;",
+                        "        ",
+                        "        public IStructure Structure { private get; set; }",
                         "        // - Links to APSIM models",
                         "        ",
                         "        List<AgPasture.PastureSpecies> Pasture = new List<AgPasture.PastureSpecies>();",
@@ -2125,7 +2128,7 @@
                         "        [EventSubscribe(\"StartOfSimulation\")]",
                         "        private void OnSimulationCommencing(object sender, EventArgs e)",
                         "        {",
-                        "            foreach (AgPasture.PastureSpecies species in myZone.FindAllChildren<AgPasture.PastureSpecies>().OfType<IModel>().ToList())",
+                        "            foreach (AgPasture.PastureSpecies species in   Structure.FindChildren<AgPasture.PastureSpecies>(recurse: true, relativeTo: (INodeModel)myZone).OfType<IModel>().ToList())",
                         "                Pasture.Add(species);",
                         "",
                         "            // reset variables",
@@ -6376,17 +6379,17 @@
                   "MinimumRotationLengthArray": null,
                   "NoGrazingStartString": "01-jun",
                   "NoGrazingEndString": "15-sep",
-                  "FractionDefoliatedBiomassToSoil": [
-                    1.0
+                  "IsCutAndCarry": false,
+                  "FractionClippingsReturned": 0.0,
+                  "FractionIntakeNToAnimal": [
+                    0.0
                   ],
-                  "FractionDefoliatedNToSoil": [
-                    0.25
+                  "DungNConc": 2.6,
+                  "FractionOfDungUrineOffPaddock": [
+                    0.75
                   ],
-                  "FractionExcretedNToDung": [
-                    0.6
-                  ],
-                  "CNRatioDung": "NaN",
                   "DepthUrineIsAdded": 250.0,
+                  "ShowAdvancedExcretaOptions": false,
                   "SendDungElsewhere": 0.0,
                   "SendUrineElsewhere": 0.0,
                   "UsePatching": false,
@@ -6394,6 +6397,7 @@
                   "ZoneCount": 25,
                   "UrineReturnPattern": 2,
                   "PseudoRandomSeed": 666,
+                  "MaxEffectiveNConcentration": 3.5,
                   "FractionPopulationDecline": 0.0,
                   "TramplingOn": false,
                   "MaximumPropLitterMovedToSoil": 0.1,
@@ -7062,76 +7066,6 @@
             {
               "$type": "Models.ForageDigestibility.Forages, Models",
               "Parameters": [
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "SurfaceOrganicMatter.Residue",
-                  "LiveDigestibility": "0.7",
-                  "DeadDigestibility": "0.3",
-                  "LiveFractionConsumable": 1.0,
-                  "DeadFractionConsumable": 1.0,
-                  "LiveMinimumBiomass": 100.0,
-                  "DeadMinimumBiomass": 0.0
-                },
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "AGPRyegrass.Leaf",
-                  "LiveDigestibility": "FromModel",
-                  "DeadDigestibility": "FromModel",
-                  "LiveFractionConsumable": 1.0,
-                  "DeadFractionConsumable": 1.0,
-                  "LiveMinimumBiomass": 100.0,
-                  "DeadMinimumBiomass": 0.0
-                },
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "AGPRyegrass.Stem",
-                  "LiveDigestibility": "FromModel",
-                  "DeadDigestibility": "FromModel",
-                  "LiveFractionConsumable": 1.0,
-                  "DeadFractionConsumable": 1.0,
-                  "LiveMinimumBiomass": 100.0,
-                  "DeadMinimumBiomass": 0.0
-                },
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "AGPRyegrass.Stolon",
-                  "LiveDigestibility": "FromModel",
-                  "DeadDigestibility": "FromModel",
-                  "LiveFractionConsumable": 1.0,
-                  "DeadFractionConsumable": 1.0,
-                  "LiveMinimumBiomass": 100.0,
-                  "DeadMinimumBiomass": 0.0
-                },
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "AGPWhiteClover.Leaf",
-                  "LiveDigestibility": "FromModel",
-                  "DeadDigestibility": "FromModel",
-                  "LiveFractionConsumable": 1.0,
-                  "DeadFractionConsumable": 1.0,
-                  "LiveMinimumBiomass": 100.0,
-                  "DeadMinimumBiomass": 0.0
-                },
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "AGPWhiteClover.Stem",
-                  "LiveDigestibility": "FromModel",
-                  "DeadDigestibility": "FromModel",
-                  "LiveFractionConsumable": 1.0,
-                  "DeadFractionConsumable": 1.0,
-                  "LiveMinimumBiomass": 100.0,
-                  "DeadMinimumBiomass": 0.0
-                },
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "AGPWhiteClover.Stolon",
-                  "LiveDigestibility": "FromModel",
-                  "DeadDigestibility": "FromModel",
-                  "LiveFractionConsumable": 1.0,
-                  "DeadFractionConsumable": 1.0,
-                  "LiveMinimumBiomass": 100.0,
-                  "DeadMinimumBiomass": 0.0
-                },
                 {
                   "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
                   "Name": "SurfaceOrganicMatter.Residue",
