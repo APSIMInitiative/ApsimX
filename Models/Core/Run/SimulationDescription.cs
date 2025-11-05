@@ -215,7 +215,7 @@ namespace Models.Core.Run
                 {
                     foreach (INodeModel replacement in replacements.Children.Where(m => m.Enabled))
                         replacementsToApply.Insert(0, new ReplaceCommand(new ModelReference(replacement), replacement.Name,
-                                                                         multiple: true, matchOnNameAndType: false));
+                                                                         multiple: true, ReplaceCommand.MatchType.Name));
                 }
             }
         }

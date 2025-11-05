@@ -23,12 +23,14 @@ public partial class ReplaceCommand : IModelCommand
 
     /// <summary>Match on name and type? If false, will only match when names match.</summary>
     [JsonProperty]
-    private readonly bool matchOnNameAndType;
+    private readonly MatchType matchType;
 
     /// <summary>Name given to model after replacement</summary>
     [JsonProperty]
     private readonly string newName;
 
+    /// <summary>Definition of how to </summary>
+    public enum MatchType { Name, NameAndType, NameOrType };
 
     /// <summary>
     /// Constructor. Add a new model to a parent model and optionally name it.
@@ -36,14 +38,14 @@ public partial class ReplaceCommand : IModelCommand
     /// <param name="modelReference">The model to add.</param>
     /// <param name="replacementPath">The path of models to replace.</param>
     /// <param name="multiple">Do as many replacements as possible?</param>
-    /// <param name="matchOnNameAndType">Match on name AND type? If false, will match on type OR name.</param>
+    /// <param name="matchType">Match on name AND type? If false, will match on type OR name.</param>
     /// <param name="newName">Name given to model after replacement.</param>
-    public ReplaceCommand(IModelReference modelReference, string replacementPath, bool multiple, bool matchOnNameAndType, string newName = null)
+    public ReplaceCommand(IModelReference modelReference, string replacementPath, bool multiple, MatchType matchType, string newName = null)
     {
         this.modelReference = modelReference;
         this.replacementPath = replacementPath;
         this.multiple = multiple;
-        this.matchOnNameAndType = matchOnNameAndType;
+        this.matchType = matchType;
         this.newName = newName;
     }
 
@@ -61,7 +63,7 @@ public partial class ReplaceCommand : IModelCommand
         {
             var modelToReplace = (INodeModel)relativeTo.Node.Get(replacementPath)
                  ?? throw new Exception($"Cannot find model: {replacementPath}");
-            if (matchOnNameAndType && modelToReplace.GetType().IsAssignableFrom(modelToAdd.GetType()))
+            if (matchType == MatchType.NameAndType && modelToReplace.GetType().IsAssignableFrom(modelToAdd.GetType()))
                 throw new Exception($"Model {replacementPath} is not of type {replacementPath}");
             modelsToReplace = [modelToReplace];
         }
@@ -70,11 +72,11 @@ public partial class ReplaceCommand : IModelCommand
             var replacementPathWithoutBrackets = replacementPath.Replace("[", string.Empty)
                                                                 .Replace("]", string.Empty);
             modelsToReplace = relativeTo.Node.FindAll(name: replacementPathWithoutBrackets);
-            if (matchOnNameAndType)
+            if (matchType == MatchType.NameAndType)
             {
                 modelsToReplace = modelsToReplace.Where(model => model.GetType().IsAssignableFrom(modelToAdd.GetType()));
             }
-            else if (!modelsToReplace.Any())
+            else if (matchType == MatchType.NameOrType && !modelsToReplace.Any())
             {
                 // didn't find any matches using name so try by type.
                 Type t = ModelRegistry.ModelNameToType(replacementPathWithoutBrackets);
@@ -106,6 +108,6 @@ public partial class ReplaceCommand : IModelCommand
     /// </summary>
     public override int GetHashCode()
     {
-        return (modelReference.GetHashCode(), replacementPath, multiple, matchOnNameAndType, newName).GetHashCode();
+        return (modelReference.GetHashCode(), replacementPath, multiple, matchType, newName).GetHashCode();
     }
 }

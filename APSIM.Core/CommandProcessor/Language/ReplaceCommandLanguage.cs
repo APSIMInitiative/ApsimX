@@ -53,7 +53,7 @@ public partial class ReplaceCommand: IModelCommand
         return new ReplaceCommand(modelReference,
                                   replacementPath: match.Groups["oldmodelpath"]?.ToString(),
                                   multiple: match.Groups["all"].Success,
-                                  matchOnNameAndType: false,
+                                  MatchType.Name,
                                   newName: match.Groups["name"].ToString());
     }
 

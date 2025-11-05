@@ -79,7 +79,7 @@ namespace UnitTests
             IEnumerable<IModelCommand> replacements = new IModelCommand[]
             {
                 new SetPropertyCommand("path", "=", "value", fileName: null),
-                new ReplaceCommand(new ModelReference(new MockModel()), "x", multiple: true, matchOnNameAndType: true)
+                new ReplaceCommand(new ModelReference(new MockModel()), "x", multiple: true, ReplaceCommand.MatchType.NameAndType)
             };
             ICommand target = new APSIM.Server.Commands.RunCommand(true, true, 32, replacements, new[] { "sim1, sim2" });
             TestRead(target);
@@ -97,8 +97,8 @@ namespace UnitTests
         {
             IEnumerable<IModelCommand> replacements = new IModelCommand[]
             {
-                new ReplaceCommand(new ModelReference(new MockModel()), "f", multiple: true, matchOnNameAndType: true),
-                new ReplaceCommand(new ModelLocatorReference(relativeTo: null, "path to a model"), "replacement value", multiple: true, matchOnNameAndType: true)
+                new ReplaceCommand(new ModelReference(new MockModel()), "f", multiple: true, ReplaceCommand.MatchType.NameAndType),
+                new ReplaceCommand(new ModelLocatorReference(relativeTo: null, "path to a model"), "replacement value", multiple: true, ReplaceCommand.MatchType.NameAndType)
             };
             IEnumerable<string> sims = new[] { "one simulation" };
             ICommand command = new APSIM.Server.Commands.RunCommand(false, true, 65536, replacements, sims);

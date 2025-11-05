@@ -531,7 +531,7 @@ public class CommandTests
 
         var newModel = new Report() { Name = "NewReport", VariableNames = [ "2" ] };
         IModelCommand cmd = new ReplaceCommand(new ModelReference(newModel),
-                                               replacementPath: "Report", multiple: false, matchOnNameAndType: true);
+                                               replacementPath: "Report", multiple: false, ReplaceCommand.MatchType.NameAndType);
         cmd.Run(simulation, runner: null);
 
         var report = simulation.Children[0] as Report;
@@ -555,7 +555,7 @@ public class CommandTests
 
         var newModel = new Report() { Name = "NewReport", VariableNames = [ "2" ] };
         IModelCommand cmd = new ReplaceCommand(new ModelReference(newModel),
-                                               replacementPath: "Report", multiple: false, matchOnNameAndType: false);
+                                               replacementPath: "Report", multiple: false, ReplaceCommand.MatchType.Name);
         cmd.Run(simulation, runner: null);
 
         var report = simulation.Children[0] as Report;
@@ -579,7 +579,7 @@ public class CommandTests
 
         var newModel = new Report() { Name = "NewReport" };
         IModelCommand cmd = new ReplaceCommand(new ModelReference(newModel),
-                                               replacementPath: "Report", multiple: false, matchOnNameAndType: false, newName: "NewName");
+                                               replacementPath: "Report", multiple: false, ReplaceCommand.MatchType.Name, newName: "NewName");
         cmd.Run(simulation, runner: null);
 
         Assert.That(simulation.Children.First().Name, Is.EqualTo("NewName"));
@@ -601,7 +601,7 @@ public class CommandTests
 
         var newModel = new Report() { Name = "NewReport", VariableNames = ["2"] };
         IModelCommand cmd = new ReplaceCommand(new ModelReference(newModel),
-                                               replacementPath: "Report", multiple: true, matchOnNameAndType: false);
+                                               replacementPath: "Report", multiple: true, ReplaceCommand.MatchType.Name);
         cmd.Run(simulation, runner: null);
 
         var reports = simulation.Node.FindChildren<Report>(recurse: true).ToArray();
@@ -630,7 +630,7 @@ public class CommandTests
 
         var newModel = new Soil() { Name = "NewSoil", ApsoilNumber = "2" };
         IModelCommand cmd = new ReplaceCommand(new ModelReference(newModel),
-                                               replacementPath: "[Soil]", multiple: true, matchOnNameAndType: false);
+                                               replacementPath: "[Soil]", multiple: true, ReplaceCommand.MatchType.NameOrType);
         cmd.Run(simulation, runner: null);
 
         var soil = simulation.Node.FindChild<Soil>(recurse: true);
@@ -653,7 +653,7 @@ public class CommandTests
 
         var newModel = new Soil() { Name = "NewSoil", Enabled = true };
         IModelCommand cmd = new ReplaceCommand(new ModelReference(newModel),
-                                               replacementPath: "[Soil]", multiple: true, matchOnNameAndType: false);
+                                               replacementPath: "[Soil]", multiple: true, ReplaceCommand.MatchType.Name);
         cmd.Run(simulation, runner: null);
 
         var soil = simulation.Node.FindChild<Soil>(recurse: true);
@@ -661,9 +661,9 @@ public class CommandTests
         Assert.That(soil.Enabled, Is.EqualTo(false));
     }
 
-    /// <summary>Ensure the replace command works when multiple matching on name and type.</summary>
+    /// <summary>Ensure the replace command works when matching on name only matches first instance.</summary>
     [Test]
-    public void EnsureMultipleReplaceOnNameAndTypeWorks()
+    public void EnsureReplaceOnNameOnlyMatchesFirst()
     {
         Simulations simulation = new()
         {
@@ -677,7 +677,7 @@ public class CommandTests
 
         var newModel = new Report() { Name = "NewReport", VariableNames = [ "2" ] };
         IModelCommand cmd = new ReplaceCommand(new ModelReference(newModel),
-                                               replacementPath: "Report", multiple: false, matchOnNameAndType: false);
+                                               replacementPath: "Report", multiple: false, ReplaceCommand.MatchType.Name);
 
         cmd.Run(simulation, runner: null);
 

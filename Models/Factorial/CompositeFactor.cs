@@ -80,7 +80,7 @@ namespace Models.Factorial
                     simulationDescription.AddOverride(new ReplaceCommand(new ModelReference(model),
                                                                          allPaths[i],
                                                                          multiple: true,
-                                                                         matchOnNameAndType: false,
+                                                                         ReplaceCommand.MatchType.NameOrType,
                                                                          newName: null));
                 else
                     simulationDescription.AddOverride(new SetPropertyCommand(allPaths[i], "=", allValues[i].ToString(), multiple: true));

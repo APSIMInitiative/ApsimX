@@ -70,7 +70,7 @@
             };
 
             var simulationDescription = new SimulationDescription(sim, "CustomName");
-            simulationDescription.AddOverride(new ReplaceCommand(new ModelReference(replacementWeather), "Weather", multiple: true, matchOnNameAndType: true, newName: "Weather"));
+            simulationDescription.AddOverride(new ReplaceCommand(new ModelReference(replacementWeather), "Weather", multiple: true, ReplaceCommand.MatchType.NameAndType, newName: "Weather"));
 
             var newSim = simulationDescription.ToSimulation();
             Assert.That(newSim.Name, Is.EqualTo("CustomName"));
