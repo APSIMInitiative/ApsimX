@@ -39,6 +39,8 @@ namespace APSIM.Workflow
             string fullPath = PathUtilities.GetAbsolutePath(inputPath, null);
             string rootPath = PathUtilities.GetRelativePath(inputPath, null);
 
+            logger.LogInformation("  test1:" + Path.GetFullPath(inputPath));
+
             logger.LogInformation("  input:" + inputPath);
             logger.LogInformation("  full:" + fullPath);
             logger.LogInformation("  root:" + rootPath);
