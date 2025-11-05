@@ -16,19 +16,8 @@ namespace APSIM.Core;
 /// </summary>
 internal class Locator
 {
-    private readonly Assembly modelsAssembly;
-
     /// <summary>Cache for speeding up look ups.</summary>
     private Dictionary<(object relativeTo, string path), VariableComposite> cache = new();
-
-    private List<IVariableSupplier> variableSuppliers = new();
-
-    /// <summary>Constructor</summary>
-    internal Locator()
-    {
-        string binPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        modelsAssembly = Assembly.LoadFrom(Path.Combine(binPath, "Models.dll"));
-    }
 
     /// <summary>Clear the cache</summary>
     public void Clear()
@@ -175,13 +164,33 @@ internal class Locator
         composite.AddInstance(relativeTo.Model);
         for (int j = 0; j < namePathBits.Length; j++)
         {
+            if (relativeToObject == null)
+                return null;
+
+            object objectInfo = null;
+            List<object> argumentsList = new List<object>();
+
             // look for an array specifier e.g. sw[2]
-            //need to do this first as the [ ] will screw up matching to a property
+            //need to do this first as the [ ] will screw up matching to a property if its an array
             string arraySpecifier = null;
             if (!onlyModelChildren && namePathBits[j].Contains("["))
+            {
+                string[] copyOfNamePathBits = namePathBits.Clone() as string[];
                 arraySpecifier = StringUtilities.SplitOffBracketedValue(ref namePathBits[j], '[', ']');
 
-            object objectInfo = GetInternalObjectInfo(relativeToObject, namePathBits[j], composite, namePathBits.Length-j-1, ignoreCase, throwOnError, onlyModelChildren, out List<object> argumentsList);
+                objectInfo = GetInternalObjectInfo(relativeToObject, namePathBits[j], composite, namePathBits.Length - j - 1, ignoreCase, throwOnError, onlyModelChildren, out argumentsList);
+
+                //we found and stripped [] for an array, but then didnt find the object, prehaps the object had [] in the name but wasn't an array, so let's check again
+                if (objectInfo == null)
+                {
+                    argumentsList = new List<object>();
+                    objectInfo = GetInternalObjectInfo(relativeToObject, copyOfNamePathBits[j], composite, copyOfNamePathBits.Length - j - 1, ignoreCase, throwOnError, onlyModelChildren, out argumentsList);
+                }
+            }
+            else
+            {
+                objectInfo = GetInternalObjectInfo(relativeToObject, namePathBits[j], composite, namePathBits.Length - j - 1, ignoreCase, throwOnError, onlyModelChildren, out argumentsList);
+            }
 
             //Depending on the type we found, handle it
             bool propertiesOnly = (flags & LocatorFlags.PropertiesOnly) == LocatorFlags.PropertiesOnly;
@@ -192,8 +201,6 @@ internal class Locator
                 if (propertiesOnly && j == namePathBits.Length - 1)
                     break;
                 relativeToObject = composite.Value;
-                if (relativeToObject == null)
-                    return null;
             }
             else if ((objectInfo as MethodInfo) != null)
             {
@@ -262,10 +269,10 @@ internal class Locator
             {
                 // Didn't find a model with a name matching the square bracketed string so
                 // now try and look for a model with a type matching the square bracketed string.
-                Type[] modelTypes = ReflectionUtilities.GetTypeWithoutNameSpace(modelName, modelsAssembly);
-                if (modelTypes.Length == 1)
+                Type modelType = ModelRegistry.ModelNameToType(modelName);
+                if (modelType != null)
                     foundNode = relativeTo.Node.WalkScoped()
-                                               .FirstOrDefault(n => modelTypes[0].IsAssignableFrom(n.Model.GetType()));
+                                               .FirstOrDefault(n => modelType.IsAssignableFrom(n.Model.GetType()));
             }
             if (foundNode == null)
             {
@@ -361,11 +368,12 @@ internal class Locator
     /// <exception cref="Exception"></exception>
     private object GetInternalObjectInfo(object relativeToObject, string name, VariableComposite composite, int remainingNames, bool ignoreCase, bool throwOnError, bool onlyModelChildren, out List<object> argumentsList)
     {
-
         argumentsList = null;
         PropertyInfo propertyInfo = null;
         MethodInfo methodInfo = null;
         INodeModel modelInfo = null;
+        if (relativeToObject == null)
+            return null;
 
         if (!onlyModelChildren)
         {
@@ -389,84 +397,89 @@ internal class Locator
             }
         }
 
+        // We never want to match on an IStructure property in a model. By setting the propertyInfo to null
+        // we might find a Structure child model which is probably what we want to locate.
+        if (propertyInfo?.PropertyType.Name == "IStructure")
+            propertyInfo = null;
+
         if (!onlyModelChildren && propertyInfo == null)
-        {
-            if (name.IndexOf('(') > 0)
             {
-                // before trying to access the method we need to identify the types of arguments to identify overloaded methods.
-                // assume: presence of quotes is string
-                // assume: tolower = false or true is boolean
-                // assume: presence of . and tryparse is double
-                // assume: tryparse is int32
-                List<Type> argumentsTypes = new List<Type>();
-                argumentsList = new List<object>();
-                // get arguments and store in VariableMethod
-                string args = name.Substring(name.IndexOf('('));
-                args = args.Substring(0, args.IndexOf(')'));
-                args = args.Replace("(", "").Replace(")", "");
-
-                if (args.Length > 0)
+                if (name.IndexOf('(') > 0)
                 {
-                    args = args.Trim('(').Trim(')');
-                    var argList = args.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim(' ')).ToArray();
+                    // before trying to access the method we need to identify the types of arguments to identify overloaded methods.
+                    // assume: presence of quotes is string
+                    // assume: tolower = false or true is boolean
+                    // assume: presence of . and tryparse is double
+                    // assume: tryparse is int32
+                    List<Type> argumentsTypes = new List<Type>();
+                    argumentsList = new List<object>();
+                    // get arguments and store in VariableMethod
+                    string args = name.Substring(name.IndexOf('('));
+                    args = args.Substring(0, args.IndexOf(')'));
+                    args = args.Replace("(", "").Replace(")", "");
 
-                    for (int argid = 0; argid < argList.Length; argid++)
+                    if (args.Length > 0)
                     {
-                        var trimmedarg = argList[argid].Trim(' ').Trim(new char[] { '(', ')' }).Trim(' ');
-                        if (trimmedarg.Contains('"'))
+                        args = args.Trim('(').Trim(')');
+                        var argList = args.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim(' ')).ToArray();
+
+                        for (int argid = 0; argid < argList.Length; argid++)
                         {
-                            argumentsTypes.Add(typeof(string));
-                            argumentsList.Add(trimmedarg.Trim('\"'));
-                        }
-                        else if (trimmedarg.ToLower() == "false" || trimmedarg.ToLower() == "true")
-                        {
-                            argumentsTypes.Add(typeof(bool));
-                            argumentsList.Add(System.Convert.ToBoolean(trimmedarg, CultureInfo.InvariantCulture));
-                        }
-                        else if (trimmedarg.Contains('.') && double.TryParse(trimmedarg, out _))
-                        {
-                            argumentsTypes.Add(typeof(double));
-                            argumentsList.Add(System.Convert.ToDouble(trimmedarg, CultureInfo.InvariantCulture));
-                        }
-                        else if (Int32.TryParse(trimmedarg, out _))
-                        {
-                            argumentsTypes.Add(typeof(Int32));
-                            argumentsList.Add(System.Convert.ToInt32(trimmedarg, CultureInfo.InvariantCulture));
-                        }
-                        else
-                        {
-                            if (throwOnError)
-                                throw new Exception($"Unable to determine the type of argument ({trimmedarg}) in Report method");
+                            var trimmedarg = argList[argid].Trim(' ').Trim(new char[] { '(', ')' }).Trim(' ');
+                            if (trimmedarg.Contains('"'))
+                            {
+                                argumentsTypes.Add(typeof(string));
+                                argumentsList.Add(trimmedarg.Trim('\"'));
+                            }
+                            else if (trimmedarg.ToLower() == "false" || trimmedarg.ToLower() == "true")
+                            {
+                                argumentsTypes.Add(typeof(bool));
+                                argumentsList.Add(System.Convert.ToBoolean(trimmedarg, CultureInfo.InvariantCulture));
+                            }
+                            else if (trimmedarg.Contains('.') && double.TryParse(trimmedarg, out _))
+                            {
+                                argumentsTypes.Add(typeof(double));
+                                argumentsList.Add(System.Convert.ToDouble(trimmedarg, CultureInfo.InvariantCulture));
+                            }
+                            else if (Int32.TryParse(trimmedarg, out _))
+                            {
+                                argumentsTypes.Add(typeof(Int32));
+                                argumentsList.Add(System.Convert.ToInt32(trimmedarg, CultureInfo.InvariantCulture));
+                            }
                             else
-                                return null;
+                            {
+                                if (throwOnError)
+                                    throw new Exception($"Unable to determine the type of argument ({trimmedarg}) in Report method");
+                                else
+                                    return null;
+                            }
                         }
                     }
-                }
 
 
-                string functionName = name.Substring(0, name.IndexOf('('));
-                methodInfo = relativeToObject.GetType().GetMethod(functionName, argumentsTypes.ToArray<Type>());
-                if (methodInfo == null && ignoreCase) // If not found, try using a case-insensitive search
-                {
-                    // try to get the method with identified arguments
-                    BindingFlags bindingFlags = BindingFlags.Default | BindingFlags.IgnoreCase;
-                    methodInfo = relativeToObject.GetType().GetMethod(functionName, argumentsTypes.Count(), bindingFlags, null, argumentsTypes.ToArray<Type>(), null);
-                }
-                if (methodInfo == null) // If not found, try searching without parameters in case they are optional and none were provided
-                {
-                    methodInfo = relativeToObject.GetType().GetMethod(functionName);
-                    if (methodInfo != null) //if we found it, add missing parameters in for the optional ones missing
+                    string functionName = name.Substring(0, name.IndexOf('('));
+                    methodInfo = relativeToObject.GetType().GetMethod(functionName, argumentsTypes.ToArray<Type>());
+                    if (methodInfo == null && ignoreCase) // If not found, try using a case-insensitive search
                     {
-                        ParameterInfo[] parameters = methodInfo.GetParameters();
-                        while (argumentsList.Count < parameters.Length)
+                        // try to get the method with identified arguments
+                        BindingFlags bindingFlags = BindingFlags.Default | BindingFlags.IgnoreCase;
+                        methodInfo = relativeToObject.GetType().GetMethod(functionName, argumentsTypes.Count(), bindingFlags, null, argumentsTypes.ToArray<Type>(), null);
+                    }
+                    if (methodInfo == null) // If not found, try searching without parameters in case they are optional and none were provided
+                    {
+                        methodInfo = relativeToObject.GetType().GetMethod(functionName);
+                        if (methodInfo != null) //if we found it, add missing parameters in for the optional ones missing
                         {
-                            argumentsTypes.Add(typeof(object));
-                            argumentsList.Add(Type.Missing);
+                            ParameterInfo[] parameters = methodInfo.GetParameters();
+                            while (argumentsList.Count < parameters.Length)
+                            {
+                                argumentsTypes.Add(typeof(object));
+                                argumentsList.Add(Type.Missing);
+                            }
                         }
                     }
                 }
             }
-        }
 
         // Not a property or method, may be a child model.
         if (relativeToObject is INodeModel model)
@@ -476,6 +489,10 @@ internal class Locator
                 compareType = StringComparison.OrdinalIgnoreCase;
 
             modelInfo = model.GetChildren().FirstOrDefault(m => m.Name.Equals(name, compareType));
+
+            //If matching by name did not work, try matching by type
+            if (modelInfo == null)
+                modelInfo = model.GetChildren().FirstOrDefault(m => m.GetType().Name.Equals(name, compareType));
         }
 
         if (methodInfo != null) //if we found a method, return it

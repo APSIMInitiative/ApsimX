@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 199,
+  "Version": 205,
   "Name": "Simulations",
   "Children": [
     {
@@ -5276,7 +5276,7 @@
                 "[Leaf].LeafResidenceTime.XYPairs.X=0,1,2,3,6,9",
                 "[Leaf].LeafResidenceTime.XYPairs.Y=550, 580, 630, 700, 850, 850",
                 "",
-                "[Stem].DBH.DBHEquation.Expression=-3.24+(0.82*[Pinus].IndividualTreeStemWt^0.29)",
+                "[Stem].DBH.DBHEquation.Expression = -3.24+(0.82*[Pinus].IndividualTreeStemWt^0.29)",
                 "[Stem].Ht.HeightFunction.Expression=0.304375+(0.245023*[Pinus].Stem.DBH^1.2668)+(0.211611*([Pinus].Population*10000)^0.218209)",
                 "[Stem].Vol.VolumeEquation.Expression=[Pinus].Stem.Ht*[Pinus].Stem.BA*(0.942*(([Pinus].Stem.Ht-1.4)^-1.161)+0.317)",
                 "",
@@ -5356,7 +5356,7 @@
                 "[Leaf].LeafResidenceTime.XYPairs.X=0,1,2,3,6,9",
                 "[Leaf].LeafResidenceTime.XYPairs.Y=550, 580, 630, 700, 850, 850",
                 "",
-                "[Stem].DBH.DBHEquation.Expression=-3.24+(0.82*[Pinus].IndividualTreeStemWt^0.29)",
+                "[Stem].DBH.DBHEquation.Expression = -3.24+(0.82*[Pinus].IndividualTreeStemWt^0.29)",
                 "",
                 "[Stem].Ht.HeightFunction.Expression=0.304375+(0.245023*[Pinus].Stem.DBH^1.2668)+(0.211611*([Pinus].Population*10000)^0.218209)",
                 "",
@@ -5430,7 +5430,7 @@
                 "[Leaf].LeafResidenceTime.XYPairs.X=0,1,2,3,6,9",
                 "[Leaf].LeafResidenceTime.XYPairs.Y=550, 580, 630, 700, 850, 850",
                 "",
-                "[Stem].DBH.DBHEquation.Expression=-3.24+(0.82*[Pinus].IndividualTreeStemWt^0.29)",
+                "[Stem].DBH.DBHEquation.Expression = -3.24+(0.82*[Pinus].IndividualTreeStemWt^0.29)",
                 "[Stem].Ht.HeightFunction.Expression=0.304375+(0.245023*[Pinus].Stem.DBH^1.2668)+(0.211611*([Pinus].Population*10000)^0.218209)",
                 "[Stem].Vol.VolumeEquation.Expression=[Pinus].Stem.Ht*[Pinus].Stem.BA*(0.942*(([Pinus].Stem.Ht-1.4)^-1.161)+0.317)",
                 "",
@@ -5503,7 +5503,7 @@
                 "",
                 "[Leaf].SpecificLeafAreaFunction.SLAPotential.Expression=0.0063-[Pinus].Leaf.Wt*0.000004",
                 "",
-                "[Stem].DBH.DBHEquation.Expression=-1.8+(0.815*[Pinus].IndividualTreeStemWt^0.29)",
+                "[Stem].DBH.DBHEquation.Expression = -1.8+(0.815*[Pinus].IndividualTreeStemWt^0.29)",
                 "[Stem].Ht.HeightFunction.Expression=0.304375+(0.9*[Pinus].Stem.DBH^0.9)+(0*([Pinus].Population*10000)^0.218209)"
               ],
               "Name": "elliottiiIMPAC",
@@ -5573,7 +5573,7 @@
                 "[Leaf].LeafResidenceTime.XYPairs.X=0,1,2,3,6,9",
                 "[Leaf].LeafResidenceTime.XYPairs.Y=550, 580, 630, 700, 850, 850",
                 "",
-                "[Stem].DBH.DBHEquation.Expression=-3.24+(0.82*[Pinus].IndividualTreeStemWt^0.29)",
+                "[Stem].DBH.DBHEquation.Expression = -3.24+(0.82*[Pinus].IndividualTreeStemWt^0.29)",
                 "[Stem].Ht.HeightFunction.Expression=0.304375+(0.245023*[Pinus].Stem.DBH^1.2668)+(0.211611*([Pinus].Population*10000)^0.218209)",
                 "[Stem].Vol.VolumeEquation.Expression=[Pinus].Stem.Ht*[Pinus].Stem.BA*(0.942*(([Pinus].Stem.Ht-1.4)^-1.161)+0.317)",
                 "",
@@ -5656,7 +5656,7 @@
                 "[Leaf].LeafResidenceTime.XYPairs.X=0,1,2,3,6,9",
                 "[Leaf].LeafResidenceTime.XYPairs.Y=550, 580, 630, 700, 850, 850",
                 "",
-                "[Stem].DBH.DBHEquation.Expression=-3.24+(0.82*[Pinus].IndividualTreeStemWt^0.29)",
+                "[Stem].DBH.DBHEquation.Expression = -3.24+(0.82*[Pinus].IndividualTreeStemWt^0.29)",
                 "[Stem].Ht.HeightFunction.Expression=0.304375+(0.245023*[Pinus].Stem.DBH^1.2668)+(0.211611*([Pinus].Population*10000)^0.218209)",
                 "[Stem].Vol.VolumeEquation.Expression=[Pinus].Stem.Ht*[Pinus].Stem.BA*(0.942*(([Pinus].Stem.Ht-1.4)^-1.161)+0.317)",
                 "",
@@ -5739,7 +5739,7 @@
                 "[Leaf].LeafResidenceTime.XYPairs.X=0,1,2,3,6,9",
                 "[Leaf].LeafResidenceTime.XYPairs.Y=550, 580, 630, 700, 850, 850",
                 "",
-                "[Stem].DBH.DBHEquation.Expression=-3.24+(0.82*[Pinus].IndividualTreeStemWt^0.29)",
+                "[Stem].DBH.DBHEquation.Expression = -3.24+(0.82*[Pinus].IndividualTreeStemWt^0.29)",
                 "[Stem].Ht.HeightFunction.Expression=0.304375+(0.245023*[Pinus].Stem.DBH^1.2668)+(0.211611*([Pinus].Population*10000)^0.218209)",
                 "[Stem].Vol.VolumeEquation.Expression=[Pinus].Stem.Ht*[Pinus].Stem.BA*(0.942*(([Pinus].Stem.Ht-1.4)^-1.161)+0.317)",
                 "",
@@ -5822,7 +5822,7 @@
                 "",
                 "[Leaf].SpecificLeafAreaFunction.SLAPotential.Expression=0.0067-[Pinus].Leaf.Wt*0.0000002",
                 "",
-                "[Stem].DBH.DBHEquation.Expression=-1.5+(0.76*[Pinus].IndividualTreeStemWt^0.3)"
+                "[Stem].DBH.DBHEquation.Expression = -1.5+(0.76*[Pinus].IndividualTreeStemWt^0.3)"
               ],
               "Name": "BFG",
               "Children": [
@@ -5886,8 +5886,8 @@
                 "",
                 "[Leaf].SpecificLeafAreaFunction.SLAPotential.Expression=0.0053+[Pinus].Leaf.Wt*0.0000001",
                 "",
-                "[Pinus].Stem.DBH.DBHEquation.Expression=-15+(3.748*[Pinus].IndividualTreeStemWt^0.21)",
-                "[Pinus].Stem.Ht.HeightFunction.Expression=-6+(1.0*[Pinus].Stem.DBH^(1.001-(2200-[Pinus].Population*10000)*0.00004))",
+                "[Pinus].Stem.DBH.DBHEquation.Expression = -15+(3.748*[Pinus].IndividualTreeStemWt^0.21)",
+                "[Pinus].Stem.Ht.HeightFunction.Expression = -6+(1.0*[Pinus].Stem.DBH^(1.001-(2200-[Pinus].Population*10000)*0.00004))",
                 "",
                 "[Stem].Vol.VolumeEquation.Expression=[Pinus].Stem.Ht*[Pinus].Stem.BA*(0.942*(([Pinus].Stem.Ht-1.4)^-1.161)+0.317)",
                 "",
@@ -5963,7 +5963,7 @@
                 "",
                 "[Leaf].SpecificLeafAreaFunction.SLAPotential.Expression=0.0067-[Pinus].Leaf.Wt*0.0000002",
                 "",
-                "[Stem].DBH.DBHEquation.Expression=-1.5+(0.76*[Pinus].IndividualTreeStemWt^0.298)"
+                "[Stem].DBH.DBHEquation.Expression = -1.5+(0.76*[Pinus].IndividualTreeStemWt^0.298)"
               ],
               "Name": "TowerHill",
               "Children": [
@@ -6039,7 +6039,7 @@
                 "",
                 "[Leaf].SpecificLeafAreaFunction.SLAPotential.Expression=0.006-[Pinus].Leaf.Wt*0.00000025",
                 "",
-                "[Stem].DBH.DBHEquation.Expression=-3.24+(0.82*[Pinus].IndividualTreeStemWt^0.3)",
+                "[Stem].DBH.DBHEquation.Expression = -3.24+(0.82*[Pinus].IndividualTreeStemWt^0.3)",
                 "[Stem].Ht.HeightFunction.Expression=0.304375+(0.245023*[Pinus].Stem.DBH^1.2668)+(0.211611*([Pinus].Population*10000)^0.218209)"
               ],
               "Name": "taeda",
@@ -6107,7 +6107,7 @@
                 "",
                 "[Leaf].SpecificLeafAreaFunction.SLAPotential.Expression=0.0063-[Pinus].Leaf.Wt*0.0000025",
                 "",
-                "[Stem].DBH.DBHEquation.Expression=-1.3+(0.82*[Pinus].IndividualTreeStemWt^0.28)",
+                "[Stem].DBH.DBHEquation.Expression = -1.3+(0.82*[Pinus].IndividualTreeStemWt^0.28)",
                 "[Stem].Ht.HeightFunction.Expression=0.304375+(0.8*[Pinus].Stem.DBH^1.1)+(0*([Pinus].Population*10000)^0.218209)"
               ],
               "Name": "taedaIMPAC",

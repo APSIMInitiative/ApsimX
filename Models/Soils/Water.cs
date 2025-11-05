@@ -8,7 +8,6 @@ using Models.Core;
 using Models.Interfaces;
 using Newtonsoft.Json;
 using APSIM.Core;
-using DocumentFormat.OpenXml.Office.CustomXsn;
 
 namespace Models.Soils
 {
@@ -389,22 +388,17 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>Finds the 'Soil' node.</summary>
-        public Soil Soil => (Soil)this.Parent ??
-                                     Node?.WalkScoped()
-                                         ?.FirstOrDefault(n => n.Model is Soil)
-                                         ?.Model as Soil;
+        /// <summary>Finds the 'Soil' node. Try parent first, then a soil in scope.</summary>
+        public Soil Soil => Node?.FindParent<Soil>() ??
+                            Node?.WalkScoped()
+                                ?.FirstOrDefault(n => n.Model is Soil)
+                                ?.Model as Soil;
 
         /// <summary>Finds the 'Physical' node.</summary>
-        public IPhysical Physical => Soil?.FindChild<IPhysical>() ??
-                                     Node?.WalkScoped()
-                                         ?.FirstOrDefault(n => n.Model is IPhysical)
-                                         ?.Model as IPhysical;
+        public IPhysical Physical => Soil?.Node.FindChild<IPhysical>();
 
         /// <summary>Finds the 'SoilWater' node.</summary>
-        public ISoilWater WaterModel => Node?.WalkScoped()
-                                            ?.FirstOrDefault(n => n.Model is ISoilWater)
-                                            ?.Model as ISoilWater;
+        public ISoilWater WaterModel => Soil?.Node.FindChild<ISoilWater>();
 
         /// <summary>Find LL values (mm) for the RelativeTo property.</summary>
         public double[] RelativeToLL
@@ -468,10 +462,10 @@ namespace Models.Soils
             IEnumerable<SoilCrop> ancestorSoilCropLists = new List<SoilCrop>();
             // LL15 is here as this is the default value.
             List<string> newSoilCropNames = new List<string> { "LL15" };
-            Soil ancestorSoil = FindAncestor<Soil>();
+            Soil ancestorSoil = Structure.FindParent<Soil>(recurse: true);
             if (ancestorSoil != null)
             {
-                ancestorSoilCropLists = ancestorSoil.FindAllDescendants<SoilCrop>();
+                ancestorSoilCropLists = Structure.FindChildren<SoilCrop>(relativeTo: ancestorSoil, recurse: true);
                 newSoilCropNames.AddRange(ancestorSoilCropLists.Select(s => s.Name.Replace("Soil", "")));
             }
             return newSoilCropNames;
@@ -513,12 +507,12 @@ namespace Models.Soils
         /// <exception cref="Exception"></exception>
         private SoilCrop GetCropSoil()
         {
-            var physical = FindSibling<Physical>();
+            var physical = Structure.Find<Physical>();
             if (physical == null)
                 physical = Structure.Find<Physical>();
                 if (physical == null)
                     throw new Exception($"Unable to locate a Physical node when updating {this.Name}.");
-            var plantCrop = physical.FindChild<SoilCrop>(RelativeTo + "Soil");
+            var plantCrop = Structure.FindChild<SoilCrop>(RelativeTo + "Soil", relativeTo: physical);
             if (plantCrop == null)
                 throw new Exception($"Unable to locate an appropriate SoilCrop with the name of {RelativeTo + "Soil"} under {physical.Name}.");
             return plantCrop;

@@ -111,7 +111,8 @@ namespace Models.Core
             }
 
             // Updates the parameters from the manager model.
-            IModel pathObject = model.FindDescendant<Manager>(StringUtilities.CleanStringOfSymbols(path.Split('.').First()));
+            var cleanPath = StringUtilities.CleanStringOfSymbols(path.Split('.').First());
+            IModel pathObject = model.Node.FindChild<Manager>(cleanPath, recurse: true);
             if (pathObject is Manager manager)
                 manager.GetParametersFromScriptModel();
 
@@ -132,7 +133,12 @@ namespace Models.Core
         {
             List<Override> undos = new List<Override>();
             foreach (var replacement in overrides)
-                undos.InsertRange(0, Apply(model, replacement.Path, replacement.Value, replacement.MatchType));
+            {
+                var replacementUndos = Apply(model, replacement.Path, replacement.Value, replacement.MatchType);
+                if (replacement.MatchType == Override.MatchTypeEnum.NameAndType && !replacementUndos.Any())
+                    throw new Exception($"Unable to find match for path {replacement.Path} in {model.FullPath}!");
+                undos.InsertRange(0, replacementUndos);
+            }
             return undos;
         }
 
@@ -224,7 +230,7 @@ namespace Models.Core
             IModel replacement;
             if (string.IsNullOrEmpty(replacementPath))
             {
-                replacement = extFile.FindAllDescendants().Where(d => typeToFind.IsAssignableFrom(d.GetType())).FirstOrDefault();
+                replacement = extFile.Node.FindChildren<IModel>(recurse: true).Where(d => typeToFind.IsAssignableFrom(d.GetType())).FirstOrDefault();
                 if (replacement == null)
                     throw new Exception($"Unable to find replacement model of type {typeToFind.Name} in file {replacementFile}");
             }

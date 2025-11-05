@@ -6,10 +6,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using APSIM.Core;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Models.Core.Run;
 using Models.Interfaces;
 using Models.Storage;
@@ -31,7 +31,10 @@ namespace UnitTests.Weather
             string weatherFilePath = Path.ChangeExtension(Path.GetTempFileName(), ".xlsx");
             using (FileStream file = new FileStream(weatherFilePath, FileMode.Create, FileAccess.Write))
             {
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("UnitTests.Weather.WeatherTestsExcelFile.xlsx").CopyTo(file);
+                using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("UnitTests.Weather.WeatherTestsExcelFile.xlsx"))
+                {
+                    stream.CopyTo(file);
+                }
             }
 
             Simulation baseSim = new Simulation()
@@ -42,7 +45,7 @@ namespace UnitTests.Weather
                     new Models.Climate.Weather()
                     {
                         Name = "Weather",
-                        FullFileName = weatherFilePath,
+                        FileName = weatherFilePath,
                         ExcelWorkSheetName = "Sheet1"
                     },
                     new Clock()
@@ -58,7 +61,59 @@ namespace UnitTests.Weather
 
             baseSim.Prepare();
             baseSim.Run();
-            var summary = baseSim.FindDescendant<MockSummary>();
+            var summary = baseSim.Node.FindChild<MockSummary>(recurse: true);
+            Assert.That(summary.messages[0], Is.EqualTo("Simulation terminated normally"));
+        }
+
+        /// <summary>
+        /// Tests a weather file in .bin (Binary) format.
+        /// </summary>
+        [Test]
+        public void BinaryWeatherFileTest()
+        {
+            string weatherFilePath = Path.ChangeExtension(Path.GetTempFileName(), ".bin");
+            using (FileStream file = new FileStream(weatherFilePath, FileMode.Create, FileAccess.Write))
+            {
+                using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("UnitTests.Weather.BinaryMetfile.bin"))
+                {
+                    stream.CopyTo(file);
+                }
+            }
+
+            Simulation baseSim = new Simulation()
+            {
+                Name = "Base",
+                Children = new List<IModel>()
+                {
+                    new Models.Climate.Weather()
+                    {
+                        Name = "Weather",
+                        FileName = weatherFilePath
+                    },
+                    new Clock()
+                    {
+                        Name = "Clock",
+                        StartDate = new DateTime(1998, 11, 9),
+                        EndDate = new DateTime(1998, 11, 12)
+                    },
+                    new MockSummary()
+                }
+            };
+            var tree = Node.Create(baseSim);
+
+            baseSim.Prepare();
+            baseSim.Run();
+
+            var weather = baseSim.Node.FindChild<Models.Climate.Weather>(recurse: true);
+            Assert.That(MathUtilities.RoundSignificant(weather.Latitude, 2), Is.EqualTo(-24.45));
+            Assert.That(MathUtilities.RoundSignificant(weather.Longitude, 2), Is.EqualTo(127.2));
+            Assert.That(MathUtilities.RoundSignificant(weather.MaxT, 1), Is.EqualTo(35.5));
+            Assert.That(MathUtilities.RoundSignificant(weather.MinT, 1), Is.EqualTo(18.3));
+            Assert.That(MathUtilities.RoundSignificant(weather.Rain, 1), Is.EqualTo(0));
+            Assert.That(MathUtilities.RoundSignificant(weather.Radn, 1), Is.EqualTo(28.3));
+            Assert.That(MathUtilities.RoundSignificant(weather.VP, 1), Is.EqualTo(5.1));
+
+            var summary = baseSim.Node.FindChild<MockSummary>(recurse: true);
             Assert.That(summary.messages[0], Is.EqualTo("Simulation terminated normally"));
         }
 
@@ -74,9 +129,10 @@ namespace UnitTests.Weather
             Models.Climate.Weather weather = new()
             {
                 Name = "Weather",
-                FullFileName = weatherFilePath,
+                FileName = weatherFilePath,
                 ExcelWorkSheetName = "Sheet1"
             };
+            Node.Create(weather);
 
             Assert.That(weather.StartDate, Is.EqualTo(new DateTime(1987, 5, 30)));
             Assert.That(weather.EndDate, Is.EqualTo(new DateTime(1987, 6, 26)));
@@ -103,7 +159,7 @@ namespace UnitTests.Weather
                         new MockSummary(),
                         new Models.Climate.Weather()
                         {
-                            FullFileName = metFile
+                            FileName = metFile
                         },
                         new Models.Report()
                         {
@@ -169,7 +225,7 @@ namespace UnitTests.Weather
                         new Models.Climate.Weather()
                         {
                             Name = "Weather",
-                            FullFileName = weatherFilePath,
+                            FileName = weatherFilePath,
                             ExcelWorkSheetName = "Sheet1"
                         },
                         new Clock()
@@ -211,6 +267,30 @@ namespace UnitTests.Weather
             Assert.That(weather.TomorrowsMetData.Rain, Is.EqualTo(weather1900.Rain).Within(0.01));
         }
 
+
+        [Test]
+        public void TestGetConstantsFromTopOfWeatherFile()
+        {
+            string weatherData = ReflectionUtilities.GetResourceAsString("UnitTests.Weather.CustomMetData.met");
+            string metFile = Path.GetTempFileName();
+            File.WriteAllText(metFile, weatherData);
+            var simulations = new Simulations()
+            {
+                Children =
+                [
+                    new Models.Climate.Weather() { FileName = metFile }
+                ]
+            };
+            var weather = simulations.Children[0] as Models.Climate.Weather;
+            Node.Create(simulations);
+            weather.OpenDataFile();
+
+            Assert.That(weather.GetConstant("longitude"), Is.EqualTo("150"));
+            Assert.That(weather.GetConstant("Longitude"), Is.EqualTo("150"));
+            Assert.That(weather.GetConstant("asdf"), Is.Null);
+        }
+
+
         /// <summary>
         /// Ensures all example .met files contain %root%
         /// </summary>
@@ -223,8 +303,8 @@ namespace UnitTests.Weather
             IEnumerable<string> exampleFileNames = Directory.GetFiles(exampleFileDirectory, "*.apsimx", SearchOption.AllDirectories);
             foreach (string exampleFile in exampleFileNames)
             {
-                Simulations sim = FileFormat.ReadFromFile<Simulations>(exampleFile, e => {return;}).Model as Simulations;
-                IEnumerable<Models.Climate.Weather> weatherModels = sim.FindAllDescendants<Models.Climate.Weather>();
+                Simulations sim = FileFormat.ReadFromFile<Simulations>(exampleFile, e => { return; }).Model as Simulations;
+                IEnumerable<Models.Climate.Weather> weatherModels = sim.Node.FindChildren<Models.Climate.Weather>(recurse: true);
                 foreach (Models.Climate.Weather weatherModel in weatherModels)
                 {
                     if (!weatherModel.FileName.Contains("%root%/Examples/WeatherFiles/") && weatherModel.FileName.Contains('\\'))
@@ -237,6 +317,99 @@ namespace UnitTests.Weather
             Assert.That(allFilesHaveRootReference, Is.True);
         }
 
+        [Test]
+        public void TestWeatherFileNameAndFullName()
+        {
+            string tempfile = Path.GetTempFileName().Replace("\\", "/");
+            string tempDir = Path.GetDirectoryName(tempfile).Replace("\\", "/") + "/tempsubfolder";
+            Directory.CreateDirectory(tempDir);
+            string tempDirUpOne = tempDir.Remove(tempDir.LastIndexOf('/'));
+            string rootPath = PathUtilities.GetAbsolutePath("%root%", tempDir);
+            tempDir += "/";
+            tempDirUpOne += "/";
+            rootPath += "/";
+
+            tempfile = Path.GetFileName(tempfile);
+
+            string metfile = tempfile.Replace(".tmp", ".met");
+            File.WriteAllText(metfile, ReflectionUtilities.GetResourceAsString("UnitTests.Weather.CustomMetData.met"));
+
+            string apsimfile = tempfile.Replace(".tmp", ".apsimx");
+
+            // Now set the apsimx file name and ensure that the weather file name is still the same but the full file name is now absolute.
+            Simulations sims = new Simulations()
+            {
+                Children = new List<IModel>()
+                {
+                    new Simulation()
+                    {
+                        Children = new List<IModel>()
+                        {
+                            new Models.Climate.Weather(),
+                            new MockClock(),
+                            new MockSummary()
+                        }
+                    }
+                },
+            };
+
+            sims.Node = Node.Create(sims, fileName: tempDir + apsimfile);
+            sims.Write(tempDir + apsimfile);
+
+            Models.Climate.Weather weather = sims.Node.FindChild<Models.Climate.Weather>(recurse: true);
+
+            List<(string, string)> inputs = new List<(string, string)>();
+            inputs.Add(("fileInSameFolder.met", "fileInSameFolder.met"));
+            inputs.Add((tempDir + "fileInSameFolder.met", "fileInSameFolder.met"));
+            inputs.Add(("subfolder/fileSubFolder.met", "subfolder/fileSubFolder.met"));
+            inputs.Add((tempDir + "subfolder/fileSubFolder.met", "subfolder/fileSubFolder.met"));
+            inputs.Add(("../fileInFolderAbove.met", tempDirUpOne + "fileInFolderAbove.met"));
+            inputs.Add((tempDirUpOne + "fileInFolderAbove.met", tempDirUpOne + "fileInFolderAbove.met"));
+            inputs.Add(("../AnotherFolder/fileInAnotherFolder.met", tempDirUpOne + "AnotherFolder/fileInAnotherFolder.met"));
+            inputs.Add((tempDirUpOne + "AnotherFolder/fileInAnotherFolder.met", tempDirUpOne + "AnotherFolder/fileInAnotherFolder.met"));
+            inputs.Add(("T:/A/Full/Path/to/file.met", "T:/A/Full/Path/to/file.met"));
+            inputs.Add(("%root%/file.met", "%root%/file.met"));
+            inputs.Add((rootPath + "file.met", "%root%/file.met"));
+            inputs.Add((null, null));
+            inputs.Add(("", ""));
+            inputs.Add(("arandomcollectionofcharacters", "arandomcollectionofcharacters"));
+            inputs.Add(("null", "null"));
+            inputs.Add(("///adf.\\..%%/as", "///adf./..%%/as"));
+
+            foreach ((string, string) input in inputs)
+            {
+                weather.FileName = input.Item1;
+                Assert.That(weather.FileName, Is.EqualTo(input.Item2));
+
+                //run it again but with windows slashs
+                if (input.Item1 != null)
+                    weather.FileName = input.Item1.Replace("/", "\\");
+                Assert.That(weather.FileName, Is.EqualTo(input.Item2));
+            }
+
+            //now "move" the simulations to under the root path and do the same checks again
+            sims.Node = Node.Create(sims, fileName: rootPath + "temp/" + apsimfile);
+            inputs.Add(("%root%/temp/file.met", "file.met"));
+            inputs.Add((rootPath + "temp/file.met", "file.met"));
+
+            foreach ((string, string) input in inputs)
+            {
+                //Replace our old directories with the root directory
+                string beforePath = input.Item1;
+                if (input.Item1 != null)
+                {
+                    beforePath = beforePath.Replace(tempDir, rootPath + "temp/");
+                    beforePath = beforePath.Replace(tempDirUpOne, rootPath);
+                }
+
+                string afterPath = input.Item2;
+                if (input.Item2 != null)
+                    afterPath = afterPath.Replace(tempDirUpOne, "%root%/");
+
+                weather.FileName = beforePath;
+                Assert.That(weather.FileName, Is.EqualTo(afterPath));
+            }
+        }
 
         /*
          * This doesn't make sense to use anymore since weather sensibility tests no longer throw exceptions
@@ -334,7 +507,6 @@ namespace UnitTests.Weather
                         new MockSummary()
                     }
             };
-
             Models.Climate.SimpleWeather weather = baseSim.Children[0] as Models.Climate.SimpleWeather;
             Clock clock = baseSim.Children[1] as Clock;
 

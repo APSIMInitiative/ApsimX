@@ -267,7 +267,7 @@ namespace Models.Optimisation
         /// </summary>
         private string GenerateApsimXFile()
         {
-            Simulations rootNode = FindAncestor<Simulations>();
+            Simulations rootNode = Structure.FindParent<Simulations>(recurse: true);
             string apsimxFileName = GetTempFileName("input_file.apsimx");
 
             Simulations sims = new Simulations();
@@ -294,7 +294,7 @@ namespace Models.Optimisation
                 originalFile = storage?.FileName;
 
             // Copy files across.
-            foreach (IReferenceExternalFiles fileReference in (rootNode ?? sims).FindAllDescendants<IReferenceExternalFiles>())
+            foreach (IReferenceExternalFiles fileReference in Structure.FindChildren<IReferenceExternalFiles>(relativeTo: rootNode ?? sims, recurse: true))
             {
                 foreach (string file in fileReference.GetReferencedFileNames())
                 {
@@ -362,7 +362,7 @@ namespace Models.Optimisation
         private string GetSimulationNames()
         {
             List<string> simulationNames = new List<string>();
-            foreach (ISimulationDescriptionGenerator generator in this.FindAllDescendants<ISimulationDescriptionGenerator>())
+            foreach (ISimulationDescriptionGenerator generator in Structure.FindChildren<ISimulationDescriptionGenerator>(recurse: true))
                 if (!(generator is Simulation sim && sim.Parent is ISimulationDescriptionGenerator))
                     simulationNames.AddRange(generator.GenerateSimulationDescriptions().Select(s => $"'{s.Name}'"));
 
@@ -463,9 +463,9 @@ namespace Models.Optimisation
             // Copy output files into appropriate output directory, if one is specified. Otherwise, delete them.
             Status = "Reading Output";
             DataTable output = null;
-            string apsimxFileDir = FindAncestor<Simulations>()?.FileName;
+            string apsimxFileDir = Structure.FindParent<Simulations>(recurse: true)?.FileName;
             if (string.IsNullOrEmpty(apsimxFileDir))
-                apsimxFileDir = FindAncestor<Simulation>()?.FileName;
+                apsimxFileDir = Structure.FindParent<Simulation>(recurse: true)?.FileName;
             if (!string.IsNullOrEmpty(apsimxFileDir))
                 apsimxFileDir = Path.GetDirectoryName(apsimxFileDir);
 
@@ -523,7 +523,7 @@ namespace Models.Optimisation
         /// <param name="checkpointName">Name of the checkpoint.</param>
         /// <param name="optimalValues">Changes to be applied to the models.</param>
         /// <param name="fileName">Name of the apsimx file run by the optimiser.</param>
-        private void RunSimsWithOptimalValues(string fileName, string checkpointName, IEnumerable<Override> optimalValues)
+        private void RunSimsWithOptimalValues(string fileName, string checkpointName, IEnumerable<IModelCommand> optimalValues)
         {
             IDataStore storage = Structure.Find<IDataStore>();
 
@@ -532,9 +532,9 @@ namespace Models.Optimisation
             Simulations clonedSims = FileFormat.ReadFromFile<Simulations>(fileName).Model as Simulations;
 
             // Apply the optimal values to the cloned simulations.
-            Overrides.Apply(clonedSims, optimalValues);
+            CommandProcessor.Run(optimalValues, relativeTo: clonedSims, runner: null);
 
-            DataStore clonedStorage = clonedSims.FindChild<DataStore>();
+            DataStore clonedStorage = Structure.FindChild<DataStore>(relativeTo: clonedSims);
             clonedStorage.Close();
             clonedStorage.CustomFileName = storage.FileName;
             clonedStorage.Open();
@@ -554,11 +554,11 @@ namespace Models.Optimisation
         /// parameter values returned by the optimiser.
         /// </summary>
         /// <param name="data">Datatable.</param>
-        private IEnumerable<Override> GetOptimalValues(DataTable data)
+        private IEnumerable<IModelCommand> GetOptimalValues(DataTable data)
         {
             DataRow optimal = data.AsEnumerable().FirstOrDefault(r => r["Is Optimal"]?.ToString() == "TRUE");
             foreach (Parameter param in Parameters)
-                yield return new Override(param.Path, optimal[$"{param.Name} Final"], Override.MatchTypeEnum.NameAndType);
+                yield return new SetPropertyCommand(param.Path, "=", optimal[$"{param.Name} Final"].ToString(), fileName: null);
         }
 
         /// <summary>

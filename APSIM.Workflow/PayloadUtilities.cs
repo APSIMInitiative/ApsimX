@@ -49,9 +49,12 @@ public static class PayloadUtilities
     public static string[] EXCLUDED_SIMS_FILEPATHS = {
                 "/Prototypes/CroptimizR/template.apsimx",
                 "/Examples/Optimisation/CroptimizRExample.apsimx",
-                "/Tests/Validation/Wheat/Wheat.apsimx",
-                "/Tests/Validation/System/FACTS_CornSoy/FACTS_Ames.apsimx",
-                "/Tests/Validation/Pinus/Pinus.apsimx"
+                "/Examples/CsvWeather.apsimx", //has no output
+                "/Tests/Simulation/SoilNitrogenPatch/PaddockSims/Edited_v2_BivariateNormal.apsimx", //has no output
+                "/Tests/Simulation/SoilNitrogenPatch/PaddockSims/Edited_v5_BivariateNormal.apsimx", //has no output
+                "/Tests/Validation/Wheat/Wheat.apsimx", //TODO: Leave wheat out for now as it gets split into smaller files automatically.
+                "/Tests/Validation/Wheat/FAR/FAR.apsimx", //TODO: Leave FAR out for now as it gets split into smaller files automatically.
+                "/Tests/Validation/Wheat/Phenology/Phenology.apsimx" //TODO: Leave Phenology out for now as it gets split into smaller files automatically.
             };
 
     // // Development submit azure URL
@@ -75,7 +78,7 @@ public static class PayloadUtilities
                 if (FileFormat.ReadFromString<Simulations>(apsimxFileText, e => throw e, false).Model is not Simulations simulations)
                     throw new Exception("Error: Failed to read simulations from APSIMX file.");
 
-                List<Weather> weatherModels = simulations.FindAllDescendants<Weather>().ToList();
+                List<Weather> weatherModels = simulations.Node.FindChildren<Weather>(recurse: true).ToList();
 
                 if (weatherModels.Count != 0)
                 {
@@ -317,9 +320,9 @@ public static class PayloadUtilities
 
         if (File.Exists(gridCsvPath) == false)
         {
-            string docker_user = "apsiminitiative"; 
+            string docker_user = "apsiminitiative";
             string r_sims_apsim_image = docker_user + "/apsimplusr:";
-            string[] validationDirs = ValidationLocationUtility.GetDirectoryPaths();
+            string[] validationPaths = ValidationLocationUtility.GetValidationFilePaths();
             // string[] validationDirs = ["/Prototypes/CroptimizR"]; // Example Temporary test directory list
 
             using StreamWriter writer = new(gridCsvPath);
@@ -327,9 +330,9 @@ public static class PayloadUtilities
             writer.WriteLine("Path,DockerImage");
 
             if (isVerbose)
-                Console.WriteLine($"Creating {validationDirs.Length} validation tasks in grid.csv");
+                Console.WriteLine($"Creating {validationPaths.Length - EXCLUDED_SIMS_FILEPATHS.Length} validation tasks in grid.csv");
 
-            foreach (string dir in validationDirs)
+            foreach (string dir in validationPaths)
             {
                 if (!EXCLUDED_SIMS_FILEPATHS.Contains(dir))
                     writer.WriteLine($"/wd{dir},{r_sims_apsim_image}");
@@ -393,7 +396,7 @@ public static class PayloadUtilities
     }
 
     /// <summary>
-    /// Submits the WorkFlo job to the Azure API.   
+    /// Submits the WorkFlo job to the Azure API.
     /// /// </summary>
     /// /// <param name="directoryPath">The directory path where the payload file is located.</param>
     public static async Task SubmitWorkFloJob(string directoryPath)
@@ -464,5 +467,5 @@ public static class PayloadUtilities
 
         }
     }
- 
+
 }

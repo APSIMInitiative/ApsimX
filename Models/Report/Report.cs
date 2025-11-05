@@ -182,7 +182,7 @@ namespace Models
         private string[] TidyUpVariableNames()
         {
             List<string> variableNames = new List<string>();
-            IModel zone = FindAncestor<Zone>();
+            IModel zone = Structure.FindParent<Zone>(recurse: true);
             if (zone == null)
                 zone = simulation;
             variableNames.Add($"[{zone.Name}].Name as Zone");

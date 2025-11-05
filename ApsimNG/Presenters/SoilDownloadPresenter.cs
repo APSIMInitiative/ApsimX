@@ -274,7 +274,7 @@ namespace UserInterface.Presenters
         {
             double[] pawcmappingLayerStructure = { 300, 300, 900 };
 
-            var soilPhysical = soilInfo.Soil.FindChild<Physical>();
+            var soilPhysical = soilInfo.Soil.Node.FindChild<Physical>();
             var row = soilData.NewRow();
             row["Name"] = soilInfo.Soil.Name;
             row["Data source"] = soilInfo.DataSource;
@@ -357,7 +357,7 @@ namespace UserInterface.Presenters
                 if(!double.TryParse(radiusEditBox.Text, out double radius))
                     throw new Exception("Radius field has invalid input \"" + radiusEditBox.Text +"\"");
 
-                string url = $"https://apsoil.apsim.info/search?latitude={latitude}&longitude={longitude}&Radius={radius}&output=ExtendedInfo&output=FullSoil&SoilType=";
+                string url = $"https://apsoil.apsim.info/search?latitude={latitude}&longitude={longitude}&Radius={radius}&output=FullSoil";
                 using (var stream = await WebUtilities.ExtractDataFromURL(url, cancellationTokenSource.Token))
                 {
                     stream.Position = 0;

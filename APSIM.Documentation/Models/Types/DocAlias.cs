@@ -22,7 +22,7 @@ namespace APSIM.Documentation.Models.Types
         public override List<ITag> Document(int none = 0)
         {
             Section section = GetSummaryAndRemarksSection(model);
-            section.Add(new Paragraph($"An alias for {(model as Alias).FindAncestor<Cultivar>()?.Name}"));
+            section.Add(new Paragraph($"An alias for {(model as Alias).Node.FindParent<Cultivar>(recurse: true)?.Name}"));
             return new List<ITag>() {section};
         }
     }
