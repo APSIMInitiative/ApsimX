@@ -27,6 +27,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Make all directories safe (we are in a container. so it is ok :))
+        run: git config --global --add safe.directory "*"
+
+      - name: Make sure we have ownership of all everything
+        run: chown -R root:root /
+
       - name: Set up .NET
         uses: actions/setup-dotnet@v4
         with:
