@@ -36,6 +36,7 @@ namespace APSIM.Workflow
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
             string inputPath = Path.GetDirectoryName(apsimFilepath) + "/";
+            string rootPath = PathUtilities.GetRelativePath(inputPath, null);
 
             if (inputPath == null)
                 throw new ArgumentNullException(nameof(inputPath), "Current directory path cannot be null.");
@@ -211,8 +212,12 @@ namespace APSIM.Workflow
                     {
                         List<Weather> weathers = copiedSims.Node.FindAll<Weather>().ToList();
                         foreach (Weather weather in weathers)
+                        {
                             if (!weather.FileName.Contains("%root%"))
-                                weather.FileName = inputPath + weather.FileName;
+                            {
+                                weather.FileName = rootPath + weather.FileName;
+                            }
+                        }
                     }
 
                     if (copyObservedData)
