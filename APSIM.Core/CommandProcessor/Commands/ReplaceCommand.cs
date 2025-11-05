@@ -94,6 +94,7 @@ public partial class ReplaceCommand : IModelCommand
                 newModel.Rename(modelToReplace.Name);
             else
                 newModel.Rename(newName);
+            newModel.Enabled = modelToReplace.Enabled;
             modelToReplace.Node.Parent.ReplaceChild(modelToReplace, newModel);
         }
 

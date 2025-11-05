@@ -638,6 +638,29 @@ public class CommandTests
         Assert.That(soil.ApsoilNumber, Is.EqualTo("2"));
     }
 
+    /// <summary>Ensure the replace command maintains the enabled flag of the model being replaced.</summary>
+    [Test]
+    public void EnsureEnabledFlagIsntCopiedOnReplace()
+    {
+        Simulations simulation = new()
+        {
+            Children =
+            [
+                new Zone() { Children = [new Soil() { Name = "SandyClayLoam", Enabled = false }] },
+            ]
+        };
+        Node.Create(simulation);
+
+        var newModel = new Soil() { Name = "NewSoil", Enabled = true };
+        IModelCommand cmd = new ReplaceCommand(new ModelReference(newModel),
+                                               replacementPath: "[Soil]", multiple: true, matchOnNameAndType: false);
+        cmd.Run(simulation, runner: null);
+
+        var soil = simulation.Node.FindChild<Soil>(recurse: true);
+        Assert.That(soil.Name, Is.EqualTo("SandyClayLoam"));
+        Assert.That(soil.Enabled, Is.EqualTo(false));
+    }
+
     /// <summary>Ensure the replace command works when multiple matching on name and type.</summary>
     [Test]
     public void EnsureMultipleReplaceOnNameAndTypeWorks()
