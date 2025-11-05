@@ -31,7 +31,7 @@ jobs:
         run: git config --global --add safe.directory "*"
 
       - name: Make sure we have ownership of all everything
-        run: chown -R root:root /
+        run: chown -R root:root /__w/ApsimX/ApsimX
 
       - name: Set up .NET
         uses: actions/setup-dotnet@v4
