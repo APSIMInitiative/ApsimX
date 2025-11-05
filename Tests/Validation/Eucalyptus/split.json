@@ -4,20 +4,20 @@
 	"CopyObservedData":false,
 	"Groups": [
 		{
-			"Name":"Eucalyptus-TropicalAndSubtropical",
-			"Folders":["Australia Egrandis","Brazil Egrandis and others"],
+			"Name":"Eucalyptus-TropicalSubTropical",
+			"Folders":["Tropical and SubTropical"],
 			"Experiments":[],
 			"Simulations":[]
 		},
 		{
 			"Name":"Eucalyptus-Temperate",
-			"Folders":["DroughtRiskSites","Forico", "FSAGrowthPlots","Furadouro","Lewisham","Shepparton","Westfield"],
+			"Folders":["Temperate"],
 			"Experiments":[],
 			"Simulations":[]
 		},
 		{
 			"Name":"Eucalyptus-Sensibility",
-			"Folders":["MAI in SE Australia","Response to Rainfall", "Response to Soil Fertility", "Reponse to N Fertilizer", "GXE Brazil", "ScottRiverNResponse"],
+			"Folders":["Sensibility"],
 			"Experiments":[],
 			"Simulations":[]
 		}
