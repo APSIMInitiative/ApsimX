@@ -165,65 +165,98 @@ namespace UnitTests
 
         }
 
+        /// <summary>
+        /// This test involves deriving values that haven't been provided, including doing 2nd order deriving where one derived values allows the calculation of a 2nd value.
+        /// Every combination of derived value is checked here to make sure they produce the correct values.
+        /// This test should be expanded as more derived values are created.
+        /// </summary>
         [Test]
         public void ObservationsDerivedStats()
         {
+            string[] derivedColumns = ["Plant.Leaf.Live.NConc", "Plant.Leaf.Live.N", "Plant.Leaf.Wt", "Plant.Leaf.Dead.Wt", "Plant.Leaf.Live.Wt", "Plant.Leaf.SpecificAreaCanopy", "Plant.Leaf.LAI"];
+
             DataTable dataTable = new DataTable();
             dataTable.Columns.Add("SimulationName");
-            dataTable.Columns.Add("Plant.Leaf.NConc");
-            dataTable.Columns.Add("Plant.Leaf.NC");
-            dataTable.Columns.Add("Plant.Leaf.Wt");
+            foreach(string name in derivedColumns)
+                dataTable.Columns.Add(name);
 
-            dataTable.Columns.Add("Plant.Leaf.Dead.Wt");
-            dataTable.Columns.Add("Plant.Leaf.Live.Wt");
+            DataRow row1 = dataTable.NewRow();
+            row1["SimulationName"] = "Simulation";
+            row1["Plant.Leaf.Live.NConc"] = 0.032391931056;
+            row1["Plant.Leaf.Live.N"] = 5.62;
+            row1["Plant.Leaf.Live.Wt"] = 173.4999988202;
+            dataTable.Rows.Add(row1);
 
-            dataTable.Columns.Add("Plant.Leaf.SpecificAreaCanopy");
-            dataTable.Columns.Add("Plant.Leaf.LAI");
+            DataRow row2 = dataTable.NewRow();
+            row2["SimulationName"] = "Simulation";
+            row2["Plant.Leaf.Wt"] = 187.3;
+            row2["Plant.Leaf.Dead.Wt"] = 13.800001179800006;
+            row2["Plant.Leaf.Live.Wt"] = 173.4999988202;
+            dataTable.Rows.Add(row2);
 
-            DataRow row;
+            DataRow row3 = dataTable.NewRow();
+            row3["SimulationName"] = "Simulation";
+            row3["Plant.Leaf.Live.Wt"] = 173.4999988202;
+            row3["Plant.Leaf.SpecificAreaCanopy"] = 0.028818444;
+            row3["Plant.Leaf.LAI"] = 5;
+            dataTable.Rows.Add(row3);
 
-            row = dataTable.NewRow();
-            row["SimulationName"] = "Test1";
-            row["Plant.Leaf.NConc"] = 5;
-            row["Plant.Leaf.NC"] = "Test1";
-            row["Plant.Leaf.Wt"] = "Test1";
-            row["Plant.Leaf.Dead.Wt"] = "Test1";
-            row["Plant.Leaf.Live.Wt"] = "Test1";
-            row["Plant.Leaf.SpecificAreaCanopy"] = "Test1";
-            row["Plant.Leaf.LAI"] = "Test1";
-            dataTable.Rows.Add(row);
+            DataRow rowAll = dataTable.NewRow();
+            row3["SimulationName"] = "Simulation";
+            row1["Plant.Leaf.Live.NConc"] = 0.032391931056;
+            row1["Plant.Leaf.Live.N"] = 5.62;
+            row3["Plant.Leaf.Live.Wt"] = 173.4999988202;
+            row2["Plant.Leaf.Wt"] = 187.3;
+            row2["Plant.Leaf.Dead.Wt"] = 13.800001179800006;
+            row3["Plant.Leaf.SpecificAreaCanopy"] = 0.028818444;
+            row3["Plant.Leaf.LAI"] = 5;
+            dataTable.Rows.Add(rowAll);
 
-            List<DerivedInfo> infos = DerivedInfo.AddDerivedColumns(dataTable);
+            (string, string)[] derivedName = [
+                ("Plant.Leaf.Live.NConc", "Plant.Leaf.N / Plant.Leaf.Wt"),
+                ("Plant.Leaf.Live.N", "Plant.Leaf.Live.NConc * Plant.Leaf.Wt"),
+                ("Plant.Leaf.Live.Wt", "Plant.Leaf.Live.N / Plant.Leaf.Live.NConc"),
 
-/*
-            infos.AddRange(DeriveColumn(dataTable, ".NConc", ".N", "/", ".Wt"));
-            infos.AddRange(DeriveColumn(dataTable, ".N", ".NConc", "*", ".Wt"));
-            infos.AddRange(DeriveColumn(dataTable, ".Wt", ".N", "/", ".NConc"));
+                ("Plant.Leaf.Wt", "Plant.Leaf.Live.Wt + Plant.Leaf.Dead.Wt"),
+                ("Plant.Leaf.Live.Wt", "Plant.Leaf.Wt - Plant.Leaf.Dead.Wt"),
+                ("Plant.Leaf.Dead.Wt", "Plant.Leaf.Wt - Plant.Leaf.Live.Wt"),
 
-            infos.AddRange(DeriveColumn(dataTable, ".", ".Live.", "+", ".Dead."));
-            infos.AddRange(DeriveColumn(dataTable, ".Live.", ".", "-", ".Dead."));
-            infos.AddRange(DeriveColumn(dataTable, ".Dead.", ".", "-", ".Live."));
+                ("Plant.Leaf.SpecificAreaCanopy", "Plant.Leaf.LAI / Leaf.Live.Wt"),
+                ("Plant.Leaf.LAI", "Plant.Leaf.SpecificAreaCanopy * Plant.Leaf.Live.Wt"),
+                ("Plant.Leaf.Live.Wt", "Plant.Leaf.LAI / Plant.Leaf.SpecificAreaCanopy")
+            ];
 
-            infos.AddRange(DeriveColumn(dataTable, "Leaf.SpecificAreaCanopy", "Leaf.LAI", "/", "Leaf.Live.Wt"));
-            infos.AddRange(DeriveColumn(dataTable, "Leaf.LAI", "Leaf.SpecificAreaCanopy", "*", "Leaf.Live.Wt"));
-            infos.AddRange(DeriveColumn(dataTable, "Leaf.Live.Wt", "Leaf.LAI", "/", "Leaf.SpecificAreaCanopy"));
-*/
-            string[] derivedName = ["Plant.Leaf.NConc", "Plant.Leaf.NC", "Plant.Leaf.Wt", "Plant.Leaf.Dead.Wt", "Plant.Leaf.Live.Wt", "Plant.Leaf.SpecificAreaCanopy", "Plant.Leaf.LAI"];
-            string[] derivedFunction = ["Wheat.Grain.N / Wheat.Grain.Wt"];
-            string[] derivedVariable = ["double"];
-            int[] derivedAdded = [3];
-            int[] derivedExisting = [0];
-
-            for (int i = 0; i < infos.Count; i++)
+            foreach(string name in derivedColumns)
             {
-                DerivedInfo info = observations.DerivedData[i];
-                Assert.That(info.Name, Is.EqualTo(derivedName[i]));
-                Assert.That(info.Function, Is.EqualTo(derivedFunction[i]));
-                Assert.That(info.DataType, Is.EqualTo(derivedVariable[i]));
-                Assert.That(info.Added, Is.EqualTo(derivedAdded[i]));
-                Assert.That(info.Existing, Is.EqualTo(derivedExisting[i]));
-            }
+                DataTable tempDataTable = dataTable.Copy();
+                List<double> values = new List<double>();
+                foreach (DataRow row in tempDataTable.Rows)
+                {
+                    string stringValue = row[name].ToString();
+                    //store value
+                    double valuebefore = double.NaN;
+                    if (!string.IsNullOrEmpty(stringValue))
+                        valuebefore = double.Parse(stringValue);
+                    values.Add(valuebefore);
+                    //null result
+                    row[name] = null;
+                }
 
+                DerivedInfo.AddDerivedColumns(tempDataTable);
+                
+                for(int i = 0; i < tempDataTable.Rows.Count; i++)
+                {
+                    DataRow row = tempDataTable.Rows[i];
+                    double valuebefore = values[i];
+                    double valueAfter = double.NaN;
+                    string stringValue = row[name].ToString();
+                    if (!string.IsNullOrEmpty(stringValue))
+                        valueAfter = double.Parse(stringValue);
+
+                    Assert.That(valueAfter, Is.EqualTo(valuebefore).Within(0.0001));
+                }
+            }
         }
+        
     }
 }
