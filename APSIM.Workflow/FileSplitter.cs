@@ -21,6 +21,7 @@ using Microsoft.Extensions.Logging;
 using APSIM.Core;
 using APSIM.Shared.Documentation.Extensions;
 using Models.PreSimulationTools;
+using System.Reflection;
 
 namespace APSIM.Workflow
 {
@@ -36,6 +37,22 @@ namespace APSIM.Workflow
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
             string inputPath = Path.GetDirectoryName(apsimFilepath) + "/";
+            string fullPath = Path.GetFullPath(inputPath);
+
+            //add %root% to fullpath to get root path for later
+            string? bin = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            if (bin == null)
+                throw new Exception("Could not find bin folder");
+
+            DirectoryInfo? directory = new DirectoryInfo(bin).Parent ?? throw new Exception("Could not find parent directory of bin folder");
+            string directoryName = directory.Name;
+
+            while (directoryName == "Debug" || directoryName == "Release" || directoryName == "bin")
+            {
+                directory = directory.Parent ?? throw new Exception("Could not find parent directory of bin folder");
+                directoryName = directory.Name;
+            }
+            string rootPath = fullPath.Replace(directory.FullName, "%root%");
 
             if (inputPath == null)
                 throw new ArgumentNullException(nameof(inputPath), "Current directory path cannot be null.");
@@ -211,8 +228,12 @@ namespace APSIM.Workflow
                     {
                         List<Weather> weathers = copiedSims.Node.FindAll<Weather>().ToList();
                         foreach (Weather weather in weathers)
+                        {
                             if (!weather.FileName.Contains("%root%"))
-                                weather.FileName = inputPath + weather.FileName;
+                            {
+                                weather.FileName = rootPath + weather.FileName;
+                            }
+                        }
                     }
 
                     if (copyObservedData)
@@ -234,7 +255,7 @@ namespace APSIM.Workflow
                             foreach (string file in input.FileNames)
                             {
                                 if (!file.Contains("%root%"))
-                                    files.Add(inputPath + file);
+                                    files.Add(rootPath + file);
                                 else
                                     files.Add(file);
                             }
@@ -251,7 +272,7 @@ namespace APSIM.Workflow
                             foreach (string file in input.FileNames)
                             {
                                 if (!file.Contains("%root%"))
-                                    files.Add(inputPath + file);
+                                    files.Add(rootPath + file);
                                 else
                                     files.Add(file);
                             }
