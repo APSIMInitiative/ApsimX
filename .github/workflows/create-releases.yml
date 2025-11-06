@@ -57,7 +57,7 @@ jobs:
 
       - name: Create APSIM Signing Certificate
         run: |
-          echo -n "$APSIM_CERT_BASE64" | base64 -d > apsim_signing_cert.p12
+          echo -n "$APSIM_CERT_BASE64" | base64 -d > ./apsim_signing_cert.p12
 
       - name: Create Release
         env:
