@@ -15,6 +15,7 @@ version=$1
 # Get apsimx path (path of repository root)
 cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null
 apsimx="$(cd ../../.. >/dev/null && pwd )"
+echo "apsimx path: $apsimx"
 
 # Version stamp the Models and ApsimNG assemblies.
 sed -i -e "s/0\.0\.0\.0/$version/g" "$apsimx/Models/Properties/AssemblyVersion.cs"
