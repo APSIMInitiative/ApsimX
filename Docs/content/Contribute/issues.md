@@ -1,6 +1,6 @@
 ---
-layout: page
 title: Issue guidelines
+draft: false
 weight: 10
 ---
 

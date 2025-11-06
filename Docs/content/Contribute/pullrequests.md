@@ -1,6 +1,6 @@
 ---
-layout: page
 title: Pull request guidelines
+draft: false
 weight: 20
 ---
 
