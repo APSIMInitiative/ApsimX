@@ -1,15 +1,9 @@
 using APSIM.Numerics;
 using APSIM.Shared.Documentation.Extensions;
-using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
-using BruTile.Wmts.Generated;
-using DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
-using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Spreadsheet;
 using Newtonsoft.Json.Linq;
 using System.Globalization;
 using System.Reflection;
-using System.Runtime.Intrinsics.X86;
 using System.Text.RegularExpressions;
 using System.Xml;
 
