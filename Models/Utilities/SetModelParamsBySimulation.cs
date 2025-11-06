@@ -181,7 +181,10 @@ namespace Models.Utilities
             Dictionary<string, string> ret = new Dictionary<string, string>();
             for (int i = 0; i < tab.Rows.Count; i++)
             {
-                ret.Add(tab.Rows[i]["SimulationName"].ToString(), tab.Rows[i][varName].ToString());
+                string value = tab.Rows[i][varName].ToString();
+                if (tab.Columns[varName].DataType == typeof(DateTime))
+                    value = DateUtilities.GetDateAsString(Convert.ToDateTime(tab.Rows[i][varName]));
+                ret.Add(tab.Rows[i]["SimulationName"].ToString(), value);
             }
             return ret;
         }
