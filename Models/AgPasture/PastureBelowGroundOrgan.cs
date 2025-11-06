@@ -10,14 +10,20 @@ using APSIM.Shared.Utilities;
 using Models.PMF.Interfaces;
 using System.Collections.Generic;
 using APSIM.Numerics;
+using APSIM.Core;
 
 namespace Models.AgPasture
 {
 
     /// <summary>Describes a generic below ground organ of a pasture species.</summary>
     [Serializable]
-    public class PastureBelowGroundOrgan : Model
+    public class PastureBelowGroundOrgan : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
+
         /// <summary>Nutrient model.</summary>
         [Link(Type = LinkType.Ancestor)]
         private PastureSpecies species = null;
@@ -234,43 +240,43 @@ namespace Models.AgPasture
         public void Initialise(Zone zone, double minimumLiveWt)
         {
             // link to soil models parameters
-            soil = zone.FindInScope<Soil>();
+            soil = Structure.Find<Soil>(relativeTo: zone);
             if (soil == null)
             {
                 throw new Exception($"Cannot find soil in zone {zone.Name}");
             }
 
-            soilPhysical = soil.FindInScope<IPhysical>();
+            soilPhysical = Structure.Find<IPhysical>(relativeTo: soil);
             if (soilPhysical == null)
             {
                 throw new Exception($"Cannot find soil physical in soil {soil.Name}");
             }
 
-            waterBalance = soil.FindInScope<ISoilWater>();
+            waterBalance = Structure.Find<ISoilWater>(relativeTo: soil);
             if (waterBalance == null)
             {
                 throw new Exception($"Cannot find a water balance model in soil {soil.Name}");
             }
 
-            soilCropData = soil.FindDescendant<SoilCrop>(species.Name + "Soil");
+            soilCropData = Structure.FindChild<SoilCrop>(species.Name + "Soil", relativeTo: soil, recurse: true);
             if (soilCropData == null)
             {
                 throw new Exception($"Cannot find a soil crop parameterisation called {species.Name + "Soil"}");
             }
 
-            nutrient = zone.FindInScope<INutrient>();
+            nutrient = Structure.Find<INutrient>(relativeTo: zone);
             if (nutrient == null)
             {
                 throw new Exception($"Cannot find SoilNitrogen in zone {zone.Name}");
             }
 
-            no3 = zone.FindInScope("NO3") as ISolute;
+            no3 = Structure.Find<ISolute>("NO3", relativeTo: zone);
             if (no3 == null)
             {
                 throw new Exception($"Cannot find NO3 solute in zone {zone.Name}");
             }
 
-            nh4 = zone.FindInScope("NH4") as ISolute;
+            nh4 = Structure.Find<ISolute>("NH4", relativeTo: zone);
             if (nh4 == null)
             {
                 throw new Exception($"Cannot find NH4 solute in zone {zone.Name}");
@@ -287,7 +293,7 @@ namespace Models.AgPasture
             MaximumAllowedRootingDepth = Math.Min(MaximumPotentialRootingDepth, soilPhysical.ThicknessCumulative[soilPhysical.Thickness.Length - 1]);
             for (int z = 0; z < soilPhysical.Thickness.Length; z++)
             {
-                if (soilCropData.XF[z] < 0.000001)
+                if (MathUtilities.FloatsAreEqual(soilCropData.XF[z], 0) || MathUtilities.FloatsAreEqual(soilCropData.KL[z], 0))
                 { // root depth limited by some soil issue
                     if (z > 0)
                     {
@@ -437,7 +443,8 @@ namespace Models.AgPasture
         ///   limited (e.g. a KNO3 = 0.02 means no limitations if the NO3 concentration is above 50 ppm).
         /// </remarks>
         /// <param name="myZone">The soil information from the zone that contains the roots.</param>
-        internal void EvaluateSoilNitrogenAvailability(ZoneWaterAndN myZone)
+        /// <param name="soilWaterUptake">Soil water uptake</param>
+        internal void EvaluateSoilNitrogenAvailability(ZoneWaterAndN myZone, double[] soilWaterUptake)
         {
             var thickness = soilPhysical.Thickness;
             var bd = soilPhysical.BD;
@@ -449,22 +456,28 @@ namespace Models.AgPasture
             double depthAtTopOfLayer = 0;
             for (int layer = 0; layer <= BottomLayer; layer++)
             {
-                // get the fraction of this layer that is within the root zone
-                double layerFraction = MathUtilities.Bound((Depth - depthAtTopOfLayer) / thickness[layer], 0.0, 1.0);
+                mySoilNO3Available[layer] = 0;
+                mySoilNH4Available[layer] = 0;
+                if (soilWaterUptake[layer] > 0)
+                {
+                    // get the fraction of this layer that is within the root zone
+                    double layerFraction = MathUtilities.Bound((Depth - depthAtTopOfLayer) / thickness[layer], 0.0, 1.0);
 
                 // get the soil moisture factor (less N available in drier soil)
-                double rwc = MathUtilities.Bound((swMM[layer] - llMM[layer]) / (dulMM[layer] - llMM[layer]), 0.0, 1.0);
+                double rwc = MathUtilities.Bound(MathUtilities.Divide(swMM[layer] - llMM[layer], dulMM[layer] - llMM[layer], 0),
+                                                 0.0, 1.0);
                 double moistureFactor = 1.0 - Math.Pow(1.0 - rwc, ExponentSoilMoisture);
 
-                // get NH4 available
-                double nh4ppm = nh4[layer] * 100.0 / (thickness[layer] * bd[layer]);
-                double concentrationFactor = Math.Min(1.0, nh4ppm * KNH4);
-                mySoilNH4Available[layer] = nh4[layer] * layerFraction * Math.Min(0.999999, moistureFactor * concentrationFactor);
+                    // get NH4 available
+                    double nh4ppm = nh4[layer] * 100.0 / (thickness[layer] * bd[layer]);
+                    double concentrationFactor = Math.Min(1.0, nh4ppm * KNH4);
+                    mySoilNH4Available[layer] = nh4[layer] * layerFraction * Math.Min(0.999999, moistureFactor * concentrationFactor);
 
-                // get NO3 available
-                double no3ppm = no3[layer] * 100.0 / (thickness[layer] * bd[layer]);
-                concentrationFactor = Math.Min(1.0, no3ppm * KNO3);
-                mySoilNO3Available[layer] = no3[layer] * layerFraction * Math.Min(0.999999, moistureFactor * concentrationFactor);
+                    // get NO3 available
+                    double no3ppm = no3[layer] * 100.0 / (thickness[layer] * bd[layer]);
+                    concentrationFactor = Math.Min(1.0, no3ppm * KNO3);
+                    mySoilNO3Available[layer] = no3[layer] * layerFraction * Math.Min(0.999999, moistureFactor * concentrationFactor);
+                }
 
                 depthAtTopOfLayer += thickness[layer];
             }
@@ -473,7 +486,7 @@ namespace Models.AgPasture
             double potentialAvailableN = mySoilNH4Available.Sum() + mySoilNO3Available.Sum();
             if (potentialAvailableN > MaximumNUptake)
             {
-                double upFraction = MaximumNUptake / potentialAvailableN;
+                double upFraction = MathUtilities.Divide(MaximumNUptake, potentialAvailableN, 0);
                 for (int layer = 0; layer <= BottomLayer; layer++)
                 {
                     mySoilNH4Available[layer] *= upFraction;

@@ -7,33 +7,12 @@
     using System.Collections.Generic;
     using System.Data;
     using System.IO;
-    using System.Reflection;
 
     [TestFixture]
     public class DataStoreWriterTests
     {
         private IDatabaseConnection database;
 
-        /// <summary>Find and return the file name of SQLite runtime .dll</summary>
-        public static string FindSqlite3DLL()
-        {
-            string directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string[] files = Directory.GetFiles(directory, "sqlite3.dll");
-            if (files.Length == 1)
-                return files[0];
-
-            throw new Exception("Cannot find sqlite3 dll directory");
-        }
-
-        [OneTimeSetUp]
-        public void OneTimeInit()
-        {
-            if (ProcessUtilities.CurrentOS.IsWindows)
-            {
-                string sqliteSourceFileName = FindSqlite3DLL();
-                Directory.SetCurrentDirectory(Path.GetDirectoryName(sqliteSourceFileName));
-            }
-        }
 
         /// <summary>Initialisation code for all unit tests in this class</summary>
         [SetUp]
@@ -41,6 +20,12 @@
         {
             database = new SQLite();
             database.OpenDatabase(":memory:", readOnly: false);
+        }
+
+        [TearDown]
+        public void Cleanup()
+        {
+            database?.CloseDatabase();
         }
 
         /// <summary>Write data for 2 simulations into one table. Ensure data was written correctly.</summary>
@@ -319,7 +304,6 @@
             try
             {
                 writer.AddCheckpoint("Saved2", new string[] { file });
-
                 writer.Stop();
 
                 Assert.That(
@@ -337,8 +321,6 @@
                                                             new object[] {              3,              2, new DateTime(2017, 01, 01),    21 },
                                                             new object[] {              3,              2, new DateTime(2017, 01, 02),    22 }})
                 .IsSame(Utilities.GetTableFromDatabase(database, "Report")), Is.True);
-
-
                 Assert.That(
                     Utilities.CreateTable(new string[]                      { "ID",    "Name" },
                                         new List<object[]> { new object[] {    1, "Current" },

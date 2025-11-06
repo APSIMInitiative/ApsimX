@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Factorial;
 
@@ -16,23 +17,23 @@ namespace Models.Core
     public static class Apsim
     {
         /// <summary>
-        /// Clears the cached scoping values for the simulation 
+        /// Clears the cached scoping values for the simulation
         /// We need to do this when models have been added or deleted,
         /// as the cache will then be incorrect
         /// </summary>
         /// <param name="model"></param>
         public static void ClearCaches(IModel model)
         {
-            Simulation simulation = model as Simulation ?? model.FindAncestor<Simulation>();
-            if (simulation != null && simulation.Scope != null)
+            Simulation simulation = model as Simulation ?? model.Node.FindParent<Simulation>(recurse: true);
+            if (simulation != null)
             {
-                simulation.ClearCaches();
+                model.Node.ClearLocator();
             }
             else
             {
-                // If the model didn't have a Simulation object as an ancestor, then it's likely to 
+                // If the model didn't have a Simulation object as an ancestor, then it's likely to
                 // have a Simulations object as one. If so, the Simulations links may need to be updated.
-                Simulations simulations = model.FindAncestor<Simulations>();
+                Simulations simulations = model.Node.FindParent<Simulations>(recurse: true);
                 if (simulations != null)
                 {
                     simulations.ClearLinks();
@@ -47,14 +48,14 @@ namespace Models.Core
         /// <returns>The clone of the model</returns>
         public static T Clone<T>(this T model) where T : IModel
         {
-            // If the simulation is currently running then we do not want to 
+            // If the simulation is currently running then we do not want to
             // clone all the model dependencies as this will mean we clone
-            // them as well. The strategy is to disconnect all the links and 
+            // them as well. The strategy is to disconnect all the links and
             // events, do the clone and then reconnect them all. This is
             // probably an expensive thing to do.
             Links links = null;
 
-            Simulation simulation = model as Simulation ?? model.FindAncestor<Simulation>();
+            Simulation simulation = model as Simulation ?? model.Node?.FindParent<Simulation>(recurse: true);
             if (simulation != null && simulation.IsRunning)
             {
                 links = new Links();
@@ -63,7 +64,7 @@ namespace Models.Core
             try
             {
                 T newModel = (T)ReflectionUtilities.Clone(model);
-                newModel.ParentAllDescendants();
+                Node.Create(newModel as INodeModel);
                 return newModel;
             }
             finally
@@ -98,17 +99,17 @@ namespace Models.Core
             // Is allowable if one of the valid parents of this type (t) matches the parent type.
             foreach (ValidParentAttribute validParent in ReflectionUtilities.GetAttributes(childType, typeof(ValidParentAttribute), true))
             {
+                //check if parent is one of the parents provided by Model
+                if (!modelTypes.Contains(validParent.ParentType))
+                    hasParentType = true;
+
                 if (validParent != null)
                 {
                     if (validParent.DropAnywhere)
                         return true;
 
-                    if (validParent.ParentType.IsAssignableFrom(parent.GetType()))
+                    if (validParent.ParentType != null && validParent.ParentType.IsAssignableFrom(parent.GetType()))
                         return true;
-
-                    //check if parent is one of the parents provided by Model
-                    if (!modelTypes.Contains(validParent.ParentType))
-                        hasParentType = true;
                 }
             }
 
@@ -144,8 +145,8 @@ namespace Models.Core
                     var resStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName);
                     using (StreamReader reader = new StreamReader(resStream))
                     {
-                        // Need to get the second '$type' line from the resource. The 
-                        // first is assumed to be 
+                        // Need to get the second '$type' line from the resource. The
+                        // first is assumed to be
                         //    "$type": "Models.Core.Simulations, Models"
                         // The second is assumed to be the model we're looking for.
                         int count = 0;

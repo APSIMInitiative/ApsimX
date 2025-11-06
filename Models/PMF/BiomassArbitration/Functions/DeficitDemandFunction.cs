@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Core;
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
@@ -6,7 +7,7 @@ using Models.Interfaces;
 namespace Models.PMF
 {
     /// <summary>
-    /// Calculates the Deficit of a given labile nutrient pool and returns it to use for a demand.
+    /// Calculates the Deficit (g) of a given labile nutrient pool and returns it to use for a demand.
     /// </summary>
     [Serializable]
     [Description("This function calculates demands for metabolic and storage pools based on the size of the potential deficits of these pools.  For nutrients is uses maximum, critical and minimum concentration thresholds and for carbon it uses structural, metabolic and storage partitioning proportions to ")]
@@ -14,8 +15,12 @@ namespace Models.PMF
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(NutrientDemandFunctions))]
     [ValidParent(ParentType = typeof(IFunction))]
-    public class DeficitDemandFunction : Model, IFunction
+    public class DeficitDemandFunction : Model, IFunction, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>Value to multiply demand for.  Use to switch demand on and off</summary>
         [Link(IsOptional = true, Type = LinkType.Child, ByName = true)]
         [Description("Multiplies calculated demand.  Use to switch demand on and off")]
@@ -24,7 +29,7 @@ namespace Models.PMF
 
         private Organ parentOrgan = null;
         private OrganNutrientDelta organNutrientDelta = null;
-       
+
         /// <summary>Name of the organ and nutrient represented by this instance</summary>
         public string OrganAndNutrient
         { get { return parentOrgan.Name+organNutrientDelta.Name; } }
@@ -37,7 +42,7 @@ namespace Models.PMF
         {
             if (model is Organ) return model as Organ;
 
-            if ((model is IPlant) || (model is IZone) || (model is Simulation)) 
+            if ((model is IPlant) || (model is IZone) || (model is Simulation))
                 throw new Exception(Name + "cannot find parent organ to get Structural and Storage DM status");
 
             return FindParentOrgan(model.Parent);
@@ -56,7 +61,7 @@ namespace Models.PMF
         {
             if ((name == "Structural")|| (name == "Metabolic")|| (name == "Storage"))
                 return name;
-            else 
+            else
                 throw new Exception("DeficitDemandFunction must be named \"Structural\", \"Metabolic\" or \"Storage\". Currently named " + name);
         }
 
@@ -69,7 +74,7 @@ namespace Models.PMF
             parentOrgan = FindParentOrgan(this.Parent);
             organNutrientDelta = FindParentNutrientDelta(this.Parent);
             string poolName = checkPoolName(this.Name);
-            
+
             //setup a function pointer (delegate) at simulation commencing so it isn't performing multiple if statements every day
             //cleaner method would probably be to use classes
             var nutrientName = organNutrientDelta.Name;//this.Parent.Parent.Name;
@@ -111,13 +116,13 @@ namespace Models.PMF
 
         private double calcStructuralNitrogenDemand()
         {
-            OrganNutrientDelta Carbon = parentOrgan.FindChild("Carbon") as OrganNutrientDelta;
+            OrganNutrientDelta Carbon = Structure.FindChild<OrganNutrientDelta>("Carbon", relativeTo: parentOrgan);
             return Carbon.DemandsAllocated.Total / parentOrgan.Cconc * organNutrientDelta.ConcentrationOrFraction.Structural;
         }
 
         private double calcDeficitForNitrogenPool(double currentAmount, double upperConc, double LowerConc)
         {
-            OrganNutrientDelta Carbon = parentOrgan.FindChild("Carbon") as OrganNutrientDelta;
+            OrganNutrientDelta Carbon = Structure.FindChild<OrganNutrientDelta>("Carbon", relativeTo: parentOrgan);
             double PotentialWt = (parentOrgan.Live.Carbon.Total + Carbon.DemandsAllocated.Total) / parentOrgan.Cconc;
             double targetAmount = (PotentialWt * upperConc) - (PotentialWt * LowerConc);
             return targetAmount - currentAmount;

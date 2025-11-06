@@ -6,13 +6,14 @@
     using Commands;
     using Models;
     using Models.Core;
+    using Models.Utilities;
     using Views;
 
     using Orientation = APSIM.Shared.Graphing.LegendOrientation;
     using Position = APSIM.Shared.Graphing.LegendPosition;
 
     /// <summary>
-    /// This presenter connects an instance of a Model.Graph.Axis with a 
+    /// This presenter connects an instance of a Model.Graph.Axis with a
     /// UserInterface.Views.AxisView
     /// </summary>
     public class LegendPresenter : IPresenter
@@ -20,10 +21,10 @@
 
         private static readonly string[] positions = Enum.GetValues(typeof(Position))
                                     .Cast<Enum>()
-                                    .Select(e => VariableProperty.GetEnumDescription(e)).ToArray();
+                                    .Select(e => AttributeUtilities.GetEnumDescription(e)).ToArray();
         private static readonly string[] orientations = Enum.GetValues(typeof(Orientation))
                                     .Cast<Enum>()
-                                    .Select(e => VariableProperty.GetEnumDescription(e))
+                                    .Select(e => AttributeUtilities.GetEnumDescription(e))
                                     .ToArray();
 
         /// <summary>

@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Core;
 using Models.Core;
 using Models.Functions;
 
@@ -13,8 +14,13 @@ namespace Models.PMF.Phen
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IFunction))]
-    public class PTQPhyllochron : Model, IFunction
+    public class PTQPhyllochron : Model, IFunction, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
+
         // LAR parameters
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction maxLAR = null;
@@ -57,7 +63,7 @@ namespace Models.PMF.Phen
         {
             if (ApplyLeafStageFactors)
             {
-                double HS = phenology.FindChild<IFunction>("HaunStage").Value();
+                double HS = Structure.FindChild<IFunction>("HaunStage", relativeTo: phenology).Value();
 
                 //Phase1 transition
                 if ((HS > 3.0) && (Phase1complete == false))
@@ -102,7 +108,7 @@ namespace Models.PMF.Phen
         [EventSubscribe("Sowing")]
         private void OnSowing(object sender, EventArgs e)
         {
-            lARPTQmodel = phenology.FindChild<LARPTQmodel>("LARPTQmodel");
+            lARPTQmodel = Structure.FindChild<LARPTQmodel>("LARPTQmodel", relativeTo: phenology);
             CropVernalised = false;
             Phase1complete = false;
             VernalisedInPhase1 = false;

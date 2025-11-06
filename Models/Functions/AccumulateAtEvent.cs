@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using Models.Core;
+using Models.Core.ApsimFile;
 using Models.PMF.Phen;
 
 namespace Models.Functions
@@ -13,8 +15,12 @@ namespace Models.Functions
     [Description("Adds the value of all children functions to the previous day's accumulation between start and end phases")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class AccumulateAtEvent : Model, IFunction
+    public class AccumulateAtEvent : Model, IFunction, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         ///Links
         /// -----------------------------------------------------------------------------------------------------------
 
@@ -94,7 +100,7 @@ namespace Models.Functions
         private void OnCalcEvent(object sender, EventArgs e)
         {
             if (childFunctions == null)
-                childFunctions = FindAllChildren<IFunction>().ToList();
+                childFunctions = Structure.FindChildren<IFunction>().ToList();
 
             if (phenology.Between(startStageIndex, endStageIndex))
             {

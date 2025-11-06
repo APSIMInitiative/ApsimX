@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Core;
 using Models.Core;
 using Models.PMF.Phen;
 
@@ -40,6 +41,15 @@ namespace Models.Functions
             _Value = PreEventValue.Value();
         }
 
+        /// <summary>Called when cutting.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Cutting")]
+        private void OnCutting(object sender, EventArgs e)
+        {
+            _Value = PreEventValue.Value();
+        }
+
         /// <summary>Called when [phase changed].</summary>
         /// <param name="phaseChange">The phase change.</param>
         /// <param name="sender">Sender plant.</param>
@@ -51,13 +61,6 @@ namespace Models.Functions
 
             if (phaseChange.StageName == ReSetEvent)
                 _Value = PreEventValue.Value();
-        }
-
-        /// <summary>Called when crop is being harvested.</summary>
-        [EventSubscribe("Cutting")]
-        private void OnHarvesting(object sender, EventArgs e)
-        {
-            _Value = PreEventValue.Value();
         }
 
         /// <summary>Gets the value.</summary>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using APSIM.Core;
 using Models.Core;
 using Models.Interfaces;
 using Models.Soils.NutrientPatching;
@@ -71,20 +72,22 @@ namespace Models.Soils.Arbitrator
         /// </summary>
         /// <param name="zone"></param>
         /// <param name="soil">The soil in the zone.</param>
-        public ZoneWaterAndN(Zone zone, Soil soil)
+        /// <param name="structure">Structure instance</param>
+        public ZoneWaterAndN(Zone zone, Soil soil, IStructure structure)
         {
             Zone = zone;
             soilInZone = soil;
-            Initialise();
+            Initialise(structure);
         }
 
         /// <summary>Initialises this instance.</summary>
-        public void Initialise()
+        /// <param name="structure">Structure instance</param>
+        public void Initialise(IStructure structure)
         {
-            WaterBalance = soilInZone.FindInScope<ISoilWater>();
-            NO3Solute = soilInZone.FindInScope<ISolute>("NO3");
-            NH4Solute = soilInZone.FindInScope<ISolute>("NH4");
-            patchManager = soilInZone.FindChild<NutrientPatchManager>();
+            WaterBalance = structure.Find<ISoilWater>(relativeTo: soilInZone);
+            NO3Solute = structure.Find<ISolute>("NO3", relativeTo: soilInZone);
+            NH4Solute = structure.Find<ISolute>("NH4", relativeTo: soilInZone);
+            patchManager = structure.FindChild<NutrientPatchManager>(relativeTo: soilInZone);
         }
 
         /// <summary>Initialises this instance.</summary>

@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using APSIM.Numerics;
 using Mapsui.Extensions;
 using Models.Core;
 using Models.Interfaces;
 using Models.Soils;
 using Models.WaterModel;
+using APSIM.Core;
 
 namespace Models.Sensor
 {
@@ -18,9 +19,13 @@ namespace Models.Sensor
     [ViewName("UserInterface.Views.PropertyView")]
     [ValidParent(ParentType = typeof(Zone))]
     [Serializable]
-    [ScopedModel]
-    public class Spectral : Model
+    public class Spectral : Model, IScopedModel, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
+
         /// <summary> link to the canopy model</summary>
         /// <summary>Models in the simulation that implement ICanopy.</summary>
         private List<ICanopy> canopyModels = null;
@@ -49,7 +54,7 @@ namespace Models.Sensor
         private void DoStartOfSimulation(object sender, EventArgs e)
         {
             Zone zone = this.Parent as Zone;
-            canopyModels = zone.FindAllDescendants<ICanopy>().ToList();
+            canopyModels = Structure.FindChildren<ICanopy>(relativeTo: zone, recurse: true).ToList();
 
             SurfaceDUlmm = soilPhysical.DUL[0] * SurfaceLayerDepth;
             SurfaceAirDrymm = soilPhysical.AirDry[0] * SurfaceLayerDepth;
@@ -63,7 +68,7 @@ namespace Models.Sensor
         private void DoDailyCalculations(object sender, EventArgs e)
         {
             double SoilNDVI = DrySoilNDVI + (WetSoilNDVI - DrySoilNDVI) * SurfaceRWC;
-            
+
             if (canopyModels.Count > 1)
                 throw new Exception("NDVI not currently programmed to work with more than one canopy");
             ICanopy canopy = canopyModels[0];
@@ -82,7 +87,7 @@ namespace Models.Sensor
 
         [Link]
         Water water = null;
-        
+
         [Link]
         ISoilWater waterBalance = null;
 
@@ -93,7 +98,7 @@ namespace Models.Sensor
         private double SurfaceAirDrymm { get; set; }
         private double SurfaceSWmm { get; set; }
         private double SurfaceRWC
-        { 
+        {
             get
             {
                 return (SurfaceSWmm-SurfaceAirDrymm) / (SurfaceDUlmm-SurfaceAirDrymm);
@@ -118,7 +123,7 @@ namespace Models.Sensor
             double evaporation = waterBalance.Eos;
             //First add irrigation and remove evaporation from soil surface.  Leaf transpiration out as assum few roots in the top few cm of soil
             SurfaceSWmm = MathUtilities.Bound(SurfaceSWmm + infiltration - evaporation, SurfaceAirDrymm, SurfaceDUlmm);
-            
+
             //Next calculate diffusion from the top soil layer specified in the soil water model to the surface layer used to influence NDVI calculatons
             double rconst = 3.0;
             double gradient = topRWC - SurfaceRWC;  //Gradient is the difference in relative water content of the surface 20 mm and the top layer

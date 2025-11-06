@@ -1,17 +1,19 @@
-﻿using System;
+﻿using APSIM.Core;
+using APSIM.Documentation.Models;
+using APSIM.Shared.Utilities;
+using Gdk;
+using Models.Core;
+using Models.Core.Apsim710File;
+using Models.Core.ApsimFile;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
-using APSIM.Shared.Utilities;
-using UserInterface.Interfaces;
-using Models.Core;
-using UserInterface.Views;
 using System.Linq;
+using System.Reflection;
 using UserInterface.EventArguments;
+using UserInterface.Interfaces;
+using UserInterface.Views;
 using Utility;
-using Models.Core.ApsimFile;
-using Models.Core.Apsim710File;
-using APSIM.Documentation.Models;
 
 namespace UserInterface.Presenters
 {
@@ -191,9 +193,8 @@ namespace UserInterface.Presenters
                 typeof(GLib.Log).Assembly.Location,
             };
 
-            var compiler = new ScriptCompiler();
-
-            var results = compiler.Compile(code, new MockModel());
+            var node = Node.Create(new MockModel());
+            var results = node.Compiler.Compile(code, node);
 
             if (results.ErrorMessages != null)
                 throw new Exception($"Script compile errors: {results.ErrorMessages}");
@@ -508,14 +509,14 @@ namespace UserInterface.Presenters
                 this.view.ShowWaitCursor(true);
                 try
                 {
-                    var converter = FileFormat.ReadFromFile<Simulations>(fileName, e => ShowError(e), true);
-                    Simulations simulations = converter.NewModel as Simulations;
+                    var response = FileFormat.ReadFromFileAndReturnConvertState<Simulations>(fileName, e => ShowError(e), true);
+                    Simulations simulations = response.head.Model as Simulations;
                     presenter = (ExplorerPresenter)this.CreateNewTab(fileName, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
 
                     // Clear simulation messages.
                     this.ShowMessage("", Simulation.MessageType.Information, true);
 
-                    if (converter.DidConvert)
+                    if (response.didConvert)
                         this.ShowMessage($"Simulation has been converted to the latest version: {simulations.Version}",Simulation.MessageType.Information,true);
 
                     // Add to MRU list and update display
@@ -613,11 +614,6 @@ namespace UserInterface.Presenters
                                 "Upgrade",
                                         new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.svg"),
                                         this.OnUpgrade);
-
-            startPage.AddButton(
-                                "View Cloud Jobs",
-                                        new Gtk.Image(null, "ApsimNG.Resources.Cloud.svg"),
-                                        this.OnViewCloudJobs);
 
 #if DEBUG
             startPage.AddButton(
@@ -881,6 +877,19 @@ namespace UserInterface.Presenters
             }
         }
 
+        public void OnNamedPipe_OpenRequest(string filesToOpen)
+        {
+            Gtk.Application.Invoke(delegate
+            {
+                if (!string.IsNullOrEmpty(filesToOpen))
+                {
+                    string[] fileNames = filesToOpen.Split(Environment.NewLine);
+                    ProcessCommandLineArguments(fileNames);
+                }
+            });
+        }
+
+
         /// <summary>
         /// Process the specified command line arguments. Will throw if there are errors during startup.
         /// </summary>
@@ -909,10 +918,12 @@ namespace UserInterface.Presenters
         /// <returns>The explorer presenter.</returns>
         private ExplorerPresenter PresenterForFile(string fileName, bool onLeftTabControl)
         {
+            string targetPath = Path.GetFullPath(fileName);
             List<ExplorerPresenter> presenters = onLeftTabControl ? this.Presenters1.OfType<ExplorerPresenter>().ToList() : this.presenters2.OfType<ExplorerPresenter>().ToList();
             foreach (ExplorerPresenter presenter in presenters)
             {
-                if (presenter.ApsimXFile.FileName == fileName)
+                string filePath = Path.GetFullPath(presenter.ApsimXFile.FileName);
+                if (filePath.Equals(targetPath, ProcessUtilities.CurrentOS.IsUnix ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase))
                 {
                     return presenter;
                 }
@@ -927,7 +938,7 @@ namespace UserInterface.Presenters
         /// <param name="onLeftTabControl">If true a tab will be added to the left hand tab control.</param>
         private void OpenApsimXFromMemoryInTab(string name, string contents, bool onLeftTabControl)
         {
-            var simulations = FileFormat.ReadFromString<Simulations>(contents, e => throw e, true).NewModel as Simulations;
+            var simulations = FileFormat.ReadFromString<Simulations>(contents, e => throw e, true).Model as Simulations;
             this.CreateNewTab(name, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
         }
 
@@ -1150,9 +1161,9 @@ namespace UserInterface.Presenters
         /// <param name="leftTab">Should the file be opened in the left tabset?</param>
         public void Import(string fileName)
         {
-            // When an old .apsim file is imported, exceptions can occur when converting the file but the 
+            // When an old .apsim file is imported, exceptions can occur when converting the file but the
             // file is still converted i.e. exception isn't fatal. Catch these exceptions and show to user
-            // in the 
+            // in the
 
             List<Exception> importExceptions = new();
             try
@@ -1167,26 +1178,6 @@ namespace UserInterface.Presenters
             string importExceptionsAsString = importExceptions.Join(Environment.NewLine);
             if (!string.IsNullOrEmpty(importExceptionsAsString))
                 ShowMessage(importExceptionsAsString, Simulation.MessageType.Warning);
-        }
-
-        /// <summary>
-        /// Open a tab which shows a list of jobs submitted to the cloud.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="e">Event Arguments.</param>
-        public void OnViewCloudJobs(object sender, EventArgs e)
-        {
-            try
-            {
-                bool onLeftTabControl = view.IsControlOnLeft(sender);
-                // Clear the message window
-                view.ShowMessage(" ", MessageType.Information);
-                CreateNewTab("View Cloud Jobs", null, onLeftTabControl, "ApsimNG.Resources.Glade.CloudJobView.glade", "UserInterface.Presenters.CloudJobPresenter");
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
         }
 
         /// <summary>
@@ -1265,7 +1256,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                int version = Models.Core.ApsimFile.Converter.LatestVersion;
+                int version = FileFormat.JSONVersion;
                 ClearStatusPanel();
                 string apsimx = PathUtilities.GetAbsolutePath("%root%", null);
                 string resources = Path.Combine(apsimx, "Models", "Resources");
@@ -1278,11 +1269,10 @@ namespace UserInterface.Presenters
                         throw new FileNotFoundException(string.Format("Unable to upgrade {0}: file does not exist.", file));
 
                     // Run the converter.
-                    string contents = File.ReadAllText(file);
-                    var converter = Converter.DoConvert(contents, version, file);
-                    if (converter.DidConvert)
+                    var response = FileFormat.ReadFromFileAndReturnConvertState<Simulations>(file);
+                    if (response.didConvert)
                     {
-                        File.WriteAllText(file, converter.Root.ToString());
+                        File.WriteAllText(file, response.json.ToString());
                         view.ShowMessage(string.Format("Successfully upgraded {0} to version {1}.", file, version), MessageType.Information, false);
                     }
                 }

@@ -7,16 +7,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Models.CLEM.Resources;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using Models.CLEM.Interfaces;
 using System.ComponentModel.DataAnnotations;
-using static Models.Core.ScriptCompiler;
 
 namespace Models.CLEM.Groupings
 {
     ///<summary>
     /// Contains a group of filters to identify individual other animals to feed
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -70,7 +69,7 @@ namespace Models.CLEM.Groupings
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            feedActivityParent = FindAncestor<OtherAnimalsActivityFeed>();
+            feedActivityParent = Structure.FindParent<OtherAnimalsActivityFeed>(recurse: true);
             SelectedOtherAnimalsType = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, AnimalTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as OtherAnimalsType;
 
             currentFeedRequest = new ResourceRequest()
@@ -85,7 +84,7 @@ namespace Models.CLEM.Groupings
             };
 
             // warning that any take filters will be ignored.
-            if (FindAllDescendants<TakeFromFiltered>().Any())
+            if (Structure.FindChildren<TakeFromFiltered>(recurse: true).Any())
             {
                 string warnMessage = $"The [TakeFiltered] component of [f={this.NameWithParent}] is not valid for [OtherAnimalFeedGroup].Take or Skip will be ignored.";
                 Warnings.CheckAndWrite(warnMessage, Summary, this, MessageType.Warning);

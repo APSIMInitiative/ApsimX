@@ -1,3 +1,4 @@
+using APSIM.Core;
 using Models.Climate;
 using Models.Core;
 using Models.DCAPST.Canopy;
@@ -26,13 +27,14 @@ namespace Models.DCAPST
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(typeof(Zone))]
-    public class DCaPSTModelNG : Model
+    public class DCaPSTModelNG : Model, IStructureDependency
     {
-        /// <summary>
-        /// Clock object reference (dcapst needs to know day of year).
-        /// </summary>
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { get; set; }
+
         [Link]
-        private readonly IClock clock = null;
+        IClock clock = null;
 
         /// <summary>
         /// Weather provider.
@@ -73,8 +75,8 @@ namespace Models.DCAPST
         IFunction rootShootRatioFunction;
 
         /// <summary>
-        /// This flag is set to indicate that we have started using DCaPST. 
-        /// We wait until the Leaf LAI reaches our tolerance before starting to use 
+        /// This flag is set to indicate that we have started using DCaPST.
+        /// We wait until the Leaf LAI reaches our tolerance before starting to use
         /// DCaPST and the continue to use it until a new sowing event occcurs.
         /// </summary>
         private bool dcapsReachedLAITriggerPoint = false;
@@ -95,7 +97,7 @@ namespace Models.DCAPST
         private double electronTransportLimitedModifier = 1.0;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         private bool includeAc2Pathway = false;
 
@@ -112,7 +114,7 @@ namespace Models.DCAPST
             }
             set
             {
-                // Optimise Handling a Crop Change call so that it only happens if the 
+                // Optimise Handling a Crop Change call so that it only happens if the
                 // value has actually changed.
                 if (cropName != value)
                 {
@@ -126,10 +128,10 @@ namespace Models.DCAPST
         /// If true, the AC2 Pathway is included in the C4 Photosynthesis rate calculation.
         /// </summary>
         [JsonIgnore]
-        public bool IncludeAc2Pathway 
-        { 
+        public bool IncludeAc2Pathway
+        {
             get => includeAc2Pathway;
-            set 
+            set
             {
                 includeAc2Pathway = value;
             }
@@ -187,13 +189,26 @@ namespace Models.DCAPST
         public static ICropParameterGenerator ParameterGenerator { get; set; } = new CropParameterGenerator();
 
         /// <summary>
+        /// Model has been fully created. Initialise.
+        /// </summary>
+        public override void OnCreated()
+        {
+            base.OnCreated();
+            plant = null;
+            SetUpPlant();
+        }
+
+        /// <summary>
         /// Reset the default DCaPST parameters according to the type of crop.
         /// </summary>
         public void Reset()
         {
             Parameters = ParameterGenerator.Generate(cropName);
-            plant = null;
-            SetUpPlant();
+            if (Node != null)  // Can be null during deserialisation. Wait until OnCreated for initialise.
+            {
+                plant = null;
+                SetUpPlant();
+            }
         }
 
         /// <summary>
@@ -220,7 +235,7 @@ namespace Models.DCAPST
         {
             if (weather is null ||
                 weather is not Weather weatherModel ||
-                weatherModel.FindChild<CO2Value>() is null
+                Structure.FindChild<CO2Value>(relativeTo: weatherModel) is null
             )
             {
                 throw new Exception($"Invalid DCaPST simulation. No {nameof(CO2Value)} model has been configured in {nameof(Weather)} model.");
@@ -258,7 +273,7 @@ namespace Models.DCAPST
             DcapstModel.DailyRun(leaf.LAI, sln);
 
             // Outputs
-            foreach (ICanopy canopy in plant.FindAllChildren<ICanopy>())
+            foreach (ICanopy canopy in Structure.FindChildren<ICanopy>(relativeTo: plant as INodeModel))
             {
                 canopy.LightProfile = new CanopyEnergyBalanceInterceptionlayerType[1]
                 {
@@ -267,7 +282,7 @@ namespace Models.DCAPST
                         AmountOnGreen = DcapstModel.InterceptedRadiation
                     }
                 };
-                
+
                 canopy.WaterDemand = DcapstModel.WaterDemanded;
             }
         }
@@ -416,7 +431,7 @@ namespace Models.DCAPST
             if (string.IsNullOrEmpty(cropName)) return;
             if (plant != null) return;
 
-            plant = FindInScope<IPlant>(CropName);
+            plant = Structure.Find<IPlant>(CropName);
             rootShootRatioFunction = GetRootShootRatioFunction();
             leaf = GetLeaf();
         }
@@ -424,7 +439,7 @@ namespace Models.DCAPST
         private ICanopy GetLeaf()
         {
             if (plant == null) return null;
-			ICanopy find = plant.FindChild<ICanopy>("Leaf");
+			ICanopy find = Structure.FindChild<ICanopy>("Leaf", relativeTo: plant as INodeModel);
             if (find == null) throw new ArgumentNullException(nameof(find), "Cannot find leaf configuration");
             return find;
         }
@@ -433,7 +448,7 @@ namespace Models.DCAPST
         {
             if (plant is null) return null;
 
-            IVariable variable = plant.FindByPath("[ratioRootShoot]");
+            var variable = Structure.GetObject("[ratioRootShoot]", relativeTo:plant as INodeModel);
             if (variable is null) return null;
             if (variable.Value is not IFunction function) return null;
 
@@ -504,7 +519,7 @@ namespace Models.DCAPST
         /// </summary>
         private IEnumerable<string> GetPlantNames()
         {
-            var plants = FindAllInScope<IPlant>()
+            var plants = Structure.FindAll<IPlant>()
                 .Select(p => p.Name)
                 .Where(name => !string.IsNullOrEmpty(name))
                 .Distinct();

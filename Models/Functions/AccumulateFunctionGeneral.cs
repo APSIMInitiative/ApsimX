@@ -4,6 +4,9 @@ using Models.Core;
 using Models.PMF.Phen;
 using System.Linq;
 using APSIM.Shared.Utilities;
+using Models.PMF;
+using System.Data;
+using APSIM.Core;
 
 
 namespace Models.Functions
@@ -19,8 +22,12 @@ namespace Models.Functions
         "Optional full or partial removal of accumulated values can occur on specified events, stages or dates")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class AccumulateFunctionGeneral : Model, IFunction
+    public class AccumulateFunctionGeneral : Model, IFunction, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         ///Links
         /// -----------------------------------------------------------------------------------------------------------
 
@@ -31,21 +38,32 @@ namespace Models.Functions
         [Link]
         private Clock clock = null;
 
+
         /// Private class members
         /// -----------------------------------------------------------------------------------------------------------
-     
-        private double AccumulatedValue = 0;
 
-        private bool AccumulateToday = false;
+        private double AccumulatedValue = 0;
+        /// <summary>
+        /// will accumulate today
+        /// </summary>
+        public bool AccumulateToday { get; set; } = false;
 
         private IEnumerable<IFunction> ChildFunctions;
+
+        private Phenology parentPhenology = null;
 
         ///Public Properties
         /// -----------------------------------------------------------------------------------------------------------
         /// <summary>The event that accumulation happens on</summary>
-        [Separator("Event to accumulate on.  (Typically PostPhenology for plants but could be any event)")]
+        [Separator("Event to accumulate on.  ([Clock].DoReportCalculations by default. Type valid event to overwrite default)")]
         [Description("Event to accumulate on")]
         public string AccumulateEventName { get; set; }
+
+        /// <summary>Name of crop to remove biomass from.</summary>
+        [Separator("Crop to Link to.  Optional parameter if crop stages are used to start, stop or reduce.  Not needed if this function is a child of plant model)")]
+        [Description("Crop to link to.  (Not needed is function is child of plant model)")]
+        [Display(Type = DisplayType.PlantName)]
+        public string NameOfPlantToLink { get; set; }
 
         /// <summary>The start stage name</summary>
         [Separator("Optional, specify stages or events to accumulate between, accumulates for duration of simulation if all are blank")]
@@ -75,23 +93,35 @@ namespace Models.Functions
         public string EndDate { get; set; }
 
         /// <summary>The reset stage name</summary>
-        [Separator("Optional, reduce accumulation")]
+        [Separator("Optional, reduce accumulation at specific crop stage")]
         [Description("(optional for plant models) Stage name to reduce accumulation")]
         [Display(Type = DisplayType.CropStageName)]
         public string ReduceStageName { get; set; }
 
+        /// <summary>Fraction to reduce accumalation to</summary>
+        [Description("Fraction to remove on stage specified above")]
+        [Units("0-1")]
+        public double FractionRemovedOnStage { get; set; }
+
         /// <summary>The end event</summary>
+        [Separator("Optional, reduce accumulation on specified event")]
         [Description("(optional for any model)  Event name to reduce accumulation.")]
         public string ReduceEventName { get; set; }
 
+        /// <summary>Fraction to reduce accumalation to</summary>
+        [Description("Fraction to remove on event specified above")]
+        [Units("0-1")]
+        public double FractionRemovedOnEvent { get; set; }
+
         /// <summary>The end event</summary>
-        [Description("(optional for any model)  Date (d-mmm) to reduce accumulation.")]
-        public string ReduceEventDate { get; set; }
+        [Separator("Optional, reduce accumulation on specified date or dates")]
+        [Description("List of dates for removal events (comma separated, dd/mm/yyyy or dd-mmm):")]
+        public string[] ReduceDates { get; set; }
 
         /// <summary>Fraction to reduce accumalation to</summary>
-        [Description("Fraction to remove on stage or event specified above")]
+        [Description("Fraction to remove on date specified above")]
         [Units("0-1")]
-        public double FractionRemovedOnReduce { get; set; }
+        public double FractionRemovedOnDate { get; set; }
 
         /// <summary>The fraction removed on Cut event</summary>
         [Separator("Optional, for plant models, fractions to remove on defoliation events")]
@@ -117,14 +147,29 @@ namespace Models.Functions
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             AccumulatedValue = 0;
-
-            if (!String.IsNullOrEmpty(StartEventName) && !String.IsNullOrEmpty(StartStageName) && !String.IsNullOrEmpty(StartDate))
+            AccumulateToday = true;
+            if (!String.IsNullOrEmpty(NameOfPlantToLink))
             {
-                AccumulateToday = true;
+                parentPhenology = Structure.Find<Plant>(NameOfPlantToLink).Phenology;
             }
             else
             {
+                parentPhenology = Structure.FindParents<Plant>().FirstOrDefault()?.Phenology;
+            }
+
+            if ((!String.IsNullOrEmpty(StartEventName))||(!String.IsNullOrEmpty(StartDate))||(!String.IsNullOrEmpty(StartStageName)))
+            {
                 AccumulateToday = false;
+            }
+
+            if(Convert.ToInt32(!String.IsNullOrEmpty(StartEventName)) + Convert.ToInt32(!String.IsNullOrEmpty(StartStageName)) + Convert.ToInt32(!String.IsNullOrEmpty(StartDate)) > 1)
+            {
+                throw new Exception("Can only select one option for starting accumulation, Stage, Date or Event.  Currently more than one are specified for " + this.Name);
+            }
+
+            if (Convert.ToInt32(!String.IsNullOrEmpty(EndEventName)) + Convert.ToInt32(!String.IsNullOrEmpty(EndStageName)) + Convert.ToInt32(!String.IsNullOrEmpty(EndDate)) > 1)
+            {
+                throw new Exception("Can only select one option for stoping accumulation, Stage, Date or Event.  Currently more than one are specified for " + this.Name);
             }
         }
 
@@ -136,21 +181,29 @@ namespace Models.Functions
         [EventSubscribe("SubscribeToEvents")]
         private void OnConnectToEvents(object sender, EventArgs args)
         {
+            if (!String.IsNullOrEmpty(AccumulateEventName))
+            {
+                if (AccumulateEventName == "[Clock].EndOfDay")
+                    throw new Exception(this.Name + " cannot use [Clock].EndOfDay for accumulate event as this is reserved for doing removals on the final event of the day to ensure it happens after accmulation.  Choose another option for Event to accumulate on");
+                events.Subscribe(AccumulateEventName, OnAccumulateEvent);
+            }
+            else
+            {
+                events.Subscribe("[Clock].DoReportCalculations", OnAccumulateEvent);
+            }
+
             if (!String.IsNullOrEmpty(StartEventName))
-            { 
-                events.Subscribe(StartEventName, OnStartEvent); 
+            {
+                events.Subscribe(StartEventName, OnStartEvent);
             }
             if (!String.IsNullOrEmpty(EndEventName))
-            { 
-                events.Subscribe(EndEventName, OnEndEvent); 
+            {
+                events.Subscribe(EndEventName, OnEndEvent);
             }
-            if (!String.IsNullOrEmpty(AccumulateEventName))
-            { 
-                events.Subscribe(AccumulateEventName, OnAccumulateEvent); 
-            }
+
             if (!String.IsNullOrEmpty(ReduceEventName))
-            { 
-                events.Subscribe(ReduceEventName, OnRemoveEvent); 
+            {
+                events.Subscribe(ReduceEventName, OnRemoveEvent);
             }
         }
 
@@ -159,24 +212,27 @@ namespace Models.Functions
         /// <param name="e">Event arguments</param>
         private void OnAccumulateEvent(object sender, EventArgs e)
         {
-            if (!String.IsNullOrEmpty(StartDate))
+
+            if (!String.IsNullOrEmpty(StartDate) && (AccumulateToday == false))
             {
-                if (DateUtilities.WithinDates(StartDate, clock.Today, StartDate))
+                DateTime startDate = DateUtilities.GetDate(StartDate, clock.Today.Year);
+                if (clock.Today == startDate)
                 {
                     AccumulateToday = true;
                 }
             }
 
-            if (!String.IsNullOrEmpty(EndDate)) 
+            if (!String.IsNullOrEmpty(EndDate) && (AccumulateToday == true))
             {
-                if (DateUtilities.WithinDates(EndDate, clock.Today, EndDate))
+                DateTime endDate = DateUtilities.GetDate(EndDate, clock.Today.Year);
+                if (clock.Today == endDate)
                 {
                     AccumulateToday = false;
                 }
             }
 
             if (ChildFunctions == null)
-                ChildFunctions = FindAllChildren<IFunction>().ToList();
+                ChildFunctions = Structure.FindChildren<IFunction>().ToList();
 
             if (AccumulateToday)
             {
@@ -188,11 +244,18 @@ namespace Models.Functions
                 AccumulatedValue += DailyIncrement;
             }
 
-            if (!String.IsNullOrEmpty(ReduceEventDate))
+            if ((ReduceDates!=null)&&(!String.IsNullOrEmpty(ReduceDates[0])))
             {
-                if (DateUtilities.WithinDates(ReduceEventDate, clock.Today, ReduceEventDate))
+                foreach (string date in ReduceDates)
                 {
-                    AccumulatedValue -= FractionRemovedOnReduce * AccumulatedValue;
+                    DateTime reduceDate = DateUtilities.GetDate(date, clock.Today.Year);
+                    if (clock.Today == reduceDate)
+                    {
+                        if (!Double.IsNaN(FractionRemovedOnDate))
+                        {
+                            reduceDateToday = true;
+                        }
+                    }
                 }
             }
 
@@ -207,23 +270,39 @@ namespace Models.Functions
             if (!String.IsNullOrEmpty(StartStageName))
             {
                 if (phaseChange.StageName == StartStageName)
-                    AccumulateToday = true;
+                    {
+                        AccumulateToday = true;
+                    }
             }
 
             if (!String.IsNullOrEmpty(EndStageName))
             {
-                if(phaseChange.StageName == EndStageName)
+                if (phaseChange.StageName == EndStageName)
+                {
                     AccumulateToday = false;
+                }
             }
-            
+
+            if (!String.IsNullOrEmpty(StartStageName) && !String.IsNullOrEmpty(EndStageName))
+                if (parentPhenology.Between(StartStageName, EndStageName))
+                {
+                    AccumulateToday = true;
+                }
+                else
+                {
+                    AccumulateToday = false;
+                }
+
+
+
             if (!String.IsNullOrEmpty(ReduceStageName))
-            {
-                if (phaseChange.StageName == ReduceStageName)
-                    if (!Double.IsNaN(FractionRemovedOnReduce))
-                    {
-                        AccumulatedValue -= FractionRemovedOnReduce * AccumulatedValue;
-                    }
-            }
+                {
+                    if (phaseChange.StageName == ReduceStageName)
+                        if (!Double.IsNaN(FractionRemovedOnStage))
+                        {
+                            reduceStageToday = true;
+                        }
+                }
         }
 
         private void OnStartEvent(object sender, EventArgs args)
@@ -238,9 +317,9 @@ namespace Models.Functions
 
         private void OnRemoveEvent(object sender, EventArgs args)
         {
-            if (!Double.IsNaN(FractionRemovedOnReduce))
+            if (!Double.IsNaN(FractionRemovedOnEvent))
             {
-                AccumulatedValue -= FractionRemovedOnReduce * AccumulatedValue;
+                reduceEventToday = true;
             }
         }
 
@@ -259,7 +338,7 @@ namespace Models.Functions
         {
             if (!Double.IsNaN(FractionRemovedOnCut))
             {
-                AccumulatedValue -= FractionRemovedOnCut * AccumulatedValue;
+                cutToday = true;
             }
         }
 
@@ -271,7 +350,7 @@ namespace Models.Functions
         {
             if (!Double.IsNaN(FractionRemovedOnHarvest))
             {
-                AccumulatedValue -= FractionRemovedOnHarvest * AccumulatedValue;
+                harvestToday = true;
             }
         }
         /// <summary>Called when Graze.</summary>
@@ -282,7 +361,7 @@ namespace Models.Functions
         {
             if (!Double.IsNaN(FractionRemovedOnGraze))
             {
-                AccumulatedValue -= FractionRemovedOnGraze * AccumulatedValue;
+                grazeToday = true;
             }
         }
 
@@ -294,7 +373,7 @@ namespace Models.Functions
         {
             if (!Double.IsNaN(FractionRemovedOnPrune))
             {
-                AccumulatedValue -= FractionRemovedOnPrune * AccumulatedValue;
+                pruneToday = true;
             }
         }
 
@@ -304,7 +383,37 @@ namespace Models.Functions
         [EventSubscribe("PlantEnding")]
         private void OnPlantEnding(object sender, EventArgs e)
         {
-            AccumulatedValue = 0;
+            if ((parentPhenology != null)&&String.IsNullOrEmpty(NameOfPlantToLink))
+            {
+                AccumulatedValue = 0;
+                AccumulateToday = false;
+            }
+        }
+
+        private bool harvestToday = false;
+        private bool cutToday = false;
+        private bool grazeToday = false;
+        private bool pruneToday = false;
+        private bool reduceDateToday = false;
+        private bool reduceEventToday = false;
+        private bool reduceStageToday = false;
+
+        [EventSubscribe("EndOfDay")]
+        private void OnEndOfDay(object sender, EventArgs e)
+        {
+            if (pruneToday) { reduce(FractionRemovedOnPrune, ref pruneToday); }
+            if (grazeToday) { reduce(FractionRemovedOnGraze, ref grazeToday); }
+            if (cutToday) { reduce(FractionRemovedOnCut, ref cutToday); }
+            if (harvestToday) { reduce(FractionRemovedOnHarvest, ref harvestToday); }
+            if (reduceDateToday) { reduce(FractionRemovedOnDate, ref reduceDateToday); }
+            if (reduceEventToday) { reduce(FractionRemovedOnEvent, ref reduceEventToday); }
+            if (reduceStageToday) { reduce(FractionRemovedOnStage, ref reduceStageToday); }
+        }
+
+        private void reduce(double fractionRemoved, ref bool reduceFlag)
+        {
+            AccumulatedValue -= fractionRemoved * AccumulatedValue;
+            reduceFlag = false;
         }
     }
 }

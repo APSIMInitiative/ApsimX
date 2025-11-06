@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using StdUnits;
 using static Models.GrazPlan.GrazType;
@@ -447,6 +450,8 @@ namespace Models.GrazPlan
         public void SetRootNutr(int age, int layer, TPlantElement elem, double value)
         {
             this.Roots[age, layer].Nu[(int)elem] = value;
+            if (double.IsNaN(value))
+                throw new Exception("NaN detected in SetRootNutr");
         }
 
         /// <summary>
@@ -1535,7 +1540,6 @@ namespace Models.GrazPlan
                         this.RootTranslocSum += this.FRootTransloc[age, layer];
                     }
                 }
-
                 limitNu = 1.0;
                 foreach (var Elem in values)
                 {
@@ -1641,6 +1645,26 @@ namespace Models.GrazPlan
                 }
 
                 this.FSeedNetGrowth.DM = this.FPartNetGrowth[ptSEED];
+
+                double leafNetGrowth = 0;
+                double stemNetGrowth = 0;
+                double rootNetGrowth = 0;
+                for (DMD = 1; DMD <= HerbClassNo; DMD++)
+                {
+                    leafNetGrowth += FShootNetGrowth[ptLEAF, DMD].DM;
+                    stemNetGrowth += FShootNetGrowth[ptSTEM, DMD].DM;
+                }
+                for (age = EFFR; age <= OLDR; age++)
+                    for (layer = 1; layer <= this.Owner.FSoilLayerCount; layer++)
+                        rootNetGrowth += FRootNetGrowth[age, layer].DM;
+
+                if (Pasture.logFileName != null)
+                    File.AppendAllLines(Pasture.logFileName, [
+                            $"Leaf net growth: {leafNetGrowth:F2}",
+                            $"Stem net growth: {stemNetGrowth:F2}",
+                            $"Root net growth: {rootNetGrowth:F2}",
+                            $"Seed net growth: {FSeedNetGrowth.DM:F2}",
+                        ]);
             }
         }
 
@@ -2400,7 +2424,6 @@ namespace Models.GrazPlan
         {
             int age, layer;
             int DMD;
-
             this.FNutrientInfo[(int)Elem].fRootTranslocSupply = 0.0;
             for (age = EFFR; age <= OLDR; age++)
             {
@@ -2630,7 +2653,7 @@ namespace Models.GrazPlan
                     {
                         for (layer = 1; layer <= this.FMaxRootLayer; layer++)
                         {
-                            nutrInfo.fUptake[(int)Nutr][area][layer] = supply[(int)Nutr][area][layer]; //kg/ha to g/m2
+                            nutrInfo.fUptake[(int)Nutr][area][layer] = supply[(int)Nutr][area][layer] * RLD[layer]; //kg/ha to g/m2
                             uptakeAreaSum += nutrInfo.fUptake[(int)Nutr][area][layer];
                         }
                     }
@@ -3017,6 +3040,8 @@ namespace Models.GrazPlan
                             }
 
                             this.FRootNetGrowth[iAge, iLayer].Nu[(int)Elem] = fPropn * fPartSupply[ptROOT];
+                            if (double.IsNaN(this.FRootNetGrowth[iAge, iLayer].Nu[(int)Elem]))
+                                throw new Exception("NaN detected");
                         }
                     }
 
@@ -3108,6 +3133,8 @@ namespace Models.GrazPlan
                                 if ((this.Roots[iAge, iLayer].Nu[(int)elem] > 1.0E-5) || (estabCohort.Roots[iAge, iLayer].DM > 0.0))
                                 {
                                     estabCohort.Roots[iAge, iLayer].Nu[(int)elem] = estabCohort.Roots[iAge, iLayer].Nu[(int)elem] + this.Roots[iAge, iLayer].Nu[(int)elem];
+                                    if (double.IsNaN(estabCohort.Roots[iAge, iLayer].Nu[(int)elem]))
+                                        throw new Exception("NaN detected in TransferSenescedNutrients");
                                 }
 
                                 this.Roots[iAge, iLayer].Nu[(int)elem] = 0.0;
