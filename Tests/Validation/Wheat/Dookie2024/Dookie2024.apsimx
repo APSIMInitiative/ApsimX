@@ -13748,7 +13748,7 @@
                 },
                 {
                   "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
-                  "ParameterFile": "C:\\GitHubRepos\\ApsimX\\Tests\\Validation\\Wheat\\inputs\\DookieWWHI2024_parameterOverwrites.csv",
+                  "ParameterFile": "..\\inputs\\DookieWWHI2024_parameterOverwrites.csv",
                   "SetEventName": "[Plant].Sowing",
                   "Name": "SetPhenologyParams",
                   "ResourceName": null,
@@ -17652,7 +17652,7 @@
                 },
                 {
                   "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
-                  "ParameterFile": "C:\\GitHubRepos\\ApsimX\\Tests\\Validation\\Wheat\\inputs\\DookieEVA2024_parameterOverwrites.csv",
+                  "ParameterFile": "..\\inputs\\DookieEVA2024_parameterOverwrites.csv",
                   "SetEventName": "[Plant].Sowing",
                   "Name": "SetPhenologyParams",
                   "ResourceName": null,
