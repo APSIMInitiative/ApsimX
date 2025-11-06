@@ -36,7 +36,9 @@ xvfb-run sh -c "wine /inno/ISCC.exe Setup/net8.0/windows/apsimx.iss"
 #rename installer to correct name
 mv $apsimx/Setup/net8.0/windows/Output/APSIMSetup.exe unsignedSetup.exe
 
-# check required arguments for subsequent command exist
+# Set the location of the code signing certificate.
+APSIM_CERT="./apsim_signing_cert.p12"
+
 test -f $APSIM_CERT || (echo "Error: APSIM_CERT environment variable not set or file does not exist"; exit 1)
 test -n "$APSIM_CERT_PWD" || (echo "Error: APSIM_CERT_PWD environment variable not set"; exit 1)
 
