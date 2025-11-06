@@ -57,4 +57,3 @@ jobs:
           APSIM_CERT_PWD: ${{ secrets.APSIM_CERT_PWD }}
           APSIM_CERT_BASE64: ${{ secrets.APSIM_CERT }}
         run: ./.github/workflows/scripts/deploy-installer.sh ${{ matrix.os }}
-
