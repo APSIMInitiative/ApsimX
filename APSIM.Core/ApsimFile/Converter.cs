@@ -3,9 +3,13 @@ using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
 using BruTile.Wmts.Generated;
+using DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Newtonsoft.Json.Linq;
 using System.Globalization;
 using System.Reflection;
+using System.Runtime.Intrinsics.X86;
 using System.Text.RegularExpressions;
 using System.Xml;
 
@@ -17,7 +21,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 205; } }
+    public static int LatestVersion { get { return 206; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -7132,5 +7136,138 @@ internal class Converter
             if (changed)
                 manager.Save();
         }
+    }
+
+    /// <summary>
+    /// Recursively scans a directory for .xlsx files, and for each file,
+    /// replaces all instances of oldVarName with newVarName.
+    /// Saves the file only if modifications were made.
+    /// </summary>
+    /// <param name="rootFolder">Root folder to search.</param>
+    /// <param name="newVarName">The old variable name to replace</param>
+    /// <param name="oldVarName">The new variable name to insert</param>
+    public static void ReplaceVariableNamesInObsFiles(string rootFolder, string oldVarName, string newVarName)
+    {
+        var files = Directory.EnumerateFiles(rootFolder, "*.xlsx", SearchOption.AllDirectories);
+
+        foreach (var file in files)
+        {
+            bool needsUpdate = false;
+
+            // First pass: check if file contains the oldVarName
+            using (var doc = SpreadsheetDocument.Open(file, false)) // read-only
+            {
+                var sstPart = doc.WorkbookPart.SharedStringTablePart;
+                if (sstPart != null)
+                {
+                    var sst = sstPart.SharedStringTable;
+                    needsUpdate = sst.Elements<SharedStringItem>()
+                                    .Any(item => (item.Text != null && item.Text.Text.Contains(oldVarName)));
+                }
+            }
+
+            if (!needsUpdate)
+            {
+                Console.WriteLine($"No changes in: {file}");
+                continue; // skip file entirely
+            }
+
+            // Second pass: open in write mode only for files that need updates
+            bool modified = false;
+            using (var doc = SpreadsheetDocument.Open(file, true))
+            {
+                var sstPart = doc.WorkbookPart.SharedStringTablePart;
+                var sst = sstPart.SharedStringTable;
+
+                foreach (var item in sst.Elements<SharedStringItem>())
+                {
+                    if (item.Text != null)
+                    {
+                        var oldText = item.Text.Text;
+                        var newText = oldText.Replace(oldVarName, newVarName);
+                        if (oldText != newText)
+                        {
+                            item.Text.Text = newText;
+                            modified = true;
+                        }
+                    }
+                }
+
+                if (modified)
+                {
+                    sst.Save();
+                    Console.WriteLine($"Updated: {file}");
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Finds NDVI models that have been implemented in a manager, gets their parameters, replaces the manager with a compiled model and puts the correct parameters onto it.
+    /// <param name="root">Root json object.</param>
+    /// <param name="_">Unused filename.</param>
+    private static void UpgradeToVersion206(JObject root, string _)
+    {
+        // loop through all managers and replace with NDVI model if appropriate
+        foreach (JObject manager in JsonUtilities.ChildrenRecursively(root, "Manager"))
+        {
+            if (manager["Name"].ToString() == "NDVIModel")
+            {
+                //Extract NDVI model parameters from scropt
+                var parameters = manager["Parameters"] as JArray;
+                var paramDict = new Dictionary<string, double>();
+
+                if (parameters != null)
+                {
+                    foreach (var p in parameters.OfType<JObject>())
+                    {
+                        string? key = (string?)p["Key"];
+                        if (key != null && double.TryParse(p["Value"]?.ToString(), out double val))
+                            paramDict[key] = val;
+                    }
+                }
+
+                // Build replacement Spectral model
+                var newModel = new JObject
+                {
+                    ["$type"] = "Models.Sensor.Spectral, Models",
+                    ["Name"] = "Spectral",
+                    ["DrySoilNDVI"] = paramDict.GetValueOrDefault("DrySoilNDVI", 0.0),
+                    ["WetSoilNDVI"] = paramDict.GetValueOrDefault("WetSoilNDVI", 0.0),
+                    ["GreenCropNDVI"] = paramDict.GetValueOrDefault("GreenCropNDVI", 0.0),
+                    ["DeadCropNDVI"] = paramDict.GetValueOrDefault("DeadCropNDVI", 0.0),
+                    ["NDVI"] = 0.0,
+                    ["ResourceName"] = null,
+                    ["Children"] = new JArray(),
+                    ["Enabled"] = true,
+                    ["ReadOnly"] = false
+                };
+
+                //Remove manager model and add Specteral model to parent
+                JObject parent = JsonUtilities.Parent(manager) as JObject;
+                JsonUtilities.RemoveChild(parent, "NDVIModel");
+                JsonUtilities.AddChild(parent, newModel);
+            }
+        }
+
+        //Variable rename pairs for .apsimx file
+        (string, string)[] replacements = [
+                ("[NDVIModel].Script.NDVI","[Spectral].NDVI"),
+                ("NDVIModel.Script.NDVI","Spectral.NDVI")];
+
+        // Change report variables.
+        foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            foreach (var (oldSt, newSt) in replacements)
+                JsonUtilities.SearchReplaceReportVariableNames(report, oldSt, newSt, caseSensitive: false);
+
+        // Change graph variables.
+        foreach (var graph in JsonUtilities.ChildrenOfType(root, "Graph"))
+            foreach (var (oldSt, newSt) in replacements)
+                JsonUtilities.SearchReplaceGraphVariableNames(graph, oldSt, newSt);
+
+        //Search through observed riles and replace old variable name with new one.
+        string repoRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, @"..\..\..\.."));
+        string validationDir = Path.Combine(repoRoot,"ApsimX", "Tests", "Validation");
+        ReplaceVariableNamesInObsFiles(validationDir, "NDVIModel.Script.NDVI", "Spectral.NDVI");
     }
 }
