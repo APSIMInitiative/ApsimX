@@ -19,8 +19,8 @@ namespace Models.PreSimulationTools
     /// Reads the contents of a specific sheet from an EXCEL file and stores into the DataStore.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.ObservedInputView")]
-    [PresenterName("UserInterface.Presenters.ObservedInputPresenter")]
+    [ViewName("UserInterface.Views.ObservationsView")]
+    [PresenterName("UserInterface.Presenters.ObservationsPresenter")]
     [ValidParent(ParentType = typeof(DataStore))]
     public class Observations : Model, IPreSimulationTool, IReferenceExternalFiles, IStructureDependency
     {

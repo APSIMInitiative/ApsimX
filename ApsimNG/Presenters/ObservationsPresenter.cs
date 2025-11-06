@@ -7,10 +7,10 @@ namespace UserInterface.Presenters
 {
 
     /// <summary>Presenter that has a PropertyPresenter and a GridPresenter.</summary>
-    class ObservedInputPresenter : IPresenter
+    class ObservationsPresenter : IPresenter
     {
         /// <summary>The underlying model</summary>
-        private ObservedInputView view;
+        private ObservationsView view;
         private ExplorerPresenter explorerPresenter;
         private IPresenter propertyPresenter;
         private GridPresenter columnsGridPresenter;
@@ -28,7 +28,7 @@ namespace UserInterface.Presenters
         public void Attach(object model, object v, ExplorerPresenter parentPresenter)
         {
             explorerPresenter = parentPresenter;
-            view = v as ObservedInputView;
+            view = v as ObservationsView;
 
             propertyPresenter = new PropertyPresenter();
             explorerPresenter.ApsimXFile.Links.Resolve(propertyPresenter);

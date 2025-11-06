@@ -7,7 +7,7 @@ namespace UserInterface.Views
     /// <summary>
     /// View for observed input that has multiple tabs for each type of validation information
     /// </summary>
-    public class ObservedInputView : ViewBase
+    public class ObservationsView : ViewBase
     {
 
         private Notebook notebook = null;
@@ -30,9 +30,9 @@ namespace UserInterface.Views
         public event EventHandler TabChanged;
 
         /// <summary>Constructor</summary>
-        public ObservedInputView(ViewBase owner) : base(owner)
+        public ObservationsView(ViewBase owner) : base(owner)
         {
-            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ObservedInputView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ObservationsView.glade");
             notebook = (Notebook)builder.GetObject("notebook1");
 
             PropertyView = new PropertyView(owner);
