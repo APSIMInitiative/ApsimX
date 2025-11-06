@@ -8,6 +8,9 @@ using System.Globalization;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace APSIM.Core;
 
@@ -17,7 +20,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 205; } }
+    public static int LatestVersion { get { return 206; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -7131,6 +7134,61 @@ internal class Converter
             });
             if (changed)
                 manager.Save();
+        }
+    }
+
+    /// <summary>
+    /// Replaces SetEmergenceDate and SetGerminationDate methods that may have been missed by the previous UpgradeTo204.
+    /// </summary>
+    /// <param name="root">Root json object.</param>
+    /// <param name="_">Unused filename.</param>
+    private static void UpgradeToVersion206(JObject root, string _)
+    {
+        var emergedArg = SyntaxFactory.Argument(
+            SyntaxFactory.LiteralExpression(
+                SyntaxKind.StringLiteralExpression,
+                SyntaxFactory.Literal("Emerging")
+            )
+        );
+        var germinatingArg = SyntaxFactory.Argument(
+            SyntaxFactory.LiteralExpression(
+                SyntaxKind.StringLiteralExpression,
+                SyntaxFactory.Literal("Germinating")
+            )
+        );
+        var newName = SyntaxFactory.IdentifierName("SetPhaseCompletionDate");
+
+        foreach (var manager in JsonUtilities.ChildManagers(root))
+        {
+            var text = manager.ToString();
+            if (text == null)
+                continue;
+            var managerRoot = CSharpSyntaxTree.ParseText(text).GetRoot();
+            var newRoot = managerRoot.ReplaceNodes(
+                managerRoot
+                    .DescendantNodes()
+                    .OfType<InvocationExpressionSyntax>()
+                    .Where(
+                        node =>
+                        {
+                            if (node.Expression is MemberAccessExpressionSyntax ma)
+                            {
+                                var name = ma.Name.ToFullString();
+                                return name == "SetEmergenceDate" || name == "SetGerminationDate";
+                            }
+                            return false;
+                        }
+                    ),
+                (old, _) =>
+                {
+                    var ma = old.Expression as MemberAccessExpressionSyntax;
+                    var newLastArg = ma.Name.ToFullString() == "SetEmergenceDate" ? emergedArg : germinatingArg;
+                    return SyntaxFactory.InvocationExpression(ma.WithName(newName), old.ArgumentList.AddArguments(newLastArg));
+                }
+            );
+
+            manager.Read(newRoot.ToFullString());
+            manager.Save();
         }
     }
 }
