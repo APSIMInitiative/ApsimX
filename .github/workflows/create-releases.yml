@@ -65,4 +65,7 @@ jobs:
           BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
           APSIM_CERT_PWD: ${{ secrets.APSIM_CERT_PWD }}
           APSIM_CERT_BASE64: ${{ secrets.APSIM_CERT }}
-        run: ./.github/workflows/scripts/deploy-installer.sh ${{ matrix.os }}
+        run: |
+          # Check APSIM_CERT_BASE64 is set
+          test -n "$APSIM_CERT_BASE64" || (echo "Error: APSIM_CERT_BASE64 environment variable not set"; exit 1)
+          ./.github/workflows/scripts/deploy-installer.sh ${{ matrix.os }}
