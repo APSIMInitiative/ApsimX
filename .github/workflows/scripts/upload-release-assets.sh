@@ -4,8 +4,9 @@
 # appearing in the upgrade lists.
 #
 # This script requires that the following variables are set:
-# - PULL_ID         ID of the pull request which triggered this release
+# - DOCKER_METADATA_OUTPUT_VERSION         variable containing PR number with "pr-" prefix
 # - NETLIFY_BUILD_HOOK      Token to trigger a netlify build
+# - BUILDS_JWT              JWT token to authorise calls to the APSIM Builds API
 # this script.
 
 set -euo pipefail
