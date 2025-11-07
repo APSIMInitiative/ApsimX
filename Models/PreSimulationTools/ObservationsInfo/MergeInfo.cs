@@ -134,7 +134,9 @@ namespace Models.PreSimulationTools.ObservationsInfo
                                     {
                                         MergeInfo info = new MergeInfo();
                                         info.Name = item.simulation.ToString();
-                                        info.Date = Convert.ToDateTime(item.clock).ToString("dd/MM/yyyy");
+                                        info.Date = null;
+                                        if (!string.IsNullOrEmpty(item.clock.ToString()))
+                                            info.Date = Convert.ToDateTime(item.clock).ToString("yyyy/MM/dd");
                                         info.Column = column;
                                         info.Value1 = newRow[column].ToString();
                                         info.Value2 = row[column].ToString();
@@ -147,7 +149,9 @@ namespace Models.PreSimulationTools.ObservationsInfo
                             {
                                 DataRow duplicateRow = combinedDataTable.NewRow();
                                 duplicateRow["SimulationName"] = item.simulation;
-                                duplicateRow["Clock.Today"] = item.clock;
+                                duplicateRow["Clock.Today"] = DBNull.Value;
+                                if (!string.IsNullOrEmpty(item.clock.ToString()))
+                                    duplicateRow["Clock.Today"] = item.clock;
                                 duplicateRow[column] = row[column];
                                 newRows.Add(duplicateRow);
                             }
