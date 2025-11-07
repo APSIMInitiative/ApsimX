@@ -106,7 +106,7 @@ namespace UnitTests
             //Check Merge information
             //
             string[] mergeName = [""];
-            string[] mergeDate = ["01/01/2000"];
+            string[] mergeDate = ["2000/01/01"];
             string[] mergeColumn = ["ValueWithSpace"];
             string[] mergeValue1 = ["10"];
             string[] mergeValue2 = ["1000"];

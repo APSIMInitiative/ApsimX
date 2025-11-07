@@ -196,7 +196,6 @@ namespace Models.PostSimulationTools
                                 // cause problems when merging sheets from multiple excel files.
                                 storage.Writer.WriteTable(table, false);
                                 storage.Writer.WaitForIdle();
-                                storage.Reader.Refresh();
                             }
                         }
                     }
