@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 
 namespace Models.PreSimulationTools.ObservationsInfo
@@ -196,7 +197,7 @@ namespace Models.PreSimulationTools.ObservationsInfo
                                                 result = value - valueVar;
                                             else if (operation == "*" || operation == "product")
                                                 result = value * valueVar;
-                                            else if (operation == "/" && valueVar != 0)
+                                            else if (operation == "/" && !MathUtilities.FloatsAreEqual(valueVar, 0))
                                                 result = value / valueVar;
                                             else
                                                 result = null;

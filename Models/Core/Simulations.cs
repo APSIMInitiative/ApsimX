@@ -246,16 +246,16 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Get all sSimulation and Factorial names from the given file.
+        /// Get all Simulation and Factorial names from the given file.
         /// </summary>
         /// <param name="onlyEnabled"></param>
         /// <returns></returns>
         public List<string> GetAllSimulationAndFactorialNameList(bool onlyEnabled = false)
         {
-            List<string> sims = [];
+            List<string> sims;
             if (onlyEnabled)
             {
-                sims = Node.FindChildren<Simulation>().Where(sim => sim.Enabled == true).Select(sim => sim.Name).ToList();
+                sims = Node.FindChildren<Simulation>().Where(sim => sim.Enabled).Select(sim => sim.Name).ToList();
                 List<string> allExperimentCombinations = Node.FindChildren<Experiment>(recurse: true).SelectMany(experiment => experiment.GetSimulationDescriptions(false).Select(sim => sim.Name)).ToList();
                 sims.AddRange(allExperimentCombinations);
             }

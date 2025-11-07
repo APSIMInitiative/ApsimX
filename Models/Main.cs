@@ -418,7 +418,9 @@ namespace Models
         private static void ListSimulationNames(string fileName, string simulationNameRegex, bool showEnabledOnly = false)
         {
             Simulations file = FileFormat.ReadFromFile<Simulations>(fileName).Model as Simulations;
-
+            if (file == null)
+                throw new Exception($"Error: Could not load simulations from file '{fileName}'.");
+                
             if (showEnabledOnly)
             {
                 List<string> sims = file.GetAllSimulationAndFactorialNameList(true);

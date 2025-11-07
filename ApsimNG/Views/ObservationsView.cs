@@ -13,16 +13,22 @@ namespace UserInterface.Views
         private Notebook notebook = null;
 
         public PropertyView PropertyView = null;
+        private Label propertyLabel = null;
 
         public ContainerView GridViewColumns = null;
+        private Label columnsLabel = null;
 
         public ContainerView GridViewDerived = null;
+        private Label derivedLabel = null;
 
         public ContainerView GridViewSimulation = null;
+        private Label simulationLabel = null;
 
         public ContainerView GridViewMerge = null;
+        private Label mergeLabel = null;
 
         public ContainerView GridViewZero = null;
+        private Label zeroLabel = null;
 
         /// <summary>
         /// Invoked when the selected tab is changed.
@@ -36,22 +42,28 @@ namespace UserInterface.Views
             notebook = (Notebook)builder.GetObject("notebook1");
 
             PropertyView = new PropertyView(owner);
-            notebook.AppendPage(PropertyView.MainWidget, new Label("Properties"));
+            propertyLabel = new Label("Properties");
+            notebook.AppendPage(PropertyView.MainWidget, propertyLabel);
 
             GridViewColumns = new ContainerView(owner);
-            notebook.AppendPage(GridViewColumns.MainWidget, new Label("Columns"));
-            
+            columnsLabel = new Label("Columns");
+            notebook.AppendPage(GridViewColumns.MainWidget, columnsLabel);
+
             GridViewDerived = new ContainerView(owner);
-            notebook.AppendPage(GridViewDerived.MainWidget, new Label("Derived"));
+            derivedLabel = new Label("Derived");
+            notebook.AppendPage(GridViewDerived.MainWidget, derivedLabel);
 
             GridViewSimulation = new ContainerView(owner);
-            notebook.AppendPage(GridViewSimulation.MainWidget, new Label("Simulations"));
+            simulationLabel = new Label("Simulations");
+            notebook.AppendPage(GridViewSimulation.MainWidget, simulationLabel);
 
             GridViewMerge = new ContainerView(owner);
-            notebook.AppendPage(GridViewMerge.MainWidget, new Label("Row Merge"));
-            
+            mergeLabel = new Label("Row Merge");
+            notebook.AppendPage(GridViewMerge.MainWidget, mergeLabel);
+
             GridViewZero = new ContainerView(owner);
-            notebook.AppendPage(GridViewZero.MainWidget, new Label("Zeros"));
+            zeroLabel = new Label("Zeros");
+            notebook.AppendPage(GridViewZero.MainWidget, zeroLabel);
 
             mainWidget = notebook;
             notebook.SwitchPage += OnSwitchPage;
@@ -86,6 +98,17 @@ namespace UserInterface.Views
             {
                 notebook.SwitchPage -= OnSwitchPage;
                 notebook.Dispose();
+
+                PropertyView.Dispose();
+                propertyLabel.Dispose();
+                GridViewColumns.Dispose();
+                derivedLabel.Dispose();
+                GridViewSimulation.Dispose();
+                simulationLabel.Dispose();
+                GridViewMerge.Dispose();
+                mergeLabel.Dispose();
+                GridViewZero.Dispose();
+                zeroLabel.Dispose();
 
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 owner = null;

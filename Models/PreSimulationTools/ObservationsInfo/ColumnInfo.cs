@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using APSIM.Core;
+using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 
@@ -218,7 +219,7 @@ namespace Models.PreSimulationTools.ObservationsInfo
                 VariableComposite variable = sims.Node.GetObject(fullPath);
                 return variable;
             }
-            catch
+            catch 
             {
                 return null;
             }
@@ -342,11 +343,11 @@ namespace Models.PreSimulationTools.ObservationsInfo
             if (knownType == null || knownType == typeof(int) || knownType == typeof(double) || knownType == typeof(DateTime))
             {
                 //try parsing to double
-                bool d = double.TryParse(value, out double num);
-                if (d == true)
+                bool canParse = double.TryParse(value, out double num);
+                if (canParse)
                 {
                     double wholeNum = num - Math.Floor(num);
-                    if (wholeNum == 0) //try parsing to int
+                    if (MathUtilities.FloatsAreEqual(wholeNum, 0)) //try parsing to int
                         return typeof(int);
                     else
                         return typeof(double);
@@ -355,8 +356,8 @@ namespace Models.PreSimulationTools.ObservationsInfo
 
             if (knownType == null || knownType == typeof(DateTime) || knownType == typeof(int) || knownType == typeof(double) || knownType == typeof(bool))
             {
-                bool b = bool.TryParse(value.Trim(), out bool boolean);
-                if (b == true)
+                bool canParse = bool.TryParse(value.Trim(), out bool boolean);
+                if (canParse)
                     return typeof(bool);
             }
 
