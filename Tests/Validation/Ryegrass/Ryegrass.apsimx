@@ -332,7 +332,7 @@
                   "Children": [
                     {
                       "$type": "Models.Clock, Models",
-                      "Start": "1992-04-01T00:00:00",
+                      "Start": "1992-03-29T00:00:00",
                       "End": "1995-06-30T00:00:00",
                       "Name": "clock",
                       "ResourceName": null,
@@ -397,6 +397,13 @@
                         {
                           "$type": "Models.Operations, Models",
                           "OperationsList": [
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "1992-03-30",
+                              "Action": "[AgPRyegrass].EndCrop()",
+                              "Line": "1992-03-30 [AgPRyegrass].EndCrop()"
+                            },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -675,7 +682,7 @@
                           "TurnoverDefoliationEffectMin": 0.025,
                           "MinimumGreenLeafProp": 0.8,
                           "MinimumGreenRootProp": 0.5,
-                          "Name": "AGPRyegrass",
+                          "Name": "AgPRyegrass",
                           "ResourceName": "AGPRyegrass",
                           "Children": [],
                           "Enabled": true,
@@ -694,6 +701,8 @@
                             "[AgPRyegrass].AboveGround.Wt",
                             "[AgPRyegrass].AboveGroundNConc",
                             "[AgPRyegrass].AboveGroundHarvestable.Wt",
+                            "Sum of [AgPRyegrass].HarvestedWt *0.1 from 1-Jan to 31-Dec as AnnualPastureYield",
+                            "",
                             "[AgPRyegrass].Leaf.DigestibilityLive",
                             "[AgPRyegrass].Stem.DigestibilityLive",
                             "[AgPRyegrass].Harvestable.Digestibility",
@@ -709,8 +718,6 @@
                             "[AgPRyegrass].Stem.Live.Wt",
                             "[AgPRyegrass].Stem.Live.NConc",
                             "([AgPRyegrass].Stem.Live.NConc*6.25) as StemCrudeProtien",
-                            "[AgPRyegrass].TotalWt ",
-                            "//[AgPRyegrass].AboveGroundCrudeProtein",
                             "sum([Soil].NO3.kgha)",
                             "[AgPRyegrass].Root.Depth"
                           ],
@@ -2006,6 +2013,74 @@
                           ],
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": null,
+                              "Position": 3,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null
+                            },
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": null,
+                              "Position": 0,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "AnnotationLocation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "Graph",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": 0,
+                              "FactorToVaryColours": null,
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "Report",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "AnnualPastureYield",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": false,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Series",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "Enabled": true,
@@ -2111,7 +2186,7 @@
                       "AnnotationLocation": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
-                      "Name": "AboveGroundWt",
+                      "Name": "AboveGroundHarvestableWt",
                       "ResourceName": null,
                       "Children": [
                         {
@@ -3071,7 +3146,7 @@
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "(AgPRyegrass.Leaf.Live.NConc)*6.25 AS LeafCrudeProtien",
+                          "YFieldName": "LeafCrudeProtien",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -3106,7 +3181,7 @@
                         },
                         {
                           "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": "(AgPRyegrass.Stem.Live.NConc)*6.25 AS StemCrudeProtien",
+                          "Title": null,
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
@@ -3139,7 +3214,7 @@
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "(AgPRyegrass.Stem.Live.NConc)*6.25 AS StemCrudeProtien",
+                          "YFieldName": "StemCrudeProtien",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -3148,74 +3223,6 @@
                           "CumulativeX": false,
                           "Filter": null,
                           "Name": "StemCR",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph, Models",
-                      "Caption": null,
-                      "Axis": [
-                        {
-                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": null,
-                          "Position": 3,
-                          "Inverted": false,
-                          "CrossesAtZero": false,
-                          "LabelOnOneLine": false,
-                          "Minimum": null,
-                          "Maximum": null,
-                          "Interval": null
-                        },
-                        {
-                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": null,
-                          "Position": 0,
-                          "Inverted": false,
-                          "CrossesAtZero": false,
-                          "LabelOnOneLine": false,
-                          "Minimum": null,
-                          "Maximum": null,
-                          "Interval": null
-                        }
-                      ],
-                      "LegendPosition": 0,
-                      "LegendOrientation": 0,
-                      "AnnotationLocation": 0,
-                      "DisabledSeries": [],
-                      "LegendOutsideGraph": false,
-                      "Name": "CrudeProtienAboveGround",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": 0,
-                          "FactorToVaryColours": null,
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 11,
-                          "MarkerSize": 0,
-                          "Line": 0,
-                          "LineThickness": 0,
-                          "TableName": "Report",
-                          "XFieldName": "Clock.Today",
-                          "YFieldName": "AgPRyegrass.CrudeProtein",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
-                          "ShowInLegend": false,
-                          "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "Series",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -3324,6 +3331,13 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
+                              "Date": "1995-02-27",
+                              "Action": "[AgPRyegrass].EndCrop()",
+                              "Line": "1995-02-27 [AgPRyegrass].EndCrop()"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1995-03-01",
                               "Action": "[AgPRyegrass].Sow(population: 1, cultivar: \"Aurora\", depth: 5, rowSpacing: 150)",
                               "Line": "1995-03-01 [AgPRyegrass].Sow(population: 1, cultivar: \"Aurora\", depth: 5, rowSpacing: 150)"
@@ -3359,6 +3373,13 @@
                         {
                           "$type": "Models.Operations, Models",
                           "OperationsList": [
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "1995-02-27",
+                              "Action": "[AgPRyegrass].EndCrop()",
+                              "Line": "1995-02-27 [AgPRyegrass].EndCrop()"
+                            },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -3400,6 +3421,13 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
+                              "Date": "1995-02-27",
+                              "Action": "[AgPRyegrass].EndCrop()",
+                              "Line": "1995-02-27 [AgPRyegrass].EndCrop()"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1995-03-01",
                               "Action": "[AgPRyegrass].Sow(population: 1, cultivar: \"Ellett\", depth: 5, rowSpacing: 150)",
                               "Line": "1995-03-01 [AgPRyegrass].Sow(population: 1, cultivar: \"Ellett\", depth: 5, rowSpacing: 150)"
@@ -3438,6 +3466,13 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
+                              "Date": "1995-02-27",
+                              "Action": "[AgPRyegrass].EndCrop()",
+                              "Line": "1995-02-27 [AgPRyegrass].EndCrop()"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1995-03-01",
                               "Action": "[AgPRyegrass].Sow(population: 1, cultivar: \"Vedette\", depth: 5, rowSpacing: 150)",
                               "Line": "1995-03-01 [AgPRyegrass].Sow(population: 1, cultivar: \"Vedette\", depth: 5, rowSpacing: 150)"
@@ -3473,6 +3508,13 @@
                         {
                           "$type": "Models.Operations, Models",
                           "OperationsList": [
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "1995-02-27",
+                              "Action": "[AgPRyegrass].EndCrop()",
+                              "Line": "1995-02-27 [AgPRyegrass].EndCrop()"
+                            },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -3524,7 +3566,7 @@
                   "Children": [
                     {
                       "$type": "Models.Clock, Models",
-                      "Start": "1995-04-01T00:00:00",
+                      "Start": "1995-02-26T00:00:00",
                       "End": "1997-06-30T00:00:00",
                       "Name": "clock",
                       "ResourceName": null,
@@ -3924,6 +3966,7 @@
                             "[AgPRyegrass].AboveGround.Wt",
                             "[AgPRyegrass].AboveGroundNConc",
                             "[AgPRyegrass].AboveGroundHarvestable.Wt",
+                            "Sum of [AgPRyegrass].HarvestedWt *0.1 from 1-Jan to 31-Dec as AnnualPastureYield",
                             "[AgPRyegrass].Leaf.DigestibilityLive",
                             "[AgPRyegrass].Stem.DigestibilityLive",
                             "[AgPRyegrass].Harvestable.Digestibility",
@@ -5188,14 +5231,14 @@
                               "XAxis": 3,
                               "YAxis": 0,
                               "ColourArgb": -16777216,
-                              "FactorToVaryColours": null,
+                              "FactorToVaryColours": "Cultivar",
                               "FactorToVaryMarkers": null,
                               "FactorToVaryLines": null,
-                              "Marker": 0,
+                              "Marker": 11,
                               "MarkerSize": 0,
-                              "Line": 4,
+                              "Line": 0,
                               "LineThickness": 0,
-                              "TableName": "Observed",
+                              "TableName": "Report",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "AgPRyegrass.Stem.Live.Wt",
                               "X2FieldName": null,
@@ -5205,7 +5248,7 @@
                               "Cumulative": false,
                               "CumulativeX": false,
                               "Filter": null,
-                              "Name": "Observed",
+                              "Name": "Predicted",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -5350,6 +5393,74 @@
                           ],
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": null,
+                              "Position": 3,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null
+                            },
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": null,
+                              "Position": 0,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "AnnotationLocation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "AnnualPastureYield",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": 0,
+                              "FactorToVaryColours": "Cultivar",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "Report",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "AnnualPastureYield",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": false,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "Enabled": true,
@@ -5413,7 +5524,7 @@
                           "Cumulative": false,
                           "CumulativeX": false,
                           "Filter": null,
-                          "Name": "Series",
+                          "Name": "Predicted",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -5455,7 +5566,7 @@
                       "AnnotationLocation": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
-                      "Name": "AboveGroundWt",
+                      "Name": "AboveGroundHarvestable",
                       "ResourceName": null,
                       "Children": [
                         {
@@ -6364,113 +6475,6 @@
                       ],
                       "Enabled": true,
                       "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Folder, Models",
-                      "ShowInDocs": false,
-                      "Name": "CrudeProtien",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                              "Title": null,
-                              "Position": 3,
-                              "Inverted": false,
-                              "CrossesAtZero": false,
-                              "LabelOnOneLine": false,
-                              "Minimum": null,
-                              "Maximum": null,
-                              "Interval": null
-                            },
-                            {
-                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                              "Title": null,
-                              "Position": 0,
-                              "Inverted": false,
-                              "CrossesAtZero": false,
-                              "LabelOnOneLine": false,
-                              "Minimum": null,
-                              "Maximum": null,
-                              "Interval": null
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "LegendOrientation": 0,
-                          "AnnotationLocation": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "CrudeProtien",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": 0,
-                              "FactorToVaryColours": "Cultivar",
-                              "FactorToVaryMarkers": null,
-                              "FactorToVaryLines": null,
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 0,
-                              "LineThickness": 0,
-                              "TableName": "Report",
-                              "XFieldName": "Clock.Today",
-                              "YFieldName": "AgPRyegrass.AboveGroundCrudeProtein",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
-                              "ShowInLegend": false,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Predicted",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": 0,
-                              "FactorToVaryColours": "Cultivar",
-                              "FactorToVaryMarkers": null,
-                              "FactorToVaryLines": null,
-                              "Marker": 0,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "Observed",
-                              "XFieldName": "Clock.Today",
-                              "YFieldName": "AgPRyegrass.AboveGround.Wt",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Observed",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
                     }
                   ],
                   "Enabled": true,
@@ -6503,6 +6507,13 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
+                              "Date": "1995-02-27",
+                              "Action": "[AgPRyegrass].EndCrop()",
+                              "Line": "1995-02-27 [AgPRyegrass].EndCrop()"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1995-03-01",
                               "Action": "[AgPRyegrass].Sow(population: 1, cultivar: \"Aurora\", depth: 5, rowSpacing: 150)",
                               "Line": "1995-03-01 [AgPRyegrass].Sow(population: 1, cultivar: \"Aurora\", depth: 5, rowSpacing: 150)"
@@ -6517,6 +6528,13 @@
                         {
                           "$type": "Models.Operations, Models",
                           "OperationsList": [
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "1995-02-27",
+                              "Action": "[AgPRyegrass].EndCrop()",
+                              "Line": "1995-02-27 [AgPRyegrass].EndCrop()"
+                            },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -6537,6 +6555,13 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
+                              "Date": "1995-02-27",
+                              "Action": "[AgPRyegrass].EndCrop()",
+                              "Line": "1995-02-27 [AgPRyegrass].EndCrop()"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1995-03-01",
                               "Action": "[AgPRyegrass].Sow(population: 1, cultivar: \"Ellett\", depth: 5, rowSpacing: 150)",
                               "Line": "1995-03-01 [AgPRyegrass].Sow(population: 1, cultivar: \"Ellett\", depth: 5, rowSpacing: 150)"
@@ -6554,6 +6579,13 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
+                              "Date": "1995-02-27",
+                              "Action": "[AgPRyegrass].EndCrop()",
+                              "Line": "1995-02-27 [AgPRyegrass].EndCrop()"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1995-03-01",
                               "Action": "[AgPRyegrass].Sow(population: 1, cultivar: \"Vedette\", depth: 5, rowSpacing: 150)",
                               "Line": "1995-03-01 [AgPRyegrass].Sow(population: 1, cultivar: \"Vedette\", depth: 5, rowSpacing: 150)"
@@ -6568,6 +6600,13 @@
                         {
                           "$type": "Models.Operations, Models",
                           "OperationsList": [
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "1995-02-27",
+                              "Action": "[AgPRyegrass].EndCrop()",
+                              "Line": "1995-02-27 [AgPRyegrass].EndCrop()"
+                            },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
@@ -6598,7 +6637,7 @@
                   "Children": [
                     {
                       "$type": "Models.Clock, Models",
-                      "Start": "1995-04-01T00:00:00",
+                      "Start": "1995-02-27T00:00:00",
                       "End": "1997-06-30T00:00:00",
                       "Name": "clock",
                       "ResourceName": null,
@@ -6998,6 +7037,7 @@
                             "[AgPRyegrass].AboveGround.Wt",
                             "[AgPRyegrass].AboveGroundHarvestable.Wt",
                             "//[AgPRyegrass].HarvestableLive.Wt",
+                            "Sum of [AgPRyegrass].HarvestedWt *0.1 from 1-Jan to 31-Dec as AnnualPastureYield",
                             "[AgPRyegrass].AboveGroundNConc",
                             "[AgPRyegrass].Leaf.DigestibilityLive",
                             "[AgPRyegrass].Stem.DigestibilityLive",
@@ -8299,7 +8339,143 @@
                           "AnnotationLocation": 0,
                           "DisabledSeries": [],
                           "LegendOutsideGraph": false,
-                          "Name": "AboveGroundWtGrms",
+                          "Name": "AboveGroundWt",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": 0,
+                              "FactorToVaryColours": "Cultivar",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "Report",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "AgPRyegrass.AboveGround.Wt",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": false,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": null,
+                              "Position": 3,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null
+                            },
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": null,
+                              "Position": 0,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "AnnotationLocation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "AnnualPastureYield",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": 0,
+                              "FactorToVaryColours": "Cultivar",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "Report",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "AnnualPastureYield",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": null,
+                              "Position": 3,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null
+                            },
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": null,
+                              "Position": 0,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "AnnotationLocation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "AboveGroundHarvestable",
                           "ResourceName": null,
                           "Children": [
                             {
@@ -8427,103 +8603,6 @@
                           "CumulativeX": false,
                           "Filter": null,
                           "Name": "Series",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph, Models",
-                      "Caption": null,
-                      "Axis": [
-                        {
-                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": null,
-                          "Position": 3,
-                          "Inverted": false,
-                          "CrossesAtZero": false,
-                          "LabelOnOneLine": false,
-                          "Minimum": null,
-                          "Maximum": null,
-                          "Interval": null
-                        },
-                        {
-                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": null,
-                          "Position": 0,
-                          "Inverted": false,
-                          "CrossesAtZero": false,
-                          "LabelOnOneLine": false,
-                          "Minimum": null,
-                          "Maximum": null,
-                          "Interval": null
-                        }
-                      ],
-                      "LegendPosition": 0,
-                      "LegendOrientation": 0,
-                      "AnnotationLocation": 0,
-                      "DisabledSeries": [],
-                      "LegendOutsideGraph": false,
-                      "Name": "AboveGroundHarvestable",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": 0,
-                          "FactorToVaryColours": "Cultivar",
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 11,
-                          "MarkerSize": 0,
-                          "Line": 0,
-                          "LineThickness": 0,
-                          "TableName": "Report",
-                          "XFieldName": "Clock.Today",
-                          "YFieldName": "AgPRyegrass.AboveGroundHarvestable.Wt",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
-                          "ShowInLegend": false,
-                          "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "Predicted",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Cultivar",
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 0,
-                          "MarkerSize": 0,
-                          "Line": 4,
-                          "LineThickness": 0,
-                          "TableName": "Observed",
-                          "XFieldName": "Clock.Today",
-                          "YFieldName": "AgPRyegrass.AboveGroundHarvestable.Wt",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
-                          "ShowInLegend": true,
-                          "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "Observed",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -12025,6 +12104,13 @@
                                 {
                                   "$type": "Models.Operations, Models",
                                   "OperationsList": [
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1993-01-01",
+                                      "Action": "[AgPRyegrass].EndCrop()",
+                                      "Line": "1993-01-01 [AgPRyegrass].EndCrop()"
+                                    },
                                     {
                                       "$type": "Models.Operation, Models",
                                       "Enabled": true,
@@ -16139,7 +16225,7 @@
                           "Children": [
                             {
                               "$type": "Models.Clock, Models",
-                              "Start": "1994-01-01T00:00:00",
+                              "Start": "1993-12-29T00:00:00",
                               "End": "1994-12-31T00:00:00",
                               "Name": "clock",
                               "ResourceName": null,
@@ -16204,6 +16290,13 @@
                                 {
                                   "$type": "Models.Operations, Models",
                                   "OperationsList": [
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1993-12-31",
+                                      "Action": "[AgPRyegrass].EndCrop()",
+                                      "Line": "1993-12-31 [AgPRyegrass].EndCrop()"
+                                    },
                                     {
                                       "$type": "Models.Operation, Models",
                                       "Enabled": true,
@@ -20281,7 +20374,7 @@
                           "Children": [
                             {
                               "$type": "Models.Clock, Models",
-                              "Start": "1991-01-01T00:00:00",
+                              "Start": "1990-12-29T00:00:00",
                               "End": "1991-12-31T00:00:00",
                               "Name": "clock",
                               "ResourceName": null,
@@ -20346,6 +20439,13 @@
                                 {
                                   "$type": "Models.Operations, Models",
                                   "OperationsList": [
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1990-12-30",
+                                      "Action": "[AgPRyegrass].EndCrop()",
+                                      "Line": "1990-12-30 [AgPRyegrass].EndCrop()"
+                                    },
                                     {
                                       "$type": "Models.Operation, Models",
                                       "Enabled": true,
@@ -24389,7 +24489,7 @@
                           "Children": [
                             {
                               "$type": "Models.Clock, Models",
-                              "Start": "1993-01-01T00:00:00",
+                              "Start": "1992-12-29T00:00:00",
                               "End": "1993-12-31T00:00:00",
                               "Name": "clock",
                               "ResourceName": null,
@@ -24454,6 +24554,13 @@
                                 {
                                   "$type": "Models.Operations, Models",
                                   "OperationsList": [
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1992-12-30",
+                                      "Action": "[AgPRyegrass].EndCrop()",
+                                      "Line": "1992-12-30 [AgPRyegrass].EndCrop()"
+                                    },
                                     {
                                       "$type": "Models.Operation, Models",
                                       "Enabled": true,
@@ -25603,6 +25710,42 @@
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Report, Models",
+                                  "VariableNames": [
+                                    "[Clock].Today",
+                                    "[Clock].Today.Year as Year",
+                                    "[Irrigation].IrrigationApplied",
+                                    "",
+                                    "// plant outputs",
+                                    "",
+                                    "",
+                                    "[AgPRyegrass].AboveGroundNConc",
+                                    "//[AgPRyegrass].AboveGroundHarvestable.StructuralWt",
+                                    "//[AgPRyegrass].AboveGroundHarvestable.wt",
+                                    "//Sum([AGPRyegrass].HarvestedWt",
+                                    "//[AgPRyegrass].HarvestedWt.wt",
+                                    "Sum of [AgPRyegrass].HarvestedWt *0.1 from 1-Jan to 31-Dec as AnnualPastureYield",
+                                    "[AgPRyegrass].GlfWaterSupply",
+                                    "[AgPRyegrass].GlfNContent",
+                                    "[AgPRyegrass].TotalWt ",
+                                    "",
+                                    "//Soil",
+                                    "sum([Soil].NO3.kgha)",
+                                    "",
+                                    "//Fertiliser",
+                                    "[Fertiliser].NitrogenApplied"
+                                  ],
+                                  "EventNames": [
+                                    "[Clock].DoReport"
+                                  ],
+                                  "GroupByVariableName": null,
+                                  "Name": "Report1",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
                                 }
                               ],
                               "Enabled": true,
@@ -25650,7 +25793,7 @@
                               "AnnotationLocation": 0,
                               "DisabledSeries": [],
                               "LegendOutsideGraph": false,
-                              "Name": "AboveGroundHarvestableWT",
+                              "Name": "HarvestableWT",
                               "ResourceName": null,
                               "Children": [
                                 {
@@ -28567,7 +28710,7 @@
                           "Children": [
                             {
                               "$type": "Models.Clock, Models",
-                              "Start": "1994-01-01T00:00:00",
+                              "Start": "1993-12-27T00:00:00",
                               "End": "1994-12-31T00:00:00",
                               "Name": "clock",
                               "ResourceName": null,
@@ -28632,6 +28775,13 @@
                                 {
                                   "$type": "Models.Operations, Models",
                                   "OperationsList": [
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1993-12-29",
+                                      "Action": "[AgPRyegrass].EndCrop()",
+                                      "Line": "1993-12-29 [AgPRyegrass].EndCrop()"
+                                    },
                                     {
                                       "$type": "Models.Operation, Models",
                                       "Enabled": true,
@@ -29863,7 +30013,7 @@
                               "AnnotationLocation": 0,
                               "DisabledSeries": [],
                               "LegendOutsideGraph": false,
-                              "Name": "AboveGroundHarvestableWT",
+                              "Name": "HarvestableWT",
                               "ResourceName": null,
                               "Children": [
                                 {
@@ -32712,7 +32862,7 @@
                           "Children": [
                             {
                               "$type": "Models.Clock, Models",
-                              "Start": "1991-01-01T00:00:00",
+                              "Start": "1990-12-29T00:00:00",
                               "End": "1991-12-31T00:00:00",
                               "Name": "clock",
                               "ResourceName": null,
@@ -32777,6 +32927,13 @@
                                 {
                                   "$type": "Models.Operations, Models",
                                   "OperationsList": [
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1990-12-30",
+                                      "Action": "[AgPRyegrass].EndCrop()",
+                                      "Line": "1990-12-30 [AgPRyegrass].EndCrop()"
+                                    },
                                     {
                                       "$type": "Models.Operation, Models",
                                       "Enabled": true,
@@ -33959,7 +34116,7 @@
                               "AnnotationLocation": 0,
                               "DisabledSeries": [],
                               "LegendOutsideGraph": false,
-                              "Name": "AboveGroundHarvestableWT",
+                              "Name": "HarvestableWT",
                               "ResourceName": null,
                               "Children": [
                                 {
@@ -36818,7 +36975,7 @@
                           "Children": [
                             {
                               "$type": "Models.Clock, Models",
-                              "Start": "1993-01-01T00:00:00",
+                              "Start": "1992-12-29T00:00:00",
                               "End": "1993-12-31T00:00:00",
                               "Name": "clock",
                               "ResourceName": null,
@@ -36883,6 +37040,13 @@
                                 {
                                   "$type": "Models.Operations, Models",
                                   "OperationsList": [
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1992-12-29",
+                                      "Action": "[AgPRyegrass].EndCrop()",
+                                      "Line": "1992-12-29 [AgPRyegrass].EndCrop()"
+                                    },
                                     {
                                       "$type": "Models.Operation, Models",
                                       "Enabled": true,
@@ -38079,7 +38243,7 @@
                               "AnnotationLocation": 0,
                               "DisabledSeries": [],
                               "LegendOutsideGraph": false,
-                              "Name": "AboveGroundHarvestableWT",
+                              "Name": "HarvestableWT",
                               "ResourceName": null,
                               "Children": [
                                 {
@@ -40928,7 +41092,7 @@
                           "Children": [
                             {
                               "$type": "Models.Clock, Models",
-                              "Start": "1994-01-01T00:00:00",
+                              "Start": "1993-12-29T00:00:00",
                               "End": "1994-12-31T00:00:00",
                               "Name": "clock",
                               "ResourceName": null,
@@ -40993,6 +41157,13 @@
                                 {
                                   "$type": "Models.Operations, Models",
                                   "OperationsList": [
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1993-12-29",
+                                      "Action": "[AgPRyegrass].EndCrop()",
+                                      "Line": "1993-12-29 [AgPRyegrass].EndCrop()"
+                                    },
                                     {
                                       "$type": "Models.Operation, Models",
                                       "Enabled": true,
@@ -42221,7 +42392,7 @@
                               "AnnotationLocation": 0,
                               "DisabledSeries": [],
                               "LegendOutsideGraph": false,
-                              "Name": "AboveGroundHarvestableWT",
+                              "Name": "HarvestableWT",
                               "ResourceName": null,
                               "Children": [
                                 {
@@ -45178,7 +45349,7 @@
                           "Children": [
                             {
                               "$type": "Models.Clock, Models",
-                              "Start": "1991-01-01T00:00:00",
+                              "Start": "1990-12-30T00:00:00",
                               "End": "1991-12-31T00:00:00",
                               "Name": "clock",
                               "ResourceName": null,
@@ -45243,6 +45414,13 @@
                                 {
                                   "$type": "Models.Operations, Models",
                                   "OperationsList": [
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Enabled": true,
+                                      "Date": "1990-12-30",
+                                      "Action": "[AgPRyegrass].EndCrop()",
+                                      "Line": "1990-12-30 [AgPRyegrass].EndCrop()"
+                                    },
                                     {
                                       "$type": "Models.Operation, Models",
                                       "Enabled": true,
@@ -46425,7 +46603,7 @@
                               "AnnotationLocation": 0,
                               "DisabledSeries": [],
                               "LegendOutsideGraph": false,
-                              "Name": "AboveGroundHarvestableWT",
+                              "Name": "HarvestableWT",
                               "ResourceName": null,
                               "Children": [
                                 {
@@ -51361,6 +51539,7 @@
                                 "[AgPRyegrass].GlfWaterSupply",
                                 "[AgPRyegrass].Leaf.Live.Wt",
                                 "[AgPRyegrass].AboveGroundHarvestable.Wt",
+                                "Sum of [AgPRyegrass].HarvestedWt *0.1 from 1-Jan to 31-Dec as AnnualPastureYield",
                                 "[AgPRyegrass].Leaf.Dead.Wt",
                                 "[AgPRyegrass].Height",
                                 "[AgPRyegrass].CoverGreen",
@@ -51633,6 +51812,13 @@
                             {
                               "$type": "Models.Operations, Models",
                               "OperationsList": [
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2006-03-14",
+                                  "Action": "[AgPRyegrass].EndCrop()",
+                                  "Line": "2006-03-14 [AgPRyegrass].EndCrop()"
+                                },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
@@ -53385,6 +53571,74 @@
                                   "ReadOnly": false
                                 }
                               ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": null,
+                              "Position": 3,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null
+                            },
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": null,
+                              "Position": 0,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "AnnotationLocation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "AnnualPastureYield",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": 0,
+                              "FactorToVaryColours": "Irrigation",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "Report",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "AnnualPastureYield",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted",
+                              "ResourceName": null,
+                              "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -56317,6 +56571,7 @@
                                 "[AgPRyegrass].GlfWaterSupply",
                                 "[AgPRyegrass].Leaf.Live.Wt",
                                 "[AgPRyegrass].AboveGroundHarvestable.wt",
+                                "Sum of [AgPRyegrass].HarvestedWt *0.1 from 1-Jan to 31-Dec as AnnualPastureYield",
                                 "[AgPRyegrass].Leaf.Dead.Wt",
                                 "[AgPRyegrass].Height",
                                 "[AgPRyegrass].CoverGreen",
@@ -56368,9 +56623,9 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
-                                  "Date": "2011-03-01",
+                                  "Date": "2011-03-15",
                                   "Action": "[AgPRyegrass].Sow(population: 1, cultivar: \"Aurora\", depth: 5, rowSpacing: 150)",
-                                  "Line": "2011-03-01 [AgPRyegrass].Sow(population: 1, cultivar: \"Aurora\", depth: 5, rowSpacing: 150)"
+                                  "Line": "2011-03-15 [AgPRyegrass].Sow(population: 1, cultivar: \"Aurora\", depth: 5, rowSpacing: 150)"
                                 }
                               ],
                               "Name": "Sowing",
@@ -58325,6 +58580,74 @@
                           ],
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": null,
+                              "Position": 3,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null
+                            },
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": null,
+                              "Position": 0,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "AnnotationLocation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "AnnualPastureYield",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": 0,
+                              "FactorToVaryColours": "Irrigation",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "Report",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "AnnualPastureYield",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "Enabled": true,
@@ -58520,86 +58843,6 @@
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
-                          "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "Series1",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Regression, Models",
-                              "ForEachSeries": false,
-                              "showOneToOne": true,
-                              "showEquation": true,
-                              "Name": "Regression",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph, Models",
-                      "Caption": null,
-                      "Axis": [
-                        {
-                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": null,
-                          "Position": 3,
-                          "Inverted": false,
-                          "CrossesAtZero": false,
-                          "LabelOnOneLine": false,
-                          "Minimum": null,
-                          "Maximum": null,
-                          "Interval": null
-                        },
-                        {
-                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": null,
-                          "Position": 0,
-                          "Inverted": false,
-                          "CrossesAtZero": false,
-                          "LabelOnOneLine": false,
-                          "Minimum": null,
-                          "Maximum": null,
-                          "Interval": null
-                        }
-                      ],
-                      "LegendPosition": 0,
-                      "LegendOrientation": 0,
-                      "AnnotationLocation": 0,
-                      "DisabledSeries": [],
-                      "LegendOutsideGraph": false,
-                      "Name": "NDVI",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": 0,
-                          "FactorToVaryColours": "Irrigation",
-                          "FactorToVaryMarkers": "CoverType",
-                          "FactorToVaryLines": null,
-                          "Marker": 0,
-                          "MarkerSize": 0,
-                          "Line": 4,
-                          "LineThickness": 0,
-                          "TableName": "PredObs",
-                          "XFieldName": "Observed.Spectral.NDVI",
-                          "YFieldName": "Predicted.Spectral.NDVI",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
-                          "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
                           "CumulativeX": false,
