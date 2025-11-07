@@ -75,15 +75,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Make all directories safe (we are in a container. so it is ok :))
-        run: git config --global --add safe.directory "*"
-
-      - name: Make sure we have ownership of ApsimX
-        run: chown -R root:root /__w/ApsimX/ApsimX
-
-      - name: Make GitHub home directory belong to root user
-        run: chown -R root:root /github/home
-
       - name: Set script permissions
         run: chmod +x -R ./.github/workflows/scripts/
 
@@ -105,15 +96,6 @@ jobs:
       steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Make all directories safe (we are in a container. so it is ok :))
-        run: git config --global --add safe.directory "*"
-
-      - name: Make sure we have ownership of ApsimX
-        run: chown -R root:root /__w/ApsimX/ApsimX
-
-      - name: Make GitHub home directory belong to root user
-        run: chown -R root:root /github/home
 
       - name: Set script permissions
         run: chmod +x -R ./.github/workflows/scripts/
