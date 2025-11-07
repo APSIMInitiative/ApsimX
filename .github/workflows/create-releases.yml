@@ -56,14 +56,14 @@ jobs:
             type=ref,event=pr
 
       - name: Create APSIM Signing Certificate
+        env:
+          APSIM_CERT_BASE64: ${{ secrets.APSIM_CERT }} 
         run: |
-          echo -n "$APSIM_CERT_BASE64" | base64 -d > apsim_signing_cert.p12
-          APSIM_CERT="./apsim_signing_cert.p12"
+          echo -n "$APSIM_CERT_BASE64" | base64 -d > ./apsim_signing_cert.p12
 
       - name: Create Release
         env:
           PULL_ID: ${DOCKER_METADATA_OUTPUT_VERSION:3}
           BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
           APSIM_CERT_PWD: ${{ secrets.APSIM_CERT_PWD }}
-          APSIM_CERT_BASE64: ${{ secrets.APSIM_CERT }}
         run: ./.github/workflows/scripts/deploy-installer.sh ${{ matrix.os }}
