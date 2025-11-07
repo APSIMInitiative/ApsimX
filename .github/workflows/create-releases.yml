@@ -18,7 +18,7 @@ on:
 
 jobs:
     create-releases:
-      if: github.event.pull_request.merged == true
+      if: github.event.pull_request.merged == true && contains(${{github.event.pull_request.body}}, 'resolves #')
       strategy:
         fail-fast: false # allow other jobs to complete if one fails
         matrix:
@@ -73,6 +73,7 @@ jobs:
     
     # Creates docker containers for APSIM releases.
     create-docker-containers:
+      if: github.event.pull_request.merged == true && contains(${{github.event.pull_request.body}}, 'resolves #')
       runs-on: ubuntu-latest
       steps:
       - name: Checkout code
@@ -94,6 +95,8 @@ jobs:
 
     # Upload release to builds.apsim.info
     upload-release-assets:
+      # only run if the PR description contains "resolves #"
+      if: github.event.pull_request.merged == true && contains(${{github.event.pull_request.body}}, 'resolves #')
       needs: [create-docker-containers, create-releases]
       runs-on: ubuntu-latest 
       steps:
