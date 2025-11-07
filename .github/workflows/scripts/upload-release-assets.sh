@@ -10,9 +10,12 @@
 
 set -euo pipefail
 
-test -z ${PULL_ID:+x} && ( echo "PULL_ID not set"; exit 1 )
+test -z ${DOCKER_METADATA_OUTPUT_VERSION:+x} && ( echo "DOCKER_METADATA_OUTPUT_VERSION not set"; exit 1 )
 test -z ${NETLIFY_BUILD_HOOK:+x} && ( echo "NETLIFY_BUILD_HOOK not set"; exit 1 )
 test -z ${BUILDS_JWT:+x} && ( echo "BUILDS_JWT not set"; exit 1 )
+
+PULL_ID=${DOCKER_METADATA_OUTPUT_VERSION:3}
+test -z ${PULL_ID:+x} && ( echo "PULL_ID not set"; exit 1 )
 
 echo Adding build to DB...
 # curl -fsX POST -H "Authorization: bearer $BUILDS_JWT" "https://builds.apsim.info/api/nextgen/add?pullRequestNumber=$PULL_ID"
