@@ -72,9 +72,13 @@ jobs:
     create-docker-containers:
       runs-on: ubuntu-latest
       steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Get 12 character commit sha
         id: get_commit_sha
         run: echo "COMMIT_SHA=$(echo ${{ github.event.pull_request.merge_commit_sha }} | cut -c1-12)" >> $GITHUB_ENV
+
       - name: Build Docker containers
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -87,6 +91,20 @@ jobs:
       needs: [create-docker-containers, create-releases]
       runs-on: ubuntu-latest 
       steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      # This is used purely for PR number extraction.
+      - name: Get PR number
+        id: meta_apsimplusr
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: apsiminitiative/apsimplusr
+          flavor: latest=true
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+      
       - name: Upload Release Assets
         env:
           PULL_ID: ${DOCKER_METADATA_OUTPUT_VERSION:3}
