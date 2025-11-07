@@ -5,6 +5,9 @@
 name: Create APSIM Releases
 permissions:
   contents: read # to check out code
+defaults:
+  run:
+    shell: bash
 
 on:
   pull_request_target:
