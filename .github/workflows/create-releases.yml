@@ -63,10 +63,13 @@ jobs:
 
       - name: Create Release
         env:
-          PULL_ID: ${DOCKER_METADATA_OUTPUT_VERSION:3}
+          DOCKER_METADATA_OUTPUT_VERSION: ${{ fromJSON(steps.meta_apsimplusr.outputs.json).labels['org.opencontainers.image.version'] }}
           BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
           APSIM_CERT_PWD: ${{ secrets.APSIM_CERT_PWD }}
-        run: ./.github/workflows/scripts/deploy-installer.sh ${{ matrix.os }}
+        run: |
+          PULL_ID=${DOCKER_METADATA_OUTPUT_VERSION:3}
+          echo "PULL_ID=$PULL_ID"
+          ./.github/workflows/scripts/deploy-installer.sh ${{ matrix.os }}
     
     # Creates docker containers for APSIM releases.
     create-docker-containers:
@@ -113,7 +116,10 @@ jobs:
       
       - name: Upload Release Assets
         env:
-          PULL_ID: ${DOCKER_METADATA_OUTPUT_VERSION:3}
+          DOCKER_METADATA_OUTPUT_VERSION: ${{ fromJSON(steps.meta_apsimplusr.outputs.json).labels['org.opencontainers.image.version'] }}
           NETLIFY_BUILD_HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}
           BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
-        run: ./.github/workflows/scripts/upload-release-assets.sh
+        run: |
+          PULL_ID=${DOCKER_METADATA_OUTPUT_VERSION:3}
+          echo "PULL_ID=$PULL_ID"
+          ./.github/workflows/scripts/upload-release-assets.sh
