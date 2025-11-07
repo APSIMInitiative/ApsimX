@@ -33,7 +33,7 @@ jobs:
       - name: Make sure we have ownership of ApsimX
         run: chown -R root:root /__w/ApsimX/ApsimX
 
-      - name: Make GitHub home directory
+      - name: Make GitHub home directory belong to root user
         run: chown -R root:root /github/home
 
       - name: Set up .NET
@@ -75,6 +75,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Make all directories safe (we are in a container. so it is ok :))
+        run: git config --global --add safe.directory "*"
+
+      - name: Make sure we have ownership of ApsimX
+        run: chown -R root:root /__w/ApsimX/ApsimX
+
+      - name: Make GitHub home directory belong to root user
+        run: chown -R root:root /github/home
+
+      - name: Set script permissions
+        run: chmod +x -R ./.github/workflows/scripts/
+
       - name: Get 12 character commit sha
         id: get_commit_sha
         run: echo "COMMIT_SHA=$(echo ${{ github.event.pull_request.merge_commit_sha }} | cut -c1-12)" >> $GITHUB_ENV
@@ -93,7 +105,19 @@ jobs:
       steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
+      - name: Make all directories safe (we are in a container. so it is ok :))
+        run: git config --global --add safe.directory "*"
+
+      - name: Make sure we have ownership of ApsimX
+        run: chown -R root:root /__w/ApsimX/ApsimX
+
+      - name: Make GitHub home directory belong to root user
+        run: chown -R root:root /github/home
+
+      - name: Set script permissions
+        run: chmod +x -R ./.github/workflows/scripts/
+
       # This is used purely for PR number extraction.
       - name: Get PR number
         id: meta_apsimplusr
