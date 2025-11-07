@@ -15,32 +15,32 @@ namespace Models.PreSimulationTools.ObservationsInfo
     /// </summary>
     public class ColumnInfo
     {
-        /// <summary></summary>
+        /// <summary>Name of the column</summary>
         public string Name;
 
-        /// <summary></summary>
+        /// <summary>Does the column name match an APSIM variable</summary>
         public string IsApsimVariable;
 
-        /// <summary></summary>
+        /// <summary>The type of the APSIM variable if it matches, null if it doesn't match</summary>
         public Type VariableType;
 
-        /// <summary></summary>
+        /// <summary>The type of the data from the observed data</summary>
         public Type DataType;
 
-        /// <summary></summary>
+        /// <summary>Does the type of the variable match the type of the observed data. Null if the variable doesn't exist</summary>
         public bool DataTypesMatch;
 
-        /// <summary></summary>
+        /// <summary>Does this column have an error column in the observed data</summary>
         public bool HasErrorColumn;
 
-        /// <summary></summary>
+        /// <summary>The observed file where this column was found</summary>
         public string File;
 
         /// <summary>
         /// Converts a list of ColumnInfo into a DataTable
         /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
+        /// <param name="data">A list of ColumnInfo</param>
+        /// <returns>A DataTable of the contents of the given list. Used by the GUI for displaying this class.</returns>
         public static DataTable CreateDataTable(IEnumerable data)
         {
             DataTable newTable = new DataTable();
@@ -83,7 +83,13 @@ namespace Models.PreSimulationTools.ObservationsInfo
             return dv.ToTable();
         }
 
-        /// <summary>From the list of columns read in, get a list of columns that match apsim variables.</summary>
+        /// <summary>
+        /// From the list of columns read in, get a list of columns that match apsim variables.
+        /// </summary>
+        /// <param name="dataTable">A datatable of the observed data</param>
+        /// <param name="simulations">The Simulations node</param>
+        /// <param name="columnNames">A list to store column names in as they are found</param>
+        /// <returns>A list of ColumnInfo objects for Observations to store</returns>
         public static List<ColumnInfo> GetAPSIMColumnsFromObserved(DataTable dataTable, Simulations simulations, List<string> columnNames)
         {
             List<ColumnInfo> infos = new List<ColumnInfo>();
@@ -176,7 +182,12 @@ namespace Models.PreSimulationTools.ObservationsInfo
             return infos;
         }
 
-        /// <summary></summary>
+        /// <summary>
+        /// Determines if the given string matches the format for an APSIM variable.
+        /// This is still rather simple, could be improved further if this class needed a performance boost.
+        /// </summary>
+        /// <param name="columnName">The name of the column</param>
+        /// <returns>True if it could be an APSIM variable, false if it cant</returns>
         private static bool NameIsAPSIMFormat(string columnName)
         {
             if (columnName.Contains('.'))
@@ -185,7 +196,12 @@ namespace Models.PreSimulationTools.ObservationsInfo
                 return false;
         }
 
-        /// <summary></summary>
+        /// <summary>
+        /// This works out if the given column name actually matches an apsim variable using the locator
+        /// </summary>
+        /// <param name="columnName">The name to match</param>
+        /// <param name="sims">Reference to Simulations</param>
+        /// <returns>Returns null if the name doesn't match, or a VariableComposite reference if it was found.</returns>
         private static VariableComposite NameMatchesAPSIMModel(string columnName, Simulations sims)
         {
             string nameWithoutBrackets = columnName;
@@ -228,8 +244,8 @@ namespace Models.PreSimulationTools.ObservationsInfo
         /// <summary>
         /// Corrects the column types to match the type of data. Really important for making sure dates are stored as DateTimes instead of as strings.
         /// </summary>
-        /// <param name="dataTable"></param>
-        /// <returns></returns>
+        /// <param name="dataTable">Takes in an observed data in a datatable and corrects an mistakes to the data types on columns.</param>
+        /// <returns>Returns the datatable with the columns corrected</returns>
         public static DataTable FixColumnTypes(DataTable dataTable)
         {
             List<string> columnNames = dataTable.GetColumnNames().ToList();
@@ -286,6 +302,12 @@ namespace Models.PreSimulationTools.ObservationsInfo
             return dataTable;
         }
 
+        /// <summary>
+        /// Determines what data type a column in a datatable should be
+        /// </summary>
+        /// <param name="columnName">The name of the column</param>
+        /// <param name="rows">Collection of rows from the DataTable</param>
+        /// <returns>A Type for that matches the data in the given column</returns>
         private static Type GetTypeOfColumn(string columnName, DataRowCollection rows)
         {
             Type type = null;
@@ -320,6 +342,18 @@ namespace Models.PreSimulationTools.ObservationsInfo
             return type;
         }
 
+        /// <summary>
+        /// Given a value as a string, this returns what type the value could be.
+        /// In order of preference:
+        /// - DateTime
+        /// - Double
+        /// - Int
+        /// - Bool
+        /// - String
+        /// </summary>
+        /// <param name="value">The value to check</param>
+        /// <param name="knownType">What type this cell could be based on the previous cells in the column the value came from. This prevents a high preferenced type from being picked if a previous cell alreay ruled that out.</param>
+        /// <returns>A Type for this cell</returns>
         private static Type GetTypeOfCell(string value, Type knownType = null)
         {
             if (knownType == null || knownType == typeof(DateTime))

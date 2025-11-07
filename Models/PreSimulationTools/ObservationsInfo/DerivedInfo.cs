@@ -13,19 +13,19 @@ namespace Models.PreSimulationTools.ObservationsInfo
     /// </summary>
     public class DerivedInfo
     {
-        /// <summary></summary>
+        /// <summary>Name of the devided variable</summary>
         public string Name;
 
-        /// <summary></summary>
+        /// <summary>The maths function used to calculate the variable</summary>
         public string Function;
 
-        /// <summary></summary>
+        /// <summary>Data type of the derived variable</summary>
         public string DataType;
 
-        /// <summary></summary>
+        /// <summary>How many of this variable was infilled</summary>
         public int Added;
 
-        /// <summary></summary>
+        /// <summary>How many of thise variable already existed in the observed data</summary>
         public int Existing;
 
         /// <summary>
@@ -65,7 +65,11 @@ namespace Models.PreSimulationTools.ObservationsInfo
             return dv.ToTable();
         }
 
-        /// <summary></summary>
+        /// <summary>
+        /// Converts a list of DerivedInfo into a DataTable
+        /// </summary>
+        /// <param name="dataTable">A list of DerivedInfo</param>
+        /// <returns>A DataTable of the contents of the given list. Used by the GUI for displaying this class.</returns>
         public static List<DerivedInfo> AddDerivedColumns(DataTable dataTable)
         {
             List<DerivedInfo> infos = new List<DerivedInfo>();
@@ -96,27 +100,28 @@ namespace Models.PreSimulationTools.ObservationsInfo
         }
 
         /// <summary>
-        ///
+        /// Calculates devirable values from the given observed data based on the paramters given.
+        /// Wrapper for DeriveColumn that allows elements as parameters instead of in a list of string for easier reading
         /// </summary>
-        /// <param name="data"></param>
-        /// <param name="derived"></param>
-        /// <param name="variable1"></param>
-        /// <param name="operation"></param>
-        /// <param name="variable2"></param>
-        /// <returns>True if a value was derived, false if not</returns>
+        /// <param name="data">The datatable to read from</param>
+        /// <param name="derived">The derived value to calculate</param>
+        /// <param name="variable1">The first variable to read</param>
+        /// <param name="operation">The operation to apply</param>
+        /// <param name="variable2">The second variable to read</param>
+        /// <returns>A list of DerivedInfo for all the derivable variables. Also adds the derived values back in to the datatable given.</returns>
         private static List<DerivedInfo> DeriveColumn(DataTable data, string derived, string variable1, string operation, string variable2)
         {
             return DeriveColumn(data, derived, operation, new List<string>() { variable1, variable2 });
         }
 
         /// <summary>
-        /// 
+        /// Calculates devirable values from the given observed data based on the paramters given.
         /// </summary>
-        /// <param name="data"></param>
-        /// <param name="derived"></param>
-        /// <param name="operation"></param>
-        /// <param name="variables"></param>
-        /// <returns>True if a value was derived, false if not</returns>
+        /// <param name="data">The datatable to read from</param>
+        /// <param name="derived">The derived value to calculate</param>
+        /// <param name="operation">The operation to apply</param>
+        /// <param name="variables">The variables to apply the operation to</param>
+        /// <returns>A list of DerivedInfo for all the derivable variables. Also adds the derived values back in to the datatable given.</returns>
         private static List<DerivedInfo> DeriveColumn(DataTable data, string derived, string operation, List<string> variables)
         {
             List<DerivedInfo> infos = new List<DerivedInfo>();

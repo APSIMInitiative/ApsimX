@@ -9,33 +9,33 @@ using APSIM.Shared.Utilities;
 namespace Models.PreSimulationTools.ObservationsInfo
 {
     /// <summary>
-    /// 
+    /// Stores information about a rows that could not be merged in an observed data
     /// </summary>
     public class MergeInfo
     {
-        /// <summary></summary>
+        /// <summary>The simulation name of the row that couldn't be merged</summary>
         public string Name;
 
-        /// <summary></summary>
+        /// <summary>The clock.today of the row that couldn't be merged</summary>
         public string Date;
 
-        /// <summary></summary>
+        /// <summary>The column it tried to merge on</summary>
         public string Column;
 
-        /// <summary></summary>
+        /// <summary>The value in the base row</summary>
         public string Value1;
 
-        /// <summary></summary>
+        /// <summary>The value in the row trying to be merged in</summary>
         public string Value2;
 
-        /// <summary></summary>
+        /// <summary>The file that the merging row came from</summary>
         public string File;
 
         /// <summary>
-        /// Converts a list of SimulationInfo into a DataTable
+        /// Converts a list of MergeInfo into a DataTable
         /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
+        /// <param name="data">A list of MergeInfo</param>
+        /// <returns>A DataTable of the contents of the given list. Used by the GUI for displaying this class.</returns>
         public static DataTable CreateDataTable(IEnumerable data)
         {
             DataTable newTable = new DataTable();
@@ -75,6 +75,9 @@ namespace Models.PreSimulationTools.ObservationsInfo
         /// Filter through the given datatable and combine rows that have the same SimulationName and Clock.Today values.
         /// Will throw if it encounters two rows with different values for a field that should be combined.
         /// </summary>
+        /// <param name="dataTable">The datatable to read from</param>
+        /// <param name="combinedDataTable">The datatable to write the results to</param>
+        /// <returns>A list of MergeInfo that describe mergings that had conflicts</returns>
         public static List<MergeInfo> CombineRows(DataTable dataTable, out DataTable combinedDataTable)
         {
             List<MergeInfo> infos = new List<MergeInfo>();
@@ -166,6 +169,9 @@ namespace Models.PreSimulationTools.ObservationsInfo
         /// <summary>
         /// Comparisions to check if the value in the given column can be merged into newRow from row.
         /// </summary>
+        /// <param name="row">The row to combine into</param>
+        /// <param name="newRow">The row to combine</param>
+        /// <param name="column">The column we are reading/writing from</param>
         /// <returns>Returns the percentage difference between values, 0 if equal, 1 if string mismatch, 0-1 for double mismatch.</returns>
         private static double CanMergeRows(DataRow row, DataRow newRow, string column)
         {

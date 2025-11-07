@@ -7,27 +7,27 @@ using Models.Core;
 namespace Models.PreSimulationTools.ObservationsInfo
 {
     /// <summary>
-    /// 
+    /// Stores information about simulation names and if they match between the apsim file and observed datas
     /// </summary>
     public class SimulationInfo
     {
-        /// <summary></summary>
+        /// <summary>Simulation name</summary>
         public string Name;
 
-        /// <summary></summary>
+        /// <summary>Does this simulation exist in the APSIM file</summary>
         public bool HasSimulation;
 
-        /// <summary></summary>
+        /// <summary>Does this simulation have data in the observed files</summary>
         public bool HasData;
 
-        /// <summary></summary>
+        /// <summary>How many rows of data this simulation has</summary>
         public int Rows;
 
         /// <summary>
         /// Converts a list of SimulationInfo into a DataTable
         /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
+        /// <param name="data">A list of SimulationInfo</param>
+        /// <returns>A DataTable of the contents of the given list. Used by the GUI for displaying this class.</returns>
         public static DataTable CreateDataTable(IEnumerable data)
         {
             DataTable newTable = new DataTable();
@@ -59,7 +59,12 @@ namespace Models.PreSimulationTools.ObservationsInfo
             return dv.ToTable();
         }
 
-        /// <summary></summary>
+        /// <summary>
+        /// Compare the simulation names from the apsim file against the simulation names in the given DataTable and returns SimulationInfo about if they match or not.
+        /// </summary>
+        /// <param name="dataTable">Observed data in a DataTable</param>
+        /// <param name="simulations">Reference to the Simulations node</param>
+        /// <returns>A list of SimulationInfo that says if the name match and if any are missing from the simulation or data</returns>
         public static List<SimulationInfo> GetSimulationsFromObserved(DataTable dataTable, Simulations simulations)
         {
             List<SimulationInfo> data = new List<SimulationInfo>();

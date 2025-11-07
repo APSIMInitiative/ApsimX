@@ -8,27 +8,27 @@ using APSIM.Shared.Utilities;
 namespace Models.PreSimulationTools.ObservationsInfo
 {
     /// <summary>
-    /// 
+    /// Stores information about a rows that contain 0 values that might need to be cleaned up
     /// </summary>
     public class ZeroInfo
     {
-        /// <summary></summary>
+        /// <summary>The simulation name</summary>
         public string Name;
 
-        /// <summary></summary>
+        /// <summary>The Clock.Today of the row with a 0</summary>
         public string Date;
 
-        /// <summary></summary>
+        /// <summary>The column where the 0 is</summary>
         public string Column;
 
-        /// <summary></summary>
+        /// <summary>The file containing this 0</summary>
         public string File;
 
         /// <summary>
-        /// Converts a list of SimulationInfo into a DataTable
+        /// Converts a list of ZeroInfo into a DataTable
         /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
+        /// <param name="data">A list of ZeroInfo</param>
+        /// <returns>A DataTable of the contents of the given list. Used by the GUI for displaying this class.</returns>
         public static DataTable CreateDataTable(IEnumerable data)
         {
             DataTable newTable = new DataTable();
@@ -61,9 +61,10 @@ namespace Models.PreSimulationTools.ObservationsInfo
         }
 
         /// <summary>
-        /// 
+        /// Looks through the given DataTable for any cells that equal "0"
         /// </summary>
-        /// <returns></returns>
+        /// <param name="dataTable">The DataTable to look at</param>
+        /// <returns>A list of ZeroInfo that help track down the found 0s</returns>
         public static List<ZeroInfo> DetectZeros(DataTable dataTable)
         {
             List<ZeroInfo> data = new List<ZeroInfo>();
