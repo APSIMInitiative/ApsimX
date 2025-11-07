@@ -14,7 +14,7 @@ on:
       - closed
 
 jobs:
-    create-release:
+    create-releases:
       if: github.event.pull_request.merged == true
       strategy:
         fail-fast: false # allow other jobs to complete if one fails
@@ -67,3 +67,29 @@ jobs:
           BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
           APSIM_CERT_PWD: ${{ secrets.APSIM_CERT_PWD }}
         run: ./.github/workflows/scripts/deploy-installer.sh ${{ matrix.os }}
+    
+    # Creates docker containers for APSIM releases.
+    create-docker-containers:
+      runs-on: ubuntu-latest
+      steps:
+      - name: Get 12 character commit sha
+        id: get_commit_sha
+        run: echo "COMMIT_SHA=$(echo ${{ github.event.pull_request.merge_commit_sha }} | cut -c1-12)" >> $GITHUB_ENV
+      - name: Build Docker containers
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          MERGE_COMMIT: ${{ env.COMMIT_SHA }}
+        run: ./.github/workflows/scripts/deploy-docker.sh
+
+    # Upload release to builds.apsim.info
+    upload-release-assets:
+      needs: [create-docker-containers, create-releases]
+      runs-on: ubuntu-latest 
+      steps:
+      - name: Upload Release Assets
+        env:
+          PULL_ID: ${DOCKER_METADATA_OUTPUT_VERSION:3}
+          NETLIFY_BUILD_HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}
+          BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
+        run: ./.github/workflows/scripts/upload-release-assets.sh
