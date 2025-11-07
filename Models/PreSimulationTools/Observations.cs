@@ -220,9 +220,10 @@ namespace Models.PreSimulationTools
         }
 
         /// <summary>
-        /// 
+        /// Returns a list of new Column names from a DataTable that excludes names that were read from previously read DataTables
         /// </summary>
-        /// <param name="dataTable"></param>
+        /// <param name="dataTable">The DataTable to read</param>
+        /// <returns>A list of ColumnInfo for the new columns</returns>
         public List<ColumnInfo> GetAPSIMColumnsFromObserved(DataTable dataTable)
         {
             ColumnNames = new List<string>();
@@ -243,9 +244,10 @@ namespace Models.PreSimulationTools
         }
 
         /// <summary>
-        /// 
+        /// Fills in the SimulationInfos with data from the given DataTable. Must be here because it needs to handle multiple sheets being read in to prevent duplication.
         /// </summary>
-        /// <param name="dataTable"></param>
+        /// <param name="dataTable">The DataTable to read</param>
+        /// <returns>Nothing. But does append the simulation infos to SimulationData</returns>
         public void GetSimulationsFromObserved(DataTable dataTable)
         {
             Simulations sims = Structure.FindParent<Simulations>(recurse: true);
@@ -269,7 +271,10 @@ namespace Models.PreSimulationTools
         }
 
         /// <summary>
+        /// Function to load a file from Excel, should be refactored later into a utility class. Used by the unit tests.
         /// </summary>
+        /// <param name="filepath">File to open</param>
+        /// <returns>A list of DataTables from the file where each table is a sheet.</returns>
         public List<DataTable> LoadFromExcel(string filepath)
         {
             if (Path.GetExtension(filepath).Equals(".xls", StringComparison.CurrentCultureIgnoreCase))
