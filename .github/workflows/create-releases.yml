@@ -67,7 +67,7 @@ jobs:
           BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
           APSIM_CERT_PWD: ${{ secrets.APSIM_CERT_PWD }}
         run: |
-          PULL_ID=${DOCKER_METADATA_OUTPUT_VERSION:3}
+          PULL_ID="${DOCKER_METADATA_OUTPUT_VERSION:3}"
           echo "PULL_ID=$PULL_ID"
           ./.github/workflows/scripts/deploy-installer.sh ${{ matrix.os }}
     
@@ -120,6 +120,6 @@ jobs:
           NETLIFY_BUILD_HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}
           BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
         run: |
-          PULL_ID=${DOCKER_METADATA_OUTPUT_VERSION:3}
+          PULL_ID="${DOCKER_METADATA_OUTPUT_VERSION:3}"
           echo "PULL_ID=$PULL_ID"
           ./.github/workflows/scripts/upload-release-assets.sh
