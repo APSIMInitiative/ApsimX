@@ -57,9 +57,9 @@ namespace UnitTests
             dataStore.Reader.Refresh();
             DataTable dt = dataStore.Reader.GetData("Observed");
 
-            Assert.That(dt.Columns[4].DataType, Is.EqualTo(typeof(DateTime)));
-            Assert.That(dt.Columns[5].DataType, Is.EqualTo(typeof(string)));
+            Assert.That(dt.Columns[5].DataType, Is.EqualTo(typeof(DateTime)));
             Assert.That(dt.Columns[6].DataType, Is.EqualTo(typeof(string)));
+            Assert.That(dt.Columns[7].DataType, Is.EqualTo(typeof(string)));
 
             string filename = "%root%/Tests/UnitTests/PreSimulationTools/Input.xlsx";
 
@@ -106,7 +106,7 @@ namespace UnitTests
             //Check Merge information
             //
             string[] mergeName = [""];
-            string[] mergeDate = ["2000/01/01"];
+            string[] mergeDate = ["2000-01-01"];
             string[] mergeColumn = ["ValueWithSpace"];
             string[] mergeValue1 = ["10"];
             string[] mergeValue2 = ["1000"];
@@ -126,7 +126,7 @@ namespace UnitTests
             //
             string[] zeroName = [""];
             string[] zeroColumn = ["Wheat.Grain.Wt"];
-            string[] zeroDate = ["01/01/2000"];
+            string[] zeroDate = ["2000-01-01"];
 
             for (int i = 0; i < observations.ZeroData.Count; i++)
             {

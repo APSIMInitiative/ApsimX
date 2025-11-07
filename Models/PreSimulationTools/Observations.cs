@@ -196,8 +196,8 @@ namespace Models.PreSimulationTools
 
                 // Create a table with all the required column, each with the type set to string
                 DataTable data = new DataTable();
-                data.Columns.Add("_Filename", typeof(string));
                 data.TableName = sheet;
+                data.Columns.Add("_Filename", typeof(string));
                 foreach (string column in columns)
                     data.Columns.Add(column, typeof(string));
 
@@ -205,6 +205,9 @@ namespace Models.PreSimulationTools
                 foreach (string fileName in files)
                 {
                     List<DataTable> tables = LoadFromExcel(fileName);
+                    string relativeFilename = fileName;
+                    if (Node != null && Node.FileName != null)
+                        relativeFilename = PathUtilities.GetRelativePath(fileName, Node.FileName);
                     foreach (DataTable table in tables)
                     {
                         if (table.TableName == sheet)
@@ -212,7 +215,7 @@ namespace Models.PreSimulationTools
                             foreach (DataRow row in table.Rows)
                             {
                                 data.ImportRow(row);
-                                data.Rows[data.Rows.Count - 1]["_Filename"] = fileName;
+                                data.Rows[data.Rows.Count - 1]["_Filename"] = relativeFilename;
                             }
                         }
                     }
