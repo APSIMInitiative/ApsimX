@@ -80,7 +80,9 @@ namespace Models.PreSimulationTools.ObservationsInfo
                         {
                             ZeroInfo info = new ZeroInfo();
                             info.Name = row["SimulationName"].ToString();
-                            info.Date = Convert.ToDateTime(row["Clock.Today"].ToString()).ToString("dd/MM/yyyy");
+                            info.Date = null;
+                            if (!string.IsNullOrEmpty(row["Clock.Today"].ToString()))
+                                info.Date = DateUtilities.GetDateAsString(Convert.ToDateTime(row["Clock.Today"]));
                             info.Column = column;
                             info.File = row["_Filename"].ToString();
                             data.Add(info);

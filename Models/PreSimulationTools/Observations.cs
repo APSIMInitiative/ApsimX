@@ -163,34 +163,66 @@ namespace Models.PreSimulationTools
                     storage.Writer.DeleteTable(sheet);
             storage.Writer.WaitForIdle();
 
-            Simulations simulations = Structure.FindParent<Simulations>(recurse: true);
+            //Get list of file names to open
+            List<string> files = new List<string>();
             foreach (string fileName in FileNames)
             {
-                string fullFileName = fileName;
-                if (!string.IsNullOrEmpty(fullFileName))
+                if (!string.IsNullOrEmpty(fileName))
                 {
-                    if (simulations != null && simulations.FileName != null)
-                        fullFileName = PathUtilities.GetRelativePath(fileName, simulations.FileName);
-
-                    string absoluteFileName = PathUtilities.GetAbsolutePath(fullFileName.Trim(), storage.FileName);
-                    if (!File.Exists(absoluteFileName))
+                    string relativeFilename = fileName;
+                    if (Node != null && Node.FileName != null)
+                        relativeFilename = PathUtilities.GetRelativePath(fileName, Node.FileName);
+                    string absoluteFileName = PathUtilities.GetAbsolutePath(relativeFilename.Trim(), storage.FileName);
+                    if (File.Exists(absoluteFileName))
+                        files.Add(absoluteFileName);
+                    else
                         throw new Exception($"Error in {Name}: file '{absoluteFileName}' does not exist");
+                }
+            }
 
-                    List<DataTable> tables = LoadFromExcel(absoluteFileName);
+            foreach (string sheet in SheetNames)
+            {
+                //get a list of all the columns for this sheet
+                List<string> columns = new List<string>();
+                foreach (string fileName in files)
+                {
+                    List<DataTable> tables = LoadFromExcel(fileName);
+                    foreach (DataTable table in tables)
+                        if (table.TableName == sheet)
+                            foreach (DataColumn column in table.Columns)
+                                if (!columns.Contains(column.ColumnName))
+                                    columns.Add(column.ColumnName);
+                }
+
+                // Create a table with all the required column, each with the type set to string
+                DataTable data = new DataTable();
+                data.Columns.Add("_Filename", typeof(string));
+                data.TableName = sheet;
+                foreach (string column in columns)
+                    data.Columns.Add(column, typeof(string));
+
+                //Copy in the data from the files
+                foreach (string fileName in files)
+                {
+                    List<DataTable> tables = LoadFromExcel(fileName);
                     foreach (DataTable table in tables)
                     {
-                        DataColumn col = table.Columns.Add("_Filename", typeof(string));
-                        for (int i = 0; i < table.Rows.Count; i++)
-                            table.Rows[i][col] = fullFileName;
-
-                        DataTable fixedTable = ColumnInfo.FixColumnTypes(table);
-
-                        // Don't delete previous data existing in this table. Doing so would
-                        // cause problems when merging sheets from multiple excel files.
-                        storage.Writer.WriteTable(fixedTable, false);
-                        storage.Writer.WaitForIdle();
+                        if (table.TableName == sheet)
+                        {
+                            foreach (DataRow row in table.Rows)
+                            {
+                                data.ImportRow(row);
+                                data.Rows[data.Rows.Count - 1]["_Filename"] = fileName;
+                            }
+                        }
                     }
                 }
+
+                //Set the column types based on the contents
+                DataTable fixedTable = ColumnInfo.FixColumnTypes(data);
+
+                //Write to the database
+                storage.Writer.WriteTable(fixedTable, true);
             }
 
             storage.Writer.WaitForIdle();
@@ -204,7 +236,8 @@ namespace Models.PreSimulationTools
 
             foreach (string sheet in SheetNames)
             {
-                DataTable dt = storage.Reader.GetData(sheet).Copy();
+                DataTable dt = storage.Reader.GetData(sheet);
+                dt = dt.Copy();
                 if (dt != null)
                 {
                     MergeData.AddRange(MergeInfo.CombineRows(dt, out DataTable combinedDatatable));

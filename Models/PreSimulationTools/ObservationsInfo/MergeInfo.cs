@@ -136,7 +136,7 @@ namespace Models.PreSimulationTools.ObservationsInfo
                                         info.Name = item.simulation.ToString();
                                         info.Date = null;
                                         if (!string.IsNullOrEmpty(item.clock.ToString()))
-                                            info.Date = Convert.ToDateTime(item.clock).ToString("yyyy/MM/dd");
+                                            info.Date = DateUtilities.GetDateAsString(Convert.ToDateTime(item.clock));
                                         info.Column = column;
                                         info.Value1 = newRow[column].ToString();
                                         info.Value2 = row[column].ToString();
