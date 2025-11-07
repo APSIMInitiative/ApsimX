@@ -24,7 +24,7 @@ test -z ${MERGE_COMMIT:+x} && ( echo "MERGE_COMMIT not set"; exit 1 )
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # Get version number.
-revision=`$DIR/container-scripts/get-revision`
+revision=`$DIR/get-revision.sh`
 year=$(TZ=Australia/Brisbane date +%-Y)
 month=$(TZ=Australia/Brisbane date +%-m)
 version=$year.$month.$revision.0
