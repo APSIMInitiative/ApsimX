@@ -1,0 +1,5 @@
+System.Threading.AbandonedMutexException: The wait completed due to an abandoned mutex.
+   at System.Threading.WaitHandle.WaitOneNoCheck(Int32 millisecondsTimeout)
+   at System.Threading.WaitHandle.WaitOne(Int32 millisecondsTimeout)
+   at UserInterface.UserInterface.SingleInstanceCheck(String[] args) in C:\Jessica\GIT\ApsimX\ApsimX\ApsimNG\UserInterface.cs:line 95
+   at UserInterface.UserInterface.Main(String[] args) in C:\Jessica\GIT\ApsimX\ApsimX\ApsimNG\UserInterface.cs:line 29
