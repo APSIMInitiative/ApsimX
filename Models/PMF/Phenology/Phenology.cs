@@ -212,6 +212,11 @@ namespace Models.PMF.Phen
         /// <summary>Gets the current zadok stage number. Used in manager scripts.</summary>
         public double Zadok { get { return zadok?.Stage ?? 0; } }
 
+        /// <summary>Days after sowing</summary>
+        [JsonIgnore]
+        public int DaysAfterSowing{ get { return plant.DaysAfterSowing; } }
+
+
         /// <summary>flag set to true is a phase does a stage set that increments currentPhaseNumber</summary>
         private bool currentPhaseNumberIncrementedByPhaseTimeStep { get; set; } = false;
 
