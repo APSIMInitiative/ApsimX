@@ -12,6 +12,8 @@ set -e
 usage="Usage: $0 <debian|macos|windows>"
 test $# -eq 1 || (echo $usage; exit 1)
 test -z "$BUILDS_JWT" && echo "BUILDS_JWT is empty" && exit 1
+test -z "$DOCKER_METADATA_OUTPUT_VERSION" && echo "PULL_ID is empty" && exit 1
+PULL_ID=${DOCKER_METADATA_OUTPUT_VERSION:3}
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 echo "DIR: $DIR"
