@@ -7144,7 +7144,7 @@ internal class Converter
     /// <param name="_">Unused filename.</param>
     private static void UpgradeToVersion206(JObject root, string _)
     {
-        var emergedArg = SyntaxFactory.Argument(
+        var emergingArg = SyntaxFactory.Argument(
             SyntaxFactory.LiteralExpression(
                 SyntaxKind.StringLiteralExpression,
                 SyntaxFactory.Literal("Emerging")
@@ -7158,12 +7158,9 @@ internal class Converter
         );
         var newName = SyntaxFactory.IdentifierName("SetPhaseCompletionDate");
 
-        foreach (var manager in JsonUtilities.ChildManagers(root))
+        foreach (var manager in JsonUtilities.ChildManagers(root).Where(mgr => !mgr.IsEmpty))
         {
-            var text = manager.ToString();
-            if (text == null)
-                continue;
-            var managerRoot = CSharpSyntaxTree.ParseText(text).GetRoot();
+            var managerRoot = CSharpSyntaxTree.ParseText(manager.ToString()).GetRoot();
             var newRoot = managerRoot.ReplaceNodes(
                 managerRoot
                     .DescendantNodes()
@@ -7182,13 +7179,16 @@ internal class Converter
                 (old, _) =>
                 {
                     var ma = old.Expression as MemberAccessExpressionSyntax;
-                    var newLastArg = ma.Name.ToFullString() == "SetEmergenceDate" ? emergedArg : germinatingArg;
+                    var newLastArg = ma.Name.ToFullString() == "SetEmergenceDate" ? emergingArg : germinatingArg;
                     return SyntaxFactory.InvocationExpression(ma.WithName(newName), old.ArgumentList.AddArguments(newLastArg));
                 }
             );
 
-            manager.Read(newRoot.ToFullString());
-            manager.Save();
+            if (!managerRoot.IsEquivalentTo(newRoot))
+            {
+                manager.Read(newRoot.ToFullString());
+                manager.Save();
+            }
         }
     }
 }
