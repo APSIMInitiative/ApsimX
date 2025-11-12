@@ -646,6 +646,7 @@
               "Start": "Emergence",
               "End": "DoubleRidge",
               "IsEmerged": true,
+              "Target": 1.0,
               "Name": "LeavesInitiating",
               "ResourceName": null,
               "Children": [
@@ -5345,15 +5346,6 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Structure].BranchNumber",
-              "Name": "StemNumberPerPlant",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.VariableReference, Models",
               "VariableName": "[Plant].SowingData.Population",
               "Name": "MainStemPopulation",
               "ResourceName": null,
@@ -5416,6 +5408,16 @@
                   "ReadOnly": false
                 }
               ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.ExpressionFunction, Models",
+              "Units": "/plant",
+              "Expression": "[Structure].BranchNumber + 1",
+              "Name": "StemNumberPerPlant",
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             }
