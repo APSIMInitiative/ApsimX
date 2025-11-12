@@ -121,13 +121,13 @@
                 "[Clock].Today",
                 "[Wheat].DaysAfterSowing",
                 "[Wheat].Phenology.Zadok",
-                "[Wheat].Phenology.Zadok.Z(1)",
-                "[Wheat].Phenology.Zadok.Z(10)",
-                "[Wheat].Phenology.Zadok.Z(31)",
-                "[Wheat].Phenology.Zadok.Z(39)",
-                "[Wheat].Phenology.Zadok.Z(55)",
-                "[Wheat].Phenology.Zadok.Z(65)",
-                "[Wheat].Phenology.Zadok.Z(99)"
+                "[Wheat].Phenology.Zadok.StageDAS(1)",
+                "[Wheat].Phenology.Zadok.StageDAS(10)",
+                "[Wheat].Phenology.Zadok.StageDAS(31)",
+                "[Wheat].Phenology.Zadok.StageDAS(39)",
+                "[Wheat].Phenology.Zadok.StageDAS(55)",
+                "[Wheat].Phenology.Zadok.StageDAS(65)",
+                "[Wheat].Phenology.Zadok.StageDAS(90)"
               ],
               "EventNames": [
                 "[Clock].DoReport"
