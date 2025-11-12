@@ -1277,7 +1277,6 @@
             "[Wheat].Leaf.MainStemPopulation",
             "[Wheat].Leaf.StemPopulation",
             "[Wheat].Leaf.StemNumberPerPlant",
-            "[Wheat].Leaf.StemNumberPerPlant.Total.Tillers",
             "[Wheat].Phenology.PTQ",
             "[Wheat].Phenology.Phyllochron",
             "[Wheat].Total.N",
@@ -2143,7 +2142,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "PlantType": null,
                       "Name": "Wheat",
                       "ResourceName": "Wheat",
                       "Children": [],
@@ -3336,7 +3334,7 @@
                           "LineThickness": 0,
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Wheat.Leaf.StemNumberPerPlant.Total.Tillers",
+                          "YFieldName": "Wheat.Leaf.StemNumberPerPlant",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -3365,7 +3363,7 @@
                           "LineThickness": 0,
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Wheat.Leaf.StemNumberPerPlant.Total.Tillers",
+                          "YFieldName": "Wheat.Leaf.StemNumberPerPlant",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -6010,7 +6008,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "PlantType": null,
                       "Name": "Wheat",
                       "ResourceName": "Wheat",
                       "Children": [],
@@ -9087,7 +9084,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "PlantType": null,
                       "Name": "Wheat",
                       "ResourceName": "Wheat",
                       "Children": [],
@@ -11972,7 +11968,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "PlantType": null,
                       "Name": "Wheat",
                       "ResourceName": "Wheat",
                       "Children": [],
@@ -15398,7 +15393,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "PlantType": null,
                       "Name": "Wheat",
                       "ResourceName": "Wheat",
                       "Children": [],
@@ -18675,7 +18669,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "PlantType": null,
                       "Name": "Wheat",
                       "ResourceName": "Wheat",
                       "Children": [],
@@ -21484,7 +21477,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "PlantType": null,
                       "Name": "Wheat",
                       "ResourceName": "Wheat",
                       "Children": [],
