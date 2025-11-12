@@ -700,7 +700,10 @@ namespace Models.PMF.Phen
         [EventSubscribe("Harvesting")]
         private void OnHarvesting(object sender, EventArgs e)
         {
-            SetToEndStage();
+            if (PlantIsAlive)
+            {
+                SetToEndStage();
+            }
         }
 
         /// <summary>Called when crop is ending</summary>
