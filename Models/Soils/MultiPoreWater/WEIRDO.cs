@@ -671,6 +671,9 @@ namespace Models.Soils
 
             if (ReportDetail) { DoDetailReport("Initialisation", 0, 0); }
 
+            //Clone our intitial water values
+            SW = water.InitialValues.Clone() as double[];
+
             //Check the soil water content initialisation is legit
             for (int l = 0; l < ProfileLayers; l++)
             {
