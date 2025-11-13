@@ -141,7 +141,7 @@ namespace UnitTests.PMF.Phenology.Scales
             sim.Prepare();
             // The exception should be thrown when trying to run the simulation with an invalid stage index
             Assert.Throws<SimulationException>(() => sim.Run(), 
-                "StageDAS(91) should throw an exception as it's out of valid range (1-90)");
+                "StageDAS(0) should throw an exception as it's out of valid range (1-90)");
         }
 
         /// <summary>
