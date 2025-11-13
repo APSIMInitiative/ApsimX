@@ -1,9 +1,7 @@
 ﻿using System;
 using APSIM.Core;
 using APSIM.Numerics;
-using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Functions;
 
 namespace Models.PMF.Phen
 {
@@ -89,23 +87,25 @@ namespace Models.PMF.Phen
         [EventSubscribe("DoPhenology")]
         private void OnDoPhenology(object sender, EventArgs e)
         {
-            double currentStage = Stage;
-            
+            int currentStage = (int)Math.Floor(Stage);
+
             // Progressively check from the last recorded stage onward until the current stage
             // Avoid the long loop from 1 to 99 each time.
 
             // An example to assign values to zadokDays:
             // if currentStage (Today) = 10, lastRecordedStage (Yesterday) = 5, and DAS = 8
-            // zadoksDays[6] = zadoksDays[7] = zadoksDays[8] = zadoksDays[9] = zadoksDays[10] = 8 
-            for (int i = lastRecordedStage + 1; i < (int)currentStage + 1; i++)
+            // zadoksDays[6] = zadoksDays[7] = zadoksDays[8] = zadoksDays[9] = zadoksDays[10] = 8
+            // Will skip loop if lastRecordedStage = currentStage
+            for (int i = lastRecordedStage + 1; i <= currentStage && i < zadokDays.Length; i++)
             {
-                if (zadokDays[i] > 0) continue; // skip the current one if already recorded for this Zadoks.
-                if ((int)currentStage < i) continue; // Not yet reached
-                zadokDays[i] = plant.DaysAfterSowing;
-                lastRecordedStage = i;
+                // skip the current one if already recorded for this Zadoks.
+                if (zadokDays[i] == 0) 
+                {
+                    zadokDays[i] = plant.DaysAfterSowing;
+                    lastRecordedStage = i;
+                }
             }
         }
-
 
         /// <summary>
         /// Gets the day (days after sowing) on which a specified Zadoks stage was first reached.
