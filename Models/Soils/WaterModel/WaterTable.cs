@@ -1,6 +1,5 @@
 ﻿using System;
 using APSIM.Numerics;
-using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Soils;
 using Newtonsoft.Json;

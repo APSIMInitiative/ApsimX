@@ -1,9 +1,5 @@
 ﻿using System;
-using APSIM.Numerics;
-using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Office2013.PowerPoint.Roaming;
 using Models.Core;
-using Models.Soils;
 using Newtonsoft.Json;
 
 namespace Models.WaterModel
