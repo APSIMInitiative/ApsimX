@@ -28,19 +28,19 @@ namespace Models.WaterModel
         public double Depth { get; private set; }
 
         /// <summary>Calculate water table depth.</summary>
-        public void Calculate()
+        public void Calculate(double[] thickness, double[] swmm, double[] dul, double[] sat)
         {
-            double[] Thickness = soilPhysical.Thickness;
-            double[] SW = soil.Water;
-            double[] SAT = MathUtilities.Multiply(soilPhysical.SAT, Thickness);
-            double[] DUL = MathUtilities.Multiply(soilPhysical.DUL, Thickness);
+            Depth = WaterTableModel.CalculateDepth(thickness, swmm, dul, sat);
+        }
 
+        private static double CalculateDepth(double[] thickness, double[] swmm, double[] dul, double[] sat)
+        {
             // Find the first saturated layer
             int sat_layer = -1;
-            for (int i = 0; i < SW.Length; i++)
+            for (int i = 0; i < swmm.Length; i++)
             {
                 // Find the first layer that is above saturation or really close to it.
-                if (MathUtilities.FloatsAreEqual(soil.Water[i], SAT[i]))
+                if (MathUtilities.FloatsAreEqual(swmm[i], sat[i]))
                 {
                     sat_layer = i;
                     break;
@@ -51,17 +51,17 @@ namespace Models.WaterModel
             if (sat_layer == -1)
             {
                 //set the depth of watertable to the total depth of the soil profile
-                Depth = MathUtilities.Sum(Thickness);
+                return MathUtilities.Sum(thickness);
             }
             // Do the calculation of the water table if the fully saturated layer is not the top layer AND
             // the layer above the fully saturated layer is saturated.
-            else if (sat_layer > 0 && SaturatedFraction(sat_layer, soil.Water, DUL, SAT) >= 0.999999 &&
-                                    SaturatedFraction(sat_layer - 1, soil.Water, DUL, SAT) > 0.0)
+            else if (sat_layer > 0 && SaturatedFraction(sat_layer, swmm, dul, sat) >= 0.999999 &&
+                                    SaturatedFraction(sat_layer - 1, swmm, dul, sat) > 0.0)
             {
                 // layer above is over dul
-                double bottom_depth = MathUtilities.Sum(Thickness, 0, sat_layer, 0.0);
-                double saturated = SaturatedFraction(sat_layer - 1, soil.Water, DUL, SAT) * Thickness[sat_layer - 1];
-                Depth = (bottom_depth - saturated);
+                double bottom_depth = MathUtilities.Sum(thickness, 0, sat_layer, 0.0);
+                double saturated = SaturatedFraction(sat_layer - 1, swmm, dul, sat) * thickness[sat_layer - 1];
+                return (bottom_depth - saturated);
             }
             else
             {
@@ -71,10 +71,10 @@ namespace Models.WaterModel
                 //      bottom depth if sw_dep is above dul_dep however because otherwise it is not part of the watertable it
                 //      is just water in the layer above the water table.
 
-                double bottom_depth = MathUtilities.Sum(Thickness, 0, sat_layer, 0.0);
-                //double saturated = (1-SaturatedFraction(sat_layer, soil.Water, DUL, SAT)) * Thickness[sat_layer];
+                double bottom_depth = MathUtilities.Sum(thickness, 0, sat_layer, 0.0);
+                //double saturated = (1-SaturatedFraction(sat_layer, soil.Water, DUL, SAT)) * thickness[sat_layer];
                 //Depth = bottom_depth - saturated;
-                Depth = bottom_depth; // DeanH modified. Bug in original FORTRAN code?
+                return bottom_depth; // DeanH modified. Bug in original FORTRAN code?
             }
         }
 

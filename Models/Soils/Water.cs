@@ -25,13 +25,13 @@ namespace Models.Soils
         [field: NonSerialized]
         public IStructure Structure { private get; set; }
 
+        [Link]
+        private ISoilWater soilWater = null;
 
-        private double[] volumetric;
         private double initialFractionFull = double.NaN;
 
         /// <summary>Last initialisation event.</summary>
         public event EventHandler WaterChanged;
-
 
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
         [Display]
@@ -94,13 +94,10 @@ namespace Models.Soils
         [Units("mm/mm")]
         public double[] Volumetric
         {
-            get
-            {
-                return volumetric;
-            }
+            get { return soilWater.SW; }
             set
             {
-                volumetric = value;
+                soilWater.SW = value;
                 WaterChanged?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -186,34 +183,6 @@ namespace Models.Soils
         /// <summary>Plant available water SW-LL15 (mm).</summary>
         [Units("mm")]
         public double[] PAWmm => MathUtilities.Multiply(PAW, Physical.Thickness);
-
-        /// <summary>Performs the initial checks and setup</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfSimulation")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            Reset();
-        }
-
-        /// <summary>Performs the initial checks and setup</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("EndOfSimulation")]
-        private void OnSimulationEnding(object sender, EventArgs e)
-        {
-            Reset();
-        }
-
-        /// <summary>
-        /// Set solute to initialisation state
-        /// </summary>
-        public void Reset()
-        {
-            if (InitialValues == null)
-                throw new Exception("No initial soil water specified.");
-            Volumetric = (double[])InitialValues.Clone();
-        }
 
         [JsonIgnore]
         private string relativeToCheck = "LL15";
