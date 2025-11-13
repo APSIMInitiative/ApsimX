@@ -296,5 +296,12 @@ namespace APSIM.Core.Tests
 
             Assert.That(stringList.Data.Count, Is.EqualTo(0));
         }
+
+        [Test]
+        public void TestOverridesErrorsIfNotFound()
+        {
+            Override badOverride = new("[Does].Not", "Exist", Override.MatchTypeEnum.NameAndType);
+            Assert.Throws<Exception>(() => Apply(sims1, [badOverride]));
+        }
     }
 }
