@@ -5,38 +5,6 @@
   "ResourceName": null,
   "Children": [
     {
-      "$type": "Models.Core.Folder, Models",
-      "ShowInDocs": false,
-      "Name": "Replacements",
-      "ResourceName": null,
-      "Children": [
-        {
-          "$type": "Models.Core.Folder, Models",
-          "ShowInDocs": false,
-          "Name": "Cultivars",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                "[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 3000",
-                "[Structure].BranchingRate.StressFactors.CoverEffect.XYPairs.X=0,0.1,0.25"
-              ],
-              "Name": "Hartog",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        }
-      ],
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
       "$type": "Models.Storage.DataStore, Models",
       "CustomFileName": null,
       "Name": "DataStore",
@@ -623,135 +591,6 @@
             {
               "$type": "Models.Manager, Models",
               "CodeArray": [
-                "using APSIM.Numerics;",
-                "using Models.Climate;",
-                "using System.Linq;",
-                "using System;",
-                "using Models.Core;",
-                "using Models.PMF;",
-                "using Models.Soils;",
-                "using Models.Utilities;",
-                "using APSIM.Shared.Utilities;",
-                "using Models.Interfaces;",
-                "",
-                "namespace Models",
-                "{",
-                "    [Serializable]",
-                "    public class Script : Model",
-                "    {",
-                "        [Link] private Clock Clock;",
-                "        [Link] private Fertiliser Fertiliser;",
-                "        [Link] private Summary Summary;",
-                "        [Link] private Soil Soil;",
-                "        private Accumulator accumulatedRain;",
-                "        [Link]",
-                "        private ISoilWater waterBalance;",
-                "        ",
-                "        [Description(\"Crop\")]",
-                "        public IPlant Crop { get; set; }",
-                "",
-                "        [Description(\"Start of sowing window (d-mmm)\")]",
-                "        public string StartDate { get; set; }",
-                "",
-                "        [Description(\"End of sowing window (d-mmm)\")]",
-                "        public string EndDate { get; set; }",
-                "",
-                "        [Description(\"Minimum extractable soil water for sowing (mm)\")]",
-                "        public double MinESW { get; set; }",
-                "",
-                "        [Description(\"Accumulated rainfall required for sowing (mm)\")]",
-                "        public double MinRain { get; set; }",
-                "",
-                "        [Description(\"Duration of rainfall accumulation (d)\")]",
-                "        public int RainDays { get; set; }",
-                "",
-                "        [Display(Type = DisplayType.CultivarName)]",
-                "        [Description(\"Cultivar to be sown\")]",
-                "        public string CultivarName { get; set; }",
-                "",
-                "        [Description(\"Sowing depth (mm)\")]",
-                "        public double SowingDepth { get; set; }",
-                "",
-                "        [Description(\"Row spacing (mm)\")]",
-                "        public double RowSpacing { get; set; }",
-                "",
-                "        [Description(\"Plant population (/m2)\")]",
-                "        public double Population { get; set; }",
-                "        ",
-                "        ",
-                "        [EventSubscribe(\"StartOfSimulation\")]",
-                "        private void OnSimulationCommencing(object sender, EventArgs e)",
-                "        {",
-                "            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);",
-                "        }",
-                "",
-                "        [EventSubscribe(\"DoManagement\")]",
-                "        private void OnDoManagement(object sender, EventArgs e)",
-                "        {",
-                "            accumulatedRain.Update();",
-                "            ",
-                "            if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&",
-                "                !Crop.IsAlive &&",
-                "                MathUtilities.Sum(waterBalance.ESW) > MinESW &&",
-                "                accumulatedRain.Sum > MinRain)",
-                "            {",
-                "                Crop.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    ",
-                "            }",
-                "        }",
-                "    }",
-                "}"
-              ],
-              "Parameters": [
-                {
-                  "Key": "Crop",
-                  "Value": "[Wheat]"
-                },
-                {
-                  "Key": "StartDate",
-                  "Value": "1-may"
-                },
-                {
-                  "Key": "EndDate",
-                  "Value": "10-jul"
-                },
-                {
-                  "Key": "MinESW",
-                  "Value": "100"
-                },
-                {
-                  "Key": "MinRain",
-                  "Value": "25"
-                },
-                {
-                  "Key": "RainDays",
-                  "Value": "7"
-                },
-                {
-                  "Key": "CultivarName",
-                  "Value": "Hartog"
-                },
-                {
-                  "Key": "SowingDepth",
-                  "Value": "30"
-                },
-                {
-                  "Key": "RowSpacing",
-                  "Value": "125"
-                },
-                {
-                  "Key": "Population",
-                  "Value": "350"
-                }
-              ],
-              "Name": "Sow using a variable rule",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Manager, Models",
-              "CodeArray": [
                 "using Models.Soils;",
                 "using System;",
                 "using System.Linq;",
@@ -843,6 +682,89 @@
                 }
               ],
               "Name": "Harvest",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
+              "CodeArray": [
+                "using APSIM.Shared.Utilities;",
+                "using Models.Utilities;",
+                "using Models.Soils;",
+                "using Models.PMF;",
+                "using Models.Core;",
+                "using System;",
+                "using System.Linq;",
+                "",
+                "namespace Models",
+                "{",
+                "    [Serializable]",
+                "    public class Script : Model",
+                "    {",
+                "        [Link] Clock Clock;",
+                "        [Link] Fertiliser Fertiliser;",
+                "        [Link] Summary Summary;",
+                "        [Link] Soil Soil;",
+                "        ",
+                "        [Description(\"Crop\")]",
+                "        public IPlant Crop { get; set; }",
+                "",
+                "        [Description(\"Sowing date (d-mmm)\")]",
+                "        public string SowDate { get; set; }",
+                "",
+                "        [Display(Type = DisplayType.CultivarName)]",
+                "        [Description(\"Cultivar to be sown\")]",
+                "        public string CultivarName { get; set; }",
+                "",
+                "        [Description(\"Sowing depth (mm)\")]",
+                "        public double SowingDepth { get; set; }",
+                "",
+                "        [Description(\"Row spacing (mm)\")]",
+                "        public double RowSpacing { get; set; }",
+                "",
+                "        [Description(\"Plant population (/m2)\")]",
+                "        public double Population { get; set; }",
+                "",
+                "        [EventSubscribe(\"DoManagement\")]",
+                "        private void OnDoManagement(object sender, EventArgs e)",
+                "        {",
+                "            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))",
+                "            {",
+                "                Crop.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    ",
+                "            }",
+                "        }",
+                "    }",
+                "}"
+              ],
+              "Parameters": [
+                {
+                  "Key": "Crop",
+                  "Value": "[Wheat]"
+                },
+                {
+                  "Key": "SowDate",
+                  "Value": "23-May"
+                },
+                {
+                  "Key": "CultivarName",
+                  "Value": "Hartog"
+                },
+                {
+                  "Key": "SowingDepth",
+                  "Value": "50"
+                },
+                {
+                  "Key": "RowSpacing",
+                  "Value": "230"
+                },
+                {
+                  "Key": "Population",
+                  "Value": "150"
+                }
+              ],
+              "Name": "Sow on a fixed date",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
