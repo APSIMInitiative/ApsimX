@@ -646,7 +646,6 @@
               "Start": "Emergence",
               "End": "DoubleRidge",
               "IsEmerged": true,
-              "Target": 1.0,
               "Name": "LeavesInitiating",
               "ResourceName": null,
               "Children": [
