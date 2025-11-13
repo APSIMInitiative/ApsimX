@@ -300,8 +300,8 @@ namespace APSIM.Core.Tests
         [Test]
         public void TestOverridesErrorsIfNotFound()
         {
-            Override badOverride = new("[Does].Not", "Exist", Override.MatchTypeEnum.NameAndType);
-            Assert.Throws<Exception>(() => Apply(sims1, [badOverride]));
+            IModelCommand badOverride = new SetPropertyCommand("[Does].Not", "=", "Exist");
+            Assert.Throws<Exception>(() => badOverride.Run(sims1, runner:null));
         }
     }
 }
