@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO.Pipes;
 using System.Threading.Tasks;
-using static Models.Core.Overrides;
 
 namespace UnitTests
 {

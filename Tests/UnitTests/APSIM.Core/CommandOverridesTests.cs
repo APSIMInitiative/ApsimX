@@ -1,14 +1,12 @@
-﻿using APSIM.Core;
-using Models;
+﻿using Models;
 using Models.Core;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using static Models.Core.Overrides;
 
-namespace UnitTests.Core
+namespace APSIM.Core.Tests
 {
     /// <summary>
     /// A test set for the edit file feature which
@@ -16,8 +14,12 @@ namespace UnitTests.Core
     /// files from the command line by using the
     /// /Edit switch on Models.exe.
     /// </summary>
+    /// <remarks>
+    /// These tests came from the old OverridesTests. They have been changed to use
+    /// the new Command code in APSIM.Core rather than the Models.Core.Overides class.
+    /// </remarks>
     [TestFixture]
-    public class OverridesTests
+    public class CommandOverridesTests
     {
         private class ListClass<T> : Model
         {
@@ -145,13 +147,14 @@ namespace UnitTests.Core
         [Test]
         public void SetPropertyInTypeMatchedModels()
         {
-            var undos = Overrides.Apply(sims1, "[Report].VariableNames", "x,y,z", Override.MatchTypeEnum.NameAndType);
+            SetPropertyCommand command = new("[Report].VariableNames", "=", "x,y,z", multiple: true);
+            (command as IModelCommand).Run(sims1, runner: null);
 
             foreach (var report in sims1.Node.FindAll<Models.Report>())
                 Assert.That(report.VariableNames, Is.EqualTo(new[] { "x", "y", "z" }));
 
             // Now undo the overrides.
-            Overrides.Apply(sims1, undos);
+            command.Undo();
             var reports = sims1.Node.FindAll<Models.Report>().ToArray();
             Assert.That(reports[0].VariableNames, Is.EqualTo(new[] { "AA" }));
             Assert.That(reports[1].VariableNames, Is.EqualTo(new[] { "BB" }));
@@ -163,7 +166,8 @@ namespace UnitTests.Core
         [Test]
         public void SetPropertyInNameMatchedModels()
         {
-            var undos = Overrides.Apply(sims1, "[Report1].VariableNames", "x,y,z", Override.MatchTypeEnum.NameAndType);
+            SetPropertyCommand command = new("[Report1].VariableNames", "=", "x,y,z", multiple: true);
+            (command as IModelCommand).Run(sims1, runner: null);
 
             // It should have changed all Report1 models.
             foreach (var report1 in sims1.Node.FindAll<Models.Report>("Report1"))
@@ -178,7 +182,7 @@ namespace UnitTests.Core
             Assert.That(reports[3].VariableNames, Is.EqualTo(new[] { "DD" }));
 
             // Now undo the overrides.
-            Overrides.Apply(sims1, undos);
+            command.Undo();
             Assert.That(reports[0].VariableNames, Is.EqualTo(new[] { "AA" }));
             Assert.That(reports[1].VariableNames, Is.EqualTo(new[] { "BB" }));
             Assert.That(reports[2].VariableNames, Is.EqualTo(new[] { "CC" }));
@@ -189,13 +193,14 @@ namespace UnitTests.Core
         [Test]
         public void SetDateProperty()
         {
-            var undos = Overrides.Apply(sims1, "[Clock].StartDate", new DateTime(2000, 01, 01), Override.MatchTypeEnum.NameAndType);
+            SetPropertyCommand command = new("[Clock].StartDate", "=", "2000-01-01");
+            (command as IModelCommand).Run(sims1, runner: null);
 
             var clock = sims1.Node.Find<Clock>();
             Assert.That(clock.StartDate, Is.EqualTo(new DateTime(2000, 01, 01)));
 
             // Now undo the overrides.
-            Overrides.Apply(sims1, undos);
+            command.Undo();
             Assert.That(clock.StartDate, Is.EqualTo(new DateTime(2017, 1, 1)));
         }
 
@@ -203,7 +208,11 @@ namespace UnitTests.Core
         [Test]
         public void SetModelFromExternalFileFirstMatchingModel()
         {
-            Overrides.Apply(sims1, "[Clock]", extFile, Override.MatchTypeEnum.NameAndType);
+            IModelCommand cmd = new ReplaceCommand(modelReference: new ModelInFileReference(extFile, "[Clock1]"),
+                                                   replacementPath: "[Clock]",
+                                                   multiple: false,
+                                                   matchType: ReplaceCommand.MatchType.Name);
+            cmd.Run(sims1, runner: null);
 
             var clock = sims1.Node.Find<Clock>();
             Assert.That(clock.StartDate, Is.EqualTo(new DateTime(2020, 01, 01)));
@@ -213,7 +222,11 @@ namespace UnitTests.Core
         [Test]
         public void SetModelFromExternalFileSpecificModel()
         {
-            Overrides.Apply(sims1, "[Clock]", $"{extFile};[Clock2]", Override.MatchTypeEnum.NameAndType);
+            IModelCommand cmd = new ReplaceCommand(modelReference: new ModelInFileReference(extFile, "[Clock2]"),
+                                                   replacementPath: "[Clock]",
+                                                   multiple: false,
+                                                   matchType: ReplaceCommand.MatchType.NameOrType);
+            cmd.Run(sims1, runner: null);
 
             var clock = sims1.Node.Find<Clock>();
             Assert.That(clock.StartDate, Is.EqualTo(new DateTime(2021, 01, 01)));
@@ -224,7 +237,12 @@ namespace UnitTests.Core
         public void ReplaceModelUsingNameMatch()
         {
             var newVariableNames = new string[] { "New" };
-            var undos = Overrides.Apply(sims1, "Report1", new Models.Report() { Name = "Report4", VariableNames = newVariableNames }, Override.MatchTypeEnum.Name);
+
+            IModelCommand cmd = new ReplaceCommand(modelReference: new ModelReference(new Models.Report() { Name = "Report4", VariableNames = newVariableNames }),
+                                                   replacementPath: "[Report1]",
+                                                   multiple: true,
+                                                   matchType: ReplaceCommand.MatchType.Name);
+            cmd.Run(sims1, runner: null);
 
             // It should have changed all Report1 models to Report4
             var reports = sims1.Node.FindAll<Models.Report>().ToArray();
@@ -241,33 +259,25 @@ namespace UnitTests.Core
             Assert.That(reports[1].VariableNames, Is.EqualTo(new string[] { "BB" }));
             Assert.That(reports[2].VariableNames, Is.EqualTo(newVariableNames));
             Assert.That(reports[3].VariableNames, Is.EqualTo(new string[] { "DD" }));
-
-
-            // Now undo the overrides.
-            Overrides.Apply(sims1, undos);
-            reports = sims1.Node.FindAll<Models.Report>().ToArray();
-            Assert.That(reports[0].VariableNames, Is.EqualTo(new string[] { "AA" }));
-            Assert.That(reports[1].VariableNames, Is.EqualTo(new string[] { "BB" }));
-            Assert.That(reports[2].VariableNames, Is.EqualTo(new string[] { "CC" }));
-            Assert.That(reports[3].VariableNames, Is.EqualTo(new string[] { "DD" }));
         }
 
         [Test]
         public void TestEditingArrayElements()
         {
-            var overrides = new Override[]
-            {
+            IEnumerable<IModelCommand> overrides = [
                 // Set an entire (string) list.
-                new Override("[StringList].Data", "1, x, y, true, 0.5", Override.MatchTypeEnum.NameAndType),
+                new SetPropertyCommand("[StringList].Data", "=", "1,x,y,true,0.5"),
 
                 // Modify a single element of a (string) list.
-                new Override("[StringList].Data[1]", 6, Override.MatchTypeEnum.NameAndType),
+                new SetPropertyCommand("[StringList].Data[1]", "=", "6"),
+
 
                 // Modify multiple elements of a (string) list.
-                new Override("[StringList].Data[3:4]", "xyz", Override.MatchTypeEnum.NameAndType),
-            };
+                new SetPropertyCommand("[StringList].Data[3:4]", "=", "xyz"),
+            ];
 
-            var undos = Overrides.Apply(sims1, overrides);
+            foreach (var cmd in overrides)
+                cmd.Run(sims1, runner: null);
 
             var stringList = (ListClass<string>)sims1.Node.Find<ListClass<string>>();
 
@@ -281,7 +291,8 @@ namespace UnitTests.Core
             })));
 
             // Now undo the overrides.
-            Overrides.Apply(sims1, undos);
+            foreach (SetPropertyCommand cmd in overrides)
+                cmd.Undo();
 
             Assert.That(stringList.Data.Count, Is.EqualTo(0));
         }

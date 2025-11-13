@@ -5,7 +5,6 @@ using APSIM.Core;
 using APSIM.Shared.JobRunning;
 using Models.Core;
 using Models.Core.Run;
-using static Models.Core.Overrides;
 
 namespace APSIM.ZMQServer
 {

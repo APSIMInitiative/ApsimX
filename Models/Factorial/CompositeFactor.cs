@@ -6,7 +6,6 @@ using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.Run;
-using static Models.Core.Overrides;
 
 namespace Models.Factorial
 {

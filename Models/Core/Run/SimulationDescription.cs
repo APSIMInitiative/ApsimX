@@ -5,7 +5,6 @@ using System.Threading;
 using APSIM.Core;
 using APSIM.Shared.JobRunning;
 using Models.Storage;
-using static Models.Core.Overrides;
 
 namespace Models.Core.Run
 {

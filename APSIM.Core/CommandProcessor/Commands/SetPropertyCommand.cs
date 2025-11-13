@@ -18,8 +18,8 @@ public partial class SetPropertyCommand : IModelCommand
     private readonly string oper;
     [JsonProperty]
     private readonly bool multiple;
-    private VariableComposite obj;
-    private object oldValue;
+    private List<VariableComposite> obj = [];
+    private List<object> oldValues = [];
 
     /// <summary>
     /// Constructor.
@@ -71,13 +71,13 @@ public partial class SetPropertyCommand : IModelCommand
         if (instances == null || !instances.Any())
             throw new Exception($"Cannot find property {name}");
 
-        // Capture the old value so that we can perform an undo if necessary.
-        obj = instances.First();
-        oldValue = obj.Value;
-
         // Perform multiple property sets.
         foreach (var instance in instances)
         {
+            // Capture the old value so that we can perform an undo if necessary.
+            obj.Add(instance);
+            oldValues.Add(instance.Value);
+
             if (oper == "=")
             {
                 // If "null" was specified then set the object value to null. Otherwise convert
@@ -132,9 +132,8 @@ public partial class SetPropertyCommand : IModelCommand
     /// </summary>
     public void Undo()
     {
-        if (multiple)
-            throw new Exception("Cannot undo a property set that has multiple instances.");
-        obj.Value = oldValue;
+        for (int i = 0; i < obj.Count; i++)
+            obj[i].Value = oldValues[i];
     }
 
     /// <summary>
