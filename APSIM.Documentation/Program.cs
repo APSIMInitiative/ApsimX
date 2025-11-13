@@ -102,7 +102,6 @@ namespace APSIM.Documentation
                     DocumentationSettings.GenerateGraphs = true;
                 Simulations sims = FileFormat.ReadFromFile<Simulations>(path).Model as Simulations;
                 Node.Create(sims, fileName: path);
-                // Simulation sim = sims.Node.FindChild<Simulation>();
                 if (sims == null)
                     throw new Exception("The file " + path + " does not contain a Simulations model at the root.");
                 string html = WebDocs.Generate(sims);
