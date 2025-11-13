@@ -13753,7 +13753,7 @@
                   "Name": "SetPhenologyParams",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -13767,16 +13767,6 @@
                   ],
                   "GroupByVariableName": null,
                   "Name": "ReportPhenoDates",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
-                  "ParameterFile": "..\\inputs\\DookiePhenoDatesInput.csv",
-                  "SetEventName": "[Plant].Sowing",
-                  "Name": "SetPhenoDatesExternally",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -17683,7 +17673,7 @@
                   "Name": "SetPhenologyParams",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -17697,16 +17687,6 @@
                   ],
                   "GroupByVariableName": null,
                   "Name": "ReportPhenoDates",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
-                  "ParameterFile": "..\\inputs\\DookiePhenoDatesInput.csv",
-                  "SetEventName": "[Plant].Sowing",
-                  "Name": "SetPhenoDatesExternally",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
