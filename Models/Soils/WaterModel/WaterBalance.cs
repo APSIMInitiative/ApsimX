@@ -567,7 +567,7 @@ namespace Models.WaterModel
             //CheckForErrors();
 
             // Calculate water table depth.
-            waterTableModel.Calculate(Thickness, Water, sat, dul);
+            waterTableModel.Calculate(Thickness, Water, dul, sat);
 
             // Calculate and apply net solute movement.
             foreach (var solute in solutes)
