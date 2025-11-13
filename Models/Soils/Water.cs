@@ -25,8 +25,17 @@ namespace Models.Soils
         [field: NonSerialized]
         public IStructure Structure { private get; set; }
 
-        [Link]
-        private ISoilWater soilWater = null;
+        /// <summary>Finds the 'Soil' node. Try parent first, then a soil in scope.</summary>
+        private Soil Soil => Node?.FindParent<Soil>() ??
+                            Node?.WalkScoped()
+                                ?.FirstOrDefault(n => n.Model is Soil)
+                                ?.Model as Soil;
+
+        /// <summary>Finds the 'Physical' node.</summary>
+        private IPhysical Physical => Soil?.Node.FindChild<IPhysical>();
+
+        /// <summary>Finds the 'SoilWater' node.</summary>
+        private ISoilWater WaterModel => Soil?.Node.FindChild<ISoilWater>();
 
         private double initialFractionFull = double.NaN;
 
@@ -94,10 +103,10 @@ namespace Models.Soils
         [Units("mm/mm")]
         public double[] Volumetric
         {
-            get { return soilWater.SW; }
+            get { return WaterModel.SW; }
             set
             {
-                soilWater.SW = value;
+                WaterModel.SW = value;
                 WaterChanged?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -356,18 +365,6 @@ namespace Models.Soils
                 InitialValues = APSIM.Soils.SoilUtilities.DistributeToDepthOfWetSoil(value, Thickness, RelativeToLL, dul);
             }
         }
-
-        /// <summary>Finds the 'Soil' node. Try parent first, then a soil in scope.</summary>
-        public Soil Soil => Node?.FindParent<Soil>() ??
-                            Node?.WalkScoped()
-                                ?.FirstOrDefault(n => n.Model is Soil)
-                                ?.Model as Soil;
-
-        /// <summary>Finds the 'Physical' node.</summary>
-        public IPhysical Physical => Soil?.Node.FindChild<IPhysical>();
-
-        /// <summary>Finds the 'SoilWater' node.</summary>
-        public ISoilWater WaterModel => Soil?.Node.FindChild<ISoilWater>();
 
         /// <summary>Find LL values (mm) for the RelativeTo property.</summary>
         public double[] RelativeToLL
