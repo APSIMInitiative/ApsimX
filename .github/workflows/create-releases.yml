@@ -44,10 +44,9 @@ jobs:
         run: |
           echo "No 'resolves #' or 'Resolves #' found in PR description. Skipping release creation."
           exit 1
-        continue-on-error: true
 
     create-releases:
-      if: github.event.pull_request.merged == true && steps.resolves_check.outcome == 'success'
+      if: github.event.pull_request.merged == true
       needs: check-for-resolves
       strategy:
         fail-fast: false # allow other jobs to complete if one fails
@@ -103,7 +102,7 @@ jobs:
     
     # Creates docker containers for APSIM releases.
     create-docker-containers:
-      if: github.event.pull_request.merged == true && steps.resolves_check.outcome == 'success'
+      if: github.event.pull_request.merged == true
       needs: check-for-resolves
       runs-on: ubuntu-latest
       steps:
@@ -127,7 +126,7 @@ jobs:
     # Upload release to builds.apsim.info
     upload-release-assets:
       # only run if the PR description contains "resolves #"
-      if: github.event.pull_request.merged == true && steps.resolves_check.outcome == 'success'
+      if: github.event.pull_request.merged == true
       needs: [create-docker-containers, create-releases]
       runs-on: ubuntu-latest 
       steps:
