@@ -17,9 +17,10 @@ namespace Models.PMF.Phen
     /// - BBCH 60: Start Flowering (Stage 6: StartFlowering)
     /// - BBCH 69: End Flowering (Stage 9: EndFlowering)
     /// - BBCH 79: End Pod Development (Stage 10: EndPodDevelopment)
-    /// - BBCH 89: End Grain Fill (Stage 11: EndGrainFill)
+    /// - BBCH 87: End Grain Fill (Stage 11: EndGrainFill)
+    /// - BBCH 90: Maturity (Stage 12: Maturity)
     /// 
-    /// Linear interpolation is used between these key stages (Stages 3-11).
+    /// Linear interpolation is used between these key stages (Stages 3-12).
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -35,11 +36,7 @@ namespace Models.PMF.Phen
         [Link]
         private Plant plant = null;
 
-        /// <summary>The Haun stage function</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        public IFunction haunStage = null;
-
-        private double[] bbchDays = new double[90]; // Use 1-based index (position zero is before sowing). BBCH range is 1 to 89.
+        private double[] bbchDays = new double[91]; // Use 1-based index (position zero is before sowing). BBCH range is 1 to 89.
 
         /// <summary>Gets the stage.</summary>
         /// <value>The stage.</value>
@@ -64,9 +61,9 @@ namespace Models.PMF.Phen
                 {
                     bbch_stage = 5.0f + 5 * fracInCurrent;
                 }
-                // BBCH 10-89: Emergence to End Grain Fill (Stages 3-11)
+                // BBCH 10-90: Emergence to Maturity (Stages 3-12)
                 // Linear interpolation between key phenological stages
-                else if (Phenology.Stage >= 3.0 && Phenology.Stage <= 11.0)
+                else if (Phenology.Stage >= 3.0 && Phenology.Stage <= 13.0)
                 {
                     // BBCH stages mapped to phenological stages:
                     // BBCH 10: Stage 3 - Emergence
@@ -75,9 +72,10 @@ namespace Models.PMF.Phen
                     // BBCH 60: Stage 6 - Start Flowering
                     // BBCH 69: Stage 9 - End Flowering
                     // BBCH 79: Stage 10 - End Pod Development
-                    // BBCH 89: Stage 11 - End Grain Fill
-                    double[] BBCH_code_y = {10, 31, 51, 60, 69, 79, 89 };
-                    double[] PMF_Stage = { 3, 4, 5, 6.0, 9, 10, 11 };
+                    // BBCH 87: Stage 11 - End Grain Fill
+                    // BBCH 90: Stage 12 - Maturity
+                    double[] BBCH_code_y = {10, 31, 51, 60, 69, 79, 87, 90 };
+                    double[] PMF_Stage = { 3, 4, 5, 6.0, 9, 10, 11, 12 };
                     bool DidInterpolate;
                     bbch_stage = MathUtilities.LinearInterpReal(Phenology.Stage,
                                                                 PMF_Stage, BBCH_code_y,
@@ -91,7 +89,7 @@ namespace Models.PMF.Phen
         private int lastRecordedStage = 0;
 
         /// <summary>
-        /// Records the day after sowing when each BBCH stage (1–89) is first reached.
+        /// Records the day after sowing when each BBCH stage (1–90) is first reached.
         /// Uses a progressive approach to avoid redundant looping,
         /// since BBCH stage increases monotonically.
         /// </summary>
@@ -116,7 +114,7 @@ namespace Models.PMF.Phen
         /// Gets the day (days after sowing) on which a specified BBCH stage was first reached.
         /// </summary>
         /// <param name="index">
-        /// BBCH stage index (1–89).  
+        /// BBCH stage index (1–90).  
         /// For example, <c>StageDAS(50)</c> returns the day after sowing when BBCH stage 50 occurred.
         /// </param>
         /// <returns>
@@ -124,12 +122,12 @@ namespace Models.PMF.Phen
         /// or 0 if that stage has not yet been reached.
         /// </returns>
         /// <exception cref="ArgumentOutOfRangeException">
-        /// Thrown when <paramref name="index"/> is outside the range 1–89.
+        /// Thrown when <paramref name="index"/> is outside the range 1–90.
         /// </exception>
         public double StageDAS(int index)
         {
             if (index < 1 || index > bbchDays.Length - 1)
-                throw new ArgumentOutOfRangeException(nameof(index), "Valid BBCH stage range is 1–89.");
+                throw new ArgumentOutOfRangeException(nameof(index), "Valid BBCH stage range is 1–90.");
 
             return bbchDays[index];
         }
