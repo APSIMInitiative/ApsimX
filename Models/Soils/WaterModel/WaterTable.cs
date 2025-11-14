@@ -35,7 +35,7 @@ namespace Models.WaterModel
         {
             double[] thickness = physical.Thickness;
             double[] dul = MathUtilities.Multiply(physical.DUL, thickness);
-            double[] sat = MathUtilities.Multiply(physical.DUL, thickness);
+            double[] sat = MathUtilities.Multiply(physical.SAT, thickness);
             Depth = CalculateDepth(thickness, swmm, dul, sat);
         }
 
