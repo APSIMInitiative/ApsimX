@@ -7364,7 +7364,7 @@
                 "        ///<summary>Perform a reset</summary>",
                 "        public void Reset()",
                 "        {",
-                "            waterVolumetric = water.InitialValues;",
+                "            waterVolumetric = water.InitialValues.Clone() as double[];",
                 "        }",
                 "",
                 "        ///<summary>Perform tillage</summary>",

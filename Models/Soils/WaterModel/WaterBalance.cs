@@ -843,7 +843,7 @@ namespace Models.WaterModel
         private void Initialise()
         {
             solutes = Structure.FindSiblings<Solute>().ToList();
-            SW = water.InitialValues;
+            SW = water.InitialValues.Clone() as double[];
             Runon = 0;
             Runoff = 0;
             PotentialInfiltration = 0;
