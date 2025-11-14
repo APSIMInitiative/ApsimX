@@ -244,7 +244,10 @@ namespace Models.WaterModel
             set
             {
                 waterVolumetric = value;
-                waterMM = MathUtilities.Multiply(value, soilPhysical.Thickness);
+                if (value == null)
+                    waterMM = null;
+                else
+                    waterMM = MathUtilities.Multiply(value, soilPhysical.Thickness);
             }
         }
 
@@ -840,7 +843,7 @@ namespace Models.WaterModel
         private void Initialise()
         {
             solutes = Structure.FindSiblings<Solute>().ToList();
-            Water = water.InitialValuesMM;
+            SW = water.InitialValues;
             Runon = 0;
             Runoff = 0;
             PotentialInfiltration = 0;
