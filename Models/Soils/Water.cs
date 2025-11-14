@@ -26,10 +26,10 @@ namespace Models.Soils
         public IStructure Structure { private get; set; }
 
         /// <summary>Finds the 'Physical' node.</summary>
-        private IPhysical Physical => Structure?.FindChild<IPhysical>();
+        private IPhysical Physical => Structure?.FindSibling<IPhysical>();
 
         /// <summary>Finds the 'SoilWater' node.</summary>
-        private ISoilWater WaterModel => Structure?.FindChild<ISoilWater>();
+        private ISoilWater WaterModel => Structure?.FindSibling<ISoilWater>();
 
         private double initialFractionFull = double.NaN;
 
