@@ -820,6 +820,8 @@ namespace Models.WaterModel
         public void RemoveWater(double[] amountToRemove)
         {
             Water = MathUtilities.Subtract(Water, amountToRemove);
+            // Update the variable in the water model.
+            water.Volumetric = waterVolumetric;
         }
 
         /// <summary>Sets the water table.</summary>
