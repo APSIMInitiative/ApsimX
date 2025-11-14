@@ -25,17 +25,11 @@ namespace Models.Soils
         [field: NonSerialized]
         public IStructure Structure { private get; set; }
 
-        /// <summary>Finds the 'Soil' node. Try parent first, then a soil in scope.</summary>
-        private Soil Soil => Node?.FindParent<Soil>() ??
-                            Node?.WalkScoped()
-                                ?.FirstOrDefault(n => n.Model is Soil)
-                                ?.Model as Soil;
-
         /// <summary>Finds the 'Physical' node.</summary>
-        private IPhysical Physical => Soil?.Node.FindChild<IPhysical>();
+        private IPhysical Physical => Structure.FindChild<IPhysical>();
 
         /// <summary>Finds the 'SoilWater' node.</summary>
-        private ISoilWater WaterModel => Soil?.Node.FindChild<ISoilWater>();
+        private ISoilWater WaterModel => Structure.FindChild<ISoilWater>();
 
         private double initialFractionFull = double.NaN;
 
@@ -324,11 +318,9 @@ namespace Models.Soils
                 double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
                 double[] sat = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.SAT.Last());
                 if (FilledFromTop)
-                    InitialValues = APSIM.Soils.SoilUtilities.DistributeWaterFromTop(value, Thickness, airdry, RelativeToLL, dul, sat, RelativeToXF);
+                    InitialValues = SoilUtilities.DistributeWaterFromTop(value, Thickness, airdry, RelativeToLL, dul, sat, RelativeToXF);
                 else
-                    InitialValues = APSIM.Soils.SoilUtilities.DistributeWaterEvenly(value, Thickness, airdry, RelativeToLL, dul, sat, RelativeToXF);
-
-                double fraction = FractionFull;
+                    InitialValues = SoilUtilities.DistributeWaterEvenly(value, Thickness, airdry, RelativeToLL, dul, sat, RelativeToXF);
             }
             else
                 initialFractionFull = value;
@@ -362,7 +354,7 @@ namespace Models.Soils
             set
             {
                 double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
-                InitialValues = APSIM.Soils.SoilUtilities.DistributeToDepthOfWetSoil(value, Thickness, RelativeToLL, dul);
+                InitialValues = SoilUtilities.DistributeToDepthOfWetSoil(value, Thickness, RelativeToLL, dul);
             }
         }
 
@@ -442,7 +434,7 @@ namespace Models.Soils
         /// </summary>
         public bool AreInitialValuesWithinPhysicalBoundaries()
         {
-            if (this.Physical == null)
+            if (Physical == null)
                 return true; //when loading from file physical will be none, in this case, just accept the
 
             if (Physical.AirDry == null || Physical.SAT == null)
