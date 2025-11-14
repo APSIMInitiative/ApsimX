@@ -81,6 +81,10 @@ namespace Models.WaterModel
         [Link]
         private SaturatedFlowModel saturatedFlow = null;
 
+        /// <summary>Link to the unsaturated flow model.</summary>
+        [Link]
+        private UnsaturatedFlowModel unsaturatedFlow = null;
+
         /// <summary>Link to the evaporation model.</summary>
         [Link]
         private EvaporationModel evaporationModel = null;
@@ -485,16 +489,8 @@ namespace Models.WaterModel
         [EventSubscribe("DoSoilWaterMovement")]
         private void OnDoSoilWaterMovement(object sender, EventArgs e)
         {
-            double[] waterCopy = new double[Water.Length];
-            Water.CopyTo(waterCopy, 0);
-
-            double[] ll15 = MathUtilities.Multiply(soilPhysical.LL15, Thickness);
-            double[] dul = MathUtilities.Multiply(soilPhysical.DUL, Thickness);
-            double[] sat = MathUtilities.Multiply(soilPhysical.SAT, Thickness);
-            double[] KS = physical.KS;
-
             // Calculate lateral flow.
-            lateralFlowModel.Calculate();
+            lateralFlowModel.Calculate(Water);
             if (LateralFlow.Length > 0)
                 Water = MathUtilities.Subtract(Water, LateralFlow);
 
@@ -531,7 +527,8 @@ namespace Models.WaterModel
             }
 
             // Saturated flow.
-            Flux = saturatedFlow.CalculateFlux(Water, dul, sat, SWCON, KS);
+            saturatedFlow.Calculate(Water);
+            Flux = saturatedFlow.Flux;
 
             // Add backed up water to runoff.
             Water[0] = Water[0] - saturatedFlow.backedUpSurface;
@@ -556,18 +553,20 @@ namespace Models.WaterModel
             }
 
             // Calculate evaporation and remove from top layer.
-            double es = evaporationModel.Calculate();
+            evaporationModel.Calculate(Water);
+            double es = evaporationModel.Es;
             Water[0] = Water[0] - es;
 
             // Calculate unsaturated flow of water and apply.
-            Flow = UnsaturatedFlowModel.CalculateFlow(Thickness, ll15, Water, dul, DiffusConst, DiffusSlope);
+            unsaturatedFlow.Calculate(Water);
+            Flow = unsaturatedFlow.Flow;
             MoveUp(Water, Flow);
 
             // Check for errors in water variables.
             //CheckForErrors();
 
             // Calculate water table depth.
-            waterTableModel.Calculate(Thickness, Water, dul, sat);
+            waterTableModel.Calculate(Water);
 
             // Calculate and apply net solute movement.
             foreach (var solute in solutes)

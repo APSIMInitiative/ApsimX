@@ -1,6 +1,8 @@
 ﻿using System;
 using APSIM.Numerics;
 using Models.Core;
+using Models.Interfaces;
+using Models.Soils;
 
 namespace Models.WaterModel
 {
@@ -25,10 +27,36 @@ namespace Models.WaterModel
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(WaterBalance))]
-    public class UnsaturatedFlowModel : Model
+    public class UnsaturatedFlowModel : Model, IWaterCalculation
     {
+
+        /// <summary>The water movement model.</summary>
+        [Link]
+        private WaterBalance waterBalance = null;
+
+        /// <summary>Access the soil physical properties.</summary>
+        [Link]
+        private IPhysical physical = null;
+
+        /// <summary>Calculated Flow</summary>
+        [Link]
+        public double[] Flow {get; private set;}
+
+        /// <summary>
+        /// Calculate unsaturated flow below drained upper limit.
+        /// </summary>
+        /// <param name="swmm">A double[] of the calcuted flux value from saturated flow</param>
+        /// <returns></returns>
+        public void Calculate(double[] swmm)
+        {
+            double[] thickness = physical.Thickness;
+            double[] ll15 = MathUtilities.Multiply(physical.LL15, thickness);
+            double[] dul = MathUtilities.Multiply(physical.DUL, thickness);
+            Flow = CalculateFlow(thickness, ll15, swmm, dul, waterBalance.DiffusConst, waterBalance.DiffusSlope);
+        }
+
         /// <summary>Calculate unsaturated flow below drained upper limit.</summary>
-        public static double[] CalculateFlow(double[] thickness, double[] ll15, double[] swmm, double[] dul, double diffusivityConstant, double diffusivitySlope)
+        private static double[] CalculateFlow(double[] thickness, double[] ll15, double[] swmm, double[] dul, double diffusivityConstant, double diffusivitySlope)
         {
             const double gravity_gradient = 0.00002;
 

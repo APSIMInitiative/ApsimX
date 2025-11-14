@@ -1,5 +1,8 @@
 ﻿using System;
+using APSIM.Numerics;
 using Models.Core;
+using Models.Interfaces;
+using Models.Soils;
 using Newtonsoft.Json;
 
 namespace Models.WaterModel
@@ -16,8 +19,20 @@ namespace Models.WaterModel
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(WaterBalance))]
-    public class SaturatedFlowModel : Model
+    public class SaturatedFlowModel : Model, IWaterCalculation
     {
+        /// <summary>The water movement model.</summary>
+        [Link]
+        private WaterBalance waterBalance = null;
+
+        /// <summary>Access the soil physical properties.</summary>
+        [Link]
+        private IPhysical physical = null;
+
+        /// <summary>Calculated Flux</summary>
+        [Link]
+        public double[] Flux {get; private set;}
+
         /// <summary>Amount of water (mm) backed up.</summary>
         [JsonIgnore]
         public double backedUpSurface { get; private set; }
@@ -26,20 +41,21 @@ namespace Models.WaterModel
         /// Perform the movement of water.
         /// </summary>
         /// <param name="swmm">soil water depth</param>
-        /// <param name="dul">drained upper limit</param>
-        /// <param name="sat">saturated limit</param>
-        /// <param name="swcon">SWCON from WaterBalance</param>
-        /// <param name="soilKS">KS from Physical</param>
         /// <returns>A double[] of the calcuted flux value from saturated flow</returns>
-        public double[] CalculateFlux(double[] swmm, double[] dul, double[] sat, double[] swcon, double[] soilKS)
+        public void Calculate(double[] swmm)
         {
-            var values = SaturatedFlowModel.CalculateFluxStatic(swmm, dul, sat, swcon, soilKS);
+            double[] thickness = physical.Thickness;
+            double[] dul = MathUtilities.Multiply(physical.DUL, thickness);
+            double[] sat = MathUtilities.Multiply(physical.SAT, thickness);
+            double[] KS = physical.KS;
+
+            var values = CalculateFlux(swmm, dul, sat, waterBalance.SWCON, KS);
             backedUpSurface = values.Item1;
-            return values.Item2;
+            Flux = values.Item2;
         }
 
         /// <summary>Perform the movement of water and return </summary>
-        private static (double, double[]) CalculateFluxStatic(double[] swmm, double[] dul, double[] sat, double[] swcon, double[] soilKS)
+        private static (double, double[]) CalculateFlux(double[] swmm, double[] dul, double[] sat, double[] swcon, double[] soilKS)
         {
             double backedUpSurface = 0.0;
             double w_in = 0.0;   // water coming into layer (mm)
