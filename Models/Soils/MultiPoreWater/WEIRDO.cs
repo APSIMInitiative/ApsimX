@@ -253,15 +253,17 @@ namespace Models.Soils
         ///<summary> Who knows</summary>
         [JsonIgnore]
         public double SummerU { get; set; }
+
         ///<summary> Who knows</summary>
         [JsonIgnore]
         public double[] SW { get; set; }
-        ///<summary> Who knows</summary>
 
-        public double[] SWCON { get; set; }
         ///<summary> Who knows</summary>
         [JsonIgnore]
-        public double[] SWmm { get; set; }
+        public double[] SWmm => SW == null ? null : MathUtilities.Multiply(SW, Thickness);
+
+        ///<summary> Who knows</summary>
+        public double[] SWCON { get; set; }
 
         ///<summary> Who knows</summary>
         [JsonIgnore]
@@ -625,7 +627,6 @@ namespace Models.Soils
             PercolationCapacityBelow = new double[ProfileLayers];
             LayerHeight = new double[ProfileLayers];
             KS = new double[ProfileLayers];
-            SWmm = new double[ProfileLayers];
             LL15mm = new double[ProfileLayers];
             DULmm = new double[ProfileLayers];
             SATmm = new double[ProfileLayers];
@@ -663,6 +664,9 @@ namespace Models.Soils
                 }
             }
 
+            //Initialise our SW here
+            SW = water.InitialValues.Clone() as double[];
+
             SetSoilProperties(); //Calls a function that applies soil parameters to calculate and set the properties for the soil
 
             Hourly = new HourlyData();
@@ -672,13 +676,12 @@ namespace Models.Soils
             if (ReportDetail) { DoDetailReport("Initialisation", 0, 0); }
 
             //Check the soil water content initialisation is legit
-            double[] initialWater = water.InitialValues.Clone() as double[];
             for (int l = 0; l < ProfileLayers; l++)
             {
-                if (initialWater[l] - soilPhysical.SAT[l] > 1e-10)
-                    throw new Exception("The initial Water content in mapped layer " + l + " of " + initialWater[l] + " is greater than the layers saturated water content of " + soilPhysical.SAT[l]);
-                if (soilPhysical.LL15[l] - initialWater[l] > 1e-10)
-                    throw new Exception("The initial Water content in mapped layer " + l + " of " + initialWater[l] + " is less than the layers lower limit water content of " + soilPhysical.LL15[l]);
+                if (water.Volumetric[l] - soilPhysical.SAT[l] > 1e-10)
+                    throw new Exception("The initial Water content in mapped layer " + l + " of " + water.Volumetric[l] + " is greater than the layers saturated water content of " + soilPhysical.SAT[l]);
+                if (soilPhysical.LL15[l] - water.Volumetric[l] > 1e-10)
+                    throw new Exception("The initial Water content in mapped layer " + l + " of " + water.Volumetric[l] + " is less than the layers lower limit water content of " + soilPhysical.LL15[l]);
             }
         }
 
@@ -1219,7 +1222,6 @@ namespace Models.Soils
                 }
                 if (Math.Abs(AccumWaterVolume - water.Volumetric[l]) > FloatingPointTolerance)
                     throw new Exception(this + " Initial water content has not been correctly partitioned between pore compartments in layer" + l);
-                SWmm[l] = LayerSum(Pores[l], "WaterDepth");
                 SW[l] = LayerSum(Pores[l], "WaterDepth") / Thickness[l];
                 KS[l] = LayerSum(Pores[l], "PoiseuilleFlow");
                 DULmm[l] = soilPhysical.DUL[l] * Thickness[l];
@@ -1347,7 +1349,6 @@ namespace Models.Soils
         {
             for (int l = ProfileLayers - 1; l >= 0; l--)
             {
-                SWmm[l] = LayerSum(Pores[l], "WaterDepth");
                 SW[l] = LayerSum(Pores[l], "WaterDepth") / Thickness[l];
             }
         }
