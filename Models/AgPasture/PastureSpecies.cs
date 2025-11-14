@@ -264,9 +264,12 @@ namespace Models.AgPasture
         /// </remarks>
         public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1, double seeds = 0, int tillering = 0, double ftn = 0.0)
         {
-            if (isAlive)
-                mySummary.WriteMessage(this, " Cannot sow the pasture species \"" + Name + "\", as it is already growing", MessageType.Warning);
-            else
+            
+            if(IsAlive==false)
+
+            // if (isAlive)
+            //     mySummary.WriteMessage(this, " Cannot sow the pasture species \"" + Name + "\", as it is already growing", MessageType.Warning);
+            // else
             {
 
                 // Find cultivar and apply cultivar overrides.
@@ -2552,15 +2555,17 @@ namespace Models.AgPasture
             {
                 initialDMFractions = initialDMFractionsForbs;
             }
-
-            // determine what biomass to reset the organs to. If a negative InitialShootDM
+            
+            if (InitialShootDM >= 0 && InitialRootDM >= 0 && InitialRootDepth >= 0 ) 
+            {
+                // determine what biomass to reset the organs to. If a negative InitialShootDM 
             //  was specified by user then that means the plant isn't sown yet so reset
             //  the organs to zero biomass. This is the reason Max is used below.
-            var shootDM = Math.Max(0.0, InitialShootDM);
-            var rootDM = Math.Max(0.0, InitialRootDM);
+                var shootDM = Math.Max(0.0, InitialShootDM);
+                var rootDM = Math.Max(0.0, InitialRootDM);
 
             // set up initial biomass in each organ (note that Nconc is assumed to be at optimum level)
-            Leaf.SetBiomassState(emergingWt: shootDM * initialDMFractions[0],
+                Leaf.SetBiomassState(emergingWt: shootDM * initialDMFractions[0],
                                  emergingN: shootDM * initialDMFractions[0] * Leaf.NConcOptimum,
                                  developingWt: shootDM * initialDMFractions[1],
                                  developingN: shootDM * initialDMFractions[1] * Leaf.NConcOptimum,
@@ -2568,7 +2573,7 @@ namespace Models.AgPasture
                                  matureN: shootDM * initialDMFractions[2] * Leaf.NConcOptimum,
                                  deadWt: shootDM * initialDMFractions[3],
                                  deadN: shootDM * initialDMFractions[3] * Leaf.NConcMinimum);
-            Stem.SetBiomassState(emergingWt: shootDM * initialDMFractions[4],
+                Stem.SetBiomassState(emergingWt: shootDM * initialDMFractions[4],
                                  emergingN: shootDM * initialDMFractions[4] * Stem.NConcOptimum,
                                  developingWt: shootDM * initialDMFractions[5],
                                  developingN: shootDM * initialDMFractions[5] * Stem.NConcOptimum,
@@ -2576,36 +2581,66 @@ namespace Models.AgPasture
                                  matureN: shootDM * initialDMFractions[6] * Stem.NConcOptimum,
                                  deadWt: shootDM * initialDMFractions[7],
                                  deadN: shootDM * initialDMFractions[7] * Stem.NConcMinimum);
-            Stolon.SetBiomassState(emergingWt: shootDM * initialDMFractions[8],
+                Stolon.SetBiomassState(emergingWt: shootDM * initialDMFractions[8],
                                    emergingN: shootDM * initialDMFractions[8] * Stolon.NConcOptimum,
                                    developingWt: shootDM * initialDMFractions[9],
                                    developingN: shootDM * initialDMFractions[9] * Stolon.NConcOptimum,
                                    matureWt: shootDM * initialDMFractions[10],
                                    matureN: shootDM * initialDMFractions[10] * Stolon.NConcOptimum,
                                    deadWt: 0.0, deadN: 0.0);
-            roots[0].SetBiomassState(rootWt: rootDM,
+                roots[0].SetBiomassState(rootWt: rootDM,
                                      rootN: rootDM * roots[0].NConcOptimum,
                                      rootDepth: InitialRootDepth);
 
             // set initial phenological stage
-            if (MathUtilities.IsGreaterThan(InitialShootDM, 0.0))
-            {
-                phenologicStage = 1;
-            }
-            else if (MathUtilities.FloatsAreEqual(InitialShootDM, 0.0, Epsilon))
-            {
-                phenologicStage = 0;
-            }
-            else
-            {
-                phenologicStage = -1;
-            }
+                // if (MathUtilities.IsGreaterThan(InitialShootDM, 0.0))
+                // {
+                //     phenologicStage = 1;
+                // }
+                // else if (MathUtilities.FloatsAreEqual(InitialShootDM, 0.0, Epsilon))
+                // {
+                //     phenologicStage = 0;
+                // }
+                // else if 
+                // {
+                //      phenologicStage = -1;
+                // }
 
-            if (phenologicStage >= 0)
-            {
-                isAlive = true;
-            }
+                // if (phenologicStage >= 0)
+                // {
+                //     isAlive = true;
+                // }
 
+                if(InitialShootDM > 0 && InitialRootDM >0 && InitialRootDepth > 0)
+                 {
+                    phenologicStage=1;
+                    isAlive=true;
+                    
+                 }
+                else if (InitialShootDM == 0 && InitialRootDM==0 && InitialRootDepth == 0)
+                    {
+                      //reset state variables
+                      Leaf.SetBiomassState(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+                      Stem.SetBiomassState(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+                      Stolon.SetBiomassState(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+                      foreach (PastureBelowGroundOrgan root in roots)
+                     {
+                        root.SetBiomassState(0.0, 0.0, 0.0);
+                     }
+
+                     greenLAI = 0.0;
+                     deadLAI = 0.0;
+                     isAlive = false;
+                     phenologicStage = -1;   
+                    }
+
+              
+                          
+                
+
+            }
+            else throw new Exception("AgPasture: Please enter initial biomasss greater than or equal to zero");
+            
             // Calculate the values for LAI
             EvaluateLAI();
 
@@ -2661,11 +2696,15 @@ namespace Models.AgPasture
 
             // 4. Set phenological stage to vegetative
             phenologicStage = 1;
+            
+            
+            
 
             // 5. Calculate the values for LAI
             EvaluateLAI();
         }
-
+        
+        
         /// <summary>Initialises the parameters to compute factor increasing shoot allocation during reproductive growth.</summary>
         /// <remarks>
         /// Reproductive phase of perennial is not simulated by the model, the ReproductiveGrowthFactor attempts to mimic the main
@@ -3298,7 +3337,7 @@ namespace Models.AgPasture
             if (myClock.Today.DayOfYear == doyGermination)
             {
                 // just allowed to germinate
-                phenologicStage = 0;
+                phenologicStage = 0; 
             }
 
             if (phenologicStage > 0)
