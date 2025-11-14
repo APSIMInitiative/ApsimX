@@ -671,16 +671,14 @@ namespace Models.Soils
 
             if (ReportDetail) { DoDetailReport("Initialisation", 0, 0); }
 
-            //Clone our intitial water values
-            SW = water.InitialValues.Clone() as double[];
-
             //Check the soil water content initialisation is legit
+            double[] initialWater = water.InitialValues.Clone() as double[];
             for (int l = 0; l < ProfileLayers; l++)
             {
-                if (water.Volumetric[l] - soilPhysical.SAT[l] > 1e-10)
-                    throw new Exception("The initial Water content in mapped layer " + l + " of " + water.Volumetric[l] + " is greater than the layers saturated water content of " + soilPhysical.SAT[l]);
-                if (soilPhysical.LL15[l] - water.Volumetric[l] > 1e-10)
-                    throw new Exception("The initial Water content in mapped layer " + l + " of " + water.Volumetric[l] + " is less than the layers lower limit water content of " + soilPhysical.LL15[l]);
+                if (initialWater[l] - soilPhysical.SAT[l] > 1e-10)
+                    throw new Exception("The initial Water content in mapped layer " + l + " of " + initialWater[l] + " is greater than the layers saturated water content of " + soilPhysical.SAT[l]);
+                if (soilPhysical.LL15[l] - initialWater[l] > 1e-10)
+                    throw new Exception("The initial Water content in mapped layer " + l + " of " + initialWater[l] + " is less than the layers lower limit water content of " + soilPhysical.LL15[l]);
             }
         }
 
