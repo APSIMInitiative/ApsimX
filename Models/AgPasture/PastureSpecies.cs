@@ -2618,25 +2618,12 @@ namespace Models.AgPasture
                     
                  }
                 else if (InitialShootDM == 0 && InitialRootDM==0 && InitialRootDepth == 0)
-                    {
-                      //reset state variables
-                      Leaf.SetBiomassState(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-                      Stem.SetBiomassState(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-                      Stolon.SetBiomassState(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-                      foreach (PastureBelowGroundOrgan root in roots)
-                     {
-                        root.SetBiomassState(0.0, 0.0, 0.0);
-                     }
-
-                     greenLAI = 0.0;
-                     deadLAI = 0.0;
-                     isAlive = false;
-                     phenologicStage = -1;   
-                    }
-
-              
-                          
-                
+                 {
+                     ResetBiomasses();
+                 }
+          
+                        
+            
 
             }
             else throw new Exception("AgPasture: Please enter initial biomasss greater than or equal to zero");
@@ -2704,7 +2691,26 @@ namespace Models.AgPasture
             EvaluateLAI();
         }
         
-        
+        /// <summary>
+        /// Reset aboveground and belowground biomasses to zero. Reset dead and green LAI to zero. Set the the phenologic state to -1 (Dormant) and Alive to false.
+        /// </summary>
+        public void ResetBiomasses()
+        {
+             //reset state variables
+            Leaf.SetBiomassState(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+            Stem.SetBiomassState(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+            Stolon.SetBiomassState(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+            foreach (PastureBelowGroundOrgan root in roots)
+                {
+                   root.SetBiomassState(0.0, 0.0, 0.0);
+                }
+
+            greenLAI = 0.0;
+            deadLAI = 0.0;
+            isAlive = false;
+            phenologicStage = -1;
+        }
+
         /// <summary>Initialises the parameters to compute factor increasing shoot allocation during reproductive growth.</summary>
         /// <remarks>
         /// Reproductive phase of perennial is not simulated by the model, the ReproductiveGrowthFactor attempts to mimic the main
