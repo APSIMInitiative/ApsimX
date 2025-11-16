@@ -1,11 +1,16 @@
 using APSIM.Numerics;
 using APSIM.Shared.Documentation.Extensions;
+using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
+using BruTile.Wmts.Generated;
 using Newtonsoft.Json.Linq;
 using System.Globalization;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace APSIM.Core;
 
@@ -7133,59 +7138,57 @@ internal class Converter
     }
 
     /// <summary>
-    /// Finds NDVI models that have been implemented in a manager, gets their parameters, replaces the manager with a compiled model and puts the correct parameters onto it.
+    /// Replaces SetEmergenceDate and SetGerminationDate methods that may have been missed by the previous UpgradeTo204.
+    /// </summary>
     /// <param name="root">Root json object.</param>
     /// <param name="_">Unused filename.</param>
     private static void UpgradeToVersion206(JObject root, string _)
     {
-        // loop through all managers and replace with NDVI model if appropriate
-        foreach (JObject manager in JsonUtilities.ChildrenRecursively(root, "Manager"))
+        var emergingArg = SyntaxFactory.Argument(
+            SyntaxFactory.LiteralExpression(
+                SyntaxKind.StringLiteralExpression,
+                SyntaxFactory.Literal("Emerging")
+            )
+        );
+        var germinatingArg = SyntaxFactory.Argument(
+            SyntaxFactory.LiteralExpression(
+                SyntaxKind.StringLiteralExpression,
+                SyntaxFactory.Literal("Germinating")
+            )
+        );
+        var newName = SyntaxFactory.IdentifierName("SetPhaseCompletionDate");
+
+        foreach (var manager in JsonUtilities.ChildManagers(root).Where(mgr => !mgr.IsEmpty))
         {
-            if (manager["Name"].ToString() == "NDVIModel")
-            {
-                //Extract NDVI model parameters from scropt
-                var parameters = manager["Parameters"] as JArray;
-                var paramDict = new Dictionary<string, double>();
-
-                if (parameters != null)
+            var managerRoot = CSharpSyntaxTree.ParseText(manager.ToString()).GetRoot();
+            var newRoot = managerRoot.ReplaceNodes(
+                managerRoot
+                    .DescendantNodes()
+                    .OfType<InvocationExpressionSyntax>()
+                    .Where(
+                        node =>
+                        {
+                            if (node.Expression is MemberAccessExpressionSyntax ma)
+                            {
+                                var name = ma.Name.ToFullString();
+                                return name == "SetEmergenceDate" || name == "SetGerminationDate";
+                            }
+                            return false;
+                        }
+                    ),
+                (old, _) =>
                 {
-                    foreach (var p in parameters.OfType<JObject>())
-                    {
-                        string? key = (string?)p["Key"];
-                        if (key != null && double.TryParse(p["Value"]?.ToString(), out double val))
-                            paramDict[key] = val;
-                    }
+                    var ma = old.Expression as MemberAccessExpressionSyntax;
+                    var newLastArg = ma.Name.ToFullString() == "SetEmergenceDate" ? emergingArg : germinatingArg;
+                    return SyntaxFactory.InvocationExpression(ma.WithName(newName), old.ArgumentList.AddArguments(newLastArg));
                 }
+            );
 
-                // Build replacement Spectral model
-                var newModel = new JObject
-                {
-                    ["$type"] = "Models.Sensor.Spectral, Models",
-                    ["Name"] = "Spectral",
-                    ["DrySoilNDVI"] = paramDict.GetValueOrDefault("DrySoilNDVI", 0.0),
-                    ["WetSoilNDVI"] = paramDict.GetValueOrDefault("WetSoilNDVI", 0.0),
-                    ["GreenCropNDVI"] = paramDict.GetValueOrDefault("GreenCropNDVI", 0.0),
-                    ["DeadCropNDVI"] = paramDict.GetValueOrDefault("DeadCropNDVI", 0.0),
-                    ["NDVI"] = 0.0,
-                    ["ResourceName"] = null,
-                    ["Children"] = new JArray(),
-                    ["Enabled"] = true,
-                    ["ReadOnly"] = false
-                };
-
-                //Remove manager model and add Specteral model to parent
-                JObject parent = JsonUtilities.Parent(manager) as JObject;
-                JsonUtilities.RemoveChild(parent, "NDVIModel");
-                JsonUtilities.AddChild(parent, newModel);
+            if (!managerRoot.IsEquivalentTo(newRoot))
+            {
+                manager.Read(newRoot.ToFullString());
+                manager.Save();
             }
         }
-
-        // Change report variables.
-        foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
-             JsonUtilities.SearchReplaceReportVariableNames(report, "[NDVIModel].Script.NDVI", "[Spectral].NDVI", caseSensitive: false);
-
-        // Change graph variables.
-        foreach (var graph in JsonUtilities.ChildrenOfType(root, "Graph"))
-                JsonUtilities.SearchReplaceGraphVariableNames(graph, "NDVIModel.Script.NDVI", "Spectral.NDVI");
     }
 }
