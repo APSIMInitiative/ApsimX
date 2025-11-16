@@ -97,19 +97,22 @@ internal class Locator
         else
             matches = [relativeTo.Model];
 
-        foreach (var match in matches)
+        if (matches != null)
         {
-            if (string.IsNullOrEmpty(path))
+            foreach (var match in matches)
             {
-                var composite = new VariableComposite(path);
-                composite.AddInstance(match);
-                yield return composite;
-            }
-            else
-            {
-                var variable = match.Node.GetObject(path, LocatorFlags.PropertiesOnly | LocatorFlags.CaseSensitive | LocatorFlags.IncludeDisabled);
-                if (variable != null)
-                    yield return variable;
+                if (string.IsNullOrEmpty(path))
+                {
+                    var composite = new VariableComposite(path);
+                    composite.AddInstance(match);
+                    yield return composite;
+                }
+                else
+                {
+                    var variable = match.Node.GetObject(path, LocatorFlags.PropertiesOnly | LocatorFlags.CaseSensitive | LocatorFlags.IncludeDisabled);
+                    if (variable != null)
+                        yield return variable;
+                }
             }
         }
     }

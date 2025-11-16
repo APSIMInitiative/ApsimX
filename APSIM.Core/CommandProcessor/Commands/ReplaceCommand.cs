@@ -29,7 +29,9 @@ public partial class ReplaceCommand : IModelCommand
     [JsonProperty]
     private readonly string newName;
 
-    /// <summary>Definition of how to </summary>
+    /// <summary>
+    /// Specifies how models are matched for replacement: by name, by both name and type, or by either name or type.
+    /// </summary>
     public enum MatchType { Name, NameAndType, NameOrType };
 
     /// <summary>
@@ -63,8 +65,8 @@ public partial class ReplaceCommand : IModelCommand
         {
             var modelToReplace = (INodeModel)relativeTo.Node.Get(replacementPath)
                  ?? throw new Exception($"Cannot find model: {replacementPath}");
-            if (matchType == MatchType.NameAndType && modelToReplace.GetType().IsAssignableFrom(modelToAdd.GetType()))
-                throw new Exception($"Model {replacementPath} is not of type {replacementPath}");
+            if (matchType == MatchType.NameAndType && !modelToReplace.GetType().IsAssignableFrom(modelToAdd.GetType()))
+                throw new Exception($"Model {replacementPath} is not of type {modelToAdd.GetType().Name}");
             modelsToReplace = [modelToReplace];
         }
         else
@@ -91,7 +93,7 @@ public partial class ReplaceCommand : IModelCommand
         // Do model replacement.
         foreach (var modelToReplace in modelsToReplace.ToArray())  // Need the ToArray because modelsToReplace changes because of the ReplaceChild call.
         {
-            var newModel = ReflectionUtilities.Clone(modelToAdd) as INodeModel;
+            var newModel = ReflectionUtilities.Clone(modelToAdd) as INodeModel ?? throw new Exception("Cloning the model failed or did not return an INodeModel instance.");
             if (string.IsNullOrEmpty(newName))
                 newModel.Rename(modelToReplace.Name);
             else

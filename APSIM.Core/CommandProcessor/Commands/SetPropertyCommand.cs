@@ -18,8 +18,8 @@ public partial class SetPropertyCommand : IModelCommand
     private readonly string oper;
     [JsonProperty]
     private readonly bool multiple;
-    private List<VariableComposite> obj = [];
-    private List<object> oldValues = [];
+    private readonly List<VariableComposite> obj = [];
+    private readonly List<object> oldValues = [];
 
     /// <summary>
     /// Constructor.

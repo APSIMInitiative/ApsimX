@@ -535,6 +535,7 @@ public class CommandTests
         cmd.Run(simulation, runner: null);
 
         var report = simulation.Children[0] as Report;
+        Assert.That(report, Is.Not.Null);
         Assert.That(report.Name, Is.EqualTo("Report"));
         Assert.That(report.VariableNames, Is.EqualTo([ "2" ]));
     }
@@ -559,13 +560,15 @@ public class CommandTests
         cmd.Run(simulation, runner: null);
 
         var report = simulation.Children[0] as Report;
+        Assert.That(report, Is.Not.Null, "simulation.Children[0] is not a Report after replacement.");
+
         Assert.That(report.Name, Is.EqualTo("Report"));
         Assert.That(report.VariableNames, Is.EqualTo([ "2" ]));
     }
 
     /// <summary>Ensure the replace command works when matching on name only and when a name is specified.</summary>
     [Test]
-    public void EnsureReplaceOnNameWWithNewNameWorks()
+    public void EnsureReplaceOnNameWithNewNameWorks()
     {
         Simulations simulation = new()
         {

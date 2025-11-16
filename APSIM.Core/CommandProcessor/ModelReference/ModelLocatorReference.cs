@@ -15,7 +15,7 @@ public class ModelLocatorReference : IModelReference
     /// <summary>The node the model reference is relative to.</summary>
     private readonly INodeModel relativeTo;
 
-    /// <summary>Parent node containing commands..</summary>
+    /// <summary>Parent node containing commands.</summary>
     [JsonProperty]
     internal readonly string modelName;
 

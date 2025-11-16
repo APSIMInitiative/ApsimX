@@ -193,7 +193,7 @@ namespace Models.GrazPlan
         /// <param name="parameterNode">The XML parameter node.</param>
         /// <param name="parameterName">The name of the XML child parameter.</param>
         /// <param name="animalParamName">The name of a GrazPlan parameter.</param>
-        /// <param name="commands">The list of comamnds to add to.</param>
+        /// <param name="commands">The list of commands to add to.</param>
         private static void ConvertScalarToCommand(XmlNode parameterNode, string parameterName, string animalParamName, List<IModelCommand> commands)
         {
             var value = XmlUtilities.Value(parameterNode, parameterName);
@@ -207,7 +207,7 @@ namespace Models.GrazPlan
         /// <param name="parentNode">The XML parameter node.</param>
         /// <param name="parameterName">The name of the XML child parameter.</param>
         /// <param name="animalParamName">The name of a GrazPlan parameter.</param>
-        /// <param name="commands">The list of comamnds to add to.</param>
+        /// <param name="commands">The list of commands to add to.</param>
         /// <param name="numValuesInArray">The number of values that should be in the array.</param>
         private static void ConvertArrayToCommands(XmlNode parentNode, string parameterName,
                                                    string animalParamName, List<IModelCommand> commands,
@@ -293,7 +293,7 @@ namespace Models.GrazPlan
         /// <param name="parameterNode">The XML parameter node.</param>
         /// <param name="parameterName">The name of the XML child parameter.</param>
         /// <param name="animalParamNames">The names of a multiple GrazPlan paramaters, one for each parameter value.</param>
-        /// <param name="commands">The list of comamnds to add to.</param>
+        /// <param name="commands">The list of commands to add to.</param>
         private static void ConvertArrayToScalars(XmlNode parameterNode, string parameterName,
                                                   string[] animalParamNames, List<IModelCommand> commands)
         {

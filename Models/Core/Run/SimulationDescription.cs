@@ -24,7 +24,7 @@ namespace Models.Core.Run
 
         /// <summary>A list of all replacements to apply to simulation to run.</summary>
         [NonSerialized]
-        private List<IModelCommand> replacementsToApply = new();
+        private readonly List<IModelCommand> replacementsToApply = new();
 
         /// <summary>
         /// The actual simulation object to run

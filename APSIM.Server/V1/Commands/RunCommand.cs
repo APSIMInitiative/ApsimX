@@ -94,7 +94,15 @@ namespace APSIM.Server.Commands
 
         public override int GetHashCode()
         {
-            return (runPostSimulationTools, runTests, numberOfProcessors, simulationNamesToRun, changes[0], changes[1]).GetHashCode();
+            int hash = HashCode.Combine(runPostSimulationTools, runTests, numberOfProcessors, simulationNamesToRun);
+            if (changes != null)
+            {
+                foreach (var change in changes)
+                {
+                    hash = HashCode.Combine(hash, change?.GetHashCode() ?? 0);
+                }
+            }
+            return hash;
         }
 
         public override string ToString()

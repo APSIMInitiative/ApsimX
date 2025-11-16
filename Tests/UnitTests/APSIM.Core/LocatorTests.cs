@@ -612,11 +612,8 @@ namespace APSIM.Core.Tests
                 ]
             };
             Node.Create(simulation);
-            IStructure loc = simulation.Node;
-            var zone1 = simulation.Children[0] as Zone;
-            var zone2 = simulation.Children[1] as Zone;
 
-            //should return the IVaraible instead of the value of a property
+            //should return the IVariable instead of the value of a property
             var instances = simulation.Node.GetAllObjects("[Clock].StartDate").ToArray();
             Assert.That(instances.Count, Is.EqualTo(2));
             Assert.That(instances[0].Value, Is.EqualTo(new DateTime(2000, 1, 1)));
