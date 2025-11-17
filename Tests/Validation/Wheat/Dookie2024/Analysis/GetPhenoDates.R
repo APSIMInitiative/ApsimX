@@ -5,6 +5,7 @@ library(lubridate)
 library(tidyr)
 library(DBI)
 library(RSQLite)
+library(here)
 
 #--------------------------------------------------------------------------------
 # ------------- Get the original dates of phenological events --------------------
@@ -14,6 +15,7 @@ library(RSQLite)
 
 # Define the folder path
 folder_db_path <- file.path("C:/github/ApsimX/Tests/Validation/Wheat/Dookie2024/Dookie2024_originalParameters.db")
+#db_path <- here("Tests", "Validation", "Wheat", "Dookie2024", "Dookie2024_originalParameters.db")
 #folder_db_path <- "../../Dookie2024/Dookie2024_originalParameters.db"
 
 # Connect to the SQLite database
@@ -79,21 +81,21 @@ folder_wheat_path <- "C:/github/ApsimX/Tests/Validation/Wheat/inputs"
 
 # Create list of variable names for set up
 # Check these with Hamish
-list_of_phases <- data.frame(
-  Wheat.Phenology.Stage = c(1,3,4,5,6),
-  VariableName = c("[Wheat].Phenology.Emerging.DateToProgress",
-             "[Wheat].Phenology.SpikeletsDifferentiating.DateToProgress",
-             "[Wheat].Phenology.StemElongating.DateToProgress",
-             "[Wheat].Phenology.Heading.DateToProgress",
-             "[Wheat].Phenology.Flowering.DateToProgress"
-))
-
-list_of_phases_range <- list_of_phases %>%
-  mutate(
-    StageMin = Wheat.Phenology.Stage,
-    StageMax = Wheat.Phenology.Stage + 1
-  )
-
+# list_of_phases <- data.frame(
+#   Wheat.Phenology.Stage = c(2,4,5,6,7),
+#   VariableName = c("[Wheat].Phenology.Emerging.DateToProgress",
+#              "[Wheat].Phenology.SpikeletsDifferentiating.DateToProgress",
+#              "[Wheat].Phenology.StemElongating.DateToProgress",
+#              "[Wheat].Phenology.Heading.DateToProgress",
+#              "[Wheat].Phenology.Flowering.DateToProgress"
+# ))
+# 
+# list_of_phases_range <- list_of_phases %>%
+#   mutate(
+#     StageMin = Wheat.Phenology.Stage,
+#     StageMax = Wheat.Phenology.Stage + 1
+#   )
+# 
 
 # ---------------------------------------
 # Attribute parameter name to each Stage
@@ -105,11 +107,11 @@ data_with_phases <- originalPhenoDatesDB %>%
          Wheat.Phenology.Stage = as.numeric(Wheat.Phenology.Stage)) %>%
   mutate(
     ParameterName = case_when(
-      between(Wheat.Phenology.Stage, 1, 2) ~ "[Wheat].Phenology.Emerging.DateToProgress",
-      between(Wheat.Phenology.Stage, 3, 4) ~ "[Wheat].Phenology.SpikeletsDifferentiating.DateToProgress",
-      between(Wheat.Phenology.Stage, 4, 5) ~ "[Wheat].Phenology.StemElongating.DateToProgress",
-      between(Wheat.Phenology.Stage, 5, 6) ~ "[Wheat].Phenology.Heading.DateToProgress",
-      between(Wheat.Phenology.Stage, 6, 7) ~ "[Wheat].Phenology.Flowering.DateToProgress",
+      between(Wheat.Phenology.Stage, 3, 4) ~ "[Wheat].Phenology.Emerging.DateToProgress",#2/3
+      between(Wheat.Phenology.Stage, 5, 6) ~ "[Wheat].Phenology.SpikeletsDifferentiating.DateToProgress",#4/5
+      between(Wheat.Phenology.Stage, 6, 7) ~ "[Wheat].Phenology.StemElongating.DateToProgress",#5/6
+      between(Wheat.Phenology.Stage, 7, 8) ~ "[Wheat].Phenology.Heading.DateToProgress",#6/7
+      between(Wheat.Phenology.Stage, 8, 9) ~ "[Wheat].Phenology.Flowering.DateToProgress",#7/8
       TRUE ~ "Unknown" # Catch-all for any other values
     )) %>%
   filter(ParameterName != "Unknown")
@@ -120,6 +122,7 @@ df_result <- data_with_phases %>%
   group_by(SimulationName, ParameterName) %>%
   summarise(
     DateToProgress = min(DateFormated, na.rm = TRUE),
+   #DateToProgress = max(DateFormated, na.rm = TRUE),
     .groups = "drop"
   )
 
