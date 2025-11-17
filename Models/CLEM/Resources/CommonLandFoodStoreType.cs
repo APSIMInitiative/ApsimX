@@ -137,14 +137,14 @@ namespace Models.CLEM.Resources
         {
             if (pasture != null)
             {
-                // using linked pasture so get details from pasture for timestep 
+                // using linked pasture so get details from pasture for timestep
                 switch (pasture.GetType().ToString())
                 {
                     case "AnimalFoodStoreType":
                         Nitrogen = (pasture as AnimalFoodStoreType).Nitrogen;
                         Nitrogen *= NitrogenReductionFromPasture;
                         Nitrogen = Math.Max(MinimumNitrogen, Nitrogen);
-                        // calculate DMD from N% 
+                        // calculate DMD from N%
                         dryMatterDigestibility = Nitrogen * NToDMDCoefficient + NToDMDIntercept;
                         dryMatterDigestibility = Math.Max(MinimumDMD, dryMatterDigestibility);
                         break;
@@ -152,7 +152,7 @@ namespace Models.CLEM.Resources
                         Nitrogen = (pasture as GrazeFoodStoreType).Nitrogen;
                         Nitrogen *= NitrogenReductionFromPasture;
                         Nitrogen = Math.Max(MinimumNitrogen, Nitrogen);
-                        // calculate DMD from N% 
+                        // calculate DMD from N%
                         dryMatterDigestibility = Nitrogen * NToDMDCoefficient + NToDMDIntercept;
                         dryMatterDigestibility = Math.Max(MinimumDMD, dryMatterDigestibility);
                         break;
@@ -168,7 +168,7 @@ namespace Models.CLEM.Resources
         public event EventHandler EcologicalIndicatorsCalculated;
 
         /// <summary>
-        /// Ecological indicators calculated 
+        /// Ecological indicators calculated
         /// </summary>
         /// <param name="e"></param>
         protected virtual void OnEcologicalIndicatorsCalculated(EventArgs e)
@@ -190,7 +190,7 @@ namespace Models.CLEM.Resources
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            if (this.FindAllChildren<Transmutation>().Count() > 0)
+            if (Structure.FindChildren<Transmutation>().Count() > 0)
             {
                 string[] memberNames = new string[] { "Transmutations" };
                 results.Add(new ValidationResult("Transmutations are not available for the CommonLandFoodStoreType (" + this.Name + ")", memberNames));

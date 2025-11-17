@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Factorial;
 
@@ -23,7 +24,7 @@ namespace Models.Core
         /// <param name="model"></param>
         public static void ClearCaches(IModel model)
         {
-            Simulation simulation = model as Simulation ?? model.FindAncestor<Simulation>();
+            Simulation simulation = model as Simulation ?? model.Node.FindParent<Simulation>(recurse: true);
             if (simulation != null)
             {
                 model.Node.ClearLocator();
@@ -32,7 +33,7 @@ namespace Models.Core
             {
                 // If the model didn't have a Simulation object as an ancestor, then it's likely to
                 // have a Simulations object as one. If so, the Simulations links may need to be updated.
-                Simulations simulations = model.FindAncestor<Simulations>();
+                Simulations simulations = model.Node.FindParent<Simulations>(recurse: true);
                 if (simulations != null)
                 {
                     simulations.ClearLinks();
@@ -54,7 +55,7 @@ namespace Models.Core
             // probably an expensive thing to do.
             Links links = null;
 
-            Simulation simulation = model as Simulation ?? model.FindAncestor<Simulation>();
+            Simulation simulation = model as Simulation ?? model.Node?.FindParent<Simulation>(recurse: true);
             if (simulation != null && simulation.IsRunning)
             {
                 links = new Links();
@@ -63,7 +64,7 @@ namespace Models.Core
             try
             {
                 T newModel = (T)ReflectionUtilities.Clone(model);
-                newModel.ParentAllDescendants();
+                Node.Create(newModel as INodeModel);
                 return newModel;
             }
             finally
@@ -98,17 +99,17 @@ namespace Models.Core
             // Is allowable if one of the valid parents of this type (t) matches the parent type.
             foreach (ValidParentAttribute validParent in ReflectionUtilities.GetAttributes(childType, typeof(ValidParentAttribute), true))
             {
+                //check if parent is one of the parents provided by Model
+                if (!modelTypes.Contains(validParent.ParentType))
+                    hasParentType = true;
+
                 if (validParent != null)
                 {
                     if (validParent.DropAnywhere)
                         return true;
 
-                    if (validParent.ParentType.IsAssignableFrom(parent.GetType()))
+                    if (validParent.ParentType != null && validParent.ParentType.IsAssignableFrom(parent.GetType()))
                         return true;
-
-                    //check if parent is one of the parents provided by Model
-                    if (!modelTypes.Contains(validParent.ParentType))
-                        hasParentType = true;
                 }
             }
 

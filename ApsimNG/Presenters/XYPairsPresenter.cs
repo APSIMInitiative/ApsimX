@@ -121,7 +121,7 @@ namespace UserInterface.Presenters
             }
             else if (xYPairs.Parent is LinearInterpolationFunction)
             {
-                var xValue = xYPairs.Parent.FindChild("XValue");
+                var xValue = xYPairs.Parent.Node.FindChild<IModel>("XValue");
                 if (xValue is VariableReference)
                     return (xValue as VariableReference).VariableName;
                 else

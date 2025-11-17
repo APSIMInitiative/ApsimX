@@ -92,7 +92,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Refresh()
         {
-            Physical physical = forestryModel.Parent.FindDescendant<Physical>();
+            Physical physical = forestryModel.Parent.Node.FindChild<Physical>(recurse: true);
             forestryViewer.SoilMidpoints = physical.DepthMidPoints;
             forestryViewer.DrawGraphs(forestryModel.Spatial);
             propertyPresenter.RefreshView(forestryModel);

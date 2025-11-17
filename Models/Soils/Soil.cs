@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
+using Models.Core.ApsimFile;
 using Models.WaterModel;
 
 namespace Models.Soils
@@ -22,8 +26,12 @@ namespace Models.Soils
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(Zones.CircularZone))]
     [ValidParent(ParentType = typeof(Zones.RectangularZone))]
-    public class Soil : Model
+    public class Soil : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { get; set; }
+
         [Link]
         private ISummary summary = null;
 
@@ -146,22 +154,23 @@ namespace Models.Soils
         /// <param name="summary">A summary instance to write warning messages to.</param>
         public void Check(ISummary summary)
         {
-            var weirdo = FindChild<WEIRDO>();
-            var water = FindChild<Water>();
-            var organic = FindChild<Organic>();
-            var chemical = FindChild<Chemical>();
-            var physical = FindChild<IPhysical>();
-            var waterBalance = FindChild<WaterBalance>();
+            var weirdo = Structure.FindChild<WEIRDO>();
+            var water = Structure.FindChild<Water>();
+            var organic = Structure.FindChild<Organic>();
+            var chemical = Structure.FindChild<Chemical>();
+            var physical = Structure.FindChild<IPhysical>();
+            var waterBalance = Structure.FindChild<WaterBalance>();
             const double min_sw = 0.0;
             const double min_bd = 0.1;
             const double specific_bd = 2.65; // (g/cc)
+            List<string> warning = new List<string>();
             StringBuilder message = new StringBuilder();
 
             //Weirdo is an experimental soil water model that does not have the same soil water parameters
             //so don't do any of these tests if Weirdo is plugged into this simulation.
             if (weirdo == null)
             {
-                var crops = FindAllDescendants<SoilCrop>();
+                var crops = Structure.FindChildren<SoilCrop>(recurse: true);
                 foreach (var soilCrop in crops)
                 {
                     if (soilCrop != null)
@@ -209,6 +218,11 @@ namespace Models.Soils
                     double max_sw = MathUtilities.Round(1.0 - physical.BD[layer] / specific_bd, 3);
                     int layerNumber = layer + 1;
 
+                    if (MathUtilities.GreaterThan(physical.ParticleSizeClay[layer] + physical.ParticleSizeSilt[layer] + physical.ParticleSizeSand[layer] - 100, 0, 1))
+                        warning.Add($"Clay, silt and sand percentages in layer {layerNumber} add up to more than 100%");
+                    else if (MathUtilities.LessThan(physical.ParticleSizeClay[layer] + physical.ParticleSizeSilt[layer] + physical.ParticleSizeSand[layer] - 100, 0, 1))
+                        warning.Add($"Clay, silt and sand percentages in layer {layerNumber} add up to less than 100%");
+
                     if (physical.AirDry[layer] == MathUtilities.MissingValue || double.IsNaN(physical.AirDry[layer]))
                         message.AppendLine($"Air dry value missing in layer {layerNumber}");
                     else if (MathUtilities.LessThan(physical.AirDry[layer], min_sw, 3))
@@ -240,9 +254,20 @@ namespace Models.Soils
                         message.AppendLine($"BD value of {physical.BD[layer].ToString("f3")} in layer {layerNumber} is greater than the theoretical maximum of 2.65");
                     else if (MathUtilities.LessThan(physical.BD[layer], min_bd, 3))
                         message.AppendLine($"BD value of {physical.BD[layer].ToString("f3")} in layer {layerNumber} is below acceptable value of {min_bd.ToString("f3")}");
+
+                    if (physical.KS != null)
+                    {
+                        // If there is a zero that isn't at the bottom of the profile then throw.
+                        // Allow a zero at the bottom so that lysimeters can be simulated.
+                        if (physical.KS[layer] == MathUtilities.MissingValue ||
+                                                double.IsNaN(physical.KS[layer]) ||
+                                                MathUtilities.LessThan(physical.KS[layer], 0, 3) ||
+                                                (layer < physical.Thickness.Length - 1 && MathUtilities.FloatsAreEqual(physical.KS[layer], 0)))
+                            message.AppendLine($"KS in layer {layerNumber} must be > 0");
+                    }
                 }
 
-                if (organic.Carbon.Length == 0)
+                if (organic == null || organic.Carbon == null || organic.Carbon.Length == 0)
                     message.AppendLine("Cannot find OC values in soil");
                 else
                     for (int layer = 0; layer != physical.Thickness.Length; layer++)
@@ -254,7 +279,7 @@ namespace Models.Soils
                             summary.WriteMessage(null, $"OC value of {organic.Carbon[layer].ToString("f3")} in layer {layerNumber} is less than 0.01", MessageType.Warning);
                     }
 
-                if (!MathUtilities.ValuesInArray(water.InitialValues))
+                if (!MathUtilities.ValuesInArray(water?.InitialValues))
                     message.AppendLine("No starting soil water values found.");
                 else
                     for (int layer = 0; layer != physical.Thickness.Length; layer++)
@@ -269,22 +294,27 @@ namespace Models.Soils
                             message.AppendLine($"Soil water of {water.InitialValues[layer].ToString("f3")} in layer {layerNumber} is below air-dry value of {physical.AirDry[layer].ToString("f3")}");
                     }
 
-                for (int layer = 0; layer != physical.Thickness.Length; layer++)
+                if (chemical == null || chemical.PH == null || chemical.PH.Length == 0)
+                    message.AppendLine("Cannot find PH values in soil");
+                else
                 {
-                    int layerNumber = layer + 1;
-                    if (chemical.PH[layer] == MathUtilities.MissingValue || double.IsNaN(chemical.PH[layer]))
-                        message.AppendLine($"PH value missing in layer {layerNumber}");
-                    else if (MathUtilities.LessThan(chemical.PH[layer], 3.5, 3))
-                        message.AppendLine($"PH value of {chemical.PH[layer].ToString("f3")} in layer {layerNumber} is less than 3.5");
-                    else if (MathUtilities.GreaterThan(chemical.PH[layer], 11, 3))
-                        message.AppendLine($"PH value of {chemical.PH[layer].ToString("f3")} in layer {layerNumber} is greater than 11");
+                    for (int layer = 0; layer != physical.Thickness.Length; layer++)
+                    {
+                        int layerNumber = layer + 1;
+                        if (chemical.PH[layer] == MathUtilities.MissingValue || double.IsNaN(chemical.PH[layer]))
+                            message.AppendLine($"PH value missing in layer {layerNumber}");
+                        else if (MathUtilities.LessThan(chemical.PH[layer], 3.5, 3))
+                            message.AppendLine($"PH value of {chemical.PH[layer].ToString("f3")} in layer {layerNumber} is less than 3.5");
+                        else if (MathUtilities.GreaterThan(chemical.PH[layer], 11, 3))
+                            message.AppendLine($"PH value of {chemical.PH[layer].ToString("f3")} in layer {layerNumber} is greater than 11");
+                    }
                 }
 
-                var no3 = FindChild<Solute>("NO3");
-                if (!MathUtilities.ValuesInArray(no3.InitialValues))
+                var no3 = Structure.FindChild<Solute>("NO3");
+                if (no3 == null || !MathUtilities.ValuesInArray(no3.InitialValues))
                     message.AppendLine("No starting NO3 values found.");
-                var nh4 = FindChild<Solute>("NH4");
-                if (!MathUtilities.ValuesInArray(nh4.InitialValues))
+                var nh4 = Structure.FindChild<Solute>("NH4");
+                if (nh4 == null || !MathUtilities.ValuesInArray(nh4.InitialValues))
                     message.AppendLine("No starting NH4 values found.");
 
                 if (MathUtilities.ValuesInArray(waterBalance?.SWCON))
@@ -296,6 +326,12 @@ namespace Models.Soils
                             message.AppendLine($"SWCON value of {waterBalance.SWCON[layer].ToString("f3")} in layer {layerNumber} is not between 0 and 1");
                     }
                 }
+            }
+
+            if (summary != null && warning.Count > 0)
+            {
+                foreach(string line in warning)
+                    summary.WriteMessage((IModel)physical, line, MessageType.Warning);
             }
 
             if (message.Length > 0)

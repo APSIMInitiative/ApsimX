@@ -22,11 +22,11 @@ namespace Models.Functions
         "Optional full or partial removal of accumulated values can occur on specified events, stages or dates")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class AccumulateFunctionGeneral : Model, IFunction, IScopeDependency
+    public class AccumulateFunctionGeneral : Model, IFunction, IStructureDependency
     {
-        /// <summary>Scope supplied by APSIM.core.</summary>
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IScope Scope { private get; set; }
+        public IStructure Structure { private get; set; }
 
         ///Links
         /// -----------------------------------------------------------------------------------------------------------
@@ -150,11 +150,11 @@ namespace Models.Functions
             AccumulateToday = true;
             if (!String.IsNullOrEmpty(NameOfPlantToLink))
             {
-                parentPhenology = Scope.Find<Plant>(NameOfPlantToLink).Phenology;
+                parentPhenology = Structure.Find<Plant>(NameOfPlantToLink).Phenology;
             }
             else
             {
-                parentPhenology = FindAllAncestors<Plant>().FirstOrDefault()?.Phenology;
+                parentPhenology = Structure.FindParents<Plant>().FirstOrDefault()?.Phenology;
             }
 
             if ((!String.IsNullOrEmpty(StartEventName))||(!String.IsNullOrEmpty(StartDate))||(!String.IsNullOrEmpty(StartStageName)))
@@ -232,7 +232,7 @@ namespace Models.Functions
             }
 
             if (ChildFunctions == null)
-                ChildFunctions = FindAllChildren<IFunction>().ToList();
+                ChildFunctions = Structure.FindChildren<IFunction>().ToList();
 
             if (AccumulateToday)
             {

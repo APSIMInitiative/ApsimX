@@ -183,9 +183,11 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class CompositeStates : OrganNutrientsState, ILocatorDependency
+    public class CompositeStates : OrganNutrientsState, IStructureDependency
     {
-        [NonSerialized] private ILocator locator;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
         private List<OrganNutrientsState> components = new List<OrganNutrientsState>();
 
@@ -195,9 +197,6 @@ namespace Models.PMF
 
         [Link(Type = LinkType.Ancestor)]
         Plant parentPlant = null;
-
-        /// <summary>Locator supplied by APSIM kernel.</summary>
-        public void SetLocator(ILocator locator) => this.locator = locator;
 
 
         /// <summary>/// Add components together to give composite/// </summary>
@@ -210,7 +209,7 @@ namespace Models.PMF
             {
                 foreach (string PropertyName in Propertys)
                 {
-                    OrganNutrientsState c = (OrganNutrientsState)(locator.Get(PropertyName));
+                    OrganNutrientsState c = (OrganNutrientsState)Structure.Get(PropertyName);
                     AddDelta(c);
                 }
             }

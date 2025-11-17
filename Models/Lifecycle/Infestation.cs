@@ -15,11 +15,11 @@ namespace Models.LifeCycle
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public class Infestation : Model, IInfest, IScopeDependency
+    public class Infestation : Model, IInfest, IStructureDependency
     {
-        /// <summary>Scope supplied by APSIM.core.</summary>
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IScope Scope { private get; set; }
+        public IStructure Structure { private get; set; }
 
         /// <summary> Clock </summary>
         [Link]
@@ -99,7 +99,7 @@ namespace Models.LifeCycle
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            InfestingOrganisum = Scope.Find<LifeCycle>(InfestingOrganisumName, relativeTo: Parent as Model);
+            InfestingOrganisum = Structure.Find<LifeCycle>(InfestingOrganisumName, relativeTo: Parent as Model);
             if (InfestingOrganisum == null)
                 throw new Exception(FullPath + " Could not find an infesting organisum called " + InfestingOrganisumName);
         }

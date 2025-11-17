@@ -56,11 +56,12 @@ namespace Models.Soils.Arbitrator
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Simulation))]
-    public class SoilArbitrator : Model, IScopeDependency
+    public class SoilArbitrator : Model, IStructureDependency
     {
-        /// <summary>Scope supplied by APSIM.core.</summary>
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IScope Scope { private get; set; }
+        public IStructure Structure { private get; set; }
+
 
         private IEnumerable<IUptake> uptakeModels = null;
         private IEnumerable<Zone> zones = null;
@@ -73,9 +74,9 @@ namespace Models.Soils.Arbitrator
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            uptakeModels = Parent.FindAllDescendants<IUptake>().ToList();
-            zones = Parent.FindAllDescendants<Zone>().ToList();
-            InitialSoilState = new SoilState(zones, Scope);
+            uptakeModels = Structure.FindChildren<IUptake>(relativeTo: Parent as INodeModel, recurse: true).ToList();
+            zones = Structure.FindChildren<Zone>(relativeTo: Parent as INodeModel, recurse: true).ToList();
+            InitialSoilState = new SoilState(zones, Structure);
             if (!(this.Parent is Simulation))
                 throw new Exception(this.Name + " must be placed directly under the simulation node as it won't work properly anywhere else");
         }

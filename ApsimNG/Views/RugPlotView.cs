@@ -49,10 +49,10 @@
         int m_DateWidth = 100;
         int m_ColWidth = 100;
         int m_HeaderHeight = 30;
-        
+
         Color DefaultOutlineColour;
         Color DefaultBackgroundColour;
-        
+
         RotationRugplot rugPlotModel;
 
         List<string> myPaddocks = null;
@@ -83,11 +83,11 @@
             SimulationDropDown = new DropDownView(this);
             SimChooserBox.PackStart(new Label("Simulation:"), false, false, 5);
             SimChooserBox.PackStart(SimulationDropDown.MainWidget, false, false, 5);
-           
+
             hbox2.PackEnd(SimChooserBox, false, false, 5 );
             vbox1.PackEnd(hbox2, false, false, 5 );
 
-            // the rugplot              
+            // the rugplot
             Box vbox2a = new Box(Orientation.Vertical, 0);
             rugCanvas = new DrawingArea();
             rugCanvas.AddEvents( (int)Gdk.EventMask.PointerMotionMask
@@ -109,7 +109,7 @@
 
             // States in upper right
             Paned vpane2b = new Paned(Orientation.Vertical);
-            
+
             ScrolledWindow StateLegend = new ScrolledWindow();
             StateLegend.ShadowType = ShadowType.EtchedIn;
             StateLegend.SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
@@ -117,7 +117,7 @@
             Gtk.TreeView stateTree = new Gtk.TreeView ();
             var cr = new Gtk.CellRendererText ();
             cr.Alignment = Pango.Alignment.Center;
-            var c = stateTree.AppendColumn ("State", cr, "text", 0); 
+            var c = stateTree.AppendColumn ("State", cr, "text", 0);
             c.SetCellDataFunc(cr, new Gtk.TreeCellDataFunc (renderCell));
 
             stateListStore = new Gtk.ListStore (typeof (string));
@@ -142,7 +142,7 @@
 
             selectedDateLabel = new Label("Selected Date Here");
             hbox1.PackStart(selectedDateLabel, false, false, 5);
-            
+
             dateplus = new Button(new Image(Gtk.Stock.Add, IconSize.Button));
             dateplus.Clicked += onPlusButtonClicked;
             dateplus.TooltipText = "Go forward 1 day";
@@ -204,34 +204,34 @@
             if (column.Title == "Paddock") {
                 var cellContents = (string) model.GetValue (iter, 0);
                 double dblValue;
-                if (Double.TryParse(cellContents, out dblValue)) 
+                if (Double.TryParse(cellContents, out dblValue))
                 {
-                    if (dblValue <= 0) 
+                    if (dblValue <= 0)
                        (cell as Gtk.CellRendererText).Background = "red";
                     else
                        (cell as Gtk.CellRendererText).Background = "green";
-                } else 
+                } else
                     (cell as Gtk.CellRendererText).BackgroundRgba = DefaultBackgroundColour.ToRGBA();
-            } 
-            else if (column.Title == "Target") 
+            }
+            else if (column.Title == "Target")
             {
                 var state = (string) model.GetValue (iter, 1);
-                var dgn = rugPlotModel.FindAncestor<RotationManager>().Nodes.
+                var dgn = rugPlotModel.Node.FindParent<RotationManager>(recurse: true).Nodes.
                        Find(n => n.Name == state) as APSIM.Shared.Graphing.Node;
                 if (dgn != null) {
-                    (cell as Gtk.CellRendererText).BackgroundRgba  = dgn.Colour.ToRGBA(); 
+                    (cell as Gtk.CellRendererText).BackgroundRgba  = dgn.Colour.ToRGBA();
                 } else {
                     (cell as Gtk.CellRendererText).BackgroundRgba = DefaultBackgroundColour.ToRGBA();
                     (cell as Gtk.CellRendererText).Text = "";
                 }
             }
-            else if (column.Title == "State") 
+            else if (column.Title == "State")
             {
                 var state = (string) model.GetValue (iter, 0);
-                var dgn = rugPlotModel.FindAncestor<RotationManager>().Nodes.
+                var dgn = rugPlotModel.Node.FindParent<RotationManager>(recurse: true).Nodes.
                        Find(n => n.Name == state) as APSIM.Shared.Graphing.Node;
                 if (dgn != null) {
-                    (cell as Gtk.CellRendererText).BackgroundRgba = dgn.Colour.ToRGBA(); 
+                    (cell as Gtk.CellRendererText).BackgroundRgba = dgn.Colour.ToRGBA();
                 } else {
                     (cell as Gtk.CellRendererText).BackgroundRgba = DefaultBackgroundColour.ToRGBA();
                 }
@@ -271,12 +271,12 @@
             }
 
             SimulationDropDown.Values = model.GetSimulationNames();
-            if (SimulationDropDown.Values.Length > 1) 
+            if (SimulationDropDown.Values.Length > 1)
                EnableMultipleSims();
             else
                DisableMultipleSims();
-               
-            if (setSimName) 
+
+            if (setSimName)
                SimulationDropDown.SelectedValue = model.SimulationName;
 
             RVTreeModel.Clear();
@@ -285,18 +285,18 @@
             }
 
             stateListStore.Clear();
-            foreach (var node in rugPlotModel.FindAncestor<RotationManager>().Nodes) {
+            foreach (var node in rugPlotModel.Node.FindParent<RotationManager>(recurse: true).Nodes) {
                stateListStore.AppendValues (node.Name);
             }
             setDateTo ("", earliestDate);
         }
         /// <summary></summary>
-        public void EnableMultipleSims() 
+        public void EnableMultipleSims()
         {
             SimChooserBox.Visible = true;
         }
         /// <summary></summary>
-        public void DisableMultipleSims() 
+        public void DisableMultipleSims()
         {
             SimChooserBox.Visible = false;
         }
@@ -340,7 +340,7 @@
 #pragma warning restore 0612
 
                 CairoContext drawingContext = new CairoContext(context, rugCanvas);
-                Gdk.Rectangle rug = new Gdk.Rectangle(); 
+                Gdk.Rectangle rug = new Gdk.Rectangle();
                 int baseline;
                 rugCanvas.GetAllocatedSize(out rug, out baseline);
                 SetupXfrms(rug.Size);
@@ -411,7 +411,7 @@
             context.Fill();
 
         }
-        
+
         private void DrawLabels(CairoContext ctx)
         {
             if (myPaddocks != null)
@@ -424,7 +424,7 @@
                     DrawCentredText(ctx, paddock, p);
                 }
             }
-            if (earliestDate != lastDate) 
+            if (earliestDate != lastDate)
             {
                 var nYears = lastDate.Year - earliestDate.Year;
                 int yStep = nYears < 10 ? 1 :
@@ -450,22 +450,22 @@
                    var tStart = Transitions[0].Date;
 
                    int x1 = 0, x2 = 0, y1 = 0, y2 = 0;
-                   for (var i = 1; i < Transitions.Count; i++) 
-                   { 
+                   for (var i = 1; i < Transitions.Count; i++)
+                   {
                        var tEnd = Transitions[i].Date;
                        x1 = m_DateWidth + column * m_ColWidth;
                        x2 = m_DateWidth + (column + 1) * m_ColWidth;
                        y1 = (int) (yoffset +  (tStart - t0).Days * yscale);
                        y2 = (int) (yoffset +  (tEnd - t0).Days * yscale);
                        // transition is logged at the end of a phase, so the colour of the rect is the preceding state
-                       var dgn = rugPlotModel.FindAncestor<RotationManager>().Nodes.
+                       var dgn = rugPlotModel.Node.FindParent<RotationManager>(recurse: true).Nodes.
                                  Find(n => n.Name == Transitions[i - 1].state) as APSIM.Shared.Graphing.Node;
-                       if(dgn != null) 
+                       if(dgn != null)
                           DrawRectangle(ctx, x1, y1, x2-x1, y2-y1, dgn.Colour);
                        tStart = tEnd;
                    }
-                   DrawRectangle(ctx, x1, y2, x2-x1, (int) (yoffset +  (t1 - t0).Days * yscale) - y2, 
-                              (rugPlotModel.FindAncestor<RotationManager>().Nodes.
+                   DrawRectangle(ctx, x1, y2, x2-x1, (int) (yoffset +  (t1 - t0).Days * yscale) - y2,
+                              (rugPlotModel.Node.FindParent<RotationManager>(recurse: true).Nodes.
                                Find(n => n.Name == Transitions.Last().state) as APSIM.Shared.Graphing.Node).Colour);
 
                    column++;
@@ -478,7 +478,7 @@
             context.SetLineWidth(3);
             context.NewPath();
             context.MoveTo( m_DateWidth, (int) (yoffset +  (selectedDate - t0).Days * yscale) );
-            context.LineTo(m_DateWidth + myPaddocks.Count * m_ColWidth, 
+            context.LineTo(m_DateWidth + myPaddocks.Count * m_ColWidth,
                             (int) (yoffset +  (selectedDate - t0).Days * yscale));
             context.StrokePreserve();
             context.Fill();
@@ -536,20 +536,20 @@
                var thisPath = new Gtk.TreePath(new[]{myPaddocks.IndexOf(p)});
                iter = new TreeIter();
 
-               // store whether the row is currently active, or the user has clicked this paddock on the rug 
+               // store whether the row is currently active, or the user has clicked this paddock on the rug
                bool isExpanded = RVTreeView.GetRowExpanded(thisPath);
                if (newPaddock != "") { isExpanded = newPaddock == p; }
 
                // remove children
                do {
                   RVTreeModel.GetIter(out iter, new TreePath(new[]{myPaddocks.IndexOf(p), 0 }));
-                  if (RVTreeModel.IterIsValid(iter)) 
+                  if (RVTreeModel.IterIsValid(iter))
                      RVTreeModel.Remove (ref iter);
                } while (RVTreeModel.IterIsValid(iter));
 
                // Add new children
                RVTreeModel.GetIter(out iter, thisPath);
-               if (rugPlotModel.RVIndices.ContainsKey(selectedDate)) 
+               if (rugPlotModel.RVIndices.ContainsKey(selectedDate))
                {
                   var ruleMap = rugPlotModel.ruleHashes.ToDictionary(x => x.Value, x => x.Key);
                   var targetMap = rugPlotModel.targetHashes.ToDictionary(x => x.Value, x => x.Key);
@@ -557,11 +557,11 @@
                   while (idx < rugPlotModel.RVPs.Count &&
                          rugPlotModel.RVPs[idx].Date.Date == selectedDate.Date)
                   {
-                      if (rugPlotModel.RVPs[idx].paddock == p) 
+                      if (rugPlotModel.RVPs[idx].paddock == p)
                       {
-                           RVTreeModel.AppendValues (iter, 
+                           RVTreeModel.AppendValues (iter,
                                                      new string[] {
-                                                        rugPlotModel.RVPs[idx].value.ToString(), 
+                                                        rugPlotModel.RVPs[idx].value.ToString(),
                                                         targetMap [ rugPlotModel.RVPs[idx].target ],
                                                         ruleMap[ rugPlotModel.RVPs[idx].rule ] } );
                       }
@@ -592,7 +592,7 @@
         {
             setDateTo ("", selectedDate.AddDays(-7));
         }
-        private void OnCurrPNameChanged (object sender, EventArgs e) 
+        private void OnCurrPNameChanged (object sender, EventArgs e)
         {
             rugPlotModel.CurrentPaddockString = (sender as Gtk.Entry)?.Text;
         }

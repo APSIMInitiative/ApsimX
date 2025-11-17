@@ -27,11 +27,12 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IOrgan))]
-    public class RootNetwork : Model, IWaterNitrogenUptake, IScopeDependency
+    public class RootNetwork : Model, IWaterNitrogenUptake, IStructureDependency
     {
-        /// <summary>Scope supplied by APSIM.core.</summary>
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IScope Scope { private get; set; }
+        public IStructure Structure { private get; set; }
+
 
         ///1. Links
         ///--------------------------------------------------------------------------------------------------
@@ -281,10 +282,10 @@ namespace Models.PMF
 
                 foreach (NetworkZoneState Z in Zones)
                 {
-                    Zone zone = Scope.Find<Zone>(Z.Name);
-                    var soilPhysical = Z.Soil.FindChild<IPhysical>();
-                    var waterBalance = Z.Soil.FindChild<ISoilWater>();
-                    var soilCrop = Z.Soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
+                    Zone zone = Structure.Find<Zone>(Z.Name);
+                    var soilPhysical = Structure.FindChild<IPhysical>(relativeTo: Z.Soil);
+                    var waterBalance = Structure.FindChild<ISoilWater>(relativeTo: Z.Soil);
+                    var soilCrop = Structure.FindChild<SoilCrop>(parentPlant.Name + "Soil", relativeTo: Z.Soil, recurse: true);
                     double[] paw = APSIM.Shared.APSoil.APSoilUtilities.CalcPAWC(soilPhysical.Thickness, soilCrop.LL, waterBalance.SW, soilCrop.XF);
                     double[] pawmm = MathUtilities.Multiply(paw, soilPhysical.Thickness);
                     double[] pawc = APSIM.Shared.APSoil.APSoilUtilities.CalcPAWC(soilPhysical.Thickness, soilCrop.LL, soilPhysical.DUL, soilCrop.XF);
@@ -314,8 +315,8 @@ namespace Models.PMF
                 if (liveWt > 0)
                     foreach (NetworkZoneState Z in Zones)
                     {
-                        var soilPhysical = Z.Soil.FindChild<IPhysical>();
-                        var waterBalance = Z.Soil.FindChild<ISoilWater>();
+                        var soilPhysical = Structure.FindChild<IPhysical>(relativeTo: Z.Soil);
+                        var waterBalance = Structure.FindChild<ISoilWater>(relativeTo: Z.Soil);
                         double[] paw = waterBalance.PAW;
                         double[] pawc = soilPhysical.PAWC;
                         int i = 0;
@@ -349,8 +350,8 @@ namespace Models.PMF
                 if (liveWt > 0)
                     foreach (NetworkZoneState Z in Zones)
                     {
-                        var soilPhysical = Z.Soil.FindChild<IPhysical>();
-                        var waterBalance = Z.Soil.FindChild<ISoilWater>();
+                        var soilPhysical = Structure.FindChild<IPhysical>(relativeTo: Z.Soil);
+                        var waterBalance = Structure.FindChild<ISoilWater>(relativeTo: Z.Soil);
 
                         double[] paw = waterBalance.PAW;
                         double[] pawc = soilPhysical.PAWC;
@@ -376,7 +377,7 @@ namespace Models.PMF
 
             var currentLayer = SoilUtilities.LayerIndexOfDepth(PlantZone.Physical.Thickness, Depth);
 
-            var soilCrop = myZone.Soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
+            var soilCrop = Structure.FindChild<SoilCrop>(parentPlant.Name + "Soil", relativeTo: myZone.Soil, recurse: true);
             if (soilCrop == null)
                 throw new Exception($"Cannot find a soil crop parameterisation called {parentPlant.Name + "Soil"}");
 
@@ -527,13 +528,13 @@ namespace Models.PMF
         {
             Zones = new List<NetworkZoneState>();
 
-            Soil soil = Scope.Find<Soil>();
+            Soil soil = Structure.Find<Soil>();
             if (soil == null)
                 throw new Exception("Cannot find soil");
-            PlantZone = new NetworkZoneState(parentPlant, soil, Scope);
+            PlantZone = new NetworkZoneState(parentPlant, soil, Structure);
             ZoneNamesToGrowRootsIn.Add(PlantZone.Name);
 
-            soilCrop = soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
+            soilCrop = Structure.FindChild<SoilCrop>(parentPlant.Name + "Soil", relativeTo: soil, recurse: true);
             if (soilCrop == null)
                 throw new Exception("Cannot find a soil crop parameterisation for " + parentPlant.Name);
         }
@@ -551,8 +552,6 @@ namespace Models.PMF
                 foreach (NetworkZoneState z in Zones)
                 {
                     z.CalculateRAw();
-                    z.CalculateRelativeLiveBiomassProportions();
-                    z.CalculateRelativeDeadBiomassProportions();
                     z.CalculateRootProportionThroughLayer();
                 }
 
@@ -620,6 +619,7 @@ namespace Models.PMF
                     double RZA = z.Area / TotalArea;
                     TotalRAw = z.RAw.Sum();
                     FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[z.LayerLive.Length];
+                    z.CalculateRelativeLiveBiomassProportions();
                     for (int layer = 0; layer < z.Physical.Thickness.Length; layer++)
                     {
                         z.LayerLive[layer] -= (liveRemoved * RZA * z.LayerLiveProportion[layer]);
@@ -630,6 +630,11 @@ namespace Models.PMF
                         z.LayerLive[layer] += (allocated * RZA * fracAlloc);
 
                         z.LayerDead[layer] += (senesced * RZA * z.LayerLiveProportion[layer]);
+                    }
+                        
+                    z.CalculateRelativeDeadBiomassProportions();
+                    for (int layer = 0; layer < z.Physical.Thickness.Length; layer++)
+                    {
                         OrganNutrientsState detachedToday = detached * RZA * z.LayerDeadProportion[layer];
                         z.LayerDead[layer] -= detachedToday;
                         z.LayerDead[layer] -= (deadRemoved * RZA * z.LayerDeadProportion[layer]);
@@ -709,17 +714,17 @@ namespace Models.PMF
             List<double> zoneAreas = new List<double>();
             foreach (string z in ZoneNamesToGrowRootsIn)
             {
-                Zone zone = Scope.Find<Zone>(z);
+                Zone zone = Structure.Find<Zone>(z);
                 if (zone != null)
                 {
-                    Soil soil = Scope.Find<Soil>(relativeTo: zone);
+                    Soil soil = Structure.Find<Soil>(relativeTo: zone);
                     if (soil == null)
                         throw new Exception("Cannot find soil in zone: " + zone.Name);
                     NetworkZoneState newZone = null;
                     if (z == PlantZone.Name)
                         newZone = PlantZone;
                     else
-                        newZone = new NetworkZoneState(parentPlant, soil, Scope);
+                        newZone = new NetworkZoneState(parentPlant, soil, Structure);
                     newZone.Initialize(parentPlant.SowingData.Depth);
                     Zones.Add(newZone);
                     zoneAreas.Add(newZone.Area);

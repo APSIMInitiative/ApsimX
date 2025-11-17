@@ -109,11 +109,12 @@ namespace Models.GrazPlan
     [ViewName("UserInterface.Views.MarkdownView")]
     [PresenterName("UserInterface.Presenters.GenericPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
-    public class Stock : Model, IScopeDependency
+    public class Stock : Model, IStructureDependency
     {
-        /// <summary>Scope supplied by APSIM.core.</summary>
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IScope Scope { private get; set; }
+        public IStructure Structure { private get; set; }
+
 
         /// <summary>
         /// The list of user specified forage component names
@@ -3713,9 +3714,9 @@ namespace Models.GrazPlan
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             this.randFactory.Initialise(RandSeed);
-            StockModel = new StockList(this, systemClock, locWtr, paddocks, Scope);
+            StockModel = new StockList(this, systemClock, locWtr, paddocks, Structure);
 
-            var childGenotypes = this.FindAllChildren<Genotype>().Cast<Genotype>().ToList();
+            var childGenotypes = Structure.FindChildren<Genotype>().Cast<Genotype>().ToList();
             if (childGenotypes != null)
                 childGenotypes.ForEach(animalParamSet => Genotypes.Add(animalParamSet));
 

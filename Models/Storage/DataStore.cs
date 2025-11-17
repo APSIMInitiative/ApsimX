@@ -15,8 +15,12 @@ namespace Models.Storage
     [ViewName("ApsimNG.Resources.Glade.DataStoreView.glade")]
     [PresenterName("UserInterface.Presenters.DataStorePresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
-    public class DataStore : Model, IDataStore, IDisposable
+    public class DataStore : Model, IDataStore, IDisposable, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>A database connection</summary>
         [NonSerialized]
         private IDatabaseConnection connection = null;
@@ -187,12 +191,12 @@ namespace Models.Storage
         {
             string extension = ".db";
 
-            Simulations simulations = FindAncestor<Simulations>();
+            Simulations simulations = Structure?.FindParent<Simulations>(recurse: true);
 
             // If we have been cloned prior to a run, then we won't be able to locate
             // the simulations object. In this situation we can fallback to using the
             // parent simulation's filename (which should be the same anyway).
-            Simulation simulation = FindAncestor<Simulation>();
+            Simulation simulation = Structure?.FindParent<Simulation>(recurse: true);
 
             if (useInMemoryDB)
                 FileName = ":memory:";

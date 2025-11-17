@@ -174,18 +174,18 @@ namespace UserInterface.Presenters
             this.view.CommonReportVariablesList.TreeHover += OnCommonVariableListTreeHover;
             this.view.CommonReportFrequencyVariablesList.TreeHover += OnCommonFrequencyListTreeHover;
 
-            Simulations simulations = report.FindAncestor<Simulations>();
+            Simulations simulations = report.Node.FindParent<Simulations>(recurse: true);
             if (simulations != null)
             {
-                dataStore = simulations.FindChild<IDataStore>();
+                dataStore = simulations.Node.FindChild<IDataStore>();
             }
 
             //// TBI this.view.VariableList.SetSyntaxHighlighter("Report");
 
             dataStorePresenter = new DataStorePresenter(new string[] { report.Name });
-            Simulation simulation = report.FindAncestor<Simulation>();
-            Experiment experiment = report.FindAncestor<Experiment>();
-            Zone paddock = report.FindAncestor<Zone>();
+            Simulation simulation = report.Node.FindParent<Simulation>(recurse: true);
+            Experiment experiment = report.Node.FindParent<Experiment>(recurse: true);
+            Zone paddock = report.Node.FindParent<Zone>(recurse: true);
 
             // Only show data which is in scope of this report.
             // E.g. data from this zone and either experiment (if applicable) or simulation.
@@ -870,9 +870,9 @@ namespace UserInterface.Presenters
         {
             List<string> plantCodeLines = new();
             List<IPlant> areaPlants = new();
-            if (report.FindAncestor<Folder>() != null)
+            if (report.Node.FindParent<Folder>(recurse: true) != null)
                 areaPlants = explorerPresenter.ApsimXFile.Node.FindAll<IPlant>().ToList();
-            else areaPlants = report.FindAncestor<Zone>().Plants;
+            else areaPlants = report.Node.FindParent<Zone>(recurse: true).Plants;
             // Make sure plantsNames only has unique names. If under replacements you'll may have many many plants of the same name.
             areaPlants = areaPlants.GroupBy(plant => plant.Name).Select(plant => plant.First()).ToList();
             foreach (IPlant plant in areaPlants)

@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;
 using APSIM.Core;
+using System.Threading;
 
 namespace Models.CLEM.Activities
 {
@@ -24,12 +25,8 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "Beta build")]
     [Version(1, 0, 2, "Rotational cropping implemented")]
     [HelpUri(@"Content/Features/Activities/Crop/ManageCrop.htm")]
-    public class CropActivityManageCrop: CLEMActivityBase, IValidatableObject, IPastureManager, IScopeDependency
+    public class CropActivityManageCrop: CLEMActivityBase, IValidatableObject, IPastureManager, IStructureDependency
     {
-        /// <summary>Scope supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IScope Scope { private get; set; }
-
         private int currentCropIndex = 0;
         private int numberOfCrops = 0;
 
@@ -128,7 +125,7 @@ namespace Models.CLEM.Activities
                     currentCropIndex = 0;
 
                 int i = 0;
-                foreach (CropActivityManageProduct item in this.FindAllChildren<CropActivityManageProduct>())
+                foreach (CropActivityManageProduct item in Structure.FindChildren<CropActivityManageProduct>())
                 {
                     item.CurrentlyManaged = (i == currentCropIndex);
                     if (item.CurrentlyManaged)
@@ -248,11 +245,11 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
         {
-            string intro = (this.FindAllChildren<CropActivityManageProduct>().Count() > 1) ? "Rotating through crops" : "";
+            string intro = (Structure.FindChildren<CropActivityManageProduct>().Count() > 1) ? "Rotating through crops" : "";
 
             return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
             {
-                (FindAllChildren<CropActivityManageProduct>(), true, "childgrouprotationborder", intro, "No CropActivityManageProduct component provided"),
+                (Structure.FindChildren<CropActivityManageProduct>(), true, "childgrouprotationborder", intro, "No CropActivityManageProduct component provided"),
             };
         }
 
@@ -264,10 +261,10 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("\r\n<div class=\"activityentry\">This crop uses ");
 
                 Land parentLand = null;
-                Model clemParent = FindAncestor<ZoneCLEM>();
+                Model clemParent = Structure.FindParent<ZoneCLEM>(relativeTo: this, recurse: true);
                 if (LandItemNameToUse != null && LandItemNameToUse != "")
                     if (clemParent != null && clemParent.Enabled)
-                        parentLand = Scope.Find<Land>(LandItemNameToUse.Split('.')[0], relativeTo: clemParent);
+                        parentLand = Structure.Find<Land>(LandItemNameToUse.Split('.')[0], relativeTo: clemParent);
 
                 if (UseAreaAvailable)
                     htmlWriter.Write("the unallocated portion of ");

@@ -10,7 +10,7 @@ namespace Models.CLEM.Resources
 {
     ///<summary>
     /// Parent model of Land Types.
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -71,7 +71,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMStartOfTimeStep")]
         private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
-            foreach (LandType childModel in this.FindAllChildren<LandType>())
+            foreach (LandType childModel in Structure.FindChildren<LandType>())
             {
                 double total = 0;
                 if (childModel.AllocatedActivitiesList != null)

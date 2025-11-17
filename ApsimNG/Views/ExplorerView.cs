@@ -111,7 +111,8 @@ namespace UserInterface.Views
                     rightHandView.PackStart(descriptionView.MainWidget, false, false, 0);
                     // Let Gtk catch up with things; otherwise too much space
                     // is allocated to the new description view. Is there a better way?
-                    while (Gtk.Application.EventsPending())
+
+                    while (!descriptionView.SizeIsAllocated)
                         Gtk.Application.RunIteration();
                 }
                 descriptionView.Text = description;

@@ -13,11 +13,12 @@ namespace Models.Soils.Nutrients
     [ValidParent(ParentType = typeof(Solute))]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ViewName("UserInterface.Views.PropertyView")]
-    public class PFlow : Model, IScopeDependency
+    public class PFlow : Model, IStructureDependency
     {
-        /// <summary>Scope supplied by APSIM.core.</summary>
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IScope Scope { private get; set; }
+        public IStructure Structure { private get; set; }
+
 
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction rate = null;
@@ -52,8 +53,8 @@ namespace Models.Soils.Nutrients
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            sourceSolute = Scope.Find<ISolute>(sourceName);
-            destinationSolute = Scope.Find<ISolute>(destinationName);
+            sourceSolute = Structure.Find<ISolute>(sourceName);
+            destinationSolute = Structure.Find<ISolute>(destinationName);
         }
 
         /// <summary>

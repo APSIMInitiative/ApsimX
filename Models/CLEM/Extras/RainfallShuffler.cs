@@ -23,12 +23,8 @@ namespace Models.CLEM
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/DataReaders/RainfallShuffler.htm")]
 
-    public class RainfallShuffler: CLEMModel, IValidatableObject, IScopeDependency
+    public class RainfallShuffler: CLEMModel, IValidatableObject, IStructureDependency
     {
-        /// <summary>Scope supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IScope Scope { private get; set; }
-
         [Link]
         private IClock clock = null;
 
@@ -114,7 +110,7 @@ namespace Models.CLEM
         {
             var results = new List<ValidationResult>();
 
-            if (Scope.Find<RandomNumberGenerator>() is null)
+            if (Structure.Find<RandomNumberGenerator>() is null)
             {
                 string[] memberNames = new string[] { "Missing random number generator" };
                 results.Add(new ValidationResult($"The [RainfallShiffler] component [{NameWithParent}] requires access to a [RandomNumberGenerator] component in the simulation tree", memberNames));

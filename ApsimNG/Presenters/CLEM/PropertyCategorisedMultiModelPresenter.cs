@@ -44,7 +44,7 @@ namespace UserInterface.Presenters
 
         public override IModel ModelForProperties()
         {
-            return this.model.FindChild<IModel>();
+            return this.model.Node.FindChild<IModel>();
         }
 
 

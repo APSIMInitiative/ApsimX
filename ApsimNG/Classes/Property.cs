@@ -273,7 +273,7 @@ namespace UserInterface.Classes
 
                     // Attempt to resolve links - populating the dropdown may
                     // require access to linked models.
-                    Simulations sims = model.FindAncestor<Simulations>();
+                    Simulations sims = model.Node.FindParent<Simulations>(recurse: true);
                     if (sims != null)
                         sims.Links.Resolve(model, allLinks: true, throwOnFail: false);
 
@@ -342,8 +342,8 @@ namespace UserInterface.Classes
                     break;
                 case DisplayType.PlantOrganList:
                     DisplayMethod = PropertyType.DropDown;
-                    Zone zone1 = model.FindAncestor<Zone>();
-                    List<Plant> plants = zone1.FindAllChildren<Plant>().ToList();
+                    Zone zone1 = model.Node.FindParent<Zone>(recurse: true);
+                    List<Plant> plants = zone1.Node.FindChildren<Plant>().ToList();
                     if (plants != null)
                         DropDownOptions = PropertyPresenterHelpers.GetPlantOrgans(plants);
                     break;
@@ -391,7 +391,7 @@ namespace UserInterface.Classes
                     if (fertiliser != null)
                     {
                         DisplayMethod = PropertyType.DropDown;
-                        DropDownOptions = fertiliser.FindAllChildren<FertiliserType>()
+                        DropDownOptions = fertiliser.Node.FindChildren<FertiliserType>()
                                                     .Select(c => c.Name).ToArray();
                     }
                     break;

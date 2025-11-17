@@ -1,0 +1,37 @@
+{
+	"OutputPath":"temp/",
+	"CopyWeatherFiles":false,
+	"CopyObservedData":false,
+	"Groups": [
+		{
+			"Name":"Wheat-InternationalSensibility",
+			"Folders":["Turkey", "Europe", "NorthAmerica", "China", "Iran", "Africa", "Sensibility"],
+			"Experiments":[],
+			"Simulations":[]
+		},
+		{
+			"Name":"Wheat-NewZealand",
+			"Folders":["New Zealand"],
+			"Experiments":[],
+			"Simulations":[]
+		},
+		{
+			"Name":"Wheat-Queensland",
+			"Folders":["SE Queensland"],
+			"Experiments":[],
+			"Simulations":[]
+		},
+		{
+			"Name":"Wheat-WA",
+			"Folders":["Western Australia"],
+			"Experiments":[],
+			"Simulations":[]
+		},
+		{
+			"Name":"Wheat-SouthernAustralia",
+			"Folders":["Southern Australia"],
+			"Experiments":[],
+			"Simulations":[]			
+		}
+	]
+}

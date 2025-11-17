@@ -807,11 +807,11 @@ namespace Models.GrazPlan
     [PresenterName("UserInterface.Presenters.SupplementPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
-    public class Supplement : Model, IScopeDependency
+    public class Supplement : Model, IStructureDependency
     {
-        /// <summary>Scope supplied by APSIM.core.</summary>
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IScope Scope { private get; set; }
+        public IStructure Structure { private get; set; }
 
         /// <summary>
         /// The simulation
@@ -1164,7 +1164,7 @@ namespace Models.GrazPlan
             {
                 theModel.AddPaddock(-1, string.Empty);
                 int paddId = 0;
-                foreach (Zone zone in Scope.FindAll<Zone>(relativeTo: simulation))
+                foreach (Zone zone in Structure.FindAll<Zone>(relativeTo: simulation))
                     if (zone.Area > 0.0)
                         theModel.AddPaddock(paddId++, zone.Name);
             }

@@ -439,6 +439,7 @@
             DataTable dtActual = storage.Reader.GetData("_Factors");
 
             Assert.That(dtExpected.IsSame(dtActual), Is.True);
+            database.CloseDatabase();
         }
 
         /// <summary>
@@ -809,7 +810,7 @@ namespace Models
             Utilities.ResolveLinks(simulation);
             Utilities.CallEventAll(simulation, "SubscribeToEvents");
 
-            var summary = simulation.FindDescendant<MockSummary>();
+            var summary = simulation.Node.FindChild<MockSummary>(recurse: true);
             Assert.That(summary.messages.First(), Is.EqualTo("WARNING: Report on StartOfFirstDay instead of StartOfSimulation. At StartOfSimulation, models may not be fully initialised."));
         }
 

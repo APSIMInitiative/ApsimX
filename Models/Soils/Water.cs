@@ -8,7 +8,6 @@ using Models.Core;
 using Models.Interfaces;
 using Newtonsoft.Json;
 using APSIM.Core;
-using DocumentFormat.OpenXml.Office.CustomXsn;
 
 namespace Models.Soils
 {
@@ -20,11 +19,12 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Water : Model, IScopeDependency
+    public class Water : Model, IStructureDependency
     {
-        /// <summary>Scope supplied by APSIM.core.</summary>
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
-        public IScope Scope { private get; set; }
+        public IStructure Structure { private get; set; }
+
 
         private double[] volumetric;
         private double initialFractionFull = double.NaN;
@@ -388,15 +388,17 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Finds the 'Soil' node. Try parent first, then a soil in scope.</summary>
+        public Soil Soil => Node?.FindParent<Soil>() ??
+                            Node?.WalkScoped()
+                                ?.FirstOrDefault(n => n.Model is Soil)
+                                ?.Model as Soil;
+
         /// <summary>Finds the 'Physical' node.</summary>
-        public IPhysical Physical => Node?.WalkScoped()
-                                         ?.FirstOrDefault(n => n.Model is IPhysical)
-                                         ?.Model as IPhysical;
+        public IPhysical Physical => Soil?.Node.FindChild<IPhysical>();
 
         /// <summary>Finds the 'SoilWater' node.</summary>
-        public ISoilWater WaterModel => Node?.WalkScoped()
-                                            ?.FirstOrDefault(n => n.Model is ISoilWater)
-                                            ?.Model as ISoilWater;
+        public ISoilWater WaterModel => Soil?.Node.FindChild<ISoilWater>();
 
         /// <summary>Find LL values (mm) for the RelativeTo property.</summary>
         public double[] RelativeToLL
@@ -460,10 +462,10 @@ namespace Models.Soils
             IEnumerable<SoilCrop> ancestorSoilCropLists = new List<SoilCrop>();
             // LL15 is here as this is the default value.
             List<string> newSoilCropNames = new List<string> { "LL15" };
-            Soil ancestorSoil = FindAncestor<Soil>();
+            Soil ancestorSoil = Structure.FindParent<Soil>(recurse: true);
             if (ancestorSoil != null)
             {
-                ancestorSoilCropLists = ancestorSoil.FindAllDescendants<SoilCrop>();
+                ancestorSoilCropLists = Structure.FindChildren<SoilCrop>(relativeTo: ancestorSoil, recurse: true);
                 newSoilCropNames.AddRange(ancestorSoilCropLists.Select(s => s.Name.Replace("Soil", "")));
             }
             return newSoilCropNames;
@@ -491,9 +493,9 @@ namespace Models.Soils
                 double airDry = Physical.AirDry[i];
                 double sat = Physical.SAT[i];
                 if (!MathUtilities.FloatsAreEqual(water, airDry) && water < airDry)
-                    throw new Exception($"A water initial value of {water} on layer {i} was less than AirDry of {airDry}. Initial water could not be set.");
+                    throw new Exception($"A water initial value of {water} on layer {i+1} was less than AirDry of {airDry}.");
                 else if (!MathUtilities.FloatsAreEqual(water, sat) && water > sat)
-                    throw new Exception($"A water initial value of {water} on layer {i} was more than Saturation of {sat}. Initial water could not be set.");
+                    throw new Exception($"A water initial value of {water} on layer {i+1} was more than Saturation of {sat}.");
             }
 
             return true;
@@ -505,12 +507,12 @@ namespace Models.Soils
         /// <exception cref="Exception"></exception>
         private SoilCrop GetCropSoil()
         {
-            var physical = FindSibling<Physical>();
+            var physical = Structure.Find<Physical>();
             if (physical == null)
-                physical = Scope.Find<Physical>();
+                physical = Structure.Find<Physical>();
                 if (physical == null)
                     throw new Exception($"Unable to locate a Physical node when updating {this.Name}.");
-            var plantCrop = physical.FindChild<SoilCrop>(RelativeTo + "Soil");
+            var plantCrop = Structure.FindChild<SoilCrop>(RelativeTo + "Soil", relativeTo: physical);
             if (plantCrop == null)
                 throw new Exception($"Unable to locate an appropriate SoilCrop with the name of {RelativeTo + "Soil"} under {physical.Name}.");
             return plantCrop;

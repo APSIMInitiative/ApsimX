@@ -207,7 +207,7 @@ namespace Models.CLEM.Activities
             {
                 CLEMActivityBase handlesActivityComponents = this.Parent as CLEMActivityBase;
 
-                foreach (LabourGroup fg in FindAllChildren<LabourGroup>())
+                foreach (LabourGroup fg in Structure.FindChildren<LabourGroup>())
                 {
                     int numberOfPpl = 1;
                     if (ApplyToAll)
@@ -250,24 +250,24 @@ namespace Models.CLEM.Activities
                 Summary.WriteMessage(this, "No [r=LabourResourceTypes] are provided in the [r=Labour] resource. All [LabourRequirement] will be ignored.", MessageType.Warning);
 
             // check filter groups present
-            if (!FindAllChildren<LabourGroup>().Any())
+            if (!Structure.FindChildren<LabourGroup>().Any())
             {
                 string[] memberNames = new string[] { "Labour filter group" };
                 results.Add(new ValidationResult($"No [f=LabourFilterGroup] is provided with the [LabourRequirement] for [a={NameWithParent}].{Environment.NewLine}Add a [LabourFilterGroup] to specify individuals for this activity.", memberNames));
             }
 
             // check for individual nesting.
-            foreach (LabourGroup fg in this.FindAllChildren<LabourGroup>())
+            foreach (LabourGroup fg in Structure.FindChildren<LabourGroup>())
             {
                 LabourGroup currentfg = fg;
-                while (currentfg != null && currentfg.FindAllChildren<LabourGroup>().Any())
+                while (currentfg != null && Structure.FindChildren<LabourGroup>(relativeTo: currentfg).Any())
                 {
-                    if (currentfg.FindAllChildren<LabourGroup>().Count() > 1)
+                    if (Structure.FindChildren<LabourGroup>(relativeTo: currentfg).Count() > 1)
                     {
                         string[] memberNames = new string[] { "Labour requirement" };
                         results.Add(new ValidationResult(String.Format("Invalid nested labour filter groups in [f={0}] for [a={1}]. Only one nested filter group is permitted each branch. Additional filtering will be ignored.", currentfg.Name, this.Name), memberNames));
                     }
-                    currentfg = currentfg.FindAllChildren<LabourGroup>().FirstOrDefault();
+                    currentfg = Structure.FindChildren<LabourGroup>(relativeTo: currentfg).FirstOrDefault();
                 }
             }
 
@@ -282,7 +282,7 @@ namespace Models.CLEM.Activities
         {
             return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
             {
-                (FindAllChildren<LabourGroup>(), true, "childgroupfilterborder", "The required labour will be taken from the following groups:", "No LabourGroups provided to define labour")
+                (Structure.FindChildren<LabourGroup>(), true, "childgroupfilterborder", "The required labour will be taken from the following groups:", "No LabourGroups provided to define labour")
             };
         }
 

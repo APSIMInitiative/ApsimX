@@ -18,8 +18,8 @@ namespace Models.GrazPlan
         /// Create the PaddockInfo
         /// </summary>
         /// <param name="zone">Optional zone.</param>
-        /// <param name="scope">Scope instance</param>
-        public PaddockInfo(IScope scope, Zone zone = null)
+        /// <param name="structure">Structure instance</param>
+        public PaddockInfo(IStructure structure, Zone zone = null)
         {
             this.Forages = new ForageList(false);
             this.SuppInPadd = new SupplementRation();
@@ -27,11 +27,11 @@ namespace Models.GrazPlan
             // locate surfaceOM and soil nutrient model
             if (zone != null)
             {
-                AddFaecesObj = (SurfaceOrganicMatter)scope.Find<SurfaceOrganicMatter>(relativeTo: zone);
-                ForagesModel = (Forages)scope.Find<Forages>(relativeTo: zone);
-                var soilPhysical = scope.Find<IPhysical>(relativeTo: zone);
+                AddFaecesObj = (SurfaceOrganicMatter)structure.Find<SurfaceOrganicMatter>(relativeTo: zone);
+                ForagesModel = (Forages)structure.Find<Forages>(relativeTo: zone);
+                var soilPhysical = structure.Find<IPhysical>(relativeTo: zone);
                 SoilLayerThickness = soilPhysical.Thickness;
-                AddUrineObj = scope.Find<ISolute>("Urea", relativeTo: zone);
+                AddUrineObj = structure.Find<ISolute>("Urea", relativeTo: zone);
             }
         }
 

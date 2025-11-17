@@ -16,12 +16,12 @@ namespace Models.CLEM
     ///<summary>
     /// Reads in crop growth data and makes it available to other models.
     ///</summary>
-    ///    
+    ///
     ///<remarks>
     ///</remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")] 
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")] 
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("Access to a crop data file")]
@@ -155,7 +155,7 @@ namespace Models.CLEM
         public string HarvestTypeColumnName { get; set; }
 
         /// <summary>
-        /// Gets or sets the full file name (with path). 
+        /// Gets or sets the full file name (with path).
         /// The Commands.ChangeProperty() uses this property to change the model.
         /// This is done after the user changes the file using the browse button in the View.
         /// </summary>
@@ -168,7 +168,7 @@ namespace Models.CLEM
                     return "";
                 else
                 {
-                    Simulation simulation = FindAncestor<Simulation>();
+                    Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
                     if (simulation != null)
                         return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
                     else
@@ -222,8 +222,8 @@ namespace Models.CLEM
         /// <summary>
         /// Provides an error message to display if something is wrong.
         /// Used by the UserInterface to give a warning of what is wrong
-        /// 
-        /// When the user selects a file using the browse button in the UserInterface 
+        ///
+        /// When the user selects a file using the browse button in the UserInterface
         /// and the file can not be displayed for some reason in the UserInterface.
         /// </summary>
         [JsonIgnore]
@@ -239,7 +239,7 @@ namespace Models.CLEM
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         public DataTable GetTable()
@@ -273,7 +273,7 @@ namespace Models.CLEM
                     MonthColumnName,
                     AmountColumnName
                 };
-                //Npct column is optional 
+                //Npct column is optional
                 //Only try to read it in if it exists in the file.
                 if (nitrogenPercentIndex != -1)
                     cropProps.Add(PercentNitrogenColumnName);
@@ -307,7 +307,7 @@ namespace Models.CLEM
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
         /// <returns>A struct called CropDataType containing the crop data for this month.
-        /// This struct can be null. 
+        /// This struct can be null.
         /// </returns>
         public List<CropDataType> GetCropDataForEntireRun(string landId, string cropName,
                                         DateTime startDate, DateTime endDate)
@@ -360,14 +360,14 @@ namespace Models.CLEM
                 AmtKg = double.Parse(dr[AmountColumnName].ToString(), CultureInfo.InvariantCulture)
             };
 
-            //Npct column is optional 
+            //Npct column is optional
             //Only try to read it in if it exists in the file.
             if (nitrogenPercentIndex != -1)
                 cropdata.Npct = double.Parse(dr[PercentNitrogenColumnName].ToString(), CultureInfo.InvariantCulture);
             else
                 cropdata.Npct = double.NaN;
 
-            //HarvestType column is optional 
+            //HarvestType column is optional
             //Only try to read it in if it exists in the file.
             if (harvestTypeIndex != -1)
             {
@@ -533,9 +533,9 @@ namespace Models.CLEM
                 htmlWriter.Write("\r\n</div>");
 
                 htmlWriter.Write("\r\n</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
 
     }
@@ -567,7 +567,7 @@ namespace Models.CLEM
         public int Month;
 
         /// <summary>
-        /// Amount in Kg (perHa or perTree) 
+        /// Amount in Kg (perHa or perTree)
         /// </summary>
         public double AmtKg;
 
@@ -577,7 +577,7 @@ namespace Models.CLEM
         public double Npct;
 
         /// <summary>
-        /// Combine Year and Month to create a DateTime. 
+        /// Combine Year and Month to create a DateTime.
         /// Day is set to the 1st of the month.
         /// </summary>
         public DateTime HarvestDate;

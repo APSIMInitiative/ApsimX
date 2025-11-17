@@ -85,7 +85,7 @@
         /// <param name="publishedEvents">If true, published events will be returned.</param>
         /// <param name="subscribedEvents">If true, subscribed events will be returned.</param>
         /// <returns>List of completion options.</returns>
-        public static List<ContextItem> ExamineTypeForContextItems(Type atype, bool properties, bool methods, bool publishedEvents, bool subscribedEvents)
+        private static List<ContextItem> ExamineTypeForContextItems(Type atype, bool properties, bool methods, bool publishedEvents, bool subscribedEvents)
         {
             List<ContextItem> allItems = new List<ContextItem>();
 
@@ -206,6 +206,9 @@
         /// <returns>List of completion options.</returns>
         private static List<ContextItem> ExamineObjectForContextItems(object o, bool properties, bool methods, bool publishedEvents, bool subscribedEvents)
         {
+            if (o is Node)
+                o = (o as Node).Model;
+
             List<ContextItem> allItems;
             Type objectType = o is Type ? o as Type : o.GetType();
             allItems = ExamineTypeForContextItems(objectType, properties, methods, publishedEvents, subscribedEvents);
@@ -233,61 +236,6 @@
         }
 
         /// <summary>
-        /// The view is asking for variable names.
-        /// </summary>
-        /// <param name="relativeTo">Model in the simulations tree which owns the editor.</param>
-        /// <param name="objectName">Fully- or partially-qualified object name for which we want completion options.</param>
-        /// <param name="properties">If true, property suggestions will be generated.</param>
-        /// <param name="methods">If true, method suggestions will be generated.</param>
-        /// <param name="events">If true, event suggestions will be generated.</param>
-        /// <returns>List of completion options.</returns>
-        public static List<ContextItem> ExamineModelForNames(IModel relativeTo, string objectName, bool properties, bool methods, bool events)
-        {
-            // TODO : refactor cultivar and report activity ledger presenters so they use the intellisense presenter.
-            // These are the only two presenters which still use this intellisense method.
-            if (objectName == string.Empty)
-                objectName = ".";
-
-            object o = null;
-            IModel replacementModel = relativeTo.Node.Get(".Simulations.Replacements") as IModel;
-            if (replacementModel != null)
-            {
-                try
-                {
-                    o = replacementModel.Node.Get(objectName) as IModel;
-                }
-                catch (Exception) { }
-            }
-
-            if (o == null)
-            {
-                try
-                {
-                    o = relativeTo.Node.Get(objectName);
-                }
-                catch (Exception) { }
-            }
-
-            if (o == null && Folder.IsModelReplacementsFolder(relativeTo.Parent))
-            {
-                // Model 'relativeTo' could be under replacements. Look for the first simulation and try that.
-                IModel simulation = relativeTo.Parent.Parent.Node.Find<Simulation>();
-                try
-                {
-                    o = simulation.Node.Get(objectName) as IModel;
-                }
-                catch (Exception) { }
-            }
-
-            if (o != null)
-            {
-                return ExamineObjectForContextItems(o, properties, methods, events, false);
-            }
-
-            return new List<ContextItem>();
-        }
-
-        /// <summary>
         /// Generates a list of context items for given model.
         /// Uses <see cref="GetNodeFromPath(Model, string)"/> to get the model reference.
         /// </summary>
@@ -303,6 +251,12 @@
             object node = GetNodeFromPath(relativeTo, objectName);
             if (node == null)
                 node = relativeTo.Node.Get(objectName);
+            if (node == null)
+            {
+                node = relativeTo.Node.GetObject(objectName);
+                if (node is VariableComposite variableComposite)
+                    node = variableComposite.DataType;
+            }
             if (node != null)
             {
                 contextItems = ExamineObjectForContextItems(node, properties, methods, publishedEvents, subscribedEvents);
@@ -357,21 +311,23 @@
                 // search through all models, not just those in scope.
                 if (node == null && Folder.IsUnderReplacementsFolder(relativeTo) != null)
                 {
-                    node = relativeTo.FindAncestor<Simulations>().FindAllDescendants().FirstOrDefault(child => child.Name == modelName);
+                    var sims = relativeTo.Node.FindParent<Simulations>(recurse: true);
+                    if (sims != null)
+                        node = sims.Node.FindChildren<IModel>(recurse: true).FirstOrDefault(child => child.Name == modelName);
 
                     // If we still failed, try a lookup on type name.
                     if (node == null)
-                        node = relativeTo.FindAncestor<Simulations>().FindAllDescendants().FirstOrDefault(x => x.GetType().Name == modelName);
+                        node = sims.Node.FindChildren<IModel>(recurse: true).FirstOrDefault(x => x.GetType().Name == modelName);
                 }
 
-                if (node == null && relativeTo.FindAncestor<Factors>() != null)
+                if (node == null && relativeTo.Node.FindParent<Factors>(recurse: true) != null)
                 {
-                    relativeTo = relativeTo.FindAncestor<Experiment>();
+                    relativeTo = relativeTo.Node.FindParent<Experiment>(recurse: true);
                     if (relativeTo != null)
                     {
                         node = relativeTo.Node.FindInScope(modelName);
                         if (node == null)
-                            node = relativeTo.FindAllDescendants().FirstOrDefault(x => x.GetType().Name == modelName);
+                            node = relativeTo.Node.FindChildren<IModel>(recurse: true).FirstOrDefault(x => x.GetType().Name == modelName);
                     }
                     if (node == null)
                         return null;

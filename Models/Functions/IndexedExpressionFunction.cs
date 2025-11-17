@@ -13,9 +13,11 @@ namespace Models.Functions;
 [ViewName("UserInterface.Views.PropertyView")]
 [PresenterName("UserInterface.Presenters.PropertyPresenter")]
 [ValidParent(typeof(SubDailyInterpolation))]
-public class IndexedExpressionFunction : Model, IIndexedFunction, ILocatorDependency
+public class IndexedExpressionFunction : Model, IIndexedFunction, IStructureDependency
 {
-    [NonSerialized] private ILocator locator;
+    /// <summary>Structure instance supplied by APSIM.core.</summary>
+    [field: NonSerialized]
+    public IStructure Structure { private get; set; }
 
     /// <summary>
     /// The ExpressionEvaluator instance.
@@ -74,8 +76,6 @@ public class IndexedExpressionFunction : Model, IIndexedFunction, ILocatorDepend
         }
     }
 
-    /// <summary>Locator supplied by APSIM kernel.</summary>
-    public void SetLocator(ILocator locator) => this.locator = locator;
 
     /// <summary>
     /// Evaluate the expression, with the value of IndexVariable passed as argument.
@@ -96,7 +96,7 @@ public class IndexedExpressionFunction : Model, IIndexedFunction, ILocatorDepend
                 if (i == _idx)
                     sym.m_value = dX;
                 else
-                    sym = FillValue(sym, this, locator);
+                    sym = FillValue(sym, this, Structure);
                 _filled.Add(sym);
             }
         }
@@ -121,12 +121,12 @@ public class IndexedExpressionFunction : Model, IIndexedFunction, ILocatorDepend
     /// </summary>
     /// <param name="sym">The symbol (name will be used to search).</param>
     /// <param name="relativeTo">The model from which to perofm the search relative to.</param>
-    /// <param name="locator">Locator instance</param>
+    /// <param name="structure">Structure instance</param>
     /// <returns>Symbol with the value filled in.</returns>
     /// <exception cref="Exception">If the value cannot be found.</exception>
-    private static Symbol FillValue(Symbol sym, Model relativeTo, ILocator locator)
+    private static Symbol FillValue(Symbol sym, Model relativeTo, IStructure structure)
     {
-        var something = locator.Get(sym.m_name.Trim());
+        var something = structure.Get(sym.m_name.Trim());
         if (something == null)
             throw new Exception($"Cannot find variable {sym.m_name} in {relativeTo.FullPath}");
         if (something is Array arr)

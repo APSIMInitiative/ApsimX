@@ -1,0 +1,156 @@
+# This GitHub Actions workflow creates APSIM releases for Windows, macOS, and Debian.
+# Only runs after a PR to master branch is closed and merged.
+# This workflow uses scripts originally developed for use within Jenkins
+
+name: Create APSIM Releases
+permissions:
+  contents: read # to check out code
+defaults:
+  run:
+    shell: bash
+
+on:
+  pull_request_target:
+    branches:
+      - master
+    types:
+      - closed
+
+jobs:
+    check-for-resolves:
+      if: github.event.pull_request.merged == true
+      runs-on: ubuntu-latest
+      steps:
+      
+      - name: Check for "resolves \#" in PR description
+        uses: shanegenschaw/pull-request-comment-trigger@v3.0.0
+        id: pr_check_lowercase
+        with:
+          trigger: 'resolves #'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Check for "Resolves \#" in PR description
+        uses: shanegenschaw/pull-request-comment-trigger@v3.0.0
+        id: pr_check_captilised
+        with:
+          trigger: 'Resolves #'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+          
+      - name: fail if no resolves found
+        id: resolves_check
+        if: steps.pr_check_lowercase.outputs.triggered == 'false' && steps.pr_check_captilised.outputs.triggered == 'false'
+        run: |
+          echo "No 'resolves #' or 'Resolves #' found in PR description. Skipping release creation."
+          exit 1
+
+    create-releases:
+      if: github.event.pull_request.merged == true
+      needs: check-for-resolves
+      strategy:
+        fail-fast: false # allow other jobs to complete if one fails
+        matrix:
+          os: [macos, debian, windows]
+      runs-on: ubuntu-latest
+      container:
+        image: apsiminitiative/apsimng-build:latest
+      steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Make all directories safe (we are in a container. so it is ok :))
+        run: git config --global --add safe.directory "*"
+
+      - name: Make sure we have ownership of ApsimX
+        run: chown -R root:root /__w/ApsimX/ApsimX
+
+      - name: Make GitHub home directory belong to root user
+        run: chown -R root:root /github/home
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Set script permissions
+        run: chmod +x -R ./.github/workflows/scripts/
+
+      # This is used purely for PR number extraction.
+      - name: Get PR number
+        id: meta_apsimplusr
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: apsiminitiative/apsimplusr
+          flavor: latest=true
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+
+      - name: Create APSIM Signing Certificate
+        env:
+          APSIM_CERT_BASE64: ${{ secrets.APSIM_CERT }} 
+        run: |
+          echo -n "$APSIM_CERT_BASE64" | base64 -d > ./apsim_signing_cert.p12
+
+      - name: Create Release
+        env:
+          DOCKER_METADATA_OUTPUT_VERSION: ${{ fromJSON(steps.meta_apsimplusr.outputs.json).labels['org.opencontainers.image.version'] }}
+          BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
+          APSIM_CERT_PWD: ${{ secrets.APSIM_CERT_PWD }}
+        run: ./.github/workflows/scripts/deploy-installer.sh ${{ matrix.os }}
+    
+    # Creates docker containers for APSIM releases.
+    create-docker-containers:
+      if: github.event.pull_request.merged == true
+      needs: check-for-resolves
+      runs-on: ubuntu-latest
+      steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set script permissions
+        run: chmod +x -R ./.github/workflows/scripts/
+
+      - name: Get 12 character commit sha
+        id: get_commit_sha
+        run: echo "COMMIT_SHA=$(echo ${{ github.event.pull_request.merge_commit_sha }} | cut -c1-12)" >> $GITHUB_ENV
+
+      - name: Build Docker containers
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          MERGE_COMMIT: ${{ env.COMMIT_SHA }}
+        run: ./.github/workflows/scripts/deploy-docker.sh
+
+    # Upload release to builds.apsim.info
+    upload-release-assets:
+      # only run if the PR description contains "resolves #"
+      if: github.event.pull_request.merged == true
+      needs: [create-docker-containers, create-releases]
+      runs-on: ubuntu-latest 
+      steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set script permissions
+        run: chmod +x -R ./.github/workflows/scripts/
+
+      # This is used purely for PR number extraction.
+      - name: Get PR number
+        id: meta_apsimplusr
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: apsiminitiative/apsimplusr
+          flavor: latest=true
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+      
+      - name: Upload Release Assets
+        env:
+          DOCKER_METADATA_OUTPUT_VERSION: ${{ fromJSON(steps.meta_apsimplusr.outputs.json).labels['org.opencontainers.image.version'] }}
+          NETLIFY_BUILD_HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}
+          BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
+        run: ./.github/workflows/scripts/upload-release-assets.sh

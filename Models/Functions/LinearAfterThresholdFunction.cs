@@ -15,9 +15,11 @@ namespace Models.Functions
     [ViewName("UserInterface.Views.LinearAfterThresholdView")]
     [PresenterName("UserInterface.Presenters.LinearAfterThresholdPresenter")]
     [Description("Use a linear function with a gradient after a trigger value is exceeded.")]
-    public class LinearAfterThresholdFunction : Model, IFunction, ILocatorDependency
+    public class LinearAfterThresholdFunction : Model, IFunction, IStructureDependency
     {
-        [NonSerialized] private ILocator locator;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
         /// <summary>The x property</summary>
         [Description("XProperty")]
@@ -38,8 +40,6 @@ namespace Models.Functions
         /// <summary>Constructor</summary>
         public LinearAfterThresholdFunction() { }
 
-        /// <summary>Locator supplied by APSIM kernel.</summary>
-        public void SetLocator(ILocator locator) => this.locator = locator;
 
         /// <summary>
         /// Constructor
@@ -57,7 +57,7 @@ namespace Models.Functions
         /// <returns></returns>
         public double Value(int arrayIndex = -1)
         {
-            object v = locator.GetObject(XProperty)?.Value;
+            object v = Structure.GetObject(XProperty)?.Value;
             if (v == null)
                 throw new Exception($"Cannot find value for {FullPath} XProperty: {XProperty}");
             double x;
