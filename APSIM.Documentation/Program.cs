@@ -18,8 +18,8 @@ namespace APSIM.Documentation
             {
                 if (args.Length == 0)
                     return GenerateAllDocuments();
-                else if (args.Length == 2)
-                    return GenerateDocument(args[0], args[1]);
+                else if (args.Length == 3)
+                    return GenerateDocument(args[0], args[1], bool.Parse(args[2]));
                 else
                 {
                     Console.Error.WriteLine("Invalid number of arguments. Either provide no arguments to generate all documents, or provide two arguments: <input file path> <output folder path>.");
@@ -92,14 +92,16 @@ namespace APSIM.Documentation
         /// <summary>Generate documentation for a single file.</summary>
         /// <param name="path">The absolute path to the file to document.</param>
         /// <param name="outputPath">The output path where the generated file should be placed.</param>
-        static int GenerateDocument(string path, string outputPath)
+        /// <param name="generateGraphs">Set whether graphs should be generated.</param>
+        static int GenerateDocument(string path, string outputPath, bool generateGraphs = false)
         {
             try
             {
                 Stopwatch stopwatch = Stopwatch.StartNew();
+                if (generateGraphs)
+                    DocumentationSettings.GenerateGraphs = true;
                 Simulations sims = FileFormat.ReadFromFile<Simulations>(path).Model as Simulations;
                 Node.Create(sims, fileName: path);
-                // Simulation sim = sims.Node.FindChild<Simulation>();
                 if (sims == null)
                     throw new Exception("The file " + path + " does not contain a Simulations model at the root.");
                 string html = WebDocs.Generate(sims);
