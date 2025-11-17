@@ -328,7 +328,7 @@ public class Node : IStructure
     {
         if (recurse)
             return FindParents<T>(name, relativeTo).FirstOrDefault();
-        else if (Parent.Model is T && (name == null || Parent.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
+        else if (Parent != null && Parent.Model is T && (name == null || Parent.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
             return (T)Parent.Model;
         else
             return default;

@@ -1,7 +1,6 @@
 ---
-layout: page
 title: Pull request guidelines
-permalink: /pull-requests/
+draft: false
 weight: 20
 ---
 

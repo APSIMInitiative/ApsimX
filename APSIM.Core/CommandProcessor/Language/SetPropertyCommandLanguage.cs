@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 
 namespace APSIM.Core;
 
-internal partial class SetPropertyCommand: IModelCommand
+public partial class SetPropertyCommand: IModelCommand
 {
     /// <summary>
     /// Create a set properties command.

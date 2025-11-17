@@ -8,6 +8,9 @@ using System.Globalization;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace APSIM.Core;
 
@@ -17,7 +20,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 206; } }
+    public static int LatestVersion { get { return 207; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -7135,11 +7138,66 @@ internal class Converter
     }
 
     /// <summary>
+    /// Replaces SetEmergenceDate and SetGerminationDate methods that may have been missed by the previous UpgradeTo204.
+    /// </summary>
+    /// <param name="root">Root json object.</param>
+    /// <param name="_">Unused filename.</param>
+    private static void UpgradeToVersion206(JObject root, string _)
+    {
+        var emergingArg = SyntaxFactory.Argument(
+            SyntaxFactory.LiteralExpression(
+                SyntaxKind.StringLiteralExpression,
+                SyntaxFactory.Literal("Emerging")
+            )
+        );
+        var germinatingArg = SyntaxFactory.Argument(
+            SyntaxFactory.LiteralExpression(
+                SyntaxKind.StringLiteralExpression,
+                SyntaxFactory.Literal("Germinating")
+            )
+        );
+        var newName = SyntaxFactory.IdentifierName("SetPhaseCompletionDate");
+
+        foreach (var manager in JsonUtilities.ChildManagers(root).Where(mgr => !mgr.IsEmpty))
+        {
+            var managerRoot = CSharpSyntaxTree.ParseText(manager.ToString()).GetRoot();
+            var newRoot = managerRoot.ReplaceNodes(
+                managerRoot
+                    .DescendantNodes()
+                    .OfType<InvocationExpressionSyntax>()
+                    .Where(
+                        node =>
+                        {
+                            if (node.Expression is MemberAccessExpressionSyntax ma)
+                            {
+                                var name = ma.Name.ToFullString();
+                                return name == "SetEmergenceDate" || name == "SetGerminationDate";
+                            }
+                            return false;
+                        }
+                    ),
+                (old, _) =>
+                {
+                    var ma = old.Expression as MemberAccessExpressionSyntax;
+                    var newLastArg = ma.Name.ToFullString() == "SetEmergenceDate" ? emergingArg : germinatingArg;
+                    return SyntaxFactory.InvocationExpression(ma.WithName(newName), old.ArgumentList.AddArguments(newLastArg));
+                }
+            );
+
+            if (!managerRoot.IsEquivalentTo(newRoot))
+            {
+                manager.Read(newRoot.ToFullString());
+                manager.Save();
+            }
+        }
+    }
+
+    /// <summary>
     /// Perform necessary cultivar path updates following waterlogging modifications for the Maize, Canola and Soybean models.
     /// </summary>
     /// <param name="root">Root json token.</param>
     /// <param name="name">File name.</param>
-    private static void UpgradeToVersion206(JObject root, string name)
+    private static void UpgradeToVersion207(JObject root, string name)
     {
         List<(string, string)> maizeUpadtes =
         [
@@ -7189,6 +7247,5 @@ internal class Converter
             var organ = parts[0][1..^1];
             return string.Join('.', [$"[{plant}]", organ, .. parts[1..]]);
         }
-
     }
 }
