@@ -13747,16 +13747,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
-                  "ParameterFile": "..\\inputs\\DookieWWHI2024_parameterOverwrites.csv",
-                  "SetEventName": "[Plant].Sowing",
-                  "Name": "SetPhenologyParams",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": false,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Report, Models",
                   "VariableNames": [
                     "[Clock].Today",
@@ -13775,7 +13765,7 @@
                 {
                   "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
                   "ParameterFile": "C:\\github\\ApsimX\\Tests\\Validation\\Wheat\\inputs\\DookiePhenoDatesInput.csv",
-                  "SetEventName": "[Plant].Sowing",
+                  "SetEventName": "[Plant].PlantSowing",
                   "Name": "SetPhenoDatesExternally",
                   "ResourceName": null,
                   "Children": [],
@@ -17677,16 +17667,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
-                  "ParameterFile": "..\\inputs\\DookieEVA2024_parameterOverwrites.csv",
-                  "SetEventName": "[Plant].Sowing",
-                  "Name": "SetPhenologyParams",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": false,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Report, Models",
                   "VariableNames": [
                     "[Clock].Today",
@@ -17705,7 +17685,7 @@
                 {
                   "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
                   "ParameterFile": "..\\inputs\\DookiePhenoDatesInput.csv",
-                  "SetEventName": "[Plant].Sowing",
+                  "SetEventName": "[Plant].PlantSowing",
                   "Name": "SetPhenoDatesExternally",
                   "ResourceName": null,
                   "Children": [],

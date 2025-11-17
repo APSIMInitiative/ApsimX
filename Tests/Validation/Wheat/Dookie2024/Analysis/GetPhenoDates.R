@@ -107,11 +107,16 @@ data_with_phases <- originalPhenoDatesDB %>%
          Wheat.Phenology.Stage = as.numeric(Wheat.Phenology.Stage)) %>%
   mutate(
     ParameterName = case_when(
-      between(Wheat.Phenology.Stage, 3, 4) ~ "[Wheat].Phenology.Emerging.DateToProgress",#2/3
-      between(Wheat.Phenology.Stage, 5, 6) ~ "[Wheat].Phenology.SpikeletsDifferentiating.DateToProgress",#4/5
-      between(Wheat.Phenology.Stage, 6, 7) ~ "[Wheat].Phenology.StemElongating.DateToProgress",#5/6
-      between(Wheat.Phenology.Stage, 7, 8) ~ "[Wheat].Phenology.Heading.DateToProgress",#6/7
-      between(Wheat.Phenology.Stage, 8, 9) ~ "[Wheat].Phenology.Flowering.DateToProgress",#7/8
+      # between(Wheat.Phenology.Stage, 3, 4) ~ "[Wheat].Phenology.Emerging.DateToProgress",#2/3
+      # between(Wheat.Phenology.Stage, 5, 6) ~ "[Wheat].Phenology.SpikeletsDifferentiating.DateToProgress",#4/5
+      # between(Wheat.Phenology.Stage, 6, 7) ~ "[Wheat].Phenology.StemElongating.DateToProgress",#5/6
+      # between(Wheat.Phenology.Stage, 7, 8) ~ "[Wheat].Phenology.Heading.DateToProgress",#6/7
+      # between(Wheat.Phenology.Stage, 8, 9) ~ "[Wheat].Phenology.Flowering.DateToProgress",#7/8
+      between(Wheat.Phenology.Stage, 2, 3) ~ "[Wheat].Phenology.Emerging.DateToProgress",#2/3
+      between(Wheat.Phenology.Stage, 4, 5) ~ "[Wheat].Phenology.SpikeletsDifferentiating.DateToProgress",#4/5
+      between(Wheat.Phenology.Stage, 5, 6) ~ "[Wheat].Phenology.StemElongating.DateToProgress",#5/6
+      between(Wheat.Phenology.Stage, 6, 7) ~ "[Wheat].Phenology.Heading.DateToProgress",#6/7
+      between(Wheat.Phenology.Stage, 7, 8) ~ "[Wheat].Phenology.Flowering.DateToProgress",#7/8
       TRUE ~ "Unknown" # Catch-all for any other values
     )) %>%
   filter(ParameterName != "Unknown")
