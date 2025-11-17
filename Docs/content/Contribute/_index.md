@@ -24,7 +24,7 @@ The software team will:
 ### Step 3 Developer raises a GitHub Pull Request (PR)
 
 * Ensure the PR conforms to the [PR guidelines](/contribute/pullrequests)
-* The developer must link to an issue. Use ```working on #issue``` or ```resolves #issue```)
+* The developer must link to an issue. Use ```working on #issue``` or ```resolves #issue```
 * Ensure the PR matches the Issue
 * The build/test system will run automatically and set a green/red (pass/fail) status.
 * The developer may need to push changes multiple times to resolve errors.
@@ -55,15 +55,24 @@ The software team will:
 * Check for inadvertent changes in code
 
 __If this is a software change only__
+
 * The software team will merge once resolved.
   
-__Else if a minor science change__
-e.g. addition to test datasets or simple changes or corrections to model or addition of new outputs
+__Else if a minor science change that DOES NOT change model behaviour__
+e.g. addition to test datasets or addition of new outputs 
+
+* Tag ```@APSIMInitiative/reference-panel``` FYI
+* The software team will merge the PR immediately.
+
+__Else if a minor science change that DOES change model behaviour__
+e.g. simple changes or defect fixes to model
+
 * Tag ```@APSIMInitiative/reference-panel``` FYI
 * The software team will merge the PR within 3 business days.
 
 __Else if this is a significant change to science code or data sets__
 e.g. a new model or significant changes to a published model.
+
 * The software team will tag ```@APSIMInitiative/reference-panel``` for additional review
 * Move to Step 6.
 

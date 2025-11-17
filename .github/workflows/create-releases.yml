@@ -5,6 +5,9 @@
 name: Create APSIM Releases
 permissions:
   contents: read # to check out code
+defaults:
+  run:
+    shell: bash
 
 on:
   pull_request_target:
@@ -14,8 +17,37 @@ on:
       - closed
 
 jobs:
+    check-for-resolves:
+      if: github.event.pull_request.merged == true
+      runs-on: ubuntu-latest
+      steps:
+      
+      - name: Check for "resolves \#" in PR description
+        uses: shanegenschaw/pull-request-comment-trigger@v3.0.0
+        id: pr_check_lowercase
+        with:
+          trigger: 'resolves #'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Check for "Resolves \#" in PR description
+        uses: shanegenschaw/pull-request-comment-trigger@v3.0.0
+        id: pr_check_captilised
+        with:
+          trigger: 'Resolves #'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+          
+      - name: fail if no resolves found
+        id: resolves_check
+        if: steps.pr_check_lowercase.outputs.triggered == 'false' && steps.pr_check_captilised.outputs.triggered == 'false'
+        run: |
+          echo "No 'resolves #' or 'Resolves #' found in PR description. Skipping release creation."
+          exit 1
+
     create-releases:
       if: github.event.pull_request.merged == true
+      needs: check-for-resolves
       strategy:
         fail-fast: false # allow other jobs to complete if one fails
         matrix:
@@ -63,13 +95,15 @@ jobs:
 
       - name: Create Release
         env:
-          PULL_ID: ${DOCKER_METADATA_OUTPUT_VERSION:3}
+          DOCKER_METADATA_OUTPUT_VERSION: ${{ fromJSON(steps.meta_apsimplusr.outputs.json).labels['org.opencontainers.image.version'] }}
           BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
           APSIM_CERT_PWD: ${{ secrets.APSIM_CERT_PWD }}
         run: ./.github/workflows/scripts/deploy-installer.sh ${{ matrix.os }}
     
     # Creates docker containers for APSIM releases.
     create-docker-containers:
+      if: github.event.pull_request.merged == true
+      needs: check-for-resolves
       runs-on: ubuntu-latest
       steps:
       - name: Checkout code
@@ -91,9 +125,12 @@ jobs:
 
     # Upload release to builds.apsim.info
     upload-release-assets:
+      # only run if the PR description contains "resolves #"
+      if: github.event.pull_request.merged == true
       needs: [create-docker-containers, create-releases]
       runs-on: ubuntu-latest 
       steps:
+
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -113,7 +150,7 @@ jobs:
       
       - name: Upload Release Assets
         env:
-          PULL_ID: ${DOCKER_METADATA_OUTPUT_VERSION:3}
+          DOCKER_METADATA_OUTPUT_VERSION: ${{ fromJSON(steps.meta_apsimplusr.outputs.json).labels['org.opencontainers.image.version'] }}
           NETLIFY_BUILD_HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}
           BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
         run: ./.github/workflows/scripts/upload-release-assets.sh
