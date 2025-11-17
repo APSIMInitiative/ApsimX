@@ -59,7 +59,7 @@ public class Options
 
     /// <summary> Gets the number of simulations/validation locations available. </summary>
     [Option("sim-count", Required = false, HelpText = "The number of simulations/validation locations available.")]
-    public string SimulationCount { get; set; } = "";
+    public bool SimulationCount { get; set; } = false;
 
     /// <summary> Azure pool to use for the workflow. </summary>
     [Option("azure-pool", Required = false, HelpText = "The Azure pool to use for the workflow.")]

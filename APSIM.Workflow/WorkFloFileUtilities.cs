@@ -51,7 +51,7 @@ public static class WorkFloFileUtilities
                   args: '"$Path" --verbose'
               finally:
                 - uses: apsiminitiative/postats2-collector:latest
-                  args: upload {currentBuildNumber} {options.CommitSHA} {options.GitHubAuthorID} {brisbaneDatetimeNow.ToString(timeFormat)} {options.AzurePool} ""$Path""
+                  args: 'upload {currentBuildNumber} {options.CommitSHA} {options.GitHubAuthorID} {brisbaneDatetimeNow.ToString(timeFormat)} {options.AzurePool} "$Path"'
             """;
             File.WriteAllText(Path.Combine(options.DirectoryPath, workFloFileName), workFloFileContents);
             Console.WriteLine($"Workflow.yml contents:\n{workFloFileContents}");

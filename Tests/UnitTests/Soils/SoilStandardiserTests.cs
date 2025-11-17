@@ -247,6 +247,70 @@
             Assert.That(nutrient.Children.Count, Is.GreaterThan(0));
         }
 
+        /// <summary>
+        /// When the user does "Add model" and adds an empty physical, organic, chemical, solute model
+        /// make sure the soil sanitiser doesn't throw - https://github.com/APSIMInitiative/ApsimX/issues/10355
+        /// </summary>
+        [Test]
+        public void EnsureSoilsWithoutThicknessDontThrowWhenStandardised()
+        {
+            Soil soil = CreateSimpleSoil();
+            soil.Node.FindChild<Physical>().Thickness = null;
+            soil.Node.FindChild<Organic>().Thickness = null;
+            soil.Node.FindChild<Chemical>().Thickness = null;
+            soil.Node.FindChild<Solute>().Thickness = null;
+
+            Assert.DoesNotThrow(() => soil.Sanitise());
+        }
+
+
+        [Test]
+        public void EnsureSoilInitialiserDoesntOverwriteExistingNodes()
+        {
+            Soil soil = new()
+            {
+                Children =
+                [
+                    new Physical()
+                    {
+                        Thickness = [100, 200],
+                        ParticleSizeClay = [ 1, 2 ],
+                        ParticleSizeSand = [ 3, 4 ],
+                        ParticleSizeSilt = [ 5, 6 ],
+                        BD = [1.36, 1.216],
+                        AirDry = [0.135, 0.214],
+                        LL15 = [0.27, 0.267],
+                        DUL = [0.365, 0.461],
+                        SAT = [0.400, 0.481],
+                    },
+                    new Organic()
+                    {
+                        Thickness = [100, 200],
+                        Carbon = [100, 200]
+                    },
+                    new Chemical()
+                    {
+                        Thickness = [100, 200],
+                        CEC = [10, 11]
+                    },
+                    new WaterBalance()
+                    {
+                        Thickness = [100, 200],
+                        SWCON = [200, 200]
+                    }
+                ]
+            };
+            Node.Create(soil);
+            SoilSanitise.InitialiseSoil(soil);
+
+            Assert.That(soil.Node.FindChild<Physical>().ParticleSizeClay, Is.EqualTo([1, 2]));
+            Assert.That(soil.Node.FindChild<Physical>().ParticleSizeSand, Is.EqualTo([3, 4]));
+            Assert.That(soil.Node.FindChild<Physical>().ParticleSizeSilt, Is.EqualTo([5, 6]));
+            Assert.That(soil.Node.FindChild<Organic>().Carbon, Is.EqualTo([100, 200]));
+            Assert.That(soil.Node.FindChild<Chemical>().CEC, Is.EqualTo([10, 11]));
+            Assert.That(soil.Node.FindChild<WaterBalance>().SWCON, Is.EqualTo([200, 200]));
+        }
+
         private Soil CreateSimpleSoil()
         {
             var soil = new Soil
@@ -299,6 +363,78 @@
             };
             Node.Create(soil);
             return soil;
+        }
+
+        [Test]
+        public void EnsureBadKS()
+        {
+            Soil soil = new()
+            {
+                Children =
+                [
+                    new Physical()
+                    {
+                        Thickness = [100, 200],
+                        ParticleSizeClay = [ 1, 2 ],
+                        ParticleSizeSand = [ 3, 4 ],
+                        ParticleSizeSilt = [ 5, 6 ],
+                        BD = [1.36, 1.216],
+                        AirDry = [0.135, 0.214],
+                        LL15 = [0.27, 0.267],
+                        DUL = [0.365, 0.461],
+                        SAT = [0.400, 0.481],
+                        KS = [0, 0]
+                    }
+                ]
+            };
+            Node.Create(soil);
+
+            Exception exception = null;
+            try
+            {
+                soil.Check(new MockSummary());
+            }
+            catch (Exception ex)
+            {
+                exception = ex;
+            }
+            Assert.That(exception.Message, Does.Contain("KS in layer 1 must be > 0"));
+        }
+
+        [Test]
+        public void EnsureZeroKSInBottomLayerOk()
+        {
+            Soil soil = new()
+            {
+                Children =
+                [
+                    new Physical()
+                    {
+                        Thickness = [100, 200],
+                        ParticleSizeClay = [ 1, 2 ],
+                        ParticleSizeSand = [ 3, 4 ],
+                        ParticleSizeSilt = [ 5, 6 ],
+                        BD = [1.36, 1.216],
+                        AirDry = [0.135, 0.214],
+                        LL15 = [0.27, 0.267],
+                        DUL = [0.365, 0.461],
+                        SAT = [0.400, 0.481],
+                        KS = [10, 0]
+                    }
+                ]
+            };
+            Node.Create(soil);
+
+            Exception exception = null;
+            try
+            {
+                soil.Check(new MockSummary());
+            }
+            catch (Exception ex)
+            {
+                exception = ex;
+            }
+            Assert.That(exception.Message, Does.Not.Contain("KS in layer"));
         }
     }
 }

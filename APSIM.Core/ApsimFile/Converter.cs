@@ -1,5 +1,6 @@
 using APSIM.Numerics;
 using APSIM.Shared.Documentation.Extensions;
+using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
 using BruTile.Wmts.Generated;
 using Newtonsoft.Json.Linq;
@@ -7,6 +8,9 @@ using System.Globalization;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace APSIM.Core;
 
@@ -16,7 +20,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 201; } }
+    public static int LatestVersion { get { return 206; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -6840,7 +6844,7 @@ internal class Converter
         foreach (var manager in JsonUtilities.ChildManagers(root))
         {
             List<Declaration> declarations = null;
-            string pattern = @"(?<relativeTo>[\w\d\[\].]*)\.*(?<methodName>FindChild|FindSibling|FindDescendant|FindAncestor|FindAllSiblings|FindAllChildren|FindAllDescendants|FindAllAncestors)(?<type>\<[\w\d\.]+\>)*\((?<remainder>.+)";
+            string pattern = @"(?<relativeTo>[\w\d\[\].]*|\([\w\d\[\]\.]*\s*as\s*[\w\d.]*\)\.)\.*(?<methodName>FindChild|FindSibling|FindDescendant|FindAncestor|FindAllSiblings|FindAllChildren|FindAllDescendants|FindAllAncestors)(?<type>\<[\w\d\.]+\>)*\((?<remainder>.+)";
             bool changed = false;
             manager.ReplaceRegex(pattern, match =>
             {
@@ -7003,4 +7007,188 @@ internal class Converter
         }
     }
 
+    /// <summary>
+    /// Ensure that when IStructure is stored in Manager scripts as a field, it is marked [NonSerialized]
+    /// </summary>
+    /// <param name="root">The root JSON token.</param>
+    /// <param name="_">The name of the apsimx file.</param>
+    private static void UpgradeToVersion202(JObject root, string _)
+    {
+        foreach (var manager in JsonUtilities.ChildManagers(root))
+        {
+            bool isChanged = manager.Replace("[field:NonSerialized]", string.Empty);
+            if (isChanged)
+                manager.Save();
+        }
+    }
+
+
+    /// <summary>
+    /// Change KS of zero or NaNs to null.
+    /// </summary>
+    /// <param name="root">The root JSON token.</param>
+    /// <param name="_">The name of the apsimx file.</param>
+    private static void UpgradeToVersion203(JObject root, string _)
+    {
+        foreach (var soil in JsonUtilities.ChildrenRecursively(root, "Soil"))
+        {
+            var physical = JsonUtilities.ChildWithName(soil, "Physical");
+
+            if (physical != null)
+            {
+                if (physical["KS"] != null)
+                {
+                    if (physical["KS"].Any())
+                    {
+                        var values = physical["KS"].Values<double>().ToArray();
+                        bool allZeroOrNaN = values.All(x => x == 0 || double.IsNaN(x));
+                        if (allZeroOrNaN) physical["KS"] = null; // set to null if all values are zero or NaN
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Replace SetEmergenceDate and SetGerminationDate methods with generic SetPhaseCompletionDate method
+    /// </summary>
+    /// <param name="root">The root JSON token.</param>
+    /// <param name="_">The name of the apsimx file.</param>
+    private static void UpgradeToVersion204(JObject root, string _)
+    {
+        Dictionary<string, Dictionary<string, string>> repDict = new Dictionary<string, Dictionary<string, string>>();
+        repDict["Germination"] = new Dictionary<string, string>
+        {
+            {"findPattern", @"Phenology\.SetGerminationDate\(\s*((?>[^()]+|\((?<DEPTH>)|\)(?<-DEPTH>))*(?(DEPTH)(?!)))\s*\);" },
+            {"replacePattern", @"Phenology.SetPhaseCompletionDate($1,""Germinating"");" }
+        };
+        repDict["Emergence"] = new Dictionary<string, string>
+        {
+            {"findPattern", @"Phenology\.SetEmergenceDate\(\s*((?>[^()]+|\((?<DEPTH>)|\)(?<-DEPTH>))*(?(DEPTH)(?!)))\s*\);" },
+            {"replacePattern", @"Phenology.SetPhaseCompletionDate($1,""Emerging"");" }
+        };
+
+        foreach (Dictionary<string, string> stage in repDict.Values)
+        {
+
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                manager.ReplaceRegex(stage["findPattern"], stage["replacePattern"], RegexOptions.IgnoreCase);
+                manager.Save();
+            }
+
+            foreach (var operations in JsonUtilities.ChildrenOfType(root, "Operations"))
+            {
+                var operation = operations["OperationsList"];
+                if (operation != null && operation.HasValues)
+                {
+                    for (int i = 0; i < operation.Count(); i++)
+                    {
+                        var specification = operation[i]["Action"];
+                        if (!String.IsNullOrEmpty(specification.ToString()))
+                        {
+                            var specificationString = specification.ToString();
+                            specificationString = Regex.Replace(specificationString, stage["findPattern"], stage["replacePattern"], RegexOptions.IgnoreCase);
+                            operation[i]["Action"] = specificationString;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Searches for managers that may have been impacted by a bug from upgrade to 200, and tries to fix this bug if any are encountered.
+    /// Looks for a parenthetic 'as' cast followed by a Structure... invocation, and moves the as cast to the relativeTo argument, with
+    /// an additional appropriate cast that was intended to be added in UpgradeToVersion200.
+    ///
+    /// For instance, the text
+    /// <code>(Physical as Model) Structure.FindChild&lt;SoilCrop&gt;(recursive: true);</code>
+    /// should be changed to
+    /// <code>Structure.FindChild&lt;SoilCrop&gt;(recursive: true, relativeTo: (INodeModel)(Physical as Model));</code>
+    /// </summary>
+    /// <remarks>
+    /// The pattern that we match against here is strictly invalid code (two expressions), so this shouldn't impact any working script.
+    /// </remarks>
+    /// <param name="root">Root json object.</param>
+    /// <param name="_">Unused filename.</param>
+    private static void UpgradeToVersion205(JObject root, string _)
+    {
+        const string pattern =
+            @"(?<cast>\([\[\]\w\d\.]+\s+as\s+[\w\d\.]+\))\s+" +
+            // NOTE: The type argument below is guaranteed to exist from upgrade to 200 (default an IModel).
+            @"(?<invocation>Structure\.\w+<[\w\d\.]+>)" +
+            @"(?<args>\(.*\))";
+        foreach (var manager in JsonUtilities.ChildManagers(root))
+        {
+            var changed = false;
+            manager.ReplaceRegex(pattern, match =>
+            {
+                changed = true;
+                var cast = "(INodeModel)" + match.Groups["cast"].ToString();
+                var args = match.Groups["args"].ToString();
+                var optionalComma = args.Where(char.IsLetterOrDigit).Any() ? ", " : "";
+                var idx = StringUtilities.FindMatchingClosingBracket(args, 0, '(', ')');
+                var newArgs = $"{args[..idx]}{optionalComma}relativeTo: {cast}{args[idx..]}";
+                return match.Groups["invocation"] + newArgs;
+            });
+            if (changed)
+                manager.Save();
+        }
+    }
+
+    /// <summary>
+    /// Replaces SetEmergenceDate and SetGerminationDate methods that may have been missed by the previous UpgradeTo204.
+    /// </summary>
+    /// <param name="root">Root json object.</param>
+    /// <param name="_">Unused filename.</param>
+    private static void UpgradeToVersion206(JObject root, string _)
+    {
+        var emergingArg = SyntaxFactory.Argument(
+            SyntaxFactory.LiteralExpression(
+                SyntaxKind.StringLiteralExpression,
+                SyntaxFactory.Literal("Emerging")
+            )
+        );
+        var germinatingArg = SyntaxFactory.Argument(
+            SyntaxFactory.LiteralExpression(
+                SyntaxKind.StringLiteralExpression,
+                SyntaxFactory.Literal("Germinating")
+            )
+        );
+        var newName = SyntaxFactory.IdentifierName("SetPhaseCompletionDate");
+
+        foreach (var manager in JsonUtilities.ChildManagers(root).Where(mgr => !mgr.IsEmpty))
+        {
+            var managerRoot = CSharpSyntaxTree.ParseText(manager.ToString()).GetRoot();
+            var newRoot = managerRoot.ReplaceNodes(
+                managerRoot
+                    .DescendantNodes()
+                    .OfType<InvocationExpressionSyntax>()
+                    .Where(
+                        node =>
+                        {
+                            if (node.Expression is MemberAccessExpressionSyntax ma)
+                            {
+                                var name = ma.Name.ToFullString();
+                                return name == "SetEmergenceDate" || name == "SetGerminationDate";
+                            }
+                            return false;
+                        }
+                    ),
+                (old, _) =>
+                {
+                    var ma = old.Expression as MemberAccessExpressionSyntax;
+                    var newLastArg = ma.Name.ToFullString() == "SetEmergenceDate" ? emergingArg : germinatingArg;
+                    return SyntaxFactory.InvocationExpression(ma.WithName(newName), old.ArgumentList.AddArguments(newLastArg));
+                }
+            );
+
+            if (!managerRoot.IsEquivalentTo(newRoot))
+            {
+                manager.Read(newRoot.ToFullString());
+                manager.Save();
+            }
+        }
+    }
 }
