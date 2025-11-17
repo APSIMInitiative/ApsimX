@@ -1,12 +1,12 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 195,
+  "Version": 205,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Memo, Models",
-      "Text": "Bur grows from flowering until cutout\n\nLint from XX to startopenbolls\n\nSeed from xx to maturity??\n\n\n\n\n\n\n1. Thermal Time only drives phenology until flowering. Cutout, bollfilling, maturing driven by supply/demand\n2. Bur have its own HarvestIndex. Bur potenital HI is end of bur growth (40%?)\n3. Seedcotton as seperate CompositeBiomass --> keep Bur seperate \n\n***Main issues:***\n\n1. Phenology needs to work across different cultivars and regions --> need to work in cutout, bollperiod and maturity calculations\n2. Boll demand as a whole not strong enough. N conc correct? BollFilling duration? Partioning? DM/N remobilisation? Leaf senescence?\n3. Node production in MRF21 too high --> need to slow down due to high temperatures? N stress?\n\n**ARBITRATOR**\n\n* Copied in WaterUptakeMethod from Sorghum model to calculate SDRatio\n\n**PHENOLOGY**\n\n* Phenology in simulations running on set *FixedValues* in Cultivar parameters\n* Is ThermalTime Response correct? See method Bange et al., 2022 (optimum 32oC and base 15.6oC)\n* Cutout script not working correctly --> seems to be a feedback on DM partitioning caused by this?\n* BollFilling Target based on boll period. Function reprocal of Temp\n* Maturing not working correctly --> function based on when cutout occurs\n\n**LEAF**\n\n* NodeNumber reduced with WaterFactor (SDRatio)\n* [Leaf].Photosynthesis.RUE.FixedValue = 1.5; [Leaf].SpecificArea.FixedValue = 0.021; [Leaf].AreaLargestLeaf.FixedValue = 0.12 not set in CultivarParameters. RUE can be determined with VPD, SLA with radition (previous week, Reddy) but AreaLargestLeaf?\n* Dynamic RUE --> NAR0607Ir80: average over the growing season is 1.1 (which is similar to fixed RUE of 1.0)\n* Dynamic RUE --> DDRF21RS1000: average growing season is 1.4; similar to 1.5 RUE fixed\n* Boll composed of Bur, Seed, Lint, all with different N-demands.\n* However, it is suggested that RUE is more influenced by radiation https://www.sciencedirect.com/science/article/pii/S0378429099000118#aep-section-id11 (RUE has been shown both experimentally and theoretically to be increased by decreased irradiance and by increased fractions of diffuse radiation. On the other hand, there is little evidence to show that VPD greatly influences RUE.)\n\n**SIMULATIONS**\n\n* NAR0607Ir80: Not enough biomass partitioned to Boll; however Lint yield is spot-on\n* DDRF21RS1000: Seems to be working well although NO3 content in the soil not accurate\n* MRF21: canopy too large due to too rapid mainstem node growth (need to be regulated by temp? Is higher in the begin phases compared with DDRF). Leaf growth too large, reproductive growth too little. Problem is most likely N rates and dates which I did not have and have to guess. Also starting N and OM was from adjacent field. NO3 in the soils also seems to be overestimated?\n\n",
+      "Text": "Notes 17/11/2025: \n\nIssues for review:\n\n[Phenology]:\nMaturing, boll period based on\n- Total growth rate\n- Mick Bange equation\n\n[Leaf]:\n- SpecificArea (check latest Wheat model?)\n\n[Boll]:\n- Daily Harvest index increase calculation\n- Daily partitioning\n\n[Lint]:\n- Lint as \"GenericOrgan\" instead of \"ReproductiveOrgan\"?\n\n[Bur], [Seed], [Lint]:\n- N concentrations (max, min)\n\n========================================================================\n\n\nBur grows from flowering until cutout\n\nLint from XX to startopenbolls\n\nSeed from xx to maturity??\n\n1. Thermal Time only drives phenology until flowering. Cutout, bollfilling, maturing driven by supply/demand\n2. Bur have its own HarvestIndex. Bur potenital HI is end of bur growth (40%?)\n3. Seedcotton as seperate CompositeBiomass --> keep Bur seperate \n\n***Main issues:***\n\n1. Phenology needs to work across different cultivars and regions --> need to work in cutout, bollperiod and maturity calculations\n2. Boll demand as a whole not strong enough. N conc correct? BollFilling duration? Partioning? DM/N remobilisation? Leaf senescence?\n3. Node production in MRF21 too high --> need to slow down due to high temperatures? N stress?\n\n**ARBITRATOR**\n\n* Copied in WaterUptakeMethod from Sorghum model to calculate SDRatio\n\n**PHENOLOGY**\n\n* Phenology in simulations running on set *FixedValues* in Cultivar parameters\n* Is ThermalTime Response correct? See method Bange et al., 2022 (optimum 32oC and base 15.6oC)\n* Cutout script not working correctly --> seems to be a feedback on DM partitioning caused by this?\n* BollFilling Target based on boll period. Function reprocal of Temp\n* Maturing not working correctly --> function based on when cutout occurs\n\n**LEAF**\n\n* NodeNumber reduced with WaterFactor (SDRatio)\n* [Leaf].Photosynthesis.RUE.FixedValue = 1.5; [Leaf].SpecificArea.FixedValue = 0.021; [Leaf].AreaLargestLeaf.FixedValue = 0.12 not set in CultivarParameters. RUE can be determined with VPD, SLA with radition (previous week, Reddy) but AreaLargestLeaf?\n* Dynamic RUE --> NAR0607Ir80: average over the growing season is 1.1 (which is similar to fixed RUE of 1.0)\n* Dynamic RUE --> DDRF21RS1000: average growing season is 1.4; similar to 1.5 RUE fixed\n* Boll composed of Bur, Seed, Lint, all with different N-demands.\n* However, it is suggested that RUE is more influenced by radiation https://www.sciencedirect.com/science/article/pii/S0378429099000118#aep-section-id11 (RUE has been shown both experimentally and theoretically to be increased by decreased irradiance and by increased fractions of diffuse radiation. On the other hand, there is little evidence to show that VPD greatly influences RUE.)\n\n**SIMULATIONS**\n\n* NAR0607Ir80: Not enough biomass partitioned to Boll; however Lint yield is spot-on\n* DDRF21RS1000: Seems to be working well although NO3 content in the soil not accurate\n* MRF21: canopy too large due to too rapid mainstem node growth (need to be regulated by temp? Is higher in the begin phases compared with DDRF). Leaf growth too large, reproductive growth too little. Problem is most likely N rates and dates which I did not have and have to guess. Also starting N and OM was from adjacent field. NO3 in the soils also seems to be overestimated?\n\n",
       "Name": "Memo",
       "ResourceName": null,
       "Children": [],
@@ -24,7 +24,6 @@
     },
     {
       "$type": "Models.Storage.DataStore, Models",
-      "useFirebird": false,
       "CustomFileName": null,
       "Name": "DataStore",
       "ResourceName": null,
@@ -32,15 +31,15 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
-            "Observed\\ForestHillObserved.xlsx",
-            "Observed\\Narrabri0607Observed.xlsx",
-            "Observed\\Narrabri0203Observed.xlsx",
-            "Observed\\BDKObserved.xlsx",
-            "Observed\\WarraObserved.xlsx",
-            "Observed\\Narrabri23.xlsx",
-            "Observed\\DouglasDaly2021.xlsx",
-            "Observed\\DouglasDaly21Observed.xlsx",
-            "Observed\\Emerald2015Observed.xlsx"
+            "Observed/ForestHillObserved.xlsx",
+            "Observed/Narrabri0607Observed.xlsx",
+            "Observed/Narrabri0203Observed.xlsx",
+            "Observed/BDKObserved.xlsx",
+            "Observed/WarraObserved.xlsx",
+            "Observed/Narrabri23.xlsx",
+            "Observed/DouglasDaly2021.xlsx",
+            "Observed/DouglasDaly21Observed.xlsx",
+            "Observed/Emerald2015Observed.xlsx"
           ],
           "SheetNames": [
             "CottonObserved",
@@ -405,12 +404,6 @@
         },
         {
           "$type": "Models.PMF.Plant, Models",
-          "Phenology": null,
-          "Arbitrator": null,
-          "structure": null,
-          "Leaf": null,
-          "Root": null,
-          "AboveGround": null,
           "PlantType": "Soybean",
           "Name": "Cotton",
           "ResourceName": null,
@@ -602,7 +595,6 @@
                 },
                 {
                   "$type": "Models.PMF.Arbitrator.C4WaterUptakeMethod, Models",
-                  "Soil": null,
                   "Name": "WaterUptakeMethod",
                   "ResourceName": null,
                   "Children": [
@@ -708,7 +700,6 @@
             },
             {
               "$type": "Models.PMF.Phen.Phenology, Models",
-              "thermalTime": null,
               "Name": "Phenology",
               "ResourceName": null,
               "Children": [
@@ -723,7 +714,6 @@
                 },
                 {
                   "$type": "Models.Functions.SubDailyInterpolation, Models",
-                  "InterpolationMethod": null,
                   "agregationMethod": 0,
                   "Name": "PreemergentThermalTime",
                   "ResourceName": null,
@@ -770,7 +760,6 @@
                 },
                 {
                   "$type": "Models.Functions.SubDailyInterpolation, Models",
-                  "InterpolationMethod": null,
                   "agregationMethod": 0,
                   "Name": "ThermalTime",
                   "ResourceName": null,
@@ -1165,7 +1154,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "8/11/2023 - Concept: **Bange, M. P., & Milroy, S. P. (2004). Growth and dry matter partitioning of diverse cotton genotypes. Field Crops Research, 87(1), 73-87. https://doi.org/10.1016/j.fcr.2003.09.007**\n\nAdd (water)stress effect in cases where severe water deficit cutout reached earlier. See Hearn, 1969 paper where when 2/3 water supply depleted --> node production halts and plant shifts into cutout.\n\nFrom PhD Warren Conaty:\n\nWater stress also alters the time taken for a boll to reach maturity. Water deficits result in the hastening of maturity, whilst excessive soil water tends to slow maturity (Hearn, 1994; Hearn, 1979; Marani and Amirav, 1971b; Marani and Amirav, 1971a). This occurs as a result of the inherent plant water relations fixed within commercial cotton cultivars derived from its wild xerophytic ancestors. As a result, when two thirds of the soil water is used, vegetative growth ceases, boll setting and square production cease and the retained bolls mature. Boll setting and square production can resume, if conditions are favourable, when mature bolls open, leading to a second fruiting flush (Hearn, 1979).",
+                      "Text": "15/09/2025: TOTAL GROWTH RATE, NOT BOLL GROWTH RATE\n\n======================================================\n\n8/11/2023 - Concept: **Bange, M. P., & Milroy, S. P. (2004). Growth and dry matter partitioning of diverse cotton genotypes. Field Crops Research, 87(1), 73-87. https://doi.org/10.1016/j.fcr.2003.09.007**\n\nAdd (water)stress effect in cases where severe water deficit cutout reached earlier. See Hearn, 1969 paper where when 2/3 water supply depleted --> node production halts and plant shifts into cutout.\n\nFrom PhD Warren Conaty:\n\nWater stress also alters the time taken for a boll to reach maturity. Water deficits result in the hastening of maturity, whilst excessive soil water tends to slow maturity (Hearn, 1994; Hearn, 1979; Marani and Amirav, 1971b; Marani and Amirav, 1971a). This occurs as a result of the inherent plant water relations fixed within commercial cotton cultivars derived from its wild xerophytic ancestors. As a result, when two thirds of the soil water is used, vegetative growth ceases, boll setting and square production cease and the retained bolls mature. Boll setting and square production can resume, if conditions are favourable, when mature bolls open, leading to a second fruiting flush (Hearn, 1979).",
                       "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
@@ -1595,7 +1584,6 @@
             },
             {
               "$type": "Models.PMF.Organs.SimpleLeaf, Models",
-              "MetData": null,
               "Albedo": 0.25,
               "Gsmax350": 0.011,
               "R50": 150.0,
@@ -1723,9 +1711,6 @@
                 },
                 {
                   "$type": "Models.Functions.SupplyFunctions.RUEModel, Models",
-                  "FT": null,
-                  "FVPD": null,
-                  "RadnInt": null,
                   "Name": "Photosynthesis",
                   "ResourceName": null,
                   "Children": [
@@ -2464,7 +2449,6 @@
                             },
                             {
                               "$type": "Models.Functions.SubDailyInterpolation, Models",
-                              "InterpolationMethod": null,
                               "agregationMethod": 0,
                               "Name": "TemperatureEffect",
                               "ResourceName": null,
@@ -2645,6 +2629,7 @@
                 },
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Units": null,
                   "Expression": "[Leaf].Phyllochron * [Leaf].Plastochron.Multiplier",
                   "Name": "Plastochron",
                   "ResourceName": null,
@@ -2783,6 +2768,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "Units": null,
                                   "Expression": "[Leaf].Phyllochron",
                                   "Name": "Target",
                                   "ResourceName": null,
@@ -2996,6 +2982,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.ExpressionFunction, Models",
+                          "Units": null,
                           "Expression": "floor([Leaf].NodeNumber+0.5)",
                           "Name": "NodeNumberROUND",
                           "ResourceName": null,
@@ -3885,12 +3872,6 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
-                  "Structural": null,
-                  "Metabolic": null,
-                  "Storage": null,
-                  "QStructuralPriority": null,
-                  "QMetabolicPriority": null,
-                  "QStoragePriority": null,
                   "Name": "DMDemands",
                   "ResourceName": null,
                   "Children": [
@@ -4464,12 +4445,6 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
-                  "Structural": null,
-                  "Metabolic": null,
-                  "Storage": null,
-                  "QStructuralPriority": null,
-                  "QMetabolicPriority": null,
-                  "QStoragePriority": null,
                   "Name": "NDemands",
                   "ResourceName": null,
                   "Children": [
@@ -4705,6 +4680,7 @@
                 },
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Units": null,
                   "Expression": "[Leaf].AreaLargestMainstemLeaf * 0.78",
                   "Name": "AreaLargestSympodialLeaf",
                   "ResourceName": null,
@@ -4926,7 +4902,6 @@
                                     },
                                     {
                                       "$type": "Models.Functions.SubDailyInterpolation, Models",
-                                      "InterpolationMethod": null,
                                       "agregationMethod": 0,
                                       "Name": "TemperatureFunction",
                                       "ResourceName": null,
@@ -4966,6 +4941,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
                                       "Expression": "([Leaf].SpecificArea.SLAMin+([Leaf].SpecificArea.SLAMax-[Leaf].SpecificArea.SLAMin)*EXP([Leaf].SpecificArea.SLAPAR*([Weather].Radn / 2.02)))/[Leaf].SpecificArea.SLAMax",
                                       "Name": "PARSLA",
                                       "ResourceName": null,
@@ -4975,6 +4951,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
                                       "Expression": "MAX(0.1, (1-(1-[Leaf].Fw)*[Leaf].SpecificArea.TURSLA))",
                                       "Name": "WaterStressFunction",
                                       "ResourceName": null,
@@ -5214,13 +5191,6 @@
             },
             {
               "$type": "Models.PMF.Organs.GenericOrgan, Models",
-              "SenescenceRate": null,
-              "NRetranslocationFactor": null,
-              "DMRetranslocationFactor": null,
-              "InitialWt": null,
-              "DMConversionEfficiency": null,
-              "CarbonConcentration": null,
-              "RetranslocateNitrogen": null,
               "StartLive": null,
               "DMSupply": null,
               "NSupply": null,
@@ -5487,6 +5457,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
                                       "Expression": "[Phenology].Maturing.Target",
                                       "Name": "PostCanopyTT",
                                       "ResourceName": null,
@@ -5496,6 +5467,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
                                       "Expression": "[Phenology].Maturing.ProgressThroughPhase",
                                       "Name": "PostCanopyTTComplete",
                                       "ResourceName": null,
@@ -5595,12 +5567,6 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
-                  "Structural": null,
-                  "Metabolic": null,
-                  "Storage": null,
-                  "QStructuralPriority": null,
-                  "QMetabolicPriority": null,
-                  "QStoragePriority": null,
                   "Name": "DMDemands",
                   "ResourceName": null,
                   "Children": [
@@ -5753,12 +5719,6 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
-                  "Structural": null,
-                  "Metabolic": null,
-                  "Storage": null,
-                  "QStructuralPriority": null,
-                  "QMetabolicPriority": null,
-                  "QStoragePriority": null,
                   "Name": "NDemands",
                   "ResourceName": null,
                   "Children": [
@@ -5944,9 +5904,6 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                  "Structural": null,
-                  "Metabolic": null,
-                  "Storage": null,
                   "Name": "InitialWt",
                   "ResourceName": null,
                   "Children": [
@@ -6009,13 +5966,6 @@
             },
             {
               "$type": "Models.PMF.Organs.GenericOrgan, Models",
-              "SenescenceRate": null,
-              "NRetranslocationFactor": null,
-              "DMRetranslocationFactor": null,
-              "InitialWt": null,
-              "DMConversionEfficiency": null,
-              "CarbonConcentration": null,
-              "RetranslocateNitrogen": null,
               "StartLive": null,
               "DMSupply": null,
               "NSupply": null,
@@ -6037,12 +5987,6 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
-                  "Structural": null,
-                  "Metabolic": null,
-                  "Storage": null,
-                  "QStructuralPriority": null,
-                  "QMetabolicPriority": null,
-                  "QStoragePriority": null,
                   "Name": "DMDemands",
                   "ResourceName": null,
                   "Children": [
@@ -6268,12 +6212,6 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
-                  "Structural": null,
-                  "Metabolic": null,
-                  "Storage": null,
-                  "QStructuralPriority": null,
-                  "QMetabolicPriority": null,
-                  "QStoragePriority": null,
                   "Name": "NDemands",
                   "ResourceName": null,
                   "Children": [
@@ -6523,6 +6461,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
                                       "Expression": "[Phenology].Maturing.Target",
                                       "Name": "ReproductiveTT",
                                       "ResourceName": null,
@@ -6532,6 +6471,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
                                       "Expression": "[Phenology].Maturing.ProgressThroughPhase",
                                       "Name": "ReproductiveTTComplete",
                                       "ResourceName": null,
@@ -6667,9 +6607,6 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                  "Structural": null,
-                  "Metabolic": null,
-                  "Storage": null,
                   "Name": "InitialWt",
                   "ResourceName": null,
                   "Children": [
@@ -6759,12 +6696,6 @@
             },
             {
               "$type": "Models.PMF.Organs.ReproductiveOrgan, Models",
-              "SurfaceOrganicMatter": null,
-              "Summary": null,
-              "biomassRemovalModel": null,
-              "DMConversionEfficiency": null,
-              "MaintenanceRespirationFunction": null,
-              "RemobilisationCost": null,
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
               "DMDemand": null,
@@ -7180,9 +7111,6 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                  "Structural": null,
-                  "Metabolic": null,
-                  "Storage": null,
                   "Name": "DMDemandPriorityFactors",
                   "ResourceName": null,
                   "Children": [
@@ -7222,9 +7150,6 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                  "Structural": null,
-                  "Metabolic": null,
-                  "Storage": null,
                   "Name": "NDemandPriorityFactors",
                   "ResourceName": null,
                   "Children": [
@@ -7268,12 +7193,6 @@
             },
             {
               "$type": "Models.PMF.Organs.ReproductiveOrgan, Models",
-              "SurfaceOrganicMatter": null,
-              "Summary": null,
-              "biomassRemovalModel": null,
-              "DMConversionEfficiency": null,
-              "MaintenanceRespirationFunction": null,
-              "RemobilisationCost": null,
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
               "DMDemand": null,
@@ -7644,9 +7563,6 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                  "Structural": null,
-                  "Metabolic": null,
-                  "Storage": null,
                   "Name": "DMDemandPriorityFactors",
                   "ResourceName": null,
                   "Children": [
@@ -7686,9 +7602,6 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                  "Structural": null,
-                  "Metabolic": null,
-                  "Storage": null,
                   "Name": "NDemandPriorityFactors",
                   "ResourceName": null,
                   "Children": [
@@ -7760,14 +7673,15 @@
             },
             {
               "$type": "Models.PMF.Organs.Root, Models",
-              "SurfaceOrganicMatter": null,
-              "RootShape": null,
-              "InitialWt": null,
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
               "NDemand": null,
               "potentialDMAllocation": null,
+              "WaterUptakeSupply": null,
+              "NitrogenUptakeSupply": null,
+              "WaterTakenUp": null,
+              "NitrogenTakenUp": null,
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
               "Name": "Root",
@@ -8223,12 +8137,6 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
-                  "Structural": null,
-                  "Metabolic": null,
-                  "Storage": null,
-                  "QStructuralPriority": null,
-                  "QMetabolicPriority": null,
-                  "QStoragePriority": null,
                   "Name": "DMDemands",
                   "ResourceName": null,
                   "Children": [
@@ -8438,12 +8346,6 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
-                  "Structural": null,
-                  "Metabolic": null,
-                  "Storage": null,
-                  "QStructuralPriority": null,
-                  "QMetabolicPriority": null,
-                  "QStoragePriority": null,
                   "Name": "NDemands",
                   "ResourceName": null,
                   "Children": [
@@ -8591,9 +8493,6 @@
                 },
                 {
                   "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                  "Structural": null,
-                  "Metabolic": null,
-                  "Storage": null,
                   "Name": "InitialWt",
                   "ResourceName": null,
                   "Children": [
@@ -9181,6 +9080,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Units": null,
                       "Expression": "[Lint].Wt + [Seed].Wt",
                       "Name": "SeedCottonWt",
                       "ResourceName": null,
@@ -11372,6 +11272,15 @@
               "ReadOnly": false
             },
             {
+              "$type": "Models.Memo, Models",
+              "Text": "Growth regulator application (mepiquat 350):\n\nRate (L/ha)\n\nDate|RS500|RS1000|RS1500\n-|-|-|-\n10 Feb 2021|0.4|-|-\n17 Feb 2021|-|0.4|-\n09 Mar 2021|0.4|0.4|0.4\n26 Mar 2021|0.8|0.8|0.8",
+              "Name": "Growth regulator details",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
               "$type": "Models.Factorial.Experiment, Models",
               "DisabledSimNames": null,
               "Name": "DDRF21",
@@ -11622,6 +11531,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "paddock",
                       "ResourceName": null,
                       "Children": [
@@ -12192,8 +12102,6 @@
                                 0.15,
                                 0.15
                               ],
-                              "InitialPAWmm": 91.5,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": true,
                               "Name": "Water",
                               "ResourceName": null,
@@ -12315,12 +12223,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "Phenology": null,
-                          "Arbitrator": null,
-                          "structure": null,
-                          "Leaf": null,
-                          "Root": null,
-                          "AboveGround": null,
                           "PlantType": "Cotton",
                           "Name": "Cotton",
                           "ResourceName": "Cotton",
@@ -12586,9 +12488,9 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": -0.4743514557687739,
-                          "Maximum": 6.634206895448419,
-                          "Interval": null
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN"
                         },
                         {
                           "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
@@ -18394,6 +18296,33 @@
           "ResourceName": null,
           "Children": [
             {
+              "$type": "Models.Memo, Models",
+              "Text": "Soil samples taken on 10/2/2020, so a week after sowing\n\nIrrigation added to rainfall in weather file",
+              "Name": "Memo",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "Stage|Date|DAS\n-|-|-\nSowing|6 Feb 2020|0\nEmergence||\n3 Leaves | 18 Feb 2020 | 12\nSquaring|9 Mar 2020 |32\nFlowering|25 Mar 2020 | 48\nCutout|29 April 2020 | 83\nOpenBolls|27 May 2020|111\nMaturity|26 Jun 2020|141\nHarvestRipe|15 Jul 2020|160",
+              "Name": "Phenology stages Observed",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "Growth regulator application (Pix):\n\nDate|Rate (L/ha)\n-|-\n22-23 Feb 2020|0.09\n04 Apr 2020|1.2",
+              "Name": "Growth regulator details",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
               "$type": "Models.Factorial.Experiment, Models",
               "DisabledSimNames": null,
               "Name": "DouglasDaly2021",
@@ -18507,24 +18436,6 @@
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Soil samples taken on 10/2/2020, so a week after sowing\n\nIrrigation added to rainfall in weather file",
-                      "Name": "Memo",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Stage|Date|DAS\n-|-|-\nSowing|6 Feb 2020|0\nEmergence||\n3 Leaves | 18 Feb 2020 | 12\nSquaring|9 Mar 2020 |32\nFlowering|25 Mar 2020 | 48\nCutout|29 April 2020 | 83\nOpenBolls|27 May 2020|111\nMaturity|26 Jun 2020|141\nHarvestRipe|15 Jul 2020|160\n",
-                      "Name": "Phenology stages Observed",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Clock, Models",
                       "Start": "2019-12-01T00:00:00",
                       "End": "2020-08-16T00:00:00",
@@ -18546,7 +18457,7 @@
                     {
                       "$type": "Models.Climate.Weather, Models",
                       "ConstantsFile": null,
-                      "FileName": "Weatherfiles\\MI 2020.met",
+                      "FileName": "Weatherfiles/MI 2020.met",
                       "ExcelWorkSheetName": "",
                       "Name": "Weather",
                       "ResourceName": null,
@@ -18584,6 +18495,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "paddock",
                       "ResourceName": null,
                       "Children": [
@@ -19323,8 +19235,6 @@
                                 0.25,
                                 0.25
                               ],
-                              "InitialPAWmm": 144.3,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
                               "ResourceName": null,
@@ -19466,12 +19376,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "Phenology": null,
-                          "Arbitrator": null,
-                          "structure": null,
-                          "Leaf": null,
-                          "Root": null,
-                          "AboveGround": null,
                           "PlantType": "Cotton",
                           "Name": "Cotton",
                           "ResourceName": "Cotton",
@@ -19611,30 +19515,33 @@
                         {
                           "$type": "Models.Manager, Models",
                           "CodeArray": [
-                            "using Models.PMF.Interfaces;",
-                            "using Newtonsoft.Json;",
-                            "using System;",
-                            "using System.Linq;",
-                            "using System.Collections.Generic;",
-                            "using Models.Core;",
-                            "using Models.PMF;",
-                            "using Models.PMF.Organs;",
-                            "using Models.Functions;",
-                            "using System.Xml.Serialization;",
-                            "using APSIM.Shared.Utilities;",
-                            "using Models.Interfaces;",
-                            "using Models.Soils;",
+                            "using APSIM.Core;",
                             "using Models.Climate;",
+                            "using Models.Soils;",
+                            "using Models.Interfaces;",
+                            "using APSIM.Shared.Utilities;",
+                            "using System.Xml.Serialization;",
+                            "using Models.Functions;",
+                            "using Models.PMF.Organs;",
+                            "using Models.PMF;",
+                            "using Models.Core;",
+                            "using System.Collections.Generic;",
+                            "using System.Linq;",
+                            "using System;",
+                            "using Newtonsoft.Json;",
+                            "using Models.PMF.Interfaces;",
                             "",
                             "namespace Models",
                             "{",
                             "    [Serializable]",
-                            "    public class Script : Model",
+                            "    public class Script : Model, IStructureDependency",
                             "    {",
+                            "        [Link] private Plant Cotton;",
+                            "        [Link] private Weather weather;",
+                            "        [Link] private IClock Clock;",
+                            "        ",
+                            "        public IStructure Structure { private get; set; }",
                             "        // Links to APSIM components",
-                            "        [Link] private Plant Cotton = null;",
-                            "        [Link] private Weather weather = null;",
-                            "        [Link] private IClock Clock = null;  // Link to Clock component",
                             "",
                             "        // List to store daily radiation values from emergence",
                             "        private List<double> dailyRadiation = new List<double>();",
@@ -19664,7 +19571,7 @@
                             "                if (!slaSet)",
                             "                {",
                             "                    // Dynamically find NodeNumber under Cotton",
-                            "                    IFunction NodeNumber = Cotton.FindDescendant<IFunction>(\"NodeNumber\");",
+                            "                    IFunction NodeNumber =   Structure.FindChild<IFunction>(\"NodeNumber\", recurse: true, relativeTo: (INodeModel)Cotton);",
                             "",
                             "                    if (NodeNumber != null)",
                             "                    {",
@@ -27148,11 +27055,11 @@
                               "Name": "EventNamesOnGraph",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -27181,7 +27088,7 @@
                           "Name": "Wt",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -27210,7 +27117,7 @@
                           "Name": "N_dead",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -27239,7 +27146,7 @@
                           "Name": "Wt_dead",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -27268,7 +27175,7 @@
                           "Name": "Cover",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -27653,7 +27560,7 @@
                           "Name": "NUptake",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
@@ -27913,7 +27820,7 @@
                       "Name": "SLA_DSSAT",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -28014,6 +27921,15 @@
               "$type": "Models.Memo, Models",
               "Text": "\n1/12/2023: See Fig. 5 Grundy, Yeates, Bell. 2020 Cotton production during the tropical monsoon season. 1.\n\n\n\nStage|P1|DAS|P2|DAS|P3|DAS\n-|-|-|-|-|-|-\nSowing|1 Dec 2008|0|19 Dec 2008|0|7 Jan 2009|0\nEmergence||\nSquaring|22 Dec 2008|21|11 Jan 2009|23|2 Feb 2009|26\nFlowering|12 Jan 2009|42|5 Feb 2009|48|5 Mar 2009|57\nCutout||\nOpenBolls|5 Mar 2009|94|19 Apr 2009|121|5 May 2009|118\nMaturity|14 May 2009|164|12 May 2009|144|10 Jun 2009|154\nDefoliation|5 May 2009?|155?|12 May 2009|144|12 Jun 2009|156\nHarvestRipe|24 May 2009|174|27 May 2009|159|30 Jun 2009|174\n",
               "Name": "Phenology stages Observed",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "\nFROM: \n\nGrundy, P. R., Yeates, S. J., & Bell, K. L. (2020). \nCotton production during the tropical monsoon season. I – The influence of variable radiation on boll loss, compensation and yield. \nField Crops Research, 254, 107790. https://doi.org/10.1016/j.fcr.2020.107790 \n\nPage 3:\n\n\"Mepiquat chloride (MC) was originally applied to all treatments \nusing rates and timing according to guidelines determined for MC usage \nat the Ord River in tropical Western Australia (Yeates et al., 2002, \n2007) but usage was modified in response to the early December \nsowing in Season 1 when MC rate appeared too high with reduced \nsympodia elongation in the upper canopy observed that may have \ncompromised compensation capacity. A more precautionary approach \nwas used for all other treatments and MC was applied at the lower end \nof the recommended rate range (7.6–19 g ai ha−1) from sixth node \ngrowth stage onwards.\"",
+              "Name": "Growth regulator details",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -28565,8 +28481,6 @@
                                 0.22,
                                 0.25
                               ],
-                              "InitialPAWmm": 75.30599999999998,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": true,
                               "Name": "Water",
                               "ResourceName": null,
@@ -29289,8 +29203,6 @@
                                 0.22,
                                 0.25
                               ],
-                              "InitialPAWmm": 75.30599999999998,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": true,
                               "Name": "Water",
                               "ResourceName": null,
@@ -30020,8 +29932,6 @@
                                 0.22,
                                 0.25
                               ],
-                              "InitialPAWmm": 75.30599999999998,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": true,
                               "Name": "Water",
                               "ResourceName": null,
@@ -30241,7 +30151,7 @@
                     {
                       "$type": "Models.Climate.Weather, Models",
                       "ConstantsFile": null,
-                      "FileName": "Weatherfiles\\QLD_BDK2008-12_update.met",
+                      "FileName": "Weatherfiles/QLD_BDK2008-12_update.met",
                       "ExcelWorkSheetName": "",
                       "Name": "Weather",
                       "ResourceName": null,
@@ -30279,6 +30189,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "paddock",
                       "ResourceName": null,
                       "Children": [
@@ -30551,30 +30462,33 @@
                         {
                           "$type": "Models.Manager, Models",
                           "CodeArray": [
-                            "using Models.PMF.Interfaces;",
-                            "using Newtonsoft.Json;",
-                            "using System;",
-                            "using System.Linq;",
-                            "using System.Collections.Generic;",
-                            "using Models.Core;",
-                            "using Models.PMF;",
-                            "using Models.PMF.Organs;",
-                            "using Models.Functions;",
-                            "using System.Xml.Serialization;",
-                            "using APSIM.Shared.Utilities;",
-                            "using Models.Interfaces;",
-                            "using Models.Soils;",
+                            "using APSIM.Core;",
                             "using Models.Climate;",
+                            "using Models.Soils;",
+                            "using Models.Interfaces;",
+                            "using APSIM.Shared.Utilities;",
+                            "using System.Xml.Serialization;",
+                            "using Models.Functions;",
+                            "using Models.PMF.Organs;",
+                            "using Models.PMF;",
+                            "using Models.Core;",
+                            "using System.Collections.Generic;",
+                            "using System.Linq;",
+                            "using System;",
+                            "using Newtonsoft.Json;",
+                            "using Models.PMF.Interfaces;",
                             "",
                             "namespace Models",
                             "{",
                             "    [Serializable]",
-                            "    public class Script : Model",
+                            "    public class Script : Model, IStructureDependency",
                             "    {",
+                            "        [Link] private Plant Cotton;",
+                            "        [Link] private Weather weather;",
+                            "        [Link] private IClock Clock;",
+                            "        ",
+                            "        public IStructure Structure { private get; set; }",
                             "        // Links to APSIM components",
-                            "        [Link] private Plant Cotton = null;",
-                            "        [Link] private Weather weather = null;",
-                            "        [Link] private IClock Clock = null;  // Link to Clock component",
                             "",
                             "        // List to store daily radiation values from emergence",
                             "        private List<double> dailyRadiation = new List<double>();",
@@ -30604,7 +30518,7 @@
                             "                if (!slaSet)",
                             "                {",
                             "                    // Dynamically find NodeNumber under Cotton",
-                            "                    IFunction NodeNumber = Cotton.FindDescendant<IFunction>(\"NodeNumber\");",
+                            "                    IFunction NodeNumber =   Structure.FindChild<IFunction>(\"NodeNumber\", recurse: true, relativeTo: (INodeModel)Cotton);",
                             "",
                             "                    if (NodeNumber != null)",
                             "                    {",
@@ -31213,8 +31127,6 @@
                                 0.22,
                                 0.25
                               ],
-                              "InitialPAWmm": 75.30599999999998,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": true,
                               "Name": "Water",
                               "ResourceName": null,
@@ -31262,12 +31174,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "Phenology": null,
-                          "Arbitrator": null,
-                          "structure": null,
-                          "Leaf": null,
-                          "Root": null,
-                          "AboveGround": null,
                           "PlantType": "Cotton",
                           "Name": "Cotton",
                           "ResourceName": "Cotton",
@@ -35270,6 +35176,15 @@
               "ReadOnly": false
             },
             {
+              "$type": "Models.Memo, Models",
+              "Text": "Grundy, P. R., Spargo, G. M., Yeates, S. J., & Bell, K. L. (2021). Improving subtropical cotton production by using late winter sowing to reduce climatic risk. Field Crops Research, 274. https://doi.org/10.1016/j.fcr.2021.108308 \n\nI could not identify any details in the paper and therefore assume that none were applied. \n\nNo data on growth regulators were provided with the observed data either.",
+              "Name": "Growth regulator details",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
               "$type": "Models.Factorial.Experiment, Models",
               "DisabledSimNames": null,
               "Name": "Emerald2015",
@@ -36269,7 +36184,7 @@
                     {
                       "$type": "Models.Climate.Weather, Models",
                       "ConstantsFile": null,
-                      "FileName": "Weatherfiles\\CQ2013_17.met",
+                      "FileName": "Weatherfiles/CQ2013_17.met",
                       "ExcelWorkSheetName": "",
                       "Name": "Weather",
                       "ResourceName": null,
@@ -36307,6 +36222,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "paddock",
                       "ResourceName": null,
                       "Children": [
@@ -37129,8 +37045,6 @@
                                 0.424,
                                 0.424
                               ],
-                              "InitialPAWmm": 234.20000000000005,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": true,
                               "Name": "Water",
                               "ResourceName": null,
@@ -37314,12 +37228,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "Phenology": null,
-                          "Arbitrator": null,
-                          "structure": null,
-                          "Leaf": null,
-                          "Root": null,
-                          "AboveGround": null,
                           "PlantType": "Cotton",
                           "Name": "Cotton",
                           "ResourceName": "Cotton",
@@ -41323,6 +41231,15 @@
               "ReadOnly": false
             },
             {
+              "$type": "Models.Memo, Models",
+              "Text": "PHYSIOLOGICAL DETERMINANTS OF YIELD AND MATURITY IN ULTRA-NARROW ROW COTTON. A thesis submitted for the degree of Doctor of Philosophy at The University of Queensland in December 2006 by Rose Roche \n\nPage 52/53: No growth regulators applied",
+              "Name": "Growth regulator details",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
               "$type": "Models.Factorial.Experiment, Models",
               "DisabledSimNames": null,
               "Name": "Narrabri0203",
@@ -41595,6 +41512,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "paddock",
                       "ResourceName": null,
                       "Children": [
@@ -42400,8 +42318,6 @@
                                 0.3656712608473711,
                                 0.3656712608473711
                               ],
-                              "InitialPAWmm": 192.9,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
                               "ResourceName": null,
@@ -42421,13 +42337,13 @@
                                 300.0
                               ],
                               "InitialValues": [
-                                22.0,
-                                0.0,
-                                "NaN",
-                                "NaN",
-                                "NaN",
-                                "NaN",
-                                "NaN"
+                                45.5,
+                                11.9,
+                                2.4,
+                                5.0,
+                                0.5,
+                                0.5,
+                                0.5
                               ],
                               "InitialValuesUnits": 0,
                               "WaterTableConcentration": 0.0,
@@ -42552,12 +42468,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "Phenology": null,
-                          "Arbitrator": null,
-                          "structure": null,
-                          "Leaf": null,
-                          "Root": null,
-                          "AboveGround": null,
                           "PlantType": "Cotton",
                           "Name": "Cotton",
                           "ResourceName": "Cotton",
@@ -49552,6 +49462,15 @@
               "ReadOnly": false
             },
             {
+              "$type": "Models.Memo, Models",
+              "Text": "I could not find any details on the use of growth regulators and therefore assume that none were applied.\n\nNo data on growth regulators were provided with the observed data either.",
+              "Name": "Growth regulator details",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
               "$type": "Models.Factorial.Experiment, Models",
               "DisabledSimNames": null,
               "Name": "NAR0607",
@@ -50156,6 +50075,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "paddock",
                       "ResourceName": null,
                       "Children": [
@@ -51083,8 +51003,6 @@
                                 0.264,
                                 0.264
                               ],
-                              "InitialPAWmm": 57.40000000000003,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": true,
                               "Name": "Water",
                               "ResourceName": null,
@@ -51232,12 +51150,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "Phenology": null,
-                          "Arbitrator": null,
-                          "structure": null,
-                          "Leaf": null,
-                          "Root": null,
-                          "AboveGround": null,
                           "PlantType": "Cotton",
                           "Name": "Cotton",
                           "ResourceName": "Cotton",
@@ -56783,6 +56695,15 @@
               "ReadOnly": false
             },
             {
+              "$type": "Models.Memo, Models",
+              "Text": "I could not find any details on the use of growth regulators and therefore assume that none were applied.\n\nNo data on growth regulators were provided with the observed data either.",
+              "Name": "Growth regulator details",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
               "$type": "Models.Factorial.Experiment, Models",
               "DisabledSimNames": null,
               "Name": "Narrabri2023",
@@ -56939,7 +56860,7 @@
                     {
                       "$type": "Models.Climate.Weather, Models",
                       "ConstantsFile": null,
-                      "FileName": "Weatherfiles\\Narrabri2023.met",
+                      "FileName": "Weatherfiles/Narrabri2023.met",
                       "ExcelWorkSheetName": "",
                       "Name": "Weather",
                       "ResourceName": null,
@@ -56977,6 +56898,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "paddock",
                       "ResourceName": null,
                       "Children": [
@@ -57542,8 +57464,6 @@
                                 0.51,
                                 0.5
                               ],
-                              "InitialPAWmm": 347.5,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
                               "ResourceName": null,
@@ -57840,30 +57760,33 @@
                         {
                           "$type": "Models.Manager, Models",
                           "CodeArray": [
-                            "using Models.PMF.Interfaces;",
-                            "using Newtonsoft.Json;",
-                            "using System;",
-                            "using System.Linq;",
-                            "using System.Collections.Generic;",
-                            "using Models.Core;",
-                            "using Models.PMF;",
-                            "using Models.PMF.Organs;",
-                            "using Models.Functions;",
-                            "using System.Xml.Serialization;",
-                            "using APSIM.Shared.Utilities;",
-                            "using Models.Interfaces;",
-                            "using Models.Soils;",
+                            "using APSIM.Core;",
                             "using Models.Climate;",
+                            "using Models.Soils;",
+                            "using Models.Interfaces;",
+                            "using APSIM.Shared.Utilities;",
+                            "using System.Xml.Serialization;",
+                            "using Models.Functions;",
+                            "using Models.PMF.Organs;",
+                            "using Models.PMF;",
+                            "using Models.Core;",
+                            "using System.Collections.Generic;",
+                            "using System.Linq;",
+                            "using System;",
+                            "using Newtonsoft.Json;",
+                            "using Models.PMF.Interfaces;",
                             "",
                             "namespace Models",
                             "{",
                             "    [Serializable]",
-                            "    public class Script : Model",
+                            "    public class Script : Model, IStructureDependency",
                             "    {",
+                            "        [Link] private Plant Cotton;",
+                            "        [Link] private Weather weather;",
+                            "        [Link] private IClock Clock;",
+                            "        ",
+                            "        public IStructure Structure { private get; set; }",
                             "        // Links to APSIM components",
-                            "        [Link] private Plant Cotton = null;",
-                            "        [Link] private Weather weather = null;",
-                            "        [Link] private IClock Clock = null;  // Link to Clock component",
                             "",
                             "        // List to store daily radiation values from emergence",
                             "        private List<double> dailyRadiation = new List<double>();",
@@ -57893,7 +57816,7 @@
                             "                if (!slaSet)",
                             "                {",
                             "                    // Dynamically find NodeNumber under Cotton",
-                            "                    IFunction NodeNumber = Cotton.FindDescendant<IFunction>(\"NodeNumber\");",
+                            "                    IFunction NodeNumber =   Structure.FindChild<IFunction>(\"NodeNumber\", recurse: true, relativeTo: (INodeModel)Cotton);",
                             "",
                             "                    if (NodeNumber != null)",
                             "                    {",
@@ -58023,12 +57946,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "Phenology": null,
-                          "Arbitrator": null,
-                          "structure": null,
-                          "Leaf": null,
-                          "Root": null,
-                          "AboveGround": null,
                           "PlantType": "Cotton",
                           "Name": "Cotton",
                           "ResourceName": "Cotton",
@@ -64875,6 +64792,15 @@
           "ResourceName": null,
           "Children": [
             {
+              "$type": "Models.Memo, Models",
+              "Text": "Email from Neil Huth on 10/01/2024: \n\n\"The plots are being sprayed over the weekend for herbicide andPGR.\"\n\n--> This suggests that PGR was applied on 13/14 January 2024, but did this actually happen?",
+              "Name": "Growth regulator details",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
               "$type": "Models.Factorial.Experiment, Models",
               "DisabledSimNames": null,
               "Name": "ForestHill2023",
@@ -65115,6 +65041,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "paddock",
                       "ResourceName": null,
                       "Children": [
@@ -65608,8 +65535,6 @@
                                 0.264,
                                 0.264
                               ],
-                              "InitialPAWmm": 63.3,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": true,
                               "Name": "Water",
                               "ResourceName": null,
@@ -65814,12 +65739,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "Phenology": null,
-                          "Arbitrator": null,
-                          "structure": null,
-                          "Leaf": null,
-                          "Root": null,
-                          "AboveGround": null,
                           "PlantType": "Cotton",
                           "Name": "Cotton",
                           "ResourceName": "Cotton",
@@ -70377,6 +70296,15 @@
           "ResourceName": null,
           "Children": [
             {
+              "$type": "Models.Memo, Models",
+              "Text": "I could not find any details on the use of growth regulators and therefore assume that none were applied.\n\nNo data on growth regulators were provided with the observed data either.",
+              "Name": "Growth regulator details",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
               "$type": "Models.Factorial.Experiment, Models",
               "DisabledSimNames": null,
               "Name": "Warra0405",
@@ -70457,7 +70385,7 @@
                     {
                       "$type": "Models.Climate.Weather, Models",
                       "ConstantsFile": null,
-                      "FileName": "Weatherfiles\\warra.met",
+                      "FileName": "Weatherfiles/warra.met",
                       "ExcelWorkSheetName": "",
                       "Name": "Weather",
                       "ResourceName": null,
@@ -70510,6 +70438,7 @@
                       "$type": "Models.Zones.RectangularZone, Models",
                       "Length": 1.0,
                       "Width": 100.0,
+                      "CanopyType": null,
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
@@ -70951,8 +70880,6 @@
                                 0.3125,
                                 0.31600000000000006
                               ],
-                              "InitialPAWmm": 146.85000000000002,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
                               "ResourceName": null,
@@ -71253,12 +71180,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "Phenology": null,
-                          "Arbitrator": null,
-                          "structure": null,
-                          "Leaf": null,
-                          "Root": null,
-                          "AboveGround": null,
                           "PlantType": "Cotton",
                           "Name": "Cotton",
                           "ResourceName": "Cotton",
@@ -71274,6 +71195,7 @@
                       "$type": "Models.Zones.RectangularZone, Models",
                       "Length": 1.0,
                       "Width": 100.0,
+                      "CanopyType": null,
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
@@ -71728,8 +71650,6 @@
                                 0.3125,
                                 0.31600000000000006
                               ],
-                              "InitialPAWmm": 146.85000000000002,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
                               "ResourceName": null,
