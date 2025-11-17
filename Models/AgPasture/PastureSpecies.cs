@@ -2619,11 +2619,10 @@ namespace Models.AgPasture
                  }
                 else if (InitialShootDM == 0 && InitialRootDM==0 && InitialRootDepth == 0)
                  {
-                     ResetBiomasses();
+                       EndCrop();
                  }
           
-                        
-            
+                                   
 
             }
             else throw new Exception("AgPasture: Please enter initial biomasss greater than or equal to zero");
