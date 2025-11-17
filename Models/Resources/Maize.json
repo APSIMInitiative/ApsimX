@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 206,
+  "Version": 207,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -1470,7 +1470,7 @@
                       "Y": [
                         1.0,
                         0.95,
-                        0.90
+                        0.9
                       ],
                       "Name": "XYPairs",
                       "ResourceName": null,
