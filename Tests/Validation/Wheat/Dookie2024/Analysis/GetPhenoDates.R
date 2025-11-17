@@ -128,7 +128,7 @@ df_result <- data_with_phases %>%
 
 # reshape for APSIM
 df_result_apsim <- df_result %>%
-  mutate(DateToProgressAPSIM = format(DateToProgress, "%d/%m/%Y")) %>%
+  mutate(DateToProgressAPSIM = format(DateToProgress, "%d-%b-%Y")) %>%
   dplyr::select(-DateToProgress) %>%
   pivot_wider(
     names_from = ParameterName,

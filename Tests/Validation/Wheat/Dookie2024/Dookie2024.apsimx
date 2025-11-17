@@ -13774,7 +13774,7 @@
                 },
                 {
                   "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
-                  "ParameterFile": "..\\inputs\\DookiePhenoDatesInputMIN.csv",
+                  "ParameterFile": "C:\\github\\ApsimX\\Tests\\Validation\\Wheat\\inputs\\DookiePhenoDatesInput.csv",
                   "SetEventName": "[Plant].Sowing",
                   "Name": "SetPhenoDatesExternally",
                   "ResourceName": null,
