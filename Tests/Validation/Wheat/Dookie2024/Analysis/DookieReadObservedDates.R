@@ -1,6 +1,9 @@
 library(readxl)
 library(dplyr)
 
+
+base_path <- file.path("C:/github")
+
 # -------------------------------------------------------------------
 # Helper function to read and process one file
 # -------------------------------------------------------------------
@@ -41,8 +44,8 @@ process_worked_input <- function(filepath) {
 # Apply function to both files
 # -------------------------------------------------------------------
 
-file1 <- "C:/github/ApsimX/Tests/Validation/Wheat/Dookie2024/DookieEVA2024.xlsx"
-file2 <- "C:/github/ApsimX/Tests/Validation/Wheat/Dookie2024/DookieWWHI2024.xlsx"
+file1 <- file.path(base_path,"ApsimX/Tests/Validation/Wheat/Dookie2024/DookieEVA2024.xlsx")
+file2 <- file.path(base_path,"ApsimX/Tests/Validation/Wheat/Dookie2024/DookieWWHI2024.xlsx")
 
 df_A <- process_worked_input(file1)
 df_B <- process_worked_input(file2)
@@ -55,6 +58,6 @@ df_final <- bind_rows(df_A, df_B)
 # -------------------------------------------------------------------
 # Save final CSV
 # -------------------------------------------------------------------
-output_path <- "C:/github/ApsimX/Tests/Validation/Wheat/inputs/DookiePhenoDatesInput_OBS.csv"
+output_path <- file.path(base_path,"ApsimX/Tests/Validation/Wheat/inputs/DookiePhenoDates_Observed.csv")
 
 write.csv(df_final, output_path, row.names = FALSE, na = "")
