@@ -107,16 +107,16 @@ data_with_phases <- originalPhenoDatesDB %>%
          Wheat.Phenology.Stage = as.numeric(Wheat.Phenology.Stage)) %>%
   mutate(
     ParameterName = case_when(
-      # between(Wheat.Phenology.Stage, 3, 4) ~ "[Wheat].Phenology.Emerging.DateToProgress",#2/3
-      # between(Wheat.Phenology.Stage, 5, 6) ~ "[Wheat].Phenology.SpikeletsDifferentiating.DateToProgress",#4/5
-      # between(Wheat.Phenology.Stage, 6, 7) ~ "[Wheat].Phenology.StemElongating.DateToProgress",#5/6
-      # between(Wheat.Phenology.Stage, 7, 8) ~ "[Wheat].Phenology.Heading.DateToProgress",#6/7
-      # between(Wheat.Phenology.Stage, 8, 9) ~ "[Wheat].Phenology.Flowering.DateToProgress",#7/8
-      between(Wheat.Phenology.Stage, 2, 3) ~ "[Wheat].Phenology.Emerging.DateToProgress",#2/3
-      between(Wheat.Phenology.Stage, 4, 5) ~ "[Wheat].Phenology.SpikeletsDifferentiating.DateToProgress",#4/5
-      between(Wheat.Phenology.Stage, 5, 6) ~ "[Wheat].Phenology.StemElongating.DateToProgress",#5/6
-      between(Wheat.Phenology.Stage, 6, 7) ~ "[Wheat].Phenology.Heading.DateToProgress",#6/7
-      between(Wheat.Phenology.Stage, 7, 8) ~ "[Wheat].Phenology.Flowering.DateToProgress",#7/8
+      between(Wheat.Phenology.Stage, 3, 4) ~ "[Wheat].Phenology.Emerging.DateToProgress",#2/3
+      between(Wheat.Phenology.Stage, 5, 6) ~ "[Wheat].Phenology.SpikeletsDifferentiating.DateToProgress",#4/5
+      between(Wheat.Phenology.Stage, 6, 7) ~ "[Wheat].Phenology.StemElongating.DateToProgress",#5/6
+      between(Wheat.Phenology.Stage, 7, 8) ~ "[Wheat].Phenology.Heading.DateToProgress",#6/7
+      between(Wheat.Phenology.Stage, 8, 9) ~ "[Wheat].Phenology.Flowering.DateToProgress",#7/8
+      # between(Wheat.Phenology.Stage, 2, 3) ~ "[Wheat].Phenology.Emerging.DateToProgress",#2/3
+      # between(Wheat.Phenology.Stage, 4, 5) ~ "[Wheat].Phenology.SpikeletsDifferentiating.DateToProgress",#4/5
+      # between(Wheat.Phenology.Stage, 5, 6) ~ "[Wheat].Phenology.StemElongating.DateToProgress",#5/6
+      # between(Wheat.Phenology.Stage, 6, 7) ~ "[Wheat].Phenology.Heading.DateToProgress",#6/7
+      # between(Wheat.Phenology.Stage, 7, 8) ~ "[Wheat].Phenology.Flowering.DateToProgress",#7/8
       TRUE ~ "Unknown" # Catch-all for any other values
     )) %>%
   filter(ParameterName != "Unknown")
@@ -151,7 +151,54 @@ df_result_apsim <- df_result %>%
 
 print(df_result_apsim)
 
-write.csv(df_result_apsim , 
+
+write.csv(df_result_apsim, 
+          file.path(folder_wheat_path,
+                    "DookiePhenoDatesInput_FromSim.csv"),
+          row.names = FALSE, quote = FALSE)
+
+
+#------------------------------------------------
+#--- Merge observation dates when available -----
+#-----------------------------------------------
+# read file
+df_obs_dates <- read.csv2(file.path(folder_wheat_path, "ObservedPhenoDates.csv"), 
+                              header = TRUE, stringsAsFactors = TRUE, sep = ",",
+                          , check.names = FALSE)
+
+# do the merge (use observations when available)
+df_result_apsim_with_obs <- df_result_apsim %>%
+  full_join(df_obs_dates, by = "SimulationName", suffix = c("_A", "_B")) %>%
+  mutate(
+    `[Wheat].Phenology.Emerging.DateToProgress` =
+      coalesce(`[Wheat].Phenology.Emerging.DateToProgress_B`,
+               `[Wheat].Phenology.Emerging.DateToProgress_A`),
+    
+    `[Wheat].Phenology.StemElongating.DateToProgress` =
+      coalesce(`[Wheat].Phenology.StemElongating.DateToProgress_B`,
+               `[Wheat].Phenology.StemElongating.DateToProgress_A`),
+    
+    `[Wheat].Phenology.Flowering.DateToProgress` =
+      coalesce(`[Wheat].Phenology.Flowering.DateToProgress_B`,
+               `[Wheat].Phenology.Flowering.DateToProgress_A`)
+  ) %>%
+  # remove only the temporary columns ending with _A and _B
+  select(
+    -ends_with("_A"),
+    -ends_with("_B")
+  ) %>%
+  select(
+    contains("Simulation"),
+    contains("Emerging"),
+    contains("Spike"),
+    contains("Stem"),
+    contains("Heading"),
+    contains("Flowering"),
+    everything()
+  )
+
+
+write.csv(df_result_apsim_with_obs, 
           file.path(folder_wheat_path,
                     "DookiePhenoDatesInput.csv"),
           row.names = FALSE, quote = FALSE)
