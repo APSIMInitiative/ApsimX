@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using APSIM.Core;
 using Models.Core;
 using StdUnits;
-using static Models.Core.Overrides;
 
 namespace Models.GrazPlan
 {
@@ -154,7 +154,7 @@ namespace Models.GrazPlan
         /// <param name="name">Name of the animal parameter set.</param>
         /// <param name="animalTypeString">The animal type.</param>
         /// <param name="parameters">The parameter values to apply.</param>
-        public Genotype(string name, string animalTypeString, List<Override> parameters)
+        public Genotype(string name, string animalTypeString, List<IModelCommand> parameters)
         {
             for (int i = 0; i < ConceiveSigs.Length; i++)
                 ConceiveSigs[i] = new double[2];
@@ -164,7 +164,7 @@ namespace Models.GrazPlan
             else if (animalTypeString == "sheep")
                 Animal = GrazType.AnimalType.Sheep;
             Node = APSIM.Core.Node.Create(this);
-            Overrides.Apply(this, parameters);
+            CommandProcessor.Run(parameters, this, runner: null);
             PotFleeceWt = FleeceRatio * BreedSRW;
             SetPeakMilk(IntakeC[11] * BreedSRW);
         }

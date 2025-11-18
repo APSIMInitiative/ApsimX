@@ -2,33 +2,30 @@ using System.Text.RegularExpressions;
 
 namespace APSIM.Core;
 
-internal partial class AddCommand: IModelCommand
+public partial class ReplaceCommand: IModelCommand
 {
     /// <summary>
-    /// Create an add command.
+    /// Create a replace command.
     /// </summary>
     /// <param name="command">The command to parse.</param>
     /// <param name="relativeTo">The node that owns the command string.</param>
     /// <param name="relativeToDirectory">Directory name that the command filenames are relative to</param>
     /// <returns></returns>
     /// <remarks>
-    /// add new Report to [Zone]
-    /// add Report to [Zone] name MyReport
-    /// add Report to all [Zone]
-    /// add [Report] from anotherfile.apsimx to [Zone]
+    /// replace [Report] with NewReport name ReportWithNewName
+    /// replace all [Report] with NewReport name ReportWithNewName
     /// </remarks>
     public static IModelCommand Create(string command, INodeModel relativeTo, string relativeToDirectory)
     {
         string modelNameWithBrackets = @"[\w\d\[\]\.]+";
-        string modelNamePattern = @"[\w\d]+";
         string fileNamePattern = @"[\w\d-_\.\\:/]+";
+        string modelNamePattern = @"[\w\d]+";
 
-        string pattern = $@"add (?<new>new)*" + @"\s*" +
-                         $@"(?<modelname>{modelNameWithBrackets})" + @"\s+" +
-                         $@"(?:from\s+(?<filename>{fileNamePattern})\s+)*" +
-                         $@"to\s+" +
-                         $@"(?<all>all)*\s*" +
-                         $@"(?<topath>{modelNameWithBrackets})\s*" +
+        string pattern = $@"replace (?<all>all)*\s*" +
+                         $@"(?<oldmodelpath>{modelNameWithBrackets})" + @"\s+" +
+                         $@"with\s+" +
+                         $@"(?<newmodelpath>{modelNameWithBrackets})\s*" +
+                         $@"(?:from\s+(?<filename>{fileNamePattern}))*\s*" +
                          $@"(?:name\s+(?<name>{modelNamePattern}))*";
 
         Match match;
@@ -37,59 +34,52 @@ internal partial class AddCommand: IModelCommand
             throw new Exception($"Invalid command: {command}");
 
         IModelReference modelReference;
-        if (match.Groups["new"]?.ToString() == "new")
-            modelReference = new NewModelReference(match.Groups["modelname"]?.ToString());
-        else if (!string.IsNullOrEmpty(match.Groups["filename"]?.ToString()))
+        if (!string.IsNullOrEmpty(match.Groups["filename"]?.ToString()))
         {
             // If filename is relative, make it absolute
             string fileName = match.Groups["filename"].ToString();
             if (relativeToDirectory != null)
                 fileName = Path.GetFullPath(fileName, relativeToDirectory);
-            modelReference = new ModelInFileReference(fileName, match.Groups["modelname"]?.ToString());
+            modelReference = new ModelInFileReference(fileName, match.Groups["newmodelpath"]?.ToString());
         }
         else
         {
-            string modelName = match.Groups["modelname"].ToString().Trim();
-            if (!modelName.StartsWith('[') && !modelName.EndsWith(']'))
-                modelName = $"[{modelName}]";
-            modelReference = new ModelLocatorReference(relativeTo, modelName);
+            string newModelPath = match.Groups["newmodelpath"].ToString().Trim();
+            if (!newModelPath.StartsWith('[') && !newModelPath.EndsWith(']'))
+                newModelPath = $"[{newModelPath}]";
+            modelReference = new ModelLocatorReference(relativeTo, newModelPath);
         }
 
-        return new AddCommand(modelReference,
-                              toPath: match.Groups["topath"]?.ToString(),
-                              multiple: match.Groups["all"].Success,
-                              newName: match.Groups["name"]?.ToString());
+        return new ReplaceCommand(modelReference,
+                                  replacementPath: match.Groups["oldmodelpath"]?.ToString(),
+                                  multiple: match.Groups["all"].Success,
+                                  MatchType.Name,
+                                  newName: match.Groups["name"].ToString());
     }
 
     /// <summary>
-    /// Convert an AddCommand instance to a string.
+    /// Convert an ReplaceCommand instance to a string.
     /// </summary>
     /// <returns>A command language string.</returns>
     public override string ToString()
     {
-        List<string> parts = ["add"];
+        List<string> parts = ["replace"];
+
+        if (multiple)
+            parts.Add("all");
+
+        parts.Add(replacementPath);
+
+        parts.Add("with");
 
         if (modelReference is ModelLocatorReference childModelReference)
             parts.Add(childModelReference.modelName);
-        else if (modelReference is NewModelReference newModelReference)
-        {
-            parts.Add("new");
-            parts.Add(newModelReference.newModelType);
-        }
         else if (modelReference is ModelInFileReference modelInFileReference)
         {
             parts.Add(modelInFileReference.modelName);
             parts.Add("from");
             parts.Add(modelInFileReference.fileName);
         }
-
-        parts.Add("to");
-
-        if (multiple)
-            parts.Add("all");
-
-        parts.Add(toPath);
-
         if (!string.IsNullOrEmpty(newName))
         {
             parts.Add("name");
