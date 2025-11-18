@@ -13764,7 +13764,7 @@
                 },
                 {
                   "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
-                  "ParameterFile": "..\\inputs\\DookiePhenoDatesInput_OBS.csv",
+                  "ParameterFile": "..\\inputs\\DookiePhenoDatesInput_SIM.csv",
                   "SetEventName": "[Plant].PlantSowing",
                   "Name": "SetPhenoDatesExternally",
                   "ResourceName": null,
@@ -17684,7 +17684,7 @@
                 },
                 {
                   "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
-                  "ParameterFile": "..\\inputs\\DookiePhenoDatesInput_OBS.csv",
+                  "ParameterFile": "..\\inputs\\DookiePhenoDatesInput_SIM.csv",
                   "SetEventName": "[Plant].PlantSowing",
                   "Name": "SetPhenoDatesExternally",
                   "ResourceName": null,
