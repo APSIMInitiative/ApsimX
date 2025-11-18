@@ -1,9 +1,18 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 205,
+  "Version": 206,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
+    {
+      "$type": "Models.Memo, Models",
+      "Text": "This file contains a series of simulations that gradualy increase in complexity, demonstrating the diffent ways the SCRUM model can be used in simulations.  \nWork your way through each simulatoin from top to bottom, read the \"Description Memo\" in each simulation for further information.   Try making small changes to the parameters on the SCRUMCropInstance and Manager models and see how they change simulation results. \n",
+      "Name": "Instructions",
+      "ResourceName": null,
+      "Children": [],
+      "Enabled": true,
+      "ReadOnly": false
+    },
     {
       "$type": "Models.Storage.DataStore, Models",
       "CustomFileName": null,
@@ -21,7 +30,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "This example runs scrum in the simplest way.   The necessary components in the \"Field\" are:\n* A PMF configured model called __\"SCRUM\"__ \n\t* This provides the generic crop model mechanisum but has no setable components.  \n\t* Right click the SCRUM model and select \"Show Model Structure\"  This allows you to review the structure and coefficient values of the SCRUM model.  Note that any parameters with a \"Parameters set at establishment\" memo on them are not defined in the models configuration.  Instead they set by the user in a SCRUMCropInstance.\n* A SCRUMCropInstance, named __\"exampleSCRUMCropInstance\"__. \n\t* This is where parameters are set to represent specific Crops/Cultivars.\n\t* Parameter values from this instance are set into the SCRUM model when it is established giving freedom (and responsibility) to the user to customise crops.\n\t* The name of this model component is arbitary.\n\t* Any number of SCRUMCropInstances can be included in each simulation and configured to represent different crops\n* A manager model called __\"EstablishCropInstance\"__ that does the equivlent job to sowing for other crop models.  The main components of this scrip are:\n\t* The first drop down on the parameter tab __\"SCRUMCropInstance to establish\"__ gives a list of all the SCRUMCropInstances in the simulation and assigns the selected name to the  SCRUMCropInstanceToEstablish property on the script tab\n\t* The first line of script reproduced below (about line 120) links the \"currentCrop\" to the SCRUMCropInstance identified by the SCRUMCropInstanceToEstablish parameter set above\n\t* the next line (about lin 121) instructs the currentCrop to establish and passes in __\"management\"__ parameters\n\t\t* Line 121 sits inside an if statement that is only entered on the __\"Establishment date\"__ set on the properties tab\n\t\t* __\"management\"__ parameters is a data class that contains all the parameters set on the parameters tab of this script \n\t\t* A key feature of SCRUM is that we specify the potential yield and harvest date (or Tt to harvest) when the crop is established\n~~~\nScrumCropInstance currentCrop =   Structure.FindChild<ScrumCropInstance>(SCRUMCropInstanceToEstablish, recurse: true, relativeTo: (INodeModel)zone);\ncurrentCrop.Establish(management);\n~~~\t\n\n\nThere is an important consideraction for Soil.Physical.SCRUMSoil.kl parameter when using SCRUM.  __Simulations do not respond to kl values set under the physical node__.  This is because SCRUM can represent different crops with a wide range of root characteristics in the same simulation.  AS such it is not appropriate to have a single set of KL values for all SCRUMCropInstances.  Instead we set the KL in the top soil and the maximum rooting depth for each SCRUMCropInstance.  The SCRUM model then sets its KL in the soil assuming an exponential decline from the specified value in the top layer to zero below maximum rooting depth.       \n\n",
+          "Text": "This example runs scrum in the simplest way.   The necessary components in the \"Field\" are:\n* A PMF configured model called __\"SCRUM\"__ \n\t* This provides the generic crop model mechanisum but has no setable components.  \n\t* Right click the SCRUM model and select \"Show Model Structure\"  This allows you to review the structure and coefficient values of the SCRUM model.  Note that any parameters with a \"Parameters set at establishment\" memo on them are not defined in the models configuration.  Instead they set by the user in a SCRUMCropInstance.\n* A SCRUMCropInstance, named __\"exampleSCRUMCropInstance\"__. \n\t* This is where parameters are set to represent specific Crops/Cultivars.\n\t* Parameter values from this instance are set into the SCRUM model when it is established giving freedom (and responsibility) to the user to customise crops.\n* A manager model called __\"EstablishCropInstance\"__ that does the equivlent job to sowing for other crop models.  The main components of this scrip are:\n\t* The first line of script reproduced below (about line 120) links the \"currentCrop\" to the SCRUMCropInstance named \"exampleScrumCropInstance\"\n\t* the next line (about lin 121) instructs the currentCrop to establish and passes in __\"management\"__ parameters\n\t\t* Line 121 sits inside an if statement that is only entered on the __\"Establishment date\"__ set on the properties tab\n\t\t* __\"management\"__ parameters is a data class that contains all the parameters set on the parameters tab of this script \n\t\t* A key feature of SCRUM is that we specify the potential yield and harvest date (or Tt to harvest) when the crop is established\n~~~\nScrumCropInstance currentCrop =   Structure.FindChild<ScrumCropInstance>(\"exampleScrumCropInstance\", recurse: true, relativeTo: (INodeModel)zone);\ncurrentCrop.Establish(management);\n~~~\t\n\n\nThere is an important consideraction for Soil.Physical.SCRUMSoil.kl parameter when using SCRUM.  __Simulations do not respond to kl values set under the physical node__.  This is because SCRUM can represent different crops with a wide range of root characteristics in the same simulation.  As such it is not appropriate to have a single set of KL values for all SCRUMCropInstances.  Instead we set the KL in the top soil and the maximum rooting depth for each SCRUMCropInstance.  The SCRUM model then sets its KL in the soil assuming an exponential decline from the specified value in the top layer to zero below maximum rooting depth.       \n\n",
           "Name": "Description",
           "ResourceName": null,
           "Children": [],
@@ -139,18 +148,11 @@
                 "        ",
                 "        public IStructure Structure { private get; set; }",
                 "",
-                "        [Separator(\"Define the SCRUM crop to plant and its basic management\")]",
-                "",
-                "        /// <summary>SCRUM crop to stablish</summary>",
-                "        [Description(\"SCRUMCropInstance to establish:\")]",
-                "        [Display(Type = DisplayType.SCRUMcropName)]",
-                "        public string SCRUMCropInstanceToEstablish { get; set; }",
-                "",
                 "        [Separator(\"Specify establishment and harvest conditions for this crop\")]",
                 "",
                 "        /// <summary>Date to establishment the crop</summary>",
                 "        [Description(\"Establishment date:\")]",
-                "        public string[] EstablishDate { get; set; }",
+                "        public DateTime EstablishDate { get; set; }",
                 "",
                 "        /// <summary>Stages at which the SCRUM is established</summary>",
                 "        [Description(\"Choose the establishment stage\")]",
@@ -158,7 +160,7 @@
                 "        public string EstablishStage {get; set;}",
                 "",
                 "        /// <summary>Depth at which the crop/seeds are planted.</summary>",
-                "        [Description(\" Planting depth (mm):\")]",
+                "        [Description(\"Planting depth (mm):\")]",
                 "        public double PlantingDepth { get; set; }",
                 "",
                 "        /// <summary>Choice on how the duration of crop is defined</summary>",
@@ -169,12 +171,12 @@
                 "        private bool isThermalTimeDefined { get { return HarvestTimeOption == HarvestTimingOption.SettingThermalTime; } }",
                 "",
                 "        /// <summary>Date to establishment the crop</summary>",
-                "        [Description(\"  Harvest date (dd/mm/yyyy):\")]",
+                "        [Description(\"Harvest date (dd/mm/yyyy):\")]",
                 "        [Display(VisibleCallback = \"isHarvestDateDefined\")]",
                 "        public DateTime HarvestDate { get; set; }",
                 "",
                 "        /// <summary>Thermal time from establishment to harvest (if blank or zero must specify harvest date)</summary>",
-                "        [Description(\"  Thermal time from establishment to harvest (oCd):\")]",
+                "        [Description(\"Thermal time from establishment to harvest (oCd):\")]",
                 "        [Display(VisibleCallback = \"isThermalTimeDefined\")]",
                 "        public double Tt_EstablishToHarvest { get; set; }",
                 "",
@@ -213,17 +215,14 @@
                 "        [EventSubscribe(\"DoManagement\")]",
                 "        private void OnDoManagement(object sender, EventArgs e)",
                 "        {",
-                "            foreach (string date in EstablishDate)",
-                "                {",
-                "                    DateTime estabDate = DateUtilities.GetDate(date, clock.Today.Year);",
-                "                    if (DateTime.Compare(clock.Today, estabDate) == 0)",
+                "            if (DateTime.Compare(clock.Today, EstablishDate) == 0)",
                 "                    {",
                 "                        if (isHarvestDateDefined && (HarvestDate <= clock.Today))",
                 "                        {",
                 "                            throw new Exception(\"Harvest date is earlier than establishment date\");",
                 "                        }",
                 "",
-                "                        management = new ScrumManagementInstance(cropName: SCRUMCropInstanceToEstablish,",
+                "                        management = new ScrumManagementInstance(cropName: \"exampleScrumCropInstance\",",
                 "                                                                 establishDate: clock.Today,",
                 "                                                                 establishStage: EstablishStage,",
                 "                                                                 plantingDepth: PlantingDepth,",
@@ -235,10 +234,9 @@
                 "                                                                 residueRemoval: ResidueRemoval,",
                 "                                                                 residueIncorporation: ResidueIncorporation,",
                 "                                                                 residueIncorporationDepth: ResidueIncorporationDepth);",
-                "                        ScrumCropInstance currentCrop =   Structure.FindChild<ScrumCropInstance>(SCRUMCropInstanceToEstablish, recurse: true, relativeTo: (INodeModel)zone);",
+                "                        ScrumCropInstance currentCrop =   Structure.FindChild<ScrumCropInstance>(\"exampleScrumCropInstance\", recurse: true, relativeTo: (INodeModel)zone);",
                 "                        currentCrop.Establish(management);",
                 "                    }",
-                "               }",
                 "        }",
                 "",
                 "        /// <summary>Flag how harvest time is defined.</summary>",
@@ -255,12 +253,8 @@
               ],
               "Parameters": [
                 {
-                  "Key": "SCRUMCropInstanceToEstablish",
-                  "Value": "exampleScrumCropInstance"
-                },
-                {
                   "Key": "EstablishDate",
-                  "Value": "15-Sep"
+                  "Value": "09/01/2000 00:00:00"
                 },
                 {
                   "Key": "EstablishStage",
@@ -272,11 +266,11 @@
                 },
                 {
                   "Key": "HarvestTimeOption",
-                  "Value": "SettingThermalTime"
+                  "Value": "SettingDate"
                 },
                 {
                   "Key": "HarvestDate",
-                  "Value": "01/01/0001 00:00:00"
+                  "Value": "02/15/2001 00:00:00"
                 },
                 {
                   "Key": "Tt_EstablishToHarvest",
@@ -3724,7 +3718,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "This example specifies a SCRUMCropInstance and sows it on the same date each year.   The necessary components in the Field are:\n* the SCRUM model\n* A SCRUMCropInstance, named SCRUMCereal in this case but the name can be anything\n* A manager model called \"Sow Cereal same date each year\" that sets the management information for SCRUMCereal and establishs it on the same date each year.  \n",
+          "Text": "This example is similar to the first but conducts repeat sowings of a cereal crop using SCRUM.   The necessary components in the \"Field\" are:\n* A PMF configured model called __\"SCRUM\"__ \n* A SCRUMCropInstance, named __\"SCRUMCereal\"__. \n\t* Parameters are set to represent a generic cereal crop.\n* A manager model called __\"Sow Cereal Multiple dates\"__ that establishes the SCRUMCereal crop each time the specified establishment dates occur.\n\n",
           "Name": "Description",
           "ResourceName": null,
           "Children": [],
@@ -3744,8 +3738,8 @@
         },
         {
           "$type": "Models.Clock, Models",
-          "Start": "1998-10-14T00:00:00",
-          "End": "2006-03-01T00:00:00",
+          "Start": "1999-06-14T00:00:00",
+          "End": "2001-09-01T00:00:00",
           "Name": "Clock",
           "ResourceName": null,
           "Children": [],
@@ -3842,13 +3836,6 @@
                 "        ",
                 "        public IStructure Structure { private get; set; }",
                 "",
-                "        [Separator(\"Define the SCRUM crop to plant and its basic management\")]",
-                "",
-                "        /// <summary>SCRUM crop to stablish</summary>",
-                "        [Description(\"Chose the crop to plant:\")]",
-                "        [Display(Type = DisplayType.SCRUMcropName)]",
-                "        public string CropName { get; set; }",
-                "",
                 "        [Separator(\"Specify establishment and harvest conditions for this crop\")]",
                 "",
                 "        /// <summary>Date to establishment the crop</summary>",
@@ -3927,7 +3914,7 @@
                 "                            throw new Exception(\"Harvest date is earlier than establishment date\");",
                 "                        }",
                 "",
-                "                        management = new ScrumManagementInstance(cropName: CropName,",
+                "                        management = new ScrumManagementInstance(cropName: \"ScrumCereal\",",
                 "                                                                 establishDate: clock.Today,",
                 "                                                                 establishStage: EstablishStage,",
                 "                                                                 plantingDepth: PlantingDepth,",
@@ -3939,7 +3926,7 @@
                 "                                                                 residueRemoval: ResidueRemoval,",
                 "                                                                 residueIncorporation: ResidueIncorporation,",
                 "                                                                 residueIncorporationDepth: ResidueIncorporationDepth);",
-                "                        ScrumCropInstance currentCrop =   Structure.FindChild<ScrumCropInstance>(CropName, recurse: true, relativeTo: (INodeModel)zone);",
+                "                        ScrumCropInstance currentCrop =   Structure.FindChild<ScrumCropInstance>(\"ScrumCereal\", recurse: true, relativeTo: (INodeModel)zone);",
                 "                        currentCrop.Establish(management);",
                 "                    }",
                 "            }",
@@ -3959,12 +3946,8 @@
               ],
               "Parameters": [
                 {
-                  "Key": "CropName",
-                  "Value": "ScrumCereal"
-                },
-                {
                   "Key": "EstablishDates",
-                  "Value": "15-sep-1999, 1-10-2001, 15/08/2003"
+                  "Value": "15-sep-1999, 1-4-2000, 15/11/2000"
                 },
                 {
                   "Key": "EstablishStage",
@@ -3984,7 +3967,7 @@
                 },
                 {
                   "Key": "Tt_EstablishToHarvest",
-                  "Value": "1000"
+                  "Value": "1500"
                 },
                 {
                   "Key": "HarvestStage",
@@ -7188,7 +7171,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "This example specifies a simple rotation of two seperate crops simulated using SCRUM.  The necessary components in the Field are:\n* the SCRUM model\n* A SCRUMCropInstance (SCRUMCereal) that parameterises the first crop and a manager script (\"Sow Cereal on Oct2000 harvest apr2001\") that sets the management informaiton for this crop and establishes it on the appropriate date.\n* A SCRUMCropInstance (SCRUMLegume) that parameterises the second crop and a manager script (\"Sow legume Jun2001 harvest after 600 oCd\") that sets the management informaiton for this crop and establishes it on the appropriate date.\n",
+          "Text": "This example shows a way to set up a rotation of different crops using SCRUM:\n* A PMF configured model called __\"SCRUM\"__ \n* Two SCRUMCropInstances, named __\"SCRUMLegume\"__ and __\"SCRUMCereal\"__. \n\t* Parameter values are set to represent a typical Cereal and Legume respectively.\n\t* The name of each SCRUMCropInstance is arbitary and can whatever you want.\n\t* Any number of SCRUMCropInstances can be included in each simulation and configured to represent different crops\n* Two manager models called __\"Sow Cereal on Oct2000 harvest apr2001\"__ and __\"Sow legume Jun2001 harvest after 600 oCd\"__.  These manager scripts are similar to those in the previous experiments but a CropName variable is declaired which provides the drop down box on the parameters tab to \"Chose the crop to plant\".  This provides a list of all the SCRUMCropInstances in the simulation so you can choose which is to be sown by the associated manager model.\n\n",
           "Name": "Description",
           "ResourceName": null,
           "Children": [],
@@ -11060,16 +11043,54 @@
       "ResourceName": null,
       "Children": [
         {
+          "$type": "Models.Memo, Models",
+          "Text": "This example demonstrates how SCRUM models can be used in combination with other APSIM models to create crop rotations.  In this example we are using a conditional planting rule that will sow the wheat model within a specified date window if soil moisture and rainfall conditions are satisifactory.  It has an additional planting rule that will sow a SCRUM crop instance within a specified date window if soil moisture and rainfall conditions are satisfactory.  \nIn this example we have set up an experiment that creates rotations of either continious wheat with fertiliser applied at planting or wheat in rotation with the SCRUM legume and no fertiliser applied.  The SCRUM legume is parameterised with a harvest index of 0.99 and 100% of product left in the field at harvest to simulate a green manure where all N from the leguem remains in the field.  \n",
+          "Name": "Description",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.Factorial.Factors, Models",
           "Name": "Factors",
           "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Factorial.Factor, Models",
-              "Specification": "[Sow SCRUM legume].Script.IncludeSCRUM = true,false",
-              "Name": "IncludeLegume",
+              "Specification": "",
+              "Name": "System",
               "ResourceName": null,
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Factorial.CompositeFactor, Models",
+                  "Specifications": [
+                    "[Sow SCRUM legume].Script.IncludeSCRUM = true",
+                    "[Fertilise at sowing].Script.Amount = 0"
+                  ],
+                  "Paths": null,
+                  "Values": null,
+                  "Name": "Legume",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.CompositeFactor, Models",
+                  "Specifications": [
+                    "[Sow SCRUM legume].Script.IncludeSCRUM = false",
+                    "[Fertilise at sowing].Script.Amount = 150"
+                  ],
+                  "Paths": null,
+                  "Values": null,
+                  "Name": "Fertiliser",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             }
@@ -11163,7 +11184,9 @@
                     "[Wheat].Grain.Total.Wt",
                     "[Wheat].Grain.Total.N",
                     "[Wheat].Total.Wt",
+                    "[Wheat].Total.N * 10 as WheatN",
                     "sum([ISoilWater].ESW)",
+                    "sum([Soil].Nutrient.MineralN)",
                     "[Wheat].LAI",
                     "[SCRUM].Phenology.Stage",
                     "[SCRUM].Phenology.CurrentStageName",
@@ -11171,7 +11194,9 @@
                     "[SCRUM].AboveGround.N",
                     "[SCRUM].Product.Total.Wt*10 as Yield",
                     "[SCRUM].Product.Total.N",
-                    "[SCRUM].Total.Wt"
+                    "[SCRUM].Total.Wt",
+                    "[SCRUM].Total.N * 10 as LegumeN",
+                    "[SurfaceOrganicMatter].N"
                   ],
                   "EventNames": [
                     "[Clock].EndOfDay"
@@ -12006,7 +12031,7 @@
                     },
                     {
                       "Key": "Amount",
-                      "Value": "160"
+                      "Value": "50"
                     }
                   ],
                   "Name": "Fertilise at sowing",
@@ -12069,17 +12094,17 @@
                 },
                 {
                   "$type": "Models.PMF.SimplePlantModels.ScrumCropInstance, Models",
-                  "HarvestIndex": 0.45,
-                  "MoistureContent": 0.14,
+                  "HarvestIndex": 0.99,
+                  "MoistureContent": 0.0,
                   "RootProportion": 0.1,
                   "MaxRootDepth": 1005.0,
                   "SurfaceKL": 0.1,
                   "MaxHeight": 700.0,
                   "MaxCover": 0.9,
                   "ExtinctionCoefficient": 0.55,
-                  "TypicalHarvestStage": "Ripe",
+                  "TypicalHarvestStage": "EarlyReproductive",
                   "SeedlingNConc": 0.05,
-                  "ProductHarvestNConc": 0.015,
+                  "ProductHarvestNConc": 0.025,
                   "StoverHarvestNConc": 0.01,
                   "RootNConc": 0.01,
                   "LegumeFactor": 1.0,
@@ -12299,7 +12324,7 @@
                     },
                     {
                       "Key": "MinRain",
-                      "Value": "15"
+                      "Value": "10"
                     },
                     {
                       "Key": "RainDays",
@@ -12315,7 +12340,7 @@
                     },
                     {
                       "Key": "HarvestTimeOption",
-                      "Value": "SettingDate"
+                      "Value": "SettingThermalTime"
                     },
                     {
                       "Key": "HarvestDate",
@@ -12323,19 +12348,19 @@
                     },
                     {
                       "Key": "Tt_EstablishToHarvest",
-                      "Value": "600"
+                      "Value": "1000"
                     },
                     {
                       "Key": "HarvestStage",
-                      "Value": "Ripe"
+                      "Value": "EarlyReproductive"
                     },
                     {
                       "Key": "ExpectedYield",
-                      "Value": "3"
+                      "Value": "6"
                     },
                     {
                       "Key": "FieldLoss",
-                      "Value": "0"
+                      "Value": "1"
                     },
                     {
                       "Key": "ResidueRemoval",
@@ -12396,7 +12421,7 @@
           "AnnotationLocation": 0,
           "DisabledSeries": [],
           "LegendOutsideGraph": false,
-          "Name": "Graph",
+          "Name": "SoilWater",
           "ResourceName": null,
           "Children": [
             {
@@ -12407,7 +12432,7 @@
               "ColourArgb": -16777216,
               "FactorToVaryColours": null,
               "FactorToVaryMarkers": null,
-              "FactorToVaryLines": "IncludeLegume",
+              "FactorToVaryLines": "System",
               "Marker": 11,
               "MarkerSize": 0,
               "Line": 0,
@@ -12436,7 +12461,7 @@
               "ColourArgb": -2793984,
               "FactorToVaryColours": null,
               "FactorToVaryMarkers": null,
-              "FactorToVaryLines": "IncludeLegume",
+              "FactorToVaryLines": "System",
               "Marker": 11,
               "MarkerSize": 0,
               "Line": 0,
@@ -12465,7 +12490,7 @@
               "ColourArgb": -16747854,
               "FactorToVaryColours": null,
               "FactorToVaryMarkers": null,
-              "FactorToVaryLines": "IncludeLegume",
+              "FactorToVaryLines": "System",
               "Marker": 11,
               "MarkerSize": 0,
               "Line": 0,
@@ -12481,6 +12506,258 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "ESW",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": "Date",
+              "Position": 3,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
+            },
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": null,
+              "Position": 0,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
+            }
+          ],
+          "LegendPosition": 0,
+          "LegendOrientation": 0,
+          "AnnotationLocation": 0,
+          "DisabledSeries": [],
+          "LegendOutsideGraph": false,
+          "Name": "SoilNitrogen",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16777216,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": "System",
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "Wheat.Total.Wt",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": true,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "WheatBiomass",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -2793984,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": "System",
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "SCRUM.Total.Wt",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": true,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "LegumeBiomass",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16747854,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": "System",
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "sum(Soil.Nutrient.MineralN)",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": true,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "ProfileN",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": "Date",
+              "Position": 3,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
+            },
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": null,
+              "Position": 0,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
+            }
+          ],
+          "LegendPosition": 0,
+          "LegendOrientation": 0,
+          "AnnotationLocation": 0,
+          "DisabledSeries": [],
+          "LegendOutsideGraph": false,
+          "Name": "SurfaceOMNitorgen",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16777216,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": "System",
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "WheatN",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": true,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "WheatN",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -2793984,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": "System",
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "LegumeN",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": true,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "LegumeN",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16747854,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": "System",
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "SurfaceOrganicMatter.N",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": true,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "SurfaceOMN",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
