@@ -237,7 +237,15 @@ namespace APSIM.Workflow
                         }
                     }
 
-                        foreach (Observations input in copiedSims.Node.FindAll<Observations>())
+                    List<string> allSheetNames = new List<string>();
+                    foreach (ExcelInput input in copiedSims.Node.FindAll<ExcelInput>())
+                    {
+                        foreach (string sheet in input.SheetNames)
+                            if (!allSheetNames.Contains(sheet))
+                                allSheetNames.Add(sheet);
+                                
+                        List<string> files = new List<string>();
+                        foreach (string file in input.FileNames)
                         {
                             if (!file.Contains("%root%"))
                                 files.Add(rootPath + file);
@@ -247,7 +255,7 @@ namespace APSIM.Workflow
                         input.FileNames = files.ToArray();
                     }
 
-                    foreach (ObservedInput input in copiedSims.Node.FindAll<ObservedInput>())
+                    foreach (Observations input in copiedSims.Node.FindAll<Observations>())
                     {
                         foreach (string sheet in input.SheetNames)
                             if (!allSheetNames.Contains(sheet))
