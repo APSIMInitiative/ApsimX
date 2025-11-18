@@ -13747,6 +13747,16 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
+                  "ParameterFile": "..\\inputs\\DookieWWHI2024_parameterOverwrites.csv",
+                  "SetEventName": "[Plant].Sowing",
+                  "Name": "SetPhenologyParams",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Report, Models",
                   "VariableNames": [
                     "[Clock].Today",
@@ -13757,16 +13767,6 @@
                   ],
                   "GroupByVariableName": null,
                   "Name": "ReportPhenoDates",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
-                  "ParameterFile": "..\\inputs\\DookiePhenoDatesInput.csv",
-                  "SetEventName": "[Plant].PlantSowing",
-                  "Name": "SetPhenoDatesExternally",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -17667,6 +17667,16 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
+                  "ParameterFile": "..\\inputs\\DookieEVA2024_parameterOverwrites.csv",
+                  "SetEventName": "[Plant].Sowing",
+                  "Name": "SetPhenologyParams",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Report, Models",
                   "VariableNames": [
                     "[Clock].Today",
@@ -17677,16 +17687,6 @@
                   ],
                   "GroupByVariableName": null,
                   "Name": "ReportPhenoDates",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
-                  "ParameterFile": "..\\inputs\\DookiePhenoDatesInput.csv",
-                  "SetEventName": "[Plant].PlantSowing",
-                  "Name": "SetPhenoDatesExternally",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
