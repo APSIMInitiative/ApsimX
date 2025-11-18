@@ -154,51 +154,52 @@ print(df_result_apsim)
 
 write.csv(df_result_apsim, 
           file.path(folder_wheat_path,
-                    "DookiePhenoDatesInput_FromSim.csv"),
+                    "DookiePhenoDatesInput_SIM.csv"),
           row.names = FALSE, quote = FALSE)
 
 
 #------------------------------------------------
 #--- Merge observation dates when available -----
 #-----------------------------------------------
-# read file
-df_obs_dates <- read.csv2(file.path(folder_wheat_path, "ObservedPhenoDates.csv"), 
-                              header = TRUE, stringsAsFactors = TRUE, sep = ",",
-                          , check.names = FALSE)
-
-# do the merge (use observations when available)
-df_result_apsim_with_obs <- df_result_apsim %>%
-  full_join(df_obs_dates, by = "SimulationName", suffix = c("_A", "_B")) %>%
-  mutate(
-    `[Wheat].Phenology.Emerging.DateToProgress` =
-      coalesce(`[Wheat].Phenology.Emerging.DateToProgress_B`,
-               `[Wheat].Phenology.Emerging.DateToProgress_A`),
-    
-    `[Wheat].Phenology.StemElongating.DateToProgress` =
-      coalesce(`[Wheat].Phenology.StemElongating.DateToProgress_B`,
-               `[Wheat].Phenology.StemElongating.DateToProgress_A`),
-    
-    `[Wheat].Phenology.Flowering.DateToProgress` =
-      coalesce(`[Wheat].Phenology.Flowering.DateToProgress_B`,
-               `[Wheat].Phenology.Flowering.DateToProgress_A`)
-  ) %>%
-  # remove only the temporary columns ending with _A and _B
-  select(
-    -ends_with("_A"),
-    -ends_with("_B")
-  ) %>%
-  select(
-    contains("Simulation"),
-    contains("Emerging"),
-    contains("Spike"),
-    contains("Stem"),
-    contains("Heading"),
-    contains("Flowering"),
-    everything()
-  )
-
-
-write.csv(df_result_apsim_with_obs, 
-          file.path(folder_wheat_path,
-                    "DookiePhenoDatesInput.csv"),
-          row.names = FALSE, quote = FALSE)
+# # read file
+# df_obs_dates <- read.csv2(file.path(folder_wheat_path, "ObservedPhenoDates.csv"), 
+#                               header = TRUE, stringsAsFactors = TRUE, sep = ",",
+#                           , check.names = FALSE)
+# 
+# # do the merge (use observations when available)
+# df_result_apsim_with_obs <- df_result_apsim %>%
+#   full_join(df_obs_dates, by = "SimulationName", suffix = c("_A", "_B")) %>%
+#   mutate(
+#     `[Wheat].Phenology.Emerging.DateToProgress` =
+#       coalesce(`[Wheat].Phenology.Emerging.DateToProgress_B`,
+#                `[Wheat].Phenology.Emerging.DateToProgress_A`),
+#     
+#     `[Wheat].Phenology.StemElongating.DateToProgress` =
+#       coalesce(`[Wheat].Phenology.StemElongating.DateToProgress_B`,
+#                `[Wheat].Phenology.StemElongating.DateToProgress_A`),
+#     
+#     `[Wheat].Phenology.Flowering.DateToProgress` =
+#       coalesce(`[Wheat].Phenology.Flowering.DateToProgress_B`,
+#                `[Wheat].Phenology.Flowering.DateToProgress_A`)
+#   ) %>%
+#   # remove only the temporary columns ending with _A and _B
+#   select(
+#     -ends_with("_A"),
+#     -ends_with("_B")
+#   ) %>%
+#   select(
+#     contains("Simulation"),
+#     contains("Emerging"),
+#     contains("Spike"),
+#     contains("Stem"),
+#     contains("Heading"),
+#     contains("Flowering"),
+#     everything()
+#   )
+# 
+# 
+# write.csv(df_result_apsim_with_obs, 
+#           file.path(folder_wheat_path,
+#                     "DookiePhenoDatesInput_WithObs.csv"),
+#                   #  "DookiePhenoDatesInput.csv"),
+#           row.names = FALSE, quote = FALSE)
