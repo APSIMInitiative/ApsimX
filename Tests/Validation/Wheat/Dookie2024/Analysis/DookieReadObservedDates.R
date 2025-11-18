@@ -41,8 +41,8 @@ process_worked_input <- function(filepath) {
 # Apply function to both files
 # -------------------------------------------------------------------
 
-file1 <- "C:/github/ApsimX/Tests/Validation/Wheat/Dookie2024/DookieEVA2024Pivot.xlsx"
-file2 <- "C:/github/ApsimX/Tests/Validation/Wheat/Dookie2024/DookieWWHI2024Pivot.xlsx"
+file1 <- "C:/github/ApsimX/Tests/Validation/Wheat/Dookie2024/DookieEVA2024.xlsx"
+file2 <- "C:/github/ApsimX/Tests/Validation/Wheat/Dookie2024/DookieWWHI2024.xlsx"
 
 df_A <- process_worked_input(file1)
 df_B <- process_worked_input(file2)
