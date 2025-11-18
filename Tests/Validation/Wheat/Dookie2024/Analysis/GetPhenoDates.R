@@ -162,7 +162,7 @@ write.csv(df_result_apsim,
 #--- Merge observation dates when available -----
 #-----------------------------------------------
 # # read file
-# df_obs_dates <- read.csv2(file.path(folder_wheat_path, "ObservedPhenoDates.csv"), 
+# df_obs_dates <- read.csv2(file.path(folder_wheat_path, "DookiePhenoDatesInput_OBS.csv"),
 #                               header = TRUE, stringsAsFactors = TRUE, sep = ",",
 #                           , check.names = FALSE)
 # 
@@ -173,11 +173,11 @@ write.csv(df_result_apsim,
 #     `[Wheat].Phenology.Emerging.DateToProgress` =
 #       coalesce(`[Wheat].Phenology.Emerging.DateToProgress_B`,
 #                `[Wheat].Phenology.Emerging.DateToProgress_A`),
-#     
+# 
 #     `[Wheat].Phenology.StemElongating.DateToProgress` =
 #       coalesce(`[Wheat].Phenology.StemElongating.DateToProgress_B`,
 #                `[Wheat].Phenology.StemElongating.DateToProgress_A`),
-#     
+# 
 #     `[Wheat].Phenology.Flowering.DateToProgress` =
 #       coalesce(`[Wheat].Phenology.Flowering.DateToProgress_B`,
 #                `[Wheat].Phenology.Flowering.DateToProgress_A`)
@@ -195,11 +195,94 @@ write.csv(df_result_apsim,
 #     contains("Heading"),
 #     contains("Flowering"),
 #     everything()
-#   )
-# 
-# 
-# write.csv(df_result_apsim_with_obs, 
-#           file.path(folder_wheat_path,
-#                     "DookiePhenoDatesInput_WithObs.csv"),
-#                   #  "DookiePhenoDatesInput.csv"),
-#           row.names = FALSE, quote = FALSE)
+#   ) 
+
+# ---------------- Often we have Pheno stages in simulation running "ahead" of date of next observation
+# We fix this here by constraining the in between observation phases
+
+# midpoint function
+midpoint = function(a, b) as.Date(a + (b - a)/2)
+
+
+df_result_apsim_with_obs <- df_result_apsim %>%
+  full_join(df_obs_dates, by = "SimulationName", suffix = c("_A", "_B")) %>%
+  
+  # --------------------------------------------------------------
+# 1) Replace APSIM dates with observed dates where available
+# --------------------------------------------------------------
+mutate(
+  `[Wheat].Phenology.Emerging.DateToProgress` =
+    coalesce(`[Wheat].Phenology.Emerging.DateToProgress_B`,
+             `[Wheat].Phenology.Emerging.DateToProgress_A`),
+  
+  `[Wheat].Phenology.StemElongating.DateToProgress` =
+    coalesce(`[Wheat].Phenology.StemElongating.DateToProgress_B`,
+             `[Wheat].Phenology.StemElongating.DateToProgress_A`),
+  
+  `[Wheat].Phenology.Flowering.DateToProgress` =
+    coalesce(`[Wheat].Phenology.Flowering.DateToProgress_B`,
+             `[Wheat].Phenology.Flowering.DateToProgress_A`)
+) %>%
+  
+  # Remove A/B temporary duplicates
+  select(-ends_with("_A"), -ends_with("_B")) %>%
+  # order for checking
+  dplyr::select(
+    contains("Simulation"),
+    contains("Emerging"),
+    contains("Spike"),
+    contains("Stem"),
+    contains("Heading"),
+    contains("Flowering"),
+    everything()
+  ) %>%
+  
+  # --------------------------------------------------------------
+# 2) PHENOLOGY CONSISTENCY CHECK
+# --------------------------------------------------------------
+rowwise() %>%
+  mutate(
+    Spike_fixed = {
+      emerg <- as.Date(`[Wheat].Phenology.Emerging.DateToProgress`, format = "%d-%b-%Y") 
+      spike  <- as.Date(`[Wheat].Phenology.SpikeletsDifferentiating.DateToProgress`, format = "%d-%b-%Y")
+      stem   <- as.Date(`[Wheat].Phenology.StemElongating.DateToProgress`, format = "%d-%b-%Y")
+      if (!is.na(spike) && !is.na(stem) && spike > stem) midpoint(emerg,stem) else spike
+    },
+    Heading_fixed = {
+      stem   <- as.Date(`[Wheat].Phenology.StemElongating.DateToProgress`, format = "%d-%b-%Y")
+      heading   <- as.Date(`[Wheat].Phenology.Heading.DateToProgress`, format = "%d-%b-%Y")
+      flowering <- as.Date(`[Wheat].Phenology.Flowering.DateToProgress`, format = "%d-%b-%Y")
+      if (!is.na(heading) && !is.na(flowering) && heading > flowering) midpoint(stem,flowering) else heading
+    }
+  ) %>%
+  ungroup() %>%
+  
+  # Convert fixed dates back to the dd-mmm-yyyy format
+  mutate(
+    `[Wheat].Phenology.SpikeletsDifferentiating.DateToProgress` =
+      format(Spike_fixed, "%d-%b-%Y"),
+    `[Wheat].Phenology.Heading.DateToProgress` =
+      format(Heading_fixed, "%d-%b-%Y")
+  ) %>%
+  
+  # Drop helper columns
+  select(-Spike_fixed, -Heading_fixed) %>%
+  
+  # --------------------------------------------------------------
+# 3) Final ordering
+# --------------------------------------------------------------
+select(
+  contains("Simulation"),
+  contains("Emerging"),
+  contains("Spike"),
+  contains("Stem"),
+  contains("Heading"),
+  contains("Flowering"),
+  everything()
+)
+
+write.csv(df_result_apsim_with_obs,
+          file.path(folder_wheat_path,
+                    #  "DookiePhenoDatesInput_WithObs.csv"),
+                    "DookiePhenoDatesInput_HYB.csv"),
+          row.names = FALSE, quote = FALSE)
