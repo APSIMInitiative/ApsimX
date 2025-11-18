@@ -2601,7 +2601,7 @@ namespace Models.AgPasture
                 // {
                 //     phenologicStage = 0;
                 // }
-                // else if 
+                // else 
                 // {
                 //      phenologicStage = -1;
                 // }
@@ -2828,7 +2828,7 @@ namespace Models.AgPasture
                         SetEmergenceState();
                     }
                 }
-                else
+                else if (phenologicStage > 0)
                 {
                     // Evaluate tissue turnover and get remobilisation (C and N)
                     EvaluateTissueTurnoverRates();
