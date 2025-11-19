@@ -828,6 +828,29 @@ namespace Models.Core.Apsim710File
             return newNode;
         }
 
+        /// <summary>Convert an APSIM 7.10 XML string to a model.</summary>
+        /// <param name="xml">The string representing the new model</param>
+        /// <returns>The newly created model.</returns>
+        public static IModel StringToModel(string xml)
+        {
+            // Try the string as if it was an APSIM 7.10 xml string.
+            var xmlDocument = new XmlDocument();
+            xmlDocument.LoadXml("<Simulation>" + xml + "</Simulation>");
+            var importer = new Importer();
+            var rootNode = xmlDocument.DocumentElement as XmlNode;
+            var convertedNode = importer.AddComponent(rootNode.ChildNodes[0], ref rootNode);
+            rootNode.RemoveAll();
+            IModel newSimulationModel = null;
+            if (convertedNode != null)
+            {
+                rootNode.AppendChild(convertedNode);
+                newSimulationModel = FileFormat.ReadFromString<IModel>(rootNode.OuterXml).Model as IModel;
+            }
+            if (newSimulationModel == null || newSimulationModel.Children.Count == 0)
+                throw new Exception("Cannot add model. Invalid model being added.");
+            return newSimulationModel.Children[0];
+        }
+
         /// <summary>
         /// Import the output component
         /// </summary>

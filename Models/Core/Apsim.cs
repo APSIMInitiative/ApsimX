@@ -120,6 +120,28 @@ namespace Models.Core
             return false;
         }
 
+        /// <summary>
+        /// Reconnect links a events.
+        /// </summary>
+        /// <param name="modelToAdd"></param>
+        public static void ReconnectLinksAndEvents(IModel modelToAdd)
+        {
+            Simulation parentSimulation = modelToAdd.Parent.Node.FindParent<Simulation>(recurse: true);
+            if (parentSimulation != null && parentSimulation.IsRunning)
+            {
+                var links = new Links(parentSimulation.ModelServices);
+                links.Resolve(modelToAdd, true, throwOnFail: true);
+                var events = new Events(modelToAdd);
+                events.ConnectEvents();
+
+                // Publish Commencing event
+                events.PublishToModelAndChildren("Commencing", new object[] { modelToAdd.Parent, new EventArgs() });
+
+                // Call StartOfSimulation events
+                events.PublishToModelAndChildren("StartOfSimulation", new object[] { modelToAdd.Parent, new EventArgs() });
+            }
+        }
+
         /// <summary>Get a list of allowable child models for the specified parent.</summary>
         /// <param name="parent">The parent model.</param>
         /// <returns>A list of allowable child models.</returns>

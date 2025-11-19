@@ -6,7 +6,6 @@ namespace Utility
     using Models;
     using Models.Climate;
     using Models.Core;
-    using Models.Core.ApsimFile;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using System;

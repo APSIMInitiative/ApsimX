@@ -57,6 +57,9 @@ public class Node : IStructure
         }
     }
 
+    /// <summary>Is the node readonly i.e. not changable.</summary>
+    public bool ReadOnly => Model == null ? false : Model.ReadOnly;
+
     /// <summary>Is initialisation underway?</summary>
     public bool IsInitialising { get; private set; }
 
@@ -87,6 +90,8 @@ public class Node : IStructure
     /// <param name="name">The new name for the node.</param>
     public void Rename(string name)
     {
+        if (ReadOnly)
+            throw new Exception($"Cannot rename model {Name}. It is readonly.");
         Name = name;
         Model.Rename(name);
         EnsureNameIsUnique();
@@ -376,6 +381,22 @@ public class Node : IStructure
     /// <param name="childModel">The child model to add.</param>
     public void AddChild(INodeModel childModel)
     {
+        if (ReadOnly)
+            throw new Exception($"Cannot add a child to model {Name}. It is readonly.");
+
+        // If this node is a Simulations node and the child model being added is a Simulations
+        // node then add the child of ChildModel instead. This is a common
+        // occurrence for model developers who copy a released
+        // model's resource file (JSON) into the GUI so it can be edited.
+        // When this happens, we want to add the first child of the
+        // simulations node (not the simulations node itself!).
+        if (childModel.Name is "Simulations")
+        {
+            childModel = childModel.GetChildren()?.First();
+            if (childModel == null)
+                throw new Exception($"Cannot add a child model named {childModel.Name}");
+        }
+
         var childNode = AddChildDontInitialise(childModel);
 
         // If we arean't in an initial setup phase then initialise all child models.
@@ -390,6 +411,9 @@ public class Node : IStructure
     /// <param name="childModel">The child model to remove.</param>
     public void RemoveChild(INodeModel childModel)
     {
+        if (ReadOnly)
+            throw new Exception($"Cannot remove a child from model {Name}. It is readonly.");
+
         // Remove the model from our children collection.
         Node nodeToRemove = children.Find(c => c.Model == childModel);
         if (nodeToRemove == null)
@@ -411,6 +435,9 @@ public class Node : IStructure
     /// <param name="newModel">The new child model to insert into same position.</param>
     public void ReplaceChild(INodeModel oldModel, INodeModel newModel)
     {
+        if (ReadOnly)
+            throw new Exception($"Cannot replace a child of model {Name}. It is readonly.");
+
         // Determine the position of the old model.
         Node oldChildNode = children.Find(c => c.Model == oldModel);
         if (oldChildNode == null)
@@ -429,6 +456,9 @@ public class Node : IStructure
     /// <param name="childModels">The child model to add.</param>
     public void InsertChild(int index, INodeModel childModel)
     {
+        if (ReadOnly)
+            throw new Exception($"Cannot insert a child of model {Name}. It is readonly.");
+
         // Add the child model to children collection. It will be added to the end of the collection.
         AddChild(childModel);
         Node childNode = children.Find(child => child.Model == childModel);
