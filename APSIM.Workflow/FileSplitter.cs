@@ -22,6 +22,7 @@ using APSIM.Core;
 using APSIM.Shared.Documentation.Extensions;
 using Models.PreSimulationTools;
 using System.Reflection;
+using Models.Utilities;
 
 namespace APSIM.Workflow
 {
@@ -218,69 +219,61 @@ namespace APSIM.Workflow
                     copiedSims.FileName = sims.FileName;
                     copiedSims.ResetSimulationFileNames();
 
-                    if (copyWeatherFiles)
+                    List<Weather> weathers = copiedSims.Node.FindAll<Weather>().ToList();
+                    foreach (Weather weather in weathers)
                     {
-                        string weatherFilesDirectory = subFolder + "WeatherFiles" + "/";
-                        Directory.CreateDirectory(weatherFilesDirectory);
-                        CopyWeatherFiles(copiedSims, weatherFilesDirectory);
-                    }
-                    else
-                    {
-                        List<Weather> weathers = copiedSims.Node.FindAll<Weather>().ToList();
-                        foreach (Weather weather in weathers)
+                        if (!weather.FileName.Contains("%root%"))
                         {
-                            if (!weather.FileName.Contains("%root%"))
-                            {
-                                weather.FileName = rootPath + weather.FileName;
-                            }
+                            weather.FileName = rootPath + weather.FileName;
                         }
                     }
 
-                    if (copyObservedData)
+                    List<SetModelParamsBySimulation> modelParams = copiedSims.Node.FindAll<SetModelParamsBySimulation>().ToList();
+                    foreach (SetModelParamsBySimulation modelParam in modelParams)
                     {
-                        string dataFilesDirectory = subFolder + "Data" + "/";
-                        Directory.CreateDirectory(dataFilesDirectory);
-                        CopyObservedData(copiedSims, folder, inputPath, dataFilesDirectory, logger);
+                        if (!modelParam.ParameterFile.Contains("%root%"))
+                        {
+                            modelParam.ParameterFile = rootPath + modelParam.ParameterFile;
+                        }
                     }
-                    else
-                    {
-                        List<string> allSheetNames = new List<string>();
-                        foreach (ExcelInput input in copiedSims.Node.FindAll<ExcelInput>())
-                        {
-                            foreach (string sheet in input.SheetNames)
-                                if (!allSheetNames.Contains(sheet))
-                                    allSheetNames.Add(sheet);
-                                    
-                            List<string> files = new List<string>();
-                            foreach (string file in input.FileNames)
-                            {
-                                if (!file.Contains("%root%"))
-                                    files.Add(rootPath + file);
-                                else
-                                    files.Add(file);
-                            }
-                            input.FileNames = files.ToArray();
-                        }
 
-                        foreach (ObservedInput input in copiedSims.Node.FindAll<ObservedInput>())
+                    List<string> allSheetNames = new List<string>();
+                    foreach (ExcelInput input in copiedSims.Node.FindAll<ExcelInput>())
+                    {
+                        foreach (string sheet in input.SheetNames)
+                            if (!allSheetNames.Contains(sheet))
+                                allSheetNames.Add(sheet);
+                                
+                        List<string> files = new List<string>();
+                        foreach (string file in input.FileNames)
                         {
-                            foreach (string sheet in input.SheetNames)
-                                if (!allSheetNames.Contains(sheet))
-                                    allSheetNames.Add(sheet);
-                            
-                            List<string> files = new List<string>();
-                            foreach (string file in input.FileNames)
-                            {
-                                if (!file.Contains("%root%"))
-                                    files.Add(rootPath + file);
-                                else
-                                    files.Add(file);
-                            }
-                            input.FileNames = files.ToArray();
+                            if (!file.Contains("%root%"))
+                                files.Add(rootPath + file);
+                            else
+                                files.Add(file);
                         }
+                        input.FileNames = files.ToArray();
+                    }
+
+                    foreach (ObservedInput input in copiedSims.Node.FindAll<ObservedInput>())
+                    {
+                        foreach (string sheet in input.SheetNames)
+                            if (!allSheetNames.Contains(sheet))
+                                allSheetNames.Add(sheet);
                         
-                        RemoveUnusedPO(copiedSims, allSheetNames);
+                        List<string> files = new List<string>();
+                        foreach (string file in input.FileNames)
+                        {
+                            if (!file.Contains("%root%"))
+                                files.Add(rootPath + file);
+                            else
+                                files.Add(file);
+                        }
+                        input.FileNames = files.ToArray();
                     }
+                    RemoveUnusedPO(copiedSims, allSheetNames);
+
+
 
                     copiedSims.FileName = fullFilePath;
                     copiedSims.ResetSimulationFileNames();

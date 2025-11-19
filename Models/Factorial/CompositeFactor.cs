@@ -6,7 +6,6 @@ using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.Run;
-using static Models.Core.Overrides;
 
 namespace Models.Factorial
 {
@@ -75,7 +74,16 @@ namespace Models.Factorial
 
             // Add a simulation override for each path / value combination.
             for (int i = 0; i != allPaths.Count; i++)
-                simulationDescription.AddOverride(new Override(allPaths[i], allValues[i], Override.MatchTypeEnum.NameAndType));
+            {
+                if (allValues[i] is INodeModel model)
+                    simulationDescription.AddOverride(new ReplaceCommand(new ModelReference(model),
+                                                                         allPaths[i],
+                                                                         multiple: true,
+                                                                         ReplaceCommand.MatchType.NameOrType,
+                                                                         newName: null));
+                else
+                    simulationDescription.AddOverride(new SetPropertyCommand(allPaths[i], "=", allValues[i].ToString(), multiple: true));
+            }
 
             if (!(Parent is Factors))
             {

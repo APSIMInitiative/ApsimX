@@ -29,8 +29,11 @@ public class CommandLanguageTests
     [TestCase("[Physical].LL15[3:5]=9")]
     [TestCase("[Physical].BD=")]
     [TestCase("[Physical].BD=null")]
+    [TestCase("replace all [Report] with [ChildReport]")]
+    [TestCase("replace all [Report] with [ChildReport] from anotherfile.apsimx")]
+    [TestCase("replace all [Report] with [ChildReport] from anotherfile.apsimx name NewName")]
 
-    public void EnsureAddLanguageParsingWorks(string commandString)
+    public void EnsureLanguageParsingWorks(string commandString)
     {
         var commands = CommandLanguage.StringToCommands([commandString], relativeTo: null, relativeToDirectory: null);
         Assert.That(commands.First().ToString(), Is.EqualTo(commandString));

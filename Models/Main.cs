@@ -362,14 +362,6 @@ namespace Models
             return runner;
         }
 
-        private static IModel ApplyConfigToApsimFile(string fileName, string configFilePath)
-        {
-            Simulations file = FileFormat.ReadFromFile<Simulations>(fileName).Model as Simulations;
-            var overrides = Overrides.ParseStrings(File.ReadAllLines(configFilePath));
-            Overrides.Apply(file, overrides);
-            return file;
-        }
-
         private static void ReplaceObsoleteArguments(ref string[] args)
         {
             if (args == null)

@@ -21,17 +21,28 @@ jobs:
       if: github.event.pull_request.merged == true
       runs-on: ubuntu-latest
       steps:
+      
       - name: Check for "resolves \#" in PR description
-        uses: Khan/pull-request-comment-trigger@v1.1.0
-        id: pr_check
+        uses: shanegenschaw/pull-request-comment-trigger@v3.0.0
+        id: pr_check_lowercase
         with:
           trigger: 'resolves #'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Check for "Resolves \#" in PR description
+        uses: shanegenschaw/pull-request-comment-trigger@v3.0.0
+        id: pr_check_captilised
+        with:
+          trigger: 'Resolves #'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+          
       - name: fail if no resolves found
-        if: steps.pr_check.outputs.triggered != 'true'
+        id: resolves_check
+        if: steps.pr_check_lowercase.outputs.triggered == 'false' && steps.pr_check_captilised.outputs.triggered == 'false'
         run: |
-          echo "No 'resolves #' found in PR description. Skipping release creation."
+          echo "No 'resolves #' or 'Resolves #' found in PR description. Skipping release creation."
           exit 1
 
     create-releases:
