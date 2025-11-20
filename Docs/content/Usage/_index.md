@@ -18,3 +18,4 @@ weight: 10
 * [Rotation Manager](/usage/rotationmanager)
 * [APSIM Server](/usage/server)
 * [Reports](/usage/report)
+* [Sensitivity Analysis](/usage/sensitivityanalysis)
