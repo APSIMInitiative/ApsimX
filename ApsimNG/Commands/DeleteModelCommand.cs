@@ -2,8 +2,6 @@
 {
     using Models.Core;
     using Interfaces;
-    using Models.Core.ApsimFile;
-    using Presenters;
     using System;
 
     /// <summary>This command deletes a model</summary>
@@ -50,7 +48,8 @@
         {
             Pos = this.parent.Children.IndexOf(this.modelToDelete as Model);
             string pathOfChildToDelete = modelToDelete.FullPath;
-            modelWasRemoved = Structure.Delete(this.modelToDelete as Model);
+            modelToDelete.Node.Parent.RemoveChild(modelToDelete as Model);
+            modelWasRemoved = true;
             tree.Delete(pathOfChildToDelete);
         }
 

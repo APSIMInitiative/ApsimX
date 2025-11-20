@@ -4,7 +4,6 @@ using APSIM.Shared.Utilities;
 using Gdk;
 using Models.Core;
 using Models.Core.Apsim710File;
-using Models.Core.ApsimFile;
 using System;
 using System.Collections.Generic;
 using System.IO;
