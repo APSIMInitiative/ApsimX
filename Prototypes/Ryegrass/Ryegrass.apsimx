@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 205,
+  "Version": 206,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -332,7 +332,7 @@
                   "Children": [
                     {
                       "$type": "Models.Clock, Models",
-                      "Start": "1992-03-29T00:00:00",
+                      "Start": "1992-03-30T00:00:00",
                       "End": "1995-06-30T00:00:00",
                       "Name": "clock",
                       "ResourceName": null,
@@ -622,9 +622,9 @@
                           },
                           "CanopyType": "PastureSpecies",
                           "LightProfile": null,
-                          "InitialShootDM": 1.0,
-                          "InitialRootDM": 1.0,
-                          "InitialRootDepth": 750.0,
+                          "InitialShootDM": 0.0,
+                          "InitialRootDM": 0.0,
+                          "InitialRootDepth": 0.0,
                           "initialDMFractionsGrasses": [
                             0.15,
                             0.25,
