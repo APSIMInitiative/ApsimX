@@ -126,7 +126,9 @@ namespace Models.Core
         /// <param name="modelToAdd"></param>
         public static void ReconnectLinksAndEvents(IModel modelToAdd)
         {
-            Simulation parentSimulation = modelToAdd.Parent.Node.FindParent<Simulation>(recurse: true);
+            Simulation parentSimulation = modelToAdd as Simulation;
+            if (parentSimulation == null)
+                parentSimulation = modelToAdd.Parent.Node.FindParent<Simulation>(recurse: true);
             if (parentSimulation != null && parentSimulation.IsRunning)
             {
                 var links = new Links(parentSimulation.ModelServices);

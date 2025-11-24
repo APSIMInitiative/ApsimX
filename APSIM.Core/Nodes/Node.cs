@@ -411,9 +411,6 @@ public class Node : IStructure
     /// <param name="childModel">The child model to remove.</param>
     public void RemoveChild(INodeModel childModel)
     {
-        if (ReadOnly)
-            throw new Exception($"Cannot remove a child from model {Name}. It is readonly.");
-
         // Remove the model from our children collection.
         Node nodeToRemove = children.Find(c => c.Model == childModel);
         if (nodeToRemove == null)
