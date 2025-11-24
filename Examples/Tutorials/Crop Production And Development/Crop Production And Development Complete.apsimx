@@ -23,42 +23,6 @@
       "ReadOnly": false
     },
     {
-      "$type": "Models.Memo, Models",
-      "Text": "# 1 Setup a Experiment Site Factor\n\n## 1.1 Objective\n\nThe objective here is to gain experience setting up a realistic experiment where you are trying to model disparate locations and\nmodel them without having to duplicate entire simulations and models.\n\n## 1.2 Steps\n\n1) Right-click [Site], click 'add model' find and select [CompositeFactor].\n2) Rename the new [CompositeFactor] model 'Millicent'.\n3) Right-click [Millicent], click 'add model', find and select [Weather].\n4) A weather file has been provided. All we have to do is select [Weather], click 'Browse' and locate the weather file in the same directory as this simulation ( Examples/Tutorials/CropProductionAndDevelopment)\n5) At the bottom of the Explorer view (left sidebar), locate the [AdditionalModels] folder. In the 'Soils/Millicent' folder copy the soil model to the [Millicent] factor model. You can also drag and drop the model if you prefer.\n\n## 1.3 Recap\n\nAt the completion of this step we have created another permutation for our experiment. This will now allow us to compare and view the differences between to two sites graphically.\nThis has given us some experience in setting experiments and their factors which are a common and effective method for creating simulated experiments.",
-      "Name": "Step 1 Setup a Experiment Site Factor",
-      "ResourceName": null,
-      "Children": [],
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
-      "$type": "Models.Memo, Models",
-      "Text": "# 2 Analyse the Data\n\nIn this step will take our data and analyse the outputs graphically.\n\n## 2.1 Objectives\n\n- Learn where to add variables.\n- Learn how to work with graphs to see the desired data in the desired form.\n- Learn how to add mulitple layers to a graph.\n- Learn how to output a subset of variable that is a list or array.\n- learn how to interpret the results to then determine the next course of action.\n\n\n## 2.2 Steps\n\n1) If we look at the [SoilWater] graph we can see some graph series that have already been created. Unfortunately we can't see the difference between each permuatation. How do we configure the graph to do this? the answer is we change colour field to **vary by simulationName**\n2) Once you have selected this option, you can see that because we have setup an experiment with permutations that all are available to see. This allows us to view and compare results between the two locations.\n3) If we then want to see how the rainfall affected the soil water, we can turn on the [Rain] Series for the [SoilWater] graph. You can clearly see how this affects the volume of water in the soil profile.\n4) Next, let's see how we can view a subset of the SoilWater volume. If we look at our [DailyReport] model, we can see that two variables have been created for two subsets of the soil water volume. One for the upper and one for the lower half of the soil profile. This is one of two common ways to output a subset or range. If we then jump over to the [SoilWater] graph, we can enable these series to view the data. You can see that the required variable is set by selecting it via the Y variable field.\n\n## 2.3 Recap\n\nIn this steps we have seen how the variables entered into a Report model become outputs after running the simulation.\nWe have also seen how we can graph the outputs by configuring series model fields within our graphs.\nWe have also seen how variables that are arrays or lists can be outputted to only capture a subset or specific range of that output.\nAdditionally, we have seen how we can layer more than one series on a graph to give us a better understanding of the impact of specific events and actions on the experiment.\n",
-      "Name": "Step 2 Analyse the Data",
-      "ResourceName": null,
-      "Children": [],
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
-      "$type": "Models.Memo, Models",
-      "Text": "# 3 Modify the Experiment\n\nIn this step will modify our experiments to see how that impacts our results.\n\n## 3.1 Objectives\n\nThe main objective is to gain experience with the various models, but particularly [Experiment] and [Factor] models, and the models we include\nas children to Factors. By changing and observing the results we will gain understanding in how the combination changes our outcomes.\n\n- Learn how to configure [Experiment] models\n- Learn about and gain experience with Experiment [Factor] models\n- Learn how to take a example experiment treatment and configure it for APSIM simulations \n\n## 3.2 Steps\n\n1.\tNext let us add a factor that changes a manager script variable value. Special note: you cannot name the factor the same as the manager script. Otherwise, you will not be able to reference the Script property in the Factor model’s field.\r\n2.\tAdd another [Factor] model to the [Permutation] model.\r\n3.\tChange its specification to change the Fertiliser amount in the [SowingFertiliser] script to two values 150 and 300. If you look at the examples in the Factor this can be done by putting the value as “[SowingFertiliser].Script.Amount = 150, 300”\r\n4.\tIf we click on the Experiment node, we can see all the permutations this will create. We now have 8 distinct permutations.\r\n5.\tWe can now run the simulation and see the results.\r\n\n## 3.3 Recap\n\nIn modifying the factors we have gained experience in changing the outputs to have a desired effect.\n",
-      "Name": "Step 3 Modify the Experiment",
-      "ResourceName": null,
-      "Children": [],
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
-      "$type": "Models.Memo, Models",
-      "Text": "# 4 Reanalyse Results\n\n## 4.1 Objective\n\n- Gain further experience configuring and interpretting graphs and data\n\n## 4.2 Steps\n\n1. Now that the have run the simulation with the new fertiliser amount permutations, let's have a look at a graph that can confirm that the permutations have done what we expect.\n2. TODO: Add more steps here.\n\n## 4.3 Recap\n\nThrough building, analysing, modifying, and finally reanalysing the results we have:\n- gained experience using APSIM to change models and parameters to manipulate the results of our simulation.\n- gained understanding as to which parameters to change to achieve a desired result.\n- learned how to make a experiment that changes many factors in an efficient manner.\n- learned the workflow of locating and entered a variable to output with an appropriate event and how we these outputs can be connected to a graph so that results can be easily viewed and modified.\n",
-      "Name": "Step 4 Reanalyse Results",
-      "ResourceName": null,
-      "Children": [],
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
       "$type": "Models.Factorial.Experiment, Models",
       "DisabledSimNames": null,
       "Name": "Experiment",
@@ -1680,16 +1644,6 @@
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Clock, Models",
-                      "Start": "2000-03-01T00:00:00",
-                      "End": "2001-02-28T00:00:00",
-                      "Name": "2000",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
                     }
                   ],
                   "Enabled": true,
@@ -3221,7 +3175,7 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "Name": "Phenology",
+          "Name": "Wheat",
           "ResourceName": null,
           "Children": [
             {
