@@ -1,3 +1,4 @@
+using APSIM.Core;
 using APSIM.Server.Commands;
 using APSIM.Shared.Utilities;
 using System;
@@ -5,7 +6,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using static Models.Core.Overrides;
 
 namespace APSIM.Server.IO
 {
@@ -161,9 +161,9 @@ namespace APSIM.Server.IO
             return new ReadCommand(table, parameters);
         }
 
-        public IEnumerable<Override> ReadChanges()
+        public IEnumerable<IModelCommand> ReadChanges()
         {
-            List<Override> replacements = new List<Override>();
+            List<IModelCommand> replacements = new List<IModelCommand>();
 
             // For now, we assume the same parameter changes are applied to all simulations.
             object input;
@@ -171,14 +171,14 @@ namespace APSIM.Server.IO
             {
                 string path = (string)input;
                 SendMessage(ack);
-                
+
                 int parameterType = ReadInt();
                 SendMessage(ack);
                 object paramValue = ReadParameter((ParamType)parameterType);
                 SendMessage(ack);
                 if (paramValue == null)
                     throw new NullReferenceException("paramValue is null");
-                replacements.Add(new Override(path, paramValue, Override.MatchTypeEnum.NameAndType));
+                replacements.Add(new SetPropertyCommand(path, "=", paramValue.ToString(), fileName: null));
             }
             SendMessage(ack);
 

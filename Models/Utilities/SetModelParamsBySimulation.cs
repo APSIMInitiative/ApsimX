@@ -1,6 +1,5 @@
 using APSIM.Core;
 using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Drawing;
 using Models.Core;
 using Newtonsoft.Json;
 using System;
@@ -8,7 +7,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.IO;
-using System.Text.RegularExpressions;
 
 namespace Models.Utilities
 {
@@ -29,56 +27,77 @@ namespace Models.Utilities
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SetModelParamsBySimulation : Model, IStructureDependency
+    public class SetModelParamsBySimulation : Model, IStructureDependency, IReferenceExternalFiles
     {
         /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
         public IStructure Structure { private get; set; }
 
-
-        /// <summary>Location of file with crop specific coefficients</summary>
-        [Core.Description("File path for parameter file")]
-        [Display(Type = DisplayType.FileName)]
-        public string ParameterFile { get; set; }
-
         /// <summary>Location of file with crop specific coefficients</summary>
         [Core.Description("Event to apply sets on")]
         public string SetEventName { get; set; }
-
 
         /// <summary>Link to an event service.</summary>
         [Link]
         private IEvent events = null;
 
         /// <summary>
-        /// Gets or sets the full file name (with path). The user interface uses this.
+        /// Filename for the weather file.
         /// </summary>
-        [JsonIgnore]
-        public string FullFileName
+        private string fileName;
+
+        /// <summary>Location of file with crop specific coefficients</summary>
+        [Core.Description("File path for parameter file")]
+        [Display(Type = DisplayType.FileName)]
+        public string ParameterFile
         {
             get
             {
-                Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
-                if (simulation != null)
-                    return PathUtilities.GetAbsolutePath(ParameterFile, simulation.FileName);
+                string apsimFilePath = "";
+                if (Node != null)
+                    apsimFilePath = Node.FileName;
+                else if (simulation != null)
+                    apsimFilePath = simulation.FileName;
                 else
                 {
-                    Simulations simulations = Structure.FindParent<Simulations>(recurse: true);
-                    if (simulations != null)
-                        return PathUtilities.GetAbsolutePath(ParameterFile, simulations.FileName);
-                    else
-                        return ParameterFile;
+                    Simulations sims = Node.FindParent<Simulations>(recurse: true);
+                    if (sims != null)
+                        apsimFilePath = sims.FileName;
                 }
-            }
-            set
-            {
-                Simulations simulations = Structure.FindParent<Simulations>(recurse: true);
-                if (simulations != null)
-                    ParameterFile = PathUtilities.GetRelativePath(value, simulations.FileName);
+
+                if (string.IsNullOrEmpty(apsimFilePath))
+                    throw new Exception("Cannot determine weather file path: Weather model is not attached to a simulation node or simulation. Please ensure the weather model is correctly attached to a simulation node.");
                 else
-                    ParameterFile = value;
-                readCSVandUpdateProperties();
+                    return PathUtilities.GetRelativePath(fileName, apsimFilePath);
             }
+            set { fileName = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the full file name (with path). The user interface uses this.
+        /// </summary>
+        [JsonIgnore]
+        private string FullFileName
+        {
+            get
+            {
+                if (this.Node != null)
+                    return PathUtilities.GetAbsolutePath(fileName, this.Node.FileName);
+                else
+                    throw new Exception("Cannot determine full weather file path: Weather model is not attached to a simulation node. Ensure the weather model is attached to a simulation node to resolve this error.");
+            }
+        }
+
+        /// <summary>Return our input filenames</summary>
+        public IEnumerable<string> GetReferencedFileNames()
+        {
+            return new string[] { FullFileName };
+        }
+
+        /// <summary>Remove all paths from referenced filenames.</summary>
+        public void RemovePathsFromReferencedFileNames()
+        {
+            ParameterFile = Path.GetFileName(ParameterFile);
         }
 
         private string CurrentSimulationName
@@ -162,7 +181,10 @@ namespace Models.Utilities
             Dictionary<string, string> ret = new Dictionary<string, string>();
             for (int i = 0; i < tab.Rows.Count; i++)
             {
-                ret.Add(tab.Rows[i]["SimulationName"].ToString(), tab.Rows[i][varName].ToString());
+                string value = tab.Rows[i][varName].ToString();
+                if (tab.Columns[varName].DataType == typeof(DateTime))
+                    value = DateUtilities.GetDateAsString(Convert.ToDateTime(tab.Rows[i][varName]));
+                ret.Add(tab.Rows[i]["SimulationName"].ToString(), value);
             }
             return ret;
         }
