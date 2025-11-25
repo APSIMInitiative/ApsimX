@@ -50226,11 +50226,11 @@
                                       "Name": "LN",
                                       "ResourceName": null,
                                       "Children": [],
-                                      "Enabled": false,
+                                      "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -50255,11 +50255,11 @@
                                       "Name": "LV",
                                       "ResourceName": null,
                                       "Children": [],
-                                      "Enabled": false,
+                                      "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -50321,7 +50321,7 @@
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -50330,7 +50330,7 @@
                               "Name": "Cv",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -50339,15 +50339,15 @@
                               "Name": "Durat",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -50363,7 +50363,7 @@
                           "Name": "Clock",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -50374,7 +50374,7 @@
                           "Name": "Weather",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -50383,7 +50383,7 @@
                           "Name": "SummaryFile",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -50391,7 +50391,7 @@
                           "Name": "SoilArbitrator",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -50409,7 +50409,7 @@
                               "Name": "Fertiliser",
                               "ResourceName": "Fertiliser",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -50554,11 +50554,11 @@
                                       "Name": "BarleySoil",
                                       "ResourceName": null,
                                       "Children": [],
-                                      "Enabled": false,
+                                      "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -50600,7 +50600,7 @@
                                   "Name": "SoilWater",
                                   "ResourceName": "WaterBalance",
                                   "Children": [],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -50666,7 +50666,7 @@
                                   "Name": "Organic",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -50701,7 +50701,7 @@
                                   "Name": "Chemical",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -50728,7 +50728,7 @@
                                   "Name": "Water",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -50736,7 +50736,7 @@
                                   "Name": "Nutrient",
                                   "ResourceName": "Nutrient",
                                   "Children": [],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -50772,7 +50772,7 @@
                                   "Name": "NO3",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -50808,7 +50808,7 @@
                                   "Name": "NH4",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -50844,7 +50844,7 @@
                                   "Name": "Urea",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -50854,11 +50854,11 @@
                                   "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -50874,7 +50874,7 @@
                               "Name": "SurfaceOrganicMatter",
                               "ResourceName": "SurfaceOrganicMatter",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -50882,7 +50882,7 @@
                               "Name": "Barley",
                               "ResourceName": "Barley",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -50898,7 +50898,7 @@
                               "Name": "MicroClimate",
                               "ResourceName": "MicroClimate",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -50951,7 +50951,7 @@
                               "Name": "SowingFertiliser",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -50993,7 +50993,7 @@
                               "Name": "HarvestAtFlowering",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -51123,7 +51123,7 @@
                               "Name": "SowingRule",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -51138,7 +51138,7 @@
                               "Name": "DailyReport",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -51153,7 +51153,7 @@
                               "Name": "HarvestReport",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -51164,15 +51164,15 @@
                               "Name": "SowingReport",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -51242,11 +51242,11 @@
                               "Name": "Series",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -51310,11 +51310,11 @@
                               "Name": "Series",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -51378,15 +51378,15 @@
                               "Name": "Series",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -51464,15 +51464,15 @@
                                   "Name": "Regression",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -51546,15 +51546,15 @@
                                   "Name": "Regression",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -51626,27 +51626,27 @@
                                   "Name": "Regression",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             }
           ],
