@@ -264,9 +264,10 @@ namespace Models.AgPasture
         /// </remarks>
         public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1, double seeds = 0, int tillering = 0, double ftn = 0.0)
         {
-            if (isAlive)
-                mySummary.WriteMessage(this, " Cannot sow the pasture species \"" + Name + "\", as it is already growing", MessageType.Warning);
-            else
+            if (isAlive==false)
+            // if (isAlive)
+            //     mySummary.WriteMessage(this, " Cannot sow the pasture species \"" + Name + "\", as it is already growing", MessageType.Warning);
+            // else
             {
 
                 // Find cultivar and apply cultivar overrides.
@@ -2553,6 +2554,9 @@ namespace Models.AgPasture
                 initialDMFractions = initialDMFractionsForbs;
             }
 
+            if(InitialShootDM>=0 && InitialRootDM>=0 && InitialRootDepth >=0)
+            {
+
             // determine what biomass to reset the organs to. If a negative InitialShootDM
             //  was specified by user then that means the plant isn't sown yet so reset
             //  the organs to zero biomass. This is the reason Max is used below.
@@ -2588,23 +2592,37 @@ namespace Models.AgPasture
                                      rootDepth: InitialRootDepth);
 
             // set initial phenological stage
-            if (MathUtilities.IsGreaterThan(InitialShootDM, 0.0))
-            {
-                phenologicStage = 1;
-            }
-            else if (MathUtilities.FloatsAreEqual(InitialShootDM, 0.0, Epsilon))
-            {
-                phenologicStage = 0;
-            }
-            else
-            {
-                phenologicStage = -1;
+            // if (MathUtilities.IsGreaterThan(InitialShootDM, 0.0))
+            // {
+            //     phenologicStage = 1;
+            // }
+            // else if (MathUtilities.FloatsAreEqual(InitialShootDM, 0.0, Epsilon))
+            // {
+            //     phenologicStage = 0;
+            // }
+            // else
+            // {
+            //     phenologicStage = -1;
+            // }
+
+            // if (phenologicStage >= 0)
+            // {
+            //     isAlive = true;
+            // }
+
+            if (InitialShootDM>0 && InitialRootDM >0 && InitialRootDM >0)
+                {
+                    phenologicStage=1;
+                    isAlive=true;
+                }
+            else if (InitialShootDM == 0 && InitialRootDM == 0 && InitialRootDepth==0)
+                {
+                    EndCrop();
+                }
+
             }
 
-            if (phenologicStage >= 0)
-            {
-                isAlive = true;
-            }
+            else throw new Exception("AgPasture: Please enter inital biomasses greater than or equal to zero");
 
             // Calculate the values for LAI
             EvaluateLAI();
@@ -2784,7 +2802,7 @@ namespace Models.AgPasture
                         SetEmergenceState();
                     }
                 }
-                else
+                else if (phenologicStage > 0)
                 {
                     // Evaluate tissue turnover and get remobilisation (C and N)
                     EvaluateTissueTurnoverRates();

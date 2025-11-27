@@ -399,10 +399,10 @@
                           "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1992-03-30",
-                              "Action": "[AgPRyegrass].EndCrop()",
-                              "Line": "1992-03-30 [AgPRyegrass].EndCrop()"
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1992-03-30 [AgPRyegrass].EndCrop()"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -3330,10 +3330,10 @@
                           "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1995-02-26",
-                              "Action": "[AgPRyegrass].EndCrop()",
-                              "Line": "1995-02-26 [AgPRyegrass].EndCrop()"
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1995-02-26 [AgPRyegrass].EndCrop()"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -3375,10 +3375,10 @@
                           "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1995-02-26",
-                              "Action": "[AgPRyegrass].EndCrop()",
-                              "Line": "1995-02-26 [AgPRyegrass].EndCrop()"
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1995-02-26 [AgPRyegrass].EndCrop()"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -3420,10 +3420,10 @@
                           "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1995-02-26",
-                              "Action": "[AgPRyegrass].EndCrop()",
-                              "Line": "1995-02-26 [AgPRyegrass].EndCrop()"
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1995-02-26 [AgPRyegrass].EndCrop()"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -3465,10 +3465,10 @@
                           "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1995-02-26",
-                              "Action": "[AgPRyegrass].EndCrop()",
-                              "Line": "1995-02-26 [AgPRyegrass].EndCrop()"
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1995-02-26 [AgPRyegrass].EndCrop()"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -3510,10 +3510,10 @@
                           "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1995-02-26",
-                              "Action": "[AgPRyegrass].EndCrop()",
-                              "Line": "1995-02-26 [AgPRyegrass].EndCrop()"
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1995-02-26 [AgPRyegrass].EndCrop()"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -6506,10 +6506,10 @@
                           "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1995-02-26",
-                              "Action": "[AgPRyegrass].EndCrop()",
-                              "Line": "1995-02-26 [AgPRyegrass].EndCrop()"
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1995-02-26 [AgPRyegrass].EndCrop()"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -6530,10 +6530,10 @@
                           "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1995-02-26",
-                              "Action": "[AgPRyegrass].EndCrop()",
-                              "Line": "1995-02-26 [AgPRyegrass].EndCrop()"
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1995-02-26 [AgPRyegrass].EndCrop()"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -6554,10 +6554,10 @@
                           "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1995-02-26",
-                              "Action": "[AgPRyegrass].EndCrop()",
-                              "Line": "1995-02-26 [AgPRyegrass].EndCrop()"
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1995-02-26 [AgPRyegrass].EndCrop()"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -6578,10 +6578,10 @@
                           "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1995-02-26",
-                              "Action": "[AgPRyegrass].EndCrop()",
-                              "Line": "1995-02-26 [AgPRyegrass].EndCrop()"
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1995-02-26 [AgPRyegrass].EndCrop()"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -6602,10 +6602,10 @@
                           "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1995-02-26",
-                              "Action": "[AgPRyegrass].EndCrop()",
-                              "Line": "1995-02-26 [AgPRyegrass].EndCrop()"
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1995-02-26 [AgPRyegrass].EndCrop()"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -12106,10 +12106,10 @@
                                   "OperationsList": [
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
-                                      "Date": "1993-01-01",
-                                      "Action": "[AgPRyegrass].EndCrop()",
-                                      "Line": "1993-01-01 [AgPRyegrass].EndCrop()"
+                                      "Enabled": false,
+                                      "Date": null,
+                                      "Action": null,
+                                      "Line": "//1993-01-01 [AgPRyegrass].EndCrop()"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
@@ -16292,10 +16292,10 @@
                                   "OperationsList": [
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
-                                      "Date": "1993-12-29",
-                                      "Action": "[AgPRyegrass].EndCrop()",
-                                      "Line": "1993-12-29 [AgPRyegrass].EndCrop()"
+                                      "Enabled": false,
+                                      "Date": null,
+                                      "Action": null,
+                                      "Line": "//1993-12-29 [AgPRyegrass].EndCrop()"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
@@ -20441,10 +20441,10 @@
                                   "OperationsList": [
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
-                                      "Date": "1990-12-29",
-                                      "Action": "[AgPRyegrass].EndCrop()",
-                                      "Line": "1990-12-29 [AgPRyegrass].EndCrop()"
+                                      "Enabled": false,
+                                      "Date": null,
+                                      "Action": null,
+                                      "Line": "//1990-12-29 [AgPRyegrass].EndCrop()"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
@@ -24556,10 +24556,10 @@
                                   "OperationsList": [
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
-                                      "Date": "1992-12-29",
-                                      "Action": "[AgPRyegrass].EndCrop()",
-                                      "Line": "1992-12-29 [AgPRyegrass].EndCrop()"
+                                      "Enabled": false,
+                                      "Date": null,
+                                      "Action": null,
+                                      "Line": "//1992-12-29 [AgPRyegrass].EndCrop()"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
@@ -28777,10 +28777,10 @@
                                   "OperationsList": [
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
-                                      "Date": "1993-12-29",
-                                      "Action": "[AgPRyegrass].EndCrop()",
-                                      "Line": "1993-12-29 [AgPRyegrass].EndCrop()"
+                                      "Enabled": false,
+                                      "Date": null,
+                                      "Action": null,
+                                      "Line": "//1993-12-29 [AgPRyegrass].EndCrop()"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
@@ -32929,10 +32929,10 @@
                                   "OperationsList": [
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
-                                      "Date": "1990-12-29",
-                                      "Action": "[AgPRyegrass].EndCrop()",
-                                      "Line": "1990-12-29 [AgPRyegrass].EndCrop()"
+                                      "Enabled": false,
+                                      "Date": null,
+                                      "Action": null,
+                                      "Line": "//1990-12-29 [AgPRyegrass].EndCrop()"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
@@ -37042,10 +37042,10 @@
                                   "OperationsList": [
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
-                                      "Date": "1992-12-29",
-                                      "Action": "[AgPRyegrass].EndCrop()",
-                                      "Line": "1992-12-29 [AgPRyegrass].EndCrop()"
+                                      "Enabled": false,
+                                      "Date": null,
+                                      "Action": null,
+                                      "Line": "//1992-12-29 [AgPRyegrass].EndCrop()"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
@@ -41159,10 +41159,10 @@
                                   "OperationsList": [
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
-                                      "Date": "1993-12-29",
-                                      "Action": "[AgPRyegrass].EndCrop()",
-                                      "Line": "1993-12-29 [AgPRyegrass].EndCrop()"
+                                      "Enabled": false,
+                                      "Date": null,
+                                      "Action": null,
+                                      "Line": "//1993-12-29 [AgPRyegrass].EndCrop()"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
@@ -45416,10 +45416,10 @@
                                   "OperationsList": [
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
-                                      "Date": "1990-12-30",
-                                      "Action": "[AgPRyegrass].EndCrop()",
-                                      "Line": "1990-12-30 [AgPRyegrass].EndCrop()"
+                                      "Enabled": false,
+                                      "Date": null,
+                                      "Action": null,
+                                      "Line": "//1990-12-30 [AgPRyegrass].EndCrop()"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
@@ -51814,10 +51814,10 @@
                               "OperationsList": [
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "2006-03-14",
-                                  "Action": "[AgPRyegrass].EndCrop()",
-                                  "Line": "2006-03-14 [AgPRyegrass].EndCrop()"
+                                  "Enabled": false,
+                                  "Date": null,
+                                  "Action": null,
+                                  "Line": "//2006-03-14 [AgPRyegrass].EndCrop()"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
@@ -56608,10 +56608,10 @@
                               "OperationsList": [
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "2011-03-14",
-                                  "Action": "[AgPRyegrass].EndCrop()",
-                                  "Line": "2011-03-14 [AgPRyegrass].EndCrop()"
+                                  "Enabled": false,
+                                  "Date": null,
+                                  "Action": null,
+                                  "Line": "//2011-03-14 [AgPRyegrass].EndCrop()"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
