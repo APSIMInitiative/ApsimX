@@ -863,4 +863,25 @@ internal static class JsonUtilities
         var children = node["Children"] as JArray;
         children.Add(child);
     }
+
+    /// <summary>
+    /// Update cultivar paths given a collection of old and new paths.
+    /// </summary>
+    /// <param name="cultivar">The cultivar json object.</param>
+    /// <param name="pathUpdates">The (old, new) cultivar paths.</param>
+    public static void UpdateCultivarPaths(JObject cultivar, IEnumerable<(string, string)> pathUpdates)
+    {
+        if (!cultivar["Command"].HasValues)
+            return;
+
+        foreach (JValue line in cultivar["Command"].Children())
+        {
+            var linestr = line.Value.ToString();
+            foreach (var (original, replacement) in pathUpdates)
+            {
+                linestr = linestr.Replace(original, replacement);
+            }
+            line.Value = linestr;
+        }
+    }
 }
