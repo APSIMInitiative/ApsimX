@@ -82,9 +82,52 @@ read_observed_func <- function (SheetName, VarName, NewVarName, UnitCorrect) {
 ndvi_raw <- read_observed_func("NDVI & height", "Plot NDVI", "NDVIModel.Script.NDVI",1)
 height_raw <- read_observed_func("Canopy Height", "Canopy height (cm)", "Wheat.Leaf.Height",10)
 haun_raw <- read_observed_func("Haun stage ", "Plant Haun stage", "Wheat.Phenology.HaunStage",1)
+# Grain
 grainSize_raw <- read_observed_func("PCDS 10.0 harvest", "Individual grain weight (mg)", "Wheat.Grain.Size",1)
+grainNumber_raw <- read_observed_func("PCDS 10.0 harvest", "Grain number (grains/m²)", "Wheat.Grain.Number",1)
+#Biomass
+grainYield_raw <- read_observed_func("PCDS 10.0 harvest", "Grain dry matter (g/m²)", "Wheat.Grain.Wt",1)
+stemYield_raw <- read_observed_func("PCDS 10.0 harvest", "Stem dry matter (g/m²)", "Wheat.Stem.Wt",1)
+spikeYield_raw <- read_observed_func("PCDS 10.0 harvest", "Spike dry matter (g/m²)", "Wheat.Spike.Wt",1)
+senescLeafYield_raw <- read_observed_func("PCDS 10.0 harvest", "Dead leaf dry matter (g/m²)", "Wheat.Leaf.Dead.Wt",1)
+earYield_raw <- read_observed_func("PCDS 10.0 harvest", "Chaff dry matter (g/m²)", "Wheat.Ear.Wt",1)
+totalAboveGround_raw <- read_observed_func("PCDS 10.0 harvest", 
+                                           "Estimated dry matter at PCDS 10.0 (g/m²)","Wheat.AboveGround.Wt",1)
+
+# Corrections and calculations
+ndvi_raw <- ndvi_raw %>%
+  mutate(
+    Date = if_else(
+      year(Date) == 2025,
+      Date %m+% years(-1),   # subtract 1 year
+      Date
+    )
+  )
+
+summary(height_raw)
 
 
+# Find PCDS
+convert_haun_to_apsim <- function(Haun){
+  
+  # Anchor points
+  haun_pts  <- c(0,   8,    10, 16) # These are not checked - mock values for test
+  apsim_pts <- c(3,   6,     8, 11)
+  
+  # Linear interpolation with clipping to range
+  APSIM_Stage <- approx(
+    x = haun_pts,
+    y = apsim_pts,
+    xout = Haun,
+    rule = 2   # clamp below min and above max instead of producing NAs
+  )$y
+  
+  return(APSIM_Stage)
+}
+haun_raw$Wheat.Phenology.HaunStage
+pcds_raw <- haun_raw %>%
+  mutate(Wheat.Phenology.Stage = convert_haun_to_apsim(Wheat.Phenology.HaunStage)) %>%
+  dplyr::select(-Wheat.Phenology.HaunStage)
 # --------------------------------------------------------------
 # --- Creates APSIM Observed File ------------------------------
 # --------------------------------------------------------------
@@ -92,7 +135,18 @@ grainSize_raw <- read_observed_func("PCDS 10.0 harvest", "Individual grain weigh
 library(dplyr)
 library(purrr)
 
-df_list <- list(ndvi_raw,height_raw,haun_raw,grainSize_raw)
+df_list <- list(ndvi_raw,
+                height_raw,
+                haun_raw,
+                grainSize_raw, 
+                grainNumber_raw,
+                stemYield_raw,
+                senescLeafYield_raw,
+                spikeYield_raw,
+                totalAboveGround_raw,
+                earYield_raw,
+                pcds_raw,
+                grainYield_raw)
 
 
 df_final <- reduce(
