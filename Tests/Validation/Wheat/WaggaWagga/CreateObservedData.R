@@ -2,11 +2,13 @@ library(dplyr)
 library(purrr)
 library(openxlsx)
 library(lubridate)
+library(readxl)
 
 
-
-# Path to your Excel file
+# Path to the field measurements Excel file
 file_path <- "C:/Users/Cfleit/Downloads/2024_WaggaWagga_PHDA24WARI2.xlsx"
+
+wagga_path <- "C:/github/ApsimX/Tests/Validation/Wheat/WaggaWagga"
 
 df_sim_names <- read.csv2(file.path(wagga_path, "CultivarToSimName.csv"),
                           header = TRUE, stringsAsFactors = TRUE, sep = ",",
@@ -131,10 +133,11 @@ totalAboveGround_10_raw <- read_observed_func("PCDS 10.0 harvest",
 
 
 
-par_raw <- read_observed_func("PCDS 8.0 harvest", 
+par_6_raw <- read_observed_func("PCDS 6.0 harvest", 
                                            "PARi at ground level","Wheat.Leaf.CoverTotal",1)
 
-
+par_8_raw <- read_observed_func("PCDS 8.0 harvest", 
+                              "PARi at ground level","Wheat.Leaf.CoverTotal",1)
 #-----------------------------------------
 # Hard coded corrections and calculations
 #------------------------------------------
@@ -163,8 +166,8 @@ totalAboveGround_8_raw$Date <- dmy("23/09/2024")
 
 
 # par
-par_raw$Date <- dmy("23/09/2024")
-summary(par_raw)
+par_6_raw$Date <- dmy("28/08/2024")
+par_8_raw$Date <- dmy("23/09/2024")
 
 # leaf
 greenLeaf_6_raw$Date <- dmy("28/08/2024")
@@ -199,29 +202,48 @@ pcds_raw <- haun_raw %>%
 # --------------------------------------------------------------
 
 
-df_list <- list(ndvi_raw,
-                height_raw,
-                haun_raw,
-                grainSize_raw, 
-                grainNumber_raw,
-                stemYield_10_raw,
-                senescLeafYield_10_raw,
-                spikeYield_10_raw,
-                totalAboveGround_6_raw,
-                totalAboveGround_8_raw,
-                totalAboveGround_10_raw,
-                earYield_10_raw,
-                par_raw,
-                pcds_raw,
-                greenLeaf_6_raw,
-                greenLeaf_8_raw,
-                stemYield_6_raw,
-                spikeYield_6_raw,
-                senescLeafYield_6_raw,
-                stemYield_8_raw,
-                spikeYield_8_raw,
-                senescLeafYield_8_raw,
-                grainYield_raw)
+df_list <- list(
+  # Pheno et al
+  ndvi_raw,
+  height_raw,
+  haun_raw,
+  pcds_raw,
+  par_6_raw,
+  par_8_raw,
+  
+  # Grain traits
+  grainSize_raw,
+  grainNumber_raw,
+  grainYield_10_raw,
+  
+  # Total biomass
+  totalAboveGround_6_raw,
+  totalAboveGround_8_raw,
+  totalAboveGround_10_raw,
+  
+  # Stem biomass
+  stemYield_6_raw,
+  stemYield_8_raw,
+  stemYield_10_raw,
+  
+  # Spike biomass
+  spikeYield_6_raw,
+  spikeYield_8_raw,
+  spikeYield_10_raw,
+  
+  # Senesced leaf biomass
+  senescLeafYield_6_raw,
+  senescLeafYield_8_raw,
+  senescLeafYield_10_raw,
+  
+  # Green leaf biomass
+  greenLeaf_6_raw,
+  greenLeaf_8_raw,
+  
+  # Ear biomass
+  earYield_10_raw
+)
+
 
 # merge
 
@@ -231,8 +253,7 @@ df_final <- bind_rows(df_list) %>%
     Clock.Today = format(
       as.POSIXct(Date),
       "%d/%m/%Y 00:00:00"
-    )
-  ) %>%
+    )) %>%
   select(SimulationName, Clock.Today, everything(), -Cultivar, -Date)
 
 summary(df_final %>% dplyr::select(Clock.Today, Wheat.AboveGround.Wt))
@@ -246,8 +267,8 @@ writeData(wb, sheet = "Observed", x = df_final)
 
 obs_path <- file.path("C:/github/ApsimX/Tests/Validation/Wheat/WaggaWagga")
 obs_path <- file.path("C:/github/ApsimX/Tests/Validation/Wheat/Dookie2024")
-
-saveWorkbook(wb, file.path(obs_path, "DookieWagga2024.xlsx"), overwrite = TRUE)
+obs_path <- file.path("C:/github/ApsimX/Tests/Validation/Wheat/WaggaWagga2024")
+saveWorkbook(wb, file.path(obs_path, "DookieWaggaWagga2024.xlsx"), overwrite = TRUE)
 
 
 
