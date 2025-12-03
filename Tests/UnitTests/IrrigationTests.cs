@@ -3,7 +3,6 @@ using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Models.Soils;
 using Models.Soils.Nutrients;
 using Models.Surface;

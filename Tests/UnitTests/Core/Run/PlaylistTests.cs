@@ -2,7 +2,6 @@
 using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Models.Core.Run;
 using Models.Storage;
 using NUnit.Framework;
