@@ -1,3 +1,10 @@
+library(dplyr)
+library(purrr)
+library(openxlsx)
+library(lubridate)
+
+
+
 # Path to your Excel file
 file_path <- "C:/Users/Cfleit/Downloads/2024_WaggaWagga_PHDA24WARI2.xlsx"
 
@@ -82,19 +89,57 @@ read_observed_func <- function (SheetName, VarName, NewVarName, UnitCorrect) {
 ndvi_raw <- read_observed_func("NDVI & height", "Plot NDVI", "NDVIModel.Script.NDVI",1)
 height_raw <- read_observed_func("Canopy Height", "Canopy height (cm)", "Wheat.Leaf.Height",10)
 haun_raw <- read_observed_func("Haun stage ", "Plant Haun stage", "Wheat.Phenology.HaunStage",1)
+
 # Grain
 grainSize_raw <- read_observed_func("PCDS 10.0 harvest", "Individual grain weight (mg)", "Wheat.Grain.Size",1)
 grainNumber_raw <- read_observed_func("PCDS 10.0 harvest", "Grain number (grains/m²)", "Wheat.Grain.Number",1)
-#Biomass
-grainYield_raw <- read_observed_func("PCDS 10.0 harvest", "Grain dry matter (g/m²)", "Wheat.Grain.Wt",1)
-stemYield_raw <- read_observed_func("PCDS 10.0 harvest", "Stem dry matter (g/m²)", "Wheat.Stem.Wt",1)
-spikeYield_raw <- read_observed_func("PCDS 10.0 harvest", "Spike dry matter (g/m²)", "Wheat.Spike.Wt",1)
-senescLeafYield_raw <- read_observed_func("PCDS 10.0 harvest", "Dead leaf dry matter (g/m²)", "Wheat.Leaf.Dead.Wt",1)
-earYield_raw <- read_observed_func("PCDS 10.0 harvest", "Chaff dry matter (g/m²)", "Wheat.Ear.Wt",1)
-totalAboveGround_raw <- read_observed_func("PCDS 10.0 harvest", 
-                                           "Estimated dry matter at PCDS 10.0 (g/m²)","Wheat.AboveGround.Wt",1)
+earYield_10_raw <- read_observed_func("PCDS 10.0 harvest", "Chaff dry matter (g/m²)", "Wheat.Ear.Wt",1)
+grainYield_10_raw <- read_observed_func("PCDS 10.0 harvest", "Grain dry matter (g/m²)", "Wheat.Grain.Wt",1)
 
-# Corrections and calculations
+#Biomass
+stemYield_6_raw <- read_observed_func("PCDS 6.0 harvest", "Stem dry matter (g/m²)", "Wheat.Stem.Wt",1)
+stemYield_8_raw <- read_observed_func("PCDS 8.0 harvest", "Stem dry matter (g/m²)", "Wheat.Stem.Wt",1)
+stemYield_10_raw <- read_observed_func("PCDS 10.0 harvest", "Stem dry matter (g/m²)", "Wheat.Stem.Wt",1)
+
+
+spikeYield_6_raw <- read_observed_func("PCDS 6.0 harvest", "Spike dry matter (g/m²)", "Wheat.Spike.Wt",1)
+spikeYield_8_raw <- read_observed_func("PCDS 8.0 harvest", "Spike dry matter (g/m²)", "Wheat.Spike.Wt",1)
+spikeYield_10_raw <- read_observed_func("PCDS 10.0 harvest", "Spike dry matter (g/m²)", "Wheat.Spike.Wt",1)
+
+
+senescLeafYield_6_raw <- read_observed_func("PCDS 6.0 harvest", "Dead leaf dry matter (g/m²)", "Wheat.Leaf.Dead.Wt",1)
+senescLeafYield_8_raw <- read_observed_func("PCDS 8.0 harvest", "Dead leaf dry matter (g/m²)", "Wheat.Leaf.Dead.Wt",1)
+senescLeafYield_10_raw <- read_observed_func("PCDS 10.0 harvest", "Dead leaf dry matter (g/m²)", "Wheat.Leaf.Dead.Wt",1)
+
+greenLeaf_6_raw <- read_observed_func("PCDS 6.0 harvest","Grean leaf dry matter (g/m²)","Wheat.Leaf.Live.Wt",1)
+greenLeaf_8_raw <- read_observed_func("PCDS 8.0 harvest","Grean leaf dry matter (g/m²)","Wheat.Leaf.Live.Wt",1)  
+
+
+totalAboveGround_6_raw <- read_observed_func("PCDS 6.0 harvest", 
+                                             "Estimated dry matter at PCDS 6.0 (g/m²)",
+                                             "Wheat.AboveGround.Wt",1)
+
+# BUG HERE FIXME
+totalAboveGround_8_raw <- read_observed_func("PCDS 8.0 harvest", 
+                                           #  "Test",
+                                           "Estimated dry matter at PCDS 8.0 (g/m²)",
+                                            "Wheat.AboveGround.Wt",1)
+
+totalAboveGround_10_raw <- read_observed_func("PCDS 10.0 harvest", 
+                                           "Estimated dry matter at PCDS 10.0 (g/m²)",
+                                           "Wheat.AboveGround.Wt",1)
+
+
+
+par_raw <- read_observed_func("PCDS 8.0 harvest", 
+                                           "PARi at ground level","Wheat.Leaf.CoverTotal",1)
+
+
+#-----------------------------------------
+# Hard coded corrections and calculations
+#------------------------------------------
+
+#ndvi (incorrect dates)
 ndvi_raw <- ndvi_raw %>%
   mutate(
     Date = if_else(
@@ -105,6 +150,25 @@ ndvi_raw <- ndvi_raw %>%
   )
 
 summary(height_raw)
+
+#Biomass (no dates available)
+stemYield_6_raw$Date <- dmy("28/08/2024")
+spikeYield_6_raw$Date <- dmy("28/08/2024")
+senescLeafYield_6_raw$Date <- dmy("28/08/2024")
+stemYield_8_raw$Date <- dmy("23/09/2024")
+spikeYield_8_raw$Date <- dmy("23/09/2024")
+senescLeafYield_8_raw$Date <- dmy("23/09/2024")
+totalAboveGround_6_raw$Date <- dmy("28/08/2024")
+totalAboveGround_8_raw$Date <- dmy("23/09/2024")
+
+
+# par
+par_raw$Date <- dmy("23/09/2024")
+summary(par_raw)
+
+# leaf
+greenLeaf_6_raw$Date <- dmy("28/08/2024")
+greenLeaf_8_raw$Date <- dmy("23/09/2024")
 
 
 # Find PCDS
@@ -124,54 +188,64 @@ convert_haun_to_apsim <- function(Haun){
   
   return(APSIM_Stage)
 }
-haun_raw$Wheat.Phenology.HaunStage
+
+# Estimate APSIM Stage based on measured Haun
 pcds_raw <- haun_raw %>%
   mutate(Wheat.Phenology.Stage = convert_haun_to_apsim(Wheat.Phenology.HaunStage)) %>%
   dplyr::select(-Wheat.Phenology.HaunStage)
+
 # --------------------------------------------------------------
 # --- Creates APSIM Observed File ------------------------------
 # --------------------------------------------------------------
 
-library(dplyr)
-library(purrr)
 
 df_list <- list(ndvi_raw,
                 height_raw,
                 haun_raw,
                 grainSize_raw, 
                 grainNumber_raw,
-                stemYield_raw,
-                senescLeafYield_raw,
-                spikeYield_raw,
-                totalAboveGround_raw,
-                earYield_raw,
+                stemYield_10_raw,
+                senescLeafYield_10_raw,
+                spikeYield_10_raw,
+                totalAboveGround_6_raw,
+                totalAboveGround_8_raw,
+                totalAboveGround_10_raw,
+                earYield_10_raw,
+                par_raw,
                 pcds_raw,
+                greenLeaf_6_raw,
+                greenLeaf_8_raw,
+                stemYield_6_raw,
+                spikeYield_6_raw,
+                senescLeafYield_6_raw,
+                stemYield_8_raw,
+                spikeYield_8_raw,
+                senescLeafYield_8_raw,
                 grainYield_raw)
 
+# merge
 
-df_final <- reduce(
-  df_list,
-  full_join,
-  by = c("Date", "Cultivar")) %>%
-  inner_join(df_sim_names, by="Cultivar") %>%
+df_final <- bind_rows(df_list) %>%
+  inner_join(df_sim_names, by = "Cultivar") %>%
   mutate(
     Clock.Today = format(
       as.POSIXct(Date),
       "%d/%m/%Y 00:00:00"
-    )) %>%
-  dplyr::select(SimulationName, Clock.Today, everything(), -Cultivar, -Date)
+    )
+  ) %>%
+  select(SimulationName, Clock.Today, everything(), -Cultivar, -Date)
 
-obs_path <- file.path("C:/github/ApsimX/Tests/Validation/Wheat/WaggaWagga")
-obs_path <- file.path("C:/github/ApsimX/Tests/Validation/Wheat/Dookie2024")
+summary(df_final %>% dplyr::select(Clock.Today, Wheat.AboveGround.Wt))
 
-
-library(openxlsx)
-
+# save
 wb <- createWorkbook()
 
 addWorksheet(wb, "Observed")
 
 writeData(wb, sheet = "Observed", x = df_final)
+
+obs_path <- file.path("C:/github/ApsimX/Tests/Validation/Wheat/WaggaWagga")
+obs_path <- file.path("C:/github/ApsimX/Tests/Validation/Wheat/Dookie2024")
 
 saveWorkbook(wb, file.path(obs_path, "DookieWagga2024.xlsx"), overwrite = TRUE)
 
@@ -181,41 +255,4 @@ saveWorkbook(wb, file.path(obs_path, "DookieWagga2024.xlsx"), overwrite = TRUE)
 
 
 
-
-
-
-
-
-
-
-
-
-ndvi_raw <- read_excel(
-  path = file_path,
-  sheet = "NDVI & height",
-  col_types = "text"   # read everything as text first to control date parsing
-)
-
-
-
-
-
-ndvi_worked <- ndvi_raw %>%
-  mutate(Clock.Today = as.Date(ymd("1899-12-30") + as.numeric(`Measurement date`)), 
-                               Block=as.factor(`!Block`),
-                               NDVI=as.numeric(`Plot NDVI`),
-                               Cultivar=as.factor(`!Cultivar`)
-                               ) %>%
-  dplyr::select(Clock.Today, Cultivar,Block, NDVI) %>%
-  inner_join(df_sim_names, by="Cultivar")
-
-# --------------------------------------------------------------
-# --- Plant Height ---------------------------------------------
-# --------------------------------------------------------------
-
-ndvi_raw <- read_excel(
-  path = file_path,
-  sheet = "Canopy Height",
-  col_types = "text"   # read everything as text first to control date parsing
-)
 

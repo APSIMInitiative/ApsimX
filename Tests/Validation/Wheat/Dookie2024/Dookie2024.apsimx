@@ -21949,7 +21949,7 @@
                   "FactorToVaryLines": null,
                   "Marker": 0,
                   "MarkerSize": 0,
-                  "Line": 2,
+                  "Line": 4,
                   "LineThickness": 0,
                   "TableName": "Observed",
                   "XFieldName": "Clock.Today",
