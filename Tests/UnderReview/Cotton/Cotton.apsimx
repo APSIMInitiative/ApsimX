@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 192,
+  "Version": 206,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -24,7 +24,6 @@
     },
     {
       "$type": "Models.Storage.DataStore, Models",
-      "useFirebird": false,
       "CustomFileName": null,
       "Name": "DataStore",
       "ResourceName": null,
@@ -32,18 +31,19 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
-            "Observed\\Observed.xlsx",
-            "Observed\\ForestHillObserved.xlsx",
-            "Observed\\Narrabri0607Observed.xlsx",
-            "Observed\\Narrabri0203Observed.xlsx",
-            "Observed\\BDKObserved.xlsx",
-            "Observed\\WarraObserved.xlsx",
-            "Observed\\Narrabri23.xlsx",
-            "Observed\\DouglasDaly2021.xlsx",
-            "Observed\\DouglasDaly21Observed.xlsx"
+            "Observed/ForestHillObserved.xlsx",
+            "Observed/Narrabri0607Observed.xlsx",
+            "Observed/Narrabri0203Observed.xlsx",
+            "Observed/BDKObserved.xlsx",
+            "Observed/WarraObserved.xlsx",
+            "Observed/Narrabri23.xlsx",
+            "Observed/DouglasDaly2021.xlsx",
+            "Observed/DouglasDaly21Observed_20251202.xlsx",
+            "Observed/Emerald2015Observed.xlsx"
           ],
           "SheetNames": [
-            "CottonObserved"
+            "CottonObserved",
+            "PhenologyObserved"
           ],
           "Name": "Observed",
           "ResourceName": null,
@@ -103,7 +103,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Replacements",
       "ResourceName": null,
       "Children": [
@@ -404,7 +403,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": true,
-                      "GraphsPerPage": 6,
                       "Name": "PotentialPartitioningMethods",
                       "ResourceName": null,
                       "Children": [
@@ -447,7 +445,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": true,
-                      "GraphsPerPage": 6,
                       "Name": "AllocationMethods",
                       "ResourceName": null,
                       "Children": [
@@ -491,7 +488,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": true,
-                      "GraphsPerPage": 6,
                       "Name": "PotentialPartitioningMethods",
                       "ResourceName": null,
                       "Children": [
@@ -510,7 +506,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": true,
-                      "GraphsPerPage": 6,
                       "Name": "ActualPartitioningMethods",
                       "ResourceName": null,
                       "Children": [
@@ -537,7 +532,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": true,
-                      "GraphsPerPage": 6,
                       "Name": "AllocationMethods",
                       "ResourceName": null,
                       "Children": [
@@ -750,6 +744,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Units": null,
                       "Expression": "1/EXP(5.385-0.0512*[Weather].MeanT)",
                       "Name": "B_PER",
                       "ResourceName": null,
@@ -1202,6 +1197,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.ExpressionFunction, Models",
+                          "Units": null,
                           "Expression": "0.81*([Phenology].CutoutDAS)+73",
                           "Name": "MaturityDuration",
                           "ResourceName": null,
@@ -2456,6 +2452,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "Units": null,
                                   "Expression": "[Leaf].Phyllochron",
                                   "Name": "Target",
                                   "ResourceName": null,
@@ -2669,6 +2666,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.ExpressionFunction, Models",
+                          "Units": null,
                           "Expression": "floor([Leaf].NodeNumber+0.5)",
                           "Name": "NodeNumberROUND",
                           "ResourceName": null,
@@ -4429,6 +4427,7 @@
                 },
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Units": null,
                   "Expression": "[Leaf].Phyllochron * [Leaf].Plastochron.Multiplier",
                   "Name": "Plastochron",
                   "ResourceName": null,
@@ -4699,6 +4698,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
                                       "Expression": "([Leaf].SpecificArea.SLAMin+([Leaf].SpecificArea.SLAMax-[Leaf].SpecificArea.SLAMin)*EXP([Leaf].SpecificArea.SLAPAR*[Leaf].SpecificArea.PAR7))/[Leaf].SpecificArea.SLAMax",
                                       "Name": "PARSLA",
                                       "ResourceName": null,
@@ -4708,6 +4708,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
                                       "Expression": "MAX(0.1, (1-(1-[Leaf].SpecificArea.FW7)*[Leaf].SpecificArea.TURSLA))",
                                       "Name": "WaterStressFunction",
                                       "ResourceName": null,
@@ -5119,6 +5120,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
                                       "Expression": "[Phenology].BollFilling.Target+[Phenology].Maturing.Target",
                                       "Name": "PostCanopyTT",
                                       "ResourceName": null,
@@ -5128,6 +5130,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
                                       "Expression": "[Phenology].BollFilling.ProgressThroughPhase+[Phenology].Maturing.ProgressThroughPhase",
                                       "Name": "PostCanopyTTComplete",
                                       "ResourceName": null,
@@ -6121,6 +6124,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
                                       "Expression": "[Phenology].BollFilling.Target+[Phenology].Maturing.Target",
                                       "Name": "ReproductiveTT",
                                       "ResourceName": null,
@@ -6130,6 +6134,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
                                       "Expression": "[Phenology].BollFilling.ProgressThroughPhase+[Phenology].Maturing.ProgressThroughPhase",
                                       "Name": "ReproductiveTTComplete",
                                       "ResourceName": null,
@@ -7334,6 +7339,10 @@
               "DMDemand": null,
               "NDemand": null,
               "potentialDMAllocation": null,
+              "WaterUptakeSupply": null,
+              "NitrogenUptakeSupply": null,
+              "WaterTakenUp": null,
+              "NitrogenTakenUp": null,
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
               "Name": "Root",
@@ -8185,13 +8194,14 @@
                 {
                   "$type": "Models.Manager, Models",
                   "CodeArray": [
-                    "using Models.Soils;",
-                    "using System;",
-                    "using System.Linq;",
-                    "using Models.Core;",
-                    "using Models.PMF;",
-                    "using Models.PMF.Organs;",
+                    "using APSIM.Numerics;",
                     "using APSIM.Shared.Utilities;",
+                    "using Models.PMF.Organs;",
+                    "using Models.PMF;",
+                    "using Models.Core;",
+                    "using System.Linq;",
+                    "using System;",
+                    "using Models.Soils;",
                     "namespace Models",
                     "{",
                     "    [Serializable]",
@@ -8394,7 +8404,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "DailyPartitioning",
                   "ResourceName": null,
                   "Children": [
@@ -8530,6 +8539,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Units": null,
                       "Expression": "[Lint].Wt + [Seed].Wt",
                       "Name": "SeedCottonWt",
                       "ResourceName": null,
@@ -8678,7 +8688,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Cultivars",
               "ResourceName": null,
               "Children": [
@@ -8924,7 +8933,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": false,
-                      "GraphsPerPage": 6,
                       "Name": "PotentialPartitioningMethods",
                       "ResourceName": null,
                       "Children": [
@@ -8967,7 +8975,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": false,
-                      "GraphsPerPage": 6,
                       "Name": "AllocationMethods",
                       "ResourceName": null,
                       "Children": [
@@ -9011,7 +9018,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": false,
-                      "GraphsPerPage": 6,
                       "Name": "PotentialPartitioningMethods",
                       "ResourceName": null,
                       "Children": [
@@ -9030,7 +9036,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": false,
-                      "GraphsPerPage": 6,
                       "Name": "ActualPartitioningMethods",
                       "ResourceName": null,
                       "Children": [
@@ -9057,7 +9062,6 @@
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": false,
-                      "GraphsPerPage": 6,
                       "Name": "AllocationMethods",
                       "ResourceName": null,
                       "Children": [
@@ -10102,6 +10106,10 @@
               "DMDemand": null,
               "NDemand": null,
               "potentialDMAllocation": null,
+              "WaterUptakeSupply": null,
+              "NitrogenUptakeSupply": null,
+              "WaterTakenUp": null,
+              "NitrogenTakenUp": null,
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
               "Name": "Root",
@@ -11985,6 +11993,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
                                       "Expression": "[Phenology].EarlyFlowering.Target + [Phenology].EarlyPodDevelopment.Target + [Phenology].EarlyGrainFilling.Target+[Phenology].MidGrainFilling.Target",
                                       "Name": "TTRequired",
                                       "ResourceName": null,
@@ -11994,6 +12003,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
                                       "Expression": "[Phenology].EarlyFlowering.ProgressThroughPhase + [Phenology].EarlyPodDevelopment.ProgressThroughPhase + [Phenology].EarlyGrainFilling.ProgressThroughPhase+[Phenology].MidGrainFilling.ProgressThroughPhase",
                                       "Name": "TTComplete",
                                       "ResourceName": null,
@@ -12959,6 +12969,7 @@
                 },
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Units": null,
                   "Expression": "[Leaf].Phyllochron * [Leaf].Plastochron.Multiplier",
                   "Name": "Plastochron",
                   "ResourceName": null,
@@ -13036,6 +13047,7 @@
                 },
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Units": null,
                   "Expression": "[Leaf].NodeNumber - 1",
                   "Name": "TrueLeafNumber",
                   "ResourceName": null,
@@ -13150,6 +13162,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
                                       "Expression": "[Grain].PotentialHarvestIndex - [Grain].HarvestIndex",
                                       "Name": "Increase",
                                       "ResourceName": null,
@@ -13178,6 +13191,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
                                       "Expression": "[Phenology].EarlyGrainFilling.Target+[Phenology].MidGrainFilling.Target+[Phenology].LateGrainFilling.Target",
                                       "Name": "ReproductiveTT",
                                       "ResourceName": null,
@@ -13187,6 +13201,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
                                       "Expression": "[Phenology].EarlyGrainFilling.ProgressThroughPhase+[Phenology].MidGrainFilling.ProgressThroughPhase+[Phenology].LateGrainFilling.ProgressThroughPhase",
                                       "Name": "ReproductiveTTComplete",
                                       "ResourceName": null,
@@ -13805,6 +13820,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
                                       "Expression": "[Phenology].LateGrainFilling.Target+[Phenology].Maturing.Target",
                                       "Name": "PostCanopyTT",
                                       "ResourceName": null,
@@ -13814,6 +13830,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
                                       "Expression": "[Phenology].LateGrainFilling.ProgressThroughPhase+[Phenology].Maturing.ProgressThroughPhase",
                                       "Name": "PostCanopyTTComplete",
                                       "ResourceName": null,
@@ -14640,6 +14657,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
                                       "Expression": "[Phenology].LateGrainFilling.Target + [Phenology].Maturing.Target",
                                       "Name": "ReproductiveTT",
                                       "ResourceName": null,
@@ -14649,6 +14667,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
                                       "Expression": "[Phenology].LateGrainFilling.ProgressThroughPhase + [Phenology].Maturing.ProgressThroughPhase",
                                       "Name": "ReproductiveTT1Complete",
                                       "ResourceName": null,
@@ -14830,6 +14849,7 @@
                                           "Children": [
                                             {
                                               "$type": "Models.Functions.ExpressionFunction, Models",
+                                              "Units": null,
                                               "Expression": "[Shell].PotentialHarvestIndex - [Shell].HarvestIndex",
                                               "Name": "Increase",
                                               "ResourceName": null,
@@ -14858,6 +14878,7 @@
                                           "Children": [
                                             {
                                               "$type": "Models.Functions.ExpressionFunction, Models",
+                                              "Units": null,
                                               "Expression": "[Phenology].EarlyPodDevelopment.Target+[Phenology].EarlyGrainFilling.Target+[Phenology].MidGrainFilling.Target",
                                               "Name": "ShellGrowthTT",
                                               "ResourceName": null,
@@ -14867,6 +14888,7 @@
                                             },
                                             {
                                               "$type": "Models.Functions.ExpressionFunction, Models",
+                                              "Units": null,
                                               "Expression": "[Phenology].EarlyPodDevelopment.ProgressThroughPhase+[Phenology].EarlyGrainFilling.ProgressThroughPhase+[Phenology].MidGrainFilling.ProgressThroughPhase",
                                               "Name": "ShellGrowthTTComplete",
                                               "ResourceName": null,
@@ -15224,6 +15246,7 @@
                 },
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Units": null,
                   "Expression": "[Shell].Live.Wt*[Shell].SpecificArea",
                   "Name": "Area",
                   "ResourceName": null,
@@ -15694,7 +15717,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "CultivarFolder",
               "ResourceName": null,
               "Children": [
@@ -15710,7 +15732,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "GenericCultivars",
                   "ResourceName": null,
                   "Children": [
@@ -16574,7 +16595,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": true,
-      "GraphsPerPage": 6,
       "Name": "Validation",
       "ResourceName": null,
       "Children": [
@@ -17384,7 +17404,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "CombinedResults",
           "ResourceName": null,
           "Children": [
@@ -18035,7 +18054,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Douglas Daly Row Spacing 2021",
           "ResourceName": null,
           "Children": [
@@ -18272,9 +18290,6 @@
                       "ConstantsFile": null,
                       "FileName": "Weatherfiles/NT_RS-DDRF2021.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -13.83,
-                      "Tav": 27.35,
-                      "Amp": 8.3,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -18311,6 +18326,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "paddock",
                       "ResourceName": null,
                       "Children": [
@@ -18881,8 +18897,6 @@
                                 0.15,
                                 0.15
                               ],
-                              "InitialPAWmm": 91.5,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": true,
                               "Name": "Water",
                               "ResourceName": null,
@@ -19238,14 +19252,12 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Canopy",
                   "ResourceName": null,
                   "Children": [
@@ -19934,7 +19946,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Biomass",
                   "ResourceName": null,
                   "Children": [
@@ -20710,7 +20721,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Phenology",
                   "ResourceName": null,
                   "Children": [
@@ -21121,7 +21131,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "HarvestIndices",
                   "ResourceName": null,
                   "Children": [
@@ -21464,7 +21473,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "ArbitratorDM",
                   "ResourceName": null,
                   "Children": [
@@ -22337,7 +22345,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Soil water",
                   "ResourceName": null,
                   "Children": [
@@ -23415,7 +23422,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "Stress",
                   "ResourceName": null,
                   "Children": [
@@ -23703,7 +23709,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "CutOut",
                   "ResourceName": null,
                   "Children": [
@@ -23930,7 +23935,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "RUE",
                   "ResourceName": null,
                   "Children": [
@@ -24641,7 +24645,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Douglas Daly 2020 Irrigation",
           "ResourceName": null,
           "Children": [
@@ -24798,11 +24801,8 @@
                     {
                       "$type": "Models.Climate.Weather, Models",
                       "ConstantsFile": null,
-                      "FileName": "Weatherfiles\\MI 2020.met",
+                      "FileName": "Weatherfiles/MI 2020.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -13.8345,
-                      "Tav": 27.32,
-                      "Amp": 8.36,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -24839,6 +24839,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "paddock",
                       "ResourceName": null,
                       "Children": [
@@ -25578,8 +25579,6 @@
                                 0.25,
                                 0.25
                               ],
-                              "InitialPAWmm": 144.3,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
                               "ResourceName": null,
@@ -25860,30 +25859,33 @@
                         {
                           "$type": "Models.Manager, Models",
                           "CodeArray": [
-                            "using Models.PMF.Interfaces;",
-                            "using Newtonsoft.Json;",
-                            "using System;",
-                            "using System.Linq;",
-                            "using System.Collections.Generic;",
-                            "using Models.Core;",
-                            "using Models.PMF;",
-                            "using Models.PMF.Organs;",
-                            "using Models.Functions;",
-                            "using System.Xml.Serialization;",
-                            "using APSIM.Shared.Utilities;",
-                            "using Models.Interfaces;",
-                            "using Models.Soils;",
+                            "using APSIM.Core;",
                             "using Models.Climate;",
+                            "using Models.Soils;",
+                            "using Models.Interfaces;",
+                            "using APSIM.Shared.Utilities;",
+                            "using System.Xml.Serialization;",
+                            "using Models.Functions;",
+                            "using Models.PMF.Organs;",
+                            "using Models.PMF;",
+                            "using Models.Core;",
+                            "using System.Collections.Generic;",
+                            "using System.Linq;",
+                            "using System;",
+                            "using Newtonsoft.Json;",
+                            "using Models.PMF.Interfaces;",
                             "",
                             "namespace Models",
                             "{",
                             "    [Serializable]",
-                            "    public class Script : Model",
+                            "    public class Script : Model, IStructureDependency",
                             "    {",
+                            "        [Link] private Plant Cotton;",
+                            "        [Link] private Weather weather;",
+                            "        [Link] private IClock Clock;",
+                            "        ",
+                            "        public IStructure Structure { private get; set; }",
                             "        // Links to APSIM components",
-                            "        [Link] private Plant Cotton = null;",
-                            "        [Link] private Weather weather = null;",
-                            "        [Link] private IClock Clock = null;  // Link to Clock component",
                             "",
                             "        // List to store daily radiation values from emergence",
                             "        private List<double> dailyRadiation = new List<double>();",
@@ -25913,7 +25915,7 @@
                             "                if (!slaSet)",
                             "                {",
                             "                    // Dynamically find NodeNumber under Cotton",
-                            "                    IFunction NodeNumber = Cotton.FindDescendant<IFunction>(\"NodeNumber\");",
+                            "                    IFunction NodeNumber =   Structure.FindChild<IFunction>(\"NodeNumber\", recurse: true, relativeTo: (INodeModel)Cotton);",
                             "",
                             "                    if (NodeNumber != null)",
                             "                    {",
@@ -26098,14 +26100,12 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Soil water mm",
                   "ResourceName": null,
                   "Children": [
@@ -27155,7 +27155,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Canopy",
                   "ResourceName": null,
                   "Children": [
@@ -27746,7 +27745,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Biomass",
                   "ResourceName": null,
                   "Children": [
@@ -28696,7 +28694,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "BollN",
                   "ResourceName": null,
                   "Children": [
@@ -28882,7 +28879,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Phenology",
                   "ResourceName": null,
                   "Children": [
@@ -29293,7 +29289,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "HarvestIndices",
                   "ResourceName": null,
                   "Children": [
@@ -29636,7 +29631,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "ArbitratorDM",
                   "ResourceName": null,
                   "Children": [
@@ -30509,7 +30503,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Soil water",
                   "ResourceName": null,
                   "Children": [
@@ -31532,7 +31525,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Soil nitrogen",
                   "ResourceName": null,
                   "Children": [
@@ -32476,7 +32468,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "CutOut",
                   "ResourceName": null,
                   "Children": [
@@ -32703,7 +32694,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "RUE",
                   "ResourceName": null,
                   "Children": [
@@ -33327,7 +33317,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "SurfaceOrganicMatter",
                   "ResourceName": null,
                   "Children": [
@@ -33602,7 +33591,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "Stress",
                   "ResourceName": null,
                   "Children": [
@@ -34252,7 +34240,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Burdekin Sowing Time Experiment 2009",
           "ResourceName": null,
           "Children": [
@@ -34815,8 +34802,6 @@
                                 0.22,
                                 0.25
                               ],
-                              "InitialPAWmm": 75.30599999999998,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": true,
                               "Name": "Water",
                               "ResourceName": null,
@@ -35525,8 +35510,6 @@
                                 0.22,
                                 0.25
                               ],
-                              "InitialPAWmm": 75.30599999999998,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": true,
                               "Name": "Water",
                               "ResourceName": null,
@@ -36242,8 +36225,6 @@
                                 0.22,
                                 0.25
                               ],
-                              "InitialPAWmm": 75.30599999999998,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": true,
                               "Name": "Water",
                               "ResourceName": null,
@@ -36463,11 +36444,8 @@
                     {
                       "$type": "Models.Climate.Weather, Models",
                       "ConstantsFile": null,
-                      "FileName": "Weatherfiles\\QLD_BDK2008-12_update.met",
+                      "FileName": "Weatherfiles/QLD_BDK2008-12_update.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -19.62,
-                      "Tav": 23.6,
-                      "Amp": 9.48,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -36504,6 +36482,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "paddock",
                       "ResourceName": null,
                       "Children": [
@@ -36776,30 +36755,33 @@
                         {
                           "$type": "Models.Manager, Models",
                           "CodeArray": [
-                            "using Models.PMF.Interfaces;",
-                            "using Newtonsoft.Json;",
-                            "using System;",
-                            "using System.Linq;",
-                            "using System.Collections.Generic;",
-                            "using Models.Core;",
-                            "using Models.PMF;",
-                            "using Models.PMF.Organs;",
-                            "using Models.Functions;",
-                            "using System.Xml.Serialization;",
-                            "using APSIM.Shared.Utilities;",
-                            "using Models.Interfaces;",
-                            "using Models.Soils;",
+                            "using APSIM.Core;",
                             "using Models.Climate;",
+                            "using Models.Soils;",
+                            "using Models.Interfaces;",
+                            "using APSIM.Shared.Utilities;",
+                            "using System.Xml.Serialization;",
+                            "using Models.Functions;",
+                            "using Models.PMF.Organs;",
+                            "using Models.PMF;",
+                            "using Models.Core;",
+                            "using System.Collections.Generic;",
+                            "using System.Linq;",
+                            "using System;",
+                            "using Newtonsoft.Json;",
+                            "using Models.PMF.Interfaces;",
                             "",
                             "namespace Models",
                             "{",
                             "    [Serializable]",
-                            "    public class Script : Model",
+                            "    public class Script : Model, IStructureDependency",
                             "    {",
+                            "        [Link] private Plant Cotton;",
+                            "        [Link] private Weather weather;",
+                            "        [Link] private IClock Clock;",
+                            "        ",
+                            "        public IStructure Structure { private get; set; }",
                             "        // Links to APSIM components",
-                            "        [Link] private Plant Cotton = null;",
-                            "        [Link] private Weather weather = null;",
-                            "        [Link] private IClock Clock = null;  // Link to Clock component",
                             "",
                             "        // List to store daily radiation values from emergence",
                             "        private List<double> dailyRadiation = new List<double>();",
@@ -36829,7 +36811,7 @@
                             "                if (!slaSet)",
                             "                {",
                             "                    // Dynamically find NodeNumber under Cotton",
-                            "                    IFunction NodeNumber = Cotton.FindDescendant<IFunction>(\"NodeNumber\");",
+                            "                    IFunction NodeNumber =   Structure.FindChild<IFunction>(\"NodeNumber\", recurse: true, relativeTo: (INodeModel)Cotton);",
                             "",
                             "                    if (NodeNumber != null)",
                             "                    {",
@@ -37438,8 +37420,6 @@
                                 0.22,
                                 0.25
                               ],
-                              "InitialPAWmm": 75.30599999999998,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": true,
                               "Name": "Water",
                               "ResourceName": null,
@@ -37657,14 +37637,12 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Canopy",
                   "ResourceName": null,
                   "Children": [
@@ -38255,7 +38233,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Biomass",
                   "ResourceName": null,
                   "Children": [
@@ -39031,7 +39008,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Phenology",
                   "ResourceName": null,
                   "Children": [
@@ -39442,7 +39418,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "HarvestIndices",
                   "ResourceName": null,
                   "Children": [
@@ -39785,7 +39760,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "ArbitratorDM",
                   "ResourceName": null,
                   "Children": [
@@ -40510,7 +40484,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "Stress",
                   "ResourceName": null,
                   "Children": [
@@ -40798,7 +40771,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "CutOut",
                   "ResourceName": null,
                   "Children": [
@@ -41025,7 +40997,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Nitrogen content",
                   "ResourceName": null,
                   "Children": [
@@ -41476,7 +41447,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Narrabri0203",
           "ResourceName": null,
           "Children": [
@@ -41635,9 +41605,6 @@
                       "ConstantsFile": null,
                       "FileName": "Weatherfiles/ACRI0203.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -30.12,
-                      "Tav": 19.44,
-                      "Amp": 16.79,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -41674,6 +41641,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "paddock",
                       "ResourceName": null,
                       "Children": [
@@ -42479,8 +42447,6 @@
                                 0.3656712608473711,
                                 0.3656712608473711
                               ],
-                              "InitialPAWmm": 192.9,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
                               "ResourceName": null,
@@ -42880,14 +42846,12 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Canopy",
                   "ResourceName": null,
                   "Children": [
@@ -43597,7 +43561,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Biomass",
                   "ResourceName": null,
                   "Children": [
@@ -44439,7 +44402,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Phenology",
                   "ResourceName": null,
                   "Children": [
@@ -44850,7 +44812,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "HarvestIndices",
                   "ResourceName": null,
                   "Children": [
@@ -45193,7 +45154,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "ArbitratorDM",
                   "ResourceName": null,
                   "Children": [
@@ -45918,7 +45878,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Soil water mm",
                   "ResourceName": null,
                   "Children": [
@@ -46968,7 +46927,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Soil nitrogen",
                   "ResourceName": null,
                   "Children": [
@@ -47912,7 +47870,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "Stress",
                   "ResourceName": null,
                   "Children": [
@@ -48200,7 +48157,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "CutOut",
                   "ResourceName": null,
                   "Children": [
@@ -48427,7 +48383,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "SLN",
                   "ResourceName": null,
                   "Children": [
@@ -48546,7 +48501,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Nitrogen",
                   "ResourceName": null,
                   "Children": [
@@ -48989,7 +48943,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "NitrogenConc",
                   "ResourceName": null,
                   "Children": [
@@ -49440,7 +49393,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Narrabri Deficit Trial 2006",
           "ResourceName": null,
           "Children": [
@@ -49769,9 +49721,6 @@
                       "ConstantsFile": null,
                       "FileName": "Weatherfiles/Narrabri_2006-07.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -30.12,
-                      "Tav": 17.86131439768467,
-                      "Amp": 17.28118279569893,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -49808,6 +49757,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "paddock",
                       "ResourceName": null,
                       "Children": [
@@ -50726,8 +50676,6 @@
                                 0.264,
                                 0.264
                               ],
-                              "InitialPAWmm": 57.40000000000003,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": true,
                               "Name": "Water",
                               "ResourceName": null,
@@ -51265,14 +51213,12 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Canopy",
                   "ResourceName": null,
                   "Children": [
@@ -52089,7 +52035,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Biomass",
                   "ResourceName": null,
                   "Children": [
@@ -52823,7 +52768,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Phenology",
                   "ResourceName": null,
                   "Children": [
@@ -53234,7 +53178,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "HarvestIndices",
                   "ResourceName": null,
                   "Children": [
@@ -53577,7 +53520,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "ArbitratorDM",
                   "ResourceName": null,
                   "Children": [
@@ -54302,7 +54244,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Plant Available Soil water mm",
                   "ResourceName": null,
                   "Children": [
@@ -55352,7 +55293,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "Stress",
                   "ResourceName": null,
                   "Children": [
@@ -55640,7 +55580,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "CutOut",
                   "ResourceName": null,
                   "Children": [
@@ -55867,7 +55806,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Nitrogen content",
                   "ResourceName": null,
                   "Children": [
@@ -56534,7 +56472,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Narrabri2023",
           "ResourceName": null,
           "Children": [
@@ -56704,11 +56641,8 @@
                     {
                       "$type": "Models.Climate.Weather, Models",
                       "ConstantsFile": null,
-                      "FileName": "Weatherfiles\\Narrabri2023.met",
+                      "FileName": "Weatherfiles/Narrabri2023.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -30.2,
-                      "Tav": 19.28,
-                      "Amp": 16.69,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -56745,6 +56679,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "paddock",
                       "ResourceName": null,
                       "Children": [
@@ -57310,8 +57245,6 @@
                                 0.51,
                                 0.5
                               ],
-                              "InitialPAWmm": 347.5,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
                               "ResourceName": null,
@@ -57608,30 +57541,33 @@
                         {
                           "$type": "Models.Manager, Models",
                           "CodeArray": [
-                            "using Models.PMF.Interfaces;",
-                            "using Newtonsoft.Json;",
-                            "using System;",
-                            "using System.Linq;",
-                            "using System.Collections.Generic;",
-                            "using Models.Core;",
-                            "using Models.PMF;",
-                            "using Models.PMF.Organs;",
-                            "using Models.Functions;",
-                            "using System.Xml.Serialization;",
-                            "using APSIM.Shared.Utilities;",
-                            "using Models.Interfaces;",
-                            "using Models.Soils;",
+                            "using APSIM.Core;",
                             "using Models.Climate;",
+                            "using Models.Soils;",
+                            "using Models.Interfaces;",
+                            "using APSIM.Shared.Utilities;",
+                            "using System.Xml.Serialization;",
+                            "using Models.Functions;",
+                            "using Models.PMF.Organs;",
+                            "using Models.PMF;",
+                            "using Models.Core;",
+                            "using System.Collections.Generic;",
+                            "using System.Linq;",
+                            "using System;",
+                            "using Newtonsoft.Json;",
+                            "using Models.PMF.Interfaces;",
                             "",
                             "namespace Models",
                             "{",
                             "    [Serializable]",
-                            "    public class Script : Model",
+                            "    public class Script : Model, IStructureDependency",
                             "    {",
+                            "        [Link] private Plant Cotton;",
+                            "        [Link] private Weather weather;",
+                            "        [Link] private IClock Clock;",
+                            "        ",
+                            "        public IStructure Structure { private get; set; }",
                             "        // Links to APSIM components",
-                            "        [Link] private Plant Cotton = null;",
-                            "        [Link] private Weather weather = null;",
-                            "        [Link] private IClock Clock = null;  // Link to Clock component",
                             "",
                             "        // List to store daily radiation values from emergence",
                             "        private List<double> dailyRadiation = new List<double>();",
@@ -57661,7 +57597,7 @@
                             "                if (!slaSet)",
                             "                {",
                             "                    // Dynamically find NodeNumber under Cotton",
-                            "                    IFunction NodeNumber = Cotton.FindDescendant<IFunction>(\"NodeNumber\");",
+                            "                    IFunction NodeNumber =   Structure.FindChild<IFunction>(\"NodeNumber\", recurse: true, relativeTo: (INodeModel)Cotton);",
                             "",
                             "                    if (NodeNumber != null)",
                             "                    {",
@@ -58025,14 +57961,12 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Soil water mm",
                   "ResourceName": null,
                   "Children": [
@@ -59082,7 +59016,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Canopy",
                   "ResourceName": null,
                   "Children": [
@@ -59605,7 +59538,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Biomass",
                   "ResourceName": null,
                   "Children": [
@@ -60273,7 +60205,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Phenology",
                   "ResourceName": null,
                   "Children": [
@@ -60684,7 +60615,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "HarvestIndices",
                   "ResourceName": null,
                   "Children": [
@@ -61027,7 +60957,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "ArbitratorDM",
                   "ResourceName": null,
                   "Children": [
@@ -61752,7 +61681,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Soil nitrogen",
                   "ResourceName": null,
                   "Children": [
@@ -62696,7 +62624,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "Stress",
                   "ResourceName": null,
                   "Children": [
@@ -62984,7 +62911,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "CutOut",
                   "ResourceName": null,
                   "Children": [
@@ -63211,7 +63137,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "SLN",
                   "ResourceName": null,
                   "Children": [
@@ -63330,7 +63255,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "PlantNitrogen",
                   "ResourceName": null,
                   "Children": [
@@ -64811,7 +64735,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "ForestHill2023",
           "ResourceName": null,
           "Children": [
@@ -65020,9 +64943,6 @@
                       "ConstantsFile": null,
                       "FileName": "Weatherfiles/ForestHill.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -27.57375,
-                      "Tav": 20.12,
-                      "Amp": 12.47,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -65059,6 +64979,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "paddock",
                       "ResourceName": null,
                       "Children": [
@@ -65552,8 +65473,6 @@
                                 0.264,
                                 0.264
                               ],
-                              "InitialPAWmm": 63.3,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": true,
                               "Name": "Water",
                               "ResourceName": null,
@@ -66056,14 +65975,12 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Graphs",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Canopy",
                   "ResourceName": null,
                   "Children": [
@@ -66722,7 +66639,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Biomass",
                   "ResourceName": null,
                   "Children": [
@@ -67489,7 +67405,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Nitrogen",
                   "ResourceName": null,
                   "Children": [
@@ -67932,7 +67847,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "NitrogenConc",
                   "ResourceName": null,
                   "Children": [
@@ -68375,7 +68289,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "SoilWater",
                   "ResourceName": null,
                   "Children": [
@@ -68803,7 +68716,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Stress",
                   "ResourceName": null,
                   "Children": [
@@ -69086,7 +68998,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "SoilNitrogen",
                   "ResourceName": null,
                   "Children": [
@@ -69233,7 +69144,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Arbitrator N",
                   "ResourceName": null,
                   "Children": [
@@ -69370,7 +69280,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Roots",
                   "ResourceName": null,
                   "Children": [
@@ -69449,7 +69358,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "SoilTemperature",
                   "ResourceName": null,
                   "Children": [
@@ -69586,7 +69494,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [
@@ -69791,7 +69698,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "BollPartitioning",
                   "ResourceName": null,
                   "Children": [
@@ -70242,7 +70148,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Warra0405",
           "ResourceName": null,
           "Children": [
@@ -70327,11 +70232,8 @@
                     {
                       "$type": "Models.Climate.Weather, Models",
                       "ConstantsFile": null,
-                      "FileName": "Weatherfiles\\warra.met",
+                      "FileName": "Weatherfiles/warra.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -26.93,
-                      "Tav": 20.01,
-                      "Amp": 14.93,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
@@ -70383,6 +70285,7 @@
                       "$type": "Models.Zones.RectangularZone, Models",
                       "Length": 1.0,
                       "Width": 100.0,
+                      "CanopyType": null,
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
@@ -70824,8 +70727,6 @@
                                 0.3125,
                                 0.31600000000000006
                               ],
-                              "InitialPAWmm": 146.85000000000002,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
                               "ResourceName": null,
@@ -71141,6 +71042,7 @@
                       "$type": "Models.Zones.RectangularZone, Models",
                       "Length": 1.0,
                       "Width": 100.0,
+                      "CanopyType": null,
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
@@ -71595,8 +71497,6 @@
                                 0.3125,
                                 0.31600000000000006
                               ],
-                              "InitialPAWmm": 146.85000000000002,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
                               "ResourceName": null,
@@ -71731,7 +71631,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "Graphs",
                   "ResourceName": null,
                   "Children": [
