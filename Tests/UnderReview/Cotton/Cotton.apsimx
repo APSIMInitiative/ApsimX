@@ -41480,9 +41480,13 @@
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Factorial.Factor, Models",
-                      "Specification": "[Sowing]",
-                      "Name": "RowSpacing",
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Sowing]"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Conventional",
                       "ResourceName": null,
                       "Children": [
                         {
@@ -41558,10 +41562,10 @@
                             },
                             {
                               "Key": "Population",
-                              "Value": "12"
+                              "Value": "8.7"
                             }
                           ],
-                          "Name": "1m",
+                          "Name": "Sowing",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
