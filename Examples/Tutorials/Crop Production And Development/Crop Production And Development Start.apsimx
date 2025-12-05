@@ -59,7 +59,7 @@
                         {
                           "$type": "Models.Climate.Weather, Models",
                           "ConstantsFile": null,
-                          "FileName": "%root%/Examples/Tutorials/Crop Production and Development/ForestHill.met",
+                          "FileName": "%root%/Examples/Tutorials/Crop Production And Development/ForestHill.met",
                           "ExcelWorkSheetName": "",
                           "Name": "Weather",
                           "ResourceName": null,
