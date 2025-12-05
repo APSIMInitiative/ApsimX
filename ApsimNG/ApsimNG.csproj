@@ -65,10 +65,10 @@
 
   <ItemGroup>
     <EmbeddedResource Update="Resources\CommonReportVariables\CommonFrequencyVariables.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\CommonReportVariables\CommonReportingVariables.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
 
