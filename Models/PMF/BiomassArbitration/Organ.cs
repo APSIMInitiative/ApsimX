@@ -355,13 +355,8 @@ namespace Models.PMF
             Allocated.Clear();
             Senesced.Clear();
             Detached.Clear();
-        }
-
-        private void ClearBiomassRemovals()
-        {
             LiveRemoved.Clear();
             DeadRemoved.Clear();
-            removeBiomass = false;
         }
 
         /// <summary>Called when [simulation commencing].</summary>
@@ -450,7 +445,6 @@ namespace Models.PMF
         {
             if (parentPlant.IsAlive)
             {
-                ClearBiomassFlows();
                 //Set start properties used for mass balance checking
                 startLiveN = Live.N;
                 startDeadN = Dead.N;
@@ -539,7 +533,6 @@ namespace Models.PMF
                 CheckMassBalance(startLiveN, startDeadN, "N");
                 CheckMassBalance(startLiveC, startDeadC, "C");
                 CheckMassBalance(startLiveWt, startDeadWt, "Wt");
-                ClearBiomassRemovals();
             }
         }
 
@@ -618,6 +611,7 @@ namespace Models.PMF
         [EventSubscribe("DoCatchYesterday")]
         protected void OnDoCatchYesterday(object sender, EventArgs e)
         {
+            ClearBiomassFlows();
             if (resetOrganTomorrow == true)
                 Reset();
             resetOrganTomorrow = false;
