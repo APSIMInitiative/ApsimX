@@ -20319,7 +20319,7 @@
         {
           "$type": "Models.Core.Simulation, Models",
           "Descriptors": null,
-          "Name": "Test",
+          "Name": "Wagga",
           "ResourceName": null,
           "Children": [
             {
@@ -24134,74 +24134,6 @@
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
-                  "Position": 3,
-                  "Inverted": false,
-                  "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": null
-                },
-                {
-                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
-                  "Position": 0,
-                  "Inverted": false,
-                  "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": null
-                }
-              ],
-              "LegendPosition": 0,
-              "LegendOrientation": 0,
-              "AnnotationLocation": 0,
-              "DisabledSeries": [],
-              "LegendOutsideGraph": false,
-              "Name": "Height1",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": 0,
-                  "FactorToVaryColours": "Cv",
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": "Sow",
-                  "Marker": 11,
-                  "MarkerSize": 0,
-                  "Line": 0,
-                  "LineThickness": 0,
-                  "TableName": "DailyReport",
-                  "XFieldName": "Clock.Today",
-                  "YFieldName": "Wheat.Phenology.Photoperiod",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": "",
-                  "Name": "Predicted",
-                  "ResourceName": null,
-                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
