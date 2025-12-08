@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 205,
+  "Version": 206,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -332,7 +332,7 @@
                   "Children": [
                     {
                       "$type": "Models.Clock, Models",
-                      "Start": "1992-03-29T00:00:00",
+                      "Start": "1992-03-30T00:00:00",
                       "End": "1995-06-30T00:00:00",
                       "Name": "clock",
                       "ResourceName": null,
@@ -622,9 +622,9 @@
                           },
                           "CanopyType": "PastureSpecies",
                           "LightProfile": null,
-                          "InitialShootDM": 1.0,
-                          "InitialRootDM": 1.0,
-                          "InitialRootDepth": 750.0,
+                          "InitialShootDM": 0.0,
+                          "InitialRootDM": 0.0,
+                          "InitialRootDepth": 0.0,
                           "initialDMFractionsGrasses": [
                             0.15,
                             0.25,
@@ -3331,9 +3331,9 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1995-02-27",
+                              "Date": "1995-02-26",
                               "Action": "[AgPRyegrass].EndCrop()",
-                              "Line": "1995-02-27 [AgPRyegrass].EndCrop()"
+                              "Line": "1995-02-26 [AgPRyegrass].EndCrop()"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -3376,9 +3376,9 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1995-02-27",
+                              "Date": "1995-02-26",
                               "Action": "[AgPRyegrass].EndCrop()",
-                              "Line": "1995-02-27 [AgPRyegrass].EndCrop()"
+                              "Line": "1995-02-26 [AgPRyegrass].EndCrop()"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -3421,9 +3421,9 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1995-02-27",
+                              "Date": "1995-02-26",
                               "Action": "[AgPRyegrass].EndCrop()",
-                              "Line": "1995-02-27 [AgPRyegrass].EndCrop()"
+                              "Line": "1995-02-26 [AgPRyegrass].EndCrop()"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -3466,9 +3466,9 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1995-02-27",
+                              "Date": "1995-02-26",
                               "Action": "[AgPRyegrass].EndCrop()",
-                              "Line": "1995-02-27 [AgPRyegrass].EndCrop()"
+                              "Line": "1995-02-26 [AgPRyegrass].EndCrop()"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -3511,9 +3511,9 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1995-02-27",
+                              "Date": "1995-02-26",
                               "Action": "[AgPRyegrass].EndCrop()",
-                              "Line": "1995-02-27 [AgPRyegrass].EndCrop()"
+                              "Line": "1995-02-26 [AgPRyegrass].EndCrop()"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -3887,9 +3887,9 @@
                           },
                           "CanopyType": "PastureSpecies",
                           "LightProfile": null,
-                          "InitialShootDM": 1.0,
-                          "InitialRootDM": 1.0,
-                          "InitialRootDepth": 750.0,
+                          "InitialShootDM": 0.0,
+                          "InitialRootDM": 0.0,
+                          "InitialRootDepth": 0.0,
                           "initialDMFractionsGrasses": [
                             0.15,
                             0.25,
@@ -6507,9 +6507,9 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1995-02-27",
+                              "Date": "1995-02-26",
                               "Action": "[AgPRyegrass].EndCrop()",
-                              "Line": "1995-02-27 [AgPRyegrass].EndCrop()"
+                              "Line": "1995-02-26 [AgPRyegrass].EndCrop()"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -6531,9 +6531,9 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1995-02-27",
+                              "Date": "1995-02-26",
                               "Action": "[AgPRyegrass].EndCrop()",
-                              "Line": "1995-02-27 [AgPRyegrass].EndCrop()"
+                              "Line": "1995-02-26 [AgPRyegrass].EndCrop()"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -6555,9 +6555,9 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1995-02-27",
+                              "Date": "1995-02-26",
                               "Action": "[AgPRyegrass].EndCrop()",
-                              "Line": "1995-02-27 [AgPRyegrass].EndCrop()"
+                              "Line": "1995-02-26 [AgPRyegrass].EndCrop()"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -6579,9 +6579,9 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1995-02-27",
+                              "Date": "1995-02-26",
                               "Action": "[AgPRyegrass].EndCrop()",
-                              "Line": "1995-02-27 [AgPRyegrass].EndCrop()"
+                              "Line": "1995-02-26 [AgPRyegrass].EndCrop()"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -6603,9 +6603,9 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1995-02-27",
+                              "Date": "1995-02-26",
                               "Action": "[AgPRyegrass].EndCrop()",
-                              "Line": "1995-02-27 [AgPRyegrass].EndCrop()"
+                              "Line": "1995-02-26 [AgPRyegrass].EndCrop()"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -6637,7 +6637,7 @@
                   "Children": [
                     {
                       "$type": "Models.Clock, Models",
-                      "Start": "1995-02-27T00:00:00",
+                      "Start": "1995-02-26T00:00:00",
                       "End": "1997-06-30T00:00:00",
                       "Name": "clock",
                       "ResourceName": null,
@@ -6958,9 +6958,9 @@
                           },
                           "CanopyType": "PastureSpecies",
                           "LightProfile": null,
-                          "InitialShootDM": 1.0,
-                          "InitialRootDM": 1.0,
-                          "InitialRootDepth": 750.0,
+                          "InitialShootDM": 0.0,
+                          "InitialRootDM": 0.0,
+                          "InitialRootDepth": 0.0,
                           "initialDMFractionsGrasses": [
                             0.15,
                             0.25,
@@ -12175,9 +12175,9 @@
                                   },
                                   "CanopyType": "PastureSpecies",
                                   "LightProfile": null,
-                                  "InitialShootDM": 1.0,
-                                  "InitialRootDM": 1.0,
-                                  "InitialRootDepth": 750.0,
+                                  "InitialShootDM": 0.0,
+                                  "InitialRootDM": 0.0,
+                                  "InitialRootDepth": 0.0,
                                   "initialDMFractionsGrasses": [
                                     0.15,
                                     0.25,
@@ -16293,9 +16293,9 @@
                                     {
                                       "$type": "Models.Operation, Models",
                                       "Enabled": true,
-                                      "Date": "1993-12-31",
+                                      "Date": "1993-12-29",
                                       "Action": "[AgPRyegrass].EndCrop()",
-                                      "Line": "1993-12-31 [AgPRyegrass].EndCrop()"
+                                      "Line": "1993-12-29 [AgPRyegrass].EndCrop()"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
@@ -16361,9 +16361,9 @@
                                   },
                                   "CanopyType": "PastureSpecies",
                                   "LightProfile": null,
-                                  "InitialShootDM": 1.0,
-                                  "InitialRootDM": 1.0,
-                                  "InitialRootDepth": 750.0,
+                                  "InitialShootDM": 0.0,
+                                  "InitialRootDM": 0.0,
+                                  "InitialRootDepth": 0.0,
                                   "initialDMFractionsGrasses": [
                                     0.15,
                                     0.25,
@@ -20442,9 +20442,9 @@
                                     {
                                       "$type": "Models.Operation, Models",
                                       "Enabled": true,
-                                      "Date": "1990-12-30",
+                                      "Date": "1990-12-29",
                                       "Action": "[AgPRyegrass].EndCrop()",
-                                      "Line": "1990-12-30 [AgPRyegrass].EndCrop()"
+                                      "Line": "1990-12-29 [AgPRyegrass].EndCrop()"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
@@ -20510,9 +20510,9 @@
                                   },
                                   "CanopyType": "PastureSpecies",
                                   "LightProfile": null,
-                                  "InitialShootDM": 1.0,
-                                  "InitialRootDM": 1.0,
-                                  "InitialRootDepth": 750.0,
+                                  "InitialShootDM": 0.0,
+                                  "InitialRootDM": 0.0,
+                                  "InitialRootDepth": 0.0,
                                   "initialDMFractionsGrasses": [
                                     0.15,
                                     0.25,
@@ -24557,9 +24557,9 @@
                                     {
                                       "$type": "Models.Operation, Models",
                                       "Enabled": true,
-                                      "Date": "1992-12-30",
+                                      "Date": "1992-12-29",
                                       "Action": "[AgPRyegrass].EndCrop()",
-                                      "Line": "1992-12-30 [AgPRyegrass].EndCrop()"
+                                      "Line": "1992-12-29 [AgPRyegrass].EndCrop()"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
@@ -24625,9 +24625,9 @@
                                   },
                                   "CanopyType": "PastureSpecies",
                                   "LightProfile": null,
-                                  "InitialShootDM": 1.0,
-                                  "InitialRootDM": 1.0,
-                                  "InitialRootDepth": 750.0,
+                                  "InitialShootDM": 0.0,
+                                  "InitialRootDM": 0.0,
+                                  "InitialRootDepth": 0.0,
                                   "initialDMFractionsGrasses": [
                                     0.15,
                                     0.25,
@@ -28710,7 +28710,7 @@
                           "Children": [
                             {
                               "$type": "Models.Clock, Models",
-                              "Start": "1993-12-27T00:00:00",
+                              "Start": "1993-12-29T00:00:00",
                               "End": "1994-12-31T00:00:00",
                               "Name": "clock",
                               "ResourceName": null,
@@ -28846,9 +28846,9 @@
                                   },
                                   "CanopyType": "PastureSpecies",
                                   "LightProfile": null,
-                                  "InitialShootDM": 1.0,
-                                  "InitialRootDM": 1.0,
-                                  "InitialRootDepth": 750.0,
+                                  "InitialShootDM": 0.0,
+                                  "InitialRootDM": 0.0,
+                                  "InitialRootDepth": 0.0,
                                   "initialDMFractionsGrasses": [
                                     0.15,
                                     0.25,
@@ -32930,9 +32930,9 @@
                                     {
                                       "$type": "Models.Operation, Models",
                                       "Enabled": true,
-                                      "Date": "1990-12-30",
+                                      "Date": "1990-12-29",
                                       "Action": "[AgPRyegrass].EndCrop()",
-                                      "Line": "1990-12-30 [AgPRyegrass].EndCrop()"
+                                      "Line": "1990-12-29 [AgPRyegrass].EndCrop()"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
@@ -32998,9 +32998,9 @@
                                   },
                                   "CanopyType": "PastureSpecies",
                                   "LightProfile": null,
-                                  "InitialShootDM": 1.0,
-                                  "InitialRootDM": 1.0,
-                                  "InitialRootDepth": 750.0,
+                                  "InitialShootDM": 0.0,
+                                  "InitialRootDM": 0.0,
+                                  "InitialRootDepth": 0.0,
                                   "initialDMFractionsGrasses": [
                                     0.15,
                                     0.25,
@@ -37111,9 +37111,9 @@
                                   },
                                   "CanopyType": "PastureSpecies",
                                   "LightProfile": null,
-                                  "InitialShootDM": 1.0,
-                                  "InitialRootDM": 1.0,
-                                  "InitialRootDepth": 750.0,
+                                  "InitialShootDM": 0.0,
+                                  "InitialRootDM": 0.0,
+                                  "InitialRootDepth": 0.0,
                                   "initialDMFractionsGrasses": [
                                     0.15,
                                     0.25,
@@ -41228,9 +41228,9 @@
                                   },
                                   "CanopyType": "PastureSpecies",
                                   "LightProfile": null,
-                                  "InitialShootDM": 1.0,
-                                  "InitialRootDM": 1.0,
-                                  "InitialRootDepth": 750.0,
+                                  "InitialShootDM": 0.0,
+                                  "InitialRootDM": 0.0,
+                                  "InitialRootDepth": 0.0,
                                   "initialDMFractionsGrasses": [
                                     0.15,
                                     0.25,
@@ -45485,9 +45485,9 @@
                                   },
                                   "CanopyType": "PastureSpecies",
                                   "LightProfile": null,
-                                  "InitialShootDM": 1.0,
-                                  "InitialRootDM": 1.0,
-                                  "InitialRootDepth": 750.0,
+                                  "InitialShootDM": 0.0,
+                                  "InitialRootDM": 0.0,
+                                  "InitialRootDepth": 0.0,
                                   "initialDMFractionsGrasses": [
                                     0.15,
                                     0.25,
@@ -50596,7 +50596,7 @@
                       "Children": [
                         {
                           "$type": "Models.Clock, Models",
-                          "Start": "2006-03-01T00:00:00",
+                          "Start": "2006-03-14T00:00:00",
                           "End": "2008-07-01T00:00:00",
                           "Name": "clock",
                           "ResourceName": null,
@@ -51415,9 +51415,9 @@
                               },
                               "CanopyType": "PastureSpecies",
                               "LightProfile": null,
-                              "InitialShootDM": 1.0,
-                              "InitialRootDM": 1.0,
-                              "InitialRootDepth": 50.0,
+                              "InitialShootDM": 0.0,
+                              "InitialRootDM": 0.0,
+                              "InitialRootDepth": 0.0,
                               "initialDMFractionsGrasses": [
                                 0.15,
                                 0.25,
@@ -55631,7 +55631,7 @@
                         },
                         {
                           "$type": "Models.Clock, Models",
-                          "Start": "2011-03-01T00:00:00",
+                          "Start": "2011-03-14T00:00:00",
                           "End": "2014-05-01T00:00:00",
                           "Name": "Clock",
                           "ResourceName": null,
@@ -56438,9 +56438,9 @@
                               },
                               "CanopyType": "PastureSpecies",
                               "LightProfile": null,
-                              "InitialShootDM": 1.0,
-                              "InitialRootDM": 1.0,
-                              "InitialRootDepth": 50.0,
+                              "InitialShootDM": 0.0,
+                              "InitialRootDM": 0.0,
+                              "InitialRootDepth": 0.0,
                               "initialDMFractionsGrasses": [
                                 0.15,
                                 0.25,
@@ -56609,9 +56609,9 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
-                                  "Date": "2011-03-01",
+                                  "Date": "2011-03-14",
                                   "Action": "[AgPRyegrass].EndCrop()",
-                                  "Line": "2011-03-01 [AgPRyegrass].EndCrop()"
+                                  "Line": "2011-03-14 [AgPRyegrass].EndCrop()"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
