@@ -5522,22 +5522,13 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[SPRUM].Leaf.Photosynthesis",
+                      "VariableName": "[STRUM].Leaf.Photosynthesis",
                       "Name": "DailyPhotosynthesis",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[SPRUM].LegumePropn",
-                      "Name": "LegumePropn",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
                   ],
                   "Enabled": true,
                   "ReadOnly": false
