@@ -340,17 +340,17 @@ namespace Models.PMF
         /// <summary>Clears this instance.</summary>
         protected virtual void Clear()
         {
-            Live.Clear();
-            Dead.Clear();
-            ReAllocated.Clear();
-            ReTranslocated.Clear();
-            Allocated.Clear();
-            Senesced.Clear();
-            Detached.Clear();
-            LiveRemoved.Clear();
-            DeadRemoved.Clear();
-            LiveToResidues.Clear();
-            DeadToResidues.Clear();
+            Live?.Clear();
+            Dead?.Clear();
+            ReAllocated?.Clear();
+            ReTranslocated?.Clear();
+            Allocated?.Clear();
+            Senesced?.Clear();
+            Detached?.Clear();
+            LiveRemoved?.Clear();
+            DeadRemoved?.Clear();
+            LiveToResidues?.Clear();
+            DeadToResidues?.Clear();
             removeBiomass = false;
             resetOrganTomorrow = false;
         }
@@ -358,15 +358,15 @@ namespace Models.PMF
         /// <summary>Clears the transferring biomass amounts.</summary>
         private void ClearBiomassFlows()
         {
-            ReAllocated.Clear();
-            ReTranslocated.Clear();
-            Allocated.Clear();
-            Senesced.Clear();
-            Detached.Clear();
-            LiveRemoved.Clear();
-            DeadRemoved.Clear();
-            LiveToResidues.Clear();
-            DeadToResidues.Clear();
+            ReAllocated?.Clear();
+            ReTranslocated?.Clear();
+            Allocated?.Clear();
+            Senesced?.Clear();
+            Detached?.Clear();
+            LiveRemoved?.Clear();
+            DeadRemoved?.Clear();
+            LiveToResidues?.Clear();
+            DeadToResidues?.Clear();
         }
 
         /// <summary>Called when [simulation commencing].</summary>
