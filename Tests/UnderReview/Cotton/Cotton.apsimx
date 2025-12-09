@@ -9168,7 +9168,8 @@
                   "Command": [
                     "//[Leaf].SpecificArea.FixedValue = 0.012",
                     "//[Leaf].AreaLargestMainstemLeaf.FixedValue = 0.011 //0.006",
-                    "//[Leaf].AreaLargestSympodialLeaf.FixedValue = 0.009 //0.006"
+                    "//[Leaf].AreaLargestSympodialLeaf.FixedValue = 0.009 //0.006",
+                    "[Phenology].Squaring.Target.FloweringTT.FixedValue = 530"
                   ],
                   "Name": "Sicot_71B",
                   "ResourceName": null,
@@ -9194,7 +9195,8 @@
                   "Command": [
                     "//[Leaf].SpecificArea.FixedValue = 0.015",
                     "//[Leaf].AreaLargestMainstemLeaf.FixedValue = 0.023",
-                    "//[Leaf].AreaLargestSympodialLeaf.FixedValue = 0.017"
+                    "//[Leaf].AreaLargestSympodialLeaf.FixedValue = 0.017",
+                    "[Phenology].Squaring.Target.FloweringTT.FixedValue = 530"
                   ],
                   "Name": "Sicot_74BRF",
                   "ResourceName": null,
@@ -9206,7 +9208,7 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Root].MaxDailyNUptake.XYPairs.Y = 10, 10",
-                    "[Phenology].Squaring.Target.FloweringTT.FixedValue = 540"
+                    "[Phenology].Squaring.Target.FloweringTT.FixedValue = 530"
                   ],
                   "Name": "748V2C",
                   "ResourceName": null,
@@ -40890,7 +40892,7 @@
                             },
                             {
                               "Key": "CultivarName",
-                              "Value": "Sicot_71B"
+                              "Value": "Sicala V-3RRi"
                             },
                             {
                               "Key": "SowingDepth",
@@ -40986,7 +40988,7 @@
                             },
                             {
                               "Key": "CultivarName",
-                              "Value": "Sicot_71B"
+                              "Value": "Sicala V-3RRi"
                             },
                             {
                               "Key": "SowingDepth",
@@ -56300,8 +56302,8 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "2023-10-12",
-                              "Action": "[Cotton].Sow(population: 11.4, cultivar: Sicot_71B, depth: 50, rowSpacing: 1000);",
-                              "Line": "2023-10-12 [Cotton].Sow(population: 11.4, cultivar: Sicot_71B, depth: 50, rowSpacing: 1000);"
+                              "Action": "[Cotton].Sow(population: 11.4, cultivar: Sicot_748B3F, depth: 50, rowSpacing: 1000);",
+                              "Line": "2023-10-12 [Cotton].Sow(population: 11.4, cultivar: Sicot_748B3F, depth: 50, rowSpacing: 1000);"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -56338,8 +56340,8 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "2023-10-12",
-                              "Action": "[Cotton].Sow(population: 11.6, cultivar: Sicot_71B, depth: 50, rowSpacing: 1000);",
-                              "Line": "2023-10-12 [Cotton].Sow(population: 11.6, cultivar: Sicot_71B, depth: 50, rowSpacing: 1000);"
+                              "Action": "[Cotton].Sow(population: 11.6, cultivar: Sicot_748B3F, depth: 50, rowSpacing: 1000);",
+                              "Line": "2023-10-12 [Cotton].Sow(population: 11.6, cultivar: Sicot_748B3F, depth: 50, rowSpacing: 1000);"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -56376,8 +56378,8 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "2023-10-12",
-                              "Action": "[Cotton].Sow(population: 12.1, cultivar: Sicot_71B, depth: 50, rowSpacing: 1000);",
-                              "Line": "2023-10-12 [Cotton].Sow(population: 12.1, cultivar: Sicot_71B, depth: 50, rowSpacing: 1000);"
+                              "Action": "[Cotton].Sow(population: 12.1, cultivar: Sicot_748B3F, depth: 50, rowSpacing: 1000);",
+                              "Line": "2023-10-12 [Cotton].Sow(population: 12.1, cultivar: Sicot_748B3F, depth: 50, rowSpacing: 1000);"
                             },
                             {
                               "$type": "Models.Operation, Models",
