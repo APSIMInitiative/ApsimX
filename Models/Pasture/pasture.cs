@@ -17,6 +17,8 @@ using System.Linq;
 using static Models.GrazPlan.GrazType;
 using static Models.GrazPlan.PastureUtil;
 using APSIM.Core;
+using Models.PMF;
+using MathNet.Numerics.Providers.SparseSolver;
 
 namespace Models.GrazPlan
 {
@@ -850,6 +852,25 @@ namespace Models.GrazPlan
             }
         }
 
+        ///<summary> Get above ground biomass> </summary>
+        public IBiomass AboveGround
+        {
+            get
+            {
+                Biomass mass =new Biomass();
+                mass.StructuralWt= GetDM(GrazType.TOTAL, GrazType.TOTAL)/10;
+                mass.StructuralN=GetPlantNutr(GrazType.TOTAL, GrazType.TOTAL, TPlantElement.N);
+                return mass;
+            }
+        }
+        /// <summary>
+        /// AboveGround Live weight
+        /// </summary>
+        public double AboveGroundLiveWt
+        {
+            get {return  GetDM(GrazType.sgGREEN, GrazType.TOTAL)/10; }
+        }
+
         /// <summary>Total dry weight of all herbage</summary>
         [Units("kg/ha")]
         public double ShootDM { get { return GetDM(GrazType.TOTAL, GrazType.TOTAL); } }
@@ -1016,6 +1037,8 @@ namespace Models.GrazPlan
         /// <summary>Average sulphur content of litter</summary>
         [Units("g/g")]
         public double LitterS { get { return GetPlantNutr(GrazType.sgLITTER, GrazType.TOTAL, TPlantElement.S); } }
+
+        
 
         /// <summary>Total dry weight of green herbage</summary>
         [Units("kg/ha")]
