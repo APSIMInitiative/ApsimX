@@ -357,7 +357,10 @@
             "[Cotton].Boll.BurFraction",
             "[Cotton].Boll.LintFraction",
             "[Cotton].Boll.SeedFraction",
-            "[Cotton].Boll.SeedCottonFraction"
+            "[Cotton].Boll.SeedCottonFraction",
+            "",
+            "",
+            "[Cotton].Boll.DailyHIIncrease"
           ],
           "EventNames": [
             "[Clock].DoReport"
@@ -8755,7 +8758,7 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             5.0,
-                            8.0
+                            7.0
                           ],
                           "Y": [
                             1.0,
@@ -8789,7 +8792,7 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             5.0,
-                            8.0
+                            7.0
                           ],
                           "Y": [
                             0.0,
@@ -8816,7 +8819,7 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "SeedFraction",
+                      "Name": "SeedFractionOLD",
                       "ResourceName": null,
                       "Children": [
                         {
@@ -8845,6 +8848,16 @@
                           "ReadOnly": false
                         }
                       ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Units": null,
+                      "Expression": "1 - [Boll].DailyPartitioning.BurFraction - [Boll].DailyPartitioning.LintFraction",
+                      "Name": "SeedFraction",
+                      "ResourceName": null,
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -40996,7 +41009,7 @@
                             },
                             {
                               "Key": "RowSpacing",
-                              "Value": "380"
+                              "Value": "250"
                             },
                             {
                               "Key": "Population",
@@ -42949,6 +42962,85 @@
                           "Name": "Observed",
                           "ResourceName": null,
                           "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "CoverGreen",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "SimulationName",
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "DailyReport",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Cotton.Leaf.CoverGreen",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.EventNamesOnGraph, Models",
+                              "ColumnName": "Cotton.Phenology.CurrentStageName",
+                              "SimulationName": "Rose0203_C",
+                              "Name": "EventNamesOnGraph",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -66811,8 +66903,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": -15.674503440480732,
-                          "Maximum": 236.79136469158075,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
                           "Interval": null
                         }
                       ],
@@ -69905,20 +69997,6 @@
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Factorial.CompositeFactor, Models",
-                          "Specifications": [
-                            "[CottonZone].Width=100",
-                            "[SkipZone].Width=100"
-                          ],
-                          "Paths": null,
-                          "Values": null,
-                          "Name": "None",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
                         }
                       ],
                       "Enabled": true,
@@ -69993,7 +70071,8 @@
                       "VariableNames": [
                         "[Clock].Today",
                         "sum([CottonZone].Soil.Water.MM[1:4]) as CottonTotSW90",
-                        "sum([SkipZone].Soil.Water.MM[1:4]) as SkipTotSW90"
+                        "sum([SkipZone].Soil.Water.MM[1:4]) as SkipTotSW90",
+                        "[CottonZone].Cotton.AboveGround.Wt"
                       ],
                       "EventNames": [
                         "[Clock].DoReport"
@@ -70020,6 +70099,7 @@
                           "$type": "Models.Report, Models",
                           "VariableNames": [
                             "[Clock].Today",
+                            "[Cotton].Phenology.CurrentStageName",
                             "[Cotton].AboveGround.Wt",
                             "sum([Soil].Water.MM[1:4]) as TotalSW90cm",
                             "[Cotton].Leaf.Fw",
@@ -70647,7 +70727,7 @@
                             },
                             {
                               "Key": "Population",
-                              "Value": "12"
+                              "Value": "10"
                             }
                           ],
                           "Name": "Sowing",
@@ -71418,7 +71498,18 @@
                           "Filter": null,
                           "Name": "Predicted",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.EventNamesOnGraph, Models",
+                              "ColumnName": "Cotton.Phenology.CurrentStageName",
+                              "SimulationName": "Warra0405SkipDouble",
+                              "Name": "EventNamesOnGraph",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -71611,6 +71702,152 @@
                       "ReadOnly": false
                     }
                   ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Folder, Models",
+          "ShowInDocs": false,
+          "Name": "Debug",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "HIIncrease",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": 0,
+                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "DailyReport",
+                  "XFieldName": "Cotton.DaysAfterSowing",
+                  "YFieldName": "Cotton.Boll.DailyHIIncrease",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "BollWt",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": 0,
+                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "DailyReport",
+                  "XFieldName": "Cotton.Boll.Wt",
+                  "YFieldName": "Cotton.Boll.DailyHIIncrease",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
