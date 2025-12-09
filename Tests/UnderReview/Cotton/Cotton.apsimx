@@ -69902,20 +69902,6 @@
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Factorial.CompositeFactor, Models",
-                          "Specifications": [
-                            "[CottonZone].Width=100",
-                            "[SkipZone].Width=100"
-                          ],
-                          "Paths": null,
-                          "Values": null,
-                          "Name": "None",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
                         }
                       ],
                       "Enabled": true,
@@ -69989,6 +69975,7 @@
                       "$type": "Models.Report, Models",
                       "VariableNames": [
                         "[Clock].Today",
+                        "[CottonZone].Cotton.Phenology.CurrentStageName",
                         "sum([CottonZone].Soil.Water.MM[1:4]) as CottonTotSW90",
                         "sum([SkipZone].Soil.Water.MM[1:4]) as SkipTotSW90"
                       ],
@@ -70018,6 +70005,7 @@
                           "VariableNames": [
                             "[Clock].Today",
                             "[Cotton].AboveGround.Wt",
+                            "[Cotton].Phenology.CurrentStageName",
                             "sum([Soil].Water.MM[1:4]) as TotalSW90cm",
                             "[Cotton].Leaf.Fw",
                             "[Cotton].Leaf.Fn",
@@ -70644,7 +70632,7 @@
                             },
                             {
                               "Key": "Population",
-                              "Value": "12"
+                              "Value": "9"
                             }
                           ],
                           "Name": "Sowing",
