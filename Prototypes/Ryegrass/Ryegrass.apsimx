@@ -399,13 +399,6 @@
                           "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": false,
-                              "Date": null,
-                              "Action": null,
-                              "Line": "//1992-03-30 [AgPRyegrass].EndCrop()"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1992-04-01",
                               "Action": "[AgPRyegrass].Sow(population: 1, cultivar: \"W\", depth: 5, rowSpacing: 150)",
@@ -3333,7 +3326,7 @@
                               "Enabled": false,
                               "Date": null,
                               "Action": null,
-                              "Line": "//1995-02-26 [AgPRyegrass].EndCrop()"
+                              "Line": ""
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -3378,7 +3371,7 @@
                               "Enabled": false,
                               "Date": null,
                               "Action": null,
-                              "Line": "//1995-02-26 [AgPRyegrass].EndCrop()"
+                              "Line": ""
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -3423,7 +3416,7 @@
                               "Enabled": false,
                               "Date": null,
                               "Action": null,
-                              "Line": "//1995-02-26 [AgPRyegrass].EndCrop()"
+                              "Line": ""
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -3468,7 +3461,7 @@
                               "Enabled": false,
                               "Date": null,
                               "Action": null,
-                              "Line": "//1995-02-26 [AgPRyegrass].EndCrop()"
+                              "Line": ""
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -3513,7 +3506,7 @@
                               "Enabled": false,
                               "Date": null,
                               "Action": null,
-                              "Line": "//1995-02-26 [AgPRyegrass].EndCrop()"
+                              "Line": ""
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -6509,7 +6502,7 @@
                               "Enabled": false,
                               "Date": null,
                               "Action": null,
-                              "Line": "//1995-02-26 [AgPRyegrass].EndCrop()"
+                              "Line": ""
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -6533,7 +6526,7 @@
                               "Enabled": false,
                               "Date": null,
                               "Action": null,
-                              "Line": "//1995-02-26 [AgPRyegrass].EndCrop()"
+                              "Line": ""
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -6557,7 +6550,7 @@
                               "Enabled": false,
                               "Date": null,
                               "Action": null,
-                              "Line": "//1995-02-26 [AgPRyegrass].EndCrop()"
+                              "Line": ""
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -6581,7 +6574,7 @@
                               "Enabled": false,
                               "Date": null,
                               "Action": null,
-                              "Line": "//1995-02-26 [AgPRyegrass].EndCrop()"
+                              "Line": ""
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -6605,7 +6598,7 @@
                               "Enabled": false,
                               "Date": null,
                               "Action": null,
-                              "Line": "//1995-02-26 [AgPRyegrass].EndCrop()"
+                              "Line": ""
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -12109,7 +12102,7 @@
                                       "Enabled": false,
                                       "Date": null,
                                       "Action": null,
-                                      "Line": "//1993-01-01 [AgPRyegrass].EndCrop()"
+                                      "Line": ""
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
@@ -16295,7 +16288,7 @@
                                       "Enabled": false,
                                       "Date": null,
                                       "Action": null,
-                                      "Line": "//1993-12-29 [AgPRyegrass].EndCrop()"
+                                      "Line": ""
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
@@ -20444,7 +20437,7 @@
                                       "Enabled": false,
                                       "Date": null,
                                       "Action": null,
-                                      "Line": "//1990-12-29 [AgPRyegrass].EndCrop()"
+                                      "Line": ""
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
@@ -24559,7 +24552,7 @@
                                       "Enabled": false,
                                       "Date": null,
                                       "Action": null,
-                                      "Line": "//1992-12-29 [AgPRyegrass].EndCrop()"
+                                      "Line": ""
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
@@ -28780,7 +28773,7 @@
                                       "Enabled": false,
                                       "Date": null,
                                       "Action": null,
-                                      "Line": "//1993-12-29 [AgPRyegrass].EndCrop()"
+                                      "Line": ""
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
@@ -32932,7 +32925,7 @@
                                       "Enabled": false,
                                       "Date": null,
                                       "Action": null,
-                                      "Line": "//1990-12-29 [AgPRyegrass].EndCrop()"
+                                      "Line": ""
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
@@ -37045,7 +37038,7 @@
                                       "Enabled": false,
                                       "Date": null,
                                       "Action": null,
-                                      "Line": "//1992-12-29 [AgPRyegrass].EndCrop()"
+                                      "Line": ""
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
@@ -41162,7 +41155,7 @@
                                       "Enabled": false,
                                       "Date": null,
                                       "Action": null,
-                                      "Line": "//1993-12-29 [AgPRyegrass].EndCrop()"
+                                      "Line": ""
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
@@ -45419,7 +45412,7 @@
                                       "Enabled": false,
                                       "Date": null,
                                       "Action": null,
-                                      "Line": "//1990-12-30 [AgPRyegrass].EndCrop()"
+                                      "Line": ""
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
@@ -51817,7 +51810,7 @@
                                   "Enabled": false,
                                   "Date": null,
                                   "Action": null,
-                                  "Line": "//2006-03-14 [AgPRyegrass].EndCrop()"
+                                  "Line": ""
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
@@ -56611,7 +56604,7 @@
                                   "Enabled": false,
                                   "Date": null,
                                   "Action": null,
-                                  "Line": "//2011-03-14 [AgPRyegrass].EndCrop()"
+                                  "Line": ""
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
