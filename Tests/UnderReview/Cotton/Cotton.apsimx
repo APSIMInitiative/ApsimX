@@ -9205,7 +9205,8 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Root].MaxDailyNUptake.XYPairs.Y = 10, 10"
+                    "[Root].MaxDailyNUptake.XYPairs.Y = 10, 10",
+                    "[Phenology].Squaring.Target.FloweringTT.FixedValue = 540"
                   ],
                   "Name": "748V2C",
                   "ResourceName": null,
@@ -66592,8 +66593,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": -68.37607550392386,
-                          "Maximum": 1241.9807533807043,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
                           "Interval": null
                         }
                       ],
