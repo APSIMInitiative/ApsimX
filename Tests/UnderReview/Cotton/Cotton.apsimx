@@ -5455,68 +5455,12 @@
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.MinimumFunction, Models",
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
                           "Name": "Rate",
                           "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.DivideFunction, Models",
-                              "Name": "Fraction",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].ThermalTime",
-                                  "Name": "TT",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.SubtractFunction, Models",
-                                  "Name": "TTRemaining",
-                                  "ResourceName": null,
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.ExpressionFunction, Models",
-                                      "Units": null,
-                                      "Expression": "[Phenology].Maturing.Target",
-                                      "Name": "PostCanopyTT",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.ExpressionFunction, Models",
-                                      "Units": null,
-                                      "Expression": "[Phenology].Maturing.ProgressThroughPhase",
-                                      "Name": "PostCanopyTTComplete",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 1.0,
-                              "Units": null,
-                              "Name": "One",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -73705,10 +73649,10 @@
                           "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": false,
-                              "Date": null,
-                              "Action": null,
-                              "Line": "2023-11-2 [Fertiliser].Apply(300, Fertiliser.Types.UreaN,10);"
+                              "Enabled": true,
+                              "Date": "2023-11-02",
+                              "Action": "[Fertiliser].Apply(300, Fertiliser.Types.UreaN,10);",
+                              "Line": "2023-11-02 [Fertiliser].Apply(300, Fertiliser.Types.UreaN,10);"
                             }
                           ],
                           "Name": "Operations",
@@ -75078,7 +75022,7 @@
                               "YFieldName": "Cotton.Leaf.Total.N",
                               "X2FieldName": null,
                               "Y2FieldName": null,
-                              "ShowInLegend": false,
+                              "ShowInLegend": true,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
                               "CumulativeX": false,
@@ -75107,7 +75051,7 @@
                               "YFieldName": "Cotton.Leaf.Total.StructuralN",
                               "X2FieldName": null,
                               "Y2FieldName": null,
-                              "ShowInLegend": false,
+                              "ShowInLegend": true,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
                               "CumulativeX": false,
@@ -75136,7 +75080,7 @@
                               "YFieldName": "Cotton.Leaf.Live.N",
                               "X2FieldName": null,
                               "Y2FieldName": null,
-                              "ShowInLegend": false,
+                              "ShowInLegend": true,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
                               "CumulativeX": false,
@@ -75165,7 +75109,7 @@
                               "YFieldName": "Cotton.Leaf.Live.StructuralN",
                               "X2FieldName": null,
                               "Y2FieldName": null,
-                              "ShowInLegend": false,
+                              "ShowInLegend": true,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
                               "CumulativeX": false,
