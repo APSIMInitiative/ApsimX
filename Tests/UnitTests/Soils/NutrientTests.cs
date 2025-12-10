@@ -5,7 +5,6 @@ using System.Linq;
 using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Models.Core.Run;
 using Models.Storage;
 using NUnit.Framework;

@@ -2,7 +2,6 @@
 {
     using APSIM.Core;
     using APSIM.Shared.Utilities;
-    using Models.Core.ApsimFile;
     using NUnit.Framework;
 
     /// <summary>This is a test class for the .apsimx file converter.</summary>
