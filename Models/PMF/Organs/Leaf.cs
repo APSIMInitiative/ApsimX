@@ -997,7 +997,12 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (CohortParameters == null || NDemand.Total == 0)
+                //if CohortParameters have not been initialised, return no stress
+                if (CohortParameters == null)
+                    return 1;
+
+                //If there is no demand or Metabolic N, return no stress
+                if (NDemand.Total == 0 && Live.MetabolicNConc == 0)
                     return 1;
 
                 double f;
