@@ -35,7 +35,7 @@
             var tree = Node.Create(sim);
 
             var simulationDescription = new SimulationDescription(sim, "CustomName");
-            simulationDescription.AddOverride(new Overrides.Override("Weather.MaxT", 2, Overrides.Override.MatchTypeEnum.NameAndType));
+            simulationDescription.AddOverride(new SetPropertyCommand("Weather.MaxT", "=", "2", fileName: null));
 
             var newSim = simulationDescription.ToSimulation();
 
@@ -70,7 +70,7 @@
             };
 
             var simulationDescription = new SimulationDescription(sim, "CustomName");
-            simulationDescription.AddOverride(new Overrides.Override("Weather", replacementWeather, Overrides.Override.MatchTypeEnum.NameAndType));
+            simulationDescription.AddOverride(new ReplaceCommand(new ModelReference(replacementWeather), "Weather", multiple: true, ReplaceCommand.MatchType.NameAndType, newName: "Weather"));
 
             var newSim = simulationDescription.ToSimulation();
             Assert.That(newSim.Name, Is.EqualTo("CustomName"));
@@ -129,7 +129,7 @@
             Assert.That(weather.MaxT, Is.EqualTo(2));
 
             // Make sure any property overrides happens after a model replacement.
-            simulationDescription.AddOverride(new Overrides.Override("Weather.MaxT", 3, Overrides.Override.MatchTypeEnum.NameAndType));
+            simulationDescription.AddOverride(new SetPropertyCommand("Weather.MaxT", "=", "3", fileName: null));
             newSim = simulationDescription.ToSimulation();
             weather = newSim.Children[0] as MockWeather;
             Assert.That(weather.MaxT, Is.EqualTo(3));

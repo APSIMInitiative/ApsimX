@@ -199,6 +199,14 @@ namespace Models.PMF
         [JsonIgnore]
         public OrganNutrientsState DeadRemoved { get; private set; }
 
+        /// <summary>Gets the biomass removed from the plant and passed to the residue (harvested, grazed, etc.)</summary>
+        [JsonIgnore]
+        public OrganNutrientsState LiveToResidues { get; private set; }
+
+        /// <summary>Gets the biomass removed from the plant and passed to the residue(harvested, grazed, etc.)</summary>
+        [JsonIgnore]
+        public OrganNutrientsState DeadToResidues { get; private set; }
+
         /// <summary>The amount of carbon respired</summary>
         [JsonIgnore]
         public OrganNutrientsState Respired { get; private set; }
@@ -306,20 +314,18 @@ namespace Models.PMF
         /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
         public virtual double RemoveBiomass(double liveToRemove = 1, double deadToRemove = 0, double liveToResidue = 0, double deadToResidue = 0)
         {
-            OrganNutrientsState liveExported = Live * liveToRemove;
-            OrganNutrientsState liveRetained = Live * liveToResidue;
-            LiveRemoved = liveExported + liveRetained;
-
-            OrganNutrientsState deadExported = Dead * deadToRemove;
-            OrganNutrientsState deadRetained = Dead * deadToResidue;
-            DeadRemoved = deadExported + deadRetained;
-
+            LiveRemoved = Live * liveToRemove;
+            LiveToResidues = Live * liveToResidue;
+            
+            DeadRemoved = Dead * deadToRemove;
+            DeadToResidues = Dead * deadToResidue;
+            
             double fracLiveToResidue = MathUtilities.Divide(liveToResidue, (liveToResidue + liveToRemove), 0);
             double fracDeadToResidue = MathUtilities.Divide(deadToResidue, (deadToResidue + deadToRemove), 0);
 
             if (fracDeadToResidue + fracLiveToResidue > 0)
             {
-                OrganNutrientsState totalToResidues = liveRetained + deadRetained;
+                OrganNutrientsState totalToResidues = LiveToResidues + DeadToResidues;
                 Biomass toResidues = totalToResidues.ToBiomass;
                 AddSOMtoZones(toResidues.Wt, toResidues.N);
             }
@@ -328,21 +334,23 @@ namespace Models.PMF
                 removeBiomass = true;
             }
 
-            return LiveRemoved.Wt + DeadRemoved.Wt;
+            return LiveRemoved.Wt + LiveToResidues.Wt + DeadRemoved.Wt + DeadToResidues.Wt;
         }
 
         /// <summary>Clears this instance.</summary>
         protected virtual void Clear()
         {
-            Live.Clear();
-            Dead.Clear();
-            ReAllocated.Clear();
-            ReTranslocated.Clear();
-            Allocated.Clear();
-            Senesced.Clear();
-            Detached.Clear();
-            LiveRemoved.Clear();
-            DeadRemoved.Clear();
+            Live?.Clear();
+            Dead?.Clear();
+            ReAllocated?.Clear();
+            ReTranslocated?.Clear();
+            Allocated?.Clear();
+            Senesced?.Clear();
+            Detached?.Clear();
+            LiveRemoved?.Clear();
+            DeadRemoved?.Clear();
+            LiveToResidues?.Clear();
+            DeadToResidues?.Clear();
             removeBiomass = false;
             resetOrganTomorrow = false;
         }
@@ -350,18 +358,15 @@ namespace Models.PMF
         /// <summary>Clears the transferring biomass amounts.</summary>
         private void ClearBiomassFlows()
         {
-            ReAllocated.Clear();
-            ReTranslocated.Clear();
-            Allocated.Clear();
-            Senesced.Clear();
-            Detached.Clear();
-        }
-
-        private void ClearBiomassRemovals()
-        {
-            LiveRemoved.Clear();
-            DeadRemoved.Clear();
-            removeBiomass = false;
+            ReAllocated?.Clear();
+            ReTranslocated?.Clear();
+            Allocated?.Clear();
+            Senesced?.Clear();
+            Detached?.Clear();
+            LiveRemoved?.Clear();
+            DeadRemoved?.Clear();
+            LiveToResidues?.Clear();
+            DeadToResidues?.Clear();
         }
 
         /// <summary>Called when [simulation commencing].</summary>
@@ -438,6 +443,8 @@ namespace Models.PMF
             Detached = new OrganNutrientsState(Cconc);
             LiveRemoved = new OrganNutrientsState(Cconc);
             DeadRemoved = new OrganNutrientsState(Cconc);
+            LiveToResidues = new OrganNutrientsState(Cconc);
+            DeadToResidues = new OrganNutrientsState(Cconc);
             Respired = new OrganNutrientsState(Cconc);
 
         }
@@ -450,7 +457,6 @@ namespace Models.PMF
         {
             if (parentPlant.IsAlive)
             {
-                ClearBiomassFlows();
                 //Set start properties used for mass balance checking
                 startLiveN = Live.N;
                 startDeadN = Dead.N;
@@ -463,7 +469,9 @@ namespace Models.PMF
                 if (removeBiomass)
                 {
                     Live -= LiveRemoved;
+                    Live -= LiveToResidues;
                     Dead -= DeadRemoved;
+                    Dead -= DeadToResidues;
                 }
                 removeBiomass = false;
 
@@ -522,7 +530,7 @@ namespace Models.PMF
 
                 if (RootNetworkObject != null)
                 {
-                    RootNetworkObject.PartitionBiomassThroughSoil(ReAllocated, ReTranslocated, Allocated, Senesced, Detached, LiveRemoved, DeadRemoved);
+                    RootNetworkObject.PartitionBiomassThroughSoil(ReAllocated, ReTranslocated, Allocated, Senesced, Detached, LiveRemoved, DeadRemoved, LiveToResidues, DeadToResidues);
                     RootNetworkObject.GrowRootDepth();
                 }
             }
@@ -539,7 +547,6 @@ namespace Models.PMF
                 CheckMassBalance(startLiveN, startDeadN, "N");
                 CheckMassBalance(startLiveC, startDeadC, "C");
                 CheckMassBalance(startLiveWt, startDeadWt, "Wt");
-                ClearBiomassRemovals();
             }
         }
 
@@ -560,13 +567,15 @@ namespace Models.PMF
             double reTranslocated = (double)(Structure.GetObject("ReTranslocated." + element).Value);
             double liveRemoved = (double)(Structure.GetObject("LiveRemoved." + element).Value);
             double deadRemoved = (double)(Structure.GetObject("DeadRemoved." + element).Value);
+            double liveToResidues = (double)(Structure.GetObject("LiveToResidues." + element).Value);
+            double deadToResidues = (double)(Structure.GetObject("DeadToResidues." + element).Value);
             double respired = (double)(Structure.GetObject("Respired." + element).Value);
             double detached = (double)(Structure.GetObject("Detached." + element).Value);
 
-            if (AreDifferent(live,  startLive + allocated - senesced - reAllocated - reTranslocated - liveRemoved - respired))
+            if (AreDifferent(live,  startLive + allocated - senesced - reAllocated - reTranslocated - liveRemoved -liveToResidues - respired))
                 throw new Exception(element + " mass balance violation in live biomass of " + this.Name + "on " + clock.Today.ToString());
 
-            if (AreDifferent(dead, startDead + senesced - deadRemoved - detached))
+            if (AreDifferent(dead, startDead + senesced - deadRemoved - deadToResidues - detached))
                 throw new Exception(element + " mass balance violation in dead biomass of " + this.Name + "on " + clock.Today.ToString());
 
         }
@@ -618,6 +627,7 @@ namespace Models.PMF
         [EventSubscribe("DoCatchYesterday")]
         protected void OnDoCatchYesterday(object sender, EventArgs e)
         {
+            ClearBiomassFlows();
             if (resetOrganTomorrow == true)
                 Reset();
             resetOrganTomorrow = false;
