@@ -997,7 +997,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (CohortParameters == null)
+                if (CohortParameters == null || Live.MetabolicNConc == 0)
                     return 1;
 
                 double f;
