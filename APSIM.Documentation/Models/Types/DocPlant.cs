@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using APSIM.Shared.Documentation;
 using DeepCloner.Core;
+using MathNet.Numerics.Distributions;
 using Models;
 using Models.Core;
 using Models.PMF;
@@ -82,18 +83,32 @@ namespace APSIM.Documentation.Models.Types
                 newTags.Add(new Section("Composite Biomass Components", new Table(tableDataBiomass)));
             }
 
+            // Document Phenology Model
+            // -------------------------------------------------------------------------------
+
+
+            Phenology phenology = new Phenology();
+            phenology = (Phenology) (this.model.Children.Find(m => m.GetType() == typeof(Phenology)));
+            DataTable dataTable = phenology.GetPhaseTable();
+            Section PhenologySection = new Section("Phenology", new Table(dataTable));
+            PhenologySection.Add(GetSummaryAndRemarksSection(phenology).Children);
+            newTags.Add(PhenologySection);
+
+
+            // Document Arbitrator Model
+            // -------------------------------------------------------------------------------
+
+
+            OrganArbitrator arbitrator = (OrganArbitrator)(this.model.Children.Find(m => m.GetType() == typeof(OrganArbitrator)));
+            newTags.Add(new Section("Organ Arbitrator", GetSummaryAndRemarksSection(arbitrator).Children));
 
             //Write children
+            // -------------------------------------------------------------------------------
+
             List<ITag> children = new List<ITag>();
             foreach (IModel child in this.model.Children)
-                if (child as Memo == null && child as CompositeBiomass == null && child as Folder == null && child as Cultivar == null)
+                if (child as Memo == null && child as CompositeBiomass == null && child as Folder == null && child as Cultivar == null && child as Phenology == null && child as OrganArbitrator == null)
                 {
-                    if (child.GetType() == typeof(Phenology))
-                    {
-                        DataTable dataTable = ((Phenology)child).GetPhaseTable();
-                        newTags.Add(new Section("Phenological Phases", new Table(dataTable)));
-                    }
-
                     children.AddRange(new List<ITag>() { GetSummaryAndRemarksSection(child) });
                 }
             newTags.Add(new Section("Child Components", children));
