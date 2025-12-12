@@ -11,7 +11,6 @@ using System.Reflection;
 using APSIM.Shared.Utilities;
 using APSIM.Documentation.Models;
 using APSIM.Documentation.Bibliography;
-using Models.Core.ApsimFile;
 using APSIM.Shared.Mapping;
 using SkiaSharp;
 using APSIM.Documentation.Graphing;
@@ -42,7 +41,7 @@ namespace APSIM.Documentation
                 name = "AgPasture";
             }
 
-            if(filename == "Lifecycle")
+            if (filename == "Lifecycle")
             {
                 filename = name.ToLower();
             }
@@ -56,10 +55,20 @@ namespace APSIM.Documentation
             if (tutorials.Contains(filename))
                 isTutorial = true;
 
-            if(filename == "SorghumDCaPST")
+            if (filename == "SorghumDCaPST")
             {
                 name = "DCaPST/Sorghum";
                 isValidation = true;
+            }
+
+            if (filename == "Agroforestry")
+            {
+                filename = "AgroforestrySystem";
+            }
+            
+            if (filename == "Lucerne")
+            {
+                filename = "LucerneValidation";
             }
 
             filename += ".apsimx";

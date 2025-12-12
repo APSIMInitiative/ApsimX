@@ -251,6 +251,12 @@
             object node = GetNodeFromPath(relativeTo, objectName);
             if (node == null)
                 node = relativeTo.Node.Get(objectName);
+            if (node == null)
+            {
+                node = relativeTo.Node.GetObject(objectName);
+                if (node is VariableComposite variableComposite)
+                    node = variableComposite.DataType;
+            }
             if (node != null)
             {
                 contextItems = ExamineObjectForContextItems(node, properties, methods, publishedEvents, subscribedEvents);

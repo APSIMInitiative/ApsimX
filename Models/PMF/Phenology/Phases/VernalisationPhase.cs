@@ -60,6 +60,7 @@ namespace Models.PMF.Phen
         public string DateToProgress { get; set; } = "";
 
         /// <summary>Thermal time target to end this phase.</summary>
+        [JsonIgnore]
         public double Target { get; set; } = 1.0;
 
         /// <summary>Summarise gene expression from CAMP into phenological progress</summary>
