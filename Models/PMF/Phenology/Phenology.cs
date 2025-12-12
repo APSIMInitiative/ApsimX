@@ -599,19 +599,22 @@ namespace Models.PMF.Phen
         public DataTable GetPhaseTable()
         {
             DataTable phaseTable = new DataTable();
-            phaseTable.Columns.Add("Phase Number", typeof(int));
-            phaseTable.Columns.Add("Phase Name", typeof(string));
-            phaseTable.Columns.Add("Initial Stage", typeof(string));
-            phaseTable.Columns.Add("Final Stage", typeof(string));
+            phaseTable.Columns.Add("Number", typeof(int));
+            phaseTable.Columns.Add("Name", typeof(string));
+            phaseTable.Columns.Add("Type", typeof(string));
+            phaseTable.Columns.Add("Start Stage", typeof(string));
+            phaseTable.Columns.Add("End Stage", typeof(string));
 
             int n = 1;
             foreach (IPhase child in Structure.FindChildren<IPhase>())
             {
+                string phasetype = child.GetType().ToString();
                 DataRow row = phaseTable.NewRow();
                 row[0] = n;
                 row[1] = child.Name;
-                row[2] = (child as IPhase).Start;
-                row[3] = (child as IPhase).End;
+                row[2] = "[" + child.Name + "](https://github.com/APSIMInitiative/ApsimX/blob/master/" + phasetype.Replace(".", "/") + ".cs)";
+                row[3] = (child as IPhase).Start;
+                row[4] = (child as IPhase).End;
                 phaseTable.Rows.Add(row);
                 n++;
             }
