@@ -89,18 +89,21 @@ namespace APSIM.Documentation.Models.Types
 
             Phenology phenology = new Phenology();
             phenology = (Phenology) (this.model.Children.Find(m => m.GetType() == typeof(Phenology)));
-            DataTable dataTable = phenology.GetPhaseTable();
-            Section PhenologySection = new Section("Phenology", new Table(dataTable));
-            PhenologySection.Add(GetSummaryAndRemarksSection(phenology).Children);
-            newTags.Add(PhenologySection);
-
+            if (phenology != null)
+            {
+                DataTable dataTable = phenology.GetPhaseTable();
+                Section PhenologySection = new Section("Phenology", new Table(dataTable));
+                PhenologySection.Add(GetSummaryAndRemarksSection(phenology).Children);
+                newTags.Add(PhenologySection);
+            }
 
             // Document Arbitrator Model
             // -------------------------------------------------------------------------------
 
 
             OrganArbitrator arbitrator = (OrganArbitrator)(this.model.Children.Find(m => m.GetType() == typeof(OrganArbitrator)));
-            newTags.Add(new Section("Organ Arbitrator", GetSummaryAndRemarksSection(arbitrator).Children));
+            if (arbitrator != null)
+                newTags.Add(new Section("Organ Arbitrator", GetSummaryAndRemarksSection(arbitrator).Children));
 
             //Write children
             // -------------------------------------------------------------------------------
