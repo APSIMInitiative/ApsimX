@@ -85,10 +85,7 @@ namespace APSIM.Documentation.Models.Types
 
             // Document Phenology Model
             // -------------------------------------------------------------------------------
-
-
-            Phenology phenology = new Phenology();
-            phenology = (Phenology) (this.model.Children.Find(m => m.GetType() == typeof(Phenology)));
+            Phenology phenology = (Phenology)this.model.Children.Find(m => m.GetType() == typeof(Phenology));
             if (phenology != null)
             {
                 DataTable dataTable = phenology.GetPhaseTable();
@@ -99,23 +96,17 @@ namespace APSIM.Documentation.Models.Types
 
             // Document Arbitrator Model
             // -------------------------------------------------------------------------------
-
-
-            OrganArbitrator arbitrator = (OrganArbitrator)(this.model.Children.Find(m => m.GetType() == typeof(OrganArbitrator)));
+            OrganArbitrator arbitrator = (OrganArbitrator)this.model.Children.Find(m => m.GetType() == typeof(OrganArbitrator));
             if (arbitrator != null)
                 newTags.Add(new Section("Organ Arbitrator", GetSummaryAndRemarksSection(arbitrator).Children));
 
             //Write children
             // -------------------------------------------------------------------------------
-
             List<ITag> children = new List<ITag>();
             foreach (IModel child in this.model.Children)
                 if (child as IText == null && child as CompositeBiomass == null && child as Folder == null && child as Cultivar == null && child as Phenology == null && child as OrganArbitrator == null)
-                {
                     children.AddRange(new List<ITag>() { GetSummaryAndRemarksSection(child) });
-                }
             newTags.Add(new Section("Child Components", children));
-
 
             //Write cultivars table
             // -------------------------------------------------------------------------------
@@ -134,8 +125,9 @@ namespace APSIM.Documentation.Models.Types
                     altNames = altNames.Replace("( ", "(");
 
                     string commands = "";
-                    foreach (string cmd in cultivarChild.Command)
-                        commands += cmd + " \n\n";
+                    if (cultivarChild.Command != null)
+                        foreach (string cmd in cultivarChild.Command)
+                            commands += cmd + " \n\n";
                     cultivarNameTable.Rows.Add(new string[] { cultivarChild.Name + " \n\n" + altNames, commands });
                 }
                 newTags.Add(new Section("Appendix 1 - Cultivar specifications", new Table(cultivarNameTable)));
