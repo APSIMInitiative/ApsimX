@@ -31,11 +31,12 @@ namespace APSIM.Documentation.Models.Types
             List<ITag> newTags = new List<ITag>();
 
             Section mainSection = GetSummaryAndRemarksSection(model);
-            Section cultivarSection = null;
+            
 
             newTags.Add(new Paragraph($"The model is constructed from the following list of software components. Details of the implementation and model parameterisation are provided in the following sections."));
 
-            // Write Plant Model Table
+            // Write Plant Model Components Table
+            // ------------------------------------------------------------------------------
             DataTable tableData = new DataTable();
             tableData.Columns.Add("Component Name", typeof(string));
             tableData.Columns.Add("Component Type", typeof(string));
@@ -52,7 +53,10 @@ namespace APSIM.Documentation.Models.Types
             }
             newTags.Add(new Section("Plant Model Components", new Table(tableData)));
 
+
+
             // Write Composite Biomass Table
+            // -------------------------------------------------------------------------------
             DataTable tableDataBiomass = new DataTable();
             tableDataBiomass.Columns.Add("Component Name", typeof(string));
             tableDataBiomass.Columns.Add("Component Organs", typeof(string));
@@ -78,28 +82,6 @@ namespace APSIM.Documentation.Models.Types
                 newTags.Add(new Section("Composite Biomass Components", new Table(tableDataBiomass)));
             }
 
-            //Write cultivars table
-            List<Cultivar> cultivars = model.Node.FindChildren<Cultivar>(recurse: true).ToList();
-            if (cultivars.Count > 0)
-            {
-                cultivars = cultivars.OrderBy(c => c.Name).ToList();
-                DataTable cultivarNameTable = new();
-                cultivarNameTable.Columns.Add("Name (Aternatives)");
-                cultivarNameTable.Columns.Add("Overrides");
-                foreach (Cultivar cultivarChild in cultivars)
-                {
-                    string altNames = cultivarChild.GetNames().Any() ? string.Join(' ', cultivarChild.GetNames()) : string.Empty;
-                    altNames = altNames.Replace(cultivarChild.Name, "");
-                    if (altNames!="") altNames="("+altNames+")";
-                    altNames = altNames.Replace("( ", "(");
-
-                    string commands = "";
-                    foreach (string cmd in cultivarChild.Command)
-                        commands += cmd + " \n\n";
-                    cultivarNameTable.Rows.Add(new string[] { cultivarChild.Name +" \n\n"+altNames, commands});
-                }
-                newTags.Add(new Section("Cultivars", new Table(cultivarNameTable)));
-            }
 
             //Write children
             List<ITag> children = new List<ITag>();
@@ -116,11 +98,38 @@ namespace APSIM.Documentation.Models.Types
                 }
             newTags.Add(new Section("Child Components", children));
 
+
+            //Write cultivars table
+            // -------------------------------------------------------------------------------
+            List<Cultivar> cultivars = model.Node.FindChildren<Cultivar>(recurse: true).ToList();
+            if (cultivars.Count > 0)
+            {
+                cultivars = cultivars.OrderBy(c => c.Name).ToList();
+                DataTable cultivarNameTable = new();
+                cultivarNameTable.Columns.Add("Name (Aternatives)");
+                cultivarNameTable.Columns.Add("Overrides");
+                foreach (Cultivar cultivarChild in cultivars)
+                {
+                    string altNames = cultivarChild.GetNames().Any() ? string.Join(' ', cultivarChild.GetNames()) : string.Empty;
+                    altNames = altNames.Replace(cultivarChild.Name, "");
+                    if (altNames != "") altNames = "(" + altNames + ")";
+                    altNames = altNames.Replace("( ", "(");
+
+                    string commands = "";
+                    foreach (string cmd in cultivarChild.Command)
+                        commands += cmd + " \n\n";
+                    cultivarNameTable.Rows.Add(new string[] { cultivarChild.Name + " \n\n" + altNames, commands });
+                }
+                newTags.Add(new Section("Appendix 1 - Cultivar specifications", new Table(cultivarNameTable)));
+            }
+
+
             mainSection.Add(newTags);
 
+
+
+
             newTags = new List<ITag>() { mainSection };
-            if (cultivarSection != null)
-                newTags.Add(cultivarSection);
 
             return newTags;
         }
