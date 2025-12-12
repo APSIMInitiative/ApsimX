@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 200,
+  "Version": 206,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -13,12 +13,27 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
-            "%root%\\Tests\\Validation\\NDVI\\Lincoln2015RainShelter.xlsx"
+            "Lincoln2015RainShelter.xlsx"
           ],
           "SheetNames": [
             "Observed"
           ],
           "Name": "ExcelMultiInput",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.PredictedObserved, Models",
+          "PredictedTableName": "NDVIDailyReport",
+          "ObservedTableName": "Observed",
+          "FieldNameUsedForMatch": "SimulationName",
+          "FieldName2UsedForMatch": "Clock.Today",
+          "FieldName3UsedForMatch": null,
+          "FieldName4UsedForMatch": null,
+          "AllColumns": false,
+          "Name": "NDVIObsPred",
           "ResourceName": null,
           "Children": [],
           "Enabled": true,
@@ -1256,7 +1271,7 @@
                   "VariableNames": [
                     "[Simulation].Name",
                     "[Clock].Today",
-                    "[Spectral].NDVI as NDVI.Value",
+                    "[Spectral].NDVI",
                     "[Wheat].SowingData.Cultivar",
                     "[ISoilWater].SWmm"
                   ],
@@ -1357,7 +1372,7 @@
               "LineThickness": 0,
               "TableName": "Observed",
               "XFieldName": "Clock.Today",
-              "YFieldName": "NDVI.Value",
+              "YFieldName": "Spectral.NDVI",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -1424,8 +1439,8 @@
               "Line": 4,
               "LineThickness": 0,
               "TableName": "NDVIObsPred",
-              "XFieldName": "Observed.NDVI.Value",
-              "YFieldName": "Predicted.NDVI.Value",
+              "XFieldName": "Observed.Spectral.NDVI",
+              "YFieldName": "Predicted.Spectral.NDVI",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
