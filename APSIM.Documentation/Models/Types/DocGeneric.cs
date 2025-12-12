@@ -63,12 +63,12 @@ namespace APSIM.Documentation.Models.Types
 
                 if (!hasDocumentation)
                 {
-                    foreach (IModel child in model.Node.FindChildren<Memo>(recurse:true))
+                    foreach (IModel child in model.Node.FindChildren<Memo>())
                         tags.AddRange(AutoDocumentation.DocumentModel(child).ToList());
                 }
                 else
                 {
-                    foreach (IModel child in model.Node.FindChildren<M.Documentation>(recurse:true))
+                    foreach (IModel child in model.Node.FindChildren<M.Documentation>())
                         tags.AddRange(AutoDocumentation.DocumentModel(child).ToList());
                 }
             }
