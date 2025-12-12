@@ -82,17 +82,21 @@ namespace APSIM.Documentation.Models.Types
             List<Cultivar> cultivars = model.Node.FindChildren<Cultivar>(recurse: true).ToList();
             if (cultivars.Count > 0)
             {
+                cultivars = cultivars.OrderBy(c => c.Name).ToList();
                 DataTable cultivarNameTable = new();
-                cultivarNameTable.Columns.Add("Cultivar Name");
-                cultivarNameTable.Columns.Add("Alternative Name(s)");
+                cultivarNameTable.Columns.Add("Name (Aternatives)");
                 cultivarNameTable.Columns.Add("Overrides");
                 foreach (Cultivar cultivarChild in cultivars)
                 {
-                    string altNames = cultivarChild.GetNames().Any() ? string.Join(',', cultivarChild.GetNames()) : string.Empty;
+                    string altNames = cultivarChild.GetNames().Any() ? string.Join(' ', cultivarChild.GetNames()) : string.Empty;
+                    altNames = altNames.Replace(cultivarChild.Name, "");
+                    if (altNames!="") altNames="("+altNames+")";
+                    altNames = altNames.Replace("( ", "(");
+
                     string commands = "";
                     foreach (string cmd in cultivarChild.Command)
                         commands += cmd + " \n\n";
-                    cultivarNameTable.Rows.Add(new string[] { cultivarChild.Name, altNames, commands});
+                    cultivarNameTable.Rows.Add(new string[] { cultivarChild.Name +" \n\n"+altNames, commands});
                 }
                 newTags.Add(new Section("Cultivars", new Table(cultivarNameTable)));
             }
