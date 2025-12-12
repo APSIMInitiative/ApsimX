@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 203,
+  "Version": 206,
   "Name": "Simulations",
   "Children": [
     {
@@ -5078,7 +5078,7 @@
                 "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.Y= 0, 1, 1, 0",
                 "",
                 "[Leaf].Photosynthesis.FT.FTFrost.MaximumTemperatureWeighting=0",
-                "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.X=-5, -2, -1, 0, 1, 2, 3, 4, 7",
+                "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.X = -5, -2, -1, 0, 1, 2, 3, 4, 7",
                 "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.Y= 0,  0,  0, 0, .1, .2, .6,.8, 1",
                 "",
                 "[Leaf].LeafDevelopmentRate.FT.XYPairs.X=2,23,32,33",
@@ -5173,7 +5173,7 @@
                 "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.Y= 0, 1, 1, 0",
                 "",
                 "[Leaf].Photosynthesis.FT.FTFrost.MaximumTemperatureWeighting=0",
-                "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.X=-5, -2, -1, 0, 1, 2, 3, 4, 7",
+                "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.X = -5, -2, -1, 0, 1, 2, 3, 4, 7",
                 "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.Y= 0,  0,  0, 0, 0, 0, .5,.8, 1",
                 "",
                 "[Leaf].LeafDevelopmentRate.FT.XYPairs.X=4,23,32,33",
@@ -5257,7 +5257,7 @@
                 "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.Y= 0, 1, 1, 0",
                 "",
                 "[Leaf].Photosynthesis.FT.FTFrost.MaximumTemperatureWeighting=0",
-                "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.X=-5, -2, -1, 0, 1, 2, 3, 4, 7",
+                "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.X = -5, -2, -1, 0, 1, 2, 3, 4, 7",
                 "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.Y= 0,  0,  0, 0, .1, .2, .6,.8, 1",
                 "",
                 "[Leaf].LeafDevelopmentRate.FT.XYPairs.X=2,23,32,33",
@@ -5546,7 +5546,7 @@
                 "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.X=3, 14, 28, 35",
                 "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.Y=0, 1, 1, 0",
                 "",
-                "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.X=-5, -2, -1, 0, 1, 2, 3, 4, 7",
+                "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.X = -5, -2, -1, 0, 1, 2, 3, 4, 7",
                 "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.Y= 0,  0,  0, 0, .1, .2, .6,.8, 1",
                 "",
                 "[Leaf].SpecificLeafAreaFunction.SpecificLeafAreaPot.XYPairs.X= 0, 1, 2, 3, 4, 5, 6, 12",
@@ -5712,7 +5712,7 @@
               "Enabled": true,
               "ReadOnly": false
             },
-           {
+            {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
                 "[Leaf].Photosynthesis.RUE.FixedValue = 1.15",
@@ -5816,7 +5816,7 @@
               ],
               "Enabled": true,
               "ReadOnly": false
-            }			
+            }
           ],
           "IncludeInDocumentation": true,
           "Enabled": true,
