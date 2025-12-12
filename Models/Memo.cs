@@ -9,7 +9,7 @@ namespace Models
     [ViewName("ApsimNG.Resources.Glade.MemoView.glade")]
     [PresenterName("UserInterface.Presenters.MemoPresenter")]
     [ValidParent(DropAnywhere = true)]
-    public class Memo : Model
+    public class Memo : Model, IText
     {
         /// <summary>Gets or sets the memo text.</summary>
         [Description("Text of the memo")]
