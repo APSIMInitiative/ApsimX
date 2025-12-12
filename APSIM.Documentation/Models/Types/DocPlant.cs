@@ -107,7 +107,7 @@ namespace APSIM.Documentation.Models.Types
 
             List<ITag> children = new List<ITag>();
             foreach (IModel child in this.model.Children)
-                if (child as Memo == null && child as CompositeBiomass == null && child as Folder == null && child as Cultivar == null && child as Phenology == null && child as OrganArbitrator == null)
+                if (child as IText == null && child as CompositeBiomass == null && child as Folder == null && child as Cultivar == null && child as Phenology == null && child as OrganArbitrator == null)
                 {
                     children.AddRange(new List<ITag>() { GetSummaryAndRemarksSection(child) });
                 }
