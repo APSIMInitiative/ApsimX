@@ -83,7 +83,7 @@ convert_haun_to_apsim <- function(Haun){
     
     # Anchor points
     haun_pts  <- c(0,   8,    10.5, 16)
-    apsim_pts <- c(3,   6,     8, 11)
+    apsim_pts <- c(3,   6,       8, 11)
     
     # Linear interpolation with clipping to range
     APSIM_Stage <- approx(
