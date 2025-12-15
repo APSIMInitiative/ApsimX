@@ -13,6 +13,7 @@ using Models.Soils;
 using Models.Soils.Arbitrator;
 using Newtonsoft.Json;
 using System.Runtime.CompilerServices;
+using NetTopologySuite.GeometriesGraph;
 
 [assembly: InternalsVisibleTo("UnitTests")]
 namespace Models.PMF.Organs
@@ -23,7 +24,7 @@ namespace Models.PMF.Organs
     /// 
     /// *NOTE: Calculations are undertaken for each rooting zone for simulations where the plant has roots in multiple spatial zones.*
     /// 
-    /// **Soil water uptake**
+    /// **Soil Water Uptake**
     /// 
     /// The approach used for soil water uptake comes from [Meinke_Hammer_Want_1993].  A simple first order decay coefficient is used to describe the exponential decay in available soil water (ie water above the crop lower limit) over time.
     /// ```
@@ -70,6 +71,30 @@ namespace Models.PMF.Organs
     /// kno3 | The second order decay coefficient for NO3 uptake (ie uptake rate at 1 ppm). | (/d/ppm)
     /// knh4 | The second order decay coefficient for NH4 uptake (ie uptake rate at 1 ppm). | (/d/ppm)
     /// 
+    /// **Root Length**
+    /// 
+    /// Root length is calculated from root biomass using a value for specific root length (mm/g).  Proliferation of roots into different layers is calculated using a simple approach similar to the generalised equimarginal criterion approach used in the field of economics.  It is assumed the maximal return on a plant's investment into roots is achieved when uptake per unit root mass is uniform across the soil profile.  As similar approach is used in portfolio analysis (ie if ROI is low in one portolio, investment can be moved to a higher returning area until ROI is the same).
+    /// Daily allocation of root mass into layers is calculated as follows to provide proliferation of roots into areas of higher resource return, taking into account for previous allocation into those areas, such as near surface layers undergoing regular rewetting or below-ground capilliary fringes immediately above water tables.
+    /// 
+    /// 
+    /// ```
+    /// // First calculate a root activity for water (RAW) for current root mass within the layer
+    /// for each layer in root profile
+    ///    RAW<sub>layer</sub> = WaterUptake<sub>layer</sub> / Root.Live.Wt<sub>layer</sub> x Thickness<sub>layer</sub> x RootProportion
+    /// 
+    /// // Then use these root activity values to partition daily allocation of growth into root layers as follows:
+    /// for each layer in root profile
+    ///    DailyAllocationtoRootMass<sub>layer</sub> = TotalDailyDMAllocationToRootMass x RAW<sub>layer</sub> / sum(RAW)
+    /// ```
+    /// 
+    /// Name | Description | Units
+    /// -|-|-
+    /// RAW | The root activity for water uptake in relation to root mass | (mm/g/m2)
+    /// WaterUptake | The daily water uptake by the plant model for a given layer | (mm)
+    /// Root.Live.Wt | The live root mass within a given layer | (g/m2)
+    /// Thickness | The width of the soil layer used within the soil water model | (mm)
+    /// RootProportion | The fraction of the layer occupied for roots (e.g. 0.5 if roots occupy the top half of a layer only) | (0-1)
+    /// TotalDailyDMAllocationToRootMass | The amount of daily growth provided to the root model by the organ arbitrator | (g/m2)
     /// 
     ///</summary>
     [Serializable]
