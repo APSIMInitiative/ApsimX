@@ -14,8 +14,6 @@ tar_option_set(packages = c("tidyverse", "lubridate","purrr",
 #----------------------
 
 source("R/createWeatherFile.R")
-source("R/interpolateHaunStages.R")
-#source("R/createStageInputParameter.R")
 source("R/compile_all_observed.R")
 source("R/read_observed_func.R")
 source("R/apply_corrections.R")
@@ -98,7 +96,7 @@ targets <- list(
   #' Interpolates observed PCDS observed variables across Date
   tar_target(df_PCDS_int, interpolate_obs_phenoStages(df_list_PCDS)),
   
-  # Finds a date when a target % for each stage is reached (BUG: name cut here)
+  # Finds a date when a target % for each stage is reached
   tar_target(df_dateStageTargetReached, findDateStageTarget(df_PCDS_int, 
                                                             config$target_stagePerc)),
   
