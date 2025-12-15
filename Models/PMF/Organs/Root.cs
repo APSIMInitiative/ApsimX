@@ -21,26 +21,17 @@ namespace Models.PMF.Organs
     ///<summary>
     /// The root model calculates root growth in terms of rooting depth, biomass accumulation and subsequent root length density in each soil layer as well as the access of soil resources (water, NO3 and NH4).
     /// 
-    /// NOTE: Calculations are undertaken for each rooting zone for simulations where the plant has roots in multiple spatial zones.
-    /// 
-    /// [Meinke_Hammer_Want_1993]  [brown_plant_2014]
+    /// *NOTE: Calculations are undertaken for each rooting zone for simulations where the plant has roots in multiple spatial zones.*
     /// 
     /// **Soil water uptake**
     /// 
+    /// The approach used for soil water uptake comes from [Meinke_Hammer_Want_1993].  A simple first order decay coefficient is used to describe the exponential decay in available soil water (ie water above the crop lower limit) over time.
     /// ```
     /// For each layer to the rooting depth
-    ///    AvailableSWmm = SWmm - LL x Thickness x LLmodifier
-    ///    Supply = Max(0.0, KL x KLmodifier x AvailableSWmm x RootProportion
+    ///    AvailableSWmm = SWmm<sub>layer</sub> - LL<sub>layer</sub> x Thickness<sub>layer</sub> x LLmodifier<sub>layer</sub>
+    ///    Supply<sub>layer</sub> = Max(0.0, KL<sub>layer</sub>] x KLmodifier<sub>layer</sub> x AvailableSWmm x RootProportion<sub>layer</sub>
     /// ```
-    /// where
-    ///    + SWmm is the soil water content from the soil water model for a given soil layer (mm)
-    ///    + Thickness is the width of the soil layer used within the soil water model (mm)
-    ///    + LL is the crop lower limit obtained from SoilCrop node for the soil within the relevant Zone (mm3/mm3).
-    ///    + KL is the first order decay soil water uptake parameter (/d) obtained from SoilCrop node for the soil within the relevant Zone ([Meinke_Hammer_Want_1993]).
-    ///    + LLmodifier is a function used to modify LL to account for the effect of differing root geometry (usually set to 1.0) (0-1)
-    ///    + KLmodifer is a function used to modifty KL to account for the effect of plant size (ie root length) on water uptake ability. (0-1)
-    ///    + RootProportion is the fraction of the layer occupied for roots (e.g. 0.5 if roots occupy the top half of a layer only) (0-1)
-    ///    
+    /// 
     /// where
     /// 
     /// Name | Description | Units
@@ -53,6 +44,31 @@ namespace Models.PMF.Organs
     /// KLmodifer | A function used to modifty KL to account for the effect of plant size (ie root length) on water uptake ability.| (0-1)
     /// RootProportion | The fraction of the layer occupied for roots (e.g. 0.5 if roots occupy the top half of a layer only) | (0-1)
     /// 
+    /// 
+    /// **Soil Nitrogen Uptake**
+    /// 
+    /// Nitrogen uptake uses a second order decay approach for both NO3 and NH4, as implemented in several crop models within earlier versions of APSIM (eg APSIM 7.10 and earlier).
+    /// 
+    /// ```
+    /// for each layer to the rooting depth
+    ///    NO3Supply<sub>layer</sub> = Math.Min(zone.NO3N<sub>layer</sub> * kno3 * NO3ppm<sub>layer</sub> * SWAF<sub>layer</sub> * RootProportion<sub>layer</sub>, (maxNUptake - NO3Uptake));
+    ///	   NO3Uptake += NO3Supply<sub>layer</sub>;
+    ///
+    ///    NH4Supply<sub>layer</sub> = Math.Min(zone.NH4N<sub>layer</sub> * knh4 * NH4ppm<sub>layer</sub> * SWAF<sub>layer</sub> * RootProportion<sub>layer</sub>, (maxNUptake - NH4Uptake));
+    ///	   NH4Uptake += NH4Supply<sub>layer</sub>;
+    ///	```   
+    /// 
+    /// Name | Description | Units
+    /// -|-|-
+    /// NO3 | The NO3 content from the nutrient model for a given layer | (kg/ha).
+    /// NO3ppm | The NO3 concentration from the nutrient model for a given layer | (ppm)
+    /// NH4 | The NH4 content from the nutrient model for a given layer | (kg/ha).
+    /// NH4ppm | The NH4 concentration from the nutrient model for a given layer | (ppm)    
+    /// SWAF | The soil water availability factor to modify nitrogen uptake for a given layer.| (0-1)
+    /// RootProportion | The fraction of the layer occupied for roots (e.g. 0.5 if roots occupy the top half of a layer only) | (0-1)
+    /// maxNUptake | The maximum plant N uptake for a given day. | (kg/ha/d)
+    /// kno3 | The second order decay coefficient for NO3 uptake (ie uptake rate at 1 ppm). | (/d/ppm)
+    /// knh4 | The second order decay coefficient for NH4 uptake (ie uptake rate at 1 ppm). | (/d/ppm)
     /// 
     /// 
     ///</summary>
