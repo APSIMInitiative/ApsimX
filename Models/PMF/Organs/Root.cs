@@ -19,10 +19,45 @@ namespace Models.PMF.Organs
 {
 
     ///<summary>
-    /// The root model calculates root growth in terms of rooting depth, biomass accumulation and subsequent root length density in each soil layer.
+    /// The root model calculates root growth in terms of rooting depth, biomass accumulation and subsequent root length density in each soil layer as well as the access of soil resources (water, NO3 and NH4).
+    /// 
+    /// NOTE: Calculations are undertaken for each rooting zone for simulations where the plant has roots in multiple spatial zones.
+    /// 
+    /// [Meinke_Hammer_Want_1993]  [brown_plant_2014]
+    /// 
+    /// **Soil water uptake**
+    /// 
+    /// ```
+    /// For each layer to the rooting depth
+    ///    AvailableSWmm = SWmm - LL x Thickness x LLmodifier
+    ///    Supply = Max(0.0, KL x KLmodifier x AvailableSWmm x RootProportion
+    /// ```
+    /// where
+    ///    + SWmm is the soil water content from the soil water model for a given soil layer (mm)
+    ///    + Thickness is the width of the soil layer used within the soil water model (mm)
+    ///    + LL is the crop lower limit obtained from SoilCrop node for the soil within the relevant Zone (mm3/mm3).
+    ///    + KL is the first order decay soil water uptake parameter (/d) obtained from SoilCrop node for the soil within the relevant Zone ([Meinke_Hammer_Want_1993]).
+    ///    + LLmodifier is a function used to modify LL to account for the effect of differing root geometry (usually set to 1.0) (0-1)
+    ///    + KLmodifer is a function used to modifty KL to account for the effect of plant size (ie root length) on water uptake ability. (0-1)
+    ///    + RootProportion is the fraction of the layer occupied for roots (e.g. 0.5 if roots occupy the top half of a layer only) (0-1)
+    ///    
+    /// where
+    /// 
+    /// Name | Description | Units
+    /// -|-|-
+    /// SWmm | The soil water content from the soil water model for a given soil layer | (mm)
+    /// Thickness | The width of the soil layer used within the soil water model | (mm)
+    /// LL | The crop lower limit obtained from SoilCrop node for the soil within the relevant Zone | (mm3/mm3).
+    /// KL | The first order decay soil water uptake parameter obtained from SoilCrop node for the soil within the relevant Zone | (/d).
+    /// LLmodifier | A function used to modify LL to account for the effect of differing root geometry (usually set to 1.0) |(0-1)
+    /// KLmodifer | A function used to modifty KL to account for the effect of plant size (ie root length) on water uptake ability.| (0-1)
+    /// RootProportion | The fraction of the layer occupied for roots (e.g. 0.5 if roots occupy the top half of a layer only) | (0-1)
+    /// 
+    /// 
+    /// 
     ///</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.PropertyView")]
+[ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
     public class Root : Model, IWaterNitrogenUptake, IArbitration, IOrgan, IOrganDamage, IRoot, IHasDamageableBiomass, IStructureDependency
