@@ -15,7 +15,7 @@ tar_option_set(packages = c("tidyverse", "lubridate","purrr",
 
 source("R/createWeatherFile.R")
 source("R/interpolateHaunStages.R")
-source("R/createStageInputParameter.R")
+#source("R/createStageInputParameter.R")
 source("R/compile_all_observed.R")
 source("R/read_observed_func.R")
 source("R/apply_corrections.R")
@@ -27,6 +27,8 @@ source("R/create_synthetic_pheno_dates.R")
 source("R/findDateStageTarget.R")
 source("R/doAPSIMStageInput.R")
 source("R/saveInputParam.R")
+source("R/doStageObsData.R")
+source("R/add_to_observed_clean.R")
 
 #----------------
 # Define targets
@@ -41,6 +43,7 @@ targets <- list(
       folder_thisScript           = here::here(),
       folder_rawData              = here::here("InputFilesFromCloud"),
       folder_inputs               = here::here("..", "..", "inputs"),
+      folder_apsimx               = here::here(".."),
       file_observ_excel           = "2024_WaggaWagga_PHDA24WARI2.xlsx",
       sheetExcel_weather          = "Weather",
       sheetExcel_haun             = "Haun stage ", # Note the extra space as-is in typo in observations (!!!!)
@@ -50,47 +53,44 @@ targets <- list(
       file_input_name_saved       = "DookiePhenoDatesInput_Wagga.csv", # forced dates of pheno-dates
       fileNameForAPSIM_observData = "DookieWaggaWagga2024.xlsx", # observation file to be read
       file_SimNameByCultivar      = "CultivarToSimNameWaggaWagga2024.csv", # simulation name by treatment meta-data
-      file_metaData_observed      = "observed_data_requirements.csv"  # meta data about what results to fetch
+      file_metaData_observed      = "observed_data_requirements.csv",  # meta data about what results to fetch,
+      var_name_stage              = "apsim_stage_raw", # name of synthetic var with observed PCSD data
+      varName_addedToObserv       = "Wheat.Phenology.Stage" # new synthetic variable to be added into observations
     )
   ),
+  
+  # Config: Get simulation names per treatment from APSIM file (via APSIM-UI) - NOTE: func this might have to change with exp
+  tar_target(df_simNameByCult,read.csv2(file.path(config$folder_thisScript, 
+                                                  config$file_SimNameByCultivar),
+                                        header = TRUE, stringsAsFactors = FALSE, sep = ",")),
+  
   
   ### ------------------------------------------------
   ### Create met file to run APSIM
   ### ------------------------------------------------
   
-  tar_target(df_met, createWeatherFile(config$folder_rawData, config$file_observ_excel, 
-                                       config$sheetExcel_weather, config$coord_thisLatLon)),
+  tar_target(df_met, createWeatherFile(config$folder_rawData, 
+                                       config$file_observ_excel, 
+                                       config$sheetExcel_weather, 
+                                       config$coord_thisLatLon)),
   
   ### -------------------------------------------------------------------------------
   ### Prepare excel data with observation in APSIM format to compare with simulations
   ### -------------------------------------------------------------------------------
   
   # check which observed data is needed to use based on a hand-made csv meta-data file
-  tar_target(df_obs_info,read.csv2(file.path(config$folder_thisScript, config$file_metaData_observed),
+  tar_target(df_obs_info,read.csv2(file.path(config$folder_thisScript, 
+                                             config$file_metaData_observed),
              header = TRUE, stringsAsFactors = FALSE, sep = ",")),
   
   # Reads excel raw observations based on meta data above (raw as-is) and appends them into a single list of dfs 
-  tar_target(list_observed_dfs,compile_all_observed(config$folder_rawData,config$file_observ_excel,df_obs_info)),
+  tar_target(list_observed_dfs,compile_all_observed(config$folder_rawData,
+                                                    config$file_observ_excel,
+                                                    df_obs_info)),
   
-  # Makes by-hand data corrections as needed to fix raw excel data (see apply_corrections() for details)
-  tar_target(list_observed_clean, apply_corrections(list_observed_dfs)),
-  
-  # Get simulation names per treatment from APSIM file (via APSIM-UI) - NOTE: func this might have to change with exp
-  tar_target(df_simNameByCult,read.csv2(file.path(config$folder_thisScript, config$file_SimNameByCultivar),
-                                   header = TRUE, stringsAsFactors = FALSE, sep = ",")),
-  
-  # Prepare the format of a APSIM observation standard file
-  tar_target(df_final_observed, 
-             prepare_final_observed(list_observed_clean,df_simNameByCult)), 
-  
-  # save the output as APSIM likes to read it
-  tar_target(df_saved, 
-             save_df_final(df_final_observed, config$folder_thisScript, 
-                           config$fileNameForAPSIM_observData)),
-  
-  ### ------------------------------------------------
-  ### Prepare parameter input file with FORCED observed pheno-dates
-  ### ------------------------------------------------
+  ### ----------------------------------------------------------------------------------------
+  ### Create APSIM stage parameters as FORCED input - AND add it as synthetic data to observations (stages_raw)
+  ### ----------------------------------------------------------------------------------------
   
   # Filter and extract the PCDS pheno-stages observed from excel raw data
   tar_target(df_list_PCDS, filter_and_extract_pcds(list_observed_dfs)),
@@ -99,13 +99,55 @@ targets <- list(
   tar_target(df_PCDS_int, interpolate_obs_phenoStages(df_list_PCDS)),
   
   # Finds a date when a target % for each stage is reached (BUG: name cut here)
-  tar_target(df_dateStageTargetReached, findDateStageTarget(df_PCDS_int, config$target_stagePerc)),
+  tar_target(df_dateStageTargetReached, findDateStageTarget(df_PCDS_int, 
+                                                            config$target_stagePerc)),
   
   # Create synthetic in-between pheno stages within a APSIM format input file
-  tar_target(df_apsimStageInput, doAPSIMStageInput(df_dateStageTargetReached, df_simNameByCult, config$target_betwStages)),
+  tar_target(df_apsimStageInput, doAPSIMStageInput(df_dateStageTargetReached, 
+                                                   df_simNameByCult, 
+                                                   config$target_betwStages)),
+  
+  # Create Observed data of pheno-satges to be added to observations (as cross-check)
+  tar_target(df_stages_Observ, doStageObsData(df_dateStageTargetReached,
+                                              df_simNameByCult,
+                                              config$varName_addedToObserv)),
+  
+  ### ----------------------------------------------------------------------------------------
+  ### Finish observation file to be read by APSIM
+  ### ----------------------------------------------------------------------------------------
+  
+  
+  # Makes by-hand data corrections as needed to fix raw excel data (see apply_corrections() for details)
+  tar_target(list_observed_clean, apply_corrections(list_observed_dfs)),
+  
+
+  tar_target(list_observed_clean_final, add_to_observed_clean(list_observed_clean,
+                                                              df_stages_Observ,
+                                                        config$var_name_stage)),
+  
+  
+  # Prepare the format of a APSIM observation standard file
+  tar_target(df_final_observed, 
+             prepare_final_observed(list_observed_clean_final,
+                                    df_simNameByCult)), 
+  
+  #### ---------------------------------------
+  ### Save files that need to be read by APSIM
+  #### ----------------------------------------
+  
+  
+  # save the output as APSIM likes to read it
+  tar_target(msg_obs_saved, 
+             save_df_final(df_final_observed, 
+                           config$folder_apsimx, 
+                           config$fileNameForAPSIM_observData)),
+  
+  
   
   # Save parameter input file with forced pheno-dates into /input
-  tar_target(msgInputSaved, saveInputParam(df_apsimStageInput, config$folder_inputs, config$file_input_name_saved),
+  tar_target(msg_param_saved, saveInputParam(df_apsimStageInput, 
+                                           config$folder_inputs, 
+                                           config$file_input_name_saved),
     format = "file" 
   )
 )
