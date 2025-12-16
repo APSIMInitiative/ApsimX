@@ -228,9 +228,21 @@ namespace APSIM.Shared.Documentation
             XmlNode summaryNode = document.SelectSingleNode(xpath);
             if (summaryNode != null)
             {
-                string raw = summaryNode.InnerXml.Trim();
-                // Need to fix multiline comments - remove newlines and consecutive spaces.
-                return Regex.Replace(raw, @"\n[ \t]+", "\n");
+                string raw = summaryNode.InnerXml;
+                // Need to fix multiline comments
+
+                //remove carriage returns
+                raw = raw.Replace("\r", "");
+
+                string output = "";
+                foreach(string line in raw.Split("\n"))
+                {
+                    
+                }
+
+
+
+                return output;
             }
             return null;
         }
