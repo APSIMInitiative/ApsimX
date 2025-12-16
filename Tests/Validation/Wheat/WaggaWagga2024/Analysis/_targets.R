@@ -116,7 +116,7 @@ targets <- list(
   
   
   # Makes by-hand data corrections as needed to fix raw excel data (see apply_corrections() for details)
-  tar_target(list_observed_clean, apply_corrections(list_observed_dfs)),
+  tar_target(list_observed_clean, apply_corrections(list_observed_dfs, df_stages_Observ)),
   
 
   tar_target(list_observed_clean_final, add_to_observed_clean(list_observed_clean,
