@@ -30,7 +30,7 @@ namespace APSIM.Shared.Documentation
         {
             string text = GetCustomTag(t, summaryTagName);
             if (text != null)
-                return text.Replace("-", " ");
+                return text;
             else
                 return "";
         }
@@ -43,7 +43,7 @@ namespace APSIM.Shared.Documentation
         {
             string text = GetCustomTag(t, remarksTagName);
             if (text != null)
-                return text.Replace("-", " ");
+                return text;
             else
                 return "";
         }
