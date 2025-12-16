@@ -2578,8 +2578,7 @@
                         "[Weather].FileName = VCS_Ruakura.met",
                         "[Soil]",
                         "[CentrePivot].Script.allowIrrigation = false",
-                        "[Fertilisation].Script.Amount = 0",
-                        "[KillClover].Script.Enable = false"
+                        "[Fertilisation].Script.Amount = 0"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -3299,8 +3298,7 @@
                         "[Weather].FileName = VCS_Ruakura.met",
                         "[Soil]",
                         "[CentrePivot].Script.allowIrrigation = false",
-                        "[Fertilisation].Script.Amount = 150",
-                        "[KillClover].Script.Enable = false"
+                        "[Fertilisation].Script.Amount = 150"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -4036,8 +4034,7 @@
                         "[Weather].FileName = VCS_Lincoln.met",
                         "[Soil]",
                         "[CentrePivot].Script.allowIrrigation = true",
-                        "[Fertilisation].Script.Amount = 0",
-                        "[KillClover].Script.Enable = false"
+                        "[Fertilisation].Script.Amount = 0"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -5013,8 +5010,7 @@
                         "[Weather].FileName = VCS_Lincoln.met",
                         "[Soil]",
                         "[CentrePivot].Script.allowIrrigation = true",
-                        "[Fertilisation].Script.Amount = 250",
-                        "[KillClover].Script.Enable = false"
+                        "[Fertilisation].Script.Amount = 250"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -5942,8 +5938,7 @@
                         "[Weather].FileName = VCS_Lincoln.met",
                         "[Soil]",
                         "[CentrePivot].Script.allowIrrigation = true",
-                        "[Fertilisation].Script.Amount = 400",
-                        "[KillClover].Script.Enable = true"
+                        "[Fertilisation].Script.Amount = 400"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -6871,8 +6866,7 @@
                         "[Weather].FileName = VCS_Lincoln.met",
                         "[Soil]",
                         "[CentrePivot].Script.allowIrrigation = false",
-                        "[Fertilisation].Script.Amount = 0",
-                        "[KillClover].Script.Enable = false"
+                        "[Fertilisation].Script.Amount = 0"
                       ],
                       "Paths": null,
                       "Values": null,

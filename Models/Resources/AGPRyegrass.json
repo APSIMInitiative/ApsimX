@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 204,
+  "Version": 206,
   "Name": "Simulations",
   "Children": [
     {
@@ -247,7 +247,7 @@
           "NConcOptimum": 0.02,
           "NConcMaximum": 0.0275,
           "MinimumRootingDepth": 50.0,
-          "MaximumPotentialRootingDepth": 1000.0,
+          "MaximumPotentialRootingDepth": 2000.0,
           "RootElongationRate": 25.0,
           "DepthDistributionParamTop": 90.0,
           "DepthDistributionExponent": 3.2,

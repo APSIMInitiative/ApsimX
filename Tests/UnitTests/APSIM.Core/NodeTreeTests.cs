@@ -342,4 +342,53 @@ class NodeTreeTests
         Assert.That(zone1.Name, Is.EqualTo("Zone21"));
         Assert.That(zone1.Model.Name, Is.EqualTo("Zone21"));
     }
+
+    /// <summary>Ensure Node.WalkParents successfully returns all parent nodes.</summary>
+    [Test]
+    public void NodeWalkParents_ReturnsAllParents()
+    {
+        // Create a simulation
+        var simulation = new Simulation()
+        {
+            Children =
+            [
+                new Zone()
+                {
+                    Children = [
+                        new Clock()
+                    ]
+                }
+            ]
+        };
+
+        var sim = Node.Create(simulation);
+        var clock = sim.FindChild<Clock>(recurse: true);
+        var parents = clock.Node.WalkParents().ToArray();
+        Assert.That(parents.Count, Is.EqualTo(2));
+        Assert.That(parents[0].Model.Name, Is.EqualTo("Zone"));
+        Assert.That(parents[1].Model.Name, Is.EqualTo("Simulation"));
+    }
+
+    /// <summary>Ensure Node.Root successfully returns the top level node.</summary>
+    [Test]
+    public void NodeRoot_ReturnsCorrectNode()
+    {
+        // Create a simulation
+        var simulation = new Simulation()
+        {
+            Children =
+            [
+                new Zone()
+                {
+                    Children = [
+                        new Clock()
+                    ]
+                }
+            ]
+        };
+
+        var simNode = Node.Create(simulation);
+        var clock = simNode.FindChild<Clock>(recurse: true);
+        Assert.That(clock.Node.Root(), Is.EqualTo(simNode));
+    }
 }

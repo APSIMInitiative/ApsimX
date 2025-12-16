@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using APSIM.Shared.Documentation;
-using Models;
+using M = Models;
 using Models.Core;
+using Models;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -54,8 +55,23 @@ namespace APSIM.Documentation.Models.Types
             tags.Add(new Paragraph(CodeDocumentation.GetSummary(model.GetType())));
             tags.Add(new Paragraph(CodeDocumentation.GetRemarks(model.GetType())));
 
-            foreach (IModel child in model.Node.FindChildren<Memo>())
-                tags.AddRange(AutoDocumentation.DocumentModel(child).ToList());
+            if (model.Node != null)
+            {
+                bool hasDocumentation = false;
+                if (model.Node.FindParent<Simulations>(recurse:true).Node.FindChild<M.Documentation>(recurse:true) != null)
+                    hasDocumentation = true;
+
+                if (!hasDocumentation)
+                {
+                    foreach (IModel child in model.Node.FindChildren<Memo>())
+                        tags.AddRange(AutoDocumentation.DocumentModel(child).ToList());
+                }
+                else
+                {
+                    foreach (IModel child in model.Node.FindChildren<M.Documentation>())
+                        tags.AddRange(AutoDocumentation.DocumentModel(child).ToList());
+                }
+            }
 
             return new Section(model.Name, tags);
         }
