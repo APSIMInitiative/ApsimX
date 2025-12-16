@@ -234,13 +234,39 @@ namespace APSIM.Shared.Documentation
                 //remove carriage returns
                 raw = raw.Replace("\r", "");
 
+                //turn tabs into spaces
+                raw = raw.Replace("\t", "    ");
+
+                bool foundFirstRealLine = false;
+                string whitespaceOffset = "";
                 string output = "";
                 foreach(string line in raw.Split("\n"))
                 {
+                    //skip over blank lines until we have content
+                    if (!foundFirstRealLine)
+                    {
+                        if (line.Trim().Length > 0)
+                        {
+                            foundFirstRealLine = true;
+                            bool wordFound = false;
+                            foreach(char c in line)
+                            {
+                                if (!wordFound)
+                                {
+                                    if (c == ' ')
+                                        whitespaceOffset += " ";
+                                    else
+                                        wordFound = true;
+                                }
+                            }
+                        }
+                    }
                     
+                    if (foundFirstRealLine)
+                    {
+                        output += line.Replace(whitespaceOffset, "") + "\n";
+                    }
                 }
-
-
 
                 return output;
             }

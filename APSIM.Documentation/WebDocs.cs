@@ -544,6 +544,7 @@ namespace APSIM.Documentation
             output += content;
             output += "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/prism/1.30.0/prism.min.js\"></script>";
             output += "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/prism/1.30.0/components/prism-csharp.min.js\"></script>";
+            output += "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/prism/1.30.0/plugins/keep-markup/prism-keep-markup.min.js\"></script>";
             output += "</body>\n";
             output += "</html>\n";
             return output;
@@ -583,9 +584,14 @@ namespace APSIM.Documentation
                         inCodeBlock = false;
 
                 string text = line;
+
+                //add csharp language to code if not there
+                if (inCodeBlock && line.Trim() == "```")
+                    text += "csharp";
+                
                 if (!inCodeBlock)
                     text = line.Trim();
-                formattedLines.Add(line);
+                formattedLines.Add(text);
             }
 
             return formattedLines.ToList();
