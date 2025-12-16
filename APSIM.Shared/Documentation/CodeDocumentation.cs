@@ -262,7 +262,7 @@ namespace APSIM.Shared.Documentation
                         }
                     }
                     
-                    if (foundFirstRealLine)
+                    if (foundFirstRealLine && whitespaceOffset.Length > 0)
                     {
                         output += line.Replace(whitespaceOffset, "") + "\n";
                     }
