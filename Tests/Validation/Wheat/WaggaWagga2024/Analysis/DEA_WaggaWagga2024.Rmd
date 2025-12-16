@@ -1,0 +1,33 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+# Libraries
+```{r, warning=FALSE}
+library(targets)
+```
+
+
+# Check pipeline status
+```{r}
+tar_glimpse()
+```
+
+
+```{r}
+tar_visnetwork()
+```
+
+# Construct pipeline
+```{r}
+# targets::tar_make(callr_function = NULL)
+targets::tar_make()
+```
+
+# Destroy pipeline (off by default)
+```{r, warning=FALSE, eval = FALSE }
+tar_destroy()
+# targets::tar_destroy(ask = FALSE)
+
+```
+
