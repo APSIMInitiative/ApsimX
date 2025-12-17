@@ -95,7 +95,9 @@ namespace Models.Functions
                 SetDefaultValues();
             }
         }
-        private CropTypes cropType;
+
+        [JsonIgnore]
+        private CropTypes cropType = CropTypes.SelectCrop;        
 
 
         /// <summary>Frost damage</summary>
@@ -446,6 +448,30 @@ namespace Models.Functions
             return sens;
         }
 
+        //// <summary>Validate inputs</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        private void OnDoCommencing(object sender, EventArgs e)
+        {
+            // Don't run if no valid crop type is selected
+            if (CropType == CropTypes.SelectCrop)
+            {
+                throw new Exception($"Please select a crop type in the `FrostHeatDamageFunctions` before running.");
+            }
+
+            // Check if the selected crop type matches the plant type in the simulation
+            string actualPlantType = Plant.Name;
+            string selectedCropType = CropType.ToString();
+
+            // Compare the selected crop type with the plant type in simulation
+            if (!actualPlantType.Equals(selectedCropType, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new Exception($"The selected crop type '{selectedCropType}' in the `FrostHeatDamageFunctions` does not match the plant type '{actualPlantType}' in the simulation. " +
+                    $"Please select the correct crop type in the `FrostHeatDamageFunctions`.");
+            }
+        }
+
         /// <summary>Initializing the variables</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>    
@@ -479,17 +505,11 @@ namespace Models.Functions
         private void OnDoManagementCalculations(object sender, EventArgs e)
         {
             if (Plant != this.Parent)
-                throw new Exception("Error: FrostHeatDamageFunctions has linked with a Plant that is not its parent");
+                throw new Exception("Error: `FrostHeatDamageFunctions` has linked with a Plant that is not its parent");
 
             if (!Plant.IsAlive)
                 return;
-
-            if (cropType == CropTypes.SelectCrop)
-            {
-                Summary.WriteMessage(this, "No crop selected. The `FrostHeatDamageFunctions` will not be performed", Core.MessageType.Warning);
-                return;
-            }    
-
+    
             Phenology phen = Plant.Phenology;
             ReproductiveOrgan organs = Plant.Node.FindChild<ReproductiveOrgan>("Grain");
 
