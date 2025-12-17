@@ -461,14 +461,23 @@ namespace Models.Functions
             }
 
             // Check if the selected crop type matches the plant type in the simulation
-            string actualPlantType = Plant.Name;
+            string actualPlantType = Plant.PlantType;
             string selectedCropType = CropType.ToString();
 
-            // Compare the selected crop type with the plant type in simulation
-            if (!actualPlantType.Equals(selectedCropType, StringComparison.OrdinalIgnoreCase))
+            List<string> plantTypes = new List<string>();
+            foreach(CropTypes type in Enum.GetValues(typeof(CropTypes)))
+                plantTypes.Add(type.ToString());
+
+            //check if the crop this is on exists in the enum, and then check if the correct crop was selected
+            //if the crop is not in the list, don't throw on this to allow prototying for new crops.
+            if (plantTypes.Contains(Plant.PlantType))
             {
-                throw new Exception($"The selected crop type '{selectedCropType}' in the `FrostHeatDamageFunctions` does not match the plant type '{actualPlantType}' in the simulation. " +
-                    $"Please select the correct crop type in the `FrostHeatDamageFunctions`.");
+                // Compare the selected crop type with the plant type in simulation
+                if (!actualPlantType.Equals(selectedCropType, StringComparison.OrdinalIgnoreCase))
+                {
+                    throw new Exception($"The selected crop type '{selectedCropType}' in the `FrostHeatDamageFunctions` does not match the plant type '{actualPlantType}' in the simulation. " +
+                        $"Please select the correct crop type in the `FrostHeatDamageFunctions`.");
+                }
             }
         }
 
