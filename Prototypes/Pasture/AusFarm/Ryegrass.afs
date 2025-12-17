@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <fwsimulation name="Pasture_component_test">
   <fwsversion>1.1</fwsversion>
-  <lastsaved>2025/09/17 11:41:17</lastsaved>
+  <lastsaved>2025/09/25 10:32:25</lastsaved>
   <component name="time_server" active="T" class="Time Server">
     <executable name="timesvr.dll" version="1.1"/>
     <initdata>
@@ -1738,6 +1738,48 @@
               </element>
               <element>
                 <field name="varname" kind="string">
+                  <val>farm.pasture01.nitrogen.model.dlt_fom_n_min</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>farm.pasture01.nitrogen.model.dlt_fom_n_min</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.nitrogen.model.dlt_n_min_res</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>farm.pasture01.nitrogen.model.dlt_n_min_res</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>Sum</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.nitrogen.model.dlt_n_min_tot</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>farm.pasture01.nitrogen.model.dlt_n_min_tot</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>Sum</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
                   <val>farm.pasture01.nitrogen.model.dlt_nh4_net</val>
                 </field>
                 <field name="alias" kind="string">
@@ -1756,34 +1798,6 @@
                 </field>
                 <field name="alias" kind="string">
                   <val>farm.pasture01.nitrogen.model.dlt_no3_net</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.nitrogen.model.dlt_res_nh4_min</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.nitrogen.model.dlt_res_nh4_min</val>
-                </field>
-                <field name="aggreg" kind="string">
-                  <val>none</val>
-                </field>
-                <field name="decplaces" kind="integer4">
-                  <val>2</val>
-                </field>
-              </element>
-              <element>
-                <field name="varname" kind="string">
-                  <val>farm.pasture01.nitrogen.model.dlt_res_no3_min</val>
-                </field>
-                <field name="alias" kind="string">
-                  <val>farm.pasture01.nitrogen.model.dlt_res_no3_min</val>
                 </field>
                 <field name="aggreg" kind="string">
                   <val>none</val>
@@ -2535,7 +2549,7 @@
               <val>masterkey</val>
             </init>
             <init name="sdml_gen_time" kind="string">
-              <val>2025-09-17 11:41:17.533</val>
+              <val>2025-09-25 10:32:25.254</val>
             </init>
           </initsection>
       ]]>

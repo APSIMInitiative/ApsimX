@@ -92,7 +92,7 @@
               "Children": [
                 {
                   "$type": "Models.CLEM.FileCrop, Models",
-                  "FileName": "FileForage.prn",
+                  "FileName": "%root%\\Examples\\CLEM\\FileForage.prn",
                   "ExcelWorkSheetName": null,
                   "CropNameColumnName": "CropName",
                   "SoilTypeColumnName": "SoilNum",

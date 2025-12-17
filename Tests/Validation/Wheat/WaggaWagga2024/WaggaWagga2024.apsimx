@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 205,
+  "Version": 206,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -1457,7 +1457,7 @@
           "VariableNames": [
             "[Simulation].Name",
             "[Clock].Today",
-            "[NDVIModel].Script.NDVI"
+            "[Spectral].NDVI"
           ],
           "EventNames": [
             "[Clock].DoReport"
@@ -2111,7 +2111,6 @@
                   "Start": "Emergence",
                   "End": "DoubleRidge",
                   "IsEmerged": true,
-                  "Target": 1.0,
                   "Name": "LeavesInitiating",
                   "ResourceName": null,
                   "Children": [
@@ -13695,81 +13694,12 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Manager, Models",
-                  "CodeArray": [
-                    "using System;",
-                    "using Models.Core;",
-                    "using Models.Interfaces;",
-                    "using Models.PMF;",
-                    "using APSIM.Shared.Utilities;",
-                    "using Models.WaterModel;",
-                    "",
-                    "namespace Models",
-                    "{",
-                    "    [Serializable]",
-                    "    public class Script : Model",
-                    "    {",
-                    "        [Link] IClock Clock;",
-                    "        [Link] ISummary Summary;",
-                    "        [Link] ICanopy WheatCanopy;",
-                    "        [Link] EvaporationModel EvapModel;",
-                    "        ",
-                    "        [Description(\"Dry soil NDVI\")]",
-                    "        public double DrySoilNDVI { get; set; }",
-                    "        ",
-                    "        [Description(\"Wet soil NDVI\")]",
-                    "        public double WetSoilNDVI { get; set; }",
-                    "",
-                    "        [Description(\"Green Crop NDVI\")]",
-                    "        public double GreenCropNDVI { get; set; }",
-                    "        ",
-                    "        [Description(\"Dead Crop NDVI\")]",
-                    "        public double DeadCropNDVI { get; set; }",
-                    "                ",
-                    "        public double NDVI { get; set; }",
-                    "",
-                    "        [EventSubscribe(\"DoManagement\")]",
-                    "        private void DoDailyCalculations(object sender, EventArgs e)",
-                    "        {",
-                    "            double SoilNDVI = WetSoilNDVI;",
-                    "            if (EvapModel.t > 1)",
-                    "               SoilNDVI = DrySoilNDVI;",
-                    "",
-                    "            //NDVI = GreenCropNDVI * WheatCanopy.CoverGreen;",
-                    "            //NDVI += DeadCropNDVI * (WheatCanopy.CoverTotal - WheatCanopy.CoverGreen);",
-                    "            //NDVI += SoilNDVI * (1 - WheatCanopy.CoverTotal);            ",
-                    "            ",
-                    "            double CropNDVI = 0;",
-                    "            if (WheatCanopy.CoverTotal > 0)",
-                    "                CropNDVI = (WheatCanopy.CoverGreen/WheatCanopy.CoverTotal) * GreenCropNDVI + (1.0 - WheatCanopy.CoverGreen/WheatCanopy.CoverTotal) * DeadCropNDVI;",
-                    "   ",
-                    "            NDVI = SoilNDVI + (CropNDVI - SoilNDVI)*Math.Pow(WheatCanopy.CoverTotal, (1.0 - SoilNDVI));",
-                    "",
-                    "            ",
-                    "        }",
-                    "    }",
-                    "}",
-                    ""
-                  ],
-                  "Parameters": [
-                    {
-                      "Key": "DrySoilNDVI",
-                      "Value": "0.1"
-                    },
-                    {
-                      "Key": "WetSoilNDVI",
-                      "Value": "0.2"
-                    },
-                    {
-                      "Key": "GreenCropNDVI",
-                      "Value": "0.75"
-                    },
-                    {
-                      "Key": "DeadCropNDVI",
-                      "Value": "0.15"
-                    }
-                  ],
-                  "Name": "NDVIModel",
+                  "$type": "Models.Sensor.Spectral, Models",
+                  "DrySoilNDVI": 0.1,
+                  "WetSoilNDVI": 0.2,
+                  "GreenCropNDVI": 0.75,
+                  "DeadCropNDVI": 0.15,
+                  "Name": "Spectral",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -13827,8 +13757,8 @@
                 },
                 {
                   "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
-                  "ParameterFile": "..\\inputs\\WaggaWagga2024_PhenoDatesInput.csv",
                   "SetEventName": "[Plant].PlantSowing",
+                  "ParameterFile": "%root%/Tests/Validation/Wheat/inputs/WaggaWagga2024_PhenoDatesInput.csv",
                   "Name": "SetPhenoDatesExternally",
                   "ResourceName": null,
                   "Children": [],
@@ -14463,7 +14393,7 @@
                       "LineThickness": 0,
                       "TableName": "NDVIDailyReport",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "NDVIModel.Script.NDVI",
+                      "YFieldName": "Spectral.NDVI",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
@@ -14492,7 +14422,7 @@
                       "LineThickness": 0,
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "NDVIModel.Script.NDVI",
+                      "YFieldName": "Spectral.NDVI",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,

@@ -85,7 +85,8 @@ namespace Models.Core.Run
             if (simulationNamePatternMatch != null)
                 patternMatch = new Regex(simulationNamePatternMatch);
 
-            Initialise();
+            if (relativeTo != null)
+                Initialise();
         }
 
         /// <summary>Contstructor</summary>

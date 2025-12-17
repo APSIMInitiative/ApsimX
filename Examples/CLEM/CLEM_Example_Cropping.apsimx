@@ -84,7 +84,7 @@
               "Children": [
                 {
                   "$type": "Models.CLEM.FileCrop, Models",
-                  "FileName": "FileCrop_Maize.prn",
+                  "FileName": "%root%\\Examples\\CLEM\\FileCrop_Maize.prn",
                   "ExcelWorkSheetName": null,
                   "CropNameColumnName": "CropName",
                   "SoilTypeColumnName": "SoilNum",
@@ -103,7 +103,7 @@
                 },
                 {
                   "$type": "Models.CLEM.FileCrop, Models",
-                  "FileName": "FileCrop_Vegetables.prn",
+                  "FileName": "%root%\\Examples\\CLEM\\FileCrop_Vegetables.prn",
                   "ExcelWorkSheetName": null,
                   "CropNameColumnName": "CropName",
                   "SoilTypeColumnName": "SoilNum",
@@ -1647,7 +1647,7 @@
               "Children": [
                 {
                   "$type": "Models.CLEM.FileCrop, Models",
-                  "FileName": "FileCrop_SorgWheat.prn",
+                  "FileName": "%root%\\Examples\\CLEM\\FileCrop_SorgWheat.prn",
                   "ExcelWorkSheetName": null,
                   "CropNameColumnName": "CropName",
                   "SoilTypeColumnName": "SoilNum",
