@@ -20,7 +20,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 207; } }
+    public static int LatestVersion { get { return 208; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -7249,7 +7249,7 @@ internal class Converter
             JsonUtilities.SearchReplaceGraphVariableNames(graph, "NDVIModel.Script.NDVI", "Spectral.NDVI");
     }
 
-     /// <summary>
+    /// <summary>
     /// Perform necessary cultivar path updates following waterlogging modifications for the Maize, Canola and Soybean models.
     /// </summary>
     /// <param name="root">Root json token.</param>
