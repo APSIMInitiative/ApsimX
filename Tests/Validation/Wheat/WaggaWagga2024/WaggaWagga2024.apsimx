@@ -11951,7 +11951,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "\r\n**Experiment name**\n\nHarvest index in historic winter and spring wheat cultivars\n\t\t\t\t\t\n**Aim**\n\nTo quantify genetic yield gain and phenotypic shifts in Australian winter and spring wheat cultivars due to selection for yield, and elucidate the mechaism responsible for reduced HI in winter wheat\n\n\t\t\t\t\n**Research question**\n- What has been the comparitive genetic yield gain in Australian winter and spring wheat cultivars?\n\n- What phenotypic shifts have been associated with selection for yield in winter and spring wheat cultivars?\n\t\t\t\n- What are the phenotypic differences between spring and winter wheat that cause comparitively lower HI in winter wheat?\n\t\t\t\t\n**Treatments**\n\nCultivar nested within habit (spring vs winter) with habit confounded by sow time\n\t\t\t\t\n\tHabit\tSow time\tSow order\tCultivar\tYear of release\n\tWinter\tmid April\t1\tOsprey\t1983\n\tWinter\tmid April\t1\tRosella\t1985\n\tWinter\tmid April\t1\tWhistler\t1998\n\tWinter\tmid April\t1\tWylah\t1999\n\tWinter\tmid April\t1\tEGA_Wedgetail\t2002\n\tWinter\tmid April\t1\tLRPB_Kittyhawk\t2016\n\tWinter\tmid April\t1\tIllabo\t2018\n\tWinter\tmid April\t1\tLRPB_Mohawk\t2023\n\tSpring\tmid May\t2\tMeering\t1984\n\tSpring\tmid May\t2\tJanz\t1989\n\tSpring\tmid May\t2\tYitpi\t1999\n\tSpring\tmid May\t2\tWyalkatchem\t2001\n\tSpring\tmid May\t2\tEGA_Gregory\t2004\n\tSpring\tmid May\t2\tMace\t2008\n\tSpring\tmid May\t2\tScepter\t2016\n\tSpring\tmid May\t2\tSunmaster\t2023\n",
+          "Text": "\r\n**Experiment name**\n\nHarvest index in historic winter and spring wheat cultivars\n\t\t\t\t\t\n**Aim**\n\nTo quantify genetic yield gain and phenotypic shifts in Australian winter and spring wheat cultivars due to selection for yield, and elucidate the mechaism responsible for reduced HI in winter wheat\n\n\t\t\t\t\n**Research question**\n- What has been the comparitive genetic yield gain in Australian winter and spring wheat cultivars?\n\n- What phenotypic shifts have been associated with selection for yield in winter and spring wheat cultivars?\n\t\t\t\n- What are the phenotypic differences between spring and winter wheat that cause comparitively lower HI in winter wheat?\n\t\t\t\t\n**Treatments**\n\nCultivar nested within habit (spring vs winter) with habit confounded by sow time\n\t\t\t\t\n\tHabit\tSow time\tSow order\tCultivar\tYear of release\n\tWinter\tmid April\t1\tOsprey\t1983\n\tWinter\tmid April\t1\tRosella\t1985\n\tWinter\tmid April\t1\tWhistler\t1998\n\tWinter\tmid April\t1\tWylah\t1999\n\tWinter\tmid April\t1\tEGA_Wedgetail\t2002\n\tWinter\tmid April\t1\tLRPB_Kittyhawk\t2016\n\tWinter\tmid April\t1\tIllabo\t2018\n\tWinter\tmid April\t1\tLRPB_Mohawk\t2023\n\tSpring\tmid May\t2\tMeering\t1984\n\tSpring\tmid May\t2\tJanz\t1989\n\tSpring\tmid May\t2\tYitpi\t1999\n\tSpring\tmid May\t2\tWyalkatchem\t2001\n\tSpring\tmid May\t2\tEGA_Gregory\t2004\n\tSpring\tmid May\t2\tMace\t2008\n\tSpring\tmid May\t2\tScepter\t2016\n\tSpring\tmid May\t2\tSunmaster\t2023\n\n\n\n17/04/2024\nApplied 15mm irrigation via lateral to PHDA24WARI2 site to ensure germination\n\n14/05/2024\nIrrigate all lateral experiments with 15mm irrigation to ensure establishment.\n\n27/05/2024\nSite irrigated with 6mm to alleviate soil crusting.\n\n",
           "Name": "Description",
           "ResourceName": null,
           "Children": [],
@@ -11987,7 +11987,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Osprey",
-                        "[Sowing].Script.Population = 101",
+                        "[Sowing].Script.Population = 200",
                         "[Sowing].Script.EmergeDate = 28-Apr"
                       ],
                       "Paths": null,
@@ -12002,7 +12002,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Rosella",
-                        "[Sowing].Script.Population = 108",
+                        "[Sowing].Script.Population = 200",
                         "[Sowing].Script.EmergeDate = 28-Apr"
                       ],
                       "Paths": null,
@@ -12017,7 +12017,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Whistler",
-                        "[Sowing].Script.Population = 92",
+                        "[Sowing].Script.Population = 200",
                         "[Sowing].Script.EmergeDate = 28-Apr"
                       ],
                       "Paths": null,
@@ -12032,7 +12032,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Wylah",
-                        "[Sowing].Script.Population = 105",
+                        "[Sowing].Script.Population = 200",
                         "[Sowing].Script.EmergeDate = 26-Apr"
                       ],
                       "Paths": null,
@@ -12047,7 +12047,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Wedgetail",
-                        "[Sowing].Script.Population = 103",
+                        "[Sowing].Script.Population = 200",
                         "[Sowing].Script.EmergeDate = 28-Apr"
                       ],
                       "Paths": null,
@@ -12062,7 +12062,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Kittyhawk",
-                        "[Sowing].Script.Population = 103",
+                        "[Sowing].Script.Population = 200",
                         "[Sowing].Script.EmergeDate = 27-Apr"
                       ],
                       "Paths": null,
@@ -12077,7 +12077,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Illabo",
-                        "[Sowing].Script.Population = 119",
+                        "[Sowing].Script.Population = 200",
                         "[Sowing].Script.EmergeDate = 27-Apr"
                       ],
                       "Paths": null,
@@ -12092,7 +12092,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Mowhawk",
-                        "[Sowing].Script.Population = 86",
+                        "[Sowing].Script.Population = 200",
                         "[Sowing].Script.EmergeDate = 28-Apr"
                       ],
                       "Paths": null,
@@ -12107,7 +12107,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Meering",
-                        "[Sowing].Script.Population = 127",
+                        "[Sowing].Script.Population = 200",
                         "[Sowing].Script.EmergeDate = 25-May"
                       ],
                       "Paths": null,
@@ -12122,7 +12122,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Janz",
-                        "[Sowing].Script.Population = 138",
+                        "[Sowing].Script.Population = 200",
                         "[Sowing].Script.EmergeDate = 27-May"
                       ],
                       "Paths": null,
@@ -12137,7 +12137,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Yitpi",
-                        "[Sowing].Script.Population = 135",
+                        "[Sowing].Script.Population = 200",
                         "[Sowing].Script.EmergeDate = 26-May"
                       ],
                       "Paths": null,
@@ -12152,7 +12152,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Wyalkatchem",
-                        "[Sowing].Script.Population = 130",
+                        "[Sowing].Script.Population = 200",
                         "[Sowing].Script.EmergeDate = 26-May"
                       ],
                       "Paths": null,
@@ -12167,7 +12167,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Gregory",
-                        "[Sowing].Script.Population = 123",
+                        "[Sowing].Script.Population = 200",
                         "[Sowing].Script.EmergeDate = 26-May"
                       ],
                       "Paths": null,
@@ -12182,7 +12182,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Mace",
-                        "[Sowing].Script.Population = 140",
+                        "[Sowing].Script.Population = 200",
                         "[Sowing].Script.EmergeDate = 27-May"
                       ],
                       "Paths": null,
@@ -12197,7 +12197,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Scepter",
-                        "[Sowing].Script.Population = 146",
+                        "[Sowing].Script.Population = 200",
                         "[Sowing].Script.EmergeDate = 27-May"
                       ],
                       "Paths": null,
@@ -12212,7 +12212,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Sunmaster",
-                        "[Sowing].Script.Population = 131",
+                        "[Sowing].Script.Population = 200",
                         "[Sowing].Script.EmergeDate = 27-May"
                       ],
                       "Paths": null,
@@ -13103,8 +13103,8 @@
                         200.0
                       ],
                       "InitialValues": [
-                        0.103,
-                        0.14,
+                        0.126,
+                        0.129,
                         0.37,
                         0.46,
                         0.41,
@@ -13323,6 +13323,37 @@
                       "ReadOnly": false
                     }
                   ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Operations, Models",
+                  "OperationsList": [
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2024-04-01",
+                      "Action": "[Irrigation].Apply (15);",
+                      "Line": "2024-04-01 [Irrigation].Apply (15);"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2024-05-04",
+                      "Action": "[Irrigation].Apply (15);",
+                      "Line": "2024-05-04 [Irrigation].Apply (15);"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2024-05-09",
+                      "Action": "[Irrigation].Apply (6);",
+                      "Line": "2024-05-09 [Irrigation].Apply (6);"
+                    }
+                  ],
+                  "Name": "Operations",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
