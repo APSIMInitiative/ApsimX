@@ -17,6 +17,7 @@ using System.Linq;
 using static Models.GrazPlan.GrazType;
 using static Models.GrazPlan.PastureUtil;
 using APSIM.Core;
+using Models.PMF;
 
 namespace Models.GrazPlan
 {
@@ -71,7 +72,7 @@ namespace Models.GrazPlan
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public class Pasture : TSoilInstance, IUptake, ICanopy, IScopedModel, IStructureDependency
+    public class Pasture : TSoilInstance, IUptake, ICanopy, IScopedModel, IStructureDependency,IPlant
     {
         /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
@@ -195,6 +196,10 @@ namespace Models.GrazPlan
 
             FFieldArea = 1.0;
         }
+       
+       
+       
+
 
         #region Initialisation properties ====================================================
 
@@ -448,6 +453,93 @@ namespace Models.GrazPlan
         public double[] LL { get; set; } // [1..
 
         #endregion
+
+        #region IPlant implementation
+        /// <summary>
+        /// TESTING Plant type
+        /// </summary>
+        public string PlantType { get; set; }
+
+        /// <summary>
+        /// TESTING Cultivar names: AgPasture
+        /// </summary>
+        public string[] CultivarNames
+        {
+            get { return null; }
+        }
+
+        /// <summary>
+        /// TESTING  IsAlive 
+        /// </summary>
+        public bool IsAlive
+        {
+            get{return false;}
+        }
+
+        /// <summary>
+        /// TESTING IsReadyForHarvesting: Used in AgPasture
+        /// </summary>
+        public bool IsReadyForHarvesting
+        {
+            get { return false; }
+        }
+
+        /// <summary>
+        /// Nitrogen uptake: from AgPasture
+        /// </summary>
+       
+  
+        /// <summary>Amount of nitrogen taken up (kg/ha).</summary>
+        public IReadOnlyList<double> NitrogenUptake  {
+            get{
+            return  null;}
+        }
+
+        /// <summary>
+        /// TESTING Harvest : Used in AgPasture
+        /// </summary>
+        /// <param name="removeBiomassFromOrgans"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public void Harvest(bool removeBiomassFromOrgans = true)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// TESTING Sow 
+        /// </summary>
+        /// <param name="cultivar"></param>
+        /// <param name="population"></param>
+        /// <param name="depth"></param>
+        /// <param name="rowSpacing"></param>
+        /// <param name="maxCover"></param>
+        /// <param name="budNumber"></param>
+        /// <param name="rowConfig"></param>
+        /// <param name="seeds"></param>
+        /// <param name="tillering"></param>
+        /// <param name="ftn"></param>
+        // <exception cref="NotImplementedException"></exception>
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1, double seeds = 0, int tillering = 0, double ftn = 0.0)
+        {
+            
+        }
+
+
+        /// <summary>
+        /// TESTING ENDCROP()
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
+        public void EndCrop()
+        {
+            throw new NotImplementedException();
+        }
+
+        
+
+
+
+
+        #endregion IPlant implementation
 
 
         #region ICanopy implementation
@@ -850,6 +942,60 @@ namespace Models.GrazPlan
             }
         }
 
+        /// <summary> START AREA - TESTING BIOMASSES TO MIMIC PMF </summary>
+        /// 
+        /// 
+        /// <summary>
+        /// TESTING ABOVEGROUND WT AND N TO MIMIC PMF
+        /// </summary>
+        public IBiomass AboveGround
+        {
+            get
+            {
+                Biomass mass = new Biomass();
+                mass.StructuralWt = GetDM(GrazType.TOTAL, GrazType.TOTAL)/10;
+                // SHootN is Concentration so converted it to amount N= Concentration * wt
+                mass.StructuralN = GetPlantNutr(GrazType.TOTAL, GrazType.TOTAL, TPlantElement.N) *GetDM(GrazType.TOTAL, GrazType.TOTAL)/10;
+                return mass;
+
+            }
+        }
+
+        /// <summary>
+        /// TESTING BIOMASS FOR LEAF
+        /// </summary>
+        public IBiomass Leaf
+        {
+            get
+            {
+                Biomass mass =new Biomass();
+                mass.StructuralWt= GetDM(GrazType.TOTAL, GrazType.ptLEAF)/10;
+                mass.StructuralN=GetPlantNutr(GrazType.TOTAL, GrazType.ptLEAF, TPlantElement.N)/10;
+                
+                return mass;
+            }
+        }
+        
+        /// <summary>
+        /// TESTING STEMwt Biomass
+        /// </summary>
+        public IBiomass Stem
+        {
+            get
+            {
+                Biomass mass =new Biomass();
+                mass.StructuralWt = GetDM(GrazType.TOTAL, GrazType.ptSTEM)/10;
+                mass.StructuralN = GetPlantNutr(GrazType.TOTAL, GrazType.ptSTEM, TPlantElement.N);
+                return mass;
+            }
+        }
+
+
+
+         /// <summary>END AREA - TESTING BIOMASSES TO MIMIC PMF </summary>
+        ///
+
+
         /// <summary>Total dry weight of all herbage</summary>
         [Units("kg/ha")]
         public double ShootDM { get { return GetDM(GrazType.TOTAL, GrazType.TOTAL); } }
@@ -1072,7 +1218,8 @@ namespace Models.GrazPlan
         /// <summary>Average sulphur content of dry herbage</summary>
         [Units("g/g")]
         public double DryS { get { return GetPlantNutr(GrazType.sgDRY, GrazType.TOTAL, TPlantElement.S); } }
-
+        
+              
         /// <summary>Total dry weight of all leaves</summary>
         [Units("kg/ha")]
         public double LeafDM { get { return GetDM(GrazType.TOTAL, GrazType.ptLEAF); } }
@@ -1100,6 +1247,9 @@ namespace Models.GrazPlan
         /// <summary>Average sulphur content of all leaves</summary>
         [Units("g/g")]
         public double LeafS { get { return GetPlantNutr(GrazType.TOTAL, GrazType.ptLEAF, TPlantElement.S); } }
+        
+    
+        
 
         /// <summary>Total dry weight of all stems</summary>
         [Units("kg/ha")]
