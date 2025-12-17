@@ -7193,11 +7193,68 @@ internal class Converter
     }
 
     /// <summary>
+    /// Finds NDVI models that have been implemented in a manager, gets their parameters, replaces the manager with a compiled model and puts the correct parameters onto it.
+    /// <param name="root">Root json object.</param>
+    /// <param name="_">Unused filename.</param>
+    private static void UpgradeToVersion207(JObject root, string _)
+    {
+        // loop through all managers and replace with NDVI model if appropriate
+        foreach (JObject manager in JsonUtilities.ChildrenRecursively(root, "Manager"))
+        {
+            if (manager["Name"].ToString() == "NDVIModel")
+            {
+                //Extract NDVI model parameters from scropt
+                var parameters = manager["Parameters"] as JArray;
+                var paramDict = new Dictionary<string, double>();
+
+                if (parameters != null)
+                {
+                    foreach (var p in parameters.OfType<JObject>())
+                    {
+                        string? key = (string?)p["Key"];
+                        if (key != null && double.TryParse(p["Value"]?.ToString(), out double val))
+                            paramDict[key] = val;
+                    }
+                }
+
+                // Build replacement Spectral model
+                var newModel = new JObject
+                {
+                    ["$type"] = "Models.Sensor.Spectral, Models",
+                    ["Name"] = "Spectral",
+                    ["DrySoilNDVI"] = paramDict.GetValueOrDefault("DrySoilNDVI", 0.0),
+                    ["WetSoilNDVI"] = paramDict.GetValueOrDefault("WetSoilNDVI", 0.0),
+                    ["GreenCropNDVI"] = paramDict.GetValueOrDefault("GreenCropNDVI", 0.0),
+                    ["DeadCropNDVI"] = paramDict.GetValueOrDefault("DeadCropNDVI", 0.0),
+                    ["NDVI"] = 0.0,
+                    ["ResourceName"] = null,
+                    ["Children"] = new JArray(),
+                    ["Enabled"] = true,
+                    ["ReadOnly"] = false
+                };
+
+                //Remove manager model and add Specteral model to parent
+                JObject parent = JsonUtilities.Parent(manager) as JObject;
+                JsonUtilities.RemoveChild(parent, "NDVIModel");
+                JsonUtilities.AddChild(parent, newModel);
+            }
+        }
+
+        // Change report variables.
+        foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[NDVIModel].Script.NDVI", "[Spectral].NDVI", caseSensitive: false);
+
+        // Change graph variables.
+        foreach (var graph in JsonUtilities.ChildrenOfType(root, "Graph"))
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "NDVIModel.Script.NDVI", "Spectral.NDVI");
+    }
+
+     /// <summary>
     /// Perform necessary cultivar path updates following waterlogging modifications for the Maize, Canola and Soybean models.
     /// </summary>
     /// <param name="root">Root json token.</param>
     /// <param name="name">File name.</param>
-    private static void UpgradeToVersion207(JObject root, string name)
+    private static void UpgradeToVersion208(JObject root, string name)
     {
         List<(string, string)> maizeUpadtes =
         [
@@ -7248,4 +7305,5 @@ internal class Converter
             return string.Join('.', [$"[{plant}]", organ, .. parts[1..]]);
         }
     }
+
 }
