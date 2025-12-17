@@ -31,7 +31,7 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
-            "DookieWaggaWagga2024.xlsx"
+            "WaggaWagga2024.xlsx"
           ],
           "SheetNames": [
             "Observed"
@@ -11913,6 +11913,22 @@
     {
       "$type": "Models.Factorial.Experiment, Models",
       "DisabledSimNames": [
+        "WaggaWagga2024CvMeeringSow22-Apr",
+        "WaggaWagga2024CvJanzSow22-Apr",
+        "WaggaWagga2024CvYitpiSow22-Apr",
+        "WaggaWagga2024CvWyalkatchemSow22-Apr",
+        "WaggaWagga2024CvGregorySow22-Apr",
+        "WaggaWagga2024CvMaceSow22-Apr",
+        "WaggaWagga2024CvScepterSow22-Apr",
+        "WaggaWagga2024CvSunmasterSow22-Apr",
+        "WaggaWagga2024CvOspreySow13-May",
+        "WaggaWagga2024CvRosellaSow13-May",
+        "WaggaWagga2024CvWhistlerSow13-May",
+        "WaggaWagga2024CvWylahSow13-May",
+        "WaggaWagga2024CvWedgetailSow13-May",
+        "WaggaWagga2024CvKittyhawkSow13-May",
+        "WaggaWagga2024CvIllaboSow13-May",
+        "WaggaWagga2024CvMowhawkSow13-May",
         "DookieWaggaWagga2024CvMeeringSow22-Apr",
         "DookieWaggaWagga2024CvJanzSow22-Apr",
         "DookieWaggaWagga2024CvYitpiSow22-Apr",
@@ -11946,7 +11962,7 @@
         "DookieWWHI2024CvJanzSow17-Apr",
         "DookieWWHI2024CvMeeringSow17-Apr"
       ],
-      "Name": "DookieWaggaWagga2024",
+      "Name": "WaggaWagga2024",
       "ResourceName": null,
       "Children": [
         {
@@ -13811,7 +13827,7 @@
                 },
                 {
                   "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
-                  "ParameterFile": "..\\inputs\\DookiePhenoDatesInput_Wagga.csv",
+                  "ParameterFile": "..\\inputs\\WaggaWagga2024_PhenoDatesInput.csv",
                   "SetEventName": "[Plant].PlantSowing",
                   "Name": "SetPhenoDatesExternally",
                   "ResourceName": null,
