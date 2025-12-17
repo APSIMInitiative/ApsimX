@@ -18,9 +18,20 @@ tar_glimpse()
 tar_visnetwork()
 ```
 
+
+```{r}
+tar_visnetwork(targets_only = TRUE)
+```
+
+```{r}
+tar_manifest()
+tar_manifest(fields = name)$name
+```
+
+
 # Construct pipeline
 ```{r}
-# targets::tar_make(callr_function = NULL)
+# targets::tar_make(callr_function = NULL) # for debugging
 targets::tar_make()
 ```
 

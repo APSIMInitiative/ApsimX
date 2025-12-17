@@ -27,6 +27,7 @@ source("R/doAPSIMStageInput.R")
 source("R/saveInputParam.R")
 source("R/doStageObsData.R")
 source("R/add_to_observed_clean.R")
+source("R/read_soil_water.R")
 
 #----------------
 # Define targets
@@ -45,6 +46,7 @@ targets <- list(
       file_observ_excel           = "2024_WaggaWagga_PHDA24WARI2.xlsx",
       sheetExcel_weather          = "Weather",
       sheetExcel_haun             = "Haun stage ", # Note the extra space as-is in typo in observations (!!!!)
+      sheetExcel_soilWater        = "GravimetricMoistureNearSowing",
       coord_thisLatLon            = data.frame(lat = -35.041, lon = 147.319),
       target_stagePerc            = 50, # % of a stage development when event date is retrieved
       target_betwStages           = 50,  # % of period between two adjacent events when a synthetic event date is assumed
@@ -62,6 +64,13 @@ targets <- list(
                                                   config$file_SimNameByCultivar),
                                         header = TRUE, stringsAsFactors = FALSE, sep = ",")),
   
+  ### ------------------------------------------------
+  ### Read soil parameters to be used in UI
+  ### ------------------------------------------------
+  
+  tar_target(df_soil_water, read_soil_water(config$folder_rawData, 
+                                     config$file_observ_excel, 
+                                     config$sheetExcel_soilWater)),
   
   ### ------------------------------------------------
   ### Create met file to run APSIM
