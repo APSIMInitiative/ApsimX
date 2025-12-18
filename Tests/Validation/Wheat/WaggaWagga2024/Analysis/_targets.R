@@ -8,7 +8,7 @@ library(here)
 
 tar_option_set(packages = c("tidyverse", "lubridate","purrr", 
                             "openxlsx", "readxl", "glue", "rstudioapi",
-                            "stringr", "tidyr"))
+                            "stringr", "tidyr", "jsonlite"))
 #----------------------
 # Define used functions
 #----------------------
@@ -28,6 +28,7 @@ source("R/saveInputParam.R")
 source("R/doStageObsData.R")
 source("R/add_to_observed_clean.R")
 source("R/read_soil_water.R")
+source("R/soil_water_in_json.R")
 
 #----------------
 # Define targets
@@ -71,6 +72,8 @@ targets <- list(
   tar_target(df_soil_water, read_soil_water(config$folder_rawData, 
                                      config$file_observ_excel, 
                                      config$sheetExcel_soilWater)),
+  
+  tar_target(json_soil_water, soil_water_in_json(df_soil_water)),
   
   ### ------------------------------------------------
   ### Create met file to run APSIM

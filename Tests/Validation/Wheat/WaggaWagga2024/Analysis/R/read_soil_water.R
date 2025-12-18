@@ -23,7 +23,18 @@ read_soil_water <- function(folder_path, file_name, SheetName) {
     mutate(Depth=as.factor(Depth), 
            InitialWater = 0.01*as.numeric(`Gravimetric_Water_Content %`)) %>%
     group_by(Depth) %>%
-    summarise(InitialWater_mean = mean(InitialWater, na.rm = TRUE))
+    summarise(InitialWater_mean = mean(InitialWater, na.rm = TRUE)) %>%
+    separate(
+      col = Depth, 
+      into = c("SoilDepthStart", "SoilDepthEnd"), 
+      sep = "\\s*\\.\\.\\s*", 
+      convert = TRUE,
+      remove = FALSE  # Change to TRUE if you want to delete the original 'Depth' column
+    ) %>%
+    # Sort rows by SoilDepthStart (smallest to largest)
+    arrange(SoilDepthStart) %>%
+    mutate(SoilDepthEnd = SoilDepthEnd*10,  SoilDepthStart= SoilDepthStart*10) %>%
+    mutate(Thickness = SoilDepthEnd - SoilDepthStart)
   
  return (df)
    
