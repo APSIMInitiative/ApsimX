@@ -4,8 +4,6 @@ using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Functions;
-using Models.Functions.DemandFunctions;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.PMF.Library;
@@ -27,6 +25,7 @@ namespace Models.PMF.Organs
     ///  These values are then given back to SimpleLeaf which uses them to calculate photosynthesis and soil water demand.
     ///  
     /// **Light Interception**
+    /// 
     /// Calculations are as follows:
     /// 
     /// ```
@@ -55,7 +54,7 @@ namespace Models.PMF.Organs
     /// 
     /// Name | Description | Units
     /// -|-|-
-    /// StomatalConductance | 
+    /// StomatalConductance | The influence of stomatal opening on rate of diffusion of water vapour exiting through the stomata of a leaf. | (mm/s)
     /// Gsmax350 | Potential stomatal conductance at atmospherical CO2 concentration of 350ppm | (m/s)
     /// FRGR | A factor that accounts for the relative growth rate of the plant | (0-1)
     /// stomatalConductanceCO2Modifier | A factor that accounts for changes of Gsmax with CO2 concentration | (0-1)
