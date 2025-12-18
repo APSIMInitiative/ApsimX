@@ -5,7 +5,6 @@ using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Functions;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.PMF.Library;
@@ -13,7 +12,6 @@ using Models.Soils;
 using Models.Soils.Arbitrator;
 using Newtonsoft.Json;
 using System.Runtime.CompilerServices;
-using NetTopologySuite.GeometriesGraph;
 
 [assembly: InternalsVisibleTo("UnitTests")]
 namespace Models.PMF.Organs
@@ -37,13 +35,13 @@ namespace Models.PMF.Organs
     /// 
     /// Name | Description | Units
     /// -|-|-
-    /// SWmm | The soil water content from the soil water model for a given soil layer | (mm)
-    /// Thickness | The width of the soil layer used within the soil water model | (mm)
-    /// LL | The crop lower limit obtained from SoilCrop node for the soil within the relevant Zone | (mm3/mm3).
-    /// KL | The first order decay soil water uptake parameter obtained from SoilCrop node for the soil within the relevant Zone | (/d).
-    /// LLmodifier | A function used to modify LL to account for the effect of differing root geometry (usually set to 1.0) |(0-1)
-    /// KLmodifer | A function used to modifty KL to account for the effect of plant size (ie root length) on water uptake ability.| (0-1)
-    /// RootProportion | The fraction of the layer occupied for roots (e.g. 0.5 if roots occupy the top half of a layer only) | (0-1)
+    /// SWmm | The soil water content from the soil water model for a given soil layer | mm
+    /// Thickness | The width of the soil layer used within the soil water model | mm
+    /// LL | The crop lower limit obtained from SoilCrop node for the soil within the relevant Zone | mm<sup>3</sup>/mm<sup>3</sup>
+    /// KL | The first order decay soil water uptake parameter obtained from SoilCrop node for the soil within the relevant Zone | /d
+    /// LLmodifier | A function used to modify LL to account for the effect of differing root geometry (usually set to 1.0) | 0-1
+    /// KLmodifer | A function used to modifty KL to account for the effect of plant size (ie root length) on water uptake ability.| 0-1
+    /// RootProportion | The fraction of the layer occupied for roots (e.g. 0.5 if roots occupy the top half of a layer only) | 0-1
     /// 
     /// 
     /// **Soil Nitrogen Uptake**
@@ -61,15 +59,15 @@ namespace Models.PMF.Organs
     /// 
     /// Name | Description | Units
     /// -|-|-
-    /// NO3 | The NO3 content from the nutrient model for a given layer | (kg/ha).
-    /// NO3ppm | The NO3 concentration from the nutrient model for a given layer | (ppm)
-    /// NH4 | The NH4 content from the nutrient model for a given layer | (kg/ha).
-    /// NH4ppm | The NH4 concentration from the nutrient model for a given layer | (ppm)    
-    /// SWAF | The soil water availability factor to modify nitrogen uptake for a given layer.| (0-1)
-    /// RootProportion | The fraction of the layer occupied for roots (e.g. 0.5 if roots occupy the top half of a layer only) | (0-1)
-    /// maxNUptake | The maximum plant N uptake for a given day. | (kg/ha/d)
-    /// kno3 | The second order decay coefficient for NO3 uptake (ie uptake rate at 1 ppm). | (/d/ppm)
-    /// knh4 | The second order decay coefficient for NH4 uptake (ie uptake rate at 1 ppm). | (/d/ppm)
+    /// NO3 | The NO3 content from the nutrient model for a given layer | kg/ha
+    /// NO3ppm | The NO3 concentration from the nutrient model for a given layer | ppm
+    /// NH4 | The NH4 content from the nutrient model for a given layer | kg/ha
+    /// NH4ppm | The NH4 concentration from the nutrient model for a given layer | ppm
+    /// SWAF | The soil water availability factor to modify nitrogen uptake for a given layer.| 0-1
+    /// RootProportion | The fraction of the layer occupied for roots (e.g. 0.5 if roots occupy the top half of a layer only) | 0-1
+    /// maxNUptake | The maximum plant N uptake for a given day. | kg/ha/d
+    /// kno3 | The second order decay coefficient for NO3 uptake (ie uptake rate at 1 ppm). | /d/ppm
+    /// knh4 | The second order decay coefficient for NH4 uptake (ie uptake rate at 1 ppm). | /d/ppm
     /// 
     /// **Root Length**
     /// 
@@ -89,12 +87,12 @@ namespace Models.PMF.Organs
     /// 
     /// Name | Description | Units
     /// -|-|-
-    /// RAW | The root activity for water uptake in relation to root mass | (mm/g/m2)
-    /// WaterUptake | The daily water uptake by the plant model for a given layer | (mm)
-    /// Root.Live.Wt | The live root mass within a given layer | (g/m2)
-    /// Thickness | The width of the soil layer used within the soil water model | (mm)
-    /// RootProportion | The fraction of the layer occupied for roots (e.g. 0.5 if roots occupy the top half of a layer only) | (0-1)
-    /// TotalDailyDMAllocationToRootMass | The amount of daily growth provided to the root model by the organ arbitrator | (g/m2)
+    /// RAW | The root activity for water uptake in relation to root mass | mm/g/m<sup>2</sup>
+    /// WaterUptake | The daily water uptake by the plant model for a given layer | mm
+    /// Root.Live.Wt | The live root mass within a given layer | g/m<sup>2</sup>
+    /// Thickness | The width of the soil layer used within the soil water model | mm
+    /// RootProportion | The fraction of the layer occupied for roots (e.g. 0.5 if roots occupy the top half of a layer only) | 0-1
+    /// TotalDailyDMAllocationToRootMass | The amount of daily growth provided to the root model by the organ arbitrator | g/m<sup>2</sup>
     /// 
     ///</summary>
     [Serializable]
