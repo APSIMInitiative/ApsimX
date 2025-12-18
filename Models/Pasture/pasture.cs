@@ -955,14 +955,14 @@ namespace Models.GrazPlan
                 Biomass mass = new Biomass();
                 mass.StructuralWt = GetDM(GrazType.TOTAL, GrazType.TOTAL)/10;
                 // SHootN is Concentration so converted it to amount N= Concentration * wt
-                mass.StructuralN = GetPlantNutr(GrazType.TOTAL, GrazType.TOTAL, TPlantElement.N) *GetDM(GrazType.TOTAL, GrazType.TOTAL)/10;
+                mass.StructuralN = GetPlantNutr(GrazType.TOTAL, GrazType.TOTAL, TPlantElement.N) * GetDM(GrazType.TOTAL, GrazType.TOTAL)/10;
                 return mass;
 
             }
         }
 
         /// <summary>
-        /// TESTING BIOMASS FOR LEAF
+        /// TESTING BIOMASS FOR LEAF. Used LEAFDM AND STEMN 
         /// </summary>
         public IBiomass Leaf
         {
@@ -970,26 +970,40 @@ namespace Models.GrazPlan
             {
                 Biomass mass =new Biomass();
                 mass.StructuralWt= GetDM(GrazType.TOTAL, GrazType.ptLEAF)/10;
-                mass.StructuralN=GetPlantNutr(GrazType.TOTAL, GrazType.ptLEAF, TPlantElement.N)/10;
-                
+                mass.StructuralN = GetPlantNutr(GrazType.TOTAL, GrazType.ptLEAF, TPlantElement.N) * GetDM(GrazType.TOTAL, GrazType.ptLEAF)/10.0;
                 return mass;
             }
         }
         
         /// <summary>
-        /// TESTING STEMwt Biomass
+        /// TESTING STEMwt Biomass. Used STEMDM and STEMN
         /// </summary>
         public IBiomass Stem
         {
             get
             {
                 Biomass mass =new Biomass();
-                mass.StructuralWt = GetDM(GrazType.TOTAL, GrazType.ptSTEM)/10;
-                mass.StructuralN = GetPlantNutr(GrazType.TOTAL, GrazType.ptSTEM, TPlantElement.N);
+                mass.StructuralWt = GetDM(GrazType.TOTAL, GrazType.ptSTEM)/10.0;
+                mass.StructuralN = GetPlantNutr(GrazType.TOTAL, GrazType.ptSTEM, TPlantElement.N) * GetDM(GrazType.TOTAL, GrazType.ptSTEM)/10.0;
                 return mass;
             }
         }
 
+        /// <summary>
+        /// TESTING ROOT Wt. Used RootDM and ROOT N
+        /// </summary>
+        public IBiomass Root
+        {
+            get
+            {
+                Biomass mass =new Biomass();
+                mass.StructuralWt = RootDM/10.0;
+                mass.StructuralN= PastureModel.GetRootConc(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.N) * RootDM/10;
+                return mass;
+
+            }
+        }
+    
 
 
          /// <summary>END AREA - TESTING BIOMASSES TO MIMIC PMF </summary>
