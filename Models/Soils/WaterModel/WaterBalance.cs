@@ -8,7 +8,6 @@ using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
 using Models.Soils;
-using Models.Utilities;
 using Newtonsoft.Json;
 
 namespace Models.WaterModel
@@ -65,7 +64,7 @@ namespace Models.WaterModel
         private IPhysical soilPhysical = null;
 
         [Link]
-        Water water = null;
+        private Water water = null;
 
         [Link]
         private ISummary summary = null;
@@ -245,7 +244,10 @@ namespace Models.WaterModel
             set
             {
                 waterVolumetric = value;
-                waterMM = MathUtilities.Multiply(value, soilPhysical.Thickness);
+                if (value == null)
+                    waterMM = null;
+                else
+                    waterMM = MathUtilities.Multiply(value, soilPhysical.Thickness);
             }
         }
 
@@ -491,7 +493,7 @@ namespace Models.WaterModel
         private void OnDoSoilWaterMovement(object sender, EventArgs e)
         {
             // Calculate lateral flow.
-            lateralFlowModel.Calculate();
+            lateralFlowModel.Calculate(Water);
             if (LateralFlow.Length > 0)
                 Water = MathUtilities.Subtract(Water, LateralFlow);
 
@@ -528,7 +530,8 @@ namespace Models.WaterModel
             }
 
             // Saturated flow.
-            Flux = saturatedFlow.Values;
+            saturatedFlow.Calculate(Water);
+            Flux = saturatedFlow.Flux;
 
             // Add backed up water to runoff.
             Water[0] = Water[0] - saturatedFlow.backedUpSurface;
@@ -553,18 +556,20 @@ namespace Models.WaterModel
             }
 
             // Calculate evaporation and remove from top layer.
-            double es = evaporationModel.Calculate();
+            evaporationModel.Calculate(Water);
+            double es = evaporationModel.Es;
             Water[0] = Water[0] - es;
 
             // Calculate unsaturated flow of water and apply.
-            Flow = unsaturatedFlow.Values;
+            unsaturatedFlow.Calculate(Water);
+            Flow = unsaturatedFlow.Flow;
             MoveUp(Water, Flow);
 
             // Check for errors in water variables.
             //CheckForErrors();
 
             // Calculate water table depth.
-            waterTableModel.Calculate();
+            waterTableModel.Calculate(Water);
 
             // Calculate and apply net solute movement.
             foreach (var solute in solutes)
@@ -577,10 +582,8 @@ namespace Models.WaterModel
             }
 
             // Now that we've finished moving water, calculate volumetric water
-            waterVolumetric = MathUtilities.Divide(Water, soilPhysical.Thickness);
-
-            // Update the variable in the water model.
-            water.Volumetric = waterVolumetric;
+            //Must pass this through water as components listen to water for an event of the water changing
+            water.Volumetric = MathUtilities.Divide(Water, soilPhysical.Thickness);
         }
 
         /// <summary>
@@ -820,7 +823,8 @@ namespace Models.WaterModel
         public void RemoveWater(double[] amountToRemove)
         {
             Water = MathUtilities.Subtract(Water, amountToRemove);
-            // Update the variable in the water model.
+            
+            //Send update to Water so it can fire the change event
             water.Volumetric = waterVolumetric;
         }
 
@@ -842,7 +846,7 @@ namespace Models.WaterModel
         private void Initialise()
         {
             solutes = Structure.FindSiblings<Solute>().ToList();
-            Water = water.InitialValuesMM;
+            SW = water.InitialValues.Clone() as double[];
             Runon = 0;
             Runoff = 0;
             PotentialInfiltration = 0;
