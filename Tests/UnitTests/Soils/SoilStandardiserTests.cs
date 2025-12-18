@@ -174,7 +174,7 @@
 
             Assert.That(soil.Node.FindChildren<Water>().Count(), Is.EqualTo(1));
             Assert.That(water.Name, Is.EqualTo("Water"));
-            Assert.That(water.Volumetric, Is.EqualTo(new double[] { 0.1, 0.2 }));
+            Assert.That(water.InitialValues, Is.EqualTo(new double[] { 0.1, 0.2 }));
             Assert.That(organic.Carbon, Is.EqualTo(new double[] { 2.0, 0.9 }));
             Assert.That(chemical.PH, Is.EqualTo(new double[] { 6.65, 7.0 }));
             Assert.That(chemical.EC, Is.EqualTo(new double[] { 150, 200 }));
