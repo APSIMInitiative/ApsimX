@@ -16,6 +16,7 @@
     <PackageReference Include="OxyPlot.Core" Version="2.1.2" />
     <PackageReference Include="OxyPlot.SkiaSharp" Version="2.1.2" />
 
+    <EmbeddedResource Include="./Resources/*.js" />
     <EmbeddedResource Include="./Resources/*.css" />
     <EmbeddedResource Include="./Resources/*.bib" />
     <PackageReference Include="Markdig" Version="0.38.0" />
