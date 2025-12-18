@@ -1,5 +1,5 @@
 df_name,sheet_name,column_name,apsim_var_name,corr_fact
-ndvi_raw,NDVI & height,Plot NDVI,NDVIModel.Script.NDVI,1
+ndvi_raw,NDVI & height,Plot NDVI,Spectral.NDVI,1
 height_raw,Canopy Height,Canopy height (cm),Wheat.Leaf.Height,10
 haun_raw,Haun stage ,Plant Haun stage,Wheat.Phenology.HaunStage,1
 grainSize_raw,PCDS 10.0 harvest,Individual grain weight (mg),Wheat.Grain.Size,1

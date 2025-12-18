@@ -8,7 +8,7 @@ library(here)
 
 tar_option_set(packages = c("tidyverse", "lubridate","purrr", 
                             "openxlsx", "readxl", "glue", "rstudioapi",
-                            "stringr", "tidyr"))
+                            "stringr", "tidyr", "jsonlite"))
 #----------------------
 # Define used functions
 #----------------------
@@ -28,6 +28,7 @@ source("R/saveInputParam.R")
 source("R/doStageObsData.R")
 source("R/add_to_observed_clean.R")
 source("R/read_soil_water.R")
+source("R/soil_water_in_json.R")
 
 #----------------
 # Define targets
@@ -50,10 +51,10 @@ targets <- list(
       coord_thisLatLon            = data.frame(lat = -35.041, lon = 147.319),
       target_stagePerc            = 50, # % of a stage development when event date is retrieved
       target_betwStages           = 50,  # % of period between two adjacent events when a synthetic event date is assumed
-      file_input_name_saved       = "DookiePhenoDatesInput_Wagga.csv", # forced dates of pheno-dates
-      fileNameForAPSIM_observData = "DookieWaggaWagga2024.xlsx", # observation file to be read
-      file_SimNameByCultivar      = "CultivarToSimNameWaggaWagga2024.csv", # simulation name by treatment meta-data
-      file_metaData_observed      = "observed_data_requirements.csv",  # meta data about what results to fetch,
+      file_input_name_saved       = "WaggaWagga2024_PhenoDatesInput.csv", # forced dates of pheno-dates
+      fileNameForAPSIM_observData = "WaggaWagga2024.xlsx", # observation file to be read
+      file_SimNameByCultivar      = "WaggaWagga2024_CultivarToSimName.csv", # simulation name by treatment meta-data
+      file_metaData_observed      = "WaggaWagga2024_observed_data_requirements.csv",  # meta data about what results to fetch,
       var_name_stage              = "apsim_stage_raw", # name of synthetic var with observed PCSD data
       varName_addedToObserv       = "Wheat.Phenology.Stage" # new synthetic variable to be added into observations
     )
@@ -71,6 +72,8 @@ targets <- list(
   tar_target(df_soil_water, read_soil_water(config$folder_rawData, 
                                      config$file_observ_excel, 
                                      config$sheetExcel_soilWater)),
+  
+  tar_target(json_soil_water, soil_water_in_json(df_soil_water)),
   
   ### ------------------------------------------------
   ### Create met file to run APSIM
