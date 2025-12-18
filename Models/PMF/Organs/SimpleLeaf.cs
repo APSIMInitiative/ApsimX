@@ -1015,14 +1015,7 @@ namespace Models.PMF.Organs
         {
             if (parentPlant.IsAlive)
             {
-                // Do senescence
-                double senescedFrac = senescenceRate.Value();
-                if (Live.Wt * (1.0 - senescedFrac) < biomassToleranceValue)
-                    senescedFrac = 1.0;  // remaining amount too small, senesce all
-                Biomass Loss = Live * senescedFrac;
-                Live.Subtract(Loss);
-                Dead.Add(Loss);
-                Senesced.Add(Loss);
+
 
                 // Do detachment
                 double detachedFrac = detachmentRate.Value();
@@ -1214,6 +1207,21 @@ namespace Models.PMF.Organs
             Live.StorageN -= storageNReallocation;
             Live.MetabolicN -= (nitrogen.Reallocation - storageNReallocation);
             Allocated.StorageN -= nitrogen.Reallocation;
+
+
+            // Do senescence
+            double senescedFrac = senescenceRate.Value();
+            if (Live.Wt * (1.0 - senescedFrac) < biomassToleranceValue)
+                senescedFrac = 1.0;  // remaining amount too small, senesce all
+
+            Biomass Loss = Live * senescedFrac;
+            Loss.MetabolicN -= (nitrogen.Reallocation - storageNReallocation);
+            Loss.StorageN -= storageNReallocation;
+
+            Live.Subtract(Loss);
+            Dead.Add(Loss);
+            Senesced.Add(Loss);
+
         }
 
     }

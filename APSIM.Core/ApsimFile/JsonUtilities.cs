@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Text.RegularExpressions;
+using APSIM.Shared.Graphing;
 using Newtonsoft.Json.Linq;
 
 namespace APSIM.Core;
@@ -441,39 +442,44 @@ internal static class JsonUtilities
     /// <param name="replacePattern">The string to replace.</param>
     public static bool SearchReplaceGraphVariableNames(JObject graph, string searchPattern, string replacePattern)
     {
-
         bool replacementMade = false;
 
-        if (graph["XFieldName"] != null)
+        List<JObject> seriei= JsonUtilities.ChildrenOfType(graph, "Series");
+
+        foreach (JObject series in seriei)
         {
-            if (graph["XFieldName"].ToString().Contains(searchPattern))
+
+            if (series["XFieldName"] != null)
             {
-                graph["XFieldName"] = graph["XFieldName"].ToString().Replace(searchPattern, replacePattern);
-                replacementMade = true;
+                if (series["XFieldName"].ToString().Contains(searchPattern))
+                {
+                    series["XFieldName"] = series["XFieldName"].ToString().Replace(searchPattern, replacePattern);
+                    replacementMade = true;
+                }
             }
-        }
-        if (graph["X2FieldName"] != null)
-        {
-            if (graph["X2FieldName"].ToString().Contains(searchPattern))
+            if (series["X2FieldName"] != null)
             {
-                graph["X2FieldName"] = graph["X2FieldName"].ToString().Replace(searchPattern, replacePattern);
-                replacementMade = true;
+                if (series["X2FieldName"].ToString().Contains(searchPattern))
+                {
+                    series["X2FieldName"] = series["X2FieldName"].ToString().Replace(searchPattern, replacePattern);
+                    replacementMade = true;
+                }
             }
-        }
-        if (graph["YFieldName"] != null)
-        {
-            if (graph["YFieldName"].ToString().Contains(searchPattern))
+            if (series["YFieldName"] != null)
             {
-                graph["YFieldName"] = graph["YFieldName"].ToString().Replace(searchPattern, replacePattern);
-                replacementMade = true;
+                if (series["YFieldName"].ToString().Contains(searchPattern))
+                {
+                    series["YFieldName"] = series["YFieldName"].ToString().Replace(searchPattern, replacePattern);
+                    replacementMade = true;
+                }
             }
-        }
-        if (graph["Y2FieldName"] != null)
-        {
-            if (graph["Y2FieldName"].ToString().Contains(searchPattern))
+            if (series["Y2FieldName"] != null)
             {
-                graph["y2FieldName"] = graph["Y2FieldName"].ToString().Replace(searchPattern, replacePattern);
-                replacementMade = true;
+                if (series["Y2FieldName"].ToString().Contains(searchPattern))
+                {
+                    series["y2FieldName"] = series["Y2FieldName"].ToString().Replace(searchPattern, replacePattern);
+                    replacementMade = true;
+                }
             }
         }
 
