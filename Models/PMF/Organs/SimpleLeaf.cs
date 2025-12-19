@@ -43,12 +43,19 @@ namespace Models.PMF.Organs
     /// Kdead | Dead canopy extinction coefficient for short wave radiaton | unitless
     /// LAIDead | Leaf Area Index for dead leaf | (m2/m2)
     /// 
-    /// **Stomatal Conductance**
+    /// **CO2 Impact on Photosynthesis and Stomatal Conductance**
     /// 
     /// A potential stomatal conductance is provided to the Microclimate model for use in calculating daily potential water use.  This conductance accounts for the effects of temperature, vapor deficit and plant nutrition.  Potential water use is then calculated by the microclimate model, and actual water use subsequently by the soil arbitrator model using data also provided by the root model regarding potential water uptake.
+    /// The impact of atmospheric CO2 concentration on stomatal conductance is dependant upon temperature and the related impact of CO2 concentration on photosynthesis.
     /// 
     /// ```
     /// StomatalConductance = Gsmax350 * FRGR * stomatalConductanceCO2Modifier;
+    /// stomatalConductanceCO2Modifier = PhotosynthesisCO2Modifier x (350 - CP)/(CO2 - CP)
+    /// CP = (163.0 - T) / (5.0 - 0.1 * T)
+    /// for C3 plants
+    /// PhotosynthesisCO2Modifier =  (CO2 - CP) x (350 + 2 x CP)/(CO2 + 2 x CP) x (350 - CP)
+    /// for C4 plants
+    /// PhotosynthesisCO2Modifier = = 0.000143 * CO2 + 0.95
     /// ```
     /// where
     /// 
@@ -58,6 +65,9 @@ namespace Models.PMF.Organs
     /// Gsmax350 | Potential stomatal conductance at atmospherical CO2 concentration of 350ppm | (m/s)
     /// FRGR | A factor that accounts for the relative growth rate of the plant | (0-1)
     /// stomatalConductanceCO2Modifier | A factor that accounts for changes of Gsmax with CO2 concentration | (0-1)
+    /// PhotosynthesisCO2Modifier | A factor that accounts for changes in photosynthesis with CO2 concentration ([Reyenga1999]) | (0-1)
+    /// CP | The CO2 compensation point | (ppm)
+    /// T | The daily average temperature | <sup>o</sup>C
     /// 
     /// [Leaf.FRGR]
     /// 
