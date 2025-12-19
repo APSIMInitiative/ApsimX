@@ -8,6 +8,7 @@ using MathNet.Numerics.Distributions;
 using Models;
 using Models.Core;
 using Models.PMF;
+using Models.PMF.Organs;
 using Models.PMF.Phen;
 using Graph = Models.Graph;
 
@@ -100,12 +101,25 @@ namespace APSIM.Documentation.Models.Types
             if (arbitrator != null)
                 newTags.Add(new Section("Organ Arbitrator", GetSummaryAndRemarksSection(arbitrator).Children));
 
+            // Document SimpleLeaf Model
+            SimpleLeaf simpleLeaf = (SimpleLeaf)this.model.Children.Find(m => m.GetType() == typeof(SimpleLeaf));
+            if (simpleLeaf != null)
+            {
+                Section S = GetSummaryAndRemarksSection(simpleLeaf);
+
+                S.Add(new Paragraph(CodeDocumentation.GetSummary(model.GetType())));
+                newTags.Add(S);
+            }
             //Write children
             // -------------------------------------------------------------------------------
             List<ITag> children = new List<ITag>();
             foreach (IModel child in this.model.Children)
-                if (child as IText == null && child as CompositeBiomass == null && child as Folder == null && child as Cultivar == null && child as Phenology == null && child as OrganArbitrator == null)
-                    children.AddRange(new List<ITag>() { GetSummaryAndRemarksSection(child) });
+                if (child as IText == null && child as CompositeBiomass == null && child as Folder == null && child as Cultivar == null && child as Phenology == null && child as OrganArbitrator == null && child as SimpleLeaf == null)
+                {
+                    Section S = GetSummaryAndRemarksSection(child);
+                    //S.Add(new Paragraph("Hello World"));
+                    children.AddRange(new List<ITag>() {S});
+                }
             newTags.Add(new Section("Child Components", children));
 
             //Write cultivars table
