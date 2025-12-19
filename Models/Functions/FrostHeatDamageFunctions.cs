@@ -264,43 +264,43 @@ namespace Models.Functions
             {
                 CropTypes.Wheat, new Dictionary<string, double>()
                 {
-                    { nameof(FrostLowTT), -4.0 },
-                    { nameof(FrostMaxReductionRatio), 0.4 },
-                    { nameof(FrostUpTT), 1.0 },
+                    { nameof(FrostLowTT), -6.1 },
+                    { nameof(FrostMaxReductionRatio), 0.5 },
+                    { nameof(FrostUpTT), 0.2 },
                     { nameof(FrostMinReductionRatio), 0 },
-                    { nameof(FrostStartSensitiveGS), 6.4854544 },
-                    { nameof(FrostStartMostSensitiveGS), 8.0 },
-                    { nameof(FrostEndMostSensitiveGS), 9.4983302 },
-                    { nameof(FrostEndSensitiveGS), 9.4990961 },
-                    { nameof(HeatLowTT), 30.3459986 },
+                    { nameof(FrostStartSensitiveGS), 5.56 },
+                    { nameof(FrostStartMostSensitiveGS), 6.68 },
+                    { nameof(FrostEndMostSensitiveGS), 8.43 },
+                    { nameof(FrostEndSensitiveGS), 9.00 },
+                    { nameof(HeatLowTT), 30.1 },
                     { nameof(HeatMinReductionRatio), 0 },
-                    { nameof(HeatUpTT), 34.0000667 },
-                    { nameof(HeatMaxReductionRatio), 0.2031898 },
-                    { nameof(HeatStartSensitiveGS), 7.2832313 },
-                    { nameof(HeatStartMostSensitiveGS), 7.483232 },
-                    { nameof(HeatEndMostSensitiveGS), 8.9709024 },
-                    { nameof(HeatEndSensitiveGS), 9.0945434 }
+                    { nameof(HeatUpTT), 38.7 },
+                    { nameof(HeatMaxReductionRatio), 0.44 },
+                    { nameof(HeatStartSensitiveGS), 6.53 },
+                    { nameof(HeatStartMostSensitiveGS), 7.84 },
+                    { nameof(HeatEndMostSensitiveGS), 8.87 },
+                    { nameof(HeatEndSensitiveGS), 9.20 }
                 }
             },
             {
                 CropTypes.Canola, new Dictionary<string, double>()
                 {
-                    { nameof(FrostLowTT), -4.108862 },
-                    { nameof(FrostMaxReductionRatio), 0.3050003 },
-                    { nameof(FrostUpTT), -0.7549879 },
+                    { nameof(FrostLowTT), -4.9 },
+                    { nameof(FrostMaxReductionRatio), 0.13 },
+                    { nameof(FrostUpTT), 0.1 },
                     { nameof(FrostMinReductionRatio), 0 },
-                    { nameof(FrostStartSensitiveGS), 7.222864 },
-                    { nameof(FrostStartMostSensitiveGS), 7.329504 },
-                    { nameof(FrostEndMostSensitiveGS), 8.063452 },
-                    { nameof(FrostEndSensitiveGS), 8.181088 },
-                    { nameof(HeatLowTT), 27.45271 },
+                    { nameof(FrostStartSensitiveGS), 5.71 },
+                    { nameof(FrostStartMostSensitiveGS), 7.56 },
+                    { nameof(FrostEndMostSensitiveGS), 8.38 },
+                    { nameof(FrostEndSensitiveGS), 9.01 },
+                    { nameof(HeatLowTT), 29.1 },
                     { nameof(HeatMinReductionRatio), 0 },
-                    { nameof(HeatUpTT), 38.8354 },
-                    { nameof(HeatMaxReductionRatio), 0.5810167 },
-                    { nameof(HeatStartSensitiveGS), 5.578273 },
-                    { nameof(HeatStartMostSensitiveGS), 6.260291 },
-                    { nameof(HeatEndMostSensitiveGS), 9.200536 },
-                    { nameof(HeatEndSensitiveGS), 9.428058 }
+                    { nameof(HeatUpTT), 39.8 },
+                    { nameof(HeatMaxReductionRatio), 0.42 },
+                    { nameof(HeatStartSensitiveGS), 5.75 },
+                    { nameof(HeatStartMostSensitiveGS), 7.01 },
+                    { nameof(HeatEndMostSensitiveGS), 8.31 },
+                    { nameof(HeatEndSensitiveGS), 10.18 }
                 }
             }
         };
