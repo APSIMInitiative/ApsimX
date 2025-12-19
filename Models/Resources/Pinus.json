@@ -690,6 +690,26 @@
           "ReadOnly": false
         },
         {
+          "$type": "Models.Functions.MovingAverageFunction, Models",
+          "NumberOfDays": 365,
+          "StageToStartMovingAverage": "Emergence",
+          "Name": "TreeGrowthRate",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Pinus].Arbitrator.DM.TotalPlantAllocation",
+              "Name": "VariableReference",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.PMF.Organs.GenericOrgan, Models",
           "StartLive": null,
           "DMSupply": null,
