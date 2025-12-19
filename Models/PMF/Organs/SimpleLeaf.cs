@@ -4,8 +4,6 @@ using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Functions;
-using Models.Functions.DemandFunctions;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.PMF.Library;
@@ -21,14 +19,53 @@ namespace Models.PMF.Organs
     ///  detachment of leaves.  SimpleLeaf does not distinguish leaf cohorts by age or position in the canopy.
     ///
     /// Radiation interception and transpiration demand are computed by the MicroClimate model.  This model takes into account
-    ///  competition between different plants when more than one is present in the simulation.  The values of canopy Cover, LAI, and plant
+    ///  competition between different plants then more than one is present in the simulation.  The values of canopy Cover, LAI, and plant
     ///  Height (as defined below) are passed daily by SimpleLeaf to the MicroClimate model.  MicroClimate uses an implementation of the
     ///  Beer-Lambert equation to compute light interception and the Penman-Monteith equation to calculate potential evapotranspiration.
     ///  These values are then given back to SimpleLeaf which uses them to calculate photosynthesis and soil water demand.
+    ///  
+    /// **Light Interception**
+    /// 
+    /// Calculations are as follows:
+    /// 
+    /// ```
+    /// CoverGreen = 1.0 - exp (-ExtinctionCoefficient x LAI)
+    /// CoverDead = 1.0 - exp (-Kdead x LAIDead)
+    /// CoverTotal = 1.0 - (1 - CoverGreen) * (1 - CoverDead)
+    /// ```
+    /// 
+    /// where
+    /// 
+    /// Name | Description | Units
+    /// -|-|-
+    /// ExtinctionCoefficient | Live Canopy extinction coeffient for short wave radiation | unitless
+    /// LAI | Leaf Area Index for live leaf | (m2/m2)
+    /// Kdead | Dead canopy extinction coefficient for short wave radiaton | unitless
+    /// LAIDead | Leaf Area Index for dead leaf | (m2/m2)
+    /// 
+    /// **Stomatal Conductance**
+    /// 
+    /// A potential stomatal conductance is provided to the Microclimate model for use in calculating daily potential water use.  This conductance accounts for the effects of temperature, vapor deficit and plant nutrition.  Potential water use is then calculated by the microclimate model, and actual water use subsequently by the soil arbitrator model using data also provided by the root model regarding potential water uptake.
+    /// 
+    /// ```
+    /// StomatalConductance = Gsmax350 * FRGR * stomatalConductanceCO2Modifier;
+    /// ```
+    /// where
+    /// 
+    /// Name | Description | Units
+    /// -|-|-
+    /// StomatalConductance | The influence of stomatal opening on rate of diffusion of water vapour exiting through the stomata of a leaf. | (mm/s)
+    /// Gsmax350 | Potential stomatal conductance at atmospherical CO2 concentration of 350ppm | (m/s)
+    /// FRGR | A factor that accounts for the relative growth rate of the plant | (0-1)
+    /// stomatalConductanceCO2Modifier | A factor that accounts for changes of Gsmax with CO2 concentration | (0-1)
+    /// 
+    /// [Leaf.FRGR]
+    /// 
     /// </summary>
     /// <remarks>
-    /// SimpleLeaf has two options to define the canopy: the user can either supply a function describing LAI or a function describing canopy cover directly.  From either of these functions SimpleLeaf can obtain the other property using the Beer-Lambert equation with the specified value of extinction coefficient.
-    /// The effect of growth rate on transpiration is captured by the Fractional Growth Rate (FRGR) function, which is passed to the MicroClimate model.
+    /// 
+    /// *Note: SimpleLeaf has two options to define the canopy: the user can either supply a function describing LAI or a function describing canopy cover directly.  From either of these functions SimpleLeaf can obtain the other property using the Beer-Lambert equation with the specified value of extinction coefficient.
+    /// The effect of growth rate on transpiration is captured by the Fractional Growth Rate (FRGR) function, which is passed to the MicroClimate model.*
     /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -978,14 +1015,7 @@ namespace Models.PMF.Organs
         {
             if (parentPlant.IsAlive)
             {
-                // Do senescence
-                double senescedFrac = senescenceRate.Value();
-                if (Live.Wt * (1.0 - senescedFrac) < biomassToleranceValue)
-                    senescedFrac = 1.0;  // remaining amount too small, senesce all
-                Biomass Loss = Live * senescedFrac;
-                Live.Subtract(Loss);
-                Dead.Add(Loss);
-                Senesced.Add(Loss);
+
 
                 // Do detachment
                 double detachedFrac = detachmentRate.Value();
@@ -1177,6 +1207,21 @@ namespace Models.PMF.Organs
             Live.StorageN -= storageNReallocation;
             Live.MetabolicN -= (nitrogen.Reallocation - storageNReallocation);
             Allocated.StorageN -= nitrogen.Reallocation;
+
+
+            // Do senescence
+            double senescedFrac = senescenceRate.Value();
+            if (Live.Wt * (1.0 - senescedFrac) < biomassToleranceValue)
+                senescedFrac = 1.0;  // remaining amount too small, senesce all
+
+            Biomass Loss = Live * senescedFrac;
+            Loss.MetabolicN -= (nitrogen.Reallocation - storageNReallocation);
+            Loss.StorageN -= storageNReallocation;
+
+            Live.Subtract(Loss);
+            Dead.Add(Loss);
+            Senesced.Add(Loss);
+
         }
 
     }

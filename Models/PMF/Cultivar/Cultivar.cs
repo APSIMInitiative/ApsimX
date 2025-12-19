@@ -49,10 +49,10 @@ namespace Models.PMF
         }
 
         /// <summary>The model the cultivar is relative to.</summary>
-        private IModel relativeToModel;
+        private INodeModel relativeToModel;
 
-        /// <summary>The collection of undo overrides that undo the overrides.</summary>
-        private IEnumerable<Overrides.Override> undos;
+        /// <summary>The collection of commands.</summary>
+        private IEnumerable<IModelCommand> commands;
 
         /// <summary>The collection of commands that must be executed when applying this cultivar.</summary>
         public string[] Command { get; set; }
@@ -87,26 +87,23 @@ namespace Models.PMF
         /// <param name="model">The underlying model to apply the commands to</param>
         public void Apply(IModel model)
         {
-            relativeToModel = model;
             if (Command == null)
                 return;
-            var incomingOverrides = Overrides.ParseStrings(Command);
-            foreach (var incoming in incomingOverrides)
-            {
-                if (!Overrides.PathHasMatches(model, incoming.Path))
-                    throw new Exception($"Can't find {incoming.Path} in cultivar {Name}.");
-            }
-            undos = Overrides.Apply(model, incomingOverrides);
+
+            relativeToModel = model as INodeModel;
+
+            commands = CommandLanguage.StringToCommands(Command.Select(c => c.Trim()), relativeToModel, relativeToDirectory: null);
+            CommandProcessor.Run(commands, relativeToModel, runner: null);
         }
 
         /// <summary>Undoes cultivar changes, if any.</summary>
         public void Unapply()
         {
-            if (undos != null)
+            if (commands != null)
             {
-                Overrides.Apply(relativeToModel, undos);
-                relativeToModel = null;
-                undos = null;
+                foreach (SetPropertyCommand command in commands)
+                    command.Undo();
+                commands = null;
             }
         }
 

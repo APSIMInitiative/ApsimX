@@ -253,15 +253,17 @@ namespace Models.Soils
         ///<summary> Who knows</summary>
         [JsonIgnore]
         public double SummerU { get; set; }
+
         ///<summary> Who knows</summary>
         [JsonIgnore]
         public double[] SW { get; set; }
-        ///<summary> Who knows</summary>
 
-        public double[] SWCON { get; set; }
         ///<summary> Who knows</summary>
         [JsonIgnore]
-        public double[] SWmm { get; set; }
+        public double[] SWmm => SW == null ? null : MathUtilities.Multiply(SW, Thickness);
+
+        ///<summary> Who knows</summary>
+        public double[] SWCON { get; set; }
 
         ///<summary> Who knows</summary>
         [JsonIgnore]
@@ -625,7 +627,6 @@ namespace Models.Soils
             PercolationCapacityBelow = new double[ProfileLayers];
             LayerHeight = new double[ProfileLayers];
             KS = new double[ProfileLayers];
-            SWmm = new double[ProfileLayers];
             LL15mm = new double[ProfileLayers];
             DULmm = new double[ProfileLayers];
             SATmm = new double[ProfileLayers];
@@ -662,6 +663,9 @@ namespace Models.Soils
                     Theta[l][c] = new double();
                 }
             }
+
+            //Initialise our SW here
+            SW = water.InitialValues.Clone() as double[];
 
             SetSoilProperties(); //Calls a function that applies soil parameters to calculate and set the properties for the soil
 
@@ -1218,7 +1222,6 @@ namespace Models.Soils
                 }
                 if (Math.Abs(AccumWaterVolume - water.Volumetric[l]) > FloatingPointTolerance)
                     throw new Exception(this + " Initial water content has not been correctly partitioned between pore compartments in layer" + l);
-                SWmm[l] = LayerSum(Pores[l], "WaterDepth");
                 SW[l] = LayerSum(Pores[l], "WaterDepth") / Thickness[l];
                 KS[l] = LayerSum(Pores[l], "PoiseuilleFlow");
                 DULmm[l] = soilPhysical.DUL[l] * Thickness[l];
@@ -1346,7 +1349,6 @@ namespace Models.Soils
         {
             for (int l = ProfileLayers - 1; l >= 0; l--)
             {
-                SWmm[l] = LayerSum(Pores[l], "WaterDepth");
                 SW[l] = LayerSum(Pores[l], "WaterDepth") / Thickness[l];
             }
         }

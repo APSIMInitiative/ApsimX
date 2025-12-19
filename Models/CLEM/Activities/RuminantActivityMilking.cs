@@ -114,13 +114,13 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
-            amountToDo = 0;
             amountToSkip = 0;
             numberToDo = 0;
             numberToSkip = 0;
             IEnumerable<RuminantFemale> herd = GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.IsLactating);
             uniqueIndividuals = GetUniqueIndividuals<RuminantFemale>(filterGroups, herd, Structure);
             numberToDo = uniqueIndividuals?.Count() ?? 0;
+            amountToDo = uniqueIndividuals.Sum(a => a.Milk.Available);
 
             // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels)
@@ -148,7 +148,6 @@ namespace Models.CLEM.Activities
                                 valuesForCompanionModels[valueToSupply.Key] = 1;
                                 break;
                             case "per L milked":
-                                amountToDo = uniqueIndividuals.Sum(a => a.Milk.Available);
                                 valuesForCompanionModels[valueToSupply.Key] = amountToDo;
                                 break;
                             default:

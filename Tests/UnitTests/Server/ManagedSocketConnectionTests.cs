@@ -1,3 +1,4 @@
+using APSIM.Core;
 using APSIM.Server.Commands;
 using APSIM.Server.IO;
 using APSIM.Shared.Utilities;
@@ -8,7 +9,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO.Pipes;
 using System.Threading.Tasks;
-using static Models.Core.Overrides;
 
 namespace UnitTests
 {
@@ -19,7 +19,7 @@ namespace UnitTests
     /// This is currently quick n dirty to verify that things basically work.
     /// todo:
     /// - mock out socket layer
-    /// - 
+    /// -
     /// </remarks>
     [TestFixture]
     public class ManagedSocketConnectionTests
@@ -75,12 +75,12 @@ namespace UnitTests
         [Test]
         public void TestReadRunCommand()
         {
-            IEnumerable<Override> replacements = new Override[]
+            IEnumerable<IModelCommand> replacements = new IModelCommand[]
             {
-                new Override("path", "value", Override.MatchTypeEnum.NameAndType),
-                new Override("x", new MockModel(), Override.MatchTypeEnum.NameAndType)
+                new SetPropertyCommand("path", "=", "value", fileName: null),
+                new ReplaceCommand(new ModelReference(new MockModel()), "x", multiple: true, ReplaceCommand.MatchType.NameAndType)
             };
-            ICommand target = new RunCommand(true, true, 32, replacements, new[] { "sim1, sim2" });
+            ICommand target = new APSIM.Server.Commands.RunCommand(true, true, 32, replacements, new[] { "sim1, sim2" });
             TestRead(target);
         }
 
@@ -94,13 +94,13 @@ namespace UnitTests
         [Test]
         public void TestWriteRunCommand()
         {
-            IEnumerable<Override> replacements = new Override[]
+            IEnumerable<IModelCommand> replacements = new IModelCommand[]
             {
-                new Override("f", new MockModel(), Override.MatchTypeEnum.NameAndType),
-                new Override("path to a model", "replacement value", Override.MatchTypeEnum.NameAndType)
+                new ReplaceCommand(new ModelReference(new MockModel()), "f", multiple: true, ReplaceCommand.MatchType.NameAndType),
+                new ReplaceCommand(new ModelLocatorReference(relativeTo: null, "path to a model"), "replacement value", multiple: true, ReplaceCommand.MatchType.NameAndType)
             };
             IEnumerable<string> sims = new[] { "one simulation" };
-            ICommand command = new RunCommand(false, true, 65536, replacements, sims);
+            ICommand command = new APSIM.Server.Commands.RunCommand(false, true, 65536, replacements, sims);
             TestWrite(command);
         }
 
@@ -155,7 +155,7 @@ namespace UnitTests
                 PipeUtilities.SendObjectToPipe(client, target);
                 PipeUtilities.GetObjectFromPipe(client);
             }
-            
+
             server.Wait();
         }
 
@@ -174,7 +174,7 @@ namespace UnitTests
                 PipeUtilities.SendObjectToPipe(client, "ACK_MANAGED");
                 Assert.That(resp, Is.EqualTo(target));
 
-                if (target is RunCommand)
+                if (target is APSIM.Server.Commands.RunCommand)
                     PipeUtilities.SendObjectToPipe(client, "FIN_MANAGED");
                 if (target is ReadCommand readCommand)
                     PipeUtilities.SendObjectToPipe(client, new DataTable(readCommand.TableName));

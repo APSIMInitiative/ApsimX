@@ -6,12 +6,12 @@ using Models;
 namespace APSIM.Documentation.Models.Types;
 
 /// <summary>
-/// Documentation for the <see cref="Memo"/> class.
+/// Documentation for the <see cref="IText"/> class.
 /// </summary>
 public class DocMemo : DocGeneric
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="DocMemo" /> class.
+    /// Initializes a new instance of the <see cref="IText" /> class.
     /// </summary>
     public DocMemo(IModel model) : base(model) { }
 
@@ -20,6 +20,6 @@ public class DocMemo : DocGeneric
     /// </summary>
     public override List<ITag> Document(int none = 0)
     {
-        return new List<ITag>() {new Paragraph((model as Memo).Text)};
+        return new List<ITag>() {new Paragraph((model as IText).Text)};
     }
 }

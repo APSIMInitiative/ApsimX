@@ -83,6 +83,7 @@ namespace Models
         /// Descriptions of simulations that are in scope.
         /// </summary>
         [JsonIgnore]
+        [field: NonSerialized]
         public List<SimulationDescription> SimulationDescriptions { get; set; }
 
         /// <summary>Gets the definitions to graph.</summary>

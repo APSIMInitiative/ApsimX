@@ -1,0 +1,55 @@
+{
+	"OutputPath":"temp/",
+	"CopyWeatherFiles":false,
+	"CopyObservedData":false,
+	"Groups": [
+		{
+			"Name":"WheatPhenology-NPIValidation",
+			"Folders":["NPIValidation"],
+			"Experiments":[],
+			"Simulations":[]
+		},
+		{
+			"Name":"WheatPhenology-ControlledEnvironment",
+			"Folders":["ControlledEnvironment"],
+			"Experiments":[],
+			"Simulations":[]
+		},
+		{
+			"Name":"WheatPhenology-SouthernAustralia",
+			"Folders":["Southern Australia"],
+			"Experiments":[],
+			"Simulations":[]			
+		},
+		{
+			"Name":"WheatPhenology-NPIField",
+			"Folders":["NPIField2019", "NPIField2020"],
+			"Experiments":[],
+			"Simulations":[]
+		},
+		{
+			"Name":"WheatPhenology-AddingValueToNVT",
+			"Folders":["AddingValueToNVT"],
+			"Experiments":[],
+			"Simulations":[]
+		},
+		{
+			"Name":"WheatPhenology-FARAwardPhenology",
+			"Folders":["FARAwardPhenology"],
+			"Experiments":[],
+			"Simulations":[]
+		},
+		{
+			"Name":"WheatPhenology-Phenology1996",
+			"Folders":["Phenology1996"],
+			"Experiments":[],
+			"Simulations":[]
+		},
+		{
+			"Name":"WheatPhenology-CPTPhenology",
+			"Folders":["CPTPhenology"],
+			"Experiments":[],
+			"Simulations":[]
+		}
+	]
+}

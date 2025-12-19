@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using APSIM.Core;
 using Models.Core.Run;
 using Models.Storage;
-using static Models.Core.Overrides;
 
 namespace APSIM.Server.Commands
 {
@@ -18,7 +18,7 @@ namespace APSIM.Server.Commands
         public bool runTests { get; set; }
         public List<string> simulationNamesToRun { get; set; }
         public int numberOfProcessors { get; set; }
-        public List<Override> changes { get; set; }
+        public List<IModelCommand> changes { get; set; }
 
         public RunCommand() { }
 
@@ -27,12 +27,12 @@ namespace APSIM.Server.Commands
         /// </summary>
         /// <param name="changes">Changes to be applied to the simulations before being run.</param>        [Newtonsoft.Json.JsonConstructor]
         [Newtonsoft.Json.JsonConstructor]
-        public RunCommand(IEnumerable<Override> changes)
+        public RunCommand(IEnumerable<IModelCommand> changes)
         {
             runPostSimulationTools = true;
             runTests = true;
             numberOfProcessors = -1;
-            this.changes = changes.ToList<Override>();
+            this.changes = changes.ToList();
             simulationNamesToRun = null;
         }
 
@@ -44,12 +44,12 @@ namespace APSIM.Server.Commands
         /// <param name="numProcessors">Max number of processors to use.</param>
         /// <param name="simulationNames">Simulation names to run.</param>
         /// <param name="changes">Changes to be applied to the simulations before being run.</param>
-        public RunCommand(bool runPostSimTools, bool runTests, int numProcessors, IEnumerable<Override> changes, IEnumerable<string> simulationNames)
+        public RunCommand(bool runPostSimTools, bool runTests, int numProcessors, IEnumerable<IModelCommand> changes, IEnumerable<string> simulationNames)
         {
             runPostSimulationTools = runPostSimTools;
             this.runTests = runTests;
             numberOfProcessors = numProcessors;
-            this.changes = changes.ToList<Override>();
+            this.changes = changes.ToList();
             simulationNamesToRun = simulationNames.ToList<string>();
         }
 
@@ -84,8 +84,9 @@ namespace APSIM.Server.Commands
                     return false;
                 if (changes.Count() != command.changes.Count())
                     return false;
-                if (changes.Zip(command.changes, (x, y) => !x.Equals(y)).Any(x => x))
-                    return false;
+                for (int i = 0;  i != changes.Count; i++)
+                    if (changes[i].GetHashCode() != command.changes[i].GetHashCode())
+                        return false;
                 return true;
             }
             return false;
@@ -93,7 +94,15 @@ namespace APSIM.Server.Commands
 
         public override int GetHashCode()
         {
-            return (runPostSimulationTools, runTests, numberOfProcessors, simulationNamesToRun, changes).GetHashCode();
+            int hash = HashCode.Combine(runPostSimulationTools, runTests, numberOfProcessors, simulationNamesToRun);
+            if (changes != null)
+            {
+                foreach (var change in changes)
+                {
+                    hash = HashCode.Combine(hash, change?.GetHashCode() ?? 0);
+                }
+            }
+            return hash;
         }
 
         public override string ToString()

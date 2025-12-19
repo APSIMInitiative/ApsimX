@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Shared.JobRunning;
 using Models.Core;
 using Models.Core.Run;
-using static Models.Core.Overrides;
 
 namespace APSIM.ZMQServer
 {
@@ -15,7 +15,7 @@ namespace APSIM.ZMQServer
     /// </summary>
     public class ServerJobRunner : JobRunner, IDisposable
     {
-        public IEnumerable<Override> Replacements { get; set; } = Enumerable.Empty<Override>();
+        public IEnumerable<IModelCommand> Replacements { get; set; } = Enumerable.Empty<IModelCommand>();
         private List<(IRunnable, IJobManager)> jobs = new List<(IRunnable, IJobManager)>();
 
         public ServerJobRunner ( ApsimEncapsulator a = null ) { apsim = a; }

@@ -584,6 +584,7 @@ namespace Models.PMF
             PartitionBiomassThroughSoil(new OrganNutrientsState(), new OrganNutrientsState(),
                                              Initial, new OrganNutrientsState(),
                                              new OrganNutrientsState(),
+                                             new OrganNutrientsState(), new OrganNutrientsState(),
                                              new OrganNutrientsState(), new OrganNutrientsState());
         }
 
@@ -597,10 +598,13 @@ namespace Models.PMF
         /// <param name="detached"></param>
         /// <param name="liveRemoved"></param>
         /// <param name="deadRemoved"></param>
+        /// <param name="liveToResidues"></param>
+        /// <param name="deadToResidues"></param>
         public void PartitionBiomassThroughSoil(OrganNutrientsState reAllocated, OrganNutrientsState reTranslocated,
                                              OrganNutrientsState allocated, OrganNutrientsState senesced,
                                              OrganNutrientsState detached,
-                                             OrganNutrientsState liveRemoved, OrganNutrientsState deadRemoved)
+                                             OrganNutrientsState liveRemoved, OrganNutrientsState deadRemoved,
+                                             OrganNutrientsState liveToResidues, OrganNutrientsState deadToResidues)
         {
             double TotalRAw = 0;
             double TotalArea = 0;
@@ -623,6 +627,7 @@ namespace Models.PMF
                     for (int layer = 0; layer < z.Physical.Thickness.Length; layer++)
                     {
                         z.LayerLive[layer] -= (liveRemoved * RZA * z.LayerLiveProportion[layer]);
+                        z.LayerLive[layer] -= (liveToResidues * RZA * z.LayerLiveProportion[layer]);
                         z.LayerLive[layer] -= (reAllocated * RZA * z.LayerLiveProportion[layer]);
                         z.LayerLive[layer] -= (reTranslocated * RZA * z.LayerLiveProportion[layer]);
                         z.LayerLive[layer] -= (senesced * RZA * z.LayerLiveProportion[layer]);
@@ -638,13 +643,16 @@ namespace Models.PMF
                         OrganNutrientsState detachedToday = detached * RZA * z.LayerDeadProportion[layer];
                         z.LayerDead[layer] -= detachedToday;
                         z.LayerDead[layer] -= (deadRemoved * RZA * z.LayerDeadProportion[layer]);
+                        z.LayerDead[layer] -= (deadToResidues * RZA * z.LayerDeadProportion[layer]);
                         checkTotalWt += (z.LayerLive[layer].Wt + z.LayerDead[layer].Wt);
                         checkTotalN += (z.LayerLive[layer].N + z.LayerDead[layer].N);
 
+                        OrganNutrientsState rootToFOM = detachedToday + liveToResidues + deadToResidues;
+                        
                         FOMType fom = new FOMType();
-                        fom.amount = (float)(detachedToday.Wt * 10);
-                        fom.N = (float)(detachedToday.N * 10);
-                        fom.C = (float)(0.40 * detachedToday.Wt * 10);
+                        fom.amount = (float)(rootToFOM.Wt * 10);
+                        fom.N = (float)(rootToFOM.N * 10);
+                        fom.C = (float)(0.40 * rootToFOM.Wt * 10);
                         fom.P = 0.0;
                         fom.AshAlk = 0.0;
 

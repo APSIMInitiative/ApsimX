@@ -1016,7 +1016,7 @@
                 "        [Description(\"Proportion of stover removed from the field at harvest (0-1):\")]",
                 "        public double ResidueRemoval { get; set; }",
                 "",
-                "        /// <summaryProportion of residues that is incorporated by cultivation after harvest</summary>",
+                "        /// <summary>Proportion of residues that is incorporated by cultivation after harvest</summary>",
                 "        [Description(\"Proportion of residue incorporated to soil at harvest (0-1):\")]",
                 "        public double ResidueIncorporation { get; set; }",
                 "",

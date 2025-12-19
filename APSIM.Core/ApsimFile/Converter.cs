@@ -10,6 +10,9 @@ using System.Reflection;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using System.Xml;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace APSIM.Core;
 
@@ -19,7 +22,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 205; } }
+    public static int LatestVersion { get { return 208; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -6842,7 +6845,7 @@ internal class Converter
         foreach (var manager in JsonUtilities.ChildManagers(root))
         {
             List<Declaration> declarations = null;
-            string pattern = @"(?<relativeTo>[\w\d\[\].]*)\.*(?<methodName>FindChild|FindSibling|FindDescendant|FindAncestor|FindAllSiblings|FindAllChildren|FindAllDescendants|FindAllAncestors)(?<type>\<[\w\d\.]+\>)*\((?<remainder>.+)";
+            string pattern = @"(?<relativeTo>[\w\d\[\].]*|\([\w\d\[\]\.]*\s*as\s*[\w\d.]*\)\.)\.*(?<methodName>FindChild|FindSibling|FindDescendant|FindAncestor|FindAllSiblings|FindAllChildren|FindAllDescendants|FindAllAncestors)(?<type>\<[\w\d\.]+\>)*\((?<remainder>.+)";
             bool changed = false;
             manager.ReplaceRegex(pattern, match =>
             {
@@ -7097,12 +7100,163 @@ internal class Converter
         }
     }
 
+    /// Searches for managers that may have been impacted by a bug from upgrade to 200, and tries to fix this bug if any are encountered.
+    /// Looks for a parenthetic 'as' cast followed by a Structure... invocation, and moves the as cast to the relativeTo argument, with
+    /// an additional appropriate cast that was intended to be added in UpgradeToVersion200.
+    ///
+    /// For instance, the text
+    /// <code>(Physical as Model) Structure.FindChild&lt;SoilCrop&gt;(recursive: true);</code>
+    /// should be changed to
+    /// <code>Structure.FindChild&lt;SoilCrop&gt;(recursive: true, relativeTo: (INodeModel)(Physical as Model));</code>
+    /// </summary>
+    /// <remarks>
+    /// The pattern that we match against here is strictly invalid code (two expressions), so this shouldn't impact any working script.
+    /// </remarks>
+    /// <param name="root">Root json object.</param>
+    /// <param name="_">Unused filename.</param>
+    private static void UpgradeToVersion205(JObject root, string _)
+    {
+        const string pattern =
+            @"(?<cast>\([\[\]\w\d\.]+\s+as\s+[\w\d\.]+\))\s+" +
+            // NOTE: The type argument below is guaranteed to exist from upgrade to 200 (default an IModel).
+            @"(?<invocation>Structure\.\w+<[\w\d\.]+>)" +
+            @"(?<args>\(.*\))";
+        foreach (var manager in JsonUtilities.ChildManagers(root))
+        {
+            var changed = false;
+            manager.ReplaceRegex(pattern, match =>
+            {
+                changed = true;
+                var cast = "(INodeModel)" + match.Groups["cast"].ToString();
+                var args = match.Groups["args"].ToString();
+                var optionalComma = args.Where(char.IsLetterOrDigit).Any() ? ", " : "";
+                var idx = StringUtilities.FindMatchingClosingBracket(args, 0, '(', ')');
+                var newArgs = $"{args[..idx]}{optionalComma}relativeTo: {cast}{args[idx..]}";
+                return match.Groups["invocation"] + newArgs;
+            });
+            if (changed)
+                manager.Save();
+        }
+    }
+
+    /// <summary>
+    /// Replaces SetEmergenceDate and SetGerminationDate methods that may have been missed by the previous UpgradeTo204.
+    /// </summary>
+    /// <param name="root">Root json object.</param>
+    /// <param name="_">Unused filename.</param>
+    private static void UpgradeToVersion206(JObject root, string _)
+    {
+        var emergingArg = SyntaxFactory.Argument(
+            SyntaxFactory.LiteralExpression(
+                SyntaxKind.StringLiteralExpression,
+                SyntaxFactory.Literal("Emerging")
+            )
+        );
+        var germinatingArg = SyntaxFactory.Argument(
+            SyntaxFactory.LiteralExpression(
+                SyntaxKind.StringLiteralExpression,
+                SyntaxFactory.Literal("Germinating")
+            )
+        );
+        var newName = SyntaxFactory.IdentifierName("SetPhaseCompletionDate");
+
+        foreach (var manager in JsonUtilities.ChildManagers(root).Where(mgr => !mgr.IsEmpty))
+        {
+            var managerRoot = CSharpSyntaxTree.ParseText(manager.ToString()).GetRoot();
+            var newRoot = managerRoot.ReplaceNodes(
+                managerRoot
+                    .DescendantNodes()
+                    .OfType<InvocationExpressionSyntax>()
+                    .Where(
+                        node =>
+                        {
+                            if (node.Expression is MemberAccessExpressionSyntax ma)
+                            {
+                                var name = ma.Name.ToFullString();
+                                return name == "SetEmergenceDate" || name == "SetGerminationDate";
+                            }
+                            return false;
+                        }
+                    ),
+                (old, _) =>
+                {
+                    var ma = old.Expression as MemberAccessExpressionSyntax;
+                    var newLastArg = ma.Name.ToFullString() == "SetEmergenceDate" ? emergingArg : germinatingArg;
+                    return SyntaxFactory.InvocationExpression(ma.WithName(newName), old.ArgumentList.AddArguments(newLastArg));
+                }
+            );
+
+            if (!managerRoot.IsEquivalentTo(newRoot))
+            {
+                manager.Read(newRoot.ToFullString());
+                manager.Save();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Finds NDVI models that have been implemented in a manager, gets their parameters, replaces the manager with a compiled model and puts the correct parameters onto it.
+    /// <param name="root">Root json object.</param>
+    /// <param name="_">Unused filename.</param>
+    private static void UpgradeToVersion207(JObject root, string _)
+    {
+        // loop through all managers and replace with NDVI model if appropriate
+        foreach (JObject manager in JsonUtilities.ChildrenRecursively(root, "Manager"))
+        {
+            if (manager["Name"].ToString() == "NDVIModel")
+            {
+                //Extract NDVI model parameters from scropt
+                var parameters = manager["Parameters"] as JArray;
+                var paramDict = new Dictionary<string, double>();
+
+                if (parameters != null)
+                {
+                    foreach (var p in parameters.OfType<JObject>())
+                    {
+                        string? key = (string?)p["Key"];
+                        if (key != null && double.TryParse(p["Value"]?.ToString(), out double val))
+                            paramDict[key] = val;
+                    }
+                }
+
+                // Build replacement Spectral model
+                var newModel = new JObject
+                {
+                    ["$type"] = "Models.Sensor.Spectral, Models",
+                    ["Name"] = "Spectral",
+                    ["DrySoilNDVI"] = paramDict.GetValueOrDefault("DrySoilNDVI", 0.0),
+                    ["WetSoilNDVI"] = paramDict.GetValueOrDefault("WetSoilNDVI", 0.0),
+                    ["GreenCropNDVI"] = paramDict.GetValueOrDefault("GreenCropNDVI", 0.0),
+                    ["DeadCropNDVI"] = paramDict.GetValueOrDefault("DeadCropNDVI", 0.0),
+                    ["NDVI"] = 0.0,
+                    ["ResourceName"] = null,
+                    ["Children"] = new JArray(),
+                    ["Enabled"] = true,
+                    ["ReadOnly"] = false
+                };
+
+                //Remove manager model and add Specteral model to parent
+                JObject parent = JsonUtilities.Parent(manager) as JObject;
+                JsonUtilities.RemoveChild(parent, "NDVIModel");
+                JsonUtilities.AddChild(parent, newModel);
+            }
+        }
+
+        // Change report variables.
+        foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[NDVIModel].Script.NDVI", "[Spectral].NDVI", caseSensitive: false);
+
+        // Change graph variables.
+        foreach (var graph in JsonUtilities.ChildrenOfType(root, "Graph"))
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "NDVIModel.Script.NDVI", "Spectral.NDVI");
+    }
+
     /// <summary>
     /// Change CLEM to work with new custom time-step rather than months
     /// </summary>
     /// <param name="root">The root JSON token.</param>
     /// <param name="_">The name of the apsimx file.</param>
-    private static void UpgradeToVersion205(JObject root, string _)
+    private static void UpgradeToVersion208(JObject root, string _)
     {
         // replace all Grow24 with GrowPF
 

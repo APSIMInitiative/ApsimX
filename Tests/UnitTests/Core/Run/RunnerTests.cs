@@ -428,7 +428,7 @@
                 // Run simulations.
                 Runner runner = new Runner(simulation, runType: typeOfRun);
 
-                AllJobsCompletedArgs argsOfAllCompletedJobs = null;
+                IRunner.AllJobsCompletedArgs argsOfAllCompletedJobs = null;
                 runner.AllSimulationsCompleted += (sender, e) => { argsOfAllCompletedJobs = e; };
 
                 runner.Run();
@@ -525,7 +525,7 @@
 
                 Runner runner = new Runner(simulation, runType: typeOfRun);
 
-                AllJobsCompletedArgs argsOfAllCompletedJobs = null;
+                IRunner.AllJobsCompletedArgs argsOfAllCompletedJobs = null;
                 runner.AllSimulationsCompleted += (sender, e) => { argsOfAllCompletedJobs = e; };
 
                 // Run simulations.
@@ -674,7 +674,7 @@
 
                 Runner runner = new Runner(simulation, runType:typeOfRun, runSimulations:false);
 
-                AllJobsCompletedArgs argsOfAllCompletedJobs = null;
+                IRunner.AllJobsCompletedArgs argsOfAllCompletedJobs = null;
                 runner.AllSimulationsCompleted += (sender, e) => { argsOfAllCompletedJobs = e; };
 
                 // Run simulations.

@@ -72,13 +72,13 @@ namespace UserInterface.Presenters
         private Dictionary<string, List<string>> modelsImplementingSpecificInterfaceDictionary = new();
 
         /// <summary> File name for reporting variables.</summary>
-        private readonly string commonReportVariablesFileName = "CommonReportingVariables.json";
+        private readonly string commonReportVariablesResourceName = "CommonReportingVariables.json";
 
         /// <summary> File name for report frequency variables.</summary>
-        private readonly string commonReportFrequencyVariablesFileName = "CommonFrequencyVariables.json";
+        private readonly string commonReportFrequencyVariablesResourceName = "CommonFrequencyVariables.json";
 
-        /// <summary> Common directory path. </summary>
-        private readonly string reportVariablesDirectoryPath = Path.Combine(new string[] { "ApsimNG", "Resources", "CommonReportVariables" });
+        /// <summary> Common resource path. </summary>
+        private readonly string reportVariablesResourcePath = "ApsimNG.Resources.CommonReportVariables";
 
         /// <summary> All in scope model names of the current apsimx file.</summary>
         public List<string> InScopeModelNames { get; set; }
@@ -90,13 +90,18 @@ namespace UserInterface.Presenters
             get { return simulationPlantModelNames; }
         }
 
-        private List<ReportVariable> GetCommonVariables(string fileName, string fileDirectoryPath)
+        private List<ReportVariable> GetCommonVariables(string resourceName, string resourcePath)
         {
-            string currentAssemblyDirectory = Assembly.GetExecutingAssembly().Location.Split("bin")[0];
-            string commonReportingVariablesFilePath = Path.Combine(currentAssemblyDirectory, fileDirectoryPath, fileName);
-            string reportingVariablesJSON = File.ReadAllText(commonReportingVariablesFilePath);
-            return JsonConvert.DeserializeObject<List<ReportVariable>>(reportingVariablesJSON);
+            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourcePath + "." + resourceName))
+            {
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    string reportingVariablesJSON = reader.ReadToEnd();
+                    return JsonConvert.DeserializeObject<List<ReportVariable>>(reportingVariablesJSON);
+                }
+            }
         }
+
 
         public List<ReportVariable> CommonReportVariablesList
         {
@@ -147,8 +152,8 @@ namespace UserInterface.Presenters
             this.view.EventList.Lines = report.EventNames;
             InScopeModelNames = GetModelScopeNames();//explorerPresenter.ApsimXFile.FindAllInScope<IModel>().Select(m => m.Name).ToList<string>();
             SimulationPlantModelNames = explorerPresenter.ApsimXFile.Node.FindAll<Plant>().Select(m => m.Name).ToList<string>();
-            CommonReportVariablesList = GetCommonVariables(commonReportVariablesFileName, reportVariablesDirectoryPath);
-            CommonFrequencyVariablesList = GetCommonVariables(commonReportFrequencyVariablesFileName, reportVariablesDirectoryPath);
+            CommonReportVariablesList = GetCommonVariables(commonReportVariablesResourceName, reportVariablesResourcePath);
+            CommonFrequencyVariablesList = GetCommonVariables(commonReportFrequencyVariablesResourceName, reportVariablesResourcePath);
             FillModelsImplementingSpecificInterfaceDictionary();
             AddInterfaceImplementingTypesToModelScopeNames();
             CommonReportVariables = GetReportVariables(CommonReportVariablesList, InScopeModelNames, true);
