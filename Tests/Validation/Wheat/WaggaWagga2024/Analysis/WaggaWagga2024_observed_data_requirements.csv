@@ -4,14 +4,14 @@ height_raw,Canopy Height,Canopy height (cm),Wheat.Leaf.Height,10
 haun_raw,Haun stage ,Plant Haun stage,Wheat.Phenology.HaunStage,1
 grainSize_raw,PCDS 10.0 harvest,Individual grain weight (mg),Wheat.Grain.Size,1
 grainNumber_raw,PCDS 10.0 harvest,Grain number (grains/m²),Wheat.Grain.Number,1
-earYield_10_raw,PCDS 10.0 harvest,Chaff dry matter (g/m²),Wheat.Ear.Wt,1
+earYield_10_raw,PCDS 10.0 harvest,Spike dry matter (g/m²),Wheat.Ear.Wt,1
 grainYield_10_raw,PCDS 10.0 harvest,Grain dry matter (g/m²),Wheat.Grain.Wt,1
 stemYield_6_raw,PCDS 6.0 harvest,Stem dry matter (g/m²),Wheat.Stem.Wt,1
 stemYield_8_raw,PCDS 8.0 harvest,Stem dry matter (g/m²),Wheat.Stem.Wt,1
 stemYield_10_raw,PCDS 10.0 harvest,Stem dry matter (g/m²),Wheat.Stem.Wt,1
 spikeYield_6_raw,PCDS 6.0 harvest,Spike dry matter (g/m²),Wheat.Spike.Wt,1
 spikeYield_8_raw,PCDS 8.0 harvest,Spike dry matter (g/m²),Wheat.Spike.Wt,1
-spikeYield_10_raw,PCDS 10.0 harvest,Spike dry matter (g/m²),Wheat.Spike.Wt,1
+spikeYield_10_raw,PCDS 10.0 harvest,Chaff dry matter (g/m²),Wheat.Spike.Wt,1
 senescLeafYield_6_raw,PCDS 6.0 harvest,Dead leaf dry matter (g/m²),Wheat.Leaf.Dead.Wt,1
 senescLeafYield_8_raw,PCDS 8.0 harvest,Dead leaf dry matter (g/m²),Wheat.Leaf.Dead.Wt,1
 senescLeafYield_10_raw,PCDS 10.0 harvest,Dead leaf dry matter (g/m²),Wheat.Leaf.Dead.Wt,1

@@ -14021,7 +14021,7 @@
                       "YAxis": 0,
                       "ColourArgb": 0,
                       "FactorToVaryColours": "Cv",
-                      "FactorToVaryMarkers": "TOS",
+                      "FactorToVaryMarkers": "Sow",
                       "FactorToVaryLines": null,
                       "Marker": 0,
                       "MarkerSize": 0,
