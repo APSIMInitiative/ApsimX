@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 201,
+  "Version": 204,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -1127,7 +1127,7 @@
         {
           "$type": "Models.PreSimulationTools.ObservedInput, Models",
           "FileNames": [
-            "%root%\\Tests\\Validation\\Wheat\\Pask\\Pask LC07 TT0607.xlsx"
+            "Pask LC07 TT0607.xlsx"
           ],
           "SheetNames": [
             "Observed"
