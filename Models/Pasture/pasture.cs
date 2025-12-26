@@ -491,7 +491,7 @@ namespace Models.GrazPlan
   
         /// <summary>Amount of nitrogen taken up (kg/ha).</summary>
         public IReadOnlyList<double> NitrogenUptake  {
-            get{
+             get{
             return  null;}
         }
 
@@ -972,6 +972,7 @@ namespace Models.GrazPlan
                 mass.StructuralWt= GetDM(GrazType.TOTAL, GrazType.ptLEAF)/10;
                 mass.StructuralN = GetPlantNutr(GrazType.TOTAL, GrazType.ptLEAF, TPlantElement.N) * GetDM(GrazType.TOTAL, GrazType.ptLEAF)/10.0;
                 return mass;
+                
             }
         }
         
@@ -1003,6 +1004,35 @@ namespace Models.GrazPlan
 
             }
         }
+        /// <summary>
+        /// TESING AboveGround Live wt : GREENDM and GreenN
+        /// </summary>
+        public IBiomass AboveGroundLive
+        {
+            get
+            {
+                Biomass mass = new Biomass();
+                mass.StructuralWt=GreenDM/10.0;
+                mass.StructuralN=GreenN * (GreenDM/10.0);
+                return mass;
+            }
+        }
+         /// <summary>
+         /// Testing above ground dead wt and N
+         /// </summary>
+        public IBiomass AboveGroundDead
+        {
+            get
+            {
+                Biomass mass = new Biomass();
+                mass.StructuralWt=DeadDM/10.0;
+                mass.StructuralN=DeadN * (DeadDM/10.0);
+                return mass;
+
+
+            }
+        }
+
     
 
 
