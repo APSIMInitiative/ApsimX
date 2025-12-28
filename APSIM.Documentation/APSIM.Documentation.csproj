@@ -12,15 +12,15 @@
   <ItemGroup>
     <ProjectReference Include="../APSIM.Shared/APSIM.Shared.csproj" />
     <ProjectReference Include="../Models/Models.csproj" />
-    <PackageReference Include="SkiaSharp" Version="2.88.8" />
-    <PackageReference Include="OxyPlot.Core" Version="2.1.2" />
-    <PackageReference Include="OxyPlot.SkiaSharp" Version="2.1.2" />
+    <PackageReference Include="SkiaSharp" Version="3.119.1" />
+    <PackageReference Include="OxyPlot.Core" Version="2.2.0" />
+    <PackageReference Include="OxyPlot.SkiaSharp" Version="2.2.0" />
 
     <EmbeddedResource Include="./Resources/*.js" />
     <EmbeddedResource Include="./Resources/*.css" />
     <EmbeddedResource Include="./Resources/*.bib" />
-    <PackageReference Include="Markdig" Version="0.38.0" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.0" />
+    <PackageReference Include="Markdig" Version="0.44.0" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.119.1" />
   </ItemGroup>
 
   <PropertyGroup>
