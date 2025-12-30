@@ -1,5 +1,7 @@
-﻿using Models.Core;
+﻿using APSIM.Core;
+using Models.Core;
 using Models.GrazPlan;
+using Models.PMF;
 using System;
 
 namespace Models.Grazplan
@@ -52,6 +54,8 @@ namespace Models.Grazplan
         [Description("Status (type) of cohort")]
         public string Status { get; set; } = "established";
 
+
+
         /// <summary>Leaf dry matter digestibility (0-1)</summary>
         [Description("Leaf dry matter digestibility (0-1)")]
         public double[] LeafDMD { get; set; } = new double[] { 0.825 };
@@ -84,6 +88,12 @@ namespace Models.Grazplan
         [Description("Stem specific area (cm^2/g)")]
         public double[] StemSpecificArea { get; set; } = new double[] { 10.0 };
     }
+
+
+    
+
+
+    
 
     /// <summary>
     /// Mass of seeds in each soil layer
@@ -118,4 +128,12 @@ namespace Models.Grazplan
         [Description("Mass of soft, ripe seeds (kg/ha")]
         public double[] SoftRipe { get; set; }      // kg/ha
     }
+
+    
+
+     
+
+
+
+
 }

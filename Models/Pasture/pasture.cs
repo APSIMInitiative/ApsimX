@@ -17,6 +17,7 @@ using System.Linq;
 using static Models.GrazPlan.GrazType;
 using static Models.GrazPlan.PastureUtil;
 using APSIM.Core;
+using Models.PMF.Organs;
 
 namespace Models.GrazPlan
 {
@@ -300,6 +301,10 @@ namespace Models.GrazPlan
         /// </summary>
         [Description("Apparent extinction coefficients of seedlings, established plants and senescing plants")]
         public double[] ExtinctCoeff { get; set; } = new double[] { 0.0, 0.0, 0.55 };
+
+
+
+     
 
         /*
         These rules apply when providing values for GreenInit[].herbage or DryInit[].herbage:
@@ -1084,6 +1089,8 @@ namespace Models.GrazPlan
         /// <summary>Average DM digestibility of all leaves</summary>
         [Units("g/g")]
         public double LeafDMD { get { return GetDMD(GrazType.TOTAL, GrazType.ptLEAF); } }
+
+
 
         /// <summary>Average crude protein content of all leaves</summary>
         [Units("g/g")]
@@ -2172,6 +2179,13 @@ namespace Models.GrazPlan
 
             return result;
         }
+
+         /// <summary>
+        /// Leaf class
+        /// </summary>
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        public Organs Leaf {get; set;}
+
         #endregion
 
         #region Subscribed events ====================================================
@@ -2201,6 +2215,7 @@ namespace Models.GrazPlan
 
             foreach (var initCohort in Children)
             {
+                
                 if (initCohort is GreenCohortInitialise greenInit)
                 {
                     Array.Resize(ref green, green.Length + 1);
@@ -3391,5 +3406,18 @@ namespace Models.GrazPlan
         }
 
         #endregion
+       
+        
+
+        
+
+           
+        
+    
+
+
+
+
+
     }
 }
