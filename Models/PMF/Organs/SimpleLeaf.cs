@@ -69,7 +69,7 @@ namespace Models.PMF.Organs
     /// CP | The CO2 compensation point | (ppm)
     /// T | The daily average temperature | <sup>o</sup>C
     /// 
-    /// [Leaf.FRGR]
+    /// 
     /// 
     /// </summary>
     /// <remarks>
