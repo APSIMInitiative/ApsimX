@@ -4,7 +4,6 @@
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
-    using Models.Core.ApsimFile;
     using Models.Soils;
     using Models.Storage;
     using NUnit.Framework;

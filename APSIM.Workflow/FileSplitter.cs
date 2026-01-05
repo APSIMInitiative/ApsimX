@@ -3,7 +3,6 @@ using APSIM.Shared.Utilities;
 using DeepCloner.Core;
 using Models.Climate;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Models.Core.Run;
 using Models.Factorial;
 using Models.PostSimulationTools;
@@ -243,7 +242,7 @@ namespace APSIM.Workflow
                         foreach (string sheet in input.SheetNames)
                             if (!allSheetNames.Contains(sheet))
                                 allSheetNames.Add(sheet);
-                                
+
                         List<string> files = new List<string>();
                         foreach (string file in input.FileNames)
                         {
@@ -260,7 +259,7 @@ namespace APSIM.Workflow
                         foreach (string sheet in input.SheetNames)
                             if (!allSheetNames.Contains(sheet))
                                 allSheetNames.Add(sheet);
-                        
+
                         List<string> files = new List<string>();
                         foreach (string file in input.FileNames)
                         {
@@ -319,7 +318,7 @@ namespace APSIM.Workflow
 
             foreach(Simulation sim in simulations)
                 folder.Children.Add(sim);
-            
+
             foreach(PredictedObserved po in predictedObserveds)
                 folder.Children.Add(po);
 
@@ -551,7 +550,7 @@ namespace APSIM.Workflow
 
             foreach (PredictedObserved po in removeList)
             {
-                Structure.Delete(po);
+                po.Node.Parent.RemoveChild(po);
             }
 
             return;
