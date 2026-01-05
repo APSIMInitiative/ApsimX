@@ -58,6 +58,7 @@ namespace APSIM.Documentation.Models
                 {typeof(ModelsMap), typeof(DocMap)},
                 {typeof(BoundFunction), typeof(DocBoundFunction)},
                 {typeof(Memo), typeof(DocMemo)},
+                {typeof(M.Documentation), typeof(DocMemo)},
                 {typeof(Structure), typeof(DocStructure)},
                 {typeof(Folder),typeof(DocFolder)},
                 {typeof(LinearInterpolationFunction), typeof(DocLinearInterpolationFunction)},

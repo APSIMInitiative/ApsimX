@@ -1,20 +1,19 @@
-﻿namespace UserInterface.Presenters
-{
-    using System.IO;
-    using Models;
-    using Views;
-    using System;
-    using Interfaces;
-    using APSIM.Shared.Utilities;
-    using Commands;
+﻿using System.IO;
+using Models;
+using UserInterface.Views;
+using System;
+using APSIM.Shared.Utilities;
+using UserInterface.Commands;
 
+namespace UserInterface.Presenters
+{
     /// <summary>
     /// Presents the text from a memo component.
     /// </summary>
     public class MemoPresenter : IPresenter
     {
-        /// <summary>The memo model.</summary>
-        private Memo memoModel;
+        /// <summary>The model.</summary>
+        private IText model;
 
         /// <summary>The explorer presenter used.</summary>
         private ExplorerPresenter explorerPresenter;
@@ -49,7 +48,7 @@
         /// <param name="parentPresenter">The explorer presenter used</param>
         public void Attach(object model, object view, ExplorerPresenter parentPresenter)
         {
-            memoModel = model as Memo;
+            this.model = model as IText;
             explorerPresenter = parentPresenter;
 
             markdownView = (view as ViewBase).GetControl<MarkdownView>("markdownView");
@@ -61,10 +60,10 @@
             helpButton.Clicked += HelpBtnClicked;
             textView.WrapText = true;
             textView.ModifyFont(Utility.Configuration.Settings.EditorFontName);
-            textView.Text = memoModel.Text;
+            textView.Text = this.model.Text;
             textView.Changed += OnTextHasChanged;
             markdownView.ImagePath = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
-            markdownView.Text = memoModel.Text;
+            markdownView.Text = this.model.Text;
             editButton.Clicked += OnEditButtonClick;
             helpButton.Visible = false;
             previewBox.Show();
@@ -120,9 +119,9 @@
         {
             editButton.Clicked -= OnEditButtonClick;
             helpButton.Clicked -= HelpBtnClicked;
-            if (memoModel.Text != textView.Text)
+            if (model.Text != textView.Text)
             {
-                ICommand changeText = new ChangeProperty(memoModel, nameof(memoModel.Text), textView.Text);
+                ICommand changeText = new ChangeProperty(model, nameof(model.Text), textView.Text);
                 explorerPresenter.CommandHistory.Add(changeText);
             }
         }
@@ -133,8 +132,8 @@
         /// <param name="changedModel">The model object that has changed</param>
         public void OnModelChanged(object changedModel)
         {
-            if (changedModel == this.memoModel)
-                this.markdownView.Text = memoModel.Text;
+            if (changedModel == model)
+                markdownView.Text = model.Text;
         }
     }
 }

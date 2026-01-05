@@ -95,8 +95,3 @@ a .docs-nav {
 .docs-nav:hover {
 	background-color: #f4f4f4;
 }
-
-/* Required to stop non-wrapping code tags. */
-pre{
-    white-space: pre-wrap;
-}

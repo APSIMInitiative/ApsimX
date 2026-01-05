@@ -17,7 +17,7 @@ public partial class SetPropertyCommand: IModelCommand
     {
         string modelNameWithBrackets = @"[\w\d\[\]\.\:]+";
 
-        string pattern = $@"(?<keyword>{modelNameWithBrackets})\s*(?<operator>[-+=]+)\s*(?<pipe>\<)*\s*(?<value>[^\<]+)*";
+        string pattern = $@"(?<keyword>{modelNameWithBrackets})\s*(?<operator>=|\+=|-=)\s*(?<pipe>\<)*\s*(?<value>[^\<]+)*";
 
         Match match = Regex.Match(command, pattern);
         if (match == null || !match.Success)
