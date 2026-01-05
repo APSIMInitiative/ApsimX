@@ -156,6 +156,9 @@ namespace Models.PreSimulationTools
         /// </summary>
         public void Run()
         {
+            if (storage == null)
+                storage = Node.FindParent<DataStore>(recurse: true);
+
             //Clear the tables at the start, since we need to read into them again
             storage.Reader.Refresh();
             foreach (string sheet in SheetNames)
