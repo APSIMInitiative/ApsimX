@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using APSIM.Core;
 using Models.Core;
-using Models.Core.ApsimFile;
-using Models.Functions;
 
 namespace Models.PMF
 {
