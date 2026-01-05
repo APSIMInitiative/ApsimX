@@ -47,6 +47,7 @@ namespace UnitTests
 
             dataStore.Node.AddChild(observations);
             simulations.Node = Node.Create(simulations);
+            simulations.Links.Resolve(simulations, true, true, false);
 
             Runner runner = new Runner(simulations);
             List<Exception> errors = runner.Run();
@@ -157,6 +158,7 @@ namespace UnitTests
 
             dataStore.Node.AddChild(observations);
             simulations.Node = Node.Create(simulations);
+            simulations.Links.Resolve(simulations, true, true, false);
 
             Runner runner = new Runner(simulations);
             List<Exception> errors = runner.Run();
