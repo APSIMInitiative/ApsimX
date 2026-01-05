@@ -20,7 +20,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 206; } }
+    public static int LatestVersion { get { return 208; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -7189,6 +7189,93 @@ internal class Converter
                 manager.Read(newRoot.ToFullString());
                 manager.Save();
             }
+        }
+    }
+
+    /// <summary>
+    /// Finds NDVI models that have been implemented in a manager, gets their parameters, replaces the manager with a compiled model and puts the correct parameters onto it.
+    /// <param name="root">Root json object.</param>
+    /// <param name="_">Unused filename.</param>
+    private static void UpgradeToVersion207(JObject root, string _)
+    {
+        // loop through all managers and replace with NDVI model if appropriate
+        foreach (JObject manager in JsonUtilities.ChildrenRecursively(root, "Manager"))
+        {
+            if (manager["Name"].ToString() == "NDVIModel")
+            {
+                //Extract NDVI model parameters from scropt
+                var parameters = manager["Parameters"] as JArray;
+                var paramDict = new Dictionary<string, double>();
+
+                if (parameters != null)
+                {
+                    foreach (var p in parameters.OfType<JObject>())
+                    {
+                        string? key = (string?)p["Key"];
+                        if (key != null && double.TryParse(p["Value"]?.ToString(), out double val))
+                            paramDict[key] = val;
+                    }
+                }
+
+                // Build replacement Spectral model
+                var newModel = new JObject
+                {
+                    ["$type"] = "Models.Sensor.Spectral, Models",
+                    ["Name"] = "Spectral",
+                    ["DrySoilNDVI"] = paramDict.GetValueOrDefault("DrySoilNDVI", 0.0),
+                    ["WetSoilNDVI"] = paramDict.GetValueOrDefault("WetSoilNDVI", 0.0),
+                    ["GreenCropNDVI"] = paramDict.GetValueOrDefault("GreenCropNDVI", 0.0),
+                    ["DeadCropNDVI"] = paramDict.GetValueOrDefault("DeadCropNDVI", 0.0),
+                    ["NDVI"] = 0.0,
+                    ["ResourceName"] = null,
+                    ["Children"] = new JArray(),
+                    ["Enabled"] = true,
+                    ["ReadOnly"] = false
+                };
+
+                //Remove manager model and add Specteral model to parent
+                JObject parent = JsonUtilities.Parent(manager) as JObject;
+                JsonUtilities.RemoveChild(parent, "NDVIModel");
+                JsonUtilities.AddChild(parent, newModel);
+            }
+        }
+
+        // Change report variables.
+        foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[NDVIModel].Script.NDVI", "[Spectral].NDVI", caseSensitive: false);
+
+        // Change graph variables.
+        foreach (var graph in JsonUtilities.ChildrenOfType(root, "Graph"))
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "NDVIModel.Script.NDVI", "Spectral.NDVI");
+    }
+    
+    /// <summary>
+    /// Change manager scripts:
+    ///      Models.Core.ApsimFile.Structure.Add(newZone, simulation);
+    /// to
+    ///      simulation.Node.AddChild(newZone);
+    /// and remove:   using Models.Core.ApsimFile;
+    /// <param name="root">Root json object.</param>
+    /// <param name="_">Unused filename.</param>
+    private static void UpgradeToVersion208(JObject root, string _)
+    {
+        const string pattern =
+            @"Models\.Core\.ApsimFile\.Structure\.Add\((?<arg1>[\w\d_]+),\s*(?<arg2>[\w\d_]+)\)";
+        foreach (var manager in JsonUtilities.ChildManagers(root))
+        {
+            var changed = false;
+            manager.ReplaceRegex(pattern, match =>
+            {
+                changed = true;
+
+                string arg1 = match.Groups["arg1"].ToString();
+                string arg2 = match.Groups["arg2"].ToString();
+                return $"{arg2}.Node.AddChild({arg1})";
+            });
+            if (changed)
+                manager.Save();
+            if (manager.Replace("using Models.Core.ApsimFile;", ""))
+                manager.Save();
         }
     }
 }

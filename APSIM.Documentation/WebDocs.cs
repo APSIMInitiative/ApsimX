@@ -96,7 +96,11 @@ namespace APSIM.Documentation
         /// </summary>
         public static string GetCSS()
         {
-            return ReflectionUtilities.GetResourceAsString("APSIM.Documentation.Resources.docs.css");
+            string css = "";
+            css += ReflectionUtilities.GetResourceAsString("APSIM.Documentation.Resources.prism.css");
+            css += "\n";
+            css += ReflectionUtilities.GetResourceAsString("APSIM.Documentation.Resources.docs.css");
+            return css;
         }
 
         /// <summary>
@@ -174,7 +178,6 @@ namespace APSIM.Documentation
             {
                 if (tag is Section section)
                 {
-
                     string id = section.Title.ToLower().Replace(" ", "-");
                     html += $"<a href=\"#{id}\"><div class=\"docs-nav\">{section.Title}</div></a>\n";
                 }
@@ -261,7 +264,7 @@ namespace APSIM.Documentation
                     lines = ConvertMarkdownCode(lines);
                     foreach (string line in lines)
                     {
-                        string text = line.Trim();
+                        string text = line;
                         if (text.StartsWith('#'))
                         {
                             string hashes = "#";
@@ -538,6 +541,9 @@ namespace APSIM.Documentation
             output += "</head>\n";
             output += "<body>\n";
             output += content;
+            output += "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/prism/1.30.0/prism.min.js\"></script>";
+            output += "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/prism/1.30.0/components/prism-csharp.min.js\"></script>";
+            output += "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/prism/1.30.0/plugins/keep-markup/prism-keep-markup.min.js\"></script>";
             output += "</body>\n";
             output += "</html>\n";
             return output;
@@ -565,31 +571,28 @@ namespace APSIM.Documentation
             // Get consecutive lines that start with triple tabs.
             bool inCodeBlock = false;
             List<string> formattedLines = new();
-            string pdfCodeLine = @"(\t{3})(.*)";
+            string codeSyntax = @"(```)(.*)";
 
             foreach (string line in paraLines)
             {
-                if(Regex.IsMatch(line, pdfCodeLine))
-                {
+                if(Regex.IsMatch(line, codeSyntax))
                     if(!inCodeBlock)
-                    {
-                        formattedLines.Add("");
-                        formattedLines.Add("```");
                         inCodeBlock = true;
-                    }
-                    formattedLines.Add(line);
-                }
                 else
-                {
                     if(inCodeBlock)
-                    {
-                        formattedLines.Add("```");
-                        formattedLines.Add("");
                         inCodeBlock = false;
-                    }
-                    formattedLines.Add(line);
-                }
+
+                string text = line;
+
+                //add csharp language to code if not there
+                if (inCodeBlock && line.Trim() == "```")
+                    text += "csharp";
+                
+                if (!inCodeBlock)
+                    text = line.Trim();
+                formattedLines.Add(text);
             }
+
             return formattedLines.ToList();
         }
 

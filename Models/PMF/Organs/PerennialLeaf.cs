@@ -303,7 +303,15 @@ namespace Models.PMF.Organs
         public double LAIDead => cohort.LaiDead;
 
         /// <summary>Gets the cover dead.</summary>
-        public double CoverDead { get { return 1.0 - Math.Exp(-ExtinctionCoefficientDead.Value() * LAIDead); } }
+        public double CoverDead { 
+            get {
+                double value = 1.0 - Math.Exp(-ExtinctionCoefficientDead.Value() * LAIDead);
+                if (MathUtilities.FloatsAreEqual(value, 0))
+                    return 0; 
+                else
+                    return value;
+            } 
+        }
 
         /// <summary>Gets the total radiation intercepted.</summary>
         [Units("MJ/m^2/day")]

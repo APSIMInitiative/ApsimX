@@ -5,6 +5,7 @@ public interface INodeModel
     string Name { get; }
     string ResourceName { get; }
     bool Enabled { get; set; }
+    bool ReadOnly { get; set; }
     bool IsHidden { get; set; }
     string FullPath { get; }
     Node Node { get; set; }

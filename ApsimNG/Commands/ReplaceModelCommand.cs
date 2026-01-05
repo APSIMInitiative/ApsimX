@@ -1,8 +1,8 @@
 ﻿namespace UserInterface.Commands
 {
+    using APSIM.Core;
     using Interfaces;
     using Models.Core;
-    using Models.Core.ApsimFile;
     using System;
 
     /// <summary>This command replaces a model with another model.</summary>
@@ -42,7 +42,7 @@
         {
             if (originalModel != null && Replacement != null)
             {
-                Replacement = Structure.Replace(originalModel, Replacement);
+                originalModel.Node.Parent.ReplaceChild(originalModel as INodeModel, Replacement as INodeModel);
                 tree.RefreshNode(Replacement.FullPath, describeModel(Replacement));
             }
         }
@@ -54,7 +54,8 @@
         {
             if (originalModel != null && Replacement != null)
             {
-                IModel newModel = Structure.Replace(Replacement, originalModel);
+                Replacement.Node.Parent.ReplaceChild(Replacement as INodeModel, originalModel as INodeModel);
+                IModel newModel = originalModel;
                 modelChanged?.Invoke(newModel);
                 tree.RefreshNode(newModel.FullPath, describeModel(originalModel));
             }

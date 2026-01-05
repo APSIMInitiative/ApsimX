@@ -83,7 +83,7 @@ Simulation,1,20.000,1,Current,10,Zone
             string[] changes = new string[]
             {
                 "[Clock].StartDate = 2019-1-20",
-                ".Simulations.Sim1.Clock.EndDate = 3/20/2019",
+                ".Simulations.Sim1.Clock.EndDate = 2019-03-20",
                 ".Simulations.Sim2.Enabled = false",
                 ".Simulations.Sim1.Field.Soil.Physical.Thickness[1] = 500",
                 ".Simulations.Sim1.Field.Soil.Physical.Thickness[2] = 2500",
@@ -114,8 +114,8 @@ Simulation,1,20.000,1,Current,10,Zone
             Assert.That(physical.Thickness[1], Is.EqualTo(150));
 
             // Run Models.exe with /Edit command.
-            var overrides = Overrides.ParseStrings(File.ReadAllLines(configFileName));
-            Overrides.Apply(sims, overrides);
+            var overrides = CommandLanguage.StringToCommands(File.ReadAllLines(configFileName), sims, relativeToDirectory:null);
+            CommandProcessor.Run(overrides, sims, runner: null);
 
             // Get references to the changed models.
             clock = sims.Node.Find<Clock>();
@@ -136,9 +136,9 @@ Simulation,1,20.000,1,Current,10,Zone
             Assert.That(clock.EndDate.Year, Is.EqualTo(end.Year));
             Assert.That(clock.EndDate.DayOfYear, Is.EqualTo(end.DayOfYear));
 
-            // Clock 2 should have been changed as well.
-            Assert.That(clock2.StartDate.Year, Is.EqualTo(start.Year));
-            Assert.That(clock2.StartDate.DayOfYear, Is.EqualTo(start.DayOfYear));
+            // Clock 2 should NOT have been changed.
+            Assert.That(clock2.StartDate.Year, Is.EqualTo(2003));
+            Assert.That(clock2.StartDate.DayOfYear, Is.EqualTo(319));
             Assert.That(clock2.EndDate.Year, Is.EqualTo(2003));
             Assert.That(clock2.EndDate.DayOfYear, Is.EqualTo(319));
 

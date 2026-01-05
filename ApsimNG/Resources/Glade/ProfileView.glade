@@ -5,7 +5,7 @@
   <object class="GtkPaned" id="top">
     <property name="visible">True</property>
     <property name="can-focus">True</property>
-    <property name="orientation">horizonal</property>
+    <property name="orientation">horizontal</property>
     <property name="wide-handle">True</property>
     <child>
       <object class="GtkPaned" id="left">
@@ -88,7 +88,7 @@
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="halign">start</property>
-            <property name="label" translatable="yes"></property>
+            <property name="label" translatable="yes"/>
           </object>
           <packing>
             <property name="resize">True</property>
@@ -139,15 +139,15 @@
                 </child>
               </object>
               <packing>
-                <property name="resize">True</property>
-                <property name="shrink">True</property>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
               </packing>
             </child>
           </object>
           <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
+            <property name="resize">True</property>
+            <property name="shrink">True</property>
           </packing>
         </child>
         <child>
@@ -160,9 +160,8 @@
             </child>
           </object>
           <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
+            <property name="resize">True</property>
+            <property name="shrink">True</property>
           </packing>
         </child>
       </object>

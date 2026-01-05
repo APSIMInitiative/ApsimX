@@ -29,8 +29,11 @@ public class CommandLanguageTests
     [TestCase("[Physical].LL15[3:5]=9")]
     [TestCase("[Physical].BD=")]
     [TestCase("[Physical].BD=null")]
+    [TestCase("replace all [Report] with [ChildReport]")]
+    [TestCase("replace all [Report] with [ChildReport] from anotherfile.apsimx")]
+    [TestCase("replace all [Report] with [ChildReport] from anotherfile.apsimx name NewName")]
 
-    public void EnsureAddLanguageParsingWorks(string commandString)
+    public void EnsureLanguageParsingWorks(string commandString)
     {
         var commands = CommandLanguage.StringToCommands([commandString], relativeTo: null, relativeToDirectory: null);
         Assert.That(commands.First().ToString(), Is.EqualTo(commandString));
@@ -45,6 +48,16 @@ public class CommandLanguageTests
     {
         var commands = CommandLanguage.StringToCommands([commandString], relativeTo: null, relativeToDirectory: null);
         Assert.That(commands.Any(), Is.False);
+    }
+
+    [TestCase("[Soil].Latitude=42", ExpectedResult = "42")]
+    [TestCase("[Soil].Latitude=-42", ExpectedResult = "-42")]
+    public string EnsureValuesAreParsedCorrectly(string commandString)
+    {
+        var setPropertyCommand = CommandLanguage.StringToCommands([commandString], relativeTo: null, relativeToDirectory: null)
+                                                .First() as SetPropertyCommand;
+
+        return setPropertyCommand.Value.ToString();
     }
 
     // Ensure inline commented lines are ignored.
