@@ -683,7 +683,7 @@
           "PredictedTableName": "HarvestReport",
           "ObservedTableName": "Observed",
           "FieldNameUsedForMatch": "SimulationName",
-          "FieldName2UsedForMatch": "Wheat.Phenology.CurrentStageName",
+          "FieldName2UsedForMatch": "Clock.Today",
           "FieldName3UsedForMatch": null,
           "FieldName4UsedForMatch": null,
           "AllColumns": false,
@@ -1131,11 +1131,11 @@
               "Name": "Tests",
               "ResourceName": null,
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         }
       ],
@@ -14042,7 +14042,7 @@
                       "Children": [
                         {
                           "$type": "Models.Regression, Models",
-                          "ForEachSeries": false,
+                          "ForEachSeries": true,
                           "showOneToOne": true,
                           "showEquation": true,
                           "Name": "Regression",
