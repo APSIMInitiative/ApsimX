@@ -4,7 +4,6 @@ using System.Linq;
 using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Models.Functions;
 using Models.Soils;
 
@@ -91,7 +90,8 @@ public class Fertiliser : Model, IStructureDependency
 
                 var releaseRateModel = releaseRate as IModel;
                 releaseRateModel = releaseRateModel.Clone();
-                Models.Core.ApsimFile.Structure.Add(releaseRateModel, newPool);
+                newPool.Node.AddChild(releaseRateModel as INodeModel);
+                Apsim.ReconnectLinksAndEvents(releaseRateModel);
                 newPool.SetReleaseFunction(releaseRate);
             }
         }
@@ -132,7 +132,7 @@ public class Fertiliser : Model, IStructureDependency
 
             // Remove pools that are empty.
             if (pool.Amount == 0)
-                Models.Core.ApsimFile.Structure.Delete(pool);
+                pool.Node.Parent.RemoveChild(pool);
         }
     }
 
