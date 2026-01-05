@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using APSIM.Core;
 using APSIM.Shared.Utilities;
-using Models.Core.ApsimFile;
 using Models.Core.Interfaces;
 using Models.Factorial;
 using Models.Storage;

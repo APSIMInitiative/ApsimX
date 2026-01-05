@@ -12,7 +12,6 @@ namespace UserInterface.Presenters
     using Models.CLEM;
     using Models.CLEM.Interfaces;
     using Models.Core;
-    using Models.Core.ApsimFile;
     using Views;
 
     /// <summary>
