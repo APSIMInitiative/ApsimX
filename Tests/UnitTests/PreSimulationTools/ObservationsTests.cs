@@ -58,9 +58,9 @@ namespace UnitTests
             dataStore.Reader.Refresh();
             DataTable dt = dataStore.Reader.GetData("Observed");
 
-            Assert.That(dt.Columns[5].DataType, Is.EqualTo(typeof(DateTime)));
-            Assert.That(dt.Columns[6].DataType, Is.EqualTo(typeof(string)));
-            Assert.That(dt.Columns[7].DataType, Is.EqualTo(typeof(string)));
+            Assert.That(dt.Columns[3].DataType, Is.EqualTo(typeof(DateTime)));
+            Assert.That(dt.Columns[4].DataType, Is.EqualTo(typeof(string)));
+            Assert.That(dt.Columns[5].DataType, Is.EqualTo(typeof(string)));
 
             string filename = "%root%/Tests/UnitTests/PreSimulationTools/Input.xlsx";
 
