@@ -468,7 +468,6 @@ public static class SoilSanitise
             if (standardInitialValues != null)
                 water.InitialValues = standardInitialValues;
         }
-        water.Reset();
     }
 
     /// <summary>Gets the model ready for running in a simulation.</summary>
