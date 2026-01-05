@@ -243,6 +243,7 @@ namespace Models.PreSimulationTools
             foreach (string sheet in SheetNames)
             {
                 DataTable dt = storage.Reader.GetData(sheet);
+                dt.TableName = sheet;
                 dt = dt.Copy();
                 if (dt != null)
                 {

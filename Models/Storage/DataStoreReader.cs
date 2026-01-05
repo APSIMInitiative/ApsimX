@@ -251,17 +251,17 @@ namespace Models.Storage
             if (result.Rows.Count > 0)
             {
                 // Add SimulationName and CheckpointName if necessary.
-                if (!fieldNamesInTable.Contains("CheckpointName"))
+                if (!result.Columns.Contains("CheckpointName"))
                 {
                     result.Columns.Add("CheckpointName", typeof(string));
                     result.Columns["CheckpointName"].SetOrdinal(0);
                 }
-                if (!fieldNamesInTable.Contains("SimulationName"))
+                if (!result.Columns.Contains("SimulationName"))
                 {
                     result.Columns.Add("SimulationName", typeof(string));
                     result.Columns["SimulationName"].SetOrdinal(2);
                 }
-                if (fieldNamesInTable.Contains("SimulationID"))
+                if (result.Columns.Contains("SimulationID"))
                 {
                     foreach (DataRow row in result.Rows)
                     {
