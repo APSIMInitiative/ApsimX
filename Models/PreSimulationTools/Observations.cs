@@ -260,7 +260,8 @@ namespace Models.PreSimulationTools
                 dt = dt.Copy();
                 if (dt != null)
                 {
-                    MergeData.AddRange(MergeInfo.CombineRows(dt, out DataTable combinedDatatable));
+                    //MergeData.AddRange(MergeInfo.CombineRows(dt, out DataTable combinedDatatable));
+                    DataTable combinedDatatable = dt;
                     ColumnData.AddRange(GetAPSIMColumnsFromObserved(combinedDatatable));
                     GetSimulationsFromObserved(combinedDatatable);
                     DerivedData.AddRange(DerivedInfo.AddDerivedColumns(combinedDatatable));
