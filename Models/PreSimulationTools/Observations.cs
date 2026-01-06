@@ -187,22 +187,35 @@ namespace Models.PreSimulationTools
             {
                 //get a list of all the columns for this sheet
                 List<string> columns = new List<string>();
+                List<Type> columnsType = new List<Type>();
                 foreach (string fileName in files)
                 {
                     List<DataTable> tables = LoadFromExcel(fileName);
                     foreach (DataTable table in tables)
+                    {
                         if (table.TableName == sheet)
+                        {
                             foreach (DataColumn column in table.Columns)
+                            {
                                 if (!columns.Contains(column.ColumnName))
+                                {
                                     columns.Add(column.ColumnName);
+                                    if (column.DataType == typeof(DateTime))
+                                        columnsType.Add(typeof(DateTime));
+                                    else
+                                        columnsType.Add(typeof(string));
+                                }
+                            }
+                        }
+                    }
                 }
 
-                // Create a table with all the required column, each with the type set to string
+                // Create a table with all the required column, each with the type set to string unless it was a datetime
                 DataTable data = new DataTable();
                 data.TableName = sheet;
                 data.Columns.Add("_Filename", typeof(string));
-                foreach (string column in columns)
-                    data.Columns.Add(column, typeof(string));
+                for (int i = 0; i < columns.Count; i++)
+                    data.Columns.Add(columns[i], columnsType[i]);
 
                 //Copy in the data from the files
                 foreach (string fileName in files)
@@ -231,7 +244,7 @@ namespace Models.PreSimulationTools
                 storage.Writer.WriteTable(fixedTable, true);
             }
 
-            storage.Writer.WaitForIdle();
+            storage.Writer.Stop();
             storage.Reader.Refresh();
 
             ColumnData = new List<ColumnInfo>();

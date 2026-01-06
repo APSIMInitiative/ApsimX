@@ -266,6 +266,9 @@ namespace Models.PreSimulationTools.ObservationsInfo
                     foreach (DataRow row in dataTable.Rows)
                     {
                         string value = row[name].ToString().Trim();
+                        if(row[name].GetType() == typeof(DateTime))
+                            value = DateUtilities.GetDateAsString(Convert.ToDateTime(row[name]));
+
                         if (value.Length > 0)
                         {
                             if (type == typeof(DateTime))
@@ -314,6 +317,9 @@ namespace Models.PreSimulationTools.ObservationsInfo
             foreach (DataRow row in rows)
             {
                 string value = row[columnName].ToString().Trim();
+                if(row[columnName].GetType() == typeof(DateTime))
+                    value = DateUtilities.GetDateAsString(Convert.ToDateTime(row[columnName]));
+
                 if (!string.IsNullOrEmpty(value))
                 {
                     Type cellType = GetTypeOfCell(value, type);
