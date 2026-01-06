@@ -16,7 +16,16 @@ using System.Runtime.CompilerServices;
 namespace Models.PreSimulationTools
 {
     /// <summary>
-    /// Reads the contents of a specific sheet from an EXCEL file and stores into the DataStore.
+    /// The Observations model allows users to import data from excel spreadsheets into tables in the Datastore within APSIM.
+    /// 
+    /// It can then report back useful information about potential problems within your data that may cause issues:
+    /// - Columns: List of columns, if they match apsim variables and if the data type from excel is correct
+    /// - Devired Data: List of Data that can be derived from existing data that was read from excel rather than storing pre-calculated values within the sheets.
+    /// - Simulations: A list of simulations found in your data compared with the simulations in the apsim file.
+    /// - Zeros: A list of all values of 0 found in the data, generally you do not want to compare predicted values against 0
+    /// - Merged Data: A list of data that could be merged (same simulation and day) along with how different the two values were
+    /// 
+    /// In order to see the results, run your simulations or refresh the datastore.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.ObservationsView")]

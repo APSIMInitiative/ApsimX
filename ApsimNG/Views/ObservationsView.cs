@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Drawing;
 using Gtk;
+using Utility;
 
 namespace UserInterface.Views
 {
@@ -11,6 +13,8 @@ namespace UserInterface.Views
     {
 
         private Notebook notebook = null;
+
+        private Label instructions;
 
         public PropertyView PropertyView = null;
         private Label propertyLabel = null;
@@ -39,6 +43,8 @@ namespace UserInterface.Views
         public ObservationsView(ViewBase owner) : base(owner)
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ObservationsView.glade");
+
+            instructions = (Label)builder.GetObject("label1");
             notebook = (Notebook)builder.GetObject("notebook1");
 
             PropertyView = new PropertyView(owner);
@@ -65,7 +71,12 @@ namespace UserInterface.Views
             zeroLabel = new Label("Zeros");
             notebook.AppendPage(GridViewZero.MainWidget, zeroLabel);
 
-            mainWidget = notebook;
+            Rectangle bounds = GtkUtilities.GetBorderOfRightHandView(owner);
+            Paned paned = (Paned)builder.GetObject("vpaned1");
+            paned = (Paned)builder.GetObject("vpaned1");
+            paned.Position = (int)Math.Round(bounds.Width * 0.75);
+
+            mainWidget = (Widget)builder.GetObject("viewport1");
             notebook.SwitchPage += OnSwitchPage;
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
@@ -126,6 +137,11 @@ namespace UserInterface.Views
         {
             get { return notebook.CurrentPage; }
             set { notebook.CurrentPage = value; }
+        }
+
+        public void SetInstructions(string text)
+        {
+            this.instructions.Text = text;
         }
     }
 

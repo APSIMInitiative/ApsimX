@@ -1,5 +1,7 @@
-﻿using Gtk.Sheet;
+﻿using APSIM.Shared.Documentation;
+using Gtk.Sheet;
 using Models.Core;
+using Models.PreSimulationTools;
 using System.Data;
 using UserInterface.Views;
 
@@ -29,6 +31,8 @@ namespace UserInterface.Presenters
         {
             explorerPresenter = parentPresenter;
             view = v as ObservationsView;
+
+            view.SetInstructions(CodeDocumentation.GetSummary(typeof(Observations)));
 
             propertyPresenter = new PropertyPresenter();
             explorerPresenter.ApsimXFile.Links.Resolve(propertyPresenter);

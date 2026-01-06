@@ -29,7 +29,7 @@ namespace Models.PreSimulationTools.ObservationsInfo
         public string Value2;
 
         /// <summary>The value in the row trying to be merged in</summary>
-        public string Difference;
+        public double Difference;
 
         /// <summary>The file that the merging row came from</summary>
         public string File;
@@ -71,9 +71,13 @@ namespace Models.PreSimulationTools.ObservationsInfo
                 newTable.Columns[i].ReadOnly = true;
 
             DataView dv = newTable.DefaultView;
-            dv.Sort = "Column asc";
+            dv.Sort = "Difference desc";
 
-            return dv.ToTable();
+            newTable = dv.ToTable();
+            foreach (DataRow row in newTable.Rows)
+                row["Difference"] = Convert.ToDouble(row["Difference"]).ToString("F2") + "%";
+
+            return newTable;
         }
 
         /// <summary>
@@ -148,7 +152,7 @@ namespace Models.PreSimulationTools.ObservationsInfo
                                         info.Value1 = newRow[column].ToString();
                                         info.Value2 = row[column].ToString();
                                         info.File = newRow["_Filename"].ToString();
-                                        info.Difference = difference.ToString("F2") + "%";
+                                        info.Difference = difference;
                                         if (isApsimVariable)
                                             infos.Add(info);
                                     }
@@ -188,7 +192,6 @@ namespace Models.PreSimulationTools.ObservationsInfo
         /// <returns>True if can be merged, false if cannot</returns>
         private static bool CanMergeRows(DataRow row, DataRow newRow, string column)
         {
-            return false;
             if (!string.IsNullOrEmpty(row[column].ToString()))
             {
                 if (!Observations.RESERVED_COLUMNS.Contains(column) && !string.IsNullOrEmpty(newRow[column].ToString()))
