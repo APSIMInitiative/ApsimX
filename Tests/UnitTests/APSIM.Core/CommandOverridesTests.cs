@@ -1,4 +1,5 @@
-﻿using Models;
+﻿using global::APSIM.Core;
+using Models;
 using Models.Core;
 using NUnit.Framework;
 using System;
@@ -6,7 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace APSIM.Core.Tests
+namespace UnitTests.APSIM.Core.Tests
 {
     /// <summary>
     /// A test set for the edit file feature which

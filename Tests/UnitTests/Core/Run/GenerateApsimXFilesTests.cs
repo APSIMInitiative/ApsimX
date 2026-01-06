@@ -1,6 +1,6 @@
 ﻿namespace UnitTests.Core.Run
 {
-    using APSIM.Shared.Utilities;
+    using global::APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
     using Models.Core.Run;
@@ -14,7 +14,7 @@
     using UnitTests.Storage;
     using static Models.Core.Run.Runner;
     using Models.Utilities.Extensions;
-    using APSIM.Core;
+    using global::APSIM.Core;
 
     /// <summary>This is a test class for the GenerateApsimxFiles class</summary>
     [TestFixture]

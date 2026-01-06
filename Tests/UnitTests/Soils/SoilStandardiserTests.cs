@@ -1,6 +1,6 @@
 ﻿namespace UnitTests.Soils
 {
-    using APSIM.Core;
+    using global::APSIM.Core;
     using Models.Core;
     using Models.Soils;
     using Models.Soils.Nutrients;

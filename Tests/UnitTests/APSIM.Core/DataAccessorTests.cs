@@ -1,4 +1,4 @@
-﻿using APSIM.Soils;
+﻿using global::APSIM.Core;
 using Models;
 using Models.Core;
 using NUnit.Framework;
@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace APSIM.Core.Tests;
+namespace UnitTests.APSIM.Core.Tests;
 
 /// <summary>
 /// Tests for the DataAccessor class.

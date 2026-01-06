@@ -2,10 +2,8 @@
 
 namespace UnitTests.Soils
 {
-    using Models;
-    using Models.WaterModel;
     using System;
-    using APSIM.Shared.APSoil;
+    using global::APSIM.Shared.APSoil;
     using Models.Core;
 
     [Serializable]

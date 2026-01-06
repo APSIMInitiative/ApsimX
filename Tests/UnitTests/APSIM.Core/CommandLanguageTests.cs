@@ -1,9 +1,9 @@
-﻿using Models.Climate;
+﻿using global::APSIM.Core;
 using NUnit.Framework;
 using System;
 using System.Linq;
 
-namespace APSIM.Core.Tests;
+namespace UnitTests.APSIM.Core.Tests;
 
 [TestFixture]
 public class CommandLanguageTests

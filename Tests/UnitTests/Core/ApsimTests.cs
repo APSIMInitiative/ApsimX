@@ -1,6 +1,6 @@
 ﻿namespace UnitTests.Core
 {
-    using APSIM.Shared.Utilities;
+    using global::APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
     using Models.Soils;
@@ -11,7 +11,7 @@
     using UserInterface;
     using UserInterface.Commands;
     using System.Linq;
-    using APSIM.Core;
+    using global::APSIM.Core;
 
     /// <summary>
     /// This is a test class for SystemComponentTest and is intended

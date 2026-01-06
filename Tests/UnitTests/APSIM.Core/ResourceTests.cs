@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using global::APSIM.Core;
+using NUnit.Framework;
 using System.IO;
 using System.Reflection;
 using Models.Core;
@@ -6,7 +7,7 @@ using Newtonsoft.Json.Linq;
 using Models.PMF;
 using System.Linq;
 
-namespace APSIM.Core.Tests;
+namespace UnitTests.APSIM.Core.Tests;
 
 /// <summary>
 /// Basic tests for consistency among the released models.

@@ -1,6 +1,6 @@
 ﻿namespace UnitTests.Core
 {
-    using APSIM.Core;
+    using global::APSIM.Core;
     using Models;
     using Models.Core;
     using NUnit.Framework;

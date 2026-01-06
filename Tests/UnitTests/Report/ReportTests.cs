@@ -1,8 +1,8 @@
 ﻿namespace UnitTests.Report
 {
-    using APSIM.Core;
-    using APSIM.Shared.Utilities;
-    using APSIM.Soils;
+    using global::APSIM.Core;
+    using global::APSIM.Shared.Utilities;
+    using global::APSIM.Soils;
     using Models;
     using Models.Core;
     using Models.Core.Run;

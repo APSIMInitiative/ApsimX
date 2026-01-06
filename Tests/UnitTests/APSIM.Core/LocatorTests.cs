@@ -1,4 +1,5 @@
-﻿using APSIM.Shared.Utilities;
+﻿using global::APSIM.Core;
+using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
 using Models.Soils.Nutrients;
@@ -10,7 +11,7 @@ using System.Reflection;
 using System.Linq;
 using APSIM.Shared.Documentation.Extensions;
 
-namespace APSIM.Core.Tests
+namespace UnitTests.APSIM.Core.Tests
 {
     [TestFixture]
     public class LocatorTests

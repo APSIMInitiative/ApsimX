@@ -1,6 +1,7 @@
+using global::APSIM.Core;
 using NUnit.Framework;
 
-namespace APSIM.Core.Tests;
+namespace UnitTests.APSIM.Core.Tests;
 
 [TestFixture]
 public class ModelRegistryTests

@@ -1,7 +1,7 @@
 ﻿namespace UnitTests.Soils
 {
-    using APSIM.Core;
-    using APSIM.Shared.Utilities;
+    using global::APSIM.Core;
+    using global::APSIM.Shared.Utilities;
     using ExCSS;
     using Gtk;
     using Models;

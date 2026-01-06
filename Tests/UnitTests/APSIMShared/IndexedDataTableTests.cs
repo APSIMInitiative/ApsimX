@@ -1,8 +1,6 @@
 ﻿namespace UnitTests.APSIMShared
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models;
+    using global::APSIM.Shared.Utilities;
     using NUnit.Framework;
     using System.Data;
     using System.Collections.Generic;

@@ -1,6 +1,6 @@
 ﻿namespace UnitTests.Graph
 {
-    using APSIM.Shared.Utilities;
+    using global::APSIM.Shared.Utilities;
     using Models.Core;
     using Models;
     using Models.Storage;
@@ -8,7 +8,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using static UnitTests.Graph.MockSimulationDescriptionGenerator;
-    using APSIM.Shared.Graphing;
+    using global::APSIM.Shared.Graphing;
     using Series = Models.Series;
     using Moq;
     using System.Data;
@@ -42,7 +42,7 @@
                     }
                 }
             };
-            APSIM.Core.Node.Create(sim);
+            global::APSIM.Core.Node.Create(sim);
 
             string data =
                 "CheckpointName  SimulationID  Col1  Col2\r\n" +
@@ -110,7 +110,7 @@
                     })
                 }
             };
-            APSIM.Core.Node.Create(folder);
+            global::APSIM.Core.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID   Exp Col1  Col2\r\n" +
@@ -197,7 +197,7 @@
                     }
                 }
             };
-            APSIM.Core.Node.Create(folder);
+            global::APSIM.Core.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID     Irr  Fert   Col1  Col2\r\n" +
@@ -326,7 +326,7 @@
                     }
                 }
             };
-            APSIM.Core.Node.Create(folder);
+            global::APSIM.Core.Node.Create(folder);
 
             var graph = folder.Children[1] as Graph;
             var series = graph.Children[0] as Series;
@@ -473,7 +473,7 @@
                     }
                 }
             };
-            APSIM.Core.Node.Create(folder);
+            global::APSIM.Core.Node.Create(folder);
 
             var graph = folder.Children[1] as Graph;
             var series = graph.Children[0] as Series;
@@ -584,7 +584,7 @@
                     }
                 }
             };
-            APSIM.Core.Node.Create(sim);
+            global::APSIM.Core.Node.Create(sim);
 
             string data =
                 "CheckpointName    SimulationID  Col1  Col2\r\n" +
@@ -665,7 +665,7 @@
                     }
                 }
             };
-            APSIM.Core.Node.Create(folder);
+            global::APSIM.Core.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID     Exp Col1  Col2  Col3\r\n" +
@@ -721,7 +721,7 @@
                     }
                 }
             };
-            APSIM.Core.Node.Create(folder);
+            global::APSIM.Core.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID    Exp Col1  Col2\r\n" +
@@ -782,7 +782,7 @@
                     }
                 }
             };
-            APSIM.Core.Node.Create(folder);
+            global::APSIM.Core.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID   Zone Col1  Col2\r\n" +
@@ -861,7 +861,7 @@
                     }
                 }
             };
-            APSIM.Core.Node.Create(folder);
+            global::APSIM.Core.Node.Create(folder);
 
             string data =
                 "CheckpointName   SimulationID Col1  Col2\r\n" +
@@ -923,7 +923,7 @@
                     }
                 }
             };
-            APSIM.Core.Node.Create(folder);
+            global::APSIM.Core.Node.Create(folder);
 
             string data =
                 " CheckpointName ABC  DEF Col1  Col2\r\n" +
@@ -1006,7 +1006,7 @@
                     }
                 }
             };
-            APSIM.Core.Node.Create(folder);
+            global::APSIM.Core.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID     Exp   A  Col1  Col2\r\n" +
@@ -1064,7 +1064,7 @@
                     }
                 }
             };
-            APSIM.Core.Node.Create(folder);
+            global::APSIM.Core.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID     Exp   A  Col1  Col2\r\n" +
@@ -1120,7 +1120,7 @@
                 }
             }
             };
-            APSIM.Core.Node.Create(folder);
+            global::APSIM.Core.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID     Exp   A  Col1  Col2\r\n" +
@@ -1202,7 +1202,7 @@
             };
 
 
-            APSIM.Core.Node.Create(simulations);
+            global::APSIM.Core.Node.Create(simulations);
 
             string data =
                 "CheckpointName    SimulationID    Exp Col1  Col2\r\n" +
@@ -1287,7 +1287,7 @@
             };
 
 
-            APSIM.Core.Node.Create(simulations);
+            global::APSIM.Core.Node.Create(simulations);
 
             string data =
                 "CheckpointName    SimulationID Col1  Col2\r\n" +
@@ -1348,7 +1348,7 @@
                 }
             };
 
-            APSIM.Core.Node.Create(simulations);
+            global::APSIM.Core.Node.Create(simulations);
 
             List<string> checkpoints = new List<string>() { "Current" };
 
@@ -1427,7 +1427,7 @@
                 }
             };
 
-            APSIM.Core.Node.Create(simulations);
+            global::APSIM.Core.Node.Create(simulations);
 
             string data =
                 "CheckpointName    SimulationID   A  Col1  Col2\r\n" +
@@ -1483,7 +1483,7 @@
                     }
                 }
             };
-            APSIM.Core.Node.Create(folder);
+            global::APSIM.Core.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID Predicted.Grain.Wt  Observed.Grain.Wt\r\n" +
@@ -1547,7 +1547,7 @@
                     }
                 }
             };
-            APSIM.Core.Node.Create(folder);
+            global::APSIM.Core.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID Predicted.Grain.Wt  Observed.Grain.Wt\r\n" +
@@ -1606,7 +1606,7 @@
                     }
                 }
             };
-            APSIM.Core.Node.Create(folder);
+            global::APSIM.Core.Node.Create(folder);
 
             string data =
                 "CheckpointName SimulationName SimulationID Predicted.Grain.Wt  Observed.Grain.Wt Experiment\r\n" +
@@ -1671,7 +1671,7 @@
                     }
                 }
             };
-            APSIM.Core.Node.Create(folder);
+            global::APSIM.Core.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID Predicted.Grain.Wt  Observed.Grain.Wt  Observed.Grain.WtError\r\n" +
@@ -1735,7 +1735,7 @@
                     })
                 }
             };
-            APSIM.Core.Node.Create(folder);
+            global::APSIM.Core.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID   Exp Col1  Col2\r\n" +

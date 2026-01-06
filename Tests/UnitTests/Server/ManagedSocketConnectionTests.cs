@@ -80,7 +80,7 @@ namespace UnitTests
                 new SetPropertyCommand("path", "=", "value", fileName: null),
                 new ReplaceCommand(new ModelReference(new MockModel()), "x", multiple: true, ReplaceCommand.MatchType.NameAndType)
             };
-            ICommand target = new APSIM.Server.Commands.RunCommand(true, true, 32, replacements, new[] { "sim1, sim2" });
+            ICommand target = new global::APSIM.Server.Commands.RunCommand(true, true, 32, replacements, new[] { "sim1, sim2" });
             TestRead(target);
         }
 
@@ -100,7 +100,7 @@ namespace UnitTests
                 new ReplaceCommand(new ModelLocatorReference(relativeTo: null, "path to a model"), "replacement value", multiple: true, ReplaceCommand.MatchType.NameAndType)
             };
             IEnumerable<string> sims = new[] { "one simulation" };
-            ICommand command = new APSIM.Server.Commands.RunCommand(false, true, 65536, replacements, sims);
+            ICommand command = new global::APSIM.Server.Commands.RunCommand(false, true, 65536, replacements, sims);
             TestWrite(command);
         }
 
@@ -174,7 +174,7 @@ namespace UnitTests
                 PipeUtilities.SendObjectToPipe(client, "ACK_MANAGED");
                 Assert.That(resp, Is.EqualTo(target));
 
-                if (target is APSIM.Server.Commands.RunCommand)
+                if (target is global::APSIM.Server.Commands.RunCommand)
                     PipeUtilities.SendObjectToPipe(client, "FIN_MANAGED");
                 if (target is ReadCommand readCommand)
                     PipeUtilities.SendObjectToPipe(client, new DataTable(readCommand.TableName));

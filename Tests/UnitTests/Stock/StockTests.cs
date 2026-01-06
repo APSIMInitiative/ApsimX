@@ -1,7 +1,7 @@
 ﻿namespace UnitTests.Stock
 {
-    using APSIM.Core;
-    using APSIM.Shared.Utilities;
+    using global::APSIM.Core;
+    using global::APSIM.Shared.Utilities;
     using Models;
     using Models.Climate;
     using Models.Core;

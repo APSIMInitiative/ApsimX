@@ -1,7 +1,7 @@
-﻿namespace APSIM.Core.Tests
+﻿namespace UnitTests.APSIM.Core.Tests
 {
-    using APSIM.Core;
-    using APSIM.Shared.Utilities;
+    using global::APSIM.Core;
+    using global::APSIM.Shared.Utilities;
     using Newtonsoft.Json.Linq;
     using NUnit.Framework;
     using System;
