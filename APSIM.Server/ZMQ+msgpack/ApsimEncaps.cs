@@ -12,8 +12,7 @@ using MessagePack;
 using APSIM.ZMQServer.IO;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Core.ApsimFile;
-using static Models.Core.Overrides;
+
 using Models.Core.Run;
 using APSIM.Core;
 
@@ -39,7 +38,7 @@ namespace APSIM.ZMQServer
         public ApsimEncapsulator(GlobalServerOptions options)
         {
             sims = FileFormat.ReadFromFile<Simulations>(options.File).Model as Simulations;
-            sims.FindChild<Models.Storage.DataStore>().UseInMemoryDB = true;
+            sims.Node.FindChild<Models.Storage.DataStore>().UseInMemoryDB = true;
             runner = new Runner(sims, numberOfProcessors: (int)options.WorkerCpuCount);
             jobRunner = new ServerJobRunner(this);
             runner.Use(jobRunner);
@@ -107,7 +106,7 @@ namespace APSIM.ZMQServer
                 throw new Exception($"get V {variablePath} should be a dotted table/column pair.");
             string tableName = variablePath.Substring(0, vp);
             string fieldName = variablePath.Substring(vp + 1);
-            var storage = sims?.FindChild<Models.Storage.IDataStore>();
+            var storage = sims?.Node.FindChild<Models.Storage.IDataStore>();
 
             if (!storage.Reader.TableNames.Contains(tableName))
                 throw new Exception($"Table {tableName} does not exist in the database.");
@@ -132,9 +131,9 @@ namespace APSIM.ZMQServer
         {
             errors = null;
             if (changes != null)
-                jobRunner.Replacements = Overrides.ParseStrings(changes);
+                jobRunner.Replacements = CommandLanguage.StringToCommands(changes, sims, relativeToDirectory: null);
             else
-                jobRunner.Replacements = Enumerable.Empty<Override>();
+                jobRunner.Replacements = Enumerable.Empty<IModelCommand>();
 
             Action onWorkerExit = () =>
             {
@@ -176,7 +175,7 @@ namespace APSIM.ZMQServer
         /// </summary>
         public void Close()
         {
-            sims?.FindChild<Models.Storage.IDataStore>()?.Close();
+            sims?.Node.FindChild<Models.Storage.IDataStore>()?.Close();
         }
     }
 }

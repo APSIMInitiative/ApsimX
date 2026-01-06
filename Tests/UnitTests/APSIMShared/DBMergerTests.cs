@@ -16,7 +16,7 @@
             database1.OpenDatabase(":memory:", readOnly: false);
             CreateTable(database1, "_Simulations",
                         columnNames: new List<string> { "ID", "Name", "FolderName" },
-                        columnTypes: new List<string> { "int", "string", "string" },
+                        columnTypes: new List<string> { "integer", "string", "string" },
                         rowValues: new List<object[]>
                             {
                                 new object[] { 1, "Sim1", "Folder1" },
@@ -25,7 +25,7 @@
 
             CreateTable(database1, "Report",
                         columnNames: new List<string> { "SimulationID", "A", "B" },
-                        columnTypes: new List<string> { "int", "float", "string" },
+                        columnTypes: new List<string> { "integer", "float", "string" },
                         rowValues: new List<object[]>
                             {
                                 new object[] { 1, 10.0, "str1" },
@@ -36,7 +36,7 @@
             database2.OpenDatabase(":memory:", readOnly: false);
             CreateTable(database2, "_Simulations",
                         columnNames: new List<string> { "ID", "Name", "FolderName" },
-                        columnTypes: new List<string> { "int", "string", "string" },
+                        columnTypes: new List<string> { "integer", "string", "string" },
                         rowValues: new List<object[]>
                             {
                                 new object[] { 1, "Sim3", "Folder3" },
@@ -45,7 +45,7 @@
 
             CreateTable(database2, "Report",
                         columnNames: new List<string> { "SimulationID", "A", "B" },
-                        columnTypes: new List<string> { "int", "float", "string" },
+                        columnTypes: new List<string> { "integer", "float", "string" },
                         rowValues: new List<object[]>
                             {
                                 new object[] { 1, 20.0, "str3" },
@@ -69,6 +69,8 @@
                                                            new object[] {              3,  20, "str3" },
                                                            new object[] {              4,  21, "str4" }})
                .IsSame(Utilities.GetTableFromDatabase(database1, "Report")), Is.True);
+            database1.CloseDatabase();
+            database2.CloseDatabase();
         }
 
         /// <summary>Ensure two .db files, which have the same simulation names, can be merged.</summary>
@@ -79,7 +81,7 @@
             database1.OpenDatabase(":memory:", readOnly: false);
             CreateTable(database1, "_Simulations",
                         columnNames: new List<string> { "ID", "Name", "FolderName" },
-                        columnTypes: new List<string> { "int", "string", "string" },
+                        columnTypes: new List<string> { "integer", "string", "string" },
                         rowValues: new List<object[]>
                             {
                                 new object[] { 1, "Sim1", "Folder1" },
@@ -88,7 +90,7 @@
 
             CreateTable(database1, "Report",
                         columnNames: new List<string> { "SimulationID", "A", "B" },
-                        columnTypes: new List<string> { "int", "float", "string" },
+                        columnTypes: new List<string> { "integer", "float", "string" },
                         rowValues: new List<object[]>
                             {
                                 new object[] { 1, 10.0, "str1" },
@@ -99,7 +101,7 @@
             database2.OpenDatabase(":memory:", readOnly: false);
             CreateTable(database2, "_Simulations",
                         columnNames: new List<string> { "ID", "Name", "FolderName" },
-                        columnTypes: new List<string> { "int", "string", "string" },
+                        columnTypes: new List<string> { "integer", "string", "string" },
                         rowValues: new List<object[]>
                             {
                                 new object[] { 1, "Sim1", "Folder3" },
@@ -108,7 +110,7 @@
 
             CreateTable(database2, "Report",
                         columnNames: new List<string> { "SimulationID", "A", "B" },
-                        columnTypes: new List<string> { "int", "float", "string" },
+                        columnTypes: new List<string> { "integer", "float", "string" },
                         rowValues: new List<object[]>
                             {
                                 new object[] { 1, 20.0, "str3" },
@@ -130,6 +132,8 @@
                                                            new object[] {              2,  11, "str2" },
                                                            new object[] {              2,  21, "str4" }})
                .IsSame(Utilities.GetTableFromDatabase(database1, "Report")), Is.True);
+            database1.CloseDatabase();
+            database2.CloseDatabase();
         }
 
         /// <summary>Ensure two .db files, which have different tables, can be merged.</summary>
@@ -140,7 +144,7 @@
             database1.OpenDatabase(":memory:", readOnly: false);
             CreateTable(database1, "_Simulations",
                         columnNames: new List<string> { "ID", "Name", "FolderName" },
-                        columnTypes: new List<string> { "int", "string", "string" },
+                        columnTypes: new List<string> { "integer", "string", "string" },
                         rowValues: new List<object[]>
                             {
                                 new object[] { 1, "Sim1", "Folder1" },
@@ -149,7 +153,7 @@
 
             CreateTable(database1, "Report1",
                         columnNames: new List<string> { "SimulationID", "A", "B" },
-                        columnTypes: new List<string> { "int", "float", "string" },
+                        columnTypes: new List<string> { "integer", "float", "string" },
                         rowValues: new List<object[]>
                             {
                                 new object[] { 1, 10.0, "str1" },
@@ -160,7 +164,7 @@
             database2.OpenDatabase(":memory:", readOnly: false);
             CreateTable(database2, "_Simulations",
                         columnNames: new List<string> { "ID", "Name", "FolderName" },
-                        columnTypes: new List<string> { "int", "string", "string" },
+                        columnTypes: new List<string> { "integer", "string", "string" },
                         rowValues: new List<object[]>
                             {
                                 new object[] { 1, "Sim3", "Folder3" },
@@ -169,7 +173,7 @@
 
             CreateTable(database2, "Report2",
                         columnNames: new List<string> { "SimulationID", "A", "B" },
-                        columnTypes: new List<string> { "int", "float", "string" },
+                        columnTypes: new List<string> { "integer", "float", "string" },
                         rowValues: new List<object[]>
                             {
                                 new object[] { 1, 20.0, "str3" },
@@ -197,6 +201,8 @@
                                       new List<object[]> { new object[] {              3,  20, "str3" },
                                                            new object[] {              4,  21, "str4" }})
                .IsSame(Utilities.GetTableFromDatabase(database1, "Report2")), Is.True);
+            database1.CloseDatabase();
+            database2.CloseDatabase();
         }
 
         /// <summary>Ensure two .db files, which have tables that don't have SimulationID, can be merged.</summary>
@@ -207,7 +213,7 @@
             database1.OpenDatabase(":memory:", readOnly: false);
             CreateTable(database1, "_Simulations",
                         columnNames: new List<string> { "ID", "Name", "FolderName" },
-                        columnTypes: new List<string> { "int", "string", "string" },
+                        columnTypes: new List<string> { "integer", "string", "string" },
                         rowValues: new List<object[]>
                             {
                                 new object[] { 1, "Sim1", "Folder1" },
@@ -226,7 +232,7 @@
             database2.OpenDatabase(":memory:", readOnly: false);
             CreateTable(database2, "_Simulations",
                         columnNames: new List<string> { "ID", "Name", "FolderName" },
-                        columnTypes: new List<string> { "int", "string", "string" },
+                        columnTypes: new List<string> { "integer", "string", "string" },
                         rowValues: new List<object[]>
                             {
                                 new object[] { 1, "Sim1", "Folder3" },
@@ -254,6 +260,8 @@
                                       new List<object[]> { new object[] {  "Report",          "A",  "g/m2" },
                                                            new object[] {  "Report",          "B", "kg/ha" }})
                .IsSame(Utilities.GetTableFromDatabase(database1, "_Units")), Is.True);
+            database1.CloseDatabase();
+            database2.CloseDatabase();
         }
 
         /// <summary>Create a table</summary>

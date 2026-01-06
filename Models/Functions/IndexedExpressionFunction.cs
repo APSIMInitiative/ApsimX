@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Models.Core;
 using APSIM.Shared.Utilities;
 using System.Globalization;
+using APSIM.Core;
 
 namespace Models.Functions;
 /// <summary>
@@ -12,8 +13,12 @@ namespace Models.Functions;
 [ViewName("UserInterface.Views.PropertyView")]
 [PresenterName("UserInterface.Presenters.PropertyPresenter")]
 [ValidParent(typeof(SubDailyInterpolation))]
-public class IndexedExpressionFunction : Model, IIndexedFunction
+public class IndexedExpressionFunction : Model, IIndexedFunction, IStructureDependency
 {
+    /// <summary>Structure instance supplied by APSIM.core.</summary>
+    [field: NonSerialized]
+    public IStructure Structure { private get; set; }
+
     /// <summary>
     /// The ExpressionEvaluator instance.
     /// </summary>
@@ -45,16 +50,16 @@ public class IndexedExpressionFunction : Model, IIndexedFunction
     /// Expression string.
     /// </summary>
     [Description("The expresison.")]
-    public string Expression 
-    { 
-        get => _exprString; 
+    public string Expression
+    {
+        get => _exprString;
         set
         {
             _exprString = value;
             _ee.Parse(value.Trim());
             _ee.Infix2Postfix();
             _idx = -1;
-        } 
+        }
     }
 
     /// <summary>
@@ -70,6 +75,7 @@ public class IndexedExpressionFunction : Model, IIndexedFunction
             _idx = -1;
         }
     }
+
 
     /// <summary>
     /// Evaluate the expression, with the value of IndexVariable passed as argument.
@@ -90,7 +96,7 @@ public class IndexedExpressionFunction : Model, IIndexedFunction
                 if (i == _idx)
                     sym.m_value = dX;
                 else
-                    sym = FillValue(sym, this);
+                    sym = FillValue(sym, this, Structure);
                 _filled.Add(sym);
             }
         }
@@ -115,11 +121,12 @@ public class IndexedExpressionFunction : Model, IIndexedFunction
     /// </summary>
     /// <param name="sym">The symbol (name will be used to search).</param>
     /// <param name="relativeTo">The model from which to perofm the search relative to.</param>
+    /// <param name="structure">Structure instance</param>
     /// <returns>Symbol with the value filled in.</returns>
     /// <exception cref="Exception">If the value cannot be found.</exception>
-    private static Symbol FillValue(Symbol sym, Model relativeTo)
+    private static Symbol FillValue(Symbol sym, Model relativeTo, IStructure structure)
     {
-        var something = relativeTo.FindByPath(sym.m_name.Trim())?.Value;
+        var something = structure.Get(sym.m_name.Trim());
         if (something == null)
             throw new Exception($"Cannot find variable {sym.m_name} in {relativeTo.FullPath}");
         if (something is Array arr)

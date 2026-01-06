@@ -6,7 +6,6 @@ using Models;
 using Models.Core;
 using Models.Core.Run;
 using Models.Storage;
-using Models.Core.ApsimFile;
 using System.Data;
 
 namespace UnitTests
@@ -22,7 +21,7 @@ namespace UnitTests
         public void TestDisabledSummary()
         {
             Simulations sims = Utilities.GetRunnableSim();
-            Summary summary = sims.FindInScope<Summary>();
+            Summary summary = sims.Node.Find<Summary>();
             summary.Verbosity = MessageType.Error;
 
             var runner = new Runner(sims);
@@ -33,14 +32,14 @@ namespace UnitTests
 
 
         /// <summary>
-        /// This test ensures that data is written immediately following calls to 
+        /// This test ensures that data is written immediately following calls to
         /// </summary>
         [Test]
         public void EnsureDataIsNotWrittenTwice()
         {
             Simulations sims = Utilities.GetRunnableSim();
-            Simulation sim = sims.FindChild<Simulation>();
-            Summary summary = sim.FindChild<Summary>();
+            Simulation sim = sims.Node.FindChild<Simulation>();
+            Summary summary = sim.Node.FindChild<Summary>();
 
             // Write 2 messages to the DB during StartOfSimulation.
             string message1 = "message 1";
@@ -51,14 +50,14 @@ namespace UnitTests
             writer.AddMessage("[Clock].StartOfSimulation", message2);
             writer.AddMessage("[Simulation].Completed", message3);
 
-            Structure.Add(writer, sim);
+            sim.Node.AddChild(writer);
 
             Runner runner = new Runner(sims);
             List<Exception> errors = runner.Run();
             if (errors != null && errors.Count > 0)
                 throw errors[0];
 
-            IDataStore storage = sims.FindChild<IDataStore>();
+            IDataStore storage = sims.Node.FindChild<IDataStore>();
             DataTable messages = storage.Reader.GetData("_Messages");
 
             // Clock will write its own "Simulation terminated normally" message.
@@ -78,6 +77,7 @@ namespace UnitTests
         }
 
         [Serializable]
+        [ValidParent(ParentType = typeof(Simulation))]
         private class SummaryWriter : Model
         {
             [Link] private ISummary summary = null;

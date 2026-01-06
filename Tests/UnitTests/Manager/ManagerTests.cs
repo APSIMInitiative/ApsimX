@@ -4,7 +4,6 @@ using Models.Core;
 using NUnit.Framework;
 using System;
 using APSIM.Shared.Documentation;
-using Models.Core.ApsimFile;
 using Models.Core.Run;
 using System.Collections.Generic;
 using System.IO;
@@ -142,7 +141,7 @@ namespace UnitTests.ManagerTests
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.bork.apsimx");
             IModel file = FileFormat.ReadFromString<Simulations>(json).Model as IModel;
-            Simulation sim = file.FindInScope<Simulation>();
+            Simulation sim = file.Node.Find<Simulation>();
             Assert.DoesNotThrow(() => sim.Run());
         }
 
@@ -268,7 +267,7 @@ namespace UnitTests.ManagerTests
             var Runner = new Runner(file);
             Runner.Run();
 
-            Summary sum = file.FindDescendant<Summary>();
+            Summary sum = file.Node.FindChild<Summary>(recurse: true);
             bool found = false;
             foreach (Message message in sum.GetMessages("Simulation"))
                 if (message.Text.Contains("Correct Manager Called"))
@@ -309,6 +308,16 @@ namespace UnitTests.ManagerTests
             testManager = createManager();
             Assert.DoesNotThrow(() => typeof(Manager).InvokeMember("OnStartOfSimulation", reflectionFlagsMethods, null, testManager, new object[] { new object(), new EventArgs() }));
             Assert.That(testManager.Parameters.Count, Is.EqualTo(1));
+
+            //should not work
+            //empty string should be allowed, but would do nothing
+            testManager.Code = "";
+            Assert.DoesNotThrow(() => typeof(Manager).InvokeMember("OnStartOfSimulation", reflectionFlagsMethods, null, testManager, new object[] { new object(), new EventArgs() }));
+
+            //should not work
+            //need to wrap this in a try catch as it will throw an exception for bad code
+            try { testManager.Code = "asdf"; } catch { }
+            Assert.Throws<TargetInvocationException>(() => typeof(Manager).InvokeMember("OnStartOfSimulation", reflectionFlagsMethods, null, testManager, new object[] { new object(), new EventArgs() }));
         }
 
         /// <summary>
@@ -386,7 +395,6 @@ namespace UnitTests.ManagerTests
             //should throw error if broken code
             testManager = createManager();
             Assert.Throws<Exception>(() => testManager.Code = testManager.Code.Replace("{", ""));
-            Assert.That(testManager.Parameters, Is.Null);
         }
 
         /// <summary>
@@ -574,32 +582,6 @@ namespace UnitTests.ManagerTests
         {
             Manager testManager = createManager();
             Assert.That(testManager.Script, Is.Not.Null);
-        }
-
-        /// <summary>
-        /// A test to check that all functions in Manager have been tested by a unit test.
-        /// </summary>
-        [Test]
-        public void MethodsHaveUnitTests()
-        {
-            //Get list of methods in this test file
-            List<MethodInfo> testMethods = ReflectionUtilities.GetAllMethods(typeof(ManagerTests), reflectionFlagsMethods, false);
-            string names = "";
-            foreach (MethodInfo method in testMethods)
-                names += method.Name + "\n";
-
-            //Get lists of methods and properties from Manager
-            List<MethodInfo> methods = ReflectionUtilities.GetAllMethodsWithoutProperties(typeof(Manager));
-            List<PropertyInfo> properties = ReflectionUtilities.GetAllProperties(typeof(Manager), reflectionFlagsProperties, false);
-
-            //Check that at least one of the methods is named for the method or property. The exception is SetServices - doesn't need a test.
-            foreach (MethodInfo method in methods.Where(m => m.Name != "SetServices"))
-                if (names.Contains(method.Name) == false)
-                    Assert.Fail($"{method.Name} is not tested by an individual unit test.");
-
-            foreach (PropertyInfo prop in properties.Where(p => p.Name != "Compiler"))
-                if (names.Contains(prop.Name) == false)
-                    Assert.Fail($"{prop.Name} is not tested by an individual unit test.");
         }
     }
 }

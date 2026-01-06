@@ -1,5 +1,5 @@
-﻿using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Drawing;
+using APSIM.Core;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Newtonsoft.Json;
 using System;
@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.IO;
-using System.Text.RegularExpressions;
 
 namespace Models.Utilities
 {
@@ -23,78 +22,100 @@ namespace Models.Utilities
                       "Contains additional columns for each model parameter that is to be overwritten.  \n" +
                       "Each parameter column must have a header name that matches a full parameter address (e.g [Wheat].Phenology.Phyllochron.BasePhyllochron.FixedValue)  \n" +
                       "Set desired parameter values down the column to match the SimulationName specified in each row.")]
-    
+
     [ValidParent(ParentType = typeof(Zone))]
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SetModelParamsBySimulation : Model 
+    public class SetModelParamsBySimulation : Model, IStructureDependency, IReferenceExternalFiles
     {
-
-
-        /// <summary>Location of file with crop specific coefficients</summary>
-        [Core.Description("File path for parameter file")]
-        [Display(Type = DisplayType.FileName)]
-        public string ParameterFile { get; set; }
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
         /// <summary>Location of file with crop specific coefficients</summary>
         [Core.Description("Event to apply sets on")]
         public string SetEventName { get; set; }
-
 
         /// <summary>Link to an event service.</summary>
         [Link]
         private IEvent events = null;
 
         /// <summary>
-        /// Gets or sets the full file name (with path). The user interface uses this.
+        /// Filename for the weather file.
         /// </summary>
-        [JsonIgnore]
-        public string FullFileName
+        private string fileName;
+
+        /// <summary>Location of file with crop specific coefficients</summary>
+        [Core.Description("File path for parameter file")]
+        [Display(Type = DisplayType.FileName)]
+        public string ParameterFile
         {
             get
             {
-                Simulation simulation = FindAncestor<Simulation>();
-                if (simulation != null)
-                    return PathUtilities.GetAbsolutePath(ParameterFile, simulation.FileName);
+                string apsimFilePath = "";
+                if (Node != null)
+                    apsimFilePath = Node.FileName;
+                else if (simulation != null)
+                    apsimFilePath = simulation.FileName;
                 else
                 {
-                    Simulations simulations = FindAncestor<Simulations>();
-                    if (simulations != null)
-                        return PathUtilities.GetAbsolutePath(ParameterFile, simulations.FileName);
-                    else
-                        return ParameterFile;
+                    Simulations sims = Node.FindParent<Simulations>(recurse: true);
+                    if (sims != null)
+                        apsimFilePath = sims.FileName;
                 }
-            }
-            set
-            {
-                Simulations simulations = FindAncestor<Simulations>();
-                if (simulations != null)
-                    ParameterFile = PathUtilities.GetRelativePath(value, simulations.FileName);
+
+                if (string.IsNullOrEmpty(apsimFilePath))
+                    throw new Exception("Cannot determine weather file path: Weather model is not attached to a simulation node or simulation. Please ensure the weather model is correctly attached to a simulation node.");
                 else
-                    ParameterFile = value;
-                readCSVandUpdateProperties();
+                    return PathUtilities.GetRelativePath(fileName, apsimFilePath);
+            }
+            set { fileName = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the full file name (with path). The user interface uses this.
+        /// </summary>
+        [JsonIgnore]
+        private string FullFileName
+        {
+            get
+            {
+                if (this.Node != null)
+                    return PathUtilities.GetAbsolutePath(fileName, this.Node.FileName);
+                else
+                    throw new Exception("Cannot determine full weather file path: Weather model is not attached to a simulation node. Ensure the weather model is attached to a simulation node to resolve this error.");
             }
         }
-                
-        private string CurrentSimulationName 
-        { 
-            get 
+
+        /// <summary>Return our input filenames</summary>
+        public IEnumerable<string> GetReferencedFileNames()
+        {
+            return new string[] { FullFileName };
+        }
+
+        /// <summary>Remove all paths from referenced filenames.</summary>
+        public void RemovePathsFromReferencedFileNames()
+        {
+            ParameterFile = Path.GetFileName(ParameterFile);
+        }
+
+        private string CurrentSimulationName
+        {
+            get
             { if (simulation != null)
-                    return  simulation.Name; 
-            else 
+                    return  simulation.Name;
+            else
                     return null;
             }
         }
 
-        ///<summary></summary> 
+        ///<summary></summary>
         [JsonIgnore] public Dictionary<string, string> CurrentSimParams { get; set; }
 
         [Link(Type = LinkType.Ancestor)]
-        private Zone zone = null;
-
-        [Link(Type = LinkType.Ancestor)]
         private Simulation simulation = null;
+
 
         ////// This secton contains the components that get values from the csv coefficient file to    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         ////// display in the grid view and set them back to the csv when they are changed in the grid !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -147,7 +168,7 @@ namespace Models.Utilities
             return new DataTable();
         }
 
-        
+
         /// <summary>
         /// Gets the parameter set from the CoeffientFile for the CropName specified and returns in a dictionary maped to paramter names.
         /// </summary>
@@ -160,7 +181,10 @@ namespace Models.Utilities
             Dictionary<string, string> ret = new Dictionary<string, string>();
             for (int i = 0; i < tab.Rows.Count; i++)
             {
-                ret.Add(tab.Rows[i]["SimulationName"].ToString(), tab.Rows[i][varName].ToString());
+                string value = tab.Rows[i][varName].ToString();
+                if (tab.Columns[varName].DataType == typeof(DateTime))
+                    value = DateUtilities.GetDateAsString(Convert.ToDateTime(tab.Rows[i][varName]));
+                ret.Add(tab.Rows[i]["SimulationName"].ToString(), value);
             }
             return ret;
         }
@@ -180,7 +204,7 @@ namespace Models.Utilities
         }
 
         /// <summary>
-        /// Method to find the current simulation row in ParameterFile and step throuh each column applying parameter sets 
+        /// Method to find the current simulation row in ParameterFile and step throuh each column applying parameter sets
         /// </summary>
         private void onSetEvent(object sender, EventArgs e)
         {
@@ -189,7 +213,7 @@ namespace Models.Utilities
             foreach (DataColumn column in setVars.Columns)
             {
                 varName = column.ColumnName.ToString();
-                if (varName != "SimulationName") 
+                if (varName != "SimulationName")
                 {
                     CurrentSimParams = getCurrentParams(setVars, CurrentSimulationName, varName);
                     object Pval = 0;
@@ -203,7 +227,7 @@ namespace Models.Utilities
                                                  CurrentSimulationName + " is not present in the SimulationName column in " + FullFileName);
                     }
                     if (Pval.ToString() != "")
-                        zone.Set(varName, Pval);
+                        Structure.Set(varName, Pval);
                 }
             }
         }

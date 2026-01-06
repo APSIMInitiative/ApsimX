@@ -1,21 +1,23 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 296,
-  "Version": 85,
-  "ApsimVersion": "0.0.0.0",
+  "Version": 195,
   "Name": "Simulations",
+  "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Core.Simulation, Models",
+      "Descriptors": null,
       "Name": "Simulation",
+      "ResourceName": null,
       "Children": [
         {
-          "$type": "Models.Weather, Models",
-          "FileName": "%root%/Examples/WeatherFiles/Popondetta.met",
+          "$type": "Models.Climate.Weather, Models",
+          "ConstantsFile": null,
+          "FileName": "%root%/Examples/WeatherFiles/PG_Popondetta.met",
           "ExcelWorkSheetName": null,
           "Name": "Weather",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -24,8 +26,8 @@
           "Start": "1996-03-01T00:00:00",
           "End": "2010-09-29T00:00:00",
           "Name": "Clock",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -35,25 +37,22 @@
           "b_interception": 1.0,
           "c_interception": 0.0,
           "d_interception": 0.0,
-          "soil_albedo": 0.23,
           "SoilHeatFluxFraction": 0.4,
           "MinimumHeightDiffForNewLayer": 0.0,
           "NightInterceptionFraction": 0.5,
           "ReferenceHeight": 2.0,
           "Name": "MicroClimate",
+          "ResourceName": "MicroClimate",
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Summary, Models",
-          "CaptureErrors": true,
-          "CaptureWarnings": true,
-          "CaptureSummaryText": true,
+          "Verbosity": 100,
           "Name": "Summary",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -64,17 +63,19 @@
           "AspectAngle": 0.0,
           "Altitude": 50.0,
           "Name": "Block",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Fertiliser, Models",
               "Name": "Fertiliser",
+              "ResourceName": "Fertiliser",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "SurfOM": [],
               "Canopies": [],
               "InitialResidueName": "oilpalm",
               "InitialResidueType": "oilpalm",
@@ -82,10 +83,9 @@
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 0.0,
-              "FractionFaecesAdded": 1.0,
-              "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOM",
-              "IncludeInDocumentation": true,
+              "ResourceName": "SurfaceOrganicMatter",
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -106,26 +106,14 @@
               "Latitude": 0.0,
               "Longitude": 0.0,
               "LocationAccuracy": null,
+              "YearOfSampling": null,
               "DataSource": null,
               "Comments": null,
               "Name": "Soil",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Soils.Physical, Models",
-                  "Depth": [
-                    "0-10",
-                    "10-30",
-                    "30-60",
-                    "60-90",
-                    "90-120",
-                    "120-150",
-                    "150-200",
-                    "200-250",
-                    "250-300",
-                    "300-350",
-                    "350-400",
-                    "400-500"
-                  ],
                   "Thickness": [
                     100.0,
                     200.0,
@@ -140,9 +128,11 @@
                     500.0,
                     1000.0
                   ],
-                  "ParticleSizeClay": null,
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "ParticleSizeClay": null,
+                  "Rocks": null,
+                  "Texture": null,
                   "BD": [
                     1.22,
                     1.22,
@@ -220,7 +210,13 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
+                  "RocksMetadata": null,
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Soils.SoilCrop, Models",
@@ -270,18 +266,17 @@
                       "KLMetadata": null,
                       "XFMetadata": null,
                       "Name": "OilPalmSoil",
+                      "ResourceName": null,
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.SoilWater, Models",
+                  "$type": "Models.WaterModel.WaterBalance, Models",
                   "SummerDate": "1-Nov",
                   "SummerU": 5.0,
                   "SummerCona": 5.0,
@@ -294,10 +289,9 @@
                   "CN2Bare": 68.0,
                   "CNRed": 20.0,
                   "CNCov": 0.8,
-                  "slope": 0.0,
-                  "discharge_width": 0.0,
-                  "catchment_area": 0.0,
-                  "max_pond": 0.0,
+                  "DischargeWidth": 0.0,
+                  "CatchmentArea": 0.0,
+                  "PSIDul": -100.0,
                   "Thickness": [
                     100.0,
                     200.0,
@@ -311,20 +305,6 @@
                     500.0,
                     500.0,
                     1000.0
-                  ],
-                  "Depth": [
-                    "0-10",
-                    "10-30",
-                    "30-60",
-                    "60-90",
-                    "90-120",
-                    "120-150",
-                    "150-200",
-                    "200-250",
-                    "250-300",
-                    "300-350",
-                    "350-400",
-                    "400-500"
                   ],
                   "SWCON": [
                     0.7,
@@ -354,29 +334,14 @@
                     0.0,
                     0.0
                   ],
-                  "PrecipitationInterception": 0.0,
                   "Name": "SoilWater",
+                  "ResourceName": "WaterBalance",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Organic, Models",
-                  "Depth": [
-                    "0-10",
-                    "10-20",
-                    "20-30",
-                    "30-60",
-                    "60-90",
-                    "90-150",
-                    "150-200",
-                    "200-250",
-                    "250-300",
-                    "300-350",
-                    "350-400",
-                    "400-500"
-                  ],
                   "FOMCNRatio": 30.0,
                   "Thickness": [
                     100.0,
@@ -406,6 +371,7 @@
                     0.4,
                     0.4
                   ],
+                  "CarbonUnits": 0,
                   "SoilCNRatio": [
                     12.0,
                     12.0,
@@ -449,41 +415,29 @@
                     0.99
                   ],
                   "FOM": [
-                    532.71903818301416,
-                    501.69589652587581,
+                    532.7190381830142,
+                    501.6958965258758,
                     472.47940199282294,
-                    394.64796999001658,
+                    394.6479699900166,
                     329.63769332659047,
-                    229.98041481462491,
+                    229.9804148146249,
                     170.37368169461377,
                     126.21592772399717,
                     93.5030589981839,
                     69.26876979533229,
-                    51.315566788589557,
-                    28.162580166338131
+                    51.31556678858956,
+                    28.16258016633813
                   ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
                   "Name": "Organic",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Chemical, Models",
-                  "Depth": [
-                    "0-10",
-                    "10-30",
-                    "30-60",
-                    "60-90",
-                    "90-120",
-                    "120-150",
-                    "150-200",
-                    "200-250",
-                    "250-300",
-                    "300-350",
-                    "350-400",
-                    "400-500"
-                  ],
                   "Thickness": [
                     100.0,
                     200.0,
@@ -497,34 +451,6 @@
                     500.0,
                     500.0,
                     1000.0
-                  ],
-                  "NO3N": [
-                    5.0,
-                    5.0,
-                    1.0,
-                    1.0,
-                    1.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0
-                  ],
-                  "NH4N": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0
                   ],
                   "PH": [
                     6.3,
@@ -540,43 +466,23 @@
                     6.8,
                     6.8
                   ],
-                  "CL": null,
+                  "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
+                  "CEC": null,
+                  "ECMetadata": null,
+                  "CLMetadata": null,
+                  "CECMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
                   "Name": "Chemical",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.InitialWater, Models",
-                  "PercentMethod": 1,
-                  "FractionFull": 1.0,
-                  "DepthWetSoil": "NaN",
-                  "RelativeTo": null,
-                  "Name": "InitialWater",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Soils.Sample, Models",
-                  "Depth": [
-                    "0-10",
-                    "10-30",
-                    "30-60",
-                    "60-90",
-                    "90-120",
-                    "120-150",
-                    "150-200",
-                    "200-250",
-                    "250-300",
-                    "300-350",
-                    "350-400",
-                    "400-500"
-                  ],
+                  "$type": "Models.Soils.Water, Models",
                   "Thickness": [
                     100.0,
                     200.0,
@@ -591,253 +497,191 @@
                     500.0,
                     1000.0
                   ],
-                  "NO3N": null,
-                  "NH4N": null,
-                  "SW": null,
-                  "OC": null,
-                  "EC": null,
-                  "CL": null,
-                  "ESP": null,
-                  "PH": null,
-                  "SWUnits": 0,
-                  "OCUnits": 0,
-                  "PHUnits": 0,
-                  "Name": "InitialNitrogen",
+                  "InitialValues": [
+                    0.48,
+                    0.48,
+                    0.4,
+                    0.51,
+                    0.506,
+                    0.506,
+                    0.4,
+                    0.4,
+                    0.4,
+                    0.4,
+                    0.4,
+                    0.4
+                  ],
+                  "InitialPAWmm": 500.0,
+                  "RelativeTo": "LL15",
+                  "FilledFromTop": false,
+                  "Name": "Water",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Soils.CERESSoilTemperature, Models",
-                  "Name": "CERESSoilTemperature",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Nutrients.Nutrient, Models",
-                  "DirectedGraphInfo": {
-                    "$type": "Models.Graph.DirectedGraph, Models",
-                    "Nodes": [
-                      {
-                        "$type": "Models.Graph.Node, Models",
-                        "Name": "Inert",
-                        "Location": "656, 254",
-                        "Colour": "0, 114, 178",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Graph.Node, Models",
-                        "Name": "SurfaceResidue",
-                        "Location": "566, 69",
-                        "Colour": "0, 114, 178",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Graph.Node, Models",
-                        "Name": "FOMLignin",
-                        "Location": "261, 69",
-                        "Colour": "0, 114, 178",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Graph.Node, Models",
-                        "Name": "FOMCellulose",
-                        "Location": "397, 70",
-                        "Colour": "0, 114, 178",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Graph.Node, Models",
-                        "Name": "FOMCarbohydrate",
-                        "Location": "123, 70",
-                        "Colour": "0, 114, 178",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Graph.Node, Models",
-                        "Name": "Microbial",
-                        "Location": "218, 299",
-                        "Colour": "0, 114, 178",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Graph.Node, Models",
-                        "Name": "Humic",
-                        "Location": "458, 293",
-                        "Colour": "0, 114, 178",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Graph.Node, Models",
-                        "Name": "Urea",
-                        "Location": "529, 419",
-                        "Colour": "0, 158, 115",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Graph.Node, Models",
-                        "Name": "NO3",
-                        "Location": "185, 435",
-                        "Colour": "0, 158, 115",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Graph.Node, Models",
-                        "Name": "NH4",
-                        "Location": "357, 422",
-                        "Colour": "0, 158, 115",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Graph.Node, Models",
-                        "Name": "Atmosphere",
-                        "Location": "48, 338",
-                        "Colour": "White",
-                        "OutlineColour": "White",
-                        "Transparent": true
-                      }
-                    ],
-                    "Arcs": [
-                      {
-                        "$type": "Models.Graph.Arc, Models",
-                        "SourceName": "SurfaceResidue",
-                        "DestinationName": "Microbial",
-                        "Location": "415, 173",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Graph.Arc, Models",
-                        "SourceName": "SurfaceResidue",
-                        "DestinationName": "Humic",
-                        "Location": "499, 172",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Graph.Arc, Models",
-                        "SourceName": "FOMLignin",
-                        "DestinationName": "Microbial",
-                        "Location": "259, 221",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Graph.Arc, Models",
-                        "SourceName": "FOMLignin",
-                        "DestinationName": "Humic",
-                        "Location": "255, 105",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Graph.Arc, Models",
-                        "SourceName": "FOMCellulose",
-                        "DestinationName": "Microbial",
-                        "Location": "370, 184",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Graph.Arc, Models",
-                        "SourceName": "FOMCellulose",
-                        "DestinationName": "Humic",
-                        "Location": "463, 224",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Graph.Arc, Models",
-                        "SourceName": "FOMCarbohydrate",
-                        "DestinationName": "Microbial",
-                        "Location": "141, 131",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Graph.Arc, Models",
-                        "SourceName": "FOMCarbohydrate",
-                        "DestinationName": "Humic",
-                        "Location": "204, 215",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Graph.Arc, Models",
-                        "SourceName": "Microbial",
-                        "DestinationName": "Microbial",
-                        "Location": "335, 301",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Graph.Arc, Models",
-                        "SourceName": "Microbial",
-                        "DestinationName": "Humic",
-                        "Location": "319, 278",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Graph.Arc, Models",
-                        "SourceName": "Humic",
-                        "DestinationName": "Microbial",
-                        "Location": "334, 340",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Graph.Arc, Models",
-                        "SourceName": "Urea",
-                        "DestinationName": "NH4",
-                        "Location": "433, 416",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Graph.Arc, Models",
-                        "SourceName": "NO3",
-                        "DestinationName": "Atmosphere",
-                        "Location": "1, 319",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Graph.Arc, Models",
-                        "SourceName": "NH4",
-                        "DestinationName": "NO3",
-                        "Location": "243, 409",
-                        "Colour": "Black",
-                        "Text": null
-                      }
-                    ]
-                  },
-                  "ResourceName": "Nutrient",
                   "Name": "Nutrient",
-                  "IncludeInDocumentation": true,
+                  "ResourceName": "Nutrient",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    100.0,
+                    200.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    500.0,
+                    500.0,
+                    500.0,
+                    500.0,
+                    500.0,
+                    1000.0
+                  ],
+                  "InitialValues": [
+                    5.0,
+                    5.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "InitialValuesUnits": 0,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "ConcInSolution": null,
+                  "Name": "NO3",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    100.0,
+                    200.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    500.0,
+                    500.0,
+                    500.0,
+                    500.0,
+                    500.0,
+                    1000.0
+                  ],
+                  "InitialValues": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "InitialValuesUnits": 0,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "ConcInSolution": null,
+                  "Name": "NH4",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    100.0,
+                    200.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    500.0,
+                    500.0,
+                    500.0,
+                    500.0,
+                    500.0,
+                    1000.0
+                  ],
+                  "InitialValues": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "InitialValuesUnits": 1,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "ConcInSolution": null,
+                  "Name": "Urea",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                  "Thickness": null,
+                  "InitialValues": null,
+                  "Name": "Temperature",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
-              "$type": "Models.Report.Report, Models",
+              "$type": "Models.Report, Models",
               "VariableNames": [
                 "[Clock].Today",
                 "[Clock].Today.Year",
@@ -858,7 +702,7 @@
                 "sum of [OilPalm].UnderstoryDltDM*10 from 1-Jan to 31-Dec as AnnualUnderstoryNPP",
                 "sum of [OilPalm].UnderstoryNFixation from 1-Jan to 31-Dec as AnnualUnderstoryNFixation",
                 "sum of sum([OilPalm].UnderstoryNUptake) from 1-Jan to 31-Dec as AnnualUnderstoryNUptake",
-                "sum of sum([OilPalm].NUptake) from 1-Jan to 31-Dec as AnnualPalmNUptake",
+                "sum of sum([OilPalm].NitrogenUptake) from 1-Jan to 31-Dec as AnnualPalmNUptake",
                 "sum of [OilPalm].RootGrowth*10 from 1-Jan to 31-Dec as AnnualRootNPP",
                 "sum of [OilPalm].StemGrowth*10 from 1-Jan to 31-Dec as AnnualStemNPP",
                 "sum of [OilPalm].FrondGrowth*10 from 1-Jan to 31-Dec as AnnualFrondNPP",
@@ -867,21 +711,22 @@
                 "sum of (([OilPalm].RootGrowth+[OilPalm].StemGrowth+[OilPalm].FrondGrowth)*10) from 1-Jan to 31-Dec as AnnualPalmVegetativeNPP",
                 "sum of ([Soil].SoilWater.Es + [OilPalm].EP + [OilPalm].UnderstoryEP) from 1-Jan to 31-Dec as AnnualET",
                 "[Calculations].Script.AnnualNRemoved",
-                "avg of sum([Soil].Nutrient.NO3.kgha) from 1-Jan to 31-Dec as AnnualAverageNO3",
-                "avg of [SurfaceOM].Wt from 1-Jan to 31-Dec as AnnualLitterMass",
-                "avg of [SurfaceOM].N from 1-Jan to 31-Dec as AnnualLitterN"
+                "mean of sum([Soil].NO3.kgha) from 1-Jan to 31-Dec as AnnualAverageNO3",
+                "mean of [SurfaceOM].Wt from 1-Jan to 31-Dec as AnnualLitterMass",
+                "mean of [SurfaceOM].N from 1-Jan to 31-Dec as AnnualLitterN"
               ],
               "EventNames": [
                 "[Clock].EndOfYear"
               ],
+              "GroupByVariableName": null,
               "Name": "AnnualOutput",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
-              "$type": "Models.Report.Report, Models",
+              "$type": "Models.Report, Models",
               "VariableNames": [
                 "[Clock].Today.Year",
                 "[Clock].Today",
@@ -896,17 +741,18 @@
                 "[Calculations].Script.surfaceom_wt_oilpalmunderstory",
                 "sum([Soil].Nutrient.TotalC)/1000 as SoilCtpha",
                 "sum([Soil].Nutrient.TotalN) as SoilNkgpha",
-                "sum([Soil].Nutrient.NO3.kgha) as TotalNO3",
-                "sum([Soil].SoilWater.SWmm) as TotalSW",
-                "sum([Soil].DULmm) as DUL",
-                "sum([Soil].SATmm) as SAT"
+                "sum([Soil].NO3.kgha) as TotalNO3",
+                "sum([Soil].Water.MM) as TotalSW",
+                "sum([Soil].Physical.DULmm) as DUL",
+                "sum([Soil].Physical.SATmm) as SAT"
               ],
               "EventNames": [
                 "[Clock].StartOfMonth"
               ],
+              "GroupByVariableName": null,
               "Name": "MonthlyOutput",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -916,45 +762,95 @@
               "UnderstoryCoverMax": 0.4,
               "UnderstoryLegumeFraction": 1.0,
               "MaximumRootDepth": 5000.0,
-              "RootDepth": 3030.0,
-              "DltDM": 19.871097229371863,
-              "ReproductiveGrowthFraction": 0.54002291016689741,
-              "UnderstoryCoverGreen": 0.04694817445569064,
-              "UnderstoryPotNUptake": [
-                9.0366045056470252,
-                16.949560255832868,
-                10.550676027297538,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0
-              ],
-              "ResourceName": "OilPalm",
               "Name": "OilPalm",
-              "IncludeInDocumentation": true,
+              "ResourceName": "OilPalm",
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Irrigation, Models",
               "Name": "Irrigation",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using System;\r\nusing System.Linq;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.OilPalm;\r\nusing Models.Surface;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock; \r\n        [Link] OilPalm oilPalm;\r\n        [Link] Summary Summary;\r\n        [Link] SurfaceOrganicMatter surface;\r\n        \r\n        [Description(\"Sowing date\")]\r\n        public DateTime sowing_date {get; set;}\r\n        \r\n        [Description(\"Plant population /ha\")]\r\n        public double population {get; set;}\r\n\r\n\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName, PlantName = \"OilPalm\")]\r\n        public string cultivar {get; set;}\r\n\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double sowing_depth {get; set;}\r\n        \r\n        public double Plant_population {get;set;}\r\n        \r\n        private byte HarvestCounter = 1;\r\n\r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Plant_population = 0;\r\n            surface.Add(24000, 270.769, 0, \"oilpalm\", \"oilpalm\");\r\n            surface.Add(63000, 191.172, 0, \"oilpalmstem\", \"oilpalmstem\");\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {    \r\n            if (Clock.Today.Date == sowing_date)\r\n            {\r\n                oilPalm.Sow(population: population / 10000, cultivar:cultivar, depth:sowing_depth, rowSpacing:150);\r\n            }\r\n            \r\n            if (HarvestCounter == 14)\r\n            {\r\n                oilPalm.Harvest();\r\n                HarvestCounter = 1;\r\n            }\r\n            \r\n            HarvestCounter++;\r\n        }\r\n    }\r\n}\r\n",
+              "CodeArray": [
+                "using Models.Soils;",
+                "using System;",
+                "using System.Linq;",
+                "using Models.Core;",
+                "using Models.PMF;",
+                "using Models.PMF.OilPalm;",
+                "using Models.Surface;",
+                "using APSIM.Shared.Utilities;",
+                "",
+                "namespace Models",
+                "{",
+                "    [Serializable]",
+                "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
+                "    public class Script : Model",
+                "    {",
+                "        [Link] Clock Clock; ",
+                "        [Link] OilPalm oilPalm;",
+                "        [Link] Summary Summary;",
+                "        [Link] SurfaceOrganicMatter surface;",
+                "        ",
+                "        [Description(\"Sowing date\")]",
+                "        public DateTime sowing_date {get; set;}",
+                "        ",
+                "        [Description(\"Plant population /ha\")]",
+                "        public double population {get; set;}",
+                "",
+                "",
+                "        [Description(\"Cultivar\")]",
+                "        [Display(Type=DisplayType.CultivarName, PlantName = \"OilPalm\")]",
+                "        public string cultivar {get; set;}",
+                "",
+                "        [Description(\"Sowing depth (mm)\")]",
+                "        public double sowing_depth {get; set;}",
+                "        ",
+                "        public double Plant_population {get;set;}",
+                "        ",
+                "        private byte HarvestCounter = 1;",
+                "",
+                "        [EventSubscribe(\"StartOfSimulation\")]",
+                "        private void OnSimulationCommencing(object sender, EventArgs e)",
+                "        {",
+                "            Plant_population = 0;",
+                "            surface.Add(24000, 270.769, 0, \"oilpalm\", \"oilpalm\");",
+                "            surface.Add(63000, 191.172, 0, \"oilpalmstem\", \"oilpalmstem\");",
+                "        }",
+                "        ",
+                "        [EventSubscribe(\"DoManagement\")]",
+                "        private void OnDoManagement(object sender, EventArgs e)",
+                "        {    ",
+                "            if (Clock.Today.Date == sowing_date)",
+                "            {",
+                "                oilPalm.Sow(population: population / 10000, cultivar:cultivar, depth:sowing_depth, rowSpacing:150);",
+                "            }",
+                "            ",
+                "            if (HarvestCounter == 14)",
+                "            {",
+                "                oilPalm.Harvest();",
+                "                HarvestCounter = 1;",
+                "            }",
+                "            ",
+                "            HarvestCounter++;",
+                "            ",
+                "            if (Clock.Today == new DateTime(2007,1,1))",
+                "                oilPalm.EndCrop();",
+                "        }",
+                "    }",
+                "}"
+              ],
               "Parameters": [
                 {
                   "Key": "sowing_date",
-                  "Value": "1996-03-01"
+                  "Value": "03/01/1996 00:00:00"
                 },
                 {
                   "Key": "population",
@@ -967,114 +863,156 @@
                 {
                   "Key": "sowing_depth",
                   "Value": "200"
-                },
-                {
-                  "Key": "Plant_population",
-                  "Value": "0"
                 }
               ],
               "Name": "Palm Management",
-              "IncludeInDocumentation": true,
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.OilPalm;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Surface;\r\n\r\nnamespace Models\r\n{ \r\n    [Serializable]\r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] OilPalm OilPalm;\r\n        [Link] Soil Soil;\r\n        [Link] SurfaceOrganicMatter SurfaceOM;\r\n        [Link] Summary Summary;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Weather Weather;\r\n        [Link] Irrigation Irrigation;\r\n        \r\n        public double Offset {get; set;}\r\n        public double AnnualFronds {get; set;}\r\n        public double AnnualBunches {get; set;}\r\n        public double AnnualYield {get; set;}\r\n        public double AnnualBunchSize {get; set;}\r\n        public double surfaceom_wt_oilpalmstem {get; set;}\r\n        public double surfaceom_wt_oilpalmunderstory {get; set;}\r\n        public double OilPalmYield {get; set;}\r\n        public double AnnualNRemoved {get; set;}\r\n\r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Offset = 0;\r\n            OilPalmYield = 0;\r\n            AnnualFronds = 0;\r\n            AnnualBunches = 0;\r\n            AnnualBunchSize = 0;\r\n            AnnualYield = 0;\r\n            surfaceom_wt_oilpalmstem = 0;\r\n            surfaceom_wt_oilpalmunderstory = 0;    \r\n            AnnualNRemoved = 0;\r\n\r\n        }\r\n        \r\n\r\n       [EventSubscribe(\"StartOfYear\")]\r\n       private void OnStartOfYear(object sender, EventArgs e)\r\n       {\r\n               Offset = OilPalm.CumulativeFrondNumber;\r\n            AnnualYield = 0;\r\n            AnnualBunches = 0;\r\n            AnnualBunchSize = 0;\r\n            AnnualNRemoved = 0;\r\n        }\r\n        \r\n       [EventSubscribe(\"DoManagementCalculations\")]\r\n       private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool(\"oilpalmstem\");\r\n            AnnualFronds = OilPalm.CumulativeFrondNumber - Offset;  \r\n        }\r\n        \r\n        [EventSubscribe(\"Harvesting\")]\r\n        private void OnHarvesting(object sender, EventArgs e)\r\n        {\r\n            AnnualYield += OilPalm.HarvestFFB;\r\n            AnnualBunches += OilPalm.HarvestBunches;\r\n            if (AnnualBunches > 0)\r\n                AnnualBunchSize = AnnualYield * 1000 / AnnualBunches / (OilPalm.Population * 10000);\r\n            AnnualNRemoved += OilPalm.HarvestNRemoved;\r\n        }\r\n    }\r\n}\r\n",
-              "Parameters": [
-                {
-                  "Key": "Offset",
-                  "Value": "6"
-                },
-                {
-                  "Key": "AnnualFronds",
-                  "Value": "0"
-                },
-                {
-                  "Key": "AnnualBunches",
-                  "Value": "0"
-                },
-                {
-                  "Key": "AnnualYield",
-                  "Value": "0"
-                },
-                {
-                  "Key": "AnnualBunchSize",
-                  "Value": "0"
-                },
-                {
-                  "Key": "surfaceom_wt_oilpalmstem",
-                  "Value": "NaN"
-                },
-                {
-                  "Key": "surfaceom_wt_oilpalmunderstory",
-                  "Value": "0"
-                },
-                {
-                  "Key": "OilPalmYield",
-                  "Value": "0"
-                },
-                {
-                  "Key": "AnnualNRemoved",
-                  "Value": "0"
-                }
+              "CodeArray": [
+                "using Models.Climate;",
+                "using Models.Surface;",
+                "using Models.Soils.Nutrients;",
+                "using Models.Soils;",
+                "using Models.PMF.OilPalm;",
+                "using Models.PMF;",
+                "using Models.Core;",
+                "using System;",
+                "using Models.Soils.Nutrients;",
+                "",
+                "namespace Models",
+                "{ ",
+                "    [Serializable]",
+                "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
+                "    public class Script : Model",
+                "    {",
+                "        [Link] Clock Clock;",
+                "        [Link] OilPalm OilPalm;",
+                "        [Link] Soil Soil;",
+                "        [Link] SurfaceOrganicMatter SurfaceOM;",
+                "        [Link] Summary Summary;",
+                "        [Link] Fertiliser Fertiliser;",
+                "        [Link] Weather Weather;",
+                "        [Link] Irrigation Irrigation;",
+                "        ",
+                "        public double Offset {get; set;}",
+                "        public double AnnualFronds {get; set;}",
+                "        public double AnnualBunches {get; set;}",
+                "        public double AnnualYield {get; set;}",
+                "        public double AnnualBunchSize {get; set;}",
+                "        public double surfaceom_wt_oilpalmstem {get; set;}",
+                "        public double surfaceom_wt_oilpalmunderstory {get; set;}",
+                "        public double OilPalmYield {get; set;}",
+                "        public double AnnualNRemoved {get; set;}",
+                "",
+                "        [EventSubscribe(\"StartOfSimulation\")]",
+                "        private void OnSimulationCommencing(object sender, EventArgs e)",
+                "        {",
+                "            Offset = 0;",
+                "            OilPalmYield = 0;",
+                "            AnnualFronds = 0;",
+                "            AnnualBunches = 0;",
+                "            AnnualBunchSize = 0;",
+                "            AnnualYield = 0;",
+                "            surfaceom_wt_oilpalmstem = 0;",
+                "            surfaceom_wt_oilpalmunderstory = 0;    ",
+                "            AnnualNRemoved = 0;",
+                "",
+                "        }",
+                "        ",
+                "",
+                "       [EventSubscribe(\"StartOfYear\")]",
+                "       private void OnStartOfYear(object sender, EventArgs e)",
+                "       {",
+                "               Offset = OilPalm.CumulativeFrondNumber;",
+                "            AnnualYield = 0;",
+                "            AnnualBunches = 0;",
+                "            AnnualBunchSize = 0;",
+                "            AnnualNRemoved = 0;",
+                "        }",
+                "        ",
+                "       [EventSubscribe(\"DoManagementCalculations\")]",
+                "       private void OnDoManagement(object sender, EventArgs e)",
+                "        {",
+                "            surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool(\"oilpalmstem\");",
+                "            AnnualFronds = OilPalm.CumulativeFrondNumber - Offset;  ",
+                "        }",
+                "        ",
+                "        [EventSubscribe(\"Harvesting\")]",
+                "        private void OnHarvesting(object sender, EventArgs e)",
+                "        {",
+                "            AnnualYield += OilPalm.HarvestFFB;",
+                "            AnnualBunches += OilPalm.HarvestBunches;",
+                "            if (AnnualBunches > 0)",
+                "                AnnualBunchSize = AnnualYield * 1000 / AnnualBunches / (OilPalm.Population * 10000);",
+                "            AnnualNRemoved += OilPalm.HarvestNRemoved;",
+                "        }",
+                "    }",
+                "}"
               ],
+              "Parameters": [],
               "Name": "Calculations",
-              "IncludeInDocumentation": true,
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 3,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Year",
+              "Position": 3,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             },
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 0,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "FFB (t/ha)",
+              "Position": 0,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             },
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 2,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Annual Rainfall (mm)",
+              "Position": 2,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             }
           ],
           "LegendPosition": 0,
           "LegendOrientation": 0,
-          "DisabledSeries": null,
+          "AnnotationLocation": 0,
+          "DisabledSeries": [],
           "LegendOutsideGraph": false,
           "Name": "AnnualFFB",
+          "ResourceName": null,
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 0,
               "XAxis": 3,
               "YAxis": 2,
@@ -1097,13 +1035,13 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Annual Rainfall",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1126,62 +1064,63 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "FFB",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 3,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Year",
+              "Position": 3,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             },
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 0,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Bunch Production (/palm)",
+              "Position": 0,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             },
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 2,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Annual Rainfall (mm)",
+              "Position": 2,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             }
           ],
           "LegendPosition": 0,
           "LegendOrientation": 0,
-          "DisabledSeries": null,
+          "AnnotationLocation": 0,
+          "DisabledSeries": [],
           "LegendOutsideGraph": false,
           "Name": "AnnualBunchProduction",
+          "ResourceName": null,
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 0,
               "XAxis": 3,
               "YAxis": 2,
@@ -1204,13 +1143,13 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Annual Rainfall",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1233,62 +1172,63 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Annual Bunches per palm",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 3,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Year",
+              "Position": 3,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             },
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 0,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Average Bunch Size (kg)",
+              "Position": 0,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             },
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 2,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Annual Rainfall (mm)",
+              "Position": 2,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             }
           ],
           "LegendPosition": 0,
           "LegendOrientation": 0,
+          "AnnotationLocation": 0,
           "DisabledSeries": null,
           "LegendOutsideGraph": false,
           "Name": "AnnualBunchSizes",
+          "ResourceName": null,
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 0,
               "XAxis": 3,
               "YAxis": 2,
@@ -1311,13 +1251,13 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Annual Rainfall",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1340,51 +1280,52 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Annual Bunch Size",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 3,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Year",
+              "Position": 3,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             },
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 0,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Vegetative NPP (kg DM/ha)",
+              "Position": 0,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             }
           ],
           "LegendPosition": 3,
           "LegendOrientation": 0,
+          "AnnotationLocation": 0,
           "DisabledSeries": null,
           "LegendOutsideGraph": false,
           "Name": "Vegetative NPP",
+          "ResourceName": null,
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1407,13 +1348,13 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Annual Understory NPP",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1436,13 +1377,13 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Annual Palm Vegetative NPP",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1465,51 +1406,52 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Annual Total Vegetative NPP",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 3,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Year",
+              "Position": 3,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             },
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 0,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Palm NPP Breakdown (kg DM/ha)",
+              "Position": 0,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             }
           ],
           "LegendPosition": 0,
           "LegendOrientation": 0,
+          "AnnotationLocation": 0,
           "DisabledSeries": null,
           "LegendOutsideGraph": false,
           "Name": "Palm NPP Breakdown",
+          "ResourceName": null,
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1532,13 +1474,13 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Annual Frond NPP",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1561,13 +1503,13 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Annual Stem NPP",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1590,13 +1532,13 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Annual Root NPP",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1619,51 +1561,52 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Annual Bunch NPP",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 3,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Year",
+              "Position": 3,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             },
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 0,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Palm LAI (m2/m2)",
+              "Position": 0,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             }
           ],
           "LegendPosition": 3,
           "LegendOrientation": 0,
+          "AnnotationLocation": 0,
           "DisabledSeries": null,
           "LegendOutsideGraph": false,
           "Name": "LAI",
+          "ResourceName": null,
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1686,51 +1629,52 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "LAI",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 3,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Year",
+              "Position": 3,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             },
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 0,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Annual Rainfall and Potential Evaporation (mm) ",
+              "Position": 0,
               "Inverted": false,
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": 0.0,
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "Maximum": null,
+              "Interval": null
             }
           ],
           "LegendPosition": 3,
           "LegendOrientation": 0,
+          "AnnotationLocation": 0,
           "DisabledSeries": null,
           "LegendOutsideGraph": false,
           "Name": "AnnualClimate",
+          "ResourceName": null,
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 0,
               "XAxis": 3,
               "YAxis": 0,
@@ -1753,13 +1697,13 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Annual Rainfall",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1782,62 +1726,63 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Annual Potential Evaporation",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 3,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Year",
+              "Position": 3,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             },
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 0,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Annual Fertiliser Input (kg N /ha)",
+              "Position": 0,
               "Inverted": false,
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": 0.0,
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "Maximum": null,
+              "Interval": null
             },
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 2,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Annual Irrigation Input (mm)",
+              "Position": 2,
               "Inverted": false,
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": 0.0,
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "Maximum": null,
+              "Interval": null
             }
           ],
           "LegendPosition": 0,
           "LegendOrientation": 0,
+          "AnnotationLocation": 0,
           "DisabledSeries": null,
           "LegendOutsideGraph": false,
           "Name": "AnnualInputs",
+          "ResourceName": null,
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 0,
               "XAxis": 3,
               "YAxis": 2,
@@ -1860,13 +1805,13 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Annual Irrigation Addition",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1889,51 +1834,52 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Annual N Addition",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 3,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Date",
+              "Position": 3,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             },
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 0,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Annual N Inputs (kg N/ha)",
+              "Position": 0,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             }
           ],
           "LegendPosition": 3,
           "LegendOrientation": 0,
+          "AnnotationLocation": 0,
           "DisabledSeries": null,
           "LegendOutsideGraph": false,
           "Name": "Annual N Inputs",
+          "ResourceName": null,
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1956,13 +1902,13 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Annual N Fixation",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -1985,13 +1931,13 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Annual N Addition",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -2014,51 +1960,52 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Annual Total N Input",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 3,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Year",
+              "Position": 3,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             },
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 0,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Annual N Losses (kg N/ha)",
+              "Position": 0,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             }
           ],
           "LegendPosition": 0,
           "LegendOrientation": 0,
-          "DisabledSeries": null,
+          "AnnotationLocation": 0,
+          "DisabledSeries": [],
           "LegendOutsideGraph": false,
           "Name": "Annual N Losses",
+          "ResourceName": null,
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -2081,13 +2028,13 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Annual N Leaching",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -2110,13 +2057,13 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Annual N Denitrified",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -2139,51 +2086,52 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Annual N Removed",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 3,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Year",
+              "Position": 3,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             },
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 0,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Annual N Addition and Removal (kg N/ha)",
+              "Position": 0,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             }
           ],
           "LegendPosition": 3,
           "LegendOrientation": 0,
+          "AnnotationLocation": 0,
           "DisabledSeries": null,
           "LegendOutsideGraph": false,
           "Name": "Annual N Additions and Removal",
+          "ResourceName": null,
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -2206,13 +2154,13 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Annual N Addition",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -2235,62 +2183,63 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Annual N Removed",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 3,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Year",
+              "Position": 3,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             },
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 0,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Total Soil Carbon (t C/ha)",
+              "Position": 0,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             },
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 2,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Total Soil Nitrogen (kg N/ha)",
+              "Position": 2,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             }
           ],
           "LegendPosition": 1,
           "LegendOrientation": 0,
+          "AnnotationLocation": 0,
           "DisabledSeries": null,
           "LegendOutsideGraph": false,
           "Name": "Soil Organic Matter",
+          "ResourceName": null,
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -2313,13 +2262,13 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Total Soil Carbon",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 2,
@@ -2342,62 +2291,63 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Total Soil Nitrogen",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 3,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Year",
+              "Position": 3,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             },
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 0,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Litter Layer Mass (kg/ha)",
+              "Position": 0,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             },
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 2,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Litter Layer Nitrogen (kg N/ha)",
+              "Position": 2,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             }
           ],
           "LegendPosition": 1,
           "LegendOrientation": 0,
-          "DisabledSeries": null,
+          "AnnotationLocation": 0,
+          "DisabledSeries": [],
           "LegendOutsideGraph": false,
           "Name": "Litter Layer",
+          "ResourceName": null,
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -2412,21 +2362,21 @@
               "TableName": "MonthlyOutput",
               "XFieldName": "Clock.Today",
               "YFieldName": "SurfaceOM.Wt",
-              "X2FieldName": "",
-              "Y2FieldName": "",
+              "X2FieldName": null,
+              "Y2FieldName": null,
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
               "CumulativeX": false,
               "Filter": null,
               "Name": "Litter Mass",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 2,
@@ -2441,70 +2391,71 @@
               "TableName": "MonthlyOutput",
               "XFieldName": "Clock.Today",
               "YFieldName": "SurfaceOM.N",
-              "X2FieldName": "",
-              "Y2FieldName": "",
+              "X2FieldName": null,
+              "Y2FieldName": null,
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
               "CumulativeX": false,
               "Filter": null,
               "Name": "Litter N",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 3,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Year",
+              "Position": 3,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             },
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 0,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Profile Nitrate (kg N/ha)",
+              "Position": 0,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             },
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 2,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Litter Layer Nitrogen (kg N/ha)",
+              "Position": 2,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             }
           ],
           "LegendPosition": 1,
           "LegendOrientation": 0,
+          "AnnotationLocation": 0,
           "DisabledSeries": null,
           "LegendOutsideGraph": false,
           "Name": "Profile Nitrate N",
+          "ResourceName": null,
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -2527,62 +2478,63 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Profile Nitrate",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 3,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Year",
+              "Position": 3,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             },
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 0,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Profile Water (mm)",
+              "Position": 0,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             },
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 2,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Litter Layer Nitrogen (kg N/ha)",
+              "Position": 2,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             }
           ],
           "LegendPosition": 1,
           "LegendOrientation": 0,
+          "AnnotationLocation": 0,
           "DisabledSeries": null,
           "LegendOutsideGraph": false,
           "Name": "Profile Water",
+          "ResourceName": null,
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -2605,13 +2557,13 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Soil Water",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -2634,13 +2586,13 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "DUL",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -2663,62 +2615,63 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "SAT",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 3,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Year",
+              "Position": 3,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             },
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 0,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "N2O Emission (kg N/ha)",
+              "Position": 0,
               "Inverted": false,
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": 0.0,
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "Maximum": null,
+              "Interval": null
             },
             {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 2,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Annual Rainfall (mm)",
+              "Position": 2,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             }
           ],
           "LegendPosition": 0,
           "LegendOrientation": 0,
+          "AnnotationLocation": 0,
           "DisabledSeries": null,
           "LegendOutsideGraph": false,
           "Name": "N2O Emissions",
+          "ResourceName": null,
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 0,
               "XAxis": 3,
               "YAxis": 2,
@@ -2741,13 +2694,13 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Annual Rainfall",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -2770,18 +2723,16 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Annual N2O Emission",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         }
       ],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
     },
@@ -2790,13 +2741,12 @@
       "useFirebird": false,
       "CustomFileName": null,
       "Name": "DataStore",
+      "ResourceName": null,
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
     }
   ],
-  "IncludeInDocumentation": true,
   "Enabled": true,
   "ReadOnly": false
 }

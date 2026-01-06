@@ -5,7 +5,6 @@ using System.Threading;
 using APSIM.Core;
 using APSIM.Shared.JobRunning;
 using Models.Storage;
-using static Models.Core.Overrides;
 
 namespace Models.Core.Run
 {
@@ -25,10 +24,7 @@ namespace Models.Core.Run
 
         /// <summary>A list of all replacements to apply to simulation to run.</summary>
         [NonSerialized]
-        private List<Override> replacementsToApply = new List<Override>();
-
-        /// <summary>Do we clone the simulation before running?</summary>
-        private bool doClone;
+        private readonly List<IModelCommand> replacementsToApply = new();
 
         /// <summary>
         /// The actual simulation object to run
@@ -51,8 +47,7 @@ namespace Models.Core.Run
         /// </summary>
         /// <param name="sim">The simulation to run.</param>
         /// <param name="name">The name of the simulation.</param>
-        /// <param name="clone">Clone the simulation passed in before running?</param>
-        public SimulationDescription(Simulation sim, string name = null, bool clone = true)
+        public SimulationDescription(Simulation sim, string name = null)
         {
             baseSimulation = sim;
             if (sim != null)
@@ -67,7 +62,6 @@ namespace Models.Core.Run
                 Name = baseSimulation.Name;
             else
                 Name = name;
-            doClone = clone;
         }
 
         /// <summary>name</summary>
@@ -81,8 +75,7 @@ namespace Models.Core.Run
         {
             get
             {
-                var scope = new ScopingRules();
-                return scope.FindAll(baseSimulation).First(model => model is IDataStore) as IDataStore;
+                return baseSimulation.Node.WalkScoped().First(model => model is IDataStore) as IDataStore;
             }
         }
 
@@ -93,7 +86,7 @@ namespace Models.Core.Run
         /// Add an override to replace an existing value
         /// </summary>
         /// <param name="change">The override to addd.</param>
-        public void AddOverride(Override change)
+        public void AddOverride(IModelCommand change)
         {
             replacementsToApply.Add(change);
         }
@@ -112,9 +105,9 @@ namespace Models.Core.Run
         /// </summary>
         /// <param name="cancelToken"></param>
         /// <param name="changes"></param>
-        public void Run(CancellationTokenSource cancelToken, IEnumerable<Override> changes)
+        public void Run(CancellationTokenSource cancelToken, IEnumerable<IModelCommand> changes)
         {
-            Overrides.Apply(SimulationToRun, changes);
+            CommandProcessor.Run(changes, SimulationToRun, runner: null);
             Run(cancelToken);
         }
 
@@ -155,26 +148,23 @@ namespace Models.Core.Run
 
                 AddReplacements();
 
-                Simulation newSimulation;
-                if (doClone)
-                    newSimulation = baseSimulation.Node.Clone().Model as Simulation;
-                else
-                    newSimulation = baseSimulation;
+                Node newNode = baseSimulation.Node.Clone();
 
                 if (string.IsNullOrWhiteSpace(Name))
-                    newSimulation.Name = baseSimulation.Name;
+                    newNode.Rename(baseSimulation.Name);
                 else
-                    newSimulation.Name = Name;
+                    newNode.Rename(Name);   // this causes a problem with experiments. The node name becomes different from the model name
 
+                Simulation newSimulation = newNode.Model as Simulation;
                 newSimulation.Parent = null;
-                Overrides.Apply(newSimulation, replacementsToApply);
+                CommandProcessor.Run(replacementsToApply, newSimulation, runner: null);
 
                 // Give the simulation the descriptors.
                 if (newSimulation.Descriptors == null || Descriptors.Count > 0)
                     newSimulation.Descriptors = Descriptors;
                 newSimulation.ModelServices = GetServices();
 
-                newSimulation.ClearCaches();
+                newSimulation.Node.ClearLocator();
                 return newSimulation;
             }
             catch (Exception err)
@@ -198,7 +188,7 @@ namespace Models.Core.Run
             }
             else
             {
-                IModel storage = topLevelModel.FindInScope<DataStore>();
+                IModel storage = topLevelModel.Node.Find<DataStore>();
                 services.Add(storage);
             }
 
@@ -222,8 +212,9 @@ namespace Models.Core.Run
                 IModel replacements = Folder.FindReplacementsFolder(topLevelModel);
                 if (replacements != null && replacements.Enabled)
                 {
-                    foreach (IModel replacement in replacements.Children.Where(m => m.Enabled))
-                        replacementsToApply.Insert(0, new Override(replacement.Name, replacement, Override.MatchTypeEnum.Name));
+                    foreach (INodeModel replacement in replacements.Children.Where(m => m.Enabled))
+                        replacementsToApply.Insert(0, new ReplaceCommand(new ModelReference(replacement), replacement.Name,
+                                                                         multiple: true, ReplaceCommand.MatchType.Name));
                 }
             }
         }

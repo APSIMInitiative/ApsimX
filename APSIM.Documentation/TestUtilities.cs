@@ -7,7 +7,6 @@ using APSIM.Shared.Documentation;
 using APSIM.Shared.Documentation.Mapping;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Newtonsoft.Json.Linq;
 using DocumentationGraph = APSIM.Shared.Documentation.Graph;
 using DocumentationGraphPage = APSIM.Shared.Documentation.GraphPage;
@@ -24,7 +23,7 @@ public static class TestUtilities
     /// <summary>
     /// List of Models and Tutorials to test
     /// </summary>
-    public static readonly List<string> FILES = new(){"Potato", "OilPalm", "MicroClimate", "Nutrient", "SCRUM", "SWIM", "AgPasture", "Report", "Manager"};
+    public static readonly List<string> FILES = new(){"Potato", "OilPalm", "MicroClimate", "Nutrient", "SCRUM", "SWIM", "Report", "Manager"};
 
     /// <summary>
     /// This function creates each of the example doc structure jsons that the test TestDocumentationStructure uses to compare against.

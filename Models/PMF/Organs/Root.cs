@@ -1,29 +1,110 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Functions;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.PMF.Library;
 using Models.Soils;
 using Models.Soils.Arbitrator;
 using Newtonsoft.Json;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("UnitTests")]
 namespace Models.PMF.Organs
 {
 
     ///<summary>
-    /// The root model calculates root growth in terms of rooting depth, biomass accumulation and subsequent root length density in each soil layer.
+    /// The root model calculates root growth in terms of rooting depth, biomass accumulation and subsequent root length density in each soil layer as well as the access of soil resources (water, NO3 and NH4).
+    /// 
+    /// *NOTE: Calculations are undertaken for each rooting zone for simulations where the plant has roots in multiple spatial zones.*
+    /// 
+    /// **Soil Water Uptake**
+    /// 
+    /// The approach used for soil water uptake comes from [Meinke_Hammer_Want_1993].  A simple first order decay coefficient is used to describe the exponential decay in available soil water (ie water above the crop lower limit) over time.
+    /// ```
+    /// For each layer to the rooting depth
+    ///    AvailableSWmm = SWmm<sub>layer</sub> - LL<sub>layer</sub> x Thickness<sub>layer</sub> x LLmodifier<sub>layer</sub>
+    ///    Supply<sub>layer</sub> = Max(0.0, KL<sub>layer</sub>] x KLmodifier<sub>layer</sub> x AvailableSWmm x RootProportion<sub>layer</sub>
+    /// ```
+    /// 
+    /// where
+    /// 
+    /// Name | Description | Units
+    /// -|-|-
+    /// SWmm | The soil water content from the soil water model for a given soil layer | mm
+    /// Thickness | The width of the soil layer used within the soil water model | mm
+    /// LL | The crop lower limit obtained from SoilCrop node for the soil within the relevant Zone | mm<sup>3</sup>/mm<sup>3</sup>
+    /// KL | The first order decay soil water uptake parameter obtained from SoilCrop node for the soil within the relevant Zone | /d
+    /// LLmodifier | A function used to modify LL to account for the effect of differing root geometry (usually set to 1.0) | 0-1
+    /// KLmodifer | A function used to modifty KL to account for the effect of plant size (ie root length) on water uptake ability.| 0-1
+    /// RootProportion | The fraction of the layer occupied for roots (e.g. 0.5 if roots occupy the top half of a layer only) | 0-1
+    /// 
+    /// 
+    /// **Soil Nitrogen Uptake**
+    /// 
+    /// Nitrogen uptake uses a second order decay approach for both NO3 and NH4, as implemented in several crop models within earlier versions of APSIM (eg APSIM 7.10 and earlier).
+    /// 
+    /// ```
+    /// for each layer to the rooting depth
+    ///    NO3Supply<sub>layer</sub> = Math.Min(zone.NO3N<sub>layer</sub> * kno3 * NO3ppm<sub>layer</sub> * SWAF<sub>layer</sub> * RootProportion<sub>layer</sub>, (maxNUptake - NO3Uptake));
+    ///	   NO3Uptake += NO3Supply<sub>layer</sub>;
+    ///
+    ///    NH4Supply<sub>layer</sub> = Math.Min(zone.NH4N<sub>layer</sub> * knh4 * NH4ppm<sub>layer</sub> * SWAF<sub>layer</sub> * RootProportion<sub>layer</sub>, (maxNUptake - NH4Uptake));
+    ///	   NH4Uptake += NH4Supply<sub>layer</sub>;
+    ///	```   
+    /// 
+    /// Name | Description | Units
+    /// -|-|-
+    /// NO3 | The NO3 content from the nutrient model for a given layer | kg/ha
+    /// NO3ppm | The NO3 concentration from the nutrient model for a given layer | ppm
+    /// NH4 | The NH4 content from the nutrient model for a given layer | kg/ha
+    /// NH4ppm | The NH4 concentration from the nutrient model for a given layer | ppm
+    /// SWAF | The soil water availability factor to modify nitrogen uptake for a given layer.| 0-1
+    /// RootProportion | The fraction of the layer occupied for roots (e.g. 0.5 if roots occupy the top half of a layer only) | 0-1
+    /// maxNUptake | The maximum plant N uptake for a given day. | kg/ha/d
+    /// kno3 | The second order decay coefficient for NO3 uptake (ie uptake rate at 1 ppm). | /d/ppm
+    /// knh4 | The second order decay coefficient for NH4 uptake (ie uptake rate at 1 ppm). | /d/ppm
+    /// 
+    /// **Root Length**
+    /// 
+    /// Root length is calculated from root biomass using a value for specific root length (mm/g).  Proliferation of roots into different layers is calculated using a simple approach similar to the generalised equimarginal criterion approach used in the field of economics.  It is assumed the maximal return on a plant's investment into roots is achieved when uptake per unit root mass is uniform across the soil profile.  As similar approach is used in portfolio analysis (ie if ROI is low in one portolio, investment can be moved to a higher returning area until ROI is the same).
+    /// Daily allocation of root mass into layers is calculated as follows to provide proliferation of roots into areas of higher resource return, taking into account for previous allocation into those areas, such as near surface layers undergoing regular rewetting or below-ground capilliary fringes immediately above water tables.
+    /// 
+    /// 
+    /// ```
+    /// // First calculate a root activity for water (RAW) for current root mass within the layer
+    /// for each layer in root profile
+    ///    RAW<sub>layer</sub> = WaterUptake<sub>layer</sub> / Root.Live.Wt<sub>layer</sub> x Thickness<sub>layer</sub> x RootProportion
+    /// 
+    /// // Then use these root activity values to partition daily allocation of growth into root layers as follows:
+    /// for each layer in root profile
+    ///    DailyAllocationtoRootMass<sub>layer</sub> = TotalDailyDMAllocationToRootMass x RAW<sub>layer</sub> / sum(RAW)
+    /// ```
+    /// 
+    /// Name | Description | Units
+    /// -|-|-
+    /// RAW | The root activity for water uptake in relation to root mass | mm/g/m<sup>2</sup>
+    /// WaterUptake | The daily water uptake by the plant model for a given layer | mm
+    /// Root.Live.Wt | The live root mass within a given layer | g/m<sup>2</sup>
+    /// Thickness | The width of the soil layer used within the soil water model | mm
+    /// RootProportion | The fraction of the layer occupied for roots (e.g. 0.5 if roots occupy the top half of a layer only) | 0-1
+    /// TotalDailyDMAllocationToRootMass | The amount of daily growth provided to the root model by the organ arbitrator | g/m<sup>2</sup>
+    /// 
     ///</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.PropertyView")]
+[ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class Root : Model, IWaterNitrogenUptake, IArbitration, IOrgan, IOrganDamage, IRoot, IHasDamageableBiomass
+    public class Root : Model, IWaterNitrogenUptake, IArbitration, IOrgan, IOrganDamage, IRoot, IHasDamageableBiomass, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>Tolerance for biomass comparisons</summary>
         private double BiomassToleranceValue = 0.0000000001;
 
@@ -169,7 +250,20 @@ namespace Models.PMF.Organs
         public BiomassPoolType potentialDMAllocation { get; set; }
 
         /// <summary>Link to the soilCrop</summary>
-        public SoilCrop SoilCrop {get; private set;} = null;
+        public SoilCrop SoilCrop { get; private set; } = null;
+
+        /// <summary>Water supplied by root network to soil arbitrator for this plant instance</summary>
+        public PlantWaterOrNDelta WaterUptakeSupply { get; set; }
+
+        /// <summary>Nitrogen supplied by the root network to the soil arbitrator for this plant instance</summary>
+        public PlantWaterOrNDelta NitrogenUptakeSupply { get; set; }
+
+        /// <summary>The water uptake allocated to the plant instance by the soil arbitrator</summary>
+        public PlantWaterOrNDelta WaterTakenUp { get; set; }
+
+        /// <summary>The Nitrogen uptake allocated to the plant instance by the soil arbitrator</summary>
+        public PlantWaterOrNDelta NitrogenTakenUp { get; set; }
+
 
         /// <summary>The DM supply for retranslocation</summary>
         private double dmRetranslocationSupply = 0.0;
@@ -401,25 +495,8 @@ namespace Models.PMF.Organs
         {
             get
             {
-                double fasw = 0;
-                double TotalArea = 0;
-
-                foreach (ZoneState Z in Zones)
-                {
-                    Zone zone = this.FindInScope(Z.Name) as Zone;
-                    var soilPhysical = Z.Soil.FindChild<IPhysical>();
-                    var waterBalance = Z.Soil.FindChild<ISoilWater>();
-                    var soilCrop = Z.Soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
-                    double[] paw = APSIM.Shared.APSoil.APSoilUtilities.CalcPAWC(soilPhysical.Thickness, soilCrop.LL, waterBalance.SW, soilCrop.XF);
-                    double[] pawmm = MathUtilities.Multiply(paw, soilPhysical.Thickness);
-                    double[] pawc = APSIM.Shared.APSoil.APSoilUtilities.CalcPAWC(soilPhysical.Thickness, soilCrop.LL, soilPhysical.DUL, soilCrop.XF);
-                    double[] pawcmm = MathUtilities.Multiply(pawc, soilPhysical.Thickness);
-                    TotalArea += zone.Area;
-
-                    fasw += MathUtilities.Sum(pawmm) / MathUtilities.Sum(pawcmm) * zone.Area;
-                }
-                fasw = fasw / TotalArea;
-                return fasw;
+                // FAWS across the root system (no constraint).
+                return CalcFASW(double.MaxValue);
             }
         }
 
@@ -438,8 +515,8 @@ namespace Models.PMF.Organs
                 if (liveWt > 0)
                     foreach (ZoneState Z in Zones)
                     {
-                        var soilPhysical = Z.Soil.FindChild<IPhysical>();
-                        var waterBalance = Z.Soil.FindChild<ISoilWater>();
+                        var soilPhysical = Structure.FindChild<IPhysical>(relativeTo: Z.Soil);
+                        var waterBalance = Structure.FindChild<ISoilWater>(relativeTo: Z.Soil);
                         double[] paw = waterBalance.PAW;
                         double[] pawc = soilPhysical.PAWC;
                         Biomass[] layerLiveForZone = Z.LayerLive;
@@ -469,8 +546,8 @@ namespace Models.PMF.Organs
                 if (liveWt > 0)
                     foreach (ZoneState Z in Zones)
                     {
-                        var soilPhysical = Z.Soil.FindChild<IPhysical>();
-                        var waterBalance = Z.Soil.FindChild<ISoilWater>();
+                        var soilPhysical = Structure.FindChild<IPhysical>(relativeTo: Z.Soil);
+                        var waterBalance = Structure.FindChild<ISoilWater>(relativeTo: Z.Soil);
 
                         double[] paw = waterBalance.PAW;
                         double[] pawc = soilPhysical.PAWC;
@@ -481,6 +558,20 @@ namespace Models.PMF.Organs
 
                 return MeanWTF;
             }
+        }
+
+        /// <summary>Returns the Fraction of Available Soil Water across the root system (across zones, constrained by the specified depth)</summary>
+        public double CalcFASW(double depth)
+        {
+            double totalFASW = 0;
+            double totalArea = 0;
+            foreach (ZoneState zoneState in Zones)
+            {
+                double area = zoneState.Zone.Area;
+                totalFASW += area * SoilUtilities.CalcFASW(zoneState.Physical.Thickness, zoneState.SoilCrop.PAWmm, zoneState.SoilCrop.PAWCmm, depth);
+                totalArea += area;
+            }
+            return totalFASW / totalArea;
         }
 
         /// <summary>Gets or sets the maximum nconc.</summary>
@@ -892,7 +983,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Initialise all zones.</summary>
-        private void InitialiseZones()
+        internal void InitialiseZones()
         {
             Zones.Clear();
             Zones.Add(PlantZone);
@@ -902,14 +993,14 @@ namespace Models.PMF.Organs
 
             for (int i = 0; i < ZoneNamesToGrowRootsIn.Count; i++)
             {
-                Zone zone = this.FindInScope(ZoneNamesToGrowRootsIn[i]) as Zone;
+                Zone zone = Structure.Find<Zone>(ZoneNamesToGrowRootsIn[i]);
                 if (zone != null)
                 {
-                    Soil soil = zone.FindInScope<Soil>();
+                    Soil soil = Structure.Find<Soil>(relativeTo: zone);
                     if (soil == null)
                         throw new Exception("Cannot find soil in zone: " + zone.Name);
                     ZoneState newZone = new ZoneState(parentPlant, this, soil, ZoneRootDepths[i], ZoneInitialDM[i], parentPlant.Population, MaxNConc,
-                                                      rootFrontVelocity, maximumRootDepth, remobilisationCost);
+                                                      rootFrontVelocity, maximumRootDepth, remobilisationCost, Structure);
                     Zones.Add(newZone);
                 }
             }
@@ -1029,15 +1120,15 @@ namespace Models.PMF.Organs
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         /// <exception cref="ApsimXException">Cannot find a soil crop parameterisation for  + Name</exception>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        internal void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Soil soil = this.FindInScope<Soil>();
+            Soil soil = Structure.Find<Soil>();
             if (soil == null)
                 throw new Exception("Cannot find soil");
             PlantZone = new ZoneState(parentPlant, this, soil, 0, InitialWt, parentPlant.Population, MaxNConc,
-                                      rootFrontVelocity, maximumRootDepth, remobilisationCost);
+                                      rootFrontVelocity, maximumRootDepth, remobilisationCost, Structure);
 
-            SoilCrop = soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
+            SoilCrop = Structure.FindChild<SoilCrop>(parentPlant.Name + "Soil", relativeTo: soil, recurse: true);
             if (SoilCrop == null)
                 throw new Exception("Cannot find a soil crop parameterisation for " + parentPlant.Name);
 

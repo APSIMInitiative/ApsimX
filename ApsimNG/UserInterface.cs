@@ -1,7 +1,10 @@
 ﻿using APSIM.Shared.Utilities;
+using ApsimNG.Utility;
 using System;
 using System.IO;
+using System.Reflection.Metadata;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using UserInterface.Presenters;
 using UserInterface.Views;
@@ -14,11 +17,16 @@ namespace UserInterface
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
+        private static Mutex appMutex = null;
+        private const string appMutexName = "ApsimNGMutex";
+        private const string appPipeName = "ApsimNGPipe";
+
         [STAThread]
         public static int Main(string[] args)
         {
             try
             {
+                bool isHostingInstance = SingleInstanceCheck(args);
                 LoadTheme();
 
                 Task.Run(() => Intellisense.CodeCompletionService.Init());
@@ -34,8 +42,23 @@ namespace UserInterface
 
                 mainPresenter.Attach(mainForm, args);
                 mainForm.MainWidget.ShowAll();
+
+                PipeManager pipeManager = null;
+
+                if (isHostingInstance)
+                {
+                    pipeManager = new PipeManager(appPipeName);
+                    pipeManager.StartServer();
+                    pipeManager.ReceiveString += mainPresenter.OnNamedPipe_OpenRequest;
+                }
+
                 if (args.Length == 0 || Path.GetExtension(args[0]) != ".cs")
                     Gtk.Application.Run();
+                if (isHostingInstance)
+                {
+                    pipeManager.StopServer();
+                    appMutex.ReleaseMutex();
+                }
             }
             catch (Exception err)
             {
@@ -60,7 +83,36 @@ namespace UserInterface
                 //themeName = "Windows10Dark";
                 Environment.SetEnvironmentVariable("GTK_THEME", themeName);
             }
+        }
 
+        private static bool SingleInstanceCheck(string[] args)
+        {
+            if (!Configuration.Settings.UseExistingInstance)
+                return false;
+
+            bool mutexCreated;
+            appMutex = new Mutex(true, appMutexName, out mutexCreated);
+            bool isFirstInstance = mutexCreated || appMutex.WaitOne(0);
+            if (!isFirstInstance)
+            {
+                string filesToOpen = " ";
+                if (args != null && args.Length > 0)
+                {
+                    StringBuilder sb = new StringBuilder();
+                    for (int i = 0; i < args.Length; i++)
+                    {
+                        sb.AppendLine(args[i]);
+                    }
+                    filesToOpen = sb.ToString();
+
+                    var manager = new PipeManager(appPipeName);
+                    if (manager.Write(filesToOpen))
+                        // this exits the application                    
+                        Environment.Exit(0);
+                }
+            }
+            return isFirstInstance;
         }
     }
 }
+

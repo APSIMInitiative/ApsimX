@@ -6,7 +6,6 @@
     using global::UserInterface.Commands;
     using Interfaces;
     using Models.Core;
-    using Models.Core.ApsimFile;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -187,6 +186,7 @@
                         }
                         else
                         {
+                            Node.Create(child as INodeModel);
                             child.ResourceName = selectedModelType.ResourceString;
                             bool isUnderReplacements = false;
                             if (Folder.IsModelReplacementsFolder(model))
@@ -194,7 +194,7 @@
 
                             // Make all children that area about to be added from resource hidden and readonly.
                             bool isHidden = !isUnderReplacements;
-                            foreach (Model descendant in child.FindAllDescendants())
+                            foreach (Model descendant in child.Node.FindChildren<IModel>(recurse: true))
                             {
                                 descendant.IsHidden = isHidden;
                                 descendant.ReadOnly = isHidden;

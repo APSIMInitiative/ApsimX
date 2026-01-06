@@ -1,7 +1,6 @@
 ﻿using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using System;
@@ -372,7 +371,7 @@ namespace APSIM.Core.Tests
         public void Version164() //no this is not a typo, this is test 164
         {
             string beforeJSON = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.CoverterTest164FileBefore.apsimx");
-            var response = FileFormat.ReadFromStringAndReturnConvertState<Simulations>(beforeJSON, null, false);
+            var response = FileFormat.ReadFromStringAndReturnConvertState(beforeJSON, typeof(Simulations), null, false);
             Simulations actualModel = response.head.Model as Simulations;
             Assert.That(response.didConvert, Is.True);
 
@@ -389,7 +388,7 @@ namespace APSIM.Core.Tests
         public void Version172()
         {
             string beforeJSON = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.CoverterTest172FileBefore.apsimx");
-            var response = FileFormat.ReadFromStringAndReturnConvertState<Simulations>(beforeJSON, null, false);
+            var response = FileFormat.ReadFromStringAndReturnConvertState(beforeJSON, typeof(Simulations), null, false);
             Simulations actualModel = response.head.Model as Simulations;
             Assert.That(response.didConvert, Is.True);
 
@@ -456,7 +455,7 @@ namespace APSIM.Core.Tests
         public void TestEnsure183_Removes_GraphsFromUnderExperiment()
         {
             string beforeJSON = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.ConverterTest183FileBefore.apsimx");
-            var response = FileFormat.ReadFromStringAndReturnConvertState<Simulations>(beforeJSON, null, false);
+            var response = FileFormat.ReadFromStringAndReturnConvertState(beforeJSON, typeof(Simulations), null, false);
             Simulations actualModel = response.head.Model as Simulations;
             Assert.That(response.didConvert, Is.True);
 

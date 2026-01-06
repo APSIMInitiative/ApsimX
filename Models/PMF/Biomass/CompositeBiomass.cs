@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using Models.Core;
 using Models.PMF.Interfaces;
 using Models.PMF.Phen;
@@ -12,8 +13,12 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class CompositeBiomass : Model, IBiomass
+    public class CompositeBiomass : Model, IBiomass, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         private List<IOrganDamage> organs = null;
 
         [Link]
@@ -38,7 +43,7 @@ namespace Models.PMF
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             organs = new List<IOrganDamage>();
-            var parentPlant = this.FindAncestor<Plant>();
+            var parentPlant = Structure.FindParent<Plant>(recurse: true);
             if (parentPlant == null)
                 throw new Exception("CompositeBiomass can only be dropped on a plant.");
             foreach (var organName in OrganNames)

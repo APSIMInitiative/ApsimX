@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using Models.Core;
-using Models.Functions;
 
 namespace Models.PMF
 {
@@ -15,8 +15,11 @@ namespace Models.PMF
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IPlant))]
     [ValidParent(ParentType = typeof(BiomassArbitrator))]
-    public class PlantPartitionFractions : Model
+    public class PlantPartitionFractions : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
 
         [Link(Type = LinkType.Ancestor)]
         private Plant plant = null;
@@ -25,7 +28,7 @@ namespace Models.PMF
         private List<string> organNames = new List<string>();
 
         /// <summary> List of Child Functions to represent each organ</summary>
-        /// 
+        ///
         public IEnumerable<IFunction> ChildFunctions { get; set; }
 
         /// <summary>Dictionary containing each organs partitioning fraction</summary>
@@ -37,12 +40,12 @@ namespace Models.PMF
         [EventSubscribe("Commencing")]
         virtual protected void OnSimulationCommencing(object sender, EventArgs e)
         {
-            foreach (Organ organ in plant.FindAllChildren<Organ>())
+            foreach (Organ organ in Structure.FindChildren<Organ>(relativeTo: plant))
             {
                 organNames.Add(organ.Name + "Fraction");
             }
 
-            ChildFunctions = FindAllChildren<IFunction>().ToList();
+            ChildFunctions = Structure.FindChildren<IFunction>().ToList();
 
             int orgNum = 0;
             foreach (IFunction c in ChildFunctions)

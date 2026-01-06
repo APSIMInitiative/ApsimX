@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Office.CustomXsn;
 using Models.Core;
 using Models.Interfaces;
 using Models.Utilities;
@@ -17,8 +19,13 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Physical))]
-    public class SoilCrop : Model
+    public class SoilCrop : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
+
         /// <summary>Depth strings (mm/mm)</summary>
         [Display]
         [Summary]
@@ -37,7 +44,7 @@ namespace Models.Soils
         {
             get
             {
-                var soilPhysical = FindAncestor<IPhysical>();
+                var soilPhysical = Structure.FindParent<IPhysical>(relativeTo: this, recurse: true);
                 if (soilPhysical == null)
                     return null;
                 return MathUtilities.Multiply(LL, soilPhysical.Thickness);
@@ -71,7 +78,7 @@ namespace Models.Soils
         {
             get
             {
-                var soilPhysical = FindAncestor<IPhysical>();
+                var soilPhysical = Structure.FindParent<IPhysical>(recurse: true);
                 if (soilPhysical == null)
                     return null;
                 return SoilUtilities.CalcPAWC(soilPhysical.Thickness, LL, soilPhysical.DUL, XF);
@@ -85,7 +92,7 @@ namespace Models.Soils
         {
             get
             {
-                var soilPhysical = FindAncestor<IPhysical>();
+                var soilPhysical = Structure.FindParent<IPhysical>(recurse: true);
                 if (soilPhysical == null)
                     return null;
                 return MathUtilities.Multiply(PAWC, soilPhysical.Thickness);
@@ -98,10 +105,10 @@ namespace Models.Soils
         {
             get
             {
-                var soilPhysical = FindAncestor<IPhysical>();
+                var soilPhysical = Structure.FindParent<IPhysical>(recurse: true);
                 if (soilPhysical == null)
                     return null;
-                var water = FindInScope<Water>();
+                var water = Structure.Find<Water>();
                 if (water == null)
                     return null;
                 return SoilUtilities.CalcPAWC(soilPhysical.Thickness, LL, water.Volumetric, XF);
@@ -114,7 +121,7 @@ namespace Models.Soils
         {
             get
             {
-                var soilPhysical = FindAncestor<IPhysical>();
+                var soilPhysical = Structure.FindParent<IPhysical>(recurse: true);
                 if (soilPhysical == null)
                     return null;
 

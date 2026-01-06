@@ -41,6 +41,7 @@ namespace UserInterface.Presenters
         /// The intellisense.
         /// </summary>
         private IntellisensePresenter intellisense;
+        private Graph parentGraph;
 
         /// <summary>Attach the model and view to this presenter.</summary>
         /// <param name="model">The graph model to work with</param>
@@ -56,7 +57,7 @@ namespace UserInterface.Presenters
             intellisense = new IntellisensePresenter(seriesView as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
 
-            Graph parentGraph = series.FindAncestor<Graph>();
+            parentGraph = series.Node.FindParent<Graph>(recurse: true);
             if (parentGraph != null)
             {
                 try
@@ -168,7 +169,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                foreach (var s in series.Parent.FindAllChildren<Series>())
+                foreach (var s in series.Parent.Node.FindChildren<Series>())
                 {
                     ChangeProperty command = new ChangeProperty(s, name, value);
                     explorerPresenter.CommandHistory.Add(command);
@@ -260,7 +261,7 @@ namespace UserInterface.Presenters
                     SetModelProperty("FactorToVaryLines", this.seriesView.LineType.SelectedValue.Replace("Vary by ", ""));
             }
         }
-        
+
         /// <summary>Series marker type has been changed by the user.</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
@@ -381,6 +382,16 @@ namespace UserInterface.Presenters
         private void OnXChanged(object sender, EventArgs e)
         {
             this.SetModelProperty("XFieldName", seriesView.X.SelectedValue);
+            ChangeProperty command;
+            if (this.seriesView.XOnTop.Checked)
+            {
+                command = new ChangeProperty(parentGraph.GetAxis(AxisPosition.Top), "Title", null);
+            }
+            else
+                command = new ChangeProperty(parentGraph.GetAxis(AxisPosition.Bottom), "Title", null);
+            explorerPresenter.CommandHistory.Add(command);
+
+
         }
 
         /// <summary>Y has been changed by the user.</summary>
@@ -389,6 +400,14 @@ namespace UserInterface.Presenters
         private void OnYChanged(object sender, EventArgs e)
         {
             this.SetModelProperty("YFieldName", seriesView.Y.SelectedValue);
+            ChangeProperty command;
+            if (this.seriesView.YOnRight.Checked)
+            {
+                command = new ChangeProperty(parentGraph.GetAxis(AxisPosition.Right), "Title", null);
+            }
+            else
+                 command = new ChangeProperty(parentGraph.GetAxis(AxisPosition.Left), "Title", null);
+            explorerPresenter.CommandHistory.Add(command);
         }
 
         /// <summary>Cumulative check box has been changed by the user.</summary>

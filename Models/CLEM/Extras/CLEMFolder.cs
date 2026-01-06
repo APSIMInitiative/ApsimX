@@ -1,5 +1,6 @@
 ﻿using Models.Core;
 using System;
+using APSIM.Core;
 
 namespace Models.CLEM
 {
@@ -8,10 +9,9 @@ namespace Models.CLEM
     /// </summary>
     [ViewName("UserInterface.Views.FolderView")]
     [PresenterName("UserInterface.Presenters.FolderPresenter")]
-    [ScopedModel]
     [Serializable]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
-    public class CLEMFolder: Folder
+    public class CLEMFolder: Folder, IScopedModel
     {
     }
 }

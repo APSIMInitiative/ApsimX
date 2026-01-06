@@ -110,10 +110,10 @@ namespace Models
         /// <summary>
         /// Called when the model is deserialised.
         /// </summary>
-        public override void OnCreated(APSIM.Core.Node node)
+        public override void OnCreated()
         {
-            base.OnCreated(node);
-            if (this.FindChild<Manager>() == null)
+            base.OnCreated();
+            if (this.Node.FindChild<Manager>() == null)
             {
                 Manager script = new Manager();
                 script.Name = "Config";
@@ -121,7 +121,7 @@ namespace Models
                 Children.Insert(0, script);
             }
 
-            base.OnCreated(node);
+            base.OnCreated();
         }
 
         /// <summary>
@@ -196,7 +196,7 @@ namespace Models
         {
             get
             {
-                Manager manager = this.FindChild<Manager>();
+                Manager manager = this.Node.FindChild<Manager>();
                 return manager?.Children?.FirstOrDefault() as IGraphPanelScript;
             }
         }

@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
 namespace APSIM.Core;
@@ -24,9 +25,31 @@ public class FileFormat
 
     /// <summary>Create a simulations object by reading the specified filename.</summary>
     /// <param name="fileName">Name of the file.</param>
+    /// <param name="type">The object type to return</param>
     /// <param name="errorHandler">Error handler to call on exception</param>
     /// <param name="initInBackground">Initialise on a background thread?</param>
-    public static (Node head, bool didConvert) ReadFromFileAndReturnConvertState<T>(string fileName, Action<Exception> errorHandler = null, bool initInBackground = false)
+    /// <returns></returns>
+    public static Node ReadFromFile(string fileName, Type type, Action<Exception> errorHandler = null, bool initInBackground = false)
+    {
+        return ReadFromFileAndReturnConvertState(fileName, type, errorHandler, initInBackground).head;
+    }
+
+    /// <summary>Create a simulations object by reading the specified filename.</summary>
+    /// <param name="fileName">Name of the file.</param>
+    /// <param name="errorHandler">Error handler to call on exception</param>
+    /// <param name="initInBackground">Initialise on a background thread?</param>
+    public static (Node head, bool didConvert, JObject json) ReadFromFileAndReturnConvertState<T>(string fileName, Action<Exception> errorHandler = null, bool initInBackground = false)
+    {
+        return ReadFromFileAndReturnConvertState(fileName, typeof(T), errorHandler, initInBackground);
+    }
+
+
+    /// <summary>Create a simulations object by reading the specified filename.</summary>
+    /// <param name="fileName">Name of the file.</param>
+    /// <param name="type">The object type to return</param>
+    /// <param name="errorHandler">Error handler to call on exception</param>
+    /// <param name="initInBackground">Initialise on a background thread?</param>
+    public static (Node head, bool didConvert, JObject json) ReadFromFileAndReturnConvertState(string fileName, Type type, Action<Exception> errorHandler = null, bool initInBackground = false)
     {
         try
         {
@@ -34,7 +57,7 @@ public class FileFormat
                 throw new Exception("Cannot read file: " + fileName + ". File does not exist.");
 
             string contents = File.ReadAllText(fileName);
-            return ReadFromStringAndReturnConvertState<T>(contents, errorHandler, initInBackground, fileName);
+            return ReadFromStringAndReturnConvertState(contents, type, errorHandler, initInBackground, fileName);
         }
         catch (Exception err)
         {
@@ -49,15 +72,16 @@ public class FileFormat
     /// <param name="fileName">The optional filename where the string came from. This is required by the converter, when it needs to modify the .db file.</param>
     public static Node ReadFromString<T>(string st, Action<Exception> errorHandler = null, bool initInBackground = false, string fileName = null)
     {
-        return ReadFromStringAndReturnConvertState<T>(st, errorHandler, initInBackground, fileName).head;
+        return ReadFromStringAndReturnConvertState(st, typeof(T), errorHandler, initInBackground, fileName).head;
     }
 
     /// <summary>Convert a string (json or xml) to a model.</summary>
     /// <param name="st">The string to convert.</param>
+    /// <param name="type">The object type to return</param>
     /// <param name="errorHandler">Error handler to call on exception</param>
     /// <param name="initInBackground">Initialise on a background thread?</param>
     /// <param name="fileName">The optional filename where the string came from. This is required by the converter, when it needs to modify the .db file.</param>
-    public static (Node head, bool didConvert) ReadFromStringAndReturnConvertState<T>(string st, Action<Exception> errorHandler = null, bool initInBackground = false, string fileName = null)
+    internal static (Node head, bool didConvert, JObject json) ReadFromStringAndReturnConvertState(string st, Type type, Action<Exception> errorHandler = null, bool initInBackground = false, string fileName = null)
     {
         // Run the converter.
         var converter = Converter.DoConvert(st, -1, fileName);
@@ -67,17 +91,22 @@ public class FileFormat
             TypeNameHandling = TypeNameHandling.Auto,
             DateParseHandling = DateParseHandling.None
         };
-        INodeModel newModel = JsonConvert.DeserializeObject<T>(converter.Root.ToString(), settings) as INodeModel;
+        INodeModel newModel = JsonConvert.DeserializeObject(converter.Root.ToString(), type, settings) as INodeModel;
 
         var head = Node.Create(newModel, errorHandler, initInBackground, fileName);
-        return (head, converter.DidConvert);
+        return (head, converter.DidConvert, converter.Root);
     }
 
     /// <summary>Convert a model to a string (json).</summary>
-    /// <param name="model">The model to serialise.</param>
+    /// <param name="node">The model to serialise.</param>
     /// <returns>The json string.</returns>
-    public static string WriteToString(object model)
+    public static string WriteToString(Node node)
     {
+        // Let models know a deserialisation is about to occur
+        foreach (var n in node.Walk())
+            if (n.Model is ICreatable creatableModel)
+                creatableModel.OnSerialising();
+
         JsonSerializer serializer = new JsonSerializer()
         {
             DateParseHandling = DateParseHandling.None,
@@ -89,7 +118,7 @@ public class FileFormat
         using (StringWriter s = new StringWriter())
         using (var writer = new JsonTextWriter(s))
         {
-            serializer.Serialize(writer, model, model.GetType());
+            serializer.Serialize(writer, node.Model, node.Model.GetType());
             json = s.ToString();
         }
         return json;
@@ -113,7 +142,7 @@ public class FileFormat
             property.ShouldSerialize = instance =>
             {
                 var attributes = member.GetCustomAttributes();
-                bool propertyHasLinkOrJsonIgnore = attributes.Any(a => a.GetType().Name == "Link" || a.GetType().Name == "JsonIgnore");
+                bool propertyHasLinkOrJsonIgnore = attributes.Any(a => a.GetType().Name == "LinkAttribute" || a.GetType().Name == "JsonIgnoreAttribute");
                 if (propertyHasLinkOrJsonIgnore)
                     return false;
 
@@ -126,11 +155,12 @@ public class FileFormat
                 if (!(member is PropertyInfo property) ||
                     !property.GetMethod.IsPublic ||
                     !property.CanWrite ||
+                    property.PropertyType.Name == "IStructure" ||
                     property.SetMethod.IsPrivate)
                     return false;
 
                 // If a memberinfo has a description attribute serialise it.
-                bool propertyHasDescription = attributes.Any(a => a.GetType().Name == "Description");
+                bool propertyHasDescription = attributes.Any(a => a.GetType().Name == "DescriptionAttribute");
                 if (propertyHasDescription)
                     return true;
 

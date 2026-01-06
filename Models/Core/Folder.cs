@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Core;
 
 namespace Models.Core
 {
@@ -7,10 +8,9 @@ namespace Models.Core
     /// </summary>
     [ViewName("UserInterface.Views.FolderView")]
     [PresenterName("UserInterface.Presenters.FolderPresenter")]
-    [ScopedModel]
     [Serializable]
     [ValidParent(DropAnywhere = true)]
-    public class Folder : Model
+    public class Folder : Model, IScopedModel
     {
         /// <summary>Show in the documentation</summary>
         /// <remarks>
@@ -48,9 +48,11 @@ namespace Models.Core
             IModel root = model;
             if (model.Parent != null)
                 //Otherwise look for the simulations model
-                root = model.FindAncestor<Simulations>();
+                root = model.Node.FindParent<Simulations>(recurse: true);
 
-            Folder replacements = root?.FindChild<Folder>("Replacements");
+            Folder replacements = null;
+            if (root != null)
+                replacements = model.Node.FindChild<Folder>("Replacements", relativeTo: root as INodeModel);
             if (IsModelReplacementsFolder(replacements))
                 return replacements;
             else
@@ -60,7 +62,7 @@ namespace Models.Core
         /// <summary>Returns true if this folder is a child of the root Simulations model, and has the name Replacements.</summary>
         public static Folder IsUnderReplacementsFolder(IModel model)
         {
-            Folder replacements = model.FindAncestor<Folder>("Replacements");
+            Folder replacements = model.Node.FindParent<Folder>("Replacements", recurse: true);
             if (IsModelReplacementsFolder(replacements))
                 return replacements;
             else

@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using APSIM.Core;
+using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Models.Functions;
 using Models.Soils;
 
@@ -12,8 +12,15 @@ namespace Models;
 /// <summary>This model is responsible for applying fertiliser.</summary>
 [Serializable]
 [ValidParent(ParentType = typeof(Zone))]
-public class Fertiliser : Model
+public class Fertiliser : Model, IStructureDependency
 {
+    /// <summary>Structure instance supplied by APSIM.core.</summary>
+    [field: NonSerialized]
+    public IStructure Structure { private get; set; }
+
+
+    private double[] cumThickness;
+
     /// <summary>The soil</summary>
     [Link] private readonly IPhysical physical = null;
 
@@ -56,18 +63,37 @@ public class Fertiliser : Model
             AddFertiliserSoluteSpecToArray(fertiliserType.Solute5Name, fertiliserType.Solute5Fraction, solutesToApply);
             AddFertiliserSoluteSpecToArray(fertiliserType.Solute6Name, fertiliserType.Solute6Fraction, solutesToApply);
 
-            var newPool = new FertiliserPool(this, summary, fertiliserType, solutesToApply, physical.Thickness,
-                                             amount, depth, depthBottom, doOutput);
-            var poolNode = Node.AddChild(newPool);
-
-            // find and clone fertiliser release function (child of FertiliserType) so that the release rate function
-            // can hold state that is specific to this fertiliser application
-            var releaseRate = fertiliserType.FindChild<IFunction>("Release");
+            // find fertiliser release function (child of FertiliserType)
+            var releaseRate = Structure.FindChild<IFunction>("Release", relativeTo: fertiliserType);
             if (releaseRate == null)
                 throw new Exception($"Cannot find a release rate function for fertiliser type: {fertiliserType.Name}");
-            releaseRate = releaseRate.Clone();
-            Structure.Add(releaseRate, newPool);
-            newPool.SetReleaseFunction(releaseRate);
+
+            if (releaseRate is Constant c && c.FixedValue == 1)
+            {
+                cumThickness ??= SoilUtilities.ToCumThickness(physical.Thickness);
+
+                // short circuit creating a fertiliser pool - quicker.
+                FertiliserPool.Apply(amount, depth, depthBottom, cumThickness, solutesToApply,
+                                     summary: doOutput ? summary : null,
+                                     fertiliser: this,
+                                     fertiliserTypeName: type);
+                NitrogenApplied += amount;
+            }
+            else
+            {
+                var newPool = new FertiliserPool(this, summary, fertiliserType, solutesToApply, physical.Thickness,
+                                                amount, depth, depthBottom, doOutput);
+                Node.AddChild(newPool);
+
+                // Clone fertiliser release function (child of FertiliserType) so that the release rate function
+                // can hold state that is specific to this fertiliser application
+
+                var releaseRateModel = releaseRate as IModel;
+                releaseRateModel = releaseRateModel.Clone();
+                newPool.Node.AddChild(releaseRateModel as INodeModel);
+                Apsim.ReconnectLinksAndEvents(releaseRateModel);
+                newPool.SetReleaseFunction(releaseRate);
+            }
         }
     }
 
@@ -106,7 +132,7 @@ public class Fertiliser : Model
 
             // Remove pools that are empty.
             if (pool.Amount == 0)
-                Structure.Delete(pool);
+                pool.Node.Parent.RemoveChild(pool);
         }
     }
 

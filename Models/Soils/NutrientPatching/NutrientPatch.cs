@@ -5,7 +5,6 @@ using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Models.Soils.Nutrients;
 using Models.Surface;
 
@@ -39,7 +38,8 @@ namespace Models.Soils.NutrientPatching
         /// <summary>Constructor.</summary>
         /// <param name="soilThicknesses">Soil thicknesses (mm).</param>
         /// <param name="nutrientPatchManager">The nutrient patch manager.</param>
-        public NutrientPatch(double[] soilThicknesses, NutrientPatchManager nutrientPatchManager)
+        /// <param name="structure">Structure instance</param>
+        public NutrientPatch(double[] soilThicknesses, NutrientPatchManager nutrientPatchManager, IStructure structure)
         {
             soilThickness = soilThicknesses;
             patchManager = nutrientPatchManager;
@@ -49,40 +49,42 @@ namespace Models.Soils.NutrientPatching
             Nutrient = simulations.Children[0] as Nutrient;
             Nutrient.IsHidden = true;
 
-            CreateSolutes(Nutrient, (patchManager as IModel).FindAncestor<Soil>().FindAllChildren<Solute>());
+            var soil = structure.FindParent<Soil>(relativeTo: patchManager, recurse: true);
+            CreateSolutes(Nutrient, structure.FindChildren<Solute>(relativeTo: soil), structure);
 
             // Find all solutes.
-            foreach (ISolute solute in Nutrient.FindAllChildren<ISolute>())
+            foreach (ISolute solute in structure.FindChildren<ISolute>(relativeTo: Nutrient))
                 solutes.Add(solute.Name, solute);
-            lignin = Nutrient.FindInScope<OrganicPool>("FOMLignin");
+            lignin = structure.Find<OrganicPool>("FOMLignin", relativeTo: Nutrient);
             if (lignin == null)
                 throw new Exception("Cannot find lignin pool in the nutrient model.");
-            cellulose = Nutrient.FindInScope<OrganicPool>("FOMCellulose");
+            cellulose = structure.Find<OrganicPool>("FOMCellulose", relativeTo: Nutrient);
             if (cellulose == null)
                 throw new Exception("Cannot find cellulose pool in the nutrient model.");
-            carbohydrate = Nutrient.FindInScope<OrganicPool>("FOMCarbohydrate");
+            carbohydrate = structure.Find<OrganicPool>("FOMCarbohydrate", relativeTo: Nutrient);
             if (carbohydrate == null)
                 throw new Exception("Cannot find carbohydrate pool in the nutrient model.");
         }
 
         /// <summary>Copy constructor.</summary>
-        public NutrientPatch(NutrientPatch from)
+        public NutrientPatch(NutrientPatch from, IStructure structure)
         {
             soilThickness = from.soilThickness;
             patchManager = from.patchManager;
             Nutrient = Apsim.Clone(from.Nutrient) as Nutrient;
             Nutrient.Name = $"Nutrient{patchManager.NumPatches}";
-            Structure.Add(Nutrient, from.Nutrient.Parent);
+            from.Nutrient.Parent.Node.AddChild(Nutrient);
+            Apsim.ReconnectLinksAndEvents(Nutrient);
 
             // Find all solutes.
-            foreach (ISolute solute in Nutrient.FindAllChildren<ISolute>())
+            foreach (ISolute solute in structure.FindChildren<ISolute>(relativeTo: Nutrient))
                 solutes.Add(solute.Name, solute);
             lignin = from.lignin;
             cellulose = from.cellulose;
             carbohydrate = from.carbohydrate;
         }
 
-        private void CreateSolutes(IModel parent, IEnumerable<Solute> solutes)
+        private void CreateSolutes(Nutrient nutrient, IEnumerable<Solute> solutes, IStructure structure)
         {
             foreach (Solute solute in solutes)
             {
@@ -91,8 +93,7 @@ namespace Models.Soils.NutrientPatching
                 newSolute.Thickness = solute.Thickness;
                 newSolute.InitialValues = solute.InitialValues;
                 newSolute.InitialValuesUnits = solute.InitialValuesUnits;
-                newSolute.Parent = parent;
-                parent.Children.Add(newSolute);
+                nutrient.AddSolute(newSolute);
             }
         }
 

@@ -3,7 +3,6 @@
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
-    using Models.Core.ApsimFile;
     using Models.Core.Run;
     using Models.Factorial;
     using Models.Storage;
@@ -145,7 +144,7 @@
                 Assert.That(files.Count(), Is.EqualTo(1));
                 string file = files.First();
                 var sims = FileFormat.ReadFromFile<Simulations>(file).Model as Simulations;
-                Assert.That(sims.FindByPath("[Manager].Script.X").Value, Is.EqualTo("1"));
+                Assert.That(sims.Node.Get("[Manager].Script.X"), Is.EqualTo("1"));
             }
             finally
             {
