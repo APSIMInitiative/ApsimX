@@ -106,7 +106,7 @@ namespace UnitTests
             
             //Check Merge information
             //
-            string[] mergeName = [""];
+            string[] mergeName = ["Simulation1"];
             string[] mergeDate = ["2000-01-01"];
             string[] mergeColumn = ["ValueWithSpace"];
             string[] mergeValue1 = ["10"];
@@ -125,7 +125,7 @@ namespace UnitTests
 
             //Check Zeros information
             //
-            string[] zeroName = [""];
+            string[] zeroName = ["Simulation1"];
             string[] zeroColumn = ["Wheat.Grain.Wt"];
             string[] zeroDate = ["2000-01-01"];
 
