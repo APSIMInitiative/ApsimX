@@ -188,6 +188,7 @@ namespace Models.PreSimulationTools.ObservationsInfo
         /// <returns>True if can be merged, false if cannot</returns>
         private static bool CanMergeRows(DataRow row, DataRow newRow, string column)
         {
+            return false;
             if (!string.IsNullOrEmpty(row[column].ToString()))
             {
                 if (!Observations.RESERVED_COLUMNS.Contains(column) && !string.IsNullOrEmpty(newRow[column].ToString()))
