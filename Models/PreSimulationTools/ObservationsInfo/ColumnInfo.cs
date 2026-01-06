@@ -188,7 +188,7 @@ namespace Models.PreSimulationTools.ObservationsInfo
         /// </summary>
         /// <param name="columnName">The name of the column</param>
         /// <returns>True if it could be an APSIM variable, false if it cant</returns>
-        private static bool NameIsAPSIMFormat(string columnName)
+        public static bool NameIsAPSIMFormat(string columnName)
         {
             if (columnName.Contains('.'))
                 return true;
@@ -202,7 +202,7 @@ namespace Models.PreSimulationTools.ObservationsInfo
         /// <param name="columnName">The name to match</param>
         /// <param name="sims">Reference to Simulations</param>
         /// <returns>Returns null if the name doesn't match, or a VariableComposite reference if it was found.</returns>
-        private static VariableComposite NameMatchesAPSIMModel(string columnName, Simulations sims)
+        public static VariableComposite NameMatchesAPSIMModel(string columnName, Simulations sims)
         {
             string nameWithoutBrackets = columnName;
             //remove any characters between ( and ) as these are often layers of a model

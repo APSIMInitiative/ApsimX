@@ -28,6 +28,9 @@ namespace Models.PreSimulationTools.ObservationsInfo
         /// <summary>The value in the row trying to be merged in</summary>
         public string Value2;
 
+        /// <summary>The value in the row trying to be merged in</summary>
+        public string Difference;
+
         /// <summary>The file that the merging row came from</summary>
         public string File;
 
@@ -45,6 +48,7 @@ namespace Models.PreSimulationTools.ObservationsInfo
             newTable.Columns.Add("Column");
             newTable.Columns.Add("Value1");
             newTable.Columns.Add("Value2");
+            newTable.Columns.Add("Difference");
             newTable.Columns.Add("File");
 
             if (data == null)
@@ -58,6 +62,7 @@ namespace Models.PreSimulationTools.ObservationsInfo
                 row["Column"] = info.Column;
                 row["Value1"] = info.Value1;
                 row["Value2"] = info.Value2;
+                row["Difference"] = info.Difference;
                 row["File"] = info.File;
                 newTable.Rows.Add(row);
             }
@@ -66,7 +71,7 @@ namespace Models.PreSimulationTools.ObservationsInfo
                 newTable.Columns[i].ReadOnly = true;
 
             DataView dv = newTable.DefaultView;
-            dv.Sort = "Name asc";
+            dv.Sort = "Column asc";
 
             return dv.ToTable();
         }
@@ -118,6 +123,7 @@ namespace Models.PreSimulationTools.ObservationsInfo
                 {
                     foreach (string column in columns)
                     {
+                        bool isApsimVariable = ColumnInfo.NameIsAPSIMFormat(column);
                         if (!string.IsNullOrEmpty(row[column].ToString()))
                         {
                             bool merged = false;
@@ -125,13 +131,14 @@ namespace Models.PreSimulationTools.ObservationsInfo
                             {
                                 if (!merged)
                                 {
-                                    if (CanMergeRows(row, newRow, column) < 0.25)
+                                    if (CanMergeRows(row, newRow, column))
                                     {
                                         newRow[column] = row[column];
                                         merged = true;
                                     }
                                     else
                                     {
+                                        double difference = PercentDifferent(newRow[column].ToString(), row[column].ToString()) * 100;
                                         MergeInfo info = new MergeInfo();
                                         info.Name = item.simulation.ToString();
                                         info.Date = null;
@@ -141,7 +148,9 @@ namespace Models.PreSimulationTools.ObservationsInfo
                                         info.Value1 = newRow[column].ToString();
                                         info.Value2 = row[column].ToString();
                                         info.File = newRow["_Filename"].ToString();
-                                        infos.Add(info);
+                                        info.Difference = difference.ToString("F2") + "%";
+                                        if (isApsimVariable)
+                                            infos.Add(info);
                                     }
                                 }
                             }
@@ -176,36 +185,57 @@ namespace Models.PreSimulationTools.ObservationsInfo
         /// <param name="row">The row to combine into</param>
         /// <param name="newRow">The row to combine</param>
         /// <param name="column">The column we are reading/writing from</param>
-        /// <returns>Returns the percentage difference between values, 0 if equal, 1 if string mismatch, 0-1 for double mismatch.</returns>
-        private static double CanMergeRows(DataRow row, DataRow newRow, string column)
+        /// <returns>True if can be merged, false if cannot</returns>
+        private static bool CanMergeRows(DataRow row, DataRow newRow, string column)
         {
             if (!string.IsNullOrEmpty(row[column].ToString()))
             {
                 if (!Observations.RESERVED_COLUMNS.Contains(column) && !string.IsNullOrEmpty(newRow[column].ToString()))
                 {
-                    bool isDouble1 = double.TryParse(newRow[column].ToString(), out double existing);
-                    bool isDouble2 = double.TryParse(row[column].ToString(), out double other);
-                    if (isDouble1 && isDouble2)
-                    {
-                        if (!MathUtilities.FloatsAreEqual(existing, other))
-                        {
-                            double percent = existing / other;
-                            if (existing > other)
-                                percent = other / existing;
-                            return 1 - percent;
-                        }
-                        else
-                            return 0;
-                    }
-                    else if (newRow[column].ToString() != row[column].ToString())
-                    {
-                        return 1;
-                    }
-
+                    double difference = PercentDifferent(newRow[column].ToString(), row[column].ToString());
+                    if (MathUtilities.FloatsAreEqual(difference, 0))
+                        return true;
+                    else
+                        return false;
                 }
             }
-            return 0;
+            return true;
+        }
+
+        /// <summary>
+        /// Compares two cell values and if they are the same, with checking for double precision errors 
+        /// </summary>
+        /// <param name="value1">First value</param>
+        /// <param name="value2">Second value</param>
+        /// <returns>Returns the percentage difference between values, 0 if equal, 1 if string mismatch, 0-1 for double mismatch.</returns>
+        private static double PercentDifferent(string value1, string value2)
+        {
+            bool isDouble1 = double.TryParse(value1, out double existing);
+            bool isDouble2 = double.TryParse(value2.ToString(), out double other);
+            if (isDouble1 && isDouble2)
+            {
+                if (!MathUtilities.FloatsAreEqual(existing, other))
+                {
+                    double percent = existing / other;
+                    if (existing > other)
+                        percent = other / existing;
+                    return 1 - percent;
+                }
+                else
+                    return 0;
+            }
+            else if (value1 != value2)
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
         }
     }
+
+
+    
 
 }
