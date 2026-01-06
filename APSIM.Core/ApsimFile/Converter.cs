@@ -7250,11 +7250,41 @@ internal class Converter
     }
 
     /// <summary>
+    /// Change manager scripts:
+    ///      Models.Core.ApsimFile.Structure.Add(newZone, simulation);
+    /// to
+    ///      simulation.Node.AddChild(newZone);
+    /// and remove:   using Models.Core.ApsimFile;
+    /// <param name="root">Root json object.</param>
+    /// <param name="_">Unused filename.</param>
+    private static void UpgradeToVersion208(JObject root, string _)
+    {
+        const string pattern =
+            @"Models\.Core\.ApsimFile\.Structure\.Add\((?<arg1>[\w\d_]+),\s*(?<arg2>[\w\d_]+)\)";
+        foreach (var manager in JsonUtilities.ChildManagers(root))
+        {
+            var changed = false;
+            manager.ReplaceRegex(pattern, match =>
+            {
+                changed = true;
+
+                string arg1 = match.Groups["arg1"].ToString();
+                string arg2 = match.Groups["arg2"].ToString();
+                return $"{arg2}.Node.AddChild({arg1})";
+            });
+            if (changed)
+                manager.Save();
+            if (manager.Replace("using Models.Core.ApsimFile;", ""))
+                manager.Save();
+        }
+    }
+
+    /// <summary>
     /// Perform necessary cultivar path updates following waterlogging modifications for the Maize, Canola and Soybean models.
     /// </summary>
     /// <param name="root">Root json token.</param>
     /// <param name="name">File name.</param>
-    private static void UpgradeToVersion208(JObject root, string name)
+    private static void UpgradeToVersion209(JObject root, string name)
     {
         List<(string, string)> maizeUpadtes =
         [
@@ -7305,5 +7335,4 @@ internal class Converter
             return string.Join('.', [$"[{plant}]", organ, .. parts[1..]]);
         }
     }
-
 }
