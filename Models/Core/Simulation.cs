@@ -35,7 +35,12 @@ namespace Models.Core
         [Link(IsOptional = true)]
         private IClock clock = null;
 
+        [Link]
+        private DataStore datastore = null;
+
         private IReportsStatus reportStatus = null;
+
+        private Metadata metadata = null;
 
         /// <summary>Invoked when simulation is about to commence.</summary>
         public event EventHandler Commencing;
@@ -202,6 +207,8 @@ namespace Models.Core
                 // Resolve all links
                 links.Resolve(this, true, throwOnFail: true);
 
+                metadata = new Metadata(this);
+
                 StoreFactorsInDataStore();
 
                 events.Publish("SubscribeToEvents", new object[] { this, EventArgs.Empty });
@@ -351,11 +358,11 @@ namespace Models.Core
             }
         }
 
-                /// <summary>Called when [Sowing] is broadcast</summary>
+        /// <summary>Called when [Sowing] is broadcast</summary>
         [EventSubscribe("Sowing")]
         protected void OnSowing(object sender, EventArgs e)
         {
-            StoreFactorsInDataStore();
+            metadata.OnSowing(sender, e);
             return;
         }
     }

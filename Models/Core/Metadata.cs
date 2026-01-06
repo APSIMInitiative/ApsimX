@@ -1,6 +1,7 @@
-
+using APSIM.Core;
 using Models.Storage;
 using System;
+using System.Data;
 
 namespace Models.Core
 {
@@ -9,12 +10,31 @@ namespace Models.Core
     /// </summary>
     public class Metadata
     {
-        private IDataStore datastore = null;
+        private Simulation simulation = null;
+
+        private string catergory;
+
+        private string model;
 
         /// <summary></summary>
-        public Metadata(IDataStore datastore)
+        public Metadata(Simulation simulation)
         {
-            this.datastore = datastore;
+            this.simulation = simulation;
+        }
+
+        /// <summary></summary>
+        public void Save()
+        {
+            DataStore datastore = simulation.Node.FindInScope<DataStore>();
+            if (datastore != null)
+            {
+                var table = new DataTable("_Metadata");
+                table.Columns.Add("catergory", typeof(string));
+                table.Columns.Add("model", typeof(string));
+
+                datastore.Writer.WriteTable(table, false);
+            }
+            return;
         }
 
         /// <summary></summary>

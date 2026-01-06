@@ -10,11 +10,12 @@ namespace Models.Storage
 {
     internal class CleanCommand : IRunnable
     {
-        private static readonly string[] otherTablesToClean = new string[3]
+        private static readonly string[] otherTablesToClean = new string[4]
         {
             "_Messages",
             "_Factors",
-            "_InitialConditions"
+            "_InitialConditions",
+            "_Metadata"
         };
 
         private DataStoreWriter writer;
