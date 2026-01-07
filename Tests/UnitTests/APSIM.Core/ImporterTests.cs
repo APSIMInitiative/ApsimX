@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using APSIM.Numerics;
 using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Utilities;
@@ -430,16 +431,61 @@ namespace APSIM.Core.Tests
             var importer = new Importer();
             Simulations simulations = importer.CreateSimulationsFromXml(xml, e => Assert.Fail());
 
-            foreach(Solute solute in simulations.Node.FindChildren<Solute>(recurse: true))
+            foreach (Solute solute in simulations.Node.FindChildren<Solute>(recurse: true))
             {
                 Assert.That(solute.Thickness, Is.Not.Null);
                 Assert.That(MathUtilities.Sum(solute.kgha).Equals(0));
             }
 
-            foreach(WaterBalance water in simulations.Node.FindChildren<WaterBalance>(recurse: true))
+            foreach (WaterBalance water in simulations.Node.FindChildren<WaterBalance>(recurse: true))
             {
                 Assert.That(water.Thickness, Is.Not.Null);
             }
+        }
+
+        [Test]
+        public void EnsureXMLToModelWorks()
+        {
+            var xml = "<clock>" +
+                      "  <start_date type=\"date\">01/01/1990</start_date>" +
+                      "  <end_date type=\"date\">31/12/2000</end_date>" +
+                      "</clock>";
+
+            var clock = Importer.StringToModel(xml) as Clock;
+            Assert.That(clock, Is.Not.Null);
+            Assert.That(clock.StartDate, Is.EqualTo(new DateTime(1990, 1, 1)));
+            Assert.That(clock.EndDate, Is.EqualTo(new DateTime(2000, 12, 31)));
+            Assert.That(clock.Node.Compiler, Is.Not.Null);
+        }
+
+        /// <summary>When a model is created from an old soil from APSIM 7.10, make sure an InitWater and Sample is added.</summary>
+        [Test]
+        public void ImporterTests_EnsureAPSOILSoilHasInitWaterAdded()
+        {
+            Simulation simulation = new Simulation();
+            Node.Create(simulation);
+            Zone zone = new Zone();
+            string soilXml = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.StructureTestsAPSoilSoil.xml");
+            var soil = Importer.StringToModel(soilXml) as Soil;
+
+            var modelTypesInSoil = soil.Children.Select(m => m.GetType());
+            Assert.That(modelTypesInSoil, Does.Contain(typeof(Water)));
+            Assert.That(modelTypesInSoil.Count(m => m == typeof(Solute)), Is.EqualTo(3));
+        }
+
+        [Test]
+        public void ImporterTests_HandleBadStringGracefully()
+        {
+            Simulation simulation = new Simulation()
+            {
+                ReadOnly = true
+            };
+            Node.Create(simulation);
+
+            string xml = "INVALID STRING";
+
+            Exception err = Assert.Throws<Exception>(() => Importer.StringToModel(xml));
+            Assert.That(err.Message, Is.EqualTo("Cannot add model. Invalid model being added."));
         }
     }
 }

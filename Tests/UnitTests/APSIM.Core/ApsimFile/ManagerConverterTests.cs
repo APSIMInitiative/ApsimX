@@ -2,7 +2,6 @@
 {
     using APSIM.Core;
     using APSIM.Shared.Utilities;
-    using Models.Core.ApsimFile;
     using Newtonsoft.Json.Linq;
     using NUnit.Framework;
     using System;

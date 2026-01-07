@@ -2,7 +2,6 @@
 {
     using Presenters;
     using Models.Core;
-    using Models.Core.ApsimFile;
     using Interfaces;
     using System;
     using APSIM.Core;
