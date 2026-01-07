@@ -106,11 +106,11 @@ namespace UnitTests
             
             //Check Merge information
             //
-            string[] mergeName = ["Simulation1"];
-            string[] mergeDate = ["2000-01-01"];
-            string[] mergeColumn = ["ValueWithSpace"];
-            string[] mergeValue1 = ["10"];
-            string[] mergeValue2 = ["1000"];
+            string[] mergeName = ["Simulation1", "Sim2"];
+            string[] mergeDate = ["2000-01-01", "2000-01-02"];
+            string[] mergeColumn = ["Wheat.Grain.Wt", "Wheat.Grain.N"];
+            string[] mergeValue1 = ["0", "20"];
+            string[] mergeValue2 = ["1000", "20"];
             
             for (int i = 0; i < observations.MergeData.Count; i++)
             {
