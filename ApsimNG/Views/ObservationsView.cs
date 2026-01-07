@@ -45,6 +45,7 @@ namespace UserInterface.Views
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ObservationsView.glade");
 
             instructions = (Label)builder.GetObject("label1");
+            instructions.Wrap = true;
             notebook = (Notebook)builder.GetObject("notebook1");
 
             PropertyView = new PropertyView(owner);
@@ -74,7 +75,7 @@ namespace UserInterface.Views
             Rectangle bounds = GtkUtilities.GetBorderOfRightHandView(owner);
             Paned paned = (Paned)builder.GetObject("vpaned1");
             paned = (Paned)builder.GetObject("vpaned1");
-            paned.Position = (int)Math.Round(bounds.Width * 0.75);
+            paned.Position = (int)Math.Round(bounds.Width * 0.6);
 
             mainWidget = (Widget)builder.GetObject("viewport1");
             notebook.SwitchPage += OnSwitchPage;

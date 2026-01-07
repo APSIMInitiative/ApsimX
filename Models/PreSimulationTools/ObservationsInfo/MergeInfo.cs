@@ -48,6 +48,7 @@ namespace Models.PreSimulationTools.ObservationsInfo
             newTable.Columns.Add("Column");
             newTable.Columns.Add("Value1");
             newTable.Columns.Add("Value2");
+            newTable.Columns.Add("Order");
             newTable.Columns.Add("Difference");
             newTable.Columns.Add("File");
 
@@ -62,7 +63,8 @@ namespace Models.PreSimulationTools.ObservationsInfo
                 row["Column"] = info.Column;
                 row["Value1"] = info.Value1;
                 row["Value2"] = info.Value2;
-                row["Difference"] = info.Difference;
+                row["Order"] = info.Difference;
+                row["Difference"] = Convert.ToDouble(info.Difference * 100).ToString("F2") + "%";
                 row["File"] = info.File;
                 newTable.Rows.Add(row);
             }
@@ -71,11 +73,10 @@ namespace Models.PreSimulationTools.ObservationsInfo
                 newTable.Columns[i].ReadOnly = true;
 
             DataView dv = newTable.DefaultView;
-            dv.Sort = "Difference desc";
+            dv.Sort = "Order desc";
 
-            newTable = dv.ToTable();
-            foreach (DataRow row in newTable.Rows)
-                row["Difference"] = Convert.ToDouble(row["Difference"]).ToString("F2") + "%";
+            newTable = dv.ToTable();            
+            newTable.Columns.Remove("Order");
 
             return newTable;
         }
@@ -142,7 +143,6 @@ namespace Models.PreSimulationTools.ObservationsInfo
                                     }
                                     else
                                     {
-                                        double difference = PercentDifferent(newRow[column].ToString(), row[column].ToString()) * 100;
                                         MergeInfo info = new MergeInfo();
                                         info.Name = item.simulation.ToString();
                                         info.Date = null;
@@ -152,7 +152,7 @@ namespace Models.PreSimulationTools.ObservationsInfo
                                         info.Value1 = newRow[column].ToString();
                                         info.Value2 = row[column].ToString();
                                         info.File = newRow["_Filename"].ToString();
-                                        info.Difference = difference;
+                                        info.Difference = PercentDifferent(newRow[column].ToString(), row[column].ToString());
                                         if (isApsimVariable)
                                             infos.Add(info);
                                     }
@@ -192,15 +192,18 @@ namespace Models.PreSimulationTools.ObservationsInfo
         /// <returns>True if can be merged, false if cannot</returns>
         private static bool CanMergeRows(DataRow row, DataRow newRow, string column)
         {
-            if (!string.IsNullOrEmpty(row[column].ToString()))
+            if (!string.IsNullOrEmpty(row[column].ToString()) && !string.IsNullOrEmpty(newRow[column].ToString()))
             {
-                if (!Observations.RESERVED_COLUMNS.Contains(column) && !string.IsNullOrEmpty(newRow[column].ToString()))
+                if (!Observations.RESERVED_COLUMNS.Contains(column) && column != "Clock.Today")
                 {
+                    return false;
+                    /*
                     double difference = PercentDifferent(newRow[column].ToString(), row[column].ToString());
                     if (MathUtilities.FloatsAreEqual(difference, 0))
                         return true;
                     else
                         return false;
+                    */
                 }
             }
             return true;
