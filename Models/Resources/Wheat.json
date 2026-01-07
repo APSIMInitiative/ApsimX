@@ -6,7 +6,6 @@
   "Children": [
     {
       "$type": "Models.PMF.Plant, Models",
-      "PlantType": "Wheat",
       "Name": "Wheat",
       "ResourceName": "WinterCereal",
       "Children": [
@@ -20,8 +19,8 @@
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
-        },        
-		{
+        },
+        {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
           "Name": "Cultivars",
@@ -58,7 +57,6 @@
                   "Command": [
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3.8423212708469157",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100.0",
-                    "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.7",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.6",
                     "[Phenology].CAMP.FLNparams.MinLN = 8.15781757053076",
                     "[Phenology].CAMP.FLNparams.PpLN = 3.6074343511019427",
@@ -79,7 +77,6 @@
                   "Command": [
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.006727231500210627",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100.0",
-                    "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.7",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.6",
                     "[Phenology].CAMP.FLNparams.MinLN = 8.25262475446035",
                     "[Phenology].CAMP.FLNparams.PpLN = 7.552256317837019",
@@ -182,17 +179,6 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 80",
-                    "[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 1600",
-                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.051",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 26",
-                    "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.5",
-                    "[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 0,0,0,0,4,7,12,20",
-                    "[Grain].MaximumNConc.FixedValue = 0.025",
-                    "[Grain].MaxNConcDailyGrowth.FixedValue = 0.025",
-                    "[Leaf].ExtinctionCoeff.DevelopmentFactor.XYPairs.Y = 1,1,1,1,1.4",
-                    "[Leaf].CohortParameters.MinimumNConc.XYPairs.Y = 0.01,0.008, 0.008,0.008, 0.008, 0.008",
-                    "[Stem].MinimumNConc.FixedValue = 0.006",
-                    "[Spike].DMRetranslocationFactor.ReproductiveGrowth.DMRetranslocationFactor.FixedValue = 0.05",
                     "[Phenology].CAMP.FLNparams.MinLN = 9.0",
                     "[Phenology].CAMP.FLNparams.PpLN = 0.0",
                     "[Phenology].CAMP.FLNparams.VrnLN = 0.0",
@@ -380,10 +366,6 @@
                   "Command": [
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 105.0",
-                    "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.75",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 26",
-                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.045",
-                    "[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 3000",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.33",
                     "[Phenology].CAMP.FLNparams.MinLN = 10",
                     "[Phenology].CAMP.FLNparams.PpLN = 12",
@@ -404,10 +386,6 @@
                   "Command": [
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 105.0",
-                    "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.75",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 26",
-                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.05",
-                    "[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 3000",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.33",
                     "[Phenology].CAMP.FLNparams.MinLN = 10",
                     "[Phenology].CAMP.FLNparams.PpLN = 6",
@@ -429,10 +407,6 @@
                   "Command": [
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 105.0",
-                    "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.75",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 26",
-                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.05",
-                    "[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 3000",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.33",
                     "[Phenology].CAMP.FLNparams.MinLN = 10",
                     "[Phenology].CAMP.FLNparams.PpLN = 6",
@@ -454,10 +428,6 @@
                   "Command": [
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 105.0",
-                    "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.75",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 28",
-                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.05",
-                    "[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 3000",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.33",
                     "[Phenology].CAMP.FLNparams.MinLN = 8",
                     "[Phenology].CAMP.FLNparams.PpLN = 12",
@@ -479,10 +449,6 @@
                   "Command": [
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 105.0",
-                    "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.75",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 26",
-                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.045",
-                    "[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 3000",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.33",
                     "[Phenology].CAMP.FLNparams.MinLN = 8",
                     "[Phenology].CAMP.FLNparams.PpLN = 12",
@@ -503,10 +469,6 @@
                   "Command": [
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 105.0",
-                    "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.75",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 26",
-                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.045",
-                    "[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 3000",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.33",
                     "[Phenology].CAMP.FLNparams.MinLN = 10",
                     "[Phenology].CAMP.FLNparams.PpLN = 8",
@@ -527,10 +489,6 @@
                   "Command": [
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 105.0",
-                    "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.75",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 26",
-                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.045",
-                    "[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 3000",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.33",
                     "[Phenology].CAMP.FLNparams.MinLN = 10",
                     "[Phenology].CAMP.FLNparams.PpLN = 12",
@@ -551,10 +509,6 @@
                   "Command": [
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 105.0",
-                    "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.75",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 26",
-                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.05",
-                    "[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 3000",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.33",
                     "[Phenology].CAMP.FLNparams.MinLN = 10",
                     "[Phenology].CAMP.FLNparams.PpLN = 12",
@@ -576,8 +530,6 @@
                   "Command": [
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 105.0",
-                    "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.75",
-                    "[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 3000",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.33",
                     "[Phenology].CAMP.FLNparams.MinLN = 10",
                     "[Phenology].CAMP.FLNparams.PpLN = 12",
@@ -586,9 +538,7 @@
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 8",
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
-                    "[Phenology].GrainFilling.Target.FixedValue = 700",
-                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.045",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 30"
+                    "[Phenology].GrainFilling.Target.FixedValue = 700"
                   ],
                   "Name": "Kerrin",
                   "ResourceName": null,
@@ -798,6 +748,30 @@
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0"
                   ],
                   "Name": "Condo",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "// Phenology parameters taken from Harto as it is near isogenic",
+                    "",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100. //107.48",
+                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
+                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 24",
+                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.247",
+                    "[Phenology].CAMP.FLNparams.MinLN = 7",
+                    "[Phenology].CAMP.FLNparams.PpLN = 4",
+                    "[Phenology].CAMP.FLNparams.VrnLN = 2",
+                    "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 5",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
+                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
+                  ],
+                  "Name": "Corack",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -1136,7 +1110,11 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 107.48",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100. //107.48",
+                    "//[Leaf].TilleringRate.Vegetative.StressedRate.PotentialtilleringRate.GenotypeTilleringTendency.FixedValue = 1.",
+                    "//[Leaf].TilleringRate.Vegetative.StressedRate.Stresses.CoverEffect.XYPairs.X=0,0.2,0.7,1",
+                    "//[Leaf].TilleringRate.Vegetative.StressedRate.Stresses.CoverEffect.XYPairs.X=1.0,1.0,1,1",
+                    "",
                     "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
                     "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.247",
@@ -1151,16 +1129,7 @@
                   ],
                   "Name": "Hartog",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Corack",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1396,8 +1365,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 106.268453805677",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100. //106.268453805677",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.137742329295879",
+                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 24",
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
                     "[Phenology].CAMP.FLNparams.MinLN = 7",
@@ -2678,9 +2648,9 @@
                     "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 13",
                     "[Grain].MaximumPotentialGrainSize.FixedValue = 0.05",
                     "[Phenology].GrainFilling.Target.FixedValue = 450",
-                    "[Stem].DMRetranslocationFactor.ReproductiveGrowth.DMRetranslocationFactor.FixedValue = 0.2",
-                    "[Stem].DMDemands.Structural.StructuralFraction.VegetativeGrowth.Fraction.FixedValue = 0.6",
-                    "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.8",
+                    "//[Stem].DMRetranslocationFactor.ReproductiveGrowth.DMRetranslocationFactor.FixedValue = 0.2",
+                    "//[Stem].DMDemands.Structural.StructuralFraction.VegetativeGrowth.Fraction.FixedValue = 0.6",
+                    "//[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.8",
                     "[Phenology].CAMP.FLNparams.MinLN = 7",
                     "[Phenology].CAMP.FLNparams.PpLN = 2.0",
                     "[Phenology].CAMP.FLNparams.VrnLN = 2",
@@ -2731,7 +2701,7 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90",
-                    "[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 4000",
+                    "//[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 4000",
                     "[Phenology].CAMP.FLNparams.MinLN = 7",
                     "[Phenology].CAMP.FLNparams.PpLN = 2",
                     "[Phenology].CAMP.FLNparams.VrnLN = 2",
@@ -2826,7 +2796,7 @@
                   "Command": [
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100.0",
-                    "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.8",
+                    "//[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.8",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.6",
                     "[Phenology].CAMP.FLNparams.MinLN = 9",
                     "[Phenology].CAMP.FLNparams.PpLN = 3.0",
@@ -2844,7 +2814,7 @@
                   "Command": [
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100.0",
-                    "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.8",
+                    "//[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.8",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.6",
                     "[Phenology].CAMP.FLNparams.MinLN = 9",
                     "[Phenology].CAMP.FLNparams.PpLN = 3.0",
@@ -2862,7 +2832,7 @@
                   "Command": [
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100.0",
-                    "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.8",
+                    "//[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.8",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.6",
                     "[Phenology].CAMP.FLNparams.MinLN = 9",
                     "[Phenology].CAMP.FLNparams.PpLN = 3.0",
@@ -3422,26 +3392,6 @@
               "ReadOnly": false
             }
           ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Functions.Constant, Models",
-          "FixedValue": 0.0,
-          "Units": null,
-          "Name": "MortalityRate",
-          "ResourceName": null,
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Functions.Constant, Models",
-          "FixedValue": 0.0,
-          "Units": null,
-          "Name": "SeedMortalityRate",
-          "ResourceName": null,
-          "Children": [],
           "Enabled": true,
           "ReadOnly": false
         }
