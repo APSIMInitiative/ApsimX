@@ -4012,7 +4012,7 @@
                                   "X": [
                                     0.0,
                                     0.2,
-                                    0.8,
+                                    0.4,
                                     1.0
                                   ],
                                   "Y": [
@@ -4087,57 +4087,66 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.SubtractFunction, Models",
+              "$type": "Models.Functions.MinimumFunction, Models",
               "Name": "StemNumberPerPlant",
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Functions.AddFunction, Models",
-                  "Name": "Total",
+                  "$type": "Models.Functions.SubtractFunction, Models",
+                  "Name": "StemNumberPerPlant",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "MainStem",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.AccumulateFunction, Models",
-                      "StartStageName": "Emergence",
-                      "EndStageName": "MaximumSpikeletPrimordia",
-                      "ResetStageName": null,
-                      "FractionRemovedOnCut": 0.0,
-                      "FractionRemovedOnHarvest": 1.0,
-                      "FractionRemovedOnGraze": 0.0,
-                      "FractionRemovedOnPrune": 0.0,
-                      "Name": "Tillers",
+                      "$type": "Models.Functions.AddFunction, Models",
+                      "Name": "Total",
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "Tillering",
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1.0,
+                          "Units": null,
+                          "Name": "MainStem",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.AccumulateFunction, Models",
+                          "StartStageName": "Emergence",
+                          "EndStageName": "MaximumSpikeletPrimordia",
+                          "ResetStageName": null,
+                          "FractionRemovedOnCut": 0.0,
+                          "FractionRemovedOnHarvest": 1.0,
+                          "FractionRemovedOnGraze": 0.0,
+                          "FractionRemovedOnPrune": 0.0,
+                          "Name": "Tillers",
                           "ResourceName": null,
                           "Children": [
                             {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].HaunStage.Delta",
-                              "Name": "DeltaNode",
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "Tillering",
                               "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].TilleringRate",
-                              "Name": "TilleringRate",
-                              "ResourceName": null,
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Phenology].HaunStage.Delta",
+                                  "Name": "DeltaNode",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Leaf].TilleringRate",
+                                  "Name": "TilleringRate",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -4148,18 +4157,48 @@
                       ],
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "DeadTillers",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "DeadTillers",
+                  "$type": "Models.Functions.ProtectedDivideFunction, Models",
+                  "NumeratorErrVal": 1.0,
+                  "DenominatorErrVal": 1.0,
+                  "Name": "PopulationSpecificMaximum",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 700.0,
+                      "Units": null,
+                      "Name": "Constant",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Plant].SowingData.Population",
+                      "Name": "Population",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
