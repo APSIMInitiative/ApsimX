@@ -4,7 +4,6 @@ using APSIM.Shared.Utilities;
 using CommandLine;
 using Models.Core;
 using Models.Core.Apsim710File;
-using Models.Core.ApsimFile;
 using Models.Core.Run;
 using System;
 using System.Collections.Generic;

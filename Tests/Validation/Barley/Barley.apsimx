@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 206,
+  "Version": 207,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -195,8 +195,8 @@
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Clock.Today",
-              "IsApsimVariable": "Yes",
-              "DataType": "DateTime",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Observed.xlsx"
             },
@@ -211,192 +211,192 @@
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.AboveGround.N",
-              "IsApsimVariable": "Yes",
-              "DataType": "Double",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Observed.xlsx"
             },
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.AboveGround.Wt",
-              "IsApsimVariable": "Yes",
-              "DataType": "Double",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Observed.xlsx"
             },
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.AboveGroundLive.Wt",
-              "IsApsimVariable": "Yes",
-              "DataType": "Double",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Observed.xlsx"
             },
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.Ear.NConc",
-              "IsApsimVariable": "Yes",
-              "DataType": "Double",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Observed.xlsx"
             },
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.Ear.Wt",
-              "IsApsimVariable": "Yes",
-              "DataType": "Double",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Observed.xlsx"
             },
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.Grain.N",
-              "IsApsimVariable": "Yes",
-              "DataType": "Double",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Observed.xlsx"
             },
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.Grain.NConc",
-              "IsApsimVariable": "Yes",
-              "DataType": "Double",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Observed.xlsx"
             },
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.Grain.Number",
-              "IsApsimVariable": "Yes",
-              "DataType": "Double",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Observed.xlsx"
             },
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.Grain.Size",
-              "IsApsimVariable": "Yes",
-              "DataType": "Double",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Observed.xlsx"
             },
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.Grain.Wt",
-              "IsApsimVariable": "Yes",
-              "DataType": "Double",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Observed.xlsx"
             },
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.Leaf.CoverGreen",
-              "IsApsimVariable": "Yes",
-              "DataType": "Double",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Observed.xlsx"
             },
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.Leaf.CoverTotal",
-              "IsApsimVariable": "Yes",
-              "DataType": "Double",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Observed.xlsx"
             },
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.Leaf.Dead.Wt",
-              "IsApsimVariable": "Yes",
-              "DataType": "Double",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Observed.xlsx"
             },
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.Leaf.Ligules",
-              "IsApsimVariable": "Yes",
-              "DataType": "VariableReference",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Observed.xlsx"
             },
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.Leaf.LAI",
-              "IsApsimVariable": "Yes",
-              "DataType": "Double",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Observed.xlsx"
             },
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.Leaf.Live.NConc",
-              "IsApsimVariable": "Yes",
-              "DataType": "Double",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Observed.xlsx"
             },
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.Leaf.Live.Wt",
-              "IsApsimVariable": "Yes",
-              "DataType": "Double",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Observed.xlsx"
             },
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.Phenology.AccumulatedEmergedTT",
-              "IsApsimVariable": "Yes",
-              "DataType": "Double",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": ""
             },
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.Phenology.CurrentStageName",
-              "IsApsimVariable": "Yes",
-              "DataType": "String",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Observed.xlsx"
             },
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.Phenology.FlagLeafDAS",
-              "IsApsimVariable": "Yes",
-              "DataType": "OnEventFunction",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Observed.xlsx"
             },
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.Phenology.FloweringDAS",
-              "IsApsimVariable": "Yes",
-              "DataType": "OnEventFunction",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Observed.xlsx"
             },
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.Phenology.MaturityDAS",
-              "IsApsimVariable": "Yes",
-              "DataType": "OnEventFunction",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Observed.xlsx"
             },
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.Phenology.Stage",
-              "IsApsimVariable": "Yes",
-              "DataType": "Double",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Observed.xlsx"
             },
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.Phenology.Zadok.Stage",
-              "IsApsimVariable": "Yes",
-              "DataType": "Double",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Observed.xlsx"
             },
@@ -411,56 +411,56 @@
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.Spike.HeadNumber",
-              "IsApsimVariable": "Yes",
-              "DataType": "VariableReference",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Observed.xlsx"
             },
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.Spike.Wt",
-              "IsApsimVariable": "Yes",
-              "DataType": "Double",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Observed.xlsx"
             },
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.Stem.NConc",
-              "IsApsimVariable": "Yes",
-              "DataType": "Double",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Observed.xlsx"
             },
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.Stem.Wt",
-              "IsApsimVariable": "Yes",
-              "DataType": "Double",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Observed.xlsx"
             },
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.Phenology.HaunStage",
-              "IsApsimVariable": "Yes",
-              "DataType": "VariableReference",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Observed.xlsx"
             },
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.Leaf.Height",
-              "IsApsimVariable": "Yes",
-              "DataType": "Double",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Observed.xlsx"
             },
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.Leaf.Tips",
-              "IsApsimVariable": "Yes",
-              "DataType": "VariableReference",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Observed.xlsx"
             },
@@ -475,8 +475,8 @@
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.Leaf.MainStemPopulation",
-              "IsApsimVariable": "Yes",
-              "DataType": "VariableReference",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Observed.xlsx"
             },
@@ -747,8 +747,8 @@
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.Phenology.EmergenceDAS",
-              "IsApsimVariable": "Yes",
-              "DataType": "OnEventFunction",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Obs_APSIMX_NPIField2019_Barley.xlsx"
             },
@@ -763,8 +763,8 @@
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
               "Name": "Barley.Phenology.FinalLeafNumber",
-              "IsApsimVariable": "Yes",
-              "DataType": "VariableReference",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
               "HasErrorColumn": false,
               "Filename": "LaTrobeCE_Obs.xlsx"
             },
@@ -775,542 +775,6 @@
               "DataType": "",
               "HasErrorColumn": false,
               "Filename": "LaTrobeCE_Obs.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column15",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column16",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column17",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column18",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column19",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column20",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column21",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column22",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column23",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column24",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column25",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column26",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column27",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column28",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column29",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column30",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column31",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column32",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column33",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column34",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column35",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column36",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column37",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column38",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column39",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column40",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column41",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column42",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column43",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column44",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column45",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column46",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column47",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column48",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column49",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column50",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column51",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column52",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column53",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column54",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column55",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column56",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column57",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column58",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column59",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column60",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column61",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column62",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column63",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column64",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column65",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column66",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column67",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column68",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column69",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column70",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column71",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column72",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column73",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column74",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column75",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column76",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column77",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column78",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column79",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column80",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
-              "Name": "Column81",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
             },
             {
               "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
@@ -1415,6 +879,54 @@
               "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Obs_APSIMX_NPIField2020_Barley.xlsx"
+            },
+            {
+              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "Name": "Barley.AboveGround.NConc",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
+              "HasErrorColumn": false,
+              "Filename": ""
+            },
+            {
+              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "Name": "Barley.Ear.N",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
+              "HasErrorColumn": false,
+              "Filename": ""
+            },
+            {
+              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "Name": "Barley.Leaf.Live.N",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
+              "HasErrorColumn": false,
+              "Filename": ""
+            },
+            {
+              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "Name": "Barley.Stem.N",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
+              "HasErrorColumn": false,
+              "Filename": ""
+            },
+            {
+              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "Name": "Barley.Leaf.Wt",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
+              "HasErrorColumn": false,
+              "Filename": ""
+            },
+            {
+              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "Name": "Barley.Leaf.SpecificAreaCanopy",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
+              "HasErrorColumn": false,
+              "Filename": ""
             }
           ],
           "DerivedData": [
@@ -1541,73 +1053,6 @@
             "Barley.Phenology.HeadingDAS",
             "Barley.Phenology.FinalLeafNumber",
             "Barley.Phenology.HaunStage_unused",
-            "Column15",
-            "Column16",
-            "Column17",
-            "Column18",
-            "Column19",
-            "Column20",
-            "Column21",
-            "Column22",
-            "Column23",
-            "Column24",
-            "Column25",
-            "Column26",
-            "Column27",
-            "Column28",
-            "Column29",
-            "Column30",
-            "Column31",
-            "Column32",
-            "Column33",
-            "Column34",
-            "Column35",
-            "Column36",
-            "Column37",
-            "Column38",
-            "Column39",
-            "Column40",
-            "Column41",
-            "Column42",
-            "Column43",
-            "Column44",
-            "Column45",
-            "Column46",
-            "Column47",
-            "Column48",
-            "Column49",
-            "Column50",
-            "Column51",
-            "Column52",
-            "Column53",
-            "Column54",
-            "Column55",
-            "Column56",
-            "Column57",
-            "Column58",
-            "Column59",
-            "Column60",
-            "Column61",
-            "Column62",
-            "Column63",
-            "Column64",
-            "Column65",
-            "Column66",
-            "Column67",
-            "Column68",
-            "Column69",
-            "Column70",
-            "Column71",
-            "Column72",
-            "Column73",
-            "Column74",
-            "Column75",
-            "Column76",
-            "Column77",
-            "Column78",
-            "Column79",
-            "Column80",
-            "Column81",
             "Experiment",
             "DOY_emergence",
             "EmergenceDate",
@@ -1620,7 +1065,13 @@
             "FlagLeafDate",
             "Species",
             "Habit",
-            "StandardName"
+            "StandardName",
+            "Barley.AboveGround.NConc",
+            "Barley.Ear.N",
+            "Barley.Leaf.Live.N",
+            "Barley.Stem.N",
+            "Barley.Leaf.Wt",
+            "Barley.Leaf.SpecificAreaCanopy"
           ],
           "Name": "ObservedInput",
           "ResourceName": null,
@@ -2726,7 +2177,7 @@
               ],
               "LegendPosition": 0,
               "LegendOrientation": 1,
-              "AnnotationLocation": 0,
+              "AnnotationLocation": 3,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Flowering Date",
@@ -2806,7 +2257,7 @@
               ],
               "LegendPosition": 0,
               "LegendOrientation": 1,
-              "AnnotationLocation": 0,
+              "AnnotationLocation": 3,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "FlagLeaf Date",
@@ -2828,6 +2279,406 @@
                   "TableName": "HarvestObsPred",
                   "XFieldName": "Observed.Barley.Phenology.FlagLeafDAS",
                   "YFieldName": "Predicted.Barley.Phenology.FlagLeafDAS",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Predicted",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 1,
+              "AnnotationLocation": 3,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "GrowthStage",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "DailyObsPred",
+                  "XFieldName": "Observed.Barley.Phenology.Stage",
+                  "YFieldName": "Predicted.Barley.Phenology.Stage",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Predicted",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 1,
+              "AnnotationLocation": 3,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "ZadokStage",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "Cv",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "DailyObsPred",
+                  "XFieldName": "Observed.Barley.Phenology.Zadok.Stage",
+                  "YFieldName": "Predicted.Barley.Phenology.Zadok.Stage",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Predicted",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 1,
+              "AnnotationLocation": 3,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "EmergenceDAS",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "HarvestObsPred",
+                  "XFieldName": "Observed.Barley.Phenology.EmergenceDAS",
+                  "YFieldName": "Predicted.Barley.Phenology.EmergenceDAS",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Predicted",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": 0.0,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": 0.0,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 4,
+              "LegendOrientation": 1,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "FinalLeafNumber",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": 0,
+                  "FactorToVaryColours": "Cv",
+                  "FactorToVaryMarkers": "Cv",
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "HarvestObsPred",
+                  "XFieldName": "Observed.Barley.Phenology.FinalLeafNumber",
+                  "YFieldName": "Predicted.Barley.Phenology.FinalLeafNumber",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 1,
+              "AnnotationLocation": 3,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "MaturityDAS",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "HarvestObsPred",
+                  "XFieldName": "Observed.Barley.Phenology.MaturityDAS",
+                  "YFieldName": "Predicted.Barley.Phenology.MaturityDAS",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
@@ -27540,6 +27391,246 @@
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "Observed",
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "Predicted",
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 1,
+              "AnnotationLocation": 3,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "FloweringDAS",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "HarvestObsPred",
+                  "XFieldName": "Observed.Barley.Phenology.FloweringDAS",
+                  "YFieldName": "Predicted.Barley.Phenology.FloweringDAS",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Predicted",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "Observed",
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "Predicted",
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 1,
+              "AnnotationLocation": 3,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "FlagLeafDAS",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "HarvestObsPred",
+                  "XFieldName": "Observed.Barley.Phenology.FlagLeafDAS",
+                  "YFieldName": "Predicted.Barley.Phenology.FlagLeafDAS",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Predicted",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 1,
+              "AnnotationLocation": 3,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "HaunStage",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "DailyObsPred",
+                  "XFieldName": "Observed.Barley.Phenology.HaunStage",
+                  "YFieldName": "Predicted.Barley.Phenology.HaunStage",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Predicted",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "Enabled": true,
@@ -27877,6 +27968,86 @@
               "Axis": [
                 {
                   "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 1,
+              "AnnotationLocation": 3,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "EmergenceDAS",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "HarvestObsPred",
+                  "XFieldName": "Observed.Barley.Phenology.EmergenceDAS",
+                  "YFieldName": "Predicted.Barley.Phenology.EmergenceDAS",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Predicted",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": "Observed",
                   "Position": 3,
                   "Inverted": false,
@@ -28002,6 +28173,166 @@
                   "TableName": "HarvestObsPred",
                   "XFieldName": "Observed.Barley.Phenology.FloweringDAS",
                   "YFieldName": "Predicted.Barley.Phenology.FloweringDAS",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Predicted",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": 0.0,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": 0.0,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 4,
+              "LegendOrientation": 1,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "FLN",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": 0,
+                  "FactorToVaryColours": "Cv",
+                  "FactorToVaryMarkers": "Cv",
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "HarvestObsPred",
+                  "XFieldName": "Observed.Barley.Phenology.FinalLeafNumber",
+                  "YFieldName": "Predicted.Barley.Phenology.FinalLeafNumber",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 1,
+              "AnnotationLocation": 3,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "MaturityDAS",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "HarvestObsPred",
+                  "XFieldName": "Observed.Barley.Phenology.MaturityDAS",
+                  "YFieldName": "Predicted.Barley.Phenology.MaturityDAS",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
