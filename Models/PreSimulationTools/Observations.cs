@@ -269,16 +269,17 @@ namespace Models.PreSimulationTools
                 dt = dt.Copy();
                 if (dt != null)
                 {
-                    MergeData.AddRange(MergeInfo.CombineRows(dt, out DataTable combinedDatatable));
-                    ColumnData.AddRange(GetAPSIMColumnsFromObserved(combinedDatatable));
-                    GetSimulationsFromObserved(combinedDatatable);
-                    DerivedData.AddRange(DerivedInfo.AddDerivedColumns(combinedDatatable));
-                    ZeroData.AddRange(ZeroInfo.DetectZeros(combinedDatatable));
+                    MergeData.AddRange(MergeInfo.CombineRows(dt));
+                    ColumnData.AddRange(GetAPSIMColumnsFromObserved(dt));
+                    GetSimulationsFromObserved(dt);
+                    DerivedData.AddRange(DerivedInfo.AddDerivedColumns(dt));
+                    ZeroData.AddRange(ZeroInfo.DetectZeros(dt));
 
-                    storage.Writer.WriteTable(combinedDatatable, true);
+                    storage.Writer.WriteTable(dt, false);
                     storage.Writer.WaitForIdle();
                 }
             }
+            storage.Writer.Stop();
         }
 
         /// <summary>

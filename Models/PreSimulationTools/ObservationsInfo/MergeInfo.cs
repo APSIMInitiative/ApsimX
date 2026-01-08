@@ -86,17 +86,13 @@ namespace Models.PreSimulationTools.ObservationsInfo
         /// Will throw if it encounters two rows with different values for a field that should be combined.
         /// </summary>
         /// <param name="dataTable">The datatable to read from</param>
-        /// <param name="combinedDataTable">The datatable to write the results to</param>
         /// <returns>A list of MergeInfo that describe mergings that had conflicts</returns>
-        public static List<MergeInfo> CombineRows(DataTable dataTable, out DataTable combinedDataTable)
+        public static List<MergeInfo> CombineRows(DataTable dataTable)
         {
             List<MergeInfo> infos = new List<MergeInfo>();
 
             if (!dataTable.GetColumnNames().ToList().Contains("Clock.Today"))
-            {
-                combinedDataTable = dataTable;
                 return infos;
-            }
 
             //Get a distinct list of rows of SimulationName and Clock.Today
             var distinctRows = dataTable.AsEnumerable()
@@ -109,16 +105,17 @@ namespace Models.PreSimulationTools.ObservationsInfo
                 })
                 .Distinct();
 
-            combinedDataTable = dataTable.Clone();
+            DataTable originalDataTable = dataTable.Copy();
+            dataTable.Clear();
 
             string errors = "";
             foreach (var item in distinctRows)
             {
                 //select all rows in original datatable with this distinct values
-                IEnumerable<DataRow> results = dataTable.Select().Where(p => p["SimulationName"] == item.simulation && p["Clock.Today"].ToString() == item.clockAsString);
+                IEnumerable<DataRow> results = originalDataTable.Select().Where(p => p["SimulationName"] == item.simulation && p["Clock.Today"].ToString() == item.clockAsString);
 
                 //store the list of columns in the datatable
-                List<string> columns = dataTable.GetColumnNames().ToList<string>();
+                List<string> columns = originalDataTable.GetColumnNames().ToList<string>();
 
                 //the one or more rows needed to capture the data during merging
                 //multiple lines may still be needed if there are conflicts in columns when trying to merge the data
@@ -160,7 +157,7 @@ namespace Models.PreSimulationTools.ObservationsInfo
                             }
                             if (!merged)
                             {
-                                DataRow duplicateRow = combinedDataTable.NewRow();
+                                DataRow duplicateRow = dataTable.NewRow();
                                 duplicateRow["SimulationName"] = item.simulation;
                                 duplicateRow["Clock.Today"] = DBNull.Value;
                                 if (!string.IsNullOrEmpty(item.clock.ToString()))
@@ -174,7 +171,7 @@ namespace Models.PreSimulationTools.ObservationsInfo
 
                 //add the rows to the result dataTable
                 foreach (DataRow dupilcateRow in newRows)
-                    combinedDataTable.Rows.Add(dupilcateRow);
+                    dataTable.Rows.Add(dupilcateRow);
             }
 
             if (!string.IsNullOrEmpty(errors))
