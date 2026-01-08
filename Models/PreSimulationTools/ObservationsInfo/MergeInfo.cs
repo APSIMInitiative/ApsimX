@@ -94,25 +94,28 @@ namespace Models.PreSimulationTools.ObservationsInfo
             if (!dataTable.GetColumnNames().ToList().Contains("Clock.Today"))
                 return infos;
 
-            //Get a distinct list of rows of SimulationName and Clock.Today
-            var distinctRows = dataTable.AsEnumerable()
-                .Select(s => new
-                {
-                    simulation = s["SimulationName"],
-                    clock = s["Clock.Today"],
-                    clockAsString = s["Clock.Today"].ToString(),
-                    filename = s["_Filename"].ToString()
-                })
-                .Distinct();
-
             DataTable originalDataTable = dataTable.Copy();
             dataTable.Clear();
+
+            //Get a distinct list of rows of SimulationName and Clock.Today
+            var distinctRows = originalDataTable.AsEnumerable()
+                .Select(s => new
+                {
+                    checkpointID = s["CheckpointID"],
+                    checkpointName = s["CheckpointName"],
+                    simulationID = s["SimulationID"],
+                    simulationName = s["SimulationName"],
+                    filename = s["_Filename"],
+                    clock = s["Clock.Today"],
+                    clockAsString = s["Clock.Today"].ToString()
+                })
+                .Distinct();
 
             string errors = "";
             foreach (var item in distinctRows)
             {
                 //select all rows in original datatable with this distinct values
-                IEnumerable<DataRow> results = originalDataTable.Select().Where(p => p["SimulationName"] == item.simulation && p["Clock.Today"].ToString() == item.clockAsString);
+                IEnumerable<DataRow> results = originalDataTable.Select().Where(p => p["SimulationName"] == item.simulationName && p["Clock.Today"].ToString() == item.clockAsString);
 
                 //store the list of columns in the datatable
                 List<string> columns = originalDataTable.GetColumnNames().ToList<string>();
@@ -141,7 +144,7 @@ namespace Models.PreSimulationTools.ObservationsInfo
                                     else
                                     {
                                         MergeInfo info = new MergeInfo();
-                                        info.Name = item.simulation.ToString();
+                                        info.Name = item.simulationName.ToString();
                                         info.Date = null;
                                         if (!string.IsNullOrEmpty(item.clock.ToString()))
                                             info.Date = DateUtilities.GetDateAsString(Convert.ToDateTime(item.clock));
@@ -158,7 +161,11 @@ namespace Models.PreSimulationTools.ObservationsInfo
                             if (!merged)
                             {
                                 DataRow duplicateRow = dataTable.NewRow();
-                                duplicateRow["SimulationName"] = item.simulation;
+                                duplicateRow["CheckpointID"] = item.checkpointID;
+                                duplicateRow["CheckpointName"] = item.checkpointName;
+                                duplicateRow["SimulationID"] = item.simulationID;
+                                duplicateRow["SimulationName"] = item.simulationName;
+                                duplicateRow["_Filename"] = item.filename;
                                 duplicateRow["Clock.Today"] = DBNull.Value;
                                 if (!string.IsNullOrEmpty(item.clock.ToString()))
                                     duplicateRow["Clock.Today"] = item.clock;

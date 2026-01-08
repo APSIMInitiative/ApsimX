@@ -266,7 +266,6 @@ namespace Models.PreSimulationTools
             {
                 DataTable dt = storage.Reader.GetData(sheet);
                 dt.TableName = sheet;
-                dt = dt.Copy();
                 if (dt != null)
                 {
                     MergeData.AddRange(MergeInfo.CombineRows(dt));
@@ -275,8 +274,11 @@ namespace Models.PreSimulationTools
                     DerivedData.AddRange(DerivedInfo.AddDerivedColumns(dt));
                     ZeroData.AddRange(ZeroInfo.DetectZeros(dt));
 
-                    storage.Writer.WriteTable(dt, false);
+                    storage.Writer.WriteTable(dt, true);
                     storage.Writer.WaitForIdle();
+
+                    DataTable dt2 = storage.Reader.GetData(sheet);
+                    dt2.TableName = sheet;
                 }
             }
             storage.Writer.Stop();
