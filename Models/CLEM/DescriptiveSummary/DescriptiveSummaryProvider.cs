@@ -25,6 +25,27 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
     protected readonly List<string> innerBlocks = new List<string>();
 
     /// <summary>
+    /// The model instance the provider is currently summarising. Set by the resolver or when the
+    /// interface entry points are invoked.
+    /// </summary>
+    protected IModel Model { get; private set; }
+
+    /// <summary>
+    /// Convenience accessor when the model is a CLEMModel.
+    /// </summary>
+    protected CLEMModel CLEMModel => Model as CLEMModel;
+
+    /// <summary>
+    /// Allow external code (or resolver) to set the model explicitly.
+    /// </summary>
+    /// <param name="model">Model instance</param>
+    public virtual void SetModel(IModel model)
+    {
+        Model = model ?? throw new ArgumentNullException(nameof(model));
+        CurrentAncestorList ??= new List<string>();
+    }
+
+    /// <summary>
     /// Method to set the current summary generator for the provider to use.
     /// </summary>
     /// <param name="generator">Descriptive summary generator to use</param>
@@ -57,9 +78,11 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
     public DescriptiveSummaryMemoReportingType ReportMemosType { get; set; } = DescriptiveSummaryMemoReportingType.InPlace;
 
     /// <inheritdoc/>
-    public virtual void BuildSummary(IModel model)
+    public virtual void BuildSummary()
     {
-        Generator.AddBlockWithText("activityentry", $"No details for [{model.GetType().Name}].");
+        var cm = CLEMModel;
+        if (cm is null) return;
+        Generator.AddBlockWithText("activityentry", $"No details for [{cm.GetType().Name}].");
     }
 
     /// <inheritdoc/>
@@ -79,16 +102,40 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
     }
 
     /// <inheritdoc/>
-    public virtual void CreateSummaryInnerOpeningBlocks() { }
-
-    /// <inheritdoc/>
-    public virtual void CreateSummaryInnerOpeningBlocksBeforeSummary() { }
-
-    /// <inheritdoc/>
-    public virtual void GetSummaryNameTypeHeader(CLEMModel cm)
+    public virtual void CreateSummaryInnerOpeningBlocks()
     {
+        var cm = CLEMModel;
+        if (cm is null) return;
+
+        if (cm.GetType().IsSubclassOf(typeof(CLEMResourceTypeBase)))
+        {
+            // add units when completed
+            string units = (cm as IResourceType).Units;
+            if (units != "NA")
+            {
+                Generator.AddBlockWithText("activityentry", $"This resource is measured in {CLEMModel.DisplaySummaryValueSnippet(units)}");
+            }
+        }
+        if (this.GetType().IsSubclassOf(typeof(ResourceBaseWithTransactions)))
+        {
+            if (cm.Children.Count == 0)
+            {
+                Generator.AddBlockWithText("activityentry", $"Empty");
+            }
+        }
+    }
+
+    /// <inheritdoc/>
+    public virtual void CreateSummaryInnerOpeningBlocksBeforeSummary() {   }
+
+    /// <inheritdoc/>
+    public virtual void GetSummaryNameTypeHeader()
+    {
+        var cm = CLEMModel;
+        if (cm is null) return;
+
         // copy your header logic here (unchanged except using Generator instead of generator)
-        Generator.AddBlockWithText("namediv", $"{GetSummaryNameTypeHeaderText(cm)} {((!cm.Enabled) ? " - DISABLED!" : "")}");
+        Generator.AddBlockWithText("namediv", $"{GetSummaryNameTypeHeaderText()} {((!cm.Enabled) ? " - DISABLED!" : "")}");
         Generator.AddLineBreak();
         Generator.AddBlockWithText("typediv", cm.GetType().Name);
 
@@ -126,16 +173,22 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
                     Generator.AddBlockWithText("partialdiv", $"tag: {transCat}");
                 }
             }
-
         }
     }
 
     /// <inheritdoc/>
-    public virtual string GetSummaryNameTypeHeaderText(CLEMModel cm) => cm.Name;
+    public virtual string GetSummaryNameTypeHeaderText()
+    {
+        var cm = CLEMModel;
+        return cm is null ? "" : $"{cm.GetType().Name}";
+    }
 
     /// <inheritdoc/>
-    public virtual void CreateSummaryOpeningBlocks(CLEMModel cm)
+    public virtual void CreateSummaryOpeningBlocks()
     {
+        var cm = CLEMModel;
+        if (cm is null) return;
+
         string overall = "activity";
         string extra = "";
 
@@ -193,7 +246,7 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
         openingBlocks.Add($"{cm.Name}_opening");
         using (generator.OpenBlock($"clearfix {overall}banner{extra}"))
         {
-            GetSummaryNameTypeHeader(cm);
+            GetSummaryNameTypeHeader();
         }
         generator.OpenBlock($"{overall}content{((extra != "") ? extra : "")}", id: $"{cm.Name}_content");
         openingBlocks.Add($"{cm.Name}_content");

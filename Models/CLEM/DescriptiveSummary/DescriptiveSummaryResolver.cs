@@ -44,11 +44,42 @@ namespace Models.CLEM.DescriptiveSummary
             else
             {
                 // create a fresh instance each time so provider state is not reused
-                object? created = Activator.CreateInstance(providerType);
+                object? created;
+                // Prefer constructing provider with the model so provider can capture it at construction time.
+                // try to find a public ctor on providerType that can accept the model
+                created = null;
+                var ctors = providerType.GetConstructors(BindingFlags.Public | BindingFlags.Instance);
+                var matchedCtor = ctors.FirstOrDefault(c =>
+                {
+                    var p = c.GetParameters();
+                    return p.Length == 1 && p[0].ParameterType.IsAssignableFrom(modelType);
+                });
+
+                if (matchedCtor != null)
+                {
+                    try
+                    {
+                        created = matchedCtor.Invoke(new object[] { modelObj });
+                    }
+                    catch (TargetInvocationException tie)
+                    {
+                        throw new InvalidOperationException($"Provider ctor threw for {providerType.FullName}", tie.InnerException ?? tie);
+                    }
+                }
+                else
+                {
+                    // fallback to parameterless ctor
+                    created = Activator.CreateInstance(providerType);
+                }
                 if (created is not IDescriptiveSummaryProvider instance)
                     throw new InvalidOperationException($"Provider {providerType.FullName} does not implement IDescriptiveSummaryProvider.");
                 provider = instance;
             }
+
+            // Ensure provider has the model available (useful if ctor didn't accept the model).
+            // DescriptiveSummaryProvider exposes SetModel(IModel), so cast and call if available.
+            if (provider is DescriptiveSummaryProvider dsp && modelObj is IModel im)
+                dsp.SetModel(im);
 
             // ensure provider has the generator and any initialization is done in SetGenerator
             provider.SetGenerator(generator);

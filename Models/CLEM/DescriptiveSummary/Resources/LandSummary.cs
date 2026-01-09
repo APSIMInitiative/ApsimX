@@ -8,7 +8,7 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     public class LandSummary : DescriptiveSummaryProviderBase<Land>
     {
         /// <inheritdoc/>
-        public override void BuildSummary(Land model)
+        public override void BuildSummary()
         {
             // minimal placeholder
         }

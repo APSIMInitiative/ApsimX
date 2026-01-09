@@ -9,8 +9,11 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     public class RuminantHerdSummary : DescriptiveSummaryProviderBase<RuminantHerd>
     {
         /// <inheritdoc/>
-        public override void BuildSummary(RuminantHerd model)
+        public override void BuildSummary()
         {
+            var model = ModelTyped;
+            if (model is null) return;
+
             string text = "Activities reporting on herds will group individuals";
             switch (model.TransactionStyle)
             {

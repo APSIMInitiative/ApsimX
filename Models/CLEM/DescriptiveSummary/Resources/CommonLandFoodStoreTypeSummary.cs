@@ -8,8 +8,10 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     public class CommonLandFoodStoreTypeSummary : DescriptiveSummaryProviderBase<CommonLandFoodStoreType>
     {
         /// <inheritdoc/>
-        public override void BuildSummary(CommonLandFoodStoreType model)
+        public override void BuildSummary()
         {
+            var model = ModelTyped;
+            if (model is null) return;
 
             if (model.Parent.GetType() == typeof(AnimalFoodStore))
             {

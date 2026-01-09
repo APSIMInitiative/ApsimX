@@ -17,8 +17,11 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     public class RuminantTypeCohortSummary : DescriptiveSummaryProviderBase<RuminantTypeCohort>
     {
         /// <inheritdoc/>
-        public override void BuildSummary(RuminantTypeCohort model)
+        public override void BuildSummary()
         {
+            var model = ModelTyped;
+            if (model is null) return;
+
             RuminantType rumType;
             bool specifyRuminantParent = false;
 
@@ -223,10 +226,10 @@ namespace Models.CLEM.DescriptiveSummary.Resources
         }
 
         /// <inheritdoc/>
-        public override void CreateSummaryOpeningBlocks(CLEMModel model)
+        public override void CreateSummaryOpeningBlocks()
         {
             if (!FormatForParentControl)
-                base.CreateSummaryOpeningBlocks(model);
+                base.CreateSummaryOpeningBlocks();
         }
 
     }

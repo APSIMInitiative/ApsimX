@@ -8,7 +8,7 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     public class HumanFoodStoreSummary : DescriptiveSummaryProviderBase<HumanFoodStore>
     {
         /// <inheritdoc/>
-        public override void BuildSummary(HumanFoodStore model)
+        public override void BuildSummary()
         {
             // minimal placeholder
         }

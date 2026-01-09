@@ -9,15 +9,17 @@ namespace Models.CLEM.DescriptiveSummary
     public class ResourcesHolderSummary : DescriptiveSummaryProviderBase<ResourcesHolder>
     {
         /// <inheritdoc/>
-        public override void BuildSummary(ResourcesHolder model)
+        public override void BuildSummary()
         {
             Generator.Append("<h1>Resources summary</h1>");
         }
 
         /// <inheritdoc/>
-        public override void CreateSummaryOpeningBlocks(CLEMModel cm)
+        public override void CreateSummaryOpeningBlocks()
         {
-            Generator.OpenBlock("resource", styleString: $"opacity: {cm.SummaryOpacity(FormatForParentControl)};", id: $"{cm.Name}_main");
+            var model = ModelTyped;
+            if (model is null) return;
+            Generator.OpenBlock("resource", styleString: $"opacity: {model.SummaryOpacity(FormatForParentControl)};", id: $"{model.Name}_main");
         }
     }
 }

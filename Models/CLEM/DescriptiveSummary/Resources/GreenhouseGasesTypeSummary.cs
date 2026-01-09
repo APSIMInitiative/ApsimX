@@ -8,8 +8,11 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     public class GreenhouseGasesTypeSummary : DescriptiveSummaryProviderBase<GreenhouseGasesType>
     {
         /// <inheritdoc/>
-        public override void BuildSummary(GreenhouseGasesType model)
+        public override void BuildSummary()
         {
+            var model = ModelTyped;
+            if (model is null) return;
+
             Generator.AddBlockWithText("activityentry", $"There is a starting amount of {CLEMModel.DisplaySummaryValueSnippet(model.StartingAmount)}");
         }
     }

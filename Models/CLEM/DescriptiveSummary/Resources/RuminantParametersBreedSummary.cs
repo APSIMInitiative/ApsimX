@@ -10,8 +10,11 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     internal class RuminantParametersBreedSummary : DescriptiveSummaryProviderBase<RuminantParametersBreeding>
     {
         /// <inheritdoc/>
-        public override void BuildSummary(RuminantParametersBreeding model)
+        public override void BuildSummary()
         {
+            var model = ModelTyped;
+            if (model is null) return;
+
             Generator.AddBlockWithText("activityentry", $"Oestrus cycle is {CLEMModel.DisplaySummaryValueSnippet(model.OestrusCycleLength, warnZero: true)} days with {CLEMModel.DisplaySummaryValueSnippet(model.DaysInHeat, warnZero:true)} days in heat");
             if (model.ProportionOffspringMale != 0.5)
                 Generator.AddBlockWithText("activityentry", $"Proportion of offspring male of {CLEMModel.DisplaySummaryValueSnippet(model.ProportionOffspringMale, warnZero: true)} is not 0.5");

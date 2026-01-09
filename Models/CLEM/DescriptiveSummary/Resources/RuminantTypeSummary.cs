@@ -9,8 +9,11 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     public class RuminantTypeSummary : DescriptiveSummaryProviderBase<RuminantType>
     {
         /// <inheritdoc/>
-        public override void BuildSummary(RuminantType model)
+        public override void BuildSummary()
         {
+            var model = ModelTyped;
+            if (model is null) return;
+
             // Basic identification
             Generator.AddBlockWithText("activityentry", $"Breed: {CLEMModel.DisplaySummaryValueSnippet(model.Name)}");
 

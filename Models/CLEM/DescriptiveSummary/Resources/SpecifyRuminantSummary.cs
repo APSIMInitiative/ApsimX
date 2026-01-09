@@ -10,8 +10,11 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     public class SpecifyRuminantSummary : DescriptiveSummaryProviderBase<SpecifyRuminant>
     {
         /// <inheritdoc/>
-        public override void BuildSummary(SpecifyRuminant model)
+        public override void BuildSummary()
         {
+            var model = ModelTyped;
+            if (model is null) return;
+
             string extra = "";
             bool cohortFound = model.Structure?.FindChildren<RuminantTypeCohort>(relativeTo: model).Any() ?? false;
 

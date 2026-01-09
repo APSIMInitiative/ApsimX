@@ -12,8 +12,11 @@ namespace Models.CLEM.DescriptiveSummary
     public class CLEMEventsSummary : DescriptiveSummaryProviderBase<CLEMEvents>
     {
         /// <inheritdoc/>
-        public override void BuildSummary(CLEMEvents model)
+        public override void BuildSummary()
         {
+            var model = ModelTyped;
+            if (model is null) return;
+
             string output = $"CLEM is running using a {CLEMModel.DisplaySummaryValueSnippet(model.TimeStep)} time step";
             if (model.TimeStep == TimeStepTypes.Custom)
             {

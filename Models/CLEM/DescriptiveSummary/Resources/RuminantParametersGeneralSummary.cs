@@ -13,8 +13,10 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     internal class RuminantParametersGeneralSummary : DescriptiveSummaryProviderBase<RuminantParametersGeneral>
     {
         /// <inheritdoc/>
-        public override void BuildSummary(RuminantParametersGeneral model)
+        public override void BuildSummary()
         {
+            var model = ModelTyped;
+            if (model is null) return;
 
             Generator.AddBlockWithText("activityentry", $"Standard reference weight (kg) female: {CLEMModel.DisplaySummaryValueSnippet<double>(model.SRWFemale, warnZero: true)} kg, male: {CLEMModel.DisplaySummaryValueSnippet<double>(model.SRWFemale * model.SRWMaleMultiplier, warnZero: true)} kg, male castrate: {CLEMModel.DisplaySummaryValueSnippet<double>(model.SRWFemale * model.SRWCastrateMaleMultiplier, warnZero: true)} kg");
             if (model.IsCN1EstimatedFromWeaningDetails)

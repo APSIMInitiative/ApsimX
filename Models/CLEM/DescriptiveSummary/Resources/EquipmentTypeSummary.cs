@@ -8,7 +8,7 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     public class EquipmentTypeSummary : DescriptiveSummaryProviderBase<EquipmentType>
     {
         /// <inheritdoc/>
-        public override void BuildSummary(EquipmentType model)
+        public override void BuildSummary()
         {
             // Keep minimal for now - expand with type-specific properties if required.
         }

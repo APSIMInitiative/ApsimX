@@ -10,7 +10,7 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     internal class RuminantParametersGrowPFCACRDSummary : DescriptiveSummaryProviderBase<RuminantParametersGrowPFCACRD>
     {
         /// <inheritdoc/>
-        public override void BuildSummary(RuminantParametersGrowPFCACRD model)
+        public override void BuildSummary()
         {
         }
 

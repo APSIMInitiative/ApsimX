@@ -8,7 +8,7 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     public class LabourTypeSummary : DescriptiveSummaryProviderBase<LabourType>
     {
         /// <inheritdoc/>
-        public override void BuildSummary(LabourType model)
+        public override void BuildSummary()
         {
             // minimal placeholder
         }

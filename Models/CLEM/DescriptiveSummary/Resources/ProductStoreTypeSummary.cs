@@ -8,7 +8,7 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     public class ProductStoreTypeSummary : DescriptiveSummaryProviderBase<ProductStoreType>
     {
         /// <inheritdoc/>
-        public override void BuildSummary(ProductStoreType model)
+        public override void BuildSummary()
         {
             // minimal placeholder
         }

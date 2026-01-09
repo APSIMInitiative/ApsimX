@@ -21,7 +21,7 @@ namespace Models.CLEM.DescriptiveSummary.Resources
         }
 
         /// <inheritdoc/>
-        public override void BuildSummary(RuminantParametersHolder model)
+        public override void BuildSummary()
         {
             Generator.Append("A summary of important ruminant parameter settings from parameters supplied");
         }

@@ -9,8 +9,11 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     public class SpecifyPreviousConceptionSummary : DescriptiveSummaryProviderBase<SetPreviousConception>
     {
         /// <inheritdoc/>
-        public override void BuildSummary(SetPreviousConception model)
+        public override void BuildSummary()
         {
+            var model = ModelTyped;
+            if (model is null) return;
+
             if (FormatForParentControl)
             {
                 // skip if this is inside the table summary of Initial Chohort

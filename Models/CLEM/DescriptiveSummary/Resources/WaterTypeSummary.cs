@@ -8,7 +8,7 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     public class WaterTypeSummary : DescriptiveSummaryProviderBase<WaterType>
     {
         /// <inheritdoc/>
-        public override void BuildSummary(WaterType model)
+        public override void BuildSummary()
         {
             // minimal placeholder
         }

@@ -8,8 +8,11 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     public class AnimalFoodStoreTypeSummary : DescriptiveSummaryProviderBase<AnimalFoodStoreType>
     {
         /// <inheritdoc/>
-        public override void BuildSummary(AnimalFoodStoreType model)
+        public override void BuildSummary()
         {
+            var model = ModelTyped;
+            if (model is null) return;
+
             Generator.AddBlockWithText("activityentry", $"This food type is {CLEMModel.DisplaySummaryValueSnippet(model.TypeOfFeed, "Not specified")} with the following properties:");
             Generator.AddBlockWithText("activityentry", $"Gross Energy Content: {CLEMModel.DisplaySummaryValueSnippet(model.GrossEnergyContent, warnZero:true)}");
             Generator.AddBlockWithText("activityentry", $"Metabolisable Energy Content: {CLEMModel.DisplaySummaryValueSnippet(model.MetabolisableEnergyContent, warnZero: true)}");

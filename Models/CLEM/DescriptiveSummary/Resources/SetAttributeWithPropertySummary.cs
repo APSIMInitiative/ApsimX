@@ -8,8 +8,11 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     public class SetAttributeWithPropertySummary : DescriptiveSummaryProviderBase<SetAttributeWithProperty>
     {
         /// <inheritdoc/>
-        public override void BuildSummary(SetAttributeWithProperty model)
+        public override void BuildSummary()
         {
+            var model = ModelTyped;
+            if (model is null) return;
+
             string attrName = CLEMModel.DisplaySummaryValueSnippet(model.AttributeName);
             string prop = CLEMModel.DisplaySummaryValueSnippet(model.PropertyOfIndividual);
 

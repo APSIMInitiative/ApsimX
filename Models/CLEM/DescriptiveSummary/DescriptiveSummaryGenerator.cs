@@ -235,7 +235,7 @@ public class DescriptiveSummaryGenerator
         if (model is CLEMModel cm)
         {
             // Opening wrapper
-            provider.CreateSummaryOpeningBlocks(cm);
+            provider.CreateSummaryOpeningBlocks();
 
             cm.CurrentAncestorList = null;
             //cm.CurrentAncestorList.Add(model.GetType().Name);
@@ -245,7 +245,7 @@ public class DescriptiveSummaryGenerator
             // Place any pre-summary inner tags
             provider.CreateSummaryInnerOpeningBlocksBeforeSummary();
             // The concrete provider or model should override ModelSummary() to provide content
-            provider.BuildSummary(model);
+            provider.BuildSummary();
             // Inner tags around the body (if used)
             provider.CreateSummaryInnerOpeningBlocks();
 
@@ -262,7 +262,7 @@ public class DescriptiveSummaryGenerator
     /// <summary>
     /// Method to determine if notes property need to be displayed
     /// </summary>
-    /// <param name="cm">The CLEM model beingdescribed</param>
+    /// <param name="cm">The CLEM model being described</param>
     private void AddNotes(CLEMModel cm)
     {
         if (cm.Notes != null && cm.Notes != "")
@@ -484,8 +484,6 @@ public class DescriptiveSummaryGenerator
 
     /// <summary>
     /// Opens a block and returns an IDisposable that will close it when disposed.
-    /// Usage:
-    /// using (generator.OpenBlock(sb, "activityentry")) { sb.Append("..."); } // automatically writes closing tag
     /// </summary>
     public IDisposable OpenBlock(string divName, string styleString = "",
         DescriptiveSummaryFormat format = DescriptiveSummaryFormat.HTML, bool newLineAfterDivOpen = false, string id = "")
@@ -522,12 +520,10 @@ public class DescriptiveSummaryGenerator
     }
 
     /// <summary>
-    /// 
+    /// Close the most recently opened block and check id matches if provided.
     /// </summary>
-    /// <param name="format"></param>
-    /// <param name="id"></param>
-    /// <exception cref="InvalidOperationException"></exception>
-    public void CloseMostRecentBlock(DescriptiveSummaryFormat format = DescriptiveSummaryFormat.HTML, string id = "")
+    /// <param name="id">Label to identify the next block to close</param>
+    public void CloseMostRecentBlock(string id = "")
     {
         if (openBlockIds.Count == 0) return;
 
@@ -537,7 +533,7 @@ public class DescriptiveSummaryGenerator
         // remove last
         openBlockIds.RemoveAt(openBlockIds.Count - 1);
 
-        switch (format)
+        switch (OutputFormat)
         {
             case DescriptiveSummaryFormat.HTML:
                 sb.AppendLine($"{GetIndentTabs}</div>");
@@ -571,103 +567,7 @@ public class DescriptiveSummaryGenerator
         {
             if (disposed) return;
             disposed = true;
-            parent.CloseMostRecentBlock(format);
+            parent.CloseMostRecentBlock();
         }
     }
-
-    /// <summary>
-    /// Wrap text is a div of specified name or format appropriate tags
-    /// </summary>
-    /// <param name="divName">Name of css div class to use</param>
-    /// <param name="text">Text to include in div</param>
-    /// <param name="styleString"></param>
-    /// <param name="mdTags">The (start, end) markdown tags to use. Optional. Default ("", "") or determined from other settings</param>
-    /// <param name="textTags">The (start, end) text tags to use. Optional. Default ("", "")</param>
-    /// <param name="format">The output file format to use</param>
-    /// <param name="leaveOpen">Do not add the closing div tag</param>
-    /// <param name="newLineAfterDivOpen"></param>
-    /// <returns></returns>
-    public static string WrapDiv(string divName, string text, string styleString = "", (string start, string end) mdTags = default, (string start, string end) textTags = default, DescriptiveSummaryFormat format = DescriptiveSummaryFormat.HTML, bool leaveOpen = false, bool newLineAfterDivOpen = false)
-    {
-        return WrapText(text, styleString, ("divclass", divName), mdTags, textTags, format, newLineAfterDivOpen);
-    }
-
-    /// <summary>
-    /// Wrap text in file format tags
-    /// </summary>
-    /// <param name="text">Text to display</param>
-    /// <param name="styleString">Additional sting to specify styling</param>
-    /// <param name="htmlTags">The (start, end) html tags to use</param>
-    /// <param name="mdTags">The (start, end) markdown tags to use. Optional. Default ("", "") or determined from other settings</param>
-    /// <param name="textTags">The (start, end) text tags to use. Optional. Default ("", "")</param>
-    /// <param name="format">The output file format to use</param>
-    /// <param name="leaveOpen">Do not add the closing div tag</param>
-    /// <param name="newLineAfterDivOpen"></param>
-    /// <returns>String to include into file</returns>
-    public static string WrapText(string text, string styleString = "", (string start, string end) htmlTags = default, (string start, string end) mdTags = default, (string start, string end) textTags = default, DescriptiveSummaryFormat format = DescriptiveSummaryFormat.HTML, bool leaveOpen = false, bool newLineAfterDivOpen = false)
-    {
-        if (textTags == default)
-            textTags = ("", "");
-
-        switch (htmlTags.start.ToLower())
-        {
-            case "divclass":
-                if (mdTags == default)
-                {
-                    switch (htmlTags.end)
-                    {
-                        case "namediv":
-                            mdTags = ("# ", "  ");
-                            break;
-                        case "activityentry":
-                            mdTags = ("* ", "  ");
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                htmlTags.start = $"<div class=\"{htmlTags.end}\"";
-                if (styleString != "")
-                    htmlTags.start += $" style=\"{styleString}\">";
-                else
-                    htmlTags.start += ">";
-
-                htmlTags.end = $"</div>";
-                break;
-            case "spanstyle":
-                htmlTags.start = $"<span style=\"{htmlTags.end}\">";
-                htmlTags.end = $"</span>";
-                break;
-            default:
-                break;
-        }
-
-        if (mdTags == default)
-            mdTags = ("", "");
-
-
-        if (htmlTags.start.Equals("divclass", StringComparison.CurrentCultureIgnoreCase) || htmlTags.start.Equals("spanclass", StringComparison.CurrentCultureIgnoreCase))
-        {
-            htmlTags.start = $"<{htmlTags.start} class=\"{htmlTags.end}\">";
-            htmlTags.end = $"</div>";
-        }
-
-        if (leaveOpen)
-        {
-            htmlTags.end = "";
-        }
-
-        string lineBreak = "";
-        if (newLineAfterDivOpen)
-            lineBreak = Environment.NewLine+"\t";
-
-        return format switch
-        {
-            DescriptiveSummaryFormat.HTML => $"{htmlTags.start}{lineBreak}{text}{htmlTags.end}{Environment.NewLine}",
-            DescriptiveSummaryFormat.Markdown => $"{mdTags.start}{text}{mdTags.end}{Environment.NewLine}",
-            DescriptiveSummaryFormat.Text => $"{textTags.start} {text} {textTags.end}{Environment.NewLine}",
-            _ => text,
-        };
-    }
-
 }

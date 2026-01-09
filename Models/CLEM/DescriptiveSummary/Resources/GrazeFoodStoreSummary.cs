@@ -8,7 +8,7 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     public class GrazeFoodStoreSummary: DescriptiveSummaryProviderBase<GrazeFoodStore>
     {
         /// <inheritdoc/>
-        public override void BuildSummary(GrazeFoodStore model)
+        public override void BuildSummary()
         {
         }
     }

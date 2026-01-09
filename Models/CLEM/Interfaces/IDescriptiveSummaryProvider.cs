@@ -40,7 +40,7 @@ public interface IDescriptiveSummaryProvider
     /// <summary>
     /// Provides the closing blocks for summary
     /// </summary>
-    void CreateSummaryOpeningBlocks(CLEMModel cm);
+    void CreateSummaryOpeningBlocks();
 
     /// <summary>
     /// Provides the closing inner  blocks for summary
@@ -60,18 +60,17 @@ public interface IDescriptiveSummaryProvider
     /// <summary>
     /// Generates the header blocks for the summary
     /// </summary>
-    void GetSummaryNameTypeHeader(CLEMModel cm);
+    void GetSummaryNameTypeHeader();
 
     /// <summary>
     /// Provide the text to place in the model summary header row
     /// </summary>
-    string GetSummaryNameTypeHeaderText(CLEMModel cm);
+    string GetSummaryNameTypeHeaderText();
 
     /// <summary>
     /// Generates a summary description based on the provided model.
     /// </summary>
-    /// <param name="model">The model used to generate the summary. Must not be null.</param>
-    void BuildSummary(IModel model);
+    void BuildSummary();
 
     /// <summary>
     /// Set the descriptive summary generator for the provider to use
@@ -87,5 +86,5 @@ public interface IDescriptiveSummaryProvider<TModel>
     where TModel : IModel
 {
     /// <inheritdoc/>
-    void BuildSummary(TModel model); 
+    void BuildSummary();
 }

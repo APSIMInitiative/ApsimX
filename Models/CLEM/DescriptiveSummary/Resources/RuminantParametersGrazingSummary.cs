@@ -10,7 +10,7 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     internal class RuminantParametersGrazingSummary : DescriptiveSummaryProviderBase<RuminantParametersGrazing>
     {
         /// <inheritdoc/>
-        public override void BuildSummary(RuminantParametersGrazing model)
+        public override void BuildSummary()
         {
         }
 

@@ -10,7 +10,7 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     internal class RuminantParametersMortalitySummary : DescriptiveSummaryProviderBase<RuminantParametersGrowMortality>
     {
         /// <inheritdoc/>
-        public override void BuildSummary(RuminantParametersGrowMortality model)
+        public override void BuildSummary()
         {
         }
 

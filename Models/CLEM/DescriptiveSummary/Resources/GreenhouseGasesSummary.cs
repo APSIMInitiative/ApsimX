@@ -8,7 +8,7 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     public class GreenhouseGasesSummary : DescriptiveSummaryProviderBase<GreenhouseGases>
     {
         /// <inheritdoc/>
-        public override void BuildSummary(GreenhouseGases model)
+        public override void BuildSummary()
         {
         }
     }

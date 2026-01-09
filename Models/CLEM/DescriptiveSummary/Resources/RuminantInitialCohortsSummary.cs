@@ -10,7 +10,6 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     public class RuminantInitialCohortsSummary : DescriptiveSummaryProviderBase<RuminantInitialCohorts>
     {
         List<string> headerLabels = [];
-        RuminantInitialCohorts cohortsModel;
 
         /// <summary>
         /// Constructor
@@ -21,9 +20,11 @@ namespace Models.CLEM.DescriptiveSummary.Resources
         }
 
         /// <inheritdoc/>
-        public override void BuildSummary(RuminantInitialCohorts model)
+        public override void BuildSummary()
         {
-            cohortsModel = model;
+            var model = ModelTyped;
+            if (model is null) return;
+
             // replicate the important parts of the existing ModelSummary()
             var fileReaders = model.Structure.FindChildren<FileRuminantCohorts>();
             if (fileReaders.Any())
@@ -55,6 +56,9 @@ namespace Models.CLEM.DescriptiveSummary.Resources
         /// <inheritdoc/>
         public override void CreateSummaryInnerOpeningBlocks()
         {
+            var cohortsModel = ModelTyped;
+            if (cohortsModel is null) return;
+
             // Prepare flags used by the original inner-opening tags
             cohortsModel.WeightWarningOccurred = false;
             cohortsModel.ConceptionsFound = cohortsModel.Structure.FindChildren<SetPreviousConception>(recurse: true).Any();
@@ -72,6 +76,9 @@ namespace Models.CLEM.DescriptiveSummary.Resources
         /// <inheritdoc/>
         public override void CreateSummaryInnerClosingBlocks()
         {
+            var cohortsModel = ModelTyped;
+            if (cohortsModel is null) return;
+
             Generator.CloseTable();
             if (cohortsModel.WeightWarningOccurred)
                 Generator.AddBlockWithText("warningbanner", "Warning: Initial weight differs from the expected normalised weight by more than 20%");

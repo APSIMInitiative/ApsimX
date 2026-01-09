@@ -8,8 +8,11 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     public class FinanceTypeSummary : DescriptiveSummaryProviderBase<FinanceType>
     {
         /// <inheritdoc/>
-        public override void BuildSummary(FinanceType model)
+        public override void BuildSummary()
         {
+            var model = ModelTyped;
+            if (model is null) return;
+
             string balance = $"Opening balance of {CLEMModel.DisplaySummaryValueSnippet(model.OpeningBalance)}";
             if (model.EnforceWithdrawalLimit)
             {

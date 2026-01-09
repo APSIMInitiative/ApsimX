@@ -8,8 +8,11 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     public class SetAttributeFromHerdSummary : DescriptiveSummaryProviderBase<SetAttributeFromHerd>
     {
         /// <inheritdoc/>
-        public override void BuildSummary(SetAttributeFromHerd model)
+        public override void BuildSummary()
         {
+            var model = ModelTyped;
+            if (model is null) return;
+
             string attrName = CLEMModel.DisplaySummaryValueSnippet(model.AttributeName);
             string calc = CLEMModel.DisplaySummaryValueSnippet(model.CalculationStyle.ToString());
 

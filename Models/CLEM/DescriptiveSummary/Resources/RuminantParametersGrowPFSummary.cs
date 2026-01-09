@@ -21,7 +21,7 @@ namespace Models.CLEM.DescriptiveSummary.Resources
         }
 
         /// <inheritdoc/>
-        public override void BuildSummary(RuminantParametersGrowPF model)
+        public override void BuildSummary()
         {
         }
 

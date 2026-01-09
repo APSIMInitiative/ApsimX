@@ -14,31 +14,35 @@ namespace Models.CLEM.DescriptiveSummary
         where TModel : IModel
     {
         /// <summary>
-        /// Override the non-generic entry so virtual dispatch from DescriptiveSummaryBase/IDescriptiveSummaryProvider will reach this implementation and then forward to the typed overload.
+        /// constructor that allows resolver to inject the model at construction time 
         /// </summary>
-        /// <param name="model">Model for which to generate summary</param>
-        /// <returns></returns>
-        public override void BuildSummary(IModel model)
+        /// <param name="model">The model for this provider</param>
+        public DescriptiveSummaryProviderBase(TModel model)
         {
-            if (model is TModel typed)
-            {
-                BuildSummary(typed);
-                return;
-            }
-
-            // If the model is not the expected type, fall back to base behaviour.
-            base.BuildSummary(model);
+            // call base helper to store model
+            base.SetModel(model);
         }
 
         /// <summary>
-        /// Typed virtual method for concrete providers to override. 
+        /// Default constructor
         /// </summary>
-        /// <param name="model">Model for which to generate summary</param>
-        /// <returns></returns>
-        public virtual void BuildSummary(TModel model)
+        public DescriptiveSummaryProviderBase() { }
+
+
+        /// <summary>
+        /// Strongly-typed accessor for the model that the provider is summarising.
+        /// Performs a checked cast and throws a clear exception if the stored Model is not the expected type.
+        /// </summary>
+        protected TModel ModelTyped
         {
-            // Default behaviour: fall back to the non-generic base implementation.
-            base.BuildSummary(model);
+            get
+            {
+                if (Model is TModel typed)
+                    return typed;
+
+                string actual = Model?.GetType().FullName ?? "null";
+                throw new InvalidOperationException($"DescriptiveSummaryProviderBase<{typeof(TModel).FullName}>: stored Model is not of the expected type. Actual: {actual}");
+            }
         }
     }
 }

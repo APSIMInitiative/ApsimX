@@ -8,7 +8,7 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     public class AnimalFoodStoreSummary : DescriptiveSummaryProviderBase<AnimalFoodStore>
     {
         /// <inheritdoc/>
-        public override void BuildSummary(AnimalFoodStore model)
+        public override void BuildSummary()
         {
         }
     }

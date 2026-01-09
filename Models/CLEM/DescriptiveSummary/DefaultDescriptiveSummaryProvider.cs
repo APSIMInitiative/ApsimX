@@ -10,10 +10,13 @@ namespace Models.CLEM.DescriptiveSummary
     public sealed class DefaultDescriptiveSummaryProvider : DescriptiveSummaryProvider
     {
         /// <inheritdoc/>
-        public override void BuildSummary(IModel model)
+        public override void BuildSummary()
         {
+            var cm = CLEMModel;
+            if (cm is null) return;
+
             // safe, minimal default output
-            Generator.AddBlockWithText("activityentry", $"No descriptive summary provider has been supplied for [{WebUtility.HtmlEncode(model?.GetType().Name ?? "Unknown")}].");
+            Generator.AddBlockWithText("activityentry", $"No descriptive summary provider has been supplied for [{WebUtility.HtmlEncode(cm?.GetType().Name ?? "Unknown")}].");
         }
     }
 }
