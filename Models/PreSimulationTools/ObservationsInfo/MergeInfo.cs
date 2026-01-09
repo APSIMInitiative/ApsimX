@@ -197,7 +197,7 @@ namespace Models.PreSimulationTools.ObservationsInfo
             if (!string.IsNullOrEmpty(row[column].ToString()) && !string.IsNullOrEmpty(newRow[column].ToString()))
             {
                 //need to still do filename here so that row from different files merge correctly
-                if (column != "_Filename" || (!Observations.RESERVED_COLUMNS.Contains(column) && column != "Clock.Today"))
+                if (column == "_Filename" || (!Observations.RESERVED_COLUMNS.Contains(column) && column != "Clock.Today"))
                 {
                     return false;
                     /*
