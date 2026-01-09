@@ -23,7 +23,7 @@ namespace Models.CLEM.Resources
         /// Name of breed
         /// </summary>
         /// <remarks>
-        /// This rrelates to breed where the name of herd defined by the name of the RuminantType
+        /// This relates to breed where the name of herd defined by the name of the RuminantType
         /// </remarks>
         [Category("Breed:CrossBreed", "General")]
         [Description("Breed name")]

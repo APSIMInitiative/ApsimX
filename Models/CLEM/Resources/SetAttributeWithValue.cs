@@ -51,9 +51,9 @@ namespace Models.CLEM.Resources
         public float Value { get; set; }
 
         /// <summary>
-        /// Minumum of value
+        /// Minimum of value
         /// </summary>
-        [Description("Minumum value")]
+        [Description("Minimum value")]
         [Required]
         public float MinimumValue { get; set; }
 

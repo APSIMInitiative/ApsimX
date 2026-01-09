@@ -10,6 +10,8 @@ using Models.Core.Attributes;
 using APSIM.Shared.Utilities;
 using APSIM.Numerics;
 using APSIM.Core;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Models.Core.ApsimFile;
 
 namespace Models.CLEM.Activities
 {

@@ -7,7 +7,7 @@ using System.IO;
 namespace Models.CLEM.Resources
 {
     /// <summary>
-    /// This stores the parameters relating to RuminantActivityGrowPF for a ruminant Type (CG - Growth parameters)
+    /// This stores the parameters relating to RuminantActivityGrowPF for a ruminant Type (CK- efficiency) (CL - lactation)
     /// All default values are provided for Bos taurus cattle with Bos indicus values provided as a comment.
     /// </summary>
     [Serializable]

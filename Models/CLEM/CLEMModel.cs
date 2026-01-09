@@ -423,22 +423,104 @@ namespace Models.CLEM
             }
 
             bool zeroFound = false;
-            if (value != null && warnZero && double.TryParse(value.ToString(), out double zeroTest))
+            if (value != null && warnZero)
             {
-                if (zeroTest == 0)
+                try
                 {
-                    zeroFound = true;
-                    errorClass = "warninglink";
-                    errorString = "? 0";
+                    TypeCode tc = Type.GetTypeCode(value.GetType());
+                    switch (tc)
+                    {
+                        case TypeCode.Byte:
+                        case TypeCode.SByte:
+                        case TypeCode.Int16:
+                        case TypeCode.UInt16:
+                        case TypeCode.Int32:
+                        case TypeCode.UInt32:
+                        case TypeCode.Int64:
+                        case TypeCode.UInt64:
+                        case TypeCode.Single:
+                        case TypeCode.Double:
+                        case TypeCode.Decimal:
+                            double zeroTest = Convert.ToDouble(value);
+                            if (zeroTest == 0.0)
+                            {
+                                zeroFound = true;
+                                errorClass = "warninglink";
+                                errorString = "? 0";
+                            }
+                            break;
+                    }
+                }
+                catch
+                {
+                    // ignore conversion errors and leave zeroFound = false
                 }
             }
-
             string htmlEnd = (htmlTags) ? "</span>" : string.Empty;
             string valueString;
             string htmlStart = String.Empty;
-            if (!zeroFound && value != null && value.ToString() != "" && value.ToString() != "NaN")
+
+            bool isMissingOrEmpty = (value == null) || (value.ToString() == "");
+
+            // detect NaN for float/double
+            bool isNaN = false;
+            if (!isMissingOrEmpty)
             {
-                valueString = value.ToString();
+                TypeCode tc2 = Type.GetTypeCode(value.GetType());
+                if (tc2 == TypeCode.Double)
+                {
+                    double d = (double)Convert.ChangeType(value, typeof(double));
+                    isNaN = double.IsNaN(d);
+                }
+                else if (tc2 == TypeCode.Single)
+                {
+                    float f = (float)Convert.ChangeType(value, typeof(float));
+                    isNaN = float.IsNaN(f);
+                }
+            }
+
+            if (!zeroFound && !isMissingOrEmpty && !isNaN && value.ToString() != "NaN")
+            {
+                // Format numerics using current culture with appropriate grouping and decimal separators.
+                string formatted = null;
+                try
+                {
+                    TypeCode tc = Type.GetTypeCode(value.GetType());
+                    switch (tc)
+                    {
+                        case TypeCode.Byte:
+                        case TypeCode.SByte:
+                        case TypeCode.Int16:
+                        case TypeCode.UInt16:
+                        case TypeCode.Int32:
+                        case TypeCode.UInt32:
+                        case TypeCode.Int64:
+                        case TypeCode.UInt64:
+                            // Integers: no decimal places, include group separators.
+                            formatted = ((IFormattable)value).ToString("N0", System.Globalization.CultureInfo.CurrentCulture);
+                            break;
+                        case TypeCode.Single:
+                        case TypeCode.Double:
+                        case TypeCode.Decimal:
+                            // Floating: use "N" to include group separators and decimal separator per culture.
+                            formatted = ((IFormattable)value).ToString("N", System.Globalization.CultureInfo.CurrentCulture);
+                            break;
+                        default:
+                            // Non-numeric: if IFormattable respect culture, else fallback to ToString()
+                            if (value is IFormattable formattable)
+                                formatted = formattable.ToString(null, System.Globalization.CultureInfo.CurrentCulture);
+                            else
+                                formatted = value.ToString();
+                            break;
+                    }
+                }
+                catch
+                {
+                    // Fallback to ToString if formatting fails.
+                    formatted = value.ToString();
+                }
+
+                valueString = formatted;
                 if (htmlTags)
                 {
                     htmlStart = $"<span class=\"{spanClass}\">";
@@ -454,6 +536,41 @@ namespace Models.CLEM
             }
 
             return $"{htmlStart}{valueString}{htmlEnd}";
+
+
+            //bool zeroFound = false;
+            //if (value != null && warnZero && double.TryParse(value.ToString(), out double zeroTest))
+            //{
+            //    if (zeroTest == 0)
+            //    {
+            //        zeroFound = true;
+            //        errorClass = "warninglink";
+            //        errorString = "? 0";
+            //    }
+            //}
+
+            //string htmlEnd = (htmlTags) ? "</span>" : string.Empty;
+            //string valueString;
+            //string htmlStart = String.Empty;
+            //if (!zeroFound && value != null && value.ToString() != "" && value.ToString() != "NaN")
+            //{
+
+            //    valueString = value.ToString();
+            //    if (htmlTags)
+            //    {
+            //        htmlStart = $"<span class=\"{spanClass}\">";
+            //    }
+            //}
+            //else
+            //{
+            //    valueString = errorString;
+            //    if (htmlTags)
+            //    {
+            //        htmlStart = $"<span class=\"{errorClass}\">";
+            //    }
+            //}
+
+            //return $"{htmlStart}{valueString}{htmlEnd}";
         }
 
         /// <summary>

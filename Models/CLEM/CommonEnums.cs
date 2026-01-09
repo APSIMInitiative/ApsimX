@@ -419,6 +419,26 @@
     }
 
     /// <summary>
+    /// Format for descriptive summary
+    /// </summary>
+    public enum DescriptiveSummaryFormat
+    {
+        /// <summary>
+        /// Format with html tags
+        /// </summary>
+        HTML,
+        /// <summary>
+        /// Format with markdown
+        /// </summary>
+        Markdown,
+        /// <summary>
+        /// Plain text
+        /// </summary>
+        Text,
+    }
+
+
+    /// <summary>
     /// Style of weaning rules
     /// </summary>
     public enum WeaningStyle

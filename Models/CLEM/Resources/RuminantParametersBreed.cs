@@ -15,7 +15,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantParametersHolder))]
-    [Description("This model provides all parameters specific to RuminantActivityGrowth (SCA Version)")]
+    [Description("This component provides ruminant breeding parameters")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersBreeding.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantParametersBreeding: CLEMModel, ISubParameters, ICloneable
