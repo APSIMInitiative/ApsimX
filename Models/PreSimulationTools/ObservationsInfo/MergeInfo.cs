@@ -105,7 +105,6 @@ namespace Models.PreSimulationTools.ObservationsInfo
                     checkpointName = s["CheckpointName"],
                     simulationID = s["SimulationID"],
                     simulationName = s["SimulationName"],
-                    filename = s["_Filename"],
                     clock = s["Clock.Today"],
                     clockAsString = s["Clock.Today"].ToString()
                 })
@@ -165,7 +164,6 @@ namespace Models.PreSimulationTools.ObservationsInfo
                                 duplicateRow["CheckpointName"] = item.checkpointName;
                                 duplicateRow["SimulationID"] = item.simulationID;
                                 duplicateRow["SimulationName"] = item.simulationName;
-                                duplicateRow["_Filename"] = item.filename;
                                 duplicateRow["Clock.Today"] = DBNull.Value;
                                 if (!string.IsNullOrEmpty(item.clock.ToString()))
                                     duplicateRow["Clock.Today"] = item.clock;
@@ -198,7 +196,8 @@ namespace Models.PreSimulationTools.ObservationsInfo
         {
             if (!string.IsNullOrEmpty(row[column].ToString()) && !string.IsNullOrEmpty(newRow[column].ToString()))
             {
-                if (!Observations.RESERVED_COLUMNS.Contains(column) && column != "Clock.Today")
+                //need to still do filename here so that row from different files merge correctly
+                if (column != "_Filename" || (!Observations.RESERVED_COLUMNS.Contains(column) && column != "Clock.Today"))
                 {
                     return false;
                     /*
