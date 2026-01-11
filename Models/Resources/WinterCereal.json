@@ -4338,8 +4338,86 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.MultiplyFunction, Models",
+              "$type": "Models.Functions.ProtectedDivideFunction, Models",
+              "NumeratorErrVal": 0.02,
+              "DenominatorErrVal": 0.02,
               "Name": "SpecificArea",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "NormalisedSLA",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Hello World",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        3.0,
+                        4.0,
+                        6.0,
+                        11.0
+                      ],
+                      "Y": [
+                        0.1,
+                        0.1,
+                        0.4,
+                        0.4
+                      ],
+                      "Name": "XYPairs",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].Stage",
+                      "Name": "XValue",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MovingAverageFunction, Models",
+                  "NumberOfDays": 30,
+                  "StageToStartMovingAverage": "Germination",
+                  "Name": "30dMovingAverageTemp",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[IWeather].MeanT",
+                      "Name": "DailyTemperature",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.MultiplyFunction, Models",
+              "Name": "SpecificAreaTemp",
               "ResourceName": null,
               "Children": [
                 {
