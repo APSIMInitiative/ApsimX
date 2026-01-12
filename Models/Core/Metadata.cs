@@ -5,6 +5,13 @@ using System.Data;
 
 namespace Models.Core
 {
+
+    enum MetadataCategory
+    {
+        Prototype,
+        Validation
+    }
+
     /// <summary>
     /// A simulation model
     /// </summary>
@@ -12,27 +19,34 @@ namespace Models.Core
     {
         private Simulation simulation = null;
 
-        private string catergory;
-
-        private string model;
+        private IDataStore datastore = null;
 
         /// <summary></summary>
-        public Metadata(Simulation simulation)
+        public Metadata(Simulation simulation, IDataStore datastore)
         {
             this.simulation = simulation;
+            this.datastore = datastore;
         }
 
         /// <summary></summary>
         public void Save()
         {
-            DataStore datastore = simulation.Node.FindInScope<DataStore>();
-            if (datastore != null)
+            if (this.datastore != null)
             {
                 var table = new DataTable("_Metadata");
-                table.Columns.Add("catergory", typeof(string));
-                table.Columns.Add("model", typeof(string));
+                table.Columns.Add("SimulationID", typeof(int));
+                table.Columns.Add("SimulationName", typeof(string));
+                table.Columns.Add("Catergory", typeof(string));
+                table.Columns.Add("Model", typeof(string));
 
-                datastore.Writer.WriteTable(table, false);
+                DataRow row = table.NewRow();
+                row["SimulationID"] = 1;
+                row["SimulationName"] = simulation.Name;
+                row["Catergory"] = MetadataCategory.Validation.ToString();
+                row["Model"] = "Model";
+                table.Rows.Add(row);
+
+                this.datastore.Writer.WriteTable(table, false);
             }
             return;
         }

@@ -11,6 +11,7 @@ using System.Threading;
 using System.Data;
 using Models.Soils;
 using APSIM.Core;
+using Docker.DotNet.Models;
 
 namespace Models.Core
 {
@@ -34,9 +35,6 @@ namespace Models.Core
 
         [Link(IsOptional = true)]
         private IClock clock = null;
-
-        [Link]
-        private DataStore datastore = null;
 
         private IReportsStatus reportStatus = null;
 
@@ -184,6 +182,7 @@ namespace Models.Core
                 // method, and FindAllDescendants() is lazy.
                 Structure.FindChildren<IModel>(recurse: true).ToList().ForEach(model => model.OnPreLink());
 
+                IDataStore storage = null;
                 if (ModelServices == null || ModelServices.Count < 1)
                 {
                     var simulations = Structure.FindParent<Simulations>(recurse: true);
@@ -192,7 +191,7 @@ namespace Models.Core
                     else
                     {
                         ModelServices = new List<object>();
-                        IDataStore storage = Structure.Find<IDataStore>();
+                        storage = Structure.Find<IDataStore>();
                         if (storage != null)
                             ModelServices.Add(Structure.Find<IDataStore>());
                     }
@@ -207,7 +206,7 @@ namespace Models.Core
                 // Resolve all links
                 links.Resolve(this, true, throwOnFail: true);
 
-                metadata = new Metadata(this);
+                metadata = new Metadata(this, storage);
 
                 StoreFactorsInDataStore();
 
@@ -280,6 +279,7 @@ namespace Models.Core
         /// </summary>
         public void Cleanup(System.Threading.CancellationTokenSource cancelToken)
         {
+            metadata.Save();
             UnsubscribeFromEvents?.Invoke(this, EventArgs.Empty);
         }
 
