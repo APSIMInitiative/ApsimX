@@ -24,14 +24,13 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Sobol))]
     [ValidParent(ParentType = typeof(CroptimizR))]
     [Serializable]
-    public class Simulation : Model, IRunnable, ISimulationDescriptionGenerator, IReportsStatus, IScopedModel, IStructureDependency
+    public class Simulation : Model, IRunnable, ISimulationDescriptionGenerator, IReportsStatus, IScopedModel
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
         [Link]
         private ISummary summary = null;
+
+        [Link]
+        private IDataStore datastore = null;
 
         [Link(IsOptional = true)]
         private IClock clock = null;
@@ -147,13 +146,13 @@ namespace Models.Core
             var simulationDescription = new SimulationDescription(this);
 
             // Add a folderName descriptor.
-            var folderNode = Structure.FindParent<Folder>(recurse: true);
+            var folderNode = Node.FindParent<Folder>(recurse: true);
             if (folderNode != null)
                 simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor("FolderName", folderNode.Name));
 
             simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor("SimulationName", Name));
 
-            foreach (var zone in Structure.FindChildren<Zone>(recurse: true))
+            foreach (var zone in Node.FindChildren<Zone>(recurse: true))
                 simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor("Zone", zone.Name));
 
             return new List<SimulationDescription>() { simulationDescription };
@@ -170,7 +169,7 @@ namespace Models.Core
                 RemoveDisabledModels(this);
 
                 // Standardise the soil.
-                var soils = Structure.FindChildren<Soil>(recurse: true);
+                var soils = Node.FindChildren<Soil>(recurse: true);
                 foreach (Soils.Soil soil in soils)
                     soil.Sanitise();
 
@@ -180,20 +179,19 @@ namespace Models.Core
                 // Note the ToList(). This is important because some models can
                 // add/remove models from the simulations tree in their OnPreLink()
                 // method, and FindAllDescendants() is lazy.
-                Structure.FindChildren<IModel>(recurse: true).ToList().ForEach(model => model.OnPreLink());
+                Node.FindChildren<IModel>(recurse: true).ToList().ForEach(model => model.OnPreLink());
 
-                IDataStore storage = null;
                 if (ModelServices == null || ModelServices.Count < 1)
                 {
-                    var simulations = Structure.FindParent<Simulations>(recurse: true);
+                    var simulations = Node.FindParent<Simulations>(recurse: true);
                     if (simulations != null)
                         ModelServices = simulations.GetServices();
                     else
                     {
                         ModelServices = new List<object>();
-                        storage = Structure.Find<IDataStore>();
+                        IDataStore storage = Node.Find<IDataStore>();
                         if (storage != null)
-                            ModelServices.Add(Structure.Find<IDataStore>());
+                            ModelServices.Add(Node.Find<IDataStore>());
                     }
                 }
 
@@ -206,7 +204,7 @@ namespace Models.Core
                 // Resolve all links
                 links.Resolve(this, true, throwOnFail: true);
 
-                metadata = new Metadata(this, storage);
+                metadata = new Metadata(this, datastore);
 
                 StoreFactorsInDataStore();
 
@@ -236,7 +234,7 @@ namespace Models.Core
                 cancelToken = new CancellationTokenSource();
 
             // Find a report status model if it exists.
-            reportStatus = Structure.FindChildren<IReportsStatus>(recurse: true).FirstOrDefault();
+            reportStatus = Node.FindChildren<IReportsStatus>(recurse: true).FirstOrDefault();
 
             try
             {
