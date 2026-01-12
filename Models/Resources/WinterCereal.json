@@ -4392,16 +4392,35 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.MovingAverageFunction, Models",
-                  "NumberOfDays": 30,
-                  "StageToStartMovingAverage": "Germination",
-                  "Name": "30dMovingAverageTemp",
+                  "$type": "Models.Functions.MaximumFunction, Models",
+                  "Name": "MaximumFunction",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[IWeather].MeanT",
-                      "Name": "DailyTemperature",
+                      "$type": "Models.Functions.MovingAverageFunction, Models",
+                      "NumberOfDays": 30,
+                      "StageToStartMovingAverage": "Germination",
+                      "Name": "30dMovingAverageTemp",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[IWeather].Radn",
+                          "Name": "DailyTemperature",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "One",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
