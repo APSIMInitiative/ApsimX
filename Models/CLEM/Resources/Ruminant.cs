@@ -959,7 +959,7 @@ namespace Models.CLEM.Resources
             Weight.SetInitialBaseWeight(setWeight);
 
             // determine fat and protein are required and adjust weight if needed
-            cohort?.AssociatedHerd.RuminantGrowActivity?.SetInitialFatProtein(this, cohort, setWeight);
+            cohort?.AssociatedHerd?.RuminantGrowActivity?.SetInitialFatProtein(this, cohort, setWeight);
 
             Weight.SetProteinMassAtSRW();
 
@@ -982,7 +982,7 @@ namespace Models.CLEM.Resources
 
             Attributes = new IndividualAttributeList();
 
-            if (cohort.Suckling)
+            if (cohort?.Suckling??false)
             {
                 if (AgeInDays >= ((setParams.General.NaturalWeaningAge.InDays == 0) ? setParams.General.GestationLength.InDays : setParams.General.NaturalWeaningAge.InDays))
                 {
@@ -999,6 +999,8 @@ namespace Models.CLEM.Resources
             }
 
             // initialise attributes
+            if (initialAttributes is null) return;
+
             foreach (ISetAttribute item in initialAttributes)
                 this.AddNewAttribute(item);
 

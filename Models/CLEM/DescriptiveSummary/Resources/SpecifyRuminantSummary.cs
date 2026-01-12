@@ -1,4 +1,7 @@
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
+using Models.Core;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
@@ -9,6 +12,19 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     /// </summary>
     public class SpecifyRuminantSummary : DescriptiveSummaryProviderBase<SpecifyRuminant>
     {
+        ///<inheritdoc/>
+        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
+        {
+            var model = ModelTyped;
+            if (model is null) return [];
+
+            return
+            [
+                (model.Structure.FindChildren<RuminantTypeCohort>(), true, "", "", $"No {CLEMModel.DisplaySummaryValueSnippet("RuminantTypeCohort", entryStyle: HTMLSummaryStyle.Resource)} provided!")
+            ];
+        }
+
+
         /// <inheritdoc/>
         public override void BuildSummary()
         {

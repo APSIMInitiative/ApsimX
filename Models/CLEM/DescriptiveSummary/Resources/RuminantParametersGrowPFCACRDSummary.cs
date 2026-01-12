@@ -15,9 +15,24 @@ namespace Models.CLEM.DescriptiveSummary.Resources
         }
 
         /// <inheritdoc/>
+        public override void CreateSummaryClosingBlocks()
+        {
+            if (!FormatForParentControl)
+                base.CreateSummaryClosingBlocks();
+        }
+
+        /// <inheritdoc/>
+        public override void CreateSummaryOpeningBlocks()
+        {
+            if (!FormatForParentControl)
+                base.CreateSummaryOpeningBlocks();
+        }
+
+        /// <inheritdoc/>
         public override void CreateSummaryInnerOpeningBlocksBeforeSummary()
         {
-            Generator.AddBlockWithText("detailsnote", $"Digestibility (CA) rumen degradability (CRD) parameters for GrowPF");
+            if (!FormatForParentControl)
+                Generator.AddBlockWithText("detailsnote", $"Digestibility (CA) rumen degradability (CRD) parameters for GrowPF");
         }
 
     }

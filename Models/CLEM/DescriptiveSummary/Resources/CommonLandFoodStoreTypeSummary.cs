@@ -24,12 +24,12 @@ namespace Models.CLEM.DescriptiveSummary.Resources
 
             if (model.PastureLink != null)
             {
-                Generator.AddBlockWithText("activityentry", $"The quality of this common land is based on {CLEMModel.DisplaySummaryResourceTypeSnippet(model.PastureLink)} with a further nitrogen reduction of {CLEMModel.DisplaySummaryValueSnippet(model.NitrogenReductionFromPasture)} percent.");
+                Generator.AddBlockWithText("activityentry", $"The quality of this common land is based on {CLEMModel.DisplaySummaryResourceTypeSnippet(model.PastureLink)} with a further nitrogen reduction of {CLEMModel.DisplaySummaryValueSnippet(model.NitrogenReductionFromPasture, warnZero:true)} percent.");
             }
             else
             {
                 Generator.AddBlockWithText("activityentry", $"The percent nitrogen of new pasture is {CLEMModel.DisplaySummaryValueSnippet(model.Nitrogen, warnZero:true)} and can be reduced to {CLEMModel.DisplaySummaryValueSnippet(model.MinimumNitrogen)}");
-                Generator.AddBlockWithText("activityentry", $"The minimum Dry Matter Digestaibility (%) is {CLEMModel.DisplaySummaryValueSnippet(model.MinimumDMD)} and is estimated from N%");
+                Generator.AddBlockWithText("activityentry", $"The minimum Dry Matter Digestaibility (%) is {CLEMModel.DisplaySummaryValueSnippet(model.MinimumDMD, warnZero: true)} and is estimated from N%");
             }
         }
     }

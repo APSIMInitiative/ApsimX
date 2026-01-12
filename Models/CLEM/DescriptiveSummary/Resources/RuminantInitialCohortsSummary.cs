@@ -1,6 +1,8 @@
+using Models.CLEM.Interfaces;
+using Models.CLEM.Resources;
+using Models.Core;
 using System.Collections.Generic;
 using System.Linq;
-using Models.CLEM.Resources;
 
 namespace Models.CLEM.DescriptiveSummary.Resources
 {
@@ -17,6 +19,18 @@ namespace Models.CLEM.DescriptiveSummary.Resources
         public RuminantInitialCohortsSummary()
         {
             SummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
+        }
+
+        ///<inheritdoc/>
+        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
+        {
+            var model = ModelTyped;
+            if (model is null) return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>();
+
+            return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
+            {
+                (model.Structure.FindChildren<ISetAttribute>().Cast<IModel>(), false, "", "", $"No {CLEMModel.DisplaySummaryValueSnippet("RuminantTypeCohort", entryStyle: HTMLSummaryStyle.Resource)} provided!")
+            };
         }
 
         /// <inheritdoc/>

@@ -29,7 +29,8 @@ namespace Models.CLEM.DescriptiveSummary.Resources
         /// <inheritdoc/>
         public override void CreateSummaryInnerOpeningBlocksBeforeSummary()
         {
-            Generator.AddBlockWithText("detailsnote", $"General breeding parameters used by multiple activities and growth components.");
+            if (!FormatForParentControl)
+                Generator.AddBlockWithText("detailsnote", $"General breeding parameters used by multiple activities and growth components.");
         }
 
     }

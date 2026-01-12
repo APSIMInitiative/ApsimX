@@ -844,7 +844,7 @@ namespace Models.CLEM
                     memoText = markdown2Html(memoText);
                 }
 
-                memoText = memoText.Replace("\n\n", "\n").Replace("\n", "<br />").Replace("</p><br />", "</p>");
+                memoText = memoText.Replace("\n\n", "\n").Replace("\n", "<br />").Replace("</p><br />", "</p>").Replace("<br /><li>", "<li>");
 
                 html += $"<div class='{memoTextClass}'>{memoText}</div></div>";
             }

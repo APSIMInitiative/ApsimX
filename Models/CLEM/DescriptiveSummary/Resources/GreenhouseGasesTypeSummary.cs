@@ -13,6 +13,11 @@ namespace Models.CLEM.DescriptiveSummary.Resources
             var model = ModelTyped;
             if (model is null) return;
 
+            if (model.AutoCollectType != GreenhouseGasTypes.None)
+            {
+                Generator.AddBlockWithText("activityentry", $"This store will automatically receive {CLEMModel.DisplaySummaryValueSnippet(model.AutoCollectType)} from activities");
+            }
+
             Generator.AddBlockWithText("activityentry", $"There is a starting amount of {CLEMModel.DisplaySummaryValueSnippet(model.StartingAmount)}");
         }
     }

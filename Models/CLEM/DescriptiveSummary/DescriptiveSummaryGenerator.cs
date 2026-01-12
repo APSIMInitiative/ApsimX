@@ -1,5 +1,7 @@
 using DocumentFormat.OpenXml.EMMA;
 using DocumentFormat.OpenXml.Wordprocessing;
+using Models.CLEM.Activities;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.ApsimFile;
 using Models.PMF.Struct;
@@ -10,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Web;
 
 namespace Models.CLEM.DescriptiveSummary;
 
@@ -18,7 +21,7 @@ namespace Models.CLEM.DescriptiveSummary;
 /// </summary>
 public class DescriptiveSummaryGenerator
 {
-    private List<string> openBlockIds = [];
+    private List<(string tag, string id, bool disabled)> openBlockIds = [];
 
     private StringBuilder sb;
 
@@ -38,6 +41,17 @@ public class DescriptiveSummaryGenerator
     public bool IsDarkMode { get; set; } = false;
 
     /// <summary>
+    /// Identifies that we are in a disabled state
+    /// </summary>
+    public bool CurrentlyDisabled
+    {
+        get
+        {
+            return openBlockIds.Any(a => a.disabled);
+        }
+    }
+
+    /// <summary>
     /// Format type for output file
     /// </summary>
     public DescriptiveSummaryFormat OutputFormat { get; set; } = DescriptiveSummaryFormat.HTML;
@@ -52,10 +66,10 @@ public class DescriptiveSummaryGenerator
     }
 
     readonly string htmlStartString = "<!DOCTYPE html>\r\n" +
-        "<html>\r\n<head>\r\n<script type=\"text / javascript\" src=\"https://livejs.com/live.js\"></script>\r\n" +
+        "<html lang=\"en\">\r\n<head>\r\n<script type=\"text/javascript\" src=\"https://livejs.com/live.js\"></script>\r\n" +
+        "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">" + 
         "<meta http-equiv=\"Cache-Control\" content=\"no-cache, no-store, must-revalidate\" />\r\n" +
-        "<meta http-equiv = \"Pragma\" content = \"no-cache\" />\r\n" +
-        "<meta http-equiv = \"Expires\" content = \"0\" />\r\n" +
+        "<meta http-equiv=\"Pragma\" content=\"no-cache\" />\r\n" +
         "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />";
 
     readonly string htmlEndString = "@media print { body { -webkit - print - color - adjust: exact; }}" +
@@ -146,7 +160,8 @@ public class DescriptiveSummaryGenerator
         ".holdermain {margin: 20px 0px 20px 0px}" +
         ".holdersub {margin: 5px 0px 5px}" +
         ".detailsnote {font-size:0.8em; font-style:italic; margin-bottom:10px;}" +
-        ".otherlink {font-weight:bold; color:black; background-color:[ContDefaultBack] !important; border-color:black; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px; }";
+        ".otherlink {font-weight:bold; color:black; background-color:[ContDefaultBack] !important; border-color:black; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px; }" + 
+        ".disabledcomponent {opacity: 0.3}";
 
     readonly static Dictionary<string, (string, string)> colours = new()
     {
@@ -218,7 +233,7 @@ public class DescriptiveSummaryGenerator
 
         AddHTMLHeader(System.Net.WebUtility.HtmlEncode(componentRoot.Name ?? componentRoot.GetType().Name));
         AddDetails(componentRoot);
-        AppendSummariesRecursively(componentRoot);
+        AppendSummariesRecursively(componentRoot, 0);
         AddHTMLFooter();
 
         //File.WriteAllText(MakeSafeFileName(filename), sb.ToString());
@@ -226,13 +241,14 @@ public class DescriptiveSummaryGenerator
     }
 
     // Recursively visit model and its children, appending descriptive summary fragments.
-    private void AppendSummariesRecursively(IModel model)
+    private void AppendSummariesRecursively(IModel model, int level)
     {
         if (model == null) return;
 
         var provider = DescriptiveSummaryResolver.GetProviderInstance(model, this);
+        provider.NestedLevel = level+1;
 
-        if (model is CLEMModel cm)
+        if (model is CLEMModel cm && (provider is DefaultDescriptiveSummaryProvider & provider.FormatForParentControl) == false)
         {
             // Opening wrapper
             provider.CreateSummaryOpeningBlocks();
@@ -240,42 +256,127 @@ public class DescriptiveSummaryGenerator
             cm.CurrentAncestorList = null;
             //cm.CurrentAncestorList.Add(model.GetType().Name);
 
-            AddNotes(cm);
+            if (!provider.FormatForParentControl)
+                AddNotes(cm.Notes, (cm.ModelSummaryStyle == HTMLSummaryStyle.Filter));
 
             // Place any pre-summary inner tags
             provider.CreateSummaryInnerOpeningBlocksBeforeSummary();
             // The concrete provider or model should override ModelSummary() to provide content
+
+            if (provider.ReportMemosType == DescriptiveSummaryMemoReportingType.AtTop)
+            {
+                AddMemos(model.Children.OfType<Memo>());
+            }
+
+            if (model is IActivityCompanionModel)
+            {
+                if (!provider.FormatForParentControl && (model as IActivityCompanionModel).Identifier != null)
+                {
+                    AddBlockWithText("activityentry", $"Applies to {CLEMModel.DisplaySummaryValueSnippet((model as IActivityCompanionModel).Identifier)}");
+                }
+            }
+
             provider.BuildSummary();
             // Inner tags around the body (if used)
             provider.CreateSummaryInnerOpeningBlocks();
 
-            foreach (var child in model.Children ?? Enumerable.Empty<IModel>())
+            var childrenToSummarise = provider.HandleChildrenInSummary();
+            foreach (var item in childrenToSummarise)
             {
-                AppendSummariesRecursively(child);
+                if (item.include)
+                {
+                    GetChildDescriptiveSummaries(provider, item.models, item.introText, item.missingText, item.borderClass);
+                }
             }
 
+            //foreach (var child in provider. model.Children ?? Enumerable.Empty<IModel>())
+            //{
+            //    AppendSummariesRecursively(child);
+            //}
+
             provider.CreateSummaryInnerClosingBlocks();
+
+            if (provider.ReportMemosType == DescriptiveSummaryMemoReportingType.AtBottom)
+            {
+                AddMemos(model.Children.OfType<Memo>());
+            }
+
             provider.CreateSummaryClosingBlocks();
+        }
+    }
+
+    private void GetChildDescriptiveSummaries(IDescriptiveSummaryProvider provider, IEnumerable<IModel> models, string introText, string MissingText, string borderClass, Func<string, string> markdown2Html = null)
+    {
+        if (!models.Any() && string.IsNullOrEmpty(MissingText)) return;
+
+        bool addBorderIt = introText != "" && provider.Model is CLEMRuminantActivityBase && models.Any();
+
+        using (OpenBlock(borderClass))
+        {
+            if (introText != "")
+            {
+                AddBlockWithText("childgrouplabel", introText);
+            }
+
+            foreach (var item in models)
+            {
+                switch (item)
+                {
+                    case Memo memo:
+                        if (provider.ReportMemosType == DescriptiveSummaryMemoReportingType.InPlace)
+                        {
+                            AddMemos(new List<Memo> { memo });
+                        }
+                        break;
+                    case CLEMModel clemModel:
+                        AppendSummariesRecursively(clemModel, provider.NestedLevel);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            if (!models.Any() && MissingText != "")
+            {
+                using (OpenBlock("errorbanner clearfix"))
+                {
+                    AddBlockWithText("activityentry", MissingText);
+                }
+            }
         }
     }
 
     /// <summary>
     /// Method to determine if notes property need to be displayed
     /// </summary>
-    /// <param name="cm">The CLEM model being described</param>
-    private void AddNotes(CLEMModel cm)
+    /// <param name="text">Note text</param>
+    /// <param name="useSimpleFormat">Switch to use the simple format style</param>
+    /// <param name="title">Label for title area</param>
+    private void AddNotes(string text, bool useSimpleFormat = false, string title = "Notes")
     {
-        if (cm.Notes != null && cm.Notes != "")
+        if (!string.IsNullOrEmpty(text))
         {
-            string memoContainerClass = (cm.ModelSummaryStyle == HTMLSummaryStyle.Filter) ? "memo-container-simple" : "memo-container";
-            string memoHeadClass = (cm.ModelSummaryStyle == HTMLSummaryStyle.Filter) ? "memo-head-simple" : "memo-head";
-            string memoTextClass = (cm.ModelSummaryStyle == HTMLSummaryStyle.Filter) ? "memo-text-simple" : "memo-text";
+            string memoContainerClass = useSimpleFormat ? "memo-container-simple" : "memo-container";
+            string memoHeadClass = useSimpleFormat ? "memo-head-simple" : "memo-head";
+            string memoTextClass = useSimpleFormat ? "memo-text-simple" : "memo-text";
 
-            using (OpenBlock(memoContainerClass, format: OutputFormat))
+            using (OpenBlock(memoContainerClass))
             {
                 AddBlockWithText(memoHeadClass, "Notes");
-                AddBlockWithText(memoTextClass, cm.Notes);
+                AddBlockWithText(memoTextClass, text);
             }
+        }
+    }
+
+    /// <summary>
+    /// Method to add memos
+    /// </summary>
+    /// <param name="memos">The list of memos to be added</param>
+    private void AddMemos(IEnumerable<Memo> memos)
+    {
+        foreach (var memo in memos)
+        {
+            AddNotes(memo.Text, useSimpleFormat: false, title: memo.Name);
         }
     }
 
@@ -401,7 +502,6 @@ public class DescriptiveSummaryGenerator
         sb.AppendLine(endTag);
     }
 
-
     /// <summary>
     /// Close a table
     /// </summary>
@@ -469,14 +569,14 @@ public class DescriptiveSummaryGenerator
     /// <summary>
     /// Add a block with specified text
     /// </summary>
-    /// <param name="divName"></param>
+    /// <param name="classString"></param>
     /// <param name="text"></param>
     /// <param name="styleString"></param>
-    /// <param name="format"></param>
-    public void AddBlockWithText(string divName, string text, string styleString = "",
-    DescriptiveSummaryFormat format = DescriptiveSummaryFormat.HTML)
+    /// <param name="disabled"></param>
+    /// <param name="tag">HTML block type</param>
+    public void AddBlockWithText(string classString, string text, string styleString = "", bool disabled = false, string tag = "div")
     {
-        using (OpenBlock(divName, styleString, format))
+        using (OpenBlock(classString, styleString, tag: tag, disabled: disabled))
         {
             sb.AppendLine(GetIndentTabs + text);
         }
@@ -485,38 +585,41 @@ public class DescriptiveSummaryGenerator
     /// <summary>
     /// Opens a block and returns an IDisposable that will close it when disposed.
     /// </summary>
-    public IDisposable OpenBlock(string divName, string styleString = "",
-        DescriptiveSummaryFormat format = DescriptiveSummaryFormat.HTML, bool newLineAfterDivOpen = false, string id = "")
+    public IDisposable OpenBlock(string classString, string styleString = "",
+        string id = "", bool disabled = false, string tag = "div")
     {
-        if (string.IsNullOrEmpty(divName)) throw new ArgumentNullException(nameof(divName));
+        if (tag == "div" && string.IsNullOrWhiteSpace(classString) && string.IsNullOrWhiteSpace(styleString))
+        {
+            return new BlockScope(this, ignore: true);
+        }
 
-        switch (format)
+        switch (OutputFormat)
         {
             case DescriptiveSummaryFormat.HTML:
                 var openTag = new StringBuilder();
-                openTag.Append($"{GetIndentTabs}<div class=\"{divName}\"");
+                openTag.Append($"{GetIndentTabs}<{tag}");
+                if (!string.IsNullOrWhiteSpace(classString))
+                    openTag.Append($" class=\"{classString}\"");
                 if (!string.IsNullOrEmpty(styleString))
                     openTag.Append($" style=\"{styleString}\"");
-                openTag.Append(">");
-                if (newLineAfterDivOpen)
-                    openTag.Append(Environment.NewLine + "\t");
+                openTag.Append('>');
                 sb.AppendLine(openTag.ToString());
                 break;
 
             case DescriptiveSummaryFormat.Markdown:
                 // simple mapping: use a bold heading for named divs or custom mapping as needed
-                sb.AppendLine($"**{divName}**");
+                sb.AppendLine("**");
                 break;
 
             case DescriptiveSummaryFormat.Text:
-                sb.AppendLine($"{divName}:");
+                sb.AppendLine("");
                 break;
         }
 
         // record open div for indent / tracking purposes
-        openBlockIds.Add(id);
+        openBlockIds.Add((tag, id, disabled));
 
-        return new BlockScope(this, format);
+        return new BlockScope(this);
     }
 
     /// <summary>
@@ -527,8 +630,10 @@ public class DescriptiveSummaryGenerator
     {
         if (openBlockIds.Count == 0) return;
 
-        if (id != "" && openBlockIds[^1] != id)
-            throw new InvalidOperationException($"Mismatched block close. Expected to close block with id '{openBlockIds[^1]}', but got '{id}'.");
+        if (id != "" && openBlockIds[^1].id != id)
+            throw new InvalidOperationException($"Mismatched block close. Expected to close block with id '{openBlockIds[^1].id}', but got '{id}'.");
+
+        string tag = openBlockIds[^1].tag;
 
         // remove last
         openBlockIds.RemoveAt(openBlockIds.Count - 1);
@@ -536,11 +641,11 @@ public class DescriptiveSummaryGenerator
         switch (OutputFormat)
         {
             case DescriptiveSummaryFormat.HTML:
-                sb.AppendLine($"{GetIndentTabs}</div>");
+                sb.AppendLine($"{GetIndentTabs}</{tag}>");
                 break;
             case DescriptiveSummaryFormat.Markdown:
                 // nothing specific to close for markdown; optionally add spacing
-                sb.AppendLine();
+                sb.AppendLine("** ");
                 break;
             case DescriptiveSummaryFormat.Text:
                 sb.AppendLine();
@@ -554,20 +659,23 @@ public class DescriptiveSummaryGenerator
     private sealed class BlockScope : IDisposable
     {
         private readonly DescriptiveSummaryGenerator parent;
-        private readonly DescriptiveSummaryFormat format;
+        private readonly bool ignore;
         private bool disposed;
 
-        public BlockScope(DescriptiveSummaryGenerator parent, DescriptiveSummaryFormat format)
+        public BlockScope(DescriptiveSummaryGenerator parent, bool ignore = false)
         {
             this.parent = parent ?? throw new ArgumentNullException(nameof(parent));
-            this.format = format;
+            this.ignore = ignore;
         }
 
         public void Dispose()
         {
             if (disposed) return;
             disposed = true;
-            parent.CloseMostRecentBlock();
+            if (!ignore)
+            {
+                parent.CloseMostRecentBlock();
+            }
         }
     }
 }

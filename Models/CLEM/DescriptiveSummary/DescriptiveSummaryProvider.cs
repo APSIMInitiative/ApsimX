@@ -1,3 +1,4 @@
+using Mapsui.Providers.Wfs.Utilities;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
@@ -5,6 +6,7 @@ using Models.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Models.CLEM.DescriptiveSummary;
 
@@ -28,12 +30,12 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
     /// The model instance the provider is currently summarising. Set by the resolver or when the
     /// interface entry points are invoked.
     /// </summary>
-    protected IModel Model { get; private set; }
+    public IModel Model { get; set; }
 
     /// <summary>
     /// Convenience accessor when the model is a CLEMModel.
     /// </summary>
-    protected CLEMModel CLEMModel => Model as CLEMModel;
+    public CLEMModel CLEMModel => Model as CLEMModel;
 
     /// <summary>
     /// Allow external code (or resolver) to set the model explicitly.
@@ -72,8 +74,12 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
     public HTMLSummaryStyle SummaryStyle { get; set; } = HTMLSummaryStyle.Default;
     /// <inheritdoc/>
     public List<string> CurrentAncestorList { get; set; } = new();
+
     /// <inheritdoc/>
-    public bool FormatForParentControl => generator.IndentIndex > 0; //CurrentAncestorList?.Count > 0;
+    public int NestedLevel { get; set; } = 0;
+
+    /// <inheritdoc/>
+    public bool FormatForParentControl => NestedLevel > 1; // generator.IndentIndex > 0; //CurrentAncestorList?.Count > 0;
     /// <inheritdoc/>
     public DescriptiveSummaryMemoReportingType ReportMemosType { get; set; } = DescriptiveSummaryMemoReportingType.InPlace;
 
@@ -82,7 +88,10 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
     {
         var cm = CLEMModel;
         if (cm is null) return;
-        Generator.AddBlockWithText("activityentry", $"No details for [{cm.GetType().Name}].");
+        if (cm is ResourceBaseWithTransactions)
+            Generator.AddBlockWithText("activityentry", $"No details for {CLEMModel.DisplaySummaryResourceTypeSnippet(cm.GetType().Name)}.");
+        else
+            Generator.AddBlockWithText("activityentry", $"No details for {cm.GetType().Name}.");
     }
 
     /// <inheritdoc/>
@@ -115,7 +124,9 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
             {
                 Generator.AddBlockWithText("activityentry", $"This resource is measured in {CLEMModel.DisplaySummaryValueSnippet(units)}");
             }
+            
         }
+
         if (this.GetType().IsSubclassOf(typeof(ResourceBaseWithTransactions)))
         {
             if (cm.Children.Count == 0)
@@ -129,13 +140,13 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
     public virtual void CreateSummaryInnerOpeningBlocksBeforeSummary() {   }
 
     /// <inheritdoc/>
-    public virtual void GetSummaryNameTypeHeader()
+    public virtual void GetSummaryNameTypeHeader(bool disabled = false)
     {
         var cm = CLEMModel;
         if (cm is null) return;
 
         // copy your header logic here (unchanged except using Generator instead of generator)
-        Generator.AddBlockWithText("namediv", $"{GetSummaryNameTypeHeaderText()} {((!cm.Enabled) ? " - DISABLED!" : "")}");
+        Generator.AddBlockWithText("namediv", $"{GetSummaryNameTypeHeaderText()} {((disabled) ? " - DISABLED!" : "")}");
         Generator.AddLineBreak();
         Generator.AddBlockWithText("typediv", cm.GetType().Name);
 
@@ -180,7 +191,7 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
     public virtual string GetSummaryNameTypeHeaderText()
     {
         var cm = CLEMModel;
-        return cm is null ? "" : $"{cm.GetType().Name}";
+        return cm is null ? "" : $"{cm.Name}";
     }
 
     /// <inheritdoc/>
@@ -201,6 +212,8 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
             else if (typeof(IResourceType).IsAssignableFrom(cm.GetType()))
                 SummaryStyle = HTMLSummaryStyle.SubResource;
             else if (typeof(ISubParameters).IsAssignableFrom(cm.GetType()))
+                SummaryStyle = HTMLSummaryStyle.SubResource;
+            else if (typeof(IConceptionModel).IsAssignableFrom(cm.GetType()))
                 SummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
             else if (cm.GetType().IsSubclassOf(typeof(CLEMActivityBase)))
                 SummaryStyle = HTMLSummaryStyle.Activity;
@@ -242,13 +255,68 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
                 break;
         }
 
-        generator.OpenBlock($"holder{((extra == "") ? "main" : "sub")} {overall}", styleString: $"opacity: {cm.SummaryOpacity(FormatForParentControl)};", id: $"{cm.Name}_opening");
+        bool firstDisabledBlock = !cm.Enabled && generator.CurrentlyDisabled == false;
+
+        //generator.OpenBlock($"holder{((extra == "") ? "main" : "sub")} {overall}", styleString: $"opacity: {cm.SummaryOpacity(FormatForParentControl)};", id: $"{cm.Name}_opening");
+        generator.OpenBlock($"holder{((extra == "") ? "main" : "sub")} {overall} {(firstDisabledBlock ? "disabledcomponent": "")}", id: $"{cm.Name}_opening",  disabled: !cm.Enabled);
         openingBlocks.Add($"{cm.Name}_opening");
         using (generator.OpenBlock($"clearfix {overall}banner{extra}"))
         {
-            GetSummaryNameTypeHeader();
+            GetSummaryNameTypeHeader(firstDisabledBlock);
         }
         generator.OpenBlock($"{overall}content{((extra != "") ? extra : "")}", id: $"{cm.Name}_content");
         openingBlocks.Add($"{cm.Name}_content");
     }
+
+    /// <summary>
+    /// Provide a list of child types to include or ignore from summary for the given model
+    /// </summary>
+    /// <returns>List of child model groups to handle</returns>
+    public virtual List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
+    {
+        return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
+        {
+        };
+    }
+
+    /// <summary>
+    /// Provide a list of child types to include or ignore from summary for the given model
+    /// </summary>
+    /// <returns>Full list of child model groups to handle</returns>
+    public virtual IEnumerable<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> HandleChildrenInSummary()
+    {
+        var cm = CLEMModel;
+        if (cm is null)
+            return Enumerable.Empty<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>();
+
+        var modelsToSummarise = GetChildrenInSummary() ?? new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>();
+
+        // Build a materialized set of all models already included in modelsToSummarise
+        var uniqueModels = new HashSet<IModel>(
+            modelsToSummarise
+                .SelectMany(entry => entry.models ?? Enumerable.Empty<IModel>())
+            );
+
+        // Find all child models and only add those not already present in uniqueModels
+        var remainingChildren = cm.Structure.FindChildren<IModel>()
+                                  .Where(child => !uniqueModels.Contains(child))
+                                  .ToList();
+
+        if (remainingChildren.Count > 0)
+            modelsToSummarise.Add((remainingChildren, true, "", "", ""));
+
+        return modelsToSummarise;
+    }
+
+    /// <summary>
+    /// Returns the opacity value for this component in the summary display
+    /// </summary>
+    public double SummaryOpacity()
+    {
+        var cm = CLEMModel;
+        if (cm is null) return 1.0;
+
+        return ((!cm.Enabled & (!FormatForParentControl | (FormatForParentControl & cm.Parent.Enabled))) ? 0.4 : 1.0);
+    }
+
 }

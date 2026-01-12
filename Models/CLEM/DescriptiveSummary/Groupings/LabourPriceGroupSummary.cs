@@ -1,0 +1,88 @@
+﻿using Models.CLEM.Groupings;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Models.CLEM.DescriptiveSummary.Groupings
+{
+    /// <summary>
+    /// Descriptive summary provider for LabourPriceGroup
+    /// </summary>
+    public class LabourPriceGroupSummary : DescriptiveSummaryProviderBase<LabourPriceGroup>
+    {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public LabourPriceGroupSummary()
+        {
+            //SummaryStyle = HTMLSummaryStyle.Filter;
+        }
+
+        /// <inheritdoc/>
+        public override void BuildSummary()
+        {
+            var model = ModelTyped;
+            if (model is null) return;
+
+            if (!FormatForParentControl)
+            {
+                //ToDo: format value for currency
+                generator.AddBlockWithText("activityentry", $"Each individual is paid {CLEMModel.DisplaySummaryValueSnippet(model.Value, warnZero:true)} per day");
+            }
+        }
+
+        /// <inheritdoc/>
+        public override void CreateSummaryInnerClosingBlocks()
+        {
+            var model = ModelTyped;
+            if (model is null) return;
+
+            generator.CloseMostRecentBlock("labourPriceGroup_filters");
+            if (FormatForParentControl)
+            {
+                generator.AddBlockWithText("", CLEMModel.DisplaySummaryValueSnippet(model.Value, warnZero: true), tag: "td");
+                generator.CloseMostRecentBlock("animalPriceGroup_row");
+            }
+        }
+
+        /// <inheritdoc/>
+        public override void CreateSummaryInnerOpeningBlocks()
+        {
+
+            var cm = CLEMModel;
+            if (cm is null) return;
+
+            if (FormatForParentControl)
+            {
+                generator.OpenBlock("", "", tag: "tr", id: "labourPriceGroup_row");
+                generator.AddBlockWithText("", cm.Name, tag: "td");
+                generator.OpenBlock("", "", tag: "td", id: "labourPriceGroup_filters");
+            }
+            else
+            {
+                generator.OpenBlock("filterborder clearfix", "", id: "labourPriceGroup_filters");
+            }
+            if (cm.Structure.FindChildren<Filter>().Any() == false)
+            {
+                generator.AddBlockWithText("filter", "All individuals");
+            }
+        }
+
+        /// <inheritdoc/>
+        public override void CreateSummaryOpeningBlocks()
+        {
+            if (!FormatForParentControl)
+                base.CreateSummaryOpeningBlocks();
+        }
+
+        /// <inheritdoc/>
+        public override void CreateSummaryClosingBlocks()
+        {
+            if (!FormatForParentControl)
+                base.CreateSummaryClosingBlocks();
+        }
+    }
+
+}

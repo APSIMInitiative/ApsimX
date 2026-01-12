@@ -1,6 +1,9 @@
 using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using DocumentFormat.OpenXml.Office2010.ExcelAc;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Models.CLEM.Activities;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.PMF.Phen;
@@ -8,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Models.CLEM.DescriptiveSummary.Resources
 {
@@ -16,6 +20,22 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     /// </summary>
     public class RuminantTypeCohortSummary : DescriptiveSummaryProviderBase<RuminantTypeCohort>
     {
+        ///<inheritdoc/>
+        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
+        {
+            var model = ModelTyped;
+
+            // if this is for a parent description (i.e. in the initial cohorts table, ignore all children as handled by other code.
+            if (model is not null && FormatForParentControl)
+            {
+                return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
+                {
+                    (model.Structure.FindChildren<IModel>(), false, "", "", "")
+                };
+            }
+            return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>();
+        }
+
         /// <inheritdoc/>
         public override void BuildSummary()
         {
@@ -163,14 +183,20 @@ namespace Models.CLEM.DescriptiveSummary.Resources
                         RuminantType rumtype = model.Structure.FindParent<RuminantType>(recurse: true);
                         if (rumtype != null)
                         {
+                            RandomNumberGenerator rng = model.Structure.Find<RandomNumberGenerator>();
+                            rng.SetForPreSimulation();
+                            rumtype.Parameters.Initialise(rumtype);
+//                            var generalParams = rumtype.Structure.FindChild<RuminantParametersGeneral>(recurse: true);
+
                             Ruminant newInd = null;
                             if (rumtype.Parameters.General is not null)
-                                newInd = Ruminant.Create(model.Sex, new(2000, 1, 1), rumtype.Parameters, model.AgeDetails.InDays, rumtype.Parameters.General.BirthScalar[0]);
+                                //Create(, int age, double weight = 0, int ? id = null, RuminantTypeCohort cohortDetails = null, IEnumerable < ISetAttribute > initialAttributes = null, SetPreviousConception previousConception = null)
+                                newInd = Ruminant.Create(model.Sex, new(2000, 1, 1), rumtype.Parameters, model.AgeDetails.InDays, cohortDetails: model);
 
                             string normWtString = newInd?.Weight.NormalisedForAge.ToString("#,##0") ?? "Unavailable";
                             if (newInd is null || (model.Weight != 0 && Math.Abs(model.Weight - newInd.Weight.NormalisedForAge) / newInd.Weight.NormalisedForAge > 0.2))
                             {
-                                normWtString = "<span class=\"errorlink\">" + normWtString + "</span>";
+                                normWtString = "<span class=\"warninglink\">" + normWtString + "</span>";
                                 (model.Parent as RuminantInitialCohorts).WeightWarningOccurred = true;
                             }
                             string weightstring = "";

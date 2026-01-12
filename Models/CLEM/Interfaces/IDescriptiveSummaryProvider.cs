@@ -28,6 +28,11 @@ public interface IDescriptiveSummaryProvider
     bool FormatForParentControl { get; }
 
     /// <summary>
+    /// Provides the nested level of the associated component
+    /// </summary>
+    int NestedLevel { get; set; }
+
+    /// <summary>
     /// Determines if this model reports memos in place
     /// </summary>
     DescriptiveSummaryMemoReportingType ReportMemosType { get; set; }
@@ -60,7 +65,7 @@ public interface IDescriptiveSummaryProvider
     /// <summary>
     /// Generates the header blocks for the summary
     /// </summary>
-    void GetSummaryNameTypeHeader();
+    void GetSummaryNameTypeHeader(bool disabled);
 
     /// <summary>
     /// Provide the text to place in the model summary header row
@@ -76,6 +81,28 @@ public interface IDescriptiveSummaryProvider
     /// Set the descriptive summary generator for the provider to use
     /// </summary>
     void SetGenerator(DescriptiveSummaryGenerator generator);
+
+    /// <summary>
+    /// Provide the grouped lists of all Children components to summarise
+    /// </summary>
+    /// <returns>A IEnumerable of the models, include, border class name, intro text and missing text for each type of component reported.</returns>
+    List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary();
+
+    /// <summary>
+    /// Update the list of child types to include or ignore from summary for the given model
+    /// </summary>
+    IEnumerable<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> HandleChildrenInSummary();
+
+    /// <summary>
+    /// Determine the opacity level to apply for summary display based on enabled state
+    /// </summary>
+    /// <returns>Opacity level for html classes</returns>
+    double SummaryOpacity();
+
+    /// <summary>
+    /// The model that this provider is summarising.
+    /// </summary>
+    IModel Model { get; set; }
 }
 
 

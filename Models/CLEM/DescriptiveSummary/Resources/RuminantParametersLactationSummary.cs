@@ -15,9 +15,25 @@ namespace Models.CLEM.DescriptiveSummary.Resources
         }
 
         /// <inheritdoc/>
+        public override void CreateSummaryClosingBlocks()
+        {
+            if (!FormatForParentControl)
+                base.CreateSummaryClosingBlocks();
+        }
+
+        /// <inheritdoc/>
+        public override void CreateSummaryOpeningBlocks()
+        {
+            if (!FormatForParentControl)
+                base.CreateSummaryOpeningBlocks();
+        }
+
+
+        /// <inheritdoc/>
         public override void CreateSummaryInnerOpeningBlocksBeforeSummary()
         {
-            Generator.AddBlockWithText("detailsnote", $"General lactation parameters used by multiple activities");
+            if (!FormatForParentControl)
+                Generator.AddBlockWithText("detailsnote", $"General lactation parameters used by multiple activities");
         }
 
     }

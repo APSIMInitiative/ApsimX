@@ -20,7 +20,7 @@ namespace Models.CLEM.Resources
     [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGrowPFCACRD), typeof(RuminantParametersGrowPFCD), typeof(RuminantParametersGrowPFCG), typeof(RuminantParametersGrowPFCI), typeof(RuminantParametersGrowPFCKCL), typeof(RuminantParametersGrowPFCM), typeof(RuminantParametersGrowPFCP) },
         associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent, ModelAssociationStyle.Child },
         SingleInstance = true)]
-    public class RuminantParametersGrowPF : CLEMModel, ISubParameters, ICloneable
+    public class RuminantParametersGrowPF : CLEMModel, ICloneable
     {
         /// <summary>
         /// Create copy of this class

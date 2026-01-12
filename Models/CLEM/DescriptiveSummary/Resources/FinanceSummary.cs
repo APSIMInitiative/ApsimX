@@ -1,4 +1,6 @@
 ﻿using Models.CLEM.Resources;
+using Models.Core;
+using System.Collections.Generic;
 
 namespace Models.CLEM.DescriptiveSummary.Resources
 {
@@ -7,6 +9,19 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     /// </summary>
     public class FinanceSummary : DescriptiveSummaryProviderBase<Finance>
     {
+        ///<inheritdoc/>
+        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
+        {
+            var model = ModelTyped;
+            if (model is null) return [];
+
+            return
+            [
+                (model.Structure.FindChildren<FinanceType>(), true, "", "", $"No {CLEMModel.DisplaySummaryValueSnippet("FinanceType", entryStyle: HTMLSummaryStyle.Resource)} provided!")
+            ];
+        }
+
+
         /// <inheritdoc/>
         public override void BuildSummary()
         {

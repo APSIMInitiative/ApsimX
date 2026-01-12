@@ -10,7 +10,10 @@ namespace Models.CLEM.DescriptiveSummary.Resources
         /// <inheritdoc/>
         public override void BuildSummary()
         {
-            // minimal placeholder
+            var model = ModelTyped;
+            if (model is null) return;
+
+            Generator.AddBlockWithText("activityentry", $"There is a starting amount of {CLEMModel.DisplaySummaryValueSnippet(model.StartingAmount)}");
         }
     }
 }

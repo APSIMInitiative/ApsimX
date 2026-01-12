@@ -7,10 +7,5 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     /// </summary>
     public class OtherAnimalsTypeSummary : DescriptiveSummaryProviderBase<OtherAnimalsType>
     {
-        /// <inheritdoc/>
-        public override void BuildSummary()
-        {
-            // minimal placeholder
-        }
     }
 }

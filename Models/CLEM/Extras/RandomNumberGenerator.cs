@@ -70,5 +70,14 @@ namespace Models.CLEM
                 generator = new Random(Seed);
             }
         }
+
+        /// <summary>
+        /// A method to initialise the random number generator needed for UI calculations such as the Descriptive Summary
+        /// </summary>
+        public void SetForPreSimulation()
+        {
+            generator = new Random(1);
+        }
+
     }
 }
