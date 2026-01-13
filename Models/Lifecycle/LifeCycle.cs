@@ -4,7 +4,6 @@ using System.Linq;
 using APSIM.Core;
 using JetBrains.Annotations;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Models.Interfaces;
 using Models.Soils;
 using Newtonsoft.Json;

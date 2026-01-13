@@ -3,7 +3,6 @@
     using System;
     using Interfaces;
     using Models.Core;
-    using Models.Core.ApsimFile;
 
     /// <summary>This command moves a model from one Parent Node to another.</summary>
     class MoveModelCommand : ICommand
@@ -49,7 +48,7 @@
             string originalPath = this.fromModel.FullPath;
 
             // Move model.
-            Structure.Move(fromModel, toParent);
+            Move(fromModel, toParent);
             tree.Delete(originalPath);
             tree.AddChild(toParent.FullPath, describeModel(fromModel));
             tree.SelectedNode = fromModel.FullPath;
@@ -61,10 +60,26 @@
         public void Undo(ITreeView tree, Action<object> modelChanged)
         {
             tree.Delete(fromModel.FullPath);
-            Structure.Move(fromModel, fromParent);
+            Move(fromModel, fromParent);
             fromModel.Name = originalName;
             tree.AddChild(fromParent.FullPath, describeModel(fromModel), originalPosition);
             tree.SelectedNode = fromModel.FullPath;
+        }
+
+
+        /// <summary>Move a model from one parent to another.</summary>
+        /// <param name="model">The model to move.</param>
+        /// <param name="newParent">The new parente for the model.</param>
+        private void Move(IModel model, IModel newParent)
+        {
+            // Remove old model.
+            model.Parent.Node.RemoveChild(model as Model);
+
+            // Clear the cache for all models in scope of the model to be moved.
+            // The models in scope will be different after the move so we will
+            // need to do this again after we move the model.
+            newParent.Node.AddChild(model as Model);
+            Apsim.ClearCaches(model);
         }
     }
 }

@@ -276,7 +276,9 @@ namespace UserInterface.Views
             {
                 textView.Buffer.Clear();
 
-                if (value != null)
+                // Attempting to process the text blocks when the view is not realized can result in
+                // Gtk Critical Errors.
+                if (value != null && textView.IsRealized)
                 {
                     MarkdownPipeline pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().UsePipeTables().UseEmphasisExtras().Build();
                     MarkdownDocument document = Markdown.Parse(value, pipeline);

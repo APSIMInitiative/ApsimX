@@ -7,7 +7,6 @@ using System.Text;
 using APSIM.ZMQServer.IO;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Models.Core.Run;
 
 namespace APSIM.ZMQServer
@@ -49,7 +48,7 @@ namespace APSIM.ZMQServer
                     conn = new OneshotComms(options);
                 else if (options.Protocol == "interactive")
                     conn = new InteractiveComms(options);
-                else 
+                else
                     throw new Exception("Unknown comms protocol '" + options.Protocol + "'");
 
                 conn.doCommands(apsimBlob);

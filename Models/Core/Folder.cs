@@ -1,6 +1,5 @@
 ﻿using System;
 using APSIM.Core;
-using Models.Core.ApsimFile;
 
 namespace Models.Core
 {

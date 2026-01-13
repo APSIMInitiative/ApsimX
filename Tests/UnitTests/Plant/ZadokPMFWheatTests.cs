@@ -3,7 +3,6 @@ using APSIM.Shared.Utilities;
 using Models;
 using Models.Agroforestry;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Models.Soils;
 using Models.Soils.Arbitrator;
 using Models.Storage;
@@ -32,10 +31,10 @@ namespace UnitTests.PMF.Phenology.Scales
             string path = Path.Combine("%root%", "Tests", "Simulation", "Zadoks", "ZadoksStageWheat.apsimx");
             path = PathUtilities.GetAbsolutePath(path, null);
             Simulations sims = FileFormat.ReadFromFile<Simulations>(path).Model as Simulations;
-            
+
             foreach (Soil soil in sims.Node.FindChildren<Soil>(recurse: true))
                 soil.Sanitise();
-            
+
             DataStore storage = sims.Node.FindChild<DataStore>(recurse: true);
             storage.UseInMemoryDB = true;
             Simulation sim = sims.Node.FindChild<Simulation>(recurse: true);
@@ -62,7 +61,7 @@ namespace UnitTests.PMF.Phenology.Scales
 
             // Read the Report table
             var dataTable = storage.Reader.GetData("Report");
-            
+
             // Get the values for each stage from the report
             var stage1DAS = DataTableUtilities.GetColumnAsDoubles(dataTable, "Wheat.Phenology.Zadok.StageDAS(1)", CultureInfo.InvariantCulture);
             var stage10DAS = DataTableUtilities.GetColumnAsDoubles(dataTable, "Wheat.Phenology.Zadok.StageDAS(10)", CultureInfo.InvariantCulture);
@@ -91,25 +90,25 @@ namespace UnitTests.PMF.Phenology.Scales
             double expectedStage90 = 175.0;
 
             // Assertions - check each stage DAS value
-            Assert.That(finalStage1, Is.EqualTo(expectedStage1), 
+            Assert.That(finalStage1, Is.EqualTo(expectedStage1),
                 $"Stage 1 DAS should be {expectedStage1}, but was {finalStage1}");
-            
-            Assert.That(finalStage10, Is.EqualTo(expectedStage10), 
+
+            Assert.That(finalStage10, Is.EqualTo(expectedStage10),
                 $"Stage 10 DAS should be {expectedStage10}, but was {finalStage10}");
-            
-            Assert.That(finalStage31, Is.EqualTo(expectedStage31), 
+
+            Assert.That(finalStage31, Is.EqualTo(expectedStage31),
                 $"Stage 31 DAS should be {expectedStage31}, but was {finalStage31}");
-            
-            Assert.That(finalStage39, Is.EqualTo(expectedStage39), 
+
+            Assert.That(finalStage39, Is.EqualTo(expectedStage39),
                 $"Stage 39 DAS should be {expectedStage39}, but was {finalStage39}");
-            
-            Assert.That(finalStage55, Is.EqualTo(expectedStage55), 
+
+            Assert.That(finalStage55, Is.EqualTo(expectedStage55),
                 $"Stage 55 DAS should be {expectedStage55}, but was {finalStage55}");
-            
-            Assert.That(finalStage65, Is.EqualTo(expectedStage65), 
+
+            Assert.That(finalStage65, Is.EqualTo(expectedStage65),
                 $"Stage 65 DAS should be {expectedStage65}, but was {finalStage65}");
-            
-            Assert.That(finalStage90, Is.EqualTo(expectedStage90), 
+
+            Assert.That(finalStage90, Is.EqualTo(expectedStage90),
                 $"Stage 90 DAS should be {expectedStage90}, but was {finalStage90}");
         }
 
@@ -123,10 +122,10 @@ namespace UnitTests.PMF.Phenology.Scales
             string path = Path.Combine("%root%", "Tests", "Simulation", "Zadoks", "ZadoksStageWheat.apsimx");
             path = PathUtilities.GetAbsolutePath(path, null);
             Simulations sims = FileFormat.ReadFromFile<Simulations>(path).Model as Simulations;
-            
+
             foreach (Soil soil in sims.Node.FindChildren<Soil>(recurse: true))
                 soil.Sanitise();
-            
+
             DataStore storage = sims.Node.FindChild<DataStore>(recurse: true);
             storage.UseInMemoryDB = true;
             Simulation sim = sims.Node.FindChild<Simulation>(recurse: true);
@@ -140,7 +139,7 @@ namespace UnitTests.PMF.Phenology.Scales
 
             sim.Prepare();
             // The exception should be thrown when trying to run the simulation with an invalid stage index
-            Assert.Throws<SimulationException>(() => sim.Run(), 
+            Assert.Throws<SimulationException>(() => sim.Run(),
                 "StageDAS(0) should throw an exception as it's out of valid range (1-90)");
         }
 
@@ -153,10 +152,10 @@ namespace UnitTests.PMF.Phenology.Scales
             string path = Path.Combine("%root%", "Tests", "Simulation", "Zadoks", "ZadoksStageWheat.apsimx");
             path = PathUtilities.GetAbsolutePath(path, null);
             Simulations sims = FileFormat.ReadFromFile<Simulations>(path).Model as Simulations;
-            
+
             foreach (Soil soil in sims.Node.FindChildren<Soil>(recurse: true))
                 soil.Sanitise();
-            
+
             DataStore storage = sims.Node.FindChild<DataStore>(recurse: true);
             storage.UseInMemoryDB = true;
             Simulation sim = sims.Node.FindChild<Simulation>(recurse: true);
@@ -171,7 +170,7 @@ namespace UnitTests.PMF.Phenology.Scales
             sim.Prepare();
 
             // The exception should be thrown when trying to run the simulation with an invalid stage index
-            Assert.Throws<SimulationException>(() => sim.Run(), 
+            Assert.Throws<SimulationException>(() => sim.Run(),
                 "StageDAS(91) should throw an exception as it's out of valid range (1-90)");
         }
 
@@ -184,10 +183,10 @@ namespace UnitTests.PMF.Phenology.Scales
             string path = Path.Combine("%root%", "Tests", "Simulation", "Zadoks", "ZadoksStageWheat.apsimx");
             path = PathUtilities.GetAbsolutePath(path, null);
             Simulations sims = FileFormat.ReadFromFile<Simulations>(path).Model as Simulations;
-            
+
             foreach (Soil soil in sims.Node.FindChildren<Soil>(recurse: true))
                 soil.Sanitise();
-            
+
             DataStore storage = sims.Node.FindChild<DataStore>(recurse: true);
             storage.UseInMemoryDB = true;
             Simulation sim = sims.Node.FindChild<Simulation>(recurse: true);
@@ -202,7 +201,7 @@ namespace UnitTests.PMF.Phenology.Scales
             sim.Prepare();
 
             // The exception should be thrown when trying to run the simulation with an invalid stage index
-            Assert.Throws<SimulationException>(() => sim.Run(), 
+            Assert.Throws<SimulationException>(() => sim.Run(),
                 "StageDAS(-1) should throw an exception as negative indices are invalid");
         }
     }
