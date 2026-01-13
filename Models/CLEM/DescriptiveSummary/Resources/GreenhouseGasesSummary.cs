@@ -1,6 +1,7 @@
 ﻿using Models.CLEM.Resources;
 using Models.Core;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Models.CLEM.DescriptiveSummary.Resources
 {
@@ -10,14 +11,19 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     public class GreenhouseGasesSummary : DescriptiveSummaryProviderBase<GreenhouseGases>
     {
         ///<inheritdoc/>
-        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
+        public override List<ChildComponentGroup> GetChildrenInSummary()
         {
             var model = ModelTyped;
             if (model is null) return [];
 
             return
             [
-                (model.Structure.FindChildren<GreenhouseGasesType>(), true, "", "", $"No {CLEMModel.DisplaySummaryValueSnippet("GreenhouseGasesType", entryStyle: HTMLSummaryStyle.Resource)} provided!")
+                new ChildComponentGroup(
+                    id: "defaulttype",
+                    model: CLEMModel,
+                    childType: typeof(GreenhouseGasesType),
+                    missing: "default"
+                    )
             ];
         }
 

@@ -11,14 +11,19 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     public class RuminantHerdSummary : DescriptiveSummaryProviderBase<RuminantHerd>
     {
         ///<inheritdoc/>
-        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
+        public override List<ChildComponentGroup> GetChildrenInSummary()
         {
             var model = ModelTyped;
             if (model is null) return [];
 
             return
             [
-                (model.Structure.FindChildren<RuminantType>(), true, "", "", $"No {CLEMModel.DisplaySummaryValueSnippet("RuminantType", entryStyle: HTMLSummaryStyle.Resource)} provided!")
+                new ChildComponentGroup(
+                    id: "defaulttype",
+                    model: CLEMModel,
+                    childType: typeof(RuminantType),
+                    missing: "default"
+                    )
             ];
         }
 

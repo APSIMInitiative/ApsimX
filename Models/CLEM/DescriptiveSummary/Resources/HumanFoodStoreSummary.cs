@@ -1,6 +1,7 @@
 using Models.CLEM.Resources;
 using Models.Core;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Models.CLEM.DescriptiveSummary.Resources
 {
@@ -10,17 +11,21 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     public class HumanFoodStoreSummary : DescriptiveSummaryProviderBase<HumanFoodStore>
     {
         ///<inheritdoc/>
-        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
+        public override List<ChildComponentGroup> GetChildrenInSummary()
         {
             var model = ModelTyped;
             if (model is null) return [];
 
             return
             [
-                (model.Structure.FindChildren<HumanFoodStoreType>(), true, "", "", $"No {CLEMModel.DisplaySummaryValueSnippet("HumanFoodStoreType", entryStyle: HTMLSummaryStyle.Resource)} provided!")
+                new ChildComponentGroup(
+                    id: "defaulttypes",
+                    model: CLEMModel,
+                    childType: typeof(HumanFoodStoreType),
+                    missing: "default"
+                    )
             ];
         }
-
 
         /// <inheritdoc/>
         public override void BuildSummary()

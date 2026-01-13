@@ -248,7 +248,8 @@ public class DescriptiveSummaryGenerator
         var provider = DescriptiveSummaryResolver.GetProviderInstance(model, this);
         provider.NestedLevel = level+1;
 
-        if (model is CLEMModel cm && (provider is DefaultDescriptiveSummaryProvider & provider.FormatForParentControl) == false)
+        //if (model is CLEMModel cm && (provider is DefaultDescriptiveSummaryProvider & provider.FormatForParentControl) == false)
+        if (model is CLEMModel cm)
         {
             // Opening wrapper
             provider.CreateSummaryOpeningBlocks();
@@ -277,15 +278,18 @@ public class DescriptiveSummaryGenerator
             }
 
             provider.BuildSummary();
-            // Inner tags around the body (if used)
-            provider.CreateSummaryInnerOpeningBlocks();
 
             var childrenToSummarise = provider.HandleChildrenInSummary();
             foreach (var item in childrenToSummarise)
             {
-                if (item.include)
+                if (item.Include)
                 {
-                    GetChildDescriptiveSummaries(provider, item.models, item.introText, item.missingText, item.borderClass);
+                    // Inner tags around the body (if used)
+                    provider.CreateSummaryInnerOpeningBlocks(item);
+
+                    GetChildDescriptiveSummaries(provider, item);
+
+                    provider.CreateSummaryInnerClosingBlocks(item);
                 }
             }
 
@@ -293,8 +297,6 @@ public class DescriptiveSummaryGenerator
             //{
             //    AppendSummariesRecursively(child);
             //}
-
-            provider.CreateSummaryInnerClosingBlocks();
 
             if (provider.ReportMemosType == DescriptiveSummaryMemoReportingType.AtBottom)
             {
@@ -305,20 +307,20 @@ public class DescriptiveSummaryGenerator
         }
     }
 
-    private void GetChildDescriptiveSummaries(IDescriptiveSummaryProvider provider, IEnumerable<IModel> models, string introText, string MissingText, string borderClass, Func<string, string> markdown2Html = null)
+    private void GetChildDescriptiveSummaries(IDescriptiveSummaryProvider provider, ChildComponentGroup componentGroup, Func<string, string> markdown2Html = null)
     {
-        if (!models.Any() && string.IsNullOrEmpty(MissingText)) return;
+        if (!componentGroup.SelectedModels.Any() && string.IsNullOrEmpty(componentGroup.Missing)) return;
 
-        bool addBorderIt = introText != "" && provider.Model is CLEMRuminantActivityBase && models.Any();
+        bool addBorderIt = componentGroup.Introduction != "" && provider.Model is CLEMRuminantActivityBase && componentGroup.SelectedModels.Any();
 
-        using (OpenBlock(borderClass))
+        using (OpenBlock(componentGroup.BorderCssClass))
         {
-            if (introText != "")
+            if (componentGroup.Introduction != "")
             {
-                AddBlockWithText("childgrouplabel", introText);
+                AddBlockWithText("childgrouplabel", componentGroup.Introduction);
             }
 
-            foreach (var item in models)
+            foreach (var item in componentGroup.SelectedModels)
             {
                 switch (item)
                 {
@@ -336,11 +338,11 @@ public class DescriptiveSummaryGenerator
                 }
             }
 
-            if (!models.Any() && MissingText != "")
+            if (!componentGroup.SelectedModels.Any() && componentGroup.Missing != "")
             {
                 using (OpenBlock("errorbanner clearfix"))
                 {
-                    AddBlockWithText("activityentry", MissingText);
+                    AddBlockWithText("activityentry", componentGroup.Missing);
                 }
             }
         }

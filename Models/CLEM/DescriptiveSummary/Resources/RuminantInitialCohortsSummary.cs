@@ -22,15 +22,20 @@ namespace Models.CLEM.DescriptiveSummary.Resources
         }
 
         ///<inheritdoc/>
-        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
+        public override List<ChildComponentGroup> GetChildrenInSummary()
         {
             var model = ModelTyped;
-            if (model is null) return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>();
+            if (model is null) return [];
 
-            return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
-            {
-                (model.Structure.FindChildren<ISetAttribute>().Cast<IModel>(), false, "", "", $"No {CLEMModel.DisplaySummaryValueSnippet("RuminantTypeCohort", entryStyle: HTMLSummaryStyle.Resource)} provided!")
-            };
+            return
+            [
+                new ChildComponentGroup(
+                    id: "default",
+                    model: CLEMModel,
+                    childType: typeof(RuminantTypeCohort),
+                    missing: "default"
+                    )
+            ];
         }
 
         /// <inheritdoc/>
@@ -68,34 +73,39 @@ namespace Models.CLEM.DescriptiveSummary.Resources
         }
 
         /// <inheritdoc/>
-        public override void CreateSummaryInnerOpeningBlocks()
+        public override void CreateSummaryInnerOpeningBlocks(ChildComponentGroup group)
         {
-            var cohortsModel = ModelTyped;
-            if (cohortsModel is null) return;
+            if (group.Id == "default" && group.SelectedModels.Any())
+            {
+                var cohortsModel = ModelTyped;
+                if (cohortsModel is null) return;
 
-            // Prepare flags used by the original inner-opening tags
-            cohortsModel.WeightWarningOccurred = false;
-            cohortsModel.ConceptionsFound = cohortsModel.Structure.FindChildren<SetPreviousConception>(recurse: true).Any();
-            cohortsModel.AttributesFound = cohortsModel.Structure.FindChildren<SetAttributeWithValue>(recurse: true).Any();
+                // Prepare flags used by the original inner-opening tags
+                cohortsModel.WeightWarningOccurred = false;
+                cohortsModel.ConceptionsFound = cohortsModel.Structure.FindChildren<SetPreviousConception>(recurse: true).Any();
+                cohortsModel.AttributesFound = cohortsModel.Structure.FindChildren<SetAttributeWithValue>(recurse: true).Any();
 
-            headerLabels = new() { "Name", "Sex", "Age", "Weight", "Norm Wt.", "Number", "IsSuckling", "IsSire" };
-            if (cohortsModel.ConceptionsFound)
-                headerLabels.Add("Pregnant");
-            if (cohortsModel.AttributesFound)
-                headerLabels.Add("Attributes");
+                headerLabels = new() { "Name", "Sex", "Age", "Weight", "Norm Wt.", "Number", "IsSuckling", "IsSire" };
+                if (cohortsModel.ConceptionsFound)
+                    headerLabels.Add("Pregnant");
+                if (cohortsModel.AttributesFound)
+                    headerLabels.Add("Attributes");
 
-            Generator.CreateTable(headerLabels);
+                Generator.CreateTable(headerLabels);
+            }
         }
 
         /// <inheritdoc/>
-        public override void CreateSummaryInnerClosingBlocks()
+        public override void CreateSummaryInnerClosingBlocks(ChildComponentGroup group)
         {
-            var cohortsModel = ModelTyped;
-            if (cohortsModel is null) return;
-
-            Generator.CloseTable();
-            if (cohortsModel.WeightWarningOccurred)
-                Generator.AddBlockWithText("warningbanner", "Warning: Initial weight differs from the expected normalised weight by more than 20%");
+            if (group.Id == "default" && group.SelectedModels.Any())
+            {
+                var cohortsModel = ModelTyped;
+                if (cohortsModel is null) return;
+                Generator.CloseTable();
+                if (cohortsModel.WeightWarningOccurred)
+                    Generator.AddBlockWithText("warningbanner", "Warning: Initial weight differs from the expected normalised weight by more than 20%");
+            }
 
         }
     }

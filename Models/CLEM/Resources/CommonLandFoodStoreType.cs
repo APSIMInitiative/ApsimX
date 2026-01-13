@@ -36,7 +36,7 @@ namespace Models.CLEM.Resources
         /// Unit type
         /// </summary>
         [Description("Units (nominal)")]
-        public string Units { get; set; }
+        public string Units { get; set; } = "kg";
 
         /// <summary>
         /// Coefficient to convert N% to DMD%

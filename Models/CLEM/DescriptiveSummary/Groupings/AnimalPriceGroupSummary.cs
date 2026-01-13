@@ -24,6 +24,23 @@ namespace Models.CLEM.DescriptiveSummary.Groupings
             //SummaryStyle = HTMLSummaryStyle.Filter;
         }
 
+        ///<inheritdoc/>
+        public override List<ChildComponentGroup> GetChildrenInSummary()
+        {
+            var model = ModelTyped;
+            if (model is null) return [];
+
+            return
+            [
+                new ChildComponentGroup(
+                    id: "default",
+                    model: CLEMModel,
+                    childType: typeof(Filter),
+                    missing: ""
+                    )
+            ];
+        }
+
         /// <inheritdoc/>
         public override void BuildSummary()
         {
@@ -58,8 +75,10 @@ namespace Models.CLEM.DescriptiveSummary.Groupings
         }
 
         /// <inheritdoc/>
-        public override void CreateSummaryInnerClosingBlocks()
+        public override void CreateSummaryInnerClosingBlocks(ChildComponentGroup group)
         {
+            if (group.Id != "default") return;
+
             var model = ModelTyped;
             if (model is null) return;
 
@@ -74,8 +93,9 @@ namespace Models.CLEM.DescriptiveSummary.Groupings
         }
 
         /// <inheritdoc/>
-        public override void CreateSummaryInnerOpeningBlocks()
+        public override void CreateSummaryInnerOpeningBlocks(ChildComponentGroup group)
         {
+            if (group.Id != "default") return;
 
             var cm = CLEMModel;
             if (cm is null) return;
@@ -90,7 +110,7 @@ namespace Models.CLEM.DescriptiveSummary.Groupings
             {
                 generator.OpenBlock("filterborder clearfix", "", id: "animalPriceGroup_filters");
             }
-            if (cm.Structure.FindChildren<Filter>().Any() == false)
+            if (group.SelectedModels.Any() == false)
             {
                 generator.AddBlockWithText("filter", "All individuals");
             }

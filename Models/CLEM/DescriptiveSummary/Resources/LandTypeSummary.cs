@@ -29,13 +29,17 @@ namespace Models.CLEM.DescriptiveSummary.Resources
                     string units = "";
                     if (string.IsNullOrWhiteSpace(model.Units) == false)
                     {
-                        units = $" {CLEMModel.DisplaySummaryValueSnippet(units)}";
+                        units = $" {CLEMModel.DisplaySummaryValueSnippet(model.Units)}";
                     }
                     string propBuildings = "";
                     if (model.PortionBuildings > 0)
-                        propBuildings = $" of which {CLEMModel.DisplaySummaryValueSnippet(model.PortionBuildings)} is buildings";
+                        propBuildings = $", {CLEMModel.DisplaySummaryValueSnippet(model.PortionBuildings*model.UsableArea)} of which is occupied by buildings";
+                    string usable = "";
+                    if (model.UsableArea != model.LandArea)
+                        usable = $" of which {CLEMModel.DisplaySummaryValueSnippet(model.UsableArea)} is usable";
 
-                    Generator.AddBlockWithText("activityentry", $"This land type has an area of {CLEMModel.DisplaySummaryValueSnippet(model.LandArea * model.ProportionOfTotalArea)}{units}{propBuildings}");
+
+                    Generator.AddBlockWithText("activityentry", $"This land type has an {CLEMModel.DisplaySummaryValueSnippet(model.LandArea, warnZero: true)}{units}{usable}{propBuildings}");
                 }
             }
             Generator.AddBlockWithText("activityentry", $"This land type is identified as {CLEMModel.DisplaySummaryValueSnippet(model.SoilType)}");

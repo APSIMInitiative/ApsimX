@@ -10,14 +10,19 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     public class OtherAnimalsSummary : DescriptiveSummaryProviderBase<OtherAnimals>
     {
         ///<inheritdoc/>
-        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
+        public override List<ChildComponentGroup> GetChildrenInSummary()
         {
             var model = ModelTyped;
             if (model is null) return [];
 
             return
             [
-                (model.Structure.FindChildren<OtherAnimalsType>(), true, "", "", $"No {CLEMModel.DisplaySummaryValueSnippet("OtherAnimalsType", entryStyle: HTMLSummaryStyle.Resource)} provided!")
+                new ChildComponentGroup(
+                    id: "defaulttype",
+                    model: CLEMModel,
+                    childType: typeof(OtherAnimalsType),
+                    missing: "default"
+                    )
             ];
         }
 

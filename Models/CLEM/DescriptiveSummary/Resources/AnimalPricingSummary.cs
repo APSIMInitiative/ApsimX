@@ -22,49 +22,41 @@ namespace Models.CLEM.DescriptiveSummary.Resources
         }
 
         ///<inheritdoc/>
-        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
+        public override List<ChildComponentGroup> GetChildrenInSummary()
         {
             var model = ModelTyped;
             if (model is null) return [];
 
             return
             [
-                (model.Structure.FindChildren<AnimalPriceGroup>().Cast<IModel>(), true, "", "The following Animal Price Groups are applied in the order provided to determine the purchase and sale price of any individual.", $"No {CLEMModel.DisplaySummaryValueSnippet("AnimalFoodStoreType", entryStyle: HTMLSummaryStyle.Resource)} provided!")
+                new ChildComponentGroup(
+                    id: "prices",
+                    model: CLEMModel,
+                    childType: typeof(AnimalPriceGroup),
+                    missing: "default",
+                    introduction: "The following Animal Price Groups are applied in the order provided to determine the purchase and sale price of any individual."
+                    )
             ];
         }
 
-        ///// <inheritdoc/>
-        //public override void BuildSummary()
-        //{
-        //    var model = ModelTyped;
-        //    if (model is null) return;
-
-        //    generator.AddBlockWithText("detailsnote", $"The following Animal Price Groups are applied in the order provided to determine the purchase and sale price of any individual.");
-        //}
-
         /// <inheritdoc/>
-        public override void CreateSummaryInnerOpeningBlocks()
+        public override void BuildSummary()
         {
-            var cm = CLEMModel;
-            if (cm is null) return;
-
-            if (cm.Structure.FindChildren<AnimalPriceGroup>().Any())
-            {
-                Generator.CreateTable(new string[] { "Name", "Filter", "Value", "Style", "Type" });
-            }
-            //else
-            //{
-            //    generator.AddBlockWithText("errorbanner", "No Animal Price Groups defined!");
-            //}
         }
 
         /// <inheritdoc/>
-        public override void CreateSummaryInnerClosingBlocks()
+        public override void CreateSummaryInnerOpeningBlocks(ChildComponentGroup group)
         {
-            var cm = CLEMModel;
-            if (cm is null) return;
+            if (group.Id == "prices" && group.SelectedModels.Any())
+            {
+                Generator.CreateTable(new string[] { "Name", "Filter", "Value", "Style", "Type" });
+            }
+        }
 
-            if (cm.Structure.FindChildren<AnimalPriceGroup>().Any())
+        /// <inheritdoc/>
+        public override void CreateSummaryInnerClosingBlocks(ChildComponentGroup group)
+        {
+            if (group.Id == "prices" && group.SelectedModels.Any())
             {
                 Generator.CloseTable();
             }

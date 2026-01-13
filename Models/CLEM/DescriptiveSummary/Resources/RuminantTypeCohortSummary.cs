@@ -21,19 +21,24 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     public class RuminantTypeCohortSummary : DescriptiveSummaryProviderBase<RuminantTypeCohort>
     {
         ///<inheritdoc/>
-        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
+        public override List<ChildComponentGroup> GetChildrenInSummary()
         {
             var model = ModelTyped;
+            if (model is null) return [];
 
-            // if this is for a parent description (i.e. in the initial cohorts table, ignore all children as handled by other code.
-            if (model is not null && FormatForParentControl)
+            if (FormatForParentControl)
             {
-                return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
-                {
-                    (model.Structure.FindChildren<IModel>(), false, "", "", "")
-                };
+                return
+                [
+                    new ChildComponentGroup(
+                    id: "ignoreall",
+                    models: model.Structure.FindChildren<IModel>(),
+                    include: false, 
+                    missing: ""
+                    )
+                ];
             }
-            return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>();
+            return [];
         }
 
         /// <inheritdoc/>

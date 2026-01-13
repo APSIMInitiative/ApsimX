@@ -103,7 +103,7 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
     }
 
     /// <inheritdoc/>
-    public virtual void CreateSummaryInnerClosingBlocks()
+    public virtual void CreateSummaryInnerClosingBlocks(ChildComponentGroup group)
     {
         foreach (string block in innerBlocks.ToArray().Reverse())
             Generator.CloseMostRecentBlock(id: block);
@@ -111,7 +111,12 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
     }
 
     /// <inheritdoc/>
-    public virtual void CreateSummaryInnerOpeningBlocks()
+    public virtual void CreateSummaryInnerOpeningBlocks(ChildComponentGroup group)
+    {
+    }
+
+    /// <inheritdoc/>
+    public virtual void CreateSummaryInnerOpeningBlocksBeforeSummary() 
     {
         var cm = CLEMModel;
         if (cm is null) return;
@@ -124,7 +129,7 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
             {
                 Generator.AddBlockWithText("activityentry", $"This resource is measured in {CLEMModel.DisplaySummaryValueSnippet(units)}");
             }
-            
+
         }
 
         if (this.GetType().IsSubclassOf(typeof(ResourceBaseWithTransactions)))
@@ -135,9 +140,6 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
             }
         }
     }
-
-    /// <inheritdoc/>
-    public virtual void CreateSummaryInnerOpeningBlocksBeforeSummary() {   }
 
     /// <inheritdoc/>
     public virtual void GetSummaryNameTypeHeader(bool disabled = false)
@@ -272,29 +274,27 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
     /// Provide a list of child types to include or ignore from summary for the given model
     /// </summary>
     /// <returns>List of child model groups to handle</returns>
-    public virtual List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
+    public virtual List<ChildComponentGroup> GetChildrenInSummary()
     {
-        return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
-        {
-        };
+        return [];
     }
 
     /// <summary>
     /// Provide a list of child types to include or ignore from summary for the given model
     /// </summary>
     /// <returns>Full list of child model groups to handle</returns>
-    public virtual IEnumerable<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> HandleChildrenInSummary()
+    public virtual IEnumerable<ChildComponentGroup> HandleChildrenInSummary()
     {
         var cm = CLEMModel;
         if (cm is null)
-            return Enumerable.Empty<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>();
+            return [];
 
-        var modelsToSummarise = GetChildrenInSummary() ?? new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>();
+        var modelsToSummarise = GetChildrenInSummary();
 
         // Build a materialized set of all models already included in modelsToSummarise
         var uniqueModels = new HashSet<IModel>(
             modelsToSummarise
-                .SelectMany(entry => entry.models ?? Enumerable.Empty<IModel>())
+                .SelectMany(entry => entry.SelectedModels ?? [])
             );
 
         // Find all child models and only add those not already present in uniqueModels
@@ -303,7 +303,7 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
                                   .ToList();
 
         if (remainingChildren.Count > 0)
-            modelsToSummarise.Add((remainingChildren, true, "", "", ""));
+            modelsToSummarise.Add(new ChildComponentGroup("others", remainingChildren));
 
         return modelsToSummarise;
     }

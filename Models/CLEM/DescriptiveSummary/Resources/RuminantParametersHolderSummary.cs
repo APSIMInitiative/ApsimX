@@ -29,16 +29,27 @@ namespace Models.CLEM.DescriptiveSummary.Resources
         }
 
         ///<inheritdoc/>
-        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
+        public override List<ChildComponentGroup> GetChildrenInSummary()
         {
-            List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> grps = new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>();
             var model = ModelTyped;
-            if (model is null) return grps;
+            if (model is null) return [];
 
-            grps.Add((model.Structure.FindChildren<ISubParameters>(recurse: true).Cast<IModel>(), true, "", "", ""));
-            grps.Add((model.Structure.FindChildren<RuminantParametersGrowPF>().Cast<IModel>(), false, "", "", ""));
-
-            return grps;
+            return
+            [
+                new ChildComponentGroup(
+                    id: "parameters",
+                    models: model.Structure.FindChildren<ISubParameters>(recurse: true).Cast<IModel>(),
+                    childType: typeof(ISubParameters),
+                    missing: ""
+                    ),
+                new ChildComponentGroup(
+                    id: "parameters",
+                    model: CLEMModel,
+                    childType: typeof(RuminantParametersGrowPF),
+                    missing: "",
+                    include: false
+                    )
+            ];
         }
     }
 }

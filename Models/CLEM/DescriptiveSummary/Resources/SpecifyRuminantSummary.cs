@@ -13,17 +13,21 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     public class SpecifyRuminantSummary : DescriptiveSummaryProviderBase<SpecifyRuminant>
     {
         ///<inheritdoc/>
-        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
+        public override List<ChildComponentGroup> GetChildrenInSummary()
         {
             var model = ModelTyped;
             if (model is null) return [];
 
             return
             [
-                (model.Structure.FindChildren<RuminantTypeCohort>(), true, "", "", $"No {CLEMModel.DisplaySummaryValueSnippet("RuminantTypeCohort", entryStyle: HTMLSummaryStyle.Resource)} provided!")
+                new ChildComponentGroup(
+                    id: "cohort",
+                    model: CLEMModel,
+                    childType: typeof(RuminantTypeCohort),
+                    missing: "default"
+                    )
             ];
         }
-
 
         /// <inheritdoc/>
         public override void BuildSummary()

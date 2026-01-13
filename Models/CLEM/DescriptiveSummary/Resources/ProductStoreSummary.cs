@@ -10,14 +10,26 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     public class ProductStoreSummary : DescriptiveSummaryProviderBase<ProductStore>
     {
         ///<inheritdoc/>
-        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
+        public override List<ChildComponentGroup> GetChildrenInSummary()
         {
             var model = ModelTyped;
             if (model is null) return [];
 
             return
             [
-                (model.Structure.FindChildren<ProductStoreType>(), true, "", "", $"No {CLEMModel.DisplaySummaryValueSnippet("ProductStoreType", entryStyle: HTMLSummaryStyle.Resource)} provided!")
+                new ChildComponentGroup(
+                    id: "defaulttype",
+                    model: CLEMModel,
+                    childType: typeof(ProductStoreType),
+                    missing: "default"
+                    ),
+                new ChildComponentGroup(
+                    id: "manuretype",
+                    model: CLEMModel,
+                    childType: typeof(ProductStoreTypeManure),
+                    missing: "",
+                    introduction: "The following product store types can automatically receive manure."
+                    ),
             ];
         }
 

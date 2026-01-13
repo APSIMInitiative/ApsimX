@@ -23,15 +23,21 @@ namespace Models.CLEM.DescriptiveSummary.Resources
         }
 
         ///<inheritdoc/>
-        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
+        public override List<ChildComponentGroup> GetChildrenInSummary()
         {
             var model = ModelTyped;
-            if (model is null) return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>();
+            if (model is null) return [];
 
-            return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
-            {
-                (model.Structure.FindChildren<LabourPriceGroup>().Cast<IModel>(), true, "", "The following Labour Price Groups are applied in the order provided to determine the pay rate of any individual.", $"No {CLEMModel.DisplaySummaryValueSnippet("LabourPriceGroup", entryStyle: HTMLSummaryStyle.Filter)} provided!")
-            };
+            return
+            [
+                new ChildComponentGroup(
+                    id: "defaulttype",
+                    model: CLEMModel,
+                    childType: typeof(LabourPriceGroup),
+                    missing: "default",
+                    introduction: "The following Labour Price Groups are applied in the order provided to determine the pay rate of any individual."
+                    )
+            ];
         }
 
         /// <inheritdoc/>
@@ -40,28 +46,18 @@ namespace Models.CLEM.DescriptiveSummary.Resources
         }
 
         /// <inheritdoc/>
-        public override void CreateSummaryInnerOpeningBlocks()
+        public override void CreateSummaryInnerOpeningBlocks(ChildComponentGroup group)
         {
-            var cm = CLEMModel;
-            if (cm is null) return;
-
-            if (cm.Structure.FindChildren<AnimalPriceGroup>().Any())
+            if (group.Id != "defaulttype" && group.SelectedModels.Any())
             {
                 Generator.CreateTable(new string[] { "Name", "Filter", "Rate per day" });
             }
-            //else
-            //{
-            //    generator.AddBlockWithText("errorbanner", "No Labour Price Groups defined!");
-            //}
         }
 
         /// <inheritdoc/>
-        public override void CreateSummaryInnerClosingBlocks()
+        public override void CreateSummaryInnerClosingBlocks(ChildComponentGroup group)
         {
-            var cm = CLEMModel;
-            if (cm is null) return;
-
-            if (cm.Structure.FindChildren<AnimalPriceGroup>().Any())
+            if (group.Id != "defaulttype" && group.SelectedModels.Any())
             {
                 Generator.CloseTable();
             }

@@ -16,15 +16,26 @@ namespace Models.CLEM.DescriptiveSummary.Resources
     public class LabourSummary : DescriptiveSummaryProviderBase<Labour>
     {
         ///<inheritdoc/>
-        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
+        public override List<ChildComponentGroup> GetChildrenInSummary()
         {
             var model = ModelTyped;
             if (model is null) return [];
 
             return
             [
-                (model.Structure.FindChildren<LabourType>(), true, "", "", $"No {CLEMModel.DisplaySummaryValueSnippet("LabourType", entryStyle: HTMLSummaryStyle.Resource)} provided!"),
-                (model.Structure.FindChildren<Relationship>().Where(a => a.Identifier == "Adult equivalent"), true, "", "", $"No {CLEMModel.DisplaySummaryValueSnippet("Relationship", entryStyle:HTMLSummaryStyle.Helper)} with the identifier {CLEMModel.DisplaySummaryValueSnippet("Adult equivalent")} was provided. All individuals are assumed to be 1 AE."),
+                new ChildComponentGroup(
+                    id: "defaulttype",
+                    model: CLEMModel,
+                    childType: typeof(LabourType),
+                    missing: "default"
+                    ),
+                new ChildComponentGroup(
+                    id: "aerelationship",
+                    models: model.Structure.FindChildren<Relationship>().Where(a => a.Identifier == "Adult equivalent"),
+                    childType: typeof(Relationship),
+                    introduction: "The following relationship is used to calculate the Adult Equivalent of each person",
+                    missing: $"No {CLEMModel.DisplaySummaryValueSnippet("Relationship", entryStyle:HTMLSummaryStyle.Helper)} with the identifier {CLEMModel.DisplaySummaryValueSnippet("Adult equivalent")} was provided. All individuals are assumed to be 1 AE."
+                    )
             ];
         }
 
@@ -38,24 +49,18 @@ namespace Models.CLEM.DescriptiveSummary.Resources
         }
 
         /// <inheritdoc/>
-        public override void CreateSummaryInnerOpeningBlocks()
+        public override void CreateSummaryInnerOpeningBlocks(ChildComponentGroup group)
         {
-            var cm = CLEMModel;
-            if (cm is null) return;
-
-            if (cm.Structure.FindChildren<AnimalPriceGroup>().Any())
+            if (group.Id == "defaulttype" && group.SelectedModels.Any())
             {
                 Generator.CreateTable(new string[] { "Name", "Sex", "Age (yrs)", "Number", "Hired" });
             }
         }
 
         /// <inheritdoc/>
-        public override void CreateSummaryInnerClosingBlocks()
+        public override void CreateSummaryInnerClosingBlocks(ChildComponentGroup group)
         {
-            var cm = CLEMModel;
-            if (cm is null) return;
-
-            if (cm.Structure.FindChildren<AnimalPriceGroup>().Any())
+            if (group.Id == "defaulttype" && group.SelectedModels.Any())
             {
                 Generator.CloseTable();
             }

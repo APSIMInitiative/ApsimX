@@ -50,12 +50,12 @@ public interface IDescriptiveSummaryProvider
     /// <summary>
     /// Provides the closing inner  blocks for summary
     /// </summary>
-    void CreateSummaryInnerClosingBlocks();
+    void CreateSummaryInnerClosingBlocks(ChildComponentGroup group);
 
     /// <summary>
     /// Provides the inner opening blocks for summary
     /// </summary>
-    void CreateSummaryInnerOpeningBlocks();
+    void CreateSummaryInnerOpeningBlocks(ChildComponentGroup group);
 
     /// <summary>
     /// Provides any blocks to occur prior to the summary but inside opening blocks
@@ -86,12 +86,12 @@ public interface IDescriptiveSummaryProvider
     /// Provide the grouped lists of all Children components to summarise
     /// </summary>
     /// <returns>A IEnumerable of the models, include, border class name, intro text and missing text for each type of component reported.</returns>
-    List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary();
+    List<ChildComponentGroup> GetChildrenInSummary();
 
     /// <summary>
     /// Update the list of child types to include or ignore from summary for the given model
     /// </summary>
-    IEnumerable<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> HandleChildrenInSummary();
+    IEnumerable<ChildComponentGroup> HandleChildrenInSummary();
 
     /// <summary>
     /// Determine the opacity level to apply for summary display based on enabled state
