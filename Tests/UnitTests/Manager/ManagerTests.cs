@@ -4,7 +4,6 @@ using Models.Core;
 using NUnit.Framework;
 using System;
 using APSIM.Shared.Documentation;
-using Models.Core.ApsimFile;
 using Models.Core.Run;
 using System.Collections.Generic;
 using System.IO;
