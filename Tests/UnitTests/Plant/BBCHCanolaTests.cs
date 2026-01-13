@@ -48,10 +48,10 @@ namespace UnitTests.PMF.Phenology.Scales
                 "[Canola].Phenology.BBCH.Stage",
                 "[Canola].Phenology.BBCH.StageDAS(1)",
                 "[Canola].Phenology.BBCH.StageDAS(10)",
-                "[Canola].Phenology.BBCH.StageDAS(31)",
+                "[Canola].Phenology.BBCH.StageDAS(30)",
                 "[Canola].Phenology.BBCH.StageDAS(60)",
-                "[Canola].Phenology.BBCH.StageDAS(69)",
-                "[Canola].Phenology.BBCH.StageDAS(79)",
+                "[Canola].Phenology.BBCH.StageDAS(65)",
+                "[Canola].Phenology.BBCH.StageDAS(75)",
                 "[Canola].Phenology.BBCH.StageDAS(87)",
                 "[Canola].Phenology.BBCH.StageDAS(90)"
             ];
@@ -68,30 +68,30 @@ namespace UnitTests.PMF.Phenology.Scales
             // Get the values for each stage from the report
             var stage1DAS = DataTableUtilities.GetColumnAsDoubles(dataTable, "Canola.Phenology.BBCH.StageDAS(1)", CultureInfo.InvariantCulture);
             var stage10DAS = DataTableUtilities.GetColumnAsDoubles(dataTable, "Canola.Phenology.BBCH.StageDAS(10)", CultureInfo.InvariantCulture);
-            var stage31DAS = DataTableUtilities.GetColumnAsDoubles(dataTable, "Canola.Phenology.BBCH.StageDAS(31)", CultureInfo.InvariantCulture);
+            var stage30DAS = DataTableUtilities.GetColumnAsDoubles(dataTable, "Canola.Phenology.BBCH.StageDAS(30)", CultureInfo.InvariantCulture);
             var stage60DAS = DataTableUtilities.GetColumnAsDoubles(dataTable, "Canola.Phenology.BBCH.StageDAS(60)", CultureInfo.InvariantCulture);
-            var stage69DAS = DataTableUtilities.GetColumnAsDoubles(dataTable, "Canola.Phenology.BBCH.StageDAS(69)", CultureInfo.InvariantCulture);
-            var stage79DAS = DataTableUtilities.GetColumnAsDoubles(dataTable, "Canola.Phenology.BBCH.StageDAS(79)", CultureInfo.InvariantCulture);
+            var stage65DAS = DataTableUtilities.GetColumnAsDoubles(dataTable, "Canola.Phenology.BBCH.StageDAS(65)", CultureInfo.InvariantCulture);
+            var stage75DAS = DataTableUtilities.GetColumnAsDoubles(dataTable, "Canola.Phenology.BBCH.StageDAS(75)", CultureInfo.InvariantCulture);
             var stage87DAS = DataTableUtilities.GetColumnAsDoubles(dataTable, "Canola.Phenology.BBCH.StageDAS(87)", CultureInfo.InvariantCulture);
             var stage90DAS = DataTableUtilities.GetColumnAsDoubles(dataTable, "Canola.Phenology.BBCH.StageDAS(90)", CultureInfo.InvariantCulture);
 
             // Get the final values (last element in each array)
             double finalStage1 = stage1DAS.Last();
             double finalStage10 = stage10DAS.Last();
-            double finalStage31 = stage31DAS.Last();
+            double finalStage30 = stage30DAS.Last();
             double finalStage60 = stage60DAS.Last();
-            double finalStage69 = stage69DAS.Last();
-            double finalStage79 = stage79DAS.Last();
+            double finalStage65 = stage65DAS.Last();
+            double finalStage75 = stage75DAS.Last();
             double finalStage87 = stage87DAS.Last();
             double finalStage90 = stage90DAS.Last();
 
             // Expected values
             double expectedStage1 = 1.0;   
             double expectedStage10 = 4.0;  
-            double expectedStage31 = 30.0;  
+            double expectedStage30 = 30.0;  
             double expectedStage60 = 105.0;  
-            double expectedStage69 = 146.0;  
-            double expectedStage79 = 177.0;  
+            double expectedStage65 = 123.0;  
+            double expectedStage75 = 142.0;  
             double expectedStage87 = 201.0;  
             double expectedStage90 = 202.0;  
 
@@ -102,17 +102,17 @@ namespace UnitTests.PMF.Phenology.Scales
             Assert.That(finalStage10, Is.EqualTo(expectedStage10), 
                 $"BBCH Stage 10 DAS should be {expectedStage10}, but was {finalStage10}");
             
-            Assert.That(finalStage31, Is.EqualTo(expectedStage31), 
-                $"BBCH Stage 31 DAS should be {expectedStage31}, but was {finalStage31}");
+            Assert.That(finalStage30, Is.EqualTo(expectedStage30), 
+                $"BBCH Stage 30 DAS should be {expectedStage30}, but was {finalStage30}");
             
             Assert.That(finalStage60, Is.EqualTo(expectedStage60), 
                 $"BBCH Stage 60 DAS should be {expectedStage60}, but was {finalStage60}");
             
-            Assert.That(finalStage69, Is.EqualTo(expectedStage69), 
-                $"BBCH Stage 69 DAS should be {expectedStage69}, but was {finalStage69}");
+            Assert.That(finalStage65, Is.EqualTo(expectedStage65), 
+                $"BBCH Stage 65 DAS should be {expectedStage65}, but was {finalStage65}");
             
-            Assert.That(finalStage79, Is.EqualTo(expectedStage79), 
-                $"BBCH Stage 79 DAS should be {expectedStage79}, but was {finalStage79}");
+            Assert.That(finalStage75, Is.EqualTo(expectedStage75), 
+                $"BBCH Stage 75 DAS should be {expectedStage75}, but was {finalStage75}");
             
             Assert.That(finalStage87, Is.EqualTo(expectedStage87), 
                 $"BBCH Stage 87 DAS should be {expectedStage87}, but was {finalStage87}");

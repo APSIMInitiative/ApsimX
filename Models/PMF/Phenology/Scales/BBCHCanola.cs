@@ -9,17 +9,17 @@ namespace Models.PMF.Phen
     /// This model calculates a BBCH growth stage value for Canola based upon the current phenological growth stage within the model.
     /// 
     /// BBCH Scale for Canola Mapping:
-    /// - BBCH 0-5: Germinating phase (Stage 1: Sowing to Stage 2: Germination) - Linear progression
-    /// - BBCH 5-10: Emerging phase (Stage 2: Germination to Stage 3: Emergence) - Linear progression
-    /// - BBCH 10: Emergence (Stage 3: Emergence)
-    /// - BBCH 31: Floral Initiation (Stage 4: FloralInitiation)
-    /// - BBCH 51: Green Bud (Stage 5: GreenBud)
-    /// - BBCH 60: Start Flowering (Stage 6: StartFlowering)
-    /// - BBCH 69: End Flowering (Stage 9: EndFlowering)
-    /// - BBCH 79: End Pod Development (Stage 10: EndPodDevelopment)
-    /// - BBCH 87: End Grain Fill (Stage 11: EndGrainFill)
-    /// - BBCH 90: Maturity (Stage 12: Maturity)
-    /// 
+    /// BBCH 10: Stage 3 - Emergence
+    /// BBCH 30: Stage 4 - Floral Initiation
+    /// BBCH 51: Stage 5 - Green Bud
+    /// BBCH 60: Stage 6 - Start Flowering
+    /// BBCH 65: Stage 6.99 - 50% of flowers on main raceme open, older petals falling
+    /// BBCH 70: Stage 7 - Pods begin to form after flowering
+    /// BBCH 75: Stage 7.99 - 50% of pods to form after flowering
+    /// BBCH 80: Stage 8 - Seeds begin to accumulate dry matter (grain filling starts)
+    /// BBCH 79: Stage 10 - End Pod Development
+    /// BBCH 87: Stage 11 - End Grain Fill
+    /// BBCH 90: Stage 12 - Maturity
     /// Linear interpolation is used between these key stages (Stages 3-12).
     /// </summary>
     [Serializable]
@@ -67,15 +67,18 @@ namespace Models.PMF.Phen
                 {
                     // BBCH stages mapped to phenological stages:
                     // BBCH 10: Stage 3 - Emergence
-                    // BBCH 31: Stage 4 - Floral Initiation
+                    // BBCH 30: Stage 4 - Floral Initiation
                     // BBCH 51: Stage 5 - Green Bud
                     // BBCH 60: Stage 6 - Start Flowering
-                    // BBCH 69: Stage 9 - End Flowering
+                    // BBCH 65: Stage 6.99 - 50% of flowers on main raceme open, older petals falling
+                    // BBCH 70: Stage 7 - Pods begin to form after flowering
+                    // BBCH 75: Stage 7.99 - 50% of pods to form after flowering
+                    // BBCH 80: Stage 8 - Seeds begin to accumulate dry matter (grain filling starts)
                     // BBCH 79: Stage 10 - End Pod Development
                     // BBCH 87: Stage 11 - End Grain Fill
                     // BBCH 90: Stage 12 - Maturity
-                    double[] BBCH_code_y = {10, 31, 51, 60, 69, 79, 87, 90 };
-                    double[] PMF_Stage = { 3, 4, 5, 6.0, 9, 10, 11, 12 };
+                    double[] BBCH_code_y = {10, 30, 51, 60, 65, 70, 75, 80, 87, 90 };
+                    double[] PMF_Stage = { 3, 4, 5, 6.0, 6.99, 7, 7.99, 8, 11, 12 };
                     bool DidInterpolate;
                     bbch_stage = MathUtilities.LinearInterpReal(Phenology.Stage,
                                                                 PMF_Stage, BBCH_code_y,
