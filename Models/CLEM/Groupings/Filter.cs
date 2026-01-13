@@ -70,7 +70,7 @@ namespace Models.CLEM.Groupings
         /// Convert the operator to a symbol
         /// </summary>
         /// <returns>Operator as symbol</returns>
-        protected string OperatorToSymbol()
+        public string OperatorToSymbol()
         {
             switch (Operator)
             {
@@ -99,7 +99,7 @@ namespace Models.CLEM.Groupings
         /// Is operator a true false test
         /// </summary>
         /// <returns>Operator as symbol</returns>
-        protected bool IsOperatorTrueFalseTest()
+        public bool IsOperatorTrueFalseTest()
         {
             switch (Operator)
             {

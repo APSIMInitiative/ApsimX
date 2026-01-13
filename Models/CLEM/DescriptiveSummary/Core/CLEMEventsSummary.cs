@@ -17,6 +17,8 @@ namespace Models.CLEM.DescriptiveSummary
             var model = ModelTyped;
             if (model is null) return;
 
+            Generator.AddBlockWithText("activityentry", $"The simulation is performed from {CLEMModel.DisplaySummaryValueSnippet(model.Clock.StartDate.ToShortDateString())} to {CLEMModel.DisplaySummaryValueSnippet(model.Clock.EndDate.ToShortDateString())}");
+
             string output = $"CLEM is running using a {CLEMModel.DisplaySummaryValueSnippet(model.TimeStep)} time step";
             if (model.TimeStep == TimeStepTypes.Custom)
             {

@@ -14,9 +14,7 @@ namespace Models.CLEM.DescriptiveSummary
     /// </summary>
     public static class DescriptiveSummaryResolver
     {
-        // cache: modelType -> providerType (Type?) or null if none found
         private static readonly ConcurrentDictionary<Type, Type?> providerTypeCache = new();
-
         private static readonly object scanLock = new();
 
         /// <summary>
@@ -43,10 +41,7 @@ namespace Models.CLEM.DescriptiveSummary
             }
             else
             {
-                // create a fresh instance each time so provider state is not reused
                 object? created;
-                // Prefer constructing provider with the model so provider can capture it at construction time.
-                // try to find a public ctor on providerType that can accept the model
                 created = null;
                 var ctors = providerType.GetConstructors(BindingFlags.Public | BindingFlags.Instance);
                 var matchedCtor = ctors.FirstOrDefault(c =>

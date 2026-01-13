@@ -49,7 +49,7 @@ namespace Models.CLEM.DescriptiveSummary.Resources
         {
             if (group.Id == "prices" && group.SelectedModels.Any())
             {
-                Generator.CreateTable(new string[] { "Name", "Filter", "Value", "Style", "Type" });
+                Generator.CreateTable(new string[] { "Name", "Filter", "Type", "Value", "Style" });
             }
         }
 

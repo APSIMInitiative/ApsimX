@@ -73,8 +73,9 @@ namespace Models.CLEM.DescriptiveSummary
             Introduction = introduction;
             ChildType = childType;
 
-            SelectedModels = model.Structure.FindChildren<IModel>().Where(a => a.GetType() == ChildType);
-
+            SelectedModels = model.Structure
+                .FindChildren<IModel>()
+                .Where(a => ChildType != null && ChildType.IsAssignableFrom(a.GetType()));
             if (missing == "default")
                 Missing = GetMissingChildType();
             else

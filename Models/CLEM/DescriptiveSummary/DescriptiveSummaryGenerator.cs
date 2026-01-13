@@ -248,63 +248,51 @@ public class DescriptiveSummaryGenerator
         var provider = DescriptiveSummaryResolver.GetProviderInstance(model, this);
         provider.NestedLevel = level+1;
 
-        //if (model is CLEMModel cm && (provider is DefaultDescriptiveSummaryProvider & provider.FormatForParentControl) == false)
-        if (model is CLEMModel cm)
+        // Opening wrapper
+        provider.CreateSummaryOpeningBlocks();
+
+        if (!provider.FormatForParentControl && model is CLEMModel cm)
+            AddNotes(cm.Notes, (cm.ModelSummaryStyle == HTMLSummaryStyle.Filter));
+
+        // Place any pre-summary inner tags
+        provider.CreateSummaryInnerOpeningBlocksBeforeSummary();
+        // The concrete provider or model should override ModelSummary() to provide content
+
+        if (provider.ReportMemosType == DescriptiveSummaryMemoReportingType.AtTop)
         {
-            // Opening wrapper
-            provider.CreateSummaryOpeningBlocks();
-
-            cm.CurrentAncestorList = null;
-            //cm.CurrentAncestorList.Add(model.GetType().Name);
-
-            if (!provider.FormatForParentControl)
-                AddNotes(cm.Notes, (cm.ModelSummaryStyle == HTMLSummaryStyle.Filter));
-
-            // Place any pre-summary inner tags
-            provider.CreateSummaryInnerOpeningBlocksBeforeSummary();
-            // The concrete provider or model should override ModelSummary() to provide content
-
-            if (provider.ReportMemosType == DescriptiveSummaryMemoReportingType.AtTop)
-            {
-                AddMemos(model.Children.OfType<Memo>());
-            }
-
-            if (model is IActivityCompanionModel)
-            {
-                if (!provider.FormatForParentControl && (model as IActivityCompanionModel).Identifier != null)
-                {
-                    AddBlockWithText("activityentry", $"Applies to {CLEMModel.DisplaySummaryValueSnippet((model as IActivityCompanionModel).Identifier)}");
-                }
-            }
-
-            provider.BuildSummary();
-
-            var childrenToSummarise = provider.HandleChildrenInSummary();
-            foreach (var item in childrenToSummarise)
-            {
-                if (item.Include)
-                {
-                    // Inner tags around the body (if used)
-                    provider.CreateSummaryInnerOpeningBlocks(item);
-
-                    GetChildDescriptiveSummaries(provider, item);
-
-                    provider.CreateSummaryInnerClosingBlocks(item);
-                }
-            }
-
-            //foreach (var child in provider. model.Children ?? Enumerable.Empty<IModel>())
-            //{
-            //    AppendSummariesRecursively(child);
-            //}
-
-            if (provider.ReportMemosType == DescriptiveSummaryMemoReportingType.AtBottom)
-            {
-                AddMemos(model.Children.OfType<Memo>());
-            }
-
-            provider.CreateSummaryClosingBlocks();
+            AddMemos(model.Children.OfType<Memo>());
         }
+
+        if (model is IActivityCompanionModel acm)
+        {
+            if (!provider.FormatForParentControl && acm.Identifier != null)
+            {
+                AddBlockWithText("activityentry", $"Applies to {CLEMModel.DisplaySummaryValueSnippet(acm.Identifier)}");
+            }
+        }
+
+        provider.BuildSummary();
+
+        var childrenToSummarise = provider.HandleChildrenInSummary();
+        foreach (var item in childrenToSummarise)
+        {
+            if (item.Include)
+            {
+                // Inner tags around the body (if used)
+                provider.CreateSummaryInnerOpeningBlocks(item);
+
+                GetChildDescriptiveSummaries(provider, item);
+
+                provider.CreateSummaryInnerClosingBlocks(item);
+            }
+        }
+
+        if (provider.ReportMemosType == DescriptiveSummaryMemoReportingType.AtBottom)
+        {
+            AddMemos(model.Children.OfType<Memo>());
+        }
+
+        provider.CreateSummaryClosingBlocks();
     }
 
     private void GetChildDescriptiveSummaries(IDescriptiveSummaryProvider provider, ChildComponentGroup componentGroup, Func<string, string> markdown2Html = null)
@@ -330,8 +318,8 @@ public class DescriptiveSummaryGenerator
                             AddMemos(new List<Memo> { memo });
                         }
                         break;
-                    case CLEMModel clemModel:
-                        AppendSummariesRecursively(clemModel, provider.NestedLevel);
+                    case IModel _:
+                        AppendSummariesRecursively(item, provider.NestedLevel);
                         break;
                     default:
                         break;
@@ -474,10 +462,10 @@ public class DescriptiveSummaryGenerator
     }
 
     /// <summary>
-    /// 
+    /// Adds a new row to an open table passing the column values
     /// </summary>
-    /// <param name="columnValues"></param>
-    /// <param name="enabled"></param>
+    /// <param name="columnValues">The string value to place in each cell</param>
+    /// <param name="enabled">A switch to determine if the row is enabled</param>
     public void AddTableRow(IEnumerable<(string, bool)> columnValues, bool enabled)
     {
         string openTag = "|";
@@ -554,8 +542,7 @@ public class DescriptiveSummaryGenerator
 
         using (OpenBlock("clearfix defaultbanner"))
         {
-            CLEMModel cm = component as CLEMModel;
-            AddBlockWithText("namediv", $"Component {cm.GetType().Name} named {cm.Name}");
+            AddBlockWithText("namediv", $"Component {component.GetType().Name} named {component.Name}");
             AddLineBreak();
             AddBlockWithText("typediv", $"Details");
         }

@@ -33,6 +33,16 @@ namespace Models.CLEM.Groupings
         private IEnumerable<string> GetParameters() => Parent?.GetParameterNames();
 
         /// <summary>
+        /// The current enumerable of properties initialised for the filter
+        /// </summary>
+        public IEnumerable<PropertyInfo> AllPropertyInfoFound { get { return propertyInfo; } }
+
+        /// <summary>
+        /// The current enumerable of properties initialised for the filter
+        /// </summary>
+        public bool IsOperatorValid { get { return validOperator; } }
+
+        /// <summary>
         /// The property or method to filter by
         /// </summary>
         [Description("Property or method")]

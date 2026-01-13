@@ -85,9 +85,9 @@ namespace Models.CLEM.DescriptiveSummary.Groupings
             generator.CloseMostRecentBlock("animalPriceGroup_filters");
             if (FormatForParentControl)
             {
+                generator.AddBlockWithText("", CLEMModel.DisplaySummaryValueSnippet(PricingStyleToFullString(model.PurchaseOrSale)), tag: "td");
                 generator.AddBlockWithText("", CLEMModel.DisplaySummaryValueSnippet(model.Value, warnZero: true), tag: "td");
                 generator.AddBlockWithText("", CLEMModel.DisplaySummaryValueSnippet(model.PricingStyle), tag: "td");
-                generator.AddBlockWithText("", CLEMModel.DisplaySummaryValueSnippet(PricingStyleToFullString(model.PurchaseOrSale)), tag: "td");
                 generator.CloseMostRecentBlock("animalPriceGroup_row");
             }
         }
