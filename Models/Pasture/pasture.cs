@@ -182,6 +182,64 @@ namespace Models.GrazPlan
         /// <summary>NH4 solute in the soil.</summary>
         private ISolute nh4 = null;
 
+        // /// <summary>
+        // /// Leaf class
+        // /// </summary>
+        // [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        // public Leaf Leaf {get; set;}
+
+        // /// <summary>
+        // /// Leaf class
+        // /// </summary>
+        // [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        // public Stem Stem{get;set;}
+
+        /// <summary>
+        /// AboveGround
+        /// </summary>
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+
+        public CompositeBiomass AboveGround {get;set;}
+
+        /// <summary>
+        /// AboveGroundLive
+        /// </summary>
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+
+        public CompositeBiomass AboveGroundLive {get;set;}
+
+
+        /// <summary>
+        /// AboveGround
+        /// </summary>
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+
+        public CompositeBiomass AboveGroundDead {get;set;}
+
+
+        /// <summary>
+        /// Leaf Generic organ
+        /// </summary>
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        
+        public GenericOrgan Leaf {get;set;}
+
+        /// <summary>
+        /// Stem Generic organ
+        /// </summary>
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+         
+        public GenericOrgan Stem {get;set;}
+
+
+        // /// <summary>
+        // /// Stem class
+        // /// </summary>
+        // [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        // public Organs Stem {get; set;}
+        
+      
+
         #endregion
 
 
@@ -2181,11 +2239,7 @@ namespace Models.GrazPlan
             return result;
         }
 
-         /// <summary>
-        /// Leaf class
-        /// </summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        public Organs Leaf {get; set;}
+     
 
         #endregion
 
@@ -2388,6 +2442,15 @@ namespace Models.GrazPlan
 
                 FToday = systemClock.Today.Day + (systemClock.Today.Month * 0x100) + (systemClock.Today.Year * 0x10000);    //stddate
             }
+            Leaf.PastureModel = PastureModel;
+            Stem.PastureModel = PastureModel;
+            //AboveGroundLive.PastureModel=PastureModel;
+            //AboveGroundDead.PastureModel=PastureModel;
+            //AboveGround.PastureModel=PastureModel;
+            
+            
+
+
         }
 
         /// <summary>Initialises arrays to same length as soil layers.</summary>
@@ -2496,7 +2559,6 @@ namespace Models.GrazPlan
 
             PastureModel.BeginTimeStep();
             storePastureCover();
-
         }
 
         /// <summary>
