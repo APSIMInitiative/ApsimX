@@ -18,6 +18,7 @@ using static Models.GrazPlan.GrazType;
 using static Models.GrazPlan.PastureUtil;
 using APSIM.Core;
 using Models.GrazPlan.Organs;
+using Models.Grazplan.Biomass;
 
 
 namespace Models.GrazPlan
@@ -576,6 +577,8 @@ namespace Models.GrazPlan
                 }
             }
         }
+
+        
         #endregion
 
         /// <summary>Radiation intercepted by the plant's canopy (MJ/m^2/day).</summary>
