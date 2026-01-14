@@ -5,7 +5,6 @@ using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Models.Interfaces;
 using Models.Soils;
 using Models.Soils.Nutrients;
@@ -469,7 +468,6 @@ public static class SoilSanitise
             if (standardInitialValues != null)
                 water.InitialValues = standardInitialValues;
         }
-        water.Reset();
     }
 
     /// <summary>Gets the model ready for running in a simulation.</summary>
@@ -877,7 +875,7 @@ public static class SoilSanitise
                 {
                     // if a crop parameterisation already exists for this crop then don't add a predicted one.
                     if (crops.Find(c => c.Name.Equals(cropName + "Soil", StringComparison.InvariantCultureIgnoreCase)) == null)
-                        Structure.Add(PredictedCrop(soil, cropName), water);
+                        water.Node.AddChild(PredictedCrop(soil, cropName));
                 }
             }
         }
