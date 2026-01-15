@@ -4338,75 +4338,55 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.ProtectedDivideFunction, Models",
-              "NumeratorErrVal": 0.02,
-              "DenominatorErrVal": 0.02,
+              "$type": "Models.Functions.MultiplyFunction, Models",
               "Name": "SpecificArea",
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "NormalisedSLA",
+                  "$type": "Models.Functions.ProtectedDivideFunction, Models",
+                  "NumeratorErrVal": 0.01,
+                  "DenominatorErrVal": 0.01,
+                  "Name": "Potential",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Hello World",
-                      "Name": "Memo",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        3.0,
-                        4.0,
-                        6.0,
-                        11.0
-                      ],
-                      "Y": [
-                        0.1,
-                        0.1,
-                        0.4,
-                        0.4
-                      ],
-                      "Name": "XYPairs",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].Stage",
-                      "Name": "XValue",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.MaximumFunction, Models",
-                  "Name": "MaximumFunction",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.MovingAverageFunction, Models",
-                      "NumberOfDays": 30,
-                      "StageToStartMovingAverage": "Germination",
-                      "Name": "30dMovingAverageTemp",
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "NormalisedSLA",
                       "ResourceName": null,
                       "Children": [
                         {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Hello World",
+                          "Name": "Memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            3.0,
+                            4.0,
+                            6.0,
+                            11.0
+                          ],
+                          "Y": [
+                            0.1,
+                            0.1,
+                            0.4,
+                            0.4
+                          ],
+                          "Name": "XYPairs",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[IWeather].Radn",
-                          "Name": "DailyTemperature",
+                          "VariableName": "[Phenology].Stage",
+                          "Name": "XValue",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -4417,12 +4397,84 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "One",
+                      "$type": "Models.Functions.MaximumFunction, Models",
+                      "Name": "RunningMeanRadiation",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.MovingAverageFunction, Models",
+                          "NumberOfDays": 30,
+                          "StageToStartMovingAverage": "",
+                          "Name": "30dMovingAverageRadiation",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[IWeather].Radn",
+                              "Name": "DailyRadiation",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.01,
+                          "Units": null,
+                          "Name": "One",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MinimumFunction, Models",
+                  "Name": "ReductionFactor",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "SWFactor",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.8,
+                            1.0
+                          ],
+                          "Y": [
+                            0.5,
+                            1.0
+                          ],
+                          "Name": "XYPairs",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Root].WaterTensionFactor",
+                          "Name": "XValue",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
