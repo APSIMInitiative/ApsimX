@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 namespace Models.CLEM.DescriptiveSummary;
 
 /// <summary>
-/// Descriptive summary provider for the Ruminant Group filter
+/// Descriptive summary provider for the Fodder limits filter group
 /// </summary>
-public class RuminantGroupSummary : GroupSummaryBase<RuminantGroup>
+public class FodderLimitsFilterGroupSummary : GroupSummaryBase<FodderLimitsFilterGroup>
 {
     /// <summary>
     /// Constructor
     /// </summary>
-    public RuminantGroupSummary()
+    public FodderLimitsFilterGroupSummary()
     {
         SummaryStyle = HTMLSummaryStyle.Filter;
     }
@@ -23,5 +23,6 @@ public class RuminantGroupSummary : GroupSummaryBase<RuminantGroup>
     /// <inheritdoc/>
     public override void BuildSummary()
     {
+        generator.AddBlockWithText("activityentry", "The following ruminants will have a set monthly proportion of intake that can come from each pasture age pool");
     }
 }

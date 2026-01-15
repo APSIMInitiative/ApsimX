@@ -10,18 +10,11 @@ namespace Models.CLEM.DescriptiveSummary;
 /// <summary>
 /// Descriptive summary provider for the Ruminant Group filter
 /// </summary>
-public class RuminantGroupSummary : GroupSummaryBase<RuminantGroup>
+public class RuminantActivityGroupSummary : GroupSummaryBase<RuminantActivityGroup>
 {
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    public RuminantGroupSummary()
-    {
-        SummaryStyle = HTMLSummaryStyle.Filter;
-    }
-
     /// <inheritdoc/>
     public override void BuildSummary()
     {
+        generator.AddBlockWithText("activityentry", "This ruminant filter is applied to this activity and all activities within this branch");
     }
 }

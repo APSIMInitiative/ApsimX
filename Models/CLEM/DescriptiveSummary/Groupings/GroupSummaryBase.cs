@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Interfaces;
+﻿using BruTile.Wms;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using System;
 using System.Collections.Generic;
@@ -76,6 +77,10 @@ public abstract class GroupSummaryBase<TModel> : DescriptiveSummaryProvider, IDe
         if (!Model.Name.Contains(GetType().Name.Split('.').Last()))
         {
             name = Model.Name;
+        }
+        if (ModelTyped is IActivityCompanionModel acm && (acm.Identifier ?? "") != "")
+        {
+            name += $" - applies to {acm.Identifier}";
         }
         generator.AddBlockWithText("filtername", name, disabled: !Model.Enabled);
     }

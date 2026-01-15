@@ -94,18 +94,6 @@ namespace Models.CLEM.Groupings
             return results;
         }
         #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write($"\r\n<div class=\"activityentry\">Any death of specified individuals is determined using the breed base mortality modified by adult mody condition and the condition of mothers for suckling individuals.</div>");
-            return htmlWriter.ToString();
-        }
-
-        #endregion
     }
 
 }

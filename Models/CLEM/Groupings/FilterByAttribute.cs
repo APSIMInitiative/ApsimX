@@ -247,34 +247,5 @@ namespace Models.CLEM.Groupings
         }
         #endregion
 
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            return $"<div class=\"filter\" style=\"opacity: {((Enabled) ? "1" : "0.4")}\">{ToHTMLString()}</div>";
-        }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryClosingTags()
-        {
-            // allows for collapsed box and simple entry
-            return "";
-        }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryOpeningTags()
-        {
-            // allows for collapsed box and simple entry
-            return "";
-        }
-        #endregion
-
     }
 }

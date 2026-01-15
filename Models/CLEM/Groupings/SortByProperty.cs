@@ -49,72 +49,41 @@ namespace Models.CLEM.Groupings
         /// <inheritdoc/>
         public object OrderRule<T>(T t) => Parent.GetProperty(PropertyOfIndividual).First().GetValue(t, null);
 
-        /// <summary>
-        /// Convert sort to string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return SortString(false);
-        }
+        ///// <summary>
+        ///// Convert sort to string
+        ///// </summary>
+        ///// <returns></returns>
+        //public override string ToString()
+        //{
+        //    return SortString(false);
+        //}
 
-        /// <summary>
-        /// Convert sort to html string
-        /// </summary>
-        /// <returns></returns>
-        public string ToHTMLString()
-        {
-            return SortString(true);
-        }
+        ///// <summary>
+        ///// Convert sort to html string
+        ///// </summary>
+        ///// <returns></returns>
+        //public string ToHTMLString()
+        //{
+        //    return SortString(true);
+        //}
 
-        private string SortString(bool htmltags)
-        {
-            string cssSet = "";
-            string cssClose = "";
-            if (htmltags)
-            {
-                cssSet = "<span class = \"filterset\">";
-                cssClose = "</span>";
-            }
+        //private string SortString(bool htmltags)
+        //{
+        //    string cssSet = "";
+        //    string cssClose = "";
+        //    if (htmltags)
+        //    {
+        //        cssSet = "<span class = \"filterset\">";
+        //        cssClose = "</span>";
+        //    }
 
-            using (StringWriter sortWriter = new StringWriter())
-            {
-                sortWriter.Write($"Sort: ");
-                sortWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
-                sortWriter.Write($" {cssSet}{SortDirection.ToString().ToLower()}{cssClose}");
-                return sortWriter.ToString();
-            }
-        }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            return $"<div class=\"filter\" style=\"opacity: {((Enabled) ? "1" : "0.4")}\">{ToHTMLString()}</div>";
-        }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryClosingTags()
-        {
-            // allows for collapsed box and simple entry
-            return "";
-        }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryOpeningTags()
-        {
-            // allows for collapsed box and simple entry
-            return "";
-        }
-        #endregion
-
+        //    using (StringWriter sortWriter = new StringWriter())
+        //    {
+        //        sortWriter.Write($"Sort: ");
+        //        sortWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+        //        sortWriter.Write($" {cssSet}{SortDirection.ToString().ToLower()}{cssClose}");
+        //        return sortWriter.ToString();
+        //    }
+        //}
     }
-
 }

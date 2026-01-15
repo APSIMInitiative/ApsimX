@@ -268,32 +268,5 @@ namespace Models.CLEM
         {
         }
 
-        #region descriptive summary
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerClosingTags()
-        {
-            return "\r\n</div>";
-        }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerOpeningTags()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
-            if (!Structure.FindChildren<Filter>().Any())
-            {
-                htmlWriter.Write("<div class=\"filter\">All individuals</div>");
-            }
-
-            return htmlWriter.ToString();
-        }
-        #endregion
     }
 }

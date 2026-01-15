@@ -113,46 +113,6 @@ namespace Models.CLEM.Groupings
             return results;
         }
         #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            switch (Style)
-            {
-                case ParameterStyle.GetFromParameters:
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">The annual mortality rates for the specified individuals each time-step are provided in the following breed parameter files: ");
-                    foreach (var rumtype in Structure.FindAll<RuminantType>())
-                    {
-                        htmlWriter.Write(rumtype.Name);
-                        if (rumtype.Parameters.GrowPF is not null)
-                        {
-                            htmlWriter.Write($".Parameters.GrowPF.BasalMortalityRate_CD1 = {rumtype.Parameters.GrowPF_CD.BasalMortalityRate_CD1}");
-                        }
-                        else if (rumtype.Parameters.Grow is not null)
-                        {
-                            htmlWriter.Write($".Parameters.Grow.MortalityBase = {rumtype.Parameters.Grow.MortalityBase}");
-                        }
-                        else
-                        {
-                            htmlWriter.Write($"<span=\"errorlink\">Missing Grow or GrowPF parameters</span>");
-                        }
-                    }
-                    htmlWriter.Write("</div>");
-                    break;
-                case ParameterStyle.Specify:
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">The annual mortality rate of {DisplaySummaryValueSnippet(Rate, warnZero: true)} will be applied to the specified individuals each time-step to determine if death occurs.</div>");
-                    break;
-                default:
-                    break;
-            }
-            return htmlWriter.ToString();
-        }
-
-        #endregion
-
     }
 
     /// <summary>

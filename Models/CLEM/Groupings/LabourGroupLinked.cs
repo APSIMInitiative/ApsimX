@@ -93,59 +93,5 @@ namespace Models.CLEM.Groupings
         }
         #endregion
 
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            return "";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryClosingTags()
-        {
-            return "";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags()
-        {
-            return "";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags()
-        {
-            return "";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write($"<div class=\"filtername\">{Name} is linked to </div>");
-
-            var zone = Structure.FindParent<Zone>(recurse: true);
-            var foundGroup = Structure.FindChildren<LabourGroup>(relativeTo: zone, recurse: true).Where(a => a.Enabled).Cast<Model>().Where(a => $"{a.Parent.Name}.{a.Name}" == ExistingGroupName).FirstOrDefault() as LabourGroup;
-            if (foundGroup != null)
-            {
-                htmlWriter.Write(foundGroup.GetFullSummary(foundGroup, new List<string>(), ""));
-            }
-            else
-            {
-                if ((ExistingGroupName ?? "") == "")
-                {
-                    htmlWriter.Write("<div class=\"errorbanner\">Linked LabourGroup not specified</div>");
-                }
-                else
-                {
-                    htmlWriter.Write($"<div class=\"errorbanner\">Linked LabourGroup <span class=\"setvalue\">{ExistingGroupName}</span> not found</div>");
-                }
-            }
-            return htmlWriter.ToString();
-        }
-
-        #endregion
-
     }
 }

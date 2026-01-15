@@ -24,44 +24,6 @@ namespace Models.CLEM.Groupings
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantActivityGroup : FilterGroup<Ruminant>
     {
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            return "<div class=\"filtername\">This ruminant filter is applied to this activity and all activities within this branch</div>";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryClosingTags()
-        {
-            return "";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags()
-        {
-            return "";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags()
-        {
-            return "\r\n</div>";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"filterborder filteractivityborder clearfix\">");
-            if (!Structure.FindChildren<Filter>().Any())
-            {
-                htmlWriter.Write("<div class=\"filter\">All individuals</div>");
-            }
-            return htmlWriter.ToString();
-        }
-        #endregion
 
     }
 }

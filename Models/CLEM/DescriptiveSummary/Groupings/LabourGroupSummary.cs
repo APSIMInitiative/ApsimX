@@ -10,12 +10,12 @@ namespace Models.CLEM.DescriptiveSummary;
 /// <summary>
 /// Descriptive summary provider for the Ruminant Group filter
 /// </summary>
-public class RuminantGroupSummary : GroupSummaryBase<RuminantGroup>
+public class LabourGroupSummary : GroupSummaryBase<LabourGroup>
 {
     /// <summary>
     /// Constructor
     /// </summary>
-    public RuminantGroupSummary()
+    public LabourGroupSummary()
     {
         SummaryStyle = HTMLSummaryStyle.Filter;
     }

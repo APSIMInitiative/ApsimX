@@ -54,7 +54,6 @@ namespace Models.CLEM.Groupings
             var zone = Structure.FindParent<Zone>(recurse: true);
             groupsAvailable = Structure.FindChildren<RuminantGroup>(relativeTo: zone, recurse: true).Where(a => a.Enabled);
         }
-
         private List<string> GetAllRuminantGroupNames()
         {
             GetAllRuminantGroupsAvailable();
@@ -103,63 +102,6 @@ namespace Models.CLEM.Groupings
                 yield return new ValidationResult(errorMsg, new string[] { "Linked filter group" });
             }
         }
-        #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            return "";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryClosingTags()
-        {
-            return "";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags()
-        {
-            return "";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags()
-        {
-            return "";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("<div class=\"filtername\">");
-            htmlWriter.Write($"{Name}");
-            if ((Identifier ?? "") != "")
-            {
-                htmlWriter.Write($" - applies to {Identifier} and");
-            }
-
-            htmlWriter.Write($" linked to </div>");
-
-            var zone = Structure.FindParent<Zone>(recurse: true);
-            var foundGroup = Structure.FindChildren<RuminantGroup>(relativeTo: zone, recurse: true).Where(a => a.Enabled).Cast<Model>().Where(a => $"{a.Parent.Name}.{a.Name}" == ExistingGroupName).FirstOrDefault() as RuminantGroup;
-            if (foundGroup != null)
-            {
-                htmlWriter.Write(foundGroup.GetFullSummary(foundGroup, new List<string>(), ""));
-            }
-            else
-            {
-                if ((ExistingGroupName ?? "") == "")
-                    htmlWriter.Write("<div class=\"errorbanner\">Linked RuminantGroup not specified</div>");
-                else
-                    htmlWriter.Write($"<div class=\"errorbanner\">Linked RuminantGroup <span class=\"setvalue\">{ExistingGroupName}</span> not found</div>");
-            }
-            return htmlWriter.ToString();
-        }
-
         #endregion
     }
 }
