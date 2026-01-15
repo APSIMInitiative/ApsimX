@@ -1,3 +1,4 @@
+using DocumentFormat.OpenXml.Wordprocessing;
 using Mapsui.Providers.Wfs.Utilities;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
@@ -6,6 +7,7 @@ using Models.Core;
 using Models.Core.ApsimFile;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -153,8 +155,6 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
 
         if (Model is CLEMActivityBase cmab)
         {
-//            if (cm.GetType().IsSubclassOf(typeof(CLEMActivityBase)))
-//            {
             //string tooltip = "";
             string divText = "";
 
@@ -179,14 +179,11 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
 
             Generator.AddBlockWithText("partialdiv", divText);
 
-//            if (cm is CLEMActivityBase cmab)
-//            {
-                string transCat = CLEMActivityBase.UpdateTransactionCategory(cmab, cm.Structure);
-                if (transCat != "")
-                {
-                    Generator.AddBlockWithText("partialdiv", $"tag: {transCat}");
-                }
-//            }
+            string transCat = CLEMActivityBase.UpdateTransactionCategory(cmab, cm.Structure);
+            if (transCat != "")
+            {
+                Generator.AddBlockWithText("partialdiv", $"tag: {transCat}");
+            }
         }
     }
 
@@ -199,9 +196,6 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
     /// <inheritdoc/>
     public virtual void CreateSummaryOpeningBlocks()
     {
-//        var cm = CLEMModel;
-//        if (cm is null) return;
-
         string overall = "activity";
         string extra = "";
 
@@ -259,8 +253,7 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
 
         bool firstDisabledBlock = !Model.Enabled && generator.CurrentlyDisabled == false;
 
-        //generator.OpenBlock($"holder{((extra == "") ? "main" : "sub")} {overall}", styleString: $"opacity: {cm.SummaryOpacity(FormatForParentControl)};", id: $"{cm.Name}_opening");
-        generator.OpenBlock($"holder{((extra == "") ? "main" : "sub")} {overall} {(firstDisabledBlock ? "disabledcomponent": "")}", id: $"{Model.Name}_opening",  disabled: !Model.Enabled);
+        generator.OpenBlock($"holder{((extra == "") ? "main" : "sub")} {overall} {(firstDisabledBlock ? "disabledcomponent" : "")}", id: $"{Model.Name}_opening", disabled: !Model.Enabled);
         openingBlocks.Add($"{Model.Name}_opening");
         using (generator.OpenBlock($"clearfix {overall}banner{extra}"))
         {
@@ -317,10 +310,6 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
     /// </summary>
     public double SummaryOpacity()
     {
-        //var cm = CLEMModel;
-        //if (cm is null) return 1.0;
-
         return ((!Model.Enabled & (!FormatForParentControl | (FormatForParentControl & Model.Parent.Enabled))) ? 0.4 : 1.0);
     }
-
 }

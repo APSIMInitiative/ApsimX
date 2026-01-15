@@ -123,6 +123,24 @@ namespace Models.CLEM
             }
         }
 
+        /// <inheritdoc/>
+        public void PrepareForTimestep()
+        {
+            return;
+        }
+
+        /// <inheritdoc/>
+        public List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
+        {
+            return null;
+        }
+
+        /// <inheritdoc/>
+        public void PerformTasksForTimestep(double argument = 0)
+        {
+            return;
+        }
+
         #region validation
         /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
@@ -153,140 +171,6 @@ namespace Models.CLEM
                 yield return new ValidationResult("At least two data points are required for relationship", memberNames);
             }
         }
-        #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"width:400px;height:200px;\">");
-            // draw chart
-
-            if (XValues is null || XValues.Length == 0)
-            {
-                htmlWriter.Write("<span class=\"errorlink\">No x values provided</span>");
-            }
-            else
-            {
-                if (YValues is null || XValues.Length != YValues.Length)
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">Number of x values does not equal number of y values</span>");
-                }
-                else
-                {
-                    htmlWriter.Write(@"
-                        <canvas id=""myChart_" + this.FullPath + @"""><p>Unable to display graph in browser</p></canvas>
-                        <script>
-                        var ctx = document.getElementById('myChart_" + this.FullPath + @"').getContext('2d');
-                        var myChart = new Chart(ctx, {
-                        responsive:false,
-                        maintainAspectRatio: true,
-                        type: 'scatter',
-                        data: {
-                            datasets: [{
-                                data: [");
-                    string data = "";
-                    for (int i = 0; i < XValues.Length; i++)
-                    {
-                        if (YValues.Length > i)
-                        {
-                            data += "{ x: " + XValues[i].ToString() + ", y: " + YValues[i] + "},";
-                        }
-                    }
-
-                    data = data.TrimEnd(',');
-                    htmlWriter.Write(data);
-                    htmlWriter.Write(@"],
-                        pointBackgroundColor: '[GraphPointColour]',
-                        pointBorderColor: '[GraphPointColour]',
-                        borderColor: '[GraphLineColour]',
-                        pointRadius: 5,
-                        pointHoverRadius: 5,
-                        fill: false,
-                        tension: 0,
-                        showLine: true,
-                        steppedLine: " + (CalculationMethod == RelationshipCalculationMethod.UseSpecifiedValues).ToString().ToLower() + @",
-                        }]
-                        },
-                        options: {
-                            legend: {
-                                display: false
-                            },
-                            scales: {
-                                xAxes: [{
-                                    color: 'green',
-                                    type: 'linear',
-                                    position: 'bottom',
-                                    ticks: {
-                                      fontColor: '[GraphLabelColour]',
-                                      fontSize: 13,
-                                      padding: 3
-                                    },
-                                    gridLines: {
-                                       color: '[GraphGridLineColour]',
-                                       drawOnChartArea: true
-                                    }");
-                    if (this.NameOfXVariable != null && this.NameOfXVariable != "")
-                    {
-                        htmlWriter.Write(@", 
-                            scaleLabel: {
-                            display: true,
-                            labelString: '" + this.NameOfXVariable + @"'
-                            }");
-                    }
-                    htmlWriter.Write(@"}],
-                        yAxes: [{
-                            type: 'linear',
-                            gridLines: {
-                                zeroLineColor: '[GraphGridZeroLineColour]',
-                                zeroLineWidth: 1,
-                                zeroLineBorderDash: [3, 3],
-                                color: '[GraphGridLineColour]',
-                                drawOnChartArea: true
-                            },
-                            ticks: {
-                                fontColor: '[GraphLabelColour]',
-                                fontSize: 13,
-                                padding: 3
-                            }");
-                    if (this.NameOfYVariable != null && this.NameOfYVariable != "")
-                    {
-                        htmlWriter.Write(@", scaleLabel: {
-                            display: true,
-                            labelString: '" + this.NameOfYVariable + @"'
-                        }");
-                    }
-                    htmlWriter.Write(@"}],
-                            }
-                           }
-                        });
-                        </script>");
-                }
-            }
-            htmlWriter.Write("\r\n</div>");
-            return htmlWriter.ToString();
-        }
-
-        /// <inheritdoc/>
-        public void PrepareForTimestep()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
-        public List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public void PerformTasksForTimestep(double argument = 0)
-        {
-            return;
-        }
-
         #endregion
     }
 }

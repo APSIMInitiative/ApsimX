@@ -5,31 +5,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.CLEM.DescriptiveSummary.Resources
+namespace Models.CLEM.DescriptiveSummary;
+
+/// <summary>
+/// Ruminant Parameters component descriptive summary
+/// </summary>
+public class RuminantParametersGrowPFSummary : DescriptiveSummaryProviderBase<RuminantParametersGrowPF>
 {
     /// <summary>
-    /// Ruminant Parameters component descriptive summary
+    /// Constructor
     /// </summary>
-    public class RuminantParametersGrowPFSummary : DescriptiveSummaryProviderBase<RuminantParametersGrowPF>
+    public RuminantParametersGrowPFSummary()
     {
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public RuminantParametersGrowPFSummary()
-        {
-            SummaryStyle = HTMLSummaryStyle.SubResource;
-        }
-
-        /// <inheritdoc/>
-        public override void BuildSummary()
-        {
-        }
-
-        /// <inheritdoc/>
-        public override void CreateSummaryInnerOpeningBlocksBeforeSummary()
-        {
-            Generator.AddBlockWithText("detailsnote", $"Holds all parameter groups relating to the ruminant Protein and fat growth component");
-        }
-
+        SummaryStyle = HTMLSummaryStyle.SubResource;
     }
+
+    /// <inheritdoc/>
+    public override void BuildSummary()
+    {
+    }
+
+    /// <inheritdoc/>
+    public override void CreateSummaryInnerOpeningBlocksBeforeSummary()
+    {
+        Generator.AddBlockWithText("detailsnote", $"Holds all parameter groups relating to the ruminant Protein and fat growth component");
+    }
+
 }

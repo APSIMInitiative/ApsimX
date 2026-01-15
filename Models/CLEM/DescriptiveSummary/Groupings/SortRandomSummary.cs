@@ -1,20 +1,19 @@
 using Models.CLEM.Groupings;
 
-namespace Models.CLEM.DescriptiveSummary.Groupings
+namespace Models.CLEM.DescriptiveSummary;
+
+/// <summary>
+/// Descriptive summary provider for SortRandom
+/// </summary>
+public class SortRandomSummary : FilterSummaryBase<SortRandom>
 {
-    /// <summary>
-    /// Descriptive summary provider for SortRandom
-    /// </summary>
-    public class SortRandomSummary : FilterSummaryBase<SortRandom>
+    /// <inheritdoc/>
+    public override string FilterString(bool htmltags)
     {
-        /// <inheritdoc/>
-        public override string FilterString(bool htmltags)
+        if (htmltags)
         {
-            if (htmltags)
-            {
-                return "<span class = \"filterset\">Randomise order</span>";
-            }
-            return "Randomise order";
+            return "<span class = \"filterset\">Randomise order</span>";
         }
+        return "Randomise order";
     }
 }

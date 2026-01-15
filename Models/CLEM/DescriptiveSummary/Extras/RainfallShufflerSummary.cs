@@ -5,27 +5,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.CLEM.DescriptiveSummary.Extras
+namespace Models.CLEM.DescriptiveSummary;
+
+/// <summary>
+/// Descriptive summary provider for the Rainfall Shuffler
+/// </summary>
+public class RainfallShufflerSummary : DescriptiveSummaryProviderBase<RainfallShuffler>
 {
-    /// <summary>
-    /// Descriptive summary provider for the Rainfall Shuffler
-    /// </summary>
-    public class RainfallShufflerSummary : DescriptiveSummaryProviderBase<RainfallShuffler>
+    /// <inheritdoc/>
+    public override void BuildSummary()
     {
-        /// <inheritdoc/>
-        public override void BuildSummary()
+        string start = "";
+        if (ModelTyped.StartSeasonMonth == MonthsOfYear.NotSet)
         {
-            string start = "";
-            if (ModelTyped.StartSeasonMonth == MonthsOfYear.NotSet)
-            {
-                start = "<span class=\"errorlink\">Not set</span>";
-            }
-            else
-            {
-                start = $"{CLEMModel.DisplaySummaryValueSnippet(ModelTyped.StartSeasonMonth)}";
-            }
-            generator.AddBlockWithText("activityentry", $"The rainfall year starts in {start}");
-            generator.AddBlockWithText("warningbanner", $"WARNING: Rainfall years are being shuffled as a proxy for stochastic rainfall variation in this simulation.<br />This is an advance feature provided for particular projects.");
+            start = generator.DisplayErrorSnippet("Not Set");
         }
+        else
+        {
+            start = $"{generator.DisplaySummaryValueSnippet(ModelTyped.StartSeasonMonth)}";
+        }
+        generator.AddBlockWithText("activityentry", $"The rainfall year starts in {start}");
+        if (ModelTyped.DoNotShuffleIteration != -1)
+        {
+            generator.AddBlockWithText("activityentry", $"Rainfall will NOT be shuffled in the CLEM multi-run iteration {ModelTyped.DoNotShuffleIteration}");
+        }
+        generator.AddBlockWithText("warningbanner", $"WARNING: Rainfall years are being shuffled as a proxy for stochastic rainfall variation in this simulation.<br />This is an advance feature provided for particular projects.");
     }
 }

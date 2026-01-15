@@ -6,35 +6,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.CLEM.DescriptiveSummary
+namespace Models.CLEM.DescriptiveSummary;
+
+/// <summary>
+/// Descriptive summary provider for the Activity Carry Limiter
+/// </summary>
+public class ActivityCarryLimiterSummary : TimerSummaryBase<ActivityCarryLimiter>
 {
-    /// <summary>
-    /// Descriptive summary provider for the Activity Carry Limiter
-    /// </summary>
-    public class ActivityCarryLimiterSummary : DescriptiveSummaryProviderBase<ActivityCarryLimiter>
+    /// <inheritdoc/>
+    public override void BuildSummary()
     {
-        /// <inheritdoc/>
-        public override void BuildSummary()
+        string limit = $"Limit cut and carry activities to ";
+        if (ModelTyped.WeightLimitPerDay is not null && ModelTyped.WeightLimitPerDay.Length >= 1)
         {
-            string name = "";
-            if (!ModelTyped.Name.Contains(this.GetType().Name.Split('.').Last()))
-            {
-                name = ModelTyped.Name;
-            }
-            Generator.OpenBlock("filtername", name);
-            using (Generator.OpenBlock("filterborder clearfix"))
-            {
-                string limit = $"Limit cut and carry activities to ";
-                if (!(ModelTyped.WeightLimitPerDay is null) && ModelTyped.WeightLimitPerDay.Count() >= 1)
-                {
-                    limit += CLEMModel.DisplaySummaryValueSnippet(ModelTyped.WeightLimitPerDay);
-                }
-                else
-                {
-                    limit += "<span class=\"errorlink\">Not Set</span>";
-                }
-                Generator.OpenBlock("filter", limit+ " dry kg/day");
-            }
+            limit += generator.DisplaySummaryValueSnippet(ModelTyped.WeightLimitPerDay);
         }
+        else
+        {
+            limit += generator.DisplayErrorSnippet("Not Set");
+        }
+        Generator.OpenBlock("filter", limit+ " dry kg/day");
     }
 }

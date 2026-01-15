@@ -4,32 +4,29 @@ using Models.Core;
 using System.IO;
 using System.Linq;
 
-namespace Models.CLEM.DescriptiveSummary
+namespace Models.CLEM.DescriptiveSummary;
+
+/// <summary>
+/// Descriptive summary for CLEM Events component
+/// </summary>
+public class CLEMEventsSummary : DescriptiveSummaryProviderBase<CLEMEvents>
 {
-    /// <summary>
-    /// Descriptive summary for CLEM Events Component
-    /// </summary>
-    public class CLEMEventsSummary : DescriptiveSummaryProviderBase<CLEMEvents>
+    /// <inheritdoc/>
+    public override void BuildSummary()
     {
-        /// <inheritdoc/>
-        public override void BuildSummary()
+        if (!FormatForParentControl)
+            Generator.AddBlockWithText("activityentry", $"The simulation is performed from {generator.DisplaySummaryValueSnippet(ModelTyped.Clock.StartDate.ToShortDateString())} to {generator.DisplaySummaryValueSnippet(ModelTyped.Clock.EndDate.ToShortDateString())}");
+
+        string output = $"CLEM is running using a {generator.DisplaySummaryValueSnippet(ModelTyped.TimeStep)} time step";
+        if (ModelTyped.TimeStep == TimeStepTypes.Custom)
         {
-            var model = ModelTyped;
-            if (model is null) return;
+            output += $" of {generator.DisplaySummaryValueSnippet(ModelTyped.CustomTimeStep)} days";
+        }
+        Generator.AddBlockWithText("activityentry", output);
 
-            Generator.AddBlockWithText("activityentry", $"The simulation is performed from {CLEMModel.DisplaySummaryValueSnippet(model.Clock.StartDate.ToShortDateString())} to {CLEMModel.DisplaySummaryValueSnippet(model.Clock.EndDate.ToShortDateString())}");
-
-            string output = $"CLEM is running using a {CLEMModel.DisplaySummaryValueSnippet(model.TimeStep)} time step";
-            if (model.TimeStep == TimeStepTypes.Custom)
-            {
-                output += $" of {CLEMModel.DisplaySummaryValueSnippet(model.CustomTimeStep)} days";
-            }
-            Generator.AddBlockWithText("activityentry", output);
-
-            if (model.Structure.FindAll<RuminantActivityGrazeAll>().Any() || model.Structure.FindAll<RuminantActivityGrazePasture>().Any() || model.Structure.FindAll<RuminantActivityGrazePastureHerd>().Any())
-            {
-                Generator.AddBlockWithText("activityentry", $"Ecological indicators will be calculated every {CLEMModel.DisplaySummaryValueSnippet(model.EcologicalIndicatorsCalculationInterval)} months starting at the end of {CLEMModel.DisplaySummaryValueSnippet(model.EcologicalIndicatorsCalculationMonth)}");
-            }
+        if (ModelTyped.Structure.FindAll<RuminantActivityGrazeAll>().Any() || ModelTyped.Structure.FindAll<RuminantActivityGrazePasture>().Any() || ModelTyped.Structure.FindAll<RuminantActivityGrazePastureHerd>().Any())
+        {
+            Generator.AddBlockWithText("activityentry", $"Ecological indicators will be calculated every {generator.DisplaySummaryValueSnippet(ModelTyped.EcologicalIndicatorsCalculationInterval)} months starting at the end of {generator.DisplaySummaryValueSnippet(ModelTyped.EcologicalIndicatorsCalculationMonth)}");
         }
     }
 }

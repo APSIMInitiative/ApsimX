@@ -155,7 +155,7 @@ namespace Models.CLEM.Timers
 
             if (numberNeeded > 0)
             {
-                // return the number needed of breeders able to mate in this timestep
+                // return the number needed of breeders able to mate in this time step
                 IndividualsToBreed = breedersNotTooOldToMate.Where(a => a.IsAbleToBreed).Take(numberNeeded);
 
                 // report activity performed details.
@@ -199,62 +199,13 @@ namespace Models.CLEM.Timers
         ///<inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            yield return new ValidationResult($"Milking timer has not been updated after time-step and daily ruminant age changes", new string[] { "Ruminant Milking Timer" });
-        }
-
-        #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"filter\">");
-            htmlWriter.Write("\r\nTiming of breeding and selection of breeders for continous milk production");
-            if (RestMonths + ShortenLactationMonths > 0)
+            if (RestMonths > 0 & ShortenLactationMonths > 0)
             {
-                htmlWriter.Write("\r\n<br />");
-                if (RestMonths > 0)
-                {
-                    htmlWriter.Write($"\r\nAllowing <span class=\"setvalueextra\">{RestMonths}</span> month{((RestMonths > 1) ? "s" : "")} rest after lactation");
-                    if (ShortenLactationMonths > 0)
-                    {
-                        htmlWriter.Write(" and ");
-                    }
-                }
-                if (ShortenLactationMonths > 0)
-                {
-                    htmlWriter.Write($" breeding {ShortenLactationMonths}</span> month{((ShortenLactationMonths > 1) ? "s" : "")} before end of lactation");
-                }
-            }
-            htmlWriter.Write("\r\n</div>");
-            if (!Enabled & !FormatForParentControl)
-            {
-                htmlWriter.Write(" - DISABLED!");
+                yield return new ValidationResult($"Breeders cannot be rested after lactation and allow conception during lactation", new string[] { "Ruminant Milking Timer" });
             }
 
-            return htmlWriter.ToString();
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryClosingTags()
-        {
-            return "</div>";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("<div class=\"filtername\">");
-            if (!Name.Contains(GetType().Name.Split('.').Last()))
-            {
-                htmlWriter.Write(Name);
-            }
-            htmlWriter.Write($"</div>");
-            htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
-            return htmlWriter.ToString();
+            // this should be handled automatically until the allowed time step of this component is set.
+            // yield return new ValidationResult($"Milking timer has not been updated after time step and daily ruminant age changes", new string[] { "Ruminant Milking Timer" });
         }
 
         #endregion

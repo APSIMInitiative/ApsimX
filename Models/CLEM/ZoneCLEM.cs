@@ -477,7 +477,7 @@ namespace Models.CLEM
                 if (AutoCreateDescriptiveSummary)
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write($"This component will be included in the overall simulation summary decription html file</div>");
+                    htmlWriter.Write($"This component will be included in the overall simulation summary description html file</div>");
                 }
                 return htmlWriter.ToString();
             }

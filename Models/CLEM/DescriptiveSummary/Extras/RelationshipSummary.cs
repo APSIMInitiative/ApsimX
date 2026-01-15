@@ -6,31 +6,31 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.CLEM.DescriptiveSummary.Extras
+namespace Models.CLEM.DescriptiveSummary;
+
+/// <summary>
+/// Descriptive summary provider for the Relationship
+/// </summary>
+public class RelationshipSummary : DescriptiveSummaryProviderBase<Relationship>
 {
-    /// <summary>
-    /// Descriptive summary provider for the Relationship
-    /// </summary>
-    public class RelationshipSummary : DescriptiveSummaryProviderBase<Relationship>
+    /// <inheritdoc/>
+    public override void BuildSummary()
     {
-        /// <inheritdoc/>
-        public override void BuildSummary()
+        using StringWriter htmlWriter = new();
+        // draw chart
+        if (ModelTyped.XValues is null || ModelTyped.XValues.Length == 0)
         {
-            using StringWriter htmlWriter = new();
-            // draw chart
-            if (ModelTyped.XValues is null || ModelTyped.XValues.Length == 0)
+            htmlWriter.Write("<span class=\"errorlink\">No x values provided</span>");
+        }
+        else
+        {
+            if (ModelTyped.YValues is null || ModelTyped.XValues.Length != ModelTyped.YValues.Length)
             {
-                htmlWriter.Write("<span class=\"errorlink\">No x values provided</span>");
+                htmlWriter.Write("<span class=\"errorlink\">Number of x values does not equal number of y values</span>");
             }
             else
             {
-                if (ModelTyped.YValues is null || ModelTyped.XValues.Length != ModelTyped.YValues.Length)
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">Number of x values does not equal number of y values</span>");
-                }
-                else
-                {
-                    htmlWriter.Write(@"
+                htmlWriter.Write(@"
                         <canvas id=""myChart_" + ModelTyped.FullPath + @"""><p>Unable to display graph in browser</p></canvas>
                         <script>
                         var ctx = document.getElementById('myChart_" + ModelTyped.FullPath + @"').getContext('2d');
@@ -41,18 +41,18 @@ namespace Models.CLEM.DescriptiveSummary.Extras
                         data: {
                             datasets: [{
                                 data: [");
-                    string data = "";
-                    for (int i = 0; i < ModelTyped.XValues.Length; i++)
+                string data = "";
+                for (int i = 0; i < ModelTyped.XValues.Length; i++)
+                {
+                    if (ModelTyped.YValues.Length > i)
                     {
-                        if (ModelTyped.YValues.Length > i)
-                        {
-                            data += "{ x: " + ModelTyped.XValues[i].ToString() + ", y: " + ModelTyped.YValues[i] + "},";
-                        }
+                        data += "{ x: " + ModelTyped.XValues[i].ToString() + ", y: " + ModelTyped.YValues[i] + "},";
                     }
+                }
 
-                    data = data.TrimEnd(',');
-                    htmlWriter.Write(data);
-                    htmlWriter.Write(@"],
+                data = data.TrimEnd(',');
+                htmlWriter.Write(data);
+                htmlWriter.Write(@"],
                         pointBackgroundColor: '[GraphPointColour]',
                         pointBorderColor: '[GraphPointColour]',
                         borderColor: '[GraphLineColour]',
@@ -82,15 +82,15 @@ namespace Models.CLEM.DescriptiveSummary.Extras
                                        color: '[GraphGridLineColour]',
                                        drawOnChartArea: true
                                     }");
-                    if (ModelTyped.NameOfXVariable != null && ModelTyped.NameOfXVariable != "")
-                    {
-                        htmlWriter.Write(@", 
+                if (ModelTyped.NameOfXVariable != null && ModelTyped.NameOfXVariable != "")
+                {
+                    htmlWriter.Write(@", 
                             scaleLabel: {
                             display: true,
                             labelString: '" + ModelTyped.NameOfXVariable + @"'
                             }");
-                    }
-                    htmlWriter.Write(@"}],
+                }
+                htmlWriter.Write(@"}],
                         yAxes: [{
                             type: 'linear',
                             gridLines: {
@@ -105,21 +105,20 @@ namespace Models.CLEM.DescriptiveSummary.Extras
                                 fontSize: 13,
                                 padding: 3
                             }");
-                    if (ModelTyped.NameOfYVariable != null && ModelTyped.NameOfYVariable != "")
-                    {
-                        htmlWriter.Write(@", scaleLabel: {
+                if (ModelTyped.NameOfYVariable != null && ModelTyped.NameOfYVariable != "")
+                {
+                    htmlWriter.Write(@", scaleLabel: {
                             display: true,
                             labelString: '" + ModelTyped.NameOfYVariable + @"'
                         }");
-                    }
-                    htmlWriter.Write(@"}],
+                }
+                htmlWriter.Write(@"}],
                             }
                            }
                         });
                         </script>");
-                }
             }
-            generator.AddBlockWithText("activityentry", htmlWriter.ToString(), styleString: "width:400px;height:200px;");
         }
+        generator.AddBlockWithText("activityentry", htmlWriter.ToString(), styleString: "width:400px;height:200px;");
     }
 }

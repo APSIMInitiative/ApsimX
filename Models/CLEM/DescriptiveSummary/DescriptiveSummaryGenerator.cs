@@ -150,6 +150,7 @@ public class DescriptiveSummaryGenerator
         ".filtername {margin:5px 0px 5px 0px; font-size:0.9em; color:#cc33cc;font-weight:bold;}" +
         ".filterborder {display: block; width: 100% - 40px; border-color:#cc33cc; background-color:[FiltContBack] !important; border-width:1px; border-style:solid; padding:0px 5px 5px 5px; margin:5px 0px 5px 0px; border-radius:5px; }" +
         ".filterset {font-size:0.85em; font-weight:bold; color:#cc33cc; background-color:[FiltContBack] !important; border-width:0px; border-style:none; padding: 1px 3px; margin: 2px 3px 0px 0px; border-radius:3px; }" +
+        ".filtersettitle {float:left; margin-right:5px;}" +
         ".filteractivityborder {background-color:[FiltContActivityBack] !important; color:#fff; }" +
         ".filter {float: left; border-color:#cc33cc; background-color:#cc33cc !important; color:white; border-width:1px; border-style:solid; padding: 1px 5px 1px 5px; margin: 5px 5px 0px 5px; border-radius:3px;}" +
         ".filtererror {font-size:0.85em; font-weight:bold; border-color:red; background-color:[FiltContBack] !important; color:red; border-width:1px; border-style:solid; padding: 1px 3px; font-weight:bold; margin: 2px 3px 0px 0px; border-radius:3px;}" +
@@ -402,6 +403,32 @@ public class DescriptiveSummaryGenerator
         {
             sb.AppendLine($"{GetIndentTabs}<br>");
         }
+    }
+
+    /// <summary>
+    /// Returns a line break snippet for the current output format including carriage return characters (e.g. br tag for html)
+    /// </summary>
+    public string DisplayLineBreak()
+    {
+        string htmltag = "";
+        if (OutputFormat == DescriptiveSummaryFormat.HTML)
+        {
+            htmltag = "<br>";
+        }
+        return $"{htmltag}{Environment.NewLine}{GetIndentTabs}";
+    }
+
+    /// <summary>
+    /// Returns the plural suffix for a given count.
+    /// </summary>
+    /// <param name="count">The count to evaluate. A count not 1 (negative, zero, or > 1) identifies the plural.</param>
+    /// <param name="word">The word to use (default empty to only return suffix)</param>
+    /// <param name="singularSuffix">Specify the singular suffix (default is empty string)</param>
+    /// <param name="pluralSuffix">Specify the plural suffix (default is 's")</param>
+    /// <returns>Returns the singular or plural word based on the specified count</returns>
+    public string DisplayPlural(int count, string word = "", string singularSuffix = "", string pluralSuffix = "s")
+    {
+        return $"{word}{((count == 1) ? singularSuffix : pluralSuffix)}";
     }
 
     private string SetCSS()
@@ -667,4 +694,245 @@ public class DescriptiveSummaryGenerator
             }
         }
     }
+
+    /// <summary>
+    /// Create an error link snipped with specified text
+    /// </summary>
+    /// <param name="errorString"></param>
+    /// <param name="htmlTags"></param>
+    /// <returns></returns>
+    public string DisplayErrorSnippet(string errorString = "Error", bool htmlTags = true)
+    {
+        string htmlStart = String.Empty;
+        string htmlEnd = (htmlTags) ? "</span>" : string.Empty;
+        if (htmlTags)
+        {
+            htmlStart = $"<span class=\"errorlink\">";
+        }
+        return $"{htmlStart}{errorString}{htmlEnd}";
+    }
+
+    /// <summary>
+    /// Create a html snippet for a given value
+    /// </summary>
+    /// <param name="value">The value to report</param>
+    /// <param name="errorString">Error text when missing</param>
+    /// <param name="entryStyle">Style of snippet</param>
+    /// <param name="htmlTags">Include html tags</param>
+    /// <param name="warnZero">Format as warning ? 0 if zero</param>
+    /// <param name="errorNotSet">Format as error if value not set or default</param>
+    /// <param name="spanClass">Override the default 'setvalue' class to use.</param>
+    /// <returns>HTML span snippet</returns>
+    public string DisplaySummaryValueSnippet<T>(T value, string errorString = "Not set", HTMLSummaryStyle entryStyle = HTMLSummaryStyle.Default, bool htmlTags = true, bool warnZero = false, bool errorNotSet = false, string spanClass = "setvalue")
+    {
+        string errorClass = "errorlink";
+        switch (entryStyle)
+        {
+            case HTMLSummaryStyle.Default:
+                break;
+            case HTMLSummaryStyle.Resource:
+                spanClass = "resourcelink";
+                break;
+            case HTMLSummaryStyle.SubResource:
+                break;
+            case HTMLSummaryStyle.SubResourceLevel2:
+                break;
+            case HTMLSummaryStyle.Activity:
+                spanClass = "activitylink";
+                break;
+            case HTMLSummaryStyle.SubActivity:
+                break;
+            case HTMLSummaryStyle.SubActivityLevel2:
+                break;
+            case HTMLSummaryStyle.Helper:
+                break;
+            case HTMLSummaryStyle.FileReader:
+                spanClass = "filelink";
+                break;
+            case HTMLSummaryStyle.Filter:
+                spanClass = "filterset";
+                errorClass = "filtererror";
+                break;
+            default:
+                break;
+        }
+
+        bool zeroFound = false;
+        if (value != null && warnZero)
+        {
+            try
+            {
+                TypeCode tc = Type.GetTypeCode(value.GetType());
+                switch (tc)
+                {
+                    case TypeCode.Byte:
+                    case TypeCode.SByte:
+                    case TypeCode.Int16:
+                    case TypeCode.UInt16:
+                    case TypeCode.Int32:
+                    case TypeCode.UInt32:
+                    case TypeCode.Int64:
+                    case TypeCode.UInt64:
+                    case TypeCode.Single:
+                    case TypeCode.Double:
+                    case TypeCode.Decimal:
+                        double zeroTest = Convert.ToDouble(value);
+                        if (zeroTest == 0.0)
+                        {
+                            zeroFound = true;
+                            errorClass = "warninglink";
+                            errorString = "? 0";
+                        }
+                        break;
+                }
+            }
+            catch
+            {
+                // ignore conversion errors and leave zeroFound = false
+            }
+        }
+        string valueString;
+        string htmlStart = String.Empty;
+        string htmlEnd = (htmlTags) ? "</span>" : string.Empty;
+
+        bool isMissingOrEmpty = (value == null) || (value.ToString() == "") || (value.ToString() == "NotSet");
+
+        // detect NaN for float/double
+        bool isNaN = false;
+        if (!isMissingOrEmpty)
+        {
+            TypeCode tc2 = Type.GetTypeCode(value.GetType());
+            if (tc2 == TypeCode.Double)
+            {
+                double d = (double)Convert.ChangeType(value, typeof(double));
+                isNaN = double.IsNaN(d);
+            }
+            else if (tc2 == TypeCode.Single)
+            {
+                float f = (float)Convert.ChangeType(value, typeof(float));
+                isNaN = float.IsNaN(f);
+            }
+        }
+
+        if (!zeroFound && !isMissingOrEmpty && !isNaN && value.ToString() != "NaN")
+        {
+            // Format numerics using current culture with appropriate grouping and decimal separators.
+            string formatted = null;
+            try
+            {
+                TypeCode tc = Type.GetTypeCode(value.GetType());
+                switch (tc)
+                {
+                    case TypeCode.Byte:
+                    case TypeCode.SByte:
+                    case TypeCode.Int16:
+                    case TypeCode.UInt16:
+                    case TypeCode.Int32:
+                    case TypeCode.UInt32:
+                    case TypeCode.Int64:
+                    case TypeCode.UInt64:
+                        // Integers: no decimal places, include group separators.
+                        formatted = ((IFormattable)value).ToString("N0", System.Globalization.CultureInfo.CurrentCulture);
+                        break;
+                    case TypeCode.Single:
+                    case TypeCode.Double:
+                    case TypeCode.Decimal:
+                        // Floating: use "N" to include group separators and decimal separator per culture.
+                        formatted = ((IFormattable)value).ToString("N", System.Globalization.CultureInfo.CurrentCulture);
+                        break;
+                    default:
+                        // Non-numeric: if IFormattable respect culture, else fallback to ToString()
+                        if (value is IFormattable formattable)
+                            formatted = formattable.ToString(null, System.Globalization.CultureInfo.CurrentCulture);
+                        else
+                            formatted = value.ToString();
+                        break;
+                }
+            }
+            catch
+            {
+                // Fallback to ToString if formatting fails.
+                formatted = value.ToString();
+            }
+
+            valueString = formatted;
+            if (htmlTags)
+            {
+                htmlStart = $"<span class=\"{spanClass}\">";
+            }
+        }
+        else
+        {
+            valueString = errorString;
+            if (htmlTags)
+            {
+                htmlStart = $"<span class=\"{errorClass}\">";
+            }
+        }
+        return $"{htmlStart}{valueString}{htmlEnd}";
+    }
+
+    /// <summary>
+    /// Create a summary html snippet from a list of values
+    /// </summary>
+    /// <param name="value">A list of value to report</param>
+    /// <param name="errorString">Error text when missing</param>
+    /// <param name="entryStyle">Style of snippet</param>
+    /// <param name="htmlTags">Include html tags</param>
+    /// <param name="warnZero">Display warning if value is zero</param>
+    /// <returns>HTML span snippet</returns>
+    public string DisplaySummaryValueSnippet<T>(IList<T> value, string errorString = "Not set", HTMLSummaryStyle entryStyle = HTMLSummaryStyle.Default, bool htmlTags = true, bool warnZero = false)
+    {
+        string result = string.Empty;
+        if (value.Any())
+        {
+            foreach (T item in value)
+            {
+                result += DisplaySummaryValueSnippet<T>(item, errorString, entryStyle, htmlTags, warnZero) + " ";
+            }
+        }
+        else
+        {
+            result = DisplaySummaryValueSnippet<T>(null, errorString, entryStyle, htmlTags, warnZero);
+        }
+
+        return result.TrimEnd();
+    }
+
+    /// <summary>
+    /// Create a summary resource type link as html snippet
+    /// </summary>
+    /// <param name="value">The value to report</param>
+    /// <param name="errorString">Error text when missing</param>
+    /// <param name="htmlTags">Include html tags</param>
+    /// <param name="nullGeneralYards">replace empty with general yards</param>
+    /// <returns>HTML span snippet</returns>
+    public string DisplaySummaryResourceTypeSnippet(string value, string errorString = "Not set", bool htmlTags = true, bool nullGeneralYards = false)
+    {
+        string spanClass = "resourcelink";
+        string errorClass = "errorlink";
+        string htmlEnd = (htmlTags) ? "</span>" : string.Empty;
+        string htmlStart = (htmlTags) ? $"<span class=\"{spanClass}\">" : string.Empty;
+
+        string valueString;
+        if (value == null || value == "")
+        {
+            if (!nullGeneralYards)
+            {
+                valueString = errorString;
+                htmlStart = (htmlTags) ? $"<span class=\"{errorClass}\">" : string.Empty;
+            }
+            else
+            {
+                valueString = "Not specified - General yards";
+            }
+        }
+        else
+        {
+            valueString = value;
+        }
+
+        return $"{htmlStart}{valueString}{htmlEnd}";
+    }
+
 }

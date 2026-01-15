@@ -1,20 +1,19 @@
 using Models.CLEM.Resources;
 
-namespace Models.CLEM.DescriptiveSummary.Resources
+namespace Models.CLEM.DescriptiveSummary;
+
+/// <summary>
+/// Descriptive summary provider for EquipmentType (sub-resource)
+/// </summary>
+public class EquipmentTypeSummary : DescriptiveSummaryProviderBase<EquipmentType>
 {
-    /// <summary>
-    /// Descriptive summary provider for EquipmentType (sub-resource)
-    /// </summary>
-    public class EquipmentTypeSummary : DescriptiveSummaryProviderBase<EquipmentType>
+    /// <inheritdoc/>
+    public override void BuildSummary()
     {
-        /// <inheritdoc/>
-        public override void BuildSummary()
-        {
-            var model = ModelTyped;
-            if (model is null) return;
+        var model = ModelTyped;
+        if (model is null) return;
 
-            Generator.AddBlockWithText("activityentry", $"There is a starting amount of {CLEMModel.DisplaySummaryValueSnippet(model.StartingAmount)}");
-        }
-
+        Generator.AddBlockWithText("activityentry", $"There is a starting amount of {generator.DisplaySummaryValueSnippet(model.StartingAmount)}");
     }
+
 }

@@ -40,7 +40,7 @@ namespace Models.CLEM
         /// The CLEMZone iteration number that will not perform any shuffle. Allows the base (natural) rainfall sequence to be included in experiments
         /// </summary>
         [Summary]
-        [Description("Iteration number where shuffle is ignored")]
+        [Description("Iteration number where shuffle is ignored (-1 all simulations")]
         public int DoNotShuffleIteration { get; set; } = -1;
 
         /// <summary>
@@ -106,32 +106,6 @@ namespace Models.CLEM
                 yield return new ValidationResult($"The [RainfallShuffler] component [{NameWithParent}] requires access to a [RandomNumberGenerator] component in the simulation tree", new string[] { "Missing random number generator" });
             }
         }
-        #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            htmlWriter.Write("\r\nThe rainfall year starts in ");
-            if (StartSeasonMonth == MonthsOfYear.NotSet)
-                htmlWriter.Write("<span class=\"errorlink\">Not set");
-            else
-            {
-                htmlWriter.Write("<span class=\"setvalue\">");
-                htmlWriter.Write(StartSeasonMonth.ToString());
-            }
-            htmlWriter.Write("</span>");
-            htmlWriter.Write("\r\n</div>");
-
-            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            htmlWriter.Write("\r\n<div class=\"warningbanner\">WARNING: Rainfall years are being shuffled as a proxy for stochastic rainfall variation in this simulation.<br />This is an advance feature provided for particular projects.</div>");
-            htmlWriter.Write("\r\n</div>");
-            return htmlWriter.ToString();
-        }
-
         #endregion
     }
 
