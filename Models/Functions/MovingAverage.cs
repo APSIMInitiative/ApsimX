@@ -39,7 +39,7 @@ namespace Models.Functions
         private bool InitialisedToday { get; set; }
 
         /// <summary>Was the moving average array initialised today</summary>
-        private bool Calculate { get; set; } = true;
+        private bool Calculate { get; set; }
 
         /// <summary>The child functions</summary>
         private IFunction ChildFunction
@@ -56,20 +56,16 @@ namespace Models.Functions
             }
         }
 
-        /// <summary>Things the plant model does when the simulation starts</summary>
+
+        /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        virtual protected void OnSimulationCommencing(object sender, EventArgs e)
+        [EventSubscribe("PlantSowing")]
+        private void OnSowing(object sender, EventArgs e)
         {
-            if (String.IsNullOrEmpty(StageToStartMovingAverage))
-            {
-                Calculate = true;
-            }
-            else
-            {
-                Calculate = false;
-            }
+            AccumulatedValues.Clear();
+            Calculate = false;
+
         }
 
         /// <summary>Called when [phase changed].</summary>
