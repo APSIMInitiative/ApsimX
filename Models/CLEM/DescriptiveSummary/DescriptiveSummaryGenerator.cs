@@ -300,8 +300,6 @@ public class DescriptiveSummaryGenerator
     {
         if (!componentGroup.SelectedModels.Any() && string.IsNullOrEmpty(componentGroup.Missing)) return;
 
-        bool addBorderIt = componentGroup.Introduction != "" && provider.Model is CLEMRuminantActivityBase && componentGroup.SelectedModels.Any();
-
         using (OpenBlock(componentGroup.BorderCssClass))
         {
             if (componentGroup.Introduction != "")

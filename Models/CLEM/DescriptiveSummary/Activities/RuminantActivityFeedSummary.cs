@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Models.CLEM.DescriptiveSummary;
 
 /// <summary>
-/// Descriptive summary provider for AnimalPriceGroup
+/// Descriptive summary provider for Ruminant Activity Feed
 /// </summary>
 public class RuminantActivityFeedSummary : DescriptiveSummaryProviderBase<RuminantActivityFeed>
 {

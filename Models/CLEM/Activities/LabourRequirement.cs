@@ -51,7 +51,7 @@ namespace Models.CLEM.Activities
         /// Days labour required per unit or fixed (days)
         /// </summary>
         [Description("Labour required (days)")]
-        [Tooltip("Number of days required for the number of units specified (or fixed if set as unit)")]
+        [Tooltip("Number of days required for the number of unit blocks specified (or fixed if set as unit)")]
         [Required, GreaterThanEqualValue(0)]
         [Category("Farm", "Rate")]
         public double LabourPerUnit { get; set; } = 1.0;
@@ -59,7 +59,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Size of unit
         /// </summary>
-        [Description("Number of units")]
+        [Description("Number of units per allocation block")]
         [Tooltip("The number of units per days labour required")]
         [Required, GreaterThanEqualValue(0)]
         [Category("Farm", "Units")]
