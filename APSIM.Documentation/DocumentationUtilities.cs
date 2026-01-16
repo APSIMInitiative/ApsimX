@@ -130,6 +130,11 @@ public static class DocumentationUtilities
             newTags.AddRange(tags);
             return newTags;
         }
+        else if (tags.First().GetType() == typeof(Section))
+        {
+            (first as Section).Title = title;
+            return tags;
+        }
         else
         {
             return tags;

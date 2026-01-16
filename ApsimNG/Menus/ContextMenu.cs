@@ -1074,7 +1074,12 @@ namespace UserInterface.Presenters
                     var simpleFileName = Path.GetFileNameWithoutExtension((modelToDocument as Simulations).FileName);
                     modelTypeName = simpleFileName;
                 }
-                else modelTypeName = modelToDocument.GetType().Name;
+                else 
+                {
+                    modelTypeName = modelToDocument.Name;
+                    if (modelToDocument.Name != modelToDocument.GetType().Name)
+                        modelTypeName = $"{modelToDocument.Name} ({modelToDocument.GetType().Name})";
+                }
 
                 string fullDocFileName = Directory.GetParent(explorerPresenter.ApsimXFile.FileName).ToString()
                     + $"{Path.DirectorySeparatorChar}{modelTypeName}.html";
