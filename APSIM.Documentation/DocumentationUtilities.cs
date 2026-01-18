@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
+using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text.RegularExpressions;
+using APSIM.Documentation.Models.Types;
 using APSIM.Shared.Documentation;
+using Models.Core;
+using Models.PMF;
 using DocumentationGraphPage = APSIM.Shared.Documentation.GraphPage;
 
 namespace APSIM.Documentation;
@@ -138,6 +139,28 @@ public static class DocumentationUtilities
         else
         {
             return tags;
+        }
+    }
+
+    /// <summary>
+    /// Gets the name of the documentation based on the provided model, with rules for Simulations and models
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns></returns>
+    public static string GetDocumentationName(IModel model) {
+
+        if (model is Plant)
+            return model.Name;
+        else if (model is Simulations)
+        {
+            return DocSimulations.GetSimulationsName(model as Simulations);
+        }
+        else 
+        {
+            string name = model.Name;
+            if (model.Name != model.GetType().Name)
+                name = $"{model.Name} ({model.GetType().Name})";
+            return name;
         }
     }
 }
