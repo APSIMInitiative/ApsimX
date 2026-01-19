@@ -263,6 +263,7 @@ namespace APSIM.Documentation.Models.Types
                     else
                     {
                         type = m.GetType().ToString();
+                        type = type.Substring(type.LastIndexOf('.')+1);
                     }
                     if (!modelNames.Contains(type))
                         modelNames.Add(type);
