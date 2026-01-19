@@ -285,7 +285,7 @@ namespace Models.PreSimulationTools
         }
 
         /// <summary>
-        /// Returns a list of new Column names from a DataTable that excludes names that were read from previously read DataTables
+        /// Returns a list of new Column infos from a DataTable that excludes names that are reserved
         /// </summary>
         /// <param name="dataTable">The DataTable to read</param>
         /// <returns>A list of ColumnInfo for the new columns</returns>

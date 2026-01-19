@@ -200,13 +200,6 @@ namespace Models.PreSimulationTools.ObservationsInfo
                 if (column == "_Filename" || (!Observations.RESERVED_COLUMNS.Contains(column) && column != "Clock.Today"))
                 {
                     return false;
-                    /*
-                    double difference = PercentDifferent(newRow[column].ToString(), row[column].ToString());
-                    if (MathUtilities.FloatsAreEqual(difference, 0))
-                        return true;
-                    else
-                        return false;
-                    */
                 }
             }
             return true;

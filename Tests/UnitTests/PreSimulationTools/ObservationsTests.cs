@@ -65,7 +65,6 @@ namespace UnitTests
             string filename = "%root%/Tests/UnitTests/PreSimulationTools/Input.xlsx";
 
             //Check column information
-            //
             string[] columns = ["Clock.Today", "DayMonth", "String", "Wheat.Grain.Wt", "ValueWithSpace", "Wheat.Grain.N"];
             foreach (string name in observations.ColumnNames)
                 Assert.That(columns.Contains(name), Is.True);
@@ -87,7 +86,6 @@ namespace UnitTests
             }
 
             //Check Derived information
-            //
             string[] derivedName = ["Wheat.Grain.NConc"];
             string[] derivedFunction = ["Wheat.Grain.N / Wheat.Grain.Wt"];
             string[] derivedVariable = ["double"];
@@ -105,7 +103,6 @@ namespace UnitTests
             }
             
             //Check Merge information
-            //
             string[] mergeName = ["Simulation1", "Sim2"];
             string[] mergeDate = ["2000-01-01", "2000-01-02"];
             string[] mergeColumn = ["Wheat.Grain.Wt", "Wheat.Grain.N"];
@@ -124,7 +121,6 @@ namespace UnitTests
             }
 
             //Check Zeros information
-            //
             string[] zeroName = ["Simulation1"];
             string[] zeroColumn = ["Wheat.Grain.Wt"];
             string[] zeroDate = ["2000-01-01"];
