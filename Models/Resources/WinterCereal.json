@@ -7939,33 +7939,111 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.SubtractFunction, Models",
+              "$type": "Models.Functions.PhaseLookupValue, Models",
+              "Start": "Emergence",
+              "End": "MaximumGrainLength",
               "Name": "PotentialGrowth",
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "TargetWt",
+                  "$type": "Models.Functions.MaximumFunction, Models",
+                  "Name": "EmergenceToRapidGrainFill",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.AddFunction, Models",
-                      "Name": "PotentialAboveGroundWt",
+                      "$type": "Models.Functions.SubtractFunction, Models",
+                      "Name": "EmergenceToRapidGrainFill",
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[AboveGround].Wt",
-                          "Name": "AboveGroundWt",
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "TargetWt",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.AddFunction, Models",
+                              "Name": "PotentialAboveGroundWt",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[AboveGroundLive].Wt",
+                                  "Name": "AboveGroundLiveWt",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[AboveGroundDead].Wt",
+                                  "Name": "AboveGroundDeadWt",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Leaf].Photosynthesis",
+                                  "Name": "DailyGrowth",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                              "Name": "StemFraction",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "X": [
+                                    3.0,
+                                    4.0,
+                                    5.0,
+                                    6.0,
+                                    8.0
+                                  ],
+                                  "Y": [
+                                    0.0,
+                                    0.1,
+                                    0.3,
+                                    0.6,
+                                    0.6
+                                  ],
+                                  "Name": "XYPairs",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Phenology].Stage",
+                                  "Name": "XValue",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].Photosynthesis",
-                          "Name": "DailyGrowth",
+                          "VariableName": "[Stem].Wt",
+                          "Name": "CurrentWt",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -7976,55 +8054,16 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "StemFraction",
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Zero",
                       "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            3.0,
-                            4.0,
-                            5.0,
-                            6.0,
-                            8.0
-                          ],
-                          "Y": [
-                            0.0,
-                            0.1,
-                            0.3,
-                            0.6,
-                            0.6
-                          ],
-                          "Name": "XYPairs",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].Stage",
-                          "Name": "XValue",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Stem].Wt",
-                  "Name": "CurrentWt",
-                  "ResourceName": null,
-                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
