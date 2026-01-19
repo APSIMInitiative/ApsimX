@@ -74,7 +74,6 @@ namespace UserInterface.Views
 
             Rectangle bounds = GtkUtilities.GetBorderOfRightHandView(owner);
             Paned paned = (Paned)builder.GetObject("vpaned1");
-            paned = (Paned)builder.GetObject("vpaned1");
             paned.Position = (int)Math.Round(bounds.Width * 0.6);
 
             mainWidget = (Widget)builder.GetObject("viewport1");

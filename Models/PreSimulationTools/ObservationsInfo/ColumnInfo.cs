@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Text;
 using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
@@ -226,13 +227,16 @@ namespace Models.PreSimulationTools.ObservationsInfo
                 return null;
 
             sims.Links.Resolve(firstPart, true, true, false);
-            string fullPath = firstPart.FullPath;
+            StringBuilder fullPath = new StringBuilder(firstPart.FullPath);
             for (int i = 1; i < nameParts.Length; i++)
-                fullPath += "." + nameParts[i];
+            {
+                fullPath.Append(".");
+                fullPath.Append(nameParts[i]);
+            }
 
             try
             {
-                VariableComposite variable = sims.Node.GetObject(fullPath);
+                VariableComposite variable = sims.Node.GetObject(fullPath.ToString());
                 return variable;
             }
             catch 

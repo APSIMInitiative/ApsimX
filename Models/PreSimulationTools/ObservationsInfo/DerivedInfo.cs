@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Text;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 
@@ -219,17 +220,17 @@ namespace Models.PreSimulationTools.ObservationsInfo
                         //if we added some derived variables, list the stats for the user
                         if (added > 0)
                         {
-                            string functionString = "";
+                            StringBuilder functionString = new StringBuilder();
                             for (int k = 0; k < variables.Count; k++)
                             {
                                 if (k != 0)
-                                    functionString += " " + operation + " ";
-                                functionString += prefix + variables[k] + postfix;
+                                    functionString.Append($" {operation} ");
+                                functionString.Append(prefix + variables[k] + postfix);
                             }
 
                             DerivedInfo info = new DerivedInfo();
                             info.Name = nameDerived;
-                            info.Function = functionString;
+                            info.Function = functionString.ToString();
                             info.DataType = "double";
                             info.Added = added;
                             info.Existing = existing;
