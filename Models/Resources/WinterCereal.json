@@ -6258,7 +6258,7 @@
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
                           "Start": "Emergence",
-                          "End": "Anthesis",
+                          "End": "HeadEmergence",
                           "Name": "VegetativeGrowth",
                           "ResourceName": null,
                           "Children": [
@@ -6278,14 +6278,14 @@
                         },
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "Anthesis",
+                          "Start": "HeadEmergence",
                           "End": "MaximumGrainLength",
                           "Name": "ReproductiveGrowth",
                           "ResourceName": null,
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.7,
+                              "FixedValue": 0.5,
                               "Units": null,
                               "Name": "StructuralFractionGF",
                               "ResourceName": null,
@@ -6661,7 +6661,7 @@
             },
             {
               "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
-              "Name": "PotentialGrowth",
+              "Name": "PotentialGrowthPF",
               "ResourceName": null,
               "Children": [
                 {
@@ -6806,6 +6806,141 @@
                           "ReadOnly": false
                         }
                       ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.PhaseLookupValue, Models",
+              "Start": "MaximumSpikeletPrimordia",
+              "End": "MaximumGrainLength",
+              "Name": "PotentialGrowth",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.MaximumFunction, Models",
+                  "Name": "EmergenceToRapidGrainFill",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.SubtractFunction, Models",
+                      "Name": "EmergenceToRapidGrainFill",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "TargetWt",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.AddFunction, Models",
+                              "Name": "PotentialAboveGroundWt",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[AboveGroundLive].Wt",
+                                  "Name": "AboveGroundLiveWt",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[AboveGroundDead].Wt",
+                                  "Name": "AboveGroundDeadWt",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Leaf].Photosynthesis",
+                                  "Name": "DailyGrowth",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                              "Name": "StemFraction",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "X": [
+                                    3.0,
+                                    5.5,
+                                    6.0,
+                                    7.0,
+                                    8.0,
+                                    9.0
+                                  ],
+                                  "Y": [
+                                    0.0,
+                                    0.0,
+                                    0.03,
+                                    0.17,
+                                    0.2,
+                                    0.2
+                                  ],
+                                  "Name": "XYPairs",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Phenology].Stage",
+                                  "Name": "XValue",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Spike].Wt",
+                          "Name": "CurrentWt",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Zero",
+                      "ResourceName": null,
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -8005,14 +8140,12 @@
                                   "$type": "Models.Functions.XYPairs, Models",
                                   "X": [
                                     3.0,
-                                    4.0,
                                     5.0,
-                                    6.0,
+                                    6.2,
                                     8.0
                                   ],
                                   "Y": [
                                     0.0,
-                                    0.1,
                                     0.3,
                                     0.6,
                                     0.6
