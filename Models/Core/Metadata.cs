@@ -1,6 +1,8 @@
 using APSIM.Shared.Utilities;
+using Models.PMF;
 using Models.Storage;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 
@@ -36,9 +38,10 @@ namespace Models.Core
             if (this.datastore != null)
             {
                 var table = new DataTable("_Metadata");
-                table.Columns.Add("SimulationName", typeof(string));
+                table.Columns.Add("Simulation", typeof(string));
                 table.Columns.Add("Catergory", typeof(string));
-                table.Columns.Add("Model", typeof(string));
+                table.Columns.Add("Directory", typeof(string));
+                table.Columns.Add("Models", typeof(string));
                 table.Columns.Add("File", typeof(string));
 
 
@@ -54,19 +57,43 @@ namespace Models.Core
                     if (filepath.Contains(cat.ToString()))
                         category = cat;
 
-                string model = "";
+                string directory = "";
                 if (category != MetadataCategory.None)
                 {
                     string categoryString = category.ToString();
                     int position = filepath.IndexOf(categoryString) + categoryString.Length + 1;
                     int positionOfNextSlash = filepath.IndexOf('/', position);
-                    model = filepath.Substring(position, positionOfNextSlash - position);
+                    directory = filepath.Substring(position, positionOfNextSlash - position);
+                }
+
+                IEnumerable<IModel> models = simulation.Node.FindChildren<IModel>(recurse: true);
+                List<string> modelNames = new List<string>();
+                string modelsString = "";
+                foreach(Model m in models)
+                {
+                    string type;
+                    if (m.GetType() == typeof(Plant))
+                    {
+                        type = m.Name.ToString();
+                    }
+                    else
+                    {
+                        type = m.GetType().ToString();
+                        type = type.Substring(type.LastIndexOf('.')+1);
+                    }
+                    if (!modelNames.Contains(type))
+                    {
+                        modelNames.Add(type);
+                        modelsString += type + ",";
+                    }
+                        
                 }
                 
                 DataRow row = table.NewRow();
-                row["SimulationName"] = name;
+                row["Simulation"] = name;
                 row["Catergory"] = category.ToString();
-                row["Model"] = model;
+                row["Directory"] = directory;
+                row["Models"] = modelsString;
                 row["File"] = filename;
                 table.Rows.Add(row);
 
