@@ -21,7 +21,7 @@ using Models.GrazPlan;
 using Models.PMF.Interfaces;
 using Models.PMF;
 
-namespace Models.GrazPlan.Organs
+namespace Models.Grazplan.Organs
 {
 
     /// <summary>This is a Organ class with Leaf and Stem. It can be extended to other organs. Currently calculates DM,N and NConc.</summary>
@@ -35,6 +35,10 @@ namespace Models.GrazPlan.Organs
         /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
         public IStructure Structure { private get; set; }
+
+        
+        private class Leaf : GenericOrgan {} 
+        private class Stem : GenericOrgan {}
 
          /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
         [Description("Is organ above ground?")]
@@ -79,6 +83,8 @@ namespace Models.GrazPlan.Organs
                     return GetDM(GrazType.TOTAL, GrazType.ptLEAF)/10.0;
                 if(Name=="Stem")
                     return GetDM(GrazType.TOTAL, GrazType.ptSTEM)/10.0;
+                
+                
               
                 return 0;
             }
@@ -159,7 +165,6 @@ namespace Models.GrazPlan.Organs
             }
         }
 
-        
 
 
 

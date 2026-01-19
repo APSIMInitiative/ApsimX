@@ -21,7 +21,7 @@ using Models.GrazPlan;
 using Models.PMF.Interfaces;
 using Models.PMF;
 
-namespace Models.GrazPlan.Organs
+namespace Models.Grazplan.Organs
 {
 
     /// <summary>This is a composite biomass classteting.</summary>

@@ -28,13 +28,13 @@ namespace Models.Grazplan.Biomass
         [Description("List of organs to aggregate.")]
         public string[] OrganNames { get; set; }
 
-        /// <summary>Include live material?</summary>
-        [Description("Include live material?")]
-        public bool IncludeLive { get; set; }
+        // /// <summary>Include live material?</summary>
+        // [Description("Include live material?")]
+        // public bool IncludeLive { get; set; }
 
-        /// <summary>Include dead material?</summary>
-        [Description("Include dead material?")]
-        public bool IncludeDead { get; set; }
+        // /// <summary>Include dead material?</summary>
+        // [Description("Include dead material?")]
+        // public bool IncludeDead { get; set; }
 
         /// <summary>
         /// TPasturePopulation

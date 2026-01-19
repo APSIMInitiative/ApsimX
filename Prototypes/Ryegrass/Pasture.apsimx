@@ -766,41 +766,6 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Report, Models",
-              "VariableNames": [
-                "[Clock].Today",
-                "[Weather].Rain",
-                "[Pasture].Leaf.Wt",
-                "[Pasture].Leaf.N",
-                "[Pasture].Leaf.NConc",
-                "",
-                "[Pasture].Stem.Wt",
-                "[Pasture].Stem.N",
-                "[Pasture].Stem.NConc",
-                "",
-                "[Pasture].AboveGround.Wt",
-                "[Pasture].AboveGround.N",
-                "[Pasture].AboveGround.NConc",
-                "",
-                "[Pasture].AboveGroundLive.Wt",
-                "[Pasture].AboveGroundLive.N",
-                "[Pasture].AboveGroundLive.NConc",
-                "",
-                "[Pasture].AboveGroundDead.Wt",
-                "[Pasture].AboveGroundDead.N",
-                "[Pasture].AboveGroundDead.NConc"
-              ],
-              "EventNames": [
-                "[Clock].DoReport"
-              ],
-              "GroupByVariableName": null,
-              "Name": "DailyReport",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
               "$type": "Models.GrazPlan.Pasture, Models",
               "Species": "Perennial Ryegrass",
               "Fertility": 0.8,
@@ -911,7 +876,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.GrazPlan.Organs.GenericOrgan, Models",
+                  "$type": "Models.Grazplan.Organs.GenericOrgan, Models",
                   "PastureModel": null,
                   "IsAboveGround": true,
                   "Name": "Leaf",
@@ -921,7 +886,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.GrazPlan.Organs.GenericOrgan, Models",
+                  "$type": "Models.Grazplan.Organs.GenericOrgan, Models",
                   "PastureModel": null,
                   "IsAboveGround": true,
                   "Name": "Stem",
@@ -937,8 +902,6 @@
                     "Leaf",
                     "Stem"
                   ],
-                  "IncludeLive": true,
-                  "IncludeDead": true,
                   "Name": "AboveGround",
                   "ResourceName": null,
                   "Children": [],
@@ -952,8 +915,6 @@
                     "Leaf",
                     "Stem"
                   ],
-                  "IncludeLive": true,
-                  "IncludeDead": false,
                   "Name": "AboveGroundLive",
                   "ResourceName": null,
                   "Children": [],
@@ -967,8 +928,6 @@
                     "Leaf",
                     "Stem"
                   ],
-                  "IncludeLive": false,
-                  "IncludeDead": true,
                   "Name": "AboveGroundDead",
                   "ResourceName": null,
                   "Children": [],
@@ -1968,6 +1927,42 @@
                   "ReadOnly": false
                 }
               ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report, Models",
+              "VariableNames": [
+                "[Clock].Today",
+                "[Weather].Rain",
+                "[Pasture].Leaf.Wt",
+                "[Pasture].Leaf.N",
+                "[Pasture].Leaf.NConc",
+                "",
+                "[Pasture].Stem.Wt",
+                "[Pasture].Stem.N",
+                "[Pasture].Stem.NConc",
+                "",
+                "[Pasture].AboveGround.Wt",
+                "[Pasture].AboveGround.N",
+                "[Pasture].AboveGround.NConc",
+                "",
+                "[Pasture].AboveGroundLive.Wt",
+                "[Pasture].AboveGroundLive.N",
+                "[Pasture].AboveGroundLive.NConc",
+                "",
+                "[Pasture].AboveGroundDead.Wt",
+                "[Pasture].AboveGroundDead.N",
+                "[Pasture].AboveGroundDead.NConc"
+              ],
+              "EventNames": [
+                "",
+                "[Clock].EndOfDay"
+              ],
+              "GroupByVariableName": null,
+              "Name": "DailyReport",
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             }

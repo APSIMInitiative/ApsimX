@@ -17,7 +17,7 @@ using System.Linq;
 using static Models.GrazPlan.GrazType;
 using static Models.GrazPlan.PastureUtil;
 using APSIM.Core;
-using Models.GrazPlan.Organs;
+using Models.Grazplan.Organs;
 using Models.Grazplan.Biomass;
 
 
