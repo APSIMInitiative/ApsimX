@@ -410,15 +410,17 @@ namespace Models
         private static void ListSimulationNames(string fileName, string simulationNameRegex, bool showEnabledOnly = false)
         {
             Simulations file = FileFormat.ReadFromFile<Simulations>(fileName).Model as Simulations;
-
+            if (file == null)
+                throw new Exception($"Error: Could not load simulations from file '{fileName}'.");
+                
             if (showEnabledOnly)
             {
-                List<string> sims = GetAllSimulationAndFactorialNameList(file, true);
+                List<string> sims = file.GetAllSimulationAndFactorialNameList(true);
                 sims.ForEach(Console.WriteLine);
             }
             else
             {
-                List<string> sims = GetAllSimulationAndFactorialNameList(file);
+                List<string> sims = file.GetAllSimulationAndFactorialNameList(false);
                 if (string.IsNullOrEmpty(simulationNameRegex))
                 {
                     sims.ForEach(Console.WriteLine);
@@ -428,30 +430,6 @@ namespace Models
                     PrintMatchingStrings(simulationNameRegex, sims);
                 }
             }
-        }
-
-        /// <summary>
-        /// Get all sSimulation and Factorial names from the given file.
-        /// </summary>
-        /// <param name="file"></param>
-        /// <param name="onlyEnabled"></param>
-        /// <returns></returns>
-        private static List<string> GetAllSimulationAndFactorialNameList(Simulations file, bool onlyEnabled = false)
-        {
-            List<string> sims = [];
-            if (onlyEnabled)
-            {
-                sims = file.Node.FindChildren<Simulation>().Where(sim => sim.Enabled == true).Select(sim => sim.Name).ToList();
-                List<string> allExperimentCombinations = file.Node.FindChildren<Experiment>(recurse: true).SelectMany(experiment => experiment.GetSimulationDescriptions(false).Select(sim => sim.Name)).ToList();
-                sims.AddRange(allExperimentCombinations);
-            }
-            else
-            {
-                sims = file.Node.FindChildren<Simulation>().Select(sim => sim.Name).ToList();
-                List<string> allExperimentCombinations = file.Node.FindChildren<Experiment>(recurse: true).SelectMany(experiment => experiment.GetSimulationDescriptions().Select(sim => sim.Name)).ToList();
-                sims.AddRange(allExperimentCombinations);
-            }
-            return sims;
         }
 
         /// <summary>

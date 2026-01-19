@@ -356,11 +356,7 @@ namespace Models.Core.Run
                 {
                     if (tool.Enabled)
                     {
-                        Status = $"Running pre-simulation tool {(tool as IModel).Name}";
-                        if (rootModel is Simulations)
-                        {
-                            (rootModel as Simulations).Links.Resolve(rootModel, true, true, false);
-                        }
+                        Status = $"Running pre-simulation tool {tool.Name}";
                         tool.Run();
                     }
                 }
