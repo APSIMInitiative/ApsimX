@@ -2837,8 +2837,6 @@ namespace Models.GrazPlan
 
             double[] mySoilWaterUptakeAvailVolumetric = MathUtilities.Divide(mySoilWaterUptakeAvail, water.Thickness);
             water.Volumetric = MathUtilities.Subtract(water.Volumetric, mySoilWaterUptakeAvailVolumetric);
-            waterBalance.SW = water.Volumetric;
-
         }
 
         /// <summary>Average carbon content in plant dry matter (kg/kg).</summary>

@@ -5,7 +5,6 @@ using System.Linq;
 using APSIM.Core;
 using APSIM.Shared.Extensions.Collections;
 using Models.Agroforestry;
-using Models.Core.ApsimFile;
 using Models.Storage;
 
 namespace Models.Core.Run

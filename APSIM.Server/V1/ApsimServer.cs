@@ -10,7 +10,6 @@ using APSIM.Server.Commands;
 using APSIM.Server.IO;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Models.Core.Run;
 
 namespace APSIM.Server

@@ -6,7 +6,6 @@ using APSIM.Shared.Utilities;
 using MathNet.Numerics.Distributions;
 using MathNet.Numerics.LinearAlgebra;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Models.Soils;
 using Models.Soils.NutrientPatching;
 using Models.Surface;
@@ -145,7 +144,8 @@ namespace Models.AgPasture
                 for (int i = 0; i < zoneCount - 1; i++)
                 {
                     var newZone = Apsim.Clone(zone);
-                    Structure.Add(newZone, simulation);
+                    simulation.Node.AddChild(newZone);
+                    Apsim.ReconnectLinksAndEvents(simulation);
                 }
             }
         }
