@@ -2445,8 +2445,18 @@ namespace Models.GrazPlan
 
                 FToday = systemClock.Today.Day + (systemClock.Today.Month * 0x100) + (systemClock.Today.Year * 0x10000);    //stddate
             }
-            Leaf.PastureModel = PastureModel;
-            Stem.PastureModel = PastureModel;
+
+            if (Leaf != null)
+            {
+                Leaf.PastureModel = PastureModel;
+            }
+
+            if (Stem != null)
+            {
+                Stem.PastureModel = PastureModel;
+            }
+            
+            //Stem.PastureModel = PastureModel;
             //AboveGroundLive.PastureModel=PastureModel;
             //AboveGroundDead.PastureModel=PastureModel;
             //AboveGround.PastureModel=PastureModel;

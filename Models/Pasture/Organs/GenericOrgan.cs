@@ -37,8 +37,7 @@ namespace Models.Grazplan.Organs
         public IStructure Structure { private get; set; }
 
         
-        private class Leaf : GenericOrgan {} 
-        private class Stem : GenericOrgan {}
+
 
          /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
         [Description("Is organ above ground?")]
@@ -79,13 +78,15 @@ namespace Models.Grazplan.Organs
         {
             get
             {   
-                if(Name=="Leaf")
-                    return GetDM(GrazType.TOTAL, GrazType.ptLEAF)/10.0;
-                if(Name=="Stem")
-                    return GetDM(GrazType.TOTAL, GrazType.ptSTEM)/10.0;
-                
-                
-              
+
+                if (PastureModel != null)
+                {
+                    if(Name=="Leaf")
+                        return GetDM(GrazType.TOTAL, GrazType.ptLEAF)/10.0;
+                    if(Name=="Stem")
+                        return GetDM(GrazType.TOTAL, GrazType.ptSTEM)/10.0;
+                }
+      
                 return 0;
             }
         }
@@ -120,10 +121,14 @@ namespace Models.Grazplan.Organs
         {
             get
             {   
-                if(Name=="Leaf")
-                    return (GetDM(GrazType.TOTAL, GrazType.ptLEAF)/10.0)* (GetPlantNutr(GrazType.TOTAL, GrazType.ptLEAF, TPlantElement.N));
-                if(Name=="Stem")
-                    return (GetDM(GrazType.TOTAL, GrazType.ptSTEM)/10.0)* (GetPlantNutr(GrazType.TOTAL, GrazType.ptSTEM, TPlantElement.N));
+                if (PastureModel != null)
+                {
+                    if(Name=="Leaf")
+                        return (GetDM(GrazType.TOTAL, GrazType.ptLEAF)/10.0)* (GetPlantNutr(GrazType.TOTAL, GrazType.ptLEAF, TPlantElement.N));
+                    if(Name=="Stem")
+                        return (GetDM(GrazType.TOTAL, GrazType.ptSTEM)/10.0)* (GetPlantNutr(GrazType.TOTAL, GrazType.ptSTEM, TPlantElement.N));
+                }
+                
                 return 0;
             }
         }
