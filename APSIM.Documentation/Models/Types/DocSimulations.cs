@@ -258,7 +258,7 @@ namespace APSIM.Documentation.Models.Types
                     string type;
                     if (m.GetType() == typeof(Plant))
                     {
-                        type = m.Name.ToString();
+                        type = m.Name;
                     }
                     else
                     {
