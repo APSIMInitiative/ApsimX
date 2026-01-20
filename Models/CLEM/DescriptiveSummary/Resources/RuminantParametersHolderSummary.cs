@@ -1,6 +1,9 @@
-﻿using Models.CLEM.Interfaces;
+﻿using DocumentFormat.OpenXml.Drawing;
+using DocumentFormat.OpenXml.EMMA;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
+using Models.DCAPST;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +28,39 @@ public class RuminantParametersHolderSummary : DescriptiveSummaryProviderBase<Ru
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        Generator.AddBlockWithText("detailsnote", "A summary of important ruminant parameter settings from parameters supplied");
+        List<(string ComponentName, string Category, string Value)> parameters = [];
+        foreach (var item in GetChildrenInSummary()[0].SelectedModels)
+        {
+            var provider = DescriptiveSummaryResolver.GetProviderInstance(item, generator);
+            if (provider is null)
+                continue;
+            if (provider is not IRuminantParameterSummaryProvider)
+                continue;
+            var results = (provider as IRuminantParameterSummaryProvider).GetSummaryParameters();
+            if (results is not null)
+                parameters.AddRange(results);
+        }
+
+        if (parameters.Count == 0)
+        {
+            generator.AddBlockWithText("errorbanner", "No ruminant parameters to display");
+        }
+        else
+        {
+            generator.AddBlockWithText("childgrouplabel", "A summary of important ruminant parameter settings from parameters supplied");
+
+            foreach (var param in parameters.GroupBy(a => a.Category))
+            {
+                using (generator.OpenBlock("childgroupresourceborder"))
+                {
+                    generator.AddBlockWithText("detailsnote", $"Parameters related to {param.Key}");
+                    foreach (var item in param)
+                    {
+                        generator.AddSummaryParameterSnippet(item.ComponentName, item.Value);
+                    }
+                }
+            }
+        }
     }
 
     ///<inheritdoc/>
@@ -40,7 +75,8 @@ public class RuminantParametersHolderSummary : DescriptiveSummaryProviderBase<Ru
                 id: "parameters",
                 models: model.Structure.FindChildren<ISubParameters>(recurse: true).Cast<IModel>(),
                 childType: typeof(ISubParameters),
-                missing: ""
+                missing: "",
+                include: false
                 ),
             new ChildComponentGroup(
                 id: "parameters",

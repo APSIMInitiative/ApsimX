@@ -88,11 +88,11 @@ public class DescriptiveSummaryGenerator
         ".resource td.fill {background-color: #c1946c !important;}" +
         ".resource td.disabled {opacity: 0.5 !important;}" +
         ".resourceborder {border-color:#996633; border-width:1px; border-style:solid; padding:0px; background-color:Cornsilk !important; }" +
-        ".resource h1,h2,h3 {color:#996633; } .activity h1,h2,h3 { color:#009999; margin-bottom:5px; }" +
+        ".resource h1,h2,h3 {color:#996633; } " +
         ".resourcebanner {background-color:#996633 !important; color:[ResFontBanner]; padding:5px; font-weight:bold; border-radius:5px 5px 0px 0px; }" +
         ".resourcebannerlight {background-color:#c1946c !important; color:[ResFontBanner]; border-radius:5px 5px 0px 0px; padding:5px 5px 5px 10px; margin-top:12px; font-weight:bold }" +
         ".resourcebannerdark {background-color:#996633 !important; color:[ResFontBanner]; border-radius:5px 5px 0px 0px; padding:5px 5px 5px 10px; margin-top:12px; font-weight:bold }" +
-        ".resourcecontent {background-color:[ResContBack] !important; margin-bottom:40px; border-radius:0px 0px 5px 5px; border-color:#996633; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
+        ".resourcecontent {background-color:[ResContBack] !important; margin-bottom:15px; border-radius:0px 0px 5px 5px; border-color:#996633; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
         ".resourcebanneralone {background-color:[ResContBack] !important; margin:10px 0px 5px 0px; border-radius:5px 5px 5px 5px; border-color:#996633; border-width:1px; border-style:solid solid solid solid; padding:5px;}" +
         ".resourcecontentlight {background-color:[ResContBackLight] !important; margin-bottom:10px; border-radius:0px 0px 5px 5px; border-color:#c1946c; border-width:0px 1px 1px 1px; border-style:none solid solid solid; padding:10px;}" +
         ".resourcecontentdark {background-color:[ResContBackDark] !important; margin-bottom:10px; border-radius:0px 0px 5px 5px; border-color:#996633; border-width:0px 1px 1px 1px; border-style:none solid solid solid; padding:10px;}" +
@@ -102,18 +102,19 @@ public class DescriptiveSummaryGenerator
         ".activity th {background-color: #996633 !important; }" +
         ".activity td.fill {background-color: #996633 !important; }" +
         ".activity table {border-collapse: collapse; font-size:0.8em; }" +
-        ".activity h1 {color:#009999; } .activity h1,h2,h3 { color:#009999; margin-bottom:5px; }" +
+        ".activity h1,h2,h3 { color:#009999; }" +
         ".activityborder {border-color:#009999; border-width:2px; border-style:none none none solid; padding:0px 0px 0px 10px; margin-bottom:15px; }" +
         ".activityborderfull {border-color:#009999; border-radius:5px; background-color:#f0f0f0 !important; border-width:1px; border-style:solid; margin-bottom:40px; }" +
         ".activitybanner {background-color:#009999 !important; border-radius:5px 5px 0px 0px; color:#f0f0f0; padding:5px; font-weight:bold }" +
         ".activitybannerlight {background-color:#86b2b1 !important; border-radius:5px 5px 0px 0px; color:white; padding:5px 5px 5px 10px; margin-top:12px; font-weight:bold }" +
         ".activitybannerdark {background-color:#009999 !important; border-radius:5px 5px 0px 0px; color:white; padding:5px 5px 5px 10px; margin-top:12px; font-weight:bold }" +
         ".activitybannercontent {background-color:#86b2b1 !important; border-radius:5px 5px 0px 0px; padding:5px 5px 5px 10px; margin-top:5px; }" +
-        ".activitycontent {background-color:[ActContBack] !important; margin-bottom:10px; border-radius:0px 0px 5px 5px; border-color:#009999; border-width:0px 1px 1px 1px; border-style:none solid solid solid; padding:10px;}" +
+        ".activitycontent {background-color:[ActContBack] !important; margin-bottom:15px; border-radius:0px 0px 5px 5px; border-color:#009999; border-width:0px 1px 1px 1px; border-style:none solid solid solid; padding:10px;}" +
         ".activitycontentlight {background-color:[ActContBackLight] !important; margin-bottom:10px; border-radius:0px 0px 5px 5px; border-color:#86b2b1; border-width:0px 1px 1px 1px; border-style:solid; padding:10px;}" +
         ".activitycontentdark {background-color:[ActContBackDark] !important; margin-bottom:10px; border-radius:0px 0px 5px 5px; border-color:#86b2b1; border-width:0px 1px 1px 1px; border-style:none solid solid solid; padding:10px;}" +
         ".activitypadding {padding:10px; }" +
         ".activityentry {padding:5px 0px 5px 0px; }" +
+        ".activityentryindent {margin-left:15px;}" +
         ".activityarea {padding:10px; }" +
         ".activitygroupsborder {border-color:#86b2b1; background-color:[ActContBackGroups] !important; border-width:1px; border-style:solid; padding:5px 10px; margin-bottom:5px; margin-top:15px;}" +
         ".activitylink {color:#009999; font-weight:bold; background-color:[ActContBack] !important; border-color:#009999; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px; }" +
@@ -130,10 +131,11 @@ public class DescriptiveSummaryGenerator
         ".warninglink {color:white; font-weight:bold; background-color:orange !important; border-color:darkorange; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px; }" +
         ".setvalue {font-weight:bold; background-color: [ValueSetBack] !important; Color: [ValueSetFont]; border-color:#697c7c; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px;}" +
         ".folder {color:#666666; font-style: italic; font-size:1.1em; }" +
-        ".childgrouplabel {color:#666666; font-style: italic; font-size:0.9em; }" +
+        ".childgrouplabel {color:#666666; font-style: italic; font-size:0.9em; margin-bottom-10px; }" +
         ".childgrouprotationborder {border-color:#86b2b1; background-color:[CropRotationBack] !important; border-width:1px; border-style:solid; padding:0px 10px 0px 10px; margin-bottom:5px;margin-top:10px; border-radius:5px; }" +
         ".childgroupactivityborder {border-color:#009999; background-color:[ActContBackLight] !important; border-width:1px; border-style:solid; padding:5px; margin-bottom:5px; margin-top:5px; border-radius:5px;}" +
         ".childgroupfilterborder {border-color:#cc33cc; background-color:[LabourGroupBack] !important; border-width:1px; border-style:solid; padding:5px; margin-bottom:5px; margin-top:5px; border-radius:5px;}" +
+        ".childgroupresourceborder {border-color:#c1946c; background-color:[ResContBackLight] !important; border-width:1px; border-style:solid; padding:5px; margin-bottom:5px; margin-top:5px; border-radius:5px;}" +
         ".labournote {font-style: italic; color:#666666; padding-top:7px;}" +
         ".warningbanner {background-color:Orange !important; border-radius:5px 5px 5px 5px; color:Black; padding:5px; font-weight:bold; margin-bottom:10px;margin-top:10px; }" +
         ".errorbanner {background-color:Red !important; border-radius:5px 5px 5px 5px; color:White; padding:5px; font-weight:bold; margin-bottom:10px;margin-top:10px; }" +
@@ -145,7 +147,7 @@ public class DescriptiveSummaryGenerator
         ".memo-container-simple {float:left; display:grid; grid-template-columns: 55px auto;border-radius:3px; border-color:DeepSkyBlue; border-width:2px; border-style:solid; margin:5px 5px 0px 5px;}" +
         ".memo-head-simple {background-color:DeepSkyBlue;padding:0px;color:white;font-weight:bold;}" +
         ".memo-text-simple {margin:auto 5px; color:Black; font-size:0.8em;}" +
-        ".memo-container h1 {color:#000000; } .activity h1,h2,h3 { color:#000000; margin-bottom:5px; }" +
+        ".memo-container h1 {color:#000000; } " +
         ".filterlink {font-weight:bold; color:#cc33cc; background-color:[FiltContBack] !important; border-color:#cc33cc; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px; }" +
         ".filtername {margin:5px 0px 5px 0px; font-size:0.9em; color:#cc33cc;font-weight:bold;}" +
         ".filterborder {display: block; width: 100% - 40px; border-color:#cc33cc; background-color:[FiltContBack] !important; border-width:1px; border-style:solid; padding:0px 5px 5px 5px; margin:5px 0px 5px 0px; border-radius:5px; }" +
@@ -154,6 +156,8 @@ public class DescriptiveSummaryGenerator
         ".filteractivityborder {background-color:[FiltContActivityBack] !important; color:#fff; }" +
         ".filter {float: left; border-color:#cc33cc; background-color:#cc33cc !important; color:white; border-width:1px; border-style:solid; padding: 1px 5px 1px 5px; margin: 5px 5px 0px 5px; border-radius:3px;}" +
         ".filtererror {font-size:0.85em; font-weight:bold; border-color:red; background-color:[FiltContBack] !important; color:red; border-width:1px; border-style:solid; padding: 1px 3px; font-weight:bold; margin: 2px 3px 0px 0px; border-radius:3px;}" +
+        ".parametername {float: left; background-color:#996633 !important; color:[ResFontBanner]; border-width:0px; border-style:none; padding: 1px 5px 1px 5px; margin: 7px 0px 0px 0px; border-radius:3px; font-weight:bold; font-size:0.6em}" +
+        ".parameterdetails {float: left; padding: 1px 5px 1px 5px; margin: 0px 5px 0px 5px;}" +
         ".filebanner {background-color:green !important; border-radius:5px 5px 0px 0px; color:mintcream; padding:5px; font-weight:bold }" +
         ".filecontent {background-color:[ContFileBack] !important; margin-bottom:20px; border-radius:0px 0px 5px 5px; border-color:green; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
         ".defaultbanner {background-color:[ContDefaultBanner] !important; border-radius:5px 5px 0px 0px; color:white; padding:5px; font-weight:bold }" +
@@ -275,25 +279,40 @@ public class DescriptiveSummaryGenerator
         provider.BuildSummary();
 
         var childrenToSummarise = provider.HandleChildrenInSummary();
-        foreach (var item in childrenToSummarise)
+
+        if (provider.WrapChildren)
         {
-            if (item.Include)
+            foreach (var item in childrenToSummarise)
             {
-                // Inner tags around the body (if used)
-                provider.CreateSummaryInnerOpeningBlocks(item);
+                if (item.Include)
+                {
+                    // Inner tags around the body (if used)
+                    provider.CreateSummaryInnerOpeningBlocks(item);
 
-                GetChildDescriptiveSummaries(provider, item);
+                    GetChildDescriptiveSummaries(provider, item);
 
-                provider.CreateSummaryInnerClosingBlocks(item);
+                    provider.CreateSummaryInnerClosingBlocks(item);
+                }
             }
         }
-
+         
         if (provider.ReportMemosType == DescriptiveSummaryMemoReportingType.AtBottom)
         {
             AddMemos(model.Children.OfType<Memo>());
         }
 
         provider.CreateSummaryClosingBlocks();
+
+        if (provider.WrapChildren == false)
+        {
+            foreach (var item in childrenToSummarise)
+            {
+                if (item.Include)
+                {
+                    GetChildDescriptiveSummaries(provider, item);
+                }
+            }
+        }
     }
 
     private void GetChildDescriptiveSummaries(IDescriptiveSummaryProvider provider, ChildComponentGroup componentGroup, Func<string, string> markdown2Html = null)
@@ -429,6 +448,71 @@ public class DescriptiveSummaryGenerator
         return $"{word}{((count == 1) ? singularSuffix : pluralSuffix)}";
     }
 
+    /// <summary>
+    /// Provide a bold formatted text snippet
+    /// </summary>
+    /// <param name="text">Text to bold</param>
+    /// <returns>Formatted snippet</returns>
+    public string DisplayBold(string text)
+    {
+        if (OutputFormat == DescriptiveSummaryFormat.HTML)
+            return $"<b>{text}</b>";
+        else
+            return $"**{text}**";
+    }   
+
+    /// <summary>
+    /// Provide a italic formatted text snippet
+    /// </summary>
+    /// <param name="text">Text to italicize</param>
+    /// <returns>Formatted snippet</returns>
+    public string DisplayItalic(string text)
+    {
+        if (OutputFormat == DescriptiveSummaryFormat.HTML)
+            return $"<i>{text}</i>";
+        else
+            return $"*{text}*";
+    }   
+
+    /// <summary>
+    /// Provide a superscript formatted text snippet
+    /// </summary>
+    /// <param name="text">Text to format as superscript</param>
+    /// <returns>Formatted snippet</returns>
+    public string DisplaySuperScript(string text)
+    {
+        if (OutputFormat == DescriptiveSummaryFormat.HTML)
+            return $"<sup>{text}</sup>";
+        else
+            return $"^{text}^";
+    }
+
+    /// <summary>
+    /// Provide a subscript formatted text snippet
+    /// </summary>
+    /// <param name="text">Text to format as subscript</param>
+    /// <returns>Formatted snippet</returns>
+    public string DisplaySubScript(string text)
+    {
+        if (OutputFormat == DescriptiveSummaryFormat.HTML)
+            return $"<sub>{text}</sub>";
+        else
+            return $"~{text}~";
+    }
+
+    /// <summary>
+    /// Add a formatted parameter value entry
+    /// </summary>
+    /// <param name="name">Name of parameter group</param>
+    /// <param name="text">FOrmatted text to display</param>
+    public void AddSummaryParameterSnippet(string name, string text)
+    {
+        using (OpenBlock("activityentry clearfix"))
+        {
+            AddBlockWithText("parametername", name);
+            AddBlockWithText("parameterdetails", text);
+        }
+    }
     private string SetCSS()
     {
         // for each key in colours, replace in cssText

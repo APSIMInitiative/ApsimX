@@ -742,32 +742,5 @@ namespace Models.CLEM
                 reader = null;
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            if (FileName == null || FileName == "")
-            {
-                htmlWriter.Write("Using <span class=\"errorlink\">[FILE NOT SET]</span>");
-            }
-            else
-            {
-                if (!this.FileExists)
-                {
-                    htmlWriter.Write($"The file <span class=\"errorlink\">{FullFileName}</span> could not be found");
-                }
-                else
-                {
-                    htmlWriter.Write($"Using <span class=\"filelink\">{FileName}</span>");
-                }
-            }
-            htmlWriter.Write("\r\n</div>");
-            return htmlWriter.ToString();
-        }
-        #endregion
     }
 }

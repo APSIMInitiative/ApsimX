@@ -115,55 +115,5 @@ namespace Models.CLEM.Timers
             ActivityPerformed?.Invoke(this, e);
         }
 
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"filter\">");
-            htmlWriter.Write("Perform when ");
-            htmlWriter.Write(DisplaySummaryValueSnippet(GrazeFoodStoreTypeName, "Resource not set", HTMLSummaryStyle.Resource));
-            htmlWriter.Write(" is between <span class=\"setvalueextra\">");
-            htmlWriter.Write(MinimumPastureLevel.ToString());
-            htmlWriter.Write("</span> and ");
-            if (MaximumPastureLevel <= MinimumPastureLevel)
-            {
-                htmlWriter.Write("<span class=\"resourcelink\">must be > MinimumPastureLevel</span> ");
-            }
-            else
-            {
-                htmlWriter.Write("<span class=\"setvalueextra\">");
-                htmlWriter.Write(MaximumPastureLevel.ToString());
-                htmlWriter.Write("</span> ");
-            }
-            htmlWriter.Write(" kg per hectare</div>");
-            if (!Enabled & !FormatForParentControl)
-                htmlWriter.Write(" - DISABLED!");
-            return htmlWriter.ToString();
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryClosingTags()
-        {
-            return "</div>";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("<div class=\"filtername\">");
-            if (!Name.Contains(GetType().Name.Split('.').Last()))
-            {
-                htmlWriter.Write(Name);
-            }
-
-            htmlWriter.Write($"</div>");
-            htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
-            return htmlWriter.ToString();
-        }
-        #endregion
-
     }
 }

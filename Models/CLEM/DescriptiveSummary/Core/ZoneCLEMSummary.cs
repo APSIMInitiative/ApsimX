@@ -13,6 +13,34 @@ namespace Models.CLEM.DescriptiveSummary;
 /// </summary>
 public class ZoneCLEMSummary : DescriptiveSummaryProviderBase<ZoneCLEM>
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public ZoneCLEMSummary()
+    {
+        WrapChildren = false;
+    }
+
+    ///<inheritdoc/>
+    public override List<ChildComponentGroup> GetChildrenInSummary()
+    {
+        return
+        [
+            new ChildComponentGroup(
+                id: "events",
+                models: ModelTyped.Structure.FindAll<Clock>(),
+                childType: typeof(Clock),
+                missing: ""
+                ),
+            new ChildComponentGroup(
+                id: "random",
+                models: ModelTyped.Structure.FindAll<RandomNumberGenerator>(),
+                childType: typeof(RandomNumberGenerator),
+                missing: ""
+                )
+        ];
+    }
+
     /// <inheritdoc/>
     public override void BuildSummary()
     {

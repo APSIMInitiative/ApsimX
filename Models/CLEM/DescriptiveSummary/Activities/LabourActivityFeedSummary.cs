@@ -21,7 +21,7 @@ public class LabourActivityFeedSummary : DescriptiveSummaryProviderBase<LabourAc
                 model: CLEMModel,
                 childType: typeof(LabourFeedGroup),
                 introduction: "The following groups will be fed:",
-                borderClass: "childgroupactivityborder"
+                borderClass: "childgroupfilterborder"
                 )
         ];
     }

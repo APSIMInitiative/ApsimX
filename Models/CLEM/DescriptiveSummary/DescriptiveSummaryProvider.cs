@@ -82,6 +82,9 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
     public int NestedLevel { get; set; } = 0;
 
     /// <inheritdoc/>
+    public bool WrapChildren { get; set; } = true; 
+
+    /// <inheritdoc/>
     public bool FormatForParentControl => NestedLevel > 1; // generator.IndentIndex > 0; //CurrentAncestorList?.Count > 0;
     /// <inheritdoc/>
     public DescriptiveSummaryMemoReportingType ReportMemosType { get; set; } = DescriptiveSummaryMemoReportingType.InPlace;
@@ -287,11 +290,6 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
             );
 
         Model.Node.FindChildren<IModel>();
-        
-        //// Find all child models and only add those not already present in uniqueModels
-        //var remainingChildren = Model.Structure.FindChildren<IModel>()
-        //                          .Where(child => !uniqueModels.Contains(child))
-        //                          .ToList();
 
         // Find all child models and only add those not already present in uniqueModels
         var remainingChildren = Model.Node.FindChildren<IModel>()

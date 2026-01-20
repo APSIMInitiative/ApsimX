@@ -301,44 +301,6 @@ namespace Models.CLEM
             }
         }
 
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            if (FileName == null || FileName == "")
-            {
-                htmlWriter.Write("Using <span class=\"errorlink\">FILE NOT SET</span>");
-            }
-            else if (!this.FileExists)
-            {
-                htmlWriter.Write($"The file <span class=\"errorlink\">{FullFileName}</span> could not be found");
-            }
-            else
-            {
-                htmlWriter.Write($"Using <span class=\"filelink\">{FileName}</span>");
-            }
-
-            if (FileName != null && FileName.Contains(".xls"))
-            {
-                if (ExcelWorkSheetName == null || ExcelWorkSheetName == "")
-                {
-                    htmlWriter.Write(" with <span class=\"errorlink\">WORKSHEET NOT SET</span>");
-                }
-                else
-                {
-                    htmlWriter.Write($" with worksheet <span class=\"filelink\">{ExcelWorkSheetName}</span>");
-                }
-            }
-
-            htmlWriter.Write("</div>");
-            return htmlWriter.ToString();
-        }
-
-        #endregion
-
         #region validation
 
         /// <inheritdoc/>

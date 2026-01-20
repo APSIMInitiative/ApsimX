@@ -147,46 +147,5 @@ namespace Models.CLEM.Timers
             }
             return true;
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"filter\">");
-            if (Sequence is null || Sequence == "")
-            {
-                htmlWriter.Write($"Sequence <span class=\"errorlink\">NOT SET</span>");
-            }
-            else
-            {
-                htmlWriter.Write("<span style=\"float:left; margin-right:5px;\">Use sequence</span>");
-                string seqString = FormatSequence(Sequence);
-                for (int i = 0; i < seqString.Length; i++)
-                {
-                    htmlWriter.Write($" <span class=\"filterset\">{(seqString[i] == '1' ? "OK" : "SKIP")} </span>");
-                }
-            }
-            htmlWriter.Write("\r\n</div>");
-            if (!Enabled & !FormatForParentControl)
-            {
-                htmlWriter.Write(" - DISABLED!");
-            }
-            return htmlWriter.ToString();
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryClosingTags()
-        {
-            return "";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags()
-        {
-            return "";
-        }
-        #endregion
     }
 }

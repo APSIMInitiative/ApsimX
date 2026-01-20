@@ -13,14 +13,11 @@ namespace Models.CLEM.DescriptiveSummary;
 /// <summary>
 /// Descriptive summary provider for Ruminant Activity Feed
 /// </summary>
-public class RuminantActivityFeedSummary : DescriptiveSummaryProviderBase<RuminantActivityFeed>
+public class RuminantActivityFeedSummary : RuminantActivitySummaryBase<RuminantActivityFeed>
 {
     ///<inheritdoc/>
     public override List<ChildComponentGroup> GetChildrenInSummary()
     {
-        var model = ModelTyped;
-        if (model is null) return [];
-
         return
         [
             new ChildComponentGroup(
@@ -29,7 +26,7 @@ public class RuminantActivityFeedSummary : DescriptiveSummaryProviderBase<Rumina
                 childType: typeof(RuminantFeedGroup),
                 missing: "",
                 introduction: "The following individuals will be fed:",
-                borderClass: "filterborder"
+                borderClass: "childgroupfilterborder"
                 )
         ];
     }
@@ -37,11 +34,43 @@ public class RuminantActivityFeedSummary : DescriptiveSummaryProviderBase<Rumina
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        using StringWriter htmlWriter = new();
-        generator.AddBlockWithText("activityentry", $"Feed ruminants {generator.DisplaySummaryValueSnippet(ModelTyped.FeedTypeName, "Feed not set", HTMLSummaryStyle.Resource)}");
+        string feedstyleStart = "";
+        switch (ModelTyped.FeedStyle)
+        {
+            case RuminantFeedActivityTypes.SpecifiedDailyAmount:
+                feedstyleStart = "a specified total daily amount from";
+                break;
+            case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
+                feedstyleStart = "a specified daily amount per individual from";
+                break;
+            case RuminantFeedActivityTypes.ProportionOfWeight:
+                feedstyleStart = "a proportion of each individuals body weight from";
+                break;
+            case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
+                feedstyleStart = "a proportion of each individuals potential intake from";
+                break;
+            case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
+                feedstyleStart = "a proportion of each individuals remaining intake required from";
+                break;
+            case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
+                feedstyleStart = "a proportion of the available feed from";
+                break;
+            default:
+                break;
+        }
+
+        generator.AddBlockWithText("activityentry", $"Feed {feedstyleStart} {generator.DisplaySummaryValueSnippet(ModelTyped.FeedTypeName, "Feed not set", HTMLSummaryStyle.Resource)} to ruminants");
         if (ModelTyped.ProportionTramplingWastage > 0)
         {
-            generator.AddBlockWithText("activityentry", $"{generator.DisplaySummaryValueSnippet(ModelTyped.ProportionTramplingWastage)} is lost through trampling");
+            generator.AddBlockWithText("activityentry", $"{generator.DisplaySummaryValueSnippet(ModelTyped.ProportionTramplingWastage)} x AmountNeeded will be lost through trampling");
+        }
+        if (ModelTyped.StopFeedingWhenSatisfied)
+        {
+            generator.AddBlockWithText("activityentry", "Feeding will stop when all individuals are satisfied!");
+        }
+        if (!ModelTyped.ForceFeed)
+        {
+            generator.AddBlockWithText("activityentry", "Individuals will be forced to eat the specified amount!");
         }
     }
 }

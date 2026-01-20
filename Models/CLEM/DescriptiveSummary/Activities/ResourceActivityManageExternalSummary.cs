@@ -23,7 +23,7 @@ public class ResourceActivityManageExternalSummary : DescriptiveSummaryProviderB
                 model: CLEMModel,
                 childType: typeof(ResourceActivityExternalMultiplier),
                 introduction: "The following multipliers will be applied:",
-                borderClass: "childgroupfilterborder"
+                borderClass: "childgroupactivityborder"
                 )
         ];
     }

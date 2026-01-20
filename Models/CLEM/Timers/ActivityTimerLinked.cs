@@ -106,45 +106,6 @@ namespace Models.CLEM.Timers
             ActivityPerformed?.Invoke(this, e);
         }
 
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"filter\">");
-            htmlWriter.Write($"Linked to {CLEMModel.DisplaySummaryValueSnippet(ExistingTimerName, errorString: "No timer selected")}");
-            htmlWriter.Write("</span></div>");
-            if (!Enabled & !FormatForParentControl)
-            {
-                htmlWriter.Write(" - DISABLED!");
-            }
-
-            return htmlWriter.ToString();
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryClosingTags()
-        {
-            return "</div>";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("<div class=\"filtername\">");
-            if (!Name.Contains(GetType().Name.Split('.').Last()))
-            {
-                htmlWriter.Write(Name);
-            }
-
-            htmlWriter.Write($"</div>");
-            htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
-            return htmlWriter.ToString();
-        }
-        #endregion
-
         #region validation
 
         /// <inheritdoc/>

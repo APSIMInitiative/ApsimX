@@ -86,51 +86,5 @@ namespace Models.CLEM.Limiters
             }
             return limiterFound;
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("<div class=\"filtername\">");
-            if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
-            {
-                htmlWriter.Write(this.Name);
-            }
-
-            htmlWriter.Write($"</div>");
-            htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
-            htmlWriter.Write("\r\n<div class=\"filter\">");
-            htmlWriter.Write($"Limit cut and carry activities to ");
-            if (!(WeightLimitPerDay is null) && WeightLimitPerDay.Count() >= 1)
-            {
-                htmlWriter.Write("<span class=\"setvalueextra\">");
-                htmlWriter.Write(WeightLimitPerDay.ToString());
-            }
-            else
-            {
-                htmlWriter.Write("<span class=\"errorlink\">Not Set");
-            }
-
-            htmlWriter.Write("</span> dry kg/day ");
-            htmlWriter.Write("</div>");
-            htmlWriter.Write("\r\n</div>");
-            return htmlWriter.ToString();
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryClosingTags()
-        {
-            return "";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags()
-        {
-            return "";
-        }
-        #endregion
-
     }
 }

@@ -19,6 +19,13 @@ public class ActivitiesHolderSummary : DescriptiveSummaryProviderBase<Activities
     {
         var model = ModelTyped;
         if (model is null) return;
-        Generator.OpenBlock("resource", styleString: $"opacity: {model.SummaryOpacity(FormatForParentControl)};", id: $"{model.Name}_main");
+        generator.OpenBlock("activity", styleString: $"opacity: {model.SummaryOpacity(FormatForParentControl)};", id: $"{model.Name}_main");
     }
+
+    /// <inheritdoc/>
+    public override void CreateSummaryClosingBlocks()
+    {
+        generator.CloseMostRecentBlock(id: $"{ModelTyped.Name}_main");
+    }
+
 }

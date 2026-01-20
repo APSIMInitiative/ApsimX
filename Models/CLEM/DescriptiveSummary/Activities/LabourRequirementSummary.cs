@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Activities;
+﻿using DocumentFormat.OpenXml.EMMA;
+using Models.CLEM.Activities;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
@@ -94,7 +95,7 @@ public class LabourRequirementSummary : DescriptiveSummaryProviderBase<LabourReq
                 break;
         }
 
-        using (generator.OpenBlock("childgroupactivityborder"))
+        using (generator.OpenBlock("childgroupactivityborder", id: $"{ModelTyped.Name}_labreq"))
         {
             generator.AddBlockWithText("childgrouplabel", $"Labour allocation will be limited using {generator.DisplaySummaryValueSnippet(limitedBy)}");
 

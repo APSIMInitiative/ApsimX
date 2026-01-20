@@ -33,6 +33,11 @@ public interface IDescriptiveSummaryProvider
     int NestedLevel { get; set; }
 
     /// <summary>
+    /// A switch to determine if child models are contained in the bounds of model border
+    /// </summary>
+    public bool WrapChildren { get; set; }
+
+    /// <summary>
     /// Determines if this model reports memos in place
     /// </summary>
     DescriptiveSummaryMemoReportingType ReportMemosType { get; set; }
@@ -114,4 +119,16 @@ public interface IDescriptiveSummaryProvider<TModel>
 {
     /// <inheritdoc/>
     void BuildSummary();
+}
+
+/// <summary>
+/// Implement this to provide a custom descriptive summary for a specific model type.
+/// </summary>
+public interface IRuminantParameterSummaryProvider
+{
+    /// <summary>
+    /// Method to get the summary parameters for a ruminant parameter type
+    /// </summary>
+    /// <returns>The list of parameters with component name and category for display</returns>
+    List<(string ComponentName, string Category, string Value)> GetSummaryParameters();
 }

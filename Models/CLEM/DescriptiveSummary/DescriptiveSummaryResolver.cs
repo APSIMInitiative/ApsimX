@@ -21,7 +21,7 @@ public static class DescriptiveSummaryResolver
     /// Get the provider instance for the supplied model object.
     /// </summary>
     /// <param name="modelObj">model for which summary is needed</param>
-    /// <param name="generator"></param>
+    /// <param name="generator">link to the current summary generator to use</param>
     /// <returns>Returns an instance of the matching closed generic provider implementing IDescriptiveSummaryProvider{TModel} for the provided model object. Returns null if no provider is found</returns>
     public static IDescriptiveSummaryProvider GetProviderInstance(object modelObj, DescriptiveSummaryGenerator generator)
     {
@@ -29,14 +29,11 @@ public static class DescriptiveSummaryResolver
         ArgumentNullException.ThrowIfNull(generator);
 
         var modelType = modelObj.GetType();
-
-        // get provider Type (or null) from cache (FindProviderTypeForModelType remains unchanged)
         var providerType = providerTypeCache.GetOrAdd(modelType, FindProviderTypeForModelType);
 
         IDescriptiveSummaryProvider provider;
         if (providerType == null)
         {
-            // fallback to default provider implementation
             provider = new DefaultDescriptiveSummaryProvider();
         }
         else
@@ -63,7 +60,6 @@ public static class DescriptiveSummaryResolver
             }
             else
             {
-                // fallback to parameterless ctor
                 created = Activator.CreateInstance(providerType);
             }
             if (created is not IDescriptiveSummaryProvider instance)
@@ -71,12 +67,9 @@ public static class DescriptiveSummaryResolver
             provider = instance;
         }
 
-        // Ensure provider has the model available (useful if ctor didn't accept the model).
-        // DescriptiveSummaryProvider exposes SetModel(IModel), so cast and call if available.
         if (provider is DescriptiveSummaryProvider dsp && modelObj is IModel im)
             dsp.SetModel(im);
 
-        // ensure provider has the generator and any initialization is done in SetGenerator
         provider.SetGenerator(generator);
         return provider;
     }
@@ -89,7 +82,6 @@ public static class DescriptiveSummaryResolver
         // Prefer exact T == modelType, otherwise try base types and interfaces (closest match)
         var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-        // build list of candidate provider types once per AppDomain scan
         List<Type> candidateProviders = new();
         lock (scanLock)
         {
