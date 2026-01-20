@@ -58,7 +58,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// The position within time-step to perform the move.
         /// </summary>
-        [Description("Within time-step timing of move")]
+        [Description("Within time step timing of move")]
         [Required]
         public WithinTimeStepTimingStyle TimeStepTiming { get; set; } = WithinTimeStepTimingStyle.Late;
 

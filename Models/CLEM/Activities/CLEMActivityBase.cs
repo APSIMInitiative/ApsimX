@@ -451,7 +451,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <typeparam name="T">Type of component to consider</typeparam>
         /// <returns></returns>
-        protected private Dictionary<string, IEnumerable<T>> LocateCompanionModels<T>() where T : IActivityCompanionModel, new()
+        public Dictionary<string, IEnumerable<T>> LocateCompanionModels<T>() where T : IActivityCompanionModel, new()
         {
             Dictionary<string, IEnumerable<T>> filters = new Dictionary<string, IEnumerable<T>>();
 
