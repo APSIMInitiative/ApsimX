@@ -5,24 +5,6 @@
   "ResourceName": null,
   "Children": [
     {
-      "$type": "Models.Memo, Models",
-      "Text": "# The APSIM Wheat Model\r\n \r\n_Brown, H.E., Huth, N.I. and Holzworth, D.P._",
-      "Name": "TitlePage",
-      "ResourceName": null,
-      "Children": [],
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
-      "$type": "Models.Memo, Models",
-      "Text": "The APSIM wheat model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.\r\n\r\nThe wheat model consists of:\r\n\r\n* a phenology model to simulate development through sequential developmental phases  \r\n* a structure model to simulate plant morphology \r\n* a collection of organs to simulate the various plant parts  \r\n* an arbitrator to allocate resources (N, biomass) to the various plant organs  \r\n\r\nThis work builds upon earlier APSIM Wheat models such as NWheat ([Asseng200225], [KeatingNWheat]), NWheatS ([Asseng1998163]), Cropmod-Wheat ([Wang2002GenericCropModel]), and the earlier versions developed in Plant (<a href=\"https://www.apsim.info/documentation/model-documentation/crop-module-documentation/wheat/\">APSIM Wheat 7.5</a>) and then within the Plant Modelling Framework ([brown_plant_2014]).",
-      "Name": "Introduction",
-      "ResourceName": null,
-      "Children": [],
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
       "$type": "Models.Storage.DataStore, Models",
       "CustomFileName": null,
       "Name": "DataStore",
@@ -1372,6 +1354,38 @@
               "DataType": "",
               "HasErrorColumn": false,
               "Filename": "Pask LC07 TT0607.xlsx"
+            },
+            {
+              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "Name": "Wheat.Leaf.Wt",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
+              "HasErrorColumn": false,
+              "Filename": ""
+            },
+            {
+              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "Name": "Wheat.Leaf.N",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
+              "HasErrorColumn": false,
+              "Filename": ""
+            },
+            {
+              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "Name": "Wheat.Leaf.SpecificAreaCanopy",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
+              "HasErrorColumn": false,
+              "Filename": ""
+            },
+            {
+              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "Name": "Wheat.Leaf.NConc",
+              "IsApsimVariable": "Not Found",
+              "DataType": "",
+              "HasErrorColumn": false,
+              "Filename": ""
             }
           ],
           "DerivedData": [
@@ -1446,7 +1460,11 @@
             "Wheat.Ear.Wt",
             "Wheat.Leaf.Dead.Nconc",
             "Wheat.Ear.N",
-            "Wheat.Ear.Nconc"
+            "Wheat.Ear.Nconc",
+            "Wheat.Leaf.Wt",
+            "Wheat.Leaf.N",
+            "Wheat.Leaf.SpecificAreaCanopy",
+            "Wheat.Leaf.NConc"
           ],
           "Name": "ObservedInput",
           "ResourceName": null,
@@ -1552,6 +1570,8 @@
             "[Wheat].Leaf.Dead.NConc",
             "[Wheat].Leaf.Dead.Wt",
             "[Wheat].Leaf.DeadWtProportion",
+            "[Wheat].Leaf.Fn",
+            "[Wheat].Leaf.Fw",
             "[Wheat].Leaf.Height",
             "[Wheat].Leaf.LAI",
             "[Wheat].Leaf.Live.N",
@@ -1569,6 +1589,7 @@
             "[Wheat].Phenology.HaunStage",
             "[Wheat].Phenology.Zadok.Stage",
             "[Wheat].Population",
+            "[Wheat].Root.Depth",
             "[Wheat].Spike.N",
             "[Wheat].Spike.NConc",
             "[Wheat].Spike.Live.StorageWt",
@@ -1581,7 +1602,10 @@
             "([Wheat].Leaf.Transpiration + [ISoilWater].Es + [MicroClimate].PrecipitationInterception)",
             "sum([Soil].NO3.kgha)",
             "sum([Soil].Water.MM)",
-            "[Soil].Water.Volumetric"
+            "[Soil].Water.Volumetric",
+            "[Wheat].Root.RootFrontVelocity.WaterFactor",
+            "[Wheat].Root.RootFrontVelocity.TemperatureFactor",
+            "[Wheat].Root.RootFrontVelocity.PotentialRootFrontVelocity"
           ],
           "EventNames": [
             "[Clock].DoReport"
@@ -1887,7 +1911,7 @@
             },
             {
               "$type": "Models.Clock, Models",
-              "Start": "2005-12-01T00:00:00",
+              "Start": "2006-06-01T00:00:00",
               "End": "2007-03-17T00:00:00",
               "Name": "Clock",
               "ResourceName": null,
@@ -2070,6 +2094,7 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "PlantType": null,
                   "Name": "Wheat",
                   "ResourceName": "Wheat",
                   "Children": [],
@@ -2139,7 +2164,7 @@
                   "Parameters": [
                     {
                       "Key": "SowDate",
-                      "Value": "8-jul"
+                      "Value": "8-jun"
                     },
                     {
                       "Key": "Treat",
@@ -2370,547 +2395,6 @@
                   "Name": "Irrigation",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Soils.Soil, Models",
-                  "RecordNumber": 301,
-                  "ASCOrder": null,
-                  "ASCSubOrder": null,
-                  "SoilType": "Clay",
-                  "LocalName": null,
-                  "Site": "Murdeduke Homestead",
-                  "NearestTown": "Winchelsea",
-                  "Region": "South West",
-                  "State": "Victoria",
-                  "Country": "Australia",
-                  "NaturalVegetation": null,
-                  "ApsoilNumber": "825",
-                  "Latitude": -38.191,
-                  "Longitude": 143.742,
-                  "LocationAccuracy": null,
-                  "YearOfSampling": "0",
-                  "DataSource": "Data collected as part of the GRDC project Training growers to manage soil water by CSIRO Sustainable Ecosystems in collaboration with farmers and Agvise consultants",
-                  "Comments": "Clay - Chem analysis: If EC <0.25 dS/m, ammonium acetate method used for cations, no prewash for soluble salts. pHwater independent.  If EC>0.25dS/m and pHwater>7.5 Tucker cation method used. OC estimated for all layers. Barley CLL estimated",
-                  "Name": "Soil",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Soils.Physical, Models",
-                      "Thickness": [
-                        150.0,
-                        150.0,
-                        300.0,
-                        300.0,
-                        300.0
-                      ],
-                      "ParticleSizeSand": null,
-                      "ParticleSizeSilt": null,
-                      "ParticleSizeClay": null,
-                      "Rocks": null,
-                      "Texture": null,
-                      "BD": [
-                        1.231,
-                        1.172,
-                        1.108,
-                        1.162,
-                        1.372
-                      ],
-                      "AirDry": [
-                        0.1,
-                        0.16,
-                        0.2,
-                        0.2,
-                        0.2
-                      ],
-                      "LL15": [
-                        0.2,
-                        0.2,
-                        0.2,
-                        0.2,
-                        0.2
-                      ],
-                      "DUL": [
-                        0.37,
-                        0.375,
-                        0.405,
-                        0.368,
-                        0.308
-                      ],
-                      "SAT": [
-                        0.505,
-                        0.528,
-                        0.552,
-                        0.532,
-                        0.452
-                      ],
-                      "KS": null,
-                      "BDMetadata": [
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data"
-                      ],
-                      "AirDryMetadata": [
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data"
-                      ],
-                      "LL15Metadata": [
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data"
-                      ],
-                      "DULMetadata": [
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data"
-                      ],
-                      "SATMetadata": [
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data"
-                      ],
-                      "KSMetadata": null,
-                      "RocksMetadata": null,
-                      "TextureMetadata": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClayMetadata": null,
-                      "Name": "Physical",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Soils.SoilCrop, Models",
-                          "LL": [
-                            0.2,
-                            0.2,
-                            0.242,
-                            0.203,
-                            0.22
-                          ],
-                          "KL": [
-                            0.06,
-                            0.06,
-                            0.06,
-                            0.04,
-                            0.04
-                          ],
-                          "XF": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                          ],
-                          "LLMetadata": [
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge"
-                          ],
-                          "KLMetadata": null,
-                          "XFMetadata": null,
-                          "Name": "wheatSoil",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.SoilCrop, Models",
-                          "LL": [
-                            0.2,
-                            0.2,
-                            0.242,
-                            0.203,
-                            0.22
-                          ],
-                          "KL": [
-                            0.07,
-                            0.07,
-                            0.07,
-                            0.05,
-                            0.05
-                          ],
-                          "XF": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                          ],
-                          "LLMetadata": [
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge"
-                          ],
-                          "KLMetadata": null,
-                          "XFMetadata": null,
-                          "Name": "barleySoil",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.SoilCrop, Models",
-                          "LL": [
-                            0.2,
-                            0.2,
-                            0.242,
-                            0.203,
-                            0.22
-                          ],
-                          "KL": [
-                            0.06,
-                            0.06,
-                            0.06,
-                            0.04,
-                            0.04
-                          ],
-                          "XF": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                          ],
-                          "LLMetadata": [
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge"
-                          ],
-                          "KLMetadata": null,
-                          "XFMetadata": null,
-                          "Name": "SCRUMSoil",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.WaterModel.WaterBalance, Models",
-                      "SummerDate": "1-Nov",
-                      "SummerU": 6.0,
-                      "SummerCona": 3.5,
-                      "WinterDate": "1-Apr",
-                      "WinterU": 2.0,
-                      "WinterCona": 2.0,
-                      "DiffusConst": 40.0,
-                      "DiffusSlope": 16.0,
-                      "Salb": 0.12,
-                      "CN2Bare": 73.0,
-                      "CNRed": 20.0,
-                      "CNCov": 0.8,
-                      "DischargeWidth": "NaN",
-                      "CatchmentArea": "NaN",
-                      "PSIDul": -100.0,
-                      "Thickness": [
-                        150.0,
-                        150.0,
-                        300.0,
-                        300.0,
-                        300.0
-                      ],
-                      "SWCON": [
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3
-                      ],
-                      "KLAT": null,
-                      "Name": "SoilWater",
-                      "ResourceName": "WaterBalance",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.Organic, Models",
-                      "FOMCNRatio": 40.0,
-                      "Thickness": [
-                        150.0,
-                        150.0,
-                        300.0,
-                        300.0,
-                        300.0
-                      ],
-                      "Carbon": [
-                        3.0,
-                        0.96,
-                        0.6,
-                        0.3,
-                        0.18
-                      ],
-                      "CarbonUnits": 1,
-                      "SoilCNRatio": [
-                        12.0,
-                        12.0,
-                        12.0,
-                        12.0,
-                        12.0
-                      ],
-                      "FBiom": [
-                        0.04,
-                        0.02,
-                        0.02,
-                        0.02,
-                        0.01
-                      ],
-                      "FInert": [
-                        0.4,
-                        0.5,
-                        0.7,
-                        1.0,
-                        1.0
-                      ],
-                      "FOM": [
-                        446.88,
-                        307.136,
-                        145.081,
-                        68.531,
-                        32.372
-                      ],
-                      "CarbonMetadata": null,
-                      "FOMMetadata": null,
-                      "Name": "Organic",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.Chemical, Models",
-                      "Thickness": [
-                        150.0,
-                        150.0,
-                        300.0,
-                        300.0,
-                        300.0
-                      ],
-                      "PH": [
-                        6.5,
-                        7.5,
-                        8.4,
-                        9.2,
-                        9.2
-                      ],
-                      "PHUnits": 0,
-                      "EC": [
-                        0.1,
-                        0.2,
-                        0.2,
-                        0.3,
-                        0.3
-                      ],
-                      "ESP": [
-                        4.2,
-                        5.2,
-                        5.9,
-                        8.9,
-                        15.8
-                      ],
-                      "CEC": [
-                        11.0,
-                        17.4,
-                        28.8,
-                        26.9,
-                        23.4
-                      ],
-                      "ECMetadata": [
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data"
-                      ],
-                      "CLMetadata": [
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data"
-                      ],
-                      "CECMetadata": null,
-                      "ESPMetadata": [
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data"
-                      ],
-                      "PHMetadata": [
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data"
-                      ],
-                      "Name": "Chemical",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.Nutrients.Nutrient, Models",
-                      "Name": "Nutrient",
-                      "ResourceName": "Nutrient",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.Solute, Models",
-                      "Thickness": [
-                        100.0,
-                        100.0,
-                        100.0,
-                        300.0,
-                        400.0
-                      ],
-                      "InitialValues": [
-                        5.0,
-                        2.0,
-                        2.0,
-                        2.0,
-                        2.0
-                      ],
-                      "InitialValuesUnits": 0,
-                      "WaterTableConcentration": 0.0,
-                      "D0": 0.0,
-                      "Exco": null,
-                      "FIP": null,
-                      "DepthConstant": 0.0,
-                      "MaxDepthSoluteAccessible": 0.0,
-                      "RunoffEffectivenessAtMovingSolute": 0.0,
-                      "MaxEffectiveRunoff": 0.0,
-                      "ConcInSolution": null,
-                      "Name": "NO3",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.Solute, Models",
-                      "Thickness": [
-                        100.0,
-                        100.0,
-                        100.0,
-                        300.0,
-                        400.0
-                      ],
-                      "InitialValues": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                      ],
-                      "InitialValuesUnits": 0,
-                      "WaterTableConcentration": 0.0,
-                      "D0": 0.0,
-                      "Exco": null,
-                      "FIP": null,
-                      "DepthConstant": 0.0,
-                      "MaxDepthSoluteAccessible": 0.0,
-                      "RunoffEffectivenessAtMovingSolute": 0.0,
-                      "MaxEffectiveRunoff": 0.0,
-                      "ConcInSolution": null,
-                      "Name": "NH4",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.Solute, Models",
-                      "Thickness": [
-                        150.0,
-                        150.0,
-                        300.0,
-                        300.0,
-                        300.0
-                      ],
-                      "InitialValues": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
-                      ],
-                      "InitialValuesUnits": 1,
-                      "WaterTableConcentration": 0.0,
-                      "D0": 0.0,
-                      "Exco": null,
-                      "FIP": null,
-                      "DepthConstant": 0.0,
-                      "MaxDepthSoluteAccessible": 0.0,
-                      "RunoffEffectivenessAtMovingSolute": 0.0,
-                      "MaxEffectiveRunoff": 0.0,
-                      "ConcInSolution": null,
-                      "Name": "Urea",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.Water, Models",
-                      "Thickness": [
-                        150.0,
-                        150.0,
-                        300.0,
-                        300.0,
-                        300.0
-                      ],
-                      "InitialValues": [
-                        0.2,
-                        0.2,
-                        0.2,
-                        0.2,
-                        0.2
-                      ],
-                      "FilledFromTop": false,
-                      "Name": "Water",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
-                      "Thickness": null,
-                      "InitialValues": null,
-                      "Name": "CERESSoilTemperature",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -3419,6 +2903,543 @@
                   "Name": "SowingReport",
                   "ResourceName": null,
                   "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Soil, Models",
+                  "RecordNumber": 0,
+                  "ASCOrder": null,
+                  "ASCSubOrder": null,
+                  "SoilType": "NZ_sedementary",
+                  "LocalName": null,
+                  "Site": "-",
+                  "NearestTown": "-",
+                  "Region": "Plains",
+                  "State": "Canterbury",
+                  "Country": "New Zealand",
+                  "NaturalVegetation": null,
+                  "ApsoilNumber": null,
+                  "Latitude": 0.0,
+                  "Longitude": 0.0,
+                  "LocationAccuracy": null,
+                  "YearOfSampling": null,
+                  "DataSource": "Generic profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results",
+                  "Comments": "Bulk density values were measured on the fine earth fraction so values entered into apsim soil are adjusted down to account for stone content (assuming stones are inert from all soil process so their mass and volume is removed from model paramaters).  SAT, DUL, LL15 and Air dry have been adjusted down to account for stone content.  OC has not been adjusted so the model will get the correct carbon and N amounts using the adjusted BD.",
+                  "Name": "TempletonSiltLoam",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.Chemical, Models",
+                      "Thickness": [
+                        180.0,
+                        150.0,
+                        400.0,
+                        270.0,
+                        500.0
+                      ],
+                      "PH": [
+                        6.0,
+                        6.0,
+                        6.0,
+                        6.0,
+                        6.0
+                      ],
+                      "PHUnits": 0,
+                      "EC": null,
+                      "ESP": null,
+                      "CEC": [
+                        14.251475000000001,
+                        11.150525,
+                        9.056000000000001,
+                        8.813,
+                        8.795900000000001
+                      ],
+                      "ECMetadata": null,
+                      "CLMetadata": null,
+                      "CECMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
+                      "ESPMetadata": null,
+                      "PHMetadata": null,
+                      "Name": "Chemical",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Physical, Models",
+                      "Thickness": [
+                        200.0,
+                        200.0,
+                        200.0,
+                        200.0,
+                        200.0,
+                        200.0,
+                        200.0,
+                        200.0
+                      ],
+                      "ParticleSizeSand": [
+                        5.0,
+                        5.0,
+                        5.0,
+                        5.0,
+                        5.0,
+                        5.0,
+                        5.0,
+                        5.0
+                      ],
+                      "ParticleSizeSilt": [
+                        65.0,
+                        65.0,
+                        65.0,
+                        65.0,
+                        65.0,
+                        65.0,
+                        65.0,
+                        65.0
+                      ],
+                      "ParticleSizeClay": [
+                        30.0,
+                        30.0,
+                        30.0,
+                        30.0,
+                        30.0,
+                        30.0,
+                        30.0,
+                        30.0
+                      ],
+                      "Rocks": [
+                        0.27468230694037155,
+                        0.11894451742649093,
+                        0.18899917287014067,
+                        0.21845732003794127,
+                        0.30294842057438,
+                        0.32407119570848963,
+                        0.36631674597670916,
+                        0.3451939708425994
+                      ],
+                      "Texture": null,
+                      "BD": [
+                        1.0,
+                        1.324,
+                        1.35,
+                        1.301,
+                        1.301,
+                        1.301,
+                        1.301,
+                        1.301
+                      ],
+                      "AirDry": [
+                        0.05,
+                        0.12,
+                        0.1,
+                        0.08,
+                        0.06,
+                        0.06,
+                        0.1,
+                        0.1
+                      ],
+                      "LL15": [
+                        0.1,
+                        0.15,
+                        0.1,
+                        0.08,
+                        0.07,
+                        0.08,
+                        0.1,
+                        0.1
+                      ],
+                      "DUL": [
+                        0.32,
+                        0.35,
+                        0.3,
+                        0.3,
+                        0.28,
+                        0.25,
+                        0.23,
+                        0.24
+                      ],
+                      "SAT": [
+                        0.42,
+                        0.41,
+                        0.37,
+                        0.37,
+                        0.33,
+                        0.32,
+                        0.3,
+                        0.31
+                      ],
+                      "KS": null,
+                      "BDMetadata": null,
+                      "AirDryMetadata": null,
+                      "LL15Metadata": null,
+                      "DULMetadata": null,
+                      "SATMetadata": null,
+                      "KSMetadata": null,
+                      "RocksMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
+                      "TextureMetadata": null,
+                      "ParticleSizeSandMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
+                      "ParticleSizeSiltMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
+                      "ParticleSizeClayMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
+                      "Name": "Physical",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Soils.SoilCrop, Models",
+                          "LL": [
+                            0.1,
+                            0.12,
+                            0.1,
+                            0.08,
+                            0.06,
+                            0.08,
+                            0.1,
+                            0.1
+                          ],
+                          "KL": [
+                            0.06,
+                            0.06,
+                            0.1,
+                            0.1,
+                            0.05,
+                            0.03,
+                            0.02,
+                            0.01
+                          ],
+                          "XF": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                          ],
+                          "LLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "KLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "XFMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "Name": "WheatSoil",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.WaterModel.WaterBalance, Models",
+                      "SummerDate": "1-oct",
+                      "SummerU": 6.0,
+                      "SummerCona": 3.0,
+                      "WinterDate": "1-Apr",
+                      "WinterU": 2.0,
+                      "WinterCona": 1.0,
+                      "DiffusConst": 0.0,
+                      "DiffusSlope": 0.0,
+                      "Salb": 0.13,
+                      "CN2Bare": 0.0,
+                      "CNRed": 0.0,
+                      "CNCov": 0.8,
+                      "DischargeWidth": "NaN",
+                      "CatchmentArea": "NaN",
+                      "PSIDul": -100.0,
+                      "Thickness": [
+                        200.0,
+                        200.0,
+                        200.0,
+                        200.0,
+                        200.0,
+                        200.0,
+                        200.0,
+                        200.0
+                      ],
+                      "SWCON": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "KLAT": null,
+                      "Name": "SoilWater",
+                      "ResourceName": "WaterBalance",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Organic, Models",
+                      "FOMCNRatio": 40.0,
+                      "Thickness": [
+                        180.0,
+                        150.0,
+                        400.0,
+                        270.0,
+                        500.0
+                      ],
+                      "Carbon": [
+                        2.6251,
+                        1.2469,
+                        0.316,
+                        0.208,
+                        0.2004
+                      ],
+                      "CarbonUnits": 0,
+                      "SoilCNRatio": [
+                        11.0,
+                        11.0,
+                        11.0,
+                        11.0,
+                        11.0
+                      ],
+                      "FBiom": [
+                        0.0333,
+                        0.0187,
+                        0.0117,
+                        0.0102,
+                        0.01
+                      ],
+                      "FInert": [
+                        0.4371,
+                        0.6569,
+                        0.8496,
+                        0.945,
+                        0.9827
+                      ],
+                      "FOM": [
+                        427.52753771689794,
+                        316.72018978386836,
+                        142.3115547905954,
+                        82.93180984684476,
+                        30.508907861793567
+                      ],
+                      "CarbonMetadata": null,
+                      "FOMMetadata": null,
+                      "Name": "Organic",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Water, Models",
+                      "Thickness": [
+                        200.0,
+                        200.0,
+                        200.0,
+                        200.0,
+                        200.0,
+                        200.0,
+                        200.0,
+                        200.0
+                      ],
+                      "InitialValues": [
+                        0.35,
+                        0.35,
+                        0.25,
+                        0.25,
+                        0.25,
+                        0.2,
+                        0.18,
+                        0.2
+                      ],
+                      "FilledFromTop": false,
+                      "Name": "Water",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                      "Name": "Nutrient",
+                      "ResourceName": "Nutrient",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Solute, Models",
+                      "Thickness": [
+                        180.0,
+                        150.0,
+                        400.0,
+                        270.0,
+                        500.0
+                      ],
+                      "InitialValues": [
+                        17.0,
+                        5.1,
+                        1.9,
+                        2.9,
+                        1.922
+                      ],
+                      "InitialValuesUnits": 0,
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.0,
+                      "Exco": null,
+                      "FIP": null,
+                      "DepthConstant": 0.0,
+                      "MaxDepthSoluteAccessible": 0.0,
+                      "RunoffEffectivenessAtMovingSolute": 0.0,
+                      "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
+                      "Name": "NO3",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Solute, Models",
+                      "Thickness": [
+                        180.0,
+                        150.0,
+                        400.0,
+                        270.0,
+                        500.0
+                      ],
+                      "InitialValues": [
+                        1.5,
+                        0.8545820745216512,
+                        0.4422643318327792,
+                        0.3843197540353572,
+                        0.3843197540353572
+                      ],
+                      "InitialValuesUnits": 0,
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.0,
+                      "Exco": null,
+                      "FIP": null,
+                      "DepthConstant": 0.0,
+                      "MaxDepthSoluteAccessible": 0.0,
+                      "RunoffEffectivenessAtMovingSolute": 0.0,
+                      "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
+                      "Name": "NH4",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Solute, Models",
+                      "Thickness": [
+                        180.0,
+                        150.0,
+                        400.0,
+                        270.0,
+                        500.0
+                      ],
+                      "InitialValues": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "InitialValuesUnits": 1,
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.0,
+                      "Exco": null,
+                      "FIP": null,
+                      "DepthConstant": 0.0,
+                      "MaxDepthSoluteAccessible": 0.0,
+                      "RunoffEffectivenessAtMovingSolute": 0.0,
+                      "MaxEffectiveRunoff": 0.0,
+                      "ConcInSolution": null,
+                      "Name": "Urea",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "Thickness": null,
+                      "InitialValues": null,
+                      "Name": "Temperature",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -5512,6 +5533,317 @@
               ],
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowInDocs": false,
+              "Name": "Stress",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "FW",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "N",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Wheat.Leaf.Fw",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "",
+                      "Name": "Predicted",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "FN",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "N",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Wheat.Leaf.Fn",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "",
+                      "Name": "Predicted",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "RootDepth",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "N",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Wheat.Root.Depth",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "",
+                      "Name": "Predicted",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "RootFrontVelocity",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "N",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Wheat.Root.RootFrontVelocity.WaterFactor",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "",
+                      "Name": "FW",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "N",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Wheat.Root.RootFrontVelocity.TemperatureFactor",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "",
+                      "Name": "FT",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "Enabled": true,
@@ -5724,7 +6056,7 @@
             },
             {
               "$type": "Models.Clock, Models",
-              "Start": "2005-01-01T00:00:00",
+              "Start": "2005-10-01T00:00:00",
               "End": "2006-08-11T00:00:00",
               "Name": "Clock",
               "ResourceName": null,
@@ -5907,6 +6239,7 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "PlantType": null,
                   "Name": "Wheat",
                   "ResourceName": "Wheat",
                   "Children": [],
@@ -5984,7 +6317,7 @@
                     },
                     {
                       "Key": "CultivarName",
-                      "Value": "Istabraq"
+                      "Value": "Savannah"
                     },
                     {
                       "Key": "SowingDepth",
@@ -6314,18 +6647,48 @@
                         150.0,
                         300.0,
                         300.0,
-                        300.0
+                        300.0,
+                        1000.0
                       ],
-                      "ParticleSizeSand": null,
-                      "ParticleSizeSilt": null,
-                      "ParticleSizeClay": null,
-                      "Rocks": null,
+                      "ParticleSizeSand": [
+                        5.0,
+                        5.0,
+                        5.0,
+                        5.0,
+                        5.0,
+                        5.0
+                      ],
+                      "ParticleSizeSilt": [
+                        65.0,
+                        65.0,
+                        65.0,
+                        65.0,
+                        65.0,
+                        65.0
+                      ],
+                      "ParticleSizeClay": [
+                        30.0,
+                        30.0,
+                        30.0,
+                        30.0,
+                        30.0,
+                        30.0
+                      ],
+                      "Rocks": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
                       "Texture": null,
                       "BD": [
                         1.231,
                         1.172,
                         1.108,
                         1.162,
+                        1.372,
                         1.372
                       ],
                       "AirDry": [
@@ -6333,9 +6696,11 @@
                         0.16,
                         0.2,
                         0.2,
+                        0.2,
                         0.2
                       ],
                       "LL15": [
+                        0.2,
                         0.2,
                         0.2,
                         0.2,
@@ -6347,6 +6712,7 @@
                         0.375,
                         0.405,
                         0.368,
+                        0.308,
                         0.308
                       ],
                       "SAT": [
@@ -6354,50 +6720,84 @@
                         0.528,
                         0.552,
                         0.532,
+                        0.452,
                         0.452
                       ],
                       "KS": null,
                       "BDMetadata": [
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data"
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
                       ],
                       "AirDryMetadata": [
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data"
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
                       ],
                       "LL15Metadata": [
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data"
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
                       ],
                       "DULMetadata": [
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data"
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
                       ],
                       "SATMetadata": [
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data"
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
                       ],
                       "KSMetadata": null,
-                      "RocksMetadata": null,
+                      "RocksMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
                       "TextureMetadata": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClayMetadata": null,
+                      "ParticleSizeSandMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
+                      "ParticleSizeSiltMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
+                      "ParticleSizeClayMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
                       "Name": "Physical",
                       "ResourceName": null,
                       "Children": [
@@ -6408,12 +6808,14 @@
                             0.2,
                             0.242,
                             0.203,
+                            0.22,
                             0.22
                           ],
                           "KL": [
                             0.06,
                             0.06,
                             0.06,
+                            0.04,
                             0.04,
                             0.04
                           ],
@@ -6422,94 +6824,34 @@
                             1.0,
                             1.0,
                             1.0,
+                            1.0,
                             1.0
                           ],
                           "LLMetadata": [
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge"
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
                           ],
-                          "KLMetadata": null,
-                          "XFMetadata": null,
+                          "KLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "XFMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
                           "Name": "wheatSoil",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.SoilCrop, Models",
-                          "LL": [
-                            0.2,
-                            0.2,
-                            0.242,
-                            0.203,
-                            0.22
-                          ],
-                          "KL": [
-                            0.07,
-                            0.07,
-                            0.07,
-                            0.05,
-                            0.05
-                          ],
-                          "XF": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                          ],
-                          "LLMetadata": [
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge"
-                          ],
-                          "KLMetadata": null,
-                          "XFMetadata": null,
-                          "Name": "barleySoil",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.SoilCrop, Models",
-                          "LL": [
-                            0.2,
-                            0.2,
-                            0.242,
-                            0.203,
-                            0.22
-                          ],
-                          "KL": [
-                            0.06,
-                            0.06,
-                            0.06,
-                            0.04,
-                            0.04
-                          ],
-                          "XF": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                          ],
-                          "LLMetadata": [
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge"
-                          ],
-                          "KLMetadata": null,
-                          "XFMetadata": null,
-                          "Name": "SCRUMSoil",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -6541,9 +6883,11 @@
                         150.0,
                         300.0,
                         300.0,
-                        300.0
+                        300.0,
+                        400.0
                       ],
                       "SWCON": [
+                        0.3,
                         0.3,
                         0.3,
                         0.3,
@@ -6702,10 +7046,10 @@
                         400.0
                       ],
                       "InitialValues": [
-                        5.0,
-                        2.0,
-                        2.0,
-                        2.0,
+                        20.9,
+                        22.0,
+                        23.2,
+                        7.4,
                         2.0
                       ],
                       "InitialValuesUnits": 0,
@@ -6795,9 +7139,11 @@
                         150.0,
                         300.0,
                         300.0,
-                        300.0
+                        300.0,
+                        1000.0
                       ],
                       "InitialValues": [
+                        0.2,
                         0.2,
                         0.2,
                         0.2,
@@ -9264,6 +9610,317 @@
               ],
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowInDocs": false,
+              "Name": "Stress",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "FW",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "N",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Wheat.Leaf.Fw",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "",
+                      "Name": "Predicted",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "FN",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "N",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Wheat.Leaf.Fn",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "",
+                      "Name": "Predicted",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "RootDepth",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "N",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Wheat.Root.Depth",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "",
+                      "Name": "Predicted",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "RootFrontVelocity",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "N",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Wheat.Root.RootFrontVelocity.WaterFactor",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "",
+                      "Name": "FW",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "N",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Wheat.Root.RootFrontVelocity.TemperatureFactor",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "",
+                      "Name": "FT",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "Enabled": true,
@@ -9300,7 +9957,7 @@
               "Children": [
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": null,
+                  "Specification": "",
                   "Name": "N",
                   "ResourceName": null,
                   "Children": [
@@ -9476,7 +10133,7 @@
             },
             {
               "$type": "Models.Clock, Models",
-              "Start": "2006-01-01T00:00:00",
+              "Start": "2006-10-01T00:00:00",
               "End": "2007-08-13T00:00:00",
               "Name": "Clock",
               "ResourceName": null,
@@ -9659,6 +10316,7 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "PlantType": null,
                   "Name": "Wheat",
                   "ResourceName": "Wheat",
                   "Children": [],
@@ -10066,18 +10724,48 @@
                         150.0,
                         300.0,
                         300.0,
-                        300.0
+                        300.0,
+                        1000.0
                       ],
-                      "ParticleSizeSand": null,
-                      "ParticleSizeSilt": null,
-                      "ParticleSizeClay": null,
-                      "Rocks": null,
+                      "ParticleSizeSand": [
+                        5.0,
+                        5.0,
+                        5.0,
+                        5.0,
+                        5.0,
+                        5.0
+                      ],
+                      "ParticleSizeSilt": [
+                        65.0,
+                        65.0,
+                        65.0,
+                        65.0,
+                        65.0,
+                        65.0
+                      ],
+                      "ParticleSizeClay": [
+                        30.0,
+                        30.0,
+                        30.0,
+                        30.0,
+                        30.0,
+                        30.0
+                      ],
+                      "Rocks": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
                       "Texture": null,
                       "BD": [
                         1.231,
                         1.172,
                         1.108,
                         1.162,
+                        1.372,
                         1.372
                       ],
                       "AirDry": [
@@ -10085,9 +10773,11 @@
                         0.16,
                         0.2,
                         0.2,
+                        0.2,
                         0.2
                       ],
                       "LL15": [
+                        0.2,
                         0.2,
                         0.2,
                         0.2,
@@ -10099,6 +10789,7 @@
                         0.375,
                         0.405,
                         0.368,
+                        0.308,
                         0.308
                       ],
                       "SAT": [
@@ -10106,50 +10797,84 @@
                         0.528,
                         0.552,
                         0.532,
+                        0.452,
                         0.452
                       ],
                       "KS": null,
                       "BDMetadata": [
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data"
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
                       ],
                       "AirDryMetadata": [
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data"
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
                       ],
                       "LL15Metadata": [
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data"
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
                       ],
                       "DULMetadata": [
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data"
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
                       ],
                       "SATMetadata": [
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data",
-                        "Unknown source or quality of data"
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
                       ],
                       "KSMetadata": null,
-                      "RocksMetadata": null,
+                      "RocksMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
                       "TextureMetadata": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClayMetadata": null,
+                      "ParticleSizeSandMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
+                      "ParticleSizeSiltMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
+                      "ParticleSizeClayMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
                       "Name": "Physical",
                       "ResourceName": null,
                       "Children": [
@@ -10160,12 +10885,14 @@
                             0.2,
                             0.242,
                             0.203,
+                            0.22,
                             0.22
                           ],
                           "KL": [
                             0.06,
                             0.06,
                             0.06,
+                            0.04,
                             0.04,
                             0.04
                           ],
@@ -10174,94 +10901,34 @@
                             1.0,
                             1.0,
                             1.0,
+                            1.0,
                             1.0
                           ],
                           "LLMetadata": [
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge"
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
                           ],
-                          "KLMetadata": null,
-                          "XFMetadata": null,
+                          "KLMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
+                          "XFMetadata": [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                          ],
                           "Name": "wheatSoil",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.SoilCrop, Models",
-                          "LL": [
-                            0.2,
-                            0.2,
-                            0.242,
-                            0.203,
-                            0.22
-                          ],
-                          "KL": [
-                            0.07,
-                            0.07,
-                            0.07,
-                            0.05,
-                            0.05
-                          ],
-                          "XF": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                          ],
-                          "LLMetadata": [
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge"
-                          ],
-                          "KLMetadata": null,
-                          "XFMetadata": null,
-                          "Name": "barleySoil",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.SoilCrop, Models",
-                          "LL": [
-                            0.2,
-                            0.2,
-                            0.242,
-                            0.203,
-                            0.22
-                          ],
-                          "KL": [
-                            0.06,
-                            0.06,
-                            0.06,
-                            0.04,
-                            0.04
-                          ],
-                          "XF": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                          ],
-                          "LLMetadata": [
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge",
-                            "Estimated based on local knowledge"
-                          ],
-                          "KLMetadata": null,
-                          "XFMetadata": null,
-                          "Name": "SCRUMSoil",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -10454,10 +11121,10 @@
                         400.0
                       ],
                       "InitialValues": [
-                        5.0,
-                        2.0,
-                        2.0,
-                        2.0,
+                        19.3,
+                        20.3,
+                        21.4,
+                        6.8,
                         2.0
                       ],
                       "InitialValuesUnits": 0,
@@ -10547,9 +11214,11 @@
                         150.0,
                         300.0,
                         300.0,
-                        300.0
+                        300.0,
+                        1000.0
                       ],
                       "InitialValues": [
+                        0.2,
                         0.2,
                         0.2,
                         0.2,
@@ -13004,6 +13673,317 @@
                       "CumulativeX": false,
                       "Filter": "",
                       "Name": "Observed",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowInDocs": false,
+              "Name": "Stress",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "FW",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "N",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Wheat.Leaf.Fw",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "",
+                      "Name": "Predicted",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "FN",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "N",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Wheat.Leaf.Fn",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "",
+                      "Name": "Predicted",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "RootDepth",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "N",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Wheat.Root.Depth",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "",
+                      "Name": "Predicted",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "RootFrontVelocity",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "N",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Wheat.Root.RootFrontVelocity.WaterFactor",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "",
+                      "Name": "FW",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "N",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Wheat.Root.RootFrontVelocity.TemperatureFactor",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "",
+                      "Name": "FT",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
