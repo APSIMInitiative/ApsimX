@@ -1605,7 +1605,9 @@
             "[Soil].Water.Volumetric",
             "[Wheat].Root.RootFrontVelocity.WaterFactor",
             "[Wheat].Root.RootFrontVelocity.TemperatureFactor",
-            "[Wheat].Root.RootFrontVelocity.PotentialRootFrontVelocity"
+            "[Wheat].Root.RootFrontVelocity.PotentialRootFrontVelocity",
+            "[Wheat].Phenology.Photoperiod",
+            "[Wheat].DaysAfterSowing"
           ],
           "EventNames": [
             "[Clock].DoReport"
@@ -6693,27 +6695,27 @@
                       ],
                       "AirDry": [
                         0.1,
+                        0.18,
                         0.16,
-                        0.2,
-                        0.2,
-                        0.2,
-                        0.2
+                        0.14,
+                        0.16,
+                        0.18
                       ],
                       "LL15": [
                         0.2,
-                        0.2,
-                        0.2,
-                        0.2,
-                        0.2,
-                        0.2
+                        0.18,
+                        0.16,
+                        0.14,
+                        0.16,
+                        0.18
                       ],
                       "DUL": [
                         0.37,
                         0.375,
                         0.405,
                         0.368,
-                        0.308,
-                        0.308
+                        0.32,
+                        0.32
                       ],
                       "SAT": [
                         0.505,
@@ -7147,8 +7149,8 @@
                         0.375,
                         0.405,
                         0.368,
-                        0.308,
-                        0.308
+                        0.32,
+                        0.32
                       ],
                       "FilledFromTop": false,
                       "Name": "Water",
@@ -15727,6 +15729,17 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "Wheat.Phenology.Stage",
+                  "Position": 2,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 }
               ],
               "LegendPosition": 0,
@@ -15790,6 +15803,35 @@
                   "CumulativeX": false,
                   "Filter": "",
                   "Name": "Observed",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 2,
+                  "ColourArgb": -2793984,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 1,
+                  "LineThickness": 0,
+                  "TableName": "DailyReport",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Wheat.Phenology.Stage",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": "",
+                  "Name": "Stage",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -16980,6 +17022,74 @@
                   "ReadOnly": false
                 }
               ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": null,
+              "Position": 3,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": null
+            },
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": null,
+              "Position": 0,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": null
+            }
+          ],
+          "LegendPosition": 0,
+          "LegendOrientation": 0,
+          "AnnotationLocation": 0,
+          "DisabledSeries": [],
+          "LegendOutsideGraph": false,
+          "Name": "AboveGroundNConc",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": 0,
+              "FactorToVaryColours": "Cv",
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": "N",
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "DailyReport",
+              "XFieldName": "Wheat.Phenology.Stage",
+              "YFieldName": "Wheat.Phenology.Photoperiod",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": "",
+              "Name": "Predicted",
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             }
