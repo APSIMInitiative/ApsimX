@@ -79,8 +79,8 @@
               "Children": [
                 {
                   "$type": "Models.Documentation, Models",
-                  "Text": "## **Performance of temperate perennial pastures in the Australian subtropics 1. Yield, persistence and pasture quality**<h2> \n\n\n\nThis simulation, Mutdapilly9294, aims to replicate the experiment conducted by K. F. Lowe et al. under the following conditions:\n1. Location: Mutdapilly Research Station (26°46'S, 152°41'E; altitude: 70 m)\n2. Environment: Subtropical\n3. Soil: Heavy black clay alluvium (Ug5.16, Northcote 1971), poorly drained both internally and externally\n4. Climate: The three-year experimental period was hotter and drier than average, particularly during the latter half.\n5. Seedbed Preparation: Fully prepared in early April 1992\n6. Irrigation: Weekly irrigations of 10–15 mm were applied for the first four weeks, followed by fortnightly irrigations of 25 mm for the remainder of the experimental period, unless rainfall made irrigation unnecessary.\n7. Fertiliser: A basal application of 24 kg P/ha (as superphosphate), 60 kg K/ha (as muriate of potash), and 50 kg N/ha (as urea) was applied before sowing.\n\nSimulation Parameters:\n\t\n1. **Cultivar:** Yatyn\n2. **Model Used:** AGPRyegrass\n3. **Duration:** 30 March 1992 – 30 June 1995\n4. **Weather File:** Mutdapilly Research Station (Lat: -27.75, Long: 152.65)\n5. **Sowing Date:** 1 April 1992\n6. **Irrigation:** Fully irrigated\n7. **Fertiliser Operations:**\n\t* Urea N, 50 kg/ha applied before sowing on 1 March 1992 \n\t* Urea N, 50 kg/ha applied again on 31 October 1993, as per Lowe et al. \n\t* Subsequently applied monthly until the end of the experiment (assumption)\n\n\nLowe, K. F., Bowdler, T. M., Casey, N. D., & Moss, R. J.  \nPerformance of temperate perennial pastures in the Australian subtropics. 1. Yield, persistence and pasture quality.\n\n\n\n\n",
-                  "Name": "Documentation",
+                  "Text": "## **Performance of temperate perennial pastures in the Australian subtropics 1. Yield, persistence and pasture quality**<h2> \n\n\n\nThis simulation, Mutdapilly9294, aims to replicate the experiment conducted by [Lowe_Bowdler_Casey_Moss]. under the following conditions:\n1. Location: Mutdapilly Research Station (26°46'S, 152°41'E; altitude: 70 m)\n2. Environment: Subtropical\n3. Soil: Heavy black clay alluvium (Ug5.16, Northcote 1971), poorly drained both internally and externally\n4. Climate: The three-year experimental period was hotter and drier than average, particularly during the latter half.\n5. Seedbed Preparation: Fully prepared in early April 1992\n6. Irrigation: Weekly irrigations of 10–15 mm were applied for the first four weeks, followed by fortnightly irrigations of 25 mm for the remainder of the experimental period, unless rainfall made irrigation unnecessary.\n7. Fertiliser: A basal application of 24 kg P/ha (as superphosphate), 60 kg K/ha (as muriate of potash), and 50 kg N/ha (as urea) was applied before sowing.\n\nSimulation Parameters:\n\t\n1. **Cultivar:** Yatyn  \n2. **Model Used:** AGPRyegrass  \n3. **Duration:** 30 March 1992 – 30 June 1995  \n4. **Weather File:** Mutdapilly Research Station (Lat: -27.75, Long: 152.65)  \n5. **Sowing Date:** 1 April 1992  \n6. **Irrigation:** Fully irrigated  \n7. **Fertiliser Operations:**  \n   - Urea N, 50 kg/ha applied before sowing on 1 March 1992  \n   - Urea N, 50 kg/ha applied again on 31 October 1993  \n   - Subsequently applied monthly until the end of the experiment (assumed)  \n\n\n\n\n\n\n\n",
+                  "Name": "Mutdapilly9294",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -3315,6 +3315,15 @@
               "ResourceName": null,
               "Children": [
                 {
+                  "$type": "Models.Documentation, Models",
+                  "Text": "### Seasonal variation in the herbage yield and nutritive value of perennial ryegrass (Lolium perenne L.) cultivars with high or normal herbage water-soluble carbohydrate concentrations grown in three contrasting Australian dairy environments <h3>\n\n\n\nThis simulation, Gatton9597 aims to replicate the experiment conducted by K.F.Smith et al. under the following conditions:\n1. Location: Gatton QLD,\n2. Environment:\n3. Soil: Not found in paper\n4. Irrigation:\n5. Cultivars: Aurora, Ba 11351,Ellett,Vedette,Kangaroo Valley\n6. Fertilisation: Not mentioned in paper\n7. Sow: Plots at the Gatton site were resown in the autumn of 1996 as the 1995 sowing failed to survive a period of extremely hot\n8. Defoliation: Harvest dates as per the schedule in K.F.Smith et al.\n\n\n**Simulation Parameters:**\n\n1. **Cultivars:**  Aurora, Ba 11351, Ellett, Vedette, Kangaroo Valley\n2. **Model used:** AGPAgPasture\n3. **Clock:** 26/02/1995 - 30/06/1997\n4. **Weather file:** Gatton.met\n5. **Sowing Date:** 1995-03-1995\n6. **Resown:** 1996/03/01 \n7. **Irrigation:** Full irrigated\n8. **Fertiliser Operations:** Fertiliser dates and rates are unknown but the paper says agronomy was to APPEC protocol for Perennial ryegrass.  We assume that N was non-limiting.\n\t* Operations is used in the simulation applying 50 kh/ha UreaN every month \n\n\n\n",
+                  "Name": "Documentation",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Factorial.Factors, Models",
                   "Name": "Factors",
                   "ResourceName": null,
@@ -6490,6 +6499,15 @@
               "Name": "Kyabram9597",
               "ResourceName": null,
               "Children": [
+                {
+                  "$type": "Models.Documentation, Models",
+                  "Text": "### Seasonal variation in the herbage yield and nutritive value of perennial ryegrass (Lolium perenne L.) cultivars with high or normal herbage water-soluble carbohydrate concentrations grown in three contrasting Australian dairy environments <h3>\n\n\n\nThis simulation, Gatton9597 aims to replicate the experiment conducted by [Smith_SeasonalVariation] under the following conditions:\n1. Location: Gatton QLD,\n2. Environment:\n3. Soil: Not found in paper\n4. Irrigation:\n5. Cultivars: Aurora, Ba 11351, Ellett, Vedette, Kangaroo Valley\n6. Fertilisation: Not mentioned in paper\n7. Sow: Plots at the Gatton site were resown in the autumn of 1996 as the 1995 sowing failed to survive a period of extremely hot\n8. Defoliation: Harvest dates as per the schedule in K.F.Smith et al.\n\n\n**Simulation Parameters:**\n\n1. **Cultivars:**  Aurora, Ba 11351, Ellett, Vedette, Kangaroo Valley\n2. **Model used:** AGPAgPasture\n3. **Clock:** 26/02/1995 - 30/06/1997\n4. **Weather file:** Kyabram.met\n5. **Sowing Date:** 1995-03-1995\n6. **Resown:** 1996/03/01 \n7. **Irrigation:** Full irrigated\n8. **Fertiliser Operations:** Fertiliser dates and rates are unknown but the paper says agronomy was to APPEC protocol for Perennial ryegrass.  We assume that N was non-limiting.\n\t* Operations is used in the simulation applying 50 kh/ha UreaN every month \n\n\n\n",
+                  "Name": "Documentation",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
                 {
                   "$type": "Models.Factorial.Factors, Models",
                   "Name": "Factors",
