@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 207,
+  "Version": 208,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -68,7 +68,7 @@
           "Name": "Memo",
           "ResourceName": null,
           "Children": [],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         },
         {
@@ -87,7 +87,7 @@
               "Name": "CERES",
               "ResourceName": null,
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -101,11 +101,11 @@
               "Name": "Campbell",
               "ResourceName": null,
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         },
         {
@@ -122,7 +122,7 @@
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -132,7 +132,7 @@
               "Name": "Clock",
               "ResourceName": null,
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -141,7 +141,7 @@
               "Name": "summaryfile",
               "ResourceName": null,
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -149,7 +149,7 @@
               "Name": "Soil Arbitrator",
               "ResourceName": null,
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -165,7 +165,7 @@
               "Name": "MicroClimate",
               "ResourceName": "MicroClimate",
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -226,7 +226,7 @@
                   "Name": "ReportVariables",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -306,7 +306,7 @@
                   "Name": "IrrigationEvents",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -323,7 +323,7 @@
                   "Name": "FertiliserEvents",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -340,7 +340,7 @@
                   "Name": "Harvest",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -356,7 +356,7 @@
                   "Name": "Surface Organic Matter",
                   "ResourceName": "SurfaceOrganicMatter",
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -426,7 +426,7 @@
                       "Name": "Chemical",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -608,11 +608,11 @@
                           "Name": "Perennial RyegrassSoil",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -659,7 +659,7 @@
                       "Name": "SoilWater",
                       "ResourceName": "WaterBalance",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -726,7 +726,7 @@
                       "Name": "Organic",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -758,7 +758,7 @@
                       "Name": "CERESSoilTemperature",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -783,7 +783,7 @@
                       "Name": "Water",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -791,7 +791,7 @@
                       "Name": "Nutrient",
                       "ResourceName": "Nutrient",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -825,7 +825,7 @@
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -859,7 +859,7 @@
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -893,11 +893,11 @@
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -905,7 +905,7 @@
                   "Name": "Irrigation",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -913,7 +913,7 @@
                   "Name": "Fertiliser",
                   "ResourceName": "Fertiliser",
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -1001,7 +1001,7 @@
                   "Name": "DailyReport",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -1018,7 +1018,7 @@
                   "Name": "HarvestReport",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -1047,6 +1047,7 @@
                   "GermIndex": 0.0,
                   "KL": null,
                   "LL": null,
+                  "PlantType": null,
                   "Albedo": 0.23,
                   "Gsmax": 0.011,
                   "R50": 200.0,
@@ -1095,7 +1096,7 @@
                       "Name": "GreenCohortInitialise",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -1128,11 +1129,11 @@
                       "Name": "DryCohortInitialise",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -1151,7 +1152,7 @@
                   "Name": "TFReport",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -1178,11 +1179,11 @@
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         },
         {
@@ -1252,7 +1253,7 @@
                   "Name": "APSIM",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -1281,11 +1282,11 @@
                   "Name": "AusFarm",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -1349,7 +1350,7 @@
                   "Name": "APSIM",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -1378,11 +1379,11 @@
                   "Name": "AusFarm",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -1446,7 +1447,7 @@
                   "Name": "APSIM",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -1475,11 +1476,11 @@
                   "Name": "Ausfarm",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -1543,7 +1544,7 @@
                   "Name": "APSIM",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -1572,11 +1573,11 @@
                   "Name": "AusFarm",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -1640,7 +1641,7 @@
                   "Name": "APSIM",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -1669,11 +1670,11 @@
                   "Name": "AusFarm",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -1737,7 +1738,7 @@
                   "Name": "APSIM",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -1766,11 +1767,11 @@
                   "Name": "AusFarm",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -1834,7 +1835,7 @@
                   "Name": "APSIM",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -1863,11 +1864,11 @@
                   "Name": "Ausfarm",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -1931,7 +1932,7 @@
                   "Name": "APSIM",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -1960,11 +1961,11 @@
                   "Name": "Ausfarm",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -2028,7 +2029,7 @@
                   "Name": "APSIM",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -2057,11 +2058,11 @@
                   "Name": "Ausfarm",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -2125,7 +2126,7 @@
                   "Name": "APSIM",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -2154,11 +2155,11 @@
                   "Name": "Ausfarm",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -2222,7 +2223,7 @@
                   "Name": "APSIM",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -2251,11 +2252,11 @@
                   "Name": "AusFarm",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -2319,7 +2320,7 @@
                   "Name": "APSIM",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -2348,11 +2349,11 @@
                   "Name": "AusFarm",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -2416,7 +2417,7 @@
                   "Name": "APSIM TF",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -2445,7 +2446,7 @@
                   "Name": "Ausfarm TF",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -2474,7 +2475,7 @@
                   "Name": "APSIM WF",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -2503,11 +2504,11 @@
                   "Name": "Ausfarm WF",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -2571,7 +2572,7 @@
                   "Name": "APSIM",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -2600,11 +2601,11 @@
                   "Name": "Ausfarm",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -2668,7 +2669,7 @@
                   "Name": "APSIM",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -2697,11 +2698,11 @@
                   "Name": "Ausfarm",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -2765,7 +2766,7 @@
                   "Name": "APSIM",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -2794,11 +2795,11 @@
                   "Name": "Ausfarm",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -2862,7 +2863,7 @@
                   "Name": "APSIM",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -2891,11 +2892,11 @@
                   "Name": "Ausfarm",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -2959,7 +2960,7 @@
                   "Name": "APSIM",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -2988,11 +2989,11 @@
                   "Name": "Ausfarm",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -3056,7 +3057,7 @@
                   "Name": "APSIM no3",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -3085,7 +3086,7 @@
                   "Name": "APSIM nh4",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -3114,7 +3115,7 @@
                   "Name": "Ausfarm no3",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -3143,11 +3144,11 @@
                   "Name": "Ausfarm nh4",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -3211,7 +3212,7 @@
                   "Name": "APSIM no3",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -3240,7 +3241,7 @@
                   "Name": "APSIM nh4",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -3269,7 +3270,7 @@
                   "Name": "Ausfarm no3",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -3298,11 +3299,11 @@
                   "Name": "Ausfarm nh4",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -3366,7 +3367,7 @@
                   "Name": "APSIM",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -3395,11 +3396,11 @@
                   "Name": "AusFarm",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -3463,7 +3464,7 @@
                   "Name": "APSIM",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -3492,11 +3493,11 @@
                   "Name": "Ausfarm",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -3560,7 +3561,7 @@
                   "Name": "APSIM layer 1",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -3589,7 +3590,7 @@
                   "Name": "APSIM layer 2",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -3618,7 +3619,7 @@
                   "Name": "Ausfarm layer 1",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -3647,11 +3648,11 @@
                   "Name": "Ausfarm layer 2",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -3715,7 +3716,7 @@
                   "Name": "APSIM layer 1",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -3744,7 +3745,7 @@
                   "Name": "APSIM layer 2",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -3773,7 +3774,7 @@
                   "Name": "Ausfarm layer 1",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -3802,11 +3803,11 @@
                   "Name": "Ausfarm layer 2",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -3870,7 +3871,7 @@
                   "Name": "APSIM layer 1",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -3899,7 +3900,7 @@
                   "Name": "APSIM layer 2",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -3928,7 +3929,7 @@
                   "Name": "Ausfarm layer 1",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -3957,11 +3958,11 @@
                   "Name": "Ausfarm layer 2",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -4025,7 +4026,7 @@
                   "Name": "APSIM layer 1",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -4054,7 +4055,7 @@
                   "Name": "APSIM layer 2",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -4083,7 +4084,7 @@
                   "Name": "APSIM layer 4",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -4112,7 +4113,7 @@
                   "Name": "Ausfarm layer 1",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -4141,7 +4142,7 @@
                   "Name": "Ausfarm layer 2",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -4170,11 +4171,11 @@
                   "Name": "Ausfarm layer 4",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -4249,7 +4250,7 @@
                   "Name": "Rain",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -4278,7 +4279,7 @@
                   "Name": "APSIM",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -4307,11 +4308,11 @@
                   "Name": "Ausfarm",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -4375,7 +4376,7 @@
                   "Name": "APSIM GAI",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -4404,7 +4405,7 @@
                   "Name": "APSIM N",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -4433,7 +4434,7 @@
                   "Name": "APSIM Moisture",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -4462,7 +4463,7 @@
                   "Name": "APSIM Temp",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -4491,7 +4492,7 @@
                   "Name": "APSIM VPD",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -4520,7 +4521,7 @@
                   "Name": "APSIM WaterLog",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -4549,7 +4550,7 @@
                   "Name": "Ausfarm GAI",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -4578,7 +4579,7 @@
                   "Name": "Ausfarm N",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -4607,7 +4608,7 @@
                   "Name": "Ausfarm Moisture",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -4636,7 +4637,7 @@
                   "Name": "Ausfarm Temp",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -4665,7 +4666,7 @@
                   "Name": "Ausfarm VPD",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -4694,11 +4695,11 @@
                   "Name": "Ausfarm WaterLog",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -4762,7 +4763,7 @@
                   "Name": "APSIM",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -4791,11 +4792,11 @@
                   "Name": "Ausfarm",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -4870,7 +4871,7 @@
                   "Name": "APSIM",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -4899,7 +4900,7 @@
                   "Name": "Ausfarm",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -4928,11 +4929,11 @@
                   "Name": "Rain",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -4996,7 +4997,7 @@
                   "Name": "APSIM",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -5025,11 +5026,11 @@
                   "Name": "Ausfarm",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -5093,7 +5094,7 @@
                   "Name": "APSIM",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -5122,11 +5123,11 @@
                   "Name": "Ausfarm",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -5190,7 +5191,7 @@
                   "Name": "APSIM",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -5219,15 +5220,15 @@
                   "Name": "Ausfarm",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         },
         {
@@ -5297,11 +5298,11 @@
                   "Name": "APSIM",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -5365,11 +5366,11 @@
                   "Name": "APSIM",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -5433,11 +5434,11 @@
                   "Name": "APSIM",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -5501,11 +5502,11 @@
                   "Name": "APSIM",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -5569,11 +5570,11 @@
                   "Name": "APSIM",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -5637,11 +5638,11 @@
                   "Name": "APSIM",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -5705,11 +5706,11 @@
                   "Name": "APSIM",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -5773,11 +5774,11 @@
                   "Name": "N",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -5841,11 +5842,11 @@
                   "Name": "N",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -5909,11 +5910,11 @@
                   "Name": "series",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -5977,11 +5978,11 @@
                   "Name": "series",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -6045,11 +6046,11 @@
                   "Name": "series",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -6113,11 +6114,11 @@
                   "Name": "series",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -6181,19 +6182,19 @@
                   "Name": "series",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         }
       ],
-      "Enabled": false,
+      "Enabled": true,
       "ReadOnly": false
     },
     {
@@ -7013,8 +7014,7 @@
                 "[WaterBalance].Infiltration",
                 "[WaterBalance].Runoff",
                 "[NO3].kgha",
-                "[NH4].kgha",
-                "[Pasture].Leaf.Wt"
+                "[NH4].kgha"
               ],
               "EventNames": [
                 "[Clock].DoReport"
@@ -7069,6 +7069,7 @@
               "GermIndex": 0.0,
               "KL": null,
               "LL": null,
+              "PlantType": null,
               "Albedo": 0.23,
               "Gsmax": 0.011,
               "R50": 200.0,
@@ -7148,15 +7149,6 @@
                     80.0
                   ],
                   "Name": "DryCohortInitialise",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.GrazPlan.Organs, Models",
-                  "PastureModel": null,
-                  "Name": "Leaf",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -12126,7 +12118,7 @@
           "Name": "Weather",
           "ResourceName": null,
           "Children": [],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         },
         {
@@ -12136,7 +12128,7 @@
           "Name": "Clock",
           "ResourceName": null,
           "Children": [],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         },
         {
@@ -12145,7 +12137,7 @@
           "Name": "summaryfile",
           "ResourceName": null,
           "Children": [],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         },
         {
@@ -12153,7 +12145,7 @@
           "Name": "Soil Arbitrator",
           "ResourceName": null,
           "Children": [],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         },
         {
@@ -12169,7 +12161,7 @@
           "Name": "MicroClimate",
           "ResourceName": "MicroClimate",
           "Children": [],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         },
         {
@@ -12332,7 +12324,7 @@
               "Name": "IrrigationEvents",
               "ResourceName": null,
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -12349,7 +12341,7 @@
               "Name": "FertiliserEvents",
               "ResourceName": null,
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -12664,7 +12656,7 @@
                       "Name": "wheatSoil",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -12738,7 +12730,7 @@
                       "Name": "barleySoil",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -12812,11 +12804,11 @@
                       "Name": "Sub Clover - LeuraSoil",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -12862,7 +12854,7 @@
                   "Name": "SoilWater",
                   "ResourceName": "WaterBalance",
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -12940,7 +12932,7 @@
                   "Name": "Organic",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -13009,7 +13001,7 @@
                   "Name": "Chemical",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -13017,7 +13009,7 @@
                   "Name": "Nutrient",
                   "ResourceName": "Nutrient",
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -13047,7 +13039,7 @@
                   "Name": "NH4",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -13087,7 +13079,7 @@
                   "Name": "NO3",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -13127,7 +13119,7 @@
                   "Name": "Urea",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -13158,7 +13150,7 @@
                   "Name": "Water",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -13168,11 +13160,11 @@
                   "Name": "CERESSoilTemperature",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -13188,7 +13180,7 @@
               "Name": "Surface Organic Matter",
               "ResourceName": "SurfaceOrganicMatter",
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -13196,7 +13188,7 @@
               "Name": "Irrigation",
               "ResourceName": null,
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -13204,7 +13196,7 @@
               "Name": "Fertiliser",
               "ResourceName": "Fertiliser",
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -13260,7 +13252,7 @@
               "Name": "DailyReport",
               "ResourceName": null,
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -13277,7 +13269,7 @@
               "Name": "HarvestReport",
               "ResourceName": null,
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -13320,6 +13312,7 @@
               "GermIndex": 0.0,
               "KL": null,
               "LL": null,
+              "PlantType": null,
               "Albedo": 0.23,
               "Gsmax": 0.011,
               "R50": 200.0,
@@ -13359,7 +13352,7 @@
                   "Name": "Dead",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -13392,7 +13385,7 @@
                   "Name": "Litter",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -13412,11 +13405,11 @@
                   "Name": "SeedCohortInitialise",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -13486,7 +13479,7 @@
                       "Name": "GreenDM",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -13515,11 +13508,11 @@
                       "Name": "DryDM",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -13583,7 +13576,7 @@
                       "Name": "AvailGreenDM",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -13612,11 +13605,11 @@
                       "Name": "AvailDM",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -13691,7 +13684,7 @@
                       "Name": "growth",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -13720,7 +13713,7 @@
                       "Name": "swuptake",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -13749,7 +13742,7 @@
                       "Name": "NH4uptake",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -13778,11 +13771,11 @@
                       "Name": "NO3uptake",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -13846,7 +13839,7 @@
                       "Name": "GAI",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -13875,7 +13868,7 @@
                       "Name": "N",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -13904,7 +13897,7 @@
                       "Name": "Moisture",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -13933,7 +13926,7 @@
                       "Name": "Temp",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -13962,11 +13955,11 @@
                       "Name": "VPD",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -14030,7 +14023,7 @@
                       "Name": "EP",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -14059,11 +14052,11 @@
                       "Name": "LAI",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -14127,7 +14120,7 @@
                       "Name": "layer_6",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -14156,7 +14149,7 @@
                       "Name": "layer_5",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -14185,7 +14178,7 @@
                       "Name": "layer_4",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -14214,7 +14207,7 @@
                       "Name": "layer_3",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -14243,7 +14236,7 @@
                       "Name": "layer_2",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -14272,11 +14265,11 @@
                       "Name": "layer_1",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -14351,7 +14344,7 @@
                       "Name": "wt",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -14380,11 +14373,11 @@
                       "Name": "N",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -14454,7 +14447,7 @@
                           "Name": "APSIM",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -14483,11 +14476,11 @@
                           "Name": "AusFarm",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -14551,7 +14544,7 @@
                           "Name": "APSIM",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -14580,11 +14573,11 @@
                           "Name": "AusFarm",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -14648,7 +14641,7 @@
                           "Name": "APSIM",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -14677,11 +14670,11 @@
                           "Name": "AusFarm",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -14745,7 +14738,7 @@
                           "Name": "APSIM",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -14774,11 +14767,11 @@
                           "Name": "AusFarm",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -14842,7 +14835,7 @@
                           "Name": "APSIM NH4",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -14871,7 +14864,7 @@
                           "Name": "AusFarm NH4",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -14900,7 +14893,7 @@
                           "Name": "APSIM NO3",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -14929,11 +14922,11 @@
                           "Name": "AusFarm NO3",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -14997,7 +14990,7 @@
                           "Name": "APSIM",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -15026,11 +15019,11 @@
                           "Name": "AusFarm",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -15094,7 +15087,7 @@
                           "Name": "APSIM",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -15123,11 +15116,11 @@
                           "Name": "AusFarm",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -15191,7 +15184,7 @@
                           "Name": "APSIM",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -15220,11 +15213,11 @@
                           "Name": "AusFarm",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -15288,7 +15281,7 @@
                           "Name": "APSIM",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -15317,11 +15310,11 @@
                           "Name": "AusFarm",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -15385,7 +15378,7 @@
                           "Name": "APSIM GAI",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -15414,7 +15407,7 @@
                           "Name": "APSIM N",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -15443,7 +15436,7 @@
                           "Name": "APSIM Moisture",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -15472,7 +15465,7 @@
                           "Name": "APSIM Temp",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -15501,7 +15494,7 @@
                           "Name": "APSIM VPD",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -15530,7 +15523,7 @@
                           "Name": "APSIM WaterLog",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -15559,7 +15552,7 @@
                           "Name": "AusFarm GAI",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -15588,7 +15581,7 @@
                           "Name": "AusFarm N",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -15617,7 +15610,7 @@
                           "Name": "AusFarm Moisture",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -15646,7 +15639,7 @@
                           "Name": "AusFarm Temp",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -15675,7 +15668,7 @@
                           "Name": "AusFarm VPD",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -15704,11 +15697,11 @@
                           "Name": "AusFarm WaterLog",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -15772,7 +15765,7 @@
                           "Name": "APSIM",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -15801,11 +15794,11 @@
                           "Name": "Ausfarm",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -15869,7 +15862,7 @@
                           "Name": "APSIM",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -15898,11 +15891,11 @@
                           "Name": "AusFarm",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -15966,7 +15959,7 @@
                           "Name": "APSIM",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -15995,11 +15988,11 @@
                           "Name": "Ausfarm",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -16063,7 +16056,7 @@
                           "Name": "APSIM",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -16092,27 +16085,27 @@
                           "Name": "Ausfarm",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         }
       ],
-      "Enabled": false,
+      "Enabled": true,
       "ReadOnly": false
     },
     {
@@ -16129,7 +16122,7 @@
           "Name": "Weather",
           "ResourceName": null,
           "Children": [],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         },
         {
@@ -16139,7 +16132,7 @@
           "Name": "Clock",
           "ResourceName": null,
           "Children": [],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         },
         {
@@ -16148,7 +16141,7 @@
           "Name": "summaryfile",
           "ResourceName": null,
           "Children": [],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         },
         {
@@ -16156,7 +16149,7 @@
           "Name": "Soil Arbitrator",
           "ResourceName": null,
           "Children": [],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         },
         {
@@ -16172,7 +16165,7 @@
           "Name": "MicroClimate",
           "ResourceName": "MicroClimate",
           "Children": [],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         },
         {
@@ -16335,7 +16328,7 @@
               "Name": "IrrigationEvents",
               "ResourceName": null,
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -16352,7 +16345,7 @@
               "Name": "FertiliserEvents",
               "ResourceName": null,
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -16567,7 +16560,7 @@
                       "Name": "wheatSoil",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -16621,7 +16614,7 @@
                       "Name": "barleySoil",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -16675,7 +16668,7 @@
                       "Name": "Sub Clover - LeuraSoil",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -16719,11 +16712,11 @@
                       "Name": "Perennial RyegrassSoil",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -16769,7 +16762,7 @@
                   "Name": "SoilWater",
                   "ResourceName": "WaterBalance",
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -16847,7 +16840,7 @@
                   "Name": "Organic",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -16896,7 +16889,7 @@
                   "Name": "Chemical",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -16904,7 +16897,7 @@
                   "Name": "Nutrient",
                   "ResourceName": "Nutrient",
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -16934,7 +16927,7 @@
                   "Name": "NH4",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -16974,7 +16967,7 @@
                   "Name": "NO3",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -17014,7 +17007,7 @@
                   "Name": "Urea",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -17045,7 +17038,7 @@
                   "Name": "Water",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -17055,11 +17048,11 @@
                   "Name": "CERESSoilTemperature",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -17075,7 +17068,7 @@
               "Name": "Surface Organic Matter",
               "ResourceName": "SurfaceOrganicMatter",
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -17083,7 +17076,7 @@
               "Name": "Irrigation",
               "ResourceName": null,
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -17091,7 +17084,7 @@
               "Name": "Fertiliser",
               "ResourceName": "Fertiliser",
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -17145,7 +17138,7 @@
               "Name": "DailyReport",
               "ResourceName": null,
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -17162,7 +17155,7 @@
               "Name": "HarvestReport",
               "ResourceName": null,
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -17171,7 +17164,7 @@
               "Name": "Memo",
               "ResourceName": null,
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -17214,6 +17207,7 @@
               "GermIndex": 0.0,
               "KL": null,
               "LL": null,
+              "PlantType": null,
               "Albedo": 0.23,
               "Gsmax": 0.011,
               "R50": 200.0,
@@ -17253,7 +17247,7 @@
                   "Name": "Dead",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -17286,7 +17280,7 @@
                   "Name": "Litter",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -17306,11 +17300,11 @@
                   "Name": "SeedCohortInitialise",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -17353,6 +17347,7 @@
               "GermIndex": 0.0,
               "KL": null,
               "LL": null,
+              "PlantType": null,
               "Albedo": 0.23,
               "Gsmax": 0.011,
               "R50": 200.0,
@@ -17401,7 +17396,7 @@
                   "Name": "GreenEst",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -17443,7 +17438,7 @@
                   "Name": "GreenSen",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -17476,7 +17471,7 @@
                   "Name": "Dead",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -17509,11 +17504,11 @@
                   "Name": "Litter",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -17583,7 +17578,7 @@
                       "Name": "GreenDM",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -17612,11 +17607,11 @@
                       "Name": "DryDM",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -17680,7 +17675,7 @@
                       "Name": "GreenDM",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -17709,11 +17704,11 @@
                       "Name": "DryDM",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -17777,7 +17772,7 @@
                       "Name": "AvailGreenDM",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -17806,11 +17801,11 @@
                       "Name": "AvailDM",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -17885,7 +17880,7 @@
                       "Name": "growth",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -17914,7 +17909,7 @@
                       "Name": "swuptake",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -17943,7 +17938,7 @@
                       "Name": "NH4uptake",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -17972,11 +17967,11 @@
                       "Name": "NO3uptake",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -18040,7 +18035,7 @@
                       "Name": "GAI",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -18069,7 +18064,7 @@
                       "Name": "N",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -18098,7 +18093,7 @@
                       "Name": "Moisture",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -18127,7 +18122,7 @@
                       "Name": "Temp",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -18156,11 +18151,11 @@
                       "Name": "VPD",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -18224,7 +18219,7 @@
                       "Name": "EP",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -18253,11 +18248,11 @@
                       "Name": "LAI",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -18321,7 +18316,7 @@
                       "Name": "layer_6",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -18350,7 +18345,7 @@
                       "Name": "layer_5",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -18379,7 +18374,7 @@
                       "Name": "layer_4",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -18408,7 +18403,7 @@
                       "Name": "layer_3",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -18437,7 +18432,7 @@
                       "Name": "layer_2",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -18466,11 +18461,11 @@
                       "Name": "layer_1",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -18540,7 +18535,7 @@
                           "Name": "APSIM",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -18569,11 +18564,11 @@
                           "Name": "AusFarm",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -18637,7 +18632,7 @@
                           "Name": "APSIM",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -18666,11 +18661,11 @@
                           "Name": "AusFarm",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -18734,7 +18729,7 @@
                           "Name": "APSIM",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -18763,11 +18758,11 @@
                           "Name": "AusFarm",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -18831,7 +18826,7 @@
                           "Name": "APSIM",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -18860,11 +18855,11 @@
                           "Name": "AusFarm",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -18928,7 +18923,7 @@
                           "Name": "APSIM",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -18957,11 +18952,11 @@
                           "Name": "AusFarm",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -19025,7 +19020,7 @@
                           "Name": "APSIM",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -19054,11 +19049,11 @@
                           "Name": "AusFarm",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -19122,7 +19117,7 @@
                           "Name": "APSIM NH4",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -19151,7 +19146,7 @@
                           "Name": "AusFarm NH4",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -19180,7 +19175,7 @@
                           "Name": "APSIM NO3",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -19209,11 +19204,11 @@
                           "Name": "AusFarm NO3",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -19277,7 +19272,7 @@
                           "Name": "APSIM GAI",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -19306,7 +19301,7 @@
                           "Name": "APSIM N",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -19335,7 +19330,7 @@
                           "Name": "APSIM Moisture",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -19364,7 +19359,7 @@
                           "Name": "APSIM Temp",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -19393,7 +19388,7 @@
                           "Name": "APSIM VPD",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -19422,7 +19417,7 @@
                           "Name": "APSIM WaterLog",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -19451,7 +19446,7 @@
                           "Name": "AusFarm GAI",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -19480,7 +19475,7 @@
                           "Name": "N_obs",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -19509,7 +19504,7 @@
                           "Name": "Moisture_obs",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -19538,7 +19533,7 @@
                           "Name": "Temp_obs",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -19567,7 +19562,7 @@
                           "Name": "VPD_obs",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -19596,11 +19591,11 @@
                           "Name": "WaterLog_obs",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -19664,7 +19659,7 @@
                           "Name": "APSIM",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -19693,11 +19688,11 @@
                           "Name": "Ausfarm",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -19761,7 +19756,7 @@
                           "Name": "APSIM",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -19790,27 +19785,27 @@
                           "Name": "AusFarm",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         }
       ],
-      "Enabled": false,
+      "Enabled": true,
       "ReadOnly": false
     }
   ],
