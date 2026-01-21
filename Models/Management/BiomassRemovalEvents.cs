@@ -187,11 +187,14 @@ namespace Models.Management
             //check if our plant is currently linked, link if not
             if (PlantInstanceToRemoveFrom == null)
                 PlantInstanceToRemoveFrom = Structure.FindChild<Plant>(NameOfPlantToRemoveFrom, relativeTo: Parent as INodeModel, recurse: true);
+                if (PlantInstanceToRemoveFrom == null)
+                    PlantInstanceToRemoveFrom = Structure.FindChild<PastureSpecies>(NameOfPlantToRemoveFrom, relativeTo: Parent as INodeModel, recurse: true);
 
-            if (PlantInstanceToRemoveFrom != null)
-                if (PlantInstanceToRemoveFrom.Parent == null)
-                    PlantInstanceToRemoveFrom = Structure.FindChild<Plant>(NameOfPlantToRemoveFrom, relativeTo: Parent as INodeModel, recurse: true);
+            // if (PlantInstanceToRemoveFrom != null)
+            //     if (PlantInstanceToRemoveFrom.Parent == null)
+            //         PlantInstanceToRemoveFrom = Structure.FindChild<Plant>(NameOfPlantToRemoveFrom, relativeTo: Parent as INodeModel, recurse: true);
 
+        
             if (PlantInstanceToRemoveFrom == null)
                 throw new Exception("BiomassRemovalEvents could not find a crop in this simulation.");
 
