@@ -113,7 +113,7 @@ namespace Models.Management
                 checkRemoval(removalFraction);
                 if (removalFraction.Type == RemovalType)
                 {
-                    if (PlantInstanceToRemoveFrom.GetType() == typeof(IPlant))
+                    if (PlantInstanceToRemoveFrom.GetType() == typeof(Plant))
                     {
                         IOrgan organ = Structure.FindChild<IOrgan>(removalFraction.OrganName, relativeTo: (INodeModel)PlantInstanceToRemoveFrom, recurse: true);
                         (organ as IHasDamageableBiomass).RemoveBiomass(liveToRemove: removalFraction.LiveToRemove,
@@ -186,11 +186,11 @@ namespace Models.Management
 
             //check if our plant is currently linked, link if not
             if (PlantInstanceToRemoveFrom == null)
-                PlantInstanceToRemoveFrom = Structure.FindChild<IPlant>(NameOfPlantToRemoveFrom, relativeTo: Parent as INodeModel, recurse: true);
+                PlantInstanceToRemoveFrom = Structure.FindChild<Plant>(NameOfPlantToRemoveFrom, relativeTo: Parent as INodeModel, recurse: true);
 
             if (PlantInstanceToRemoveFrom != null)
                 if (PlantInstanceToRemoveFrom.Parent == null)
-                    PlantInstanceToRemoveFrom = Structure.FindChild<IPlant>(NameOfPlantToRemoveFrom, relativeTo: Parent as INodeModel, recurse: true);
+                    PlantInstanceToRemoveFrom = Structure.FindChild<Plant>(NameOfPlantToRemoveFrom, relativeTo: Parent as INodeModel, recurse: true);
 
             if (PlantInstanceToRemoveFrom == null)
                 throw new Exception("BiomassRemovalEvents could not find a crop in this simulation.");
@@ -250,7 +250,7 @@ namespace Models.Management
                 BiomassRemovalFractions.Remove(removeList[i]);
 
             //add in organs that are missing
-            if (PlantInstanceToRemoveFrom.GetType() == typeof(IPlant))
+            if (PlantInstanceToRemoveFrom.GetType() == typeof(Plant))
             {
                 foreach (IOrgan organ in organs)
                 {
