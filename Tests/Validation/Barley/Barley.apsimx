@@ -59,6 +59,8 @@
             "[Barley].Leaf.Height",
             "[Barley].Leaf.Tips",
             "[Barley].Leaf.MainStemPopulation",
+            "[Barley].Leaf.Fn",
+            "[Barley].Leaf.Fw",
             "[Soil].Nutrient.MineralN",
             "[Soil].Water.Volumetric",
             "[Soil].Water.MM",
@@ -190,794 +192,6 @@
           ],
           "SheetNames": [
             "Observed"
-          ],
-          "ColumnData": [
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Clock.Today",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Average of Popn",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.AboveGround.N",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.AboveGround.Wt",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.AboveGroundLive.Wt",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Ear.NConc",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Ear.Wt",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Grain.N",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Grain.NConc",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Grain.Number",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Grain.Size",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Grain.Wt",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Leaf.CoverGreen",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Leaf.CoverTotal",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Leaf.Dead.Wt",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Leaf.Ligules",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Leaf.LAI",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Leaf.Live.NConc",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Leaf.Live.Wt",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Phenology.AccumulatedEmergedTT",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Phenology.CurrentStageName",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Phenology.FlagLeafDAS",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Phenology.FloweringDAS",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Phenology.MaturityDAS",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Phenology.Stage",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Phenology.Zadok.Stage",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.SowingData.Cultivar",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Spike.HeadNumber",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Spike.Wt",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Stem.NConc",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Stem.Wt",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Phenology.HaunStage",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Leaf.Height",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Leaf.Tips",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Structure.MainStemPop",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Leaf.MainStemPopulation",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Cultivar",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Cv",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "HI",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Irrigation",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Nitrogen",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "ProfileN",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "ProfileWater",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "ProfileWatererror",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Site",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Soil.SoilNitrogen.mineral_n",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Soil.Water.Volumetric",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Soil.Water.Volumetric(1)error",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Soil.Water.Volumetric(2)error",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Soil.Water.Volumetric(3)error",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Soil.Water.Volumetric(4)error",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Soil.Water.Volumetric(5)error",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Soil.Water.Volumetric(6)error",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Soil.Water.Volumetric(7)error",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Soil.Water.Volumetric(8)error",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "TOS",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Sowing",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Tillers_perPlant",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Treatment",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "grainno_perear",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Leaf.CoverGreen_backup",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Leaf.CoverTotal_backup",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Leaf.SpecificAreaCanopy_backup",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Observed.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "PP",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "LaTrobeCE_Obs.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "V",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "LaTrobeCE_Obs.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Genotype",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "LaTrobeCE_Obs.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "FlagLeafDAE",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "HeadingDAE",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "FloweringDAE",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Phenology.EmergenceDAS",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Obs_APSIMX_NPIField2019_Barley.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Phenology.HeadingDAS",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "LaTrobeCE_Obs.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Phenology.FinalLeafNumber",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "LaTrobeCE_Obs.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Phenology.HaunStage_unused",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "LaTrobeCE_Obs.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Experiment",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Obs_APSIMX_NPIField2019_Barley.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "DOY_emergence",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Obs_APSIMX_NPIField2019_Barley.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "EmergenceDate",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Obs_APSIMX_NPIField2019_Barley.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "DOY_Heading_median",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Obs_APSIMX_NPIField2019_Barley.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "DOY_Flowering_median",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Obs_APSIMX_NPIField2019_Barley.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "HeadingDate",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Obs_APSIMX_NPIField2019_Barley.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "FloweringDate",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Obs_APSIMX_NPIField2019_Barley.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Phenology.FinalLeafNumber_Avg",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Obs_APSIMX_NPIField2019_Barley.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "DOY_FlagLeaf_median",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Obs_APSIMX_NPIField2019_Barley.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "FlagLeafDate",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Obs_APSIMX_NPIField2019_Barley.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Species",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Obs_APSIMX_NPIField2020_Barley.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Habit",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Obs_APSIMX_NPIField2020_Barley.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "StandardName",
-              "IsApsimVariable": "No",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": "Obs_APSIMX_NPIField2020_Barley.xlsx"
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.AboveGround.NConc",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Ear.N",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Leaf.Live.N",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Stem.N",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Leaf.Wt",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
-              "Name": "Barley.Leaf.SpecificAreaCanopy",
-              "IsApsimVariable": "Not Found",
-              "DataType": "",
-              "HasErrorColumn": false,
-              "Filename": ""
-            }
-          ],
-          "DerivedData": [
-            {
-              "$type": "Models.PreSimulationTools.Observations+DerivedInfo, Models",
-              "Name": "Barley.AboveGround.NConc",
-              "Function": "Barley.AboveGround.N / Barley.AboveGround.Wt",
-              "DataType": "Double",
-              "Added": 20,
-              "Existing": 0
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+DerivedInfo, Models",
-              "Name": "Barley.Ear.N",
-              "Function": "Barley.Ear.NConc * Barley.Ear.Wt",
-              "DataType": "Double",
-              "Added": 38,
-              "Existing": 0
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+DerivedInfo, Models",
-              "Name": "Barley.Leaf.Live.N",
-              "Function": "Barley.Leaf.Live.NConc * Barley.Leaf.Live.Wt",
-              "DataType": "Double",
-              "Added": 76,
-              "Existing": 0
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+DerivedInfo, Models",
-              "Name": "Barley.Stem.N",
-              "Function": "Barley.Stem.NConc * Barley.Stem.Wt",
-              "DataType": "Double",
-              "Added": 82,
-              "Existing": 0
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+DerivedInfo, Models",
-              "Name": "Barley.Leaf.Wt",
-              "Function": "Barley.Leaf.Live.Wt + Barley.Leaf.Dead.Wt",
-              "DataType": "Double",
-              "Added": 292,
-              "Existing": 0
-            },
-            {
-              "$type": "Models.PreSimulationTools.Observations+DerivedInfo, Models",
-              "Name": "Barley.Leaf.SpecificAreaCanopy",
-              "Function": "Barley.Leaf.LAI / Barley.Leaf.Live.Wt",
-              "DataType": "Double",
-              "Added": 443,
-              "Existing": 0
-            }
           ],
           "ColumnNames": [
             "Clock.Today",
@@ -4399,6 +3613,7 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
+                          "PlantType": null,
                           "Name": "Barley",
                           "ResourceName": "Barley",
                           "Children": [],
@@ -8261,6 +7476,7 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
+                          "PlantType": null,
                           "Name": "Barley",
                           "ResourceName": "Barley",
                           "Children": [],
@@ -10970,6 +10186,7 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
+                          "PlantType": null,
                           "Name": "Barley",
                           "ResourceName": "Barley",
                           "Children": [],
@@ -13894,6 +13111,7 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
+                          "PlantType": null,
                           "Name": "Barley",
                           "ResourceName": "Barley",
                           "Children": [],
@@ -17560,6 +16778,7 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
+                          "PlantType": null,
                           "Name": "Barley",
                           "ResourceName": "Barley",
                           "Children": [],
@@ -20875,6 +20094,7 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
+                          "PlantType": null,
                           "Name": "Barley",
                           "ResourceName": "Barley",
                           "Children": [],
@@ -23669,6 +22889,7 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
+                          "PlantType": null,
                           "Name": "Barley",
                           "ResourceName": "Barley",
                           "Children": [],
@@ -25446,6 +24667,7 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
+                          "PlantType": null,
                           "Name": "Barley",
                           "ResourceName": "Barley",
                           "Children": [],
@@ -27012,6 +26234,7 @@
                             },
                             {
                               "$type": "Models.PMF.Plant, Models",
+                              "PlantType": null,
                               "Name": "Barley",
                               "ResourceName": "Barley",
                               "Children": [],
@@ -31321,6 +30544,7 @@
                             },
                             {
                               "$type": "Models.PMF.Plant, Models",
+                              "PlantType": null,
                               "Name": "Barley",
                               "ResourceName": "Barley",
                               "Children": [],
@@ -33098,6 +32322,7 @@
                             },
                             {
                               "$type": "Models.PMF.Plant, Models",
+                              "PlantType": null,
                               "Name": "Barley",
                               "ResourceName": "Barley",
                               "Children": [],
@@ -34821,6 +34046,7 @@
                             },
                             {
                               "$type": "Models.PMF.Plant, Models",
+                              "PlantType": null,
                               "Name": "Barley",
                               "ResourceName": "Barley",
                               "Children": [],
@@ -36762,6 +35988,7 @@
                             },
                             {
                               "$type": "Models.PMF.Plant, Models",
+                              "PlantType": null,
                               "Name": "Barley",
                               "ResourceName": "Barley",
                               "Children": [],
@@ -39604,6 +38831,7 @@
                             },
                             {
                               "$type": "Models.PMF.Plant, Models",
+                              "PlantType": null,
                               "Name": "Barley",
                               "ResourceName": "Barley",
                               "Children": [],
@@ -41315,6 +40543,7 @@
                             },
                             {
                               "$type": "Models.PMF.Plant, Models",
+                              "PlantType": null,
                               "Name": "Barley",
                               "ResourceName": "Barley",
                               "Children": [],
@@ -42484,6 +41713,7 @@
                             },
                             {
                               "$type": "Models.PMF.Plant, Models",
+                              "PlantType": null,
                               "Name": "Barley",
                               "ResourceName": "Barley",
                               "Children": [],
@@ -43874,6 +43104,7 @@
                             },
                             {
                               "$type": "Models.PMF.Plant, Models",
+                              "PlantType": null,
                               "Name": "Barley",
                               "ResourceName": "Barley",
                               "Children": [],
@@ -45239,6 +44470,7 @@
                             },
                             {
                               "$type": "Models.PMF.Plant, Models",
+                              "PlantType": null,
                               "Name": "Barley",
                               "ResourceName": "Barley",
                               "Children": [],
@@ -46229,6 +45461,7 @@
                             },
                             {
                               "$type": "Models.PMF.Plant, Models",
+                              "PlantType": null,
                               "Name": "Barley",
                               "ResourceName": "Barley",
                               "Children": [],
@@ -47235,6 +46468,7 @@
                             },
                             {
                               "$type": "Models.PMF.Plant, Models",
+                              "PlantType": null,
                               "Name": "Barley",
                               "ResourceName": "Barley",
                               "Children": [],
@@ -48241,6 +47475,7 @@
                             },
                             {
                               "$type": "Models.PMF.Plant, Models",
+                              "PlantType": null,
                               "Name": "Barley",
                               "ResourceName": "Barley",
                               "Children": [],
@@ -49512,6 +48747,7 @@
                             },
                             {
                               "$type": "Models.PMF.Plant, Models",
+                              "PlantType": null,
                               "Name": "Barley",
                               "ResourceName": "Barley",
                               "Children": [],
@@ -50583,6 +49819,7 @@
                             },
                             {
                               "$type": "Models.PMF.Plant, Models",
+                              "PlantType": null,
                               "Name": "Barley",
                               "ResourceName": "Barley",
                               "Children": [],
@@ -51638,6 +50875,7 @@
                             },
                             {
                               "$type": "Models.PMF.Plant, Models",
+                              "PlantType": null,
                               "Name": "Barley",
                               "ResourceName": "Barley",
                               "Children": [],
@@ -52709,6 +51947,7 @@
                             },
                             {
                               "$type": "Models.PMF.Plant, Models",
+                              "PlantType": null,
                               "Name": "Barley",
                               "ResourceName": "Barley",
                               "Children": [],
@@ -53759,6 +52998,7 @@
                             },
                             {
                               "$type": "Models.PMF.Plant, Models",
+                              "PlantType": null,
                               "Name": "Barley",
                               "ResourceName": "Barley",
                               "Children": [],
@@ -55200,6 +54440,7 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
+                      "PlantType": null,
                       "Name": "Barley",
                       "ResourceName": "Barley",
                       "Children": [],
