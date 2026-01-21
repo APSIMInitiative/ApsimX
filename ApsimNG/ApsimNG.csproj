@@ -47,9 +47,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.CodeDom" Version="10.0.1" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.1" />
-    <PackageReference Include="System.Resources.Extensions" Version="10.0.1" />
+    <PackageReference Include="System.CodeDom" Version="10.0.2" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.2" />
+    <PackageReference Include="System.Resources.Extensions" Version="10.0.2" />
     <PackageReference Include="ISO3166" Version="1.0.4" />
     <PackageReference Include="Markdig" Version="0.44.0" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
@@ -58,8 +58,8 @@
     <PackageReference Include="OxyPlot.Core" Version="2.2.0" />
     <PackageReference Include="OxyPlot.GtkSharp3" Version="2.1.0-Preview1" />
     <PackageReference Include="HtmlAgilityPack" Version="1.12.4" />
-    <PackageReference Include="System.Drawing.Common" Version="10.0.1" />
-	<PackageReference Include="System.Windows.Extensions" Version="10.0.1" />
+    <PackageReference Include="System.Drawing.Common" Version="10.0.2" />
+	<PackageReference Include="System.Windows.Extensions" Version="10.0.2" />
   </ItemGroup>
 
   <ItemGroup>
