@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 204,
+  "Version": 208,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -1125,7 +1125,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.PreSimulationTools.ObservedInput, Models",
+          "$type": "Models.PreSimulationTools.Observations, Models",
           "FileNames": [
             "Pask LC07 TT0607.xlsx"
           ],
@@ -1134,249 +1134,249 @@
           ],
           "ColumnData": [
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
               "Name": "Clock.Today",
               "IsApsimVariable": "Not Found",
               "DataType": "",
               "HasErrorColumn": false,
-              "Filename": "%root%\\Tests\\Validation\\Wheat\\Pask\\Pask LC07 TT0607.xlsx"
+              "Filename": "Pask LC07 TT0607.xlsx"
             },
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
               "Name": "Wheat.Phenology.Zadok.Stage",
               "IsApsimVariable": "Not Found",
               "DataType": "",
               "HasErrorColumn": false,
-              "Filename": "%root%\\Tests\\Validation\\Wheat\\Pask\\Pask LC07 TT0607.xlsx"
+              "Filename": "Pask LC07 TT0607.xlsx"
             },
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
               "Name": "Wheat.Phenology.CurrentStageName",
               "IsApsimVariable": "Not Found",
               "DataType": "",
               "HasErrorColumn": false,
-              "Filename": "%root%\\Tests\\Validation\\Wheat\\Pask\\Pask LC07 TT0607.xlsx"
+              "Filename": "Pask LC07 TT0607.xlsx"
             },
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
               "Name": "Wheat.Leaf.Live.NConc",
               "IsApsimVariable": "Not Found",
               "DataType": "",
               "HasErrorColumn": false,
-              "Filename": "%root%\\Tests\\Validation\\Wheat\\Pask\\Pask LC07 TT0607.xlsx"
+              "Filename": "Pask LC07 TT0607.xlsx"
             },
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
               "Name": "Wheat.Leaf.Live.Wt",
               "IsApsimVariable": "Not Found",
               "DataType": "",
               "HasErrorColumn": false,
-              "Filename": "%root%\\Tests\\Validation\\Wheat\\Pask\\Pask LC07 TT0607.xlsx"
+              "Filename": "Pask LC07 TT0607.xlsx"
             },
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
               "Name": "Wheat.Stem.Wt",
               "IsApsimVariable": "Not Found",
               "DataType": "",
               "HasErrorColumn": false,
-              "Filename": "%root%\\Tests\\Validation\\Wheat\\Pask\\Pask LC07 TT0607.xlsx"
+              "Filename": "Pask LC07 TT0607.xlsx"
             },
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
               "Name": "Wheat.Leaf.Dead.Wt",
               "IsApsimVariable": "Not Found",
               "DataType": "",
               "HasErrorColumn": false,
-              "Filename": "%root%\\Tests\\Validation\\Wheat\\Pask\\Pask LC07 TT0607.xlsx"
+              "Filename": "Pask LC07 TT0607.xlsx"
             },
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
               "Name": "Wheat.AboveGround.Wt",
               "IsApsimVariable": "Not Found",
               "DataType": "",
               "HasErrorColumn": false,
-              "Filename": "%root%\\Tests\\Validation\\Wheat\\Pask\\Pask LC07 TT0607.xlsx"
+              "Filename": "Pask LC07 TT0607.xlsx"
             },
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
               "Name": "Wheat.AboveGround.N",
               "IsApsimVariable": "Not Found",
               "DataType": "",
               "HasErrorColumn": false,
-              "Filename": "%root%\\Tests\\Validation\\Wheat\\Pask\\Pask LC07 TT0607.xlsx"
+              "Filename": "Pask LC07 TT0607.xlsx"
             },
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
               "Name": "Wheat.AboveGround.NConc",
               "IsApsimVariable": "Not Found",
               "DataType": "",
               "HasErrorColumn": false,
-              "Filename": "%root%\\Tests\\Validation\\Wheat\\Pask\\Pask LC07 TT0607.xlsx"
+              "Filename": "Pask LC07 TT0607.xlsx"
             },
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
               "Name": "Wheat.Leaf.LAI",
               "IsApsimVariable": "Not Found",
               "DataType": "",
               "HasErrorColumn": false,
-              "Filename": "%root%\\Tests\\Validation\\Wheat\\Pask\\Pask LC07 TT0607.xlsx"
+              "Filename": "Pask LC07 TT0607.xlsx"
             },
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
               "Name": "Wheat.Population",
               "IsApsimVariable": "Not Found",
               "DataType": "",
               "HasErrorColumn": false,
-              "Filename": "%root%\\Tests\\Validation\\Wheat\\Pask\\Pask LC07 TT0607.xlsx"
+              "Filename": "Pask LC07 TT0607.xlsx"
             },
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
               "Name": "Wheat.Leaf.StemPopulation",
               "IsApsimVariable": "Not Found",
               "DataType": "",
               "HasErrorColumn": false,
-              "Filename": "%root%\\Tests\\Validation\\Wheat\\Pask\\Pask LC07 TT0607.xlsx"
+              "Filename": "Pask LC07 TT0607.xlsx"
             },
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
               "Name": "Wheat.Spike.Wt",
               "IsApsimVariable": "Not Found",
               "DataType": "",
               "HasErrorColumn": false,
-              "Filename": "%root%\\Tests\\Validation\\Wheat\\Pask\\Pask LC07 TT0607.xlsx"
+              "Filename": "Pask LC07 TT0607.xlsx"
             },
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
               "Name": "Wheat.Leaf.Live.N",
               "IsApsimVariable": "Not Found",
               "DataType": "",
               "HasErrorColumn": false,
-              "Filename": "%root%\\Tests\\Validation\\Wheat\\Pask\\Pask LC07 TT0607.xlsx"
+              "Filename": "Pask LC07 TT0607.xlsx"
             },
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
               "Name": "Wheat.Stem.N",
               "IsApsimVariable": "Not Found",
               "DataType": "",
               "HasErrorColumn": false,
-              "Filename": "%root%\\Tests\\Validation\\Wheat\\Pask\\Pask LC07 TT0607.xlsx"
+              "Filename": "Pask LC07 TT0607.xlsx"
             },
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
               "Name": "Wheat.Spike.N",
               "IsApsimVariable": "Not Found",
               "DataType": "",
               "HasErrorColumn": false,
-              "Filename": "%root%\\Tests\\Validation\\Wheat\\Pask\\Pask LC07 TT0607.xlsx"
+              "Filename": "Pask LC07 TT0607.xlsx"
             },
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
               "Name": "Wheat.Stem.Nconc",
               "IsApsimVariable": "Not Found",
               "DataType": "",
               "HasErrorColumn": false,
-              "Filename": "%root%\\Tests\\Validation\\Wheat\\Pask\\Pask LC07 TT0607.xlsx"
+              "Filename": "Pask LC07 TT0607.xlsx"
             },
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
               "Name": "Wheat.Spike.Nconc",
               "IsApsimVariable": "Not Found",
               "DataType": "",
               "HasErrorColumn": false,
-              "Filename": "%root%\\Tests\\Validation\\Wheat\\Pask\\Pask LC07 TT0607.xlsx"
+              "Filename": "Pask LC07 TT0607.xlsx"
             },
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
               "Name": "Wheat.Grain.Wt",
               "IsApsimVariable": "Not Found",
               "DataType": "",
               "HasErrorColumn": false,
-              "Filename": "%root%\\Tests\\Validation\\Wheat\\Pask\\Pask LC07 TT0607.xlsx"
+              "Filename": "Pask LC07 TT0607.xlsx"
             },
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
               "Name": "Wheat.Grain.N",
               "IsApsimVariable": "Not Found",
               "DataType": "",
               "HasErrorColumn": false,
-              "Filename": "%root%\\Tests\\Validation\\Wheat\\Pask\\Pask LC07 TT0607.xlsx"
+              "Filename": "Pask LC07 TT0607.xlsx"
             },
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
               "Name": "Wheat.Grain.Nconc",
               "IsApsimVariable": "Not Found",
               "DataType": "",
               "HasErrorColumn": false,
-              "Filename": "%root%\\Tests\\Validation\\Wheat\\Pask\\Pask LC07 TT0607.xlsx"
+              "Filename": "Pask LC07 TT0607.xlsx"
             },
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
               "Name": "Wheat.Grain.Size",
               "IsApsimVariable": "Not Found",
               "DataType": "",
               "HasErrorColumn": false,
-              "Filename": "%root%\\Tests\\Validation\\Wheat\\Pask\\Pask LC07 TT0607.xlsx"
+              "Filename": "Pask LC07 TT0607.xlsx"
             },
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
               "Name": "Wheat.Grain.Number",
               "IsApsimVariable": "Not Found",
               "DataType": "",
               "HasErrorColumn": false,
-              "Filename": "%root%\\Tests\\Validation\\Wheat\\Pask\\Pask LC07 TT0607.xlsx"
+              "Filename": "Pask LC07 TT0607.xlsx"
             },
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
               "Name": "Wheat.Leaf.Dead.N",
               "IsApsimVariable": "Not Found",
               "DataType": "",
               "HasErrorColumn": false,
-              "Filename": "%root%\\Tests\\Validation\\Wheat\\Pask\\Pask LC07 TT0607.xlsx"
+              "Filename": "Pask LC07 TT0607.xlsx"
             },
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
               "Name": "Wheat.Spike.HeadNumber",
               "IsApsimVariable": "Not Found",
               "DataType": "",
               "HasErrorColumn": false,
-              "Filename": "%root%\\Tests\\Validation\\Wheat\\Pask\\Pask LC07 TT0607.xlsx"
+              "Filename": "Pask LC07 TT0607.xlsx"
             },
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
               "Name": "Wheat.Ear.Wt",
               "IsApsimVariable": "Not Found",
               "DataType": "",
               "HasErrorColumn": false,
-              "Filename": "%root%\\Tests\\Validation\\Wheat\\Pask\\Pask LC07 TT0607.xlsx"
+              "Filename": "Pask LC07 TT0607.xlsx"
             },
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
               "Name": "Wheat.Leaf.Dead.Nconc",
               "IsApsimVariable": "Not Found",
               "DataType": "",
               "HasErrorColumn": false,
-              "Filename": "%root%\\Tests\\Validation\\Wheat\\Pask\\Pask LC07 TT0607.xlsx"
+              "Filename": "Pask LC07 TT0607.xlsx"
             },
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
               "Name": "Wheat.Ear.N",
               "IsApsimVariable": "Not Found",
               "DataType": "",
               "HasErrorColumn": false,
-              "Filename": "%root%\\Tests\\Validation\\Wheat\\Pask\\Pask LC07 TT0607.xlsx"
+              "Filename": "Pask LC07 TT0607.xlsx"
             },
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+ColumnInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+ColumnInfo, Models",
               "Name": "Wheat.Ear.Nconc",
               "IsApsimVariable": "Not Found",
               "DataType": "",
               "HasErrorColumn": false,
-              "Filename": "%root%\\Tests\\Validation\\Wheat\\Pask\\Pask LC07 TT0607.xlsx"
+              "Filename": "Pask LC07 TT0607.xlsx"
             }
           ],
           "DerivedData": [
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+DerivedInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+DerivedInfo, Models",
               "Name": "Wheat.AboveGround.NConc",
               "Function": "Wheat.AboveGround.N / Wheat.AboveGround.Wt",
               "DataType": "Double",
@@ -1384,7 +1384,7 @@
               "Existing": 93
             },
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+DerivedInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+DerivedInfo, Models",
               "Name": "Wheat.Leaf.Wt",
               "Function": "Wheat.Leaf.Live.Wt + Wheat.Leaf.Dead.Wt",
               "DataType": "Double",
@@ -1392,7 +1392,7 @@
               "Existing": 0
             },
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+DerivedInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+DerivedInfo, Models",
               "Name": "Wheat.Leaf.N",
               "Function": "Wheat.Leaf.Live.N + Wheat.Leaf.Dead.N",
               "DataType": "Double",
@@ -1400,7 +1400,7 @@
               "Existing": 0
             },
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+DerivedInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+DerivedInfo, Models",
               "Name": "Wheat.Leaf.SpecificAreaCanopy",
               "Function": "Wheat.Leaf.LAI / Wheat.Leaf.Live.Wt",
               "DataType": "Double",
@@ -1408,7 +1408,7 @@
               "Existing": 0
             },
             {
-              "$type": "Models.PreSimulationTools.ObservedInput+DerivedInfo, Models",
+              "$type": "Models.PreSimulationTools.Observations+DerivedInfo, Models",
               "Name": "Wheat.Leaf.NConc",
               "Function": "Wheat.Leaf.N / Wheat.Leaf.Wt",
               "DataType": "Double",
@@ -1448,7 +1448,7 @@
             "Wheat.Ear.N",
             "Wheat.Ear.Nconc"
           ],
-          "Name": "ObservedInput",
+          "Name": "Observations",
           "ResourceName": null,
           "Children": [],
           "Enabled": true,
@@ -1652,6 +1652,28 @@
           ],
           "Parameters": [],
           "Name": "Harvesting",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Report, Models",
+          "VariableNames": [
+            "[Simulation].Name",
+            "[Clock].Today",
+            "[Wheat].SowingData.Cultivar",
+            "[IWeather].Latitude",
+            "[IWeather].Longitude",
+            "[LocationInfo].Script.Country",
+            "[LocationInfo].Script.State",
+            "[LocationInfo].Script.Region"
+          ],
+          "EventNames": [
+            "[Wheat].Sowing"
+          ],
+          "GroupByVariableName": null,
+          "Name": "SowingReport",
           "ResourceName": null,
           "Children": [],
           "Enabled": true,
@@ -2009,7 +2031,7 @@
                   "VariableNames": [
                     "[Simulation].Name",
                     "[Clock].Today",
-                    "[NDVIModel].Script.NDVI",
+                    "[Spectral].NDVI",
                     "[Wheat].SowingData.Cultivar"
                   ],
                   "EventNames": [
@@ -2346,85 +2368,6 @@
                 {
                   "$type": "Models.Irrigation, Models",
                   "Name": "Irrigation",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Manager, Models",
-                  "CodeArray": [
-                    "using System;",
-                    "using Models.Core;",
-                    "using Models.Interfaces;",
-                    "using Models.PMF;",
-                    "using APSIM.Shared.Utilities;",
-                    "using Models.WaterModel;",
-                    "",
-                    "namespace Models",
-                    "{",
-                    "    [Serializable]",
-                    "    public class Script : Model",
-                    "    {",
-                    "        [Link] IClock Clock;",
-                    "        [Link] ISummary Summary;",
-                    "        [Link] ICanopy WheatCanopy;",
-                    "        [Link] EvaporationModel EvapModel;",
-                    "        ",
-                    "        [Description(\"Dry soil NDVI\")]",
-                    "        public double DrySoilNDVI { get; set; }",
-                    "        ",
-                    "        [Description(\"Wet soil NDVI\")]",
-                    "        public double WetSoilNDVI { get; set; }",
-                    "",
-                    "        [Description(\"Green Crop NDVI\")]",
-                    "        public double GreenCropNDVI { get; set; }",
-                    "        ",
-                    "        [Description(\"Dead Crop NDVI\")]",
-                    "        public double DeadCropNDVI { get; set; }",
-                    "                ",
-                    "        [Description(\"Daily Estimated NDVI\")]",
-                    "        public double NDVI { get; set; }",
-                    "",
-                    "        [EventSubscribe(\"DoManagement\")]",
-                    "        private void DoDailyCalculations(object sender, EventArgs e)",
-                    "        {",
-                    "            double SoilNDVI = WetSoilNDVI;",
-                    "            if (EvapModel.t > 1)",
-                    "               SoilNDVI = DrySoilNDVI;",
-                    "",
-                    "            NDVI = GreenCropNDVI * WheatCanopy.CoverGreen;",
-                    "            NDVI += DeadCropNDVI * (WheatCanopy.CoverTotal - WheatCanopy.CoverGreen);",
-                    "            NDVI += SoilNDVI * (1 - WheatCanopy.CoverTotal);            ",
-                    "            ",
-                    "        }",
-                    "    }",
-                    "}",
-                    ""
-                  ],
-                  "Parameters": [
-                    {
-                      "Key": "DrySoilNDVI",
-                      "Value": "0.11"
-                    },
-                    {
-                      "Key": "WetSoilNDVI",
-                      "Value": "0.15"
-                    },
-                    {
-                      "Key": "GreenCropNDVI",
-                      "Value": "0.75"
-                    },
-                    {
-                      "Key": "DeadCropNDVI",
-                      "Value": "0.15"
-                    },
-                    {
-                      "Key": "NDVI",
-                      "Value": "0"
-                    }
-                  ],
-                  "Name": "NDVIModel",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -3440,6 +3383,40 @@
                     }
                   ],
                   "Name": "NO3Initialise1",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Sensor.Spectral, Models",
+                  "DrySoilNDVI": 0.11,
+                  "WetSoilNDVI": 0.15,
+                  "GreenCropNDVI": 0.75,
+                  "DeadCropNDVI": 0.15,
+                  "Name": "Spectral",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report, Models",
+                  "VariableNames": [
+                    "[Simulation].Name",
+                    "[Clock].Today",
+                    "[Wheat].SowingData.Cultivar",
+                    "[IWeather].Latitude",
+                    "[IWeather].Longitude",
+                    "[LocationInfo].Script.Country",
+                    "[LocationInfo].Script.State",
+                    "[LocationInfo].Script.Region"
+                  ],
+                  "EventNames": [
+                    "[Wheat].Sowing"
+                  ],
+                  "GroupByVariableName": null,
+                  "Name": "SowingReport",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -5891,7 +5868,7 @@
                   "VariableNames": [
                     "[Simulation].Name",
                     "[Clock].Today",
-                    "[NDVIModel].Script.NDVI",
+                    "[Spectral].NDVI",
                     "[Wheat].SowingData.Cultivar"
                   ],
                   "EventNames": [
@@ -6302,85 +6279,6 @@
                     }
                   ],
                   "Name": "IrrDate",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Manager, Models",
-                  "CodeArray": [
-                    "using System;",
-                    "using Models.Core;",
-                    "using Models.Interfaces;",
-                    "using Models.PMF;",
-                    "using APSIM.Shared.Utilities;",
-                    "using Models.WaterModel;",
-                    "",
-                    "namespace Models",
-                    "{",
-                    "    [Serializable]",
-                    "    public class Script : Model",
-                    "    {",
-                    "        [Link] IClock Clock;",
-                    "        [Link] ISummary Summary;",
-                    "        [Link] ICanopy WheatCanopy;",
-                    "        [Link] EvaporationModel EvapModel;",
-                    "        ",
-                    "        [Description(\"Dry soil NDVI\")]",
-                    "        public double DrySoilNDVI { get; set; }",
-                    "        ",
-                    "        [Description(\"Wet soil NDVI\")]",
-                    "        public double WetSoilNDVI { get; set; }",
-                    "",
-                    "        [Description(\"Green Crop NDVI\")]",
-                    "        public double GreenCropNDVI { get; set; }",
-                    "        ",
-                    "        [Description(\"Dead Crop NDVI\")]",
-                    "        public double DeadCropNDVI { get; set; }",
-                    "                ",
-                    "        [Description(\"Daily Estimated NDVI\")]",
-                    "        public double NDVI { get; set; }",
-                    "",
-                    "        [EventSubscribe(\"DoManagement\")]",
-                    "        private void DoDailyCalculations(object sender, EventArgs e)",
-                    "        {",
-                    "            double SoilNDVI = WetSoilNDVI;",
-                    "            if (EvapModel.t > 1)",
-                    "               SoilNDVI = DrySoilNDVI;",
-                    "",
-                    "            NDVI = GreenCropNDVI * WheatCanopy.CoverGreen;",
-                    "            NDVI += DeadCropNDVI * (WheatCanopy.CoverTotal - WheatCanopy.CoverGreen);",
-                    "            NDVI += SoilNDVI * (1 - WheatCanopy.CoverTotal);            ",
-                    "            ",
-                    "        }",
-                    "    }",
-                    "}",
-                    ""
-                  ],
-                  "Parameters": [
-                    {
-                      "Key": "DrySoilNDVI",
-                      "Value": "0.11"
-                    },
-                    {
-                      "Key": "WetSoilNDVI",
-                      "Value": "0.15"
-                    },
-                    {
-                      "Key": "GreenCropNDVI",
-                      "Value": "0.75"
-                    },
-                    {
-                      "Key": "DeadCropNDVI",
-                      "Value": "0.15"
-                    },
-                    {
-                      "Key": "NDVI",
-                      "Value": "0"
-                    }
-                  ],
-                  "Name": "NDVIModel",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -7237,6 +7135,40 @@
                     }
                   ],
                   "Name": "NO3Initialise1",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Sensor.Spectral, Models",
+                  "DrySoilNDVI": 0.11,
+                  "WetSoilNDVI": 0.15,
+                  "GreenCropNDVI": 0.75,
+                  "DeadCropNDVI": 0.15,
+                  "Name": "Spectral",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report, Models",
+                  "VariableNames": [
+                    "[Simulation].Name",
+                    "[Clock].Today",
+                    "[Wheat].SowingData.Cultivar",
+                    "[IWeather].Latitude",
+                    "[IWeather].Longitude",
+                    "[LocationInfo].Script.Country",
+                    "[LocationInfo].Script.State",
+                    "[LocationInfo].Script.Region"
+                  ],
+                  "EventNames": [
+                    "[Wheat].Sowing"
+                  ],
+                  "GroupByVariableName": null,
+                  "Name": "SowingReport",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -9688,7 +9620,7 @@
                   "VariableNames": [
                     "[Simulation].Name",
                     "[Clock].Today",
-                    "[NDVIModel].Script.NDVI",
+                    "[Spectral].NDVI",
                     "[Wheat].SowingData.Cultivar"
                   ],
                   "EventNames": [
@@ -10099,85 +10031,6 @@
                     }
                   ],
                   "Name": "IrrDate",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Manager, Models",
-                  "CodeArray": [
-                    "using System;",
-                    "using Models.Core;",
-                    "using Models.Interfaces;",
-                    "using Models.PMF;",
-                    "using APSIM.Shared.Utilities;",
-                    "using Models.WaterModel;",
-                    "",
-                    "namespace Models",
-                    "{",
-                    "    [Serializable]",
-                    "    public class Script : Model",
-                    "    {",
-                    "        [Link] IClock Clock;",
-                    "        [Link] ISummary Summary;",
-                    "        [Link] ICanopy WheatCanopy;",
-                    "        [Link] EvaporationModel EvapModel;",
-                    "        ",
-                    "        [Description(\"Dry soil NDVI\")]",
-                    "        public double DrySoilNDVI { get; set; }",
-                    "        ",
-                    "        [Description(\"Wet soil NDVI\")]",
-                    "        public double WetSoilNDVI { get; set; }",
-                    "",
-                    "        [Description(\"Green Crop NDVI\")]",
-                    "        public double GreenCropNDVI { get; set; }",
-                    "        ",
-                    "        [Description(\"Dead Crop NDVI\")]",
-                    "        public double DeadCropNDVI { get; set; }",
-                    "                ",
-                    "        [Description(\"Daily Estimated NDVI\")]",
-                    "        public double NDVI { get; set; }",
-                    "",
-                    "        [EventSubscribe(\"DoManagement\")]",
-                    "        private void DoDailyCalculations(object sender, EventArgs e)",
-                    "        {",
-                    "            double SoilNDVI = WetSoilNDVI;",
-                    "            if (EvapModel.t > 1)",
-                    "               SoilNDVI = DrySoilNDVI;",
-                    "",
-                    "            NDVI = GreenCropNDVI * WheatCanopy.CoverGreen;",
-                    "            NDVI += DeadCropNDVI * (WheatCanopy.CoverTotal - WheatCanopy.CoverGreen);",
-                    "            NDVI += SoilNDVI * (1 - WheatCanopy.CoverTotal);            ",
-                    "            ",
-                    "        }",
-                    "    }",
-                    "}",
-                    ""
-                  ],
-                  "Parameters": [
-                    {
-                      "Key": "DrySoilNDVI",
-                      "Value": "0.11"
-                    },
-                    {
-                      "Key": "WetSoilNDVI",
-                      "Value": "0.15"
-                    },
-                    {
-                      "Key": "GreenCropNDVI",
-                      "Value": "0.75"
-                    },
-                    {
-                      "Key": "DeadCropNDVI",
-                      "Value": "0.15"
-                    },
-                    {
-                      "Key": "NDVI",
-                      "Value": "0"
-                    }
-                  ],
-                  "Name": "NDVIModel",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -11034,6 +10887,40 @@
                     }
                   ],
                   "Name": "NO3Initialise1",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Sensor.Spectral, Models",
+                  "DrySoilNDVI": 0.11,
+                  "WetSoilNDVI": 0.15,
+                  "GreenCropNDVI": 0.75,
+                  "DeadCropNDVI": 0.15,
+                  "Name": "Spectral",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report, Models",
+                  "VariableNames": [
+                    "[Simulation].Name",
+                    "[Clock].Today",
+                    "[Wheat].SowingData.Cultivar",
+                    "[IWeather].Latitude",
+                    "[IWeather].Longitude",
+                    "[LocationInfo].Script.Country",
+                    "[LocationInfo].Script.State",
+                    "[LocationInfo].Script.Region"
+                  ],
+                  "EventNames": [
+                    "[Wheat].Sowing"
+                  ],
+                  "GroupByVariableName": null,
+                  "Name": "SowingReport",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
