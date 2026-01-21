@@ -79,7 +79,7 @@
               "Children": [
                 {
                   "$type": "Models.Documentation, Models",
-                  "Text": "## **Performance of temperate perennial pastures in the Australian subtropics 1. Yield, persistence and pasture quality**<h2> \n\n\n\nThis simulation, Mutdapilly9294, aims to replicate the experiment conducted by [Lowe_Bowdler_Casey_Moss]. under the following conditions:\n1. Location: Mutdapilly Research Station (26°46'S, 152°41'E; altitude: 70 m)\n2. Environment: Subtropical\n3. Soil: Heavy black clay alluvium (Ug5.16, Northcote 1971), poorly drained both internally and externally\n4. Climate: The three-year experimental period was hotter and drier than average, particularly during the latter half.\n5. Seedbed Preparation: Fully prepared in early April 1992\n6. Irrigation: Weekly irrigations of 10–15 mm were applied for the first four weeks, followed by fortnightly irrigations of 25 mm for the remainder of the experimental period, unless rainfall made irrigation unnecessary.\n7. Fertiliser: A basal application of 24 kg P/ha (as superphosphate), 60 kg K/ha (as muriate of potash), and 50 kg N/ha (as urea) was applied before sowing.\n\nSimulation Parameters:\n\t\n1. **Cultivar:** Yatyn  \n2. **Model Used:** AGPRyegrass  \n3. **Duration:** 30 March 1992 – 30 June 1995  \n4. **Weather File:** Mutdapilly Research Station (Lat: -27.75, Long: 152.65)  \n5. **Sowing Date:** 1 April 1992  \n6. **Irrigation:** Fully irrigated  \n7. **Fertiliser Operations:**  \n   - Urea N, 50 kg/ha applied before sowing on 1 March 1992  \n   - Urea N, 50 kg/ha applied again on 31 October 1993  \n   - Subsequently applied monthly until the end of the experiment (assumed)  \n\n\n\n\n\n\n\n",
+                  "Text": "## **Performance of temperate perennial pastures in the Australian subtropics 1. Yield, persistence and pasture quality**<h2> \n\n\n\nThis simulation, Mutdapilly9294, aims to replicate the experiment conducted by [Lowe_Bowdler_Casey_Moss]. under the following conditions:\n1. Location: Mutdapilly Research Station (26°46'S, 152°41'E; altitude: 70 m)\n2. Environment: Subtropical\n3. Soil: Heavy black clay alluvium (Ug5.16, Northcote 1971), poorly drained both internally and externally\n4. Climate: The three-year experimental period was hotter and drier than average, particularly during the latter half.\n5. Seedbed Preparation: Fully prepared in early April 1992\n6. Irrigation: Weekly irrigations of 10–15 mm were applied for the first four weeks, followed by fortnightly irrigations of 25 mm for the remainder of the experimental period, unless rainfall made irrigation unnecessary.\n7. Fertiliser: A basal application of 24 kg P/ha (as superphosphate), 60 kg K/ha (as muriate of potash), and 50 kg N/ha (as urea) was applied before sowing.\n\n**Simulation Parameters:**\n\t\n1. **Cultivar:** Yatyn  \n2. **Model Used:** AGPRyegrass  \n3. **Duration:** 30 March 1992 – 30 June 1995  \n4. **Weather File:** Mutdapilly Research Station (Lat: -27.75, Long: 152.65)  \n5. **Sowing Date:** 1 April 1992  \n6. **Irrigation:** Fully irrigated  \n7. **Fertiliser Operations:**  \n   - Urea N, 50 kg/ha applied before sowing on 1 March 1992  \n   - Urea N, 50 kg/ha applied again on 31 October 1993  \n   - Subsequently applied monthly until the end of the experiment (assumed) \n8. **Report Variables**: Biomass, LAIGreen, Irrigation, Water Stress, SoilNitrate, NConc, Crude Protien, Root Depth\n \n\n\n\n\n\n\n\n",
                   "Name": "Mutdapilly9294",
                   "ResourceName": null,
                   "Children": [],
@@ -3264,7 +3264,7 @@
                       "AnnotationLocation": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
-                      "Name": "Graph",
+                      "Name": "RootDepth",
                       "ResourceName": null,
                       "Children": [
                         {
@@ -3316,8 +3316,8 @@
               "Children": [
                 {
                   "$type": "Models.Documentation, Models",
-                  "Text": "### Seasonal variation in the herbage yield and nutritive value of perennial ryegrass (Lolium perenne L.) cultivars with high or normal herbage water-soluble carbohydrate concentrations grown in three contrasting Australian dairy environments <h3>\n\n\n\nThis simulation, Gatton9597 aims to replicate the experiment conducted by K.F.Smith et al. under the following conditions:\n1. Location: Gatton QLD,\n2. Environment:\n3. Soil: Not found in paper\n4. Irrigation:\n5. Cultivars: Aurora, Ba 11351,Ellett,Vedette,Kangaroo Valley\n6. Fertilisation: Not mentioned in paper\n7. Sow: Plots at the Gatton site were resown in the autumn of 1996 as the 1995 sowing failed to survive a period of extremely hot\n8. Defoliation: Harvest dates as per the schedule in K.F.Smith et al.\n\n\n**Simulation Parameters:**\n\n1. **Cultivars:**  Aurora, Ba 11351, Ellett, Vedette, Kangaroo Valley\n2. **Model used:** AGPAgPasture\n3. **Clock:** 26/02/1995 - 30/06/1997\n4. **Weather file:** Gatton.met\n5. **Sowing Date:** 1995-03-1995\n6. **Resown:** 1996/03/01 \n7. **Irrigation:** Full irrigated\n8. **Fertiliser Operations:** Fertiliser dates and rates are unknown but the paper says agronomy was to APPEC protocol for Perennial ryegrass.  We assume that N was non-limiting.\n\t* Operations is used in the simulation applying 50 kh/ha UreaN every month \n\n\n\n",
-                  "Name": "Documentation",
+                  "Text": "### Seasonal variation in the herbage yield and nutritive value of perennial ryegrass (Lolium perenne L.) cultivars with high or normal herbage water-soluble carbohydrate concentrations grown in three contrasting Australian dairy environments <h3>\n\n\n\nThis simulation, Gatton9597 aims to replicate the experiment conducted by [Smith_Simpson_Oram] under the following conditions:\n1. Location: Gatton QLD,\n2. Environment:\n3. Soil: Not found in paper\n4. Irrigation:\n5. Cultivars: Aurora, Ba 11351,Ellett,Vedette,Kangaroo Valley\n6. Fertilisation: Not mentioned in paper\n7. Sow: Plots at the Gatton site were resown in the autumn of 1996 as the 1995 sowing failed to survive a period of extremely hot\n8. Defoliation: Harvest dates as per the schedule in K.F.Smith et al.\n\n\n**Simulation Parameters:**\n\n1. **Cultivars:**  Aurora, Ba 11351, Ellett, Vedette, Kangaroo Valley\n2. **Model used:** AGPAgPasture\n3. **Clock:** 26/02/1995 - 30/06/1997\n4. **Weather file:** Gatton.met\n5. **Sowing Date:** 1995-03-1995\n6. **Resown:** 1996/03/01 \n7. **Irrigation:** Full irrigated\n8. **Fertiliser Operations:** Fertiliser dates and rates are unknown but the paper says agronomy was to APPEC protocol for Perennial ryegrass.  We assume that N was non-limiting.\n   * Operations is used in the simulation applying 50 kh/ha UreaN every month\n9. **Report Variables:** Biomass, LAIGreen, Irrigation,Water Stress, Nitrogen Stress, SoilNitrate, NConc, Digestibility, Crude Protien\n\n\n\n",
+                  "Name": "Gatton9597",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -6501,8 +6501,8 @@
               "Children": [
                 {
                   "$type": "Models.Documentation, Models",
-                  "Text": "### Seasonal variation in the herbage yield and nutritive value of perennial ryegrass (Lolium perenne L.) cultivars with high or normal herbage water-soluble carbohydrate concentrations grown in three contrasting Australian dairy environments <h3>\n\n\n\nThis simulation, Gatton9597 aims to replicate the experiment conducted by [Smith_SeasonalVariation] under the following conditions:\n1. Location: Gatton QLD,\n2. Environment:\n3. Soil: Not found in paper\n4. Irrigation:\n5. Cultivars: Aurora, Ba 11351, Ellett, Vedette, Kangaroo Valley\n6. Fertilisation: Not mentioned in paper\n7. Sow: Plots at the Gatton site were resown in the autumn of 1996 as the 1995 sowing failed to survive a period of extremely hot\n8. Defoliation: Harvest dates as per the schedule in K.F.Smith et al.\n\n\n**Simulation Parameters:**\n\n1. **Cultivars:**  Aurora, Ba 11351, Ellett, Vedette, Kangaroo Valley\n2. **Model used:** AGPAgPasture\n3. **Clock:** 26/02/1995 - 30/06/1997\n4. **Weather file:** Kyabram.met\n5. **Sowing Date:** 1995-03-1995\n6. **Resown:** 1996/03/01 \n7. **Irrigation:** Full irrigated\n8. **Fertiliser Operations:** Fertiliser dates and rates are unknown but the paper says agronomy was to APPEC protocol for Perennial ryegrass.  We assume that N was non-limiting.\n\t* Operations is used in the simulation applying 50 kh/ha UreaN every month \n\n\n\n",
-                  "Name": "Documentation",
+                  "Text": "### Seasonal variation in the herbage yield and nutritive value of perennial ryegrass (Lolium perenne L.) cultivars with high or normal herbage water-soluble carbohydrate concentrations grown in three contrasting Australian dairy environments <h3>\n\n\n\nThis simulation, Kyabram9597 aims to replicate the experiment conducted by [Smith_Simpson_Oram] under the following conditions:\n1. Location: Kyabram QLD.\n3. Soil: Not found in paper\n4. Irrigation: Fully irrigated\n5. Cultivars: Aurora, Ba 11351, Ellett, Vedette, Kangaroo Valley\n6. Fertilisation: Not mentioned in paper\n7. Sow: Plots at the Gatton site were resown in the autumn of 1996 as the 1995 sowing failed to survive a period of extremely hot\n8. Defoliation: Harvest dates as per the schedule in K.F.Smith et al.\n\n\n**Simulation Parameters:**\n\n1. **Cultivars:**  Aurora, Ba 11351, Ellett, Vedette, Kangaroo Valley\n2. **Model used:** AGPAgPasture\n3. **Clock:** 26/02/1995 - 30/06/1997\n4. **Weather file:** Kyabram.met\n5. **Sowing Date:** 1995-03-1995\n6. **Resown:** 1996/03/01 \n7. **Irrigation:** Full irrigated\n8. **Fertiliser Operations:** Fertiliser dates and rates are unknown but the paper says agronomy was to APPEC protocol for Perennial ryegrass.  We assume that N was non-limiting.\n\t* Operations is used in the simulation applying 50 kh/ha UreaN every month \n9. **Experiment factors**: Cultivars\n10. **Report Variables:** Biomass, LAIGreen, Irrigation,Water Stress, Nitrogen Stress, SoilNitrate, NConc, Digestibility, Crude Protien\n\n\n\n\n",
+                  "Name": "Kyabram95971",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -22041,6 +22041,15 @@
                       ],
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Documentation, Models",
+                      "Text": "\nThis folder consists of 3 experiments conducted across 3 years. The simulations in these experiments aim to replicate the experiment conducted by [Lowe_Fulkerson_Walker] under the following conditions:\n1. Location: Tropical upland environment of the Atherton Tableland in Kairi Queensland\n2. Seedbed: All experiments were sown in late March or early April by broadcasting seed onto the surface and rolling before irrgation\n3. Irrigation: Irrigation of 12 mm was applied to the experiments every 5 days for first 4 weeks with 25mm applied every 14 days subsequently\n4. Defoliation: After initial period of about 6 weeks all experiment plots were defoliated with reciprocating balde mower or rotary mower to 5cm above ground. \n5. Defoliation Frequency: defoliation was done 4 weekly basis in 1991 and from June to August 1993\n6. Fertilizers Nitrogen (Urea) applied: 0, 25, 37.5, 50, 75, 100, 150 \n5. Species: Lolium multiflorum\n6. Duration: 1991, 1993, 1994\n\n\n\n\n**Simulation Parameters:**\n1. Model used: AGPRyegrass\n2. Duration: 1991, 1993, 1994\n3. Sowing Date:01-01-1991, 01-01-1993, 01-01-1994\n4. Irrigation: Fully irrigated. Used manager script\n5. Fertiliser Operations: Used Opertions to match the schedule in [Lowe_Fulkerson_Walker]. \n6. Defoliation schedule: Used operations to match the schedule in [Lowe_Fulkerson_Walker]. \n6. Experiment factors: Fertilisation applied \n7. Report variables: AboveGroundHarvestable Weight, NConc,Nitrogen stress, Water Stress, Irrigation",
+                      "Name": "KairiNitrogenExperiment",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "Enabled": true,
@@ -34525,6 +34534,15 @@
                           "ReadOnly": false
                         }
                       ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Documentation, Models",
+                      "Text": "\nThis folder consists of 3 experiments conducted across 3 years. The simulations in these experiments aim to replicate the experiment conducted by [Lowe_Fulkerson_Walker] under the following conditions:\n1. Location: Subtropical alluvial systems of the Bremer at Mutdapilly in Southeast Queensland\n2. Seedbed: All experiments were sown in late March or early April by broadcasting seed onto the surface and rolling before irrgation\n3. Irrigation: Irrigation of 12 mm was applied to the experiments every 5 days for first 4 weeks with 25mm applied every 14 days subsequently\n4. Defoliation: After initial period of about 6 weeks all experiment plots were defoliated with reciprocating balde mower or rotary mower to 5cm above ground. \n5. Defoliation Frequency: Defoliation was done 4 weekly basis in 1991 and from June to August 1993\n6. Fertilizers Nitrogen (Urea) applied: 0, 25, 37.5, 50, 75, 100, 150 \n5. Species: Lolium multiflorum\n6. Duration: 1991, 1993, 1994\n\n\n\n\n**Simulation Parameters:**\n1. Model used: AGPRyegrass\n2. Duration: 1991, 1993, 1994\n3. Sowing Date: 01-01-1991, 01-01-1993, 01-01-1994\n4. Irrigation: Fully irrigated. Used manager script\n5. Fertiliser Operations: Used Opertions to match the schedule in [Lowe_Fulkerson_Walker]. \n6. Defoliation schedule: Used operations to match the schedule in [Lowe_Fulkerson_Walker]. \n6. Experiment factors: Fertilisation applied \n7. Report variables: AboveGroundHarvestable Weight, NConc,Nitrogen stress, Water Stress, Irrigation",
+                      "Name": "MutdapillyNitrogenExperiment",
+                      "ResourceName": null,
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -47122,6 +47140,15 @@
                       ],
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Documentation, Models",
+                      "Text": "\nThis folder consists of 3 experiments conducted across 3 years. The simulations in these experiments aim to replicate the experiment conducted by [Lowe_Fulkerson_Walker] under the following conditions:\n1. Location: Richmond Casino in northern NSW.\n2. Seedbed: All experiments were sown in late March or early April by broadcasting seed onto the surface and rolling before irrgation\n3. Irrigation: Irrigation of 12 mm was applied to the experiments every 5 days for first 4 weeks with 25mm applied every 14 days subsequently\n4. Defoliation: After initial period of about 6 weeks all experiment plots were defoliated with reciprocating balde mower or rotary mower to 5cm above ground. \n5. Defoliation Frequency: Defoliation was done 4 weekly basis in 1991 and from June to August 1993\n6. Fertilizers Nitrogen (Urea) applied: 0, 25, 37.5, 50, 75, 100, 150 \n5. Species: Lolium multiflorum\n6. Duration: 1991, 1993, 1994\n\n\n\n\n**Simulation Parameters:**\n1. Model used: AGPRyegrass\n2. Duration: 1991, 1993, 1994\n3. Sowing Date: 01-01-1991, 01-01-1993, 01-01-1994\n4. Irrigation: Fully irrigated. Used manager script\n5. Fertiliser Operations: Used Opertions to match the schedule in [Lowe_Fulkerson_Walker]. \n6. Defoliation schedule: Used operations to match the schedule in [Lowe_Fulkerson_Walker]. \n6. Experiment factors: Fertilisation applied \n7. Report variables: AboveGroundHarvestable Weight, NConc,Nitrogen stress, Water Stress, Irrigation",
+                      "Name": "CasinoNitrogenExperiment",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "Enabled": true,
@@ -47884,11 +47911,11 @@
                                       "Name": "IrrigationEvents",
                                       "ResourceName": null,
                                       "Children": [],
-                                      "Enabled": false,
+                                      "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -48188,11 +48215,11 @@
                                       "Name": "IrrigationEvents",
                                       "ResourceName": null,
                                       "Children": [],
-                                      "Enabled": false,
+                                      "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -49237,11 +49264,11 @@
                                       "Name": "IrrigationEvents",
                                       "ResourceName": null,
                                       "Children": [],
-                                      "Enabled": false,
+                                      "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -49919,11 +49946,11 @@
                                       "Name": "IrrigationEvents",
                                       "ResourceName": null,
                                       "Children": [],
-                                      "Enabled": false,
+                                      "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
