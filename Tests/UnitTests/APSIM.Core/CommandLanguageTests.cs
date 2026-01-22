@@ -50,6 +50,16 @@ public class CommandLanguageTests
         Assert.That(commands.Any(), Is.False);
     }
 
+    [TestCase("[Soil].Latitude=42", ExpectedResult = "42")]
+    [TestCase("[Soil].Latitude=-42", ExpectedResult = "-42")]
+    public string EnsureValuesAreParsedCorrectly(string commandString)
+    {
+        var setPropertyCommand = CommandLanguage.StringToCommands([commandString], relativeTo: null, relativeToDirectory: null)
+                                                .First() as SetPropertyCommand;
+
+        return setPropertyCommand.Value.ToString();
+    }
+
     // Ensure inline commented lines are ignored.
     [Test]
     [TestCase("[Weather].FileName=NewName    # comment", ExpectedResult = "NewName")]

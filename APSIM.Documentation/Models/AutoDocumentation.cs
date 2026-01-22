@@ -58,6 +58,7 @@ namespace APSIM.Documentation.Models
                 {typeof(ModelsMap), typeof(DocMap)},
                 {typeof(BoundFunction), typeof(DocBoundFunction)},
                 {typeof(Memo), typeof(DocMemo)},
+                {typeof(M.Documentation), typeof(DocMemo)},
                 {typeof(Structure), typeof(DocStructure)},
                 {typeof(Folder),typeof(DocFolder)},
                 {typeof(LinearInterpolationFunction), typeof(DocLinearInterpolationFunction)},
@@ -122,7 +123,8 @@ namespace APSIM.Documentation.Models
             List<ITag> newTags;
             newTags = AutoDocumentation.DocumentModel(model);
             newTags = DocumentationUtilities.CleanEmptySections(newTags);
-            newTags = DocumentationUtilities.AddHeader(model.Name, newTags);
+            string name = DocumentationUtilities.GetDocumentationName(model);
+            newTags = DocumentationUtilities.AddHeader(name, newTags);
             return newTags;
         }
 

@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 206,
+  "Version": 208,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -11,9 +11,9 @@
       "ResourceName": null,
       "Children": [
         {
-          "$type": "Models.Memo, Models",
-          "Text": "RUE\n\nTillering vs rank and cover and SW content - change SWFactor to full range and set slamax and min ranges etc\n\nrecent Wheat fixes - rename growth stages to PCDS\n\nLeaf size vs rank\n\nRoot Growth during grain filling\n\nNew Growth Phase/Stage names\n\nSLA model\n\nCV Extinction Coeff\n\nCV LargestLEaf\n",
-          "Name": "Memo",
+          "$type": "Models.Documentation, Models",
+          "Text": "The APSIM wheat model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.\n\nThe wheat model consists of:\n\n* a phenology model to simulate development through sequential developmental phases  \n* a structure model to simulate plant morphology \n* a collection of organs to simulate the various plant parts  \n* an arbitrator to allocate resources (N, biomass) to the various plant organs  \n\nThis work builds upon earlier APSIM Wheat models such as NWheat ([Asseng200225], [KeatingNWheat]), NWheatS ([Asseng1998163]), Cropmod-Wheat ([Wang2002GenericCropModel]), and the earlier versions developed in Plant (<a href=\\\"http://www.apsim.info/Documentation/Model,CropandSoil/CropModuleDocumentation/Wheat.aspx\">APSIM Wheat 7.5</a>\") and then within the Plant Modelling Framework ([brown_plant_2014]).",
+          "Name": "Introduction",
           "ResourceName": null,
           "Children": [],
           "Enabled": true,
@@ -21,8 +21,8 @@
         },
         {
           "$type": "Models.Memo, Models",
-          "Text": "_Brown, H.E., Huth, N.I. and Holzworth, D.P._\n\nThe APSIM wheat model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.\r\n\r\nThe wheat model consists of:\r\n\r\n* a phenology model to simulate development through sequential developmental phases  \r\n* a structure model to simulate plant morphology \r\n* a collection of organs to simulate the various plant parts  \r\n* an arbitrator to allocate resources (N, biomass) to the various plant organs  \r\n\r\nThis work builds upon earlier APSIM Wheat models such as NWheat ([Asseng200225], [KeatingNWheat]), NWheatS ([Asseng1998163]), Cropmod-Wheat ([Wang2002GenericCropModel]), and the earlier versions developed in Plant (<a href=\\\"http://www.apsim.info/Documentation/Model,CropandSoil/CropModuleDocumentation/Wheat.aspx\">APSIM Wheat 7.5</a>\") and then within the Plant Modelling Framework ([brown_plant_2014]).",
-          "Name": "Introduction",
+          "Text": "RUE\n\nTillering vs rank and cover and SW content - change SWFactor to full range and set slamax and min ranges etc\n\nrecent Wheat fixes - rename growth stages to PCDS\n\nLeaf size vs rank\n\nRoot Growth during grain filling\n\nNew Growth Phase/Stage names\n\nSLA model\n\nCV Extinction Coeff\n\nCV LargestLEaf\n",
+          "Name": "Memo",
           "ResourceName": null,
           "Children": [],
           "Enabled": true,
@@ -231,18 +231,9 @@
           "ResourceName": null,
           "Children": [
             {
-              "$type": "Models.Memo, Models",
-              "Text": "The wheat models outputs of phase names (Phenology.CurrentPhase.Name), stage names (Phenology.CurrentStageName) and decimal stage (Phenology.Stage) are consistent with the population culm development score (PCSD) as described by [Celestina2023]. \nObservations recorded following the protocole outlined by [Celestina2023] are suitable for testing model accuracy and calibrating cultivar coefficients.",
-              "Name": "PCDS (development stages)",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Memo, Models",
-              "Text": "Wheat exhibits a range of developmental responses to environment and these are strongly influenced by genotype characteristics. \nTemperature is the primary driver of development, increasing development rates and decreasing phase durations as it increases.  These affects are captured by thermal time.  However, wheat also exhibits cold and photoperiod sensitivities in its Vernalisaing phase and further photoperiod sensitivity in the SpikeletDifferenation and HeadEmergence phases.  Photoperiod responses are seen as a reduction in the length of a phase for a photoperiod sensitive genotype in response to a longer photoperiod.  Vernalisation responses are more complicated as they are driven by cool temperature but interact with photoperiod.  For vernalisation sensitive varieties (Winter types), exposure to cool temperatures and/or short photoperiods during the Vernalising phase may reduce its thermal time duration.  \n\nAPSIM wheat implements the Cereal Anthesis Molecular Phenology (<a href=\"https://www.apsim.info/wp-content/uploads/2025/09/camp-model-description-1.pdf\">CAMP</a>) model to simulate development.  It is based on the Kirby Framework which assumes the timing of anthesis is a result of the timing of flag leaf and an additional thermal time passage from there to heading then anthesis.  It also assumes the timing of flag leaf is a result of the Final Leaf Number (which sets a target) and leaf appearance rate (which sets the rate of progress toward the target).  Leaf appearance rate is a function of Thermal time and a genotype specific Phyllochron which changes with Haun stage as described by [Jamieson_LeafAppearance_1995].  \n\nFinal Leaf Number (FLN) is set on the day that terminal spikelet occurs as: \n\nFLN = 2.85 + 1.1 * TSHS  \n\nWhere TSHS is the Haun stage on the day terminal spikelet stage occurs.  Terminal spikelet is at the end of the SpikeletDifferentaiation phase which is preceeded by the Emerging and Vernalising phases.  The mechanisums for progress through each of these phase are described below",
-              "Name": "Environmental responses",
+              "$type": "Models.Documentation, Models",
+              "Text": "The wheat models outputs of phase names (Phenology.CurrentPhase.Name), stage names (Phenology.CurrentStageName) and decimal stage (Phenology.Stage) are consistent with the population culm development score (PCSD) as described by [Celestina2023]. \nObservations recorded following the protocole outlined by [Celestina2023] are suitable for testing model accuracy and calibrating cultivar coefficients.\n\nWheat exhibits a range of developmental responses to environment and these are strongly influenced by genotype characteristics. \nTemperature is the primary driver of development, increasing development rates and decreasing phase durations as it increases.  These affects are captured by thermal time.  However, wheat also exhibits cold and photoperiod sensitivities in its Vernalisaing phase and further photoperiod sensitivity in the SpikeletDifferenation and HeadEmergence phases.  Photoperiod responses are seen as a reduction in the length of a phase for a photoperiod sensitive genotype in response to a longer photoperiod.  Vernalisation responses are more complicated as they are driven by cool temperature but interact with photoperiod.  For vernalisation sensitive varieties (Winter types), exposure to cool temperatures and/or short photoperiods during the Vernalising phase may reduce its thermal time duration.  \n\nAPSIM wheat implements the Cereal Anthesis Molecular Phenology (<a href=\"https://www.apsim.info/wp-content/uploads/2025/09/camp-model-description-1.pdf\">CAMP</a>) model to simulate development.  It is based on the Kirby Framework which assumes the timing of anthesis is a result of the timing of flag leaf and an additional thermal time passage from there to heading then anthesis.  It also assumes the timing of flag leaf is a result of the Final Leaf Number (which sets a target) and leaf appearance rate (which sets the rate of progress toward the target).  Leaf appearance rate is a function of Thermal time and a genotype specific Phyllochron which changes with Haun stage as described by [Jamieson_LeafAppearance_1995].  \n\nFinal Leaf Number (FLN) is set on the day that terminal spikelet occurs as: \n\nFLN = 2.85 + 1.1 * TSHS  \n\nWhere TSHS is the Haun stage on the day terminal spikelet stage occurs.  Terminal spikelet is at the end of the SpikeletDifferentaiation phase which is preceeded by the Emerging and Vernalising phases.  The mechanisums for progress through each of these phase are described below",
+              "Name": "Documentation",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -655,7 +646,6 @@
               "Start": "Emergence",
               "End": "DoubleRidge",
               "IsEmerged": true,
-              "Target": 1.0,
               "Name": "LeavesInitiating",
               "ResourceName": null,
               "Children": [
@@ -1637,6 +1627,15 @@
           "Name": "Grain",
           "ResourceName": null,
           "Children": [
+            {
+              "$type": "Models.Documentation, Models",
+              "Text": "**Grain Number**\n\nGrain number is calculated using the simple approach applied in earlier versions of the APSIM Wheat models where grain number is calculated directly from the mass of stem and spike atnthesis.  The parameter describing the potential number of grains per gram of the combined mass of stem and spike is commonly used as a cultivar-specific trait, often in concert with parameters for potential grain size.\n\n```\nGrainNumber = GrainsPerGrainStemPlusSpike x StemPlusSpike.Wt\n```\n\nwhere\n \nName | Description | Units\n-|-|-\nGrainNumber | Grains per unit area | /m<sup>2</sup>\nStemPlusSpike.Wt | Mass of StemPlusSpike composite organ | g/m<sup>2</sup>\nGrainsPerGrainStemPlusSpike | Number of grains per gram of mass in Stem + Spike | /g\n\n\n**Grain Growth**\n\nGrain growth occurs in two  phases (Expansion and Filling) with a specific growth rate applied to both to allow grains to reach their potential size by the end of grain filling.\n\n```\nGrainDMDemand = PotentialGrainGrowthRate x ThermalTime x GrainNumber\n\nif in the GrainExpanding phenological phase\n   PotentialGrainGrowthRate = PotentialGrainSize x InitialProportion / GrainExpanding.Target\n\nelse if in the GrainFilling phenological phase\n   PotentialGrainGrowthRate = PotentialGrainSize x (1 -InitialProportion) / GrainFilling.Target\n\nPotentialGrainGrowthRate = bound (PotentialGrainGrowthRate, 0, {PotentialGrainSize - GrainSize) x GrainNumber\n\n```\n\nwhere\n\nName | Description | Units\n-|-|-\nPotentialGrainGrowthRate | Potential daily increase in mean grain size | g/(<sup>o</sup>C.d)\nThermalTime | Daily thermal time increment calculated by the phenology model | <sup>o</sup>C.d\nPotentialGrainSize | Grain size achievable by the plant under optimal growing conditions | g\nInitialProportion | Proportion of the PotentialGrainSize that is achieved by the end of the grain expansion phase | 0-1\nGrainExpanding.Target | Thermal time duration of the grain expansion phase | <sup>o</sup>C.d\nGrainFilling.Target | Thermal time duration of the grain filling phase | <sup>o</sup>C.d\n\n\n**Grain Nitrogen Accumulation**\n\nThe accumulation of nitrogen within the grain occurs in a single phase including both the grain expansion and filling phases.  Again, this is calculated from a specific grain N accumulation rate as described below.  Note also that the daily N demand is limited to ensure that N accumulation is slowed when grain growth is slowed.  The later is achieved by ensuring a maximum N concentration of daily grain growth.  Finally, all dry matter and Nitrogen within the grain organ is assumed to be \"structural\", such that N cannot be retranslocated from grain and a minimum amount of N is required for any dry matter to be allocated to grain by the organ arbitrator.\n\n```\nPotentialGrainNAccumulationRate = PotentialGrainKernalN / (GrainExpanding.Target + GrainFilling.Target)\nGrainNDemand = PotentialGrainNAccumulationRate x ThermalTime x GrainNumber\nGrainNDemand = min (GrainNDemand, MaximumNConc x GrainDMDemand)\n\n```\n\nwhere\n\nName | Description | Units\n-|-|-\nPotentialGrainNAccumulationRate | Potential daily increase in grain kernal N content | g N/(<sup>o</sup>C.d)\nPotentialGrainKernalN | Grain kernal N content under optimum growing conditions| g N\nMaximumNConc | Maximum N concentration of daily growth (ie ratio of daily N and DM demand) | g N/g",
+              "Name": "Documentation",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
             {
               "$type": "Models.Functions.HoldFunction, Models",
               "WhenToHold": "Anthesis",

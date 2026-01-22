@@ -300,8 +300,8 @@ namespace Models.PMF
                 double checkN = StartN;
                 foreach (Organ o in PlantOrgans)
                 {
-                    checkC += (o.Carbon.SuppliesAllocated.Fixation + o.Carbon.SuppliesAllocated.Uptake - o.Detached.C - o.LiveRemoved.C - o.DeadRemoved.C);
-                    checkN += (o.Nitrogen.SuppliesAllocated.Fixation + o.Nitrogen.SuppliesAllocated.Uptake - o.Detached.N - o.LiveRemoved.N - o.DeadRemoved.N);
+                    checkC += (o.Carbon.SuppliesAllocated.Fixation + o.Carbon.SuppliesAllocated.Uptake - o.Detached.C - o.LiveRemoved.C - o.DeadRemoved.C - o.LiveToResidues.C - o.DeadToResidues.C);
+                    checkN += (o.Nitrogen.SuppliesAllocated.Fixation + o.Nitrogen.SuppliesAllocated.Uptake - o.Detached.N - o.LiveRemoved.N - o.DeadRemoved.N - o.LiveToResidues.N - o.DeadToResidues.N);
                     endC += o.C;
                     endN += o.N;
                 }
