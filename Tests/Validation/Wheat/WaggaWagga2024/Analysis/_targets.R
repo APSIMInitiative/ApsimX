@@ -45,9 +45,9 @@ targets <- list(
       folder_rawData              = here::here("InputFilesFromCloud"), # this will be from Cloud
       folder_inputs               = here::here("..", "..", "inputs"),
       folder_apsimx               = here::here(".."),
-      file_rawData_excel           = "2024_WaggaWagga_PHDA24WARI2.xlsx", # raw observed data
-      file_input_name_saved       = "WaggaWagga2024_PhenoDatesInput.csv", # forced dates of pheno-dates
-      fileNameForAPSIM_observData = "WaggaWagga2024.xlsx", # observation file created for APSIM to read
+      file_rawData_excel          = "2024_WaggaWagga_PHDA24WARI2.xlsx", # raw observed data (pre-defined file name)
+      file_input_name_saved       = "WaggaWagga2024_PhenoDatesInput.csv", # name for forced pheno-dates file
+      fileNameForAPSIM_observData = "WaggaWagga2024.xlsx", # name of observation file created for APSIM to read
       file_SimNameByCultivar      = "WaggaWagga2024_CultivarToSimName.csv", # lookup table of sim by treat names (handmade metadata)
       file_metaData_observed      = "WaggaWagga2024_observed_data_requirements.csv",  # What obs variables to fetch? (handmade metadata)
       
@@ -59,7 +59,7 @@ targets <- list(
       # Other function parameters
       coord_thisLatLon            = data.frame(lat = -35.041, lon = 147.319),
       target_stagePerc            = 50, # % of a stage development when event date is retrieved
-      target_betwStages           = 50,  # % of period between two adjacent events when a synthetic event date is assumed
+      target_betwStages           = 50, # % of period between two adjacent events when a synthetic event date is assumed
       var_name_stage              = "apsim_stage_raw", # name of synthetic var with observed PCSD data
       varName_addedToObserv       = "Wheat.Phenology.Stage" # new synthetic variable to be added into observations
     )

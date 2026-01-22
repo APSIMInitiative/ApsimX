@@ -5,6 +5,8 @@ output: html_notebook
 # Libraries
 ```{r, warning=FALSE}
 library(targets)
+library(tidyverse)
+library(visNetwork)
 ```
 
 
@@ -16,7 +18,25 @@ tar_glimpse()
 
 ```{r}
 tar_visnetwork()
+
 ```
+
+# Format relevant aspects of network
+```{r}
+net <- tar_visnetwork()
+
+# Assign targets to groups
+net$x$nodes <- net$x$nodes %>%
+  mutate(group = if_else(grepl("final", id), "FinalNode", "IntermediaryNode"))
+
+# Define group colors and display
+net %>%
+  visGroups(group = "FinalNode", color = "red") %>%
+  visLegend()
+
+
+```
+
 
 
 ```{r}
