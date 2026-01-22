@@ -18,7 +18,10 @@ public class SetAttributeFromHerdSummary : DescriptiveSummaryProviderBase<SetAtt
 
         if (FormatForParentControl)
         {
-            Generator.AddBlockWithText("activityentry", $"Attribute {attrName} is calculated from the herd using method {calc} and multiplied by {generator.DisplaySummaryValueSnippet(model.Multiplier)}");
+            string multiplier = "";
+            if (model.Multiplier != 1.0)
+                multiplier = $" and multiplied by {generator.DisplaySummaryValueSnippet(model.Multiplier)}";
+            Generator.AddBlockWithText("resourcebanneralone clearfix", $"Attribute {attrName} is calculated as {calc} from the specified individuals{multiplier}");
         }
         else
         {

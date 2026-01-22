@@ -1,5 +1,6 @@
 using Models.CLEM.Resources;
 using System.Globalization;
+using System.IO;
 
 namespace Models.CLEM.DescriptiveSummary;
 
@@ -16,16 +17,11 @@ public class SpecifyPreviousConceptionSummary : DescriptiveSummaryProviderBase<S
 
         if (FormatForParentControl)
         {
-            // skip if this is inside the table summary of Initial Chohort
-            if (!(CurrentAncestorList.Count >= 3 && CurrentAncestorList[CurrentAncestorList.Count - 3] == typeof(RuminantInitialCohorts).Name))
-            {
-                Generator.AddBlockWithText("activityentry", $"These individuals will be {generator.DisplaySummaryValueSnippet<int>(model.NumberDaysPregnant, warnZero: true)} days pregnant");
-            }
+            generator.AddBlockWithText("resourcebanneralone", $"These individuals will be {generator.DisplaySummaryValueSnippet<int>(model.NumberDaysPregnant, warnZero: true)} days pregnant");
         }
         else
         {
-            Generator.AddBlockWithText("activityentry", $"Set last conception age to make these females {generator.DisplaySummaryValueSnippet<int>(model.NumberDaysPregnant, warnZero: true)} days pregnant");
+            generator.AddBlockWithText("activityentry", $"Set last conception age to make these females {generator.DisplaySummaryValueSnippet<int>(model.NumberDaysPregnant, warnZero: true)} days pregnant");
         }
-
     }
 }

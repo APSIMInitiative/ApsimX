@@ -1,4 +1,6 @@
+using DocumentFormat.OpenXml.Presentation;
 using Models.CLEM.Resources;
+using System.IO;
 
 namespace Models.CLEM.DescriptiveSummary;
 
@@ -20,17 +22,23 @@ public class SetAttributeWithPropertySummary : DescriptiveSummaryProviderBase<Se
         {
             bool isGroupAttribute = (CurrentAncestorList?.Count >= 2 && CurrentAncestorList[CurrentAncestorList.Count - 2] == typeof(RuminantInitialCohorts).Name);
             if (model.StandardDeviation == 0)
-                Generator.AddBlockWithText("activityentry", $"Attribute {attrName} is linked to {prop} and provided {(isGroupAttribute ? "to all cohorts " : "")}with a value of {generator.DisplaySummaryValueSnippet(model.Value)}");
+                generator.AddBlockWithText("resourcebanneralone clearfix", $"Attribute {attrName} is linked to {prop} and provided {(isGroupAttribute ? "to all cohorts " : "")}with a value of {generator.DisplaySummaryValueSnippet(model.Value)}");
             else
-                Generator.AddBlockWithText("activityentry", $"Attribute {attrName} is linked to {prop} and provided {(isGroupAttribute ? "to all cohorts " : "")}with mean = {generator.DisplaySummaryValueSnippet(model.Value)} and s.d. = {generator.DisplaySummaryValueSnippet(model.StandardDeviation)}");
+                generator.AddBlockWithText("resourcebanneralone clearfix", $"Attribute {attrName} is linked to {prop} and provided {(isGroupAttribute ? "to all cohorts " : "")}with mean = {generator.DisplaySummaryValueSnippet(model.Value)} and s.d. = {generator.DisplaySummaryValueSnippet(model.StandardDeviation)}");
         }
         else
         {
-            Generator.AddBlockWithText("activityentry", $"Provide an attribute with the label {attrName} that will be inherited with the {generator.DisplaySummaryValueSnippet(model.InheritanceStyle.ToString())} style{(model.Mandatory ? " and is required by all individuals in the population" : "")}");
+            generator.AddBlockWithText("activityentry", $"Provide an attribute with the label {attrName} that will be inherited with the {generator.DisplaySummaryValueSnippet(model.InheritanceStyle.ToString())} style{(model.Mandatory ? " and is required by all individuals in the population" : "")}");
+
+            string inherited = "";
+            if (model.InheritanceStyle != AttributeInheritanceStyle.None)
+                inherited = ($" and is allowed to vary between {generator.DisplaySummaryValueSnippet(model.MinimumValue)} and {generator.DisplaySummaryValueSnippet(model.MaximumValue)} when inherited");
+
+
             if (model.StandardDeviation == 0)
-                Generator.AddBlockWithText("activityentry", $"This attribute is linked to {prop} and has a value of {generator.DisplaySummaryValueSnippet(model.Value)}");
+                generator.AddBlockWithText("activityentry", $"This attribute is linked to {prop} and has a value of {generator.DisplaySummaryValueSnippet(model.Value)}{inherited}");
             else
-                Generator.AddBlockWithText("activityentry", $"This attribute's value is linked to {prop} and is randomly taken from a normal distribution with mean {generator.DisplaySummaryValueSnippet(model.Value)} and standard deviation {generator.DisplaySummaryValueSnippet(model.StandardDeviation)}");
+                generator.AddBlockWithText("activityentry", $"This attribute's value is linked to {prop} and is randomly taken from a normal distribution with mean {generator.DisplaySummaryValueSnippet(model.Value)} and standard deviation {generator.DisplaySummaryValueSnippet(model.StandardDeviation)}{inherited}");
         }
     }
 }

@@ -3,6 +3,7 @@ using Models.CLEM.Resources;
 using Models.Core;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 
 namespace Models.CLEM.DescriptiveSummary;
@@ -43,11 +44,11 @@ public class SpecifyRuminantSummary : DescriptiveSummaryProviderBase<SpecifyRumi
             extra = " with the following details.";
         }
 
-        Generator.AddBlockWithText("activityentry", $"{generator.DisplaySummaryValueSnippet<double>(model.Proportion, warnZero: true)} of the individuals will be {generator.DisplaySummaryResourceTypeSnippet(model.RuminantTypeName)} {extra}");
+        generator.AddBlockWithText("activityentry", $"{generator.DisplaySummaryValueSnippet<double>(model.Proportion, warnZero: true)} of the individuals will be {generator.DisplaySummaryResourceTypeSnippet(model.RuminantTypeName)} {extra}:");
 
         if (!cohortFound)
         {
-            Generator.AddBlockWithText("activityentry", $"No {generator.DisplaySummaryResourceTypeSnippet("RuminantCohort")} describing the individuals was provided!", styleString:"errorlink");
+            generator.AddBlockWithText("activityentry", $"No {generator.DisplaySummaryResourceTypeSnippet("RuminantCohort")} describing the individuals was provided!", styleString:"errorlink");
         }
     }
 }

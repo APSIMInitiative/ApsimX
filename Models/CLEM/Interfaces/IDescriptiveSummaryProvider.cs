@@ -130,5 +130,5 @@ public interface IRuminantParameterSummaryProvider
     /// Method to get the summary parameters for a ruminant parameter type
     /// </summary>
     /// <returns>The list of parameters with component name and category for display</returns>
-    List<(string ComponentName, string Category, string Value)> GetSummaryParameters();
+    List<(string componentName, string propertyName, string category, string description, string value)> GetSummaryParameters();
 }
