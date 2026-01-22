@@ -62,6 +62,9 @@ namespace UnitTests
             Assert.That(dt.Columns[4].DataType, Is.EqualTo(typeof(string)));
             Assert.That(dt.Columns[5].DataType, Is.EqualTo(typeof(string)));
 
+            //checked derived column has correct units
+            Assert.That(dt.Columns[11].DataType, Is.EqualTo(typeof(double)));
+
             string filename = "%root%/Tests/UnitTests/PreSimulationTools/Input.xlsx";
 
             //Check column information
