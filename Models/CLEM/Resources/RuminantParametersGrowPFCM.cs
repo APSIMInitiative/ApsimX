@@ -13,7 +13,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantParametersGrowPF))]
-    [Description("RuminantActivityGrowPF (CM - metabolism)")]
+    [Description("Ruminant metabolism (CM) parameters for GrowPF approach")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrowPFCM.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantParametersGrowPFCM : CLEMModel, ISubParameters, ICloneable
@@ -134,19 +134,5 @@ namespace Models.CLEM.Resources
             };
             return clonedParameters;
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            htmlWriter.Write("Ruminant parameters for metabolism as used in RuminantActivityGrowPF</div>");
-            return htmlWriter.ToString();
-        }
-
-        #endregion
-
     }
 }

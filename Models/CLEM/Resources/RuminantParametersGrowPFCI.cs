@@ -16,7 +16,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantParametersGrowPF))]
-    [Description("RuminantActivityGrowPF (CI - intake parameters)")]
+    [Description("Ruminant intake (CD) parameters for GrowPF approach")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrowPFCI.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantParametersGrowPFCI : CLEMModel, ISubParameters, ICloneable, IValidatableObject
@@ -177,7 +177,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Peak lactation intake level (SCA CI19)
         /// </summary>
-        [Category("Farm", "Lactation-Intake")]
+        [Category("Farm:Summary", "Lactation-Intake")]
         [Description("Peak lactation intake level [CI19]")]
         [Required, GreaterThanValue(0)]
         public double[] PeakLactationIntakeLevel_CI19 { get; set; } = new double[] { 0.416, 0.416 };
@@ -185,7 +185,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Relative condition effect (SCA CI20)
         /// </summary>
-        [Category("Farm", "Lactation-Intake")]
+        [Category("Farm:Summary", "Lactation-Intake")]
         [Description("Relative condition effect [CI20] 1=off")]
         [Required, GreaterThanEqualValue(1)]
         public double RelativeConditionEffect_CI20 { get; set; } = 1.5;
@@ -226,30 +226,35 @@ namespace Models.CLEM.Resources
         /// Enteric methane emissions parameter 1 from Blaxter and Claperton 1965
         /// </summary>
         [Description("Methane emissions parameter 1 [CH1]")]
+        [Category("Breed", "Emissions")]
         public double MethaneEmissionsParameter1 { get; set; } = 0.0184;
 
         /// <summary>
         /// Enteric methane emissions parameter 2 from Blaxter and Claperton 1965
         /// </summary>
         [Description("Methane emissions parameter 2 [CH2]")]
+        [Category("Breed", "Emissions")]
         public double MethaneEmissionsParameter2 { get; set; } = 13.0;
 
         /// <summary>
         /// Enteric methane emissions parameter 3 from Blaxter and Claperton 1965
         /// </summary>
         [Description("Methane emissions parameter 3 [CH3]")]
+        [Category("Breed", "Emissions")]
         public double MethaneEmissionsParameter3 { get; set; } = 7.52;
 
         /// <summary>
         /// Enteric methane emissions parameter 4 from Blaxter and Claperton 1965
         /// </summary>
         [Description("Methane emissions parameter 4 [CH4]")]
+        [Category("Breed", "Emissions")]
         public double MethaneEmissionsParameter4 { get; set; } = 23.7;
 
         /// <summary>
         /// Enteric methane emissions parameter 5 from Blaxter and Claperton 1965
         /// </summary>
         [Description("Methane emissions parameter 5 [CH5]")]
+        [Category("Breed", "Emissions")]
         public double MethaneEmissionsParameter5 { get; set; } = 3.36;
 
         /// <summary>
@@ -303,36 +308,5 @@ namespace Models.CLEM.Resources
             }
             return new List<ValidationResult>();
         }
-
-        #region descriptive summary 
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            htmlWriter.Write("Ruminant parameters for intake as used in RuminantActivityGrowPF</div>");
-            
-            if (FormatForParentControl)
-            {
-                if (RelativeConditionEffect_CI20 == 1.0)
-                {
-                    htmlWriter.Write("\r\n<div class=\"warninglink\">");
-                    htmlWriter.Write($"Ruminant intake reduction based on high condition is disabled<br />To allow this functionality set [GrowPF CI].RelativeConditionEffect_CI20 to a value <span class=\"setvalue\">> 1</span> (default 1.5)");
-                    htmlWriter.Write("</div>");
-                    if(IgnoreFeedQualityIntakeAdustment)
-                        htmlWriter.Write("</br>");
-                }
-                if (IgnoreFeedQualityIntakeAdustment)
-                {
-                    htmlWriter.Write("\r\n<div class=\"warninglink\">");
-                    htmlWriter.Write($"Ruminant intake reduction based on intake quality is disabled<br />To allow this functionality set [GrowPF CI].IgnoreFeedQualityIntakeAdustment to <span class=\"setvalue\">False</span>");
-                    htmlWriter.Write(" </div>");
-                }
-            }
-            return htmlWriter.ToString();
-        }
-
-        #endregion
     }
 }

@@ -14,13 +14,11 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantParametersGrowPF))]
-    [Description("RuminantActivityGrowPF (CG - growth parameters)")]
+    [Description("Ruminant growth (CG) parameters for GrowPF approach")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrowPFCG.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantParametersGrowPFCG: CLEMModel, ISubParameters, ICloneable
     {
-        #region Growth CG#
-
         /// <summary>
         /// Efficiency of DPLS use for wool (CG1 in SCA) [Breed] - [0.6] - Wool
         /// </summary>
@@ -184,7 +182,9 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Protein content of fat-free tissue gain on wet basis
         /// </summary>
+        [Category("Breed", "Growth")]
         [Description("Protein content fat-free issue gain on wet basis")]
+        [Required, GreaterThanValue(0)]
         public double ProteinContentOfFatFreeTissueGainWetBasis { get; set; } = 0.21;
 
         /// <summary>
@@ -199,6 +199,7 @@ namespace Models.CLEM.Resources
         /// Days until standard protein content of fat-free tissue gain on wet basis
         /// </summary>
         [Description("Days until standard protein content fat-free issue gain on wet basis")]
+        [Category("Breed", "Growth")]
         [Required, GreaterThanValue(0)]
         public double DaysUntilStandardProteinContentOfFatFreeTissueGainWetBasis { get; set; } = 30;
 
@@ -234,9 +235,6 @@ namespace Models.CLEM.Resources
         [Required, Proportion]
         public double FatPercentToProportionEDeficitTakenFromBodyFatSlope { get; set; } = 0.033; 
 
-
-        #endregion
-
         /// <summary>
         /// Create copy of this class
         /// </summary>
@@ -267,19 +265,5 @@ namespace Models.CLEM.Resources
             };
             return clonedParameters;
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            htmlWriter.Write("Ruminant parameters for growth as used in RuminantActivityGrowPF</div>");
-            return htmlWriter.ToString();
-        }
-
-        #endregion
-
     }
 }

@@ -14,17 +14,15 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantParametersHolder))]
-    [Description("This model provides all parameters specific to RuminantActivityGrow (V1 CLEM)")]
+    [Description("Ruminant growth parameters specific to RuminantActivityGrow")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrow.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantParametersGrow: CLEMModel, ISubParameters, ICloneable
     {
-        #region Mortality
-
         /// <summary>
         /// Base mortality rate (annual)
         /// </summary>
-        [Category("Farm", "Survival")]
+        [Category("Farm:Summary", "Survival")]
         [Description("Base mortality rate (annual)")]
         [Required, Proportion]
         public double MortalityBase { get; set; } = 0.03;
@@ -34,8 +32,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         public double MortalityBaseDaily { get { return MortalityBase / 365.0; } }
 
-        #endregion
-
         /// <summary>
         /// Parameter for calculation of energy needed per kg empty body gain #1 (a, see p37 Table 1.11 Nutrient Requirements of domesticated ruminants)
         /// </summary>
@@ -43,6 +39,7 @@ namespace Models.CLEM.Resources
         [Description("Energy per kg growth #1")]
         [Required, GreaterThanValue(0)]
         public double GrowthEnergyIntercept1 { get; set; } = 6.7;
+
         /// <summary>
         /// Parameter for calculation of energy needed per kg empty body gain #2 (b, see p37 Table 1.11 Nutrient Requirements of domesticated ruminants)
         /// </summary>
@@ -317,19 +314,5 @@ namespace Models.CLEM.Resources
             };
             return clonedParameters;
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            htmlWriter.Write("Ruminant parameters required for RuminantActivityGrow</div>");
-            return htmlWriter.ToString();
-        }
-
-        #endregion
-
     }
 }

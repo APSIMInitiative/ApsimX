@@ -14,7 +14,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantParametersGrowPF))]
-    [Description("RuminantActivityGrowPF (CK - efficiency, CL - lactation)")]
+    [Description("Ruminant efficiency (CK) and lactation (CL) parameters for GrowPF approach")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrowPFCKCL.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantParametersGrowPFCKCL : CLEMModel, ISubParameters, ICloneable
@@ -51,7 +51,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Expected Peak yield lactation for milking 
         /// </summary>
-        [Category("Farm", "Lactation")]
+        [Category("Farm:Summary", "Lactation")]
         [Description("Expected peak lactation (kg) when milking")]
         [Required, GreaterThanEqualValue(0)]
         public double ExpectedPeakYield { get; set; } = 20.0;
@@ -107,7 +107,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Energy content of milk (MJ kg-1, SCA CL6)
         /// </summary>
-        [Category("Farm", "Lactation")]
+        [Category("Farm:Summary", "Lactation")]
         [Description("Energy content of milk [CL6]")]
         [Required, GreaterThanValue(0)]
         public double EnergyContentMilk_CL6 { get; set; } = 0.031; // sheep 0.047
@@ -149,7 +149,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Protein content of milk as percent (%, SCA CL15)
         /// </summary>
-        [Category("Farm", "Lactation")]
+        [Category("Farm:Summary", "Lactation")]
         [Description("Protein percent of milk [CL15]")]
         [Required, GreaterThanValue(0)]
         [Units("%")]
@@ -264,19 +264,5 @@ namespace Models.CLEM.Resources
             };
             return clonedParameters;
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            htmlWriter.Write("Ruminant parameters for energy efficiency (CK) and lactation (CL) as used in RuminantActivityGrowPF</div>");
-            return htmlWriter.ToString();
-        }
-
-        #endregion
-
     }
 }

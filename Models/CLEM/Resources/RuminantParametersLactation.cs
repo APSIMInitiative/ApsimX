@@ -14,7 +14,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantParametersHolder))]
-    [Description("This model provides all parameters specific to RuminantActivityGrowPF")]
+    [Description("General ruminant lactation parameters")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersLactation.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantParametersLactation : CLEMModel, ISubParameters, ICloneable
@@ -22,7 +22,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Number of days for milking
         /// </summary>
-        [Category("Farm", "Lactation")]
+        [Category("Farm:Summary", "Lactation")]
         [Description("Number of days for milking")]
         [Required, GreaterThanEqualValue(0)]
         public double MilkingDays { get; set; } = 300;
@@ -30,7 +30,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Peak milk yield(kg/day)
         /// </summary>
-        [Category("Farm", "Lactation")]
+        [Category("Farm:Summary", "Lactation")]
         [Description("Peak milk yield (kg/day)")]
         [Required, GreaterThanValue(0)]
         public double MilkPeakYield { get; set; } = 4.0;
@@ -62,7 +62,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Milk peak day
         /// </summary>
-        [Category("Farm", "Lactation")]
+        [Category("Farm:Summary", "Lactation")]
         [Description("Milk peak day (CL2)")]
         [Required, GreaterThanValue(0)]
         public double MilkPeakDay { get; set; } = 45;
@@ -85,19 +85,5 @@ namespace Models.CLEM.Resources
             };
             return clonedParameters;
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            htmlWriter.Write("Ruminant parameters for lactation as used in RuminantActivityGrow</div>");
-            return htmlWriter.ToString();
-        }
-
-        #endregion
-
     }
 }

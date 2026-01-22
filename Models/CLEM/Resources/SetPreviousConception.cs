@@ -105,59 +105,5 @@ namespace Models.CLEM.Resources
             }
         }
         #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            if (FormatForParentControl)
-            {
-                // skip if this is inside the table summary of Initial Chohort
-                if (!(CurrentAncestorList.Count >= 3 && CurrentAncestorList[CurrentAncestorList.Count - 3] == typeof(RuminantInitialCohorts).Name))
-                {
-                    htmlWriter.Write("\r\n<div class=\"resourcebanneralone\">");
-                    htmlWriter.Write($"These individuals will be ");
-                    if (NumberDaysPregnant == 0)
-                        htmlWriter.Write($"<span class=\"errorlink\">Not Set</span> ");
-                    else
-                        htmlWriter.Write($"<span class=\"setvalue\">{NumberDaysPregnant}</span>");
-                    htmlWriter.Write($" dayss pregnant</div>");
-                }
-            }
-            else
-            {
-                htmlWriter.Write($"\r\n<div class=\"activityentry\">");
-                htmlWriter.Write($"Set last conception age to make these females ");
-                if (NumberDaysPregnant == 0)
-                    htmlWriter.Write($"<span class=\"errorlink\">Not Set</span> ");
-                else
-                    htmlWriter.Write($"<span class=\"setvalue\">{NumberDaysPregnant}</span>");
-                htmlWriter.Write($" days pregnant</div>");
-            }
-            return htmlWriter.ToString();
-        }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryClosingTags()
-        {
-            return !FormatForParentControl ? base.ModelSummaryClosingTags() : "";
-        }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryOpeningTags()
-        {
-            return !FormatForParentControl ? base.ModelSummaryOpeningTags() : "";
-        }
-
-        #endregion
-
     }
 }

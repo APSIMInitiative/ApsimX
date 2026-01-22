@@ -14,7 +14,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantParametersHolder))]
-    [Description("This model provides all general parameters for the RuminantType")]
+    [Description("General ruminant parameters")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGeneral.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantParametersGeneral : CLEMModel, ISubParameters, ICloneable, IValidatableObject
@@ -25,7 +25,7 @@ namespace Models.CLEM.Resources
         /// <remarks>
         /// This relates to breed where the name of herd defined by the name of the RuminantType
         /// </remarks>
-        [Category("Breed:CrossBreed", "General")]
+        [Category("Breed:CrossBreed:Summary", "General")]
         [Description("Breed name")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of breed required")]
         public string Breed { get; set; } = "Bos taurus";
@@ -48,7 +48,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Minimum size at which females mature, proportion of SRW
         /// </summary>
-        [Category("Farm", "Breeding")]
+        [Category("Farm:Summary", "Breeding")]
         [Description("Minimum female size for maturity (prop of SRW)")]
         [Required, Proportion, GreaterThanValue(0.0)]
         public double MinimumSizeForMaturityFemale { get; set; } = 0.6;
@@ -56,7 +56,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Minimum size at which males mature, proportion of male SRW
         /// </summary>
-        [Category("Farm", "Breeding")]
+        [Category("Farm:Summary", "Breeding")]
         [Description("Minimum male size for maturity (prop of male SRW)")]
         [Required, Proportion, GreaterThanValue(0.0)]
         public double MinimumSizeForMaturityMale { get; set; } = 0.6;
@@ -85,7 +85,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Standard Reference Weight of female
         /// </summary>
-        [Category("Farm:CrossBreed", "General")]
+        [Category("Farm:CrossBreed:Summary", "General")]
         [Units("kg")]
         [Description("Standard Ref. Weight for a female")]
         [Required, GreaterThanValue(0)]
@@ -94,7 +94,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Standard Reference Weight for castrated male from female multiplier
         /// </summary>
-        [Category("Farm:CrossBreed", "General")]
+        [Category("Farm:CrossBreed:Summary", "General")]
         [Description("Castrated male SRW multiplier")]
         [Required, GreaterThanValue(0)]
         public double SRWCastrateMaleMultiplier { get; set; } = 1.2;
@@ -102,7 +102,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Standard Reference Weight for male from female multiplier
         /// </summary>
-        [Category("Farm:CrossBreed", "General")]
+        [Category("Farm:CrossBreed:Summary", "General")]
         [Description("Male SRW multiplier")]
         [Required, GreaterThanValue(0)]
         public double SRWMaleMultiplier { get; set; } = 1.4;
@@ -128,7 +128,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Weight(kg) of 1 animal equivalent (e.g. steer, DSE)
         /// </summary>
-        [Category("Farm", "General")]
+        [Category("Farm:Summary", "General")]
         [Description("Weight of an animal equivalent")]
         [Units("kg")]
         [Required, GreaterThanValue(0)]
@@ -141,7 +141,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Relative body condition to score rate
         /// </summary>
-        [Category("Farm", "Growth")]
+        [Category("Farm:Summary", "Growth")]
         [Description("Rel. Body Cond. to Score rate")]
         [Required, GreaterThanValue(0)]
         public double RelBCToScoreRate { get; set; } = 0.15;
@@ -149,7 +149,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Body condition score range
         /// </summary>
-        [Category("Farm", "Growth")]
+        [Category("Farm:Summary", "Growth")]
         [Description("Body Condition Score range (min, mid, max)")]
         [Required, ArrayItemCount(3)]
         public double[] BCScoreRange { get; set; } = new[] { 0.0, 3.0, 5.0 };
@@ -187,7 +187,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <value>Default value for cattle</value>
         [Description("Age growth rate coefficient [CN1]")]
-        [Category("Farm:CrossBreed", "Growth")]
+        [Category("Farm:CrossBreed:Summary", "Growth")]
         [Core.Display(VisibleCallback = "IsCN1Supplied")]
         public double AgeGrowthRateCoefficient_CN1 { get; set; } = 0.0145; // updated from previous 0.0115 used in IAT/NABSA based on new analysis and breed improvements
 
@@ -195,7 +195,7 @@ namespace Models.CLEM.Resources
         /// Average weaning weight to estimate age growth rate coefficient (CN1)
         /// </summary>
         [Description("Average weaning weight to estimate age growth rate coefficient")]
-        [Category("Farm", "Growth")]
+        [Category("Farm:Summary", "Growth")]
         [Units("kg")]
         [Core.Display(VisibleCallback = "IsCN1EstimatedFromWeaningDetails")]
         public double CN1EstimatedWeaningWeight { get; set; }
@@ -204,7 +204,7 @@ namespace Models.CLEM.Resources
         /// Average weaning age to estimate age growth rate coefficient (CN1)
         /// </summary>
         [Description("Average weaning age to estimate age growth rate coefficient")]
-        [Category("Farm", "Growth")]
+        [Category("Farm:Summary", "Growth")]
         [Core.Display(SubstituteSubPropertyName = "Parts", VisibleCallback = "IsCN1EstimatedFromWeaningDetails")]
         [Units("years, months, days")]
         public AgeSpecifier CN1EstimatedWeaningAge { get; set; } = new int[] { 0 };
@@ -212,7 +212,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Determines whether CN1 is to be estimated from weaning details supplied
         /// </summary>
-        public bool IsCN1EstimatedFromWeaningDetails { get { return AgeGrowthRateCoefficientProvisionStyle == AgeGrowthRateCoefficientProvisionTypes.EstimateFromAverageWeaningDatails; } }
+        public bool IsCN1EstimatedFromWeaningDetails { get { return AgeGrowthRateCoefficientProvisionStyle == AgeGrowthRateCoefficientProvisionTypes.EstimateFromAverageWeaningDetails; } }
 
         /// <summary>
         /// Determines whether CN1 is to be estimated from weaning details supplied
@@ -233,7 +233,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <value>Default value for cattle</value>
         [Description("Slow growth factor [CN3]")]
-        [Category("Farm:CrossBreed", "Growth")]
+        [Category("Farm:CrossBreed:Summary", "Growth")]
         [Required, GreaterThanValue(0)]
         public double SlowGrowthFactor_CN3 { get; set; } = 0.4;
 
@@ -243,7 +243,7 @@ namespace Models.CLEM.Resources
         /// Conversion from empty body weight to live weight
         /// </summary>
         [Description("Conversion from empty body weight to live weight")]
-        [Category("Farm:CrossBreed", "Weight")]
+        [Category("Farm:CrossBreed:Summary", "Growth")]
         [Required, GreaterThanValue(1.0)]
         public double EBW2LW_CG18 { get; set; } = 1.09;
 
@@ -251,7 +251,7 @@ namespace Models.CLEM.Resources
         /// The proportion of SRW empty body weight that is protein
         /// </summary>
         [Description("The proportion of SRW empty body weight that is protein")]
-        [Category("Breed:CrossBreed", "Weight")]
+        [Category("Breed:CrossBreed", "Growth")]
         [Required, Proportion, GreaterThanValue(0)]
         public double ProportionSRWEmptyBodyProtein { get; set; } = 0.17;
 
@@ -273,7 +273,7 @@ namespace Models.CLEM.Resources
         /// Determine whether wool production is included.
         /// </summary>
         [Description("Include wool production")]
-        [Category("Breed", "Wool")]
+        [Category("Breed:Summary", "General")]
         public bool IncludeWool { get; set; } = false;
 
         /// <summary>
@@ -369,26 +369,6 @@ namespace Models.CLEM.Resources
         }
 
         #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            htmlWriter.Write("General ruminant parameters used by all activities:</br>");
-            htmlWriter.Write($"Standard reference weight (kg) f:{DisplaySummaryValueSnippet<double>(SRWFemale, warnZero: true)} m:{DisplaySummaryValueSnippet<double>(SRWFemale*SRWMaleMultiplier, warnZero: true)} castrate m:{DisplaySummaryValueSnippet<double>(SRWFemale*SRWCastrateMaleMultiplier, warnZero: true)}");
-            if (IsCN1EstimatedFromWeaningDetails)
-            {
-                htmlWriter.Write($"The AgeGrowthRateCoefficient (CN1) is estimated using the average weaning weight of [{CN1EstimatedWeaningWeight}] and [{CN1EstimatedWeaningAge.InDays}] days at weaning.</br>");
-            }
-            htmlWriter.Write("</div>");
-            return htmlWriter.ToString();
-        }
-
-        #endregion
-
     }
 
     /// <summary>
@@ -403,6 +383,6 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Use average weight and age at weaning to estimate
         /// </summary>
-        EstimateFromAverageWeaningDatails
+        EstimateFromAverageWeaningDetails
     }
 }

@@ -12,7 +12,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantParametersHolder))]
-    [Description("This model provides all SCA07 growth parameters for the RuminantType")]
+    [Description("Ruminant growth parameters specific to SCA07 approach")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrowSCA07.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
 

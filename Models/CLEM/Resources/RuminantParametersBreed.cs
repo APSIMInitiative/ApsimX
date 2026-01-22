@@ -15,7 +15,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantParametersHolder))]
-    [Description("This component provides ruminant breeding parameters")]
+    [Description("Ruminant breeding parameters")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersBreeding.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantParametersBreeding: CLEMModel, ISubParameters, ICloneable
@@ -147,19 +147,5 @@ namespace Models.CLEM.Resources
             };
             return clonedParameters;
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            htmlWriter.Write("Ruminant breeding parameters used in RuminantActivityGrow</div>");
-            return htmlWriter.ToString();
-        }
-
-        #endregion
-
     }
 }

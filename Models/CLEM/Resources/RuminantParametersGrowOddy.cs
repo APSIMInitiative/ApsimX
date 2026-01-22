@@ -12,7 +12,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantParametersHolder))]
-    [Description("This model provides all Oddy growth parameters for the RuminantType")]
+    [Description("Ruminant growth parameters specific to Oddy approach")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrowOddy.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
 
