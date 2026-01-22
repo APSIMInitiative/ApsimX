@@ -1,17 +1,18 @@
 ﻿namespace UnitTests.Core
 {
+    using APSIM.Core;
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
     using Models.Soils;
+    using Models.Storage;
     using NUnit.Framework;
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using UserInterface;
     using UserInterface.Commands;
-    using System.Linq;
-    using APSIM.Core;
 
     /// <summary>
     /// This is a test class for SystemComponentTest and is intended
@@ -45,6 +46,12 @@
             this.simulation = this.simulations.Children[0] as Simulation;
         }
 
+        [TearDown]
+        public void Cleanup()
+        {
+            DataStore storage = simulations.Node.FindChild<DataStore>(recurse: true);
+            storage?.Dispose();
+        }
         /// <summary>
         /// A test for the FullPath method
         /// </summary>

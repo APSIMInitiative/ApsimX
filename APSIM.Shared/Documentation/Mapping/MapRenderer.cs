@@ -1,18 +1,16 @@
-using APSIM.Shared.Utilities;
 using Mapsui;
-using Mapsui.Extensions;
 using Mapsui.Layers;
 using Mapsui.Nts;
 using Mapsui.Projections;
 using Mapsui.Providers;
 using Mapsui.Styles;
 using Mapsui.Tiling;
-using Mapsui.Rendering;
 using Mapsui.Tiling.Layers;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using DocumentationMap = APSIM.Shared.Documentation.Map;
 
 namespace APSIM.Shared.Mapping
@@ -55,7 +53,7 @@ namespace APSIM.Shared.Mapping
         public static SkiaSharp.SKImage ToImage(this DocumentationMap map, int width)
         {
             Map exported = map.ToMapsuiMap();
-            Navigator navigator = new Navigator();
+            Navigator navigator = exported.Navigator;
             var center = SphericalMercator.FromLonLat(map.Center.Longitude, map.Center.Latitude);
             navigator.CenterOn(new MPoint(center.x, center.y));
             navigator.SetSize(width, width);
@@ -73,7 +71,7 @@ namespace APSIM.Shared.Mapping
             Mapsui.Fetcher.DataChangedEventHandler changedHandler = (s, e) =>
             {
                 var layer = (TileLayer)s;
-                if (((!osmLayer.Busy && e.Error == null) || e.Error != null) && !e.Cancelled)
+                if (((!osmLayer.Busy && e.Error == null) || e.Error != null))
                 {
                     if (e.Error != null)
                     // Try to handle failure to fetch Open Street Map layer
@@ -84,16 +82,15 @@ namespace APSIM.Shared.Mapping
                         if (countryLayer != null)
                         {
                             countryLayer.Enabled = true;
-                            MSection mSection = new MSection(navigator.Viewport.ToExtent(), navigator.Viewport.Resolution);
-                            countryLayer.RefreshData(new FetchInfo(mSection));
+                            exported.RefreshData();
                             // Give the "country" layer time to be loaded, if necessary.
-                            // Seven seconds should be way more than enough...
+                            // A second should be way more than enough...
                             int nSleeps = 0;
-                            while (countryLayer.Busy && nSleeps++ < 700)
+                            while (countryLayer.Busy && nSleeps++ < 100)
                                 System.Threading.Thread.Sleep(10);
                         }
                     }
-                    MemoryStream bitmap = new Mapsui.Rendering.Skia.MapRenderer().RenderToBitmapStream(navigator.Viewport, exported.Layers, exported.BackColor);
+                    MemoryStream bitmap = new Mapsui.Rendering.Skia.MapRenderer().RenderToBitmapStream(exported);
                     bitmap.Seek(0, SeekOrigin.Begin);
                     result = SkiaSharp.SKImage.FromEncodedData(bitmap);
                 }
@@ -102,12 +99,10 @@ namespace APSIM.Shared.Mapping
             if (osmLayer != null)
             {
                 osmLayer.Enabled = true;
-                osmLayer.AbortFetch();
+                exported.AbortFetch();
                 osmLayer.ClearCache();
                 osmLayer.DataChanged += changedHandler;
-                MSection mSection = new MSection(navigator.Viewport.ToExtent(), navigator.Viewport.Resolution);
-                FetchInfo fetchInfo = new FetchInfo(mSection);
-                osmLayer.RefreshData(fetchInfo);
+                exported.RefreshData();
             }
             // Allow ourselves up to 30 seconds to get a map.
             int nSleeps = 0;
@@ -128,17 +123,19 @@ namespace APSIM.Shared.Mapping
         {
             Map result = InitMap();
 
-            GenericCollectionLayer<List<IFeature>> markerLayer = new GenericCollectionLayer<List<IFeature>>
-            {
-                Name = "Markers"
-            };
-            Stream markerStream = APSIM.Shared.Documentation.Image.GetStreamFromResource("Marker.png");
-            int bitmapId = BitmapRegistry.Instance.Register(markerStream);
-            markerLayer.Style = new SymbolStyle { BitmapId = bitmapId, SymbolScale = 1.0, SymbolOffset = new Offset(0.0, 0.5, true) };
-
+            List<IFeature> points = new System.Collections.Generic.List<IFeature>();
             foreach (var loc in map.Markers.Select(c => SphericalMercator.FromLonLat(c.Longitude, c.Latitude)))
-                markerLayer.Features.Add(new GeometryFeature(new NetTopologySuite.Geometries.Point(loc.x, loc.y)));
+                points.Add(new GeometryFeature(new NetTopologySuite.Geometries.Point(loc.x, loc.y)));
+            MemoryLayer markerLayer = new MemoryLayer()
+            {
+                Name = "Markers",
+                Features = points,
+                Style = ImageStyles.CreatePinStyle(Color.FromArgb(255, 255, 0, 0), null, 0.666)
+            };
             result.Layers.Add(markerLayer);
+
+            foreach (var widget in result.Widgets)
+                widget.Enabled = false;
 
             return result;
         }
@@ -173,18 +170,28 @@ namespace APSIM.Shared.Mapping
             // This layer is used only as a sort of backup in case the BruTile download times out
             // or is otherwise unavailable.
             // It should normally be invisible, as it will be covered by the BruTile tile layer.
-            string apsimx = PathUtilities.GetAbsolutePath("%root%", null);
-            string shapeFileName = Path.Combine(apsimx, "ApsimNG", "Resources", "world", "countries.shp");
-            if (File.Exists(shapeFileName))
+
+            string countriesJson;
+            string resourceName = "APSIM.Shared.Resources.countries.json"; // Fully qualified name
+            var assembly = Assembly.GetExecutingAssembly();
+
+            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+            {
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    countriesJson = reader.ReadToEnd();
+                }
+            }
+            if (!string.IsNullOrEmpty(countriesJson)) 
             {
                 Layer layWorld = new Layer("Countries");
-                Mapsui.Nts.Providers.Shapefile.ShapeFile shapeFile = new Mapsui.Nts.Providers.Shapefile.ShapeFile(shapeFileName, true)
+                Mapsui.Nts.Providers.GeoJsonProvider geoJsonProvider = new Mapsui.Nts.Providers.GeoJsonProvider(countriesJson)
                 {
                     CRS = "EPSG:4326"
                 };
-                ProjectingProvider provider = new ProjectingProvider(shapeFile)
-                { 
-                    CRS = "EPSG:3857" 
+                ProjectingProvider provider = new ProjectingProvider(geoJsonProvider)
+                {
+                    CRS = "EPSG:3857"
                 };
                 layWorld.DataSource = provider;
                 layWorld.Style = new Mapsui.Styles.VectorStyle
@@ -193,7 +200,6 @@ namespace APSIM.Shared.Mapping
                     Fill = new Mapsui.Styles.Brush { Color = Mapsui.Styles.Color.White }
                 };
                 layWorld.Style.Enabled = true;
-                layWorld.FetchingPostponedInMilliseconds = 1;
                 layWorld.Enabled = false;
                 result.Layers.Insert(0, layWorld);
             }
