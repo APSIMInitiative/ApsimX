@@ -427,12 +427,12 @@ public class DescriptiveSummaryGenerator
     /// </summary>
     public string DisplayLineBreak()
     {
-        string htmltag = "";
+        string htmlTag = "";
         if (OutputFormat == DescriptiveSummaryFormat.HTML)
         {
-            htmltag = "<br>";
+            htmlTag = "<br>";
         }
-        return $"{htmltag}{Environment.NewLine}{GetIndentTabs}";
+        return $"{htmlTag}{Environment.NewLine}{GetIndentTabs}";
     }
 
     /// <summary>
@@ -509,8 +509,8 @@ public class DescriptiveSummaryGenerator
     {
         using (OpenBlock("activityentry clearfix"))
         {
-            AddBlockWithText("parametername", name);
             AddBlockWithText("parameterdetails", text);
+            AddBlockWithText("parametername", name);
         }
     }
     private string SetCSS()
