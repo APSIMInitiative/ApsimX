@@ -6,7 +6,6 @@
     using global::UserInterface.Commands;
     using Interfaces;
     using Models.Core;
-    using Models.Core.ApsimFile;
     using System;
     using System.Collections.Generic;
     using System.Linq;

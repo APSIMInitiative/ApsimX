@@ -27,6 +27,9 @@ This language replaces an older version of the language. If you have command fil
     - ```delete [Zone].Soil```
 - __duplicate__ - duplicate a model.
     - ```duplicate [Zone].Report name NewReport```
+- __replace__ - replace a model with another model
+    - ```replace all [Report] with NewReport name ReportWithNewName```
+    - ```replace all [Report] with NewReport from anotherfile.apsimx name ReportWithNewName```
 - __property set__ - Change the property of a model
       ```[Weather].FileName=Dalby.met```
 - __property set__ - Change the property of a model using the value read from a file (contents of value.txt).

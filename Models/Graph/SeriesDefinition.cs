@@ -324,6 +324,11 @@ namespace Models
                         filter = AddToFilter(filter, $"SimulationID in ({simulationIdsCSV})");
                 }
 
+                //Filter out any string columns with empty values that might cause doubles to be read as strings after being filtered in the dataview
+                foreach (DataColumn field in data.Columns)
+                    if (field.DataType == typeof(string) && field.ColumnName != "CheckpointName"&& field.ColumnName != "SimulationName")
+                        filter = AddToFilter(filter, $"{field.ColumnName} <> \"\"");
+
                 //cleanup filter
                 filter = filter?.Replace('\"', '\'');
                 filter = RemoveMiddleWildcards(filter);
@@ -418,6 +423,7 @@ namespace Models
             }
             if (!string.IsNullOrEmpty(userFilter))
                 filter = AddToFilter(filter, userFilter);
+
             return filter;
         }
 

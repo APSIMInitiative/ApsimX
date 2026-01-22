@@ -410,7 +410,7 @@
         {
             JsonSerializerSettings jSettings = new JsonSerializerSettings()
             {
-                ContractResolver = new DynamicContractResolver(true, true, true),
+                ContractResolver = new DynamicContractResolver(true, true, excludeReadonly: false),
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
                 TypeNameHandling = TypeNameHandling.Objects,
                 NullValueHandling = NullValueHandling.Include,

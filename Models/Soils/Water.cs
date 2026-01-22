@@ -25,13 +25,16 @@ namespace Models.Soils
         [field: NonSerialized]
         public IStructure Structure { private get; set; }
 
+        /// <summary>Finds the 'Physical' node.</summary>
+        private IPhysical Physical => Structure?.FindSibling<IPhysical>();
 
-        private double[] volumetric;
+        /// <summary>Finds the 'SoilWater' node.</summary>
+        private ISoilWater WaterModel => Structure?.FindSibling<ISoilWater>();
+
         private double initialFractionFull = double.NaN;
 
         /// <summary>Last initialisation event.</summary>
         public event EventHandler WaterChanged;
-
 
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
         [Display]
@@ -94,13 +97,10 @@ namespace Models.Soils
         [Units("mm/mm")]
         public double[] Volumetric
         {
-            get
-            {
-                return volumetric;
-            }
+            get { return WaterModel.SW; }
             set
             {
-                volumetric = value;
+                WaterModel.SW = value;
                 WaterChanged?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -186,34 +186,6 @@ namespace Models.Soils
         /// <summary>Plant available water SW-LL15 (mm).</summary>
         [Units("mm")]
         public double[] PAWmm => MathUtilities.Multiply(PAW, Physical.Thickness);
-
-        /// <summary>Performs the initial checks and setup</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfSimulation")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            Reset();
-        }
-
-        /// <summary>Performs the initial checks and setup</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("EndOfSimulation")]
-        private void OnSimulationEnding(object sender, EventArgs e)
-        {
-            Reset();
-        }
-
-        /// <summary>
-        /// Set solute to initialisation state
-        /// </summary>
-        public void Reset()
-        {
-            if (InitialValues == null)
-                throw new Exception("No initial soil water specified.");
-            Volumetric = (double[])InitialValues.Clone();
-        }
 
         [JsonIgnore]
         private string relativeToCheck = "LL15";
@@ -346,11 +318,9 @@ namespace Models.Soils
                 double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
                 double[] sat = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.SAT.Last());
                 if (FilledFromTop)
-                    InitialValues = APSIM.Soils.SoilUtilities.DistributeWaterFromTop(value, Thickness, airdry, RelativeToLL, dul, sat, RelativeToXF);
+                    InitialValues = SoilUtilities.DistributeWaterFromTop(value, Thickness, airdry, RelativeToLL, dul, sat, RelativeToXF);
                 else
-                    InitialValues = APSIM.Soils.SoilUtilities.DistributeWaterEvenly(value, Thickness, airdry, RelativeToLL, dul, sat, RelativeToXF);
-
-                double fraction = FractionFull;
+                    InitialValues = SoilUtilities.DistributeWaterEvenly(value, Thickness, airdry, RelativeToLL, dul, sat, RelativeToXF);
             }
             else
                 initialFractionFull = value;
@@ -384,21 +354,9 @@ namespace Models.Soils
             set
             {
                 double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
-                InitialValues = APSIM.Soils.SoilUtilities.DistributeToDepthOfWetSoil(value, Thickness, RelativeToLL, dul);
+                InitialValues = SoilUtilities.DistributeToDepthOfWetSoil(value, Thickness, RelativeToLL, dul);
             }
         }
-
-        /// <summary>Finds the 'Soil' node. Try parent first, then a soil in scope.</summary>
-        public Soil Soil => Node?.FindParent<Soil>() ??
-                            Node?.WalkScoped()
-                                ?.FirstOrDefault(n => n.Model is Soil)
-                                ?.Model as Soil;
-
-        /// <summary>Finds the 'Physical' node.</summary>
-        public IPhysical Physical => Soil?.Node.FindChild<IPhysical>();
-
-        /// <summary>Finds the 'SoilWater' node.</summary>
-        public ISoilWater WaterModel => Soil?.Node.FindChild<ISoilWater>();
 
         /// <summary>Find LL values (mm) for the RelativeTo property.</summary>
         public double[] RelativeToLL
@@ -476,7 +434,7 @@ namespace Models.Soils
         /// </summary>
         public bool AreInitialValuesWithinPhysicalBoundaries()
         {
-            if (this.Physical == null)
+            if (Physical == null)
                 return true; //when loading from file physical will be none, in this case, just accept the
 
             if (Physical.AirDry == null || Physical.SAT == null)

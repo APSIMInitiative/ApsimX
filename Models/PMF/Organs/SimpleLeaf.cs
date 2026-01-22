@@ -4,8 +4,6 @@ using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Functions;
-using Models.Functions.DemandFunctions;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.PMF.Library;
@@ -21,14 +19,85 @@ namespace Models.PMF.Organs
     ///  detachment of leaves.  SimpleLeaf does not distinguish leaf cohorts by age or position in the canopy.
     ///
     /// Radiation interception and transpiration demand are computed by the MicroClimate model.  This model takes into account
-    ///  competition between different plants when more than one is present in the simulation.  The values of canopy Cover, LAI, and plant
+    ///  competition between different plants then more than one is present in the simulation.  The values of canopy Cover, LAI, and plant
     ///  Height (as defined below) are passed daily by SimpleLeaf to the MicroClimate model.  MicroClimate uses an implementation of the
     ///  Beer-Lambert equation to compute light interception and the Penman-Monteith equation to calculate potential evapotranspiration.
     ///  These values are then given back to SimpleLeaf which uses them to calculate photosynthesis and soil water demand.
+    ///  
+    /// **Light Interception**
+    /// 
+    /// Calculations are as follows:
+    /// 
+    /// ```
+    /// CoverGreen = 1.0 - exp (-ExtinctionCoefficient x LAI)
+    /// CoverDead = 1.0 - exp (-Kdead x LAIDead)
+    /// CoverTotal = 1.0 - (1 - CoverGreen) * (1 - CoverDead)
+    /// ```
+    /// 
+    /// where
+    /// 
+    /// Name | Description | Units
+    /// -|-|-
+    /// ExtinctionCoefficient | Live Canopy extinction coeffient for short wave radiation | unitless
+    /// LAI | Leaf Area Index for live leaf | (m2/m2)
+    /// Kdead | Dead canopy extinction coefficient for short wave radiaton | unitless
+    /// LAIDead | Leaf Area Index for dead leaf | (m2/m2)
+    /// 
+    /// **CO2 Impact on Photosynthesis and Stomatal Conductance**
+    /// 
+    /// A potential stomatal conductance is provided to the Microclimate model for use in calculating daily potential water use.  This conductance accounts for the effects of temperature, vapor deficit and plant nutrition.  Potential water use is then calculated by the microclimate model, and actual water use subsequently by the soil arbitrator model using data also provided by the root model regarding potential water uptake.
+    /// The impact of atmospheric CO2 concentration on stomatal conductance is dependant upon temperature and the related impact of CO2 concentration on photosynthesis.
+    /// 
+    /// ```
+    /// StomatalConductance = Gsmax350 * FRGR * stomatalConductanceCO2Modifier;
+    /// stomatalConductanceCO2Modifier = PhotosynthesisCO2Modifier x (350 - CP)/(CO2 - CP)
+    /// CP = (163.0 - T) / (5.0 - 0.1 * T)
+    /// for C3 plants
+    /// PhotosynthesisCO2Modifier =  (CO2 - CP) x (350 + 2 x CP)/(CO2 + 2 x CP) x (350 - CP)
+    /// for C4 plants
+    /// PhotosynthesisCO2Modifier = = 0.000143 * CO2 + 0.95
+    /// ```
+    /// where
+    /// 
+    /// Name | Description | Units
+    /// -|-|-
+    /// StomatalConductance | The influence of stomatal opening on rate of diffusion of water vapour exiting through the stomata of a leaf. | (mm/s)
+    /// Gsmax350 | Potential stomatal conductance at atmospherical CO2 concentration of 350ppm | (m/s)
+    /// FRGR | A factor that accounts for the relative growth rate of the plant | (0-1)
+    /// stomatalConductanceCO2Modifier | A factor that accounts for changes of Gsmax with CO2 concentration | (0-1)
+    /// PhotosynthesisCO2Modifier | A factor that accounts for changes in photosynthesis with CO2 concentration ([Reyenga1999]) | (0-1)
+    /// CP | The CO2 compensation point | (ppm)
+    /// T | The daily average temperature | <sup>o</sup>C
+    /// 
+    /// 
+    /// **Photosynthesis**
+    /// 
+    /// Potential daily photosynthesis is calculated simply using a Radiation Use Efficiency (RUE) approach.  In this approach, daily potential photosynthesis is directly proportional to the amount of total short wave radiation intercepted by the plant canopy.
+    /// The radiation use efficienty is adjusted from a base value appropriate for historical levels of atmospheric CO2 concentration (ie 350ppm - see previous section).  Daily values of potential photosynthesis are then modified for effects of plant nitrogen status, temperature and atmospheric vapour pressure deficit.  These same relative growth factors are provided to the MicroClimate model to moderate the stomatal conductance terms incorporated into the Penman-Monteith formulation.
+    /// Finally, the daily growth rate is moderated in response to the relative water supply:demand ratio (F<sub>W</sub>) to capture the effect of daily plant water status.
+    /// 
+    /// This calculation for photosynthesis is then provided to the organ arbitrator as a potential daily DM fixation supply for arbitration with all other DM supplies and demands.
+    /// 
+    /// 
+    /// ```
+    /// DMFixationSupply = RUE x PhotosynthesisCO2Modifier x Min(F<sub>T</sub>, F<sub>N</sub>, F<sub>VPD</sub>) x F<sub>W</sub>
+    /// ```
+    /// Name | Description | Units
+    /// -|-|-
+    /// RUE | Radiation Use Efficiency for potential daily growth | g/MJ/m<sup>2</sup>
+    /// F<sub>T</sub> | Relative growth rate factor for Temperature | 0-1
+    /// F<sub>N</sub> | Relative growth rate factor for Nitrogen status | 0-1
+    /// F<sub>VPD</sub> | Relative growth rate factor for Vapour Pressure Deficit  | 0-1
+    /// F<sub>W</sub> | Relative growth rate factor for plant water status | 0-1
+    /// 
+    /// where
+    /// 
+    /// 
     /// </summary>
     /// <remarks>
-    /// SimpleLeaf has two options to define the canopy: the user can either supply a function describing LAI or a function describing canopy cover directly.  From either of these functions SimpleLeaf can obtain the other property using the Beer-Lambert equation with the specified value of extinction coefficient.
-    /// The effect of growth rate on transpiration is captured by the Fractional Growth Rate (FRGR) function, which is passed to the MicroClimate model.
+    /// 
+    /// *Note: SimpleLeaf has two options to define the canopy: the user can either supply a function describing LAI or a function describing canopy cover directly.  From either of these functions SimpleLeaf can obtain the other property using the Beer-Lambert equation with the specified value of extinction coefficient.
+    /// The effect of growth rate on transpiration is captured by the Fractional Growth Rate (FRGR) function, which is passed to the MicroClimate model.*
     /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -978,14 +1047,7 @@ namespace Models.PMF.Organs
         {
             if (parentPlant.IsAlive)
             {
-                // Do senescence
-                double senescedFrac = senescenceRate.Value();
-                if (Live.Wt * (1.0 - senescedFrac) < biomassToleranceValue)
-                    senescedFrac = 1.0;  // remaining amount too small, senesce all
-                Biomass Loss = Live * senescedFrac;
-                Live.Subtract(Loss);
-                Dead.Add(Loss);
-                Senesced.Add(Loss);
+
 
                 // Do detachment
                 double detachedFrac = detachmentRate.Value();
@@ -1177,6 +1239,21 @@ namespace Models.PMF.Organs
             Live.StorageN -= storageNReallocation;
             Live.MetabolicN -= (nitrogen.Reallocation - storageNReallocation);
             Allocated.StorageN -= nitrogen.Reallocation;
+
+
+            // Do senescence
+            double senescedFrac = senescenceRate.Value();
+            if (Live.Wt * (1.0 - senescedFrac) < biomassToleranceValue)
+                senescedFrac = 1.0;  // remaining amount too small, senesce all
+
+            Biomass Loss = Live * senescedFrac;
+            Loss.MetabolicN -= (nitrogen.Reallocation - storageNReallocation);
+            Loss.StorageN -= storageNReallocation;
+
+            Live.Subtract(Loss);
+            Dead.Add(Loss);
+            Senesced.Add(Loss);
+
         }
 
     }

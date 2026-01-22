@@ -110,6 +110,8 @@ public class CommandLanguage
             return LoadCommand.Create(command, relativeToDirectory);
         else if (command.StartsWith("run", StringComparison.InvariantCultureIgnoreCase))
             return RunCommand.Create(command);
+        else if (command.StartsWith("replace", StringComparison.InvariantCultureIgnoreCase))
+            return ReplaceCommand.Create(command, relativeTo, relativeToDirectory);
         else if (command.Contains('='))
             return SetPropertyCommand.Create(command, relativeToDirectory);
 

@@ -1,22 +1,19 @@
-﻿using APSIM.Interop.Mapping;
-using APSIM.Shared.Utilities;
-using Gtk;
+﻿using APSIM.Shared.Mapping;
+using APSIM.Numerics;
 using GLib;
-using UserInterface.Interfaces;
-using Mapsui;
+using Gtk;
+using Mapsui.Extensions;
 using Mapsui.Layers;
+using Models.Mapping;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using UserInterface.Interfaces;
 using Utility;
-using Mapsui.Extensions;
-using Microsoft.CodeAnalysis;
-using Models.Mapping;
-using DocumentationMap = APSIM.Shared.Documentation.Map;
 using DocumentationCoordinate = APSIM.Shared.Documentation.Mapping.Coordinate;
-using APSIM.Numerics;
+using DocumentationMap = APSIM.Shared.Documentation.Map;
 
 namespace UserInterface.Views
 {
@@ -60,7 +57,7 @@ namespace UserInterface.Views
         private int defaultHeight = 718;
 
         private Mapsui.Map map;
-        private Mapsui.Navigator navigator = new Mapsui.Navigator();
+        private Mapsui.Navigator navigator;
         private Gtk.Image image;
         private Gtk.EventBox container;
 
@@ -155,7 +152,7 @@ namespace UserInterface.Views
             container = new Gtk.EventBox();
             container.Add(image);
 
-            Paned box = new Paned(Orientation.Vertical);
+            Paned box = new Paned(Gtk.Orientation.Vertical);
             PropertiesView = new PropertyView(this);
             box.Add1(((ViewBase)PropertiesView).MainWidget);
 
@@ -189,7 +186,7 @@ namespace UserInterface.Views
         public Gdk.Pixbuf Export()
         {
             Mapsui.Rendering.Skia.MapRenderer renderer = new Mapsui.Rendering.Skia.MapRenderer();
-            MemoryStream stream = renderer.RenderToBitmapStream(navigator.Viewport, map.Layers, map.BackColor, 1);
+            MemoryStream stream = renderer.RenderToBitmapStream(map, 1);
             stream.Seek(0, SeekOrigin.Begin);
             return new Gdk.Pixbuf(stream);
         }
@@ -221,6 +218,7 @@ namespace UserInterface.Views
                 new DocumentationCoordinate(center.Latitude, center.Longitude),
                 zoom,
                 convertedMarkers).ToMapsuiMap();
+            navigator = map.Navigator;
 
             navigator.SetSize(defaultWidth, defaultHeight);
             if (image.Allocation.Width > 1 && image.Allocation.Height > 1)
@@ -242,11 +240,10 @@ namespace UserInterface.Views
                 if (osmLayer != null)
                 {
                     osmLayer.Enabled = true;
-                    osmLayer.AbortFetch();
+                    map.AbortFetch();
                     osmLayer.ClearCache();
                     osmLayer.DataChanged += OsmLayer_DataChanged;
-                    MSection mSection = new MSection(navigator.Viewport.ToExtent(), navigator.Viewport.Resolution);
-                    osmLayer.RefreshData(new FetchInfo(mSection));
+                    map.RefreshData();
                 }
             }
         }
@@ -263,31 +260,30 @@ namespace UserInterface.Views
         private void OsmLayer_DataChanged(object sender, Mapsui.Fetcher.DataChangedEventArgs e)
         {
             Mapsui.Tiling.Layers.TileLayer osmLayer = (Mapsui.Tiling.Layers.TileLayer)sender;
-            if (((!osmLayer.Busy && e.Error == null) || e.Error != null) && !e.Cancelled)
+            if (((!osmLayer.Busy && e.Error == null) || e.Error != null))
             {
                 if (e.Error != null)
                 // Try to handle failure to fetch Open Street Map layer
                 // by displaying the country outline layer instead
                 {
+                    map.AbortFetch();
                     osmLayer.DataChanged -= OsmLayer_DataChanged;
-                    osmLayer.AbortFetch();
                     osmLayer.Enabled = false;
                     Layer countryLayer = map.Layers.FindLayer("Countries").FirstOrDefault() as Layer;
                     if (countryLayer != null)
                     {
                         countryLayer.Enabled = true;
-                        MSection mSection = new MSection(navigator.Viewport.ToExtent(), navigator.Viewport.Resolution);
-                        countryLayer.RefreshData(new FetchInfo(mSection));
+                        map.RefreshData();
                         // Give the "country" layer time to be loaded, if necessary.
-                        // Seven seconds should be way more than enough...
+                        // A second should be way more than enough...
                         int nSleeps = 0;
-                        while (countryLayer.Busy && nSleeps++ < 700)
+                        while (countryLayer.Busy && nSleeps++ < 100)
                             System.Threading.Thread.Sleep(10);
                     }
                 }
                 osmLayer.DataChanged -= OsmLayer_DataChanged;
                 Mapsui.Rendering.Skia.MapRenderer renderer = new Mapsui.Rendering.Skia.MapRenderer();
-                MemoryStream stream = renderer.RenderToBitmapStream(navigator.Viewport, map.Layers, map.BackColor, 1);
+                MemoryStream stream = renderer.RenderToBitmapStream(map, 1);
                 stream.Seek(0, SeekOrigin.Begin);
                 InvokeOnMainThread(delegate { image.Pixbuf = new Gdk.Pixbuf(stream); });
             }

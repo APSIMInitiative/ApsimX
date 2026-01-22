@@ -7,7 +7,6 @@ using APSIM.Shared.Documentation;
 using APSIM.Shared.Documentation.Mapping;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Newtonsoft.Json.Linq;
 using DocumentationGraph = APSIM.Shared.Documentation.Graph;
 using DocumentationGraphPage = APSIM.Shared.Documentation.GraphPage;

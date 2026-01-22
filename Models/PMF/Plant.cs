@@ -15,7 +15,7 @@ namespace Models.PMF
 {
     /// <summary>
     /// The model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This
-    /// new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a
+    /// framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a
     /// model in much the same way that models can be coupled to construct a simulation.This means that dynamic composition
     /// of lower level process and organ classes(e.g.photosynthesis, leaf) into larger constructions(e.g.maize, wheat,
     /// sorghum) can be achieved by the model developer without additional coding.

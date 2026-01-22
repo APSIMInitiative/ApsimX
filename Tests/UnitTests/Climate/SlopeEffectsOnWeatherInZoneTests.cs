@@ -1,25 +1,18 @@
-using APSIM.Shared.Utilities;
-using Models.Core;
-using Models.Core.ApsimFile;
-using NUnit.Framework;
-using System.IO;
-using Models;
-using Models.Storage;
-using NUnit.Framework.Constraints;
-using Models.GrazPlan;
-using System.Collections.Generic;
-using System.Data;
-using Models.Climate;
-using System.Linq;
 using APSIM.Core;
+using APSIM.Shared.Utilities;
+using Models.Climate;
+using Models.Core;
+using Models.Storage;
+using NUnit.Framework;
+using System.Data;
+using System.IO;
+using System.Linq;
 
 namespace UnitTests.Climate;
 
 [TestFixture]
 class SlopeEffectsOnWeatherInZoneTests
 {
-
-
         /// <summary>
         /// A simulations instance
         /// </summary>
@@ -45,7 +38,14 @@ class SlopeEffectsOnWeatherInZoneTests
             simulation = simulations.Node.FindChild<Simulation>();
         }
 
-        [Test]
+    [TearDown]
+        public void Cleanup()
+        {
+            DataStore storage = simulations.Node.FindChild<DataStore>(recurse: true);
+            storage?.Dispose();
+        }
+
+    [Test]
         public void ApsimXFileIsPresentTest()
         {
             Assert.That(simulations.Name, Is.EqualTo("Simulations"));
