@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Models.CLEM.DescriptiveSummary;
 
-internal class RuminantParametersGrowSummary : DescriptiveSummaryProviderBase<RuminantParametersGrow>
+internal class RuminantParametersGrowSummary : RuminantParametersSummaryBase<RuminantParametersGrow>
 {
     /// <inheritdoc/>
     public override void BuildSummary()
@@ -33,7 +33,7 @@ internal class RuminantParametersGrowSummary : DescriptiveSummaryProviderBase<Ru
     public override void CreateSummaryInnerOpeningBlocksBeforeSummary()
     {
         if (!FormatForParentControl)
-            Generator.AddBlockWithText("detailsnote", $"Parameters required for orginal ruminant growth activity (RuminantantActivityGrow)");
+            Generator.AddBlockWithText("detailsnote", $"Parameters required for original ruminant growth activity (RuminantantActivityGrow)");
     }
 
 }

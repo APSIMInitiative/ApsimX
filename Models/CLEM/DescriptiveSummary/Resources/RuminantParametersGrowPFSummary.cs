@@ -10,7 +10,7 @@ namespace Models.CLEM.DescriptiveSummary;
 /// <summary>
 /// Ruminant Parameters component descriptive summary
 /// </summary>
-public class RuminantParametersGrowPFSummary : DescriptiveSummaryProviderBase<RuminantParametersGrowPF>
+public class RuminantParametersGrowPFSummary : RuminantParametersSummaryBase<RuminantParametersGrowPF>
 {
     /// <summary>
     /// Constructor

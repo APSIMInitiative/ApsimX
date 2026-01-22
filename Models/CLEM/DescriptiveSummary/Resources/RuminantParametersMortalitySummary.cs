@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Resources;
+﻿using Models.CLEM.Interfaces;
+using Models.CLEM.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Models.CLEM.DescriptiveSummary;
 
-internal class RuminantParametersMortalitySummary : DescriptiveSummaryProviderBase<RuminantParametersGrowMortality>
+internal class RuminantParametersMortalitySummary : RuminantParametersSummaryBase<RuminantParametersGrowMortality>
 {
     /// <inheritdoc/>
     public override void BuildSummary()

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Models.CLEM.DescriptiveSummary;
 
-internal class RuminantParametersGrazingSummary : DescriptiveSummaryProviderBase<RuminantParametersGrazing>
+internal class RuminantParametersGrazingSummary : RuminantParametersSummaryBase<RuminantParametersGrazing>
 {
     /// <inheritdoc/>
     public override void BuildSummary()

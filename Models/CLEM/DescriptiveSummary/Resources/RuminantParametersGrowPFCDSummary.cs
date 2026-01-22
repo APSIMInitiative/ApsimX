@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Models.CLEM.DescriptiveSummary;
 
-internal class RuminantParametersGrowPFCDSummary : DescriptiveSummaryProviderBase<RuminantParametersGrowPFCD>
+internal class RuminantParametersGrowPFCDSummary : RuminantParametersSummaryBase<RuminantParametersGrowPFCD>
 {
     /// <inheritdoc/>
     public override void BuildSummary()
