@@ -7252,7 +7252,7 @@ internal class Converter
     }
 
     /// <summary>
-    /// Change CLEM to work with new custom time-step rather than months
+    /// Change CLEM to work with new custom time-step rather than months and method of handling age and dates
     /// </summary>
     /// <param name="root">The root JSON token.</param>
     /// <param name="_">The name of the apsimx file.</param>
