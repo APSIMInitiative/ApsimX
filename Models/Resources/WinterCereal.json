@@ -7365,58 +7365,12 @@
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
                       "Name": "DMRetranslocationFactor",
                       "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            0.4,
-                            0.5,
-                            1.0
-                          ],
-                          "Y": [
-                            0.0,
-                            0.0,
-                            0.1,
-                            0.1
-                          ],
-                          "Name": "XYPairs",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.DivideFunction, Models",
-                          "Name": "XValue",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].GrainFilling.ProgressThroughPhase",
-                              "Name": "TTinPhase",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].GrainFilling.Target",
-                              "Name": "TTTarget",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -7669,7 +7623,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 0.0,
                   "Units": null,
                   "Name": "QStoragePriority",
                   "ResourceName": null,
