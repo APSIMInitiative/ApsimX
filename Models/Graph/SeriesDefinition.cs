@@ -328,6 +328,11 @@ namespace Models
                 filter = filter?.Replace('\"', '\'');
                 filter = RemoveMiddleWildcards(filter);
 
+                //Filter out any columns with empty values that might get converted wrongly by the graph system
+                foreach (DataColumn field in data.Columns)
+                    if (field.DataType != typeof(string) && field.ColumnName != "CheckpointName"&& field.ColumnName != "SimulationName")
+                        filter = AddToFilter(filter, $"{field.ColumnName} IS NOT NULL");
+
                 //apply our filter to the data
                 View = new DataView(data);
                 try
