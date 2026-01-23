@@ -2446,15 +2446,33 @@ namespace Models.GrazPlan
                 FToday = systemClock.Today.Day + (systemClock.Today.Month * 0x100) + (systemClock.Today.Year * 0x10000);    //stddate
             }
 
-            if (Leaf != null)
-            {
-                Leaf.PastureModel = PastureModel;
-            }
+            // if (Leaf != null)
+            // {
+            //     Leaf.PastureModel = PastureModel;
+            // }
 
-            if (Stem != null)
-            {
-                Stem.PastureModel = PastureModel;
-            }
+            // if (Stem != null)
+            // {
+            //     Stem.PastureModel = PastureModel;
+            // }
+
+            // if (AboveGround != null)
+            // {
+            //     AboveGround.PastureModel=PastureModel;
+            // }
+
+            // if (AboveGroundLive != null)
+            // {
+            //     AboveGroundLive.PastureModel=PastureModel;
+                
+            // }
+
+            // if(AboveGroundDead != null)
+            // {
+            //     AboveGroundDead.PastureModel=PastureModel;
+            // }
+
+
             
             //Stem.PastureModel = PastureModel;
             //AboveGroundLive.PastureModel=PastureModel;
