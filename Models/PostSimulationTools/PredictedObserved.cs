@@ -136,12 +136,6 @@ namespace Models.PostSimulationTools
                 if (dt == null)
                     throw new ApsimXException(this, "Datastore is empty, please re-run simulations");
 
-                // If neither the predicted nor obseved tables have been modified during
-                // the most recent simulations run, don't do anything.
-                if (dataStore?.Writer != null &&
-                !(dataStore.Writer.TablesModified.Contains(PredictedTableName) || dataStore.Writer.TablesModified.Contains(ObservedTableName)))
-                    return;
-
                 IEnumerable<string> predictedDataNames = dataStore.Reader.ColumnNames(PredictedTableName);
                 IEnumerable<string> observedDataNames = dataStore.Reader.ColumnNames(ObservedTableName);
 

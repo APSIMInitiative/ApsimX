@@ -46,6 +46,12 @@ namespace UnitTests.Core
             this.simulation = this.simulations.Children[0] as Simulation;
         }
 
+        [TearDown]
+        public void Cleanup()
+        {
+            DataStore storage = simulations.Node.FindChild<DataStore>(recurse: true);
+            storage?.Dispose();
+        }
         /// <summary>
         /// A test for the FullPath method
         /// </summary>

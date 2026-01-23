@@ -21,10 +21,10 @@ using System.Reflection;
 
 namespace UnitTests
 {
-
     [SetUpFixture]
     public static class Utilities
     {
+
         private static string originalDir = Directory.GetCurrentDirectory();
 
         private static string tempPath;
@@ -49,6 +49,7 @@ namespace UnitTests
         [OneTimeSetUp]
         public static void OneTimeSetUp()
         {
+            string originalDir = Directory.GetCurrentDirectory();
             tempPath = Path.Combine(Path.GetTempPath(), $"apsimx-unittests-{Guid.NewGuid().ToString()}");
             Environment.SetEnvironmentVariable("TMP", tempPath);
             if (!Directory.Exists(tempPath))
