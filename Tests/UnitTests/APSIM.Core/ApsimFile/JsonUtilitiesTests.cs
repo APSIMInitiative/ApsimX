@@ -6,7 +6,7 @@ using Newtonsoft.Json.Linq;
 using Models.Core;
 using APSIM.Core;
 
-namespace APSIM.Core.Tests
+namespace UnitTests.APSIM.Core.Tests
 {
     /// <summary>
     /// A collection of tests for the json utilities.
