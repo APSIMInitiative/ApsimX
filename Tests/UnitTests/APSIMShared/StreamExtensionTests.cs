@@ -3,11 +3,12 @@ using NUnit.Framework;
 using System.IO;
 using System.Linq;
 using System.Text;
+using APSIMSharedExtensions = APSIM.Shared.Extensions;
 
 namespace UnitTests.APSIMShared
 {
     /// <summary>
-    /// Unit tests for <see cref="StreamExtensions"/>.
+    /// Unit tests for <see cref="APSIMSharedExtensions.StreamExtensions"/>.
     /// </summary>
     [TestFixture]
     public class StreamExtensionTests

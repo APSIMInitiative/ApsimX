@@ -10,6 +10,7 @@ using UserInterface;
 using UserInterface.Commands;
 using System.Linq;
 using APSIM.Core;
+using ModelsStorageDataStore = Models.Storage.DataStore;
 
 namespace UnitTests.Core
 {
@@ -49,9 +50,10 @@ namespace UnitTests.Core
         [TearDown]
         public void Cleanup()
         {
-            DataStore storage = simulations.Node.FindChild<DataStore>(recurse: true);
+            ModelsStorageDataStore storage = simulations.Node.FindChild<ModelsStorageDataStore>(recurse: true);
             storage?.Dispose();
         }
+
         /// <summary>
         /// A test for the FullPath method
         /// </summary>
