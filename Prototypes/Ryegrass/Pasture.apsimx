@@ -1953,7 +1953,9 @@
                 "",
                 "[Pasture].AboveGroundDead.Wt",
                 "[Pasture].AboveGroundDead.N",
-                "[Pasture].AboveGroundDead.NConc"
+                "[Pasture].AboveGroundDead.NConc",
+                "",
+                "[Pasture].AboveGround.N"
               ],
               "EventNames": [
                 "",
