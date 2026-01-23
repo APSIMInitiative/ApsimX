@@ -7,7 +7,7 @@ using System.Linq;
 using UnitTests;
 using UserInterface.EventArguments;
 
-namespace APSIM.NG.Tests;
+namespace UnitTests.APSIM.NG.Tests;
 
 /// <summary>This is a test class for the intellisense functions.</summary>
 [TestFixture]

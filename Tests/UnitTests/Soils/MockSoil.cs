@@ -1,12 +1,9 @@
-﻿
+﻿using System;
+using APSIM.Shared.APSoil;
+using Models.Core;
 
 namespace UnitTests.Soils
 {
-    using Models;
-    using Models.WaterModel;
-    using System;
-    using APSIM.Shared.APSoil;
-    using Models.Core;
 
     [Serializable]
     class MockSoil : Model
