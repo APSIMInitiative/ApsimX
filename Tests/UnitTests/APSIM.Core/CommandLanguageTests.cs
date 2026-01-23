@@ -1,4 +1,4 @@
-﻿using global::APSIM.Core;
+﻿using APSIM.Core;
 using NUnit.Framework;
 using System;
 using System.Linq;

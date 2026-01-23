@@ -1,4 +1,4 @@
-﻿using global::APSIM.Core;
+﻿using APSIM.Core;
 using Models.Core;
 using Models.Soils;
 using NUnit.Framework;
@@ -9,7 +9,6 @@ using Models;
 using Models.Factorial;
 using Models.PMF;
 using Models.PMF.Organs;
-using UnitTests;
 
 namespace UnitTests.APSIM.Core.Tests;
 

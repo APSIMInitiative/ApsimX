@@ -1,19 +1,20 @@
-﻿namespace UnitTests.Core.Run
+﻿using APSIM.Core;
+using APSIM.Shared.Utilities;
+using Models;
+using Models.Core;
+using Models.Core.Run;
+using Models.Storage;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using UnitTests.Storage;
+using static Models.Core.Run.Runner;
+
+namespace UnitTests.Core.Run
 {
-    using global::APSIM.Core;
-    using global::APSIM.Shared.Utilities;
-    using Models;
-    using Models.Core;
-    using Models.Core.Run;
-    using Models.Storage;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.IO;
-    using System.Linq;
-    using UnitTests.Storage;
-    using static Models.Core.Run.Runner;
 
     /// <summary>This is a test class for the RunnableSimulationList class</summary>
     [TestFixture]
@@ -207,7 +208,7 @@
                                     EndDate = new DateTime(1980, 1, 4)
                                 },
                                 new MockSummary(),
-                                new Report()
+                                new Models.Report()
                                 {
                                     Name = "Report",
                                     VariableNames = new string[] {"[Clock].Today"},
@@ -565,7 +566,7 @@
                     Name = $"sim{number}",
                     Children =
                     [
-                        new Report()
+                        new Models.Report()
                         {
                             Name = $"Report{number}",
                             VariableNames = ["[Clock].Today"],

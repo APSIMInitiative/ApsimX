@@ -1,10 +1,9 @@
-﻿using global::APSIM.Core;
+﻿using APSIM.Core;
 using Models;
 using Models.Core;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace UnitTests.APSIM.Core.Tests;
 

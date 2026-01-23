@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using global::APSIM.Core;
+using APSIM.Core;
 using Models;
 using Models.Core;
 using NUnit.Framework;

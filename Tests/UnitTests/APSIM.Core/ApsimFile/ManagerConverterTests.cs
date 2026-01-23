@@ -1,12 +1,13 @@
-﻿namespace UnitTests.APSIM.Core.Tests
+﻿using APSIM.Core;
+using APSIM.Shared.Utilities;
+using Newtonsoft.Json.Linq;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace UnitTests.APSIM.Core.Tests
 {
-    using global::APSIM.Core;
-    using global::APSIM.Shared.Utilities;
-    using Newtonsoft.Json.Linq;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>
     /// Test the writer's load/save .apsimx capability

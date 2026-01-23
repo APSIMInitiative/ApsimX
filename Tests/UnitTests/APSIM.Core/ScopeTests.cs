@@ -1,4 +1,4 @@
-﻿using global::APSIM.Core;
+﻿using APSIM.Core;
 using Models;
 using Models.Core;
 using Models.Factorial;
@@ -8,7 +8,6 @@ using Models.Soils;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
-using UnitTests;
 using UnitTests.Core;
 
 namespace UnitTests.APSIM.Core.Tests;

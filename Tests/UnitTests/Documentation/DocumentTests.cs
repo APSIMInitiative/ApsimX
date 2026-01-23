@@ -23,7 +23,7 @@ namespace UnitTests.Documentation
         public void TestDocumentationStructure()
         {
             string apsimx = PathUtilities.GetAbsolutePath("%root%", null);
-            foreach (string file in global::APSIM.Documentation.TestUtilities.FILES)
+            foreach (string file in TestUtilities.FILES)
             {
                  string resources = Path.Combine(apsimx, "Tests", "Validation", file) + "/";
                 if (file == "Report" || file == "Manager")
@@ -39,7 +39,7 @@ namespace UnitTests.Documentation
                 List<ITag> actualTags = AutoDocumentation.Document(sims);
 
                 string savedJSON = ReflectionUtilities.GetResourceAsString("UnitTests.Documentation.TestFiles."+file+".json");
-                List<ITag> expectedTags = global::APSIM.Documentation.TestUtilities.GetTags(savedJSON);
+                List<ITag> expectedTags = TestUtilities.GetTags(savedJSON);
 
                 MatchTagStructure(expectedTags, actualTags, file);
             }

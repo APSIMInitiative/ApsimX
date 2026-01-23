@@ -1,21 +1,18 @@
-﻿namespace UnitTests.Core.Run
-{
-    using global::APSIM.Shared.Utilities;
-    using Models;
-    using Models.Core;
-    using Models.Core.Run;
-    using Models.Factorial;
-    using Models.Storage;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using UnitTests.Storage;
-    using static Models.Core.Run.Runner;
-    using Models.Utilities.Extensions;
-    using global::APSIM.Core;
+﻿using Models;
+using Models.Core;
+using Models.Core.Run;
+using Models.Factorial;
+using Models.Storage;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Models.Utilities.Extensions;
+using APSIM.Core;
 
+namespace UnitTests.Core.Run
+{
     /// <summary>This is a test class for the GenerateApsimxFiles class</summary>
     [TestFixture]
     public class GenerateApsimXFilesTests

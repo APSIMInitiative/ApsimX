@@ -1,11 +1,9 @@
-﻿using global::APSIM.Core;
+﻿using APSIM.Core;
 using Models;
-using Models.Climate;
 using Models.Core;
 using Models.PMF;
 using Models.Soils;
 using NUnit.Framework;
-using System;
 using System.IO;
 using System.Linq;
 using UnitTests.Core.Run;

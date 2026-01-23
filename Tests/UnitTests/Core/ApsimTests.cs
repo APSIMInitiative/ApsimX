@@ -1,17 +1,18 @@
-﻿namespace UnitTests.Core
+﻿using APSIM.Shared.Utilities;
+using Models;
+using Models.Core;
+using Models.Soils;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using UserInterface;
+using UserInterface.Commands;
+using System.Linq;
+using APSIM.Core;
+
+namespace UnitTests.Core
 {
-    using global::APSIM.Shared.Utilities;
-    using Models;
-    using Models.Core;
-    using Models.Soils;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using UserInterface;
-    using UserInterface.Commands;
-    using System.Linq;
-    using global::APSIM.Core;
 
     /// <summary>
     /// This is a test class for SystemComponentTest and is intended
@@ -52,7 +53,7 @@
         public void FullPathTest()
         {
             Zone zone2 = this.simulation.Children[5] as Zone;
-            Graph graph = zone2.Children[0] as Graph;
+            Models.Graph graph = zone2.Children[0] as Models.Graph;
             Soil soil = zone2.Children[1] as Soil;
 
             Assert.That(this.simulation.FullPath, Is.EqualTo(".Simulations.Test"));
@@ -89,7 +90,7 @@
         public void ParentTest()
         {
             Zone zone2 = this.simulation.Children[5] as Zone;
-            Graph graph = zone2.Children[0] as Graph;
+            Models.Graph graph = zone2.Children[0] as Models.Graph;
 
             Assert.That(simulation.Node.FindParent<Simulations>(recurse: true), Is.Not.Null);
             Assert.That(graph.Node.FindParent<Simulations>(recurse: true).Name, Is.EqualTo("Simulations"));
@@ -120,7 +121,7 @@
         public void GetTest()
         {
             Zone zone2 = this.simulation.Children[5] as Zone;
-            Graph graph = zone2.Children[0] as Graph;
+            Models.Graph graph = zone2.Children[0] as Models.Graph;
             Soil soil = zone2.Children[1] as Soil;
 
             Zone field1 = this.simulation.Children[4] as Zone;

@@ -1,4 +1,4 @@
-﻿using global::APSIM.Core;
+﻿using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;

@@ -1,8 +1,9 @@
-﻿namespace UnitTests.APSIM.Core.Tests
+﻿using APSIM.Core;
+using APSIM.Shared.Utilities;
+using NUnit.Framework;
+
+namespace UnitTests.APSIM.Core.Tests
 {
-    using global::APSIM.Core;
-    using global::APSIM.Shared.Utilities;
-    using NUnit.Framework;
 
     /// <summary>This is a test class for the .apsimx file converter.</summary>
     [TestFixture]
