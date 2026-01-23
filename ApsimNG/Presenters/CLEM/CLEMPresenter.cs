@@ -179,9 +179,12 @@ namespace UserInterface.Presenters
         /// <param name="e">Close arguments</param>
         internal void OnTabSelected(object sender, EventArgs e)
         {
+            // no clem model or selected tab has not changed
+            if (ClemModel == null)
+                return;
+
             // change tab name
-            if (ClemModel != null)
-                ClemModel.SelectedTab = (e as TabChangedEventArgs).TabName;
+            ClemModel.SelectedTab = (e as TabChangedEventArgs).TabName;
 
             string tabName = (e as TabChangedEventArgs).TabName;
             PresenterList.TryGetValue(tabName, out IPresenter selectedPresenter);

@@ -1,8 +1,12 @@
+using APSIM.Core;
 using APSIM.Shared.Documentation.Extensions;
+using DocumentFormat.OpenXml.EMMA;
 using Models.CLEM.Activities;
+using Models.CLEM.DescriptiveSummary;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
+using Models.Core.ApsimFile;
 using Models.Core.Attributes;
 using Models.Factorial;
 using Models.Storage;
@@ -14,8 +18,6 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
-using APSIM.Core;
-using Models.Core.ApsimFile;
 
 namespace Models.CLEM
 {
@@ -82,6 +84,12 @@ namespace Models.CLEM
         public bool AutoCreateDescriptiveSummary { get; set; }
 
         /// <summary>
+        /// The output format for the descriptive summary
+        /// </summary>
+        [Description("Descriptive summary format")]
+        public DescriptiveSummaryFormat DescriptiveSummaryFormatStyle { get; set; } = DescriptiveSummaryFormat.HTML;
+
+        /// <summary>
         /// Build TransactionCategory from tree structure
         /// </summary>
         [Description("Build TransactionCategory from tree structure")]
@@ -134,7 +142,22 @@ namespace Models.CLEM
 
             // remove the overall summary description file if present
             string[] filebits = (sender as Simulation).FileName.Split('.');
-            wholeSimulationSummaryFile = $"{filebits.First()}.html";
+            wholeSimulationSummaryFile = filebits.First();
+            switch (DescriptiveSummaryFormatStyle)
+            {
+                case DescriptiveSummaryFormat.HTML:
+                    wholeSimulationSummaryFile += ".html";
+                    break;
+                case DescriptiveSummaryFormat.Markdown:
+                    wholeSimulationSummaryFile += ".md";
+                    break;
+                case DescriptiveSummaryFormat.Text:
+                    wholeSimulationSummaryFile += ".txt";
+                    break;
+                default:
+                    break;
+            }
+
             if (File.Exists(wholeSimulationSummaryFile))
             {
                 File.Delete(wholeSimulationSummaryFile);
@@ -147,23 +170,35 @@ namespace Models.CLEM
             // if auto create summary
             if (AutoCreateDescriptiveSummary && !Structure.FindParents<Experiment>().Any())
             {
-                if (!File.Exists(wholeSimulationSummaryFile))
-                {
-                    File.WriteAllText(wholeSimulationSummaryFile, CLEMModel.CreateDescriptiveSummaryHTML(this, Structure, false, false, (sender as Simulation).FileName));
-                }
-                else
-                {
-                    string html = File.ReadAllText(wholeSimulationSummaryFile);
-                    using StringWriter htmlWriter = new();
-                    int index = html.IndexOf("<!-- CLEMZoneBody -->");
-                    if (index > 0)
-                    {
-                        htmlWriter.Write(html[..(index - 1)]);
-                        htmlWriter.Write(CLEMModel.CreateDescriptiveSummaryHTML(this, Structure, false, true));
-                        htmlWriter.Write(html[index..]);
-                        File.WriteAllText(wholeSimulationSummaryFile, htmlWriter.ToString());
-                    }
-                }
+                var allZoneCLEM = Structure.FindAll<ZoneCLEM>();
+                if (allZoneCLEM.Any() && allZoneCLEM.FirstOrDefault() != this) return;
+
+                DescriptiveSummaryGenerator summaryGenerator = new DescriptiveSummaryGenerator(DescriptiveSummaryFormatStyle, false);
+                summaryGenerator.GenerateSummaryForComponentAndChildren(Structure.FindParent<Simulation>(recurse: true), wholeSimulationSummaryFile);
+
+                //
+                //
+                // ToDo: leave until I confirm that the new descriptive summary with providers works on all APSIM components from Simulation down.
+                //
+                //
+
+                //if (!File.Exists(wholeSimulationSummaryFile))
+                //{
+                //    File.WriteAllText(wholeSimulationSummaryFile, CLEMModel.CreateDescriptiveSummaryHTML(this, Structure, false, false, (sender as Simulation).FileName));
+                //}
+                //else
+                //{
+                //    string html = File.ReadAllText(wholeSimulationSummaryFile);
+                //    using StringWriter htmlWriter = new();
+                //    int index = html.IndexOf("<!-- CLEMZoneBody -->");
+                //    if (index > 0)
+                //    {
+                //        htmlWriter.Write(html[..(index - 1)]);
+                //        htmlWriter.Write(CLEMModel.CreateDescriptiveSummaryHTML(this, Structure, false, true));
+                //        htmlWriter.Write(html[index..]);
+                //        File.WriteAllText(wholeSimulationSummaryFile, htmlWriter.ToString());
+                //    }
+                //}
             }
         }
 
