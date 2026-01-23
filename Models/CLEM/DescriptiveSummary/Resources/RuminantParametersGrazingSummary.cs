@@ -1,4 +1,6 @@
-﻿using Models.CLEM.Resources;
+﻿using Models.CLEM.Activities;
+using Models.CLEM.Resources;
+using Models.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,29 +12,12 @@ namespace Models.CLEM.DescriptiveSummary;
 internal class RuminantParametersGrazingSummary : RuminantParametersSummaryBase<RuminantParametersGrazing>
 {
     /// <inheritdoc/>
-    public override void BuildSummary()
+    public override bool IsNeeded()
     {
-    }
+        List<Type> suitableActivities = [typeof(RuminantActivityGrazeAll), typeof(RuminantActivityGrazePasture), typeof(RuminantActivityGrazePastureHerd)];
 
-    /// <inheritdoc/>
-    public override void CreateSummaryClosingBlocks()
-    {
-        if (!FormatForParentControl)
-            base.CreateSummaryClosingBlocks();
-    }
-
-    /// <inheritdoc/>
-    public override void CreateSummaryOpeningBlocks()
-    {
-        if (!FormatForParentControl)
-            base.CreateSummaryOpeningBlocks();
-    }
-
-    /// <inheritdoc/>
-    public override void CreateSummaryInnerOpeningBlocksBeforeSummary()
-    {
-        if (!FormatForParentControl)
-            Generator.AddBlockWithText("detailsnote", $"Breed specific grazing parameters");
+        var allModels = ModelTyped.Structure.FindAll<CLEMRuminantActivityBase>().Select(a => a.GetType()).ToList();
+        return suitableActivities.Any(a => allModels.Contains(a));
     }
 
 }

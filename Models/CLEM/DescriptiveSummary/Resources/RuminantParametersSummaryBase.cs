@@ -55,6 +55,8 @@ public abstract class RuminantParametersSummaryBase<TModel> : DescriptiveSummary
     /// <returns>The list of parameters with component name and category for display</returns>
     public virtual List<(string componentName, string propertyName, string category, string description, string value)> GetSummaryParameters()
     {
+        if (IsNeeded() == false) return [];
+
         var summaryParams = GetParametersByAttributeDetails();
 
         var summaryToRemove = SummaryParametersToRemove();
@@ -86,10 +88,22 @@ public abstract class RuminantParametersSummaryBase<TModel> : DescriptiveSummary
     }
 
     /// <inheritdoc/>
+    public virtual bool IsNeeded()
+    {
+        return true;
+    }
+
+    /// <inheritdoc/>
     public override void BuildSummary()
     {
-        if (!FormatForParentControl)
+        if (FormatForParentControl)
             return;
+
+        if (IsNeeded() == false)
+        {
+            generator.AddBlockWithText("warningbanner", "These parameters are not required for this simulation");
+            return;
+        }
 
         foreach (var param in GetSummaryParameters().OrderBy(a => a.category))
         {

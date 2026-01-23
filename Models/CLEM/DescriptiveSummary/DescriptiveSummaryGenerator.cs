@@ -75,10 +75,10 @@ public class DescriptiveSummaryGenerator
     readonly string htmlEndString = "@media print { body { -webkit - print - color - adjust: exact; }}" +
         "\r\n</style>\r\n<!-- graphscript -->\r\n</head>\r\n";
 
-    readonly string cssString = "<style>body {color: [FontColor]; max-width:1000px; font-size:1em; font-family: Segoe UI, Arial, sans-serif}" +
-        "table {border-collapse: collapse; font-size:0.8em; }" +
+    readonly string cssString = "<style>body {color: [BodyFont]; background-color: [BodyBackground]; max-width:1000px; font-size:1em; font-family: Segoe UI, Arial, sans-serif}" +
+        "table {border-collapse:collapse; font-size:0.8em; }" +
         ".resource table,th,td {border: 1px solid #996633; }" +
-        "table th {padding:8px; color:[HeaderFontColor];}" +
+        "table th {padding:8px; color:[HeaderBodyFont];}" +
         "table td {padding:8px; }" +
         " td:nth-child(n+2) {text-align:center;}" +
         " th:nth-child(1) {text-align:left;}" +
@@ -140,14 +140,13 @@ public class DescriptiveSummaryGenerator
         ".warningbanner {background-color:Orange !important; border-radius:5px 5px 5px 5px; color:Black; padding:5px; font-weight:bold; margin-bottom:10px;margin-top:10px; }" +
         ".errorbanner {background-color:Red !important; border-radius:5px 5px 5px 5px; color:White; padding:5px; font-weight:bold; margin-bottom:10px;margin-top:10px; }" +
         ".memobanner {background-color:white !important; border-radius:5px 5px 5px 5px;border-color:Blue;border-width:1px;border-style:solid;color:Navy; padding:10px; margin-bottom:10px;margin-top:10px; font-size:0.8em;}" +
-        ".memobanner {background-color:white !important; border-radius:5px 5px 5px 5px;border-color:Blue;border-width:1px;border-style:solid;color:Navy; padding:10px; margin-bottom:10px;margin-top:10px; font-size:0.8em;}" +
-        ".memo-container {display:grid; grid-template-columns: 70px auto;border-radius:7px; border-color:DeepSkyBlue; border-width:2px; border-style:solid; margin-bottom:10px; margin-top:10px;}" +
-        ".memo-head {background-color:DeepSkyBlue;padding:10px;color:white;font-weight:bold;}" +
-        ".memo-text {margin:auto;margin-left:15px;padding:5px;color:Black;}" +
-        ".memo-container-simple {float:left; display:grid; grid-template-columns: 55px auto;border-radius:3px; border-color:DeepSkyBlue; border-width:2px; border-style:solid; margin:5px 5px 0px 5px;}" +
-        ".memo-head-simple {background-color:DeepSkyBlue;padding:0px;color:white;font-weight:bold;}" +
-        ".memo-text-simple {margin:auto 5px; color:Black; font-size:0.8em;}" +
-        ".memo-container h1 {color:#000000; } " +
+        ".memo-container {display:grid; grid-template-columns: 70px auto;border-radius:7px; border-color:[MemoBorder]; border-width:2px; border-style:solid; background-color:[MemoBackground]; margin-bottom:10px; margin-top:10px;}" +
+        ".memo-head {background-color:[MemoBorder]; padding:10px; color:[MemoTitle]; font-weight:bold;}" +
+        ".memo-text {margin:auto;margin-left:15px;padding:5px;color:[MemoText];}" +
+        ".memo-container-simple {float:left; display:grid; grid-template-columns: 55px auto;border-radius:3px; border-color:[MemoBorder]; border-width:2px; border-style:solid; margin:5px 5px 0px 5px;}" +
+        ".memo-head-simple {background-color:[MemoBorder]; padding:0px; color:[MemoTitle]; font-weight:bold;}" +
+        ".memo-text-simple {margin:auto 5px; color:[MemoText]; font-size:0.8em;}" +
+        ".memo-container h1 {color:[MemoText]; } " +
         ".filterlink {font-weight:bold; color:#cc33cc; background-color:[FiltContBack] !important; border-color:#cc33cc; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px; }" +
         ".filtername {margin:5px 0px 5px 0px; font-size:0.9em; color:#cc33cc;font-weight:bold;}" +
         ".filterborder {display: block; width: 100% - 40px; border-color:#cc33cc; background-color:[FiltContBack] !important; border-width:1px; border-style:solid; padding:0px 5px 5px 5px; margin:5px 0px 5px 0px; border-radius:5px; }" +
@@ -160,7 +159,7 @@ public class DescriptiveSummaryGenerator
         ".parameterdetails {float: left; padding: 1px 5px 1px 5px; margin: 0px 5px 0px 5px;}" +
         ".filebanner {background-color:green !important; border-radius:5px 5px 0px 0px; color:mintcream; padding:5px; font-weight:bold }" +
         ".filecontent {background-color:[ContFileBack] !important; margin-bottom:20px; border-radius:0px 0px 5px 5px; border-color:green; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
-        ".defaultbanner {background-color:[ContDefaultBanner] !important; border-radius:5px 5px 0px 0px; color:white; padding:5px; font-weight:bold }" +
+        ".defaultbanner {background-color:[ContDefaultBanner] !important; border-radius:5px 5px 0px 0px; color:[ContDefaultTitle]; padding:5px; font-weight:bold }" +
         ".defaultcontent {background-color:[ContDefaultBack] !important; margin-bottom:20px; border-radius:0px 0px 5px 5px; border-color:[ContDefaultBanner]; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
         ".holdermain {margin: 20px 0px 20px 0px}" +
         ".holdersub {margin: 5px 0px 5px}" +
@@ -168,23 +167,29 @@ public class DescriptiveSummaryGenerator
         ".otherlink {font-weight:bold; color:black; background-color:[ContDefaultBack] !important; border-color:black; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px; }" + 
         ".disabledcomponent {opacity: 0.3}";
 
-    readonly static Dictionary<string, (string, string)> colours = new()
+    readonly static Dictionary<string, (string light, string dark)> colours = new()
     {
-        { "FontColor", ("black", "#E5E5E5") },
+        { "BodyBackground", ("white", "#101010") },
+        { "BodyFont", ("black", "#e5e5e5") },
+        { "MemoBorder", ("deepskyblue", "#49adc4") },
+        { "MemoBackground", ("white", "#006064") },
+        { "MemoTitle", ("white", "#0e2023") },
+        { "MemoText", ("black", "#CFD8DC") },
         { "HeaderFontColor", ("white", "black") },
         { "ResRowBack", ("floralwhite","#281A0E") },
         { "ResRowBack2", ("white","#3F2817") },
         { "ResContBack", ("floralwhite","#281A0E") },
         { "ResContBackLight", ("white","#3F2817") },
         { "ResContBackDark", ("floralwhite","#281A0E") },
-        { "ResFontBanner", ("white","white") },
-        { "ResFontContent", ("black","white") },
+        { "ResFontBanner", ("white","#281A0E") },
+        { "ResFontContent", ("black","#e5e5e5") },
         { "ActContBack", ("#efffff","#003F3D") },
         { "ActContBackLight", ("white","#005954") },
         { "ActContBackDark", ("#efffff","#f003F3D") },
         { "ActContBackGroups", ("white","#f003F3D") },
         { "ContDefaultBack", ("#e6e6e6","#282828") },
         { "ContDefaultBanner", ("black","#686868") },
+        { "ContDefaultTitle", ("white","#E0E0E0") },
         { "ContFileBack", ("#deffde","#0C440C") },
         { "CropRotationBack", ("white","#97B2B1") },
         { "LabourGroupBack", ("white","#c1946c") },
@@ -1015,6 +1020,26 @@ public class DescriptiveSummaryGenerator
         }
 
         return $"{htmlStart}{valueString}{htmlEnd}";
+    }
+
+    /// <summary>
+    /// Get the file extension to use based on the descriptive summary format provided.
+    /// </summary>
+    /// <param name="format">Descriptive summary format required</param>
+    /// <returns>file extension with full stop</returns>
+    public static string FileExtensionToUse(DescriptiveSummaryFormat format)
+    {
+        switch (format)
+        {
+            case DescriptiveSummaryFormat.HTML:
+                return ".html";
+            case DescriptiveSummaryFormat.Markdown:
+                return ".md";
+            case DescriptiveSummaryFormat.Text:
+                return ".txt";
+            default:
+                return ".txt";
+        }
     }
 
 }

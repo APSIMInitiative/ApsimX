@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Resources;
+﻿using Models.CLEM.Activities;
+using Models.CLEM.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,23 +13,14 @@ namespace Models.CLEM.DescriptiveSummary;
 /// </summary>
 public class RuminantParametersGrowPFSummary : RuminantParametersSummaryBase<RuminantParametersGrowPF>
 {
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    public RuminantParametersGrowPFSummary()
-    {
-        SummaryStyle = HTMLSummaryStyle.SubResource;
-    }
-
     /// <inheritdoc/>
-    public override void BuildSummary()
+    public override bool IsNeeded()
     {
+        var component = ModelTyped.Structure.Find<RuminantActivityGrowPF>();
+        if (component is null || component.Enabled == false)
+        {
+            return false;
+        }
+        return true;
     }
-
-    /// <inheritdoc/>
-    public override void CreateSummaryInnerOpeningBlocksBeforeSummary()
-    {
-        Generator.AddBlockWithText("detailsnote", $"Holds all parameter groups relating to the ruminant Protein and fat growth component");
-    }
-
 }

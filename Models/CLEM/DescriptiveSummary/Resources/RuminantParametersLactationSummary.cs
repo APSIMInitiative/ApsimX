@@ -10,31 +10,5 @@ namespace Models.CLEM.DescriptiveSummary;
 
 internal class RuminantParametersLactationSummary : RuminantParametersSummaryBase<RuminantParametersLactation>
 {
-    /// <inheritdoc/>
-    public override void BuildSummary()
-    {
-    }
-
-    /// <inheritdoc/>
-    public override void CreateSummaryClosingBlocks()
-    {
-        if (!FormatForParentControl)
-            base.CreateSummaryClosingBlocks();
-    }
-
-    /// <inheritdoc/>
-    public override void CreateSummaryOpeningBlocks()
-    {
-        if (!FormatForParentControl)
-            base.CreateSummaryOpeningBlocks();
-    }
-
-
-    /// <inheritdoc/>
-    public override void CreateSummaryInnerOpeningBlocksBeforeSummary()
-    {
-        if (!FormatForParentControl)
-            Generator.AddBlockWithText("detailsnote", $"General lactation parameters used by multiple activities");
-    }
 
 }

@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Resources;
+﻿using Models.CLEM.Activities;
+using Models.CLEM.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,30 +11,14 @@ namespace Models.CLEM.DescriptiveSummary;
 internal class RuminantParametersGrowPFCMSummary : RuminantParametersSummaryBase<RuminantParametersGrowPFCM>
 {
     /// <inheritdoc/>
-    public override void BuildSummary()
+    public override bool IsNeeded()
     {
-    }
-
-    /// <inheritdoc/>
-    public override void CreateSummaryClosingBlocks()
-    {
-        if (!FormatForParentControl)
-            base.CreateSummaryClosingBlocks();
-    }
-
-    /// <inheritdoc/>
-    public override void CreateSummaryOpeningBlocks()
-    {
-        if (!FormatForParentControl)
-            base.CreateSummaryOpeningBlocks();
-    }
-
-
-    /// <inheritdoc/>
-    public override void CreateSummaryInnerOpeningBlocksBeforeSummary()
-    {
-        if (!FormatForParentControl)
-            Generator.AddBlockWithText("detailsnote", $"Metabolism (CM) parameters for GrowPF");
+        var component = ModelTyped.Structure.Find<RuminantActivityGrowPF>();
+        if (component is null || component.Enabled == false)
+        {
+            return false;
+        }
+        return true;
     }
 
 }
