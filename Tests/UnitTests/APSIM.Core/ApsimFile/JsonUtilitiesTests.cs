@@ -277,5 +277,36 @@ namespace UnitTests.APSIM.Core.Tests
 
             Assert.That(arr.Values<string>(), Is.EqualTo(values));
         }
+
+        /// <summary>
+        /// Tests that we can update cultivar paths with path updates
+        /// </summary>
+        [Test]
+        public void UpdateCultivarPathsTest()
+        {
+            var cultivarText = """
+{
+  "$type": "Models.PMF.Cultivar, Models",
+  "Command": [
+    "[Phenology].Juvenile.Target.FixedValue = 150",
+    "[Leaf].Photosynthesis.RUE.FixedValue = 2.0"
+  ],
+  "Name": "TestCultivar",
+  "ResourceName": null,
+  "Children": [],
+  "Enabled": true,
+  "ReadOnly": true
+}
+""";
+            JObject cultivarNode = JObject.Parse(cultivarText);
+            List<(string, string)> pathUpdates =
+            [
+                ("[Phenology].Juvenile.Target.FixedValue", "[Phenology].Juvenile.Target.RealTarget.FixedValue"),
+                ("[Foo].Bar", "[Foo].Bar.Baz")
+            ];
+            JsonUtilities.UpdateCultivarPaths(cultivarNode, pathUpdates);
+            string[] expectedValues = ["[Phenology].Juvenile.Target.RealTarget.FixedValue = 150", "[Leaf].Photosynthesis.RUE.FixedValue = 2.0"];
+            Assert.That((cultivarNode["Command"] as JArray).Values<string>(), Is.EqualTo(expectedValues));
+        }
     }
 }
