@@ -33,7 +33,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("Do not adjust intake by quality")]
         [Category("Breed", "Intake")]
-        public bool IgnoreFeedQualityIntakeAdustment { get; set; } = false;
+        public bool IgnoreFeedQualityIntakeAdjustment { get; set; } = false;
 
         /// <summary>
         /// Relative size scalar (SCA CI1) [Breed] - Growth
@@ -299,7 +299,7 @@ namespace Models.CLEM.Resources
                     summary.WriteMessage(this, $"Ruminant intake reduction based on high condition is disabled for [{ruminantType?.Name??"Unknown"}].{Environment.NewLine}To allow this functionality set [Parameters].[GrowPF].[GrowPF CI].RelativeConditionEffect_CI20 to a value greater than [1] (default 1.5)", MessageType.Warning);
                 }
                 // intake reduced by quality of feed turned off
-                if (IgnoreFeedQualityIntakeAdustment)
+                if (IgnoreFeedQualityIntakeAdjustment)
                 {
                     ruminantType ??= Structure.FindParent<RuminantType>(recurse: true);
                     summary ??= Structure.Find<Summary>();

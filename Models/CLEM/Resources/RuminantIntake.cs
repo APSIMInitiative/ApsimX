@@ -66,7 +66,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         public void AdjustIntakeBasedOnFeedQuality(bool isLactating, Ruminant ind)
         {
-            if (ind.Parameters.GrowPF_CI.IgnoreFeedQualityIntakeAdustment)
+            if (ind.Parameters.GrowPF_CI.IgnoreFeedQualityIntakeAdjustment)
                 return;
 
             // ========================================================================================================================

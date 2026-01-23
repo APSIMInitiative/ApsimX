@@ -131,4 +131,10 @@ public interface IRuminantParameterSummaryProvider
     /// </summary>
     /// <returns>The list of parameters with component name and category for display</returns>
     List<(string componentName, string propertyName, string category, string description, string value)> GetSummaryParameters();
+
+    /// <summary>
+    /// Determines if the parameter component is needed in the simulation
+    /// </summary>
+    /// <returns>True if the component is needed, false otherwise</returns>
+    bool IsNeeded();
 }
