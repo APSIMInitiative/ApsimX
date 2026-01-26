@@ -36,15 +36,18 @@ namespace APSIM.Shared.Utilities
         /// <summary>
         /// a list of month names with 3 letter abbreviations.
         /// </summary>
-        static public readonly string[] MONTHS_3_LETTERS = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+        static public readonly string[] MONTHS_3_LETTERS = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",   //English
+                                                             "Jan", "Feb", "Mrz", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez" }; //German
         /// <summary>
         /// a list of month names with 3 and 4 letter abbreviations because Microsoft keep changing localizations to these
         /// </summary>
-        static public readonly string[] MONTHS_4_LETTERS = { "Janu", "Febu", "Marh", "Aprl", "May", "June", "July", "Augt", "Sept", "Octo", "Novb", "Decb" };
+        static public readonly string[] MONTHS_4_LETTERS = { "Janu", "Febu", "Marh", "Aprl", "May", "June", "July", "Augt", "Sept", "Octo", "Novb", "Decb",   //English
+                                                             "Janu", "Febr", "Marz", "Aprl", "Mai", "Juni", "Juli", "Augt", "Sept", "Okto", "Novb", "Dezb" }; //German
         /// <summary>
         /// a list of month full names
         /// </summary>
-        static public readonly string[] MONTHS_FULL_NAME = { "January", "Feburary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+        static public readonly string[] MONTHS_FULL_NAME = { "January", "Feburary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December", //English
+                                                             "Januar", "Februar", "Marz", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember" };  //German
         /// <summary>
         /// a list of abbreviated month names as defined by localization
         /// </summary>
@@ -490,6 +493,10 @@ namespace APSIM.Shared.Utilities
             //trim whitespace
             string dateTrimmed = dateWithSymbolsParsed.Trim();
 
+            //if date ends in a . trim off the .
+            if (dateTrimmed.EndsWith("."))
+                dateTrimmed = dateTrimmed.Substring(0, dateTrimmed.Length-1);
+
             DateAsParts values = new DateAsParts(1, 1, DEFAULT_YEAR, false, false, "");
 
             //check that the string has a valid symbol
@@ -667,17 +674,21 @@ namespace APSIM.Shared.Utilities
             string monthLowerString = monthString.ToLower();
             errorMsg = "";
 
-            string[] months3 = new string[12];
-            string[] months4 = new string[12];
-            string[] monthsFull = new string[12];
+            string[] months3 = new string[24];
+            string[] months4 = new string[24];
+            string[] monthsFull = new string[24];
             string[] monthsCultAbbrev = new string[12];
             string[] monthsCultFull = new string[12];
 
-            for (int i = 0; i < 12; i++)
+            for (int i = 0; i < MONTHS_FULL_NAME.Length; i++)
             {
                 months3[i] = MONTHS_3_LETTERS[i].ToLower();
                 months4[i] = MONTHS_4_LETTERS[i].ToLower();
                 monthsFull[i] = MONTHS_FULL_NAME[i].ToLower();
+            }
+
+            for (int i = 0; i < 12; i++)
+            {
                 monthsCultAbbrev[i] = MONTHS_CULTURE_ABBREV_NAME[i].ToLower();
                 monthsCultFull[i] = MONTHS_CULTURE_FULL_NAME[i].ToLower();
             }
@@ -690,11 +701,11 @@ namespace APSIM.Shared.Utilities
             else
             {
                 if (index < 0)
-                    index = Array.IndexOf(monthsFull, monthLowerString);
+                    index = Array.IndexOf(monthsFull, monthLowerString) % 12;
                 if (index < 0)
-                    index = Array.IndexOf(months4, monthLowerString);
+                    index = Array.IndexOf(months4, monthLowerString) % 12;
                 if (index < 0)
-                    index = Array.IndexOf(months3, monthLowerString);
+                    index = Array.IndexOf(months3, monthLowerString) % 12;
                 if (index < 0)
                     index = Array.IndexOf(monthsCultFull, monthLowerString);
                 if (index < 0)
