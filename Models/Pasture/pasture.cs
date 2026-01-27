@@ -581,6 +581,86 @@ namespace Models.GrazPlan
         
         #endregion
 
+
+        #region IPLANT
+        /// <summary>
+        ///  IPlant: Not implemented
+        /// </summary>
+        public string PlantType { get; set; }
+        /// <summary>
+        /// Cultivars not implemented
+        /// </summary>
+        public string[] CultivarNames
+        {
+            get { return null; }
+        }
+        /// <summary>
+        /// Not implemented
+        /// </summary>
+        public bool IsAlive
+        {
+            get{return false;}
+        }
+        /// <summary>
+        /// IsReadyForHarvesting: Not implemented
+        /// </summary>
+        public bool IsReadyForHarvesting
+        {
+            get { return false; }
+        }
+        /// <summary>
+        /// Nitrogen uptake: Not implemented
+        /// </summary>
+       
+  
+        /// <summary>Amount of nitrogen taken up (kg/ha: Not implemented.</summary>
+        public IReadOnlyList<double> NitrogenUptake  {
+             get{
+            return  null;}
+        }
+        /// <summary>
+        /// Harvest: Not implemented
+        /// </summary>
+        /// <param name="removeBiomassFromOrgans"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public void Harvest(bool removeBiomassFromOrgans = true)
+        {
+            throw new NotImplementedException();
+        }
+        /// <summary>
+        /// Sow: Not implemented 
+        /// </summary>
+        /// <param name="cultivar"></param>
+        /// <param name="population"></param>
+        /// <param name="depth"></param>
+        /// <param name="rowSpacing"></param>
+        /// <param name="maxCover"></param>
+        /// <param name="budNumber"></param>
+        /// <param name="rowConfig"></param>
+        /// <param name="seeds"></param>
+        /// <param name="tillering"></param>
+        /// <param name="ftn"></param>
+        // <exception cref="NotImplementedException"></exception>
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1, double seeds = 0, int tillering = 0, double ftn = 0.0)
+        {
+            
+        }
+
+        /// <summary>
+        /// EndCrop: Not incremented
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
+        public void EndCrop()
+        {
+            throw new NotImplementedException();
+        }
+        
+        #endregion IPlant
+
+
+
+
+
         /// <summary>Radiation intercepted by the plant's canopy (MJ/m^2/day).</summary>
         [JsonIgnore]
         [Units("MJ/m^2/day")]

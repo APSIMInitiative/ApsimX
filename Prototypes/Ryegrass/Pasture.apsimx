@@ -795,6 +795,7 @@
               "Gsmax": 0.011,
               "R50": 200.0,
               "LightProfile": null,
+              "PlantType": null,
               "WaterDemand": 0.0,
               "LAI": 0.0,
               "Name": "Pasture",
