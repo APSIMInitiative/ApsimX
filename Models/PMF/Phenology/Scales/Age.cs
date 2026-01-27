@@ -76,7 +76,7 @@ namespace Models.PMF.Phen
         private void PostPhenology(object sender, EventArgs e)
         {
             daysThroughYear += 1;
-            if (DateUtilities.DatesAreEqual(DateUtilities.GetDateAsString(Anniversary), clock.Today))
+            if (Anniversary == clock.Today)
             {
                     Years += 1;
                     daysThroughYear = 0;
