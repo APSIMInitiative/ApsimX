@@ -6292,7 +6292,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
+                      "FixedValue": 1.0,
                       "Units": null,
                       "Name": "DMRetranslocationFactor",
                       "ResourceName": null,
@@ -6412,7 +6412,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.5,
+                              "FixedValue": 0.0,
                               "Units": null,
                               "Name": "StructuralFractionGF",
                               "ResourceName": null,
@@ -6442,8 +6442,35 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "$type": "Models.Functions.SubtractFunction, Models",
                   "Name": "Storage",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Spike].PotentialGrowth",
+                      "Name": "DMDemand",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Spike].DMDemands.Structural",
+                      "Name": "StructuralFraction",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "StorageHold",
                   "ResourceName": null,
                   "Children": [
                     {
@@ -7004,7 +7031,7 @@
                             },
                             {
                               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "Name": "StemFraction",
+                              "Name": "SpikeFraction",
                               "ResourceName": null,
                               "Children": [
                                 {
@@ -7020,10 +7047,10 @@
                                   "Y": [
                                     0.0,
                                     0.0,
-                                    0.03,
-                                    0.2,
-                                    0.2,
-                                    0.2
+                                    0.04,
+                                    0.22,
+                                    0.22,
+                                    0.22
                                   ],
                                   "Name": "XYPairs",
                                   "ResourceName": null,
@@ -7495,7 +7522,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.7,
+                              "FixedValue": 0.6,
                               "Units": null,
                               "Name": "Fraction",
                               "ResourceName": null,
@@ -7516,7 +7543,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.7,
+                              "FixedValue": 0.0,
                               "Units": null,
                               "Name": "Fraction",
                               "ResourceName": null,
@@ -7546,8 +7573,35 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "$type": "Models.Functions.SubtractFunction, Models",
                   "Name": "Storage",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Stem].PotentialGrowth",
+                      "Name": "DMDemand",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Stem].DMDemands.Structural",
+                      "Name": "StructuralDemand",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "StorageHold",
                   "ResourceName": null,
                   "Children": [
                     {
@@ -8221,11 +8275,13 @@
                                   "$type": "Models.Functions.XYPairs, Models",
                                   "X": [
                                     3.0,
+                                    5.0,
                                     6.0,
-                                    8.0
+                                    7.0
                                   ],
                                   "Y": [
                                     0.0,
+                                    0.36,
                                     0.7,
                                     0.7
                                   ],
