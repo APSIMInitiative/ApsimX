@@ -29,9 +29,6 @@ namespace Models.Core
         [Link]
         private ISummary summary = null;
 
-        [Link]
-        private IDataStore datastore = null;
-
         [Link(IsOptional = true)]
         private IClock clock = null;
 
@@ -204,6 +201,7 @@ namespace Models.Core
                 // Resolve all links
                 links.Resolve(this, true, throwOnFail: true);
 
+                IDataStore datastore = this.Node.FindChild<IDataStore>();
                 metadata = new Metadata(this, datastore);
 
                 StoreFactorsInDataStore();
