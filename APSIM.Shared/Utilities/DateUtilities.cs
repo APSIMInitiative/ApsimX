@@ -414,6 +414,18 @@ namespace APSIM.Shared.Utilities
             return date.ToString("yyyy-MM-dd");
         }
 
+        /// <summary>
+        /// Converts a DateTime object to the standard dd-MM we use in APSIM discard the year component
+        /// </summary>
+        /// <param name="date">A DateTime Object</param>
+        /// <returns>Date as string in (dd-MM)</returns>
+        public static string GetDateAsDayMonthString(DateTime date)
+        {
+            string day = date.ToString("dd");
+            string month = MONTHS_3_LETTERS[date.Month-1];
+            return $"{day}-{month}";
+        }
+
         /////////////////////////////////////////////////////////////////////////////   
         /////////////////////////////////////////////////////////////////////////////  
         /////////////////////////////////////////////////////////////////////////////  
