@@ -25,11 +25,14 @@ namespace Models.Core
 
         private IDataStore datastore = null;
 
+        private List<string> cultivars;
+
         /// <summary></summary>
         public Metadata(Simulation simulation, IDataStore datastore)
         {
             this.simulation = simulation;
             this.datastore = datastore;
+            cultivars = new List<string>();
         }
 
         /// <summary></summary>
@@ -86,7 +89,6 @@ namespace Models.Core
                         modelNames.Add(type);
                         modelsString += type + ",";
                     }
-                        
                 }
                 
                 DataRow row = table.NewRow();
@@ -95,6 +97,7 @@ namespace Models.Core
                 row["Directory"] = directory;
                 row["Models"] = modelsString;
                 row["File"] = filename;
+                row["Cultivars"] = filename;
                 table.Rows.Add(row);
 
                 this.datastore.Writer.WriteTable(table, false);
