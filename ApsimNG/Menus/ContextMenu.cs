@@ -731,14 +731,15 @@ namespace UserInterface.Presenters
                     ushort i = 0;
                     foreach (string tableName in storage.Reader.TableNames)
                     {
-                        cts.Token.ThrowIfCancellationRequested();
-                        DataTable table = storage.Reader.GetData(tableName);
-                        table.TableName = tableName;
-                        tables.Add(table);
-
+                        if (!string.IsNullOrEmpty(tableName))
+                        {
+                            cts.Token.ThrowIfCancellationRequested();
+                            DataTable table = storage.Reader.GetData(tableName);
+                            table.TableName = tableName;
+                            tables.Add(table);
+                        }
                         double progress = 0.5 * (i + 1) / storage.Reader.TableNames.Count;
                         explorerPresenter.MainPresenter.ShowProgress(progress);
-
                         i++;
                     }
                 }, cts.Token);
@@ -1066,18 +1067,9 @@ namespace UserInterface.Presenters
                 IModel modelToDocument = currentN;
                 explorerPresenter.ApsimXFile.Links.Resolve(modelToDocument, true, true, false);
 
-                string modelTypeName = String.Empty;
-                if (modelToDocument is Models.PMF.Plant)
-                    modelTypeName = modelToDocument.Name;
-                else if (modelToDocument is Simulations)
-                {
-                    var simpleFileName = Path.GetFileNameWithoutExtension((modelToDocument as Simulations).FileName);
-                    modelTypeName = simpleFileName;
-                }
-                else modelTypeName = modelToDocument.GetType().Name;
-
+                string name = DocumentationUtilities.GetDocumentationName(modelToDocument);
                 string fullDocFileName = Directory.GetParent(explorerPresenter.ApsimXFile.FileName).ToString()
-                    + $"{Path.DirectorySeparatorChar}{modelTypeName}.html";
+                    + $"{Path.DirectorySeparatorChar}{name}.html";
 
                 bool graphSetting = DocumentationSettings.GenerateGraphs;
                 DocumentationSettings.GenerateGraphs = true;

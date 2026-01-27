@@ -1,9 +1,9 @@
-﻿namespace UnitTests.APSIMShared
+﻿using APSIM.Shared.Utilities;
+using NUnit.Framework;
+using System.Collections.Generic;
+
+namespace UnitTests.APSIMShared
 {
-    using APSIM.Shared.Utilities;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
 
     [TestFixture]
     class DBMergerTests
