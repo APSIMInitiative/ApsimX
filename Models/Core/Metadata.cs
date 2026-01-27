@@ -46,7 +46,7 @@ namespace Models.Core
                 table.Columns.Add("Directory", typeof(string));
                 table.Columns.Add("Models", typeof(string));
                 table.Columns.Add("File", typeof(string));
-
+                table.Columns.Add("Cultivars", typeof(string));
 
                 string name = simulation.Name;
 
@@ -90,6 +90,14 @@ namespace Models.Core
                         modelsString += type + ",";
                     }
                 }
+                if (modelsString.EndsWith(','))
+                    modelsString = modelsString.Substring(0, modelsString.Length-1);
+
+                string cultivarsString = "";
+                foreach(string cultivar in cultivars)
+                    cultivarsString += cultivar + ",";
+                if (cultivarsString.EndsWith(','))
+                    cultivarsString = cultivarsString.Substring(0, cultivarsString.Length-1);
                 
                 DataRow row = table.NewRow();
                 row["Simulation"] = name;
@@ -97,7 +105,7 @@ namespace Models.Core
                 row["Directory"] = directory;
                 row["Models"] = modelsString;
                 row["File"] = filename;
-                row["Cultivars"] = filename;
+                row["Cultivars"] = cultivarsString;
                 table.Rows.Add(row);
 
                 this.datastore.Writer.WriteTable(table, false);
@@ -108,6 +116,14 @@ namespace Models.Core
         /// <summary></summary>
         public void OnSowing(object sender, EventArgs e)
         {
+            Plant plant = sender as Plant;
+            if (plant != null)
+            {
+                SowingParameters sowingParameters = plant.SowingData;
+                string name = plant.PlantType + ": " + sowingParameters.Cultivar;
+                if (!cultivars.Contains(name))
+                    cultivars.Add(name);
+            }
             return;
         }
     }
