@@ -10,7 +10,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 
-namespace APSIM.Core.Tests
+namespace UnitTests.APSIM.Core.Tests
 {
     /// <summary>This is a test class for the .apsimx file converter.</summary>
     [TestFixture]
