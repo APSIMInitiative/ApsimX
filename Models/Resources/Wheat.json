@@ -7644,8 +7644,8 @@
                     "[Phenology].CAMP.FLNparams.VxPLN = 4",
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 8",
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
-                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
-					"[Phenology].GrainFilling.Target.FixedValue = 700"
+                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
+                    "[Phenology].GrainFilling.Target.FixedValue = 700"
                   ],
                   "Name": "Wakanui",
                   "ResourceName": null,
@@ -7745,7 +7745,6 @@
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 8",
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
-					
                   ],
                   "Name": "Stockade",
                   "ResourceName": null,
