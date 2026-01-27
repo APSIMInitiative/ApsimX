@@ -2110,12 +2110,62 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0123,
-              "Units": null,
+              "$type": "Models.Functions.PhaseLookup, Models",
               "Name": "MinimumNConc",
               "ResourceName": null,
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.PhaseLookupValue, Models",
+                  "Start": "FlagLeafAppearance",
+                  "End": "MaximumGrainLength",
+                  "Name": "EarlyGrainFill",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.032,
+                      "Units": null,
+                      "Name": "Min",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.PhaseLookupValue, Models",
+                  "Start": "MaximumGrainLength",
+                  "End": "HarvestRipe",
+                  "Name": "Reproductive",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0123,
+                      "Units": null,
+                      "Name": "Min",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Potential branching rate is determined by the commonly observed pattern of tillering in wheat, in which each tiller emerges with the third leaf on its parent axis (e.g. first tiller emerges at the same time as the third leaf on the main stem, the first secondary tiller appears with the third leaf on tiller 1).  This is described as a simple function of main stem leaf number.",
+                  "Name": "Memo",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -6181,8 +6231,8 @@
                     "NaN"
                   ],
                   "Y": [
-                    0.024,
-                    0.024,
+                    0.02,
+                    0.02,
                     0.005,
                     "NaN"
                   ],
@@ -6215,12 +6265,30 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.004,
-              "Units": null,
+              "$type": "Models.Functions.MultiplyFunction, Models",
               "Name": "MinimumNConc",
               "ResourceName": null,
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Spike].MaximumNConc",
+                  "Name": "MaximumNConc",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.7,
+                  "Units": null,
+                  "Name": "MinimumNConc",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             },
