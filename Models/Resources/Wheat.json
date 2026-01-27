@@ -7358,7 +7358,7 @@
                     "[Phenology].CAMP.FLNparams.VxPLN = 4",
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 150",
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
-                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
+                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60", 
 					"[Phenology].GrainFilling.Target.FixedValue = 700"
                   ],
                   "Name": "Claire",
