@@ -7211,8 +7211,8 @@ internal class Converter
                 {
                     foreach (var p in parameters.OfType<JObject>())
                     {
-                        string? key = (string?)p["Key"];
-                        if (key != null && double.TryParse(p["Value"]?.ToString(), out double val))
+                        string key = p["Key"].ToString();
+                        if (key != null && double.TryParse(p["Value"].ToString(), out double val))
                             paramDict[key] = val;
                     }
                 }

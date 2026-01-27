@@ -17,6 +17,7 @@ using Models.Surface;
 using Models.Soils;
 
 using Models.Utilities;
+using Models.AgPasture;
 namespace UserInterface.Classes
 {
     public enum PropertyType
@@ -410,7 +411,8 @@ namespace UserInterface.Classes
                     break;
                 case DisplayType.PlantName:
                     DisplayMethod = PropertyType.DropDown;
-                    var plantModels = model.Node.FindAll<Plant>();
+                    IEnumerable<IPlant> plantModels = model.Node.FindAll<Plant>().ToList();
+                    plantModels = plantModels.Concat(model.Node.FindAll<PastureSpecies>()).ToList();
                     if (plantModels != null)
                         DropDownOptions = plantModels.Select(plant => plant.Name).ToArray();
                     break;

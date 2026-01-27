@@ -1,8 +1,9 @@
-﻿namespace UserInterface.Views
+﻿using System;
+using Gtk;
+using UserInterface.Interfaces;
+
+namespace UserInterface.Views
 {
-    using System;
-    using Gtk;
-    using Interfaces;
 
     /// <summary>A button view.</summary>
     public class ButtonView : ViewBase, IButtonView
