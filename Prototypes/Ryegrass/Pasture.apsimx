@@ -802,7 +802,72 @@
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Grazplan.GreenCohortInitialise, Models",
+                  "$type": "Models.GrazPlan.Organs.GenericOrgan, Models",
+                  "PastureModel": null,
+                  "IsAboveGround": true,
+                  "Name": "Leaf",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.GrazPlan.Organs.GenericOrgan, Models",
+                  "PastureModel": null,
+                  "IsAboveGround": true,
+                  "Name": "Stem",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.GrazPlan.Biomass.CompositeBiomass, Models",
+                  "PastureModel": null,
+                  "OrganNames": [
+                    "Leaf",
+                    "Stem"
+                  ],
+                  "IncludeLive": true,
+                  "IncludeDead": true,
+                  "Name": "AboveGround",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.GrazPlan.Biomass.CompositeBiomass, Models",
+                  "PastureModel": null,
+                  "OrganNames": [
+                    "Leaf",
+                    "Stem"
+                  ],
+                  "IncludeLive": true,
+                  "IncludeDead": false,
+                  "Name": "AboveGroundLive",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.GrazPlan.Biomass.CompositeBiomass, Models",
+                  "PastureModel": null,
+                  "OrganNames": [
+                    "Leaf",
+                    "Stem"
+                  ],
+                  "IncludeLive": false,
+                  "IncludeDead": true,
+                  "Name": "AboveGroundDead",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.GrazPlan.GreenCohortInitialise, Models",
                   "RootWeight": [
                     400.0,
                     400.0

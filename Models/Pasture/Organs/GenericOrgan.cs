@@ -1,7 +1,7 @@
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Grazplan;
+
 using Models.Interfaces;
 using Models.Soils;
 using Models.Soils.Arbitrator;
@@ -17,11 +17,11 @@ using System.Linq;
 using static Models.GrazPlan.GrazType;
 using static Models.GrazPlan.PastureUtil;
 using APSIM.Core;
-using Models.GrazPlan;
+
 using Models.PMF.Interfaces;
 using Models.PMF;
 
-namespace Models.Grazplan.Organs
+namespace Models.GrazPlan.Organs
 {
 
     /// <summary>This is a Organ class with Leaf and Stem. It can be extended to other organs. Currently calculates DM,N and NConc.</summary>

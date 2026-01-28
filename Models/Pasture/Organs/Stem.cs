@@ -1,7 +1,7 @@
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Grazplan;
+
 using Models.Interfaces;
 using Models.Soils;
 using Models.Soils.Arbitrator;
@@ -21,7 +21,7 @@ using Models.GrazPlan;
 using Models.PMF.Interfaces;
 using Models.PMF;
 
-namespace Models.Grazplan.Organs
+namespace Models.GrazPlan.Organs
 {
 
     /// <summary>This is a composite biomass classteting.</summary>

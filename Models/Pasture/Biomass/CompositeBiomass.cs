@@ -9,7 +9,7 @@ using Models.PMF.Interfaces;
 using Models.PMF.Phen;
 using static Models.GrazPlan.GrazType;
 
-namespace Models.Grazplan.Biomass
+namespace Models.GrazPlan.Biomass
 {
     /// <summary>This is a composite biomass class, representing the sum of 1 or more biomass objects from one or more organs.</summary>
     [Serializable]
