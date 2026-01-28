@@ -16,6 +16,6 @@ public sealed class DefaultDescriptiveSummaryProvider : DescriptiveSummaryProvid
         if (cm is null) return;
 
         // safe, minimal default output
-        Generator.AddBlockWithText("activityentry", $"No descriptive summary provider has been supplied for [{WebUtility.HtmlEncode(cm?.GetType().Name ?? "Unknown")}].");
+        generator.AddBlockWithText($"No descriptive summary provider is available for {generator.DisplaySummaryValueSnippet(cm?.GetType().Name ?? "Unknown")}.");
     }
 }

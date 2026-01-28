@@ -15,6 +15,6 @@ public class RuminantActivityGroupSummary : GroupSummaryBase<RuminantActivityGro
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText("activityentry", "This ruminant filter is applied to this activity and all activities within this branch");
+        generator.AddBlockWithText("This ruminant filter is applied to this activity and all activities within this branch");
     }
 }

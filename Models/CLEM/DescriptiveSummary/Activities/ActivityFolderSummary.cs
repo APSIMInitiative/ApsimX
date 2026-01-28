@@ -11,7 +11,7 @@ public class ActivityFolderSummary : DescriptiveSummaryProviderBase<ActivityFold
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText("folder",  $"{ModelTyped.Name} folder {((ModelTyped.Enabled == false) ? " - DISABLED!" : "")}");
+        generator.AddBlockWithText($"{ModelTyped.Name} folder {((ModelTyped.Enabled == false) ? " - DISABLED!" : "")}", "folder");
     }
 
     /// <inheritdoc/>

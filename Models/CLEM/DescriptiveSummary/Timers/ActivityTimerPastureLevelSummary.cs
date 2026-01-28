@@ -24,6 +24,6 @@ public class ActivityTimerPastureLevelSummary : TimerSummaryBase<ActivityTimerPa
             htmlWriter.Write(generator.DisplaySummaryValueSnippet(ModelTyped.MaximumPastureLevel, warnZero: true));
         }
         htmlWriter.Write(" kg per hectare");
-        generator.AddBlockWithText("filter", htmlWriter.ToString());
+        generator.AddBlockWithText(htmlWriter.ToString(), "entryValue filterItem");
     }
 }

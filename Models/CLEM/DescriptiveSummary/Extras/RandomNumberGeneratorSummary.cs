@@ -22,6 +22,6 @@ internal class RandomNumberGeneratorSummary : DescriptiveSummaryProviderBase<Ran
         {
             output += $"each run identical by using the seed {generator.DisplaySummaryValueSnippet(ModelTyped.Seed)}";
         }
-        generator.AddBlockWithText("activityentry", output);
+        generator.AddBlockWithText(output);
     }
 }

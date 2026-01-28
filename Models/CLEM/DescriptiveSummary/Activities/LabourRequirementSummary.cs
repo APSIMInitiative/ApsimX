@@ -38,7 +38,7 @@ public class LabourRequirementSummary : DescriptiveSummaryProviderBase<LabourReq
                 childType: typeof(LabourGroup),
                 introduction: "The required labour will be taken from the following groups:",
                 missing: "No labour groups provided to defined labour",
-                borderClass: "childgroupfilterborder"
+                borderClass: "childgroupborder filtergroup"
                 )
         ];
     }
@@ -47,7 +47,7 @@ public class LabourRequirementSummary : DescriptiveSummaryProviderBase<LabourReq
     public override void BuildSummary()
     {
         using StringWriter htmlWriter = new();
-        htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(ModelTyped.LabourPerUnit, "Rate not set")} {generator.DisplayPlural(((ModelTyped.LabourPerUnit == 1.0) ? 1 : 2), "day", " is", "s are")} required ");
+        htmlWriter.Write($"{generator.DisplaySummaryValueSnippet(ModelTyped.LabourPerUnit, "Rate not set")} {generator.DisplayPlural(((ModelTyped.LabourPerUnit == 1.0) ? 1 : 2), "day", " is", "s are")} required ");
 
         if ((ModelTyped.Measure ?? "").Equals("fixed", StringComparison.CurrentCultureIgnoreCase) == false)
         {
@@ -73,7 +73,7 @@ public class LabourRequirementSummary : DescriptiveSummaryProviderBase<LabourReq
                     break;
             }
         }
-        generator.AddBlockWithText("activityentry", htmlWriter.ToString());
+        generator.AddBlockWithText(htmlWriter.ToString());
 
         string extraLimit = "";
         string limitedBy = "";
@@ -95,29 +95,29 @@ public class LabourRequirementSummary : DescriptiveSummaryProviderBase<LabourReq
                 break;
         }
 
-        using (generator.OpenBlock("childgroupactivityborder", id: $"{ModelTyped.Name}_labreq"))
+        using (generator.OpenBlock("childgroupborder activitygroup", id: $"{ModelTyped.Name}_labreq"))
         {
-            generator.AddBlockWithText("childgrouplabel", $"Labour allocation will be limited using {generator.DisplaySummaryValueSnippet(limitedBy)}");
+            generator.AddBlockWithText($"Labour allocation will be limited using {generator.DisplaySummaryValueSnippet(limitedBy)}", "childgrouplabel");
 
             if (ModelTyped.MaximumPerGroup > 0)
             {
-                generator.AddBlockWithText("activityentry", $"Each {generator.DisplaySummaryValueSnippet("LabourGroup", entryStyle: HTMLSummaryStyle.Filter)} can supply up to {generator.DisplaySummaryValueSnippet(ModelTyped.MaximumPerGroup)}{extraLimit}");
+                generator.AddBlockWithText($"Each {generator.DisplaySummaryValueSnippet("LabourGroup", entryStyle: HTMLSummaryStyle.Filter)} can supply up to {generator.DisplaySummaryValueSnippet(ModelTyped.MaximumPerGroup)}{extraLimit}");
             }
 
             if (ModelTyped.MinimumPerPerson > 0)
             {
-                generator.AddBlockWithText("activityentry", $"No labour is allocated if less than {generator.DisplaySummaryValueSnippet(ModelTyped.MinimumPerPerson)}{extraLimit}");
+                generator.AddBlockWithText($"No labour is allocated if less than {generator.DisplaySummaryValueSnippet(ModelTyped.MinimumPerPerson)}{extraLimit}");
             }
 
             if (ModelTyped.MaximumPerPerson > 0 && ModelTyped.MaximumPerPerson < 31)
             {
-                generator.AddBlockWithText("activityentry", $"No individual can provide more than {generator.DisplaySummaryValueSnippet(ModelTyped.MaximumPerPerson)}{extraLimit}");
+                generator.AddBlockWithText($"No individual can provide more than {generator.DisplaySummaryValueSnippet(ModelTyped.MaximumPerPerson)}{extraLimit}");
             }
         }
 
         if (ModelTyped.ApplyToAll)
         {
-            generator.AddBlockWithText("activityentry", $"All people matching the below criteria (first level) will perform this task. (e.g. all children)");
+            generator.AddBlockWithText($"All people matching the below criteria (first level) will perform this task. (e.g. all children)");
         }
     }
 }

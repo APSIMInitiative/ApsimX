@@ -67,7 +67,7 @@ public class TransmutationSummary: DescriptiveSummaryProviderBase<Transmutation>
             htmlWriter.Write($" (or the largest packet size needed the individual transmutes)");
         }
 
-        generator.AddBlockWithText("activityentry", htmlWriter.ToString());
+        generator.AddBlockWithText(htmlWriter.ToString());
     }
 
 }

@@ -63,6 +63,27 @@ public class DescriptiveSummaryGenerator
     {
         OutputFormat = format;
         IsDarkMode = isDarkMode;
+
+        // For each entry in 'colours', if the 'light' string references a key in CLEMcolours,
+        // replace it with the actual colour string from CLEMcolours.
+        foreach (var key in colours.Keys.ToList())
+        {
+            var (light, dark) = colours[key];
+            if (CLEMcolours.TryGetValue(light, out var clemValue))
+            {
+                // replace light with the mapped value
+                light = clemValue.light;
+                // assign the updated tuple back into the dictionary
+                colours[key] = (light, dark);
+            }
+            if (CLEMcolours.TryGetValue(dark, out var clemValueDark))
+            {
+                // replace dark with the mapped value
+                dark = clemValueDark.dark;
+                // assign the updated tuple back into the dictionary
+                colours[key] = (light, dark);
+            }
+        }
     }
 
     readonly string htmlStartString = "<!DOCTYPE html>\r\n" +
@@ -77,68 +98,58 @@ public class DescriptiveSummaryGenerator
 
     readonly string cssString = "<style>body {color: [BodyFont]; background-color: [BodyBackground]; max-width:1000px; font-size:1em; font-family: Segoe UI, Arial, sans-serif}" +
         "table {border-collapse:collapse; font-size:0.8em; }" +
-        ".resource table,th,td {border: 1px solid #996633; }" +
         "table th {padding:8px; color:[HeaderBodyFont];}" +
         "table td {padding:8px; }" +
-        " td:nth-child(n+2) {text-align:center;}" +
-        " th:nth-child(1) {text-align:left;}" +
-        ".resource th {background-color: #996633 !important; }" +
-        ".resource tr:nth-child(2n+3) {background:[ResRowBack] !important;}" +
-        ".resource tr:nth-child(2n+2) {background:[ResRowBack2] !important;}" +
-        ".resource td.fill {background-color: #c1946c !important;}" +
-        ".resource td.disabled {opacity: 0.5 !important;}" +
-        ".resourceborder {border-color:#996633; border-width:1px; border-style:solid; padding:0px; background-color:Cornsilk !important; }" +
-        ".resource h1,h2,h3 {color:#996633; } " +
-        ".resourcebanner {background-color:#996633 !important; color:[ResFontBanner]; padding:5px; font-weight:bold; border-radius:5px 5px 0px 0px; }" +
-        ".resourcebannerlight {background-color:#c1946c !important; color:[ResFontBanner]; border-radius:5px 5px 0px 0px; padding:5px 5px 5px 10px; margin-top:12px; font-weight:bold }" +
-        ".resourcebannerdark {background-color:#996633 !important; color:[ResFontBanner]; border-radius:5px 5px 0px 0px; padding:5px 5px 5px 10px; margin-top:12px; font-weight:bold }" +
-        ".resourcecontent {background-color:[ResContBack] !important; margin-bottom:15px; border-radius:0px 0px 5px 5px; border-color:#996633; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
-        ".resourcebanneralone {background-color:[ResContBack] !important; margin:10px 0px 5px 0px; border-radius:5px 5px 5px 5px; border-color:#996633; border-width:1px; border-style:solid solid solid solid; padding:5px;}" +
-        ".resourcecontentlight {background-color:[ResContBackLight] !important; margin-bottom:10px; border-radius:0px 0px 5px 5px; border-color:#c1946c; border-width:0px 1px 1px 1px; border-style:none solid solid solid; padding:10px;}" +
-        ".resourcecontentdark {background-color:[ResContBackDark] !important; margin-bottom:10px; border-radius:0px 0px 5px 5px; border-color:#996633; border-width:0px 1px 1px 1px; border-style:none solid solid solid; padding:10px;}" +
-        ".resourcelink {color:#996633; font-weight:bold; background-color:Cornsilk !important; border-color:#996633; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px; }" +
-        ".activity th,td {padding:5px; }" +
-        ".activity table,th,td {border: 1px solid #996633; }" +
-        ".activity th {background-color: #996633 !important; }" +
-        ".activity td.fill {background-color: #996633 !important; }" +
-        ".activity table {border-collapse: collapse; font-size:0.8em; }" +
-        ".activity h1,h2,h3 { color:#009999; }" +
-        ".activityborder {border-color:#009999; border-width:2px; border-style:none none none solid; padding:0px 0px 0px 10px; margin-bottom:15px; }" +
-        ".activityborderfull {border-color:#009999; border-radius:5px; background-color:#f0f0f0 !important; border-width:1px; border-style:solid; margin-bottom:40px; }" +
-        ".activitybanner {background-color:#009999 !important; border-radius:5px 5px 0px 0px; color:#f0f0f0; padding:5px; font-weight:bold }" +
-        ".activitybannerlight {background-color:#86b2b1 !important; border-radius:5px 5px 0px 0px; color:white; padding:5px 5px 5px 10px; margin-top:12px; font-weight:bold }" +
-        ".activitybannerdark {background-color:#009999 !important; border-radius:5px 5px 0px 0px; color:white; padding:5px 5px 5px 10px; margin-top:12px; font-weight:bold }" +
-        ".activitybannercontent {background-color:#86b2b1 !important; border-radius:5px 5px 0px 0px; padding:5px 5px 5px 10px; margin-top:5px; }" +
-        ".activitycontent {background-color:[ActContBack] !important; margin-bottom:15px; border-radius:0px 0px 5px 5px; border-color:#009999; border-width:0px 1px 1px 1px; border-style:none solid solid solid; padding:10px;}" +
-        ".activitycontentlight {background-color:[ActContBackLight] !important; margin-bottom:10px; border-radius:0px 0px 5px 5px; border-color:#86b2b1; border-width:0px 1px 1px 1px; border-style:solid; padding:10px;}" +
-        ".activitycontentdark {background-color:[ActContBackDark] !important; margin-bottom:10px; border-radius:0px 0px 5px 5px; border-color:#86b2b1; border-width:0px 1px 1px 1px; border-style:none solid solid solid; padding:10px;}" +
-        ".activitypadding {padding:10px; }" +
-        ".activityentry {padding:5px 0px 5px 0px; }" +
-        ".activityentryindent {margin-left:15px;}" +
-        ".activityarea {padding:10px; }" +
-        ".activitygroupsborder {border-color:#86b2b1; background-color:[ActContBackGroups] !important; border-width:1px; border-style:solid; padding:5px 10px; margin-bottom:5px; margin-top:15px;}" +
-        ".activitylink {color:#009999; font-weight:bold; background-color:[ActContBack] !important; border-color:#009999; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px; }" +
-        ".topspacing { margin-top:10px; }" +
+        "td:nth-child(n+2) {text-align:center;}" +
+        "th:nth-child(1) {text-align:left;}" +
+        "td.disabled {opacity: 0.5 !important;}" +
+        ".resource table,th,td {border: 1px solid [TableBorder-Res]; }" +
+        ".resource th {background-color: [TableHeaderBackground-Res] !important; }" +
+        ".resource tr:nth-child(2n+3) {background:[TableRowBackground1-Res] !important;}" +
+        ".resource tr:nth-child(2n+2) {background:[TableRowBackground2-Res] !important;}" +
+        ".resource td.fill {background-color:[TableCellBackground1-Res] !important;}" +
+        ".activity table,th,td {border: 1px solid Resource; }" +
+        ".activity th {background-color: Resource !important; }" +
+        ".activity td.fill {background-color: Resource !important; }" +
+        ".resource h1,h2,h3 {color:[Headings-Res]; } " +
+        ".activity h1,h2,h3 { color:[Headings-Act]; }" +
         ".disabled { color:#CCC; }" +
+        ".disabledcomponent {opacity: 0.3}" +
+
         ".clearfix { overflow: auto; }" +
-        ".namediv { float:left; vertical-align:middle; }" +
-        ".typediv { float:left; vertical-align:middle; font-size:0.6em; }" +
-        ".highlightdiv { float:left; vertical-align:middle; color:black; border-color:black; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; margin-top: 5px; margin-right:10px; border-radius:3px; background-color:DarkOrange}" +
-        ".partialdiv { font-size:0.8em; float:right; text-transform: uppercase; color:white; font-weight:bold; vertical-align:middle; border-color:white; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; margin-left: 10px;  border-radius:3px; }" +
-        ".partialinvertdiv { font-size:0.8em; float:right; text-transform: uppercase; color:black; font-weight:bold; vertical-align:middle; background-color:white; border-color:white; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; margin-left: 10px; border-radius:6px; }" +
-        ".filelink {color:green; font-weight:bold; background-color:mintcream !important; border-color:green; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px; }" +
-        ".errorlink {color:white; font-weight:bold; background-color:red !important; border-color:darkred; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px; }" +
-        ".warninglink {color:white; font-weight:bold; background-color:orange !important; border-color:darkorange; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px; }" +
-        ".setvalue {font-weight:bold; background-color: [ValueSetBack] !important; Color: [ValueSetFont]; border-color:#697c7c; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px;}" +
+        ".partial { font-size:0.8em; float:right; text-transform: uppercase; color:white; font-weight:bold; vertical-align:middle; border-color:white; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; margin-left: 10px; border-radius:3px; }" +
+
+        ".topspacing { margin-top:10px; }" +
+        ".holdermain {margin: 0px 0px 40px 0px}" +
+        ".holdersub {margin: 20px 0px 5px}" +
+
         ".folder {color:#666666; font-style: italic; font-size:1.1em; }" +
-        ".childgrouplabel {color:#666666; font-style: italic; font-size:0.9em; margin-bottom-10px; }" +
-        ".childgrouprotationborder {border-color:#86b2b1; background-color:[CropRotationBack] !important; border-width:1px; border-style:solid; padding:0px 10px 0px 10px; margin-bottom:5px;margin-top:10px; border-radius:5px; }" +
-        ".childgroupactivityborder {border-color:#009999; background-color:[ActContBackLight] !important; border-width:1px; border-style:solid; padding:5px; margin-bottom:5px; margin-top:5px; border-radius:5px;}" +
-        ".childgroupfilterborder {border-color:#cc33cc; background-color:[LabourGroupBack] !important; border-width:1px; border-style:solid; padding:5px; margin-bottom:5px; margin-top:5px; border-radius:5px;}" +
-        ".childgroupresourceborder {border-color:#c1946c; background-color:[ResContBackLight] !important; border-width:1px; border-style:solid; padding:5px; margin-bottom:5px; margin-top:5px; border-radius:5px;}" +
-        ".labournote {font-style: italic; color:#666666; padding-top:7px;}" +
-        ".warningbanner {background-color:Orange !important; border-radius:5px 5px 5px 5px; color:Black; padding:5px; font-weight:bold; margin-bottom:10px;margin-top:10px; }" +
-        ".errorbanner {background-color:Red !important; border-radius:5px 5px 5px 5px; color:White; padding:5px; font-weight:bold; margin-bottom:10px;margin-top:10px; }" +
+
+        ".componentBanner {font-weight:bold; border-radius:5px 5px 0px 0px; padding:5px 5px 5px 10px; margin-top:0px; color:[BannerFont-Other]; background-color:[BannerBackground-Other];}" +
+        ".componentContent {margin-bottom:20px; border-radius:0px 0px 5px 5px; border-width:1px; border-style:none solid solid solid; padding:10px; background-color:[ContentBackground-Other]; border-color:[BannerBackground-Other];}" +
+        ".componentContentNoBanner {margin-bottom:20px; border-radius:5px; border-width:1px; border-style:solid; padding:5px; background-color:[ContentBackground-Other]; border-color:[BannerBackground-Other];}" +
+
+        ".resource .componentContentAlone {background-color:[BannerContentBackground-Res]; border-color:Resource}" +
+
+        ".resource .componentBanner {color:[BannerFont-Res]; background-color:[BannerBackground-Res];}" +
+        ".resource .light.componentBanner {background-color:[BannerBackgroundLight-Res]; }" +
+        ".resource .dark.componentBanner {background-color:[BannerBackgroundDark-Res]; }" +
+        ".resource .light.componentContent {background-color:[ContentBackgroundLight-Res]; border-color:[BannerBackgroundLight-Res]; }" +
+        ".resource .dark.componentContent {background-color:[ContentBackgroundDark-Res]; border-color:[BannerBackgroundDark-Res]; }" +
+
+        ".activity .componentBanner {color:[BannerFont-Act]; background-color:[BannerBackground-Act]}" +
+        ".activity .light.componentBanner {background-color:[BannerBackgroundLight-Act]; }" +
+        ".activity .dark.componentBanner {background-color:[BannerBackgroundDark-Act]; }" +
+        ".activity .light.componentContent {background-color:[ContentBackgroundLight-Act]; border-color:[BannerBackgroundLight-Act]; }" +
+        ".activity .dark.componentContent {background-color:[ContentBackgroundDark-Act]; border-color:[BannerBackgroundDark-Act]; }" +
+
+        ".file .componentBanner {color:[BannerFont-File]; background-color:[BannerBackground-File]}" +
+        ".file .componentContent {background-color:[ContentBackground-File] !important; border-color:[BannerBackground-File]; }" +
+        ".other .componentBanner {color:[BannerFont-Other] !important; background-color:[BannerBackground-Other] !important}" +
+        ".other .componentContent {background-color:[ContentBackground-Other] !important; border-color:[BannerBackground-Other] !important; }" +
+
+        ".memo .componentBanner {background-color:[MemoBorder]; padding:10px; color:[MemoTitle]; }" +
+
         ".memobanner {background-color:white !important; border-radius:5px 5px 5px 5px;border-color:Blue;border-width:1px;border-style:solid;color:Navy; padding:10px; margin-bottom:10px;margin-top:10px; font-size:0.8em;}" +
         ".memo-container {display:grid; grid-template-columns: 70px auto;border-radius:7px; border-color:[MemoBorder]; border-width:2px; border-style:solid; background-color:[MemoBackground]; margin-bottom:10px; margin-top:10px;}" +
         ".memo-head {background-color:[MemoBorder]; padding:10px; color:[MemoTitle]; font-weight:bold;}" +
@@ -147,69 +158,170 @@ public class DescriptiveSummaryGenerator
         ".memo-head-simple {background-color:[MemoBorder]; padding:0px; color:[MemoTitle]; font-weight:bold;}" +
         ".memo-text-simple {margin:auto 5px; color:[MemoText]; font-size:0.8em;}" +
         ".memo-container h1 {color:[MemoText]; } " +
-        ".filterlink {font-weight:bold; color:#cc33cc; background-color:[FiltContBack] !important; border-color:#cc33cc; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px; }" +
-        ".filtername {margin:5px 0px 5px 0px; font-size:0.9em; color:#cc33cc;font-weight:bold;}" +
-        ".filterborder {display: block; width: 100% - 40px; border-color:#cc33cc; background-color:[FiltContBack] !important; border-width:1px; border-style:solid; padding:0px 5px 5px 5px; margin:5px 0px 5px 0px; border-radius:5px; }" +
-        ".filterset {font-size:0.85em; font-weight:bold; color:#cc33cc; background-color:[FiltContBack] !important; border-width:0px; border-style:none; padding: 1px 3px; margin: 2px 3px 0px 0px; border-radius:3px; }" +
-        ".filtersettitle {float:left; margin-right:5px;}" +
-        ".filteractivityborder {background-color:[FiltContActivityBack] !important; color:#fff; }" +
-        ".filter {float: left; border-color:#cc33cc; background-color:#cc33cc !important; color:white; border-width:1px; border-style:solid; padding: 1px 5px 1px 5px; margin: 5px 5px 0px 5px; border-radius:3px;}" +
-        ".filtererror {font-size:0.85em; font-weight:bold; border-color:red; background-color:[FiltContBack] !important; color:red; border-width:1px; border-style:solid; padding: 1px 3px; font-weight:bold; margin: 2px 3px 0px 0px; border-radius:3px;}" +
-        ".parametername {float: left; background-color:#996633 !important; color:[ResFontBanner]; border-width:0px; border-style:none; padding: 1px 5px 1px 5px; margin: 7px 0px 0px 0px; border-radius:3px; font-weight:bold; font-size:0.6em}" +
-        ".parameterdetails {float: left; padding: 1px 5px 1px 5px; margin: 0px 5px 0px 5px;}" +
-        ".filebanner {background-color:green !important; border-radius:5px 5px 0px 0px; color:mintcream; padding:5px; font-weight:bold }" +
-        ".filecontent {background-color:[ContFileBack] !important; margin-bottom:20px; border-radius:0px 0px 5px 5px; border-color:green; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
-        ".defaultbanner {background-color:[ContDefaultBanner] !important; border-radius:5px 5px 0px 0px; color:[ContDefaultTitle]; padding:5px; font-weight:bold }" +
-        ".defaultcontent {background-color:[ContDefaultBack] !important; margin-bottom:20px; border-radius:0px 0px 5px 5px; border-color:[ContDefaultBanner]; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
-        ".holdermain {margin: 20px 0px 20px 0px}" +
-        ".holdersub {margin: 5px 0px 5px}" +
-        ".detailsnote {font-size:0.8em; font-style:italic; margin-bottom:10px;}" +
-        ".otherlink {font-weight:bold; color:black; background-color:[ContDefaultBack] !important; border-color:black; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px; }" + 
-        ".disabledcomponent {opacity: 0.3}";
 
-    readonly static Dictionary<string, (string light, string dark)> colours = new()
+        ".entryHolder {padding:5px 0px 5px 0px;}" +
+        ".entryHolder.indent {margin-left:15px;}" +
+
+        ".entryValue {font-weight:bold; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px; color:[ValueFont]; background-color:[ValueBackground]; border-color:[ValueBorder]; }" +
+        ".resourceValue.entryValue {color:[ValueFont-Res]; background-color:[ValueBackground-Res]; border-color:[ValueBorder-Res];}" +
+        ".activityValue.entryValue {color:[ValueFont-Act]; background-color:[ValueBackground-Act]; border-color:[ValueBorder-Act];}" +
+        ".fileValue.entryValue {color:[ValueFont-File]; background-color:[ValueBackground-File]; border-color:[ValueBorder-File];}" +
+        ".errorValue.entryValue {color:[ValueFont-Error]; background-color:[ValueBackground-Error]; border-color:[ValueBorder-Error];}" +
+        ".warningValue.entryValue {color:[ValueFont-Warn]; background-color:[ValueBackground-Warn]; border-color:[ValueBorder-Warn];}" +
+        ".filterValue.entryValue {color:[ValueFont-Filter]; background-color:[ValueBackground-Filter]; border-color:[ValueBorder-Filter];}" +
+        ".filterError.entryValue {color:[ValueFont-Filter]; background-color:[ValueBackground-Filter]; border-color:[ValueBorder-Filter];}" +
+        ".otherValue.entryValue {color:[ValueFont-Other]; background-color:[ValueBackground-Other]; border-color:[ValueBorder-Other];}" +
+        ".labelValue.entryValue {background-color:transparent; border-color:transparent; border-width:0px; border-style:none; padding:0px; border-radius:0px;}" +
+        ".filterItem.entryValue {color:[Font-Filter]; background-color:[Filter]; border-color:[Filter]; padding: 2px 5px 2px 5px; margin: 5px 5px 0px 5px;}" +
+
+        ".entryValue.floatLeft {float:left; vertical-align:middle;}" +
+        ".entryValue.smaller {font-size:0.6em;}" +
+        ".filterItem .entryValue {font-size:0.9em;}" +
+        ".error.filteritem {border-color:[Font-FilterError]; background-color:[Background-ErrorFilter]; color:[Font-FilterError]; font-weight:bold; }" +
+        ".filteritemstitle {float:left; margin-right:5px;}" +
+        ".childTitle {margin:10px 0px 5px 0px; font-weight:bold;}" + //  font-size:0.9em;
+        ".filter.childTitle {color:[Font-Filter];}" +
+
+        ".childgrouplabel {padding:5px 0px 5px 0px; margin-bottom: 10px;}" + //color:#666666; font-style: italic; font-size:0.9em;
+        ".childgroupborder {border-width:0px; border-style:solid; padding:10px; margin:10px 0px 5px 0px; border-radius:5px; }" +
+        ".rotationgroup.childgroupborder {border-color:[GroupBorder-Rotation]; background-color:[GroupBackground-Rotation]; border-width:1px; }" +
+        ".activitygroup.childgroupborder {border-color:[GroupBorder-Act]; background-color:[GroupBackground-Act]; border-width:1px; }" +
+        ".filtergroup.childgroupborder {border-color:[GroupBorder-Filter]; background-color:[GroupBackground-Filter]; border-width:1px; }" +
+        ".resourcegroup.childgroupborder {border-color:[GroupBorder-Res]; background-color:[BannerBackgroundDark-Res]; border-width:1px; }" +
+        ".labourgroup.childgroupborder {border-color:[GroupBorder-Labour]; background-color:[GroupBackground-Labour]; border-width:1px; }" +
+        ".filteritems.childgroupborder {display: block; width: 100% - 40px; border-color:[Filter]; background-color:[Content-Filter]; border-width:1px; padding:0px 5px 5px 5px; margin:5px 0px 5px 0px;}" +
+
+        ".parametername {float: left; background-color:Resource !important; color:[BannerFont-Res]; border-width:0px; border-style:none; padding: 1px 5px 1px 5px; margin: 7px 0px 0px 0px; border-radius:3px; font-weight:bold; font-size:0.6em}" +
+        ".parameterdetails {float: left; padding: 1px 5px 1px 5px; margin: 0px 5px 0px 5px;}" +
+
+        ".infoBanner {background-color:[BannerBackground]; border-radius:5px 5px 5px 5px; color:[BannerFont]; padding:5px; font-weight:bold; margin-bottom:10px;margin-top:10px; }" +
+        ".infoBanner.warning {background-color:[BannerBackground-Warning]; color:[BannerFont-Warning];}" +
+        ".infoBanner.error {background-color:[BannerBackground-Error]; color:[BannerFont-Error];}" +
+
+        ".detailsnote {font-weight:bold; margin:5px 0px 5px 0px; padding:5px; }" + //font - style:italic; font-size:0.8em; 
+        ".resource .childgroupborder .detailsnote {border-color:[GroupBorder-Res]; background-color:[GroupBackground-Res]; border-width:1px; }" +
+        
+        ".activityborder {border-color:[GroupBackground-Act]; border-width:2px; border-style:none none none solid; padding:0px 0px 0px 10px; margin-bottom:15px; }" +
+        "";
+
+    readonly static Dictionary<string, (string light, string dark)> CLEMcolours = new()
+    {
+        { "Resource", ("#996Resource633", "#996633") },
+        { "ResourceLight", ("#c1946c","#c1946c") },
+        { "Activity", ("#009999", "#009999") },
+        { "Filter", ("#cc33cc","#952295") },
+        { "FontLight", ("floralwhite","#281A0E") },
+    };
+
+    private Dictionary<string, (string light, string dark)> colours = new()
     {
         { "BodyBackground", ("white", "#101010") },
-        { "BodyFont", ("black", "#e5e5e5") },
+        { "BodyFont", ("black", "#d0d0d0") },
+        { "Headings-Res", ("Resource","Resource") },
+        { "Headings-Act", ("Activity","Activity") },
         { "MemoBorder", ("deepskyblue", "#49adc4") },
         { "MemoBackground", ("white", "#006064") },
         { "MemoTitle", ("white", "#0e2023") },
         { "MemoText", ("black", "#CFD8DC") },
+        { "TableBorder-Res", ("Resource", "Resource") },
+        { "TableHeaderBackground-Res", ("Resource", "Resource") },
+        { "TableRowBackground1-Res", ("FontLight","FontLight") },
+        { "TableRowBackground2-Res", ("white","#3F2817") },
+        { "TableCellBackground1-Res", ("ResourceLight","ResourceLight") },
+        { "Border-Res", ("ResourceLight","ResourceLight") },
+        { "BorderBackground-Res", ("Cornsilk","Cornsilk") },
+        { "BannerBackground-Res", ("Resource","Resource") },
+        { "BannerBackgroundLight-Res", ("ResourceLight","ResourceLight") },
+        { "BannerBackgroundDark-Res", ("Resource","Resource") },
+        { "BannerFont-Res", ("FontLight","FontLight") },
+        { "ContentBackground-Res", ("FontLight","FontLight") },
+        { "ContentBackgroundLight-Res", ("white","#3F2817") },
+        { "ContentBackgroundDark-Res", ("FontLight","FontLight") },
+        { "ContentFont-Res", ("black","#e5e5e5") },
+        { "ContentBorderLight-Res", ("ResourceLight","ResourceLight") },
+        { "ContentBorderDark-Res", ("Resource","Resource") },
+        { "Border-Act", ("ResourceLight","ResourceLight") },
+        { "BorderBackground-Act", ("Cornsilk","Cornsilk") },
+        { "BannerBackground-Act", ("Activity","Activity") },
+        { "BannerBackgroundLight-Act", ("white","Activity") },
+        { "BannerBackgroundDark-Act", ("Activity","Activity") },
+        { "BannerFont-Act", ("FontLight","FontLight") },
+        { "ContentBackground-Act", ("#efffff","#003F3D") },
+        { "ContentBackgroundLight-Act", ("white","#005954") },
+        { "ContentBackgroundDark-Act", ("#efffff","#003F3D") },
+        { "ContentFont-Act", ("black","#e5e5e5") },
+        { "ContentBorderLight-Act", ("ResourceLight","ResourceLight") },
+        { "ContentBorderDark-Act", ("Resource","Resource") },
+        { "BannerBackground-File", ("Green","Green") },
+        { "BannerFont-File", ("MintGreen","MintGreen") },
+        { "ContentBackground-File", ("#deffde","#0C440C") },
+        { "BannerBackground-Other", ("black","#686868") },
+        { "BannerFont-Other", ("white","#E0E0E0") },
+        { "ContentBackground-Other", ("#e6e6e6","#282828") },
+        { "ValueFont", ("black","#0e2023") },
+        { "ValueBackground", ("#e8fbfc","#49adc4") },
+        { "ValueBorder", ("#e8fbfc","#49adc4") },
+        { "ValueFont-Res", ("Resource","Resource") },
+        { "ValueBackground-Res", ("Cornsilk","Cornsilk") },
+        { "ValueBorder-Res", ("Resource","Resource") },
+        { "ValueFont-Act", ("Activity","Activity") },
+        { "ValueBackground-Act", ("#efffff", "#efffff") },
+        { "ValueBorder-Act", ("Activity","Activity") },
+        { "ValueFont-File", ("Green","Green") },
+        { "ValueBackground-File", ("mintcream", "mintcream") },
+        { "ValueBorder-File", ("Green","Green") },
+        { "ValueFont-Filter", ("Filter","#de91de") },
+        { "ValueBackground-Filter", ("#fbe8fc","#1a011b") },
+        { "ValueBorder-Filter", ("Filter","#1a011b") },
+        { "ValueFont-FilterError", ("Red","Red") },
+        { "ValueBackground-FilterError", ("#fbe8fc","#5c195e") },
+        { "ValueBorder-FilterError", ("Red","Red") },
+        { "ValueFont-Error", ("White","Pink") },
+        { "ValueBackground-Error", ("Red", "DarkRed") },
+        { "ValueBorder-Error", ("DarkRed","DarkRed") },
+        { "ValueFont-Warn", ("White","White") },
+        { "ValueBackground-Warn", ("Orange","Orange") },
+        { "ValueBorder-Warn", ("DarkOrange", "DarkOrange") },
+        { "ValueFont-Other", ("Black","Black") },
+        { "ValueBackground-Other", ("#e6e6e6","#e6e6e6") },
+        { "ValueBorder-Other", ("Black", "Black") },
+        { "GroupBorder-Res", ("Resource", "Resource") },
+        { "GroupBorder-Act", ("Activity", "Activity") },
+        { "GroupBorder-Filter", ("Filter","Filter") },
+        { "GroupBorder-Rotation", ("#86b2b1", "#86b2b1") },
+        { "GroupBorder-Labour", ("Resource","ResourceLight") },
+        { "GroupBackground-Res", ("white","#3F2817") },
+        { "GroupBackground-Act", ("white","#f003F3D") },
+        { "GroupBackground-Filter", ("#fbe8fc","#1a011b") },
+        { "GroupBackground-Rotation", ("white","#97B2B1") },
+        { "GroupBackground-Labour", ("white","ResourceLight") },
+        { "Filter", ("Filter","Filter") },
+        { "Content-Filter", ("#fbe8fc","#5c195e") },
+        { "Font-Filter", ("white","#f0caf0") },
+        { "Background-FilterError", ("#ffcccc", "#ffcccc") },
+        { "Font-FilterError", ("red","red") },
         { "HeaderFontColor", ("white", "black") },
-        { "ResRowBack", ("floralwhite","#281A0E") },
-        { "ResRowBack2", ("white","#3F2817") },
-        { "ResContBack", ("floralwhite","#281A0E") },
-        { "ResContBackLight", ("white","#3F2817") },
-        { "ResContBackDark", ("floralwhite","#281A0E") },
-        { "ResFontBanner", ("white","#281A0E") },
-        { "ResFontContent", ("black","#e5e5e5") },
-        { "ActContBack", ("#efffff","#003F3D") },
-        { "ActContBackLight", ("white","#005954") },
-        { "ActContBackDark", ("#efffff","#f003F3D") },
-        { "ActContBackGroups", ("white","#f003F3D") },
-        { "ContDefaultBack", ("#e6e6e6","#282828") },
-        { "ContDefaultBanner", ("black","#686868") },
-        { "ContDefaultTitle", ("white","#E0E0E0") },
-        { "ContFileBack", ("#deffde","#0C440C") },
-        { "CropRotationBack", ("white","#97B2B1") },
-        { "LabourGroupBack", ("white","#c1946c") },
-        { "LabourGroupBorder", ("#996633","#c1946c") },
-        { "FiltContBack", ("#fbe8fc","#5c195e") },
-        { "FiltContActivityBack", ("#cc33cc","#cc33cc") },
-        { "ValueSetBack", ("#e8fbfc","#49adc4") },
-        { "ValueSetFont", ("black","#0e2023") }
+        { "BannerFont", ("blue", "navy") },
+        { "BannerBackground", ("lightblue", "steelblue") },
+        { "BannerBorder", ("blue", "navy") },
+        { "BannerFont-Warning", ("white", "#eadecf") },
+        { "BannerBackground-Warning", ("orange", "darkorange") },
+        { "BannerBorder-Warning", ("darkorange", "black") },
+        { "BannerFont-Error", ("white", "#eadecf") },
+        { "BannerBackground-Error", ("red", "darkred") },
+        { "BannerBorder-Error", ("darkred", "black") },
     };
 
     readonly static Dictionary<string, (string, string)> graphColours = new()
     {
         { "FontColor", ("black", "#E5E5E5") },
         { "HeaderFontColor", ("white", "black") },
-        { "ResRowBack", ("floralwhite","#281A0E") },
-        { "ResRowBack2", ("white","#3F2817") },
-        { "ResContBack", ("floralwhite","#281A0E") },
+        { "TableRowBackground1-Res", ("FontLight","FontLight") },
+        { "TableRowBackground2-Res", ("white","#3F2817") },
+        { "ResContBack", ("FontLight","FontLight") },
         { "ResContBackLight", ("white","#3F2817") },
-        { "ResContBackDark", ("floralwhite","#281A0E") },
-        { "ResFontBanner", ("white","white") },
+        { "ResContBackDark", ("FontLight","FontLight") },
+        { "BannerFont-Res", ("white","white") },
         { "ResFontContent", ("black","white") },
         { "ActContBack", ("#efffff","#003F3D") },
         { "ActContBackLight", ("white","#005954") },
@@ -219,8 +331,8 @@ public class DescriptiveSummaryGenerator
         { "ContDefaultBanner", ("black","#686868") },
         { "ContFileBack", ("#deffde","#0C440C") },
         { "CropRotationBack", ("white","#97B2B1") },
-        { "LabourGroupBack", ("white","#c1946c") },
-        { "LabourGroupBorder", ("#996633","#c1946c") },
+        { "LabourGroupBack", ("white","ResourceLight") },
+        { "LabourGroupBorder", ("Resource","ResourceLight") },
         { "FiltContBack", ("#fbe8fc","#5c195e") },
         { "FiltContActivityBack", ("#cc33cc","#cc33cc") },
         { "ValueSetBack", ("#e8fbfc","#49adc4") },
@@ -277,7 +389,7 @@ public class DescriptiveSummaryGenerator
         {
             if (!provider.FormatForParentControl && acm.Identifier != null)
             {
-                AddBlockWithText("activityentry", $"Applies to {CLEMModel.DisplaySummaryValueSnippet(acm.Identifier)}");
+                AddBlockWithText($"Applies to {CLEMModel.DisplaySummaryValueSnippet(acm.Identifier)}");
             }
         }
 
@@ -324,11 +436,11 @@ public class DescriptiveSummaryGenerator
     {
         if (!componentGroup.SelectedModels.Any() && string.IsNullOrEmpty(componentGroup.Missing)) return;
 
-        using (OpenBlock(componentGroup.BorderCssClass))
+        using (OpenBlock(componentGroup.BorderCssClass, allowIgnore: true))
         {
             if (componentGroup.Introduction != "")
             {
-                AddBlockWithText("childgrouplabel", componentGroup.Introduction);
+                AddBlockWithText(componentGroup.Introduction, "childgrouplabel");
             }
 
             foreach (var item in componentGroup.SelectedModels)
@@ -351,9 +463,9 @@ public class DescriptiveSummaryGenerator
 
             if (!componentGroup.SelectedModels.Any() && componentGroup.Missing != "")
             {
-                using (OpenBlock("errorbanner clearfix"))
+                using (OpenBlock("infoBanner error clearfix"))
                 {
-                    AddBlockWithText("activityentry", componentGroup.Missing);
+                    AddBlockWithText(componentGroup.Missing);
                 }
             }
         }
@@ -375,8 +487,8 @@ public class DescriptiveSummaryGenerator
 
             using (OpenBlock(memoContainerClass))
             {
-                AddBlockWithText(memoHeadClass, "Notes");
-                AddBlockWithText(memoTextClass, text);
+                AddBlockWithText("Notes", memoHeadClass);
+                AddBlockWithText(text, memoTextClass);
             }
         }
     }
@@ -509,13 +621,13 @@ public class DescriptiveSummaryGenerator
     /// Add a formatted parameter value entry
     /// </summary>
     /// <param name="name">Name of parameter group</param>
-    /// <param name="text">FOrmatted text to display</param>
+    /// <param name="text">Formatted text to display</param>
     public void AddSummaryParameterSnippet(string name, string text)
     {
-        using (OpenBlock("activityentry clearfix"))
+        using (OpenBlock("entryHolder clearfix"))
         {
-            AddBlockWithText("parameterdetails", text);
-            AddBlockWithText("parametername", name);
+            AddBlockWithText(text, "parameterdetails");
+            AddBlockWithText(name, "parametername");
         }
     }
     private string SetCSS()
@@ -550,10 +662,10 @@ public class DescriptiveSummaryGenerator
 
         if (OutputFormat == DescriptiveSummaryFormat.HTML)
         {
-            openTag = "<table><tr>";
+            openTag = "<table><thead><tr>";
             cellWrapStart = "<th>";
             cellWrapEnd = "</th>";
-            endTag = "</tr>";
+            endTag = "</tr></thead><tbody>";
         }
 
         sb.AppendLine(GetIndentTabs+openTag);
@@ -614,7 +726,7 @@ public class DescriptiveSummaryGenerator
         switch (OutputFormat)
         {
             case DescriptiveSummaryFormat.HTML:
-                Append("</table>");
+                Append("</tbody></table>");
                 break;
             case DescriptiveSummaryFormat.Markdown:
                 sb.AppendLine();
@@ -652,32 +764,34 @@ public class DescriptiveSummaryGenerator
 
     private void AddDetails(IModel component)
     {
-        AddBlockWithText("detailsnote", $"{GetIndentTabs}You will need to keep refreshing this page to see changes relating to the last component selected");
+        AddBlockWithText($"{GetIndentTabs}You will need to keep refreshing this page to see changes relating to the last component selected", "detailsnote");
 
-        using (OpenBlock("clearfix defaultbanner"))
+        using (OpenBlock("clearfix componentBanner"))
         {
-            AddBlockWithText("namediv", $"Component {component.GetType().Name} named {component.Name}");
+            AddBlockWithText($"Component {component.GetType().Name} named {component.Name}", "entryValue labelValue floatLeft");
             AddLineBreak();
-            AddBlockWithText("typediv", $"Details");
+            AddBlockWithText($"Details", "entryValue labelValue floatLeft smaller");
         }
 
-        using (OpenBlock("defaultcontent"))
+        using (OpenBlock("componentContent"))
         {
             //Model sim = (component as Model).Node.FindParent<Simulation>(relativeTo: component as Model, recurse: true);
-            //AddBlockWithText(sb, "activityentry", $"{GetIndentTabs}Simulation: {sim.Name}");
-            AddBlockWithText("activityentry", $"{GetIndentTabs}Summary last created on {DateTime.Now.ToShortDateString()} at {DateTime.Now.ToShortTimeString()}");
+            //AddBlockWithText(sb, "entryHolder", $"{GetIndentTabs}Simulation: {sim.Name}");
+            AddBlockWithText($"{GetIndentTabs}Summary last created on {DateTime.Now.ToShortDateString()} at {DateTime.Now.ToShortTimeString()}");
         }
     }
 
     /// <summary>
     /// Add a block with specified text
     /// </summary>
-    /// <param name="classString"></param>
     /// <param name="text"></param>
+    /// <param name="classString"></param>
     /// <param name="styleString"></param>
     /// <param name="disabled"></param>
     /// <param name="tag">HTML block type</param>
-    public void AddBlockWithText(string classString, string text, string styleString = "", bool disabled = false, string tag = "div")
+    /// <param name="addTopBottomMargin"></param>
+    /// <param name="ignore"></param>
+    public void AddBlockWithText(string text, string classString = "",string styleString = "", bool disabled = false, string tag = "div", bool addTopBottomMargin = true, bool ignore = false)
     {
         using (OpenBlock(classString, styleString, tag: tag, disabled: disabled))
         {
@@ -688,12 +802,16 @@ public class DescriptiveSummaryGenerator
     /// <summary>
     /// Opens a block and returns an IDisposable that will close it when disposed.
     /// </summary>
-    public IDisposable OpenBlock(string classString, string styleString = "",
-        string id = "", bool disabled = false, string tag = "div")
+    public IDisposable OpenBlock(string classString = "", string styleString = "",
+        string id = "", bool disabled = false, string tag = "div", bool addTopBottomMargin = true, bool allowIgnore = false)
     {
-        if (tag == "div" && string.IsNullOrWhiteSpace(classString) && string.IsNullOrWhiteSpace(styleString))
+        if (tag == "div" && string.IsNullOrWhiteSpace(classString) && string.IsNullOrWhiteSpace(styleString) && addTopBottomMargin)
         {
-            return new BlockScope(this, ignore: true);
+            if (allowIgnore)
+            {
+                return new BlockScope(this, ignore: true);
+            }
+            classString = "entryHolder";
         }
 
         switch (OutputFormat)
@@ -794,7 +912,7 @@ public class DescriptiveSummaryGenerator
         string htmlEnd = (htmlTags) ? "</span>" : string.Empty;
         if (htmlTags)
         {
-            htmlStart = $"<span class=\"errorlink\">";
+            htmlStart = $"<span class=\"entryValue errorValue\">";
         }
         return $"{htmlStart}{errorString}{htmlEnd}";
     }
@@ -810,22 +928,22 @@ public class DescriptiveSummaryGenerator
     /// <param name="errorNotSet">Format as error if value not set or default</param>
     /// <param name="spanClass">Override the default 'setvalue' class to use.</param>
     /// <returns>HTML span snippet</returns>
-    public string DisplaySummaryValueSnippet<T>(T value, string errorString = "Not set", HTMLSummaryStyle entryStyle = HTMLSummaryStyle.Default, bool htmlTags = true, bool warnZero = false, bool errorNotSet = false, string spanClass = "setvalue")
+    public string DisplaySummaryValueSnippet<T>(T value, string errorString = "Not set", HTMLSummaryStyle entryStyle = HTMLSummaryStyle.Default, bool htmlTags = true, bool warnZero = false, bool errorNotSet = false, string spanClass = "")
     {
-        string errorClass = "errorlink";
+        string errorClass = "errorValue";
         switch (entryStyle)
         {
             case HTMLSummaryStyle.Default:
                 break;
             case HTMLSummaryStyle.Resource:
-                spanClass = "resourcelink";
+                spanClass = "resourceValue";
                 break;
             case HTMLSummaryStyle.SubResource:
                 break;
             case HTMLSummaryStyle.SubResourceLevel2:
                 break;
             case HTMLSummaryStyle.Activity:
-                spanClass = "activitylink";
+                spanClass = "activityValue";
                 break;
             case HTMLSummaryStyle.SubActivity:
                 break;
@@ -834,10 +952,10 @@ public class DescriptiveSummaryGenerator
             case HTMLSummaryStyle.Helper:
                 break;
             case HTMLSummaryStyle.FileReader:
-                spanClass = "filelink";
+                spanClass = "fileValue";
                 break;
             case HTMLSummaryStyle.Filter:
-                spanClass = "filterset";
+                spanClass = "filterValue";
                 errorClass = "filtererror";
                 break;
             default:
@@ -867,7 +985,7 @@ public class DescriptiveSummaryGenerator
                         if (zeroTest == 0.0)
                         {
                             zeroFound = true;
-                            errorClass = "warninglink";
+                            errorClass = "warningValue";
                             errorString = "? 0";
                         }
                         break;
@@ -945,7 +1063,7 @@ public class DescriptiveSummaryGenerator
             valueString = formatted;
             if (htmlTags)
             {
-                htmlStart = $"<span class=\"{spanClass}\">";
+                htmlStart = $"<span class=\"entryValue {spanClass}\">";
             }
         }
         else
@@ -953,7 +1071,7 @@ public class DescriptiveSummaryGenerator
             valueString = errorString;
             if (htmlTags)
             {
-                htmlStart = $"<span class=\"{errorClass}\">";
+                htmlStart = $"<span class=\"entryValue {errorClass}\">";
             }
         }
         return $"{htmlStart}{valueString}{htmlEnd}";
@@ -996,10 +1114,10 @@ public class DescriptiveSummaryGenerator
     /// <returns>HTML span snippet</returns>
     public string DisplaySummaryResourceTypeSnippet(string value, string errorString = "Not set", bool htmlTags = true, bool nullGeneralYards = false)
     {
-        string spanClass = "resourcelink";
-        string errorClass = "errorlink";
+        string spanClass = "resourceValue";
+        string errorClass = "errorValue";
         string htmlEnd = (htmlTags) ? "</span>" : string.Empty;
-        string htmlStart = (htmlTags) ? $"<span class=\"{spanClass}\">" : string.Empty;
+        string htmlStart = (htmlTags) ? $"<span class=\"entryValue {spanClass}\">" : string.Empty;
 
         string valueString;
         if (value == null || value == "")

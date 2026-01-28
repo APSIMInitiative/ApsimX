@@ -17,12 +17,12 @@ public class ReportActivitiesPerformedSummary : DescriptiveSummaryProviderBase<R
 
         if (ModelTyped.CreateHTML)
         {
-            generator.AddBlockWithText("activityentry", $"A HTML version of this report is available {rotateText}. (See Summary tab for current link)");
+            generator.AddBlockWithText( $"A HTML version of this report is available {rotateText}. (See Summary tab for current link)");
         }
 
         if (ModelTyped.AutoCreateHTML)
         {
-            generator.AddBlockWithText("activityentry", $"A HTML version of this report will automatically be created for its parent CLEMZone and named the same as the simulation file with a html extension");
+            generator.AddBlockWithText( $"A HTML version of this report will automatically be created for its parent CLEMZone and named the same as the simulation file with a html extension");
         }
     }
 }

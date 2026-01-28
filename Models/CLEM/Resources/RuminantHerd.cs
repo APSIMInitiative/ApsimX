@@ -439,7 +439,7 @@ namespace Models.CLEM.Resources
         public override string ModelSummary()
         {
             string html = "";
-            html += "\r\n<div class=\"activityentry\">Activities reporting on herds will group individuals";
+            html += "\r\n<div class=\"entryHolder\">Activities reporting on herds will group individuals";
             switch (TransactionStyle)
             {
                 case RuminantTransactionsGroupingStyle.Combined:

@@ -22,12 +22,12 @@ public class RelationshipRunningValueSummary : DescriptiveSummaryProviderBase<Re
         htmlWriter.Write($" and ranging between {generator.DisplaySummaryValueSnippet(ModelTyped.Minimum)} and ");
         if (MathUtilities.IsLessThanOrEqual(ModelTyped.Maximum, ModelTyped.Minimum))
         {
-            htmlWriter.Write("<span class=\"errorlink\">Invalid</span>");
+            htmlWriter.Write(generator.DisplayErrorSnippet("Invalid"));
         }
         else
         {
             htmlWriter.Write($"{generator.DisplaySummaryValueSnippet(ModelTyped.Maximum)}");
         }
-        generator.AddBlockWithText("activityentry", htmlWriter.ToString());
+        generator.AddBlockWithText(htmlWriter.ToString());
     }
 }

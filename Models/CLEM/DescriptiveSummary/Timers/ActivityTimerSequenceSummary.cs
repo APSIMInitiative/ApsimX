@@ -13,7 +13,7 @@ public class ActivityTimerSequenceSummary : TimerSummaryBase<ActivityTimerSequen
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        using (generator.OpenBlock("filter"))
+        using (generator.OpenBlock("entryValue filterItem"))
         {
             if (ModelTyped.Sequence is null || ModelTyped.Sequence == "")
             {
@@ -21,11 +21,11 @@ public class ActivityTimerSequenceSummary : TimerSummaryBase<ActivityTimerSequen
             }
             else
             {
-                generator.DisplaySummaryValueSnippet("Use sequence", spanClass: "filtersettitle");
+                generator.DisplaySummaryValueSnippet("Use sequence", spanClass: "filteritemstitle");
                 string seqString = ActivityTimerSequence.FormatSequence(ModelTyped.Sequence);
                 for (int i = 0; i < seqString.Length; i++)
                 {
-                    generator.DisplaySummaryValueSnippet((seqString[i] == '1' ? "OK" : "SKIP"), spanClass: "filterset");
+                    generator.DisplaySummaryValueSnippet((seqString[i] == '1' ? "OK" : "SKIP"));
                 }
             }
         }

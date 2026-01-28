@@ -23,7 +23,7 @@ public class OtherAnimalsActivityFeedSummary : DescriptiveSummaryProviderBase<Ot
                 model: CLEMModel,
                 childType: typeof(OtherAnimalsFeedGroup),
                 introduction: "The follow individuals will be fed:",
-                borderClass: "childgroupfilterborder"
+                borderClass: "childgroupborder filtergroup"
                 )
         ];
     }
@@ -31,6 +31,6 @@ public class OtherAnimalsActivityFeedSummary : DescriptiveSummaryProviderBase<Ot
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText("activityentry", $"Feed {generator.DisplaySummaryValueSnippet(ModelTyped.FeedTypeName, "Not set", HTMLSummaryStyle.Resource)}");
+        generator.AddBlockWithText($"Feed {generator.DisplaySummaryValueSnippet(ModelTyped.FeedTypeName, "Not set", HTMLSummaryStyle.Resource)}");
     }
 }

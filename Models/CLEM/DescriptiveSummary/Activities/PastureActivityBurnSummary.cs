@@ -20,7 +20,7 @@ public class PastureActivityBurnSummary : DescriptiveSummaryProviderBase<Pasture
         htmlWriter.Write($" if less than {generator.DisplaySummaryValueSnippet(ModelTyped.MinimumProportionGreen.ToString("0.#%"), warnZero: true)} green");
         htmlWriter.Write($" with a burning efficiency of {generator.DisplaySummaryValueSnippet(ModelTyped.BurningEfficiency, warnZero: true)} and ");
         htmlWriter.Write($" and a carbon content of {generator.DisplaySummaryValueSnippet(ModelTyped.CarbonPercent, warnZero: true)}%");
-        generator.AddBlockWithText("activityentry", htmlWriter.ToString());
+        generator.AddBlockWithText(htmlWriter.ToString());
 
         reportEmission("Methane", ModelTyped.MethaneStoreName);
         reportEmission("NitrousOxide", ModelTyped.NitrousOxideStoreName);
@@ -37,7 +37,7 @@ public class PastureActivityBurnSummary : DescriptiveSummaryProviderBase<Pasture
         {
             store = $"{generator.DisplaySummaryResourceTypeSnippet(storeName)}";
         }
-        generator.AddBlockWithText("activityentry", $"{gasName} emissions will be placed in {store}");
+        generator.AddBlockWithText( $"{gasName} emissions will be placed in {store}");
 
     }
 

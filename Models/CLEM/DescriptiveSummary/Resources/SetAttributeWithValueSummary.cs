@@ -21,22 +21,22 @@ public class SetAttributeWithValueSummary : DescriptiveSummaryProviderBase<SetAt
         {
             bool isGroupAttribute = (CurrentAncestorList?.Count >= 2 && CurrentAncestorList[CurrentAncestorList.Count - 2] == typeof(RuminantInitialCohorts).Name);
             if (model.StandardDeviation == 0)
-                generator.AddBlockWithText("resourcebanneralone clearfix", $"Attribute {attrName} is provided {(isGroupAttribute ? "to all cohorts " : "")}with a value of {generator.DisplaySummaryValueSnippet(model.Value)}");
+                generator.AddBlockWithText($"Attribute {attrName} is provided {(isGroupAttribute ? "to all cohorts " : "")}with a value of {generator.DisplaySummaryValueSnippet(model.Value)}", "resourcebanneralone clearfix");
             else
-                generator.AddBlockWithText("resourcebanneralone clearfix", $"Attribute {attrName} is provided {(isGroupAttribute ? "to all cohorts " : "")}with mean = {generator.DisplaySummaryValueSnippet(model.Value)} and s.d. = {generator.DisplaySummaryValueSnippet(model.StandardDeviation)}");
+                generator.AddBlockWithText($"Attribute {attrName} is provided {(isGroupAttribute ? "to all cohorts " : "")}with mean = {generator.DisplaySummaryValueSnippet(model.Value)} and s.d. = {generator.DisplaySummaryValueSnippet(model.StandardDeviation)}", "resourcebanneralone clearfix");
         }
         else
         {
-            generator.AddBlockWithText("activityentry", $"Provide an attribute with the label {attrName} that will be inherited with the {generator.DisplaySummaryValueSnippet(model.InheritanceStyle.ToString())} style{(model.Mandatory ? " and is required by all individuals in the population" : "")}");
+            generator.AddBlockWithText($"Provide an attribute with the label {attrName} that will be inherited with the {generator.DisplaySummaryValueSnippet(model.InheritanceStyle.ToString())} style{(model.Mandatory ? " and is required by all individuals in the population" : "")}");
 
             string inherited = "";
             if (model.InheritanceStyle != AttributeInheritanceStyle.None)
                 inherited = ($" and is allowed to vary between {generator.DisplaySummaryValueSnippet(model.MinimumValue)} and {generator.DisplaySummaryValueSnippet(model.MaximumValue)} when inherited");
 
             if (model.StandardDeviation == 0)
-                generator.AddBlockWithText("activityentry", $"This attribute has a value of {generator.DisplaySummaryValueSnippet(model.Value)}{inherited}");
+                generator.AddBlockWithText($"This attribute has a value of {generator.DisplaySummaryValueSnippet(model.Value)}{inherited}");
             else
-                generator.AddBlockWithText("activityentry", $"This attribute's value is randomly taken from a normal distribution with mean {generator.DisplaySummaryValueSnippet(model.Value)} and standard deviation {generator.DisplaySummaryValueSnippet(model.StandardDeviation)}{inherited}");
+                generator.AddBlockWithText($"This attribute's value is randomly taken from a normal distribution with mean {generator.DisplaySummaryValueSnippet(model.Value)} and standard deviation {generator.DisplaySummaryValueSnippet(model.StandardDeviation)}{inherited}");
         }
     }
 }

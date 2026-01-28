@@ -43,7 +43,7 @@ public class RuminantFeedGroupMonthlySummary : GroupSummaryBase<RuminantFeedGrou
         using StringWriter htmlWriter = new();
         if (ModelTyped.Parent.GetType() != typeof(RuminantActivityFeed))
         {
-            generator.AddBlockWithText("warningbanner", "This Ruminant Feed Group must be placed beneath a Ruminant Activity Feed component");
+            generator.AddBlockWithText("This Ruminant Feed Group must be placed beneath a Ruminant Activity Feed component", "infoBanner warning");
             return;
         }
 
@@ -120,7 +120,7 @@ public class RuminantFeedGroupMonthlySummary : GroupSummaryBase<RuminantFeedGrou
                 break;
         }
 
-        generator.AddBlockWithText("activityentry", htmlWriter.ToString());
+        generator.AddBlockWithText(htmlWriter.ToString());
 
         if (overfeed)
         {
@@ -129,13 +129,13 @@ public class RuminantFeedGroupMonthlySummary : GroupSummaryBase<RuminantFeedGrou
             {
                 overfedText += ", with excess food still utilised but wasted";
             }
-            generator.AddBlockWithText("activityentry", overfedText);
+            generator.AddBlockWithText(overfedText);
 
         }
 
         if (ft == RuminantFeedActivityTypes.SpecifiedDailyAmount)
         {
-            generator.AddBlockWithText("warningbanner", "Note: This is a specified daily amount fed to the entire herd. If insufficient provided, each individual's potential intake will not be met");
+            generator.AddBlockWithText("Note: This is a specified daily amount fed to the entire herd. If insufficient provided, each individual's potential intake will not be met", "infoBanner warning");
         }
     }
 

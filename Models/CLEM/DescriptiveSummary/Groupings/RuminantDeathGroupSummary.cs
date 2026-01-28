@@ -16,6 +16,6 @@ public class RuminantDeathGroupSummary : GroupSummaryBase<RuminantDeathGroup>
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText("activityentry", "Any death of specified individuals is determined using the breed base mortality modified by adult mody condition and the condition of mothers for suckling individuals.");
+        generator.AddBlockWithText("Any death of specified individuals is determined using the breed base mortality modified by adult mody condition and the condition of mothers for suckling individuals.");
     }
 }

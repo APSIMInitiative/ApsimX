@@ -1,5 +1,6 @@
 using DocumentFormat.OpenXml.Wordprocessing;
 using Mapsui.Providers.Wfs.Utilities;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
@@ -93,16 +94,16 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
     public virtual void BuildSummary()
     {
         if (Model is ResourceBaseWithTransactions)
-            Generator.AddBlockWithText("activityentry", $"No details for {CLEMModel.DisplaySummaryResourceTypeSnippet(Model.GetType().Name)}.");
+            generator.AddBlockWithText($"No details for {CLEMModel.DisplaySummaryResourceTypeSnippet(Model.GetType().Name)}.");
         else
-            Generator.AddBlockWithText("activityentry", $"No details for {Model.GetType().Name}.");
+            generator.AddBlockWithText($"No details for {Model.GetType().Name}.");
     }
 
     /// <inheritdoc/>
     public virtual void CreateSummaryClosingBlocks()
     {
         foreach (string block in openingBlocks.ToArray().Reverse())
-            Generator.CloseMostRecentBlock(id: block);
+            generator.CloseMostRecentBlock(id: block);
         openingBlocks.Clear();
     }
 
@@ -110,7 +111,7 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
     public virtual void CreateSummaryInnerClosingBlocks(ChildComponentGroup group)
     {
         foreach (string block in innerBlocks.ToArray().Reverse())
-            Generator.CloseMostRecentBlock(id: block);
+            generator.CloseMostRecentBlock(id: block);
         innerBlocks.Clear();
     }
 
@@ -131,7 +132,7 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
             string units = (cm as IResourceType).Units;
             if (units != "NA")
             {
-                Generator.AddBlockWithText("activityentry", $"This resource is measured in {CLEMModel.DisplaySummaryValueSnippet(units)}");
+                generator.AddBlockWithText($"This resource is measured in {generator.DisplaySummaryValueSnippet(units, errorNotSet: true)}", "entryHolder");
             }
 
         }
@@ -140,7 +141,7 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
         {
             if (cm.Children.Count == 0)
             {
-                Generator.AddBlockWithText("activityentry", $"Empty");
+                generator.AddBlockWithText($"Empty", "entryHolder");
             }
         }
     }
@@ -149,9 +150,9 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
     public virtual void GetSummaryNameTypeHeader(bool disabled = false)
     {
         // copy your header logic here (unchanged except using Generator instead of generator)
-        Generator.AddBlockWithText("namediv", $"{GetSummaryNameTypeHeaderText()} {((disabled) ? " - DISABLED!" : "")}");
-        Generator.AddLineBreak();
-        Generator.AddBlockWithText("typediv", Model.GetType().Name);
+        generator.AddBlockWithText($"{GetSummaryNameTypeHeaderText()} {((disabled) ? " - DISABLED!" : "")}", "entryValue labelValue floatLeft");
+        generator.AddLineBreak();
+        generator.AddBlockWithText(Model.GetType().Name, "entryValue labelValue floatLeft smaller");
 
         var cm = CLEMModel;
         if (cm is null) return;
@@ -180,12 +181,12 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
                     break;
             }
 
-            Generator.AddBlockWithText("partialdiv", divText);
+            generator.AddBlockWithText(divText, "entryValue partial");
 
             string transCat = CLEMActivityBase.UpdateTransactionCategory(cmab, cm.Structure);
             if (transCat != "")
             {
-                Generator.AddBlockWithText("partialdiv", $"tag: {transCat}");
+                generator.AddBlockWithText($"tag: {transCat}", "entryValue partial");
             }
         }
     }
@@ -200,12 +201,16 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
     public virtual void CreateSummaryOpeningBlocks()
     {
         string overall = "activity";
-        string extra = "";
+        string extra = "dark";
+        bool sub = false;
 
         if (SummaryStyle == HTMLSummaryStyle.Default)
         {
             if (Model is Relationship || this.GetType().IsSubclassOf(typeof(Relationship)))
+            {
                 SummaryStyle = HTMLSummaryStyle.Default;
+                sub = true;
+            }
             else if (Model.GetType().IsSubclassOf(typeof(ResourceBaseWithTransactions)))
                 SummaryStyle = HTMLSummaryStyle.Resource;
             else if (typeof(IResourceType).IsAssignableFrom(Model.GetType()))
@@ -214,14 +219,24 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
                 SummaryStyle = HTMLSummaryStyle.SubResource;
             else if (typeof(IConceptionModel).IsAssignableFrom(Model.GetType()))
                 SummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
+            else if (Model.GetType().Name.StartsWith("Report"))
+            {
+                SummaryStyle = HTMLSummaryStyle.Helper;
+            }
             else if (Model.GetType().IsSubclassOf(typeof(CLEMActivityBase)))
                 SummaryStyle = HTMLSummaryStyle.Activity;
+            else if (Model is CLEMEvents)
+            {
+                SummaryStyle = HTMLSummaryStyle.Default;
+                sub = true;
+            }
+
         }
 
         switch (SummaryStyle)
         {
             case HTMLSummaryStyle.Default:
-                overall = "default";
+                overall = "other";
                 break;
             case HTMLSummaryStyle.Resource:
                 overall = "resource";
@@ -229,25 +244,32 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
             case HTMLSummaryStyle.SubResource:
                 overall = "resource";
                 extra = "light";
+                sub = true;
                 break;
             case HTMLSummaryStyle.SubResourceLevel2:
                 overall = "resource";
                 extra = "dark";
+                sub = true;
                 break;
             case HTMLSummaryStyle.Activity:
                 break;
             case HTMLSummaryStyle.SubActivity:
                 extra = "light";
+                sub = true;
                 break;
             case HTMLSummaryStyle.Helper:
+                overall = "other";
+                sub = true;
                 break;
             case HTMLSummaryStyle.SubActivityLevel2:
+                sub = true;
                 extra = "dark";
                 break;
             case HTMLSummaryStyle.FileReader:
                 overall = "file";
                 break;
             case HTMLSummaryStyle.Filter:
+                sub = true;
                 overall = "filter";
                 break;
             default:
@@ -256,13 +278,15 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
 
         bool firstDisabledBlock = !Model.Enabled && generator.CurrentlyDisabled == false;
 
-        generator.OpenBlock($"holder{((extra == "") ? "main" : "sub")} {overall} {(firstDisabledBlock ? "disabledcomponent" : "")}", id: $"{Model.Name}_opening", disabled: !Model.Enabled);
+        generator.OpenBlock($"holder{((sub == false) ? "main" : "sub")} {overall} {(firstDisabledBlock ? "disabledcomponent" : "")}", id: $"{Model.Name}_opening", disabled: !Model.Enabled);
         openingBlocks.Add($"{Model.Name}_opening");
-        using (generator.OpenBlock($"clearfix {overall}banner{extra}"))
+        //using (generator.OpenBlock($"clearfix {overall}banner{extra}"))
+        using (generator.OpenBlock($"componentBanner {extra} clearfix")) //{extra}
         {
             GetSummaryNameTypeHeader(firstDisabledBlock);
         }
-        generator.OpenBlock($"{overall}content{((extra != "") ? extra : "")}", id: $"{Model.Name}_content");
+        //generator.OpenBlock($"{overall}content{((extra != "") ? extra : "")}", id: $"{Model.Name}_content");
+        generator.OpenBlock($"componentContent {extra}", id: $"{Model.Name}_content");
         openingBlocks.Add($"{Model.Name}_content");
     }
 

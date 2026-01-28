@@ -17,28 +17,28 @@ namespace Models.CLEM.DescriptiveSummary
 
             if (m.FileName == null || m.FileName == "")
             {
-                generator.AddBlockWithText("activityentry", $"Using {generator.DisplayErrorSnippet("Filename not set")}");
+                generator.AddBlockWithText($"Using {generator.DisplayErrorSnippet("Filename not set")}");
                 return;
             }
             if (!m.FileExists)
             {
-                generator.AddBlockWithText("activityentry", $"File {generator.DisplaySummaryValueSnippet(m.FullFileName, entryStyle: HTMLSummaryStyle.FileReader)} {generator.DisplayErrorSnippet("Not Found")}");
+                generator.AddBlockWithText($"File {generator.DisplaySummaryValueSnippet(m.FullFileName, entryStyle: HTMLSummaryStyle.FileReader)} {generator.DisplayErrorSnippet("Not Found")}");
                 return;
             }
 
-            generator.AddBlockWithText("activityentry", $"Using {generator.DisplaySummaryValueSnippet(m.FileName, "Filename not set", HTMLSummaryStyle.FileReader)}");
+            generator.AddBlockWithText($"Using {generator.DisplaySummaryValueSnippet(m.FileName, "Filename not set", HTMLSummaryStyle.FileReader)}");
 
 
-            using (generator.OpenBlock("activityentryindent", id: $"{ModelTyped.Name}_columnlinks"))
+            using (generator.OpenBlock("entryHolder indent", id: $"{ModelTyped.Name}_columnlinks"))
             {
                 if (m.FileName != null && m.FileName.Contains(".xls"))
                 {
-                    generator.AddBlockWithText("activityentry", $"Using worksheet {generator.DisplaySummaryValueSnippet(m.ExcelWorkSheetName, "Not Set", errorNotSet: true, entryStyle: HTMLSummaryStyle.FileReader)}");
+                    generator.AddBlockWithText($"Using worksheet {generator.DisplaySummaryValueSnippet(m.ExcelWorkSheetName, "Not Set", errorNotSet: true, entryStyle: HTMLSummaryStyle.FileReader)}");
                 }
             }
 
             // FilePasture is legacy - recommend sqlite reader
-            generator.AddBlockWithText("warningbanner", "Note: This reader is legacy. For best performance prefer the SQLite pasture reader (FileSQLitePasture).");
+            generator.AddBlockWithText("Note: This reader is legacy. For best performance prefer the SQLite pasture reader (FileSQLitePasture).", "infoBanner warning");
         }
     }
 }

@@ -20,13 +20,13 @@ public class RelationshipSummary : DescriptiveSummaryProviderBase<Relationship>
         // draw chart
         if (ModelTyped.XValues is null || ModelTyped.XValues.Length == 0)
         {
-            htmlWriter.Write("<span class=\"errorlink\">No x values provided</span>");
+            htmlWriter.Write(generator.DisplayErrorSnippet("No x values provided"));
         }
         else
         {
             if (ModelTyped.YValues is null || ModelTyped.XValues.Length != ModelTyped.YValues.Length)
             {
-                htmlWriter.Write("<span class=\"errorlink\">Number of x values does not equal number of y values</span>");
+                htmlWriter.Write(generator.DisplayErrorSnippet("Number of x values does not equal number of y values"));
             }
             else
             {
@@ -119,6 +119,6 @@ public class RelationshipSummary : DescriptiveSummaryProviderBase<Relationship>
                         </script>");
             }
         }
-        generator.AddBlockWithText("activityentry", htmlWriter.ToString(), styleString: "width:400px;height:200px;");
+        generator.AddBlockWithText(htmlWriter.ToString(), styleString: "width:400px;height:200px;");
     }
 }

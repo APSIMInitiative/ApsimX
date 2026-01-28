@@ -58,6 +58,6 @@ public class RuminantHerdSummary : DescriptiveSummaryProviderBase<RuminantHerd>
                 text += " by [Unknown grouping style]";
                 break;
         }
-        Generator.AddBlockWithText("activityentry", text);
+        Generator.AddBlockWithText(text);
     }
 }

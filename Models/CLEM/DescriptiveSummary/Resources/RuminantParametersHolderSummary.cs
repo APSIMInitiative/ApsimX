@@ -30,7 +30,7 @@ public class RuminantParametersHolderSummary : DescriptiveSummaryProviderBase<Ru
     {
         if (ModelTyped.DisplaySummaryParameters == false)
         {
-            generator.AddBlockWithText("warningbanner", "Summary parameter display is turned OFF!");
+            generator.AddBlockWithText("Summary parameter display is turned OFF!", "infoBanner warning");
             return;
         }
 
@@ -49,17 +49,17 @@ public class RuminantParametersHolderSummary : DescriptiveSummaryProviderBase<Ru
 
         if (parameters.Count == 0)
         {
-            generator.AddBlockWithText("errorbanner", "No summary ruminant parameters to display");
+            generator.AddBlockWithText("No summary ruminant parameters to display", "infoBanner error");
         }
         else
         {
-            generator.AddBlockWithText("childgrouplabel", "A summary of important ruminant parameter settings from parameters supplied");
+            generator.AddBlockWithText("A summary of important ruminant parameter settings from parameters supplied", "childgrouplabel");
 
             foreach (var param in parameters.GroupBy(a => a.category).OrderBy(a => a.Key != "General"))
             {
-                using (generator.OpenBlock("childgroupresourceborder"))
+                using (generator.OpenBlock("childgroupborder"))
                 {
-                    generator.AddBlockWithText("detailsnote", $"Parameters related to {param.Key}");
+                    generator.AddBlockWithText($"Parameters related to {param.Key}", "detailsnote");
                     foreach (var item in param)
                     {
                         generator.AddSummaryParameterSnippet(item.componentName, $"{item.description} {item.value}");

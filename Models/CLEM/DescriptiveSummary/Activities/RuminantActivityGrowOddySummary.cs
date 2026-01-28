@@ -11,9 +11,9 @@ namespace Models.CLEM.DescriptiveSummary
         /// <inheritdoc/>
         public override void BuildSummary()
         {
-            generator.AddBlockWithText("activityentry", $"Ruminant growth approach: Oddy et al protein driven growth approach");
-            generator.AddBlockWithText("activityentry", $"Requires ruminant fat and protein allocation to muscle and viscera.");
-            generator.AddBlockWithText("warningbanner", $"Test implementation. Only valid for individuals currently in growth phase.");
+            generator.AddBlockWithText($"Ruminant growth approach: Oddy et al protein driven growth approach");
+            generator.AddBlockWithText($"Requires ruminant fat and protein allocation to muscle and viscera.");
+            generator.AddBlockWithText($"Test implementation. Only valid for individuals currently in growth phase.", "infoBanner warning");
         }
     }
 }

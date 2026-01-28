@@ -14,7 +14,7 @@ namespace Models.CLEM.DescriptiveSummary
             var model = ModelTyped;
             if (model is null) return;
 
-            generator.AddBlockWithText("activityentry",$"Ruminant growth approach: SCA 2007 (SCA07 equations)");
+            generator.AddBlockWithText($"Ruminant growth approach: SCA 2007 (SCA07 equations)");
         }
     }
 }

@@ -14,7 +14,7 @@ public class OtherAnimalsActivitySellSummary : DescriptiveSummaryProviderBase<Ot
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText("activityentry", $"Sales will pay to {generator.DisplaySummaryValueSnippet(ModelTyped.BankAccountName, "Not set", HTMLSummaryStyle.Resource)}");
-        generator.AddBlockWithText("activityentry", $"Individuals will be flagged as {generator.DisplaySummaryValueSnippet(ModelTyped.SaleFlagToUse, "Not set")}");
+        generator.AddBlockWithText($"Sales will pay to {generator.DisplaySummaryValueSnippet(ModelTyped.BankAccountName, "Not set", HTMLSummaryStyle.Resource)}");
+        generator.AddBlockWithText($"Individuals will be flagged as {generator.DisplaySummaryValueSnippet(ModelTyped.SaleFlagToUse, "Not set")}");
     }
 }

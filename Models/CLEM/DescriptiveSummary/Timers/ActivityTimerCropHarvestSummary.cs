@@ -37,7 +37,7 @@ public class ActivityTimerCropHarvestSummary : TimerSummaryBase<ActivityTimerCro
             htmlWriter.Write($" harvest and stop {GetMonthsSnippet("stop")} ");
             htmlWriter.Write((ModelTyped.OffsetMonthHarvestStop > 0) ? "after \"last\" (if using HarvestType)" : "before \"first\" (if using HarvestType)");
         }
-        generator.AddBlockWithText("filter", htmlWriter.ToString());
+        generator.AddBlockWithText(htmlWriter.ToString(), "entryValue filterItem");
     }
 
     private string GetMonthsSnippet(string startorstop)

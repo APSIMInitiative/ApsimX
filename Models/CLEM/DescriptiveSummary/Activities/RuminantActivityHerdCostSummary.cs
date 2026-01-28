@@ -14,11 +14,9 @@ namespace Models.CLEM.DescriptiveSummary
             var model = ModelTyped;
             if (model is null) return;
 
-            generator.AddBlockWithText("activityentry",
-                "Arranges payment of herd expenses (e.g. vet fees) using companion models (ActivityFee, LabourRequirement).");
+            generator.AddBlockWithText("Arranges payment of herd expenses (e.g. vet fees) using companion models (ActivityFee, LabourRequirement).");
 
-            generator.AddBlockWithText("activityentry",
-                "Applies the companion labels to calculate fixed/per-head/per-AE costs where configured.");
+            generator.AddBlockWithText("Applies the companion labels to calculate fixed/per-head/per-AE costs where configured.");
         }
     }
 }

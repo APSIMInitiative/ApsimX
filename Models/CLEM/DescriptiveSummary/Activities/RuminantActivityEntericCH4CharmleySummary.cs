@@ -19,8 +19,8 @@ namespace Models.CLEM.DescriptiveSummary
         /// <inheritdoc/>
         public override void BuildSummary()
         {
-            generator.AddBlockWithText("activityentry", "Produces enteric methane emissions using the Charmley et al. method and places emissions into the greenhouse gas store(s) with AutoAllocate on.");
-            generator.AddBlockWithText("activityentry",$"Methane emissions will be calculated from individuals' intake and grouped by {generator.DisplaySummaryValueSnippet(ModelTyped.GroupingStyle, "Style not set")} for reporting.");
+            generator.AddBlockWithText("Produces enteric methane emissions using the Charmley et al. method and places emissions into the greenhouse gas store(s) with AutoAllocate on.");
+            generator.AddBlockWithText($"Methane emissions will be calculated from individuals' intake and grouped by {generator.DisplaySummaryValueSnippet(ModelTyped.GroupingStyle, "Style not set")} for reporting.");
         }
     }
 }

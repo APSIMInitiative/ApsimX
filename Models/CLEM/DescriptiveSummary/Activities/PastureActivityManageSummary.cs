@@ -24,7 +24,7 @@ public class PastureActivityManageSummary : DescriptiveSummaryProviderBase<Pastu
                 model: CLEMModel,
                 childType: typeof(Relationship),
                 introduction: "Relationships for change in land condition and grass basal area as function of utilisation:",
-                borderClass: "childgroupactivityborder"
+                borderClass: "childgroupborder activitygroup"
                 )
         ];
     }

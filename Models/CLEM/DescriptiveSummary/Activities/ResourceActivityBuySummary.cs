@@ -24,6 +24,6 @@ public class ResourceActivityBuySummary : DescriptiveSummaryProviderBase<Resourc
             htmlWriter.Write(" using ");
             htmlWriter.Write(generator.DisplaySummaryValueSnippet(ModelTyped.AccountName, "Account not set", HTMLSummaryStyle.Resource));
         }
-        generator.AddBlockWithText("activityentry", htmlWriter.ToString());
+        generator.AddBlockWithText(htmlWriter.ToString());
     }
 }

@@ -21,12 +21,12 @@ public class SetAttributeFromHerdSummary : DescriptiveSummaryProviderBase<SetAtt
             string multiplier = "";
             if (model.Multiplier != 1.0)
                 multiplier = $" and multiplied by {generator.DisplaySummaryValueSnippet(model.Multiplier)}";
-            Generator.AddBlockWithText("resourcebanneralone clearfix", $"Attribute {attrName} is calculated as {calc} from the specified individuals{multiplier}");
+            Generator.AddBlockWithText($"Attribute {attrName} is calculated as {calc} from the specified individuals{multiplier}", "resourcebanneralone clearfix");
         }
         else
         {
-            Generator.AddBlockWithText("activityentry", $"Provide an attribute with the label {attrName} determined from the herd using {calc}{(model.Mandatory ? " and required by all individuals" : "")}");
-            Generator.AddBlockWithText("activityentry", $"Resulting value is multiplied by {generator.DisplaySummaryValueSnippet(model.Multiplier)} and inherited with style {generator.DisplaySummaryValueSnippet(model.InheritanceStyle.ToString())}");
+            Generator.AddBlockWithText($"Provide an attribute with the label {attrName} determined from the herd using {calc}{(model.Mandatory ? " and required by all individuals" : "")}");
+            Generator.AddBlockWithText($"Resulting value is multiplied by {generator.DisplaySummaryValueSnippet(model.Multiplier)} and inherited with style {generator.DisplaySummaryValueSnippet(model.InheritanceStyle.ToString())}");
         }
     }
 }

@@ -62,7 +62,7 @@ public class ActivityTimerRuminantLevelSummary : TimerSummaryBase<ActivityTimerR
         }
         htmlWriter.Write($" {generator.DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Default)}");
         htmlWriter.Write($" {generator.DisplaySummaryValueSnippet(ModelTyped.Amount, "Not set", HTMLSummaryStyle.Default)}");
-        generator.AddBlockWithText("filter", htmlWriter.ToString());
+        generator.AddBlockWithText(htmlWriter.ToString(), "entryValue filterItem");
     }
 
     /// <summary>

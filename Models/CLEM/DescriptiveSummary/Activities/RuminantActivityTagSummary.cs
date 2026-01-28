@@ -23,7 +23,7 @@ namespace Models.CLEM.DescriptiveSummary
                 childType: typeof(RuminantGroup),
                 missing: "No individuals identified",
                 introduction: intro,
-                borderClass: "childgroupfilterborder"
+                borderClass: "childgroupborder filtergroup"
                 )
             ];
         }
@@ -37,7 +37,7 @@ namespace Models.CLEM.DescriptiveSummary
             {
                 tag += $", is of category {generator.DisplaySummaryValueSnippet(ModelTyped.TagCategory)}";
             }
-            generator.AddBlockWithText("activityentry", $"{tag}");
+            generator.AddBlockWithText($"{tag}");
         }
     }
 }

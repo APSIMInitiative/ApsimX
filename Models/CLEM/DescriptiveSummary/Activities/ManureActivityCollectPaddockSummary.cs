@@ -14,6 +14,6 @@ public class ManureActivityCollectPaddockSummary : DescriptiveSummaryProviderBas
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText("activityentry", $"Collect manure from {generator.DisplaySummaryValueSnippet(ModelTyped.GrazeFoodStoreTypeName, "Pasture not set", HTMLSummaryStyle.Resource)}");
+        generator.AddBlockWithText($"Collect manure from {generator.DisplaySummaryValueSnippet(ModelTyped.GrazeFoodStoreTypeName, "Pasture not set", HTMLSummaryStyle.Resource)}");
     }
 }

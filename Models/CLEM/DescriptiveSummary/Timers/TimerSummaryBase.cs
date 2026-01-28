@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Interfaces;
+﻿using DocumentFormat.OpenXml.Vml.Spreadsheet;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using System;
 using System.Collections.Generic;
@@ -60,8 +61,8 @@ public abstract class TimerSummaryBase<TModel> : DescriptiveSummaryProvider, IDe
         {
             name = Model.Name;
         }
-        generator.AddBlockWithText("filtername", name, disabled: !Model.Enabled);
-        generator.OpenBlock("filterborder clearfix", "", id: "timerdetails");
+        generator.AddBlockWithText(name, "childTitle filter", disabled: !Model.Enabled);
+        generator.OpenBlock("childgroupborder filteritems clearfix", "", id: "timerdetails");
     }
 
     /// <inheritdoc/>

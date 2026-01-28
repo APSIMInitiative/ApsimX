@@ -16,20 +16,20 @@ namespace Models.CLEM.DescriptiveSummary
             var model = ModelTyped;
             if (model is null) return;
 
-            generator.AddBlockWithText("activityentry", $"Purchased individuals will be placed in {generator.DisplaySummaryValueSnippet(model.GrazeFoodStoreName, "Not specified - general yards", HTMLSummaryStyle.Resource)}");
+            generator.AddBlockWithText($"Purchased individuals will be placed in {generator.DisplaySummaryValueSnippet(model.GrazeFoodStoreName, "Not specified - general yards", HTMLSummaryStyle.Resource)}");
 
             Relationship numberRelationship = ModelTyped.Structure.FindChildren<Relationship>().Where(a => a.Identifier == "Number to stock vs pasture").FirstOrDefault();
             if (string.IsNullOrWhiteSpace(ModelTyped.GrazeFoodStoreName) == false && ModelTyped.GrazeFoodStoreName.StartsWith("Not specified") == false && numberRelationship != null)
             {
-                generator.AddBlockWithText("activityentry", $"The relationship {generator.DisplaySummaryValueSnippet(numberRelationship.Name)} will be used to calculate numbers purchased based on destination pasture biomass (t\\ha)");
+                generator.AddBlockWithText( $"The relationship {generator.DisplaySummaryValueSnippet(numberRelationship.Name)} will be used to calculate numbers purchased based on destination pasture biomass (t\\ha)");
             }
             else
             {
-                generator.AddBlockWithText("activityentry", $"{generator.DisplaySummaryValueSnippet(model.NumberToPurchase, warnZero: true)} individuals will be purchased with cohorts able to determine proportional breakdown.");
+                generator.AddBlockWithText($"{generator.DisplaySummaryValueSnippet(model.NumberToPurchase, warnZero: true)} individuals will be purchased with cohorts able to determine proportional breakdown.");
             }
 
             if (!string.IsNullOrWhiteSpace(model.TagLabel))
-                generator.AddBlockWithText("activityentry", $"Purchased individuals will be assigned the tag {generator.DisplaySummaryValueSnippet(model.TagLabel)} for identification.");
+                generator.AddBlockWithText($"Purchased individuals will be assigned the tag {generator.DisplaySummaryValueSnippet(model.TagLabel)} for identification.");
         }
     }
 }

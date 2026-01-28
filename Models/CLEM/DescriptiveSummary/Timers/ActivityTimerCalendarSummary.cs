@@ -21,13 +21,13 @@ public class ActivityTimerCalendarSummary : TimerSummaryBase<ActivityTimerCalend
         clemEvents.Clock = clock;
         if (clock is null || clemEvents is null)
         {
-            generator.AddBlockWithText("filter", generator.DisplayErrorSnippet("No Clock or CLEM Events component found above Timer"));
+            generator.AddBlockWithText(generator.DisplayErrorSnippet("No Clock or CLEM Events component found above Timer"), "entryValue filterError");
             return;
         }
 
         if (ModelTyped.StartDetails.Parts[0] > 0 & ModelTyped.StartDetails.Parts[1] == 0)
         {
-            generator.AddBlockWithText("filter", generator.DisplayErrorSnippet("Invalid date component specified. Missing month value"));
+            generator.AddBlockWithText(generator.DisplayErrorSnippet("Invalid date component specified. Missing month value"), "entryValue filterError");
             return;
         }
 
@@ -59,7 +59,7 @@ public class ActivityTimerCalendarSummary : TimerSummaryBase<ActivityTimerCalend
         }
         else
         {
-            htmlWriter.Write(generator.DisplaySummaryValueSnippet(range.Start, spanClass: "setvalueextra"));
+            htmlWriter.Write(generator.DisplaySummaryValueSnippet(range.Start, spanClass: "entryValue entryValue-Other"));
         }
 
         if (range.Start.ymd.month != range.End.ymd.month | (range.Start.IsMonthOnly == false & range.Start.ymd.day != range.End.ymd.day))
@@ -71,20 +71,20 @@ public class ActivityTimerCalendarSummary : TimerSummaryBase<ActivityTimerCalend
             }
             else
             {
-                htmlWriter.Write(generator.DisplaySummaryValueSnippet(range.End, spanClass: "setvalueextra"));
+                htmlWriter.Write(generator.DisplaySummaryValueSnippet(range.End, spanClass: "entryValue entryValue-Other"));
             }
         }
 
         if (range.IsFloatingRange)
         {
-            htmlWriter.Write(generator.DisplaySummaryValueSnippet(range.RepeatIntervalToString(), spanClass: "setvalueextra"));
+            htmlWriter.Write(generator.DisplaySummaryValueSnippet(range.RepeatIntervalToString(), spanClass: "entryValue entryValue-Other"));
         }
 
         if (range.WholeTimeStepInRange)
         {
-            htmlWriter.Write(generator.DisplaySummaryValueSnippet("where whole time step must be in range", spanClass: "setvalueextra"));
+            htmlWriter.Write(generator.DisplaySummaryValueSnippet("where whole time step must be in range", spanClass: "entryValue entryValue-Other"));
         }
 
-        generator.AddBlockWithText("filter", htmlWriter.ToString());
+        generator.AddBlockWithText(htmlWriter.ToString(), "entryValue filterItem");
     }
 }

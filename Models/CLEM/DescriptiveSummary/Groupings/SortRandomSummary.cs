@@ -8,12 +8,8 @@ namespace Models.CLEM.DescriptiveSummary;
 public class SortRandomSummary : FilterSummaryBase<SortRandom>
 {
     /// <inheritdoc/>
-    public override string FilterString(bool htmltags)
+    public override string FilterString()
     {
-        if (htmltags)
-        {
-            return "<span class = \"filterset\">Randomise order</span>";
-        }
         return "Randomise order";
     }
 }

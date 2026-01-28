@@ -22,7 +22,7 @@ public class FinanceTypeSummary : DescriptiveSummaryProviderBase<FinanceType>
         {
             balance += " with no withdrawal limit";
         }
-        Generator.AddBlockWithText("activityentry", balance);
+        Generator.AddBlockWithText(balance);
 
         string interest = "No interest rates included";
         if (model.InterestRateCharged + model.InterestRatePaid > 0)
@@ -39,6 +39,6 @@ public class FinanceTypeSummary : DescriptiveSummaryProviderBase<FinanceType>
                 interest += $"{generator.DisplaySummaryValueSnippet(model.InterestRatePaid)}% paid";
             }
         }
-        Generator.AddBlockWithText("activityentry", interest);
+        Generator.AddBlockWithText(interest);
     }
 }

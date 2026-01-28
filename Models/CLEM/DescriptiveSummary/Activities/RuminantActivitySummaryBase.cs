@@ -58,7 +58,7 @@ public abstract class RuminantActivitySummaryBase<TModel> : DescriptiveSummaryPr
                 id: "default",
                 model: CLEMModel,
                 childType: typeof(RuminantGroup),
-                borderClass: "childgroupfilterborder",
+                borderClass: "childgroupborder filtergroup",
                 introduction: "Individuals will be selected from the following:"
                 )
         ];

@@ -64,6 +64,6 @@ public class TransmuteRuminantSummary : DescriptiveSummaryProviderBase<Transmute
                 htmlWriter.Write($" with all financial Transactions of sales and purchases using {generator.DisplaySummaryValueSnippet(ModelTyped.FinanceTypeForTransactionsName, entryStyle: HTMLSummaryStyle.Resource)}");
             }
         }
-        generator.AddBlockWithText("activityentry", htmlWriter.ToString());
+        generator.AddBlockWithText(htmlWriter.ToString());
     }
 }

@@ -16,7 +16,7 @@ namespace Models.CLEM.DescriptiveSummary;
 public class FilterByPropertySummary : FilterSummaryBase<FilterByProperty>
 {
     /// <inheritdoc/>
-    public override string FilterString(bool htmltags)
+    public override string FilterString()
     {
         var model = ModelTyped;
         if (model is null) return "UNKNOWN";
@@ -26,11 +26,8 @@ public class FilterByPropertySummary : FilterSummaryBase<FilterByProperty>
         using StringWriter filterWriter = new();
         if (model.AllPropertyInfoFound.Any() == false)
         {
-            filterWriter.Write($"Filter:");
-            string errorLink = (htmltags) ? " <span class=\"errorlink\">" : " ";
-            string spanClose = (htmltags) ? "</span>" : "";
             string message = (model.PropertyOfIndividual == null || model.PropertyOfIndividual == "") ? "Not Set" : $"Unknown: {model.PropertyOfIndividual}";
-            filterWriter.Write($"{errorLink}{message}{spanClose}");
+            filterWriter.Write($"Filter:{generator.DisplayErrorSnippet(message)}");
             return filterWriter.ToString();
         }
 
@@ -45,47 +42,43 @@ public class FilterByPropertySummary : FilterSummaryBase<FilterByProperty>
                     filterWriter.Write(" not");
                 }
 
-                filterWriter.Write($" {generator.DisplaySummaryValueSnippet(model.PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+                filterWriter.Write($" {generator.DisplaySummaryValueSnippet(model.PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter)}");
             }
             else
             {
-                filterWriter.Write($" {generator.DisplaySummaryValueSnippet(model.PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+                filterWriter.Write($" {generator.DisplaySummaryValueSnippet(model.PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter)}");
                 if (model.IsOperatorValid)
                 {
                     filterWriter.Write((model.Operator == ExpressionType.IsFalse || model.Value?.ToString().ToLower() == "false") ? " not" : " is");
                 }
                 else
                 {
-                    string errorLink = (htmltags) ? "<span class=\"errorlink\">" : "";
-                    string spanClose = (htmltags) ? "</span>" : "";
-                    filterWriter.Write($"{errorLink}invalid operator {model.OperatorToSymbol()}{spanClose}");
+                    filterWriter.Write($"invalid operator {model.OperatorToSymbol()}");
                 }
-                filterWriter.Write($" {generator.DisplaySummaryValueSnippet(model.Value?.ToString(), "No value", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+                filterWriter.Write($" {generator.DisplaySummaryValueSnippet(model.Value?.ToString(), "No value", HTMLSummaryStyle.Filter)}");
             }
         }
         else
         {
-            filterWriter.Write($" {generator.DisplaySummaryValueSnippet(model.PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+            filterWriter.Write($" {generator.DisplaySummaryValueSnippet(model.PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter)}");
 
             if (model.AllPropertyInfoFound != null)
             {
                 if (model.IsOperatorValid)
                 {
-                    filterWriter.Write($" {generator.DisplaySummaryValueSnippet(model.OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+                    filterWriter.Write($" {generator.DisplaySummaryValueSnippet(model.OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Filter)}");
                 }
                 else
                 {
-                    string errorLink = (htmltags) ? "<span class=\"errorlink\">" : "";
-                    string spanClose = (htmltags) ? "</span>" : "";
-                    filterWriter.Write($"{errorLink}invalid operator {model.OperatorToSymbol()}{model.AllPropertyInfoFound.Last().PropertyType.Name}{spanClose}");
+                    filterWriter.Write($"invalid operator {model.OperatorToSymbol()}{model.AllPropertyInfoFound.Last().PropertyType.Name}");
                 }
             }
             else
             {
-                filterWriter.Write($" {generator.DisplaySummaryValueSnippet(model.OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+                filterWriter.Write($" {generator.DisplaySummaryValueSnippet(model.OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Filter)}");
             }
 
-            filterWriter.Write($" {generator.DisplaySummaryValueSnippet(model.Value?.ToString(), "No value", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+            filterWriter.Write($" {generator.DisplaySummaryValueSnippet(model.Value?.ToString(), "No value", HTMLSummaryStyle.Filter)}");
         }
         return filterWriter.ToString();
     }

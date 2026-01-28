@@ -32,11 +32,11 @@ public class RuminantConceptionByConditionSummary : DescriptiveSummaryProviderBa
 
         if (model.ConditionBasedConceptionStyle == ConditionBasedCalculationStyle.None)
         {
-            Generator.AddBlockWithText("activityentry", $"{prefix}will have a probability of conceiving of {generator.DisplaySummaryValueSnippet(model.ConditionBasedConceptionProbability, warnZero: true)}.");
+            Generator.AddBlockWithText($"{prefix}will have a probability of conceiving of {generator.DisplaySummaryValueSnippet(model.ConditionBasedConceptionProbability, warnZero: true)}.");
         }
         else
         {
-            Generator.AddBlockWithText("activityentry", $"{prefix}{generator.DisplaySummaryValueSnippet(model.ConditionBasedConceptionCutOff, warnZero: true)} will have a probability of conceiving of {generator.DisplaySummaryValueSnippet(model.ConditionBasedConceptionProbability, warnZero: true)}.");
+            Generator.AddBlockWithText($"{prefix}{generator.DisplaySummaryValueSnippet(model.ConditionBasedConceptionCutOff, warnZero: true)} will have a probability of conceiving of {generator.DisplaySummaryValueSnippet(model.ConditionBasedConceptionProbability, warnZero: true)}.");
         }
     }
 }

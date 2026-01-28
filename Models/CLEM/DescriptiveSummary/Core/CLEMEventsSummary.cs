@@ -15,18 +15,18 @@ public class CLEMEventsSummary : DescriptiveSummaryProviderBase<CLEMEvents>
     public override void BuildSummary()
     {
         if (!FormatForParentControl)
-            Generator.AddBlockWithText("activityentry", $"The simulation is performed from {generator.DisplaySummaryValueSnippet(ModelTyped.Clock.StartDate.ToShortDateString())} to {generator.DisplaySummaryValueSnippet(ModelTyped.Clock.EndDate.ToShortDateString())}");
+            generator.AddBlockWithText($"The simulation is performed from {generator.DisplaySummaryValueSnippet(ModelTyped.Clock.StartDate.ToShortDateString())} to {generator.DisplaySummaryValueSnippet(ModelTyped.Clock.EndDate.ToShortDateString())}");
 
         string output = $"CLEM is running using a {generator.DisplaySummaryValueSnippet(ModelTyped.TimeStep)} time step";
         if (ModelTyped.TimeStep == TimeStepTypes.Custom)
         {
             output += $" of {generator.DisplaySummaryValueSnippet(ModelTyped.CustomTimeStep)} days";
         }
-        Generator.AddBlockWithText("activityentry", output);
+        generator.AddBlockWithText(output);
 
         if (ModelTyped.Structure.FindAll<RuminantActivityGrazeAll>().Any() || ModelTyped.Structure.FindAll<RuminantActivityGrazePasture>().Any() || ModelTyped.Structure.FindAll<RuminantActivityGrazePastureHerd>().Any())
         {
-            Generator.AddBlockWithText("activityentry", $"Ecological indicators will be calculated every {generator.DisplaySummaryValueSnippet(ModelTyped.EcologicalIndicatorsCalculationInterval)} months starting at the end of {generator.DisplaySummaryValueSnippet(ModelTyped.EcologicalIndicatorsCalculationMonth)}");
+            generator.AddBlockWithText($"Ecological indicators will be calculated every {generator.DisplaySummaryValueSnippet(ModelTyped.EcologicalIndicatorsCalculationInterval)} months starting at the end of {generator.DisplaySummaryValueSnippet(ModelTyped.EcologicalIndicatorsCalculationMonth)}");
         }
     }
 }

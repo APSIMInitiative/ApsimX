@@ -23,6 +23,6 @@ public class FodderLimitsFilterGroupSummary : GroupSummaryBase<FodderLimitsFilte
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText("activityentry", "The following ruminants will have a set monthly proportion of intake that can come from each pasture age pool");
+        generator.AddBlockWithText("The following ruminants will have a set monthly proportion of intake that can come from each pasture age pool");
     }
 }

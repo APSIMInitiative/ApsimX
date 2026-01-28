@@ -22,7 +22,7 @@ public class ActivityFeeSummary : DescriptiveSummaryProviderBase<ActivityFee>
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText("activityentry", $"Pay {generator.DisplaySummaryValueSnippet(ModelTyped.Amount, "Rate not set")} " +
+        generator.AddBlockWithText($"Pay {generator.DisplaySummaryValueSnippet(ModelTyped.Amount, "Rate not set")} " +
             $"per {generator.DisplaySummaryValueSnippet(ModelTyped.Measure, "Measure not set")} " +
             $"from {generator.DisplaySummaryResourceTypeSnippet(ModelTyped.BankAccountName)}");
     }

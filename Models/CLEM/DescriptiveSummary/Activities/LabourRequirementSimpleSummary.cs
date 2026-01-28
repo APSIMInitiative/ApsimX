@@ -27,7 +27,7 @@ public class LabourRequirementSimpleSummary : DescriptiveSummaryProviderBase<Lab
                 childType: typeof(LabourGroup),
                 introduction: "The required labour will be taken from the following groups:",
                 missing: "No labour groups provided to defined labour",
-                borderClass: "childgroupfilterborder"
+                borderClass: "childgroupborder filtergroup"
                 )
         ];
     }
@@ -35,6 +35,6 @@ public class LabourRequirementSimpleSummary : DescriptiveSummaryProviderBase<Lab
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText("activityentry", "Labour details defined by parent activity");
+        generator.AddBlockWithText("Labour details defined by parent activity");
     }
 }

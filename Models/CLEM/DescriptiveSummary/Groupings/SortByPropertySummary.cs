@@ -9,21 +9,13 @@ namespace Models.CLEM.DescriptiveSummary;
 public class SortByPropertySummary : FilterSummaryBase<SortByProperty>
 {
     /// <inheritdoc/>
-    public override string FilterString(bool htmltags)
+    public override string FilterString()
     {
-        string cssSet = "";
-        string cssClose = "";
-        if (htmltags)
-        {
-            cssSet = "<span class = \"filterset\">";
-            cssClose = "</span>";
-        }
-
         using (StringWriter sortWriter = new StringWriter())
         {
             sortWriter.Write($"Sort: ");
-            sortWriter.Write($" {generator.DisplaySummaryValueSnippet(ModelTyped.PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
-            sortWriter.Write($" {cssSet}{ModelTyped.SortDirection.ToString().ToLower()}{cssClose}");
+            sortWriter.Write($"{generator.DisplaySummaryValueSnippet(ModelTyped.PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter)}");
+            sortWriter.Write($" {generator.DisplaySummaryValueSnippet(ModelTyped.SortDirection.ToString().ToLower())}");
             return sortWriter.ToString();
         }
     }

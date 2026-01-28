@@ -53,7 +53,7 @@ public abstract class FilterSummaryBase<TModel> : DescriptiveSummaryProvider, ID
     /// <returns></returns>
     public override string ToString()
     {
-        return FilterString(false);
+        return FilterString();
     }
 
     /// <summary>
@@ -62,14 +62,14 @@ public abstract class FilterSummaryBase<TModel> : DescriptiveSummaryProvider, ID
     /// <returns></returns>
     public string ToHTMLString()
     {
-        return FilterString(true);
+        return FilterString();
     }
 
     /// <summary>
     /// Method to convert a filter into html snippet
     /// </summary>
     /// <returns></returns>
-    public virtual string FilterString(bool html)
+    public virtual string FilterString()
     {
         return $"UNKNOWN";
     }
@@ -77,7 +77,7 @@ public abstract class FilterSummaryBase<TModel> : DescriptiveSummaryProvider, ID
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText("filter", FilterString(generator.OutputFormat == DescriptiveSummaryFormat.HTML), styleString: ((CLEMModel.Enabled) ? "" : "disabled"));
+        generator.AddBlockWithText(FilterString(), styleString: ((CLEMModel.Enabled) ? "" : "disabled"), classString: "entryValue filterItem floatLeft");
     }
 
     /// <inheritdoc/>

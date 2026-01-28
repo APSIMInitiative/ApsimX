@@ -21,7 +21,7 @@ namespace Models.CLEM.DescriptiveSummary
                 childType: typeof(RuminantGroup),
                 missing: "No individuals identified for destocking",
                 introduction: "The following filter groups will identify selection rules and order for destocking",
-                borderClass: "childgroupfilterborder"
+                borderClass: "childgroupborder filtergroup"
                 )
             ];
         }
@@ -32,11 +32,8 @@ namespace Models.CLEM.DescriptiveSummary
             var model = ModelTyped;
             if (model is null) return;
 
-            generator.AddBlockWithText("activityentry",
-                $"Pasture will be assessed in months defined by a Timer and assessed until {generator.DisplaySummaryValueSnippet(model.LastAssessmentMonth, warnZero: true)} to maintain {generator.DisplaySummaryValueSnippet(model.FeedLowLimit, warnZero: true)} kg/ha at the end of the period.");
-
-            generator.AddBlockWithText("activityentry",
-                "This activity evaluates paddock biomass and marks individuals for destocking if required. Companion models may be used to specify sell order and costs.");
+            generator.AddBlockWithText($"Pasture will be assessed in months defined by a Timer and assessed until {generator.DisplaySummaryValueSnippet(model.LastAssessmentMonth, warnZero: true)} to maintain {generator.DisplaySummaryValueSnippet(model.FeedLowLimit, warnZero: true)} kg/ha at the end of the period.");
+            generator.AddBlockWithText($"This activity evaluates paddock biomass and marks individuals for destocking if required. Companion models may be used to specify sell order and costs.");
         }
     }
 }

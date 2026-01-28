@@ -50,6 +50,7 @@ public class LabourPricingSummary : DescriptiveSummaryProviderBase<LabourPricing
     {
         if (group.Id != "defaulttype" && group.SelectedModels.Any())
         {
+            generator.OpenBlock(id: "tablewrap", addTopBottomMargin: true);
             Generator.CreateTable(new string[] { "Name", "Filter", "Rate per day" });
         }
     }
@@ -60,6 +61,8 @@ public class LabourPricingSummary : DescriptiveSummaryProviderBase<LabourPricing
         if (group.Id != "defaulttype" && group.SelectedModels.Any())
         {
             Generator.CloseTable();
+            generator.CloseMostRecentBlock(id: "tablewrap");
         }
+
     }
 }

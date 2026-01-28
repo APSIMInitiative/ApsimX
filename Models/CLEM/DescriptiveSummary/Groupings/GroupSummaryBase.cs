@@ -82,7 +82,7 @@ public abstract class GroupSummaryBase<TModel> : DescriptiveSummaryProvider, IDe
         {
             name += $" - applies to {acm.Identifier}";
         }
-        generator.AddBlockWithText("filtername", name, disabled: !Model.Enabled);
+        generator.AddBlockWithText(name, disabled: !Model.Enabled, classString: "childTitle filter");
     }
 
     /// <inheritdoc/>
@@ -94,10 +94,10 @@ public abstract class GroupSummaryBase<TModel> : DescriptiveSummaryProvider, IDe
     /// <inheritdoc/>
     public override void CreateSummaryInnerOpeningBlocks(ChildComponentGroup group)
     {
-        generator.OpenBlock("filterborder clearfix", "", id: "groupitems");
+        generator.OpenBlock("childgroupborder filteritems clearfix", "", id: "groupitems");
         if (group.SelectedModels.Any() == false)
         {
-            generator.AddBlockWithText("filter", "All individuals");
+            generator.AddBlockWithText("All individuals", "entryValue filterItem floatLeft");
         }
     }
 

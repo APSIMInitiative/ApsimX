@@ -31,7 +31,7 @@ namespace Models.CLEM.DescriptiveSummary
                     childType: typeof(RuminantGroup),
                     missing: "No RuminantGroup component provided",
                     introduction: $"Individuals selected for {identifier} will be further refined by:",
-                    borderClass: "childgroupfilterborder"
+                    borderClass: "childgroupborder filtergroup"
                 ));
             }
             groups.Add(new ChildComponentGroup(
@@ -40,7 +40,7 @@ namespace Models.CLEM.DescriptiveSummary
                 childType: typeof(SpecifyRuminant),
                 missing: "No SpecifyRuminant component provided",
                 introduction: "The following SpecifyRuminant components will define the individuals to be purchased (Breeding males and females):",
-                borderClass: "childgroupactivityborder"
+                borderClass: "childgroupborder activitygroup"
             ));
 
             return groups;
@@ -54,19 +54,17 @@ namespace Models.CLEM.DescriptiveSummary
             if (model is null) return;
 
             // Safety stop information
-            generator.AddBlockWithText("activityentry",
-                $"The simulation will stop if breeders exceed {generator.DisplaySummaryValueSnippet(model.MaxBreedersMultiplierToStop, warnZero: true)} × maximum breeders (max breeders = {generator.DisplaySummaryValueSnippet(model.MaximumBreedersKept, warnZero: true)}) equating to {generator.DisplaySummaryValueSnippet(model.MaximumBreedersKept * model.MaxBreedersMultiplierToStop, warnZero: true)} breeders.");
+            generator.AddBlockWithText($"The simulation will stop if breeders exceed {generator.DisplaySummaryValueSnippet(model.MaxBreedersMultiplierToStop, warnZero: true)} × maximum breeders (max breeders = {generator.DisplaySummaryValueSnippet(model.MaximumBreedersKept, warnZero: true)}) equating to {generator.DisplaySummaryValueSnippet(model.MaximumBreedersKept * model.MaxBreedersMultiplierToStop, warnZero: true)} breeders.");
 
             // Initial herd adjustment
             if (model.AdjustBreedingFemalesAtStartup || model.AdjustBreedingMalesAtStartup)
             {
                 string which = model.AdjustBreedingFemalesAtStartup && model.AdjustBreedingMalesAtStartup ? "females and males" :
                                model.AdjustBreedingFemalesAtStartup ? "females" : "males";
-                generator.AddBlockWithText("activityentry",
-                    $"At startup this activity will adjust initial cohorts for {which} to achieve the maximum herd.");
+                generator.AddBlockWithText($"At startup this activity will adjust initial cohorts for {which} to achieve the maximum herd.");
             }
 
-            generator.AddBlockWithText("activityentry", $"Breeding females");
+            generator.AddBlockWithText($"Breeding females");
 
             // does controlled mating exist in simulation
             var zone = ModelTyped.Structure.FindParent<Zone>(recurse: true);
@@ -97,7 +95,7 @@ namespace Models.CLEM.DescriptiveSummary
                     {
                         output += $" with {generator.DisplayBold("No")} destocking through sales";
                     }
-                    generator.AddBlockWithText("activityentry", output);
+                    generator.AddBlockWithText(output);
 
                     output = "";
                     if (ModelTyped.PerformFemaleDestocking)
@@ -116,14 +114,14 @@ namespace Models.CLEM.DescriptiveSummary
                             notBeingMarked.Add("Sell old female breeders");
                         }
 
-                        generator.AddBlockWithText("activityentry", output);
+                        generator.AddBlockWithText(output);
                     }
 
                     if (ModelTyped.PerformFemaleStocking)
                     {
                         if (ModelTyped.MaximumProportionBreedersPerPurchase < 1 & minimumBreedersKept > 0)
                         {
-                            generator.AddBlockWithText("activityentry", $"A maximum of {generator.DisplaySummaryValueSnippet(ModelTyped.MaximumProportionBreedersPerPurchase)} of the Minimum Breeders Kept equal to {generator.DisplaySummaryValueSnippet(ModelTyped.MaximumProportionBreedersPerPurchase * minimumBreedersKept)} can be purchased in a single transaction");
+                            generator.AddBlockWithText($"A maximum of {generator.DisplaySummaryValueSnippet(ModelTyped.MaximumProportionBreedersPerPurchase)} of the Minimum Breeders Kept equal to {generator.DisplaySummaryValueSnippet(ModelTyped.MaximumProportionBreedersPerPurchase * minimumBreedersKept)} can be purchased in a single transaction");
                         }
 
                         output = $"Purchased breeders will be placed in {generator.DisplaySummaryResourceTypeSnippet(ModelTyped.GrazeFoodStoreNameBreeders, nullGeneralYards: true)} ";
@@ -131,26 +129,26 @@ namespace Models.CLEM.DescriptiveSummary
                         {
                             output += $" with no restocking while pasture is below {generator.DisplaySummaryValueSnippet(ModelTyped.MinimumPastureBeforeRestock)} kg/ha";
                         }
-                        generator.AddBlockWithText("activityentry", output);
+                        generator.AddBlockWithText(output);
 
 
                         if (!cmate && ModelTyped.GrazeFoodStoreNameBreeders != "" && ModelTyped.GrazeFoodStoreNameBreeders == ModelTyped.GrazeFoodStoreNameSires)
                         {
-                            generator.AddBlockWithText("warningbanner", $"Uncontrolled mating will occur as soon as Breeders and Sires are placed in {generator.DisplaySummaryResourceTypeSnippet(ModelTyped.GrazeFoodStoreNameBreeders, nullGeneralYards: true)}.");
+                            generator.AddBlockWithText($"Uncontrolled mating will occur as soon as Breeders and Sires are placed in {generator.DisplaySummaryResourceTypeSnippet(ModelTyped.GrazeFoodStoreNameBreeders, nullGeneralYards: true)}.", "infoBanner warning");
                         }
                     }
                     else
                     {
-                        generator.AddBlockWithText("activityentry", $"This activity is {generator.DisplayBold("NOT")} stocking any breeding females");
+                        generator.AddBlockWithText($"This activity is {generator.DisplayBold("NOT")} stocking any breeding females");
                     }
                 }
                 else
                 {
-                    generator.AddBlockWithText("activityentry", $"This activity is {generator.DisplayBold("NOT")} currently managing breeding females");
+                    generator.AddBlockWithText($"This activity is {generator.DisplayBold("NOT")} currently managing breeding females");
                 }
             }
 
-            generator.AddBlockWithText("activityentry", $"Breeding males (sires/rams etc)");
+            generator.AddBlockWithText($"Breeding males (sires/rams etc)");
 
             output = "";
             using (generator.OpenBlock("activitycontentlight", id: $"{ModelTyped.Name}_malbreeders"))
@@ -169,7 +167,7 @@ namespace Models.CLEM.DescriptiveSummary
                     {
                         output = $"A maximum of {generator.DisplaySummaryValueSnippet(ModelTyped.MaximumSiresKept)} will be maintained";
                     }
-                    generator.AddBlockWithText("activityentry", output);
+                    generator.AddBlockWithText( output);
                     output = "";
                     if (ModelTyped.PerformMaleDestocking)
                     {
@@ -182,11 +180,11 @@ namespace Models.CLEM.DescriptiveSummary
                             output = $"Old sires will {generator.DisplayBold("NOT")} be marked for sale{generator.DisplaySuperScript("*")}{((ModelTyped.MaximumSiresKept == 0) ? $" as maximum sires kept is {generator.DisplaySummaryValueSnippet(ModelTyped.MaximumSiresKept)}" : "")}";
                             notBeingMarked.Add("Sell old male breeders");
                         }
-                        generator.AddBlockWithText("activityentry", output);
+                        generator.AddBlockWithText( output);
                     }
                     else
                     {
-                        generator.AddBlockWithText("activityentry", $"This activity is {generator.DisplayBold("NOT")} destocking any breeding males");
+                        generator.AddBlockWithText($"This activity is {generator.DisplayBold("NOT")} destocking any breeding males");
                     }
 
                     output = "";
@@ -198,88 +196,88 @@ namespace Models.CLEM.DescriptiveSummary
                         {
                             output += $" with no restocking while pasture is below {generator.DisplaySummaryValueSnippet(ModelTyped.MinimumPastureBeforeRestock)} kg/ha";
                         }
-                        generator.AddBlockWithText("activityentry", output);
+                        generator.AddBlockWithText(output);
                     }
                     else
                     {
-                        generator.AddBlockWithText("activityentry", $"This activity is {generator.DisplayBold("NOT")} stocking any breeding males");
+                        generator.AddBlockWithText($"This activity is {generator.DisplayBold("NOT")} stocking any breeding males");
                     }
                 }
                 else
                 {
-                    generator.AddBlockWithText("activityentry", $"This activity is {generator.DisplayBold("NOT")} currently managing breeding males");
+                    generator.AddBlockWithText($"This activity is {generator.DisplayBold("NOT")} currently managing breeding males");
                 }
 
             }
 
 
-            generator.AddBlockWithText("activityentry", $"General herd");
+            generator.AddBlockWithText($"General herd");
 
             output = "";
             using (generator.OpenBlock("activitycontentlight", id: $"{ModelTyped.Name}_generalherd"))
             {
                 if (ModelTyped.GrowOutYoungMales)
                 {
-                    generator.AddBlockWithText("activityentry", "Young males will be managed for grow out");
+                    generator.AddBlockWithText($"Young males will be managed for grow out");
 
                     if (!ModelTyped.PerformMaleDestocking | !ModelTyped.MarkAgeWeightMalesForSale)
                     {
-                        generator.AddBlockWithText("activityentry", "Grow out males are " + generator.DisplayBold("NOT") + " marked for sale");
+                        generator.AddBlockWithText($"Grow out males are {generator.DisplayBold("NOT")} marked for sale");
                         notBeingMarked.Add("Sell grow out males reaching age or weight");
                     }
                     else
                     {
                         if (ModelTyped.MaleSellingAge.InDays + ((int)ModelTyped.MaleSellingWeight) > 0)
                         {
-                            generator.AddBlockWithText("activityentry", $"Grow out males will be sold when {generator.DisplaySummaryValueSnippet(ModelTyped.MaleSellingAge.InDays)} days old or {generator.DisplaySummaryValueSnippet(ModelTyped.MaleSellingWeight)} kg");
+                            generator.AddBlockWithText($"Grow out males will be sold when {generator.DisplaySummaryValueSnippet(ModelTyped.MaleSellingAge.InDays)} days old or {generator.DisplaySummaryValueSnippet(ModelTyped.MaleSellingWeight)} kg");
                         }
                         else
                         {
-                            generator.AddBlockWithText("activityentry", $"Grow out males will {generator.DisplayBold("NOT")} be marked for sale<sup>*</sup> {((ModelTyped.MaleSellingAge.InDays + ModelTyped.MaleSellingWeight > 0) ? " as no age or weight for sale has been defined" : "")}");
+                            generator.AddBlockWithText($"Grow out males will {generator.DisplayBold("NOT")} be marked for sale<sup>*</sup> {((ModelTyped.MaleSellingAge.InDays + ModelTyped.MaleSellingWeight > 0) ? " as no age or weight for sale has been defined" : "")}");
                             notBeingMarked.Add("Sell grow out males reaching age or weight");
                         }
                     }
 
-                    generator.AddBlockWithText("activityentry", $"Grow-out males will be placed in {generator.DisplaySummaryResourceTypeSnippet(ModelTyped.GrazeFoodStoreNameGrowOutMales, nullGeneralYards: true)}");
+                    generator.AddBlockWithText($"Grow-out males will be placed in {generator.DisplaySummaryResourceTypeSnippet(ModelTyped.GrazeFoodStoreNameGrowOutMales, nullGeneralYards: true)}");
 
                 }
                 else
                 {
-                    generator.AddBlockWithText("activityentry", $"Growing out and sale of young males is {generator.DisplayBold("NOT")} being performed by this activity");
+                    generator.AddBlockWithText($"Growing out and sale of young males is {generator.DisplayBold("NOT")} being performed by this activity");
                 }
 
                 if (ModelTyped.GrowOutYoungFemales)
                 {
-                    generator.AddBlockWithText("activityentry", $"Young females will be managed as grow out or a breeder reserve {((ModelTyped.GrowOutYoungMales) ? " with the grow out males" : "")}");
+                    generator.AddBlockWithText($"Young females will be managed as grow out or a breeder reserve {((ModelTyped.GrowOutYoungMales) ? " with the grow out males" : "")}");
 
                     if (!ModelTyped.PerformFemaleDestocking | !ModelTyped.MarkAgeWeightFemalesForSale)
                     {
-                        generator.AddBlockWithText("activityentry", $"Grow out females are {generator.DisplayBold("NOT")} marked for sale");
+                        generator.AddBlockWithText($"Grow out females are {generator.DisplayBold("NOT")} marked for sale");
                         notBeingMarked.Add("Sell grow out females reaching age or weight");
                     }
                     else
                     {
                         if (ModelTyped.FemaleSellingAge.InDays + ModelTyped.FemaleSellingWeight > 0)
                         {
-                            generator.AddBlockWithText("activityentry", $"Grow out females will be sold when {generator.DisplaySummaryValueSnippet(ModelTyped.FemaleSellingAge.InDays)} days old or {generator.DisplaySummaryValueSnippet(ModelTyped.FemaleSellingWeight)} kg");
+                            generator.AddBlockWithText($"Grow out females will be sold when {generator.DisplaySummaryValueSnippet(ModelTyped.FemaleSellingAge.InDays)} days old or {generator.DisplaySummaryValueSnippet(ModelTyped.FemaleSellingWeight)} kg");
                         }
                         else
                         {
-                            generator.AddBlockWithText("activityentry", $"Grow out females will {generator.DisplayBold("NOT")} be marked for sale<sup>*</sup> {((ModelTyped.FemaleSellingAge.InDays + ModelTyped.FemaleSellingWeight > 0) ? " as no age or weight for sale has been defined" : "")}");
+                            generator.AddBlockWithText($"Grow out females will {generator.DisplayBold("NOT")} be marked for sale<sup>*</sup> {((ModelTyped.FemaleSellingAge.InDays + ModelTyped.FemaleSellingWeight > 0) ? " as no age or weight for sale has been defined" : "")}");
                             notBeingMarked.Add("Sell grow out females reaching age or weight");
                         }
                     }
 
-                    generator.AddBlockWithText("activityentry", $"Grow-out females will be placed in {generator.DisplaySummaryResourceTypeSnippet(ModelTyped.GrazeFoodStoreNameGrowOutFemales, nullGeneralYards: true)}");
+                    generator.AddBlockWithText($"Grow-out females will be placed in {generator.DisplaySummaryResourceTypeSnippet(ModelTyped.GrazeFoodStoreNameGrowOutFemales, nullGeneralYards: true)}");
 
                     if (!cmate && ModelTyped.GrazeFoodStoreNameGrowOutFemales != "" & !ModelTyped.CastrateMales && ModelTyped.GrazeFoodStoreNameGrowOutFemales == ModelTyped.GrazeFoodStoreNameGrowOutMales)
                     {
-                        generator.AddBlockWithText("warningbanner", $"Uncontrolled mating may occur in grow out females and males if allowed to mature before sales as they are placed in {generator.DisplaySummaryResourceTypeSnippet(ModelTyped.GrazeFoodStoreNameGrowOutFemales, nullGeneralYards: true)} if using natural mating.");
+                        generator.AddBlockWithText($"Uncontrolled mating may occur in grow out females and males if allowed to mature before sales as they are placed in {generator.DisplaySummaryResourceTypeSnippet(ModelTyped.GrazeFoodStoreNameGrowOutFemales, nullGeneralYards: true)} if using natural mating.", "infoBanner warning");
                     }
                 }
                 else
                 {
-                    generator.AddBlockWithText("activityentry", $"Growing out and sale of young females is {generator.DisplayBold("NOT")} being performed by this activity");
+                    generator.AddBlockWithText($"Growing out and sale of young females is {generator.DisplayBold("NOT")} being performed by this activity");
                 }
 
 
@@ -287,17 +285,17 @@ namespace Models.CLEM.DescriptiveSummary
                 {
                     if (ModelTyped.ContinuousGrowOutSales)
                     {
-                        generator.AddBlockWithText("activityentry", "Grow out age/weight sales will be performed in any month where conditions are met");
+                        generator.AddBlockWithText("Grow out age/weight sales will be performed in any month where conditions are met");
                     }
                     else
                     {
-                        generator.AddBlockWithText("activityentry", "Grow out age/weight sales will only be performed when this activity is due");
+                        generator.AddBlockWithText("Grow out age/weight sales will only be performed when this activity is due");
                     }
                 }
 
                 if (ModelTyped.GrowOutYoungMales & ModelTyped.CastrateMales)
                 {
-                    generator.AddBlockWithText("activityentry", "Young males will be castrated (e.g. create steers or bullocks)");
+                    generator.AddBlockWithText($"Young males will be castrated (e.g. create steers or bullocks)");
                 }
 
             }
@@ -307,9 +305,9 @@ namespace Models.CLEM.DescriptiveSummary
                 output = "";
                 foreach (var item in notBeingMarked)
                 {
-                    output += generator.DisplaySummaryValueSnippet(item, spanClass: "highlightdiv");
+                    output += generator.DisplaySummaryValueSnippet(item, spanClass: "entryValue floatLeft warningValue" ); // "highlightdiv");
                 }
-                generator.AddBlockWithText("clearfix warningbanner", $"* This activity is not performing all mark for sale tasks. The following tasks can be enabled or handled elsewhere: {output}");
+                generator.AddBlockWithText($"* This activity is not performing all mark for sale tasks. The following tasks can be enabled or handled elsewhere: {output}", "clearfix infoBanner warning");
             }
         }
     }

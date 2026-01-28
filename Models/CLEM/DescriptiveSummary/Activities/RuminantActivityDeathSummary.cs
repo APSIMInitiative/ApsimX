@@ -24,7 +24,7 @@ namespace Models.CLEM.DescriptiveSummary
                 childType: typeof(IRuminantDeathGroup),
                 missing: "No death groups provided. Deaths are determined using breed base mortality.",
                 introduction: "Deaths are determined using the following configured death groups and rates/conditions:",
-                borderClass: "childgroupfilterborder"
+                borderClass: "childgroupborder filtergroup"
                 )
             ];
         }

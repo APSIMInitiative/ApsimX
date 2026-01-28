@@ -22,7 +22,7 @@ public class LabourActivityFeedToTargetsSummary : DescriptiveSummaryProviderBase
                 model: CLEMModel,
                 childType: typeof(LabourActivityFeedTarget),
                 introduction: "The following targets are applied:",
-                borderClass: "childgroupactivityborder"
+                borderClass: "childgroupborder activitygroup"
                 ),
             new ChildComponentGroup(
                 id: "purchases",
@@ -30,7 +30,7 @@ public class LabourActivityFeedToTargetsSummary : DescriptiveSummaryProviderBase
                 childType: typeof(LabourActivityFeedTargetPurchase),
                 introduction: "The following purchases will be used to supply food:",
                 missing: "",
-                borderClass: "childgroupactivityborder"
+                borderClass: "childgroupborder activitygroup"
                 ),
         ];
     }
@@ -43,9 +43,9 @@ public class LabourActivityFeedToTargetsSummary : DescriptiveSummaryProviderBase
         {
             output += $"{generator.DisplaySummaryValueSnippet(ModelTyped.DailyIntakeOtherSources)} provided from non-modelled sources";
         }
-        generator.AddBlockWithText("activityentry", output);
+        generator.AddBlockWithText(output);
 
-        generator.AddBlockWithText("activityentry", $"Hired labour {generator.DisplaySummaryValueSnippet(((ModelTyped.IncludeHiredLabour) ? "is" : "is not"))} included");
+        generator.AddBlockWithText($"Hired labour {generator.DisplaySummaryValueSnippet(((ModelTyped.IncludeHiredLabour) ? "is" : "is not"))} included");
 
         // find a market place if present
         Simulation sim = ModelTyped.Structure.FindParent<Simulation>(recurse: true);
@@ -54,7 +54,7 @@ public class LabourActivityFeedToTargetsSummary : DescriptiveSummaryProviderBase
             Market marketPlace = ModelTyped.Structure.FindChild<Market>(relativeTo: sim);
             if (marketPlace != null)
             {
-                generator.AddBlockWithText("activityentry", $"Food with be bought and sold through the market {generator.DisplaySummaryResourceTypeSnippet(marketPlace.Name)} included");
+                generator.AddBlockWithText($"Food with be bought and sold through the market {generator.DisplaySummaryResourceTypeSnippet(marketPlace.Name)} included");
             }
         }
     }

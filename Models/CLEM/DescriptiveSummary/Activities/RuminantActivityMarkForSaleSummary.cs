@@ -14,16 +14,15 @@ namespace Models.CLEM.DescriptiveSummary
             var model = ModelTyped;
             if (model is null) return;
 
-            generator.AddBlockWithText("activityentry",
-                $"Flag individuals for sale as {generator.DisplaySummaryValueSnippet(model.SaleFlagToUse.ToString(), "SaleFlag not set")}");
+            generator.AddBlockWithText($"Flag individuals for sale as {generator.DisplaySummaryValueSnippet(model.SaleFlagToUse.ToString(), "SaleFlag not set")}");
 
             if (model.OverwriteFlag)
             {
-                generator.AddBlockWithText("activityentry", "Existing sale flags will be overwritten.");
+                generator.AddBlockWithText($"Existing sale flags will be overwritten.");
             }
             else
             {
-                generator.AddBlockWithText("activityentry", "Existing sale flags will be preserved.");
+                generator.AddBlockWithText($"Existing sale flags will be preserved.");
             }
         }
     }

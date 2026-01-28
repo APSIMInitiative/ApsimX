@@ -101,7 +101,7 @@ public abstract class RuminantParametersSummaryBase<TModel> : DescriptiveSummary
 
         if (IsNeeded() == false)
         {
-            generator.AddBlockWithText("warningbanner", "These parameters are not required for this simulation");
+            generator.AddBlockWithText("These parameters are not required for this simulation", "infoBanner warning");
             return;
         }
 
@@ -117,7 +117,7 @@ public abstract class RuminantParametersSummaryBase<TModel> : DescriptiveSummary
         if (!FormatForParentControl)
         {
             string PropertyType = typeof(TModel).Name.Replace("RuminantParameters", "");
-            Generator.AddBlockWithText("detailsnote", $"{PropertyType} parameters used by multiple activities and growth components.");
+            Generator.AddBlockWithText($"{PropertyType} parameters used by multiple activities and growth components.", "detailsnote");
         }
     }
 

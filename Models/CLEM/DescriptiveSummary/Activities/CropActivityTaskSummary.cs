@@ -17,6 +17,6 @@ public class CropActivityTaskSummary : DescriptiveSummaryProviderBase<CropActivi
     public override void BuildSummary()
     {
         if (ModelTyped.Structure.FindChildren<ActivityFee>().Count() + ModelTyped.Structure.FindChildren<LabourRequirement>().Count() == 0)
-            generator.AddBlockWithText("warningbanner", "This task is not needed as it has no fee or labour requirement");
+            generator.AddBlockWithText("This task is not needed as it has no fee or labour requirement", "infoBanner warning");
     }
 }

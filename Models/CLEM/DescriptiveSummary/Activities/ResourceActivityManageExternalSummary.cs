@@ -23,7 +23,7 @@ public class ResourceActivityManageExternalSummary : DescriptiveSummaryProviderB
                 model: CLEMModel,
                 childType: typeof(ResourceActivityExternalMultiplier),
                 introduction: "The following multipliers will be applied:",
-                borderClass: "childgroupactivityborder"
+                borderClass: "childgroupborder activitygroup"
                 )
         ];
     }
@@ -32,7 +32,7 @@ public class ResourceActivityManageExternalSummary : DescriptiveSummaryProviderB
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText("activityentry", $"Resources added or removed are provided by {generator.DisplaySummaryValueSnippet(ModelTyped.ResourceDataReader, "Reader not set", HTMLSummaryStyle.FileReader)}");
+        generator.AddBlockWithText($"Resources added or removed are provided by {generator.DisplaySummaryValueSnippet(ModelTyped.ResourceDataReader, "Reader not set", HTMLSummaryStyle.FileReader)}");
 
         string output = "";
         if (ModelTyped.AccountName is null || ModelTyped.AccountName == "")
@@ -41,16 +41,16 @@ public class ResourceActivityManageExternalSummary : DescriptiveSummaryProviderB
             output = "No financial constraints relating to pricing and packet sizes associated with each resource will be included.";
         else
             output = $"Pricing and packet sizes associated with each resource will be used with {generator.DisplaySummaryResourceTypeSnippet(ModelTyped.AccountName)}";
-        generator.AddBlockWithText("activityentry", output);
+        generator.AddBlockWithText( output);
 
-        generator.AddBlockWithText("activityentry", output);
+        //generator.AddBlockWithText(output);
 
-        using (generator.OpenBlock("filterborder clearfix", "", id: "includedresources"))
+        using (generator.OpenBlock("childgroupborder filtergroup  clearfix", "", id: "includedresources"))
         {
-            Generator.AddBlockWithText("childgrouplabel", "The following resources will be included if present in the Resource File");
+            generator.AddBlockWithText("The following resources will be included if present in the Resource File", "childgrouplabel");
             var resourceFilter = ((ModelTyped.ResourceColumnsToUse ?? "").Length > 0) ? ModelTyped.ResourceColumnsToUse : "All resources";
             foreach (var res in resourceFilter.Split(",").Select(x => x.Trim()))
-                generator.AddBlockWithText("filter", res);
+                generator.AddBlockWithText(res, "entryValue filterItem floatLeft");
         }
     }
 }

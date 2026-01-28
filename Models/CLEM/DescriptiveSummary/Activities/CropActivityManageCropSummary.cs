@@ -67,6 +67,6 @@ public class CropActivityManageCropSummary : DescriptiveSummaryProviderBase<Crop
             }
         }
         htmlWriter.Write($"of {CLEMModel.DisplaySummaryValueSnippet(ModelTyped.LandItemNameToUse, "Resource not set", HTMLSummaryStyle.Resource)}");
-        generator.AddBlockWithText("activityentry", htmlWriter.ToString());
+        generator.AddBlockWithText(htmlWriter.ToString());
     }
 }

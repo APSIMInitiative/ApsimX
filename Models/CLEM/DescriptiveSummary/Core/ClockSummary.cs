@@ -12,9 +12,30 @@ namespace Models.CLEM.DescriptiveSummary;
 /// </summary>
 public class ClockSummary : DescriptiveSummaryProviderBase<Clock>
 {
+    ///<inheritdoc/>
+    public override List<ChildComponentGroup> GetChildrenInSummary()
+    {
+        string missing = "";
+        if (ModelTyped.Node.Find<ZoneCLEM>() is not null)
+        {
+            missing = $"No CLEMEvents component found!";
+        }
+
+        return
+        [
+            new ChildComponentGroup(
+                id: "events",
+                models: ModelTyped.Node.FindChildren<CLEMEvents>(),
+                childType: typeof(CLEMEvents),
+                borderClass: "childgroupborder", 
+                missing: missing
+                ),
+        ];
+    }
+
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        Generator.AddBlockWithText("activityentry", $"The simulation is performed from {generator.DisplaySummaryValueSnippet(ModelTyped.StartDate.ToShortDateString())} to {generator.DisplaySummaryValueSnippet(ModelTyped.EndDate.ToShortDateString())}");
+        generator.AddBlockWithText($"The simulation is performed from {generator.DisplaySummaryValueSnippet(ModelTyped.StartDate.ToShortDateString())} to {generator.DisplaySummaryValueSnippet(ModelTyped.EndDate.ToShortDateString())}");
     }
 }

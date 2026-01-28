@@ -31,7 +31,7 @@ public class LabourTypeSummary : DescriptiveSummaryProviderBase<LabourType>
         {
             if (model.Individuals == 0)
             {
-                generator.AddBlockWithText("errorbanner", "No individuals are specified for this labour type");
+                generator.AddBlockWithText("No individuals are specified for this labour type", "infoBanner error");
             }
             else
             {
@@ -40,12 +40,12 @@ public class LabourTypeSummary : DescriptiveSummaryProviderBase<LabourType>
                 {
                     number += " as hired labour";
                 }
-                generator.AddBlockWithText("activityentry", number);
+                generator.AddBlockWithText(number);
             }
 
             if (model.Individuals > 1)
             {
-                generator.AddBlockWithText("warningbanner", $"You will be unable to identify these individuals with <span class=\"setvalue\">Name</span> but need to use the Attribute with tag <span class=\"setvalue\">Group</span> and value <span class=\"setvalue\">{model.Name}</span></div>");
+                generator.AddBlockWithText($"You will be unable to identify these individuals with {generator.DisplaySummaryValueSnippet("Name")} but need to use the Attribute with tag {generator.DisplaySummaryValueSnippet("Group")} and value {generator.DisplaySummaryValueSnippet(model.Name)}", "infoBanner warning");
             }
         }
     }

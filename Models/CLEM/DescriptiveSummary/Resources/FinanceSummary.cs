@@ -33,7 +33,7 @@ public class FinanceSummary : DescriptiveSummaryProviderBase<Finance>
         var model = ModelTyped;
         if (model is null) return;
 
-        Generator.AddBlockWithText("activityentry", $"Currency is {generator.DisplaySummaryValueSnippet(model.CurrencyName, "Not specified")}");
-        Generator.AddBlockWithText("activityentry", $"The financial year starts in {generator.DisplaySummaryValueSnippet(model.FirstMonthOfFinancialYear, "Not specified", warnZero: true)}");
+        Generator.AddBlockWithText($"Currency is {generator.DisplaySummaryValueSnippet(model.CurrencyName, "Not specified")}");
+        Generator.AddBlockWithText($"The financial year starts in {generator.DisplaySummaryValueSnippet(model.FirstMonthOfFinancialYear, "Not specified", warnZero: true)}");
     }
 }

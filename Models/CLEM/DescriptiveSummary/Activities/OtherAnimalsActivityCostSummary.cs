@@ -23,7 +23,7 @@ public class OtherAnimalsActivityCostSummary : DescriptiveSummaryProviderBase<Ot
                 model: CLEMModel,
                 childType: typeof(OtherAnimalsGroup),
                 introduction: "Costs calculated based on the individuals specified below:",
-                borderClass: "childgroupfilterborder"
+                borderClass: "childgroupborder filtergroup"
                 )
         ];
     }
@@ -31,6 +31,6 @@ public class OtherAnimalsActivityCostSummary : DescriptiveSummaryProviderBase<Ot
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText("warningbanner", "Each cohort will only be considered once (when first specified) regardless of multiple filter groups");
+        generator.AddBlockWithText("Each cohort will only be considered once (when first specified) regardless of multiple filter groups", "infoBanner warning");
     }
 }

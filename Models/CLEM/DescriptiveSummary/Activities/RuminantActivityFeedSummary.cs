@@ -26,7 +26,7 @@ public class RuminantActivityFeedSummary : RuminantActivitySummaryBase<RuminantA
                 childType: typeof(RuminantFeedGroup),
                 missing: "",
                 introduction: "The following individuals will be fed:",
-                borderClass: "childgroupfilterborder"
+                borderClass: "childgroupborder filtergroup"
                 )
         ];
     }
@@ -59,18 +59,18 @@ public class RuminantActivityFeedSummary : RuminantActivitySummaryBase<RuminantA
                 break;
         }
 
-        generator.AddBlockWithText("activityentry", $"Feed {feedstyleStart} {generator.DisplaySummaryValueSnippet(ModelTyped.FeedTypeName, "Feed not set", HTMLSummaryStyle.Resource)} to ruminants");
+        generator.AddBlockWithText($"Feed {feedstyleStart} {generator.DisplaySummaryValueSnippet(ModelTyped.FeedTypeName, "Feed not set", HTMLSummaryStyle.Resource)} to ruminants");
         if (ModelTyped.ProportionTramplingWastage > 0)
         {
-            generator.AddBlockWithText("activityentry", $"{generator.DisplaySummaryValueSnippet(ModelTyped.ProportionTramplingWastage)} x AmountNeeded will be lost through trampling");
+            generator.AddBlockWithText($"{generator.DisplaySummaryValueSnippet(ModelTyped.ProportionTramplingWastage)} x AmountNeeded will be lost through trampling");
         }
         if (ModelTyped.StopFeedingWhenSatisfied)
         {
-            generator.AddBlockWithText("activityentry", "Feeding will stop when all individuals are satisfied!");
+            generator.AddBlockWithText("Feeding will stop when all individuals are satisfied!");
         }
         if (!ModelTyped.ForceFeed)
         {
-            generator.AddBlockWithText("activityentry", "Individuals will be forced to eat the specified amount!");
+            generator.AddBlockWithText("Individuals will be forced to eat the specified amount!");
         }
     }
 }

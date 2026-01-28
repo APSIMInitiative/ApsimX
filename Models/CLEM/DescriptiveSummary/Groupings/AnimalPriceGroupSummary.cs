@@ -50,7 +50,7 @@ public class AnimalPriceGroupSummary : DescriptiveSummaryProviderBase<AnimalPric
         if (!FormatForParentControl)
         {
             //ToDo: format value for currency
-            generator.AddBlockWithText("activityentry", $"{PricingStyleToFullString(model.PurchaseOrSale)} {generator.DisplaySummaryValueSnippet(model.Value, warnZero:true)} {generator.DisplaySummaryValueSnippet(model.PricingStyle)} ");
+            generator.AddBlockWithText($"{PricingStyleToFullString(model.PurchaseOrSale)} {generator.DisplaySummaryValueSnippet(model.Value, warnZero:true)} {generator.DisplaySummaryValueSnippet(model.PricingStyle)} ");
         }
     }
 
@@ -85,9 +85,9 @@ public class AnimalPriceGroupSummary : DescriptiveSummaryProviderBase<AnimalPric
         generator.CloseMostRecentBlock("animalPriceGroup_filters");
         if (FormatForParentControl)
         {
-            generator.AddBlockWithText("", generator.DisplaySummaryValueSnippet(PricingStyleToFullString(model.PurchaseOrSale)), tag: "td");
-            generator.AddBlockWithText("", generator.DisplaySummaryValueSnippet(model.Value, warnZero: true), tag: "td");
-            generator.AddBlockWithText("", generator.DisplaySummaryValueSnippet(model.PricingStyle), tag: "td");
+            generator.AddBlockWithText(generator.DisplaySummaryValueSnippet(PricingStyleToFullString(model.PurchaseOrSale)), tag: "td");
+            generator.AddBlockWithText(generator.DisplaySummaryValueSnippet(model.Value, warnZero: true), tag: "td");
+            generator.AddBlockWithText(generator.DisplaySummaryValueSnippet(model.PricingStyle), tag: "td");
             generator.CloseMostRecentBlock("animalPriceGroup_row");
         }
     }
@@ -103,16 +103,16 @@ public class AnimalPriceGroupSummary : DescriptiveSummaryProviderBase<AnimalPric
         if (FormatForParentControl)
         {
             generator.OpenBlock("", "", tag: "tr", id: "animalPriceGroup_row");
-            generator.AddBlockWithText("", cm.Name, tag: "td");
+            generator.AddBlockWithText(cm.Name, tag: "td");
             generator.OpenBlock("", "", tag: "td", id: "animalPriceGroup_filters");
         }
         else
         {
-            generator.OpenBlock("filterborder clearfix", "", id: "animalPriceGroup_filters");
+            generator.OpenBlock("childgroupborder filteritems clearfix", "", id: "animalPriceGroup_filters");
         }
         if (group.SelectedModels.Any() == false)
         {
-            generator.AddBlockWithText("filter", "All individuals");
+            generator.AddBlockWithText("All individuals", "entryValue filterItem floatLeft");
         }
     }
 

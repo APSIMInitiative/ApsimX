@@ -42,6 +42,6 @@ public class ActivityTimerResourceLevelSummary : TimerSummaryBase<ActivityTimerR
         }
         htmlWriter.Write(str);
         generator.DisplaySummaryValueSnippet(ModelTyped.Amount);
-        generator.AddBlockWithText("filter", htmlWriter.ToString());
+        generator.AddBlockWithText(htmlWriter.ToString(), "entryValue filterItem");
     }
 }

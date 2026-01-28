@@ -15,13 +15,13 @@ public class ResourceActivityProcessSummary : DescriptiveSummaryProviderBase<Res
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText("activityentry", $"Process {generator.DisplaySummaryValueSnippet(ModelTyped.ResourceTypeProcessedName, entryStyle: HTMLSummaryStyle.Resource)}" +
+        generator.AddBlockWithText($"Process {generator.DisplaySummaryValueSnippet(ModelTyped.ResourceTypeProcessedName, entryStyle: HTMLSummaryStyle.Resource)}" +
             $" into {generator.DisplaySummaryValueSnippet(ModelTyped.ResourceTypeCreatedName, entryStyle: HTMLSummaryStyle.Resource)} at a rate of " +
             $"{generator.DisplaySummaryValueSnippet(ModelTyped.ConversionRate, errorNotSet: true, warnZero: true)}");
 
         if (ModelTyped.Reserve > 0)
         {
-            generator.AddBlockWithText("activityentry", $"{generator.DisplaySummaryValueSnippet(ModelTyped.Reserve)} will be reserved.");
+            generator.AddBlockWithText($"{generator.DisplaySummaryValueSnippet(ModelTyped.Reserve)} will be reserved.");
         }
     }
 }

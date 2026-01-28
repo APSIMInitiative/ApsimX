@@ -57,7 +57,7 @@ public class RuminantInitialCohortsSummary : DescriptiveSummaryProviderBase<Rumi
             string text = $"Ruminant cohort file readers ({readers.Trim()}) will be used to provide initial cohorts";
             if (model.Structure.FindChildren<RuminantTypeCohort>().Any())
                 text += " which will be included with the cohorts also provided.";
-            Generator.AddBlockWithText("activityentry", text + ".");
+            Generator.AddBlockWithText(text + ".");
         }
 
         if (model.ManagedPastureName != "Not specified")
@@ -68,7 +68,7 @@ public class RuminantInitialCohortsSummary : DescriptiveSummaryProviderBase<Rumi
             string pastureText = $"{prefix}individuals will be placed on the pasture {generator.DisplaySummaryValueSnippet(model.ManagedPastureName, entryStyle: HTMLSummaryStyle.Resource)}";
             if (overridePasture)
                 pastureText += " unless overridden by the cohort pasture setting";
-            Generator.AddBlockWithText("activityentry", pastureText + ".");
+            Generator.AddBlockWithText(pastureText + ".");
         }
     }
 
@@ -91,7 +91,9 @@ public class RuminantInitialCohortsSummary : DescriptiveSummaryProviderBase<Rumi
             if (cohortsModel.AttributesFound)
                 headerLabels.Add("Attributes");
 
-            Generator.CreateTable(headerLabels);
+            generator.OpenBlock(id: "tablewrap", addTopBottomMargin: true);
+
+            generator.CreateTable(headerLabels);
         }
     }
 
@@ -102,9 +104,11 @@ public class RuminantInitialCohortsSummary : DescriptiveSummaryProviderBase<Rumi
         {
             var cohortsModel = ModelTyped;
             if (cohortsModel is null) return;
-            Generator.CloseTable();
+            generator.CloseTable();
+            generator.CloseMostRecentBlock(id: "tablewrap");
+
             if (cohortsModel.WeightWarningOccurred)
-                Generator.AddBlockWithText("warningbanner", "Warning: Initial weight differs from the expected normalised weight by more than 20%");
+                generator.AddBlockWithText("Warning: Initial weight differs from the expected normalised weight by more than 20%", "infoBanner warning");
         }
 
     }

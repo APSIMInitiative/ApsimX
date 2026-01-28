@@ -11,6 +11,6 @@ public class ActivityTimerMonthRangeSummary : TimerSummaryBase<ActivityTimerMont
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText("filter", $"Perform between {generator.DisplaySummaryValueSnippet(ModelTyped.StartMonth, errorNotSet: true, spanClass:"setvalueextra")} and {generator.DisplaySummaryValueSnippet(ModelTyped.StartMonth, errorNotSet: true, spanClass: "setvalueextra")}");
+        generator.AddBlockWithText($"Perform between {generator.DisplaySummaryValueSnippet(ModelTyped.StartMonth, errorNotSet: true, spanClass:"entryValue otherValue")} and {generator.DisplaySummaryValueSnippet(ModelTyped.StartMonth, errorNotSet: true, spanClass: "entryValue otherValue")}", "entryValue filterItem");
     }
 }

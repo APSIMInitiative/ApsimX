@@ -22,7 +22,7 @@ public class OtherAnimalsActivityBuySummary : DescriptiveSummaryProviderBase<Oth
                 model: CLEMModel,
                 childType: typeof(OtherAnimalsTypeCohort),
                 introduction: "The individuals defined in the following cohorts will be purchased:",
-                borderClass: "childgroupactivityborder"
+                borderClass: "childgroupborder activitygroup"
                 )
         ];
     }

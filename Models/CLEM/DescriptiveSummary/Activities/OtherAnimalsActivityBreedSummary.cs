@@ -16,7 +16,7 @@ public class OtherAnimalsActivityBreedSummary : DescriptiveSummaryProviderBase<O
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText("activityentry", $"{generator.DisplaySummaryValueSnippet(ModelTyped.AnimalTypeName, "No Other Animal Type", HTMLSummaryStyle.Resource)}" +
+        generator.AddBlockWithText($"{generator.DisplaySummaryValueSnippet(ModelTyped.AnimalTypeName, "No Other Animal Type", HTMLSummaryStyle.Resource)}" +
             $" individuals must be {generator.DisplaySummaryValueSnippet(ModelTyped.BreedingAge, "Mature age not set", HTMLSummaryStyle.Default)} months of age to breed.");
 
         string output = $"Breeding will occur regardless of whether adult males are present in the local population";
@@ -24,7 +24,7 @@ public class OtherAnimalsActivityBreedSummary : DescriptiveSummaryProviderBase<O
         {
             output = "Breeding will only occur when adult males are present in the local population.";
         }
-        generator.AddBlockWithText("activityentry", output);
-        generator.AddBlockWithText("activityentry", $"Each breeding female will produce {generator.DisplaySummaryValueSnippet(ModelTyped.OffspringPerBreeder, "Offspring not set", HTMLSummaryStyle.Default)} offspring with an equal sex ratio and rounded to whole individuals");
+        generator.AddBlockWithText(output);
+        generator.AddBlockWithText($"Each breeding female will produce {generator.DisplaySummaryValueSnippet(ModelTyped.OffspringPerBreeder, "Offspring not set", HTMLSummaryStyle.Default)} offspring with an equal sex ratio and rounded to whole individuals");
     }
 }

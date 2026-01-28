@@ -49,7 +49,7 @@ public class ResourceActivitySellSummary : DescriptiveSummaryProviderBase<Resour
             account = $" with sales placed in {generator.DisplaySummaryValueSnippet(ModelTyped.AccountName, "Account not set", HTMLSummaryStyle.Resource)}";
         }
 
-        generator.AddBlockWithText("activityentry", $"Sell {saleAmount}{salestyle} {generator.DisplaySummaryValueSnippet(ModelTyped.ResourceTypeName, "Resource not set", HTMLSummaryStyle.Resource)}{account}");
+        generator.AddBlockWithText($"Sell {saleAmount}{salestyle} {generator.DisplaySummaryValueSnippet(ModelTyped.ResourceTypeName, "Resource not set", HTMLSummaryStyle.Resource)}{account}");
     }
 
 }

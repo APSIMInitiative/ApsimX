@@ -47,6 +47,6 @@ public class RuminantDeathGroupRateSummary : GroupSummaryBase<RuminantDeathGroup
             default:
                 break;
         }
-        generator.AddBlockWithText("activityentry", htmlWriter.ToString());
+        generator.AddBlockWithText(htmlWriter.ToString());
     }
 }

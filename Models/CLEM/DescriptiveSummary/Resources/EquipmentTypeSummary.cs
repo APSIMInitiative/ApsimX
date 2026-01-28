@@ -13,7 +13,7 @@ public class EquipmentTypeSummary : DescriptiveSummaryProviderBase<EquipmentType
         var model = ModelTyped;
         if (model is null) return;
 
-        Generator.AddBlockWithText("activityentry", $"There is a starting amount of {generator.DisplaySummaryValueSnippet(model.StartingAmount)}");
+        Generator.AddBlockWithText($"There is a starting amount of {generator.DisplaySummaryValueSnippet(model.StartingAmount)}");
     }
 
 }

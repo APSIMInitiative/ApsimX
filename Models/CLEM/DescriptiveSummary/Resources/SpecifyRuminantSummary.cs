@@ -44,11 +44,11 @@ public class SpecifyRuminantSummary : DescriptiveSummaryProviderBase<SpecifyRumi
             extra = " with the following details.";
         }
 
-        generator.AddBlockWithText("activityentry", $"{generator.DisplaySummaryValueSnippet<double>(model.Proportion, warnZero: true)} of the individuals will be {generator.DisplaySummaryResourceTypeSnippet(model.RuminantTypeName)} {extra}:");
+        generator.AddBlockWithText($"{generator.DisplaySummaryValueSnippet<double>(model.Proportion, warnZero: true)} of the individuals will be {generator.DisplaySummaryResourceTypeSnippet(model.RuminantTypeName)} {extra}:");
 
         if (!cohortFound)
         {
-            generator.AddBlockWithText("activityentry", $"No {generator.DisplaySummaryResourceTypeSnippet("RuminantCohort")} describing the individuals was provided!", styleString:"errorlink");
+            generator.AddBlockWithText($"No {generator.DisplaySummaryResourceTypeSnippet("RuminantCohort")} describing the individuals was provided!", styleString:"infoBanner error");
         }
     }
 }

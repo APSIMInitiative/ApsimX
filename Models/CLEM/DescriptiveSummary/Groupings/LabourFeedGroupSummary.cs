@@ -34,7 +34,7 @@ public class LabourFeedGroupSummary : GroupSummaryBase<LabourFeedGroup>
         using StringWriter htmlWriter = new();
         if (ModelTyped.Parent.GetType() != typeof(LabourActivityFeed))
         {
-            generator.AddBlockWithText("warningbanner", "This Labour Feed Group must be placed beneath a Labour Activity Feed component");
+            generator.AddBlockWithText("This Labour Feed Group must be placed beneath a Labour Activity Feed component", "infoBanner warning");
             return;
         }
 
@@ -71,6 +71,6 @@ public class LabourFeedGroupSummary : GroupSummaryBase<LabourFeedGroup>
         }
         style += "is fed to each individual that matches the following conditions:";
         generator.DisplaySummaryValueSnippet(style);
-        generator.AddBlockWithText("activityentry", htmlWriter.ToString());
+        generator.AddBlockWithText(htmlWriter.ToString());
     }
 }

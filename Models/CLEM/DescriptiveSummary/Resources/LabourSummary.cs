@@ -45,7 +45,7 @@ public class LabourSummary : DescriptiveSummaryProviderBase<Labour>
         var model = ModelTyped;
         if (model is null) return;
 
-        generator.AddBlockWithText("activityentry", $"Individuals {(model.AllowAgeing? "" : "do not")} age with time");
+        generator.AddBlockWithText($"Individuals {(model.AllowAgeing? "" : "do not")} age with time");
     }
 
     /// <inheritdoc/>
@@ -53,7 +53,8 @@ public class LabourSummary : DescriptiveSummaryProviderBase<Labour>
     {
         if (group.Id == "defaulttype" && group.SelectedModels.Any())
         {
-            Generator.CreateTable(new string[] { "Name", "Sex", "Age (yrs)", "Number", "Hired" });
+            generator.OpenBlock(id: "tablewrap", addTopBottomMargin: true);
+            generator.CreateTable(new string[] { "Name", "Sex", "Age (yrs)", "Number", "Hired" });
         }
     }
 
@@ -62,7 +63,8 @@ public class LabourSummary : DescriptiveSummaryProviderBase<Labour>
     {
         if (group.Id == "defaulttype" && group.SelectedModels.Any())
         {
-            Generator.CloseTable();
+            generator.CloseTable();
+            generator.CloseMostRecentBlock(id: "tablewrap");
         }
     }
 }

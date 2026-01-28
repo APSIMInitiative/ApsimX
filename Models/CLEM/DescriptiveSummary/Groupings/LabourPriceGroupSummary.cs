@@ -38,7 +38,7 @@ public class LabourPriceGroupSummary : DescriptiveSummaryProviderBase<LabourPric
         if (!FormatForParentControl)
         {
             //ToDo: format value for currency
-            generator.AddBlockWithText("activityentry", $"Each individual is paid {CLEMModel.DisplaySummaryValueSnippet(model.Value, warnZero:true)} per day");
+            generator.AddBlockWithText($"Each individual is paid {CLEMModel.DisplaySummaryValueSnippet(model.Value, warnZero:true)} per day");
         }
     }
 
@@ -53,7 +53,7 @@ public class LabourPriceGroupSummary : DescriptiveSummaryProviderBase<LabourPric
         generator.CloseMostRecentBlock("labourPriceGroup_filters");
         if (FormatForParentControl)
         {
-            generator.AddBlockWithText("", generator.DisplaySummaryValueSnippet(model.Value, warnZero: true), tag: "td");
+            generator.AddBlockWithText(generator.DisplaySummaryValueSnippet(model.Value, warnZero: true), tag: "td", classString: "");
             generator.CloseMostRecentBlock("animalPriceGroup_row");
         }
     }
@@ -69,16 +69,16 @@ public class LabourPriceGroupSummary : DescriptiveSummaryProviderBase<LabourPric
         if (FormatForParentControl)
         {
             generator.OpenBlock("", "", tag: "tr", id: "labourPriceGroup_row");
-            generator.AddBlockWithText("", cm.Name, tag: "td");
+            generator.AddBlockWithText(cm.Name, tag: "td", classString: "");
             generator.OpenBlock("", "", tag: "td", id: "labourPriceGroup_filters");
         }
         else
         {
-            generator.OpenBlock("filterborder clearfix", "", id: "labourPriceGroup_filters");
+            generator.OpenBlock("childgroupborder filteritems clearfix", "", id: "labourPriceGroup_filters");
         }
         if (cm.Structure.FindChildren<Filter>().Any() == false)
         {
-            generator.AddBlockWithText("filter", "All individuals");
+            generator.AddBlockWithText("All individuals", "entryValue filterItem floatLeft");
         }
     }
 

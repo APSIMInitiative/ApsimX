@@ -17,25 +17,25 @@ namespace Models.CLEM.DescriptiveSummary
 
             if (m.FileName == null || m.FileName == "")
             {
-                generator.AddBlockWithText("activityentry", $"Using {generator.DisplayErrorSnippet("Filename not set")}");
+                generator.AddBlockWithText($"Using {generator.DisplayErrorSnippet("Filename not set")}");
                 return;
             }
             if (!m.FileExists)
             {
-                generator.AddBlockWithText("activityentry", $"File {generator.DisplaySummaryValueSnippet(m.FullFileName, entryStyle: HTMLSummaryStyle.FileReader)} {generator.DisplayErrorSnippet("Not Found")}");
+                generator.AddBlockWithText($"File {generator.DisplaySummaryValueSnippet(m.FullFileName, entryStyle: HTMLSummaryStyle.FileReader)} {generator.DisplayErrorSnippet("Not Found")}");
                 return;
             }
 
-            generator.AddBlockWithText("activityentry", $"Using {generator.DisplaySummaryValueSnippet(m.FileName, "Filename not set", HTMLSummaryStyle.FileReader)}");
+            generator.AddBlockWithText($"Using {generator.DisplaySummaryValueSnippet(m.FileName, "Filename not set", HTMLSummaryStyle.FileReader)}");
 
-            using (generator.OpenBlock("activityentryindent", id: $"{ModelTyped.Name}_columns"))
+            using (generator.OpenBlock("entryHolder indent", id: $"{ModelTyped.Name}_columns"))
             {
                 if (m.FileName != null && m.FileName.Contains(".xls"))
                 {
-                    generator.AddBlockWithText("activityentry", $"Using worksheet {generator.DisplaySummaryValueSnippet(m.ExcelWorkSheetName, "Not Set", errorNotSet: true, entryStyle: HTMLSummaryStyle.FileReader)}");
+                    generator.AddBlockWithText($"Using worksheet {generator.DisplaySummaryValueSnippet(m.ExcelWorkSheetName, "Not Set", errorNotSet: true, entryStyle: HTMLSummaryStyle.FileReader)}");
                 }
 
-                using (generator.OpenBlock("activityentryindent", id: $"{ModelTyped.Name}_columnlinks"))
+                using (generator.OpenBlock("entryHolder indent", id: $"{ModelTyped.Name}_columnlinks"))
                 {
                     FileSQLitePastureSummary.ColumnNameSnippet("Cohort name", m.NameColumnName, generator);
                     FileSQLitePastureSummary.ColumnNameSnippet("Sex", m.SexColumnName, generator);

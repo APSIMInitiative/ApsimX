@@ -36,9 +36,9 @@ public class CropActivityManageProductSummary : DescriptiveSummaryProviderBase<C
     {
         using StringWriter htmlWriter = new();
         if (ModelTyped.TreesPerHa > 0)
-            generator.AddBlockWithText("activityentry", $"This is a tree crop with a density of {generator.DisplaySummaryValueSnippet(ModelTyped.TreesPerHa)} per hectare");
+            generator.AddBlockWithText($"This is a tree crop with a density of {generator.DisplaySummaryValueSnippet(ModelTyped.TreesPerHa)} per hectare");
 
-        generator.AddBlockWithText("activityentry", $"{((ModelTyped.ProportionKept == 1) ? "This " : $"{generator.DisplaySummaryValueSnippet(ModelTyped.ProportionKept, warnZero: true)} of this product is placed in {generator.DisplaySummaryValueSnippet(ModelTyped.StoreItemName, "Resource not set", HTMLSummaryStyle.Resource)}")}");
-        generator.AddBlockWithText("activityentry", $"Data is retrieved from {generator.DisplaySummaryValueSnippet(ModelTyped.ModelNameFileCrop, "Resource not set", HTMLSummaryStyle.FileReader)} ");
+        generator.AddBlockWithText($"{((ModelTyped.ProportionKept == 1) ? "This " : $"{generator.DisplaySummaryValueSnippet(ModelTyped.ProportionKept, warnZero: true)} of this product is placed in {generator.DisplaySummaryValueSnippet(ModelTyped.StoreItemName, "Resource not set", HTMLSummaryStyle.Resource)}")}");
+        generator.AddBlockWithText($"Data is retrieved from {generator.DisplaySummaryValueSnippet(ModelTyped.ModelNameFileCrop, "Resource not set", HTMLSummaryStyle.FileReader)} ");
     }
 }

@@ -25,6 +25,6 @@ public class ActivityCarryLimiterSummary : TimerSummaryBase<ActivityCarryLimiter
         {
             limit += generator.DisplayErrorSnippet("Not Set");
         }
-        Generator.OpenBlock("filter", limit+ " dry kg/day");
+        generator.OpenBlock("entryValue filterItem", limit+ " dry kg/day");
     }
 }

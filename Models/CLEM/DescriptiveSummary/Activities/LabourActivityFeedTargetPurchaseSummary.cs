@@ -14,7 +14,7 @@ public class LabourActivityFeedTargetPurchaseSummary : DescriptiveSummaryProvide
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText("activityentry", $"{generator.DisplaySummaryValueSnippet(ModelTyped.FoodStoreName, "Store not set", entryStyle: HTMLSummaryStyle.Resource, errorNotSet: true)}" +
+        generator.AddBlockWithText($"{generator.DisplaySummaryValueSnippet(ModelTyped.FoodStoreName, "Store not set", entryStyle: HTMLSummaryStyle.Resource, errorNotSet: true)}" +
             $"will be purchased to provide {generator.DisplaySummaryValueSnippet(ModelTyped.TargetProportion, errorNotSet: true)} of remaining intake needed to meet current targets");
     }
 }

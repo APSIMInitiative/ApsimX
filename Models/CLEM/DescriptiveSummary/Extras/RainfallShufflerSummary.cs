@@ -24,11 +24,11 @@ public class RainfallShufflerSummary : DescriptiveSummaryProviderBase<RainfallSh
         {
             start = $"{generator.DisplaySummaryValueSnippet(ModelTyped.StartSeasonMonth)}";
         }
-        generator.AddBlockWithText("activityentry", $"The rainfall year starts in {start}");
+        generator.AddBlockWithText($"The rainfall year starts in {start}");
         if (ModelTyped.DoNotShuffleIteration != -1)
         {
-            generator.AddBlockWithText("activityentry", $"Rainfall will NOT be shuffled in the CLEM multi-run iteration {ModelTyped.DoNotShuffleIteration}");
+            generator.AddBlockWithText($"Rainfall will NOT be shuffled in the CLEM multi-run iteration {ModelTyped.DoNotShuffleIteration}");
         }
-        generator.AddBlockWithText("warningbanner", $"WARNING: Rainfall years are being shuffled as a proxy for stochastic rainfall variation in this simulation.<br />This is an advance feature provided for particular projects.");
+        generator.AddBlockWithText($"WARNING: Rainfall years are being shuffled as a proxy for stochastic rainfall variation in this simulation.<br />This is an advance feature provided for particular projects.", "warningbanner");
     }
 }

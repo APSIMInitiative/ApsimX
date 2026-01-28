@@ -11,11 +11,10 @@ namespace Models.CLEM.DescriptiveSummary
         /// <inheritdoc/>
         public override void BuildSummary()
         {
-            generator.AddBlockWithText("activityentry", $"Ruminant growth approach: Grow Protein and Fat (Dougherty et al)");
-            generator.AddBlockWithText("activityentry", $"Requires ruminant fat and protein initialisation");
+            generator.AddBlockWithText($"Ruminant growth approach: Grow Protein and Fat (Dougherty et al)");
+            generator.AddBlockWithText($"Requires ruminant fat and protein initialisation");
 
-            generator.AddBlockWithText("activityentry",
-                $"Unfed individuals {generator.DisplaySummaryValueSnippet(ModelTyped.ReportUnfed?"Are":"Are not")} identified for reporting");
+            generator.AddBlockWithText($"Unfed individuals {generator.DisplaySummaryValueSnippet(ModelTyped.ReportUnfed?"are":"are not")} identified for reporting");
         }
     }
 }

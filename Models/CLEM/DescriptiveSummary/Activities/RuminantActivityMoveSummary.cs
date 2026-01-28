@@ -16,8 +16,7 @@ namespace Models.CLEM.DescriptiveSummary
 
             string sucklings = (model.MoveSucklings)?"":", moving sucklings with mothers";
 
-            generator.AddBlockWithText("activityentry",
-                $"Move individuals to {generator.DisplaySummaryValueSnippet(model.ManagedPastureName, "Not specified - general yards", HTMLSummaryStyle.Resource)}{sucklings}.");
+            generator.AddBlockWithText($"Move individuals to {generator.DisplaySummaryValueSnippet(model.ManagedPastureName, "Not specified - general yards", HTMLSummaryStyle.Resource)}{sucklings}.");
 
             string timing = "";
             switch (ModelTyped.TimeStepTiming)
@@ -35,11 +34,10 @@ namespace Models.CLEM.DescriptiveSummary
                     break;
             }
 
-            generator.AddBlockWithText("activityentry", timing);
+            generator.AddBlockWithText(timing);
 
             if (ModelTyped.PerformAtStartOfSimulation)
-                generator.AddBlockWithText("activityentry",
-                $"This activity will occur at the start of the simulation.");
+                generator.AddBlockWithText($"This activity will occur at the start of the simulation.");
         }
     }
 }

@@ -45,7 +45,7 @@ public class LabourGroupLinkedSummary : GroupSummaryBase<LabourGroupLinked>
     /// <inheritdoc/>
     public override void CreateSummaryInnerOpeningBlocks(ChildComponentGroup group)
     {
-        generator.OpenBlock("filterborder clearfix", "", id: "groupitems");
+        generator.OpenBlock("childgroupborder filteritems clearfix", "", id: "groupitems");
     }
 
 }

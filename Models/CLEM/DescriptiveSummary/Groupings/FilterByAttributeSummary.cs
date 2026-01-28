@@ -15,7 +15,7 @@ namespace Models.CLEM.DescriptiveSummary;
 public class FilterByAttributeSummary : FilterSummaryBase<FilterByAttribute>
 {
     /// <inheritdoc/>
-    public override string FilterString(bool htmltags)
+    public override string FilterString()
     {
         var model = ModelTyped;
         if (model is null) return "UNKNOWN";
@@ -40,13 +40,13 @@ public class FilterByAttributeSummary : FilterSummaryBase<FilterByAttribute>
                 filterWriter.Write(" has");
             }
 
-            filterWriter.Write($" attribute {generator.DisplaySummaryValueSnippet(model.AttributeTag, "No tag", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)}");
+            filterWriter.Write($" attribute {generator.DisplaySummaryValueSnippet(model.AttributeTag, "No tag", entryStyle: HTMLSummaryStyle.Filter)}");
         }
         else
         {
-            filterWriter.Write($" Attribute {generator.DisplaySummaryValueSnippet(model.AttributeTag, "No tag", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)}");
-            filterWriter.Write($" {generator.DisplaySummaryValueSnippet(model.OperatorToSymbol(), "Unknown operator", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)}");
-            filterWriter.Write($" {generator.DisplaySummaryValueSnippet(model.Value?.ToString(), "No value", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)}");
+            filterWriter.Write($" Attribute {generator.DisplaySummaryValueSnippet(model.AttributeTag, "No tag", entryStyle: HTMLSummaryStyle.Filter)}");
+            filterWriter.Write($" {generator.DisplaySummaryValueSnippet(model.OperatorToSymbol(), "Unknown operator", entryStyle: HTMLSummaryStyle.Filter)}");
+            filterWriter.Write($" {generator.DisplaySummaryValueSnippet(model.Value?.ToString(), "No value", entryStyle: HTMLSummaryStyle.Filter)}");
         }
         return filterWriter.ToString();
     }

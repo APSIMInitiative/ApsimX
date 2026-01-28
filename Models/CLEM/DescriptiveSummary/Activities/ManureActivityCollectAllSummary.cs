@@ -14,6 +14,6 @@ public class ManureActivityCollectAllSummary : DescriptiveSummaryProviderBase<Ma
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText("activityentry", $"Collect manure from all pasture");
+        generator.AddBlockWithText($"Collect manure from all pasture");
     }
 }

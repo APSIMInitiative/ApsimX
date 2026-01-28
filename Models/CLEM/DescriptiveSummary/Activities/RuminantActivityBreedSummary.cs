@@ -21,7 +21,7 @@ namespace Models.CLEM.DescriptiveSummary
                 childType: typeof(RuminantActivityControlledMating),
                 missing: "This simulation uses natural (uncontrolled) mating that will occur when males and females of breeding condition are located together.",
                 introduction: "Mating uses the following approach",
-                borderClass: "childgroupactivityborder"
+                borderClass: "childgroupborder activitygroup"
                 )
             ];
         }
@@ -32,11 +32,11 @@ namespace Models.CLEM.DescriptiveSummary
         {
             if (ModelTyped.InferStartupPregnancy)
             {
-                generator.AddBlockWithText("activityentry", "Pregnancy status of breeders from matings prior to simulation start will be predicted.");
+                generator.AddBlockWithText("Pregnancy status of breeders from matings prior to simulation start will be predicted.");
             }
             else
             {
-                generator.AddBlockWithText("activityentry", "No pregnancy of breeders from matings prior to simulation start is inferred.");
+                generator.AddBlockWithText("No pregnancy of breeders from matings prior to simulation start is inferred.");
             }
         }
     }

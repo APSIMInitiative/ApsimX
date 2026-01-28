@@ -49,7 +49,8 @@ public class AnimalPricingSummary : DescriptiveSummaryProviderBase<AnimalPricing
     {
         if (group.Id == "prices" && group.SelectedModels.Any())
         {
-            Generator.CreateTable(new string[] { "Name", "Filter", "Type", "Value", "Style" });
+            generator.OpenBlock(id: "tablewrap", addTopBottomMargin: true);
+            generator.CreateTable(new string[] { "Name", "Filter", "Type", "Value", "Style" });
         }
     }
 
@@ -58,7 +59,8 @@ public class AnimalPricingSummary : DescriptiveSummaryProviderBase<AnimalPricing
     {
         if (group.Id == "prices" && group.SelectedModels.Any())
         {
-            Generator.CloseTable();
+            generator.CloseTable();
+            generator.CloseMostRecentBlock(id: "tablewrap");
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Models.CLEM.DescriptiveSummary
             {
                 htmlWriter.Write($"{generator.DisplaySummaryValueSnippet(ModelTyped.WeaningWeight, errorNotSet: true, warnZero: true)} kg");
             }
-            generator.AddBlockWithText("activityentry", htmlWriter.ToString());
+            generator.AddBlockWithText(htmlWriter.ToString());
             htmlWriter.GetStringBuilder().Clear();
 
             htmlWriter.Write("Weaned individuals will ");
@@ -37,7 +37,7 @@ namespace Models.CLEM.DescriptiveSummary
             {
                 htmlWriter.Write($"be place in {generator.DisplaySummaryResourceTypeSnippet(ModelTyped.GrazeFoodStoreName, nullGeneralYards: true)}");
             }
-            generator.AddBlockWithText("activityentry", htmlWriter.ToString());
+            generator.AddBlockWithText(htmlWriter.ToString());
         }
     }
 }

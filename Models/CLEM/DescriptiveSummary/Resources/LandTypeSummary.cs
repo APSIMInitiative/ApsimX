@@ -18,12 +18,12 @@ public class LandTypeSummary : DescriptiveSummaryProviderBase<LandType>
 
         if (model.LandArea == 0)
         {
-            Generator.AddBlockWithText("errorbanner", "No area has been set for this land type");
+            Generator.AddBlockWithText("No area has been set for this land type", "infoBanner error");
         }
         else
         {
             if (model.ProportionOfTotalArea == 0)
-                Generator.AddBlockWithText("errorbanner", "The proportion of total area assigned to this land type is <span class=\"errorlink\">0</span> so no area is assigned.");
+                Generator.AddBlockWithText($"The proportion of total area assigned to this land type is {generator.DisplaySummaryValueSnippet(model.ProportionOfTotalArea, warnZero: true)} so no area is assigned.", "infoBanner error");
             else
             {
                 string units = "";
@@ -39,9 +39,9 @@ public class LandTypeSummary : DescriptiveSummaryProviderBase<LandType>
                     usable = $" of which {generator.DisplaySummaryValueSnippet(model.UsableArea)} is usable";
 
 
-                Generator.AddBlockWithText("activityentry", $"This land type has an {generator.DisplaySummaryValueSnippet(model.LandArea, warnZero: true)}{units}{usable}{propBuildings}");
+                Generator.AddBlockWithText($"This land type has an {generator.DisplaySummaryValueSnippet(model.LandArea, warnZero: true)}{units}{usable}{propBuildings}");
             }
         }
-        Generator.AddBlockWithText("activityentry", $"This land type is identified as {generator.DisplaySummaryValueSnippet(model.SoilType)}");
+        Generator.AddBlockWithText($"This land type is identified as {generator.DisplaySummaryValueSnippet(model.SoilType)}");
     }
 }

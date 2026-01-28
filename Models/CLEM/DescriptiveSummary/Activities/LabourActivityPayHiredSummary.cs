@@ -12,6 +12,6 @@ public class LabourActivityPayHiredSummary : DescriptiveSummaryProviderBase<Labo
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText("activityentry", $"Pay all hired labour based on associated Fee components");
+        generator.AddBlockWithText($"Pay all hired labour based on associated Fee components");
     }
 }

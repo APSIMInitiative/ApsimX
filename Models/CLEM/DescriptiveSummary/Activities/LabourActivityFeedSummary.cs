@@ -21,7 +21,7 @@ public class LabourActivityFeedSummary : DescriptiveSummaryProviderBase<LabourAc
                 model: CLEMModel,
                 childType: typeof(LabourFeedGroup),
                 introduction: "The following groups will be fed:",
-                borderClass: "childgroupfilterborder"
+                borderClass: "childgroupborder filtergroup"
                 )
         ];
     }
@@ -29,6 +29,6 @@ public class LabourActivityFeedSummary : DescriptiveSummaryProviderBase<LabourAc
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText("activityentry", $"Feed people {generator.DisplaySummaryResourceTypeSnippet(ModelTyped.FeedTypeName, "Not set")}");
+        generator.AddBlockWithText($"Feed people {generator.DisplaySummaryResourceTypeSnippet(ModelTyped.FeedTypeName, "Not set")}");
     }
 }

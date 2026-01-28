@@ -17,13 +17,13 @@ public class HumanFoodStoreTypeSummary : DescriptiveSummaryProviderBase<HumanFoo
 
         if (!(model.Units ?? "").Equals("KG", StringComparison.CurrentCultureIgnoreCase))
         {
-            generator.AddBlockWithText("activityentry", $"Each unit of this resource is equivalent to {generator.DisplaySummaryValueSnippet(model.ConvertToKg, warnZero:true)} kg");
+            generator.AddBlockWithText($"Each unit of this resource is equivalent to {generator.DisplaySummaryValueSnippet(model.ConvertToKg, warnZero:true)} kg");
         }
         else
         {
             if (model.ConvertToKg != 1)
             {
-                generator.AddBlockWithText("errorbanner", $"SET UnitsToKg to <span class=\"setvalue\">1</span> as this Food Type is measured in kg");
+                generator.AddBlockWithText($"SET UnitsToKg to {generator.DisplaySummaryValueSnippet(1)} as this Food Type is measured in kg", "infoBanner error");
             }
         }
 
@@ -32,17 +32,17 @@ public class HumanFoodStoreTypeSummary : DescriptiveSummaryProviderBase<HumanFoo
             string start = $"The simulation starts with {generator.DisplaySummaryValueSnippet(model.StartingAmount)}";
             if (model.StartingAge > 0)
                 start += $" with an age of {generator.DisplaySummaryValueSnippet(model.StartingAge)} months";
-            generator.AddBlockWithText("activityentry", start);
+            generator.AddBlockWithText(start);
         }
 
         if (model.UseByAge == 0)
         {
-            generator.AddBlockWithText("activityentry", "This food does not spoil");
+            generator.AddBlockWithText("This food does not spoil");
         }
         else
         {
-            generator.AddBlockWithText("activityentry", $"This food must be consumed before {generator.DisplaySummaryValueSnippet(model.UseByAge)} month{((model.UseByAge > 1) ? "s" : "")} old");
+            generator.AddBlockWithText($"This food must be consumed before {generator.DisplaySummaryValueSnippet(model.UseByAge)} month{((model.UseByAge > 1) ? "s" : "")} old");
         }
-        generator.AddBlockWithText("activityentry", $" {generator.DisplaySummaryValueSnippet(((model.EdibleProportion == 1) ? "All" : model.EdibleProportion.ToString("#0%")))} of this raw food is edible.");
+        generator.AddBlockWithText($" {generator.DisplaySummaryValueSnippet(((model.EdibleProportion == 1) ? "All" : model.EdibleProportion.ToString("#0%")))} of this raw food is edible.");
     }
 }

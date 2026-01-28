@@ -22,7 +22,7 @@ namespace Models.CLEM.DescriptiveSummary
                 childType: typeof(Relationship),
                 missing: "",
                 introduction: "Relationship defining the individual live weight to load unit size",
-                borderClass: "childgroupactivityborder"
+                borderClass: "childgroupborder activitygroup"
                 ),
                 new ChildComponentGroup(
                 id: "ruminantgroups",
@@ -30,7 +30,7 @@ namespace Models.CLEM.DescriptiveSummary
                 childType: typeof(RuminantGroup),
                 missing: "No individual specified",
                 introduction: "Individuals to be trucked",
-                borderClass: "childgroupfilterborder"
+                borderClass: "childgroupborder filtergroup"
                 ),
                 new ChildComponentGroup(
                 id: "truckfees",
@@ -38,7 +38,7 @@ namespace Models.CLEM.DescriptiveSummary
                 childType: typeof(ActivityFee),
                 missing: "",
                 introduction: "Fees associated with trucking",
-                borderClass: "childgroupactivityborder"
+                borderClass: "childgroupborder activitygroup"
                 ),
                 new ChildComponentGroup(
                 id: "trucklabour",
@@ -46,7 +46,7 @@ namespace Models.CLEM.DescriptiveSummary
                 childType: typeof(LabourRequirement),
                 missing: "",
                 introduction: "Labour required for trucking",
-                borderClass: "childgroupfilterborder"
+                borderClass: "childgroupborder filtergroup"
                 ),
                 new ChildComponentGroup(
                 id: "truckemissions",
@@ -54,7 +54,7 @@ namespace Models.CLEM.DescriptiveSummary
                 childType: typeof(GreenhouseGasActivityEmission),
                 missing: "",
                 introduction: "Trucking emissions",
-                borderClass: "childgroupactivityborder"
+                borderClass: "childgroupborder activitygroup"
                 )
             ];
         }
@@ -62,9 +62,9 @@ namespace Models.CLEM.DescriptiveSummary
         /// <inheritdoc/>
         public override void BuildSummary()
         {
-            generator.AddBlockWithText("activityentry", $"It is {generator.DisplaySummaryValueSnippet(ModelTyped.DistanceToMarket)} km to market");
+            generator.AddBlockWithText($"It is {generator.DisplaySummaryValueSnippet(ModelTyped.DistanceToMarket)} km to market");
 
-            generator.AddBlockWithText("activityentry", $"Each load unit (pod/deck) holds {generator.DisplaySummaryValueSnippet(ModelTyped.NumberPerLoadUnit, warnZero: true)} head (of specified individuals)");
+            generator.AddBlockWithText($"Each load unit (pod/deck) holds {generator.DisplaySummaryValueSnippet(ModelTyped.NumberPerLoadUnit, warnZero: true)} head (of specified individuals)");
 
             string output = "Each truck ";
             if (ModelTyped.MinimumLoadUnitsPerTruck > 0)
@@ -76,7 +76,7 @@ namespace Models.CLEM.DescriptiveSummary
             {
                 output += $" and requires at least {generator.DisplaySummaryValueSnippet(ModelTyped.MinimumLoadUnitsBeforeTransporting, warnZero: true)} load units before transporting.";
             }
-            generator.AddBlockWithText("activityentry", output);
+            generator.AddBlockWithText(output);
 
             output = "";
             if (ModelTyped.LoadUnitsPerTrailer.Length > 1)
@@ -94,7 +94,7 @@ namespace Models.CLEM.DescriptiveSummary
             {
                 output += $" and requires {generator.DisplaySummaryValueSnippet(ModelTyped.MinimumLoadUnitsBeforeAddTrailer, warnZero: true)} load units before adding each trailer";
             }
-            generator.AddBlockWithText("activityentry", output);
+            generator.AddBlockWithText(output);
 
             output = "";
 
@@ -104,7 +104,7 @@ namespace Models.CLEM.DescriptiveSummary
             {
                 output += $" from first to last trailer";
             }
-            generator.AddBlockWithText("activityentry", output);
+            generator.AddBlockWithText(output);
         }
     }
 }
