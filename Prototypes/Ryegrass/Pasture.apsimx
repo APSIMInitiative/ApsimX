@@ -903,6 +903,8 @@
                     "Leaf",
                     "Stem"
                   ],
+                  "IncludeLive": true,
+                  "IncludeDead": true,
                   "Name": "AboveGround",
                   "ResourceName": null,
                   "Children": [],
@@ -916,6 +918,8 @@
                     "Leaf",
                     "Stem"
                   ],
+                  "IncludeLive": true,
+                  "IncludeDead": false,
                   "Name": "AboveGroundLive",
                   "ResourceName": null,
                   "Children": [],
@@ -929,6 +933,8 @@
                     "Leaf",
                     "Stem"
                   ],
+                  "IncludeLive": false,
+                  "IncludeDead": true,
                   "Name": "AboveGroundDead",
                   "ResourceName": null,
                   "Children": [],
@@ -1936,6 +1942,7 @@
               "VariableNames": [
                 "[Clock].Today",
                 "[Weather].Rain",
+                "",
                 "[Pasture].Leaf.Wt",
                 "[Pasture].Leaf.N",
                 "[Pasture].Leaf.NConc",

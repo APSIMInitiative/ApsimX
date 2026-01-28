@@ -28,13 +28,13 @@ namespace Models.Grazplan.Biomass
         [Description("List of organs to aggregate.")]
         public string[] OrganNames { get; set; }
 
-        // /// <summary>Include live material?</summary>
-        // [Description("Include live material?")]
-        // public bool IncludeLive { get; set; }
+        /// <summary>Include live material?</summary>
+        [Description("Include live material?")]
+        public bool IncludeLive { get; set; }
 
-        // /// <summary>Include dead material?</summary>
-        // [Description("Include dead material?")]
-        // public bool IncludeDead { get; set; }
+        /// <summary>Include dead material?</summary>
+        [Description("Include dead material?")]
+        public bool IncludeDead { get; set; }
 
         /// <summary>
         /// TPasturePopulation
@@ -107,22 +107,22 @@ namespace Models.Grazplan.Biomass
                     {
                         wt+=organ.Wt;
                     }
-                if (PastureModel != null)
-                {
-                    if (Name == "AboveGroundLive")
-                    {   
-                    
-                        wt=GetDM(GrazType.sgGREEN, GrazType.TOTAL)/10.0;
-                    
-                    }
-                   
-                    if(Name=="AboveGroundDead")
-                        wt= GetDM(GrazType.stDEAD, GrazType.TOTAL)/10.0;
-                }
-                
-         
 
-                return wt;
+               
+               bool liveOnly = IncludeLive && !IncludeDead;
+               bool deadOnly = IncludeDead && !IncludeLive;
+
+               if (PastureModel != null)
+               {
+                    if (Name == "AboveGroundLive")
+                        wt = liveOnly ? GetDM(GrazType.sgGREEN, GrazType.TOTAL) / 10.0 : 0;
+
+                    else if (Name == "AboveGroundDead")
+                        wt = deadOnly ? GetDM(GrazType.stDEAD, GrazType.TOTAL) / 10.0 : 0;
+               }
+
+               return wt;
+ 
             }
         }
  
