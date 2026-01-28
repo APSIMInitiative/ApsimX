@@ -1288,7 +1288,6 @@
             "[Wheat].Root.RootFrontVelocity.PotentialRootFrontVelocity",
             "[Wheat].Phenology.Photoperiod",
             "[Wheat].DaysAfterSowing",
-            "[Wheat].Leaf.TillerProsperity",
             "[Wheat].Leaf.WaterDemand",
             "[Wheat].Leaf.Transpiration"
           ],
