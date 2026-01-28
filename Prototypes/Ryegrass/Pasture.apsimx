@@ -909,98 +909,33 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Grazplan.DryCohortInitialise, Models",
+                  "$type": "Models.GrazPlan.DryCohortInitialise, Models",
                   "Status": "established",
                   "LeafDMD": [
-                    0.6
+                    0.825
                   ],
                   "LeafWeight": [
-                    500.0
+                    800.0
                   ],
                   "LeafNConc": [
-                    0.0
+                    0.01
                   ],
                   "LeafSpecificArea": [
                     430.0
                   ],
                   "StemDMD": [
-                    0.35
+                    0.825
                   ],
                   "StemWeight": [
-                    1500.0
+                    800.0
                   ],
                   "StemNConc": [
-                    0.0
+                    0.01
                   ],
                   "StemSpecificArea": [
-                    80.0
+                    10.0
                   ],
                   "Name": "DryCohortInitialise",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Grazplan.Organs.GenericOrgan, Models",
-                  "PastureModel": null,
-                  "IsAboveGround": true,
-                  "Name": "Leaf",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Grazplan.Organs.GenericOrgan, Models",
-                  "PastureModel": null,
-                  "IsAboveGround": true,
-                  "Name": "Stem",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Grazplan.Biomass.CompositeBiomass, Models",
-                  "PastureModel": null,
-                  "OrganNames": [
-                    "Leaf",
-                    "Stem"
-                  ],
-                  "IncludeLive": true,
-                  "IncludeDead": true,
-                  "Name": "AboveGround",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Grazplan.Biomass.CompositeBiomass, Models",
-                  "PastureModel": null,
-                  "OrganNames": [
-                    "Leaf",
-                    "Stem"
-                  ],
-                  "IncludeLive": true,
-                  "IncludeDead": false,
-                  "Name": "AboveGroundLive",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Grazplan.Biomass.CompositeBiomass, Models",
-                  "PastureModel": null,
-                  "OrganNames": [
-                    "Leaf",
-                    "Stem"
-                  ],
-                  "IncludeLive": false,
-                  "IncludeDead": true,
-                  "Name": "AboveGroundDead",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
