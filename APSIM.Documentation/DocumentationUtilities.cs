@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using APSIM.Documentation.Models.Types;
 using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.PMF;
+using Models.PMF.Phen;
 using DocumentationGraphPage = APSIM.Shared.Documentation.GraphPage;
 
 namespace APSIM.Documentation;
@@ -162,5 +164,51 @@ public static class DocumentationUtilities
                 name = $"{model.Name} ({model.GetType().Name})";
             return name;
         }
+    }
+
+    /// <summary>
+    /// Return all properties. The normal .NET reflection doesn't return private fields in base classes.
+    /// This function does.
+    /// </summary>
+    public static string GetFilepathOfNamespace(Type type)
+    {
+        string path = type.ToString();
+        path = path.Replace("Models.PMF.Phen.", "Models.PMF.Phenology.");
+
+        if (path.StartsWith("Models.PMF.") && path.EndsWith("Arbitrator"))
+            path = path.Replace("Models.PMF.", "Models.PMF.Arbitrator.");
+
+        if (path.StartsWith("Models.PMF.") && path.EndsWith("Phase"))
+            path = path.Replace("Models.PMF.Phenology.", "Models.PMF.Phenology.Phases.");
+
+        return path;
+    }
+
+    /// <summary>
+    /// Returns a DataTable with each Phase listed
+    /// </summary>
+    public static DataTable GetPhaseTable(Phenology phenology)
+    {
+        DataTable phaseTable = new DataTable();
+        phaseTable.Columns.Add("Number", typeof(int));
+        phaseTable.Columns.Add("Name", typeof(string));
+        phaseTable.Columns.Add("Type", typeof(string));
+        phaseTable.Columns.Add("Start Stage", typeof(string));
+        phaseTable.Columns.Add("End Stage", typeof(string));
+
+        int n = 1;
+        foreach (IPhase child in phenology.Node.FindChildren<IPhase>())
+        {
+            string phasetype = GetFilepathOfNamespace(child.GetType());
+            DataRow row = phaseTable.NewRow();
+            row[0] = n;
+            row[1] = child.Name;
+            row[2] = $"[{child.GetType()}](https://github.com/APSIMInitiative/ApsimX/blob/master/" + phasetype.Replace(".", "/") + ".cs)";
+            row[3] = (child as IPhase).Start;
+            row[4] = (child as IPhase).End;
+            phaseTable.Rows.Add(row);
+            n++;
+        }
+        return phaseTable;
     }
 }

@@ -593,34 +593,6 @@ namespace Models.PMF.Phen
             return proceedToNextPhase;
         }
 
-        /// <summary>
-        /// Returns a DataTable with each Phase listed
-        /// </summary>
-        public DataTable GetPhaseTable()
-        {
-            DataTable phaseTable = new DataTable();
-            phaseTable.Columns.Add("Number", typeof(int));
-            phaseTable.Columns.Add("Name", typeof(string));
-            phaseTable.Columns.Add("Type", typeof(string));
-            phaseTable.Columns.Add("Start Stage", typeof(string));
-            phaseTable.Columns.Add("End Stage", typeof(string));
-
-            int n = 1;
-            foreach (IPhase child in Structure.FindChildren<IPhase>())
-            {
-                string phasetype = child.GetType().ToString();
-                DataRow row = phaseTable.NewRow();
-                row[0] = n;
-                row[1] = child.Name;
-                row[2] = "[" + phasetype + "](https://github.com/APSIMInitiative/ApsimX/blob/master/" + phasetype.Replace(".", "/") + ".cs)";
-                row[3] = (child as IPhase).Start;
-                row[4] = (child as IPhase).End;
-                phaseTable.Rows.Add(row);
-                n++;
-            }
-            return phaseTable;
-        }
-
         /// <summary>Called when [simulation commencing].</summary>
         [EventSubscribe("Commencing")]
         private void OnCommencing(object sender, EventArgs e)
