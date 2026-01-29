@@ -612,7 +612,7 @@ namespace Models.PMF.Phen
                 DataRow row = phaseTable.NewRow();
                 row[0] = n;
                 row[1] = child.Name;
-                row[2] = "[" + child.Name + "](https://github.com/APSIMInitiative/ApsimX/blob/master/" + phasetype.Replace(".", "/") + ".cs)";
+                row[2] = "[" + phasetype + "](https://github.com/APSIMInitiative/ApsimX/blob/master/" + phasetype.Replace(".", "/") + ".cs)";
                 row[3] = (child as IPhase).Start;
                 row[4] = (child as IPhase).End;
                 phaseTable.Rows.Add(row);

@@ -26,6 +26,8 @@ namespace Models.PMF.Organs
     ///  
     /// **Light Interception**
     /// 
+    /// The interception of light by live and dead leaf material is calculated seperately within the SimpleLeaf model, with both calculations based upon the Beer-Lambert approach for light extinction ([monsi_factor_2005]).
+    ///  
     /// Calculations are as follows:
     /// 
     /// ```
@@ -42,6 +44,8 @@ namespace Models.PMF.Organs
     /// LAI | Leaf Area Index for live leaf | (m2/m2)
     /// Kdead | Dead canopy extinction coefficient for short wave radiaton | unitless
     /// LAIDead | Leaf Area Index for dead leaf | (m2/m2)
+    /// 
+    /// The formulations used to calculate the daily ExtinctionCoefficient are described later within this document.
     /// 
     /// **CO2 Impact on Photosynthesis and Stomatal Conductance**
     /// 
@@ -72,7 +76,7 @@ namespace Models.PMF.Organs
     /// 
     /// **Photosynthesis**
     /// 
-    /// Potential daily photosynthesis is calculated simply using a Radiation Use Efficiency (RUE) approach.  In this approach, daily potential photosynthesis is directly proportional to the amount of total short wave radiation intercepted by the plant canopy.
+    /// Potential daily photosynthesis is calculated as the product of intercepted short wave radiation and its conversion efficiency, the radiation use efficiency (RUE) ([Monteith1977]).  _NOTE: RUE in this model is expressed as g/MJ for a whole plant basis, including both above and below ground growth._
     /// The radiation use efficienty is adjusted from a base value appropriate for historical levels of atmospheric CO2 concentration (ie 350ppm - see previous section).  Daily values of potential photosynthesis are then modified for effects of plant nitrogen status, temperature and atmospheric vapour pressure deficit.  These same relative growth factors are provided to the MicroClimate model to moderate the stomatal conductance terms incorporated into the Penman-Monteith formulation.
     /// Finally, the daily growth rate is moderated in response to the relative water supply:demand ratio (F<sub>W</sub>) to capture the effect of daily plant water status.
     /// 
@@ -82,6 +86,9 @@ namespace Models.PMF.Organs
     /// ```
     /// DMFixationSupply = RUE x PhotosynthesisCO2Modifier x Min(F<sub>T</sub>, F<sub>N</sub>, F<sub>VPD</sub>) x F<sub>W</sub>
     /// ```
+    /// 
+    /// where
+    /// 
     /// Name | Description | Units
     /// -|-|-
     /// RUE | Radiation Use Efficiency for potential daily growth | g/MJ/m<sup>2</sup>
@@ -89,8 +96,6 @@ namespace Models.PMF.Organs
     /// F<sub>N</sub> | Relative growth rate factor for Nitrogen status | 0-1
     /// F<sub>VPD</sub> | Relative growth rate factor for Vapour Pressure Deficit  | 0-1
     /// F<sub>W</sub> | Relative growth rate factor for plant water status | 0-1
-    /// 
-    /// where
     /// 
     /// 
     /// </summary>

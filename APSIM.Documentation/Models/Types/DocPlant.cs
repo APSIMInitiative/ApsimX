@@ -11,6 +11,7 @@ using Models.PMF;
 using Models.PMF.Organs;
 using Models.PMF.Phen;
 using Graph = Models.Graph;
+using DocumentationNode = Models.Documentation;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -33,9 +34,9 @@ namespace APSIM.Documentation.Models.Types
             List<ITag> newTags = new List<ITag>();
 
             Section mainSection = GetSummaryAndRemarksSection(model);
-            
 
-            newTags.Add(new Paragraph($"The model is constructed from the following list of software components. Details of the implementation and model parameterisation are provided in the following sections."));
+
+            mainSection.Add(new Paragraph($"The model is constructed from the following list of software components. Details of the implementation and model parameterisation are provided in the following sections."));
 
             // Write Plant Model Components Table
             // ------------------------------------------------------------------------------
@@ -44,7 +45,7 @@ namespace APSIM.Documentation.Models.Types
             tableData.Columns.Add("Component Type", typeof(string));
             foreach (IModel child in this.model.Children)
             {
-                if (child.GetType() != typeof(Memo) && child.GetType() != typeof(Cultivar) && child.GetType() != typeof(Folder) && child.GetType() != typeof(CompositeBiomass))
+                if (child.GetType() != typeof(Memo) && child.GetType() != typeof(DocumentationNode) && child.GetType() != typeof(Cultivar) && child.GetType() != typeof(Folder) && child.GetType() != typeof(CompositeBiomass))
                 {
                     DataRow row = tableData.NewRow();
                     row[0] = child.Name;
@@ -53,9 +54,9 @@ namespace APSIM.Documentation.Models.Types
                     tableData.Rows.Add(row);
                 }
             }
-            newTags.Add(new Section("Plant Model Components", new Table(tableData)));
+            mainSection.Add(new Table(tableData));
 
-
+            newTags.Add(mainSection);
 
             // Write Composite Biomass Table
             // -------------------------------------------------------------------------------
@@ -110,6 +111,7 @@ namespace APSIM.Documentation.Models.Types
                 S.Add(new Paragraph(CodeDocumentation.GetSummary(model.GetType())));
                 newTags.Add(S);
             }
+
             //Write children
             // -------------------------------------------------------------------------------
             List<ITag> children = new List<ITag>();
@@ -146,14 +148,6 @@ namespace APSIM.Documentation.Models.Types
                 }
                 newTags.Add(new Section("Appendix 1 - Cultivar specifications", new Table(cultivarNameTable)));
             }
-
-
-            mainSection.Add(newTags);
-
-
-
-
-            newTags = new List<ITag>() { mainSection };
 
             return newTags;
         }
