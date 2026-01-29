@@ -1317,12 +1317,12 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].CAMP.FLNparams.MinLN = 8 ",
+                "[Phenology].CAMP.FLNparams.MinLN = 8",
                 "[Phenology].CAMP.FLNparams.PpLN = 5 ",
                 "[Phenology].CAMP.FLNparams.VrnLN = 0",
                 "[Phenology].CAMP.FLNparams.VxPLN = 0",
-                "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 85",
-                "[Phenology].PhyllochronPpSensitivity.FixedValue = 2",
+                "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 80 // 90 // 85",
+                "[Phenology].PhyllochronPpSensitivity.FixedValue = 1.5 // 1.5 // 2",
                 "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
                 "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50 ",
                 "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1",
