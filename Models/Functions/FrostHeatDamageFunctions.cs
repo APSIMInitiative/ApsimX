@@ -275,7 +275,7 @@ namespace Models.Functions
                     { nameof(HeatLowTT), 30.1 },
                     { nameof(HeatMinReductionRatio), 0 },
                     { nameof(HeatUpTT), 38.7 },
-                    { nameof(HeatMaxReductionRatio), 0.44 },
+                    { nameof(HeatMaxReductionRatio), 0.56 },
                     { nameof(HeatStartSensitiveGS), 6.53 },
                     { nameof(HeatStartMostSensitiveGS), 7.84 },
                     { nameof(HeatEndMostSensitiveGS), 8.87 },
