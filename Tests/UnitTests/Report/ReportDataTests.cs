@@ -1,10 +1,10 @@
-﻿namespace UnitTests.Report
+﻿using Models.Storage;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+
+namespace UnitTests.Report
 {
-    using APSIM.Shared.Utilities;
-    using Models.Storage;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
 
     [TestFixture]
     public class ReportDataTests

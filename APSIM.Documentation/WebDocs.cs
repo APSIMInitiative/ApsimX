@@ -110,7 +110,8 @@ namespace APSIM.Documentation
         public static string Generate(IModel model)
         {
             string html = GenerateWeb(model);
-            html = AddBoilerplate(model.Name + " Documentation", GetCSS(), html);
+            string name = DocumentationUtilities.GetDocumentationName(model);
+            html = AddBoilerplate($"{name} Documentation", GetCSS(), html);
             return html;
         }
 

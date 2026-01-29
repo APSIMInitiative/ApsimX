@@ -7,7 +7,6 @@ using APSIM.Shared.APSoil;
 using APSIM.Shared.Utilities;
 using DocumentFormat.OpenXml.Office.CustomXsn;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Models.Factorial;
 using Models.Interfaces;
 using Models.Utilities;

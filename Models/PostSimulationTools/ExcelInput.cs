@@ -156,16 +156,20 @@ namespace Models.PostSimulationTools
                                 List<string> replaceColumns = new List<string>();
                                 foreach (DataColumn column in table.Columns)
                                 {
-                                    if (column.DataType == typeof(string)) {
+                                    if (column.DataType == typeof(string))
+                                    {
                                         bool isDate = true;
                                         int count = 0;
-                                        while(isDate && count < table.Rows.Count) {
-                                            if (DateUtilities.ValidateDateStringWithYear(table.Rows[count][column.ColumnName].ToString()) == null) {
+                                        while (isDate && count < table.Rows.Count)
+                                        {
+                                            if (DateUtilities.ValidateDateStringWithYear(table.Rows[count][column.ColumnName].ToString()) == null)
+                                            {
                                                 isDate = false;
                                             }
                                             count += 1;
                                         }
-                                        if (isDate) {
+                                        if (isDate)
+                                        {
                                             replaceColumns.Add(column.ColumnName);
                                         }
                                     }
@@ -175,7 +179,7 @@ namespace Models.PostSimulationTools
                                     DataColumn column = table.Columns[name];
                                     int ordinal = column.Ordinal;
 
-                                    DataColumn newColumn = new DataColumn("NewColumn"+name, typeof(DateTime));
+                                    DataColumn newColumn = new DataColumn("NewColumn" + name, typeof(DateTime));
                                     table.Columns.Add(newColumn);
                                     newColumn.SetOrdinal(ordinal);
 

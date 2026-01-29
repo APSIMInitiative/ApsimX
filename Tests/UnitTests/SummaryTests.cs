@@ -6,7 +6,6 @@ using Models;
 using Models.Core;
 using Models.Core.Run;
 using Models.Storage;
-using Models.Core.ApsimFile;
 using System.Data;
 
 namespace UnitTests
@@ -51,7 +50,7 @@ namespace UnitTests
             writer.AddMessage("[Clock].StartOfSimulation", message2);
             writer.AddMessage("[Simulation].Completed", message3);
 
-            Structure.Add(writer, sim);
+            sim.Node.AddChild(writer);
 
             Runner runner = new Runner(sims);
             List<Exception> errors = runner.Run();

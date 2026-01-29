@@ -1,16 +1,14 @@
-﻿using Atk;
+﻿using APSIM.Core;
 using Models;
-using Models.Climate;
 using Models.Core;
 using Models.PMF;
 using Models.Soils;
 using NUnit.Framework;
-using System;
 using System.IO;
 using System.Linq;
 using UnitTests.Core.Run;
 
-namespace APSIM.Core.Tests;
+namespace UnitTests.APSIM.Core.Tests;
 
 [TestFixture]
 public class CommandTests
@@ -88,7 +86,7 @@ public class CommandTests
         {
             Children =
             [
-                new Report() { Name = "NewReport" }
+                new Models.Report() { Name = "NewReport" }
             ]
         };
         Node simulationsNode = Node.Create(simulations);
@@ -122,7 +120,7 @@ public class CommandTests
         {
             Children =
             [
-                new Report() { Name = "NewReport" }
+                new Models.Report() { Name = "NewReport" }
             ]
         };
         Node.Create(simulation);
@@ -141,7 +139,7 @@ public class CommandTests
         {
             Children =
             [
-                new Report() { Name = "Report" }
+                new Models.Report() { Name = "Report" }
             ]
         };
         Node.Create(simulation);
@@ -150,7 +148,7 @@ public class CommandTests
         cmd.Run(simulation, runner: null);
 
         Assert.That(simulation.Children.Count, Is.EqualTo(2));
-        Assert.That(simulation.Children[1], Is.InstanceOf<Report>());
+        Assert.That(simulation.Children[1], Is.InstanceOf<Models.Report>());
         Assert.That(simulation.Children[1].Name, Is.EqualTo("NewReport"));
     }
 
@@ -163,7 +161,7 @@ public class CommandTests
         {
             Children =
             [
-                new Report() { Name = "Report" }
+                new Models.Report() { Name = "Report" }
             ]
         };
         Node.Create(simulations);
@@ -241,7 +239,7 @@ public class CommandTests
         {
             Children =
             [
-                new Weather()
+                new Models.Climate.Weather()
                 {
                     FileName = "file1.apsimx"
                 }
@@ -252,7 +250,7 @@ public class CommandTests
         IModelCommand cmd = new SetPropertyCommand("[Weather].FileName", "=", "", fileName: null);
         cmd.Run(simulation, runner: null);
 
-        var weather = simulation.Children.First() as Weather;
+        var weather = simulation.Children.First() as Models.Climate.Weather;
         Assert.That(weather.FileName, Is.Empty);
     }
 
@@ -474,7 +472,7 @@ public class CommandTests
         {
             Children =
             [
-                new Report() { Name = "Report" }
+                new Models.Report() { Name = "Report" }
             ]
         };
         Node.Create(simulations);
@@ -500,7 +498,7 @@ public class CommandTests
         {
             Children =
             [
-                new Report() { Name = "Report" }
+                new Models.Report() { Name = "Report" }
             ]
         };
         Node.Create(simulations);
@@ -523,18 +521,18 @@ public class CommandTests
         {
             Children =
             [
-                new Report() { Name = "Report", VariableNames = [ "1" ] }
+                new Models.Report() { Name = "Report", VariableNames = [ "1" ] }
             ]
         };
         Node.Create(simulation);
 
 
-        var newModel = new Report() { Name = "NewReport", VariableNames = [ "2" ] };
+        var newModel = new Models.Report() { Name = "NewReport", VariableNames = [ "2" ] };
         IModelCommand cmd = new ReplaceCommand(new ModelReference(newModel),
                                                replacementPath: "Report", multiple: false, ReplaceCommand.MatchType.NameAndType);
         cmd.Run(simulation, runner: null);
 
-        var report = simulation.Children[0] as Report;
+        var report = simulation.Children[0] as Models.Report;
         Assert.That(report, Is.Not.Null);
         Assert.That(report.Name, Is.EqualTo("Report"));
         Assert.That(report.VariableNames, Is.EqualTo([ "2" ]));
@@ -548,18 +546,18 @@ public class CommandTests
         {
             Children =
             [
-                new Report() { Name = "Report", VariableNames = [ "1" ] }
+                new Models.Report() { Name = "Report", VariableNames = [ "1" ] }
             ]
         };
         Node.Create(simulation);
 
 
-        var newModel = new Report() { Name = "NewReport", VariableNames = [ "2" ] };
+        var newModel = new Models.Report() { Name = "NewReport", VariableNames = [ "2" ] };
         IModelCommand cmd = new ReplaceCommand(new ModelReference(newModel),
                                                replacementPath: "Report", multiple: false, ReplaceCommand.MatchType.Name);
         cmd.Run(simulation, runner: null);
 
-        var report = simulation.Children[0] as Report;
+        var report = simulation.Children[0] as Models.Report;
         Assert.That(report, Is.Not.Null, "simulation.Children[0] is not a Report after replacement.");
 
         Assert.That(report.Name, Is.EqualTo("Report"));
@@ -574,13 +572,13 @@ public class CommandTests
         {
             Children =
             [
-                new Report() { Name = "Report" }
+                new Models.Report() { Name = "Report" }
             ]
         };
         Node.Create(simulation);
 
 
-        var newModel = new Report() { Name = "NewReport" };
+        var newModel = new Models.Report() { Name = "NewReport" };
         IModelCommand cmd = new ReplaceCommand(new ModelReference(newModel),
                                                replacementPath: "Report", multiple: false, ReplaceCommand.MatchType.Name, newName: "NewName");
         cmd.Run(simulation, runner: null);
@@ -597,17 +595,17 @@ public class CommandTests
             Children =
             [
                 new Zone() { Children = [new Clock() { Name = "Report" }] },
-                new Zone() { Children = [new Report() { Name = "Report" }] }
+                new Zone() { Children = [new Models.Report() { Name = "Report" }] }
             ]
         };
         Node.Create(simulation);
 
-        var newModel = new Report() { Name = "NewReport", VariableNames = ["2"] };
+        var newModel = new Models.Report() { Name = "NewReport", VariableNames = ["2"] };
         IModelCommand cmd = new ReplaceCommand(new ModelReference(newModel),
                                                replacementPath: "Report", multiple: true, ReplaceCommand.MatchType.Name);
         cmd.Run(simulation, runner: null);
 
-        var reports = simulation.Node.FindChildren<Report>(recurse: true).ToArray();
+        var reports = simulation.Node.FindChildren<Models.Report>(recurse: true).ToArray();
         Assert.That(reports[0].Name, Is.EqualTo("Report"));
         Assert.That(reports[0].VariableNames, Is.EqualTo(["2"]));
         Assert.That(reports[1].Name, Is.EqualTo("Report"));
@@ -672,19 +670,19 @@ public class CommandTests
         {
             Children =
             [
-                new Zone() { Children = [new Report() { Name = "Report", VariableNames = [ "1" ] }] },
-                new Zone() { Children = [new Report() { Name = "Report", VariableNames = [ "1" ] }] }
+                new Zone() { Children = [new Models.Report() { Name = "Report", VariableNames = [ "1" ] }] },
+                new Zone() { Children = [new Models.Report() { Name = "Report", VariableNames = [ "1" ] }] }
             ]
         };
         Node.Create(simulation);
 
-        var newModel = new Report() { Name = "NewReport", VariableNames = [ "2" ] };
+        var newModel = new Models.Report() { Name = "NewReport", VariableNames = [ "2" ] };
         IModelCommand cmd = new ReplaceCommand(new ModelReference(newModel),
                                                replacementPath: "Report", multiple: false, ReplaceCommand.MatchType.Name);
 
         cmd.Run(simulation, runner: null);
 
-        var reports = simulation.Node.FindChildren<Report>(recurse: true).ToArray();
+        var reports = simulation.Node.FindChildren<Models.Report>(recurse: true).ToArray();
         Assert.That(reports[0].Name, Is.EqualTo("Report"));
         Assert.That(reports[0].VariableNames, Is.EqualTo([ "2" ]));
         Assert.That(reports[1].Name, Is.EqualTo("Report"));

@@ -3,7 +3,6 @@ using APSIM.Shared.Utilities;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Models;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Models.PMF.Organs;
 using Models.Soils;
 using Models.Storage;
