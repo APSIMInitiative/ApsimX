@@ -127,22 +127,5 @@ namespace Models.CLEM.Activities
                 this.Status = ActivityStatus.Success;
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write($"Calculates the number of Other Animal individuals specified by filter groups to apply costs and labour.</br>");
-                htmlWriter.Write("Each cohort will only be considered once (when first specified) regardless of multiple filter groups.");
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString();
-            }
-        }
-        #endregion
-
     }
 }

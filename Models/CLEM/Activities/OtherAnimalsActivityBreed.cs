@@ -244,38 +244,5 @@ namespace Models.CLEM.Activities
                 }
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new ())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write($"[r={DisplaySummaryValueSnippet(AnimalTypeName, "No Other Animal Type", HTMLSummaryStyle.Resource)}] individuals must be {DisplaySummaryValueSnippet(BreedingAge, "Mature age not set", HTMLSummaryStyle.Default)} months of age to breed.");
-                htmlWriter.Write("</div>");
-
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                if (UseLocalMales)
-                {
-                    htmlWriter.Write("Breeding will only occur when adult males are present in the local population.");
-                }
-                else
-                {
-                    htmlWriter.Write("Breeding will only regardless of whether adult males are present in the local population.");
-                }
-
-                htmlWriter.Write("</div>");
-
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write($"Each breeding female will produce {DisplaySummaryValueSnippet(OffspringPerBreeder, "Offspring not set", HTMLSummaryStyle.Default)} offspring with an equal sex ratio and rounded to whole individuals.");
-                htmlWriter.Write("</div>");
-
-                return htmlWriter.ToString();
-            }
-        }
-        #endregion
-
     }
 }

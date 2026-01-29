@@ -13,6 +13,14 @@ namespace Models.CLEM.DescriptiveSummary;
 /// </summary>
 public class CropActivityTaskSummary : DescriptiveSummaryProviderBase<CropActivityTask>
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public CropActivityTaskSummary()
+    {
+        SummaryStyle = HTMLSummaryStyle.SubActivity;
+    }
+
     /// <inheritdoc/>
     public override void BuildSummary()
     {

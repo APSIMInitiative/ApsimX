@@ -9,6 +9,14 @@ namespace Models.CLEM.DescriptiveSummary
     /// </summary>
     public class FilePastureSummary : DescriptiveSummaryProviderBase<FilePasture>
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public FilePastureSummary()
+        {
+            SummaryStyle = HTMLSummaryStyle.FileReader;
+        }
+
         ///<inheritdoc/>
         public override void BuildSummary()
         {

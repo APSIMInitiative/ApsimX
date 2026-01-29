@@ -142,22 +142,5 @@ namespace Models.CLEM.Resources
         }
 
         #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            if (StartingAmount > 0)
-            {
-                using StringWriter htmlWriter = new();
-                htmlWriter.Write("<div class=\"activityentry\">");
-                htmlWriter.Write("There is a starting amount of <span class=\"setvalue\">" + this.StartingAmount.ToString("0.#") + "</span></div>");
-                return htmlWriter.ToString();
-            }
-            return "";
-        }
-        #endregion
-
     }
 }

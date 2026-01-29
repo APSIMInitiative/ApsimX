@@ -16,6 +16,14 @@ namespace Models.CLEM.DescriptiveSummary;
 /// </summary>
 public class RuminantGroupLinkedSummary : GroupSummaryBase<RuminantGroupLinked>
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public RuminantGroupLinkedSummary()
+    {
+        SummaryStyle = HTMLSummaryStyle.Filter;
+    }
+
     ///<inheritdoc/>
     public override List<ChildComponentGroup> GetChildrenInSummary()
     {

@@ -111,21 +111,5 @@ namespace Models.CLEM.Activities
             }
         }
         #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">Earn ");
-            htmlWriter.Write("Earnings will be paid to ");
-            htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(BankAccountName, "Account not set", HTMLSummaryStyle.Resource));
-            htmlWriter.Write(" based on <span class=\"resourcelink\">Labour Pricing</span> set in the <span class=\"resourcelink\">Labour</span>");
-            htmlWriter.Write("</div>");
-            return htmlWriter.ToString();
-        } 
-        #endregion
-
     }
 }

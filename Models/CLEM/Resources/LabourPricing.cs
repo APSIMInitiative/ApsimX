@@ -45,36 +45,5 @@ namespace Models.CLEM.Resources
         }
 
         #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            if (!Children.OfType<LabourPriceGroup>().Any())
-            {
-                return "\r\n<div class=\"errorlink\">No labour price groups has been defined</div>";
-            }
-            return "";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags()
-        {
-            return "</table>";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags()
-        {
-            if (Children.OfType<LabourPriceGroup>().Any())
-            {
-                return "<table><tr><th>Name</th><th>Filter</th><th>Rate per day</th></tr>";
-            }
-
-            return "";
-        }
-
-        #endregion
     }
 }

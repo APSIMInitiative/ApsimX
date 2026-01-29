@@ -230,21 +230,5 @@ namespace Models.CLEM.Activities
                 SetStatusSuccessOrPartial(shorn != numberToDo || MathUtilities.IsPositive(amountToDo));
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">Shear selected herd and place wool clip in ");
-            htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(WoolProductStoreName, "Store Type not set")}");
-            htmlWriter.Write(" and cashmere clip in ");
-            htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(CashmereProductStoreName, "Store Type not set")}");
-            htmlWriter.Write($" removing {ProportionFleeceRemoved:%} of the fleece.</div>");
-            return htmlWriter.ToString();
-        }
-        #endregion
-
     }
 }

@@ -173,32 +173,5 @@ namespace Models.CLEM.Activities
             }
         }
         #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">All individuals in ");
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(GrazeFoodStoreTypeName, "Pasture not set", HTMLSummaryStyle.Resource));
-                htmlWriter.Write(" will graze for ");
-                if (HoursGrazed <= 0)
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">" + HoursGrazed.ToString("0.#") + "</span> hours of ");
-                }
-                else
-                {
-                    htmlWriter.Write(((HoursGrazed == 8) ? "" : "<span class=\"setvalue\">" + HoursGrazed.ToString("0.#") + "</span> hours of "));
-                }
-
-                htmlWriter.Write("the maximum 8 hours each day</span>");
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString();
-            }
-        }
-        #endregion
-
     }
 }

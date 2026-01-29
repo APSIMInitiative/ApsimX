@@ -235,21 +235,5 @@ namespace Models.CLEM.Activities
                 SetStatusSuccessOrPartial(moved != numberToDo);
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write($"\r\n<div class=\"activityentry\">Move individuals to {DisplaySummaryResourceTypeSnippet(ManagedPastureName, nullGeneralYards: true)}");
-            if (MoveSucklings)
-                htmlWriter.Write(" moving sucklings with mother");
-            htmlWriter.Write(".</div>");
-            if (PerformAtStartOfSimulation)
-                htmlWriter.Write("\r\n<div class=\"activityentry\">These individuals will be located on the specified pasture at start-up</div>");
-            return htmlWriter.ToString();
-        } 
-        #endregion
     }
 }

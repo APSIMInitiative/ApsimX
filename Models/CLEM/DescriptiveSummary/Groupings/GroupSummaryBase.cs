@@ -29,7 +29,10 @@ public abstract class GroupSummaryBase<TModel> : DescriptiveSummaryProvider, IDe
     /// <summary>
     /// Default constructor
     /// </summary>
-    public GroupSummaryBase() { }
+    public GroupSummaryBase() 
+    {
+        SummaryStyle = HTMLSummaryStyle.Filter;
+    }
 
     /// <summary>
     /// Strongly-typed accessor for the model that the provider is summarising.

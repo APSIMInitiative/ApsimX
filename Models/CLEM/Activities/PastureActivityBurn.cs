@@ -186,45 +186,5 @@ namespace Models.CLEM.Activities
             }
             SetStatusSuccessOrPartial(areaToSkip > 0);
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write($"\r\n<div class=\"activityentry\">Burn {DisplaySummaryResourceTypeSnippet(PaddockName, "Pasture Not Set", nullGeneralYards: false)}");
-            htmlWriter.Write($" if less than {DisplaySummaryValueSnippet(MinimumProportionGreen.ToString("0.#%"), warnZero: true)} green.");
-            htmlWriter.Write($" with a burning efficiency of {DisplaySummaryValueSnippet(BurningEfficiency, warnZero: true)} and ");
-            htmlWriter.Write($" and a carbon content of {DisplaySummaryValueSnippet(CarbonPercent, warnZero: true)}%");
-            htmlWriter.Write("</div>");
-
-            htmlWriter.Write("\r\n<div class=\"activityentry\">Methane emissions will be placed in ");
-            if (MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
-            {
-                htmlWriter.Write("<span class=\"resourcelink\">[GreenhouseGases].Methane</span> if present");
-            }
-            else
-            {
-                htmlWriter.Write($"<span class=\"resourcelink\">{MethaneStoreName}</span>");
-            }
-
-            htmlWriter.Write("</div>");
-
-            htmlWriter.Write("\r\n<div class=\"activityentry\">Nitrous oxide emissions will be placed in ");
-            if (NitrousOxideStoreName is null || NitrousOxideStoreName == "Use store named N2O if present")
-            {
-                htmlWriter.Write("<span class=\"resourcelink\">[GreenhouseGases].N2O</span> if present");
-            }
-            else
-            {
-                htmlWriter.Write($"<span class=\"resourcelink\">{NitrousOxideStoreName}</span>");
-            }
-
-            htmlWriter.Write("</div>");
-            return htmlWriter.ToString();
-        } 
-        #endregion
-
     }
 }

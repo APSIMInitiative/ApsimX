@@ -17,7 +17,7 @@ public class ReportActivitiesPerformedSummary : DescriptiveSummaryProviderBase<R
 
         if (ModelTyped.CreateHTML)
         {
-            generator.AddBlockWithText( $"A HTML version of this report is available {rotateText}. (See Summary tab for current link)");
+            generator.AddBlockWithText( $"A HTML version of this report is available with {rotateText}. (See Summary tab for current link)");
         }
 
         if (ModelTyped.AutoCreateHTML)

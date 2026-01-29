@@ -620,29 +620,5 @@ namespace Models.CLEM.Activities
         }
 
         #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">The gross energy content of forage is ");
-
-            if (MathUtilities.FloatsAreEqual(EnergyGross, 0))
-            {
-                htmlWriter.Write("<span class=\"errorlink\">[NOT SET]</span>");
-            }
-            else
-            {
-                htmlWriter.Write("<span class=\"setvalue\">" + EnergyGross.ToString() + "</span>");
-            }
-
-            htmlWriter.Write(" MJ/kg dry matter</div>");
-
-            return htmlWriter.ToString();
-        }
-        #endregion
-
     }
 }

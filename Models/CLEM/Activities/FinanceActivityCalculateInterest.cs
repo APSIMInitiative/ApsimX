@@ -102,51 +102,5 @@ namespace Models.CLEM.Activities
                 }
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            ZoneCLEM clemParent = Structure.FindParent<ZoneCLEM>(recurse: true);
-            ResourcesHolder resHolder;
-            Finance finance = null;
-            if (clemParent != null)
-            {
-                resHolder = Structure.FindChildren<ResourcesHolder>(relativeTo: clemParent).FirstOrDefault() as ResourcesHolder;
-                finance = resHolder.FindResourceGroup<Finance>();
-                if (finance != null && !finance.Enabled)
-                    finance = null;
-            }
-            if (finance == null)
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">This activity is not required as no <span class=\"resourcelink\">Finance</span> resource is available.</div>");
-            }
-            else
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Interest rates are set in the <span class=\"resourcelink\">FinanceType</span> component</div>");
-                foreach (FinanceType accnt in Structure.FindChildren<FinanceType>(relativeTo: finance).Where(a => a.Enabled))
-                {
-                    if (accnt.InterestRateCharged == 0 & accnt.InterestRatePaid == 0)
-                    {
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">This activity is not needed for <span class=\"resourcelink\">" + accnt.Name + "</span> as no interest rates are set.</div>");
-                    }
-                    else
-                    {
-                        if (accnt.InterestRateCharged > 0)
-                        {
-                            htmlWriter.Write($"\r\n<div class=\"activityentry\">This activity will calculate interest charged for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRateCharged.ToString("#.00") + "</span>%</div>");
-                        }
-                        else
-                        {
-                            htmlWriter.Write($"\r\n<div class=\"activityentry\">This activity will calculate interest paid for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRatePaid.ToString("#.00") + "</span>%</div>");
-                        }
-                    }
-                }
-            }
-            return htmlWriter.ToString();
-        } 
-        #endregion
     }
 }

@@ -285,28 +285,5 @@ namespace Models.CLEM.Activities
                 SetStatusSuccessOrPartial(propFed < 1);
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
-        {
-            return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
-            {
-                (Structure.FindChildren<LabourFeedGroup>(), true, "childgroupactivityborder", "The following groups will be fed:", "No LabourFeedGroup was provided"),
-            };
-        }
-
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">Feed people ");
-            htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(FeedTypeName, "Feed type not set", HTMLSummaryStyle.Resource));
-            htmlWriter.Write("</div>");
-            return htmlWriter.ToString();
-        } 
-        #endregion
     }
 }

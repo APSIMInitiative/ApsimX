@@ -15,7 +15,7 @@ public class HumanFoodStoreTypeSummary : DescriptiveSummaryProviderBase<HumanFoo
         var model = ModelTyped;
         if (model is null) return;
 
-        if (!(model.Units ?? "").Equals("KG", StringComparison.CurrentCultureIgnoreCase))
+        if (!(model.Units ?? "").Equals("kg", StringComparison.CurrentCultureIgnoreCase))
         {
             generator.AddBlockWithText($"Each unit of this resource is equivalent to {generator.DisplaySummaryValueSnippet(model.ConvertToKg, warnZero:true)} kg");
         }

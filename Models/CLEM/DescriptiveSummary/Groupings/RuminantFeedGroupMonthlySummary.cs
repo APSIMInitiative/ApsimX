@@ -20,6 +20,14 @@ public class RuminantFeedGroupMonthlySummary : GroupSummaryBase<RuminantFeedGrou
     //
     //
 
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public RuminantFeedGroupMonthlySummary()
+    {
+        SummaryStyle = HTMLSummaryStyle.SubActivity;
+    }
+
     ///<inheritdoc/>
     public override List<ChildComponentGroup> GetChildrenInSummary()
     {

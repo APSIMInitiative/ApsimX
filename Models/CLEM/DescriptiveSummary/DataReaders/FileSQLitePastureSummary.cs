@@ -10,6 +10,14 @@ namespace Models.CLEM.DescriptiveSummary
     /// </summary>
     public class FileSQLitePastureSummary : DescriptiveSummaryProviderBase<FileSQLitePasture>
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public FileSQLitePastureSummary()
+        {
+            SummaryStyle = HTMLSummaryStyle.FileReader;
+        }
+
         ///<inheritdoc/>
         public override void BuildSummary()
         {

@@ -31,7 +31,7 @@ public class GrazeFoodStoreFertilityLimiterSummary : DescriptiveSummaryProviderB
         else
             monthSet = generator.DisplaySummaryValueSnippet(model.AnnualYieldStartMonth.ToString());
 
-        generator.AddBlockWithText($"<b>(A)</b> An annual nitrogen supply of {generator.DisplaySummaryValueSnippet(model.AnnualNitrogenSupply, warnZero: true, errorString: "Not Set")} kg per hectare has been used since {monthSet}");
+        generator.AddBlockWithText($"{generator.DisplayBold("(A)")} An annual nitrogen supply of {generator.DisplaySummaryValueSnippet(model.AnnualNitrogenSupply, warnZero: true, errorString: "Not Set")} kg per hectare has been used since {monthSet}");
         if (model.AnnualNitrogenSupply > 0)
         {
             if (parentPasture.GreenNitrogenPercent > 0)
@@ -42,11 +42,11 @@ public class GrazeFoodStoreFertilityLimiterSummary : DescriptiveSummaryProviderB
 
         if (timerpresent)
         {
-            generator.AddBlockWithText($"or <b>(B)</b> the growth month falls within the specified period below:");
+            generator.AddBlockWithText($"or {generator.DisplayBold("(B)")} the growth month falls within the specified period below:");
         }
         else
         {
-            generator.AddBlockWithText("or<b>(B) </ b > Add a ActivityMonthRangeTimer below to reduce nitrogen content in specified months");
+            generator.AddBlockWithText($"or {generator.DisplayBold("(B)")}. Add a ActivityMonthRangeTimer below to reduce nitrogen content in specified months");
         }
     }
 }

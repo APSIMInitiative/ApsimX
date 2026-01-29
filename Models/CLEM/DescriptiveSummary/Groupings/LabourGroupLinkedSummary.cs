@@ -16,6 +16,14 @@ namespace Models.CLEM.DescriptiveSummary;
 /// </summary>
 public class LabourGroupLinkedSummary : GroupSummaryBase<LabourGroupLinked>
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public LabourGroupLinkedSummary()
+    {
+        SummaryStyle = HTMLSummaryStyle.Filter;
+    }
+
     ///<inheritdoc/>
     public override List<ChildComponentGroup> GetChildrenInSummary()
     {

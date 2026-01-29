@@ -7,6 +7,14 @@ namespace Models.CLEM.DescriptiveSummary;
 /// </summary>
 public class RuminantConceptionCurveSummary : DescriptiveSummaryProviderBase<RuminantConceptionCurve>
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public RuminantConceptionCurveSummary()
+    {
+        SummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
+    }
+
     /// <inheritdoc/>
     public override void BuildSummary()
     {

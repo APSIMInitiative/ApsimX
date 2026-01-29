@@ -28,8 +28,10 @@ public abstract class FilterSummaryBase<TModel> : DescriptiveSummaryProvider, ID
     /// <summary>
     /// Default constructor
     /// </summary>
-    public FilterSummaryBase() { }
-
+    public FilterSummaryBase() 
+    {
+        SummaryStyle = HTMLSummaryStyle.Filter;
+    }
 
     /// <summary>
     /// Strongly-typed accessor for the model that the provider is summarising.

@@ -15,6 +15,14 @@ namespace Models.CLEM.DescriptiveSummary;
 /// </summary>
 public class CropActivityManageCropSummary : DescriptiveSummaryProviderBase<CropActivityManageCrop>
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public CropActivityManageCropSummary()
+    {
+        SummaryStyle = HTMLSummaryStyle.SubActivityLevel2;
+    }
+
     ///<inheritdoc/>
     public override List<ChildComponentGroup> GetChildrenInSummary()
     {

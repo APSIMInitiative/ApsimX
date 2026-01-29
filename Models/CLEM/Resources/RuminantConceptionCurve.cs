@@ -61,15 +61,5 @@ namespace Models.CLEM.Resources
             rate = Math.Max(0, Math.Min(rate, 100));
             return rate / 100;
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            return "<div class=\"activityentry\">Conception rates are being calculated for all females using the same curve.</div>";
-        }
-
-        #endregion
     }
 }

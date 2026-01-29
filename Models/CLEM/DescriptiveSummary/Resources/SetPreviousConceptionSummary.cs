@@ -9,6 +9,14 @@ namespace Models.CLEM.DescriptiveSummary;
 /// </summary>
 public class SpecifyPreviousConceptionSummary : DescriptiveSummaryProviderBase<SetPreviousConception>
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public SpecifyPreviousConceptionSummary()
+    {
+        SummaryStyle = HTMLSummaryStyle.SubResource;
+    }
+
     /// <inheritdoc/>
     public override void BuildSummary()
     {

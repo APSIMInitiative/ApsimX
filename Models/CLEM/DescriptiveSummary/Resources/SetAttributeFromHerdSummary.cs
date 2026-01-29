@@ -7,6 +7,14 @@ namespace Models.CLEM.DescriptiveSummary;
 /// </summary>
 public class SetAttributeFromHerdSummary : DescriptiveSummaryProviderBase<SetAttributeFromHerd>
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public SetAttributeFromHerdSummary()
+    {
+        SummaryStyle = HTMLSummaryStyle.SubResource;
+    }
+
     /// <inheritdoc/>
     public override void BuildSummary()
     {

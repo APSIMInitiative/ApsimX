@@ -40,7 +40,7 @@ namespace Models.CLEM.DescriptiveSummary
                 childType: typeof(SpecifyRuminant),
                 missing: "No SpecifyRuminant component provided",
                 introduction: "The following SpecifyRuminant components will define the individuals to be purchased (Breeding males and females):",
-                borderClass: "childgroupborder activitygroup"
+                borderClass: "childgroupborder resourcegroup"
             ));
 
             return groups;

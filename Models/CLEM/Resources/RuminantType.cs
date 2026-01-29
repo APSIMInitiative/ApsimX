@@ -529,17 +529,6 @@ namespace Models.CLEM.Resources
             ConceptionStatusChanged?.Invoke(this, e);
         }
 
-        #region descriptive summary 
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            string html = "";
-            return html;
-        }
-
-        #endregion
-
         #region validation
 
         /// <inheritdoc/>

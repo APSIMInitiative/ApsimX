@@ -13,6 +13,14 @@ namespace Models.CLEM.DescriptiveSummary;
 /// </summary>
 public class SpecifyRuminantSummary : DescriptiveSummaryProviderBase<SpecifyRuminant>
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public SpecifyRuminantSummary()
+    {
+        SummaryStyle = HTMLSummaryStyle.SubResource;
+    }
+
     ///<inheritdoc/>
     public override List<ChildComponentGroup> GetChildrenInSummary()
     {

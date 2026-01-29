@@ -201,26 +201,5 @@ namespace Models.CLEM.Activities
         }
 
         #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            return "\r\n<h1>Activities summary</h1>";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags()
-        {
-            return $"\r\n<div class=\"activity\"style=\"opacity: {SummaryOpacity(FormatForParentControl)}\">";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryClosingTags()
-        {
-            return "\r\n</div>";
-        }
-        #endregion
     }
 }

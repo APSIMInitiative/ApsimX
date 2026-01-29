@@ -108,29 +108,5 @@ namespace Models.CLEM.Resources
         /// Override base event
         /// </summary>
         public event EventHandler AllocationReported;
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            htmlWriter.Write("Reported in ");
-            if (UnitsOfArea == null || UnitsOfArea == "")
-                htmlWriter.Write("<span class=\"errorlink\">Unspecified units of area</span>");
-            else
-                htmlWriter.Write("<span class=\"setvalue\">" + UnitsOfArea + "</span>");
-            htmlWriter.Write("</span>");
-
-
-            if (UnitsOfAreaToHaConversion != 1)
-                htmlWriter.Write(" (1 " + UnitsOfArea + " = <span class=\"setvalue\">" + UnitsOfAreaToHaConversion.ToString() + "</span> hectares)");
-
-            htmlWriter.Write("</div>");
-            return htmlWriter.ToString();
-        }
-
-        #endregion
     }
 }

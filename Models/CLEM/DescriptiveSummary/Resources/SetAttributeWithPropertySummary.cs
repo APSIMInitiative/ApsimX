@@ -9,6 +9,14 @@ namespace Models.CLEM.DescriptiveSummary;
 /// </summary>
 public class SetAttributeWithPropertySummary : DescriptiveSummaryProviderBase<SetAttributeWithProperty>
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public SetAttributeWithPropertySummary()
+    {
+        SummaryStyle = HTMLSummaryStyle.SubResource;
+    }
+
     /// <inheritdoc/>
     public override void BuildSummary()
     {

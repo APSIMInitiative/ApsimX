@@ -1,23 +1,24 @@
-﻿using Models.CLEM.Groupings;
-using System;
+﻿using Models.CLEM;
+using Models.CLEM.Activities;
+using Models.CLEM.DescriptiveSummary;
+using Models.CLEM.Groupings;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models.CLEM.DescriptiveSummary;
 
 /// <summary>
-/// Descriptive summary provider for LabourPriceGroup
+/// Descriptive summary provider for the Ruminant Feed Group filter
 /// </summary>
-public class LabourPriceGroupSummary : DescriptiveSummaryProviderBase<LabourPriceGroup>
+public class LabourAvailabilityGroupSummary : GroupSummaryBase<LabourAvailabilityGroup>
 {
     /// <summary>
     /// Constructor
     /// </summary>
-    public LabourPriceGroupSummary()
+    public LabourAvailabilityGroupSummary()
     {
-        SummaryStyle = HTMLSummaryStyle.SubResource;
+        SummaryStyle = HTMLSummaryStyle.SubActivity;
     }
 
     ///<inheritdoc/>
@@ -32,7 +33,8 @@ public class LabourPriceGroupSummary : DescriptiveSummaryProviderBase<LabourPric
                 id: "default",
                 model: CLEMModel,
                 childType: typeof(Filter),
-                missing: ""
+                introduction: "The following individuals have availability (days per month) specified:",
+                missing: "No individuals have availability specified."
                 )
         ];
     }
@@ -40,14 +42,6 @@ public class LabourPriceGroupSummary : DescriptiveSummaryProviderBase<LabourPric
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        var model = ModelTyped;
-        if (model is null) return;
-
-        if (!FormatForParentControl)
-        {
-            //ToDo: format value for currency
-            generator.AddBlockWithText($"Each individual is paid {CLEMModel.DisplaySummaryValueSnippet(model.Value, warnZero:true)} per day");
-        }
     }
 
     /// <inheritdoc/>
@@ -58,11 +52,11 @@ public class LabourPriceGroupSummary : DescriptiveSummaryProviderBase<LabourPric
         var model = ModelTyped;
         if (model is null) return;
 
-        generator.CloseMostRecentBlock("labourPriceGroup_filters");
+        generator.CloseMostRecentBlock("labourAvailabilityItem_filters");
         if (FormatForParentControl)
         {
             generator.AddBlockWithText(generator.DisplaySummaryValueSnippet(model.Value, warnZero: true), tag: "td", classString: "");
-            generator.CloseMostRecentBlock("labourPriceGroup_row");
+            generator.CloseMostRecentBlock("labourAvailabilityItem_row");
         }
     }
 
@@ -76,13 +70,13 @@ public class LabourPriceGroupSummary : DescriptiveSummaryProviderBase<LabourPric
 
         if (FormatForParentControl)
         {
-            generator.OpenBlock("", "", tag: "tr", id: "labourPriceGroup_row");
+            generator.OpenBlock("", "", tag: "tr", id: "labourAvailabilityItem_row");
             generator.AddBlockWithText(cm.Name, tag: "td", classString: "");
-            generator.OpenBlock("", "", tag: "td", id: "labourPriceGroup_filters");
+            generator.OpenBlock("", "", tag: "td", id: "labourAvailabilityItem_filters");
         }
         else
         {
-            generator.OpenBlock("childgroupborder filteritems clearfix", "", id: "labourPriceGroup_filters");
+            generator.OpenBlock("childgroupborder filteritems clearfix", "", id: "labourAvailabilityItem_filters");
         }
         if (cm.Structure.FindChildren<Filter>().Any() == false)
         {
@@ -103,4 +97,5 @@ public class LabourPriceGroupSummary : DescriptiveSummaryProviderBase<LabourPric
         if (!FormatForParentControl)
             base.CreateSummaryClosingBlocks();
     }
+
 }

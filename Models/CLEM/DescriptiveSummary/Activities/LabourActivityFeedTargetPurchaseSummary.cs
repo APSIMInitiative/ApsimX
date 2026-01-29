@@ -11,6 +11,14 @@ namespace Models.CLEM.DescriptiveSummary;
 /// </summary>
 public class LabourActivityFeedTargetPurchaseSummary : DescriptiveSummaryProviderBase<LabourActivityFeedTargetPurchase>
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public LabourActivityFeedTargetPurchaseSummary()
+    {
+        SummaryStyle = HTMLSummaryStyle.SubActivity;
+    }
+
     /// <inheritdoc/>
     public override void BuildSummary()
     {

@@ -20,6 +20,14 @@ namespace Models.CLEM.DescriptiveSummary;
 /// </summary>
 public class RuminantTypeCohortSummary : DescriptiveSummaryProviderBase<RuminantTypeCohort>
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public RuminantTypeCohortSummary()
+    {
+        SummaryStyle = HTMLSummaryStyle.SubResource;
+    }
+
     ///<inheritdoc/>
     public override List<ChildComponentGroup> GetChildrenInSummary()
     {

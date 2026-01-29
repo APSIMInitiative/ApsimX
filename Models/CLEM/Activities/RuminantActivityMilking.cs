@@ -215,20 +215,5 @@ namespace Models.CLEM.Activities
                 SetStatusSuccessOrPartial((number == numberToDo && amountToDo <= 0) == false);
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">Milk is placed in ");
-            htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(ResourceTypeName, "Not set", HTMLSummaryStyle.Resource));
-            htmlWriter.Write("</div>");
-            return htmlWriter.ToString();
-        } 
-
-        #endregion
-
     }
 }

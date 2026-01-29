@@ -9,6 +9,14 @@ namespace Models.CLEM.DescriptiveSummary
     /// </summary>
     public class FileSQLiteCropSummary : DescriptiveSummaryProviderBase<FileSQLiteCrop>
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public FileSQLiteCropSummary()
+        {
+            SummaryStyle = HTMLSummaryStyle.FileReader;
+        }
+
         ///<inheritdoc/>
         public override void BuildSummary()
         {

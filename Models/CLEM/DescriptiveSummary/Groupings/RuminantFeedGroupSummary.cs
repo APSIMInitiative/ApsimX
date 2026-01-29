@@ -13,6 +13,14 @@ namespace Models.CLEM.DescriptiveSummary;
 /// </summary>
 public class RuminantFeedGroupSummary : GroupSummaryBase<RuminantFeedGroup>
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public RuminantFeedGroupSummary()
+    {
+        SummaryStyle = HTMLSummaryStyle.SubActivity;
+    }
+
     ///<inheritdoc/>
     public override List<ChildComponentGroup> GetChildrenInSummary()
     {

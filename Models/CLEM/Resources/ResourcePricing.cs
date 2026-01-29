@@ -109,11 +109,12 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public void SetPrice(double amount, IModel model)
         {
+            if (PreviousPrice == CurrentPrice && amount == CurrentPrice) { return; }
+
             PreviousPrice = CurrentPrice;
             PricePerPacket = amount;
 
-            if (LastPriceChange is null)
-                LastPriceChange = new ResourcePriceChangeDetails();
+            LastPriceChange ??= new ResourcePriceChangeDetails();
 
             LastPriceChange.ChangedBy = model;
             LastPriceChange.PriceChanged = this;
@@ -130,59 +131,5 @@ namespace Models.CLEM.Resources
         {
             PriceChangeOccurred?.Invoke(this, e);
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write("\r\nThis is a <span class=\"setvalue\">");
-                switch (PurchaseOrSale)
-                {
-                    case PurchaseOrSalePricingStyleType.Both:
-                        htmlWriter.Write("purchase and sell");
-                        break;
-                    case PurchaseOrSalePricingStyleType.Purchase:
-                        htmlWriter.Write("purchase");
-                        break;
-                    case PurchaseOrSalePricingStyleType.Sale:
-                        htmlWriter.Write("sell");
-                        break;
-                    default:
-                        break;
-                }
-                htmlWriter.Write("</span> price</div>");
-
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write("\r\nThis resource is managed ");
-                if (UseWholePackets)
-                    htmlWriter.Write("only in whole ");
-                else
-                    htmlWriter.Write("in ");
-
-                htmlWriter.Write("packets ");
-                if (PacketSize > 0)
-                    htmlWriter.Write("<span class=\"setvalue\">" + this.PacketSize.ToString("#.###") + "</span>");
-                else
-                    htmlWriter.Write("<span class=\"errorlink\">Not defined</span>");
-
-                htmlWriter.Write(" unit" + ((this.PacketSize == 1) ? "" : "s"));
-                htmlWriter.Write(" in size\r\n</div>");
-
-                htmlWriter.Write("\r\n<div class=\"activityentry\">\r\nEach packet is worth ");
-                if (PricePerPacket > 0)
-                    htmlWriter.Write("<span class=\"setvalue\">" + this.PricePerPacket.ToString("#.00") + "</span>");
-                else
-                    htmlWriter.Write("<span class=\"errorlink\">Not defined</span>");
-
-                htmlWriter.Write("\r\n</div>");
-                return htmlWriter.ToString();
-            }
-        }
-
-        #endregion
     }
 }

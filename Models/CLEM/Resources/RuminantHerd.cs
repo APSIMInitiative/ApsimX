@@ -272,8 +272,6 @@ namespace Models.CLEM.Resources
             PurchaseIndividuals?.Clear();
         }
 
-        #region group tracking
-
         /// <summary>
         /// Overrides the base class method to allow for changes before end of month reporting
         /// </summary>
@@ -385,10 +383,6 @@ namespace Models.CLEM.Resources
             return groupedInd;
         }
 
-        #endregion
-
-        #region weaning event
-
         /// <summary>
         /// Override base event
         /// </summary>
@@ -408,10 +402,6 @@ namespace Models.CLEM.Resources
             OnWeanOccurred(e);
         }
 
-        #endregion
-
-        #region breeding female left herd event
-
         /// <summary>
         /// Override base event
         /// </summary>
@@ -430,45 +420,6 @@ namespace Models.CLEM.Resources
         {
             OnFinalFemaleOccurred(e);
         }
-
-        #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            string html = "";
-            html += "\r\n<div class=\"entryHolder\">Activities reporting on herds will group individuals";
-            switch (TransactionStyle)
-            {
-                case RuminantTransactionsGroupingStyle.Combined:
-                    html += " into a single transaction per RuminantType.";
-                    break;
-                case RuminantTransactionsGroupingStyle.ByPriceGroup:
-                    html += " by the pricing groups provided for the RuminantType.";
-                    break;
-                case RuminantTransactionsGroupingStyle.ByClass:
-                    html += " by the class of individuals.";
-                    break;
-                case RuminantTransactionsGroupingStyle.BySexAndClass:
-                    html += " by the sex and class of individuals.";
-                    break;
-                case RuminantTransactionsGroupingStyle.ByFullClass:
-                    html += " by the full class of individuals.";
-                    break;
-                case RuminantTransactionsGroupingStyle.BySexAndFullClass:
-                    html += " by the sex and full class of individuals.";
-                    break;
-                default:
-                    html += " by [Unknown grouping style]";
-                    break;
-            }
-            html += "</div>";
-            return html;
-        }
-
-        #endregion
     }
 
     /// <summary>

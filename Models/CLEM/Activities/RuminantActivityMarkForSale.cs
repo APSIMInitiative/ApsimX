@@ -160,14 +160,5 @@ namespace Models.CLEM.Activities
                 SetStatusSuccessOrPartial(number != numberToDo);
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            return $"\r\n<div class=\"activityentry\">Flag individuals for sale as {CLEMModel.DisplaySummaryValueSnippet(SaleFlagToUse.ToString(), "SaleFlag not set")}</div>";
-        }
-        #endregion
     }
 }

@@ -13,6 +13,14 @@ namespace Models.CLEM.DescriptiveSummary;
 /// </summary>
 public class RuminantDeathGroupConditionSummary : GroupSummaryBase<RuminantDeathGroupCondition>
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public RuminantDeathGroupConditionSummary()
+    {
+        SummaryStyle = HTMLSummaryStyle.SubActivity;
+    }
+
     /// <inheritdoc/>
     public override void BuildSummary()
     {

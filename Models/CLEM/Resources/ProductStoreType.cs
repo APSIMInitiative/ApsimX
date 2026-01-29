@@ -134,22 +134,5 @@ namespace Models.CLEM.Resources
         }
 
         #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            string html = base.ModelSummary();
-
-            html += "\r\n<div class=\"activityentry\">";
-            if (StartingAmount > 0)
-                html += "There is <span class=\"setvalue\">" + this.StartingAmount.ToString("#.###") + "</span> at the start of the simulation.";
-            html += "\r\n</div>";
-            return html;
-        }
-
-        #endregion
-
     }
 }

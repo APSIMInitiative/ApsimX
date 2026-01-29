@@ -9,6 +9,14 @@ namespace Models.CLEM.DescriptiveSummary
     /// </summary>
     public class FileRuminantCohortsSummary : DescriptiveSummaryProviderBase<FileRuminantCohorts>
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public FileRuminantCohortsSummary()
+        {
+            SummaryStyle = HTMLSummaryStyle.FileReader;
+        }
+
         ///<inheritdoc/>
         public override void BuildSummary()
         {

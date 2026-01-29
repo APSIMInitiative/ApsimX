@@ -61,40 +61,5 @@ namespace Models.CLEM.Activities
         }
 
         #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"filter\">");
-            htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(ResourceTypeName, "Resource not set", HTMLSummaryStyle.Resource));
-            htmlWriter.Write($" x ");
-            htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(Multiplier, "Not set", HTMLSummaryStyle.Default, warnZero: true));
-            htmlWriter.Write("</div>");
-            if (!Enabled & !FormatForParentControl)
-            {
-                htmlWriter.Write(" - DISABLED!");
-            }
-
-            return htmlWriter.ToString();
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryClosingTags()
-        {
-            return "</div>";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write($"<div class=\"filtername\">{Name}</div>");
-            htmlWriter.Write($"\r\n<div class=\"filterborder clearfix\" style=\"opacity: {SummaryOpacity(FormatForParentControl)}\">");
-            return htmlWriter.ToString();
-        }
-        #endregion
     }
 }

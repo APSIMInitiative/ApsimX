@@ -94,17 +94,5 @@ namespace Models.CLEM.Activities
                 methaneEmissions?.Add(a.Item2 / 1000, this, a.Item1, TransactionCategory);
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">Methane emissions will be placed in the first [GreenhouseGasType] automatically receiving Methane (CH<sub>4</sub>)");
-            return htmlWriter.ToString();
-        }
-        #endregion
-
     }
 }

@@ -467,27 +467,5 @@ namespace Models.CLEM.Resources
         }
 
         #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            return "<h1>Resources summary</h1>";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags()
-        {
-            return "\r\n<div class=\"resource\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryClosingTags()
-        {
-            return "\r\n</div>";
-        }
-
-        #endregion
     }
 }

@@ -463,45 +463,5 @@ namespace Models.CLEM.Resources
                 return 0;
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            if (AllowAgeing)
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write("Individuals age with time");
-                htmlWriter.Write("</div>");
-            }
-            if(Structure.FindChildren<Relationship>().Where(a => a.Identifier == "Adult equivalent").Any() == false)
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write($"No [Relationship] with the identifier [Adult equivalent] was provided with [{Parent.Name}]. All individuals are assumed to be 1 AE.");
-                htmlWriter.Write("</div>");
-            }
-
-            htmlWriter.Write("\r\n<div class=\"holderresourcesub\">");
-            htmlWriter.Write("\r\n<div class=\"clearfix resourcebannerlight\">Labour types</div>");
-            htmlWriter.Write("\r\n<div class=\"resourcecontentlight\">");
-            htmlWriter.Write("<table><tr><th>Name</th><th>Gender</th><th>Age (yrs)</th><th>Number</th><th>Hired</th></tr>");
-            foreach (LabourType labourType in Structure.FindChildren<LabourType>(relativeTo: this))
-            {
-                htmlWriter.Write("<tr>");
-                htmlWriter.Write($"<td>{labourType.Name}</td>");
-                htmlWriter.Write($"<td><span class=\"setvalue\">{labourType.Sex}</span></td>");
-                htmlWriter.Write($"<td><span class=\"setvalue\">{labourType.InitialAge}</span></td>");
-                htmlWriter.Write($"<td><span class=\"setvalue\">{labourType.Individuals}</span></td>");
-                htmlWriter.Write("<td" + ((labourType.IsHired) ? " class=\"fill\"" : "") + "></td>");
-                htmlWriter.Write("</tr>");
-            }
-            htmlWriter.Write("</table>");
-            htmlWriter.Write("</div></div>");
-            return htmlWriter.ToString();
-        }
-
-        #endregion
     }
 }

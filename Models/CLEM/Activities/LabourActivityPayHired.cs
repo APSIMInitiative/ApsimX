@@ -200,18 +200,5 @@ namespace Models.CLEM.Activities
             return results;
         }
         #endregion
-
-        #region descriptive summary
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Pay all hired labour based on associated Fee components</div>");
-                return htmlWriter.ToString();
-            }
-        }
-        #endregion
-
     }
 }

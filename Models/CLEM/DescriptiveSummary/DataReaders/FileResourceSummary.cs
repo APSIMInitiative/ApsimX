@@ -10,6 +10,14 @@ namespace Models.CLEM.DescriptiveSummary
     /// </summary>
     public class FileResourceSummary : DescriptiveSummaryProviderBase<FileResource>
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public FileResourceSummary()
+        {
+            SummaryStyle = HTMLSummaryStyle.FileReader;
+        }
+
         /// <inheritdoc/>
         public override void BuildSummary()
         {

@@ -13,6 +13,14 @@ namespace Models.CLEM.DescriptiveSummary;
 /// </summary>
 public class ResourceActivityExternalMultiplierSummary : FilterSummaryBase<ResourceActivityExternalMultiplier>
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public ResourceActivityExternalMultiplierSummary()
+    {
+        SummaryStyle = HTMLSummaryStyle.Filter;
+    }
+
     /// <inheritdoc/>
     public override void BuildSummary()
     {

@@ -205,25 +205,5 @@ namespace Models.CLEM.Activities
                 SetStatusSuccessOrPartial(unitsToSkip > 0);
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write($"\r\n<div class=\"activityentry\">Obtain {CLEMModel.DisplaySummaryValueSnippet(Units, warnZero: true)} ");
-            htmlWriter.Write(" packets of ");
-            htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(ResourceTypeName, "Resource not set", HTMLSummaryStyle.Resource));
-            if (AccountName != "No finance required")
-            {
-                htmlWriter.Write(" using ");
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(AccountName, "Account not set", HTMLSummaryStyle.Resource));
-            }
-            htmlWriter.Write("</div>");
-            return htmlWriter.ToString();
-        } 
-        #endregion
-
     }
 }

@@ -21,7 +21,7 @@ public class AnimalPriceGroupSummary : DescriptiveSummaryProviderBase<AnimalPric
     /// </summary>
     public AnimalPriceGroupSummary()
     {
-        //SummaryStyle = HTMLSummaryStyle.Filter;
+        SummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
     }
 
     ///<inheritdoc/>

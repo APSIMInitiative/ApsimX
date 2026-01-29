@@ -12,6 +12,14 @@ namespace Models.CLEM.DescriptiveSummary;
 /// </summary>
 public class RainfallShufflerSummary : DescriptiveSummaryProviderBase<RainfallShuffler>
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public RainfallShufflerSummary()
+    {
+        SummaryStyle = HTMLSummaryStyle.Default;
+    }
+
     /// <inheritdoc/>
     public override void BuildSummary()
     {

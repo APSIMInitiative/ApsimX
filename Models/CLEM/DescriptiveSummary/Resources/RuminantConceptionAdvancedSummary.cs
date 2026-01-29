@@ -8,6 +8,14 @@ namespace Models.CLEM.DescriptiveSummary;
 /// </summary>
 public class RuminantConceptionAdvancedSummary : DescriptiveSummaryProviderBase<RuminantConceptionAdvanced>
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public RuminantConceptionAdvancedSummary()
+    {
+        SummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
+    }
+
     /// <inheritdoc/>
     public override void BuildSummary()
     {

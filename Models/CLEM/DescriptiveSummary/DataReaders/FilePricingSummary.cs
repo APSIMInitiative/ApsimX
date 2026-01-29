@@ -9,6 +9,14 @@ namespace Models.CLEM.DescriptiveSummary
     /// </summary>
     public class FilePricingSummary : DescriptiveSummaryProviderBase<FilePricing>
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public FilePricingSummary()
+        {
+            SummaryStyle = HTMLSummaryStyle.FileReader;
+        }
+
         /// <inheritdoc/>
         public override void BuildSummary()
         {

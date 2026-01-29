@@ -15,6 +15,14 @@ namespace Models.CLEM.DescriptiveSummary;
 /// </summary>
 public class TransmutationSummary: DescriptiveSummaryProviderBase<Transmutation>
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public TransmutationSummary()
+    {
+        SummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
+    }
+
     ///<inheritdoc/>
     public override List<ChildComponentGroup> GetChildrenInSummary()
     {

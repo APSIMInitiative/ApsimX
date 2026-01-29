@@ -1,18 +1,10 @@
-using DocumentFormat.OpenXml.EMMA;
-using DocumentFormat.OpenXml.Wordprocessing;
-using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.Core;
-using Models.Core.ApsimFile;
-using Models.PMF.Struct;
-using Svg.FilterEffects;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
-using System.Web;
 
 namespace Models.CLEM.DescriptiveSummary;
 
@@ -181,6 +173,7 @@ public class DescriptiveSummaryGenerator
         ".filteritemstitle {float:left; margin-right:5px;}" +
         ".childTitle {margin:10px 0px 5px 0px; font-weight:bold;}" + //  font-size:0.9em;
         ".filter.childTitle {color:[Font-Filter];}" +
+        ".resource.childTitle {color:[Headings-Res];}" +
 
         ".childgrouplabel {padding:5px 0px 5px 0px; margin-bottom: 10px;}" + //color:#666666; font-style: italic; font-size:0.9em;
         ".childgroupborder {border-width:0px; border-style:solid; padding:10px; margin:10px 0px 5px 0px; border-radius:5px; }" +

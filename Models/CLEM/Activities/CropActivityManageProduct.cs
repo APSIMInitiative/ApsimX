@@ -664,37 +664,6 @@ namespace Models.CLEM.Activities
         }
 
         #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
-        {
-            string intro = (Structure.FindChildren<CropActivityManageProduct>().Count() >= 1) ? "Mixed crop" : "";
-            return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
-            {
-                (Structure.FindChildren<CropActivityManageProduct>(), true, "childgrouprotationborder", intro, ""),
-            };
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            if (TreesPerHa > 0)
-                htmlWriter.Write($"\r\n<div class=\"activityentry\">This is a tree crop with a density of {CLEMModel.DisplaySummaryValueSnippet(TreesPerHa)} per hectare</div>");
-
-            htmlWriter.Write($"\r\n<div class=\"activityentry\">" + ((ProportionKept == 1) ? "This " : $"{CLEMModel.DisplaySummaryValueSnippet(ProportionKept, warnZero: true)} of this ") + "product is placed in ");
-            htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(StoreItemName, "Resource not set", HTMLSummaryStyle.Resource)}");
-            htmlWriter.Write("</div>");
-
-            htmlWriter.Write($"\r\n<div class=\"activityentry\">Data is retrieved from {CLEMModel.DisplaySummaryValueSnippet(ModelNameFileCrop, "Resource not set", HTMLSummaryStyle.FileReader)}");
-            htmlWriter.Write($" using crop named {CLEMModel.DisplaySummaryValueSnippet(CropName)}");
-            htmlWriter.Write("</div>");
-            return htmlWriter.ToString();
-        }
-
-        #endregion
     }
 
     /// <summary>

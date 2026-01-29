@@ -238,24 +238,6 @@ namespace Models.CLEM.Resources
         }
 
         #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("<div class=\"activityentry\">");
-                htmlWriter.Write("Manure will decay at a rate of <span class=\"setvalue\">" + this.DecayRate.ToString("0.###") + "</span> each month and will only last for <span class=\"setvalue\">" + this.MaximumAge.InDays.ToString("0.#") + "</span> days.</div>");
-                htmlWriter.Write("<div class=\"activityentry\">");
-                htmlWriter.Write("Fresh manure is <span class=\"setvalue\">" + this.ProportionMoistureFresh.ToString("0.##%") + "</span> moisture and delines by " + this.MoistureDecayRate.ToString("0.###") + "</span> each month.");
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString();
-            }
-        }
-
-        #endregion
     }
 
     /// <summary>

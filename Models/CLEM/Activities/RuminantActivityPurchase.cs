@@ -271,33 +271,5 @@ namespace Models.CLEM.Activities
             }
         }
         #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            htmlWriter.Write($"Purchased individuals will be placed in {DisplaySummaryResourceTypeSnippet(GrazeFoodStoreName, nullGeneralYards: true)}</div>");
-
-            Relationship numberRelationship = Structure.FindChildren<Relationship>().Where(a => a.Identifier == "Number to stock vs pasture").FirstOrDefault();
-            if (numberRelationship != null)
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                if (GrazeFoodStoreName != null && !GrazeFoodStoreName.StartsWith("Not specified"))
-                {
-                    htmlWriter.Write("The relationship <span class=\"activitylink\">" + numberRelationship.Name + "</span> will be used to calculate numbers purchased based on pasture biomass (t\\ha)");
-                }
-                else
-                {
-                    htmlWriter.Write("The number of individuals in the Ruminant Cohort supplied will be used as no paddock has been supplied for the relationship <span class=\"resourcelink\">" + numberRelationship.Name + "</span> will be used to calculate numbers purchased based on pasture biomass (t//ha)");
-                }
-
-                htmlWriter.Write("</div>");
-            }
-            return htmlWriter.ToString();
-        } 
-        #endregion
     }
 }

@@ -14,6 +14,14 @@ namespace Models.CLEM.DescriptiveSummary;
 /// </summary>
 public class TransmuteRuminantSummary : DescriptiveSummaryProviderBase<TransmuteRuminant>
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public TransmuteRuminantSummary()
+    {
+        SummaryStyle = HTMLSummaryStyle.SubResource;
+    }
+
     ///<inheritdoc/>
     public override string GetSummaryNameTypeHeaderText()
     {

@@ -586,31 +586,5 @@ namespace Models.CLEM.Activities
                 return (useControlledMating) ? controlledMating.TimingOK:  base.TimingOK;
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            if (InferStartupPregnancy)
-            {
-                htmlWriter.Write("Pregnancy status of breeders from matings prior to simulation start will be predicted.</div>");
-            }
-            else
-            {
-                htmlWriter.Write("No pregnancy of breeders from matings prior to simulation start is inferred.</div>");
-            }
-            controlledMating = Structure.FindChildren<RuminantActivityControlledMating>().FirstOrDefault();
-            if (controlledMating is null)
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write("This simulation uses natural (uncontrolled) mating that will occur when males and females of breeding condition are located together.");
-                htmlWriter.Write("</div>");
-            }
-            return htmlWriter.ToString();
-        }
-        #endregion
     }
 }

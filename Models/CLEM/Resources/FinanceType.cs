@@ -237,49 +237,5 @@ namespace Models.CLEM.Resources
 
         #endregion
 
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            htmlWriter.Write($"Opening balance of <span class=\"setvalue\">{OpeningBalance:#,##0.00}</span>");
-            if (EnforceWithdrawalLimit)
-            {
-                htmlWriter.Write($" that can be withdrawn to <span class=\"setvalue\">{WithdrawalLimit:#,##0.00}</span>");
-            }
-            else
-            {
-                htmlWriter.Write(" with no withdrawal limit");
-            }
-
-            htmlWriter.Write("</div>");
-            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            if (InterestRateCharged + InterestRatePaid == 0)
-            {
-                htmlWriter.Write("No interest rates included");
-            }
-            else
-            {
-                htmlWriter.Write("Interest rate of ");
-                if (InterestRateCharged > 0)
-                {
-                    htmlWriter.Write("<span class=\"setvalue\">");
-                    htmlWriter.Write($"{InterestRateCharged:0.##}</span>% charged ");
-                    if (InterestRatePaid > 0)
-                        htmlWriter.Write("and ");
-                }
-                if (InterestRatePaid > 0)
-                {
-                    htmlWriter.Write("<span class=\"setvalue\">");
-                    htmlWriter.Write($"{InterestRatePaid:0.##}</span>% paid");
-                }
-            }
-            htmlWriter.Write("</div>");
-            return htmlWriter.ToString();
-        }
-        #endregion
-
     }
 }

@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Activities;
+﻿using Docker.DotNet.Models;
+using Models.CLEM.Activities;
 using System;
 using System.Linq;
 
@@ -12,5 +13,6 @@ public class FinanceActivityIncomeSummary : DescriptiveSummaryProviderBase<Finan
     /// <inheritdoc/>
     public override void BuildSummary()
     {
+        generator.AddBlockWithText($"Earn {generator.DisplaySummaryValueSnippet(ModelTyped.Amount, warnZero: true)} paid into {generator.DisplaySummaryResourceTypeSnippet(ModelTyped.AccountName)}");
     }
 }

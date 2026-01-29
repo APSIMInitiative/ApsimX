@@ -11,6 +11,14 @@ namespace Models.CLEM.DescriptiveSummary
     /// </summary>
     public class RuminantTruckingSummary : RuminantActivitySummaryBase<RuminantTrucking>
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public RuminantTruckingSummary()
+        {
+            SummaryStyle = HTMLSummaryStyle.SubResource;
+        }
+
         ///<inheritdoc/>
         public override List<ChildComponentGroup> GetChildrenInSummary()
         {
