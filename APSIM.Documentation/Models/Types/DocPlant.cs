@@ -1,16 +1,12 @@
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using APSIM.Shared.Documentation;
-using DeepCloner.Core;
-using MathNet.Numerics.Distributions;
 using Models;
 using Models.Core;
 using Models.PMF;
 using Models.PMF.Organs;
 using Models.PMF.Phen;
-using Graph = Models.Graph;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -33,9 +29,9 @@ namespace APSIM.Documentation.Models.Types
             List<ITag> newTags = new List<ITag>();
 
             Section mainSection = GetSummaryAndRemarksSection(model);
-            
 
-            newTags.Add(new Paragraph($"The model is constructed from the following list of software components. Details of the implementation and model parameterisation are provided in the following sections."));
+
+            mainSection.Add(new Paragraph($"The model is constructed from the following list of software components. Details of the implementation and model parameterisation are provided in the following sections."));
 
             // Write Plant Model Components Table
             // ------------------------------------------------------------------------------
@@ -44,18 +40,16 @@ namespace APSIM.Documentation.Models.Types
             tableData.Columns.Add("Component Type", typeof(string));
             foreach (IModel child in this.model.Children)
             {
-                if (child.GetType() != typeof(Memo) && child.GetType() != typeof(Cultivar) && child.GetType() != typeof(Folder) && child.GetType() != typeof(CompositeBiomass))
+                if (child as IText == null && child.GetType() != typeof(Cultivar) && child.GetType() != typeof(Folder) && child.GetType() != typeof(CompositeBiomass))
                 {
                     DataRow row = tableData.NewRow();
                     row[0] = child.Name;
-                    string childtype = child.GetType().ToString();
-                    row[1] = "["+childtype+ "](https://github.com/APSIMInitiative/ApsimX/blob/master/"+childtype.Replace(".","/")+".cs)";
+                    string childtype = DocumentationUtilities.GetFilepathOfNamespace(child.GetType());
+                    row[1] = $"[{child.GetType()}](https://github.com/APSIMInitiative/ApsimX/blob/master/"+childtype.Replace(".","/")+".cs)";
                     tableData.Rows.Add(row);
                 }
             }
-            newTags.Add(new Section("Plant Model Components", new Table(tableData)));
-
-
+            mainSection.Add(new Table(tableData));
 
             // Write Composite Biomass Table
             // -------------------------------------------------------------------------------
@@ -81,15 +75,17 @@ namespace APSIM.Documentation.Models.Types
             }
             if (tableDataBiomass.Rows.Count > 0)
             {
-                newTags.Add(new Section("Composite Biomass Components", new Table(tableDataBiomass)));
+                mainSection.Add(new Section("Composite Biomass Components", new Table(tableDataBiomass)));
             }
+
+            newTags.Add(mainSection);
 
             // Document Phenology Model
             // -------------------------------------------------------------------------------
             Phenology phenology = (Phenology)this.model.Children.Find(m => m.GetType() == typeof(Phenology));
             if (phenology != null)
             {
-                DataTable dataTable = phenology.GetPhaseTable();
+                DataTable dataTable = DocumentationUtilities.GetPhaseTable(phenology);
                 Section PhenologySection = new Section("Phenology", new Table(dataTable));
                 PhenologySection.Add(GetSummaryAndRemarksSection(phenology).Children);
                 newTags.Add(PhenologySection);
@@ -110,6 +106,7 @@ namespace APSIM.Documentation.Models.Types
                 S.Add(new Paragraph(CodeDocumentation.GetSummary(model.GetType())));
                 newTags.Add(S);
             }
+
             //Write children
             // -------------------------------------------------------------------------------
             List<ITag> children = new List<ITag>();
@@ -146,14 +143,6 @@ namespace APSIM.Documentation.Models.Types
                 }
                 newTags.Add(new Section("Appendix 1 - Cultivar specifications", new Table(cultivarNameTable)));
             }
-
-
-            mainSection.Add(newTags);
-
-
-
-
-            newTags = new List<ITag>() { mainSection };
 
             return newTags;
         }
