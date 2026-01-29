@@ -210,10 +210,21 @@ public class PropertyMetadata
                 else
                     throw new Exception($"Cannot convert {v} to Double");
             });
-            if (Property.PropertyType == typeof(double[]))
-                newValues = (newValues as IEnumerable<double>).ToArray();
-            else if (Property.PropertyType == typeof(List<double>))
-                newValues = (newValues as IEnumerable<double>).ToList();
+            
+            bool allNaN = true;
+            foreach (double d in (newValues as IEnumerable<double>))
+                if (!double.IsNaN(d))
+                    allNaN = false;
+
+            if (allNaN)
+                newValues = null;
+            else
+            {
+                if (Property.PropertyType == typeof(double[]))
+                    newValues = (newValues as IEnumerable<double>).ToArray();
+                else if (Property.PropertyType == typeof(List<double>))
+                    newValues = (newValues as IEnumerable<double>).ToList();
+            }
         }
         else if (Property.PropertyType == typeof(int[]) || Property.PropertyType == typeof(List<int>))
         {
