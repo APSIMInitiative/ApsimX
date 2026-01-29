@@ -167,8 +167,8 @@ public static class DocumentationUtilities
     }
 
     /// <summary>
-    /// Return all properties. The normal .NET reflection doesn't return private fields in base classes.
-    /// This function does.
+    /// Given a type, returns a string of the file path instead of the namespace.
+    /// This is only a temporary patch until namespaces can be fixed, and more fixes will need to be added as required.
     /// </summary>
     public static string GetFilepathOfNamespace(Type type)
     {
@@ -185,7 +185,7 @@ public static class DocumentationUtilities
     }
 
     /// <summary>
-    /// Returns a DataTable with each Phase listed
+    /// Returns a DataTable with each Phase listed for documentation
     /// </summary>
     public static DataTable GetPhaseTable(Phenology phenology)
     {
