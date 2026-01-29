@@ -44,14 +44,6 @@ namespace Models.CLEM.Resources
         public double ConditionBasedConceptionProbability { get; set; }
 
         /// <summary>
-        /// constructor
-        /// </summary>
-        public RuminantConceptionByCondition()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
-        }
-
-        /// <summary>
         /// Calculate conception rate for a female based on condition score
         /// </summary>
         /// <param name="female">Female to calculate conception rate for</param>

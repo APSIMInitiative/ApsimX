@@ -34,14 +34,6 @@ namespace Models.CLEM.Resources
         public int NumberDaysPregnant { get; set; }
 
         /// <summary>
-        /// constructor
-        /// </summary>
-        public SetPreviousConception()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
-        }
-
-        /// <summary>
         /// Set the conception details of the female provided
         /// </summary>
         /// <param name="female">Female to set details</param>

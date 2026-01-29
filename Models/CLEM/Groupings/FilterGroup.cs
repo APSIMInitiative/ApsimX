@@ -66,14 +66,6 @@ namespace Models.CLEM
             return properties.Keys.OrderBy(k => k);
         }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public FilterGroup()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.Filter;
-        }
-
         /// <inheritdoc/>
         public IEnumerable<PropertyInfo> GetProperty(string name) 
         {

@@ -140,14 +140,5 @@ namespace Models.CLEM.Resources
             }
             return Convert.ToSingle(Math.Min(MaximumValue, Math.Max(MinimumValue, Convert.ToDouble(value) + sd * randStdNormal)));
         }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public SetAttributeWithValue()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
-        }
-
     }
 }

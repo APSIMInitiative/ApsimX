@@ -41,14 +41,6 @@ namespace Models.CLEM.Resources
         public double[] ConceptionRateAsymptote { get; set; }
 
         /// <summary>
-        /// constructor
-        /// </summary>
-        public RuminantConceptionAdvanced()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
-        }
-
-        /// <summary>
         /// Calculate conception rate for a female
         /// </summary>
         /// <param name="female">Female to calculate conception rate for</param>

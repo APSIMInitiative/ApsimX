@@ -26,12 +26,5 @@ namespace Models.CLEM.Groupings
         [GreaterThanValue(0)]
         public double Value { get; set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public LabourFeedGroup()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
-        }
     }
 }

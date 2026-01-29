@@ -194,14 +194,6 @@ namespace Models.CLEM
         public string ErrorMessage = string.Empty;
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        public FileRuminantCohorts()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.FileReader;
-        }
-
-        /// <summary>
         /// Reads the specified file and returns a list of RuminantTypeCohort objects.
         /// </summary>
         /// <returns>List of RuminantTypeCohort objects.</returns>

@@ -17,12 +17,5 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/Labour/LabourAvailability.htm")]
     public class LabourAvailabilityList : LabourSpecifications
     {
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public LabourAvailabilityList()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
-        }
     }
 }

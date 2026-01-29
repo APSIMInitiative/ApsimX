@@ -47,14 +47,6 @@ namespace Models.CLEM.Groupings
         /// </summary>
         public bool VisibleCustomProperties() => Style == ParameterStyle.Specify;
     
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public RuminantDeathGroupRate()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
-        }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>

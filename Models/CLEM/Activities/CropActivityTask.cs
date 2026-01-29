@@ -28,14 +28,6 @@ namespace Models.CLEM.Activities
 
         double amountToSkip = 0;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        protected CropActivityTask()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
-        }
-
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {

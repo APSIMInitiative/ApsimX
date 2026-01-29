@@ -181,7 +181,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         public SetAttributeWithProperty()
         {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
             propertyInfo = typeof(RuminantType).GetProperty(PropertyOfIndividual);
         }
     }

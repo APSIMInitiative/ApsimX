@@ -179,14 +179,6 @@ namespace Models.CLEM
         private double[] distinctStkRates;
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        public FilePasture()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.FileReader;
-        }
-
-        /// <summary>
         /// Does file exist
         /// </summary>
         public bool FileExists

@@ -48,13 +48,5 @@ namespace Models.CLEM.Activities
         /// </summary>
         [JsonIgnore]
         public HumanFoodStoreType FoodStore { get; set; }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public LabourActivityFeedTargetPurchase()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
-        }
     }
 }

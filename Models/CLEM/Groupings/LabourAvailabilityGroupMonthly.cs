@@ -45,13 +45,5 @@ namespace Models.CLEM.Groupings
                 return 0;
             }
         }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public LabourAvailabilityGroupMonthly()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
-        }
     }
 }

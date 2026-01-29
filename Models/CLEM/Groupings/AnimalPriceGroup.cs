@@ -84,14 +84,6 @@ namespace Models.CLEM.Groupings
         /// <inheritdoc/>
         public IResourceType Resource { get { return Structure.FindParent<IResourceType>(recurse: true); } }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        protected AnimalPriceGroup()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
-        }
-
         /// <inheritdoc/>
         public event EventHandler PriceChangeOccurred;
 

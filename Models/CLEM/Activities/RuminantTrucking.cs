@@ -131,7 +131,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantTrucking()
         {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 

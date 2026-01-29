@@ -36,14 +36,6 @@ namespace Models.CLEM.Activities
         [GreaterThanEqualValue(0)]
         public double Multiplier { get; set; }
 
-        /// <summary>
-        /// Constructor for External multiplier
-        /// </summary>
-        public ResourceActivityExternalMultiplier()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.Filter;
-        }
-
         #region validation
         /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

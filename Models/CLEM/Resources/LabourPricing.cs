@@ -21,14 +21,6 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/Labour/LabourPricing.htm")]
     public class LabourPricing : CLEMModel, IValidatableObject
     {
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public LabourPricing()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
-        }
-
         #region validation
 
         /// <inheritdoc/>

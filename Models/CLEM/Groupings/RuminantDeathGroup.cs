@@ -28,14 +28,6 @@ namespace Models.CLEM.Groupings
         [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public RuminantDeathGroup()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
-        }
-
         /// <inheritdoc/>
         public virtual void DetermineDeaths(IEnumerable<Ruminant> individuals)
         {

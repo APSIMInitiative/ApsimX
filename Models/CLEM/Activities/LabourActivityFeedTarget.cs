@@ -79,13 +79,5 @@ namespace Models.CLEM.Activities
         /// </summary>
         [JsonIgnore]
         public bool TargetMaximumAchieved { get { return Math.Round(CurrentAchieved, 4) >= Math.Round(TargetMaximum, 4); } }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public LabourActivityFeedTarget()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
-        }
     }
 }

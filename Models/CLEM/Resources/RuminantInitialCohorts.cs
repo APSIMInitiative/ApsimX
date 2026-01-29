@@ -58,14 +58,6 @@ namespace Models.CLEM.Resources
         public bool WeightWarningOccurred = false;
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        protected RuminantInitialCohorts()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
-        }
-
-        /// <summary>
         /// Overrides the base class method to allow for initialization and needs to be done before StartOfSimulation.
         /// </summary>
         [EventSubscribe("DoInitialSummary")]

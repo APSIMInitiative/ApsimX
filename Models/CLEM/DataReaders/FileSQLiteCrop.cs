@@ -194,14 +194,6 @@ namespace Models.CLEM
         public string ErrorMessage = string.Empty;
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        public FileSQLiteCrop()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.FileReader;
-        }
-
-        /// <summary>
         /// Searches the DataTable created from the Forage File using the specified parameters.
         /// <returns></returns>
         /// </summary>

@@ -200,14 +200,6 @@ namespace Models.CLEM
         public string ErrorMessage = string.Empty;
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        public FilePricing()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.FileReader;
-        }
-
-        /// <summary>
         /// Get the DataTable view of this data
         /// </summary>
         /// <returns>The DataTable</returns>

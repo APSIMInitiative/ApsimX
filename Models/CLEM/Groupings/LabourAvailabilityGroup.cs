@@ -38,13 +38,5 @@ namespace Models.CLEM.Groupings
         {
             return Value;
         }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public LabourAvailabilityGroup()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
-        }
     }
 }

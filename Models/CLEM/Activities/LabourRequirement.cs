@@ -32,15 +32,6 @@ namespace Models.CLEM.Activities
         private readonly List<ResourceRequest> resourceList = new();
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        public LabourRequirement()
-        {
-            AllocationStyle = ResourceAllocationStyle.Manual;
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
-        }
-
-        /// <summary>
         /// An identifier for this Labour requirement based on parent requirements
         /// </summary>
         [Description("Labour identifier")]

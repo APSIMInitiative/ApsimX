@@ -40,12 +40,5 @@ namespace Models.CLEM.Resources
         [Description("Units")]
         public string Units { get; set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public ResourceUnitsConverter()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
-        }
     }
 }

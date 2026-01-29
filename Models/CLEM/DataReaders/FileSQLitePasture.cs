@@ -188,14 +188,6 @@ namespace Models.CLEM
         public string ErrorMessage = string.Empty;
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        public FileSQLitePasture()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.FileReader;
-        }
-
-        /// <summary>
         /// Does file exist
         /// </summary>
         public bool FileExists

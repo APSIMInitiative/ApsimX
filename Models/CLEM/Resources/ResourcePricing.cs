@@ -63,14 +63,6 @@ namespace Models.CLEM.Resources
         public ResourcePriceChangeDetails LastPriceChange { get; set; }
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        public ResourcePricing()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
-        }
-
-        /// <summary>
         /// Calulate the value of an amount of resource
         /// </summary>
         /// <param name="amount">Amount of resource to value</param>

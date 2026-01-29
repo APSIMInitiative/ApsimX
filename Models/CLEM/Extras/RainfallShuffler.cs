@@ -55,15 +55,6 @@ namespace Models.CLEM
         [JsonIgnore]
         public DateTime[] ShuffledYearsArray { get; set; }
 
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public RainfallShuffler()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.Default;
-        }
-
         /// <summary>An event handler to allow us to initialise resources</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>

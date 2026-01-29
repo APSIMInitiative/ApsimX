@@ -19,14 +19,6 @@ namespace Models.CLEM.Resources
     public class RuminantConceptionCurve : CLEMModel, IConceptionModel
     {
         /// <summary>
-        /// constructor
-        /// </summary>
-        public RuminantConceptionCurve()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
-        }
-
-        /// <summary>
         /// Conception rate coefficient of breeder
         /// </summary>
         [Description("Conception rate coefficient of breeder PW")]

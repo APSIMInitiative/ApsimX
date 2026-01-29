@@ -24,14 +24,6 @@ namespace Models.CLEM.Resources
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class AnimalPricing : CLEMModel, IValidatableObject
     {
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public AnimalPricing()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
-        }
-
         #region validation
 
         /// <inheritdoc/>

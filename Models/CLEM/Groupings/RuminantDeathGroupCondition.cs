@@ -50,14 +50,6 @@ namespace Models.CLEM.Groupings
         [Required, GreaterThanValue(0), Proportion]
         public double ProbabilityOfDying { get; set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public RuminantDeathGroupCondition()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
-        }
-
         /// <inheritdoc/>
         public override void DetermineDeaths(IEnumerable<Ruminant> individuals)
         {

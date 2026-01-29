@@ -277,14 +277,6 @@ namespace Models.CLEM
         public string ErrorMessage = string.Empty;
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        public FileCrop()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.FileReader;
-        }
-
-        /// <summary>
         ///
         /// </summary>
         /// <returns></returns>

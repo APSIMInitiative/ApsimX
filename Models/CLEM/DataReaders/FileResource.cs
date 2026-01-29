@@ -205,7 +205,6 @@ namespace Models.CLEM
         /// </summary>
         public FileResource()
         {
-            base.ModelSummaryStyle = HTMLSummaryStyle.FileReader;
             StyleOfDateEntry = DateStyle.YearAndMonth;
         }
 

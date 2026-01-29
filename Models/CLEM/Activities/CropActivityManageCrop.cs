@@ -65,14 +65,6 @@ namespace Models.CLEM.Activities
         [JsonIgnore]
         public LandType LinkedLandItem { get; set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public CropActivityManageCrop()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubActivityLevel2;
-        }
-
         /// <summary>An event handler to allow us to initialise</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>

@@ -28,12 +28,5 @@ namespace Models.CLEM.Groupings
         [Required, GreaterThanEqualValue(0)]
         public double Value { get; set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        protected LabourPriceGroup()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
-        }
     }
 }
