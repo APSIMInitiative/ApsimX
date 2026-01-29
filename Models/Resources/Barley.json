@@ -6,11 +6,6 @@
   "Children": [
     {
       "$type": "Models.PMF.Plant, Models",
-      "Phenology": null,
-      "Arbitrator": null,
-      "structure": null,
-      "Leaf": null,
-      "Root": null,
       "Name": "Barley",
       "ResourceName": "WinterCereal",
       "Children": [
@@ -795,11 +790,11 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].CAMP.FLNparams.MinLN = 9",
+                "[Phenology].CAMP.FLNparams.MinLN = 8 // 9",
                 "[Phenology].CAMP.FLNparams.PpLN = 6",
                 "[Phenology].CAMP.FLNparams.VrnLN = 0",
                 "[Phenology].CAMP.FLNparams.VxPLN = 0",
-                "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 85",
+                "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 95 // 85",
                 "[Phenology].PhyllochronPpSensitivity.FixedValue = 2",
                 "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
               ],
