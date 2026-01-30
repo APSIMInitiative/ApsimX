@@ -48,6 +48,7 @@
       <object class="GtkPaned" id="vpaned1">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
+        <property name="orientation">horizontal</property>
         <child>
           <object class="GtkFrame" id="previewBox">
             <property name="visible">True</property>
