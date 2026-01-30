@@ -232,7 +232,7 @@
           "Children": [
             {
               "$type": "Models.Documentation, Models",
-              "Text": "The wheat models outputs of phase names (Phenology.CurrentPhase.Name), stage names (Phenology.CurrentStageName) and decimal stage (Phenology.Stage) are consistent with the population culm development score (PCSD) as described by [Celestina2023]. \nObservations recorded following the protocole outlined by [Celestina2023] are suitable for testing model accuracy and calibrating cultivar coefficients.\n\nWheat exhibits a range of developmental responses to environment and these are strongly influenced by genotype characteristics. \nTemperature is the primary driver of development, increasing development rates and decreasing phase durations as it increases.  These affects are captured by thermal time.  However, wheat also exhibits cold and photoperiod sensitivities in its Vernalisaing phase and further photoperiod sensitivity in the SpikeletDifferenation and HeadEmergence phases.  Photoperiod responses are seen as a reduction in the length of a phase for a photoperiod sensitive genotype in response to a longer photoperiod.  Vernalisation responses are more complicated as they are driven by cool temperature but interact with photoperiod.  For vernalisation sensitive varieties (Winter types), exposure to cool temperatures and/or short photoperiods during the Vernalising phase may reduce its thermal time duration.  \n\nAPSIM wheat implements the Cereal Anthesis Molecular Phenology (<a href=\"https://www.apsim.info/wp-content/uploads/2025/09/camp-model-description.docx\">CAMP</a>) model to simulate development.  It is based on the Kirby Framework which assumes the timing of anthesis is a result of the timing of flag leaf and an additional thermal time passage from there to heading then anthesis.  It also assumes the timing of flag leaf is a result of the Final Leaf Number (which sets a target) and leaf appearance rate (which sets the rate of progress toward the target).  Leaf appearance rate is a function of Thermal time and a genotype specific Phyllochron which changes with Haun stage as described by [Jamieson_LeafAppearance_1995].  \n\nFinal Leaf Number (FLN) is set on the day that terminal spikelet occurs as: \n\nFLN = 2.85 + 1.1 * TSHS  \n\nWhere TSHS is the Haun stage on the day terminal spikelet stage occurs.  Terminal spikelet is at the end of the SpikeletDifferentaiation phase which is preceeded by the Emerging and Vernalising phases.  The mechanisums for progress through each of these phase are described below\n\n\n",
+              "Text": "The wheat models outputs of phase names (Phenology.CurrentPhase.Name), stage names (Phenology.CurrentStageName) and decimal stage (Phenology.Stage) are consistent with the population culm development score (PCSD) as described by [Celestina2023]. \nObservations recorded following the protocole outlined by [Celestina2023] are suitable for testing model accuracy and calibrating cultivar coefficients.\n\nWheat exhibits a range of developmental responses to environment and these are strongly influenced by genotype characteristics. \nTemperature is the primary driver of development, increasing development rates and decreasing phase durations as it increases.  These affects are captured by thermal time.  However, wheat also exhibits cold and photoperiod sensitivities in its Vernalisaing phase and further photoperiod sensitivity in the SpikeletDifferenation and HeadEmergence phases.  Photoperiod responses are seen as a reduction in the length of a phase for a photoperiod sensitive genotype in response to a longer photoperiod.  Vernalisation responses are more complicated as they are driven by cool temperature but interact with photoperiod.  For vernalisation sensitive varieties (Winter types), exposure to cool temperatures and/or short photoperiods during the Vernalising phase may reduce its thermal time duration.  \n\nAPSIM wheat implements the Cereal Anthesis Molecular Phenology (<a href=\"https://www.apsim.info/wp-content/uploads/2025/09/camp-model-description-1.pdf\">CAMP</a>) model to simulate development.  It is based on the Kirby Framework which assumes the timing of anthesis is a result of the timing of flag leaf and an additional thermal time passage from there to heading then anthesis.  It also assumes the timing of flag leaf is a result of the Final Leaf Number (which sets a target) and leaf appearance rate (which sets the rate of progress toward the target).  Leaf appearance rate is a function of Thermal time and a genotype specific Phyllochron which changes with Haun stage as described by [Jamieson_LeafAppearance_1995].  \n\nFinal Leaf Number (FLN) is set on the day that terminal spikelet occurs as: \n\nFLN = 2.85 + 1.1 * TSHS  \n\nWhere TSHS is the Haun stage on the day terminal spikelet stage occurs.  Terminal spikelet is at the end of the SpikeletDifferentaiation phase which is preceeded by the Emerging and Vernalising phases.  The mechanisums for progress through each of these phase are described below",
               "Name": "Documentation",
               "ResourceName": null,
               "Children": [],
@@ -2110,18 +2110,68 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0123,
-              "Units": null,
+              "$type": "Models.Functions.PhaseLookup, Models",
               "Name": "MinimumNConc",
               "ResourceName": null,
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.PhaseLookupValue, Models",
+                  "Start": "FlagLeafAppearance",
+                  "End": "MaximumGrainLength",
+                  "Name": "EarlyGrainFill",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.032,
+                      "Units": null,
+                      "Name": "Min",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.PhaseLookupValue, Models",
+                  "Start": "MaximumGrainLength",
+                  "End": "HarvestRipe",
+                  "Name": "Reproductive",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0123,
+                      "Units": null,
+                      "Name": "Min",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Potential branching rate is determined by the commonly observed pattern of tillering in wheat, in which each tiller emerges with the third leaf on its parent axis (e.g. first tiller emerges at the same time as the third leaf on the main stem, the first secondary tiller appears with the third leaf on tiller 1).  This is described as a simple function of main stem leaf number.",
+                  "Name": "Memo",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.035,
+              "FixedValue": 0.0325,
               "Units": null,
               "Name": "MaxNConcDailyGrowth",
               "ResourceName": null,
@@ -2131,7 +2181,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0463,
+              "FixedValue": 0.0325,
               "Units": null,
               "Name": "MaximumNConc",
               "ResourceName": null,
@@ -2724,13 +2774,13 @@
                                       "X": [
                                         3.0,
                                         5.0,
-                                        6.0,
+                                        8.0,
                                         9.0
                                       ],
                                       "Y": [
                                         0.5,
                                         0.2,
-                                        0.2,
+                                        0.0,
                                         0.0
                                       ],
                                       "Name": "XYPairs",
@@ -3094,15 +3144,6 @@
           "ResourceName": null,
           "Children": [
             {
-              "$type": "Models.Documentation, Models",
-              "Text": "\n\n**Canopy Development**\n\nCalculations are as follows:\n \n```\n\nArea  = InitialArea + AccumulatedChange\nInitialArea = AreaPerPlant x Population\nAccumulatedChange = AreaGrowth - AreaSenesced - AreaRemoved - AreaShrinkage\nAreaGrowth = SpecificLeafArea x Allocated.StructuralWt\nAreaSenesced = SpecificLeafAreaCanopy x Senesced.StructuralWt\nAreaRemoved = SpecificLeafAreaCanopy x Removed.StructuralWt\nAreaShrinkage = SpecificLeafAreaCanopy x Live.StructuralWt x 0.2 x ThermalTime/TTFlagLeafToAnthesis\n\n```\n \nwhere\n \nName | Description | Units\n-|-|-\nArea | Green leaf area per unit ground area | m<sup>2</sup>/m<sup>2</sup>\nInitialArea | Leaf area of an individual plant at emerence | m<sup>2</sup>\nAreaGrowth | Accumulated leaf area growth from emergence to flag leaf | m<sup>2</sup>/m<sup>2</sup>\nAreaSenesced | Accumulated leaf area senescence from emergence to harvest ripe | m<sup>2</sup>/m<sup>2</sup>\nAreaRemoved | Accumulated leaf area removed (e.g. grazing) from emergence to harvest ripe| m<sup>2</sup>/m<sup>2</sup>\nAreaShrinkage | Accumulated leaf area reduction due to leaf shrinkage from flag leaf to anthesis| m<sup>2</sup>/m<sup>2</sup>\nSpecificLeafArea | Area per unit mass of green leaf for today's leaf growth | m<sup>2</sup>/g\nSpecificLeafAreaCanopy | Area per unit mass of green leaf currently in the entire crop canopy | m<sup>2</sup>/g\nAllocated.StructuralWt | Mass of dm allocated to the leaf from daily growth by the organ arbitrator. | g/m<sup>2</sup>\nSenesced.StructuralWt | Mass of live dm senesced on the current day. | g/m<sup>2</sup>\nRemoved.StructuralWt | Mass of live dm removed on the current day. | g/m<sup>2</sup>\nThermalTime | Daily thermal time calculated by the phenology model | <sup>o</sup>C\nTTFlagLeafToAnthesis | Thermal time target for the period from Flag leaf to Anthesis | <sup>o</sup>C\n\n\n**Potential Leaf Growth**\n\nPotential growth in leaf area is used to calculate the leaf dry matter demand.  The potential increase in leaf area is calculated with estimates of leaf appearance, stem dynamics and plant population.  The appearance and sizes of leaves are assumed to be similar on all stems.  Leaf size is assumed to increase from emergence to the beginning of stem elongation.  Leaf appearance is calculated within the Phenology model as part of the <a href=\"https://www.apsim.info/wp-content/uploads/2025/09/camp-model-description.docx\">CAMP</a> model.\n\nNote that leaf biomass is assumed to consist of entirely structural dry matter.\n\nCalculations are as follows:\n\n```\nif in vegetative phase (ie Emergence to Flag Leaf)\n   DMDemand.Structural.Wt = deltaLAIPotential x SpecificLeafArea\nelse\n   DMDemand.Structural.Wt = 0.0\nDMDemand.Storage.Wt = 0.0\nDMDemand.Metabolic.Wt = 0.0\nDeltaLAIPotential = AreaLargestLeaf x RelativeArea x Population x StemNumberPerPlant x LAR x ExpansionStressFactor\nLAR = ThermalTime / Phyllochron\n\n\n```\n\nwhere\n \nName | Description | Units\n-|-|-\nDMDemand.Structural.Wt | Daily potential leaf structural growth (ie daily DMD demand for leaf growth) | g/m<sup>2</sup>\ndeltaLAIPotential | Daily potential increase in LAI if DM supply from arbitrator is adequate | m<sup>2</sup>/m<sup>2</sup>/d\nAreaLargestLeaf | The area of the largest leaf on the main stem. | m<sup>2</sup>\nRelativeArea | The size of the currently expanding leaf compared to the largest leaf on the main stem | 0-1\nStemNumberPerPlant | The number of currently expanding stems on each plant. | /plant\nLAR | The Leaf Appearance Rate, or the number of leaves appearing on the current day. | /day\nThermalTime | Daily thermal time calculated by the phenology model | <sup>o</sup>C\nPhyllochron | The thermal time required for the appearance of each leaf on the main stem. | <sup>o</sup>C\n\n\n**Tiller Dynamics**\n\nThe number of stems on each plant is calculated by adding an accumulation of the daily tillering rate to the main stem.  Tillering rate is driven by main stem leaf number to account for the appearance of the main stem tillers with each main stem leaf after leaf three and each higher order tiller after the third leaf on each sub-tiller.  Tillering will occur at optimum rates whilst canopy cover is less than 20% and cease once cover is above 80%.\n\nCalculations are as follows:\n\n```\nStemNumberPerPlant = 1.0 + TillerNumber\nTillerNumber = sum of (DeltaHS x TilleringRate) from Emergence to MaximumSpikeletPrimordia\nTilleringRate = PotentialTilleringRate x min(ExpansionStress, CoverEffect)\n\n```\n\nwhere\n \nName | Description | Units\n-|-|-\nStemNumberPerPlant | Total number of stems on each plant (main stem and tillers) | /plant\nTillerNumber | Total number of tillers on each plant (including first, second, third,... order tillers. | /plant\nTilleringRate | Number of tillers appearing anywhere on the plant during the current day | /day\nPotentialTilleringRate | Potential number of tillers that could appear today in the absence of limiting factors| /day\nExpansionStress | Rate modifier accounting for the effect of water, nitrogen or temperature. | 0-1\nCoverEffect | Rate modifier accounting for the effect of shading on tiller appearance. | 0-1\n\n\n**Specific Green Leaf Area**\nThe winter cereal model estimates the specific leaf area of daily leaf growth directly rather than as an emergent property of separaete area and mass growth functions as used in many earlier APSIM wheat models.  An optimal SpecificLeafArea is reduced below 15C to a factor of 50% at a mean daily temperature of 5C.  A WaterTensionFactor (provided by the Root Model) is used to capture effects of low leaf water potential on SpecificLeafArea and this will reduce SpecificLeafArea by 50% at a WaterTensionFactor of 0.8.  These will result in a maximum reduction in SpecificLeafArea of 50% of the optimum value under either water or temperature limitation.\n\n```\nSpecificLeafArea = PotentialSpecificLeafArea x min (SWFactor, TemperatureFactor)\n\n```\n\nwhere\n \nName | Description | Units\n-|-|-\nSpecificLeafArea | Area per unit mass of green leaf for today's leaf growth | m<sup>2</sup>/g\nPotentialSpecificLeafArea | SpecificLeafArea for daily leaf growth under optimal growing conditions | m<sup>2</sup>/g\nSWFactor | Water Factor to reduce SpecificLeafArea under water limiting conditions | 0-1\nTemperatureFactor | Water Factor to reduce SpecificLeafArea under low temperature conditions | 0-1\n\n\n\n**Canopy Light Extinction Coefficients**\nCanopy light interception is calculated by the methods described above using light extinction coefficients.  The extinction coefficient for green leaf is assumed to change with plant growth stage and row spacing.  The extinction coefficient is assumed to have a higher value up until DoubleRidge growth stage with leaves on small plants often falling more horizontally for this early growth.  This initial value is a function of row spacing with a value of 0.9 at row spacing up to 150mm, decreasing to 0.7 at 500mm row spacing. Extinction coefficient then falls to a lower, stable (and row spacing independant) value once crops reach flag leaf stage.\n\n```\nExtinctionCoefficient = LateVegetativeValue + (EarlyGrowthValue - LateVegetativeVale) x DevelopmentFactor\n\n```\n\nwhere\n \nName | Description | Units\n-|-|-\nExtinctionCoefficient | Daily light extinction coefficient for green leaf area for the current day | -\nLateVegetativeValue | The value of daily lignt extinction coefficient for canopies after flag leaf stage | -\nEarlyGrowthValue | The value of daily light extinction coefficient for canopies prior to double ridge | -\nDevelopmentFactor | A function to scale  daily light extinction coefficient between double ridge and flag leaf stages | -\n",
-              "Name": "Documentation",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
               "$type": "Models.Functions.SupplyFunctions.RUEModel, Models",
               "Name": "Photosynthesis",
               "ResourceName": null,
@@ -3344,7 +3385,7 @@
                     },
                     {
                       "$type": "Models.Functions.SubtractFunction, Models",
-                      "Name": "AccumulatedChange",
+                      "Name": "Change",
                       "ResourceName": null,
                       "Children": [
                         {
@@ -4020,8 +4061,8 @@
                                   "$type": "Models.Functions.XYPairs, Models",
                                   "X": [
                                     0.0,
-                                    0.2,
-                                    0.8,
+                                    0.55,
+                                    0.95,
                                     1.0
                                   ],
                                   "Y": [
@@ -4096,57 +4137,147 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.SubtractFunction, Models",
+              "$type": "Models.Functions.MinimumFunction, Models",
               "Name": "StemNumberPerPlant",
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Functions.AddFunction, Models",
-                  "Name": "Total",
+                  "$type": "Models.Functions.SubtractFunction, Models",
+                  "Name": "StemNumberPerPlant",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "MainStem",
+                      "$type": "Models.Functions.AddFunction, Models",
+                      "Name": "Total",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1.0,
+                          "Units": null,
+                          "Name": "MainStem",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.AccumulateFunction, Models",
+                          "StartStageName": "Emergence",
+                          "EndStageName": "MaximumSpikeletPrimordia",
+                          "ResetStageName": null,
+                          "FractionRemovedOnCut": 0.0,
+                          "FractionRemovedOnHarvest": 1.0,
+                          "FractionRemovedOnGraze": 0.0,
+                          "FractionRemovedOnPrune": 0.0,
+                          "Name": "Tillers",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "Tillering",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Phenology].HaunStage.Delta",
+                                  "Name": "DeltaNode",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Leaf].TilleringRate",
+                                  "Name": "TilleringRate",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.Functions.AccumulateFunction, Models",
-                      "StartStageName": "Emergence",
-                      "EndStageName": "MaximumSpikeletPrimordia",
+                      "StartStageName": "MaximumSpikeletPrimordia",
+                      "EndStageName": "MaximumGrainLength",
                       "ResetStageName": null,
                       "FractionRemovedOnCut": 0.0,
                       "FractionRemovedOnHarvest": 1.0,
                       "FractionRemovedOnGraze": 0.0,
                       "FractionRemovedOnPrune": 0.0,
-                      "Name": "Tillers",
+                      "Name": "DeadTillers",
                       "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "Tillering",
+                          "Name": "DailyTillerAttrition",
                           "ResourceName": null,
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].HaunStage.Delta",
-                              "Name": "DeltaHS",
+                              "VariableName": "[Leaf].StemNumberPerPlant.StemNumberPerPlant",
+                              "Name": "LiveTillers",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].TilleringRate",
-                              "Name": "TilleringRate",
+                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                              "Name": "TillerAttritionRate",
                               "ResourceName": null,
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Memo, Models",
+                                  "Text": "Hello World",
+                                  "Name": "Memo",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "X": [
+                                    0.0,
+                                    0.002,
+                                    0.003,
+                                    0.004
+                                  ],
+                                  "Y": [
+                                    0.03,
+                                    0.02,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "Name": "XYPairs",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Leaf].TillerProsperity",
+                                  "Name": "XValue",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -4163,12 +4294,32 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "DeadTillers",
+                  "$type": "Models.Functions.ProtectedDivideFunction, Models",
+                  "NumeratorErrVal": 1.0,
+                  "DenominatorErrVal": 1.0,
+                  "Name": "PopulationSpecificMaximum",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 2400.0,
+                      "Units": null,
+                      "Name": "Constant",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Plant].SowingData.Population",
+                      "Name": "Population",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -4317,6 +4468,15 @@
                   "Name": "Potential",
                   "ResourceName": null,
                   "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Hello World",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
@@ -4494,7 +4654,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
+              "FixedValue": 0.03,
               "Units": null,
               "Name": "NRetranslocationFactor",
               "ResourceName": null,
@@ -4564,14 +4724,16 @@
                   "X": [
                     3.0,
                     4.5,
-                    6.0,
-                    8.0
+                    5.5,
+                    9.5,
+                    11.0
                   ],
                   "Y": [
                     0.06,
-                    0.05,
+                    0.06,
+                    0.045,
                     0.035,
-                    0.02
+                    0.005
                   ],
                   "Name": "XYPairs",
                   "ResourceName": null,
@@ -5460,7 +5622,7 @@
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
                                   "VariableName": "[Plant].SowingData.Population",
-                                  "Name": "Population",
+                                  "Name": "PlantNumber",
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
@@ -5469,7 +5631,7 @@
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
                                   "VariableName": "[Leaf].StemNumberPerPlant",
-                                  "Name": "StemNumberPerPlant",
+                                  "Name": "BranchNumber",
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
@@ -5911,6 +6073,62 @@
               ],
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.MovingAverageFunction, Models",
+              "NumberOfDays": 5,
+              "StageToStartMovingAverage": "Emergence",
+              "Name": "TillerProsperity",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "This is calculated to represent the supply of asslimilate to individual tillers over the past 5 days to use as an index to determine tiller mortality.  When tiller numbers are high or total crop assimilate supply is small there will not be enough assimilate to maintain all of the tillers so the model will senesce some. ",
+                  "Name": "Memo",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.DivideFunction, Models",
+                  "Name": "TillerGrowthRate",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Arbitrator].DM.TotalFixationSupply",
+                      "Name": "DailyGrowth",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].ThermalTime",
+                      "Name": "ThermalTime",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].StemPopulation",
+                      "Name": "StemPopulation",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "Enabled": true,
@@ -6007,22 +6225,16 @@
                 {
                   "$type": "Models.Functions.XYPairs, Models",
                   "X": [
-                    3.0,
-                    4.0,
-                    5.0,
-                    5.5,
-                    6.5,
-                    7.0,
-                    8.0
+                    6.0,
+                    8.5,
+                    10.2,
+                    "NaN"
                   ],
                   "Y": [
-                    0.025,
-                    0.025,
-                    0.025,
-                    0.025,
-                    0.025,
-                    0.025,
-                    0.025
+                    0.02,
+                    0.02,
+                    0.005,
+                    "NaN"
                   ],
                   "Name": "XYPairs",
                   "ResourceName": null,
@@ -6053,12 +6265,30 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.004,
-              "Units": null,
+              "$type": "Models.Functions.MultiplyFunction, Models",
               "Name": "MinimumNConc",
               "ResourceName": null,
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Spike].MaximumNConc",
+                  "Name": "MaximumNConc",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.7,
+                  "Units": null,
+                  "Name": "MinimumNConc",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -6130,7 +6360,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
+                      "FixedValue": 1.0,
                       "Units": null,
                       "Name": "DMRetranslocationFactor",
                       "ResourceName": null,
@@ -6223,7 +6453,7 @@
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
                           "Start": "Emergence",
-                          "End": "Anthesis",
+                          "End": "HeadEmergence",
                           "Name": "VegetativeGrowth",
                           "ResourceName": null,
                           "Children": [
@@ -6243,14 +6473,14 @@
                         },
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "Anthesis",
+                          "Start": "HeadEmergence",
                           "End": "MaximumGrainLength",
                           "Name": "ReproductiveGrowth",
                           "ResourceName": null,
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.7,
+                              "FixedValue": 0.0,
                               "Units": null,
                               "Name": "StructuralFractionGF",
                               "ResourceName": null,
@@ -6280,8 +6510,35 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "$type": "Models.Functions.SubtractFunction, Models",
                   "Name": "Storage",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Spike].PotentialGrowth",
+                      "Name": "DMDemand",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Spike].DMDemands.Structural",
+                      "Name": "StructuralFraction",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "StorageHold",
                   "ResourceName": null,
                   "Children": [
                     {
@@ -6626,7 +6883,7 @@
             },
             {
               "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
-              "Name": "PotentialGrowth",
+              "Name": "PotentialGrowthPF",
               "ResourceName": null,
               "Children": [
                 {
@@ -6781,6 +7038,141 @@
               ],
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.PhaseLookupValue, Models",
+              "Start": "MaximumSpikeletPrimordia",
+              "End": "MaximumGrainLength",
+              "Name": "PotentialGrowth",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.MaximumFunction, Models",
+                  "Name": "EmergenceToRapidGrainFill",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.SubtractFunction, Models",
+                      "Name": "EmergenceToRapidGrainFill",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "TargetWt",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.AddFunction, Models",
+                              "Name": "PotentialAboveGroundWt",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[AboveGroundLive].Wt",
+                                  "Name": "AboveGroundLiveWt",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[AboveGroundDead].Wt",
+                                  "Name": "AboveGroundDeadWt",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Leaf].Photosynthesis",
+                                  "Name": "DailyGrowth",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                              "Name": "SpikeFraction",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "X": [
+                                    3.0,
+                                    5.5,
+                                    6.0,
+                                    7.0,
+                                    8.0,
+                                    9.0
+                                  ],
+                                  "Y": [
+                                    0.0,
+                                    0.0,
+                                    0.04,
+                                    0.22,
+                                    0.22,
+                                    0.22
+                                  ],
+                                  "Name": "XYPairs",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Phenology].Stage",
+                                  "Name": "XValue",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Spike].Wt",
+                          "Name": "CurrentWt",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Zero",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "Enabled": true,
@@ -6902,19 +7294,17 @@
                   "$type": "Models.Functions.XYPairs, Models",
                   "X": [
                     3.0,
-                    4.0,
-                    5.0,
+                    4.5,
                     6.0,
-                    7.0,
-                    8.0
+                    9.5,
+                    11.0
                   ],
                   "Y": [
-                    0.07,
                     0.055,
-                    0.04,
-                    0.015,
+                    0.055,
+                    0.02,
                     0.012,
-                    0.012
+                    0.005
                   ],
                   "Name": "XYPairs",
                   "ResourceName": null,
@@ -7070,58 +7460,12 @@
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
                       "Name": "DMRetranslocationFactor",
                       "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            0.4,
-                            0.5,
-                            1.0
-                          ],
-                          "Y": [
-                            0.0,
-                            0.0,
-                            0.1,
-                            0.1
-                          ],
-                          "Name": "XYPairs",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.DivideFunction, Models",
-                          "Name": "XValue",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].GrainFilling.ProgressThroughPhase",
-                              "Name": "TTinPhase",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].GrainFilling.Target",
-                              "Name": "TTTarget",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -7246,7 +7590,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.7,
+                              "FixedValue": 0.6,
                               "Units": null,
                               "Name": "Fraction",
                               "ResourceName": null,
@@ -7267,7 +7611,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.7,
+                              "FixedValue": 0.0,
                               "Units": null,
                               "Name": "Fraction",
                               "ResourceName": null,
@@ -7297,8 +7641,35 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "$type": "Models.Functions.SubtractFunction, Models",
                   "Name": "Storage",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Stem].PotentialGrowth",
+                      "Name": "DMDemand",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Stem].DMDemands.Structural",
+                      "Name": "StructuralDemand",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "StorageHold",
                   "ResourceName": null,
                   "Children": [
                     {
@@ -7374,7 +7745,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 0.0,
                   "Units": null,
                   "Name": "QStoragePriority",
                   "ResourceName": null,
@@ -7674,7 +8045,7 @@
             },
             {
               "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
-              "Name": "PotentialGrowth",
+              "Name": "PotentialGrowthPF",
               "ResourceName": null,
               "Children": [
                 {
@@ -7898,6 +8269,137 @@
                   "Name": "AboveGround",
                   "ResourceName": null,
                   "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.PhaseLookupValue, Models",
+              "Start": "Emergence",
+              "End": "MaximumGrainLength",
+              "Name": "PotentialGrowth",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.MaximumFunction, Models",
+                  "Name": "EmergenceToRapidGrainFill",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.SubtractFunction, Models",
+                      "Name": "EmergenceToRapidGrainFill",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "TargetWt",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.AddFunction, Models",
+                              "Name": "PotentialAboveGroundWt",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[AboveGroundLive].Wt",
+                                  "Name": "AboveGroundLiveWt",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[AboveGroundDead].Wt",
+                                  "Name": "AboveGroundDeadWt",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Leaf].Photosynthesis",
+                                  "Name": "DailyGrowth",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                              "Name": "StemFraction",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "X": [
+                                    3.0,
+                                    5.0,
+                                    6.0,
+                                    7.0
+                                  ],
+                                  "Y": [
+                                    0.0,
+                                    0.36,
+                                    0.7,
+                                    0.7
+                                  ],
+                                  "Name": "XYPairs",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Phenology].Stage",
+                                  "Name": "XValue",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Stem].Wt",
+                          "Name": "CurrentWt",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Zero",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
