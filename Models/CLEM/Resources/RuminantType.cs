@@ -108,7 +108,7 @@ namespace Models.CLEM.Resources
             if (Structure.FindChildren<AnimalPricing>().Count() > 0)
             {
                 PriceList = Structure.FindChildren<AnimalPricing>().FirstOrDefault();
-                // Components are not permanently modifed during simulation so no need for clone: PriceList = Apsim.Clone(this.FindAllChildren<AnimalPricing>().FirstOrDefault()) as AnimalPricing;
+                // Components are not permanently modified during simulation so no need for clone: PriceList = Apsim.Clone(this.FindAllChildren<AnimalPricing>().FirstOrDefault()) as AnimalPricing;
 
                 priceGroups = Structure.FindChildren<AnimalPriceGroup>(relativeTo: PriceList).Cast<AnimalPriceGroup>().ToList();
             }
@@ -194,7 +194,7 @@ namespace Models.CLEM.Resources
             // try and estimate the previous birth and conception date
             // start stepping backward by gestation + wait + oestrus length
             // apply the first conception rate in the list as an idea of failure rate.
-            // set details at first successfull
+            // set details at first successful
             // go right back to maturity to work out number of births.
             // IS THIS NEEDED OR DOES IT CORRUPT THE MODEL OUTCOMES
 

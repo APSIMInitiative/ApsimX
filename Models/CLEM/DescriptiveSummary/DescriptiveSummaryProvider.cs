@@ -1,16 +1,10 @@
-using DocumentFormat.OpenXml.Wordprocessing;
-using Mapsui.Providers.Wfs.Utilities;
-using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
-using Models.Core.ApsimFile;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 
 namespace Models.CLEM.DescriptiveSummary;
 
