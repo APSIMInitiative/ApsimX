@@ -33,6 +33,16 @@ namespace Models.CLEM.Groupings
         private IEnumerable<string> GetParameters() => Parent?.GetParameterNames();
 
         /// <summary>
+        /// The current enumerable of properties initialised for the filter
+        /// </summary>
+        public IEnumerable<PropertyInfo> AllPropertyInfoFound { get { return propertyInfo; } }
+
+        /// <summary>
+        /// The current enumerable of properties initialised for the filter
+        /// </summary>
+        public bool IsOperatorValid { get { return validOperator; } }
+
+        /// <summary>
         /// The property or method to filter by
         /// </summary>
         [Description("Property or method")]
@@ -239,94 +249,94 @@ namespace Models.CLEM.Groupings
             return true;
         }
 
-        /// <summary>
-        /// Convert filter to string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return FilterString(false);
-        }
+        ///// <summary>
+        ///// Convert filter to string
+        ///// </summary>
+        ///// <returns></returns>
+        //public override string ToString()
+        //{
+        //    return FilterString(false);
+        //}
 
-        /// <summary>
-        /// Convert filter to html string
-        /// </summary>
-        /// <returns></returns>
-        public string ToHTMLString()
-        {
-            return FilterString(true);
-        }
+        ///// <summary>
+        ///// Convert filter to html string
+        ///// </summary>
+        ///// <returns></returns>
+        //public string ToHTMLString()
+        //{
+        //    return FilterString(true);
+        //}
 
-        private string FilterString(bool htmltags)
-        {
-            Initialise();
+        //private string FilterString(bool htmltags)
+        //{
+        //    Initialise();
 
-            using StringWriter filterWriter = new();
-            if (propertyInfo.Any() == false)
-            {
-                filterWriter.Write($"Filter:");
-                string errorLink = (htmltags) ? " <span class=\"errorlink\">" : " ";
-                string spanClose = (htmltags) ? "</span>" : "";
-                string message = (PropertyOfIndividual == null || PropertyOfIndividual == "") ? "Not Set" : $"Unknown: {PropertyOfIndividual}";
-                filterWriter.Write($"{errorLink}{message}{spanClose}");
-                return filterWriter.ToString();
-            }
+        //    using StringWriter filterWriter = new();
+        //    if (propertyInfo.Any() == false)
+        //    {
+        //        filterWriter.Write($"Filter:");
+        //        string errorLink = (htmltags) ? " <span class=\"errorlink\">" : " ";
+        //        string spanClose = (htmltags) ? "</span>" : "";
+        //        string message = (PropertyOfIndividual == null || PropertyOfIndividual == "") ? "Not Set" : $"Unknown: {PropertyOfIndividual}";
+        //        filterWriter.Write($"{errorLink}{message}{spanClose}");
+        //        return filterWriter.ToString();
+        //    }
 
-            filterWriter.Write($"Filter:");
-            bool trueFalse = IsOperatorTrueFalseTest();
-            if (trueFalse | (propertyInfo != null && propertyInfo.Last().PropertyType.IsEnum))
-            {
-                if (propertyInfo.Last().PropertyType == typeof(bool))
-                {
-                    if (Operator == ExpressionType.IsFalse || Value?.ToString().ToLower() == "false")
-                    {
-                        filterWriter.Write(" not");
-                    }
+        //    filterWriter.Write($"Filter:");
+        //    bool trueFalse = IsOperatorTrueFalseTest();
+        //    if (trueFalse | (propertyInfo != null && propertyInfo.Last().PropertyType.IsEnum))
+        //    {
+        //        if (propertyInfo.Last().PropertyType == typeof(bool))
+        //        {
+        //            if (Operator == ExpressionType.IsFalse || Value?.ToString().ToLower() == "false")
+        //            {
+        //                filterWriter.Write(" not");
+        //            }
 
-                    filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
-                }
-                else
-                {
-                    filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
-                    if (validOperator)
-                    {
-                        filterWriter.Write((Operator == ExpressionType.IsFalse || Value?.ToString().ToLower() == "false") ? " not" : " is");
-                    }
-                    else
-                    {
-                        string errorLink = (htmltags) ? "<span class=\"errorlink\">" : "";
-                        string spanClose = (htmltags) ? "</span>" : "";
-                        filterWriter.Write($"{errorLink}invalid operator {OperatorToSymbol()}{spanClose}");
-                    }
-                    filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(Value?.ToString(), "No value", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
-                }
-            }
-            else
-            {
-                filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+        //            filterWriter.Write($" {.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+        //        }
+        //        else
+        //        {
+        //            filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+        //            if (validOperator)
+        //            {
+        //                filterWriter.Write((Operator == ExpressionType.IsFalse || Value?.ToString().ToLower() == "false") ? " not" : " is");
+        //            }
+        //            else
+        //            {
+        //                string errorLink = (htmltags) ? "<span class=\"errorlink\">" : "";
+        //                string spanClose = (htmltags) ? "</span>" : "";
+        //                filterWriter.Write($"{errorLink}invalid operator {OperatorToSymbol()}{spanClose}");
+        //            }
+        //            filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(Value?.ToString(), "No value", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+        //        }
+        //    }
+        //    else
+        //    {
+        //        filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
 
-                if (propertyInfo != null)
-                {
-                    if (validOperator)
-                    {
-                        filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
-                    }
-                    else
-                    {
-                        string errorLink = (htmltags) ? "<span class=\"errorlink\">" : "";
-                        string spanClose = (htmltags) ? "</span>" : "";
-                        filterWriter.Write($"{errorLink}invalid operator {OperatorToSymbol()}{propertyInfo.Last().PropertyType.Name}{spanClose}");
-                    }
-                }
-                else
-                {
-                    filterWriter.Write($" {DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
-                }
+        //        if (propertyInfo != null)
+        //        {
+        //            if (validOperator)
+        //            {
+        //                filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+        //            }
+        //            else
+        //            {
+        //                string errorLink = (htmltags) ? "<span class=\"errorlink\">" : "";
+        //                string spanClose = (htmltags) ? "</span>" : "";
+        //                filterWriter.Write($"{errorLink}invalid operator {OperatorToSymbol()}{propertyInfo.Last().PropertyType.Name}{spanClose}");
+        //            }
+        //        }
+        //        else
+        //        {
+        //            filterWriter.Write($" {DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+        //        }
 
-                filterWriter.Write($" {DisplaySummaryValueSnippet(Value?.ToString(), "No value", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
-            }
-            return filterWriter.ToString();
-        }
+        //        filterWriter.Write($" {DisplaySummaryValueSnippet(Value?.ToString(), "No value", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+        //    }
+        //    return filterWriter.ToString();
+        //}
 
         #region validation
         /// <inheritdoc/>
@@ -396,28 +406,6 @@ namespace Models.CLEM.Groupings
         }
         #endregion
 
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            return $"<div class=\"filter\" style=\"opacity: {((Enabled) ? "1" : "0.4")}\">{ToHTMLString()}</div>";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryClosingTags()
-        {
-            // allows for collapsed box and simple entry
-            return "";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags()
-        {
-            // allows for collapsed box and simple entry
-            return "";
-        }
-        #endregion
     }
 
 }

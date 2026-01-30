@@ -28,14 +28,6 @@ namespace Models.CLEM.Activities
 
         double amountToSkip = 0;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        protected CropActivityTask()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
-        }
-
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
@@ -172,18 +164,6 @@ namespace Models.CLEM.Activities
                 follow = follow.Parent;
             }
         }
-        #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            if (Structure.FindChildren<ActivityFee>().Count() + Structure.FindChildren<LabourRequirement>().Count() == 0)
-                htmlWriter.Write("<div class=\"errorlink\">This task is not needed as it has no fee or labour requirement</div>");
-            return htmlWriter.ToString();
-        } 
         #endregion
     }
 }

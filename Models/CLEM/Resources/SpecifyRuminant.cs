@@ -71,14 +71,6 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public bool WeightWarningOccurred { get; private set; } = false;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public SpecifyRuminant()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
-        }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -124,37 +116,6 @@ namespace Models.CLEM.Resources
 
         }
         #endregion
-
-        #region descriptive summary
-
-        private bool cohortFound;
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"setvalue\">{Proportion.ToString("p0")}</span> of the individuals will be ");
-                if (RuminantTypeName == null || RuminantTypeName == "")
-                    htmlWriter.Write("<span class=\"errorlink\">TYPE NOT SET</span>");
-                else
-                    htmlWriter.Write("<span class=\"resourcelink\">" + RuminantTypeName + "</span>");
-
-                cohortFound = Structure.FindChildren<RuminantTypeCohort>().Count() > 0;
-                if (cohortFound)
-                    htmlWriter.Write($" with the following details:</div>");
-                else
-                {
-                    htmlWriter.Write($"</div>");
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"errorlink\">No <span class=\"resourcelink\">RuminantCohort</span> describing the individuals was provided!</div>");
-                }
-
-                return htmlWriter.ToString();
-            }
-        }
-
-        #endregion
-
 
     }
 }

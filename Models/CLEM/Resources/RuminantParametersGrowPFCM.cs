@@ -6,14 +6,14 @@ using System.IO;
 namespace Models.CLEM.Resources
 {
     /// <summary>
-    /// This stores the parameters relating to RuminantActivityGrowPF for a ruminant Type (CG - Growth parameters)
+    /// This stores the parameters relating to RuminantActivityGrowPF for a ruminant Type (CM - metabolism parameters)
     /// All default values are provided for Bos taurus cattle with Bos indicus values provided as a comment.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantParametersGrowPF))]
-    [Description("RuminantActivityGrowPF (CM - metabolism)")]
+    [Description("Ruminant metabolism (CM) parameters for GrowPF approach")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrowPFCM.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantParametersGrowPFCM : CLEMModel, ISubParameters, ICloneable
@@ -134,19 +134,5 @@ namespace Models.CLEM.Resources
             };
             return clonedParameters;
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            htmlWriter.Write("Ruminant parameters for metabolism as used in RuminantActivityGrowPF</div>");
-            return htmlWriter.ToString();
-        }
-
-        #endregion
-
     }
 }

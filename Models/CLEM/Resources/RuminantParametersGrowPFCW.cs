@@ -13,7 +13,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantParametersGrowPF))]
-    [Description("RuminantActivityGrowPF (CW - wool)")]
+    [Description("Ruminant wool (CW) parameters for GrowPF approach")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrowPFCWP.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantParametersGrowPFCW : CLEMModel, ISubParameters, ICloneable
@@ -21,7 +21,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Standard Fleece Weight
         /// </summary>
-        [Category("Farm", "Wool")]
+        [Category("Farm:Summary", "Wool")]
         [Description("Standard Fleece Weight")]
         public double StandardFleeceWeight { get; set; } = 4;
 
@@ -42,7 +42,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Clean To Greasy C Ratio (SCA CW3)   -- USER
         /// </summary>
-        [Category("Farm", "Wool")] 
+        [Category("Farm:Summary", "Wool")] 
         [Description("Clean To Greasy C Ratio [CW3]")]
         public double CleanToGreasyCRatio_CW3 { get; set; } = 0.7;
 
@@ -124,19 +124,5 @@ namespace Models.CLEM.Resources
             };
             return clonedParameters;
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            htmlWriter.Write("Ruminant parameters for wool as used in RuminantActivityGrowPF</div>");
-            return htmlWriter.ToString();
-        }
-
-        #endregion
-
     }
 }

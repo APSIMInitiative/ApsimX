@@ -124,16 +124,5 @@ namespace Models.CLEM.Activities
                 }
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            return $"\r\n<div class=\"activityentry\">Produce {DisplaySummaryResourceTypeSnippet(GreenhouseGasStoreName)} at rate of {CLEMModel.DisplaySummaryValueSnippet(Amount, warnZero:true)} {CLEMModel.DisplaySummaryValueSnippet(Measure)}</div>";
-        }
-        #endregion
-
-
     }
 }

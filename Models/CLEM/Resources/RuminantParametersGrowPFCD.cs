@@ -14,7 +14,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantParametersGrowPF))]
-    [Description("RuminantActivityGrowPF (CD - death)")]
+    [Description("Ruminant mortality (CD) parameters for GrowPF approach")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrowPFCD.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantParametersGrowPFCD : CLEMModel, ISubParameters, ICloneable
@@ -22,7 +22,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Basal mortality rate CD1
         /// </summary>
-        [Category("Farm", "Survival")]
+        [Category("Farm:Summary", "Survival")]
         [Description("Basal mortality rate")]
         [Required, GreaterThanValue(0)]
         public double BasalMortalityRate_CD1 { get; set; } = 5.53e-5;
@@ -30,7 +30,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Effect body condition on mortality # 1 CD2
         /// </summary>
-        [Category("Farm", "Survival")]
+        [Category("Farm:Summary", "Survival")]
         [Description("Effect body condition on mortality #1")]
         [Required, GreaterThanValue(0)]
         public double EffectBCOnMortality1_CD2 { get; set; } = 0.3;
@@ -38,7 +38,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Effect body condition on mortality # 2 CD3
         /// </summary>
-        [Category("Farm", "Survival")]
+        [Category("Farm:Summary", "Survival")]
         [Description("Effect body condition on mortality #2")]
         [Required, GreaterThanValue(0)]
         public double EffectBCOnMortality2_CD3 { get; set; } = 0.6;
@@ -90,7 +90,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Relative difference in weight of dying animals
         /// </summary>
-        [Category("Farm", "Survival")]
+        [Category("Farm:Summary", "Survival")]
         [Description("Relative difference in weight of dying animals")]
         [Required, GreaterThanValue(0)]
         public double RelativeDifferenceWeightDyingIndividuals_CD12 { get; set; } = 0.1;
@@ -98,7 +98,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Upper limit for mortality in weaners 
         /// </summary>
-        [Category("Farm", "Survival")]
+        [Category("Farm:Summary", "Survival")]
         [Description("Upper limit for mortality in weaners")]
         [Required, GreaterThanValue(0)]
         public double UpperLimitForMortalityInWeaners_CD13 { get; set; } = 1e-4; //ToDo find suitable default.. This is about 2x base mortality for now. So 2x mort at weaning dropping to base by 1 year old.
@@ -128,19 +128,5 @@ namespace Models.CLEM.Resources
             };
             return clonedParameters;
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            htmlWriter.Write("Ruminant parameters for death as used in RuminantActivityGrowPF</div>");
-            return htmlWriter.ToString();
-        }
-
-        #endregion
-
     }
 }

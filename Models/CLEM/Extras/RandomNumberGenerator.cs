@@ -48,7 +48,7 @@ namespace Models.CLEM
             {
                 if (generator is null)
                 {
-                    throw new Exception("Missing random number generator!\r\nThis simulation uses stochastic processes requiring random numbers\r\nYou must add a [o=CLEM.RandomNumberGenerator] component below the [o=Simulation]");
+                    throw new Exception($"Missing random number generator!{Environment.NewLine}This simulation uses stochastic processes requiring random numbers{Environment.NewLine}You must add a [o=CLEM.RandomNumberGenerator] component below the [o=Simulation].");
                 }
 
                 return generator; 
@@ -69,6 +69,14 @@ namespace Models.CLEM
             {
                 generator = new Random(Seed);
             }
+        }
+
+        /// <summary>
+        /// A method to initialise the random number generator needed for UI calculations such as the Descriptive Summary
+        /// </summary>
+        public void SetForPreSimulation()
+        {
+            generator = new Random(1);
         }
     }
 }

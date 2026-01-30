@@ -188,14 +188,5 @@ namespace Models.CLEM.Activities
                 SetStatusSuccessOrPartial(tagged != numberToDo);
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            return $"\r\n<div class=\"activityentry\">{DisplaySummaryValueSnippet(ApplicationStyle)} the tag {DisplaySummaryValueSnippet(TagLabel)} {((ApplicationStyle == TagApplicationStyle.Add)?"to":"from")} all individuals in the following groups</div>";
-        }
-        #endregion
     }
 }

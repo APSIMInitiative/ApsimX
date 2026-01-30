@@ -81,20 +81,5 @@ namespace Models.CLEM.Activities
                 }
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            StringWriter stringWriter = new();
-            using StringWriter htmlWriter = stringWriter;
-            htmlWriter.Write($"\r\n<div class=\"activityentry\">Pay {CLEMModel.DisplaySummaryValueSnippet(Amount, warnZero: true)}");
-            htmlWriter.Write($" from {CLEMModel.DisplaySummaryValueSnippet(AccountName, "Not set", HTMLSummaryStyle.Resource)}");
-            htmlWriter.Write("</div>");
-            return htmlWriter.ToString();
-        } 
-        #endregion
-
     }
 }

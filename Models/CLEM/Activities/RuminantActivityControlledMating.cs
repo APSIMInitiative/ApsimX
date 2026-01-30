@@ -65,7 +65,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantActivityControlledMating()
         {
-            ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
@@ -298,37 +297,5 @@ namespace Models.CLEM.Activities
             // return resulting list with conception precalculated back to the breeding activity.
             return uniqueIndividuals;
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            // set attribute with value
-            IEnumerable<SetAttributeWithValue> attributeSetters = Structure.FindChildren<SetAttributeWithValue>();
-            if (attributeSetters.Any())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write($"The Attributes of the sire are {(attributeSetters.Any() ? "specified below" : "selected at random from the herd")} to ensure inheritance to offspring");
-                htmlWriter.Write("</div>");
-            }
-            else
-            {
-                // need to check for mandatory attributes
-                var zone = Structure.FindParent<Zone>(recurse: true);
-                var mandatoryAttributes = Structure.FindChildren<SetAttributeWithValue>(relativeTo: zone, recurse: true).Where(a => a.Mandatory).Select(a => a.AttributeName).Distinct();
-                if (mandatoryAttributes.Any())
-                {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write($"The mandatory attributes <span class=\"setvalue\">{string.Join("</span>,<span class=\"setvalue\">", mandatoryAttributes)}</span> required from the breeding males will be randomly selected from the herd");
-                    htmlWriter.Write("</div>");
-                }
-            }
-            return htmlWriter.ToString();
-        }
-        #endregion
-
-
     }
 }

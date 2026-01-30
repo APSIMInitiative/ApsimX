@@ -282,43 +282,5 @@ namespace Models.CLEM.Activities
             }
         }
         #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">Individuals are weaned at ");
-            if (Style == WeaningStyle.AgeOrWeight | Style == WeaningStyle.AgeOnly)
-            {
-                htmlWriter.Write($"{DisplaySummaryValueSnippet(WeaningAge.InDays)} days");
-                if (Style == WeaningStyle.AgeOrWeight)
-                {
-                    htmlWriter.Write(" or  ");
-                }
-            }
-            if (Style == WeaningStyle.AgeOrWeight | Style == WeaningStyle.WeightOnly)
-            {
-                htmlWriter.Write($"{DisplaySummaryValueSnippet(WeaningWeight)} kg");
-            }
-
-            htmlWriter.Write("</div>");
-
-            htmlWriter.Write("\r\n<div class=\"activityentry\">Weaned individuals will ");
-            if (GrazeFoodStoreName == "Leave at current location")
-            {
-                htmlWriter.Write("remain at the location they were weaned");
-            }
-            else
-            {
-                htmlWriter.Write($"be place in {DisplaySummaryResourceTypeSnippet(GrazeFoodStoreName, nullGeneralYards: true)}");
-            }
-
-            htmlWriter.Write("</div>");
-            // ToDo: warn if natural weaning will take place
-            return htmlWriter.ToString();
-        }
-        #endregion
     }
 }

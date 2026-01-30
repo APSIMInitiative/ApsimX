@@ -205,7 +205,6 @@ namespace Models.CLEM
         /// </summary>
         public FileResource()
         {
-            base.ModelSummaryStyle = HTMLSummaryStyle.FileReader;
             StyleOfDateEntry = DateStyle.YearAndMonth;
         }
 
@@ -416,90 +415,6 @@ namespace Models.CLEM
                 reader = null;
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            if (FileName == null || FileName == "")
-            {
-                htmlWriter.Write("Using <span class=\"errorlink\">FILE NOT SET</span>");
-            }
-            else
-            {
-                if (!FileExists)
-                {
-                    htmlWriter.Write($"The file <span class=\"errorlink\">{FullFileName}</span> could not be found");
-                }
-                else
-                {
-                    htmlWriter.Write($"Using <span class=\"filelink\">{FileName}</span>");
-                }
-            }
-            if (FileName != null && FileName.Contains(".xls"))
-            {
-                if (ExcelWorkSheetName == null || ExcelWorkSheetName == "")
-                {
-                    htmlWriter.Write(" with <span class=\"errorlink\">WORKSHEET NOT SET</span>");
-                }
-                else
-                {
-                    htmlWriter.Write($" with worksheet <span class=\"filelink\">{ExcelWorkSheetName}</span>");
-                }
-            }
-            htmlWriter.Write("</div>");
-            htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"Margin-left:15px;\">");
-            htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Resource name</span> is ");
-            if (ResourceNameColumnName is null || ResourceNameColumnName == "")
-            {
-                htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-            }
-            else
-            {
-                htmlWriter.Write($"<span class=\"setvalue\">{ResourceNameColumnName}</span></div>");
-            }
-            string yearLabel = (StyleOfDateEntry == DateStyle.DateStamp) ? "Date" : "Year";
-            htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">{yearLabel}</span> is ");
-            if (YearColumnName is null || YearColumnName == "")
-            {
-                htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-            }
-            else
-            {
-                htmlWriter.Write($"<span class=\"setvalue\">{YearColumnName}</span></div>");
-            }
-
-            if (StyleOfDateEntry == DateStyle.YearAndMonth)
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is ");
-                if (MonthColumnName is null || MonthColumnName == "")
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-                }
-                else
-                {
-                    htmlWriter.Write($"<span class=\"setvalue\">{MonthColumnName}</span></div>");
-                }
-            }
-
-            htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Amount</span> is ");
-            if (AmountColumnName is null || AmountColumnName == "")
-            {
-                htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-            }
-            else
-            {
-                htmlWriter.Write($"<span class=\"setvalue\">{AmountColumnName}</span></div>");
-            }
-
-            htmlWriter.Write("\r\n</div>");
-            return htmlWriter.ToString();
-        }
-
-        #endregion
 
         #region validation
 

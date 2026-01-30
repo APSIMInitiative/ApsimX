@@ -13,7 +13,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantParametersHolder))]
-    [Description("This model provides parameters for the original model ruminant mortality")]
+    [Description("Ruminant mortality parameters specific to RuminantActivityGrow")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrowMortality.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantParametersGrowMortality : CLEMModel, ISubParameters, ICloneable
@@ -84,19 +84,5 @@ namespace Models.CLEM.Resources
             };
             return clonedParameters;
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            htmlWriter.Write("Ruminant parameters for death as used in RuminantActivityGrow</div>");
-            return htmlWriter.ToString();
-        }
-
-        #endregion
-
     }
 }

@@ -262,44 +262,5 @@ namespace Models.CLEM.Activities
         }
 
         #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">Sell ");
-            switch (SellStyle)
-            {
-                case ResourceSellStyle.SpecifiedAmount:
-                    htmlWriter.Write($"<span class=\"resourcelink\">{Value:#,##0}</span> of ");
-                    break;
-                case ResourceSellStyle.ProportionOfStore:
-                    htmlWriter.Write($"<span class=\"resourcelink\">{Value:#0%}</span> percent of ");
-                    break;
-                case ResourceSellStyle.ProportionOfLastGain:
-                    htmlWriter.Write($"<span class=\"resourcelink\">{Value:#0%}</span> percent of the last gain transaction recorded for ");
-                    break;
-                case ResourceSellStyle.ReserveAmount:
-                    htmlWriter.Write($"all but <span class=\"resourcelink\">{Value:#,##0}</span> as reserve of ");
-                    break;
-                case ResourceSellStyle.ReserveProportion:
-                    htmlWriter.Write($"all but leaving <span class=\"resourcelink\">{Value:##0%}</span> percent of store as reserve of ");
-                    break;
-                default:
-                    break;
-            }
-            htmlWriter.Write(DisplaySummaryValueSnippet(ResourceTypeName, "Resource not set", HTMLSummaryStyle.Resource));
-            if (AccountName != "No finance required")
-            {
-                htmlWriter.Write(" with sales placed in ");
-                htmlWriter.Write(DisplaySummaryValueSnippet(AccountName, "Account not set", HTMLSummaryStyle.Resource));
-            }
-            htmlWriter.Write("</div>");
-            return htmlWriter.ToString();
-        }
-
-        #endregion
     }
 }

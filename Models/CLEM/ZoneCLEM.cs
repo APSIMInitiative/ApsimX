@@ -1,5 +1,8 @@
+using APSIM.Core;
 using APSIM.Shared.Documentation.Extensions;
+using DocumentFormat.OpenXml.EMMA;
 using Models.CLEM.Activities;
+using Models.CLEM.DescriptiveSummary;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
@@ -14,7 +17,6 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
-using APSIM.Core;
 
 namespace Models.CLEM
 {
@@ -32,7 +34,7 @@ namespace Models.CLEM
     [Version(1, 0, 2, "New ResourceUnitConverter functionality added that changes some reporting.\r\nThis change will cause errors for all previous custom resource ledger reports created using the APSIM Report component.\r\nTo fix errors add \".Name\" to all LastTransaction.ResourceType and LastTransaction.Activity entries in custom ledgers (i.e. LastTransaction.ResourceType.Name as Resource). The CLEM ReportResourceLedger component has been updated to automatically handle the changes")]
     [Version(1, 0, 1, "")]
     [ModelAssociations( associatedModels: new Type[] { typeof(CLEMEvents), typeof(ResourcesHolder), typeof(ActivitiesHolder) }, AssociationStyles = new ModelAssociationStyle[] { ModelAssociationStyle.InScope, ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent })]
-    public class ZoneCLEM : Zone, ICLEMUI, ICLEMDescriptiveSummary, IScopedModel, IStructureDependency
+    public class ZoneCLEM : Zone, ICLEMUI, IScopedModel, IStructureDependency
     {
         /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
@@ -81,6 +83,12 @@ namespace Models.CLEM
         public bool AutoCreateDescriptiveSummary { get; set; }
 
         /// <summary>
+        /// The output format for the descriptive summary
+        /// </summary>
+        [Description("Descriptive summary format")]
+        public DescriptiveSummaryFormat DescriptiveSummaryFormatStyle { get; set; } = DescriptiveSummaryFormat.HTML;
+
+        /// <summary>
         /// Build TransactionCategory from tree structure
         /// </summary>
         [Description("Build TransactionCategory from tree structure")]
@@ -114,14 +122,6 @@ namespace Models.CLEM
         [JsonIgnore]
         public new string CanopyType { get; set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public ZoneCLEM()
-        {
-            ModelSummaryStyle = HTMLSummaryStyle.Helper;
-        }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -133,7 +133,22 @@ namespace Models.CLEM
 
             // remove the overall summary description file if present
             string[] filebits = (sender as Simulation).FileName.Split('.');
-            wholeSimulationSummaryFile = $"{filebits.First()}.html";
+            wholeSimulationSummaryFile = filebits.First();
+            switch (DescriptiveSummaryFormatStyle)
+            {
+                case DescriptiveSummaryFormat.HTML:
+                    wholeSimulationSummaryFile += ".html";
+                    break;
+                case DescriptiveSummaryFormat.Markdown:
+                    wholeSimulationSummaryFile += ".md";
+                    break;
+                case DescriptiveSummaryFormat.Text:
+                    wholeSimulationSummaryFile += ".txt";
+                    break;
+                default:
+                    break;
+            }
+
             if (File.Exists(wholeSimulationSummaryFile))
             {
                 File.Delete(wholeSimulationSummaryFile);
@@ -146,23 +161,35 @@ namespace Models.CLEM
             // if auto create summary
             if (AutoCreateDescriptiveSummary && !Structure.FindParents<Experiment>().Any())
             {
-                if (!File.Exists(wholeSimulationSummaryFile))
-                {
-                    File.WriteAllText(wholeSimulationSummaryFile, CLEMModel.CreateDescriptiveSummaryHTML(this, Structure, false, false, (sender as Simulation).FileName));
-                }
-                else
-                {
-                    string html = File.ReadAllText(wholeSimulationSummaryFile);
-                    using StringWriter htmlWriter = new();
-                    int index = html.IndexOf("<!-- CLEMZoneBody -->");
-                    if (index > 0)
-                    {
-                        htmlWriter.Write(html[..(index - 1)]);
-                        htmlWriter.Write(CLEMModel.CreateDescriptiveSummaryHTML(this, Structure, false, true));
-                        htmlWriter.Write(html[index..]);
-                        File.WriteAllText(wholeSimulationSummaryFile, htmlWriter.ToString());
-                    }
-                }
+                var allZoneCLEM = Structure.FindAll<ZoneCLEM>();
+                if (allZoneCLEM.Any() && allZoneCLEM.FirstOrDefault() != this) return;
+
+                DescriptiveSummaryGenerator summaryGenerator = new DescriptiveSummaryGenerator(DescriptiveSummaryFormatStyle, false);
+                summaryGenerator.GenerateSummaryForComponentAndChildren(Structure.FindParent<Simulation>(recurse: true), wholeSimulationSummaryFile);
+
+                //
+                //
+                // ToDo: leave until I confirm that the new descriptive summary with providers works on all APSIM components from Simulation down.
+                //
+                //
+
+                //if (!File.Exists(wholeSimulationSummaryFile))
+                //{
+                //    File.WriteAllText(wholeSimulationSummaryFile, CLEMModel.CreateDescriptiveSummaryHTML(this, Structure, false, false, (sender as Simulation).FileName));
+                //}
+                //else
+                //{
+                //    string html = File.ReadAllText(wholeSimulationSummaryFile);
+                //    using StringWriter htmlWriter = new();
+                //    int index = html.IndexOf("<!-- CLEMZoneBody -->");
+                //    if (index > 0)
+                //    {
+                //        htmlWriter.Write(html[..(index - 1)]);
+                //        htmlWriter.Write(CLEMModel.CreateDescriptiveSummaryHTML(this, Structure, false, true));
+                //        htmlWriter.Write(html[index..]);
+                //        File.WriteAllText(wholeSimulationSummaryFile, htmlWriter.ToString());
+                //    }
+                //}
             }
         }
 
@@ -336,209 +363,5 @@ namespace Models.CLEM
             }
             return valid;
         }
-
-        #region Descriptive summary
-
-        /// <summary>
-        /// Summary style to use for this component
-        /// </summary>
-        public HTMLSummaryStyle ModelSummaryStyle { get; set; }
-
-        /// <inheritdoc/>
-        [JsonIgnore]
-        public List<string> CurrentAncestorList { get; set; } = new List<string>();
-
-        /// <inheritdoc/>
-        public bool FormatForParentControl { get { return CurrentAncestorList.Count > 0; } }
-
-        /// <inheritdoc/>
-        [JsonIgnore]
-        public DescriptiveSummaryMemoReportingType ReportMemosType { get; set; } = DescriptiveSummaryMemoReportingType.InPlace;
-
-        ///<inheritdoc/>
-        public string GetFullSummary(IModel model, List<string> parentControls, string htmlString, Func<string, string> markdown2Html = null)
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"holdermain\" style=\"opacity: " + ((!this.Enabled) ? "0.4" : "1") + "\">");
-
-            CurrentAncestorList = parentControls.ToList();
-            CurrentAncestorList.Add(model.GetType().Name);
-
-            // get clock
-            Simulation parentSim = Structure.FindParent<Simulation>(recurse: true);
-
-            htmlWriter.Write(CLEMModel.AddMemosToSummary(parentSim, Structure, markdown2Html));
-
-            // create the summary box with properties of this component
-            if (this is ICLEMDescriptiveSummary)
-            {
-                htmlWriter.Write(ModelSummaryOpeningTags());
-                htmlWriter.Write(ModelSummaryInnerOpeningTagsBeforeSummary());
-                htmlWriter.Write(ModelSummary());
-                // TODO: May need to implement Adding Memos for some Models with reduced display
-                htmlWriter.Write(ModelSummaryInnerOpeningTags());
-                htmlWriter.Write(ModelSummaryInnerClosingTags());
-                htmlWriter.Write(ModelSummaryClosingTags());
-            }
-
-            // find random number generator
-            RandomNumberGenerator rnd = Structure.FindChild<RandomNumberGenerator>(relativeTo: parentSim, recurse: true);
-            if (rnd != null)
-            {
-                htmlWriter.Write("\r\n<div class=\"clearfix defaultbanner\">");
-                htmlWriter.Write("<div class=\"namediv\">" + rnd.Name + "</div><br />");
-                htmlWriter.Write("<div class=\"typediv\">RandomNumberGenerator</div>");
-                htmlWriter.Write("</div>");
-                htmlWriter.Write("\r\n<div class=\"defaultcontent\">");
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Random numbers are provided for this simultion with ");
-                if (rnd.Seed == 0)
-                {
-                    htmlWriter.Write("every run using a different sequence.");
-                }
-                else
-                {
-                    htmlWriter.Write("each run identical by using the seed <span class=\"setvalue\">" + rnd.Seed.ToString() + "</span>");
-                }
-
-                htmlWriter.Write("\r\n</div>");
-
-                htmlWriter.Write(CLEMModel.AddMemosToSummary(rnd, Structure, markdown2Html));
-
-                htmlWriter.Write("\r\n</div>");
-            }
-
-            Clock clk = Structure.FindChild<Clock>(relativeTo: parentSim, recurse: true);
-            if (clk != null)
-            {
-                htmlWriter.Write("\r\n<div class=\"clearfix defaultbanner\">");
-                htmlWriter.Write("<div class=\"namediv\">" + clk.Name + "</div><br />");
-                htmlWriter.Write("<div class=\"typediv\">Clock</div>");
-                htmlWriter.Write("</div>");
-                htmlWriter.Write("\r\n<div class=\"defaultcontent\">");
-                htmlWriter.Write("\r\n<div class=\"activityentry\">This simulation runs from ");
-                if (clk.Start == null)
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">[START DATE NOT SET]</span>");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"setvalue\">" + clk.StartDate.ToShortDateString() + "</span>");
-                }
-
-                htmlWriter.Write(" to ");
-                if (clk.End == null)
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">[END DATE NOT SET]</span>");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"setvalue\">" + clk.EndDate.ToShortDateString() + "</span>");
-                }
-
-                htmlWriter.Write("\r\n</div>");
-
-                htmlWriter.Write(CLEMModel.AddMemosToSummary(clk, Structure, markdown2Html));
-
-                htmlWriter.Write("\r\n</div>");
-                htmlWriter.Write("\r\n</div>");
-            }
-
-            foreach (CLEMModel cm in Structure.FindChildren<CLEMModel>())
-            {
-                htmlWriter.Write(cm.GetFullSummary(cm, CurrentAncestorList, "", markdown2Html));
-            }
-
-            CurrentAncestorList = null;
-
-            return htmlWriter.ToString();
-        }
-
-        ///<inheritdoc/>
-        public string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write("This farm is identified as region ");
-                htmlWriter.Write($"<span class=\"setvalue\">{ClimateRegion}</span></div>");
-
-                ResourcesHolder resources = Structure.FindChild<ResourcesHolder>();
-                if (resources != null)
-                {
-                    if (resources.FoundMarket != null)
-                    {
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                        htmlWriter.Write("This farm represents ");
-                        htmlWriter.Write($"<span class=\"setvalue\">{FarmMultiplier}</span></div> farm(s) when trading with the Market</div>");
-                    }
-                }
-
-                if (AutoCreateDescriptiveSummary)
-                {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write($"This component will be included in the overall simulation summary decription html file</div>");
-                }
-                return htmlWriter.ToString();
-            }
-        }
-
-        ///<inheritdoc/>
-        public string ModelSummaryClosingTags()
-        {
-            return "\r\n</div>\r\n</div>";
-        }
-
-        ///<inheritdoc/>
-        public string ModelSummaryOpeningTags()
-        {
-            string overall = "default";
-            string extra = "";
-
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"holder" + ((extra == "") ? "main" : "sub") + " " + overall + "\" style=\"opacity: " + ((!this.Enabled) ? 0.4 : 1.0).ToString() + ";\">");
-            htmlWriter.Write("\r\n<div class=\"clearfix " + overall + "banner" + extra + "\">" + ModelSummaryNameTypeHeader() + "</div>");
-            htmlWriter.Write("\r\n<div class=\"" + overall + "content" + ((extra != "") ? extra : "") + "\">");
-
-            return htmlWriter.ToString();
-        }
-
-        ///<inheritdoc/>
-        public string ModelSummaryInnerClosingTags()
-        {
-            return "";
-        }
-
-        ///<inheritdoc/>
-        public string ModelSummaryInnerOpeningTags()
-        {
-            return "";
-        }
-
-        ///<inheritdoc/>
-        public string ModelSummaryInnerOpeningTagsBeforeSummary()
-        {
-            return "";
-        }
-
-        ///<inheritdoc/>
-        public string ModelSummaryNameTypeHeader()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write($"<div class=\"namediv\">{this.Name}{((!this.Enabled) ? " - DISABLED!" : "")}</div>");
-            if (GetType().IsSubclassOf(typeof(CLEMActivityBase)))
-            {
-                htmlWriter.Write("<div class=\"partialdiv\"></div>");
-            }
-            htmlWriter.Write($"<br /><div class=\"typediv\">{GetType().Name}</div>");
-            return htmlWriter.ToString();
-        }
-
-        ///<inheritdoc/>
-        public string ModelSummaryNameTypeHeaderText()
-        {
-            return this.Name;
-        }
-        #endregion
-
     }
 }

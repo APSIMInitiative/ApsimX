@@ -60,7 +60,6 @@ namespace Models.CLEM
         /// </summary>
         public Transmutation()
         {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
             TransactionCategory = "Transmutation";
         }
 
@@ -75,57 +74,5 @@ namespace Models.CLEM
             }
         }
         #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("<div class=\"activityentry\">");
-
-            var pricing = Structure.FindChildren<ITransmute>().Where(a => a.TransmuteStyle == TransmuteStyle.UsePricing);
-            var direct = Structure.FindChildren<ITransmute>().Where(a => a.TransmuteStyle == TransmuteStyle.Direct);
-
-            htmlWriter.Write($"The following resources (B) will transmute ");
-            if (pricing.Any())
-            {
-                htmlWriter.Write($"using the resource purchase price ");
-                var transmuteResourcePrice = ((Structure.FindParent<ResourcesHolder>(recurse: true)).FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ResourceInShortfall, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore))?.Price(PurchaseOrSalePricingStyleType.Purchase);
-                if (transmuteResourcePrice != null)
-                {
-                    htmlWriter.Write("found");
-                }
-                else
-                {
-                    htmlWriter.Write($"<span class=\"errorlink\">not found</span>");
-                }
-            }
-            htmlWriter.WriteLine(" to provide this shortfall resource (A)");
-
-
-            if (direct.Any())
-            {
-                htmlWriter.Write($" in {(UseWholePackets ? " whole" : "")} packets of <span class=\"setvalue\">{TransmutationPacketSize:#,##0.##}</span>");
-            }
-
-            if (pricing.Count() + direct.Count() > 1)
-            {
-                htmlWriter.Write($" (or the largest packet size needed the individual transmutes)");
-            }
-
-            htmlWriter.WriteLine("</div>");
-
-            if (!Structure.FindChildren<ITransmute>().Any())
-            {
-                htmlWriter.Write("<div class=\"errorbanner\">");
-                htmlWriter.Write("No Transmute components provided");
-                htmlWriter.WriteLine("</div>");
-            }
-            return htmlWriter.ToString();
-        }
-
-        #endregion
     }
-
 }

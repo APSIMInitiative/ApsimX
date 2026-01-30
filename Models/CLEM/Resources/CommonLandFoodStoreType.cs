@@ -36,7 +36,7 @@ namespace Models.CLEM.Resources
         /// Unit type
         /// </summary>
         [Description("Units (nominal)")]
-        public string Units { get; set; }
+        public string Units { get; set; } = "kg";
 
         /// <summary>
         /// Coefficient to convert N% to DMD%
@@ -300,48 +300,6 @@ namespace Models.CLEM.Resources
         public new void Set(double newAmount)
         {
             throw new NotImplementedException();
-        }
-
-        #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("<div class=\"activityentry\">");
-                if (Parent.GetType() == typeof(AnimalFoodStore))
-                {
-                    htmlWriter.Write("This common land can be used by animal feed activities only");
-                }
-                else
-                {
-                    htmlWriter.Write("This common land can be used by grazing and cut and carry activities");
-                }
-
-                htmlWriter.Write("</div>");
-                if (PastureLink != null)
-                {
-                    htmlWriter.Write("<div class=\"activityentry\">");
-                    htmlWriter.Write("The quality of this common land is based on <span class=\"resourcelink\">" + PastureLink + "</span> with <span class=\"setvalue\">" + (100 - this.NitrogenReductionFromPasture / 100).ToString("0.#") + "</span>% of the current nitrogen percent");
-                    htmlWriter.Write("</div>");
-                }
-                else
-                {
-                    htmlWriter.Write("<div class=\"activityentry\">");
-                    htmlWriter.Write("The nitrogen quality of new pasture is <span class=\"setvalue\">" + this.Nitrogen.ToString("0.###") + "%</span> and can be reduced to <span class=\"setvalue\">" + this.MinimumNitrogen.ToString("0.#") + "%</span>");
-                    htmlWriter.Write("</div>");
-                    htmlWriter.Write("<div class=\"activityentry\">");
-                    htmlWriter.Write("The minimum Dry Matter Digestaibility is <span class=\"setvalue\">" + this.MinimumDMD.ToString("0.###") + "%</span>");
-                    htmlWriter.Write("</div>");
-                    htmlWriter.Write("<div class=\"activityentry\">");
-                    htmlWriter.Write("Dry matter digestibility will be calculated from the N%");
-                    htmlWriter.Write("</div>");
-                }
-                return htmlWriter.ToString();
-            }
         }
 
         #endregion

@@ -74,14 +74,6 @@ namespace Models.CLEM
         /// </summary>
         public bool AmountPerPacketEnabled() { return TransmuteStyle == TransmuteStyle.Direct; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public Transmute()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
-        }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -280,74 +272,6 @@ namespace Models.CLEM
                 }
             }
         }
-        #endregion
-
-        #region descriptive summary
-
-        ///<inheritdoc/>
-        public override string ModelSummaryNameTypeHeaderText()
-        {
-            return Transmute.AddTransmuteStyleText(this);
-        }
-
-        /// <summary>
-        /// Create additional text for transmute headers
-        /// </summary>
-        /// <param name="transmute"></param>
-        /// <returns></returns>
-        public static string AddTransmuteStyleText(ITransmute transmute)
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.WriteLine((transmute as IModel).Name);
-            if (transmute.TransmuteStyle == TransmuteStyle.Direct)
-            {
-                htmlWriter.WriteLine(": B&#8594;A");
-            }
-            else
-            {
-                if (transmute.FinanceTypeForTransactionsName != null && transmute.FinanceTypeForTransactionsName != "")
-                {
-                    htmlWriter.WriteLine(": B&#8594;$ $&#8594;A");
-                }
-                else
-                {
-                    htmlWriter.WriteLine(": B&#8594;$&#8594;A");
-                }
-            }
-            return htmlWriter.ToString();
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("<div class=\"activityentry\">");
-            if (TransmuteStyle == TransmuteStyle.Direct && AmountPerPacket > 0)
-            {
-                htmlWriter.Write($"<span class=\"setvalue\">{AmountPerPacket:#,##0.##}</span> x ");
-            }
-
-            if (TransmuteResourceTypeName != null && TransmuteResourceTypeName != "")
-            {
-                htmlWriter.Write($"<span class=\"resourcelink\">{TransmuteResourceTypeName}</span>");
-            }
-            else
-            {
-                htmlWriter.Write("<span class=\"errorlink\">No Transmute resource (B) set</span>");
-            }
-
-            if (TransmuteStyle == TransmuteStyle.UsePricing)
-            {
-                htmlWriter.Write($" using the resource pricing details");
-                if (FinanceTypeForTransactionsName != null && FinanceTypeForTransactionsName != "")
-                {
-                    htmlWriter.Write($" and all financial Transactions of sales and purchases using <span class=\"resourcelink\">{TransmuteResourceTypeName}</span>");
-                }
-            }
-            htmlWriter.WriteLine("</div>");
-            return htmlWriter.ToString();
-        }
-
         #endregion
     }
 

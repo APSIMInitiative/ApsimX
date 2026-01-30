@@ -511,7 +511,9 @@ namespace Models.CLEM.Resources
         {
             // This method is called on any update to age
             // This will occur at the start of each time-step called by the RuminantType resource before any activities.
-            // Mother's will always be processed before offstring due to the order of creation in the herd, so we can be assured mothers details are known when considering sucklings.
+            // Mother's will always be processed before offspring due to the order of creation in the herd, so we can be assured mothers details are known when considering sucklings.
+
+            if (BirthDueDate is null) return;
 
             if (IsSterilised) //|| BirthDueDate is null)
             {

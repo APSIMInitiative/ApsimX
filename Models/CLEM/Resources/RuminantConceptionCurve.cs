@@ -19,14 +19,6 @@ namespace Models.CLEM.Resources
     public class RuminantConceptionCurve : CLEMModel, IConceptionModel
     {
         /// <summary>
-        /// constructor
-        /// </summary>
-        public RuminantConceptionCurve()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
-        }
-
-        /// <summary>
         /// Conception rate coefficient of breeder
         /// </summary>
         [Description("Conception rate coefficient of breeder PW")]
@@ -61,15 +53,5 @@ namespace Models.CLEM.Resources
             rate = Math.Max(0, Math.Min(rate, 100));
             return rate / 100;
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            return "<div class=\"activityentry\">Conception rates are being calculated for all females using the same curve.</div>";
-        }
-
-        #endregion
     }
 }

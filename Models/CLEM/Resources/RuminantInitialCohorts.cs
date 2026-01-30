@@ -58,14 +58,6 @@ namespace Models.CLEM.Resources
         public bool WeightWarningOccurred = false;
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        protected RuminantInitialCohorts()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
-        }
-
-        /// <summary>
         /// Overrides the base class method to allow for initialization and needs to be done before StartOfSimulation.
         /// </summary>
         [EventSubscribe("DoInitialSummary")]
@@ -101,76 +93,6 @@ namespace Models.CLEM.Resources
             }
             return individuals;
         }
-
-        #region descriptive summary
-
-        ///<inheritdoc/>
-        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
-        {
-            return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
-            {
-                (Structure.FindChildren<ISetAttribute>().Cast<IModel>(), false, "", "", "")
-            };
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-
-            if (Structure.FindChildren<FileRuminantCohorts>().Any())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write($"Ruminant cohort file readers will be used to provide initial cohorts");
-                if (Structure.FindChildren<RuminantTypeCohort>().Any())
-                {
-                    htmlWriter.Write($" which will be included with the cohorts also provided");
-                }
-                htmlWriter.Write(".</div>");
-            }
-
-            if (ManagedPastureName != "Not specified")
-            {
-                bool overridePasture = Structure.FindChildren<RuminantTypeCohort>().Where(a => a.ManagedPastureName != "Not specified").Any();
-
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                if (overridePasture) {
-                    htmlWriter.Write($"New ");
-                }
-                else
-                {
-                    htmlWriter.Write($"All new ");
-                }
-                htmlWriter.Write($"individuals will be placed on the pasture <span class=\"setvalue\">{ManagedPastureName}</span>");
-                if (overridePasture)
-                {
-                    htmlWriter.Write(" unless overridden by the cohort pasture setting");
-                }
-                htmlWriter.Write(".</div>");
-            }
-
-            return htmlWriter.ToString();
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags()
-        {
-            if (WeightWarningOccurred)
-                return "</table></br><span class=\"errorlink\">Warning: Initial weight differs from the expected normalised weight by more than 20%</span>";
-            return "";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags()
-        {
-            WeightWarningOccurred = false;
-            ConceptionsFound = Structure.FindChildren<SetPreviousConception>(recurse: true).Any();
-            AttributesFound = Structure.FindChildren<SetAttributeWithValue>(recurse: true).Any();
-            return $"<table><tr><th>Name</th><th>Sex</th><th>Age</th><th>Weight</th><th>Norm.Wt.</th><th>Number</th><th>Suckling</th><th>Sire</th>{(ConceptionsFound ? "<th>Pregnant</th>" : "")}{(AttributesFound ? "<th>Attributes</th>" : "")}</tr>";
-        }
-
-        #endregion
     }
 }
 

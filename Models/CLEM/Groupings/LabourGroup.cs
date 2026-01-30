@@ -23,53 +23,5 @@ namespace Models.CLEM.Groupings
     [HelpUri(@"Content/Features/Filters/Groups/LabourFilterGroup.htm")]
     public class LabourGroup : FilterGroup<LabourType>
     {
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            string html = "";
-            return html;
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryClosingTags()
-        {
-            return "";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags()
-        {
-            return "";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags()
-        {
-            string html = "";
-            html += "\r\n</div>";
-            return html;
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags()
-        {
-            string html = "";
-            if (Parent.GetType() == typeof(LabourGroup))
-            {
-                html += "<div class=\"labournote\" style=\"clear: both;\">If insufficient labour use the specifications below</div>";
-            }
-
-            html += "\r\n<div class=\"filterborder clearfix\">";
-
-            if (!Structure.FindChildren<Filter>().Any())
-            {
-                html += "<div class=\"filter\">Any labour</div>";
-            }
-
-            return html;
-        }
-        #endregion
     }
 }

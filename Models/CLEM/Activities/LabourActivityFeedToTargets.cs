@@ -670,53 +670,5 @@ namespace Models.CLEM.Activities
             return results;
         }
         #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
-        {
-            return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
-            {
-                (Structure.FindChildren<LabourActivityFeedTarget>(), true, "childgroupactivityborder", "The following targets are applied:", "No LabourActivityFeedTarget was provided"),
-                (Structure.FindChildren<LabourActivityFeedTargetPurchase>(), true, "childgroupactivityborder", "The following purchases will be used to supply food:", "")
-            };
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("<div class=\"activityentry\">");
-                htmlWriter.Write($"Each Adult Equivalent is able to consume {CLEMModel.DisplaySummaryValueSnippet(DailyIntakeLimit, warnZero:true)} kg per day");
-                if (DailyIntakeOtherSources > 0)
-                {
-                    htmlWriter.Write("with <span class=\"setvalue\">");
-                    htmlWriter.Write(DailyIntakeOtherSources.ToString("#,##0.##"));
-                    htmlWriter.Write("</span> provided from non-modelled sources");
-                }
-                htmlWriter.Write(".</div>");
-                htmlWriter.Write("<div class=\"activityentry\">");
-                htmlWriter.Write("Hired labour <span class=\"setvalue\">" + ((IncludeHiredLabour) ? "is" : "is not") + "</span> included");
-                htmlWriter.Write("</div>");
-
-                // find a market place if present
-                Simulation sim = Structure.FindParent<Simulation>(recurse: true);
-                if (sim != null)
-                {
-                    Market marketPlace = Structure.FindChild<Market>(relativeTo: sim);
-                    if (marketPlace != null)
-                    {
-                        htmlWriter.Write("<div class=\"activityentry\">");
-                        htmlWriter.Write("Food with be bought and sold through the market <span class=\"setvalue\">" + marketPlace.Name + "</span>");
-                        htmlWriter.Write("</div>");
-                    }
-                }
-                return htmlWriter.ToString();
-            }
-        }
-
-        #endregion
     }
 }

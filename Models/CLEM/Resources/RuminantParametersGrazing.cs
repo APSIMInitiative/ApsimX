@@ -14,7 +14,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantParametersHolder))]
-    [Description("This model provides all parameters specific to RuminantActivityGrowth (SCA Version)")]
+    [Description("Ruminant grazing parameters")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrazing.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantParametersGrazing: CLEMModel, ISubParameters, ICloneable
@@ -22,7 +22,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Maximum green in diet
         /// </summary>
-        [Category("Farm", "Grazing")]
+        [Category("Farm:Summary", "Diet")]
         [Description("Maximum green in diet")]
         [Required, Proportion]
         public double GreenDietMax { get; set; } = 0.98;
@@ -30,7 +30,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Shape of curve for diet vs pasture
         /// </summary>
-        [Category("Breed", "Grazing")]
+        [Category("Breed", "Diet")]
         [Description("Shape of curve for diet vs pasture")]
         [Required, GreaterThanValue(0)]
         public double GreenDietCoefficient { get; set; } = 0.15;
@@ -39,7 +39,7 @@ namespace Models.CLEM.Resources
         /// Proportion green in pasture at zero in diet
         /// was %
         /// </summary>
-        [Category("Farm", "Diet")]
+        [Category("Farm:Summary", "Diet")]
         [Description("Proportion green in pasture at zero in diet")]
         [Required, Proportion]
         public double GreenDietZero { get; set; } = 0.04;
@@ -47,7 +47,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Coefficient to adjust intake for herbage biomass
         /// </summary>
-        [Category("Farm", "Diet")]
+        [Category("Farm:Summary", "Diet")]
         [Description("Coefficient to adjust intake for herbage biomass")]
         [Required, GreaterThanValue(0)]
 
@@ -56,7 +56,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Enforce strict feeding limits
         /// </summary>
-        [Category("Farm", "Diet")]
+        [Category("Farm:Summary", "Diet")]
         [Description("Enforce strict feeding limits")]
         [Required]
         public bool StrictFeedingLimits { get; set; } = true;
@@ -78,19 +78,5 @@ namespace Models.CLEM.Resources
             };
             return clonedParameters;
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            htmlWriter.Write("Ruminant parameters required for grazing activities:</div>");
-            return htmlWriter.ToString();
-        }
-
-        #endregion
-
     }
 }

@@ -65,14 +65,6 @@ namespace Models.CLEM.Activities
         [JsonIgnore]
         public LandType LinkedLandItem { get; set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public CropActivityManageCrop()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubActivityLevel2;
-        }
-
         /// <summary>An event handler to allow us to initialise</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -237,58 +229,6 @@ namespace Models.CLEM.Activities
             {
                 yield return new ValidationResult($"More than one [a=CropActivityManageProduct] with the same [CropName] of were provided. Use rotation croppping, \"HarvestTag\" and different crop names to manage the same crop", new string[] { "Multiple crop product activities" });
             }
-        }
-        #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
-        {
-            string intro = (Structure.FindChildren<CropActivityManageProduct>().Count() > 1) ? "Rotating through crops" : "";
-
-            return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
-            {
-                (Structure.FindChildren<CropActivityManageProduct>(), true, "childgrouprotationborder", intro, "No CropActivityManageProduct component provided"),
-            };
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">This crop uses ");
-
-                Land parentLand = null;
-                Model clemParent = Structure.FindParent<ZoneCLEM>(relativeTo: this, recurse: true);
-            if (LandItemNameToUse != null && LandItemNameToUse != "")
-            {
-                if (clemParent != null && clemParent.Enabled)
-                {
-                    parentLand = Structure.Find<Land>(LandItemNameToUse.Split('.')[0], relativeTo: clemParent);
-                }
-            }
-
-            if (UseAreaAvailable)
-            {
-                htmlWriter.Write("the unallocated portion of ");
-            }
-            else
-            {
-                htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(AreaRequested, warnZero: true)} of ");
-
-                if (parentLand == null)
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">[UNITS NOT SET]</span> of ");
-                }
-                else
-                {
-                    htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(parentLand.UnitsOfArea)} of ");
-                }
-            }
-            htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(LandItemNameToUse, "Resource not set", HTMLSummaryStyle.Resource)}");
-            htmlWriter.Write("</div>");
-            return htmlWriter.ToString();
         }
         #endregion
     }

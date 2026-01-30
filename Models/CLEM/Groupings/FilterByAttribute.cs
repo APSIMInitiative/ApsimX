@@ -146,56 +146,56 @@ namespace Models.CLEM.Groupings
             }
         }
 
-        /// <summary>
-        /// Convert sort to string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return FilterString(false);
-        }
+        ///// <summary>
+        ///// Convert sort to string
+        ///// </summary>
+        ///// <returns></returns>
+        //public override string ToString()
+        //{
+        //    return FilterString(false);
+        //}
 
-        /// <summary>
-        /// Convert filter to html string
-        /// </summary>
-        /// <returns></returns>
-        public string ToHTMLString()
-        {
-            return FilterString(true);
-        }
+        ///// <summary>
+        ///// Convert filter to html string
+        ///// </summary>
+        ///// <returns></returns>
+        //public string ToHTMLString()
+        //{
+        //    return FilterString(true);
+        //}
 
-        private string FilterString(bool htmltags)
-        {
-            using StringWriter filterWriter = new();
-            filterWriter.Write($"Filter:");
-            bool trueFalse = IsOperatorTrueFalseTest();
-            if (FilterStyle == AttributeFilterStyle.Exists | trueFalse)
-            {
-                bool nothingAdded = true;
-                if (trueFalse)
-                {
-                    if (Operator == ExpressionType.IsFalse | Value?.ToString().ToLower() == "false")
-                    {
-                        filterWriter.Write(" does not have");
-                        nothingAdded = false;
-                    }
-                }
+        //private string FilterString(bool htmltags)
+        //{
+        //    using StringWriter filterWriter = new();
+        //    filterWriter.Write($"Filter:");
+        //    bool trueFalse = IsOperatorTrueFalseTest();
+        //    if (FilterStyle == AttributeFilterStyle.Exists | trueFalse)
+        //    {
+        //        bool nothingAdded = true;
+        //        if (trueFalse)
+        //        {
+        //            if (Operator == ExpressionType.IsFalse | Value?.ToString().ToLower() == "false")
+        //            {
+        //                filterWriter.Write(" does not have");
+        //                nothingAdded = false;
+        //            }
+        //        }
 
-                if (nothingAdded)
-                {
-                    filterWriter.Write(" has");
-                }
+        //        if (nothingAdded)
+        //        {
+        //            filterWriter.Write(" has");
+        //        }
 
-                filterWriter.Write($" attribute {CLEMModel.DisplaySummaryValueSnippet(AttributeTag, "No tag", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)}");
-            }
-            else
-            {
-                filterWriter.Write($" Attribute {CLEMModel.DisplaySummaryValueSnippet(AttributeTag, "No tag", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)}");
-                filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)}");
-                filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(Value?.ToString(), "No value", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)}");
-            }
-            return filterWriter.ToString();
-        }
+        //        filterWriter.Write($" attribute {CLEMModel.DisplaySummaryValueSnippet(AttributeTag, "No tag", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)}");
+        //    }
+        //    else
+        //    {
+        //        filterWriter.Write($" Attribute {CLEMModel.DisplaySummaryValueSnippet(AttributeTag, "No tag", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)}");
+        //        filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)}");
+        //        filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(Value?.ToString(), "No value", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)}");
+        //    }
+        //    return filterWriter.ToString();
+        //}
 
         #region validation
         /// <inheritdoc/>
@@ -244,35 +244,6 @@ namespace Models.CLEM.Groupings
                         break;
                 }
             }
-        }
-        #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            return $"<div class=\"filter\" style=\"opacity: {((Enabled) ? "1" : "0.4")}\">{ToHTMLString()}</div>";
-        }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryClosingTags()
-        {
-            // allows for collapsed box and simple entry
-            return "";
-        }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryOpeningTags()
-        {
-            // allows for collapsed box and simple entry
-            return "";
         }
         #endregion
 

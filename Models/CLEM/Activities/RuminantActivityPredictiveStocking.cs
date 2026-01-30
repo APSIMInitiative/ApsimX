@@ -336,42 +336,5 @@ namespace Models.CLEM.Activities
         {
             ReportStatus?.Invoke(this, e);
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
-        {
-            return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
-            {
-                (Structure.FindChildren<RuminantGroup>(), true, "childgroupfilterborder", "Individuals will be sold in the following order:", "")
-            };
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">Pasture will be assessed in months defined by a Timer and assessed until ");
-            if ((int)LastAssessmentMonth > 0 & (int)LastAssessmentMonth <= 12)
-            {
-                htmlWriter.Write("<span class=\"setvalue\">");
-                htmlWriter.Write(LastAssessmentMonth.ToString());
-            }
-            else
-            {
-                htmlWriter.Write("<span class=\"errorlink\">No month set");
-            }
-
-            htmlWriter.Write("</span></div>");
-
-            htmlWriter.Write("\r\n<div class=\"activityentry\">The herd will be sold to maintain ");
-            htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(FeedLowLimit, warnZero: true)} kg/ha at the end of this period");
-            htmlWriter.Write("</div>");
-            return htmlWriter.ToString();
-        }
-
-        #endregion
-
     }
 }

@@ -383,13 +383,5 @@ namespace Models.CLEM.Resources
         {
             throw new NotImplementedException();
         }
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            string html = "";
-            return html;
-        }
-
     }
 }

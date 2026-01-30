@@ -44,14 +44,6 @@ namespace Models.CLEM.Resources
         public double ConditionBasedConceptionProbability { get; set; }
 
         /// <summary>
-        /// constructor
-        /// </summary>
-        public RuminantConceptionByCondition()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
-        }
-
-        /// <summary>
         /// Calculate conception rate for a female based on condition score
         /// </summary>
         /// <param name="female">Female to calculate conception rate for</param>
@@ -73,42 +65,5 @@ namespace Models.CLEM.Resources
                     throw new NotImplementedException($"No conception estimate available for style {ConditionBasedConceptionStyle}");
             }
         }
-
-        #region descriptive summary 
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("<div class=\"activityentry\">");
-            htmlWriter.Write("Females ");
-            switch (ConditionBasedConceptionStyle)
-            {
-                case ConditionBasedCalculationStyle.ProportionOfMaxWeightToSurvive:
-                    htmlWriter.Write("with a ratio of live weight to highest weight achieved greater than or equal to ");
-                    break;
-                case ConditionBasedCalculationStyle.RelativeCondition:
-                    htmlWriter.Write("with a relative condition (live weight over normalised weight) greater than or equal to ");
-                    break;
-                case ConditionBasedCalculationStyle.BodyConditionScore:
-                    htmlWriter.Write("with a Body Condition Score greater than or equal to ");
-                    break;
-                case ConditionBasedCalculationStyle.None:
-                    htmlWriter.Write("");
-                    break;
-                default:
-                    htmlWriter.Write("with <span class=\"errorlink\">Undefined style selected</span> ");
-                    break;
-            }
-            if (ConditionBasedConceptionStyle != ConditionBasedCalculationStyle.None)
-            {
-                htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(ConditionBasedConceptionCutOff, warnZero: true)}");
-            }
-            htmlWriter.Write($" will have a {CLEMModel.DisplaySummaryValueSnippet(ConditionBasedConceptionProbability, warnZero: true)} probability of conceiving.");
-            htmlWriter.Write("</div>");
-            return htmlWriter.ToString();
-        }
-
-        #endregion
     }
 }

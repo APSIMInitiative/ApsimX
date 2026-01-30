@@ -1,5 +1,6 @@
 ﻿using Models.Core;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Resources
 {
@@ -14,6 +15,11 @@ namespace Models.CLEM.Resources
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantParametersHolder: CLEMModel
     {
+        /// <summary>
+        /// Switch to determine if summary ruminant parameters are displayed in the descriptive summary
+        /// </summary>
+        [Description("Display summary parameters in descriptive summary")]
+        public bool DisplaySummaryParameters { get; set; } = true;
 
     }
 }

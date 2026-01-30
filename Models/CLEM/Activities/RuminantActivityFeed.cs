@@ -451,23 +451,5 @@ namespace Models.CLEM.Activities
             }
         }
         #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">Feed ruminants ");
-            htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(FeedTypeName, "Feed not set", HTMLSummaryStyle.Resource));
-            htmlWriter.Write("</div>");
-            if (ProportionTramplingWastage > 0)
-            {
-                htmlWriter.Write($"\r\n<div class=\"activityentry\"> <span class=\"setvalue\">{ProportionTramplingWastage:0.##%}</span> is lost through trampling</div>");
-            }
-
-            return htmlWriter.ToString();
-        } 
-        #endregion
     }
 }

@@ -50,14 +50,6 @@ namespace Models.CLEM.Groupings
         [Required, GreaterThanValue(0), Proportion]
         public double ProbabilityOfDying { get; set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public RuminantDeathGroupCondition()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
-        }
-
         /// <inheritdoc/>
         public override void DetermineDeaths(IEnumerable<Ruminant> individuals)
         {
@@ -86,37 +78,6 @@ namespace Models.CLEM.Groupings
                 ind.SaleFlag = HerdChangeReason.DiedUnderweight;
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write($"\r\n<div class=\"activityentry\">Specified individuals with a ");
-            switch (ConditionMetric)
-            {
-                case ConditionBasedCalculationStyle.ProportionOfMaxWeightToSurvive:
-                    htmlWriter.Write($"\r\n<div class=\"setvalue\">proportion of current weight to maximum weight attained</span>");
-                    break;
-                case ConditionBasedCalculationStyle.RelativeCondition:
-                    htmlWriter.Write($"\r\n<div class=\"setvalue\">relative condition</span>");
-                    break;
-                case ConditionBasedCalculationStyle.BodyConditionScore:
-                    htmlWriter.Write($"\r\n<div class=\"setvalue\">body condition score</span>");
-                    break;
-                case ConditionBasedCalculationStyle.EmptyBodyFatProportion:
-                    htmlWriter.Write($"\r\n<div class=\"setvalue\">proportion of body fat</span>");
-                    break;
-                default:
-                    break;
-            }
-            htmlWriter.Write($" less than {DisplaySummaryValueSnippet(CutOff, warnZero: true)}");
-            htmlWriter.Write($" have a probability of death of {DisplaySummaryValueSnippet(ProbabilityOfDying, warnZero: true)} for the time-step.</div>");
-            return htmlWriter.ToString();
-        }
-
-        #endregion
     }
 
 }

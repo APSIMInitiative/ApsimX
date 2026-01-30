@@ -502,51 +502,5 @@ namespace Models.CLEM.Activities
         }
 
         #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
-        {
-            return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
-            {
-                (Structure.FindChildren<Relationship>(), true, "childgroupactivityborder", "Relationships for change in land condition and grass basal area as function of utilisation:", "")
-            };
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(FeedTypeName, "Pasture not set", HTMLSummaryStyle.Resource));
-            htmlWriter.Write(" occupies ");
-            Land parentLand = null;
-            if (LandTypeNameToUse != null && LandTypeNameToUse != "")
-            {
-                parentLand = Structure.Find<Land>(LandTypeNameToUse.Split('.')[0]);
-            }
-
-            if (UseAreaAvailable)
-            {
-                htmlWriter.Write("the unallocated portion of ");
-            }
-            else
-            {
-                if (parentLand == null)
-                {
-                    htmlWriter.Write($"<span class=\"setvalue\">{AreaRequested:#,##0.###}</span> <span class=\"errorlink\">[UNITS NOT SET]</span> of ");
-                }
-                else
-                {
-                    htmlWriter.Write($"<span class=\"setvalue\">{AreaRequested:#,##0.###}</span> {parentLand.UnitsOfArea} of ");
-                }
-            }
-            htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(LandTypeNameToUse, "Land not set", HTMLSummaryStyle.Resource));
-            htmlWriter.Write("</div>");
-
-            return htmlWriter.ToString();
-        }
-        #endregion
     }
 }

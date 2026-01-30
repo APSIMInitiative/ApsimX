@@ -53,14 +53,6 @@ namespace Models.CLEM.Groupings
         [Models.Core.Display(Order = 500)]
         public string TransactionCategory { get; set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public OtherAnimalsFeedGroup()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
-        }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>

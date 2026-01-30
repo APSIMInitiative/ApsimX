@@ -243,41 +243,5 @@ namespace Models.CLEM.Activities
                 SetStatusSuccessOrPartial(amountToSkip > 0);
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            htmlWriter.Write($"Cut {DisplaySummaryValueSnippet(Supply, warnZero: true)}");
-            switch (CutStyle)
-            {
-                case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-                    htmlWriter.Write(" kg ");
-                    break;
-                case RuminantFeedActivityTypes.ProportionOfWeight:
-                    htmlWriter.Write(" of herd <span class=\"setvalue\">live weight</span> ");
-                    break;
-                case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-                    htmlWriter.Write(" of herd <span class=\"setvalue\">potential intake</span> ");
-                    break;
-                case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                    htmlWriter.Write(" of herd <span class=\"setvalue\">remaining intake required</span> ");
-                    break;
-                default:
-                    break;
-            }
-
-            htmlWriter.Write("from ");
-            htmlWriter.Write(DisplaySummaryValueSnippet(PaddockName, "Pasture not set", HTMLSummaryStyle.Resource));
-            htmlWriter.Write(" and carry to ");
-            htmlWriter.Write(DisplaySummaryValueSnippet(AnimalFoodStoreName, "Store not set", HTMLSummaryStyle.Resource));
-            htmlWriter.Write("</div>");
-            return htmlWriter.ToString();
-        }
-        #endregion
-
     }
 }

@@ -27,28 +27,5 @@ namespace Models.CLEM.Activities
         {
             Status = ActivityStatus.NoTask;
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            return $"\r\n<div class=folder>{this.Name} folder {((!this.Enabled) ? " - DISABLED!" : "")}</div>";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryClosingTags()
-        {
-            return "\r\n</div>";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags()
-        {
-            return $"\r\n<div class=\"activityborder\" style=\"opacity: {SummaryOpacity(FormatForParentControl)};\">";
-        } 
-        #endregion
-
-
     }
 }

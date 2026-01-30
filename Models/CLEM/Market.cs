@@ -160,35 +160,5 @@ namespace Models.CLEM
             }
         }
         #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        [JsonIgnore]
-        public List<string> CurrentAncestorList { get; set; } = new List<string>();
-
-        /// <inheritdoc/>
-        public bool FormatForParentControl { get { return CurrentAncestorList.Count > 1; } }
-
-        /// <inheritdoc/>
-        public string GetFullSummary(object model, List<string> parentControls, Func<string, string> markdown2Html = null)
-        {
-            using StringWriter htmlWriter = new();
-            var parents = parentControls.ToList();
-            parents.Add(model.GetType().Name);
-
-            htmlWriter.Write($"\r\n<div class=\"holdermain\" style=\"opacity: {((!this.Enabled) ? "0.4" : "1")}\">");
-            foreach (CLEMModel cm in Structure.FindChildren<CLEMModel>())
-            {
-                htmlWriter.Write(cm.GetFullSummary(cm, parents, "", markdown2Html));
-            }
-
-            htmlWriter.Write("</div>");
-
-            return htmlWriter.ToString();
-        }
-        #endregion
-
-
     }
 }

@@ -51,9 +51,9 @@ namespace Models.CLEM.Resources
         public float Value { get; set; }
 
         /// <summary>
-        /// Minumum of value
+        /// Minimum of value
         /// </summary>
-        [Description("Minumum value")]
+        [Description("Minimum value")]
         [Required]
         public float MinimumValue { get; set; }
 
@@ -140,91 +140,5 @@ namespace Models.CLEM.Resources
             }
             return Convert.ToSingle(Math.Min(MaximumValue, Math.Max(MinimumValue, Convert.ToDouble(value) + sd * randStdNormal)));
         }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public SetAttributeWithValue()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
-        }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            if (FormatForParentControl)
-            {
-                if (!(CurrentAncestorList.Count >= 3 && CurrentAncestorList[CurrentAncestorList.Count - 3] == typeof(RuminantInitialCohorts).Name))
-                {
-                    bool isgroupattribute = (CurrentAncestorList.Count >= 2 && CurrentAncestorList[CurrentAncestorList.Count - 2] == typeof(RuminantInitialCohorts).Name);
-
-                    htmlWriter.Write("\r\n<div class=\"resourcebanneralone clearfix\">");
-                    htmlWriter.Write($"Attribute  ");
-                    if (AttributeName == null || AttributeName == "")
-                        htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
-                    else
-                        htmlWriter.Write($"<span class=\"setvalue\">{AttributeName}</span>");
-
-                    if (StandardDeviation == 0)
-                        htmlWriter.Write($" is provided {(isgroupattribute ? "to all cohorts" : "")} with a value of <span class=\"setvalue\">{Value}</span> ");
-                    else
-                        htmlWriter.Write($" is provided {(isgroupattribute ? "to all cohorts" : "")} with a value taken from mean = <span class=\"setvalue\">{Value}</span> and s.d. = <span class=\"setvalue\">{StandardDeviation}</span>");
-
-                    htmlWriter.Write($"</div>");
-                }
-            }
-            else
-            {
-                htmlWriter.Write($"\r\n<div class=\"activityentry\">");
-                htmlWriter.Write($"Provide an attribute with the label ");
-                if (AttributeName == null || AttributeName == "")
-                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
-                else
-                    htmlWriter.Write($"<span class=\"setvalue\">{AttributeName}</span>");
-
-                htmlWriter.Write($" that will be inherited with the <span class=\"setvalue\">{InheritanceStyle}</span> style");
-                if (Mandatory)
-                    htmlWriter.Write($" and is required by all individuals in the population");
-
-                htmlWriter.Write($"</div>");
-
-                htmlWriter.Write($"\r\n<div class=\"activityentry\">");
-                if (StandardDeviation == 0)
-                    htmlWriter.Write($"This attribute has a value of <span class=\"setvalue\">{Value}</span> ");
-                else
-                    htmlWriter.Write($"This attribute's value is randonly taken from the normal distribution with a mean of <span class=\"setvalue\">{Value}</span> and standard deviation of <span class=\"setvalue\">{StandardDeviation}</span> ");
-
-                if (InheritanceStyle != AttributeInheritanceStyle.None)
-                    htmlWriter.Write($" and is allowed to vary between <span class=\"setvalue\">{MinimumValue}</span> and <span class=\"setvalue\">{MaximumValue}</span> when inherited");
-
-                htmlWriter.Write($"</div>");
-            }
-            return htmlWriter.ToString();
-        }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryClosingTags()
-        {
-            return !FormatForParentControl ? base.ModelSummaryClosingTags() : "";
-        }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryOpeningTags()
-        {
-            return !FormatForParentControl ? base.ModelSummaryOpeningTags() : "";
-        }
-
-        #endregion
-
-
     }
 }

@@ -14,13 +14,11 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantParametersGrowPF))]
-    [Description("RuminantActivityGrowPF (CRD - rumen digestibility)")]
+    [Description("Ruminant rumen degradability (CRD) and digestibility (CA) for GrowPF approach")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrowPFCACRD.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantParametersGrowPFCACRD : CLEMModel, ISubParameters, ICloneable
     {
-        #region Rumen Degradability CRD#
-
         /// <summary>
         /// Rumen degradability intercept (SCA CRD1) [Core] [def=] - Growth
         /// </summary>
@@ -73,10 +71,6 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanEqualValue(0)]
         public double ProteinShortfallAlleviationScalar { get; set; } = 0.0; // B.indicus 0.5, B.indicus x breeds 0.25 sheep 0 bos taurus 0
 
-        #endregion
-
-        #region CA#
-
         // CA1- CA4, CA9 hard coded in DUDP calculations FoodResourceStore.DUDP
 
         /// <summary>
@@ -105,9 +99,6 @@ namespace Models.CLEM.Resources
 
         // UDP digestibility in concentrates
 
-        #endregion
-
-
         /// <summary>
         /// Create copy of this class
         /// </summary>
@@ -130,19 +121,5 @@ namespace Models.CLEM.Resources
             };
             return clonedParameters;
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            htmlWriter.Write("Ruminant parameters for digestibility (CA) and Rumen degradability (CRD)</div>");
-            return htmlWriter.ToString();
-        }
-
-        #endregion
-
     }
 }

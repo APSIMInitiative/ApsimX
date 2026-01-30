@@ -154,12 +154,5 @@ namespace Models.CLEM.Activities
             }
             SetStatusSuccessOrPartial(amountToSkip > 0);
         }
-
-        ///<inheritdoc/>
-        public override string ModelSummary()
-        {
-            return "\r\n<div class=\"activityentry\">Collect manure from all pasture</div>";
-        }
-
     }
 }

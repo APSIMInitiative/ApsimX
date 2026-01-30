@@ -96,14 +96,6 @@ namespace Models.CLEM.Timers
             return (events?.TimeStep ?? TimeStepTypes.Daily) != TimeStepTypes.Monthly;
         }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public ActivityTimerCalendar()
-        {
-            ModelSummaryStyle = HTMLSummaryStyle.Filter;
-        }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -195,112 +187,6 @@ namespace Models.CLEM.Timers
             {
                 yield return new ValidationResult("Either both or neither of Start and End year must be 0", new[] { nameof(StartDetails), nameof(EndDetails) });
             }
-        }
-
-        #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            Clock clock = Structure.Find<Clock>();
-            CLEMEvents clemEvents = Structure.Find<CLEMEvents>();
-            clemEvents.SetInterval();
-            clemEvents.Clock = clock;
-            if (clock is null || clemEvents is null)
-            {
-                return $"<div class=\"filter\"><span class=\"errorlink\">No CLEM Events component provided below Clock</span></div>";
-            }
-
-            if (StartDetails.Parts[0] > 0 & StartDetails.Parts[1] == 0)
-            {
-                return $"<div class=\"filter\"><span class=\"errorlink\">Invalid date component specified. Missing month value</span></div>";
-            }
-
-            TimerRange range = new(clemEvents, StartDetails, EndDetails, RepeatInterval, WholeTimeStepMustBeInRange, Structure.FindChildren<ActivityTimerSequence>(), true);
-
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"filter\">");
-
-            string invertString = (Invert) ? "when <b>NOT</b> " : "";
-
-            if (range.Start.ymd.month == range.End.ymd.month & (range.Start.IsMonthOnly | range.Start.ymd.day == range.End.ymd.day))
-            {
-                if (range.Start.ymd.month > 0 & range.Start.IsMonthOnly)
-                {
-                    htmlWriter.Write($"Perform {invertString} in ");
-                }
-                else
-                {
-                    htmlWriter.Write($"Perform {invertString} on ");
-                }
-            }
-            else
-            {
-                htmlWriter.Write($"Perform {invertString} between ");
-            }
-
-            if (range.Start.ErrorMessages.Count() > 0)
-            {
-                htmlWriter.Write($"<span class=\"errorlink\">{range.Start.ErrorMessages.First()}</span>");
-            }
-            else
-            {
-                htmlWriter.Write($"<span class=\"setvalueextra\">{range.Start.ToString()}</span>");
-            }
-
-            if (range.Start.ymd.month != range.End.ymd.month | (range.Start.IsMonthOnly == false & range.Start.ymd.day != range.End.ymd.day))
-            {
-                htmlWriter.Write($" and ");
-                if (range.End.ErrorMessages.Count() > 0)
-                {
-                    htmlWriter.Write($"<span class=\"errorlink\">{range.End.ErrorMessages.First()}</span>");
-                }
-                else
-                {
-                    htmlWriter.Write($"<span class=\"setvalueextra\">{range.End.ToString()}</span>");
-                }
-            }
-
-            if (range.IsFloatingRange)
-            {
-                htmlWriter.Write($"<span class=\"setvalueextra\">{range.RepeatIntervalToString()}</span>");
-            }
-
-            if (range.WholeTimeStepInRange)
-            {
-                htmlWriter.Write($"<span class=\"setvalueextra\">where whole time-step must be in range</span>");
-            }
-
-            htmlWriter.Write("</div>");
-            if (!Enabled & !FormatForParentControl)
-            {
-                htmlWriter.Write(" - DISABLED!");
-            }
-
-            return htmlWriter.ToString();
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryClosingTags()
-        {
-            return "</div>";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("<div class=\"filtername\">");
-            if (!Name.Contains(this.GetType().Name.Split('.').Last()))
-            {
-                htmlWriter.Write(this.Name);
-            }
-
-            htmlWriter.Write($"</div>");
-            htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
-            return htmlWriter.ToString();
         }
 
         #endregion

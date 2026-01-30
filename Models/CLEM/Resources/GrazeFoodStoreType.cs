@@ -1128,58 +1128,6 @@ namespace Models.CLEM.Resources
             }
         }
         #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new StringWriter();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            htmlWriter.Write("This pasture has an initial green nitrogen content of ");
-            if (this.GreenNitrogenPercent == 0)
-                htmlWriter.Write("<span class=\"errorlink\">Not set</span>%");
-            else
-                htmlWriter.Write($"<span class=\"setvalue\">{GreenNitrogenPercent:0.###}%</span>");
-
-            if (DecayNitrogen > 0)
-                htmlWriter.Write($" and will decline by <span class=\"setvalue\">{DecayNitrogen:0.###}%</span> per month to a minimum nitrogen of <span class=\"setvalue\">{MinimumNitrogen:0.###}%</span>");
-
-            htmlWriter.Write("\r\n</div>");
-            if (DecayDMD > 0)
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write($"Dry Matter Digestibility will decay at a rate of <span class=\"setvalue\">{DecayDMD:0.###}</span> per month to a minimum DMD of <span class=\"setvalue\">{MinimumDMD:0.###}%</span>");
-                htmlWriter.Write("\r\n</div>");
-            }
-            if (DetachRate > 0)
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write($"Pasture is lost through detachment at a rate of <span class=\"setvalue\">{DetachRate:0.###}</span> per month");
-                if (CarryoverDetachRate > 0)
-                    htmlWriter.Write($" and <span class=\"setvalue\">{CarryoverDetachRate:0.###}</span> per month after 12 months");
-
-                htmlWriter.Write("\r\n</div>");
-            }
-            else
-            {
-                if (CarryoverDetachRate > 0)
-                {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write($"Pasture is lost through detachement at a rate of <span class=\"setvalue\">{CarryoverDetachRate:0.###}</span> per month after 12 months");
-                    htmlWriter.Write("\r\n</div>");
-                }
-            }
-            return htmlWriter.ToString();
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags()
-        {
-            return "";
-        }
-        #endregion
-
     }
 
 }

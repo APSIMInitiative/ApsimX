@@ -21,14 +21,6 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/Labour/LabourPricing.htm")]
     public class LabourPricing : CLEMModel, IValidatableObject
     {
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public LabourPricing()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
-        }
-
         #region validation
 
         /// <inheritdoc/>
@@ -42,37 +34,6 @@ namespace Models.CLEM.Resources
             {
                 yield return new ValidationResult($"No price [Value] has been set for some of the [LabourPriceGroup] in [r={Name}]\r\nThese will not result in price calculations and can be deleted.", new string[] { "Labour pricing" });
             }
-        }
-
-        #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            if (!Children.OfType<LabourPriceGroup>().Any())
-            {
-                return "\r\n<div class=\"errorlink\">No labour price groups has been defined</div>";
-            }
-            return "";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags()
-        {
-            return "</table>";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags()
-        {
-            if (Children.OfType<LabourPriceGroup>().Any())
-            {
-                return "<table><tr><th>Name</th><th>Filter</th><th>Rate per day</th></tr>";
-            }
-
-            return "";
         }
 
         #endregion

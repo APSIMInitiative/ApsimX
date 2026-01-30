@@ -73,7 +73,7 @@ namespace Models.CLEM.Activities
                     summary.WriteMessage(this, $"Ruminant intake reduction based on high condition is disabled for [{indgrp.Key}].{Environment.NewLine}To allow this functionality set [Parameters].[GrowPF].[GrowPF CI].RelativeConditionEffect_CI20 to a value greater than [1] (default 1.5)", MessageType.Warning);
                 }
                 // intake reduced by quality of feed
-                if (indgrp.First().Parameters.GrowPF_CI.IgnoreFeedQualityIntakeAdustment)
+                if (indgrp.First().Parameters.GrowPF_CI.IgnoreFeedQualityIntakeAdjustment)
                 {
                     summary ??= Structure.Find<Summary>();
                     summary.WriteMessage(this, $"Ruminant intake reduction based on intake quality is disabled for [{indgrp.Key}].{Environment.NewLine}To allow this functionality set [Parameters].[GrowPF].[GrowPF CI].IgnoreFeedQualityIntakeAdustment to [False]", MessageType.Warning);

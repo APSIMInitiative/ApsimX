@@ -14,13 +14,13 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantParametersHolder))]
-    [Description("This model provides all parameters specific to RuminantActivityGrowPF")]
+    [Description("Ruminant parameters holder for GrowPF parameters")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrowPF.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGrowPFCACRD), typeof(RuminantParametersGrowPFCD), typeof(RuminantParametersGrowPFCG), typeof(RuminantParametersGrowPFCI), typeof(RuminantParametersGrowPFCKCL), typeof(RuminantParametersGrowPFCM), typeof(RuminantParametersGrowPFCP) },
         associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent, ModelAssociationStyle.Child },
         SingleInstance = true)]
-    public class RuminantParametersGrowPF : CLEMModel, ISubParameters, ICloneable
+    public class RuminantParametersGrowPF : CLEMModel, ICloneable
     {
         /// <summary>
         /// Create copy of this class
@@ -31,19 +31,5 @@ namespace Models.CLEM.Resources
         {
             throw new NotImplementedException();
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            htmlWriter.Write("Manages all prarameter groups required for RuminantActivityGrowPF</div>");
-            return htmlWriter.ToString();
-        }
-
-        #endregion
-
     }
 }

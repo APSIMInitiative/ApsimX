@@ -188,14 +188,6 @@ namespace Models.CLEM
         public string ErrorMessage = string.Empty;
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        public FileSQLitePasture()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.FileReader;
-        }
-
-        /// <summary>
         /// Does file exist
         /// </summary>
         public bool FileExists
@@ -372,8 +364,6 @@ namespace Models.CLEM
             return results;
         }
 
-        #region Properties and Methods for populating the User Interface with data
-
         /// <summary>
         /// Gets or sets the full file name (with path). The user interface uses this.
         /// Must be a property so that the Presenter can use a  Commands.ChangeProperty() on it.
@@ -464,10 +454,6 @@ namespace Models.CLEM
                 return null;
             }
         }
-
-        #endregion
-
-        #region Event Handlers for Running Simulation
 
         /// <summary>An event handler to allow us to initialise</summary>
         /// <param name="sender">The sender.</param>
@@ -822,92 +808,5 @@ namespace Models.CLEM
 
             return pasturedata;
         }
-
-        #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            if (FileName == null || FileName == "")
-            {
-                htmlWriter.Write("Using <span class=\"errorlink\">[FILE NOT SET]</span>");
-                htmlWriter.Write("\r\n</div>");
-            }
-            else
-            {
-                if (!this.FileExists)
-                {
-                    htmlWriter.Write($"The file <span class=\"errorlink\">{ FullFileName}</span> could not be found\r\n</div>");
-                }
-                else
-                {
-                    htmlWriter.Write($"Using <span class=\"filelink\">{ FileName}</span>\r\n</div>");
-
-                    // Add table name
-                    htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"Margin-left:15px;\">");
-                    htmlWriter.Write($"Using table <span class=\"filelink\">{ TableName}</span>");
-                    // add column links
-                    htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"Margin-left:15px;\">");
-
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Region id</span> is {CLEMModel.DisplaySummaryValueSnippet(RegionColumnName)}");
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Land id</span> is {CLEMModel.DisplaySummaryValueSnippet(LandIdColumnName)}");
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Grass basal area</span> is {CLEMModel.DisplaySummaryValueSnippet(GrassBAColumnName)}");
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Land condition</span> is {CLEMModel.DisplaySummaryValueSnippet(LandConColumnName)}");
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Stocking rate</span> is {CLEMModel.DisplaySummaryValueSnippet(StkRateColumnName)}");
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Year</span> is {CLEMModel.DisplaySummaryValueSnippet(YearColumnName)}");
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is {CLEMModel.DisplaySummaryValueSnippet(MonthColumnName)}");
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Grwoth</span> is {CLEMModel.DisplaySummaryValueSnippet(GrowthColumnName)}");
-
-                    // other data columns
-                    if (ErosionColumnName is null || ErosionColumnName == "")
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">No erosion data will be obtained from database</div>");
-                    else
-                    {
-                        htmlWriter.Write($"\r\n<div class=\"activityentry\">Erosion data will be obtained from column named {CLEMModel.DisplaySummaryValueSnippet(ErosionColumnName)}");
-                    }
-
-                    if (RunoffColumnName is null || RunoffColumnName == "")
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">No runoff data will be obtained from database</div>");
-                    else
-                    {
-                        htmlWriter.Write($"\r\n<div class=\"activityentry\">Runoff data will be obtained from column named {CLEMModel.DisplaySummaryValueSnippet(RunoffColumnName)}");
-                    }
-
-                    if (RainfallColumnName is null || RainfallColumnName == "")
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">No rainfall data will be obtained from database</div>");
-                    else
-                    {
-                        htmlWriter.Write($"\r\n<div class=\"activityentry\">Rainfall data will be obtained from column named {CLEMModel.DisplaySummaryValueSnippet(RainfallColumnName)}");
-                    }
-
-                    if (CoverColumnName is null || CoverColumnName == "")
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">No cover data will be obtained from database</div>");
-                    else
-                    {
-                        htmlWriter.Write($"\r\n<div class=\"activityentry\">Cover data will be obtained from column named {CLEMModel.DisplaySummaryValueSnippet(CoverColumnName)}");
-                    }
-
-                    if (TBAColumnName is null || TBAColumnName == "")
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">No tree basal area data will be obtained from database</div>");
-                    else
-                    {
-                        htmlWriter.Write($"\r\n<div class=\"activityentry\">Tree basal area data will be obtained from column named {CLEMModel.DisplaySummaryValueSnippet(TBAColumnName)}");
-                    }
-                    htmlWriter.Write("\r\n</div>");
-                    htmlWriter.Write("\r\n</div>");
-                }
-            }
-            if (MissingDataAction == OnMissingResourceActionTypes.Ignore)
-            {
-                htmlWriter.Write("\r\n<div class=\"warningbanner\">CAUTION: The simulation will assume no production and associated monthly values such as rainfall if any monthly pasture production entries are missing. You will not be alerted to this possible problem with the pasture database. It is suggested that you run your simulation with another setting of MissingDataAction to check the database when setting up your simulation.</div>");
-            }
-
-            return htmlWriter.ToString();
-        }
-        #endregion
     }
 }

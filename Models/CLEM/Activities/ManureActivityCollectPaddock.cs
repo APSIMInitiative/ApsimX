@@ -160,19 +160,5 @@ namespace Models.CLEM.Activities
             }
             SetStatusSuccessOrPartial(amountToSkip > 0);
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">Collect manure from ");
-            htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(GrazeFoodStoreTypeName, "Pasture not set", HTMLSummaryStyle.Resource));
-            htmlWriter.Write("</div>");
-            return htmlWriter.ToString();
-        }
-        #endregion
-
     }
 }

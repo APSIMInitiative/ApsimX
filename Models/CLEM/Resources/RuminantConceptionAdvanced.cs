@@ -41,14 +41,6 @@ namespace Models.CLEM.Resources
         public double[] ConceptionRateAsymptote { get; set; }
 
         /// <summary>
-        /// constructor
-        /// </summary>
-        public RuminantConceptionAdvanced()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
-        }
-
-        /// <summary>
         /// Calculate conception rate for a female
         /// </summary>
         /// <param name="female">Female to calculate conception rate for</param>
@@ -95,16 +87,5 @@ namespace Models.CLEM.Resources
             rate = Math.Max(0, Math.Min(rate, 100));
             return rate / 100;
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            return "<div class=\"activityentry\">Conception rates are being calculated for first pregnancy before 12 months, between 12-24 months and after 24 months as well as 2nd calf and 3rd or later calf. </div>";
-        }
-
-
-        #endregion
     }
 }

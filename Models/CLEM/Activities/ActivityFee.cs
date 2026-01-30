@@ -73,7 +73,6 @@ namespace Models.CLEM.Activities
         public ActivityFee()
         {
             AllocationStyle = ResourceAllocationStyle.Manual;
-            ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -138,23 +137,5 @@ namespace Models.CLEM.Activities
                 SetStatusSuccessOrPartial(shortfalls);
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write($"\r\n<div class=\"activityentry\">Pay {CLEMModel.DisplaySummaryValueSnippet(Amount, "Rate not set")} ");
-            if (Measure?.ToLower() != "")
-            {
-                htmlWriter.Write($"per {CLEMModel.DisplaySummaryValueSnippet(Measure, "Measure not set")} ");
-            }
-
-            htmlWriter.Write($"from {DisplaySummaryResourceTypeSnippet(BankAccountName)}</div>");
-            return htmlWriter.ToString();
-        }
-        #endregion
-
     }
 }

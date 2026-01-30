@@ -24,14 +24,6 @@ namespace Models.CLEM.Resources
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class AnimalPricing : CLEMModel, IValidatableObject
     {
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public AnimalPricing()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
-        }
-
         #region validation
 
         /// <inheritdoc/>
@@ -49,43 +41,5 @@ namespace Models.CLEM.Resources
         }
 
         #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            return "";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags()
-        {
-            string html = "";
-            if (Structure.FindChildren<AnimalPriceGroup>().Any())
-            {
-                html += "</table></div>";
-            }
-
-            return html;
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags()
-        {
-            string html = "";
-            if (Structure.FindChildren<AnimalPriceGroup>().Any())
-            {
-                html += "<div class=\"topspacing\"><table><tr><th>Name</th><th>Filter</th><th>Value</th><th>Style</th><th>Type</th></tr>";
-            }
-            else
-            {
-                html += "<span class=\"errorlink\">No Animal Price Groups defined!</span>";
-            }
-
-            return html;
-        }
-        #endregion
-
     }
 }

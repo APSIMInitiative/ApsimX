@@ -194,14 +194,6 @@ namespace Models.CLEM
         public string ErrorMessage = string.Empty;
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        public FileSQLiteCrop()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.FileReader;
-        }
-
-        /// <summary>
         /// Searches the DataTable created from the Forage File using the specified parameters.
         /// <returns></returns>
         /// </summary>
@@ -295,72 +287,5 @@ namespace Models.CLEM
             return cropData;
         }
 
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            if (FileName == null || FileName == "")
-            {
-                htmlWriter.Write("Using <span class=\"errorlink\">FILE NOT SET</span>");
-                htmlWriter.Write("\r\n</div>");
-            }
-            else
-            {
-                if (!this.FileExists)
-                {
-                    htmlWriter.Write($"The file <span class=\"errorlink\">{FullFileName}</span> could not be found");
-                    htmlWriter.Write("\r\n</div>");
-                }
-                else
-                {
-                    htmlWriter.Write($"Using <span class=\"filelink\">{ FileName}</span>");
-
-                    if (TableName == null || TableName == "")
-                    {
-                        htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"Margin-left:15px;\">Using table <span class=\"errorlink\">[TABLE NOT SET]</span></div>");
-                    }
-                    else
-                    {
-                        // Add table name
-                        htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"Margin-left:15px;\">");
-                        htmlWriter.Write($"Using table <span class=\"filelink\">{TableName}</span>");
-                        // add column links
-                        htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"Margin-left:15px;\">");
-                        htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Land id</span> is {CLEMModel.DisplaySummaryValueSnippet(SoilTypeColumnName)}");
-                        htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Crop name</span> is {CLEMModel.DisplaySummaryValueSnippet(CropNameColumnName)}");
-                        htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Date</span> is {CLEMModel.DisplaySummaryValueSnippet(DateColumnName)}");
-                        htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Growth</span> is {CLEMModel.DisplaySummaryValueSnippet(AmountColumnName)}");
-
-                        if (PercentNitrogenColumnName is null || PercentNitrogenColumnName == "")
-                        {
-                            htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">NOT NEEDED</span></div>");
-                        }
-                        else
-                        {
-                            htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">{PercentNitrogenColumnName}</span></div>");
-                        }
-
-                        if (HarvestTypeColumnName is null || HarvestTypeColumnName == "")
-                        {
-                            htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Harvest</span> is <span class=\"setvalue\">NOT NEEDED</span></div>");
-                        }
-                        else
-                        {
-                            htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Harvest</span> is <span class=\"setvalue\">{HarvestTypeColumnName}</span></div>");
-                        }
-
-                        htmlWriter.Write("\r\n</div>");
-                    }
-                    htmlWriter.Write("\r\n</div>");
-                }
-            }
-            return htmlWriter.ToString();
-
-        }
-        #endregion
     }
-
 }

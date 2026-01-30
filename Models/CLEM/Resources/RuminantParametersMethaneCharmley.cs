@@ -13,7 +13,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantParametersHolder))]
-    [Description("This model provides all general parameters for the Enteric Methane - Charmely")]
+    [Description("Ruminant enteric methane emission parameters specific to Charmley et all approach")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersMethaneCharmley.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantParametersMethaneCharmley: CLEMModel, ISubParameters, ICloneable
@@ -21,7 +21,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Methane production from intake coefficient
         /// </summary>
-        [Category("Farm", "Products")]
+        [Category("Farm:Summary", "Products")]
         [Description("Methane production from intake coefficient")]
         [Required, GreaterThanValue(0)]
         [System.ComponentModel.DefaultValue(20.7)]
@@ -38,19 +38,5 @@ namespace Models.CLEM.Resources
                 MethaneProductionCoefficient = MethaneProductionCoefficient
             };
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-            htmlWriter.Write("Ruminant parameters for enteric methane using Charmley method</div>");
-            return htmlWriter.ToString();
-        }
-
-        #endregion
-
     }
 }

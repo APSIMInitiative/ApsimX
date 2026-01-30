@@ -64,14 +64,6 @@ namespace Models.CLEM
         /// </summary>
         public bool AmountPerPacketEnabled() { return TransmuteStyle != TransmuteStyle.Direct; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public TransmuteLabour()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
-        }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -133,41 +125,6 @@ namespace Models.CLEM
             }
         }
         #endregion
-
-        #region descriptive summary
-
-        ///<inheritdoc/>
-        public override string ModelSummaryNameTypeHeaderText()
-        {
-            return Transmute.AddTransmuteStyleText(this);
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("<div class=\"activityentry\">");
-            if (TransmuteStyle == TransmuteStyle.Direct)
-            {
-                htmlWriter.Write($"<span class=\"setvalue\">{AmountPerPacket:#,##0.##}</span> days labour ");
-            }
-
-            htmlWriter.Write(" ruminants (B) are taken from the following groups to supply shortfall resource (A) ");
-
-            if (TransmuteStyle == TransmuteStyle.UsePricing)
-            {
-                htmlWriter.Write($" using the herd pricing details");
-                if (FinanceTypeForTransactionsName != null && FinanceTypeForTransactionsName != "")
-                {
-                    htmlWriter.Write($" with all financial Transactions of sales and purchases using <span class=\"resourcelink\">{TransmuteResourceTypeName}</span>");
-                }
-            }
-            htmlWriter.WriteLine("</div>");
-            return htmlWriter.ToString();
-        }
-
-        #endregion
-
     }
 
 }
