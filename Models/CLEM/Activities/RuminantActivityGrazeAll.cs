@@ -63,7 +63,7 @@ namespace Models.CLEM.Activities
             foreach (GrazeFoodStoreType pastureType in grazeFoodStore.Children.Where(a => a.GetType() == typeof(GrazeFoodStoreType) || a.GetType() == typeof(CommonLandFoodStoreType)))
             {
                 var newGrazePasture = new RuminantActivityGrazePasture(this, pastureType, transCat, nextUID);
-                Core.ApsimFile.Structure.Add(newGrazePasture, this);
+                Structure.AddChild(newGrazePasture);
                 var events = new Events(newGrazePasture);
                 // Publish Commencing event
                 events.PublishToModelAndChildren("CLEMInitialiseActivity", new object[] { Parent, new EventArgs() });

@@ -174,26 +174,24 @@ namespace Models.CLEM.Activities
             {
                 Name = $"Filter_{location}_{shortHerdName}"
             };
-            Core.ApsimFile.Structure.Add(herdGroup, this);
+            Structure.AddChild(herdGroup);
 
-            Core.ApsimFile.Structure.Add(new FilterByProperty()
+            herdGroup.Structure.AddChild(new FilterByProperty()
             {
                 PropertyOfIndividual = "Location",
                 Operator = System.Linq.Expressions.ExpressionType.Equal,
                 Value = location,
                 Parent = herdGroup,
                 Name = "GrazeLocation"
-            }, herdGroup
-            );
-            Core.ApsimFile.Structure.Add(new FilterByProperty()
+            });
+            herdGroup.Structure.AddChild(new FilterByProperty()
             {
                 PropertyOfIndividual = "HerdName",
                 Operator = System.Linq.Expressions.ExpressionType.Equal,
                 Value = shortHerdName,
                 Parent = herdGroup,
                 Name = "GrazeHerd"
-            }, herdGroup
-            );
+            });
 
             var events = new Events(herdGroup);
             events.PublishToModelAndChildren("Commencing", new object[] { herdGroup, new EventArgs() });

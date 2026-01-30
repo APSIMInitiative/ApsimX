@@ -82,7 +82,7 @@ namespace Models.CLEM.Resources
                 {
                     cohort.Parent = this;
                     cohort.MinimumTimeStepInterval = this.MinimumTimeStepInterval;
-                    Core.ApsimFile.Structure.Add(cohort, this);
+                    Structure.AddChild(cohort);
                 }
             }
         }

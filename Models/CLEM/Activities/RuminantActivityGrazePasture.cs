@@ -10,6 +10,7 @@ using System.IO;
 using APSIM.Shared.Utilities;
 using Models.CLEM.Groupings;
 using APSIM.Numerics;
+using APSIM.Core;
 
 namespace Models.CLEM.Activities
 {
@@ -96,7 +97,7 @@ namespace Models.CLEM.Activities
             foreach (RuminantType herdType in Structure.FindChildren<RuminantType>(relativeTo: HerdResource))
             {
                 var newGrazePastureHerd = new RuminantActivityGrazePastureHerd(this, herdType, transCat, nextUID);
-                Core.ApsimFile.Structure.Add(newGrazePastureHerd, this);
+                Structure.AddChild(newGrazePastureHerd);
                 var events = new Events(newGrazePastureHerd);
                 // Publish Commencing event
                 events.PublishToModelAndChildren("CLEMInitialiseActivity", new object[] { newGrazePastureHerd, new EventArgs() });
