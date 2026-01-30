@@ -6,7 +6,6 @@ using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
-using Models.Core.ApsimFile;
 using System;
 using System.Collections.Generic;
 using System.IO;
