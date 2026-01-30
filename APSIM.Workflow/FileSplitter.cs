@@ -254,7 +254,7 @@ namespace APSIM.Workflow
                         input.FileNames = files.ToArray();
                     }
 
-                    foreach (ObservedInput input in copiedSims.Node.FindAll<ObservedInput>())
+                    foreach (Observations input in copiedSims.Node.FindAll<Observations>())
                     {
                         foreach (string sheet in input.SheetNames)
                             if (!allSheetNames.Contains(sheet))
