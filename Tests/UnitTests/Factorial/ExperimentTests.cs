@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using UnitTests.Weather;
 using APSIM.Shared.Utilities;
-using Models.Core.ApsimFile;
 using Models;
 using APSIM.Core;
 

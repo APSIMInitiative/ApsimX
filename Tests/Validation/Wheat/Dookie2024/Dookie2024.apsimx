@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 206,
+  "Version": 208,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -13701,6 +13701,28 @@
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report, Models",
+                  "VariableNames": [
+                    "[Simulation].Name",
+                    "[Clock].Today",
+                    "[Wheat].SowingData.Cultivar",
+                    "[IWeather].Latitude",
+                    "[IWeather].Longitude",
+                    "[LocationInfo].Script.Country",
+                    "[LocationInfo].Script.State",
+                    "[LocationInfo].Script.Region"
+                  ],
+                  "EventNames": [
+                    "[Wheat].Sowing"
+                  ],
+                  "GroupByVariableName": null,
+                  "Name": "SowingReport",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
@@ -17548,6 +17570,28 @@
                   "SetEventName": "[Plant].PlantSowing",
                   "ParameterFile": "%root%/Tests/Validation/Wheat/inputs/DookiePhenoDatesInput.csv",
                   "Name": "SetPhenoDatesExternally",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report, Models",
+                  "VariableNames": [
+                    "[Simulation].Name",
+                    "[Clock].Today",
+                    "[Wheat].SowingData.Cultivar",
+                    "[IWeather].Latitude",
+                    "[IWeather].Longitude",
+                    "[LocationInfo].Script.Country",
+                    "[LocationInfo].Script.State",
+                    "[LocationInfo].Script.Region"
+                  ],
+                  "EventNames": [
+                    "[Wheat].Sowing"
+                  ],
+                  "GroupByVariableName": null,
+                  "Name": "SowingReport",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,

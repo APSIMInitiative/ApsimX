@@ -3,11 +3,12 @@ using NUnit.Framework;
 using System.IO;
 using System.Linq;
 using System.Text;
+using APSIMSharedExtensions = APSIM.Shared.Extensions;
 
 namespace UnitTests.APSIMShared
 {
     /// <summary>
-    /// Unit tests for <see cref="APSIM.Shared.Extensions.StreamExtensions"/>.
+    /// Unit tests for <see cref="APSIMSharedExtensions.StreamExtensions"/>.
     /// </summary>
     [TestFixture]
     public class StreamExtensionTests
@@ -89,12 +90,12 @@ namespace UnitTests.APSIMShared
         [Test]
         public void TestArrayEquals()
         {
-            Assert.That(APSIM.Shared.Extensions.StreamExtensions.Equal(null, null), Is.True);
-            Assert.That(APSIM.Shared.Extensions.StreamExtensions.Equal(new byte[0], null), Is.False);
-            Assert.That(APSIM.Shared.Extensions.StreamExtensions.Equal(null, new byte[0]), Is.False);
-            Assert.That(APSIM.Shared.Extensions.StreamExtensions.Equal(new byte[0], new byte[1]), Is.False);
-            Assert.That(APSIM.Shared.Extensions.StreamExtensions.Equal(new byte[2] { 0, 1 }, new byte[2] { 0, 2 }), Is.False);
-            Assert.That(APSIM.Shared.Extensions.StreamExtensions.Equal(new byte[2] { 64, 128 }, new byte[2] { 64, 128 }), Is.True);
+            Assert.That(StreamExtensions.Equal(null, null), Is.True);
+            Assert.That(StreamExtensions.Equal(new byte[0], null), Is.False);
+            Assert.That(StreamExtensions.Equal(null, new byte[0]), Is.False);
+            Assert.That(StreamExtensions.Equal(new byte[0], new byte[1]), Is.False);
+            Assert.That(StreamExtensions.Equal(new byte[2] { 0, 1 }, new byte[2] { 0, 2 }), Is.False);
+            Assert.That(StreamExtensions.Equal(new byte[2] { 64, 128 }, new byte[2] { 64, 128 }), Is.True);
         }
 
         /// <summary>

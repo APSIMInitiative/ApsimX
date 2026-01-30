@@ -123,7 +123,8 @@ namespace APSIM.Documentation.Models
             List<ITag> newTags;
             newTags = AutoDocumentation.DocumentModel(model);
             newTags = DocumentationUtilities.CleanEmptySections(newTags);
-            newTags = DocumentationUtilities.AddHeader(model.Name, newTags);
+            string name = DocumentationUtilities.GetDocumentationName(model);
+            newTags = DocumentationUtilities.AddHeader(name, newTags);
             return newTags;
         }
 

@@ -6,7 +6,6 @@ using APSIM.Numerics;
 using APSIM.Shared.Extensions.Collections;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Models.Soils.Nutrients;
 using Models.Surface;
 
@@ -558,7 +557,7 @@ namespace Models.Soils.NutrientPatching
                 newPatch.Name = "base";
                 patches.Add(newPatch);
                 Node.AddChild(newPatch.Nutrient);
-                Models.Core.ApsimFile.Structure.ReconnectLinksAndEvents(newPatch.Nutrient);
+                Apsim.ReconnectLinksAndEvents(newPatch.Nutrient);
 
                 // Create an OrganicPoolPatch under SurfaceOrganicMatter so that SurfaceOrganicMatter residue composition
                 // C and N flows go to this patch manager rather than directly to the pool under Nutrient in the first patch.
@@ -568,7 +567,7 @@ namespace Models.Soils.NutrientPatching
                 };
 
                 Node.InsertChild(0, microbialPool);
-                Models.Core.ApsimFile.Structure.ReconnectLinksAndEvents(microbialPool);
+                Apsim.ReconnectLinksAndEvents(microbialPool);
 
                 var humicPool = new OrganicPoolPatch(this)
                 {
@@ -576,7 +575,7 @@ namespace Models.Soils.NutrientPatching
                 };
 
                 Node.InsertChild(0, humicPool);
-                Models.Core.ApsimFile.Structure.ReconnectLinksAndEvents(microbialPool);
+                Apsim.ReconnectLinksAndEvents(microbialPool);
             }
         }
 

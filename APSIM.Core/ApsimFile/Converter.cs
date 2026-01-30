@@ -22,7 +22,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 208; } }
+    public static int LatestVersion { get { return 209; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -7213,8 +7213,8 @@ internal class Converter
                 {
                     foreach (var p in parameters.OfType<JObject>())
                     {
-                        string? key = (string?)p["Key"];
-                        if (key != null && double.TryParse(p["Value"]?.ToString(), out double val))
+                        string key = p["Key"].ToString();
+                        if (key != null && double.TryParse(p["Value"].ToString(), out double val))
                             paramDict[key] = val;
                     }
                 }
@@ -7250,13 +7250,43 @@ internal class Converter
         foreach (var graph in JsonUtilities.ChildrenOfType(root, "Graph"))
             JsonUtilities.SearchReplaceGraphVariableNames(graph, "NDVIModel.Script.NDVI", "Spectral.NDVI");
     }
-
+    
     /// <summary>
+    /// Change manager scripts:
+    ///      Models.Core.ApsimFile.Structure.Add(newZone, simulation);
+    /// to
+    ///      simulation.Node.AddChild(newZone);
+    /// and remove:   using Models.Core.ApsimFile;
+    /// <param name="root">Root json object.</param>
+    /// <param name="_">Unused filename.</param>
+    private static void UpgradeToVersion208(JObject root, string _)
+    {
+        const string pattern =
+            @"Models\.Core\.ApsimFile\.Structure\.Add\((?<arg1>[\w\d_]+),\s*(?<arg2>[\w\d_]+)\)";
+        foreach (var manager in JsonUtilities.ChildManagers(root))
+        {
+            var changed = false;
+            manager.ReplaceRegex(pattern, match =>
+            {
+                changed = true;
+
+                string arg1 = match.Groups["arg1"].ToString();
+                string arg2 = match.Groups["arg2"].ToString();
+                return $"{arg2}.Node.AddChild({arg1})";
+            });
+            if (changed)
+                manager.Save();
+            if (manager.Replace("using Models.Core.ApsimFile;", ""))
+                manager.Save();
+        }
+    }
+
+        /// <summary>
     /// Change CLEM to work with new custom time-step rather than months
     /// </summary>
     /// <param name="root">The root JSON token.</param>
     /// <param name="_">The name of the apsimx file.</param>
-    private static void UpgradeToVersion208(JObject root, string _)
+    private static void UpgradeToVersion209(JObject root, string _)
     {
         // replace all Grow24 with GrowPF
 
@@ -7428,5 +7458,4 @@ internal class Converter
         newAgeSpecifier = newAgeSpecifier.Replace("[VALUE]", partsString);
         return JObject.Parse(newAgeSpecifier);
     }
-
 }

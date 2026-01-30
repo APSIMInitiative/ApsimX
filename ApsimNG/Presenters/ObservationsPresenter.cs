@@ -1,5 +1,7 @@
-﻿using Gtk.Sheet;
+﻿using APSIM.Shared.Documentation;
+using Gtk.Sheet;
 using Models.Core;
+using Models.PreSimulationTools;
 using System.Data;
 using UserInterface.Views;
 
@@ -7,14 +9,17 @@ namespace UserInterface.Presenters
 {
 
     /// <summary>Presenter that has a PropertyPresenter and a GridPresenter.</summary>
-    class ObservedInputPresenter : IPresenter
+    class ObservationsPresenter : IPresenter
     {
         /// <summary>The underlying model</summary>
-        private ObservedInputView view;
+        private ObservationsView view;
         private ExplorerPresenter explorerPresenter;
         private IPresenter propertyPresenter;
         private GridPresenter columnsGridPresenter;
         private GridPresenter derivedGridPresenter;
+        private GridPresenter simulationGridPresenter;
+        private GridPresenter mergeGridPresenter;
+        private GridPresenter zeroGridPresenter;
 
         /// <summary>
         /// Attach the model to the view.
@@ -25,8 +30,10 @@ namespace UserInterface.Presenters
         public void Attach(object model, object v, ExplorerPresenter parentPresenter)
         {
             explorerPresenter = parentPresenter;
-            view = v as ObservedInputView;
-            
+            view = v as ObservationsView;
+
+            view.SetInstructions(CodeDocumentation.GetSummary(typeof(Observations)));
+
             propertyPresenter = new PropertyPresenter();
             explorerPresenter.ApsimXFile.Links.Resolve(propertyPresenter);
             propertyPresenter.Attach(model, view.PropertyView, parentPresenter);
@@ -36,6 +43,15 @@ namespace UserInterface.Presenters
 
             derivedGridPresenter = new GridPresenter();
             CreateGridTab("DerivedTable", model as IModel, derivedGridPresenter, view.GridViewDerived);
+
+            simulationGridPresenter = new GridPresenter();
+            CreateGridTab("SimulationTable", model as IModel, simulationGridPresenter, view.GridViewSimulation);
+
+            mergeGridPresenter = new GridPresenter();
+            CreateGridTab("MergeTable", model as IModel, mergeGridPresenter, view.GridViewMerge);
+
+            zeroGridPresenter = new GridPresenter();
+            CreateGridTab("ZeroTable", model as IModel, zeroGridPresenter, view.GridViewZero);
         }
 
         /// <summary>
@@ -46,10 +62,11 @@ namespace UserInterface.Presenters
             propertyPresenter.Detach();
             columnsGridPresenter.Detach();
             derivedGridPresenter.Detach();
+            mergeGridPresenter.Detach();
         }
 
         /// <summary>
-        /// Detach the model from the view.
+        /// Create a datatable tab on the view
         /// </summary>
         public void CreateGridTab(string property, IModel model, GridPresenter gridPresenter, ContainerView viewContainer)
         {

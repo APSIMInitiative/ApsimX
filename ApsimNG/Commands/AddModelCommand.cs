@@ -3,8 +3,10 @@
     using Presenters;
     using Interfaces;
     using Models.Core;
-    using Models.Core.ApsimFile;
     using System;
+    using APSIM.Core;
+    using System.Xml;
+    using Models.Core.Apsim710File;
 
     /// <summary>This command adds a model as a child of another model.</summary>
     public class AddModelCommand : ICommand
@@ -70,10 +72,11 @@
         /// <param name="modelChanged">Action to be performed if/when a model is changed.</param>
         public void Do(ITreeView tree, Action<object> modelChanged)
         {
-            if (xmlOrJson != null)
-                modelToAdd = Structure.Add(xmlOrJson, parent);
+            if (xmlOrJson == null)
+                modelToAdd = child;
             else
-                modelToAdd = Structure.Add(child, parent);
+                modelToAdd = StringToModel(xmlOrJson);
+            parent.Node.AddChild(modelToAdd as INodeModel);
             modelAdded = true;
             tree.AddChild(parent.FullPath, describeModel(modelToAdd));
             tree.SelectedNode = modelToAdd.FullPath;
@@ -87,9 +90,34 @@
             if (modelAdded && modelToAdd != null)
             {
                 string path = modelToAdd.FullPath;
-                Structure.Delete(modelToAdd);
-                tree.Delete(modelToAdd.FullPath);
+                modelToAdd.Node.Parent.RemoveChild(modelToAdd as INodeModel);
+                tree.Delete(path);
             }
+        }
+
+        /// <summary>Convert an XML or JSON string to a model.</summary>
+        /// <param name="st">The string representing the new model</param>
+        /// <returns>The newly created model.</returns>
+        private static IModel StringToModel(string st)
+        {
+            // The strategy here is to try and add the string as if it was a APSIM Next Gen.
+            // string (json or xml). If that throws an exception then try adding it as if
+            // it was an APSIM 7.10 string (xml). If that doesn't work throw 'invalid format' exception.
+            IModel modelToAdd = null;
+            try
+            {
+                modelToAdd = FileFormat.ReadFromString<IModel>(st).Model as IModel;
+            }
+            catch (Exception err)
+            {
+                if (err.Message.StartsWith("Unknown string encountered"))
+                    throw;
+            }
+
+            if (modelToAdd == null)
+                modelToAdd = Importer.StringToModel(st);
+
+            return modelToAdd;
         }
     }
 }

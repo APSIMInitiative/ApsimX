@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
+using Models.CLEM.Groupings;
+using System.Linq.Expressions;
 
 namespace Models.CLEM.Activities
 {

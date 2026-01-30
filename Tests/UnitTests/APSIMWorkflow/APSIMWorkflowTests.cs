@@ -3,6 +3,7 @@ using APSIM.Shared.Utilities;
 using System.Reflection;
 using System.IO;
 using System.Linq;
+using APSIM.Workflow;
 
 namespace UnitTests.APSIMWorkflowTests;
 
@@ -23,7 +24,7 @@ public class ProgramTests
     [TearDown]
     public void TearDown()
     {
-        APSIM.Workflow.Program.apsimFilePaths.Clear();
+        Program.apsimFilePaths.Clear();
         string apsimFileResetText = ReflectionUtilities.GetResourceAsString("UnitTests.apsimworkflow_unaltered.apsimx");
         string unitTestDir = GetUnitTestsDirectory();
         File.WriteAllText(Path.Combine(unitTestDir, "apsimworkflow.apsimx").Replace("\\", "/"), apsimFileResetText);
@@ -38,10 +39,10 @@ public class ProgramTests
         string unitTestDir = GetUnitTestsDirectory();
         string apsimFileName = "apsimworkflow.apsimx";
         string newFilePath = "C:/Test/newWeatherfile.met";
-        APSIM.Workflow.Program.apsimFilePaths.Add(apsimFileName);
+        Program.apsimFilePaths.Add(apsimFileName);
 
         // Act
-        APSIM.Workflow.InputUtilities.UpdateWeatherFileNamePathInApsimXFile(text, oldWeatherFilePath, newFilePath, new APSIM.Workflow.Options() { DirectoryPath = unitTestDir }, APSIM.Workflow.Program.apsimFilePaths.First());
+        InputUtilities.UpdateWeatherFileNamePathInApsimXFile(text, oldWeatherFilePath, newFilePath, new Options() { DirectoryPath = unitTestDir }, Program.apsimFilePaths.First());
 
         string textAfterUpdate = File.ReadAllText(Path.Combine(unitTestDir, apsimFileName).Replace("\\", "/"));
 
@@ -59,7 +60,7 @@ public class ProgramTests
         string apsimFileName = Path.Combine(fullTestDir, "apsimworkflow.apsimx").Replace("\\", "/");
 
         // Act
-        string result = APSIM.Workflow.InputUtilities.GetApsimXFileTextFromFile(apsimFileName);
+        string result = InputUtilities.GetApsimXFileTextFromFile(apsimFileName);
 
         // Assert
         Assert.That(result, Is.EqualTo(apsimFileText));
@@ -72,7 +73,7 @@ public class ProgramTests
         string[] args = new string[] { "--sim-count" };
 
         // Act
-        int returnValue = APSIM.Workflow.Program.Main(args);
+        int returnValue = Program.Main(args);
         
         // Assert
         Assert.That(returnValue, Is.EqualTo(0));

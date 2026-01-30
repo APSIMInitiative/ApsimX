@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
+using DocumentFormat.OpenXml.Drawing.Charts;
 using Models.CLEM.Interfaces;
 using System.Collections.Generic;
 using System.IO;

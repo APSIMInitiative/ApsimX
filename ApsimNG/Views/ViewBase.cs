@@ -1,11 +1,12 @@
-﻿namespace UserInterface.Views
+﻿using UserInterface.Interfaces;
+using Gtk;
+using System;
+using System.IO;
+using System.Reflection;
+using Utility;
+
+namespace UserInterface.Views
 {
-    using global::UserInterface.Interfaces;
-    using Gtk;
-    using System;
-    using System.IO;
-    using System.Reflection;
-    using Utility;
 
     public class ViewBase : IDisposable
     {
