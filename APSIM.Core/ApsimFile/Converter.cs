@@ -7258,6 +7258,15 @@ internal class Converter
     /// <param name="_">The name of the apsimx file.</param>
     private static void UpgradeToVersion208(JObject root, string _)
     {
+        Dictionary<string, string> searchReplaceStrings = new Dictionary<string, string>()
+        {
+            { "Models.CLEM.Resources.LabourAvailabilityItemMonthly", "Models.CLEM.Groupings.LabourAvailabilityGroupMonthly" },
+            { "Models.CLEM.Resources.LabourAvailabilityItem", "Models.CLEM.Groupings.LabourAvailabilityGroup" },
+        };
+
+        foreach (var item in searchReplaceStrings)
+            JsonUtilities.ReplaceChildModelType(root, item.Key, item.Value);
+
         // replace all Grow24 with GrowPF
 
         var rumCompUpdated = new Tuple<string, string, string>[]
@@ -7298,7 +7307,6 @@ internal class Converter
                 new("RuminantActivityManage", "MaleSellingAge"),
                 new("RuminantActivityManage", "FemaleSellingAge"),
                 new("ProductStoreTypeManure", "MaximumAge"),
-                new("LabourType", "InitialAge"),
                 new("OtherAnimalsActivityBreed", "InitialAge")
         };
 
