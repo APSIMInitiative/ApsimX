@@ -24,7 +24,7 @@ public class LabourActivityFeedTargetsSummary : DescriptiveSummaryProviderBase<L
     public override void BuildSummary()
     {
         using StringWriter htmlWriter = new();
-        htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(ModelTyped.Metric, "Metric not set"));
+        htmlWriter.Write(generator.DisplaySummaryValueSnippet(ModelTyped.Metric, "Metric not set"));
         htmlWriter.Write($"{generator.DisplaySummaryValueSnippet(ModelTyped.TargetValue)} units per AE per day");
         htmlWriter.Write($" up to a maximum of {generator.DisplaySummaryValueSnippet(ModelTyped.TargetMaximumValue, errorNotSet: true)}");
         generator.AddBlockWithText(htmlWriter.ToString());

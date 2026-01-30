@@ -118,11 +118,8 @@ public class ChildComponentGroup
     {
         if (ChildType is null)
             return "";
-        HTMLSummaryStyle entryStyle = HTMLSummaryStyle.Default;
-        if (ChildType is IResourceType)
-            entryStyle = HTMLSummaryStyle.Resource;
 
-        return $"No {CLEMModel.DisplaySummaryValueSnippet((ChildType != null ? ChildType.Name : "component"), entryStyle: entryStyle)} provided!";
+        return $"No {(ChildType != null ? ChildType.Name : "component")} provided!";
     }
 
 }

@@ -254,13 +254,6 @@ namespace Models.CLEM.Reporting
 
             return listStatistics;
         }
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            string html = "";
-            return html;
-        }
     }
 
     /// <summary>

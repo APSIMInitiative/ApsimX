@@ -32,14 +32,6 @@ namespace Models.CLEM.Limiters
         public double[] WeightLimitPerDay { get; set; }
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        public ActivityCarryLimiter()
-        {
-            ModelSummaryStyle = HTMLSummaryStyle.Filter;
-        }
-
-        /// <summary>
         /// Get the amount of cut and carry available.
         /// </summary>
         /// <param name="weight"></param>

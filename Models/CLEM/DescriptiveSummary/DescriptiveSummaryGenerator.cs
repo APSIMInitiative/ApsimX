@@ -1,9 +1,11 @@
+using DocumentFormat.OpenXml.InkML;
 using Models.CLEM.Interfaces;
 using Models.Core;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace Models.CLEM.DescriptiveSummary;
@@ -183,6 +185,7 @@ public class DescriptiveSummaryGenerator
         ".resourcegroup.childgroupborder {border-color:[GroupBorder-Res]; background-color:[BannerBackgroundDark-Res]; border-width:1px; }" +
         ".labourgroup.childgroupborder {border-color:[GroupBorder-Labour]; background-color:[GroupBackground-Labour]; border-width:1px; }" +
         ".filteritems.childgroupborder {display: block; width: 100% - 40px; border-color:[Filter]; background-color:[Content-Filter]; border-width:1px; padding:0px 5px 5px 5px; margin:5px 0px 5px 0px;}" +
+        ".othergroup.childgroupborder {border-color:[BannerBackground-Other]; background-color:transparent; border-width:1px; }" +
 
         ".parametername {float: left; background-color:Resource !important; color:[BannerFont-Res]; border-width:0px; border-style:none; padding: 1px 5px 1px 5px; margin: 7px 0px 0px 0px; border-radius:3px; font-weight:bold; font-size:0.6em}" +
         ".parameterdetails {float: left; padding: 1px 5px 1px 5px; margin: 0px 5px 0px 5px;}" +
@@ -307,29 +310,13 @@ public class DescriptiveSummaryGenerator
 
     readonly static Dictionary<string, (string, string)> graphColours = new()
     {
-        { "FontColor", ("black", "#E5E5E5") },
-        { "HeaderFontColor", ("white", "black") },
-        { "TableRowBackground1-Res", ("FontLight","FontLight") },
-        { "TableRowBackground2-Res", ("white","#3F2817") },
-        { "ResContBack", ("FontLight","FontLight") },
-        { "ResContBackLight", ("white","#3F2817") },
-        { "ResContBackDark", ("FontLight","FontLight") },
-        { "BannerFont-Res", ("white","white") },
-        { "ResFontContent", ("black","white") },
-        { "ActContBack", ("#efffff","#003F3D") },
-        { "ActContBackLight", ("white","#005954") },
-        { "ActContBackDark", ("#efffff","#f003F3D") },
-        { "ActContBackGroups", ("white","#f003F3D") },
-        { "ContDefaultBack", ("#e6e6e6","#282828") },
-        { "ContDefaultBanner", ("black","#686868") },
-        { "ContFileBack", ("#deffde","#0C440C") },
-        { "CropRotationBack", ("white","#97B2B1") },
-        { "LabourGroupBack", ("white","ResourceLight") },
-        { "LabourGroupBorder", ("Resource","ResourceLight") },
-        { "FiltContBack", ("#fbe8fc","#5c195e") },
-        { "FiltContActivityBack", ("#cc33cc","#cc33cc") },
-        { "ValueSetBack", ("#e8fbfc","#49adc4") },
-        { "ValueSetFont", ("black","#0e2023") }
+        { "GraphGridLineColour", ("#eee", "#777") },
+        { "GraphGridZeroLineColour", ("#999", "#999") },
+        { "GraphPointColour", ("#00bcd6", "white") },
+        { "GraphLineColour", ("#fda50f", "#49adc4") },
+        { "GraphLabelColour", ("#888", "white") },
+        { "GraphAxisLabelColour", ("#888", "#49adc4") }
+        
     };
 
     /// <summary>
@@ -352,7 +339,16 @@ public class DescriptiveSummaryGenerator
         AddHTMLFooter();
 
         //File.WriteAllText(MakeSafeFileName(filename), sb.ToString());
-        File.WriteAllText(filename, sb.ToString());
+
+        string textToWrite = sb.ToString();
+        if (textToWrite.Contains("<canvas"))
+        {
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            StreamReader textStreamReader = new StreamReader(assembly.GetManifestResourceStream("Models.Resources.CLEM.Chart.min.js"));
+            textToWrite = textToWrite.Replace("<!-- graphscript -->", $"<script>{textStreamReader.ReadToEnd()}</script>");
+            textToWrite = UpdateCSSColours(textToWrite, graphColours);
+        }
+        File.WriteAllText(filename, textToWrite);
     }
 
     // Recursively visit model and its children, appending descriptive summary fragments.
@@ -367,7 +363,7 @@ public class DescriptiveSummaryGenerator
         provider.CreateSummaryOpeningBlocks();
 
         if (!provider.FormatForParentControl && model is CLEMModel cm)
-            AddNotes(cm.Notes, (cm.ModelSummaryStyle == HTMLSummaryStyle.Filter));
+            AddNotes(cm.Notes, (provider.SummaryStyle == HTMLSummaryStyle.Filter));
 
         // Place any pre-summary inner tags
         provider.CreateSummaryInnerOpeningBlocksBeforeSummary();
@@ -382,7 +378,7 @@ public class DescriptiveSummaryGenerator
         {
             if (!provider.FormatForParentControl && acm.Identifier != null)
             {
-                AddBlockWithText($"Applies to {CLEMModel.DisplaySummaryValueSnippet(acm.Identifier)}");
+                AddBlockWithText($"Applies to {DisplaySummaryValueSnippet(acm.Identifier)}");
             }
         }
 
@@ -623,13 +619,13 @@ public class DescriptiveSummaryGenerator
             AddBlockWithText(name, "parametername");
         }
     }
-    private string SetCSS()
+    private string UpdateCSSColours(string css, Dictionary<string, (string light, string dark)> dictionaryOfColours)
     {
         // for each key in colours, replace in cssText
-        string updatedCss = cssString;
-        foreach (var key in colours.Keys)
+        string updatedCss = css;
+        foreach (var key in dictionaryOfColours.Keys)
         {
-            var (light, dark) = colours[key];
+            var (light, dark) = dictionaryOfColours[key];
             if (IsDarkMode)
             {
                 updatedCss = updatedCss.Replace($"[{key}]", dark);
@@ -741,7 +737,7 @@ public class DescriptiveSummaryGenerator
         sb.AppendLine(htmlStartString);
         sb.AppendLine($"<title>Summary - {title}</title>");
         sb.AppendLine("<meta charset=\"utf-8\" />");
-        sb.AppendLine(SetCSS());
+        sb.AppendLine(UpdateCSSColours(cssString, colours));
         sb.AppendLine(htmlEndString);
         sb.AppendLine("<body>\r\n<!-- CLEMZoneBody -->");
     }

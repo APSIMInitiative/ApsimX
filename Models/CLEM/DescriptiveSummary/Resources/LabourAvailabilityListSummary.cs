@@ -35,7 +35,7 @@ public class LabourAvailabilityListSummary : DescriptiveSummaryProviderBase<Labo
                 model: CLEMModel,
                 childType: typeof(ILabourSpecificationItem),
                 missing: "default",
-                introduction: "The following Labour Availability Items are applied in the order provided to determine the availability of any individual."
+                introduction: "Availability is assigned from the following groups in the order specified"
                 )
         ];
     }
@@ -48,7 +48,7 @@ public class LabourAvailabilityListSummary : DescriptiveSummaryProviderBase<Labo
     /// <inheritdoc/>
     public override void CreateSummaryInnerOpeningBlocks(ChildComponentGroup group)
     {
-        if (group.Id != "defaulttype" && group.SelectedModels.Any())
+        if (group.Id == "defaulttype" && group.SelectedModels.Any())
         {
             generator.OpenBlock(id: "tablewrap", addTopBottomMargin: true);
             Generator.CreateTable(new string[] { "Name", "Filter", "Days per month" });
@@ -58,7 +58,7 @@ public class LabourAvailabilityListSummary : DescriptiveSummaryProviderBase<Labo
     /// <inheritdoc/>
     public override void CreateSummaryInnerClosingBlocks(ChildComponentGroup group)
     {
-        if (group.Id != "defaulttype" && group.SelectedModels.Any())
+        if (group.Id == "defaulttype" && group.SelectedModels.Any())
         {
             Generator.CloseTable();
             generator.CloseMostRecentBlock(id: "tablewrap");

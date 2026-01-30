@@ -73,7 +73,6 @@ namespace Models.CLEM.Activities
         public ActivityFee()
         {
             AllocationStyle = ResourceAllocationStyle.Manual;
-            ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

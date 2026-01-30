@@ -30,7 +30,7 @@ public class AnimalPricingSummary : DescriptiveSummaryProviderBase<AnimalPricing
         return
         [
             new ChildComponentGroup(
-                id: "prices",
+                id: "available",
                 model: CLEMModel,
                 childType: typeof(AnimalPriceGroup),
                 missing: "default",
@@ -47,17 +47,17 @@ public class AnimalPricingSummary : DescriptiveSummaryProviderBase<AnimalPricing
     /// <inheritdoc/>
     public override void CreateSummaryInnerOpeningBlocks(ChildComponentGroup group)
     {
-        if (group.Id == "prices" && group.SelectedModels.Any())
+        if (group.Id == "available" && group.SelectedModels.Any())
         {
             generator.OpenBlock(id: "tablewrap", addTopBottomMargin: true);
-            generator.CreateTable(new string[] { "Name", "Filter", "Type", "Value", "Style" });
+            generator.CreateTable(new string[] { "Name", "Filter", "Days per month" });
         }
     }
 
     /// <inheritdoc/>
     public override void CreateSummaryInnerClosingBlocks(ChildComponentGroup group)
     {
-        if (group.Id == "prices" && group.SelectedModels.Any())
+        if (group.Id == "available" && group.SelectedModels.Any())
         {
             generator.CloseTable();
             generator.CloseMostRecentBlock(id: "tablewrap");

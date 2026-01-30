@@ -94,7 +94,7 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
     public virtual void BuildSummary()
     {
         if (Model is ResourceBaseWithTransactions)
-            generator.AddBlockWithText($"No details for {CLEMModel.DisplaySummaryResourceTypeSnippet(Model.GetType().Name)}.");
+            generator.AddBlockWithText($"No details for {generator.DisplaySummaryResourceTypeSnippet(Model.GetType().Name)}.");
         else
             generator.AddBlockWithText($"No details for {Model.GetType().Name}.");
     }

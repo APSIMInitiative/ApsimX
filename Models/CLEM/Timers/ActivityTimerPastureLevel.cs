@@ -71,14 +71,6 @@ namespace Models.CLEM.Timers
         /// </summary>
         public event EventHandler ActivityPerformed;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public ActivityTimerPastureLevel()
-        {
-            ModelSummaryStyle = HTMLSummaryStyle.Filter;
-        }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>

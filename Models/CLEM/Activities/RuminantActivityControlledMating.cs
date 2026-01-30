@@ -65,7 +65,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantActivityControlledMating()
         {
-            ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 

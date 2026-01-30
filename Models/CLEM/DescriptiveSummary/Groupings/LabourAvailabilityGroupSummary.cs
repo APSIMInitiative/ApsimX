@@ -13,14 +13,6 @@ namespace Models.CLEM.DescriptiveSummary;
 /// </summary>
 public class LabourAvailabilityGroupSummary : GroupSummaryBase<LabourAvailabilityGroup>
 {
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    public LabourAvailabilityGroupSummary()
-    {
-        SummaryStyle = HTMLSummaryStyle.SubActivity;
-    }
-
     ///<inheritdoc/>
     public override List<ChildComponentGroup> GetChildrenInSummary()
     {
@@ -33,8 +25,7 @@ public class LabourAvailabilityGroupSummary : GroupSummaryBase<LabourAvailabilit
                 id: "default",
                 model: CLEMModel,
                 childType: typeof(Filter),
-                introduction: "The following individuals have availability (days per month) specified:",
-                missing: "No individuals have availability specified."
+                missing: ""
                 )
         ];
     }
@@ -42,6 +33,14 @@ public class LabourAvailabilityGroupSummary : GroupSummaryBase<LabourAvailabilit
     /// <inheritdoc/>
     public override void BuildSummary()
     {
+        var model = ModelTyped;
+        if (model is null) return;
+
+        if (!FormatForParentControl)
+        {
+            //ToDo: format value for currency
+            generator.AddBlockWithText($"The following individuals have {generator.DisplaySummaryValueSnippet(model.Value, warnZero: true)} days available per month");
+        }
     }
 
     /// <inheritdoc/>
@@ -52,11 +51,11 @@ public class LabourAvailabilityGroupSummary : GroupSummaryBase<LabourAvailabilit
         var model = ModelTyped;
         if (model is null) return;
 
-        generator.CloseMostRecentBlock("labourAvailabilityItem_filters");
+        generator.CloseMostRecentBlock("labourAvailabilityGroup_filters");
         if (FormatForParentControl)
         {
-            generator.AddBlockWithText(generator.DisplaySummaryValueSnippet(model.Value, warnZero: true), tag: "td", classString: "");
-            generator.CloseMostRecentBlock("labourAvailabilityItem_row");
+            generator.AddBlockWithText(generator.DisplaySummaryValueSnippet(ModelTyped.Value, warnZero: true), tag: "td");
+            generator.CloseMostRecentBlock("labourAvailabilityGroup_row");
         }
     }
 
@@ -70,15 +69,15 @@ public class LabourAvailabilityGroupSummary : GroupSummaryBase<LabourAvailabilit
 
         if (FormatForParentControl)
         {
-            generator.OpenBlock("", "", tag: "tr", id: "labourAvailabilityItem_row");
-            generator.AddBlockWithText(cm.Name, tag: "td", classString: "");
-            generator.OpenBlock("", "", tag: "td", id: "labourAvailabilityItem_filters");
+            generator.OpenBlock("", "", tag: "tr", id: "labourAvailabilityGroup_row");
+            generator.AddBlockWithText(cm.Name, tag: "td");
+            generator.OpenBlock("", "", tag: "td", id: "labourAvailabilityGroup_filters");
         }
         else
         {
-            generator.OpenBlock("childgroupborder filteritems clearfix", "", id: "labourAvailabilityItem_filters");
+            generator.OpenBlock("childgroupborder filteritems clearfix", "", id: "labourAvailabilityGroup_filters");
         }
-        if (cm.Structure.FindChildren<Filter>().Any() == false)
+        if (group.SelectedModels.Any() == false)
         {
             generator.AddBlockWithText("All individuals", "entryValue filterItem floatLeft");
         }
@@ -97,5 +96,4 @@ public class LabourAvailabilityGroupSummary : GroupSummaryBase<LabourAvailabilit
         if (!FormatForParentControl)
             base.CreateSummaryClosingBlocks();
     }
-
 }

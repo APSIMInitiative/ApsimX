@@ -46,7 +46,7 @@ public class LabourPriceGroupSummary : DescriptiveSummaryProviderBase<LabourPric
         if (!FormatForParentControl)
         {
             //ToDo: format value for currency
-            generator.AddBlockWithText($"Each individual is paid {CLEMModel.DisplaySummaryValueSnippet(model.Value, warnZero:true)} per day");
+            generator.AddBlockWithText($"Each individual is paid {generator.DisplaySummaryValueSnippet(model.Value, warnZero:true)} per day");
         }
     }
 

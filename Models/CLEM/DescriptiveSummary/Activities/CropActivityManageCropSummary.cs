@@ -63,7 +63,7 @@ public class CropActivityManageCropSummary : DescriptiveSummaryProviderBase<Crop
         }
         else
         {
-            htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(ModelTyped.AreaRequested, errorString: "Not Set")}");
+            htmlWriter.Write($"{generator.DisplaySummaryValueSnippet(ModelTyped.AreaRequested, errorString: "Not Set")}");
 
             if (parentLand == null)
             {
@@ -71,10 +71,10 @@ public class CropActivityManageCropSummary : DescriptiveSummaryProviderBase<Crop
             }
             else
             {
-                htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(parentLand.UnitsOfArea)}");
+                htmlWriter.Write($"{generator.DisplaySummaryValueSnippet(parentLand.UnitsOfArea)}");
             }
         }
-        htmlWriter.Write($"of {CLEMModel.DisplaySummaryValueSnippet(ModelTyped.LandItemNameToUse, "Resource not set", HTMLSummaryStyle.Resource)}");
+        htmlWriter.Write($"of {generator.DisplaySummaryValueSnippet(ModelTyped.LandItemNameToUse, "Resource not set", HTMLSummaryStyle.Resource)}");
         generator.AddBlockWithText(htmlWriter.ToString());
     }
 }

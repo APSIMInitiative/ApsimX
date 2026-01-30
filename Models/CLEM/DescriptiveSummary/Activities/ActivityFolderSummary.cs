@@ -17,6 +17,6 @@ public class ActivityFolderSummary : DescriptiveSummaryProviderBase<ActivityFold
     /// <inheritdoc/>
     public override void CreateSummaryOpeningBlocks()
     {
-        generator.OpenBlock("activityborder", styleString: $"opacity: {ModelTyped.SummaryOpacity(FormatForParentControl)};", id: $"{ModelTyped.Name}_main");
+        generator.OpenBlock("activityborder", styleString: $"opacity: {SummaryOpacity()};", id: $"{ModelTyped.Name}_main");
     }
 }

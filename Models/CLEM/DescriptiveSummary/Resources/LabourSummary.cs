@@ -34,7 +34,7 @@ public class LabourSummary : DescriptiveSummaryProviderBase<Labour>
                 models: model.Structure.FindChildren<Relationship>().Where(a => a.Identifier == "Adult equivalent"),
                 childType: typeof(Relationship),
                 introduction: "The following relationship is used to calculate the Adult Equivalent of each person",
-                missing: $"No {CLEMModel.DisplaySummaryValueSnippet("Relationship", entryStyle:HTMLSummaryStyle.Helper)} with the identifier {generator.DisplaySummaryValueSnippet("Adult equivalent")} was provided. All individuals are assumed to be 1 AE."
+                missing: $"No {generator.DisplaySummaryValueSnippet("Relationship", entryStyle:HTMLSummaryStyle.Helper)} with the identifier {generator.DisplaySummaryValueSnippet("Adult equivalent")} was provided. All individuals are assumed to be 1 AE."
                 )
         ];
     }

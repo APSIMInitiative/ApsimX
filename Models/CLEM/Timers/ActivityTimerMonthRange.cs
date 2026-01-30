@@ -64,14 +64,6 @@ namespace Models.CLEM.Timers
         ///<inheritdoc/>
         public string StatusMessage { get; set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public ActivityTimerMonthRange()
-        {
-            ModelSummaryStyle = HTMLSummaryStyle.Filter;
-        }
-
         /// <inheritdoc/>
         public bool ActivityDue
         {

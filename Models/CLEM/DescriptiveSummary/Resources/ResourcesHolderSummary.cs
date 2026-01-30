@@ -17,7 +17,7 @@ public class ResourcesHolderSummary : DescriptiveSummaryProviderBase<ResourcesHo
     /// <inheritdoc/>
     public override void CreateSummaryOpeningBlocks()
     {
-        Generator.OpenBlock("resource", styleString: $"opacity: {ModelTyped.SummaryOpacity(FormatForParentControl)};", id: $"{ModelTyped.Name}_main");
+        Generator.OpenBlock("resource", styleString: $"opacity: {SummaryOpacity()};", id: $"{ModelTyped.Name}_main");
     }
 
     /// <inheritdoc/>

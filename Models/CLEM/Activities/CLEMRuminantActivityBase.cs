@@ -332,14 +332,5 @@ namespace Models.CLEM.Activities
                 }
             }
         }
-
-        /// <inheritdoc/>
-        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
-        {
-            return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
-            {
-                (Structure.FindChildren<RuminantGroup>(), true, "childgroupfilterborder", "Individuals will be selected from the following:", "")
-            };
-        }
     }
 }
