@@ -331,7 +331,7 @@ namespace Models
                 //Filter out any columns with empty values that might get converted wrongly by the graph system
                 foreach (DataColumn field in data.Columns)
                     if (field.DataType != typeof(string) && (field.ColumnName == XFieldName || field.ColumnName == YFieldName) )
-                        filter = AddToFilter(filter, $"{field.ColumnName} IS NOT NULL");
+                        filter = AddToFilter(filter, $"[{field.ColumnName}] IS NOT NULL");
 
                 //apply our filter to the data
                 View = new DataView(data);
