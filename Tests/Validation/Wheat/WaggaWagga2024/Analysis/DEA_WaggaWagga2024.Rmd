@@ -18,7 +18,6 @@ tar_glimpse()
 
 ```{r}
 tar_visnetwork()
-
 ```
 
 # Format relevant aspects of network
@@ -34,9 +33,7 @@ net %>%
   visGroups(group = "FinalNode", color = "red") %>%
   visLegend()
 
-
 ```
-
 
 
 ```{r}
@@ -60,5 +57,11 @@ targets::tar_make()
 tar_destroy()
 # targets::tar_destroy(ask = FALSE)
 
+```
+
+
+# Get soil parameters in json format
+```{r}
+tar_read(json_soil_water)
 ```
 
