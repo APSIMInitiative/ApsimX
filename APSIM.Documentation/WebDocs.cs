@@ -357,30 +357,43 @@ namespace APSIM.Documentation
         /// </summary>
         public static List<ICitation> ProcessCitations(string input, out string output)
         {
-
-            Regex regex = new Regex(@"\[\w+\]");
-            MatchCollection matches = regex.Matches(input);
-
             output = input;
             List<ICitation> citations = new List<ICitation>();
             List<string> citesFound = new List<string>();
+            Regex regex;
+            MatchCollection matches;
 
+            //Find references without overriding text and convert to overwrite standard
+            regex = new Regex(@"(?<!\])\[\#(\w+)\]");
+            matches = regex.Matches(input);
             foreach(Match match in matches)
             {
-                string value = match.Value;
-                string cleanedValue = value.Replace("[", "").Replace("]", "");
-                if (!citesFound.Contains(cleanedValue))
-                {
-                    citesFound.Add(cleanedValue);
-                    ICitation citation = AutoDocumentation.Bibilography.Lookup(cleanedValue);
-                    if (citation != null)
-                    {
-                        citations.Add(citation);
-                        output = output.Replace(value, $"[{citation.InTextCite}](#references)");
-                    }
-                }
+                string value = match.Groups[0].Value;
+                string reference = match.Groups[1].Value;
+                ICitation citation = AutoDocumentation.Bibilography.Lookup(reference);
+                if (citation != null)
+                    output = output.Replace(value, $"[{citation.InTextCite}][#{reference}]");
             }
 
+            //Find references with overriding text
+            regex = new Regex(@"\[(.*)\]\[\#(\w+)\]");
+            matches = regex.Matches(output);
+            foreach(Match match in matches)
+            {
+                string value = match.Groups[0].Value;
+                string text = match.Groups[1].Value;
+                string reference = match.Groups[2].Value;
+                ICitation citation = AutoDocumentation.Bibilography.Lookup(reference);
+                if (citation != null)
+                {
+                    if (!citesFound.Contains(reference))
+                    {
+                        citesFound.Add(reference);
+                        citations.Add(citation);
+                    }
+                    output = output.Replace(value, $"[{text}](#{reference})");
+                }
+            }
             return citations;
         }
 
@@ -389,28 +402,22 @@ namespace APSIM.Documentation
         /// </summary>
         public static string WriteBibliography(List<ICitation> citations)
         {
-            string output = "";
-
-            // Ensure references in bibliography are sorted alphabetically
-            // by their full text.
+            // Ensure references in bibliography are sorted alphabetically by their full text.
             IEnumerable<ICitation> sorted = citations.OrderBy(c => c.BibliographyText);
 
+            string output = "";
             foreach (ICitation citation in sorted)
             {
-
-                // If a URL is provided for this citation, insert the citation
-                // as a hyperlink.
-                bool isLink = !string.IsNullOrEmpty(citation.URL);
-                if (isLink)
+                //if no link, wrap in a p tag, if using a link, use a a href instead
+                string tagStart = "<p>";
+                string tagEnd = "</p>";
+                if (!string.IsNullOrEmpty(citation.URL))
                 {
-                    output += $"[{citation.BibliographyText}]({citation.URL})\n\n";
+                    tagStart = $"<a href=\"{citation.URL}\">";
+                    tagEnd = "</a>";
                 }
-                else
-                {
-                    output += $"{citation.BibliographyText}\n\n";
-                }
+                output += $"<div id=\"{citation.Name}\">{tagStart}{citation.BibliographyText}{tagEnd}</div>\n\n";
             }
-
             return output;
         }
 
