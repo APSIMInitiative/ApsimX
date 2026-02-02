@@ -87,6 +87,20 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.Map, Models",
+                  "Zoom": 3.0,
+                  "Center": {
+                    "$type": "Models.Mapping.Coordinate, Models",
+                    "Latitude": 0.0,
+                    "Longitude": 0.0
+                  },
+                  "Name": "MutdapillyMap",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Factorial.Factors, Models",
                   "Name": "Factors",
                   "ResourceName": null,
@@ -6488,6 +6502,20 @@
                   ],
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Map, Models",
+                  "Zoom": 3.0,
+                  "Center": {
+                    "$type": "Models.Mapping.Coordinate, Models",
+                    "Latitude": 0.0,
+                    "Longitude": 0.0
+                  },
+                  "Name": "GattonMap",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
@@ -9585,6 +9613,20 @@
                   ],
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Map, Models",
+                  "Zoom": 3.0,
+                  "Center": {
+                    "$type": "Models.Mapping.Coordinate, Models",
+                    "Latitude": 0.0,
+                    "Longitude": 0.0
+                  },
+                  "Name": "Map",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
@@ -9602,6 +9644,29 @@
                   "Name": "KairiNitrogenExperiment",
                   "ResourceName": null,
                   "Children": [
+                    {
+                      "$type": "Models.Documentation, Models",
+                      "Text": "\n## **Comparative productivity of irrigated short-term ryegrass (Lolium multiflorum) pasture receiving nitrogen, grown alone or in a mixture with white (Trifolium repens) and Persian (T. resupinatum) clovers**<h3>\n\n\nThis folder consists of 3 experiments conducted across 3 years in Kairi. The simulations in these experiments aim to replicate the experiment conducted by [Lowe_Fulkerson_Walker] under the following conditions:\n1. Location: Tropical upland environment of the Atherton Tableland in Kairi Queensland\n2. Seedbed: All experiments were sown in late March or early April by broadcasting seed onto the surface and rolling before irrgation\n3. Irrigation: Irrigation of 12 mm was applied to the experiments every 5 days for first 4 weeks with 25mm applied every 14 days subsequently\n4. Defoliation: After initial period of about 6 weeks all experiment plots were defoliated with reciprocating balde mower or rotary mower to 5cm above ground. \n5. Defoliation Frequency: defoliation was done 4 weekly basis in 1991 and from June to August 1993\n6. Fertilizers Nitrogen (Urea) applied: 0, 25, 37.5, 50, 75, 100, 150 \n5. Species: Lolium multiflorum\n6. Duration: 1991, 1993, 1994\n\n\n\n\n**Simulation Parameters:**\n1. Model used: AGPRyegrass\n2. Duration: 1991, 1993, 1994\n3. Sowing Date:01-01-1991, 01-01-1993, 01-01-1994\n4. Irrigation: Fully irrigated. Used manager script\n5. Fertiliser Operations: Used Opertions to match the schedule in [Lowe_Fulkerson_Walker]. \n6. Defoliation schedule: Used operations to match the schedule in [Lowe_Fulkerson_Walker]. \n6. Experiment factors: Fertilisation applied \n7. Report variables: AboveGroundHarvestable Weight, NConc,Nitrogen stress, Water Stress, Irrigation",
+                      "Name": "KairiNitrogenExperiment",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Map, Models",
+                      "Zoom": 3.0,
+                      "Center": {
+                        "$type": "Models.Mapping.Coordinate, Models",
+                        "Latitude": 0.0,
+                        "Longitude": 0.0
+                      },
+                      "Name": "KairiMap",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
                     {
                       "$type": "Models.Factorial.Experiment, Models",
                       "DisabledSimNames": null,
@@ -22041,15 +22106,6 @@
                       ],
                       "Enabled": true,
                       "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Documentation, Models",
-                      "Text": "\nThis folder consists of 3 experiments conducted across 3 years. The simulations in these experiments aim to replicate the experiment conducted by [Lowe_Fulkerson_Walker] under the following conditions:\n1. Location: Tropical upland environment of the Atherton Tableland in Kairi Queensland\n2. Seedbed: All experiments were sown in late March or early April by broadcasting seed onto the surface and rolling before irrgation\n3. Irrigation: Irrigation of 12 mm was applied to the experiments every 5 days for first 4 weeks with 25mm applied every 14 days subsequently\n4. Defoliation: After initial period of about 6 weeks all experiment plots were defoliated with reciprocating balde mower or rotary mower to 5cm above ground. \n5. Defoliation Frequency: defoliation was done 4 weekly basis in 1991 and from June to August 1993\n6. Fertilizers Nitrogen (Urea) applied: 0, 25, 37.5, 50, 75, 100, 150 \n5. Species: Lolium multiflorum\n6. Duration: 1991, 1993, 1994\n\n\n\n\n**Simulation Parameters:**\n1. Model used: AGPRyegrass\n2. Duration: 1991, 1993, 1994\n3. Sowing Date:01-01-1991, 01-01-1993, 01-01-1994\n4. Irrigation: Fully irrigated. Used manager script\n5. Fertiliser Operations: Used Opertions to match the schedule in [Lowe_Fulkerson_Walker]. \n6. Defoliation schedule: Used operations to match the schedule in [Lowe_Fulkerson_Walker]. \n6. Experiment factors: Fertilisation applied \n7. Report variables: AboveGroundHarvestable Weight, NConc,Nitrogen stress, Water Stress, Irrigation",
-                      "Name": "KairiNitrogenExperiment",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
                     }
                   ],
                   "Enabled": true,
@@ -22061,6 +22117,29 @@
                   "Name": "MutdapillyNitrogenExperiment",
                   "ResourceName": null,
                   "Children": [
+                    {
+                      "$type": "Models.Documentation, Models",
+                      "Text": " \n## **Comparative productivity of irrigated short-term ryegrass (Lolium multiflorum) pasture receiving nitrogen, grown alone or in a mixture with white (Trifolium repens) and Persian (T. resupinatum) clovers**<h3>\n\nThis folder consists of 3 experiments conducted across 3 years. The simulations in these experiments aim to replicate the experiment conducted by [Lowe_Fulkerson_Walker] under the following conditions:\n1. Location: Subtropical alluvial systems of the Bremer at Mutdapilly in Southeast Queensland\n2. Seedbed: All experiments were sown in late March or early April by broadcasting seed onto the surface and rolling before irrgation\n3. Irrigation: Irrigation of 12 mm was applied to the experiments every 5 days for first 4 weeks with 25mm applied every 14 days subsequently\n4. Defoliation: After initial period of about 6 weeks all experiment plots were defoliated with reciprocating balde mower or rotary mower to 5cm above ground. \n5. Defoliation Frequency: Defoliation was done 4 weekly basis in 1991 and from June to August 1993\n6. Fertilizers Nitrogen (Urea) applied: 0, 25, 37.5, 50, 75, 100, 150 \n5. Species: Lolium multiflorum\n6. Duration: 1991, 1993, 1994\n\n\n\n\n**Simulation Parameters:**\n1. Model used: AGPRyegrass\n2. Duration: 1991, 1993, 1994\n3. Sowing Date: 01-01-1991, 01-01-1993, 01-01-1994\n4. Irrigation: Fully irrigated. Used manager script\n5. Fertiliser Operations: Used Opertions to match the schedule in [Lowe_Fulkerson_Walker]. \n6. Defoliation schedule: Used operations to match the schedule in [Lowe_Fulkerson_Walker]. \n6. Experiment factors: Fertilisation applied \n7. Report variables: AboveGroundHarvestable Weight, NConc,Nitrogen stress, Water Stress, Irrigation",
+                      "Name": "MutdapillyNitrogenExperiment",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Map, Models",
+                      "Zoom": 3.0,
+                      "Center": {
+                        "$type": "Models.Mapping.Coordinate, Models",
+                        "Latitude": 0.0,
+                        "Longitude": 0.0
+                      },
+                      "Name": "MutdapillyMap",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
                     {
                       "$type": "Models.Factorial.Experiment, Models",
                       "DisabledSimNames": null,
@@ -34536,15 +34615,6 @@
                       ],
                       "Enabled": true,
                       "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Documentation, Models",
-                      "Text": "\nThis folder consists of 3 experiments conducted across 3 years. The simulations in these experiments aim to replicate the experiment conducted by [Lowe_Fulkerson_Walker] under the following conditions:\n1. Location: Subtropical alluvial systems of the Bremer at Mutdapilly in Southeast Queensland\n2. Seedbed: All experiments were sown in late March or early April by broadcasting seed onto the surface and rolling before irrgation\n3. Irrigation: Irrigation of 12 mm was applied to the experiments every 5 days for first 4 weeks with 25mm applied every 14 days subsequently\n4. Defoliation: After initial period of about 6 weeks all experiment plots were defoliated with reciprocating balde mower or rotary mower to 5cm above ground. \n5. Defoliation Frequency: Defoliation was done 4 weekly basis in 1991 and from June to August 1993\n6. Fertilizers Nitrogen (Urea) applied: 0, 25, 37.5, 50, 75, 100, 150 \n5. Species: Lolium multiflorum\n6. Duration: 1991, 1993, 1994\n\n\n\n\n**Simulation Parameters:**\n1. Model used: AGPRyegrass\n2. Duration: 1991, 1993, 1994\n3. Sowing Date: 01-01-1991, 01-01-1993, 01-01-1994\n4. Irrigation: Fully irrigated. Used manager script\n5. Fertiliser Operations: Used Opertions to match the schedule in [Lowe_Fulkerson_Walker]. \n6. Defoliation schedule: Used operations to match the schedule in [Lowe_Fulkerson_Walker]. \n6. Experiment factors: Fertilisation applied \n7. Report variables: AboveGroundHarvestable Weight, NConc,Nitrogen stress, Water Stress, Irrigation",
-                      "Name": "MutdapillyNitrogenExperiment",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
                     }
                   ],
                   "Enabled": true,
@@ -34556,6 +34626,29 @@
                   "Name": "CasinoNitrogenExperiment",
                   "ResourceName": null,
                   "Children": [
+                    {
+                      "$type": "Models.Documentation, Models",
+                      "Text": "\n## **Comparative productivity of irrigated short-term ryegrass (Lolium multiflorum) pasture receiving nitrogen, grown alone or in a mixture with white (Trifolium repens) and Persian (T. resupinatum) clovers**<h3>\n\nThis folder consists of 3 experiments conducted across 3 years. The simulations in these experiments aim to replicate the experiment conducted by [Lowe_Fulkerson_Walker] under the following conditions:\n1. Location: Richmond Casino in northern NSW.\n2. Seedbed: All experiments were sown in late March or early April by broadcasting seed onto the surface and rolling before irrgation\n3. Irrigation: Irrigation of 12 mm was applied to the experiments every 5 days for first 4 weeks with 25mm applied every 14 days subsequently\n4. Defoliation: After initial period of about 6 weeks all experiment plots were defoliated with reciprocating balde mower or rotary mower to 5cm above ground. \n5. Defoliation Frequency: Defoliation was done 4 weekly basis in 1991 and from June to August 1993\n6. Fertilizers Nitrogen (Urea) applied: 0, 25, 37.5, 50, 75, 100, 150 \n5. Species: Lolium multiflorum\n6. Duration: 1991, 1993, 1994\n\n\n\n\n**Simulation Parameters:**\n1. Model used: AGPRyegrass\n2. Duration: 1991, 1993, 1994\n3. Sowing Date: 01-01-1991, 01-01-1993, 01-01-1994\n4. Irrigation: Fully irrigated. Used manager script\n5. Fertiliser Operations: Used Opertions to match the schedule in [Lowe_Fulkerson_Walker]. \n6. Defoliation schedule: Used operations to match the schedule in [Lowe_Fulkerson_Walker]. \n6. Experiment factors: Fertilisation applied \n7. Report variables: AboveGroundHarvestable Weight, NConc,Nitrogen stress, Water Stress, Irrigation",
+                      "Name": "CasinoNitrogenExperiment",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Map, Models",
+                      "Zoom": 3.0,
+                      "Center": {
+                        "$type": "Models.Mapping.Coordinate, Models",
+                        "Latitude": 0.0,
+                        "Longitude": 0.0
+                      },
+                      "Name": "CasinoMap",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
                     {
                       "$type": "Models.Factorial.Experiment, Models",
                       "DisabledSimNames": null,
@@ -47140,15 +47233,6 @@
                       ],
                       "Enabled": true,
                       "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Documentation, Models",
-                      "Text": "\nThis folder consists of 3 experiments conducted across 3 years. The simulations in these experiments aim to replicate the experiment conducted by [Lowe_Fulkerson_Walker] under the following conditions:\n1. Location: Richmond Casino in northern NSW.\n2. Seedbed: All experiments were sown in late March or early April by broadcasting seed onto the surface and rolling before irrgation\n3. Irrigation: Irrigation of 12 mm was applied to the experiments every 5 days for first 4 weeks with 25mm applied every 14 days subsequently\n4. Defoliation: After initial period of about 6 weeks all experiment plots were defoliated with reciprocating balde mower or rotary mower to 5cm above ground. \n5. Defoliation Frequency: Defoliation was done 4 weekly basis in 1991 and from June to August 1993\n6. Fertilizers Nitrogen (Urea) applied: 0, 25, 37.5, 50, 75, 100, 150 \n5. Species: Lolium multiflorum\n6. Duration: 1991, 1993, 1994\n\n\n\n\n**Simulation Parameters:**\n1. Model used: AGPRyegrass\n2. Duration: 1991, 1993, 1994\n3. Sowing Date: 01-01-1991, 01-01-1993, 01-01-1994\n4. Irrigation: Fully irrigated. Used manager script\n5. Fertiliser Operations: Used Opertions to match the schedule in [Lowe_Fulkerson_Walker]. \n6. Defoliation schedule: Used operations to match the schedule in [Lowe_Fulkerson_Walker]. \n6. Experiment factors: Fertilisation applied \n7. Report variables: AboveGroundHarvestable Weight, NConc,Nitrogen stress, Water Stress, Irrigation",
-                      "Name": "CasinoNitrogenExperiment",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
                     }
                   ],
                   "Enabled": true,
@@ -47261,9 +47345,23 @@
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Memo, Models",
-                      "Text": "This experiment grew tall fescue and ryegrass with different irrigation treatments under the rain-out shelter at Lincoln ",
-                      "Name": "Memo",
+                      "$type": "Models.Map, Models",
+                      "Zoom": 3.0,
+                      "Center": {
+                        "$type": "Models.Mapping.Coordinate, Models",
+                        "Latitude": 0.0,
+                        "Longitude": 0.0
+                      },
+                      "Name": "LincolnMap",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Documentation, Models",
+                      "Text": "This experiment ryegrass with different irrigation treatments under the rain-out shelter at Lincoln \n\n\n\n1. Location: Lincoln, New Zealand\n2. Clock: 14/03/2006 - 1/07/2008\n3. Irrigation: Weekly, SpringDrought,AutumnDrought,2Weekly,2WeeksIn3,1WeekIn4\n4. Sowing Date: 2006-03-15 to 1/07/2008\n5. Model: AgPasture\n6. Fertiliser: ManagerScript used ApplyFertOnDates\n7. Cultivar: Aurora \n8. Report Variables: sum(NO3.kgha), SoilWater.Eo, sum(Output.SWmm) , SoilWater.Es, SoilWater.Eos, SoilWater.Runoff, SoilWater.Infiltration, SoilWater.Drainage, GlfNContent, GlfWaterSupply, Leaf.Live.Wt, AboveGroundHarvestable.Wt, Sum of HarvestedWt *0.1 from 1-Jan to 31-Dec as AnnualPastureYield, Leaf.Dead.Wt, Height, CoverGreen, CoverTotal, LAI, RootWt, InitialRootDepth, Root.Depth, PotentialEP, PotentialEPa, PotentialEPr\n9. Observed file: RainShelter.xlsx\n\n",
+                      "Name": "RainshelterDoc",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -50636,7 +50734,7 @@
                     {
                       "$type": "Models.Core.Simulation, Models",
                       "Descriptors": null,
-                      "Name": "RainShelter",
+                      "Name": "Rainshelter",
                       "ResourceName": null,
                       "Children": [
                         {
@@ -53706,9 +53804,23 @@
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Memo, Models",
-                      "Text": "This experiment was run over 3 years in Lincoln, New Zealand on a shallow stony soil.  It is described in full by [Teixeira_Brown_Michel_Meenken_Hu_Thomas_Huth_Holzworth_2018] Treatments of Lucerne and Pasture (Ryegrass) were established in the Autumn of 2011 and irrigtion treatments were installed in the spring of 2011 and applied for three years.  Treatments were:\n\n - None where no irrigation was applied\n - TwoPerWeek where irrigation was applied twice per week during spring/summer/autumn to replace water use measured by neutron probe\n - OnePerWeek where the same amout of irrigation was applied as the above treatment but at weekly frequency (i.e fewer, larger irrigations)\n - ThreeWeekly where the same amount of irrigation was applied as abouve but at a 3 weekely frequency (i.e fewer, larger irrigations)\n\nLucerne and pasture were defoliated at differing frequiencies following best mananagment practice resulting in 8-10 regrowth period per year for pasture and 5-6 for lucerne.  Neutron probes were installed to 1.6 m depth using a 20T digger with a pnumatic plate on its boom to drive and extract a pilot rod into the stony sub soil and then an aluminum access tube was installed into the resultant hole.  Neutron probes measurements were tatken at 7 - 10 day intervals during the irrigation season.  CS616 probes were also installed in the top soil at 0-15 and 15-30 cm depths in each plot and logged hourly.\n\r\n\n",
-                      "Name": "Memo",
+                      "$type": "Models.Map, Models",
+                      "Zoom": 3.0,
+                      "Center": {
+                        "$type": "Models.Mapping.Coordinate, Models",
+                        "Latitude": 0.0,
+                        "Longitude": 0.0
+                      },
+                      "Name": "LincolnMap",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Documentation, Models",
+                      "Text": "This experiment was run over 3 years in Lincoln, New Zealand on a shallow stony soil.  It is described in full by [Teixeira_Brown_Michel_Meenken_Hu_Thomas_Huth_Holzworth_2018] Treatments Pasture (Ryegrass) was established in the Autumn of 2011 and irrigtion treatments were installed in the spring of 2011 and applied for three years.  Treatments were:\n\n\n* None where no irrigation was applied\n* TwoPerWeek where irrigation was applied twice per week during spring/summer/autumn to replace water use measured by neutron probe\n* OnePerWeek where the same amout of irrigation was applied as the above treatment but at weekly frequency (i.e fewer, larger irrigations)\n* ThreeWeekly where the same amount of irrigation was applied as abouve but at a 3 weekely frequency (i.e fewer, larger irrigations)\n\nPasture was defoliated at differing frequiencies following best mananagment practice resulting in 8-10 regrowth period per year for pasture and 5-6 for lucerne.  Neutron probes were installed to 1.6 m depth using a 20T digger with a pnumatic plate on its boom to drive and extract a pilot rod into the stony sub soil and then an aluminum access tube was installed into the resultant hole.  Neutron probes measurements were tatken at 7 - 10 day intervals during the irrigation season.  CS616 probes were also installed in the top soil at 0-15 and 15-30 cm depths in each plot and logged hourly.",
+                      "Name": "LandPDoc",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
