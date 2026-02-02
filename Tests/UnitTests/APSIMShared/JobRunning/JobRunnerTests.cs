@@ -1,10 +1,9 @@
-﻿namespace UnitTests.APSIMShared.JobRunning
+﻿using APSIM.Shared.JobRunning;
+using NUnit.Framework;
+using System.Collections.Generic;
+
+namespace UnitTests.APSIMShared.JobRunning
 {
-    using APSIM.Shared.JobRunning;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using System.Threading;
 
     public class JobRunnerTests
     {

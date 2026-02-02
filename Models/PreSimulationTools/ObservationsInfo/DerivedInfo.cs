@@ -155,7 +155,7 @@ namespace Models.PreSimulationTools.ObservationsInfo
                         string nameDerived = prefix + derived + postfix;
                         //create the column if it doesn't exist
                         if (!data.Columns.Contains(nameDerived))
-                            data.Columns.Add(nameDerived);
+                            data.Columns.Add(nameDerived, typeof(double));
 
                         //for each row in the datastore, see if we can compute the derived value
                         int added = 0;

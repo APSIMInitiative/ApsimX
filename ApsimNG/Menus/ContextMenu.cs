@@ -1067,18 +1067,9 @@ namespace UserInterface.Presenters
                 IModel modelToDocument = currentN;
                 explorerPresenter.ApsimXFile.Links.Resolve(modelToDocument, true, true, false);
 
-                string modelTypeName = String.Empty;
-                if (modelToDocument is Models.PMF.Plant)
-                    modelTypeName = modelToDocument.Name;
-                else if (modelToDocument is Simulations)
-                {
-                    var simpleFileName = Path.GetFileNameWithoutExtension((modelToDocument as Simulations).FileName);
-                    modelTypeName = simpleFileName;
-                }
-                else modelTypeName = modelToDocument.GetType().Name;
-
+                string name = DocumentationUtilities.GetDocumentationName(modelToDocument);
                 string fullDocFileName = Directory.GetParent(explorerPresenter.ApsimXFile.FileName).ToString()
-                    + $"{Path.DirectorySeparatorChar}{modelTypeName}.html";
+                    + $"{Path.DirectorySeparatorChar}{name}.html";
 
                 bool graphSetting = DocumentationSettings.GenerateGraphs;
                 DocumentationSettings.GenerateGraphs = true;
