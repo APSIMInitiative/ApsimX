@@ -44,7 +44,7 @@ targets <- list(
       folder_thisScript           = here::here(),
       folder_rawData              = here::here("InputFilesFromCloud"), # this will be from Cloud
       folder_inputs               = here::here("..", "..", "inputs"),
-      folder_apsimx               = here::here(".."),
+      folder_apsimx               = here::here(".."), # a level up from where Analysis is
       file_rawData_excel          = "2024_WaggaWagga_PHDA24WARI2.xlsx", # raw observed data (pre-defined file name)
       file_input_name_saved       = "WaggaWagga2024_PhenoDatesInput.csv", # name for forced pheno-dates file
       fileNameForAPSIM_observData = "WaggaWagga2024.xlsx", # name of observation file created for APSIM to read
