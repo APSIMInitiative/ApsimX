@@ -12244,10 +12244,37 @@
                 },
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[Sowing].Script.SowDate = 22-Apr,13-May",
+                  "Specification": "",
                   "Name": "Sow",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Sowing].Script.SowDate = 22-Apr"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "22-Apr",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Sowing].Script.SowDate = 13-May"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "13-May",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -12379,6 +12406,14 @@
               "Name": "Field",
               "ResourceName": null,
               "Children": [
+                {
+                  "$type": "Models.Fertiliser, Models",
+                  "Name": "Fertiliser",
+                  "ResourceName": "Fertiliser",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
                 {
                   "$type": "Models.Soils.Soil, Models",
                   "RecordNumber": 1062,
@@ -13118,8 +13153,8 @@
                         200.0
                       ],
                       "InitialValues": [
-                        0.126,
-                        0.129,
+                        0.103,
+                        0.14,
                         0.37,
                         0.46,
                         0.41,
@@ -13145,16 +13180,16 @@
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.CERESSoilTemperature, Models",
+                      "Name": "Temperature",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Fertiliser, Models",
-                  "Name": "Fertiliser",
-                  "ResourceName": "Fertiliser",
-                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -13366,9 +13401,43 @@
                       "Line": "2024-05-09 [Irrigation].Apply (6);"
                     }
                   ],
-                  "Name": "Operations",
+                  "Name": "IrrigationAppliedAmounts",
                   "ResourceName": null,
                   "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Operations, Models",
+                  "OperationsList": [
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2024-04-22",
+                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\");",
+                      "Line": "2024-04-22 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2024-05-13",
+                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\");",
+                      "Line": "2024-05-13 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
+                    }
+                  ],
+                  "Name": "FertiliserAppliedAmounts",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "FIXME: These are conditional to cv instead (not for both) ... i.e., at sowing",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -13610,7 +13679,7 @@
                   "Parameters": [
                     {
                       "Key": "NoHarvestBefore",
-                      "Value": "17-Nov"
+                      "Value": "25-Nov"
                     }
                   ],
                   "Name": "Harvest",
@@ -13697,7 +13766,7 @@
                   "$type": "Models.Sensor.Spectral, Models",
                   "DrySoilNDVI": 0.1,
                   "WetSoilNDVI": 0.2,
-                  "GreenCropNDVI": 0.75,
+                  "GreenCropNDVI": 0.95,
                   "DeadCropNDVI": 0.15,
                   "Name": "Spectral",
                   "ResourceName": null,
