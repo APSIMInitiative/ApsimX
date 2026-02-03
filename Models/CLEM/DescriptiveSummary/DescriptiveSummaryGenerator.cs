@@ -691,7 +691,7 @@ public class DescriptiveSummaryGenerator
 
         if (OutputFormat == DescriptiveSummaryFormat.HTML)
         {
-            openTag = $"<tr{(enabled ? "" : " class=\"disabled\"")}>";
+            openTag = $"<tr{(enabled ? "" : " class=\"disabledcomponent\"")}>";
             cellWrapStart = "<td>";
             cellWrapEnd = "</td>";
             endTag = "</tr>";

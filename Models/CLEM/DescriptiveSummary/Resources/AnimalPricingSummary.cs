@@ -50,7 +50,7 @@ public class AnimalPricingSummary : DescriptiveSummaryProviderBase<AnimalPricing
         if (group.Id == "available" && group.SelectedModels.Any())
         {
             generator.OpenBlock(id: "tablewrap", addTopBottomMargin: true);
-            generator.CreateTable(new string[] { "Name", "Filter", "Days per month" });
+            generator.CreateTable(new string[] { "Name", "Filter", "Transaction", "Amount", "Apply" });
         }
     }
 

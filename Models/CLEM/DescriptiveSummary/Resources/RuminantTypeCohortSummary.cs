@@ -197,7 +197,8 @@ public class RuminantTypeCohortSummary : DescriptiveSummaryProviderBase<Ruminant
                     if (rumtype != null)
                     {
                         RandomNumberGenerator rng = model.Structure.Find<RandomNumberGenerator>();
-                        rng.SetForPreSimulation();
+                        if (rng is not null)
+                            rng.SetForPreSimulation();
                         rumtype.Parameters.Initialise(rumtype);
 //                            var generalParams = rumtype.Structure.FindChild<RuminantParametersGeneral>(recurse: true);
 
@@ -214,7 +215,7 @@ public class RuminantTypeCohortSummary : DescriptiveSummaryProviderBase<Ruminant
                         }
                         string weightstring = "";
                         if (model.Weight > 0)
-                            weightstring = $"{generator.DisplaySummaryValueSnippet($"{model.Weight.ToString()} + {((model.WeightSD > 0) ? " (" + model.WeightSD.ToString() + ")" : "")}")}";
+                            weightstring = $"{generator.DisplaySummaryValueSnippet($"{model.Weight}{((model.WeightSD > 0) ? $" \00B1 {model.WeightSD}" : "")}")}";
 
 
                         List<(string label, bool fill)> cellValues = new List<(string, bool)>() {
@@ -248,7 +249,7 @@ public class RuminantTypeCohortSummary : DescriptiveSummaryProviderBase<Ruminant
                             cellValues.Add((attributes, setAttributesFound.Any()));
                         }
 
-                        generator.AddTableRow(cellValues, model.Enabled);
+                        generator.AddTableRow(cellValues, ModelTyped.Enabled);
                     }
                     break;
                 default:
