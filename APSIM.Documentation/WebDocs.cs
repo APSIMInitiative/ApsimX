@@ -15,6 +15,7 @@ using APSIM.Shared.Mapping;
 using SkiaSharp;
 using APSIM.Documentation.Graphing;
 using APSIM.Core;
+using APSIM.Shared.Documentation.Extensions;
 
 namespace APSIM.Documentation
 {
@@ -359,28 +360,27 @@ namespace APSIM.Documentation
         {
             output = input;
             List<ICitation> citations = new List<ICitation>();
-            List<string> citesFound = new List<string>();
             Regex regex;
             MatchCollection matches;
 
             //Find references without overriding text and convert to standard
-            regex = new Regex(@"(?<!\])\[\#([^\]]+)\]");
+            regex = new Regex(@"(?<!\])\[\#([^\]]+)\](?!\()");
             matches = regex.Matches(input);
+            int offset = 0;
             foreach(Match match in matches)
             {
                 string value = match.Groups[0].Value;
-                if (!citesFound.Contains(value))
-                {
-                    citesFound.Add(value);
-                    string reference = match.Groups[1].Value;
-                    ICitation citation = AutoDocumentation.Bibilography.Lookup(reference);
-                    if (citation != null)
-                        output = output.Replace(value, $"[{citation.InTextCite}][#{reference}]");
-                }
+                string reference = match.Groups[1].Value;
+                ICitation citation = AutoDocumentation.Bibilography.Lookup(reference);
+                string markdownCite = $"[{citation.InTextCite}][#{reference}]";
+                output = output.Remove(match.Index + offset, value.Length);
+                output = output.Insert(match.Index + offset, markdownCite);
+                offset += markdownCite.Length - value.Length;
             }
 
             //Find references with overriding text
-            citesFound.Clear();
+            List<string> valuesReplaced = new List<string>();
+            List<string> citesFound = new List<string>();
             regex = new Regex(@"\[([^\]]+)\]\[\#([^\]]+)\]");
             matches = regex.Matches(output);
             foreach(Match match in matches)
@@ -395,6 +395,10 @@ namespace APSIM.Documentation
                     {
                         citesFound.Add(reference);
                         citations.Add(citation);
+                    }
+                    if (!valuesReplaced.Contains(value))
+                    {
+                        valuesReplaced.Add(value);
                         output = output.Replace(value, $"[{text}](#{reference})");
                     }
                 }
@@ -414,14 +418,13 @@ namespace APSIM.Documentation
             foreach (ICitation citation in sorted)
             {
                 //if no link, wrap in a p tag, if using a link, use a a href instead
-                string tagStart = "<p>";
-                string tagEnd = "</p>";
+                string contents = $"{citation.BibliographyText}";
                 if (!string.IsNullOrEmpty(citation.URL))
-                {
-                    tagStart = $"<a href=\"{citation.URL}\">";
-                    tagEnd = "</a>";
-                }
-                output += $"<div id=\"{citation.Name}\">{tagStart}{citation.BibliographyText}{tagEnd}</div>\n\n";
+                    contents = $"[{citation.BibliographyText}]({citation.URL})";
+
+                output += $"{contents}";                            //contents of reference
+                output += $"<div id=\"{citation.Name}\"></div>";    //div tag for navigation
+                output += $"\n\n";                                  //space to ensure newlines
             }
             return output;
         }
