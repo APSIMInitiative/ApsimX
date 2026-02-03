@@ -2279,7 +2279,11 @@ namespace Models.AgPasture
         public IBiomass AboveGround
         {
             get
-            {
+            {   
+
+                if(Leaf==null || Stem == null || Stolon == null)
+                    return new Biomass();
+
                 Biomass mass = new Biomass();
                 mass.StructuralWt = (Leaf.StandingHerbageWt + Stem.StandingHerbageWt + Stolon.StandingHerbageWt) / 10.0; // to g/m2
                 mass.StructuralN = (Leaf.StandingHerbageN + Stem.StandingHerbageN + Stolon.StandingHerbageN) / 10.0;    // to g/m2
@@ -2293,11 +2297,17 @@ namespace Models.AgPasture
         public IBiomass AboveGroundHarvestable
         {
             get
-            {
+            {   
+                
+                if(Leaf==null || Stem == null || Stolon == null)
+                    return new Biomass();
+                                   
                 Biomass mass = new Biomass();
                 mass.StructuralWt = Harvestable.Wt / 10.0; // to g/m2
                 mass.StructuralN = Harvestable.N / 10.0;    // to g/m2
-                return mass;
+                return mass; 
+                
+                
             }
         }
 

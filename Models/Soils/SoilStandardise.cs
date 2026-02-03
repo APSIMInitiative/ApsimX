@@ -222,14 +222,15 @@ public static class SoilSanitise
     /// <param name="targetThickness">Target thickness.</param>
     private static void SanitiseChemical(Chemical chemical, Physical physical, Organic organic, double[] targetThickness)
     {
+        string name = $"{chemical.FullPath} ({chemical.GetType()})";
         if (!MathUtilities.AreEqual(targetThickness, chemical.Thickness))
         {
-            chemical.PH = SoilUtilities.MapConcentration(chemical.PH, chemical.Thickness, targetThickness, 7.0);
-            chemical.EC = SoilUtilities.MapConcentration(chemical.EC, chemical.Thickness, targetThickness, MathUtilities.LastValue(chemical.EC));
-            chemical.ESP = SoilUtilities.MapConcentration(chemical.ESP, chemical.Thickness, targetThickness, MathUtilities.LastValue(chemical.ESP));
+            chemical.PH = SoilUtilities.MapConcentration(chemical.PH, chemical.Thickness, targetThickness, 7.0, modelName: name);
+            chemical.EC = SoilUtilities.MapConcentration(chemical.EC, chemical.Thickness, targetThickness, MathUtilities.LastValue(chemical.EC), modelName: name);
+            chemical.ESP = SoilUtilities.MapConcentration(chemical.ESP, chemical.Thickness, targetThickness, MathUtilities.LastValue(chemical.ESP), modelName: name);
 
             if (chemical.CEC != null && chemical.CEC.Length > 0 && chemical.CEC.Length != targetThickness.Length)
-                chemical.CEC = SoilUtilities.MapConcentration(chemical.CEC, chemical.Thickness, targetThickness, MathUtilities.LastValue(chemical.CEC));
+                chemical.CEC = SoilUtilities.MapConcentration(chemical.CEC, chemical.Thickness, targetThickness, MathUtilities.LastValue(chemical.CEC), modelName: name);
 
             chemical.Thickness = targetThickness;
         }
@@ -251,12 +252,13 @@ public static class SoilSanitise
     /// <param name="targetThickness">Target thickness.</param>
     private static void SanitiseOrganic(Organic organic, double[] targetThickness)
     {
+        string name = $"{organic.FullPath} ({organic.GetType()})";
         if (!MathUtilities.AreEqual(targetThickness, organic.Thickness))
         {
-            organic.FBiom = SoilUtilities.MapConcentration(organic.FBiom, organic.Thickness, targetThickness, MathUtilities.LastValue(organic.FBiom));
-            organic.FInert = SoilUtilities.MapConcentration(organic.FInert, organic.Thickness, targetThickness, MathUtilities.LastValue(organic.FInert));
-            organic.Carbon = SoilUtilities.MapConcentration(organic.Carbon, organic.Thickness, targetThickness, MathUtilities.LastValue(organic.Carbon));
-            organic.SoilCNRatio = SoilUtilities.MapConcentration(organic.SoilCNRatio, organic.Thickness, targetThickness, MathUtilities.LastValue(organic.SoilCNRatio));
+            organic.FBiom = SoilUtilities.MapConcentration(organic.FBiom, organic.Thickness, targetThickness, MathUtilities.LastValue(organic.FBiom), modelName: name);
+            organic.FInert = SoilUtilities.MapConcentration(organic.FInert, organic.Thickness, targetThickness, MathUtilities.LastValue(organic.FInert), modelName: name);
+            organic.Carbon = SoilUtilities.MapConcentration(organic.Carbon, organic.Thickness, targetThickness, MathUtilities.LastValue(organic.Carbon), modelName: name);
+            organic.SoilCNRatio = SoilUtilities.MapConcentration(organic.SoilCNRatio, organic.Thickness, targetThickness, MathUtilities.LastValue(organic.SoilCNRatio), modelName: name);
             organic.FOM = SoilUtilities.MapMass(organic.FOM, organic.Thickness, targetThickness, false);
             organic.Thickness = targetThickness;
         }
@@ -285,6 +287,7 @@ public static class SoilSanitise
     /// <param name="targetThickness"></param>
     private static void SanitisePhysical(Physical physical, double[] targetThickness)
     {
+        string name = $"{physical.FullPath} ({physical.GetType()})";
         if (physical.KS != null && physical.KS.All(ks => Double.IsNaN(ks)))
             physical.KS = null;
 
@@ -292,25 +295,25 @@ public static class SoilSanitise
         {
             foreach (var crop in (physical as IModel).Node.FindChildren<SoilCrop>())
             {
-                crop.KL = SoilUtilities.MapConcentration(crop.KL, physical.Thickness, targetThickness, MathUtilities.LastValue(crop.KL));
-                crop.XF = SoilUtilities.MapConcentration(crop.XF, physical.Thickness, targetThickness, MathUtilities.LastValue(crop.XF));
-                crop.LL = SoilUtilities.MapConcentration(crop.LL, physical.Thickness, targetThickness, MathUtilities.LastValue(crop.LL));
+                crop.KL = SoilUtilities.MapConcentration(crop.KL, physical.Thickness, targetThickness, MathUtilities.LastValue(crop.KL), modelName: name);
+                crop.XF = SoilUtilities.MapConcentration(crop.XF, physical.Thickness, targetThickness, MathUtilities.LastValue(crop.XF), modelName: name);
+                crop.LL = SoilUtilities.MapConcentration(crop.LL, physical.Thickness, targetThickness, MathUtilities.LastValue(crop.LL), modelName: name);
             }
 
-            physical.BD = SoilUtilities.MapConcentration(physical.BD, physical.Thickness, targetThickness, MathUtilities.LastValue(physical.BD));
-            physical.AirDry = SoilUtilities.MapConcentration(physical.AirDry, physical.Thickness, targetThickness, MathUtilities.LastValue(physical.AirDry));
-            physical.LL15 = SoilUtilities.MapConcentration(physical.LL15, physical.Thickness, targetThickness, MathUtilities.LastValue(physical.LL15));
-            physical.DUL = SoilUtilities.MapConcentration(physical.DUL, physical.Thickness, targetThickness, MathUtilities.LastValue(physical.DUL));
-            physical.SAT = SoilUtilities.MapConcentration(physical.SAT, physical.Thickness, targetThickness, MathUtilities.LastValue(physical.SAT));
-            physical.KS = SoilUtilities.MapConcentration(physical.KS, physical.Thickness, targetThickness, MathUtilities.LastValue(physical.KS));
+            physical.BD = SoilUtilities.MapConcentration(physical.BD, physical.Thickness, targetThickness, MathUtilities.LastValue(physical.BD), modelName: name);
+            physical.AirDry = SoilUtilities.MapConcentration(physical.AirDry, physical.Thickness, targetThickness, MathUtilities.LastValue(physical.AirDry), modelName: name);
+            physical.LL15 = SoilUtilities.MapConcentration(physical.LL15, physical.Thickness, targetThickness, MathUtilities.LastValue(physical.LL15), modelName: name);
+            physical.DUL = SoilUtilities.MapConcentration(physical.DUL, physical.Thickness, targetThickness, MathUtilities.LastValue(physical.DUL), modelName: name);
+            physical.SAT = SoilUtilities.MapConcentration(physical.SAT, physical.Thickness, targetThickness, MathUtilities.LastValue(physical.SAT), modelName: name);
+            physical.KS = SoilUtilities.MapConcentration(physical.KS, physical.Thickness, targetThickness, MathUtilities.LastValue(physical.KS), modelName: name);
             if (physical.ParticleSizeClay != null && physical.ParticleSizeClay.Length > 0 && physical.ParticleSizeClay.Length != targetThickness.Length)
-                physical.ParticleSizeClay = SoilUtilities.MapConcentration(physical.ParticleSizeClay, physical.Thickness, targetThickness, MathUtilities.LastValue(physical.ParticleSizeClay));
+                physical.ParticleSizeClay = SoilUtilities.MapConcentration(physical.ParticleSizeClay, physical.Thickness, targetThickness, MathUtilities.LastValue(physical.ParticleSizeClay), modelName: name);
             if (physical.ParticleSizeSand != null && physical.ParticleSizeSand.Length > 0 && physical.ParticleSizeSand.Length != targetThickness.Length)
-                physical.ParticleSizeSand = SoilUtilities.MapConcentration(physical.ParticleSizeSand, physical.Thickness, targetThickness, MathUtilities.LastValue(physical.ParticleSizeSand));
+                physical.ParticleSizeSand = SoilUtilities.MapConcentration(physical.ParticleSizeSand, physical.Thickness, targetThickness, MathUtilities.LastValue(physical.ParticleSizeSand), modelName: name);
             if (physical.ParticleSizeSilt != null && physical.ParticleSizeSilt.Length > 0 && physical.ParticleSizeSilt.Length != targetThickness.Length)
-                physical.ParticleSizeSilt = SoilUtilities.MapConcentration(physical.ParticleSizeSilt, physical.Thickness, targetThickness, MathUtilities.LastValue(physical.ParticleSizeSilt));
+                physical.ParticleSizeSilt = SoilUtilities.MapConcentration(physical.ParticleSizeSilt, physical.Thickness, targetThickness, MathUtilities.LastValue(physical.ParticleSizeSilt), modelName: name);
             if (physical.Rocks != null && physical.Rocks.Length > 0 && physical.Rocks.Length != targetThickness.Length)
-                physical.Rocks = SoilUtilities.MapConcentration(physical.Rocks, physical.Thickness, targetThickness, MathUtilities.LastValue(physical.Rocks));
+                physical.Rocks = SoilUtilities.MapConcentration(physical.Rocks, physical.Thickness, targetThickness, MathUtilities.LastValue(physical.Rocks), modelName: name);
             physical.Thickness = targetThickness;
 
             foreach (var crop in (physical as IModel).Node.FindChildren<SoilCrop>())
@@ -427,12 +430,14 @@ public static class SoilSanitise
     /// <param name="organic"></param>
     public static void InFill(this Chemical chemical, Physical physical, Organic organic)
     {
+        string physicalName = $"{physical.FullPath} ({physical.GetType()})";
+        string organicName = $"{organic.FullPath} ({organic.GetType()})";
         if (chemical.CEC == null || chemical.CEC.Length == 0)
         {
             // Map some variables to the same thickness as the chemical model.
-            double[] oc = SoilUtilities.MapConcentration(organic.Carbon, organic.Thickness, chemical.Thickness, MathUtilities.LastValue(organic.Carbon));
-            double[] particleSizeClay = SoilUtilities.MapConcentration(physical.ParticleSizeClay, physical.Thickness, chemical.Thickness, MathUtilities.LastValue(physical.ParticleSizeClay));
-            double[] particleSizeSand = SoilUtilities.MapConcentration(physical.ParticleSizeSand, physical.Thickness, chemical.Thickness, MathUtilities.LastValue(physical.ParticleSizeSand));
+            double[] oc = SoilUtilities.MapConcentration(organic.Carbon, organic.Thickness, chemical.Thickness, MathUtilities.LastValue(organic.Carbon), modelName: organicName);
+            double[] particleSizeClay = SoilUtilities.MapConcentration(physical.ParticleSizeClay, physical.Thickness, chemical.Thickness, MathUtilities.LastValue(physical.ParticleSizeClay), modelName: physicalName);
+            double[] particleSizeSand = SoilUtilities.MapConcentration(physical.ParticleSizeSand, physical.Thickness, chemical.Thickness, MathUtilities.LastValue(physical.ParticleSizeSand), modelName: physicalName);
 
             // Create a pedo transfer function for when CEC is missing.
             double[] cec = new double[chemical.Thickness.Length];
@@ -477,17 +482,17 @@ public static class SoilSanitise
     {
         // Define default ppm value to use below bottom layer of this solute if necessary.
         double defaultValue = 0;
-
+        string name = $"{solute.FullPath} ({solute.GetType()})";
         if (!MathUtilities.AreEqual(targetThickness, solute.Thickness))
         {
             if (solute.Exco != null)
-                solute.Exco = SoilUtilities.MapConcentration(solute.Exco, solute.Thickness, targetThickness, 0.2);
+                solute.Exco = SoilUtilities.MapConcentration(solute.Exco, solute.Thickness, targetThickness, 0.2, modelName: name);
             if (solute.FIP != null)
-                solute.FIP = SoilUtilities.MapConcentration(solute.FIP, solute.Thickness, targetThickness, 0.2);
+                solute.FIP = SoilUtilities.MapConcentration(solute.FIP, solute.Thickness, targetThickness, 0.2, modelName: name);
 
             if (solute.InitialValuesUnits == UnitsEnum.kgha)
                 solute.InitialValues = SoilUtilities.kgha2ppm(solute.Thickness, solute.SoluteBD, solute.InitialValues);
-            solute.InitialValues = SoilUtilities.MapConcentration(solute.InitialValues, solute.Thickness, targetThickness, defaultValue);
+            solute.InitialValues = SoilUtilities.MapConcentration(solute.InitialValues, solute.Thickness, targetThickness, defaultValue, modelName: name);
             solute.Thickness = targetThickness;
             if (solute.InitialValuesUnits == UnitsEnum.kgha)
                 solute.InitialValues = SoilUtilities.ppm2kgha(solute.Thickness, solute.SoluteBD, solute.InitialValues);
@@ -506,10 +511,11 @@ public static class SoilSanitise
     private static void SanitiseWaterBalance(WaterBalance waterBalance, Physical physical, double[] targetThickness)
     {
         waterBalance.SetPhysical(physical);
+        string name = $"{waterBalance.FullPath} ({waterBalance.GetType()})";
         if (!MathUtilities.AreEqual(targetThickness, waterBalance.Thickness))
         {
-            waterBalance.KLAT = SoilUtilities.MapConcentration(waterBalance.KLAT, waterBalance.Thickness, targetThickness, MathUtilities.LastValue(waterBalance.KLAT));
-            waterBalance.SWCON = SoilUtilities.MapConcentration(waterBalance.SWCON, waterBalance.Thickness, targetThickness, 0.0);
+            waterBalance.KLAT = SoilUtilities.MapConcentration(waterBalance.KLAT, waterBalance.Thickness, targetThickness, MathUtilities.LastValue(waterBalance.KLAT), modelName: name);
+            waterBalance.SWCON = SoilUtilities.MapConcentration(waterBalance.SWCON, waterBalance.Thickness, targetThickness, 0.0, modelName: name);
 
             waterBalance.Thickness = targetThickness;
         }
@@ -523,13 +529,14 @@ public static class SoilSanitise
     /// <param name="targetThickness">Target thickness.</param>
     private static void SanitiseWeirdo(WEIRDO weirdo, double[] targetThickness)
     {
+        string name = $"{weirdo.FullPath} ({weirdo.GetType()})";
         weirdo.CFlow = MathUtilities.Multiply_Value(weirdo.CFlow, 1e-10);
-        weirdo.CFlow = SoilUtilities.MapConcentration(weirdo.CFlow, weirdo.Thickness, targetThickness, weirdo.CFlow[weirdo.CFlow.Length - 1]);
-        weirdo.XFlow = SoilUtilities.MapConcentration(weirdo.XFlow, weirdo.Thickness, targetThickness, weirdo.XFlow[weirdo.XFlow.Length - 1]);
-        weirdo.PsiBub = SoilUtilities.MapConcentration(weirdo.PsiBub, weirdo.Thickness, targetThickness, weirdo.PsiBub[weirdo.PsiBub.Length - 1]);
-        weirdo.UpperRepellentWC = SoilUtilities.MapConcentration(weirdo.UpperRepellentWC, weirdo.Thickness, targetThickness, weirdo.UpperRepellentWC[weirdo.UpperRepellentWC.Length - 1]);
-        weirdo.LowerRepellentWC = SoilUtilities.MapConcentration(weirdo.LowerRepellentWC, weirdo.Thickness, targetThickness, weirdo.LowerRepellentWC[weirdo.LowerRepellentWC.Length - 1]);
-        weirdo.MinRepellancyFactor = SoilUtilities.MapConcentration(weirdo.MinRepellancyFactor, weirdo.Thickness, targetThickness, weirdo.MinRepellancyFactor[weirdo.MinRepellancyFactor.Length - 1]);
+        weirdo.CFlow = SoilUtilities.MapConcentration(weirdo.CFlow, weirdo.Thickness, targetThickness, weirdo.CFlow[weirdo.CFlow.Length - 1], modelName: name);
+        weirdo.XFlow = SoilUtilities.MapConcentration(weirdo.XFlow, weirdo.Thickness, targetThickness, weirdo.XFlow[weirdo.XFlow.Length - 1], modelName: name);
+        weirdo.PsiBub = SoilUtilities.MapConcentration(weirdo.PsiBub, weirdo.Thickness, targetThickness, weirdo.PsiBub[weirdo.PsiBub.Length - 1], modelName: name);
+        weirdo.UpperRepellentWC = SoilUtilities.MapConcentration(weirdo.UpperRepellentWC, weirdo.Thickness, targetThickness, weirdo.UpperRepellentWC[weirdo.UpperRepellentWC.Length - 1], modelName: name);
+        weirdo.LowerRepellentWC = SoilUtilities.MapConcentration(weirdo.LowerRepellentWC, weirdo.Thickness, targetThickness, weirdo.LowerRepellentWC[weirdo.LowerRepellentWC.Length - 1], modelName: name);
+        weirdo.MinRepellancyFactor = SoilUtilities.MapConcentration(weirdo.MinRepellancyFactor, weirdo.Thickness, targetThickness, weirdo.MinRepellancyFactor[weirdo.MinRepellancyFactor.Length - 1], modelName: name);
         weirdo.Thickness = targetThickness;
     }
 
@@ -552,6 +559,8 @@ public static class SoilSanitise
         if (fromValues == null || fromThickness == null)
             return null;
 
+        string name = $"{physical.FullPath} ({physical.GetType()})";
+
         // convert from values to a mass basis with a dummy bottom layer.
         List<double> values = new List<double>();
         values.AddRange(fromValues);
@@ -568,9 +577,9 @@ public static class SoilSanitise
         var firstCrop = (physical as IModel).Node.FindChild<SoilCrop>();
         double[] LowerBound;
         if (physical != null && firstCrop != null)
-            LowerBound = SoilUtilities.MapConcentration(firstCrop.LL, physical.Thickness, thickness.ToArray(), MathUtilities.LastValue(firstCrop.LL));
+            LowerBound = SoilUtilities.MapConcentration(firstCrop.LL, physical.Thickness, thickness.ToArray(), MathUtilities.LastValue(firstCrop.LL), modelName: name);
         else
-            LowerBound = SoilUtilities.MapConcentration(physical.LL15, physical.Thickness, thickness.ToArray(), physical.LL15.Last());
+            LowerBound = SoilUtilities.MapConcentration(physical.LL15, physical.Thickness, thickness.ToArray(), physical.LL15.Last(), modelName: name);
         if (LowerBound == null)
             throw new Exception("Cannot find crop lower limit or LL15 in soil");
 
@@ -967,11 +976,12 @@ public static class SoilSanitise
         if (A == null)
             return null;
 
-        var physical = soil.Node.FindChild<IPhysical>();
+        IPhysical physical = soil.Node.FindChild<IPhysical>();
+        string name = $"{(physical as IModel).FullPath} ({physical.GetType()})";
         double[] LL = PredictedLL(physical, A, B);
-        LL = SoilUtilities.MapConcentration(LL, PredictedThickness, physical.Thickness, LL.Last());
-        KL = SoilUtilities.MapConcentration(KL, PredictedThickness, physical.Thickness, KL.Last());
-        double[] XF = SoilUtilities.MapConcentration(PredictedXF, PredictedThickness, physical.Thickness, PredictedXF.Last());
+        LL = SoilUtilities.MapConcentration(LL, PredictedThickness, physical.Thickness, LL.Last(), modelName: name);
+        KL = SoilUtilities.MapConcentration(KL, PredictedThickness, physical.Thickness, KL.Last(), modelName: name);
+        double[] XF = SoilUtilities.MapConcentration(PredictedXF, PredictedThickness, physical.Thickness, PredictedXF.Last(), modelName: name);
         string[] Metadata = StringUtilities.CreateStringArray("Estimated", physical.Thickness.Length);
         LL = MathUtilities.Constrain(LL, physical.LL15, physical.DUL);
 
@@ -996,8 +1006,9 @@ public static class SoilSanitise
     /// <returns></returns>
     private static double[] PredictedLL(IPhysical physical, double[] A, double B)
     {
-        double[] LL15 = SoilUtilities.MapConcentration(physical.LL15, physical.Thickness, PredictedThickness, physical.LL15.Last());
-        double[] DUL = SoilUtilities.MapConcentration(physical.DUL, physical.Thickness, PredictedThickness, physical.DUL.Last());
+        string name = $"{(physical as IModel).FullPath} ({physical.GetType()})";
+        double[] LL15 = SoilUtilities.MapConcentration(physical.LL15, physical.Thickness, PredictedThickness, physical.LL15.Last(), modelName: name);
+        double[] DUL = SoilUtilities.MapConcentration(physical.DUL, physical.Thickness, PredictedThickness, physical.DUL.Last(), modelName: name);
         double[] LL = new double[PredictedThickness.Length];
         for (int i = 0; i != PredictedThickness.Length; i++)
         {

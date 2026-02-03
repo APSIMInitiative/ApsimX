@@ -1,7 +1,7 @@
 ﻿using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Grazplan;
+using Models.GrazPlan;
 using Models.Interfaces;
 using Models.Soils;
 using Models.Soils.Arbitrator;

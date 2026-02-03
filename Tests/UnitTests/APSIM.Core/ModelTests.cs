@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using APSIM.Core;
+using Models.Core;
 using Models.Soils;
 using NUnit.Framework;
 using System;
@@ -8,9 +9,8 @@ using Models;
 using Models.Factorial;
 using Models.PMF;
 using Models.PMF.Organs;
-using UnitTests;
 
-namespace APSIM.Core.Tests;
+namespace UnitTests.APSIM.Core.Tests;
 
 [TestFixture]
 public class ModelTests
