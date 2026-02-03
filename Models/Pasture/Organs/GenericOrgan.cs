@@ -20,6 +20,7 @@ using APSIM.Core;
 
 using Models.PMF.Interfaces;
 using Models.PMF;
+using Models.PMF.Organs;
 
 namespace Models.GrazPlan.Organs
 {
@@ -41,7 +42,10 @@ namespace Models.GrazPlan.Organs
 
          /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
         [Description("Is organ above ground?")]
-        public bool IsAboveGround { get; set; } = true; 
+        public bool IsAboveGround { get; set; }
+
+
+       
          /// <summary>
         /// TPasturePopulation
         /// </summary>
@@ -55,6 +59,7 @@ namespace Models.GrazPlan.Organs
             PastureModel.MassUnit = sUnit;
             return result;
         }
+
         
         /// <summary>
         /// Get average nutrient content of a plant (g/g) (CONCENTRATION NOT AMT)
@@ -81,10 +86,20 @@ namespace Models.GrazPlan.Organs
 
                 if (PastureModel != null)
                 {
-                    if(Name=="Leaf")
+                    if(Name=="Leaf" && IsAboveGround is true)
                         return GetDM(GrazType.TOTAL, GrazType.ptLEAF)/10.0;
-                    if(Name=="Stem")
+                    if(Name=="Stem" && IsAboveGround is true)
                         return GetDM(GrazType.TOTAL, GrazType.ptSTEM)/10.0;
+                    if (Name == "Root" && IsAboveGround is false)
+                    {
+                        string sUnit = PastureModel.MassUnit;
+                        PastureModel.MassUnit = "kg/ha";
+                        double result = PastureModel.GetRootMass(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL)/10.0;
+                        PastureModel.MassUnit = sUnit;
+
+                        return result;
+                    }
+                    
                 }
       
                 return 0;
@@ -123,10 +138,14 @@ namespace Models.GrazPlan.Organs
             {   
                 if (PastureModel != null)
                 {
-                    if(Name=="Leaf")
-                        return (GetDM(GrazType.TOTAL, GrazType.ptLEAF)/10.0)* (GetPlantNutr(GrazType.TOTAL, GrazType.ptLEAF, TPlantElement.N));
-                    if(Name=="Stem")
-                        return (GetDM(GrazType.TOTAL, GrazType.ptSTEM)/10.0)* (GetPlantNutr(GrazType.TOTAL, GrazType.ptSTEM, TPlantElement.N));
+                    if(Name=="Leaf"  && IsAboveGround is true)
+                        return GetDM(GrazType.TOTAL, GrazType.ptLEAF)/10.0* GetPlantNutr(GrazType.TOTAL, GrazType.ptLEAF, TPlantElement.N);
+                    if(Name=="Stem"  && IsAboveGround is true)
+                        return GetDM(GrazType.TOTAL, GrazType.ptSTEM)/10.0 * GetPlantNutr(GrazType.TOTAL, GrazType.ptSTEM, TPlantElement.N);
+                    if (Name == "Root" && IsAboveGround is false)
+                    {
+                        return  PastureModel.GetRootConc(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.N);
+                    }
                 }
                 
                 return 0;

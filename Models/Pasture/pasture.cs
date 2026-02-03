@@ -2544,6 +2544,11 @@ namespace Models.GrazPlan
                 Stem.PastureModel = PastureModel;
             }
 
+            if(Root != null)
+            {
+                Root.PastureModel =PastureModel;
+            }
+
             if (AboveGround != null)
             {
                 AboveGround.PastureModel=PastureModel;
