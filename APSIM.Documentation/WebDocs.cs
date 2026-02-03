@@ -121,7 +121,7 @@ namespace APSIM.Documentation
         /// <param name="model">Path to which the file will be generated.</param>
         public static string GenerateWeb(IModel model)
         {
-            return TagsToHTMLString(AutoDocumentation.Document(model));
+            return TagsToHTMLString(AutoDocumentation.Document(model), model);
         }
 
         /// <summary>
