@@ -13,6 +13,7 @@ using UserInterface.EventArguments;
 using UserInterface.Interfaces;
 using UserInterface.Views;
 using Utility;
+using APSIMNG.Utility;
 
 namespace UserInterface.Presenters
 {
@@ -72,11 +73,12 @@ namespace UserInterface.Presenters
             }
 
             // Cleanup the recent file list
-            Utility.Configuration.Settings.CleanMruList();
+            Configuration.Settings.CleanMruList();
 
             // Populate the 2 start pages.
-            this.PopulateStartPage(this.view.StartPage1);
-            this.PopulateStartPage(this.view.StartPage2);
+            PopulateStartPage(this.view.MenuList);
+            PopulateStartPage(this.view.StartPage2);
+            PopulateMRUList();
 
             // Trap some events.
             this.view.AllowClose += this.OnClosing;
@@ -85,6 +87,9 @@ namespace UserInterface.Presenters
             this.view.TabClosing += this.OnTabClosing;
             this.view.ShowDetailedError += this.ShowDetailedErrorMessage;
             this.view.Show();
+            // Must be done after the MarkdownView is shown.
+            ShowNotifications();
+
 
             int height = this.view.PanelHeight;
             double savedHeight = Utility.Configuration.Settings.StatusPanelHeight / 100.0;
@@ -629,10 +634,19 @@ namespace UserInterface.Presenters
                             "Help",
                             new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Help.svg"),
                             this.OnHelp);
-            // Populate the view's listview.
-            startPage.List.Values = Configuration.Settings.MruList.Select(f => f.FileName).ToArray();
 
             this.PopulatePopup(startPage);
+        }
+
+        /// <summary>
+        /// Show notifications/news items in its own list.
+        /// </summary>
+        /// <param name="markdownView"></param>
+        private void ShowNotifications()
+        {
+            NotificationUtility utility = new NotificationUtility();
+            string markdownText = utility.GetNotificationMarkdownText();
+            view.NotificationMarkdownView.Text = markdownText;
         }
 
         private void OnShowSettingsDialog(object sender, EventArgs e)
@@ -1344,5 +1358,15 @@ namespace UserInterface.Presenters
         {
             ShowError(args.Error);
         }
+
+
+        /// <summary>
+        /// Populate the most recently used files list view.
+        /// </summary>
+        private void PopulateMRUList()
+        {
+            view.StartPage1.List.Values = Configuration.Settings.MruList.Select(f => f.FileName).ToArray();
+        }
+
     }
 }

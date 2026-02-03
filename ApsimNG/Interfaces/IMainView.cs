@@ -18,6 +18,17 @@ namespace UserInterface.Interfaces
         /// </summary>
         IListButtonView StartPage2 { get; }
 
+        /// <summary>
+        /// Get the start page 3 view
+        /// </summary>
+        IMarkdownView NotificationMarkdownView { get; }
+
+        /// <summary>
+        /// Get the most recently used files list view
+        /// </summary>
+        IListButtonView MenuList { get; }
+
+
         /// <summary>Add a tab form to the tab control. Optionally select the tab if SelectTab is true.</summary>
         /// <param name="text">Text for tab.</param>
         /// <param name="image">Image for tab.</param>

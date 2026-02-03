@@ -52,7 +52,6 @@ namespace UserInterface.Views
         /// Button panel for the right hand view's start page.
         /// </summary>
         private ListButtonView listButtonView2;
-
         /// <summary>
         /// The main Gtk Window.
         /// </summary>
@@ -123,6 +122,32 @@ namespace UserInterface.Views
 
         private FontChooserDialog fontDialog;
 
+        /// <summary>
+        /// Button panel for the notifications list.
+        /// </summary>
+        private MarkdownView notificationMarkdownView;
+
+
+        /// <summary>
+        /// Box which holds notifications
+        /// </summary>
+        private Box notificationBox;
+
+        /// <summary>   
+        /// Box which holds menu buttons
+        /// </summary>
+        private Box menuButtonBox;
+
+        /// <summary>
+        /// Most recently used files list button view
+        /// </summary>
+        private ListButtonView menuList;
+
+        /// <summary>
+        /// GtkPaned View where the most recently used simulations and notifications are housed.    
+        /// </summary>
+        private Paned notificationAndMruPane;
+
 
         /// <summary>
         /// Constructor
@@ -144,15 +169,28 @@ namespace UserInterface.Views
             hpaned1 = (Paned)builder.GetObject("hpaned1");
             hbox1 = (Widget)builder.GetObject("vbox3");
             vpaned1 = (Paned)builder.GetObject("vpaned1");
+            menuButtonBox = (Box)builder.GetObject("menuButtonBox");
+            notificationBox = (Box)builder.GetObject("notificationBox");
+            notificationAndMruPane = (Paned)builder.GetObject("notificationAndMRUPane");
             mainWidget = window1;
             window1.Icon = new Gdk.Pixbuf(null, "ApsimNG.Resources.apsim logo32.png");
+
             listButtonView1 = new ListButtonView(this);
             listButtonView1.ButtonsAreToolbar = true;
-
             vbox1.PackEnd(listButtonView1.MainWidget, true, true, 0);
+
             listButtonView2 = new ListButtonView(this);
             listButtonView2.ButtonsAreToolbar = true;
             vbox2.PackEnd(listButtonView2.MainWidget, true, true, 0);
+
+            notificationMarkdownView = new MarkdownView(this);
+            notificationBox.PackEnd(notificationMarkdownView.MainWidget, true, true, 0);
+            notificationAndMruPane.Position *= 3;
+
+            menuList = new ListButtonView(this);
+            menuList.ButtonsAreToolbar = true;
+            menuButtonBox.PackEnd(menuList.MainWidget, true, true, 0);
+
             hpaned1.PositionSet = true;
             hpaned1.Child2.Hide();
             hpaned1.Child2.NoShowAll = true;
@@ -322,6 +360,16 @@ namespace UserInterface.Views
         /// Get the list and button view
         /// </summary>
         public IListButtonView StartPage2 { get { return listButtonView2; } }
+
+        /// <summary>
+        /// Get the notifications list and button view
+        /// </summary>
+        public IMarkdownView NotificationMarkdownView  { get { return notificationMarkdownView; } }
+
+        /// <summary>
+        /// Get the most recently used files list view
+        /// </summary>
+        public IListButtonView MenuList {get {return menuList;}}
 
         /// <summary>
         /// Controls the height of the status panel.
