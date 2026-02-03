@@ -24,7 +24,8 @@ namespace APSIM.Documentation.Models.Types
         /// </summary>
         public override List<ITag> Document(int none = 0)
         {
-            Section section = GetSummaryAndRemarksSection(model);
+
+            List<ITag> tags = new List<ITag>();
             
             XYPairs xyPairs = model as XYPairs;
 
@@ -65,10 +66,10 @@ namespace APSIM.Documentation.Models.Types
                 table.Rows.Add(row);
             }
 
-            section.Add(new Table(table));
-            section.Add(CreateGraph());
+            tags.Add(new Table(table));
+            tags.Add(CreateGraph());
 
-            return new List<ITag>() {section};
+            return tags;
         }
 
         private Graph CreateGraph()

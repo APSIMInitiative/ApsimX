@@ -128,11 +128,11 @@ namespace APSIM.Documentation
         ///
         /// </summary>
         /// <param name="tags">Tags to be converted</param>
-        public static string TagsToHTMLString(List<ITag> tags)
+        /// <param name="model">Model being documented</param>
+        public static string TagsToHTMLString(List<ITag> tags, IModel model)
         {
-            tags.Add(new Section("References"));
-            string markdown = ConvertToMarkdown(tags, "");
-            string headerImg = ConvertToMarkdown(new List<ITag>(){AddHeaderImageTag()},"");
+            string markdown = ConvertToMarkdown(tags, "", model);
+            string headerImg = ConvertToMarkdown(new List<ITag>(){AddHeaderImageTag()},"", model);
             markdown = headerImg + markdown;
             List<(string, string)> htmlSegments = GetAllHTMLSegments(markdown, out string output1);
             List<ICitation> citations = ProcessCitations(output1, out string output2);
@@ -239,7 +239,7 @@ namespace APSIM.Documentation
         /// <summary>
         ///
         /// </summary>
-        public static string ConvertToMarkdown(List<ITag> tags, string heading)
+        public static string ConvertToMarkdown(List<ITag> tags, string heading, IModel model)
         {
             string output = "";
 
@@ -256,7 +256,7 @@ namespace APSIM.Documentation
                     sectionCount += 1;
                     string sectionHeader = $"{header}{headingPrefix}{sectionCount}";
                     output += $"{sectionHeader} {section.Title}\n\n";
-                    output += ConvertToMarkdown(section.Children, sectionHeader);
+                    output += ConvertToMarkdown(section.Children, sectionHeader, model);
                 }
                 else if (tag is Paragraph paragraph)
                 {
@@ -349,6 +349,9 @@ namespace APSIM.Documentation
                     output += imgMarkdown;
                 }
             }
+
+            output = ReplaceInserts(output, model);
+
             return output;
         }
 
@@ -408,6 +411,43 @@ namespace APSIM.Documentation
                 else
                 {
                     output += $"{citation.BibliographyText}\n\n";
+                }
+            }
+
+            return output;
+        }
+
+        /// <summary>
+        /// Add a bibliography to the document.
+        /// </summary>
+        public static string ReplaceInserts(string input, IModel model)
+        {
+            string output = input;
+            Regex regex = new Regex(@"{([^}]+)}");
+            MatchCollection matches = regex.Matches(input);
+            int offset = 0;
+            foreach(Match match in matches)
+            {
+                string value = match.Value;
+                string reference = match.Groups[1].Value;
+                IModel referencedModel = model.Node.Get(reference, LocatorFlags.ModelsOnly, model.Node.Model) as IModel;
+                if (referencedModel != null)
+                {
+                    string markdown = ConvertToMarkdown(AutoDocumentation.Document(referencedModel), "", referencedModel);
+                    output = output.Remove(match.Index + offset, value.Length);
+                    output = output.Insert(match.Index + offset, markdown);
+                    offset += markdown.Length - value.Length;
+                }
+                else
+                {
+                    var obj = model.Node.Get(reference, LocatorFlags.None, model.Node.Model);
+                    string text = reference;
+                    if (obj != null)
+                        text = obj.ToString();
+
+                    output = output.Remove(match.Index + offset, value.Length);
+                    output = output.Insert(match.Index + offset, text);
+                    offset += text.Length - value.Length;
                 }
             }
 
