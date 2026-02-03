@@ -363,20 +363,25 @@ namespace APSIM.Documentation
             Regex regex;
             MatchCollection matches;
 
-            //Find references without overriding text and convert to overwrite standard
-            regex = new Regex(@"(?<!\])\[\#(\w+)\]");
+            //Find references without overriding text and convert to standard
+            regex = new Regex(@"(?<!\])\[\#([^\]]+)\]");
             matches = regex.Matches(input);
             foreach(Match match in matches)
             {
                 string value = match.Groups[0].Value;
-                string reference = match.Groups[1].Value;
-                ICitation citation = AutoDocumentation.Bibilography.Lookup(reference);
-                if (citation != null)
-                    output = output.Replace(value, $"[{citation.InTextCite}][#{reference}]");
+                if (!citesFound.Contains(value))
+                {
+                    citesFound.Add(value);
+                    string reference = match.Groups[1].Value;
+                    ICitation citation = AutoDocumentation.Bibilography.Lookup(reference);
+                    if (citation != null)
+                        output = output.Replace(value, $"[{citation.InTextCite}][#{reference}]");
+                }
             }
 
             //Find references with overriding text
-            regex = new Regex(@"\[(.*)\]\[\#(\w+)\]");
+            citesFound.Clear();
+            regex = new Regex(@"\[([^\]]+)\]\[\#([^\]]+)\]");
             matches = regex.Matches(output);
             foreach(Match match in matches)
             {
@@ -390,8 +395,8 @@ namespace APSIM.Documentation
                     {
                         citesFound.Add(reference);
                         citations.Add(citation);
+                        output = output.Replace(value, $"[{text}](#{reference})");
                     }
-                    output = output.Replace(value, $"[{text}](#{reference})");
                 }
             }
             return citations;
