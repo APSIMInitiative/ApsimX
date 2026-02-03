@@ -20,7 +20,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 208; } }
+    public static int LatestVersion { get { return 209; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -7276,6 +7276,46 @@ internal class Converter
                 manager.Save();
             if (manager.Replace("using Models.Core.ApsimFile;", ""))
                 manager.Save();
+        }
+    }
+
+    /// <summary>
+    /// Change bibliography references to use [text][#reference] syntax
+    /// Update <sup></sup> and <sub></sub> tags to use ^^ and ~~ syntax
+    /// Replace a hrefs with [text](url) syntax
+    /// <param name="root">Root json object.</param>
+    /// <param name="_">Unused filename.</param>
+    private static void UpgradeToVersion209(JObject root, string _)
+    {
+        List<JObject> iTexts = JsonUtilities.ChildrenRecursively(root, "Memo");
+        iTexts.AddRange(JsonUtilities.ChildrenRecursively(root, "Documentation"));
+
+        foreach (JObject iText in iTexts)
+        {
+            string text = iText["Text"].ToString();
+            text = text.Replace("<sup>", "^");
+            text = text.Replace("</sup>", "^");
+            text = text.Replace("<sub>", "~");
+            text = text.Replace("</sub>", "~");
+
+            Regex regex = new Regex(@"\[([^\]]+)\](?!\()");
+            MatchCollection matches = regex.Matches(text);
+            foreach(Match match in matches)
+                text = text.Replace(match.Value, match.Value.Replace("[", "[#"));
+
+            regex = new Regex(@"<a href=""?([^\s<>]+)"">([^<>]+)<\/a>");
+            matches = regex.Matches(text);
+            foreach(Match match in matches)
+            {
+                string value = match.Groups[0].Value;
+                string url = match.Groups[1].Value;
+                string contents = match.Groups[2].Value;
+                if (!url.StartsWith("http"))
+                    url = "https://" + url;
+                text = text.Replace(value, $"[{contents}]({url})");
+            }
+
+            iText["Text"] = text;
         }
     }
 }
