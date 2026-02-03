@@ -1057,7 +1057,7 @@
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Grazplan.GreenCohortInitialise, Models",
+                      "$type": "Models.GrazPlan.GreenCohortInitialise, Models",
                       "RootWeight": [
                         400.0,
                         400.0
@@ -1099,7 +1099,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Grazplan.DryCohortInitialise, Models",
+                      "$type": "Models.GrazPlan.DryCohortInitialise, Models",
                       "Status": "established",
                       "LeafDMD": [
                         0.6
@@ -7078,7 +7078,7 @@
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Grazplan.GreenCohortInitialise, Models",
+                  "$type": "Models.GrazPlan.GreenCohortInitialise, Models",
                   "RootWeight": [
                     400.0,
                     400.0
@@ -7120,7 +7120,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Grazplan.DryCohortInitialise, Models",
+                  "$type": "Models.GrazPlan.DryCohortInitialise, Models",
                   "Status": "established",
                   "LeafDMD": [
                     0.6
@@ -13320,7 +13320,7 @@
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Grazplan.DryCohortInitialise, Models",
+                  "$type": "Models.GrazPlan.DryCohortInitialise, Models",
                   "Status": "dead",
                   "LeafDMD": [
                     0.55
@@ -13353,7 +13353,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Grazplan.DryCohortInitialise, Models",
+                  "$type": "Models.GrazPlan.DryCohortInitialise, Models",
                   "Status": "litter",
                   "LeafDMD": [
                     0.55
@@ -13386,7 +13386,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Grazplan.SeedCohortInitialise, Models",
+                  "$type": "Models.GrazPlan.SeedCohortInitialise, Models",
                   "SoftUnripe": [
                     75.0
                   ],
@@ -17214,7 +17214,7 @@
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Grazplan.DryCohortInitialise, Models",
+                  "$type": "Models.GrazPlan.DryCohortInitialise, Models",
                   "Status": "dead",
                   "LeafDMD": [
                     0.55
@@ -17247,7 +17247,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Grazplan.DryCohortInitialise, Models",
+                  "$type": "Models.GrazPlan.DryCohortInitialise, Models",
                   "Status": "litter",
                   "LeafDMD": [
                     0.55
@@ -17280,7 +17280,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Grazplan.SeedCohortInitialise, Models",
+                  "$type": "Models.GrazPlan.SeedCohortInitialise, Models",
                   "SoftUnripe": [
                     467.0
                   ],
@@ -17353,7 +17353,7 @@
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Grazplan.GreenCohortInitialise, Models",
+                  "$type": "Models.GrazPlan.GreenCohortInitialise, Models",
                   "RootWeight": [
                     0.0,
                     400.0
@@ -17395,7 +17395,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Grazplan.GreenCohortInitialise, Models",
+                  "$type": "Models.GrazPlan.GreenCohortInitialise, Models",
                   "RootWeight": [
                     200.0,
                     0.0
@@ -17437,7 +17437,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Grazplan.DryCohortInitialise, Models",
+                  "$type": "Models.GrazPlan.DryCohortInitialise, Models",
                   "Status": "dead",
                   "LeafDMD": [
                     0.6
@@ -17470,7 +17470,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Grazplan.DryCohortInitialise, Models",
+                  "$type": "Models.GrazPlan.DryCohortInitialise, Models",
                   "Status": "litter",
                   "LeafDMD": [
                     0.65

@@ -381,16 +381,24 @@ namespace APSIM.Shared.Utilities
         /// <param name="toThickness">To thickness.</param>
         /// <param name="defaultValueForBelowProfile">The default value for below profile.</param>
         /// <param name="allowMissingValues">Tolerate missing values (double.NaN)?</param>
+        /// <param name="modelName">Model name for error reporting</param>
         /// <returns></returns>
         public static double[] MapConcentration(double[] fromValues, double[] fromThickness,
                                                   double[] toThickness,
                                                   double defaultValueForBelowProfile,
-                                                  bool allowMissingValues = false)
+                                                  bool allowMissingValues = false,
+                                                  string modelName = null)
         {
             if (fromValues != null && !MathUtilities.AreEqual(fromThickness, toThickness))
             {
                 if (fromValues.Length != fromThickness.Length && !allowMissingValues)
-                    throw new Exception($"In MapConcentration, the number of values ({fromValues.Length}) doesn't match the number of thicknesses ({fromThickness.Length}).");
+                {   
+                    string prefix = "MapConcentration";
+                    if (!string.IsNullOrEmpty(modelName))
+                        prefix = $"{modelName}";
+                    throw new Exception($"In {prefix}, the number of values ({fromValues.Length}) doesn't match the number of thicknesses ({fromThickness.Length}).");
+                }
+                    
                 if (fromValues == null || fromThickness == null)
                     return null;
 
