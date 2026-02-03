@@ -257,6 +257,11 @@ internal class Locator
                 if (propertiesOnly && j == namePathBits.Length - 1)
                     break;
                 relativeToObject = composite.Value;
+
+                //if the property evaluates to null (has not been set), instantiate a copy of that class so it can continue searching the properties.
+                //that way we can continuing search below this object without the relativeToObject being null and breaking the search
+                if (relativeToObject == null && !composite.Property.DeclaringType.IsAbstract)
+                    relativeToObject = Activator.CreateInstance(composite.Property.DeclaringType);
             }
             else if ((objectInfo as MethodInfo) != null)
             {
