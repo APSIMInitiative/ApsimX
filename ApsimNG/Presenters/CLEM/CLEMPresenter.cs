@@ -168,9 +168,9 @@ namespace UserInterface.Presenters
 
                 }
 
-                //if (ClemModel != null && ClemModel.SelectedTab is null && PresenterList.Count > 0)
-                //    if (PresenterList.FirstOrDefault().Value is IRefreshPresenter)
-                //        (PresenterList.FirstOrDefault().Value as IRefreshPresenter).Refresh(); 
+                if (ClemModel != null && ClemModel.SelectedTab is null && PresenterList.Count > 0)
+                    if (PresenterList.FirstOrDefault().Value is IRefreshPresenter)
+                        (PresenterList.FirstOrDefault().Value as IRefreshPresenter).Refresh(); 
             }
         }
 

@@ -212,7 +212,7 @@ namespace UserInterface.Presenters
                     }
                     if (dataRows.Length > maxErrors)
                     {
-                        markdownWriter.Write("## Warning limit reached");
+                        markdownWriter.Write($"\r\n## Warning limit reached");
                         markdownWriter.Write("  \r\n  \r\nIn excess of " + maxErrors + " errors and warnings were generated. Only the first " + maxErrors + " are displayed here. Please refer to the SummaryInformation for the full list of issues.");
                     }
                 }
