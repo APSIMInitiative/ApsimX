@@ -156,6 +156,7 @@ namespace Models.CLEM.Activities
             Status = ActivityStatus.NoTask;
             UniqueID = parentBasedUid;
             isStandAloneModel = false;
+            Resources = grazePasture.Resources;
         }
 
         /// <summary>

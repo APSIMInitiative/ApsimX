@@ -1,4 +1,3 @@
-using DocumentFormat.OpenXml.Drawing;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
@@ -6,10 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.IO;
 using System.Linq;
-using Models.CLEM.Groupings;
-using System.Linq.Expressions;
 
 namespace Models.CLEM.Activities
 {
@@ -42,6 +38,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
+            
             bool buildTransactionFromTree = Structure.FindParent<ZoneCLEM>(recurse: true).BuildTransactionCategoryFromTree;
             string transCat = "";
             if (!buildTransactionFromTree)

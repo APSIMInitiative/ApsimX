@@ -71,6 +71,7 @@ namespace Models.CLEM.Activities
             OnPartialResourcesAvailableAction = grazeAll.OnPartialResourcesAvailableAction;
             Status = ActivityStatus.NoTask;
             UniqueID = parentProvidedUid;
+            Resources = grazeAll.Resources;
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
