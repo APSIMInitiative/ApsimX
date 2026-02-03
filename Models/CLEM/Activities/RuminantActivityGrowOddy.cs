@@ -147,6 +147,7 @@ namespace Models.CLEM.Activities
             }
 
             ind.Intake.AdjustIntakeBasedOnFeedQuality(false, ind);
+            ind.Intake.UpdateGutFill();
             CalculateEnergy(ind);
         }
 

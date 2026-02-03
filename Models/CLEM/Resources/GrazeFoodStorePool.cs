@@ -69,6 +69,9 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public double AcidDetergentInsolubleProtein { get; set; }
 
+        /// <inheritdoc/>
+        public double GutFill { get; set; }
+
         /// <summary>
         /// Amount (kg)
         /// </summary>

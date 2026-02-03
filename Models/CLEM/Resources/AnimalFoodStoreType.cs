@@ -83,6 +83,13 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Crude protein content (%)
         /// </summary>
+        [Description("Gut fill")]
+        [Required, Proportion, GreaterThanEqualValue(0)]
+        public double GutFill { get; set; } = 0.08;
+
+        /// <summary>
+        /// Crude protein content (%)
+        /// </summary>
         public double CrudeProteinPercent { get; set; }
 
         /// <summary>
@@ -298,6 +305,9 @@ namespace Models.CLEM.Resources
                     yield return new ValidationResult($"Percent crude protein content must be supplied for [r={NameWithParent}] when using [{CPContentStyle}]", new string[] { "UserCrudeProteinPercent" });
                 }
             }
+
+            // ToDo: add warnings for questionable gut fill to feed type settings.
+
         }
 
         #endregion

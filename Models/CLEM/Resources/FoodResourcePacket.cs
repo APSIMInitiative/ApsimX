@@ -93,6 +93,9 @@ namespace Models.CLEM.Resources
             }
         }
 
+        ///<inheritdoc/>
+        public double GutFill { get; set; } = 0.08;
+
         ///<summary>
         /// Amount of food supplied
         ///</summary> 
@@ -248,6 +251,7 @@ namespace Models.CLEM.Resources
             CrudeProteinPercent = WeightedAverage("CrudeProteinPercent", packet, amount);
             RumenDegradableProteinPercent = WeightedAverage("RumenDegradableProteinPercent", packet, amount);
             GrossEnergyContent = WeightedAverage("GrossEnergyContent", packet, amount);
+            GutFill = WeightedAverage("GutFill", packet, amount);
             Amount += amount;
             TypeOfFeed = packet.TypeOfFeed;
         }
@@ -285,6 +289,10 @@ namespace Models.CLEM.Resources
                 case "GrossEnergyContent":
                     value = GrossEnergyContent;
                     newValue = packet.GrossEnergyContent;
+                    break;
+                case "GutFill":
+                    value = GutFill;
+                    newValue = packet.GutFill;
                     break;
             }
             if (amount == 0)

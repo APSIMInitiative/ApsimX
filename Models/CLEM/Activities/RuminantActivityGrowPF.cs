@@ -304,6 +304,7 @@ namespace Models.CLEM.Activities
         {
             // Adjusting potential intake for digestibility of fodder is now done in RuminantIntake along with concentrates and fodder.
             ind.Intake.AdjustIntakeBasedOnFeedQuality(lactating, ind);
+            ind.Intake.UpdateGutFill();
             CalculateEnergy(ind);
         }
 
@@ -560,7 +561,7 @@ namespace Models.CLEM.Activities
             // Do check against NBal gain to TFP and TUP
             if (Math.Abs(ind.Output.NitrogenBalance - ind.Weight.Protein.ForFaecal - ind.Weight.Protein.ForUrinary) / ind.Output.NitrogenBalance > 0.05)
             {
-                string warn = $"Cross-check: Ruminant [{ind.Breed}] nitrogen balance differs from TFP plus TUP by more then 5%.{Environment.NewLine}[a={NameWithParent}], TimeStep:[{events.IntervalIndex},{events.Clock.Today:yyyy-MM-dd}]";
+                string warn = $"Cross-check: Ruminant [{ind.Breed}] nitrogen balance differs from TFP plus TUP by more then 5%.{Environment.NewLine}[a={NameWithParent}]";
                 string warningString = $"Cross-check: Ruminant [{ind.Breed}] nitrogen balance differs from TFP plus TUP by more then 5%.{Environment.NewLine}[a={NameWithParent}], TimeStep:[{events.IntervalIndex},{events.Clock.Today:yyyy-MM-dd}], Individual:[{ind.ID}].{Environment.NewLine}This advice is for advanced users and breed developers. Seek advice from CLEM developers.";
                 Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warningString);
             }
@@ -1046,8 +1047,14 @@ namespace Models.CLEM.Activities
                     sexFactor = 0.85;
                 }
 
-                double RCFatSlope = (individual.Parameters.General.ProportionEBWFatMax - individual.Parameters.General.ProportionEBWFat) / 0.5;
-                pFat = (individual.Parameters.General.ProportionEBWFat + ((RC - 1) * RCFatSlope)) * sexFactor;
+                double propFat = individual.Parameters.General.ProportionEBWFatFemale;
+                if (individual.Sex == Sex.Male && individual.IsSterilised == false)
+                {
+                    propFat = individual.Parameters.General.ProportionEBWFatMale;
+                }
+
+                double RCFatSlope = (individual.Parameters.General.ProportionEBWFatMax - propFat) / 0.5;
+                pFat = (propFat + ((RC - 1) * RCFatSlope)) * sexFactor;
             }
             else
             {

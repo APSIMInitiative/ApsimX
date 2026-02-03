@@ -155,11 +155,15 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Set the protein mass expected at Standard Reference Weight
         /// </summary>
-        /// <param name="standardReferenceWeight">Standard reference weight of individual accounting for sex and sterility</param>
-        /// <param name="parameters">Ruminant general parameters</param>
-        public void SetProteinMassAtSRW(double standardReferenceWeight, RuminantParametersGeneral parameters)
+        /// <param name="ind">The individual ruminant</param>
+        public void SetProteinMassAtSRW(Ruminant ind) //double standardReferenceWeight, RuminantParametersGeneral parameters)
         {
-            MassAtSRW = standardReferenceWeight * (1.0 / parameters.EBW2LW_CG18) * parameters.ProportionSRWEmptyBodyProtein;
+            double EBFMature = ind.Parameters.General.ProportionEBWFatFemale;
+            if (ind.Sex == Sex.Male && ind.IsSterilised == false)
+            {
+                EBFMature = ind.Parameters.General.ProportionEBWFatMale;
+            }
+            MassAtSRW = ind.Weight.StandardReferenceWeight * 0.85 * (1.0 - EBFMature) * 0.22;
         }
 
         /// <summary>

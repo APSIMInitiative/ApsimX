@@ -1,4 +1,9 @@
-﻿namespace Models.CLEM
+﻿using Docker.DotNet.Models;
+using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
+using Models.Core;
+
+namespace Models.CLEM
 {
     /// <summary>
     /// Status of activity

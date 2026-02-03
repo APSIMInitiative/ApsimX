@@ -159,9 +159,18 @@ namespace Models.CLEM.Resources
         /// Still growing (e.g. heifers) will be leaner (RC 0.9) and intake males will be leaner based on sex effect (0.85)
         /// </summary>
         [Category("Breed:CrossBreed", "Growth")]
-        [Description("Proportion of EBW fat"), Tooltip("Assumes cow at relative condition 1 (mid condition)")]
+        [Description("Proportion of EBW fat for mature females"), Tooltip("Assumes cow at relative condition 1 (mid condition)")]
         [Required, Proportion, GreaterThanValue(0.0)]
-        public double ProportionEBWFat { get; set; } = 0.25;
+        public double ProportionEBWFatFemale { get; set; } = 0.25;
+
+        /// <summary>
+        /// Starting fat as a proportion of Empty Body Weight assuming Relative Condition of 1. (Mid) SIRES
+        /// Still growing (e.g. heifers) will be leaner (RC 0.9) and intake males will be leaner based on sex effect (0.85)
+        /// </summary>
+        [Category("Breed:CrossBreed", "Growth")]
+        [Description("Proportion of EBW fat for mature males"), Tooltip("Assumes sire at relative condition 1 (mid condition)")]
+        [Required, Proportion, GreaterThanValue(0.0)]
+        public double ProportionEBWFatMale { get; set; } = 0.25;
 
         /// <summary>
         /// Max fat as a proportion of Empty Body Weight assuming Relative Condition of 1.5
@@ -170,6 +179,14 @@ namespace Models.CLEM.Resources
         [Description("Proportion of EBW fat at RC=1.5"), Tooltip("Assumes cow at relative condition 1.5")]
         [Required, Proportion]
         public double ProportionEBWFatMax { get; set; } = 0.45;
+
+        /// <summary>
+        /// Minimum gut fill
+        /// </summary>
+        [Category("Core", "Growth")]
+        [Description("Minimum gut fill")]
+        [Required, Proportion]
+        public double GutFillMinimum { get; set; } = 0.04;
 
         #endregion
 
@@ -239,21 +256,21 @@ namespace Models.CLEM.Resources
 
         #endregion
 
-        /// <summary>
-        /// Conversion from empty body weight to live weight
-        /// </summary>
-        [Description("Conversion from empty body weight to live weight")]
-        [Category("Farm:CrossBreed:Summary", "Growth")]
-        [Required, GreaterThanValue(1.0)]
-        public double EBW2LW_CG18 { get; set; } = 1.09;
+        ///// <summary>
+        ///// Conversion from empty body weight to live weight
+        ///// </summary>
+        //[Description("Conversion from empty body weight to live weight [CG18]")]
+        //[Category("Farm:CrossBreed:Summary", "Growth")]
+        //[Required, GreaterThanValue(1.0)]
+        //public double EBW2LW_CG18 { get; set; } = 1.09;
 
-        /// <summary>
-        /// The proportion of SRW empty body weight that is protein
-        /// </summary>
-        [Description("The proportion of SRW empty body weight that is protein")]
-        [Category("Breed:CrossBreed", "Growth")]
-        [Required, Proportion, GreaterThanValue(0)]
-        public double ProportionSRWEmptyBodyProtein { get; set; } = 0.17;
+        ///// <summary>
+        ///// The proportion of SRW empty body weight that is protein
+        ///// </summary>
+        //[Description("The proportion of SRW empty body weight that is protein")]
+        //[Category("Breed:CrossBreed", "Growth")]
+        //[Required, Proportion, GreaterThanValue(0)]
+        //public double ProportionSRWEmptyBodyProtein { get; set; } = 0.17;
 
         /// <summary>
         /// Energy content of fat (MJ/kg) (Used in GrowPF, SAC07 and Oddy Growth models)

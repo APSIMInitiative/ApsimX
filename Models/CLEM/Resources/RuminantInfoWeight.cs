@@ -136,7 +136,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <remarks>
         /// Live is calculated on change in base weight that assumes conceptus and wool weight have been updated for the time step
-        /// This should be true as these are either done early (birth) on activitiy (shear) or in the growth model before weight gain.
+        /// This should be true as these are either done early (birth) on activity (shear) or in the growth model before weight gain.
         /// </remarks>
         [FilterByProperty]
         public double Live { get { return live; } }
@@ -145,7 +145,7 @@ namespace Models.CLEM.Resources
         /// Previous live weight of individual (kg)
         /// </summary>
         /// <remarks>
-        /// The live weight in the last timestep inclused conceptus and fleece
+        /// The live weight in the last timestep including conceptus and fleece
         /// </remarks>
         public double Previous { get { return Base.Previous + (Conceptus?.Previous??0) + (Wool?.Previous??0); } }
 
@@ -237,7 +237,7 @@ namespace Models.CLEM.Resources
                     StandardReferenceWeight *= ruminant.Parameters.General.SRWMaleMultiplier;
                 }
             }
-            Protein?.SetProteinMassAtSRW(StandardReferenceWeight, ruminant.Parameters.General);
+            Protein?.SetProteinMassAtSRW(ruminant);
         }
 
         /// <summary>
@@ -248,7 +248,7 @@ namespace Models.CLEM.Resources
             // todo: not sure this is needed anymore as moved to protein and calculated in SetSWR(), but is used one other time in new Ruminant constructor
 
             // update the protein mass at SRW as this only relies on SRW and specified constants.
-            Protein?.SetProteinMassAtSRW(StandardReferenceWeight, ruminant.Parameters.General);
+            Protein?.SetProteinMassAtSRW(ruminant);
         }
 
         /// <summary>
@@ -363,7 +363,7 @@ namespace Models.CLEM.Resources
             EmptyBodyMass += wtChange;
 
             // account for gut fill and adjust base weight
-            Base.Adjust(wtChange * (ruminant.Parameters.General?.EBW2LW_CG18 ?? 1.09));
+            Base.Adjust(wtChange * EBMToLiveWeight()); // (ruminant.Parameters.General?.EBW2LW_CG18 ?? 1.09));
 
             UpdateLiveWeight();
 
@@ -383,7 +383,16 @@ namespace Models.CLEM.Resources
         /// <param name="weight">Initial base weight (kg)</param>
         public void SetInitialBaseWeight(double weight)
         {
-            Adjust(weight / (ruminant.Parameters.General?.EBW2LW_CG18 ?? 1.09));
+            Adjust(weight / EBMToLiveWeight()); // / (ruminant.Parameters.General?.EBW2LW_CG18 ?? 1.09));
+        }
+
+        /// <summary>
+        /// Calculate the ratio of empty body mass to live weight from current gut fill
+        /// </summary>
+        /// <returns></returns>
+        private double EBMToLiveWeight()
+        {
+            return 1.0 / (1.0 - ruminant.Intake.GutFill);
         }
 
         /// <summary>

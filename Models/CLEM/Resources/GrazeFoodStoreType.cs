@@ -219,6 +219,34 @@ namespace Models.CLEM.Resources
         [Description("Fat percent (ether extract) (%)")]
         public double FatPercent { get; set; } = 1.9;
 
+        /// <summary>
+        /// Value of gut fill for highest quality green pasture
+        /// </summary>
+        [Percentage, GreaterThanEqualValue(0)]
+        [Category("Farm", "Quality")]
+        [Description("Gut fill high quality (Green DMD)")]
+        public double GutFillHighQuality { get; set; } = 0.08;
+
+        /// <summary>
+        /// Value of gut fill for lowest quality cured pasture at min DMD
+        /// </summary>
+        [Percentage, GreaterThanEqualValue(0)]
+        [Category("Farm", "Quality")]
+        [Description("Gut fill low quality (min DMD)")]
+        public double GutFillLowQuality { get; set; } = 0.2;
+
+        /// <inheritdoc/>
+        public double GutFill
+        {
+            get
+            {
+                return GutFillLowQuality + ((DryMatterDigestibility - MinimumDMD)/(GreenDMD - MinimumDMD)) * (GutFillHighQuality - GutFillLowQuality);
+            }
+            set
+            {
+            }
+        }
+
         /// <inheritdoc/>
         [JsonIgnore]
         public double OverallPastureBiomass { get; set; }

@@ -147,6 +147,21 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Gut fill. The proportion of live weight that is accounted for by gut contents
+        /// </summary>
+        public double GutFill { get; private set; } = 0.04;
+
+        /// <summary>
+        /// Calculate the average weighted gut fill from current diet.
+        /// </summary>
+        public void UpdateGutFill()
+        {
+            double proportionAttained = (SolidsDaily.Actual + SolidsDaily.Unneeded) / SolidsDaily.Expected;
+            double shortfallModifier = proportionAttained + (1 - proportionAttained) * 0.5;
+            GutFill = feedTypeStoreDict.Sum(a => a.Value.Details.GutFill * a.Value.Details.Amount) / feedTypeStoreDict.Sum(a => a.Value.Details.Amount) * shortfallModifier;
+        }
+
+        /// <summary>
         /// Provides the proportion of milk in the diet.
         /// </summary>
         public double ProportionMilk

@@ -56,5 +56,10 @@ namespace Models.CLEM.Interfaces
         /// Acid detergent insoluble protein
         /// </summary>
         public double AcidDetergentInsolubleProtein { get; set; }
+
+        /// <summary>
+        /// Gut fill if this feed is consumed alone (gut contents as a proportion of live weight)
+        /// </summary>
+        public double GutFill { get; set; }
     }
 }

@@ -18,6 +18,7 @@ public class AnimalFoodStoreTypeSummary : DescriptiveSummaryProviderBase<AnimalF
         generator.AddBlockWithText($"Metabolisable Energy Content: {generator.DisplaySummaryValueSnippet(model.MetabolisableEnergyContent, warnZero: true)}");
         generator.AddBlockWithText($"Percent fat (ether extract): {generator.DisplaySummaryValueSnippet(model.FatPercent, warnZero: true)} %");
         generator.AddBlockWithText($"Dry Matter Digestibility (DMD): {generator.DisplaySummaryValueSnippet(model.DryMatterDigestibility, warnZero: true)} %");
+        generator.AddBlockWithText($"Gut fill: {generator.DisplaySummaryValueSnippet(model.GutFill, warnZero: true)}");
         switch (model.CPContentStyle)
         {
             case CrudeProteinContentStyle.SpecifyCrudeProteinContent:
