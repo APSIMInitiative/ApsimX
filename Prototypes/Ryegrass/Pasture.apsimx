@@ -822,6 +822,16 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.GrazPlan.Organs.GenericOrgan, Models",
+                  "PastureModel": null,
+                  "IsAboveGround": false,
+                  "Name": "Root",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.GrazPlan.Biomass.CompositeBiomass, Models",
                   "PastureModel": null,
                   "OrganNames": [

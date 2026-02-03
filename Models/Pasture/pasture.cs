@@ -233,6 +233,14 @@ namespace Models.GrazPlan
         public GenericOrgan Stem {get;set;}
 
 
+        /// <summary>
+        /// Root generic organ
+        /// </summary>
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+         
+        public GenericOrgan Root {get;set;}
+
+
         // /// <summary>
         // /// Stem class
         // /// </summary>
