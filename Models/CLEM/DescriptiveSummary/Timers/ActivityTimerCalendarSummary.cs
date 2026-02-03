@@ -17,13 +17,14 @@ public class ActivityTimerCalendarSummary : TimerSummaryBase<ActivityTimerCalend
     {
         Clock clock = ModelTyped.Structure.Find<Clock>();
         CLEMEvents clemEvents = ModelTyped.Structure.Find<CLEMEvents>();
-        clemEvents.SetInterval();
-        clemEvents.Clock = clock;
+
         if (clock is null || clemEvents is null)
         {
             generator.AddBlockWithText(generator.DisplayErrorSnippet("No Clock or CLEM Events component found above Timer"), "entryValue filterError");
             return;
         }
+        clemEvents.SetInterval();
+        clemEvents.Clock = clock;
 
         if (ModelTyped.StartDetails.Parts[0] > 0 & ModelTyped.StartDetails.Parts[1] == 0)
         {
