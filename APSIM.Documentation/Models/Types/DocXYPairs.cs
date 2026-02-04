@@ -5,6 +5,8 @@ using APSIM.Shared.Utilities;
 using Models.Functions;
 using System.Data;
 using System;
+using Models.PMF;
+using APSIM.Core;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -76,8 +78,9 @@ namespace APSIM.Documentation.Models.Types
         {
             XYPairs xyPairs = model as XYPairs;
             var series = new APSIM.Shared.Graphing.Series[1];
-            string xName = "X";
-            string yName = "Y";
+            VariableReference XVariable = (VariableReference) xyPairs.Parent.Children.Find(m => m.Name == "XValue");
+            string xName = XVariable.VariableName;
+            string yName = xyPairs.Parent.Name;
             string parentName = "";
 
             if (model.Parent != null)
@@ -96,7 +99,7 @@ namespace APSIM.Documentation.Models.Types
             var xAxis = new APSIM.Shared.Graphing.Axis(xName, APSIM.Shared.Graphing.AxisPosition.Bottom, false, false);
             var yAxis = new APSIM.Shared.Graphing.Axis(yName, APSIM.Shared.Graphing.AxisPosition.Left, false, false);
             var legend = new APSIM.Shared.Graphing.LegendConfiguration(APSIM.Shared.Graphing.LegendOrientation.Vertical, APSIM.Shared.Graphing.LegendPosition.TopLeft, true);
-            return new Graph(xyPairs.Name, xyPairs.FullPath, series, xAxis, yAxis, legend);
+            return new Graph("", xyPairs.FullPath, series, xAxis, yAxis, legend);
         }
     }
 }
