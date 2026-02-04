@@ -73,6 +73,17 @@ namespace Models.GrazPlan.Organs
             return PastureModel.GetHerbageConc(comp, part, GrazType.TOTAL, elem);
         }
 
+        private double GetDMRoot(int comp, int part, int layer)
+        {
+            string sUnit = PastureModel.MassUnit;
+            PastureModel.MassUnit = "kg/ha";
+            double result = PastureModel.GetRootMass(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL)/10.0;
+            PastureModel.MassUnit = sUnit;
+            return result;
+             
+        }
+        
+
         /// <summary>
         /// StructuralWt of the Organ Live+ Dead
         /// </summary>
@@ -90,14 +101,10 @@ namespace Models.GrazPlan.Organs
                         return GetDM(GrazType.TOTAL, GrazType.ptLEAF)/10.0;
                     if(Name=="Stem" && IsAboveGround is true)
                         return GetDM(GrazType.TOTAL, GrazType.ptSTEM)/10.0;
-                    if (Name == "Root" && IsAboveGround is false)
-                    {
-                        string sUnit = PastureModel.MassUnit;
-                        PastureModel.MassUnit = "kg/ha";
-                        double result = PastureModel.GetRootMass(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL)/10.0;
-                        PastureModel.MassUnit = sUnit;
 
-                        return result;
+                     if (Name == "Root" && IsAboveGround is false)
+                    {
+                        return GetDMRoot(GrazType.sgGREEN,GrazType.TOTAL,GrazType.TOTAL);
                     }
                     
                 }

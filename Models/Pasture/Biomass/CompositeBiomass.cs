@@ -16,7 +16,7 @@ namespace Models.GrazPlan.Biomass
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Pasture))]
-    public class CompositeBiomass : Model, IStructureDependency
+    public class CompositeBiomass : Model, IStructureDependency,IBiomass
     {
         /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
@@ -111,6 +111,7 @@ namespace Models.GrazPlan.Biomass
                
                bool liveOnly = IncludeLive && !IncludeDead;
                bool deadOnly = IncludeDead && !IncludeLive;
+         
 
                if (PastureModel != null)
                {
@@ -172,6 +173,91 @@ namespace Models.GrazPlan.Biomass
                     return 0.0;
             }
         }
+
+        /// <summary>
+        /// Gets Structual N
+        /// </summary>
+
+        public double StructuralN
+        {
+            get
+            {
+                double n=0;
+                if(organs != null)
+                {
+                    foreach (var organ in organs)
+                    {
+                        n += organ.StructuralN;
+                    }
+                }
+
+                return n;
+            }
+        }
+
+        /// <summary>
+        /// Gets StorageWt
+        /// </summary>
+        public double StorageWt
+        {
+            get
+            {
+                double wt =0;
+                if(organs != null)
+                {
+                    foreach (var organ in organs)
+                    {
+                        wt += organ.StructuralWt;
+                    }
+                }
+
+                return wt; 
+            }
+        }
+
+        /// <summary>
+        /// Gets StorageN
+        /// </summary>
+        public double StorageN
+        {
+            get
+            {
+                double n =0;
+                if(organs != null)
+                {
+                    foreach (var organ in organs)
+                    {
+                        n += organ.StructuralWt;
+                    }
+                }
+
+                return n; 
+            }
+        }
+
+
+        /// <summary>
+        /// Gets StorageN
+        /// </summary>
+        public double StructuralWt
+        {
+            get
+            {
+                double wt =0;
+                if(organs != null)
+                {
+                    foreach (var organ in organs)
+                    {
+                        wt += organ.StructuralWt;
+                    }
+                }
+
+                return wt; 
+            }
+        }
+
+
+
 
 
 

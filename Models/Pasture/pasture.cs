@@ -19,6 +19,7 @@ using static Models.GrazPlan.PastureUtil;
 using APSIM.Core;
 using Models.GrazPlan.Organs;
 using Models.GrazPlan.Biomass;
+using Models.PMF;
 
 
 namespace Models.GrazPlan
@@ -74,7 +75,7 @@ namespace Models.GrazPlan
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public class Pasture : TSoilInstance, IUptake, ICanopy, IScopedModel, IStructureDependency
+    public class Pasture : TSoilInstance, IUptake, ICanopy, IScopedModel, IStructureDependency,IPlant
     {
         /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
@@ -2549,10 +2550,10 @@ namespace Models.GrazPlan
                 Root.PastureModel =PastureModel;
             }
 
-            if (AboveGround != null)
-            {
-                AboveGround.PastureModel=PastureModel;
-            }
+            // if (AboveGround != null)
+            // {
+            //     AboveGround.PastureModel=PastureModel;
+            // }
 
             if (AboveGroundLive != null)
             {
