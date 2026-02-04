@@ -132,6 +132,7 @@ namespace APSIM.Documentation
         /// <param name="model">Model being documented</param>
         public static string TagsToHTMLString(List<ITag> tags, IModel model)
         {
+            tags.Add(new Section("References"));
             string markdown = ConvertToMarkdown(tags, "", model);
             string headerImg = ConvertToMarkdown(new List<ITag>(){AddHeaderImageTag()},"", model);
             markdown = headerImg + markdown;
@@ -155,7 +156,6 @@ namespace APSIM.Documentation
             html = AddTableWrappers(html);
             html = AddCSSClasses(html);
             html = AddContentWrapper(GetNavigationHTML(tags), html);
-
 
             return html;
         }
@@ -451,7 +451,7 @@ namespace APSIM.Documentation
                 IModel referencedModel = model.Node.Get(reference, LocatorFlags.ModelsOnly, model.Node.Model) as IModel;
                 if (referencedModel != null)
                 {
-                    string markdown = ConvertToMarkdown(AutoDocumentation.Document(referencedModel), "", referencedModel);
+                    string markdown = ConvertToMarkdown(AutoDocumentation.Document(referencedModel), "", referencedModel).Trim();
                     output = output.Remove(match.Index + offset, value.Length);
                     output = output.Insert(match.Index + offset, markdown);
                     offset += markdown.Length - value.Length;
@@ -647,8 +647,6 @@ namespace APSIM.Documentation
                 if (inCodeBlock && line.Trim() == "```")
                     text += "csharp";
                 
-                if (!inCodeBlock)
-                    text = line.Trim();
                 formattedLines.Add(text);
             }
 

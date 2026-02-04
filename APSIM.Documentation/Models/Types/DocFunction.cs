@@ -93,9 +93,9 @@ namespace APSIM.Documentation.Models.Types
                 return $"Each time {budNumberFunction.SetStage} occurs, bud number on each main-stem is set to:" +
                 $"*{budNumberFunction.Node.FindChild<IModel>("FractionOfBudBurst").Name}* * *SowingData.BudNumber* (from manager at establishment)";
             else if (function is PhaseLookup phaseLookup)
-                return $"//{functionAsModel.Name} is calculated using specific values or functions for various growth phases. \n" + GetFunctionChildText(function);
+                return $"//{functionAsModel.Name} is calculated using specific dependant on growth phase.\n" + GetFunctionChildText(function, "");
             else if (function is PhaseLookupValue phaseLookupValue)
-                return $"if phenological stage is between {phaseLookupValue.Start} and {phaseLookupValue.End}\n" + GetFunctionChildText(function);
+                return $"if phenological stage is between {phaseLookupValue.Start} and {phaseLookupValue.End}\n" + GetFunctionChildText(function, "    ");
             else if (function is PhotoperiodFunction photoperiodFunction)
                 return $"*Twilight = {photoperiodFunction.Twilight} (degrees)*";
             else if (function is SigmoidFunction sigmoidFunction)
@@ -119,13 +119,13 @@ namespace APSIM.Documentation.Models.Types
         /// <summary>
         /// Get paragraph text on simple functions
         /// </summary>
-        public static string GetFunctionChildText(IFunction function)
+        public static string GetFunctionChildText(IFunction function, string padding)
         {
             string text = "";
             var functionAsModel = function as IModel;
             List<IFunction> childFunctions = functionAsModel.Node.FindChildren<IFunction>().ToList();
             for (int i = 0; i < childFunctions.Count; i++)
-                text += GetFunctionText(childFunctions[i]);
+                text += padding + GetFunctionText(childFunctions[i]) + "\n";
             
                 return text;
         }
