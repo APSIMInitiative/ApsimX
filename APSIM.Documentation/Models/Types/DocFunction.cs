@@ -29,19 +29,20 @@ namespace APSIM.Documentation.Models.Types
         public override List<ITag> Document(int none = 0)
         {
             Section section = GetSummaryAndRemarksSection(model);
-
             string text = GetFunctionText(this.model as IFunction);
-            if (text.Length > 0)
-                section.Add(new Paragraph(text));
+            Paragraph paragraph = new Paragraph(text);
+            
+            //if (text.Length > 0)
+            //    section.Add(new Paragraph(text));
 
-            List<ITag> subTags = new();
-            foreach (IModel child in model.Node.FindChildren<IModel>())
-                if (!(child is Memo))
-                    subTags.AddRange(AutoDocumentation.DocumentModel(child));
+            //List<ITag> subTags = new();
+            //foreach (IModel child in model.Node.FindChildren<IModel>())
+            //    if (!(child is Memo))
+            //        subTags.AddRange(AutoDocumentation.DocumentModel(child));
 
-            section.Add(subTags);
+            //paragraph.Add(subTags);
 
-            return new List<ITag>() {section};
+            return new List<ITag>() {paragraph};
         }
 
         /// <summary>
@@ -92,9 +93,9 @@ namespace APSIM.Documentation.Models.Types
                 return $"Each time {budNumberFunction.SetStage} occurs, bud number on each main-stem is set to:" +
                 $"*{budNumberFunction.Node.FindChild<IModel>("FractionOfBudBurst").Name}* * *SowingData.BudNumber* (from manager at establishment)";
             else if (function is PhaseLookup phaseLookup)
-                return $"{functionAsModel.Name} is calculated using specific values or functions for various growth phases.  The function will use a value of zero for phases not specified below.";
+                return $"//{functionAsModel.Name} is calculated using specific values or functions for various growth phases. \n" + GetFunctionChildText(function);
             else if (function is PhaseLookupValue phaseLookupValue)
-                return $"{functionAsModel.Name} has a value between {phaseLookupValue.Start} and {phaseLookupValue.End} calculated as:";
+                return $"if phenological stage is between {phaseLookupValue.Start} and {phaseLookupValue.End}\n" + GetFunctionChildText(function);
             else if (function is PhotoperiodFunction photoperiodFunction)
                 return $"*Twilight = {photoperiodFunction.Twilight} (degrees)*";
             else if (function is SigmoidFunction sigmoidFunction)
@@ -116,9 +117,23 @@ namespace APSIM.Documentation.Models.Types
         }
 
         /// <summary>
-        /// Creates a list of child function names
+        /// Get paragraph text on simple functions
         /// </summary>
-        private static string ChildFunctionList(IModel model)
+        public static string GetFunctionChildText(IFunction function)
+        {
+            string text = "";
+            var functionAsModel = function as IModel;
+            List<IFunction> childFunctions = functionAsModel.Node.FindChildren<IFunction>().ToList();
+            for (int i = 0; i < childFunctions.Count; i++)
+                text += GetFunctionText(childFunctions[i]);
+            
+                return text;
+        }
+
+            /// <summary>
+            /// Creates a list of child function names
+            /// </summary>
+            private static string ChildFunctionList(IModel model)
         {
             List<IFunction> childFunctions = model.Node.FindChildren<IFunction>().ToList();
 
