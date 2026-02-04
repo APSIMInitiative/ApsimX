@@ -683,7 +683,7 @@
           "PredictedTableName": "HarvestReport",
           "ObservedTableName": "Observed",
           "FieldNameUsedForMatch": "SimulationName",
-          "FieldName2UsedForMatch": "Wheat.Phenology.CurrentStageName",
+          "FieldName2UsedForMatch": "Clock.Today",
           "FieldName3UsedForMatch": null,
           "FieldName4UsedForMatch": null,
           "AllColumns": false,
@@ -1131,11 +1131,11 @@
               "Name": "Tests",
               "ResourceName": null,
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         }
       ],
@@ -12244,10 +12244,37 @@
                 },
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[Sowing].Script.SowDate = 22-Apr,13-May",
+                  "Specification": "",
                   "Name": "Sow",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Sowing].Script.SowDate = 22-Apr"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "22-Apr",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Sowing].Script.SowDate = 13-May"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "13-May",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -12380,6 +12407,14 @@
               "ResourceName": null,
               "Children": [
                 {
+                  "$type": "Models.Fertiliser, Models",
+                  "Name": "Fertiliser",
+                  "ResourceName": "Fertiliser",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Soils.Soil, Models",
                   "RecordNumber": 1062,
                   "ASCOrder": null,
@@ -12466,63 +12501,63 @@
                       ],
                       "Texture": null,
                       "BD": [
-                        1.294,
-                        1.443,
-                        1.513,
-                        1.2,
+                        1.38,
                         1.4,
-                        1.519,
-                        1.417,
-                        1.669,
-                        1.56,
-                        1.68
+                        1.44,
+                        1.44,
+                        1.44,
+                        1.44,
+                        1.57,
+                        1.57,
+                        1.57,
+                        1.57
                       ],
                       "AirDry": [
-                        0.082,
-                        0.11,
-                        0.27,
-                        0.27,
-                        0.274,
-                        0.297,
-                        0.275,
-                        0.258,
-                        0.193,
+                        0.1,
+                        0.1,
+                        0.12,
+                        0.12,
+                        0.15,
+                        0.15,
+                        0.15,
+                        0.17,
+                        0.2,
                         0.252
                       ],
                       "LL15": [
-                        0.18,
-                        0.11,
-                        0.27,
-                        0.27,
-                        0.274,
-                        0.297,
-                        0.275,
-                        0.258,
-                        0.193,
+                        0.1,
+                        0.1,
+                        0.12,
+                        0.12,
+                        0.15,
+                        0.15,
+                        0.15,
+                        0.17,
+                        0.2,
                         0.252
                       ],
                       "DUL": [
-                        0.31,
-                        0.19,
-                        0.371,
-                        0.465,
-                        0.413,
-                        0.332,
-                        0.328,
-                        0.315,
-                        0.334,
+                        0.24,
+                        0.24,
+                        0.25,
+                        0.25,
+                        0.28,
+                        0.28,
+                        0.33,
+                        0.33,
+                        0.33,
                         0.31
                       ],
                       "SAT": [
-                        0.341,
-                        0.209,
-                        0.408,
-                        0.511,
-                        0.455,
-                        0.365,
-                        0.361,
-                        0.346,
-                        0.367,
+                        0.264,
+                        0.264,
+                        0.275,
+                        0.275,
+                        0.308,
+                        0.308,
+                        0.363,
+                        0.363,
+                        0.363,
                         0.342
                       ],
                       "KS": null,
@@ -12642,15 +12677,15 @@
                         {
                           "$type": "Models.Soils.SoilCrop, Models",
                           "LL": [
-                            0.18,
-                            0.11,
-                            0.27,
-                            0.27,
-                            0.274,
-                            0.297,
-                            0.275,
-                            0.258,
-                            0.193,
+                            0.1,
+                            0.1,
+                            0.12,
+                            0.12,
+                            0.15,
+                            0.15,
+                            0.15,
+                            0.17,
+                            0.2,
                             0.252
                           ],
                           "KL": [
@@ -12781,12 +12816,12 @@
                         200.0
                       ],
                       "Carbon": [
-                        1.48,
-                        0.64,
-                        0.4,
-                        0.35,
+                        0.72,
+                        0.29,
                         0.25,
-                        0.21,
+                        0.26,
+                        0.2,
+                        0.18,
                         0.1,
                         0.1,
                         0.1,
@@ -12992,15 +13027,15 @@
                         200.0
                       ],
                       "InitialValues": [
-                        25.0,
-                        5.5,
-                        3.1,
-                        1.8,
-                        1.4,
-                        2.2,
-                        3.4,
-                        4.2,
-                        4.1,
+                        25.25,
+                        25.875,
+                        15.375,
+                        9.2125,
+                        5.3375,
+                        3.475,
+                        3.1875,
+                        2.9125,
+                        2.48,
                         4.4
                       ],
                       "InitialValuesUnits": 0,
@@ -13034,15 +13069,15 @@
                         200.0
                       ],
                       "InitialValues": [
-                        1.3,
-                        1.0,
-                        1.2,
-                        0.9,
-                        0.9,
-                        0.7,
-                        0.7,
-                        0.7,
-                        0.5,
+                        5.925,
+                        3.55,
+                        2.525,
+                        2.2,
+                        3.0,
+                        2.6375,
+                        3.0,
+                        2.7125,
+                        4.24,
                         1.6
                       ],
                       "InitialValuesUnits": 0,
@@ -13118,16 +13153,16 @@
                         200.0
                       ],
                       "InitialValues": [
-                        0.126,
-                        0.129,
-                        0.37,
-                        0.46,
-                        0.41,
-                        0.33,
-                        0.33,
-                        0.31,
-                        0.33,
-                        0.31
+                        0.1,
+                        0.1,
+                        0.12,
+                        0.12,
+                        0.15,
+                        0.15,
+                        0.15,
+                        0.17,
+                        0.2,
+                        0.252
                       ],
                       "FilledFromTop": true,
                       "Name": "Water",
@@ -13145,16 +13180,16 @@
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.CERESSoilTemperature, Models",
+                      "Name": "Temperature",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Fertiliser, Models",
-                  "Name": "Fertiliser",
-                  "ResourceName": "Fertiliser",
-                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -13366,9 +13401,43 @@
                       "Line": "2024-05-09 [Irrigation].Apply (6);"
                     }
                   ],
-                  "Name": "Operations",
+                  "Name": "IrrigationAppliedAmounts",
                   "ResourceName": null,
                   "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Operations, Models",
+                  "OperationsList": [
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2024-04-22",
+                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\");",
+                      "Line": "2024-04-22 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2024-05-13",
+                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\");",
+                      "Line": "2024-05-13 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
+                    }
+                  ],
+                  "Name": "FertiliserAppliedAmounts",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "FIXME: These are conditional to cv instead (not for both) ... i.e., at sowing",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -13610,7 +13679,7 @@
                   "Parameters": [
                     {
                       "Key": "NoHarvestBefore",
-                      "Value": "17-Nov"
+                      "Value": "25-Nov"
                     }
                   ],
                   "Name": "Harvest",
@@ -13697,7 +13766,7 @@
                   "$type": "Models.Sensor.Spectral, Models",
                   "DrySoilNDVI": 0.1,
                   "WetSoilNDVI": 0.2,
-                  "GreenCropNDVI": 0.75,
+                  "GreenCropNDVI": 0.95,
                   "DeadCropNDVI": 0.15,
                   "Name": "Spectral",
                   "ResourceName": null,
@@ -13760,6 +13829,16 @@
                   "SetEventName": "[Plant].PlantSowing",
                   "ParameterFile": "%root%/Tests/Validation/Wheat/inputs/WaggaWagga2024_PhenoDatesInput.csv",
                   "Name": "SetPhenoDatesExternally",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
+                  "SetEventName": "[Plant].PlantSowing",
+                  "ParameterFile": "%root%/Tests/Validation/Wheat/inputs/WaggaWagga2024_HaunRelatedInput.csv",
+                  "Name": "SetHaunRelatedExternally",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -14021,7 +14100,7 @@
                       "YAxis": 0,
                       "ColourArgb": 0,
                       "FactorToVaryColours": "Cv",
-                      "FactorToVaryMarkers": "TOS",
+                      "FactorToVaryMarkers": "Sow",
                       "FactorToVaryLines": null,
                       "Marker": 0,
                       "MarkerSize": 0,
@@ -14042,7 +14121,7 @@
                       "Children": [
                         {
                           "$type": "Models.Regression, Models",
-                          "ForEachSeries": false,
+                          "ForEachSeries": true,
                           "showOneToOne": true,
                           "showEquation": true,
                           "Name": "Regression",

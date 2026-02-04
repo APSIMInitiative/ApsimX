@@ -40,21 +40,26 @@ targets <- list(
   tar_target(
     config,
     list(
+      # folders and file names
       folder_thisScript           = here::here(),
-      folder_rawData              = here::here("InputFilesFromCloud"),
+      folder_rawData              = here::here("InputFilesFromCloud"), # this will be from Cloud
       folder_inputs               = here::here("..", "..", "inputs"),
-      folder_apsimx               = here::here(".."),
-      file_observ_excel           = "2024_WaggaWagga_PHDA24WARI2.xlsx",
+      folder_apsimx               = here::here(".."), # a level up from where Analysis is
+      file_rawData_excel          = "2024_WaggaWagga_PHDA24WARI2.xlsx", # raw observed data (pre-defined file name)
+      file_input_name_saved       = "WaggaWagga2024_PhenoDatesInput.csv", # name for forced pheno-dates file
+      fileNameForAPSIM_observData = "WaggaWagga2024.xlsx", # name of observation file created for APSIM to read
+      file_SimNameByCultivar      = "WaggaWagga2024_CultivarToSimName.csv", # lookup table of sim by treat names (handmade metadata)
+      file_metaData_observed      = "WaggaWagga2024_observed_data_requirements.csv",  # What obs variables to fetch? (handmade metadata)
+      
+      # Excel sheet names used from 2024_WaggaWagga_PHDA24WARI2.xlsx
       sheetExcel_weather          = "Weather",
       sheetExcel_haun             = "Haun stage ", # Note the extra space as-is in typo in observations (!!!!)
       sheetExcel_soilWater        = "GravimetricMoistureNearSowing",
+      
+      # Other function parameters
       coord_thisLatLon            = data.frame(lat = -35.041, lon = 147.319),
       target_stagePerc            = 50, # % of a stage development when event date is retrieved
-      target_betwStages           = 50,  # % of period between two adjacent events when a synthetic event date is assumed
-      file_input_name_saved       = "WaggaWagga2024_PhenoDatesInput.csv", # forced dates of pheno-dates
-      fileNameForAPSIM_observData = "WaggaWagga2024.xlsx", # observation file to be read
-      file_SimNameByCultivar      = "WaggaWagga2024_CultivarToSimName.csv", # simulation name by treatment meta-data
-      file_metaData_observed      = "WaggaWagga2024_observed_data_requirements.csv",  # meta data about what results to fetch,
+      target_betwStages           = 50, # % of period between two adjacent events when a synthetic event date is assumed
       var_name_stage              = "apsim_stage_raw", # name of synthetic var with observed PCSD data
       varName_addedToObserv       = "Wheat.Phenology.Stage" # new synthetic variable to be added into observations
     )
@@ -70,7 +75,7 @@ targets <- list(
   ### ------------------------------------------------
   
   tar_target(df_soil_water, read_soil_water(config$folder_rawData, 
-                                     config$file_observ_excel, 
+                                     config$file_rawData_excel, 
                                      config$sheetExcel_soilWater)),
   
   tar_target(json_soil_water, soil_water_in_json(df_soil_water)),
@@ -80,7 +85,7 @@ targets <- list(
   ### ------------------------------------------------
   
   tar_target(df_met, createWeatherFile(config$folder_rawData, 
-                                       config$file_observ_excel, 
+                                       config$file_rawData_excel, 
                                        config$sheetExcel_weather, 
                                        config$coord_thisLatLon)),
   
@@ -95,7 +100,7 @@ targets <- list(
   
   # Reads excel raw observations based on meta data above (raw as-is) and appends them into a single list of dfs 
   tar_target(list_observed_dfs,compile_all_observed(config$folder_rawData,
-                                                    config$file_observ_excel,
+                                                    config$file_rawData_excel,
                                                     df_obs_info)),
   
   ### ----------------------------------------------------------------------------------------
