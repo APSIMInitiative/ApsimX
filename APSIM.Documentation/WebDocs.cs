@@ -364,7 +364,7 @@ namespace APSIM.Documentation
             MatchCollection matches;
 
             //Find references without overriding text and convert to standard
-            regex = new Regex(@"(?<!\])\[\#([^\]]+)\](?!\()");
+            regex = new Regex(@"(?<!])\[#([^\]]+)\](?![(\[])");
             matches = regex.Matches(input);
             int offset = 0;
             foreach(Match match in matches)
@@ -372,10 +372,13 @@ namespace APSIM.Documentation
                 string value = match.Groups[0].Value;
                 string reference = match.Groups[1].Value;
                 ICitation citation = AutoDocumentation.Bibilography.Lookup(reference);
-                string markdownCite = $"[{citation.InTextCite}][#{reference}]";
-                output = output.Remove(match.Index + offset, value.Length);
-                output = output.Insert(match.Index + offset, markdownCite);
-                offset += markdownCite.Length - value.Length;
+                if (citation != null)
+                {
+                    string markdownCite = $"[{citation.InTextCite}][#{reference}]";
+                    output = output.Remove(match.Index + offset, value.Length);
+                    output = output.Insert(match.Index + offset, markdownCite);
+                    offset += markdownCite.Length - value.Length;
+                }
             }
 
             //Find references with overriding text

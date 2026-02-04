@@ -77,8 +77,8 @@ namespace UnitTests.Documentation
         [Test]
         public void TestProcessCitationsReplacesCitationWithLink()
         {
-            string text = "This is a citation [brown_plant_2014] and some more text.";
-            string expected = "This is a citation [Brown et al., 2014](#references) and some more text.";
+            string text = "This is a citation [#brown_plant_2014] and some more text.";
+            string expected = "This is a citation [Brown et al., 2014](#brown_plant_2014) and some more text.";
             WebDocs.ProcessCitations(text, out string actual);
             Assert.That(actual, Is.EqualTo(expected));
         }

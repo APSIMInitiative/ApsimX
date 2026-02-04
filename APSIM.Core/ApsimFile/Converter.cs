@@ -7298,10 +7298,18 @@ internal class Converter
             text = text.Replace("<sub>", "~");
             text = text.Replace("</sub>", "~");
 
-            Regex regex = new Regex(@"\[([^\]]+)\](?!\()");
+            Regex regex = new Regex(@"\[([^\#\]]+)\](?!\()");
             MatchCollection matches = regex.Matches(text);
+            int offset = 0;
             foreach(Match match in matches)
-                text = text.Replace(match.Value, match.Value.Replace("[", "[#"));
+            {
+                string value = match.Groups[0].Value;
+                string reference = match.Groups[1].Value;
+                string newSyntax = $"[#{reference}]";
+                text = text.Remove(match.Index + offset, value.Length);
+                text = text.Insert(match.Index + offset, newSyntax);
+                offset += newSyntax.Length - value.Length;
+            }
 
             regex = new Regex(@"<a href=""?([^\s<>]+)"">([^<>]+)<\/a>");
             matches = regex.Matches(text);

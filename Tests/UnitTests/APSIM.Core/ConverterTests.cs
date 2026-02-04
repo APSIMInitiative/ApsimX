@@ -406,12 +406,12 @@ namespace UnitTests.APSIM.Core.Tests
         [Test]
         public void Version209()
         {
-            string beforeJSON = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.CoverterTest172FileBefore.apsimx");
+            string beforeJSON = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.CoverterTest209FileBefore.apsimx");
             var response = FileFormat.ReadFromStringAndReturnConvertState(beforeJSON, typeof(Simulations), null, false);
             Simulations actualModel = response.head.Model as Simulations;
             Assert.That(response.didConvert, Is.True);
 
-            string afterJSON = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.CoverterTest172FileAfter.apsimx");
+            string afterJSON = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.CoverterTest209FileAfter.apsimx");
             Simulations expectedModel = FileFormat.ReadFromString<Simulations>(afterJSON, null, false).Model as Simulations;
 
             string actual = actualModel.Node.ToJSONString();
