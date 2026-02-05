@@ -43,7 +43,8 @@ namespace APSIM.Documentation.Graphing
         /// <param name="height">Desired height of the image (in px).</param>
         public SkiaSharp.SKImage Export(IGraph graph, double width, double height)
         {
-            return Export(ToPlotModel(graph), width, height);
+            IPlotModel plot = ToPlotModel(graph);
+            return Export(plot, width, height);
         }
 
         /// <summary>
@@ -60,6 +61,7 @@ namespace APSIM.Documentation.Graphing
                 exporter.Height = (int)height;
                 exporter.Width = (int)width;
                 exporter.UseTextShaping = false;
+                exporter.Dpi = 192;
                 exporter.Export(plot, stream);
                 stream.Seek(0, SeekOrigin.Begin);
                 return SkiaSharp.SKImage.FromEncodedData(stream);  

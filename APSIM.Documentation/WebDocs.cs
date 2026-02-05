@@ -16,6 +16,7 @@ using SkiaSharp;
 using APSIM.Documentation.Graphing;
 using APSIM.Core;
 using APSIM.Shared.Documentation.Extensions;
+using OxyPlot;
 
 namespace APSIM.Documentation
 {
@@ -152,8 +153,8 @@ namespace APSIM.Documentation
 
             var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
             string html = Markdown.ToHtml(output2, pipeline);
-            html = RestoreHTMLSegments(html, htmlSegments);
             html = AddTableWrappers(html);
+            html = RestoreHTMLSegments(html, htmlSegments);
             html = AddCSSClasses(html);
             html = AddContentWrapper(GetNavigationHTML(tags), html);
 
@@ -545,10 +546,10 @@ namespace APSIM.Documentation
             output = output.Replace("<h1 ", "<h1 class=\"docs-h1\" ");
             output = output.Replace("<h2 ", "<h2 class=\"docs-h2\" ");
             output = output.Replace("<img ", "<img class=\"docs-img\" ");
-            output = output.Replace("<table>", "<table class=\"docs-table\" ");
-            output = output.Replace("<th>", "<th class=\"docs-th\"> ");
-            output = output.Replace("<td>", "<td class=\"docs-td\"> ");
-            output = output.Replace("<tr>", "<tr class=\"docs-tr\"> ");
+            output = output.Replace("<table>", "<table class=\"docs-table\">");
+            output = output.Replace("<th>", "<th class=\"docs-th\">");
+            output = output.Replace("<td>", "<td class=\"docs-td\">");
+            output = output.Replace("<tr>", "<tr class=\"docs-tr\">");
             return output;
         }
 
@@ -700,8 +701,10 @@ namespace APSIM.Documentation
         /// Get an image from a graph tag
         /// </summary>
         /// <param name="graph"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
         /// <returns></returns>
-        private static SKImage GetGraphImage(Graph graph)
+        public static SKImage GetGraphImage(Graph graph, int width = 800, int height = 600)
         {
             GraphExporter exporter = new GraphExporter();
 
@@ -710,10 +713,18 @@ namespace APSIM.Documentation
             // Temp hack - set marker size to 5. We need to review
             // appropriate sizing for graphs in autodocs.
             if (plot is OxyPlot.PlotModel model)
+            {
+                int count = model.Series.OfType<OxyPlot.Series.LineSeries>().Count();
                 foreach (var series in model.Series.OfType<OxyPlot.Series.LineSeries>())
-                    series.MarkerSize = 5;
+                {
+                    series.MarkerSize = 10;
+                    series.StrokeThickness = 1;
+                    if (count == 1)
+                        series.Color = OxyColor.FromArgb(255, 0, 77, 71);
+                } 
+            }
 
-            return exporter.Export(plot, 800, 600);
+            return exporter.Export(plot, width, height);
         }
 
     }
