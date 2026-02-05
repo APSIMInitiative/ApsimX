@@ -1,12 +1,15 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Reflection.Metadata;
 using APSIM.Shared.Documentation;
 using Models;
+using Models.Functions;
 using Models.Core;
 using Models.PMF;
 using Models.PMF.Organs;
 using Models.PMF.Phen;
+using Constant = Models.Functions.Constant;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -109,15 +112,12 @@ namespace APSIM.Documentation.Models.Types
 
             //Write children
             // -------------------------------------------------------------------------------
-            List<ITag> children = new List<ITag>();
             foreach (IModel child in this.model.Children)
-                if (child as IText == null && child as CompositeBiomass == null && child as Folder == null && child as Cultivar == null && child as Phenology == null && child as OrganArbitrator == null && child as SimpleLeaf == null)
+                if (child as IText == null && child as CompositeBiomass == null && child as Folder == null && child as Cultivar == null && child as Phenology == null && child as OrganArbitrator == null && child as SimpleLeaf == null && child as Constant == null)
                 {
                     Section S = GetSummaryAndRemarksSection(child);
-                    //S.Add(new Paragraph("Hello World"));
-                    children.AddRange(new List<ITag>() {S});
+                    newTags.Add(S);
                 }
-            newTags.Add(new Section("Child Components", children));
 
             //Write cultivars table
             // -------------------------------------------------------------------------------
