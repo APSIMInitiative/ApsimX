@@ -184,69 +184,27 @@ namespace Models.GrazPlan
         /// <summary>NH4 solute in the soil.</summary>
         private ISolute nh4 = null;
 
-        // /// <summary>
-        // /// Leaf class
-        // /// </summary>
-        // [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        // public Leaf Leaf {get; set;}
-
-        // /// <summary>
-        // /// Leaf class
-        // /// </summary>
-        // [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        // public Stem Stem{get;set;}
 
         /// <summary>
         /// AboveGround
         /// </summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
 
-        public CompositeBiomass AboveGround {get;set;}
+        public IBiomass AboveGround {get;set;}
+
+       /// <summary>
+       /// Gereric Organs
+       /// </summary>
+        [Link(Type = LinkType.Child)]
+        public List<GenericOrgan> Organs { get; set; }
 
         /// <summary>
-        /// AboveGroundLive
+        /// Composite Biomass
         /// </summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
 
-        public CompositeBiomass AboveGroundLive {get;set;}
+        [Link(Type = LinkType.Child)]
+        public List<Biomass.CompositeBiomass> CompositeBiomasses {get; set;}
 
-
-        /// <summary>
-        /// AboveGround
-        /// </summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-
-        public CompositeBiomass AboveGroundDead {get;set;}
-
-
-        /// <summary>
-        /// Leaf Generic organ
-        /// </summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        
-        public GenericOrgan Leaf {get;set;}
-
-        /// <summary>
-        /// Stem Generic organ
-        /// </summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-         
-        public GenericOrgan Stem {get;set;}
-
-
-        /// <summary>
-        /// Root generic organ
-        /// </summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-         
-        public GenericOrgan Root {get;set;}
-
-
-        // /// <summary>
-        // /// Stem class
-        // /// </summary>
-        // [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        // public Organs Stem {get; set;}
         
       
 
@@ -2535,44 +2493,14 @@ namespace Models.GrazPlan
                 FToday = systemClock.Today.Day + (systemClock.Today.Month * 0x100) + (systemClock.Today.Year * 0x10000);    //stddate
             }
 
-            if (Leaf != null)
-            {
-                Leaf.PastureModel = PastureModel;
-            }
+           
+           //APSIM does not automatically inject your GrazPlan pasture engine (TPasturePopulation) into organ classes so you must wire Composite Biomass and Organs wired to PastureModel
 
-            if (Stem != null)
-            {
-                Stem.PastureModel = PastureModel;
-            }
-
-            if(Root != null)
-            {
-                Root.PastureModel =PastureModel;
-            }
-
-            // if (AboveGround != null)
-            // {
-            //     AboveGround.PastureModel=PastureModel;
-            // }
-
-            if (AboveGroundLive != null)
-            {
-                AboveGroundLive.PastureModel=PastureModel;
-                
-            }
-
-            if(AboveGroundDead != null)
-            {
-                AboveGroundDead.PastureModel=PastureModel;
-            }
-
-
+            foreach (var organ in Organs)
+                organ.PastureModel=PastureModel;
             
-            //Stem.PastureModel = PastureModel;
-            //AboveGroundLive.PastureModel=PastureModel;
-            //AboveGroundDead.PastureModel=PastureModel;
-            //AboveGround.PastureModel=PastureModel;
-            
+            foreach (var composite in CompositeBiomasses)
+                composite.PastureModel = PastureModel;
             
 
 
