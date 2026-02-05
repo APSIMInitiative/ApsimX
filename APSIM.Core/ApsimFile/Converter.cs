@@ -7372,12 +7372,14 @@ internal class Converter
             node["Value"] = JContainer.FromObject(node.Value<decimal>("Value") / 12.0m);
         }
 
-        foreach (JObject clk in JsonUtilities.ChildrenRecursively(root, "Clock"))
+        if (JsonUtilities.ChildrenOfType(root, "ZoneCLEM").Any())  // make sure there is a CLEM component before adding the CLEMEvents
         {
-            //check if child already has a CLEMEvents
-            if (JsonUtilities.ChildWithName(clk, "CLEMEvents") == null)
+            foreach (JObject clk in JsonUtilities.ChildrenRecursively(root, "Clock"))
             {
-                string newCLEMEvents = @"{
+                //check if child already has a CLEMEvents
+                if (JsonUtilities.ChildWithName(clk, "CLEMEvents") == null)
+                {
+                    string newCLEMEvents = @"{
                         ""$type"": ""Models.CLEM.CLEMEvents, Models"",
                         ""TimeStep"": 30, 
                         ""CustomTimeStep"": 0,
@@ -7393,9 +7395,10 @@ internal class Converter
                         ""ReadOnly"": false
                         }";
 
-                //JsonUtilities.AddModel(clk, new CLEMEvents());
-                JsonUtilities.AddChild(clk, JObject.Parse(newCLEMEvents));
+                    //JsonUtilities.AddModel(clk, new CLEMEvents());
+                    JsonUtilities.AddChild(clk, JObject.Parse(newCLEMEvents));
 
+                }
             }
         }
 
