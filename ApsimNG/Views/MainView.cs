@@ -122,11 +122,8 @@ namespace UserInterface.Views
 
         private FontChooserDialog fontDialog;
 
-        /// <summary>
-        /// Button panel for the notifications list.
-        /// </summary>
+        /// <summary> Button panel for the notifications list.</summary>
         private MarkdownView notificationMarkdownView;
-
 
         /// <summary>
         /// Box which holds notifications
@@ -147,7 +144,6 @@ namespace UserInterface.Views
         /// GtkPaned View where the most recently used simulations and notifications are housed.    
         /// </summary>
         private Paned notificationAndMruPane;
-
 
         /// <summary>
         /// Constructor
@@ -189,7 +185,7 @@ namespace UserInterface.Views
 
             menuList = new ListButtonView(this);
             menuList.ButtonsAreToolbar = true;
-            menuButtonBox.PackEnd(menuList.MainWidget, true, true, 0);
+            menuButtonBox.PackEnd(menuList.MainWidget, false, false, 0);
 
             hpaned1.PositionSet = true;
             hpaned1.Child2.Hide();
@@ -360,11 +356,6 @@ namespace UserInterface.Views
         /// Get the list and button view
         /// </summary>
         public IListButtonView StartPage2 { get { return listButtonView2; } }
-
-        /// <summary>
-        /// Get the notifications list and button view
-        /// </summary>
-        public IMarkdownView NotificationMarkdownView  { get { return notificationMarkdownView; } }
 
         /// <summary>
         /// Get the most recently used files list view
@@ -1211,6 +1202,10 @@ namespace UserInterface.Views
                 }
             }
         }
+
+        /// <summary>Gets the notification markdown view.</summary>
+        public IMarkdownView NotificationMarkdownView => notificationMarkdownView;
+
 
         /// <summary>Show a message in a dialog box</summary>
         /// <param name="message">The message.</param>

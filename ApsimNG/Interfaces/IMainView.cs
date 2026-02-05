@@ -1,5 +1,4 @@
-﻿using Cairo;
-using Gtk;
+﻿using Gtk;
 using System;
 using UserInterface.Views;
 using UserInterface.EventArguments;
