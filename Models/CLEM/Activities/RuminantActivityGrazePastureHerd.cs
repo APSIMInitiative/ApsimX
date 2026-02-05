@@ -248,6 +248,7 @@ namespace Models.CLEM.Activities
             if (usingGrowPF) return 1;
 
             // determine pasture quality from all pools (DMD) at start of grazing
+            // ToDo: need to get this from IGrazeFoodStore where this interface is on GrazeFoodStoreType and GrazeFoodStoreAPSIMLink 
             double pastureDMD = GrazeFoodStoreModel.SwardDryMatterDigestibility;
             
             // Reduce potential intake based on pasture quality for the proportion consumed (zero legume).
@@ -290,6 +291,7 @@ namespace Models.CLEM.Activities
                         PotentialIntakePastureQualityLimiter = CalculatePotentialIntakePastureQualityLimiter();
                     }
 
+                    // ToDo: need to TonnesPerHectareStartOfTimestep this from IGrazeFoodStore where this interface is on GrazeFoodStoreType and GrazeFoodStoreAPSIMLink 
                     PotentialIntakePastureBiomassLimiter = 1 - Math.Exp(-herd.FirstOrDefault().Parameters.Grazing.IntakeCoefficientBiomass * GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000);
 
                     foreach (Ruminant ind in herd)
@@ -383,9 +385,21 @@ namespace Models.CLEM.Activities
 
                 // allocate to individuals in proportion to what they requested
                 // current DMD and N of intake is stored in th consumePasturePoolsPacket and passed to GrazeFoodStoreType.Remove as AdditionalDetails with breed pool limits
-                
+
                 // todo: get food quality from pasture (when quality provided from crop input file) or set here?
-                
+
+
+                // if GrazeFoodStoreAPSIMModel
+                // calculate relative intake (get CalcRelIntake() from GrazPlan.AnimalGroup)
+                // build diet (get DescribeTheDiet() from GrazPlan.AnimalGroup)
+                // uses AnimalGroup.AddDietItem() and AnimalGroup.SummarizeDiet()
+                // build a FeedPacket to pass to ruminants intake
+
+
+
+
+
+
                 foreach (Ruminant ind in herd)
                 {
                     double eaten;
