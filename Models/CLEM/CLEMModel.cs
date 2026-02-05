@@ -271,6 +271,28 @@ namespace Models.CLEM
         }
 
         /// <summary>
+        /// return a list of components available given the specified types
+        /// </summary>
+        /// <param name="typesToFind">the list of types to locate</param>
+        /// <returns>A list of names of components including any string item in list provided</returns>
+        public IEnumerable<string> GetModelsAvailableByType(object[] typesToFind)
+        {
+            List<string> results = new();
+            foreach (object type in typesToFind)
+            {
+                if (type is string)
+                {
+                    results.Add(type as string);
+                }
+                else if (type is Type typed)
+                {
+                    results.AddRange(Structure.FindAll<IModel>().Where(a => a.GetType() == typed).Select(a => a.Name));
+                }
+            }
+            return results.AsEnumerable();
+        }
+
+        /// <summary>
         /// Get a list of model names given specified types as array
         /// </summary>
         /// <param name="typesToFind">the list of types to include</param>

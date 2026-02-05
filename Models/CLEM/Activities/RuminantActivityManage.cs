@@ -52,8 +52,8 @@ namespace Models.CLEM.Activities
         private int maleBreedersRequired = 0;
         private string grazeStoreGrowOutFemales = "";
         private string grazeStoreGrowOutMales = "";
-        private GrazeFoodStoreType grazeStoreSires;
-        private GrazeFoodStoreType grazeStoreBreeders;
+        private IGrazeFoodStoreType grazeStoreSires;
+        private IGrazeFoodStoreType grazeStoreBreeders;
         private RuminantParameters breedParameters;
         private IEnumerable<SpecifiedRuminantListItem> purchaseDetails;
         private double mortalityRate = 0;
@@ -537,8 +537,8 @@ namespace Models.CLEM.Activities
             // called in onInitialise as needs to be before OnInitialiseResources when the herd is created as this may adjust initial cohort sizes.
             // no access to the herd in this method as it is yet to be created in CLEMInitialiseResources but this method may need to adjust initial cohort numbers before building the herd.
 
-            grazeStoreBreeders = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, GrazeFoodStoreNameBreeders, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
-            grazeStoreSires = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, GrazeFoodStoreNameSires, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+            grazeStoreBreeders = Resources.FindResourceType<GrazeFoodStore, IResourceType>(this, GrazeFoodStoreNameBreeders, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IGrazeFoodStoreType;
+            grazeStoreSires = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, GrazeFoodStoreNameSires, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IGrazeFoodStoreType;
 
             // reset min breeders if set greater than max breeders
             // this allows multi run versions to only consider maxbreeders
@@ -1221,7 +1221,7 @@ namespace Models.CLEM.Activities
                         foreach (RuminantMale male in selectFilter.Filter(GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.MarkedForSale, new List<HerdChangeReason>() { HerdChangeReason.MaxAgeSale }).Where(a => a.IsWeaned && (a.AgeInDays - a.Parameters.Details.EstimatedAgeAtMaturityMale > -334) && !a.IsCastrated)).Take(maleBreedersRequired))
                         {
                             if (grazeStoreSires is not null)
-                                male.Location = grazeStoreSires.Name;
+                                male.Location = (grazeStoreSires as Model).Name;
                             male.SaleFlag = HerdChangeReason.None;
                             male.Attributes.Remove("GrowOut");
                             male.Attributes.Add("Sire");
@@ -1240,7 +1240,7 @@ namespace Models.CLEM.Activities
                             foreach (RuminantMale male in selectFilter.Filter(GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => (a.AgeInDays - a.Parameters.Details.EstimatedAgeAtMaturityMale > -334) && a.Attributes.Exists("GrowOut") && !a.IsCastrated)).Take(maleBreedersRequired).ToList())
                             {
                                 if (grazeStoreSires is not null)
-                                    male.Location = grazeStoreSires.Name;
+                                    male.Location = (grazeStoreSires as Model).Name;
                                 male.SaleFlag = HerdChangeReason.None;
                                 male.Attributes.Remove("GrowOut");
                                 male.Attributes.Add("Sire");
@@ -1427,7 +1427,7 @@ namespace Models.CLEM.Activities
                                 female.SaleFlag = HerdChangeReason.None;
                                 if (grazeStoreBreeders is not null)
                                 {
-                                    female.Location = grazeStoreBreeders.Name;
+                                    female.Location = (grazeStoreBreeders as Model).Name;
                                 }
 
                                 femaleBreedersRequired--;
@@ -1450,7 +1450,7 @@ namespace Models.CLEM.Activities
 
                                 if (grazeStoreBreeders is not null)
                                 {
-                                    female.Location = grazeStoreBreeders.Name;
+                                    female.Location = (grazeStoreBreeders as Model).Name;
                                 }
 
                                 femaleBreedersRequired--;
@@ -1829,7 +1829,7 @@ namespace Models.CLEM.Activities
                     if (GrazeFoodStoreNameSires.Contains("."))
                     {
                         ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
-                        if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameSires) is null)
+                        if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, IResourceType>(this, GrazeFoodStoreNameSires) is null)
                         {
                             string[] memberNames = new string[] { "GrazeStoreType (paddock) to place purchased sires in" };
                             yield return new ValidationResult($"The location where purchased ruminant sires are to be placed [r={GrazeFoodStoreNameSires}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames);
@@ -1847,7 +1847,7 @@ namespace Models.CLEM.Activities
                     if (GrazeFoodStoreNameBreeders.Contains("."))
                     {
                         ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
-                        if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameBreeders) is null)
+                        if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, IResourceType>(this, GrazeFoodStoreNameBreeders) is null)
                         {
                             string[] memberNames = new string[] { "GrazeStoreType (paddock) to place purchased breeders in" };
                             yield return new ValidationResult($"The location where purchased ruminant breeders are to be placed [r={GrazeFoodStoreNameBreeders}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames);
@@ -1879,7 +1879,7 @@ namespace Models.CLEM.Activities
                 if (GrazeFoodStoreNameGrowOutMales.Contains('.'))
                 {
                     ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
-                    if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameGrowOutMales) is null)
+                    if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, IResourceType>(this, GrazeFoodStoreNameGrowOutMales) is null)
                     {
                         string[] memberNames = new string[] { "GrazeStoreType (paddock) to place grow out males in" };
                         yield return new ValidationResult($"The location where grow out male ruminants are to be moved [r={GrazeFoodStoreNameGrowOutMales}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames);
@@ -1891,7 +1891,7 @@ namespace Models.CLEM.Activities
                 if (GrazeFoodStoreNameGrowOutFemales.Contains('.'))
                 {
                     ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
-                    if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameGrowOutFemales) is null)
+                    if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, IResourceType>(this, GrazeFoodStoreNameGrowOutFemales) is null)
                     {
                         string[] memberNames = new string[] { "GrazeStoreType (paddock) to place purchased sires in" };
                         yield return new ValidationResult($"The location where grow out female ruminants are to be moved [r={GrazeFoodStoreNameGrowOutFemales}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames);

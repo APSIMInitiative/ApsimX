@@ -65,7 +65,7 @@ namespace Models.CLEM.Activities
         /// Name of GrazeFoodStore (paddock) to place weaners (leave blank for general yards)
         /// </summary>
         [Description("GrazeFoodStore (paddock) to place weaners")]
-        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Not specified - general yards", "Leave at current location", typeof(GrazeFoodStore) } })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Not specified - general yards", "Leave at current location", typeof(IGrazeFoodStoreType) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Weaned individuals' location required")]
         public string GrazeFoodStoreName { get; set; } = "Leave at current location";
 
@@ -275,7 +275,7 @@ namespace Models.CLEM.Activities
             if (GrazeFoodStoreName.Contains('.'))
             {
                 ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
-                if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreName) is null)
+                if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, IResourceType>(this, GrazeFoodStoreName) is null)
                 {
                     yield return new ValidationResult($"The location where ruminants are to be moved [r={GrazeFoodStoreName}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", new string[] { "Location is not valid" });
                 }
