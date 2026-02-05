@@ -75,7 +75,7 @@ namespace APSIM.Documentation.Models.Types
             Table tableTag = new Table(table);
             string tableMarkdown = WebDocs.ConvertToMarkdown(new List<ITag> {tableTag}, "", xyPairs);
 
-            SKImage graphImage = WebDocs.GetGraphImage(CreateGraph(), 600, 600);
+            SKImage graphImage = WebDocs.GetGraphImage(CreateGraph(), 600, 600, 192);
             string imgMarkdown = WebDocs.GetMarkdownImageFromSKImage(graphImage);
 
             string markdown = imgMarkdown + "\n" + tableMarkdown;

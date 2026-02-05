@@ -41,10 +41,10 @@ namespace APSIM.Documentation.Graphing
         /// <param name="graph">Graph to be exported.</param>
         /// <param name="width">Desired width of the image (in px).</param>
         /// <param name="height">Desired height of the image (in px).</param>
-        public SkiaSharp.SKImage Export(IGraph graph, double width, double height)
+        /// <param name="dpi">Desired api image</param>
+        public SkiaSharp.SKImage Export(IGraph graph, double width, double height, double dpi)
         {
-            IPlotModel plot = ToPlotModel(graph);
-            return Export(plot, width, height);
+            return Export(ToPlotModel(graph), width, height, dpi);
         }
 
         /// <summary>
@@ -53,7 +53,8 @@ namespace APSIM.Documentation.Graphing
         /// <param name="plot">Plot model to be exported.</param>
         /// <param name="width">Desired width of the image (in px).</param>
         /// <param name="height">Desired height of the image (in px).</param>
-        public SkiaSharp.SKImage Export(IPlotModel plot, double width, double height)
+        /// <param name="dpi">Desired api image</param>
+        public SkiaSharp.SKImage Export(IPlotModel plot, double width, double height, double dpi)
         {
             using (Stream stream = new MemoryStream())
             {
@@ -61,7 +62,7 @@ namespace APSIM.Documentation.Graphing
                 exporter.Height = (int)height;
                 exporter.Width = (int)width;
                 exporter.UseTextShaping = false;
-                exporter.Dpi = 192;
+                exporter.Dpi = (float)dpi;
                 exporter.Export(plot, stream);
                 stream.Seek(0, SeekOrigin.Begin);
                 return SkiaSharp.SKImage.FromEncodedData(stream);  

@@ -17,6 +17,7 @@ using APSIM.Documentation.Graphing;
 using APSIM.Core;
 using APSIM.Shared.Documentation.Extensions;
 using OxyPlot;
+using APSIM.Shared.Graphing;
 
 namespace APSIM.Documentation
 {
@@ -703,12 +704,15 @@ namespace APSIM.Documentation
         /// <param name="graph"></param>
         /// <param name="width"></param>
         /// <param name="height"></param>
+        /// <param name="dpi"></param>
         /// <returns></returns>
-        public static SKImage GetGraphImage(Graph graph, int width = 800, int height = 600)
+        public static SKImage GetGraphImage(Graph graph, int width = 800, int height = 600, int dpi = 96)
         {
             GraphExporter exporter = new GraphExporter();
 
             var plot = exporter.ToPlotModel(graph);
+            //foreach(Series s in graph.Series)
+            //    s.
 
             // Temp hack - set marker size to 5. We need to review
             // appropriate sizing for graphs in autodocs.
@@ -717,14 +721,14 @@ namespace APSIM.Documentation
                 int count = model.Series.OfType<OxyPlot.Series.LineSeries>().Count();
                 foreach (var series in model.Series.OfType<OxyPlot.Series.LineSeries>())
                 {
-                    series.MarkerSize = 10;
+                    series.MarkerSize = 4;
                     series.StrokeThickness = 1;
                     if (count == 1)
                         series.Color = OxyColor.FromArgb(255, 0, 77, 71);
                 } 
             }
 
-            return exporter.Export(plot, width, height);
+            return exporter.Export(plot, width, height, dpi);
         }
 
     }
