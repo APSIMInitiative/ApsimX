@@ -41,6 +41,7 @@ namespace UserInterface.Presenters
             if (model is not ZoneCLEM zc)
             {
                 zc = (model as IModel).Node.Find<ZoneCLEM>();
+                if (zc is null) return;
             }
 
             summaryGenerator.OutputFormat = zc.DescriptiveSummaryFormatStyle;
