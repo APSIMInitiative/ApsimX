@@ -14,6 +14,16 @@ public class CLEMEventsSummary : DescriptiveSummaryProviderBase<CLEMEvents>
     /// <inheritdoc/>
     public override void BuildSummary()
     {
+        if(ModelTyped.Clock is null)
+        {
+            if (ModelTyped.Parent is Clock _clock)
+            {
+                ModelTyped.Clock = _clock;
+            }
+            else
+                return;
+        }
+
         if (!FormatForParentControl)
             generator.AddBlockWithText($"The simulation is performed from {generator.DisplaySummaryValueSnippet(ModelTyped.Clock.StartDate.ToShortDateString())} to {generator.DisplaySummaryValueSnippet(ModelTyped.Clock.EndDate.ToShortDateString())}");
 
