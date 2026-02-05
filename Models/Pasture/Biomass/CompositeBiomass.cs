@@ -150,12 +150,12 @@ namespace Models.GrazPlan.Biomass
                 {
                     if (Name == "AboveGroundLive")
                     {   
-                         n= GetPlantNutr(GrazType.sgGREEN, GrazType.TOTAL, TPlantElement.N);
+                         n= GetDM(GrazType.sgGREEN, GrazType.TOTAL) / 10.0 * GetPlantNutr(GrazType.sgGREEN, GrazType.TOTAL, TPlantElement.N);
                     
                     }
                    
                     if(Name=="AboveGroundDead")
-                        n= GetPlantNutr(GrazType.stDEAD, GrazType.TOTAL, TPlantElement.N);
+                        n = GetDM(GrazType.stDEAD, GrazType.TOTAL) / 10.0 * GetPlantNutr(GrazType.stDEAD, GrazType.TOTAL, TPlantElement.N);
                        
                 }
                 return n;

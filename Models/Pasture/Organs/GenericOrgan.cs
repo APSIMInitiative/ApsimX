@@ -104,7 +104,7 @@ namespace Models.GrazPlan.Organs
 
                     if (Name == "Root" && IsAboveGround is false)
                     {
-                        return GetDMRoot(GrazType.sgGREEN,GrazType.TOTAL,GrazType.TOTAL);
+                        return GetDMRoot(GrazType.sgGREEN,GrazType.TOTAL,GrazType.TOTAL)/10.0;
                     }
                     
                 }
@@ -146,18 +146,19 @@ namespace Models.GrazPlan.Organs
                 if (PastureModel != null)
                 {
                     if(Name=="Leaf"  && IsAboveGround is true)
-                        return GetDM(GrazType.TOTAL, GrazType.ptLEAF)/10.0* GetPlantNutr(GrazType.TOTAL, GrazType.ptLEAF, TPlantElement.N);
+                        return GetDM(GrazType.TOTAL, GrazType.ptLEAF)/10.0 * GetPlantNutr(GrazType.TOTAL, GrazType.ptLEAF, TPlantElement.N);
                     if(Name=="Stem"  && IsAboveGround is true)
                         return GetDM(GrazType.TOTAL, GrazType.ptSTEM)/10.0 * GetPlantNutr(GrazType.TOTAL, GrazType.ptSTEM, TPlantElement.N);
                     if (Name == "Root" && IsAboveGround is false)
                     {
-                        return  PastureModel.GetRootConc(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.N);
+                        return  GetDMRoot(GrazType.sgGREEN,GrazType.TOTAL,GrazType.TOTAL)/10.0 * PastureModel.GetRootConc(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.N);
                     }
                 }
                 
                 return 0;
             }
         }
+
 
         /// <summary>
         /// DM of Organ Live+ Dead
@@ -179,7 +180,7 @@ namespace Models.GrazPlan.Organs
         {
             get
             {
-                return StructuralN;
+                return StructuralN + StorageN;
             }
         }
 
@@ -190,8 +191,13 @@ namespace Models.GrazPlan.Organs
         {
             get
             {   
+                if (Wt > 0)
+                {
+                    return N/Wt;
+                }
+
+                return 0;
                 
-                return N/Wt;
 
             }
         }
