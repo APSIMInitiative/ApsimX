@@ -139,10 +139,13 @@ namespace Models.GrazPlan.Biomass
                 double n = 0;
                 
                 if (organs != null)
+                {
                     foreach (var organ in organs)
-                    {
                         n+=organ.N;
-                    }
+
+                }
+                    
+                    
                  if (PastureModel != null)
                 {
                     if (Name == "AboveGroundLive")

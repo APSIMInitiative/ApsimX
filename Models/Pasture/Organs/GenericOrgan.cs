@@ -46,7 +46,7 @@ namespace Models.GrazPlan.Organs
 
 
        
-         /// <summary>
+        /// <summary>
         /// TPasturePopulation
         /// </summary>
         public TPasturePopulation PastureModel;
@@ -54,7 +54,7 @@ namespace Models.GrazPlan.Organs
         {   
     
             string sUnit = PastureModel.MassUnit;
-             PastureModel.MassUnit = "kg/ha";
+            PastureModel.MassUnit = "kg/ha";
             double result = PastureModel.GetHerbageMass(comp, part, GrazType.TOTAL);
             PastureModel.MassUnit = sUnit;
             return result;
