@@ -62,17 +62,7 @@ namespace Models.GrazPlan.Biomass
             return PastureModel.GetHerbageConc(comp, part, GrazType.TOTAL, elem);
         }
         
-        // /// <summary>
-        // /// Get average nutrient content of a plant (g/g) (CONCENTRATION NOT AMT)
-        // /// </summary>
-        // /// <param name="comp">Herbage</param>
-        // /// <param name="part">Plant part</param>
-        // /// <param name="elem">Nutrient element</param>
-        // /// <returns></returns>
-        // private double GetPlantNutr(int comp, int part, TPlantElement elem)
-        // {
-        //     return PastureModel.GetHerbageConc(comp, part, GrazType.TOTAL, elem);
-        // }
+       
 
         /// <summary>Clear ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -258,11 +248,6 @@ namespace Models.GrazPlan.Biomass
                 return wt; 
             }
         }
-
-
-
-
-
 
 
     }

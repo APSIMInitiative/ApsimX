@@ -25,7 +25,7 @@ using Models.PMF.Organs;
 namespace Models.GrazPlan.Organs
 {
 
-    /// <summary>This is a Organ class with Leaf and Stem. It can be extended to other organs. Currently calculates DM,N and NConc.</summary>
+    /// <summary>This is a Organ class with Leaf, Stem and Root. It can be extended to other organs. Currently calculates DM,N and NConc.</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -73,11 +73,12 @@ namespace Models.GrazPlan.Organs
             return PastureModel.GetHerbageConc(comp, part, GrazType.TOTAL, elem);
         }
 
-        private double GetDMRoot(int comp, int part, int layer)
+        private double GetDMRoot()
         {
             string sUnit = PastureModel.MassUnit;
             PastureModel.MassUnit = "kg/ha";
-            double result = PastureModel.GetRootMass(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL)/10.0;
+            double result = PastureModel.GetRootMass(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL);
+            //double result = PastureModel.GetRootMass(GrazType.ptROOT, GrazType.TOTAL, GrazType.TOTAL);
             PastureModel.MassUnit = sUnit;
             return result;
              
@@ -104,7 +105,7 @@ namespace Models.GrazPlan.Organs
 
                     if (Name == "Root" && IsAboveGround is false)
                     {
-                        return GetDMRoot(GrazType.sgGREEN,GrazType.TOTAL,GrazType.TOTAL)/10.0;
+                        return GetDMRoot()/10.0;
                     }
                     
                 }
@@ -151,7 +152,7 @@ namespace Models.GrazPlan.Organs
                         return GetDM(GrazType.TOTAL, GrazType.ptSTEM)/10.0 * GetPlantNutr(GrazType.TOTAL, GrazType.ptSTEM, TPlantElement.N);
                     if (Name == "Root" && IsAboveGround is false)
                     {
-                        return  GetDMRoot(GrazType.sgGREEN,GrazType.TOTAL,GrazType.TOTAL)/10.0 * PastureModel.GetRootConc(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.N);
+                        return  GetDMRoot()/10.0 * PastureModel.GetRootConc(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.N);
                     }
                 }
                 

@@ -184,6 +184,7 @@ namespace Models.GrazPlan
         /// <summary>NH4 solute in the soil.</summary>
         private ISolute nh4 = null;
 
+        #region  Link Biomass and Organ classes
 
         /// <summary>
         /// AboveGround
