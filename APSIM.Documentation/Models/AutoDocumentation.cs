@@ -87,7 +87,7 @@ namespace APSIM.Documentation.Models
                 {typeof(Manager), typeof(DocManager)},
                 {typeof(Experiment), typeof(DocExperiment)},
                 {typeof(FrostSenescenceFunction), typeof(DocFrostSenescenceFunction)},
-                {typeof(RUEModel), typeof(DocGenericWithChildren)},
+                {typeof(RUEModel), typeof(DocGeneric)},
                 {typeof(LeafCohortParameters), typeof(DocLeafCohortParameters)},
                 {typeof(RUECO2Function), typeof(DocGenericWithChildren)},
                 {typeof(RootShapeSemiCircle), typeof(DocGenericWithChildren)},
