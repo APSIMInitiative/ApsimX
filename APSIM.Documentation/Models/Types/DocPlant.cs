@@ -44,7 +44,7 @@ namespace APSIM.Documentation.Models.Types
             tableData.Columns.Add("Component Type", typeof(string));
             foreach (IModel child in this.model.Children)
             {
-                if (child as IText == null && child.GetType() != typeof(Cultivar) && child.GetType() != typeof(Folder) && child.GetType() != typeof(CompositeBiomass))
+                if (child as IText == null && child.GetType() != typeof(Cultivar) && child.GetType() != typeof(Folder) && child.GetType() != typeof(CompositeBiomass) && child.GetType() != typeof(ModelOverrides))
                 {
                     DataRow row = tableData.NewRow();
                     row[0] = child.Name;
@@ -114,7 +114,7 @@ namespace APSIM.Documentation.Models.Types
             //Write children
             // -------------------------------------------------------------------------------
             foreach (IModel child in this.model.Children)
-                if (child as IText == null && child as CompositeBiomass == null && child as Folder == null && child as Cultivar == null && child as Phenology == null && child as OrganArbitrator == null && child as SimpleLeaf == null && child as Constant == null)
+                if (child as IText == null && child as CompositeBiomass == null && child as Folder == null && child as Cultivar == null && child as Phenology == null && child as OrganArbitrator == null && child as SimpleLeaf == null && child as Constant == null && child as ModelOverrides == null)
                 {
                     Section S = GetSummaryAndRemarksSection(child);
                     newTags.Add(S);
@@ -138,15 +138,18 @@ namespace APSIM.Documentation.Models.Types
                     if (altNames.Length > 0)
                         altNames = $"*{altNames}*";
 
-                    List<string> commandsList = new List<string>(cultivarChild.Command);
-                    commandsList.Sort(StringComparer.OrdinalIgnoreCase);
                     string commands = "";
                     if (cultivarChild.Command != null)
-                        foreach (string cmd in commandsList)
-                            commands += $"<p>{cmd}</p>";
+                    {
+                        List<string> commandsList = new List<string>(cultivarChild.Command);
+                        commandsList.Sort(StringComparer.OrdinalIgnoreCase);
+                        if (cultivarChild.Command != null)
+                            foreach (string cmd in commandsList)
+                                commands += $"<p>{cmd}</p>";
+                    }
                     cultivarNameTable.Rows.Add(new string[] { $"<p>{cultivarChild.Name}</p><p>{altNames}</p>", commands });
                 }
-                newTags.Add(new Section("Appendix 1 - Cultivar specifications", new Table(cultivarNameTable)));
+                newTags.Add(new Section("Appendix 1: Cultivar specifications", new Table(cultivarNameTable)));
             }
 
             return newTags;
