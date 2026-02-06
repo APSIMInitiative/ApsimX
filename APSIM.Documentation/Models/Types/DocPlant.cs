@@ -34,7 +34,7 @@ namespace APSIM.Documentation.Models.Types
             Section mainSection = GetSummaryAndRemarksSection(model);
 
 
-            mainSection.Add(new Paragraph($"The model is constructed from the following list of software components. Details of the implementation and model parameterisation are provided in the following sections."));
+            mainSection.Add(new Paragraph($"The model is constructed from the following list of software components. Links provided will direct the user to the code for each model.  Details of the implementation and model parameterisation are provided in the following sections."));
 
             // Write Plant Model Components Table
             // ------------------------------------------------------------------------------
