@@ -3386,6 +3386,7 @@ namespace Models.GrazPlan
         public void Sow(double rate)
         {
             PastureModel.Sow(rate * KGHA_GM2);      // Convert kg/ha to g/m^2
+            
         }
 
         /// <summary>
