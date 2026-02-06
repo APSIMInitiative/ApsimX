@@ -183,7 +183,7 @@ namespace APSIM.Documentation
             {
                 if (tag is Section section)
                 {
-                    string id = section.Title.ToLower().Replace(" ", "-");
+                    string id = section.Title.ToLower().Replace(":", "").Replace(" ", "-");
                     html += $"<a href=\"#{id}\"><div class=\"docs-nav\">{section.Title}</div></a>\n";
                 }
             }
