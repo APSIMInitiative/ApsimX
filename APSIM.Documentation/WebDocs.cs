@@ -18,6 +18,7 @@ using APSIM.Core;
 using APSIM.Shared.Documentation.Extensions;
 using OxyPlot;
 using APSIM.Shared.Graphing;
+using DocumentFormat.OpenXml.Bibliography;
 
 namespace APSIM.Documentation
 {
@@ -453,7 +454,14 @@ namespace APSIM.Documentation
                 IModel referencedModel = model.Node.Get(reference, LocatorFlags.ModelsOnly, model.Node.Model) as IModel;
                 if (referencedModel != null)
                 {
-                    string markdown = ConvertToMarkdown(AutoDocumentation.Document(referencedModel), "", referencedModel).Trim();
+                    List<ITag> tags = AutoDocumentation.Document(referencedModel);
+                    if (tags.Count == 1)
+                    {
+                        ITag firstTag = tags.FirstOrDefault();
+                        if (firstTag != null && firstTag is Section)
+                            tags = (firstTag as Section).Children;
+                    }
+                    string markdown = ConvertToMarkdown(tags, "", referencedModel).Trim();
                     output = output.Remove(match.Index + offset, value.Length);
                     output = output.Insert(match.Index + offset, markdown);
                     offset += markdown.Length - value.Length;
