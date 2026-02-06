@@ -227,11 +227,11 @@ namespace Models.CLEM.Activities
             // otherwise use the suckling curve where there is a larger drop off in milk production
             if (ind.SucklingOffspringList.Count == 0)
             {
-                milkCurve = ind.Parameters.Lactation.MilkCurveNonSuckling;
+                milkCurve = ind.Parameters.Lactation.MilkCurveNonSuckling_CL4;
             }
             else // no milking
             {
-                milkCurve = ind.Parameters.Lactation.MilkCurveSuckling;
+                milkCurve = ind.Parameters.Lactation.MilkCurveSuckling_CL3;
             }
 
             ind.Milk.PotentialRate = ind.Parameters.Lactation.MilkPeakYield * ind.Weight.Live / ind.Weight.NormalisedForAge * (Math.Pow(((milkTime + ind.Parameters.Lactation.MilkOffsetDay) / ind.Parameters.Lactation.MilkPeakDay), milkCurve)) * Math.Exp(milkCurve * (1 - (milkTime + ind.Parameters.Lactation.MilkOffsetDay) / ind.Parameters.Lactation.MilkPeakDay));

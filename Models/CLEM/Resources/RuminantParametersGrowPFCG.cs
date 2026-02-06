@@ -188,10 +188,10 @@ namespace Models.CLEM.Resources
         public double ProteinContentOfFatFreeTissueGainWetBasis { get; set; } = 0.21;
 
         /// <summary>
-        /// Protein content of fat-free tissue gain on wet basis
+        /// Protein content of fat-free tissue gain on wet basis at birth
         /// </summary>
         [Category("Breed:CrossBreed", "Growth:Growth")]
-        [Description("Protein content fat-free issue gain on wet basis")]
+        [Description("Protein content fat-free issue gain on wet basis at birth")]
         [Required, GreaterThanValue(0)]
         public double ProteinContentOfFatFreeTissueGainWetBasisAtBirth { get; set; } = 0.1373; // sheep 0.1484
 

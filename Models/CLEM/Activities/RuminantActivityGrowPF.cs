@@ -828,11 +828,11 @@ namespace Models.CLEM.Activities
             if (ind.NumberOfSucklings != 0)
             {
                 milkProductionMax = ind.Parameters.GrowPF_CKCL.PeakYieldScalar_CL0[ind.NumberOfSucklings - 1] * Math.Pow(ind.Weight.StandardReferenceWeight, 0.75) * ind.Weight.RelativeSize * ind.RelativeConditionAtParturition * nutritionAfterPeakLactationFactor *
-                Math.Pow(Mm, ind.Parameters.GrowPF_CKCL.MilkCurveSuckling_CL3) * Math.Exp(ind.Parameters.GrowPF_CKCL.MilkCurveSuckling_CL3 * (1 - Mm));
+                Math.Pow(Mm, ind.Parameters.Lactation.MilkCurveSuckling_CL3) * Math.Exp(ind.Parameters.Lactation.MilkCurveSuckling_CL3 * (1 - Mm));
             }
             else
             {
-                milkProductionMax = 0.94 * ind.Milk.EnergyContent * ind.Parameters.GrowPF_CKCL.ExpectedPeakYield * ind.RelativeConditionAtParturition * nutritionAfterPeakLactationFactor * Math.Pow(Mm, ind.Parameters.GrowPF_CKCL.MilkCurveNonSuckling_CL4) * Math.Exp(ind.Parameters.GrowPF_CKCL.MilkCurveNonSuckling_CL4 * (1 - Mm));
+                milkProductionMax = 0.94 * ind.Milk.EnergyContent * ind.Parameters.GrowPF_CKCL.ExpectedPeakYield * ind.RelativeConditionAtParturition * nutritionAfterPeakLactationFactor * Math.Pow(Mm, ind.Parameters.Lactation.MilkCurveNonSuckling_CL4) * Math.Exp(ind.Parameters.Lactation.MilkCurveNonSuckling_CL4 * (1 - Mm));
             }
 
             double ratioMilkProductionME = 1.0;

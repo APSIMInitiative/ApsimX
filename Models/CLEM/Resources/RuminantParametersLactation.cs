@@ -41,7 +41,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Lactation")]
         [Description("Milk curve shape suckling (CL3)")]
         [Required, GreaterThanValue(0)]
-        public double MilkCurveSuckling { get; set; } = 0.6;
+        public double MilkCurveSuckling_CL3 { get; set; } = 0.6;
         
         /// <summary>
         /// Milk curve shape non suckling
@@ -49,7 +49,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Lactation")]
         [Description("Milk curve shape non suckling (CL4)")]
         [Required, GreaterThanValue(0)]
-        public double MilkCurveNonSuckling { get; set; } = 0.11;
+        public double MilkCurveNonSuckling_CL4 { get; set; } = 0.11;
         
         /// <summary>
         /// Milk offset day
@@ -67,7 +67,6 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0)]
         public double MilkPeakDay { get; set; } = 45;
 
-
         /// <summary>
         /// Create copy of the class
         /// </summary>
@@ -78,8 +77,8 @@ namespace Models.CLEM.Resources
             {
                 MilkingDays = MilkingDays,
                 MilkPeakYield = MilkPeakYield,
-                MilkCurveSuckling = MilkCurveSuckling,
-                MilkCurveNonSuckling = MilkCurveNonSuckling,
+                MilkCurveSuckling_CL3 = MilkCurveSuckling_CL3,
+                MilkCurveNonSuckling_CL4 = MilkCurveNonSuckling_CL4,
                 MilkOffsetDay = MilkOffsetDay,
                 MilkPeakDay = MilkPeakDay
             };

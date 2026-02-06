@@ -65,38 +65,6 @@ namespace Models.CLEM.Resources
         public double[] PeakYieldScalar_CL0 { get; set; } = new double[] { 0.375, 0.375 };  // sheep 0.486, 0.778, 0.934
 
         /// <summary>
-        /// Milk offset day (SCA CL1)
-        /// </summary>
-        [Category("Breed", "Lactation")]
-        [Description("Milk offset day [CL1]")]
-        [Required, GreaterThanValue(0)]
-        public double MilkOffsetDay_CL1 { get; set; } = 4; // sheep 2.0
-
-        /// <summary>
-        /// Milk peak day (SCA CL2)
-        /// </summary>
-        [Category("Breed", "Lactation")]
-        [Description("Milk peak day [CL2]")]
-        [Required, GreaterThanValue(0)]
-        public double MilkPeakDay_CL2 { get; set; } = 30; // sheep 22.0
-
-        /// <summary>
-        /// Milk curve shape suckling (SCA CL3)
-        /// </summary>
-        [Category("Breed", "Lactation")]
-        [Description("Milk curve shape suckling [CL3]")]
-        [Required, GreaterThanValue(0)]
-        public double MilkCurveSuckling_CL3 { get; set; } = 0.6; // sheep 1.0
-
-        /// <summary>
-        /// Milk curve shape non suckling (SCA CL4)
-        /// </summary>
-        [Category("Breed", "Lactation")]
-        [Description("Milk curve shape non suckling [CL4]")]
-        [Required, GreaterThanValue(0)]
-        public double MilkCurveNonSuckling_CL4 { get; set; } = 0.6;
-
-        /// <summary>
         /// Metabolisability of milk (SCA CL5)
         /// </summary>
         [Category("Core", "Lactation")]
@@ -241,10 +209,6 @@ namespace Models.CLEM.Resources
                 ELactationEfficiencyIntercept_CK5 = ELactationEfficiencyIntercept_CK5,
                 ELactationEfficiencyCoefficient_CK6 = ELactationEfficiencyCoefficient_CK6,
                 PeakYieldScalar_CL0 = PeakYieldScalar_CL0.Clone() as double[],
-                MilkOffsetDay_CL1 = MilkOffsetDay_CL1,
-                MilkPeakDay_CL2 = MilkPeakDay_CL2,
-                MilkCurveSuckling_CL3 = MilkCurveSuckling_CL3,
-                MilkCurveNonSuckling_CL4 = MilkCurveNonSuckling_CL4,
                 MetabolisabilityOfMilk_CL5 = MetabolisabilityOfMilk_CL5,
                 EnergyContentMilk_CL6 = EnergyContentMilk_CL6,
                 LactationEnergyDeficit_CL7 = LactationEnergyDeficit_CL7,
