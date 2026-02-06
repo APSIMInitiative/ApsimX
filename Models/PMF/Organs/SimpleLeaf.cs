@@ -19,10 +19,10 @@ namespace Models.PMF.Organs
     ///  detachment of leaves.  SimpleLeaf does not distinguish leaf cohorts by age or position in the canopy.
     ///
     /// Radiation interception and transpiration demand are computed by the MicroClimate model.  This model takes into account
-    ///  competition between different plants then more than one is present in the simulation.  The values of canopy Cover, LAI, and plant
-    ///  Height (as defined below) are passed daily by SimpleLeaf to the MicroClimate model.  MicroClimate uses an implementation of the
+    ///  competition between different plants when more than one plant is present in the simulation.  The values of canopy cover, LAI, and plant
+    ///  height (as defined below) are passed daily by SimpleLeaf to the MicroClimate model.  MicroClimate uses an implementation of the
     ///  Beer-Lambert equation to compute light interception and the Penman-Monteith equation to calculate potential evapotranspiration.
-    ///  These values are then given back to SimpleLeaf which uses them to calculate photosynthesis and soil water demand.
+    ///  These values are then provided back to SimpleLeaf which uses them to calculate photosynthesis and soil water demand.
     ///  
     /// **Light Interception**
     /// 
