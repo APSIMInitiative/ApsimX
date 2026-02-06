@@ -97,3 +97,8 @@ a .docs-nav {
 .docs-nav:hover {
 	background-color: #f4f4f4;
 }
+
+table p {
+    margin: 0px;
+    padding: 0px;
+}

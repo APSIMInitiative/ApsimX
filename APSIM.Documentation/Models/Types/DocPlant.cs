@@ -10,6 +10,7 @@ using Models.PMF;
 using Models.PMF.Organs;
 using Models.PMF.Phen;
 using Constant = Models.Functions.Constant;
+using System;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -130,16 +131,20 @@ namespace APSIM.Documentation.Models.Types
                 cultivarNameTable.Columns.Add("Overrides");
                 foreach (Cultivar cultivarChild in cultivars)
                 {
-                    string altNames = cultivarChild.GetNames().Any() ? string.Join(' ', cultivarChild.GetNames()) : string.Empty;
+                    string altNames = cultivarChild.GetNames().Any() ? string.Join(',', cultivarChild.GetNames()) : string.Empty;
                     altNames = altNames.Replace(cultivarChild.Name, "");
-                    if (altNames != "") altNames = "(" + altNames + ")";
-                    altNames = altNames.Replace("( ", "(");
+                    if (altNames.StartsWith(','))
+                        altNames = altNames.Remove(0);
+                    if (altNames.Length > 0)
+                        altNames = $"*{altNames}*";
 
+                    List<string> commandsList = new List<string>(cultivarChild.Command);
+                    commandsList.Sort(StringComparer.OrdinalIgnoreCase);
                     string commands = "";
                     if (cultivarChild.Command != null)
-                        foreach (string cmd in cultivarChild.Command)
-                            commands += cmd + " \n\n";
-                    cultivarNameTable.Rows.Add(new string[] { cultivarChild.Name + " \n\n" + altNames, commands });
+                        foreach (string cmd in commandsList)
+                            commands += $"<p>{cmd}</p>";
+                    cultivarNameTable.Rows.Add(new string[] { $"<p>{cultivarChild.Name}</p><p>{altNames}</p>", commands });
                 }
                 newTags.Add(new Section("Appendix 1 - Cultivar specifications", new Table(cultivarNameTable)));
             }
