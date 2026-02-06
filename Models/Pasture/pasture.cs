@@ -206,7 +206,7 @@ namespace Models.GrazPlan
         [Link(Type = LinkType.Child)]
         public List<Biomass.CompositeBiomass> CompositeBiomasses {get; set;}
 
-        
+        #endregion
       
 
         #endregion
