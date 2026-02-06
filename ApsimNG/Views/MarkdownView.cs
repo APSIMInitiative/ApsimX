@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using APSIM.Shared.Utilities;
@@ -613,6 +614,27 @@ namespace UserInterface.Views
                 using (MemoryStream stream = new MemoryStream(bytes))
                 {
                     image = new Gtk.Image(new Pixbuf(stream));
+                }
+            }
+            else if (Uri.TryCreate(url, UriKind.Absolute, out Uri uri) && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps))
+            {
+                try{
+                    using var client = new HttpClient();
+                    var response = client.GetAsync(uri).Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        using (var stream = response.Content.ReadAsStreamAsync().Result)
+                        {
+                            var content = response.Content.ReadAsByteArrayAsync().Result;
+                            string tempImgFileName = Path.Combine(Path.GetTempPath(), Path.GetFileName(uri.AbsolutePath));
+                            File.WriteAllBytes(tempImgFileName, content);
+                            image = new Image(new Pixbuf(tempImgFileName));
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ShowError(ex);
                 }
             }
             else if (File.Exists(absolutePath))
