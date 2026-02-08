@@ -185,6 +185,15 @@ public static class DocumentationUtilities
     }
 
     /// <summary>
+    /// Creates a markdown link for a model to connect it to its github page
+    /// </summary>
+    public static string GetGithubMarkdownLink(IModel model)
+    {
+        string modeltype = GetFilepathOfNamespace(model.GetType());
+        return $"[{model.GetType()}](https://github.com/APSIMInitiative/ApsimX/blob/master/" + modeltype.Replace(".", "/") + ".cs)";
+    }
+
+    /// <summary>
     /// Returns a DataTable with each Phase listed for documentation
     /// </summary>
     public static DataTable GetPhaseTable(Phenology phenology)
@@ -203,7 +212,7 @@ public static class DocumentationUtilities
             DataRow row = phaseTable.NewRow();
             row[0] = n;
             row[1] = child.Name;
-            row[2] = $"[{child.GetType()}](https://github.com/APSIMInitiative/ApsimX/blob/master/" + phasetype.Replace(".", "/") + ".cs)";
+            row[2] = GetGithubMarkdownLink(child);
             row[3] = (child as IPhase).Start;
             row[4] = (child as IPhase).End;
             phaseTable.Rows.Add(row);

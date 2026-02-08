@@ -52,10 +52,7 @@ namespace APSIM.Documentation.Models.Types
         public static Section GetSummaryAndRemarksSection(IModel model) {
 
             List<ITag> tags = new List<ITag>();
-
-            string modeltype = DocumentationUtilities.GetFilepathOfNamespace(model.GetType());
-            string linetext = "source: " + model.GetType().ToString();
-            tags.Add(new Paragraph($"Source: [{model.GetType().ToString()}](https://github.com/APSIMInitiative/ApsimX/blob/master/" + modeltype.Replace(".", "/") + ".cs)"));
+            tags.Add(new Paragraph($"Source: {DocumentationUtilities.GetGithubMarkdownLink(model)}"));
             
             tags.Add(new Paragraph(CodeDocumentation.GetSummary(model.GetType())));
             tags.Add(new Paragraph(CodeDocumentation.GetRemarks(model.GetType())));

@@ -49,7 +49,7 @@ namespace APSIM.Documentation.Models.Types
                     DataRow row = tableData.NewRow();
                     row[0] = child.Name;
                     string childtype = DocumentationUtilities.GetFilepathOfNamespace(child.GetType());
-                    row[1] = $"[{child.GetType()}](https://github.com/APSIMInitiative/ApsimX/blob/master/"+childtype.Replace(".","/")+".cs)";
+                    row[1] = DocumentationUtilities.GetGithubMarkdownLink(child);
                     tableData.Rows.Add(row);
                 }
             }

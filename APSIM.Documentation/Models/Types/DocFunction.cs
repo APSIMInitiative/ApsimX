@@ -28,20 +28,8 @@ namespace APSIM.Documentation.Models.Types
         /// </summary>
         public override List<ITag> Document(int none = 0)
         {
-            Section section = GetSummaryAndRemarksSection(model);
             string text = GetFunctionText(this.model as IFunction);
             Paragraph paragraph = new Paragraph(text);
-            
-            //if (text.Length > 0)
-            //    section.Add(new Paragraph(text));
-
-            //List<ITag> subTags = new();
-            //foreach (IModel child in model.Node.FindChildren<IModel>())
-            //    if (!(child is Memo))
-            //        subTags.AddRange(AutoDocumentation.DocumentModel(child));
-
-            //paragraph.Add(subTags);
-
             return new List<ITag>() {paragraph};
         }
 
