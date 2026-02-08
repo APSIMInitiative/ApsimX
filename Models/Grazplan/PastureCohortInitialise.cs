@@ -2,7 +2,7 @@
 using Models.GrazPlan;
 using System;
 
-namespace Models.Grazplan
+namespace Models.GrazPlan
 {
     /// <summary>
     /// Green initialisation helper for GUI

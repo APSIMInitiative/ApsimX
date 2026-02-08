@@ -2334,7 +2334,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "\n[Hammer_etal_2009] used a constant extraction front velocity of 2.5cm per day in their analysis of historical maize yield trends in the US corn belt.\n",
+                      "Text": "\n[#Hammer_etal_2009] used a constant extraction front velocity of 2.5cm per day in their analysis of historical maize yield trends in the US corn belt.\n",
                       "Name": "memo",
                       "ResourceName": null,
                       "Children": [],

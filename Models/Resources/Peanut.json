@@ -1097,7 +1097,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "This approach is based upon the value used in [robertson_simulation_2002] increased to account for partitioning to roots.",
+                      "Text": "This approach is based upon the value used in [#robertson_simulation_2002] increased to account for partitioning to roots.",
                       "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1470,7 +1470,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "This approach is based upon that described by [Porter2000PhD] to account for the impacts of population and row/plant spacing.  Extinction coefficient is said to decrease with decreasing inter-plant spacing within the plant row.",
+                  "Text": "This approach is based upon that described by [#Porter2000PhD] to account for the impacts of population and row/plant spacing.  Extinction coefficient is said to decrease with decreasing inter-plant spacing within the plant row.",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -2562,7 +2562,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Memo, Models",
-                                      "Text": "This approach is based upon that used in [robertson_simulation_2002].",
+                                      "Text": "This approach is based upon that used in [#robertson_simulation_2002].",
                                       "Name": "Memo",
                                       "Children": [],
                                       "IncludeInDocumentation": true,
@@ -2819,7 +2819,7 @@
                       "Children": [
                         {
                           "$type": "Models.Memo, Models",
-                          "Text": "This value is based upon that used in [robertson_simulation_2002].",
+                          "Text": "This value is based upon that used in [#robertson_simulation_2002].",
                           "Name": "Memo",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2854,7 +2854,7 @@
                           "Children": [
                             {
                               "$type": "Models.Memo, Models",
-                              "Text": "This value is based upon that used in [robertson_simulation_2002].",
+                              "Text": "This value is based upon that used in [#robertson_simulation_2002].",
                               "Name": "Memo",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -3599,7 +3599,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "This approach is based upon that used in [robertson_simulation_2002].",
+                  "Text": "This approach is based upon that used in [#robertson_simulation_2002].",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -3808,7 +3808,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "This approach is based upon that used in [robertson_simulation_2002].",
+                  "Text": "This approach is based upon that used in [#robertson_simulation_2002].",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -6036,7 +6036,7 @@
                           "Children": [
                             {
                               "$type": "Models.Memo, Models",
-                              "Text": "This approach is based upon that used in [robertson_simulation_2002].",
+                              "Text": "This approach is based upon that used in [#robertson_simulation_2002].",
                               "Name": "Memo",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -6608,7 +6608,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "This approach is based upon that used in [robertson_simulation_2002].",
+                  "Text": "This approach is based upon that used in [#robertson_simulation_2002].",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": true,

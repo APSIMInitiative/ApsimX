@@ -1678,7 +1678,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "Aboveground RUE for Gliricidia was measured as 1.06 g/MJ by [harrington1995radiation]. Adding c. 0.3 for belowground allocation provides a value of 1.4 g/MJ.\r\n  ",
+                      "Text": "Aboveground RUE for Gliricidia was measured as 1.06 g/MJ by [#harrington1995radiation]. Adding c. 0.3 for belowground allocation provides a value of 1.4 g/MJ.\r\n  ",
                       "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1977,7 +1977,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "This function specifies that lead residence time increases with age. Values are mainly based on [cremer1992relations] and [beets1987specific].\r\n\r\n\r\n\r\n",
+                  "Text": "This function specifies that lead residence time increases with age. Values are mainly based on [#cremer1992relations] and [#beets1987specific].\r\n\r\n\r\n\r\n",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -2161,7 +2161,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "This value is wtihin the range of 0.50-0.53 reported by [beets2018carbon] for _P. radiata_ foliage.\r\n\r\n",
+                  "Text": "This value is wtihin the range of 0.50-0.53 reported by [#beets2018carbon] for _P. radiata_ foliage.\r\n\r\n",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -2198,7 +2198,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "DM demands are set in a similar ways for each organ, but with different values: structural (default specified), metabolic (value = 0), and storage functions (1 - structural). Values measured range from about 5 to 50% for Pinus leaves ([quentin2015non]), which also covers the range of 1-20% for other species and plant parts ([hoch2003non]). Metabolic demand is set to zero, because RUE is a value for net growth for which a respiration calculation is not needed. These values may become an important focus if one attempts to use the model for coppicing, as is already the case in several other APSIM models, e.g. lucerne and gliricidia.  \r\n\r\n",
+                  "Text": "DM demands are set in a similar ways for each organ, but with different values: structural (default specified), metabolic (value = 0), and storage functions (1 - structural). Values measured range from about 5 to 50% for Pinus leaves ([#quentin2015non]), which also covers the range of 1-20% for other species and plant parts ([#hoch2003non]). Metabolic demand is set to zero, because RUE is a value for net growth for which a respiration calculation is not needed. These values may become an important focus if one attempts to use the model for coppicing, as is already the case in several other APSIM models, e.g. lucerne and gliricidia.  \r\n\r\n",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -3095,7 +3095,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "Branch, stem and coarse root minimum N concentrations are based on [raymond2000effect]. ",
+                  "Text": "Branch, stem and coarse root minimum N concentrations are based on [#raymond2000effect]. ",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -4669,7 +4669,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "[huth_managing_2008] measured a constant root front velocity of 24.3 mm/d down to 1.4 m depth under favourable growing conditions, which was similar to wheat. [goncalves2013integrating] report eucalypt root front velocities averaging 19 mm/day for the first 1.5 years to 12 mm/day by 3.5 years in conditions of little impedence to root growth. The value of 10 mm/d used here is lower to reflect more common limiting conditions.\r\n\r\n",
+                  "Text": "[#huth_managing_2008] measured a constant root front velocity of 24.3 mm/d down to 1.4 m depth under favourable growing conditions, which was similar to wheat. [#goncalves2013integrating] report eucalypt root front velocities averaging 19 mm/day for the first 1.5 years to 12 mm/day by 3.5 years in conditions of little impedence to root growth. The value of 10 mm/d used here is lower to reflect more common limiting conditions.\r\n\r\n",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -4813,7 +4813,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "Specific root length was based on [jourdan2008fine]. ",
+                  "Text": "Specific root length was based on [#jourdan2008fine]. ",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
