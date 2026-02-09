@@ -619,17 +619,14 @@ namespace UserInterface.Views
             else if (Uri.TryCreate(url, UriKind.Absolute, out Uri uri) && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps))
             {
                 try{
-                    using var client = new HttpClient();
-                    var response = client.GetAsync(uri).Result;
-                    if (response.IsSuccessStatusCode)
+                    using (var stream = WebUtilities.AsyncGetStreamTask(uri.AbsoluteUri, "image/*"))
                     {
-                        using (var stream = response.Content.ReadAsStreamAsync().Result)
-                        {
-                            var content = response.Content.ReadAsByteArrayAsync().Result;
-                            string tempImgFileName = Path.Combine(Path.GetTempPath(), Path.GetFileName(uri.AbsolutePath));
-                            File.WriteAllBytes(tempImgFileName, content);
-                            image = new Image(new Pixbuf(tempImgFileName));
-                        }
+                        using MemoryStream ms = new MemoryStream();
+                        stream.ContinueWith(t => t.Result.CopyTo(ms)).Wait();
+                        byte[] content = ms.ToArray();
+                        string tempImgFileName = Path.Combine(Path.GetTempPath(), Path.GetFileName(uri.AbsolutePath));
+                        File.WriteAllBytes(tempImgFileName, content);
+                        image = new Image(new Pixbuf(tempImgFileName));
                     }
                 }
                 catch (Exception ex)
