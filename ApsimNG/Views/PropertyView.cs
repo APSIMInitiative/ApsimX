@@ -379,7 +379,7 @@ namespace UserInterface.Views
                     Button filesChooserButton = new("..."){ Name = property.ID.ToString() };
                     filesChooserButton.Clicked += (o, _) => ChooseFile(o as Widget, true, false);
 
-                    Box filenamesContainer = new HBox();
+                    Box filenamesContainer = new Box(Orientation.Horizontal, 0);
                     filenamesContainer.PackStart(filenamesOutline, true, true, 0);
                     filenamesContainer.PackStart(filesChooserButton, false, false, 0);
                     component = filenamesContainer;
