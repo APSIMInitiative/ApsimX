@@ -733,7 +733,8 @@
                             "[AgPRyegrass].Stem.Live.NConc",
                             "([AgPRyegrass].Stem.Live.NConc*6.25) as StemCrudeProtien",
                             "sum([Soil].NO3.kgha)",
-                            "[AgPRyegrass].Root.Depth"
+                            "[AgPRyegrass].Root.Depth",
+                            "[AGPRyegrass].AboveGround.Wt"
                           ],
                           "EventNames": [
                             "[Clock].DoReport"
