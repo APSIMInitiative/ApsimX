@@ -12,7 +12,7 @@
       "Children": [
         {
           "$type": "Models.Documentation, Models",
-          "Text": "The wheat model consists of:\n\n* a phenology model to simulate development through sequential developmental phases  \n* a structure model to simulate plant morphology \n* a collection of organs to simulate the various plant parts  \n* an arbitrator to allocate resources (N, biomass) to the various plant organs  \n\nThis work builds upon earlier APSIM Wheat models such as NWheat ([#Asseng200225], [#KeatingNWheat]), NWheatS ([#Asseng1998163]), Cropmod-Wheat ([#Wang2002GenericCropModel]), and the earlier versions developed in Plant ([APSIM Wheat 7.5](https://\\\"http://www.apsim.info/Documentation/Model,CropandSoil/CropModuleDocumentation/Wheat.aspx)\") and then within the Plant Modelling Framework ([#brown_plant_2014]).",
+          "Text": "The wheat model consists of:\n\n* a phenology model to simulate development through sequential developmental phases  \n* a structure model to simulate plant morphology \n* a collection of organs to simulate the various plant parts  \n* an arbitrator to allocate resources (N, biomass) to the various plant organs  \n\nThis work builds upon earlier APSIM Wheat models such as NWheat ([#Asseng200225], [#KeatingNWheat]), NWheatS ([#Asseng1998163]), Cropmod-Wheat ([#Wang2002GenericCropModel]), and the earlier versions developed in Plant ([APSIM Wheat 7.5](https://www.apsim.info/documentation/model-documentation/crop-module-documentation/wheat/) and then within the Plant Modelling Framework ([#brown_plant_2014]).",
           "Name": "Introduction",
           "ResourceName": null,
           "Children": [],
