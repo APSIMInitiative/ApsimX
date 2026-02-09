@@ -72,7 +72,7 @@ namespace Models.GrazPlan
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public class Pasture : TSoilInstance, IUptake, ICanopy, IScopedModel, IStructureDependency,IPlant
+    public class Pasture : TSoilInstance, IUptake, ICanopy, IScopedModel, IStructureDependency
     {
         /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
@@ -942,96 +942,96 @@ namespace Models.GrazPlan
             }
         }
 
-        /// <summary> START AREA - TESTING BIOMASSES TO MIMIC PMF </summary>
-        /// 
-        /// 
-        /// <summary>
-        /// TESTING ABOVEGROUND WT AND N TO MIMIC PMF
-        /// </summary>
-        public IBiomass AboveGround
-        {
-            get
-            {
-                Biomass mass = new Biomass();
-                mass.StructuralWt = GetDM(GrazType.TOTAL, GrazType.TOTAL)/10;
-                // SHootN is Concentration so converted it to amount N= Concentration * wt
-                mass.StructuralN = GetPlantNutr(GrazType.TOTAL, GrazType.TOTAL, TPlantElement.N) * GetDM(GrazType.TOTAL, GrazType.TOTAL)/10;
-                return mass;
+        // /// <summary> START AREA - TESTING BIOMASSES TO MIMIC PMF </summary>
+        // /// 
+        // /// 
+        // /// <summary>
+        // /// TESTING ABOVEGROUND WT AND N TO MIMIC PMF
+        // /// </summary>
+        // public IBiomass AboveGround
+        // {
+        //     get
+        //     {
+        //         Biomass mass = new Biomass();
+        //         mass.StructuralWt = GetDM(GrazType.TOTAL, GrazType.TOTAL)/10;
+        //         // SHootN is Concentration so converted it to amount N= Concentration * wt
+        //         mass.StructuralN = GetPlantNutr(GrazType.TOTAL, GrazType.TOTAL, TPlantElement.N) * GetDM(GrazType.TOTAL, GrazType.TOTAL)/10;
+        //         return mass;
 
-            }
-        }
+        //     }
+        // }
 
-        /// <summary>
-        /// TESTING BIOMASS FOR LEAF. Used LEAFDM AND STEMN 
-        /// </summary>
-        public IBiomass Leaf
-        {
-            get
-            {
-                Biomass mass =new Biomass();
-                mass.StructuralWt= GetDM(GrazType.TOTAL, GrazType.ptLEAF)/10;
-                mass.StructuralN = GetPlantNutr(GrazType.TOTAL, GrazType.ptLEAF, TPlantElement.N) * GetDM(GrazType.TOTAL, GrazType.ptLEAF)/10.0;
-                return mass;
+        // /// <summary>
+        // /// TESTING BIOMASS FOR LEAF. Used LEAFDM AND STEMN 
+        // /// </summary>
+        // public IBiomass Leaf
+        // {
+        //     get
+        //     {
+        //         Biomass mass =new Biomass();
+        //         mass.StructuralWt= GetDM(GrazType.TOTAL, GrazType.ptLEAF)/10;
+        //         mass.StructuralN = GetPlantNutr(GrazType.TOTAL, GrazType.ptLEAF, TPlantElement.N) * GetDM(GrazType.TOTAL, GrazType.ptLEAF)/10.0;
+        //         return mass;
                 
-            }
-        }
+        //     }
+        // }
         
-        /// <summary>
-        /// TESTING STEMwt Biomass. Used STEMDM and STEMN
-        /// </summary>
-        public IBiomass Stem
-        {
-            get
-            {
-                Biomass mass =new Biomass();
-                mass.StructuralWt = GetDM(GrazType.TOTAL, GrazType.ptSTEM)/10.0;
-                mass.StructuralN = GetPlantNutr(GrazType.TOTAL, GrazType.ptSTEM, TPlantElement.N) * GetDM(GrazType.TOTAL, GrazType.ptSTEM)/10.0;
-                return mass;
-            }
-        }
+        // /// <summary>
+        // /// TESTING STEMwt Biomass. Used STEMDM and STEMN
+        // /// </summary>
+        // public IBiomass Stem
+        // {
+        //     get
+        //     {
+        //         Biomass mass =new Biomass();
+        //         mass.StructuralWt = GetDM(GrazType.TOTAL, GrazType.ptSTEM)/10.0;
+        //         mass.StructuralN = GetPlantNutr(GrazType.TOTAL, GrazType.ptSTEM, TPlantElement.N) * GetDM(GrazType.TOTAL, GrazType.ptSTEM)/10.0;
+        //         return mass;
+        //     }
+        // }
 
-        /// <summary>
-        /// TESTING ROOT Wt. Used RootDM and ROOT N
-        /// </summary>
-        public IBiomass Root
-        {
-            get
-            {
-                Biomass mass =new Biomass();
-                mass.StructuralWt = RootDM/10.0;
-                mass.StructuralN= PastureModel.GetRootConc(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.N) * RootDM/10;
-                return mass;
+        // /// <summary>
+        // /// TESTING ROOT Wt. Used RootDM and ROOT N
+        // /// </summary>
+        // public IBiomass Root
+        // {
+        //     get
+        //     {
+        //         Biomass mass =new Biomass();
+        //         mass.StructuralWt = RootDM/10.0;
+        //         mass.StructuralN= PastureModel.GetRootConc(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.N) * RootDM/10;
+        //         return mass;
 
-            }
-        }
-        /// <summary>
-        /// TESING AboveGround Live wt : GREENDM and GreenN
-        /// </summary>
-        public IBiomass AboveGroundLive
-        {
-            get
-            {
-                Biomass mass = new Biomass();
-                mass.StructuralWt=GreenDM/10.0;
-                mass.StructuralN=GreenN * (GreenDM/10.0);
-                return mass;
-            }
-        }
-         /// <summary>
-         /// Testing above ground dead wt and N
-         /// </summary>
-        public IBiomass AboveGroundDead
-        {
-            get
-            {
-                Biomass mass = new Biomass();
-                mass.StructuralWt=DeadDM/10.0;
-                mass.StructuralN=DeadN * (DeadDM/10.0);
-                return mass;
+        //     }
+        // }
+        // /// <summary>
+        // /// TESING AboveGround Live wt : GREENDM and GreenN
+        // /// </summary>
+        // public IBiomass AboveGroundLive
+        // {
+        //     get
+        //     {
+        //         Biomass mass = new Biomass();
+        //         mass.StructuralWt=GreenDM/10.0;
+        //         mass.StructuralN=GreenN * (GreenDM/10.0);
+        //         return mass;
+        //     }
+        // }
+        //  /// <summary>
+        //  /// Testing above ground dead wt and N
+        //  /// </summary>
+        // public IBiomass AboveGroundDead
+        // {
+        //     get
+        //     {
+        //         Biomass mass = new Biomass();
+        //         mass.StructuralWt=DeadDM/10.0;
+        //         mass.StructuralN=DeadN * (DeadDM/10.0);
+        //         return mass;
 
 
-            }
-        }
+        //     }
+        // }
 
     
 
