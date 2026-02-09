@@ -439,7 +439,7 @@ namespace APSIM.Documentation
         }
 
         /// <summary>
-        /// Add a bibliography to the document.
+        /// Replace content covered by curly braces with apsim content
         /// </summary>
         public static string ReplaceInserts(string input, IModel model)
         {

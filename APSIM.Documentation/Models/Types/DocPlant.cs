@@ -134,9 +134,9 @@ namespace APSIM.Documentation.Models.Types
                     string altNames = cultivarChild.GetNames().Any() ? string.Join(',', cultivarChild.GetNames()) : string.Empty;
                     altNames = altNames.Replace(cultivarChild.Name, "");
                     if (altNames.StartsWith(','))
-                        altNames = altNames.Remove(0);
+                        altNames = altNames.Substring(1);
                     if (altNames.Length > 0)
-                        altNames = $"*{altNames}*";
+                        altNames = $"<p>*{altNames}*</p>";
 
                     string commands = "";
                     if (cultivarChild.Command != null)
@@ -144,10 +144,20 @@ namespace APSIM.Documentation.Models.Types
                         List<string> commandsList = new List<string>(cultivarChild.Command);
                         commandsList.Sort(StringComparer.OrdinalIgnoreCase);
                         if (cultivarChild.Command != null)
+                        {
                             foreach (string cmd in commandsList)
-                                commands += $"<p>{cmd}</p>";
+                            {
+                                string line = cmd.Trim();
+                                if (line.Contains("//"))
+                                    line = line.Split("//")[0];
+                                if (line.Length > 0)
+                                    commands += $"<p>{cmd}</p>";
+                            }
+                        }
+                            
+                                
                     }
-                    cultivarNameTable.Rows.Add(new string[] { $"<p>{cultivarChild.Name}</p><p>{altNames}</p>", commands });
+                    cultivarNameTable.Rows.Add(new string[] { $"<p>{cultivarChild.Name}</p>{altNames}", commands });
                 }
                 newTags.Add(new Section("Appendix 1: Cultivar specifications", new Table(cultivarNameTable)));
             }

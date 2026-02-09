@@ -6,7 +6,10 @@ using Models.Interfaces;
 namespace Models.Functions.SupplyFunctions
 {
     /// <summary>
-    /// Potential daily photosynthesis is calculated as the product of intercepted short wave radiation and its conversion efficiency, the radiation use efficiency (RUE) ([#Monteith1977]).  _NOTE: RUE in this model is expressed as g/MJ for a whole plant basis, including both above and below ground growth._
+    /// Potential daily photosynthesis is calculated as the product of intercepted short wave radiation and its conversion efficiency, the radiation use efficiency (RUE) ([#Monteith1977]).
+    /// 
+    /// _Note: RUE in this model is expressed as g/MJ for a whole plant basis, including both above and below ground growth._
+    /// 
     /// The radiation use efficiency is adjusted from a base value appropriate for historical levels of atmospheric CO2 concentration (ie 350ppm - see previous section).  Daily values of potential photosynthesis are then modified for whichever is the most severe effect of plant nitrogen status, temperature and atmospheric vapour pressure deficit.   These same relative growth factors are provided to the MicroClimate model to moderate the stomatal conductance terms incorporated into the Penman-Monteith formulation.
     /// Finally, the daily growth rate is moderated in response to the relative water supply:demand ratio (F<sub>W</sub>) to capture the effect of daily plant water status.
     /// 

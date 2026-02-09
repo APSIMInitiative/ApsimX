@@ -112,6 +112,7 @@ namespace APSIM.Documentation.Models
                 {typeof(Simulations), typeof(DocSimulations)},
                 {typeof(M.Graph), typeof(DocGraph)},
                 {typeof(Nutrient), typeof(DocNutrient)},
+                {typeof(SimpleLeaf), typeof(DocGenericBlank)}
             };
             return documentMap;
         }
@@ -123,8 +124,6 @@ namespace APSIM.Documentation.Models
             List<ITag> newTags;
             newTags = AutoDocumentation.DocumentModel(model);
             newTags = DocumentationUtilities.CleanEmptySections(newTags);
-            string name = DocumentationUtilities.GetDocumentationName(model);
-            //newTags = DocumentationUtilities.AddHeader(name, newTags);
             return newTags;
         }
 

@@ -26,7 +26,7 @@ namespace Models.PMF.Organs
     ///  
     /// **Light Interception**
     /// 
-    /// The interception of light by live and dead leaf material is calculated seperately within the SimpleLeaf model, with both calculations based upon the Beer-Lambert approach for light extinction ([monsi_factor_2005]).
+    /// The interception of light by live and dead leaf material is calculated seperately within the SimpleLeaf model, with both calculations based upon the Beer-Lambert approach for light extinction ([#monsi_factor_2005]).
     ///  
     /// Calculations are as follows:
     /// 
@@ -41,15 +41,17 @@ namespace Models.PMF.Organs
     /// Name | Description | Units
     /// -|-|-
     /// ExtinctionCoefficient | Live Canopy extinction coeffient for short wave radiation | unitless
-    /// LAI | Leaf Area Index for live leaf | (m2/m2)
+    /// LAI | Leaf Area Index for live leaf | (m^2^/m^2^)
     /// Kdead | Dead canopy extinction coefficient for short wave radiaton | unitless
-    /// LAIDead | Leaf Area Index for dead leaf | (m2/m2)
+    /// LAIDead | Leaf Area Index for dead leaf | (m^2^/m^2^)
     /// 
     /// The formulations used to calculate the daily ExtinctionCoefficient are described later within this document.
     /// 
     /// **CO2 Impact on Photosynthesis and Stomatal Conductance**
     /// 
-    /// A potential stomatal conductance is provided to the Microclimate model for use in calculating daily potential water use.  This conductance accounts for the effects of temperature, vapor deficit and plant nutrition.  Potential water use is then calculated by the microclimate model, and actual water use subsequently by the soil arbitrator model using data also provided by the root model regarding potential water uptake.
+    /// A potential stomatal conductance is provided to the Microclimate model for use in calculating daily potential water use. 
+    /// This conductance accounts for the effects of temperature, vapor deficit and plant nutrition. 
+    /// Potential water use is then calculated by the microclimate model, and actual water use subsequently by the soil arbitrator model using data also provided by the root model regarding potential water uptake.
     /// The impact of atmospheric CO2 concentration on stomatal conductance is dependant upon temperature and the related impact of CO2 concentration on photosynthesis.
     /// 
     /// ```
@@ -69,9 +71,9 @@ namespace Models.PMF.Organs
     /// Gsmax350 | Potential stomatal conductance at atmospherical CO2 concentration of 350ppm | (m/s)
     /// FRGR | A factor that accounts for the relative growth rate of the plant | (0-1)
     /// stomatalConductanceCO2Modifier | A factor that accounts for changes of Gsmax with CO2 concentration | (0-1)
-    /// PhotosynthesisCO2Modifier | A factor that accounts for changes in photosynthesis with CO2 concentration ([Reyenga1999]) | (0-1)
+    /// PhotosynthesisCO2Modifier | A factor that accounts for changes in photosynthesis with CO2 concentration ([#Reyenga1999]) | (0-1)
     /// CP | The CO2 compensation point | (ppm)
-    /// T | The daily average temperature | <sup>o</sup>C
+    /// T | The daily average temperature | ^o^C
     /// 
     /// **Photosynthesis**
     /// 
