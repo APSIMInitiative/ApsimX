@@ -104,12 +104,7 @@ namespace APSIM.Documentation.Models.Types
             // Document SimpleLeaf Model
             SimpleLeaf simpleLeaf = (SimpleLeaf)this.model.Children.Find(m => m.GetType() == typeof(SimpleLeaf));
             if (simpleLeaf != null)
-            {
-                Section S = GetSummaryAndRemarksSection(simpleLeaf);
-
-                S.Add(new Paragraph(CodeDocumentation.GetSummary(model.GetType())));
-                newTags.Add(S);
-            }
+                newTags.Add(new Section("Leaf", AutoDocumentation.Document(simpleLeaf)));
 
             //Write children
             // -------------------------------------------------------------------------------

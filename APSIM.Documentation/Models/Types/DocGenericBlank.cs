@@ -12,25 +12,17 @@ namespace APSIM.Documentation.Models.Types
     /// A generic documentation class that does nothing except document documentation classes.
     /// No summary and remarks or other inclusions.
     /// </summary>
-    public class DocGenericBlank
+    public class DocGenericBlank : DocGeneric
     {
-        /// <summary>
-        /// The model that the documentation should be generated for
-        /// </summary>
-        protected IModel model = null;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="DocGeneric" /> class.
         /// </summary>
-        public DocGenericBlank(IModel model)
-        {
-            this.model = model;
-        }
+        public DocGenericBlank(IModel model): base(model) {}
 
         /// <summary>
         /// Document the model
         /// </summary>
-        public virtual List<ITag> Document(int none = 0)
+        public override List<ITag> Document(int none = 0)
         {
             List<ITag> tags = new List<ITag>();
             tags.Add(new Paragraph($"Source: {DocumentationUtilities.GetGithubMarkdownLink(model)}"));

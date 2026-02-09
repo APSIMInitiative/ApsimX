@@ -111,8 +111,7 @@ namespace APSIM.Documentation.Models
                 {typeof(Alias), typeof(DocAlias)},
                 {typeof(Simulations), typeof(DocSimulations)},
                 {typeof(M.Graph), typeof(DocGraph)},
-                {typeof(Nutrient), typeof(DocNutrient)},
-                {typeof(SimpleLeaf), typeof(DocGenericBlank)}
+                {typeof(Nutrient), typeof(DocNutrient)}
             };
             return documentMap;
         }
