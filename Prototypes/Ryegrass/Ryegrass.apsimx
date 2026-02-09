@@ -59121,6 +59121,20 @@
       ],
       "Enabled": true,
       "ReadOnly": false
+    },
+    {
+      "$type": "Models.Map, Models",
+      "Zoom": 4.0,
+      "Center": {
+        "$type": "Models.Mapping.Coordinate, Models",
+        "Latitude": 0.0,
+        "Longitude": 0.0
+      },
+      "Name": "Map",
+      "ResourceName": null,
+      "Children": [],
+      "Enabled": true,
+      "ReadOnly": false
     }
   ],
   "Enabled": true,

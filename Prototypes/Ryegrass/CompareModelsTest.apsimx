@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 208,
+  "Version": 209,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -67,7 +67,7 @@
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Grazplan.GreenCohortInitialise, Models",
+                      "$type": "Models.GrazPlan.GreenCohortInitialise, Models",
                       "RootWeight": [
                         400.0,
                         400.0
@@ -109,7 +109,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Grazplan.DryCohortInitialise, Models",
+                      "$type": "Models.GrazPlan.DryCohortInitialise, Models",
                       "Status": "established",
                       "LeafDMD": [
                         0.6
