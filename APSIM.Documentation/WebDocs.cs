@@ -444,7 +444,7 @@ namespace APSIM.Documentation
         public static string ReplaceInserts(string input, IModel model)
         {
             string output = input;
-            Regex regex = new Regex(@"{([^}]+)}");
+            Regex regex = new Regex(@"{([^}\s]+)}");
             MatchCollection matches = regex.Matches(input);
             int offset = 0;
             foreach(Match match in matches)
