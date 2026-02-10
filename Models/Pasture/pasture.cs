@@ -291,6 +291,7 @@ namespace Models.GrazPlan
         /// </summary>
         [Description("Value denoting the phenological stage of the species")]
         public double Phenology { get; set; } = 1.0015;
+        
 
         /// <summary>
         /// Current maximum length of the flowering period.
@@ -569,13 +570,17 @@ namespace Models.GrazPlan
         {
             get { return null; }
         }
+
+       private bool isAlive = false;
+        
         /// <summary>
-        /// Not implemented
+        /// NOT implemented
         /// </summary>
         public bool IsAlive
         {
             get{return false;}
         }
+
         /// <summary>
         /// IsReadyForHarvesting: Not implemented
         /// </summary>
@@ -602,6 +607,10 @@ namespace Models.GrazPlan
         {
             throw new NotImplementedException();
         }
+
+        private Cultivar cultivarDefinition = null;
+
+          private ISummary mySummary = null;
         /// <summary>
         /// Sow: Not implemented 
         /// </summary>
@@ -618,7 +627,18 @@ namespace Models.GrazPlan
         // <exception cref="NotImplementedException"></exception>
         public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1, double seeds = 0, int tillering = 0, double ftn = 0.0)
         {
-            
+            if(isAlive == false)
+            {
+                 cultivarDefinition = Structure.FindChildren<Cultivar>(recurse: true).FirstOrDefault(c => c.IsKnownAs(cultivar));
+                if (cultivarDefinition != null)
+                {
+                    mySummary.WriteMessage(this, $"Applying cultivar {cultivar}", MessageType.Diagnostic);
+                    cultivarDefinition.Apply(this);
+                }
+
+                isAlive =true;
+                
+            }
         }
 
         /// <summary>
@@ -2535,8 +2555,12 @@ namespace Models.GrazPlan
         [EventSubscribe("DoActualPlantGrowth")]
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
-            DoPastureGrowth();
-            EndStep();
+            if (isAlive == true)
+            {
+                DoPastureGrowth();
+                EndStep();
+            }
+           
         }
 
         /// <summary>
@@ -2800,6 +2824,7 @@ namespace Models.GrazPlan
             if (Pasture.logFileName != null)
                 File.AppendAllLines(logFileName, new string[]
                                 {
+                                    
                                     "-------------",
                                     $"DATE:  {systemClock.Today:d MMM yyyy}",
                                     $"TMax: {FInputs.MaxTemp:F2}",

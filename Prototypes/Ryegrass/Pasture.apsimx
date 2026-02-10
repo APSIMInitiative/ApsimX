@@ -2585,6 +2585,23 @@
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Operations, Models",
+              "OperationsList": [
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "1990-10-10",
+                  "Action": "[Pasture].Sow(population: 120, cultivar: \"Ryegrass\", depth: 30, rowSpacing: 250)",
+                  "Line": "1990-10-10 [Pasture].Sow(population: 120, cultivar: \"Ryegrass\", depth: 30, rowSpacing: 250)"
+                }
+              ],
+              "Name": "Operations",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "Enabled": true,
