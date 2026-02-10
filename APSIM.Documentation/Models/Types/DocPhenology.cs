@@ -27,7 +27,7 @@ namespace APSIM.Documentation.Models.Types
             {
                 new Paragraph("."),
                 new Section("List of Plant Model Components",
-                    new Table((model as Phenology).GetPhaseTable())),
+                    new Table(DocumentationUtilities.GetPhaseTable(model as Phenology))),
             };
 
             section.Add(new Section("Phenology", subTags));
