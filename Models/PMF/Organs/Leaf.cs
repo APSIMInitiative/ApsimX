@@ -208,6 +208,18 @@ namespace Models.PMF.Organs
             set { _PotentialEP = value; }
         }
 
+        /// <summary>Sets the min canopy temperature. Set by MICROCLIMATE.</summary>
+        [Units("oC")]
+        public double MinCanopyTemperature { get; set; }
+
+        /// <summary>Sets the max canopy temperature. Set by MICROCLIMATE.</summary>
+        [Units("oC")]
+        public double MaxCanopyTemperature { get; set; }
+
+        /// <summary>Sets the mean canopy temperature. Set by MICROCLIMATE.</summary>
+        [Units("oC")]
+        public double MeanCanopyTemperature { get; set; }
+
         /// <summary>Sets the actual water demand.</summary>
         [Units("mm")]
         public double WaterDemand { get; set; }
@@ -1138,6 +1150,9 @@ namespace Models.PMF.Organs
             NDemand.Clear();
             PotentialEP = 0;
             WaterDemand = 0;
+            MinCanopyTemperature = 0;
+            MaxCanopyTemperature = 0;
+            MeanCanopyTemperature = 0;
             LightProfile = null;
             LeafStructure.UpdateHeight();
             Width = WidthFunction.Value();
