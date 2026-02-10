@@ -16,6 +16,9 @@ using SkiaSharp;
 using APSIM.Documentation.Graphing;
 using APSIM.Core;
 using APSIM.Shared.Documentation.Extensions;
+using OxyPlot;
+using APSIM.Shared.Graphing;
+using DocumentFormat.OpenXml.Bibliography;
 
 namespace APSIM.Documentation
 {
@@ -122,18 +125,19 @@ namespace APSIM.Documentation
         /// <param name="model">Path to which the file will be generated.</param>
         public static string GenerateWeb(IModel model)
         {
-            return TagsToHTMLString(AutoDocumentation.Document(model));
+            return TagsToHTMLString(AutoDocumentation.Document(model), model);
         }
 
         /// <summary>
         ///
         /// </summary>
         /// <param name="tags">Tags to be converted</param>
-        public static string TagsToHTMLString(List<ITag> tags)
+        /// <param name="model">Model being documented</param>
+        public static string TagsToHTMLString(List<ITag> tags, IModel model)
         {
             tags.Add(new Section("References"));
-            string markdown = ConvertToMarkdown(tags, "");
-            string headerImg = ConvertToMarkdown(new List<ITag>(){AddHeaderImageTag()},"");
+            string markdown = ConvertToMarkdown(tags, "", model);
+            string headerImg = ConvertToMarkdown(new List<ITag>(){AddHeaderImageTag()},"", model);
             markdown = headerImg + markdown;
             List<(string, string)> htmlSegments = GetAllHTMLSegments(markdown, out string output1);
             List<ICitation> citations = ProcessCitations(output1, out string output2);
@@ -151,11 +155,10 @@ namespace APSIM.Documentation
 
             var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
             string html = Markdown.ToHtml(output2, pipeline);
-            html = RestoreHTMLSegments(html, htmlSegments);
             html = AddTableWrappers(html);
+            html = RestoreHTMLSegments(html, htmlSegments);
             html = AddCSSClasses(html);
             html = AddContentWrapper(GetNavigationHTML(tags), html);
-
 
             return html;
         }
@@ -180,7 +183,7 @@ namespace APSIM.Documentation
             {
                 if (tag is Section section)
                 {
-                    string id = section.Title.ToLower().Replace(" ", "-");
+                    string id = section.Title.ToLower().Replace(":", "").Replace(" ", "-");
                     html += $"<a href=\"#{id}\"><div class=\"docs-nav\">{section.Title}</div></a>\n";
                 }
             }
@@ -240,7 +243,7 @@ namespace APSIM.Documentation
         /// <summary>
         ///
         /// </summary>
-        public static string ConvertToMarkdown(List<ITag> tags, string heading)
+        public static string ConvertToMarkdown(List<ITag> tags, string heading, IModel model)
         {
             string output = "";
 
@@ -257,7 +260,7 @@ namespace APSIM.Documentation
                     sectionCount += 1;
                     string sectionHeader = $"{header}{headingPrefix}{sectionCount}";
                     output += $"{sectionHeader} {section.Title}\n\n";
-                    output += ConvertToMarkdown(section.Children, sectionHeader);
+                    output += ConvertToMarkdown(section.Children, sectionHeader, model);
                 }
                 else if (tag is Paragraph paragraph)
                 {
@@ -350,6 +353,9 @@ namespace APSIM.Documentation
                     output += imgMarkdown;
                 }
             }
+
+            output = ReplaceInserts(output, model);
+
             return output;
         }
 
@@ -433,6 +439,50 @@ namespace APSIM.Documentation
         }
 
         /// <summary>
+        /// Replace content covered by curly braces with apsim content
+        /// </summary>
+        public static string ReplaceInserts(string input, IModel model)
+        {
+            string output = input;
+            Regex regex = new Regex(@"{([^}]+)}");
+            MatchCollection matches = regex.Matches(input);
+            int offset = 0;
+            foreach(Match match in matches)
+            {
+                string value = match.Value;
+                string reference = match.Groups[1].Value;
+                IModel referencedModel = model.Node.Get(reference, LocatorFlags.ModelsOnly, model.Node.Model) as IModel;
+                if (referencedModel != null)
+                {
+                    List<ITag> tags = AutoDocumentation.Document(referencedModel);
+                    if (tags.Count == 1)
+                    {
+                        ITag firstTag = tags.FirstOrDefault();
+                        if (firstTag != null && firstTag is Section)
+                            tags = (firstTag as Section).Children;
+                    }
+                    string markdown = ConvertToMarkdown(tags, "", referencedModel).Trim();
+                    output = output.Remove(match.Index + offset, value.Length);
+                    output = output.Insert(match.Index + offset, markdown);
+                    offset += markdown.Length - value.Length;
+                }
+                else
+                {
+                    var obj = model.Node.Get(reference, LocatorFlags.None, model.Node.Model);
+                    string text = reference;
+                    if (obj != null)
+                        text = obj.ToString();
+
+                    output = output.Remove(match.Index + offset, value.Length);
+                    output = output.Insert(match.Index + offset, text);
+                    offset += text.Length - value.Length;
+                }
+            }
+
+            return output;
+        }
+
+        /// <summary>
         /// Replaces the image path in any md with a base64 encoded image string.
         /// </summary>
         public static string ReplaceImagePathWithEncodedString(string markdown)
@@ -505,10 +555,10 @@ namespace APSIM.Documentation
             output = output.Replace("<h1 ", "<h1 class=\"docs-h1\" ");
             output = output.Replace("<h2 ", "<h2 class=\"docs-h2\" ");
             output = output.Replace("<img ", "<img class=\"docs-img\" ");
-            output = output.Replace("<table>", "<table class=\"docs-table\" ");
-            output = output.Replace("<th>", "<th class=\"docs-th\"> ");
-            output = output.Replace("<td>", "<td class=\"docs-td\"> ");
-            output = output.Replace("<tr>", "<tr class=\"docs-tr\"> ");
+            output = output.Replace("<table>", "<table class=\"docs-table\">");
+            output = output.Replace("<th>", "<th class=\"docs-th\">");
+            output = output.Replace("<td>", "<td class=\"docs-td\">");
+            output = output.Replace("<tr>", "<tr class=\"docs-tr\">");
             return output;
         }
 
@@ -607,8 +657,6 @@ namespace APSIM.Documentation
                 if (inCodeBlock && line.Trim() == "```")
                     text += "csharp";
                 
-                if (!inCodeBlock)
-                    text = line.Trim();
                 formattedLines.Add(text);
             }
 
@@ -662,20 +710,33 @@ namespace APSIM.Documentation
         /// Get an image from a graph tag
         /// </summary>
         /// <param name="graph"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="dpi"></param>
         /// <returns></returns>
-        private static SKImage GetGraphImage(Graph graph)
+        public static SKImage GetGraphImage(Graph graph, int width = 800, int height = 600, int dpi = 96)
         {
             GraphExporter exporter = new GraphExporter();
 
             var plot = exporter.ToPlotModel(graph);
+            //foreach(Series s in graph.Series)
+            //    s.
 
             // Temp hack - set marker size to 5. We need to review
             // appropriate sizing for graphs in autodocs.
             if (plot is OxyPlot.PlotModel model)
+            {
+                int count = model.Series.OfType<OxyPlot.Series.LineSeries>().Count();
                 foreach (var series in model.Series.OfType<OxyPlot.Series.LineSeries>())
-                    series.MarkerSize = 5;
+                {
+                    series.MarkerSize = 4;
+                    series.StrokeThickness = 1;
+                    if (count == 1)
+                        series.Color = OxyColor.FromArgb(255, 0, 77, 71);
+                } 
+            }
 
-            return exporter.Export(plot, 800, 600);
+            return exporter.Export(plot, width, height, dpi);
         }
 
     }

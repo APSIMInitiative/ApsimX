@@ -28,20 +28,9 @@ namespace APSIM.Documentation.Models.Types
         /// </summary>
         public override List<ITag> Document(int none = 0)
         {
-            Section section = GetSummaryAndRemarksSection(model);
-
             string text = GetFunctionText(this.model as IFunction);
-            if (text.Length > 0)
-                section.Add(new Paragraph(text));
-
-            List<ITag> subTags = new();
-            foreach (IModel child in model.Node.FindChildren<IModel>())
-                if (!(child is Memo))
-                    subTags.AddRange(AutoDocumentation.DocumentModel(child));
-
-            section.Add(subTags);
-
-            return new List<ITag>() {section};
+            Paragraph paragraph = new Paragraph(text);
+            return new List<ITag>() {paragraph};
         }
 
         /// <summary>
@@ -57,7 +46,7 @@ namespace APSIM.Documentation.Models.Types
             else if (function is Constant constant)
                 return $"{functionAsModel.Name} = {constant.FixedValue} {FindUnits(constant)}";
             else if (function is AccumulateFunction accumulateFunction)
-                return $"*{functionAsModel.Name}* = Accumulated {ChildFunctionList(functionAsModel)} and between {accumulateFunction.StartStageName.ToLower()} and {accumulateFunction.EndStageName.ToLower()}";
+                return $"{functionAsModel.Name} = Accumulated {ChildFunctionList(functionAsModel)} and between {accumulateFunction.StartStageName.ToLower()} and {accumulateFunction.EndStageName.ToLower()}";
             else if (function is AddFunction addFunction)
                 return DocumentMathFunction('+', addFunction);
             else if (function is SubtractFunction subtractFunction)
@@ -67,13 +56,13 @@ namespace APSIM.Documentation.Models.Types
             else if (function is DivideFunction divideFunction)
                 return DocumentMathFunction('/', divideFunction);
             else if (function is DailyMeanVPD dailyMeanVPD)
-                return $"*MaximumVPDWeight = {dailyMeanVPD.MaximumVPDWeight}*";
+                return $"MaximumVPDWeight = {dailyMeanVPD.MaximumVPDWeight}";
             else if (function is DeltaFunction deltaFunction)
-                return $"*{functionAsModel.Name}* is the daily differential of {ChildFunctionList(functionAsModel)}";
+                return $"{functionAsModel.Name} is the daily differential of {ChildFunctionList(functionAsModel)}";
             else if (function is ExpressionFunction expressionFunction)
                 return $"{functionAsModel.Name} = {expressionFunction.Expression.Replace(".Value()", "").Replace("*", "x")}";
             else if (function is HoldFunction holdFunction && holdFunction.Node.FindChild<IFunction>() != null)
-                return $"*{functionAsModel.Name}* = *{holdFunction.Node.FindChild<IModel>().Name}* until {holdFunction.WhenToHold} after which the value is fixed.";
+                return $"{functionAsModel.Name} = {holdFunction.Node.FindChild<IModel>().Name} until {holdFunction.WhenToHold} after which the value is fixed.";
             else if (function is LessThanFunction lessThanFunction)
             {
                 List<IModel> childFunctions = lessThanFunction.Node.FindChildren<IModel>().ToList();
@@ -83,42 +72,56 @@ namespace APSIM.Documentation.Models.Types
                     return "";
             }
             else if (function is LinearAfterThresholdFunction linearAfterThresholdFunction)
-                return $"*{functionAsModel.Name}* is calculated as a function of *{StringUtilities.RemoveTrailingString(linearAfterThresholdFunction.XProperty, ".Value()")}*. *Trigger value {linearAfterThresholdFunction.XTrigger} Gradient {linearAfterThresholdFunction.Slope}*";
+                return $"{functionAsModel.Name} is calculated as a function of {StringUtilities.RemoveTrailingString(linearAfterThresholdFunction.XProperty, ".Value()")}. Trigger value {linearAfterThresholdFunction.XTrigger} Gradient {linearAfterThresholdFunction.Slope}";
             else if (function is MovingAverageFunction movingAverageFunction && functionAsModel.Node.FindChild<IFunction>() != null)
                 return $"{functionAsModel.Name} is calculated from a moving average of {functionAsModel.Node.FindChild<IModel>().Name} over a series of {movingAverageFunction.NumberOfDays} days.";
             else if (function is MovingSumFunction movingSumFunction && functionAsModel.Node.FindChild<IFunction>() != null)
                 return $"{functionAsModel.Name} is calculated from a moving sum of {functionAsModel.Node.FindChild<IModel>().Name}.Name over a series of {movingSumFunction.NumberOfDays} days.";
             else if (function is BudNumberFunction budNumberFunction && functionAsModel.Node.FindChild<IFunction>() != null)
                 return $"Each time {budNumberFunction.SetStage} occurs, bud number on each main-stem is set to:" +
-                $"*{budNumberFunction.Node.FindChild<IModel>("FractionOfBudBurst").Name}* * *SowingData.BudNumber* (from manager at establishment)";
+                $"{budNumberFunction.Node.FindChild<IModel>("FractionOfBudBurst").Name} * SowingData.BudNumber (from manager at establishment)";
             else if (function is PhaseLookup phaseLookup)
-                return $"{functionAsModel.Name} is calculated using specific values or functions for various growth phases.  The function will use a value of zero for phases not specified below.";
+                return $"//{functionAsModel.Name} is calculated using specific dependant on growth phase.\n" + GetFunctionChildText(function, "");
             else if (function is PhaseLookupValue phaseLookupValue)
-                return $"{functionAsModel.Name} has a value between {phaseLookupValue.Start} and {phaseLookupValue.End} calculated as:";
+                return $"if phenological stage is between {phaseLookupValue.Start} and {phaseLookupValue.End}\n" + GetFunctionChildText(function, "    ");
             else if (function is PhotoperiodFunction photoperiodFunction)
-                return $"*Twilight = {photoperiodFunction.Twilight} (degrees)*";
+                return $"Twilight = {photoperiodFunction.Twilight} (degrees)";
             else if (function is SigmoidFunction sigmoidFunction)
                 return $"Values of Ymax, Xo, b and XValue are calcuated as defined below.";
             else if (function is StringComparisonFunction stringComparisonFunction)
                 return $"If {stringComparisonFunction.PropertyName} = {stringComparisonFunction.StringValue} Then:";
             else if (function is VariableReference variableReference)
-                return $"*{functionAsModel.Name} = {StringUtilities.RemoveTrailingString(variableReference.VariableName, ".Value()")}*";
+                return $"{functionAsModel.Name} = {StringUtilities.RemoveTrailingString(variableReference.VariableName, ".Value()")}";
             else if (function is WangEngelTempFunction wangEngelTempFunction)
                 return $"{functionAsModel.Name} is calculated using a Wang and Engel beta function which has a value of zero below {wangEngelTempFunction.MinTemp} {wangEngelTempFunction.Units} increasing to a maximum value at {wangEngelTempFunction.OptTemp} {wangEngelTempFunction.Units} and decreasing to zero again at {wangEngelTempFunction.MaxTemp} {wangEngelTempFunction.Units} ([WangEngel1998]).";
             else if (function is WeightedTemperatureFunction weightedTemperatureFunction)
-                return $"*MaximumTemperatureWeighting = {weightedTemperatureFunction.MaximumTemperatureWeighting}*";
+                return $"MaximumTemperatureWeighting = {weightedTemperatureFunction.MaximumTemperatureWeighting}";
             else if (function is AllometricDemandFunction allometricDemandFunction)
                 return $"YValue = {allometricDemandFunction.Const} * XValue ^ {allometricDemandFunction.Power}";
             else if (function is PartitionFractionDemandFunction partitionFractionDemandFunction)
-                return $"*{functionAsModel.Name} = PartitionFraction x [Arbitrator].DM.TotalFixationSupply*";
+                return $"{functionAsModel.Name} = PartitionFraction x [Arbitrator].DM.TotalFixationSupply";
             else
                 return $"";
         }
 
         /// <summary>
-        /// Creates a list of child function names
+        /// Get paragraph text on simple functions
         /// </summary>
-        private static string ChildFunctionList(IModel model)
+        public static string GetFunctionChildText(IFunction function, string padding)
+        {
+            string text = "";
+            var functionAsModel = function as IModel;
+            List<IFunction> childFunctions = functionAsModel.Node.FindChildren<IFunction>().ToList();
+            for (int i = 0; i < childFunctions.Count; i++)
+                text += padding + GetFunctionText(childFunctions[i]) + "\n";
+            
+                return text;
+        }
+
+            /// <summary>
+            /// Creates a list of child function names
+            /// </summary>
+            private static string ChildFunctionList(IModel model)
         {
             List<IFunction> childFunctions = model.Node.FindChildren<IFunction>().ToList();
 
@@ -159,7 +162,7 @@ namespace APSIM.Documentation.Models.Types
         {
             IModel model = function as IModel;
             string writer = "";
-            writer += $"*{model.Name}* = ";
+            writer += $"{model.Name} = ";
 
             bool addOperator = false;
             foreach (IModel child in model.Children)
@@ -175,7 +178,7 @@ namespace APSIM.Documentation.Models.Types
                         writer += c.FixedValue;
                     else
                     {
-                        writer += $"*" + child.Name + "*";
+                        writer += child.Name;
                     }
                     addOperator = true;
                 }
