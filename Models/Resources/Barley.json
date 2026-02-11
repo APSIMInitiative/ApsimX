@@ -15,7 +15,13 @@
             "[Barley].PlantType=Barley",
             "[Phenology].Flowering.Target.FixedValue=0",
             "[Phenology].HeadEmergenceLongDayBase.FixedValue = 140",
-            "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.33"
+            "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.33",
+            "",
+            "// underestimated biomass: increase the biomass supply",
+            "[Leaf].Photosynthesis.RUE.FixedValue=1.6",
+            "",
+            "[Leaf].Photosynthesis.FW.XYPairs.X=0, 0.5, 1",
+            "[Leaf].Photosynthesis.FW.XYPairs.Y=0, 1,   1"
           ],
           "Name": "ModelOverrides",
           "ResourceName": null,
