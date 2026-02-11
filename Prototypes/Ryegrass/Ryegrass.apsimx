@@ -58484,7 +58484,7 @@
                                   "LineThickness": 0,
                                   "TableName": "Report",
                                   "XFieldName": "Clock.Today",
-                                  "YFieldName": "AgPRyegrass.AboveGroundHarvestable.wt",
+                                  "YFieldName": "AgPRyegrass.AboveGround.Wt",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": false,
