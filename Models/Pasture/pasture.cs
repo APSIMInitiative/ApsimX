@@ -1,7 +1,7 @@
 ﻿using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Grazplan;
+using Models.GrazPlan;
 using Models.Interfaces;
 using Models.Soils;
 using Models.Soils.Arbitrator;
@@ -17,6 +17,10 @@ using System.Linq;
 using static Models.GrazPlan.GrazType;
 using static Models.GrazPlan.PastureUtil;
 using APSIM.Core;
+using Models.GrazPlan.Organs;
+using Models.GrazPlan.Biomass;
+using Models.PMF;
+
 
 namespace Models.GrazPlan
 {
@@ -71,7 +75,7 @@ namespace Models.GrazPlan
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public class Pasture : TSoilInstance, IUptake, ICanopy, IScopedModel, IStructureDependency
+    public class Pasture : TSoilInstance, IUptake, ICanopy, IScopedModel, IStructureDependency,IPlant
     {
         /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
@@ -179,6 +183,31 @@ namespace Models.GrazPlan
 
         /// <summary>NH4 solute in the soil.</summary>
         private ISolute nh4 = null;
+
+        #region  Link Biomass and Organ classes
+
+        /// <summary>
+        /// AboveGround
+        /// </summary>
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+
+        public IBiomass AboveGround {get;set;}
+
+       /// <summary>
+       /// Gereric Organs
+       /// </summary>
+        [Link(Type = LinkType.Child)]
+        public List<GenericOrgan> Organs { get; set; }
+
+        /// <summary>
+        /// Composite Biomass
+        /// </summary>
+
+        [Link(Type = LinkType.Child)]
+        public List<Biomass.CompositeBiomass> CompositeBiomasses {get; set;}
+
+        #endregion
+      
 
         #endregion
 
@@ -300,6 +329,10 @@ namespace Models.GrazPlan
         /// </summary>
         [Description("Apparent extinction coefficients of seedlings, established plants and senescing plants")]
         public double[] ExtinctCoeff { get; set; } = new double[] { 0.0, 0.0, 0.55 };
+
+
+
+     
 
         /*
         These rules apply when providing values for GreenInit[].herbage or DryInit[].herbage:
@@ -512,7 +545,89 @@ namespace Models.GrazPlan
                 }
             }
         }
+
+        
         #endregion
+
+
+        #region IPLANT
+        /// <summary>
+        ///  IPlant: Not implemented
+        /// </summary>
+        public string PlantType { get; set; }
+        /// <summary>
+        /// Cultivars not implemented
+        /// </summary>
+        public string[] CultivarNames
+        {
+            get { return null; }
+        }
+        /// <summary>
+        /// Not implemented
+        /// </summary>
+        public bool IsAlive
+        {
+            get{return false;}
+        }
+        /// <summary>
+        /// IsReadyForHarvesting: Not implemented
+        /// </summary>
+        public bool IsReadyForHarvesting
+        {
+            get { return false; }
+        }
+        /// <summary>
+        /// Nitrogen uptake: Not implemented
+        /// </summary>
+       
+  
+        /// <summary>Amount of nitrogen taken up (kg/ha: Not implemented.</summary>
+        public IReadOnlyList<double> NitrogenUptake  {
+             get{
+            return  null;}
+        }
+        /// <summary>
+        /// Harvest: Not implemented
+        /// </summary>
+        /// <param name="removeBiomassFromOrgans"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public void Harvest(bool removeBiomassFromOrgans = true)
+        {
+            throw new NotImplementedException();
+        }
+        /// <summary>
+        /// Sow: Not implemented 
+        /// </summary>
+        /// <param name="cultivar"></param>
+        /// <param name="population"></param>
+        /// <param name="depth"></param>
+        /// <param name="rowSpacing"></param>
+        /// <param name="maxCover"></param>
+        /// <param name="budNumber"></param>
+        /// <param name="rowConfig"></param>
+        /// <param name="seeds"></param>
+        /// <param name="tillering"></param>
+        /// <param name="ftn"></param>
+        // <exception cref="NotImplementedException"></exception>
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1, double seeds = 0, int tillering = 0, double ftn = 0.0)
+        {
+            
+        }
+
+        /// <summary>
+        /// EndCrop: Not incremented
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
+        public void EndCrop()
+        {
+            throw new NotImplementedException();
+        }
+        
+        #endregion IPlant
+
+
+
+
 
         /// <summary>Radiation intercepted by the plant's canopy (MJ/m^2/day).</summary>
         [JsonIgnore]
@@ -1084,6 +1199,8 @@ namespace Models.GrazPlan
         /// <summary>Average DM digestibility of all leaves</summary>
         [Units("g/g")]
         public double LeafDMD { get { return GetDMD(GrazType.TOTAL, GrazType.ptLEAF); } }
+
+
 
         /// <summary>Average crude protein content of all leaves</summary>
         [Units("g/g")]
@@ -2172,6 +2289,9 @@ namespace Models.GrazPlan
 
             return result;
         }
+
+     
+
         #endregion
 
         #region Subscribed events ====================================================
@@ -2201,6 +2321,7 @@ namespace Models.GrazPlan
 
             foreach (var initCohort in Children)
             {
+                
                 if (initCohort is GreenCohortInitialise greenInit)
                 {
                     Array.Resize(ref green, green.Length + 1);
@@ -2372,6 +2493,18 @@ namespace Models.GrazPlan
 
                 FToday = systemClock.Today.Day + (systemClock.Today.Month * 0x100) + (systemClock.Today.Year * 0x10000);    //stddate
             }
+
+           
+           //APSIM does not automatically inject your GrazPlan pasture engine (TPasturePopulation) into organ classes so you must wire Composite Biomass and Organs wired to PastureModel
+
+            foreach (var organ in Organs)
+                organ.PastureModel=PastureModel;
+            
+            foreach (var composite in CompositeBiomasses)
+                composite.PastureModel = PastureModel;
+            
+
+
         }
 
         /// <summary>Initialises arrays to same length as soil layers.</summary>
@@ -2480,7 +2613,6 @@ namespace Models.GrazPlan
 
             PastureModel.BeginTimeStep();
             storePastureCover();
-
         }
 
         /// <summary>
@@ -3254,6 +3386,7 @@ namespace Models.GrazPlan
         public void Sow(double rate)
         {
             PastureModel.Sow(rate * KGHA_GM2);      // Convert kg/ha to g/m^2
+            
         }
 
         /// <summary>
@@ -3391,5 +3524,18 @@ namespace Models.GrazPlan
         }
 
         #endregion
+       
+        
+
+        
+
+           
+        
+    
+
+
+
+
+
     }
 }

@@ -20,7 +20,7 @@ namespace Models.PMF.Organs
     ///<summary>
     /// The root model calculates root growth in terms of rooting depth, biomass accumulation and subsequent root length density in each soil layer as well as the access of soil resources (water, NO3 and NH4).
     /// 
-    /// *NOTE: Calculations are undertaken for each rooting zone for simulations where the plant has roots in multiple spatial zones.*
+    /// *Note: Calculations are undertaken for each rooting zone for simulations where the plant has roots in multiple spatial zones.*
     /// 
     /// **Soil Water Uptake**
     /// 
@@ -71,9 +71,11 @@ namespace Models.PMF.Organs
     /// 
     /// **Root Length**
     /// 
-    /// Root length is calculated from root biomass using a value for specific root length (mm/g).  Proliferation of roots into different layers is calculated using a simple approach similar to the generalised equimarginal criterion approach used in the field of economics.  It is assumed the maximal return on a plant's investment into roots is achieved when uptake per unit root mass is uniform across the soil profile.  As similar approach is used in portfolio analysis (ie if ROI is low in one portolio, investment can be moved to a higher returning area until ROI is the same).
-    /// Daily allocation of root mass into layers is calculated as follows to provide proliferation of roots into areas of higher resource return, taking into account for previous allocation into those areas, such as near surface layers undergoing regular rewetting or below-ground capilliary fringes immediately above water tables.
-    /// 
+    /// Root length is calculated from root biomass using a value for specific root length (mm/g). 
+    /// Proliferation of roots into different layers is calculated using a simple approach similar to the generalised equimarginal criterion approach used in the field of economics.
+    /// It is assumed the maximal return on a plant's investment into roots is achieved when uptake per unit root mass is uniform across the soil profile.
+    /// Daily allocation of root mass into layers is calculated as follows to provide proliferation of roots into areas of higher resource return, taking into account for previous
+    /// allocation into those areas, such as near surface layers undergoing regular rewetting or below-ground capilliary fringes immediately above water tables.
     /// 
     /// ```
     /// // First calculate a root activity for water (RAW) for current root mass within the layer
@@ -87,12 +89,12 @@ namespace Models.PMF.Organs
     /// 
     /// Name | Description | Units
     /// -|-|-
-    /// RAW | The root activity for water uptake in relation to root mass | mm/g/m<sup>2</sup>
+    /// RAW | The root activity for water uptake in relation to root mass | mm/g/m^2^
     /// WaterUptake | The daily water uptake by the plant model for a given layer | mm
-    /// Root.Live.Wt | The live root mass within a given layer | g/m<sup>2</sup>
-    /// Thickness | The width of the soil layer used within the soil water model | mm
+    /// Root.Live.Wt | The live root mass within a given layer | g/m^2^
+    /// Thickness | The depth of the soil layer used within the soil water model | mm
     /// RootProportion | The fraction of the layer occupied for roots (e.g. 0.5 if roots occupy the top half of a layer only) | 0-1
-    /// TotalDailyDMAllocationToRootMass | The amount of daily growth provided to the root model by the organ arbitrator | g/m<sup>2</sup>
+    /// TotalDailyDMAllocationToRootMass | The amount of daily growth provided to the root model by the organ arbitrator | g/m^2^
     /// 
     ///</summary>
     [Serializable]

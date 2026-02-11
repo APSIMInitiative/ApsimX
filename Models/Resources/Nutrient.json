@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 208,
+  "Version": 209,
   "Name": "Simulations",
   "Children": [
     {
@@ -218,7 +218,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "This work builds upon earlier APSIM soil organic matter models such as SoilN ([probert_apsims_1998]).\n\nThe N pools / flows simulate the nitrate content of each soil layer.  Much of the capability has been taken from implementation in the APSIM SoilN model ([probert_apsims_1998]), which was derived from approaches in CERES-Maize ([jones_ceres-maize:_1986]).",
+          "Text": "This work builds upon earlier APSIM soil organic matter models such as SoilN ([#probert_apsims_1998]).\n\nThe N pools / flows simulate the nitrate content of each soil layer.  Much of the capability has been taken from implementation in the APSIM SoilN model ([#probert_apsims_1998]), which was derived from approaches in CERES-Maize ([#jones_ceres-maize:_1986]).",
           "Name": "Introduction",
           "ResourceName": null,
           "Children": [],
@@ -232,7 +232,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "The inert pool captures organic matter that either does not decompose, or decomposes at a rate slow enough to be of little importance to simulations.  Such an approach was also captured in the APSIM SoilN model ([probert_apsims_1998]).",
+              "Text": "The inert pool captures organic matter that either does not decompose, or decomposes at a rate slow enough to be of little importance to simulations.  Such an approach was also captured in the APSIM SoilN model ([#probert_apsims_1998]).",
               "Name": "Memo",
               "ResourceName": null,
               "Children": [],
@@ -317,7 +317,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "The FOMLignin pool captures \"lignin-like\" material within fresh organic matter (FOM).  Such as approach was also captured in the APSIM SoilN model ([probert_apsims_1998]) and in CERES Maize([jones_ceres-maize:_1986]). This pool has the slowest decomposition rate of the three FOM pools.",
+              "Text": "The FOMLignin pool captures \"lignin-like\" material within fresh organic matter (FOM).  Such as approach was also captured in the APSIM SoilN model ([#probert_apsims_1998]) and in CERES Maize([#jones_ceres-maize:_1986]). This pool has the slowest decomposition rate of the three FOM pools.",
               "Name": "Memo",
               "ResourceName": null,
               "Children": [],
@@ -419,7 +419,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "The FOMCellulose pool captures \"cellulose-like\" material within fresh organic matter (FOM).  Such as approach was also captured in the APSIM SoilN model ([probert_apsims_1998]) and in CERES Maize([jones_ceres-maize:_1986]). ",
+              "Text": "The FOMCellulose pool captures \"cellulose-like\" material within fresh organic matter (FOM).  Such as approach was also captured in the APSIM SoilN model ([#probert_apsims_1998]) and in CERES Maize([#jones_ceres-maize:_1986]). ",
               "Name": "Memo",
               "ResourceName": null,
               "Children": [],
@@ -521,7 +521,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "The FOMCarbohydrate pool captures \"carbohydrate-like\" material within fresh organic matter (FOM).  Such as approach was also captured in the APSIM SoilN model ([probert_apsims_1998]) and in CERES Maize([jones_ceres-maize:_1986]). This pool has the fastest decomposition rate of the three FOM pools.",
+              "Text": "The FOMCarbohydrate pool captures \"carbohydrate-like\" material within fresh organic matter (FOM).  Such as approach was also captured in the APSIM SoilN model ([#probert_apsims_1998]) and in CERES Maize([#jones_ceres-maize:_1986]). This pool has the fastest decomposition rate of the three FOM pools.",
               "Name": "Memo",
               "ResourceName": null,
               "Children": [],
@@ -748,7 +748,7 @@
                           "Children": [
                             {
                               "$type": "Models.Memo, Models",
-                              "Text": "The default potential decomposition rate comes from SoilN ([probert_apsims_1998]). For sandy soils, the rate is modified as per [Asseng1998163].",
+                              "Text": "The default potential decomposition rate comes from SoilN ([#probert_apsims_1998]). For sandy soils, the rate is modified as per [#Asseng1998163].",
                               "Name": "Memo",
                               "ResourceName": null,
                               "Children": [],
@@ -1206,7 +1206,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "Denitrification is simulated using the approaches initially used in CERES Maize ([jones_ceres-maize:_1986]) as implemented in APSIM SoilN ([probert_apsims_1998]).  These were based upon the work of [Rolston1984].  Denitrification rate is calculated using this approach to account for the effect of soil carbon, temperature and water on the fraction of nitrate lost on a daily basis.  ",
+              "Text": "Denitrification is simulated using the approaches initially used in CERES Maize ([#jones_ceres-maize:_1986]) as implemented in APSIM SoilN ([#probert_apsims_1998]).  These were based upon the work of [#Rolston1984].  Denitrification rate is calculated using this approach to account for the effect of soil carbon, temperature and water on the fraction of nitrate lost on a daily basis.  ",
               "Name": "Memo",
               "ResourceName": null,
               "Children": [],
@@ -1268,7 +1268,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "The emission of N2O during denitrification is calculated from an N2:N2O ratio using the approach from the DayCent model ([PARTON1998]) as previously tested in APSIM ([THORBURN2010]).",
+                  "Text": "The emission of N2O during denitrification is calculated from an N2:N2O ratio using the approach from the DayCent model ([#PARTON1998]) as previously tested in APSIM ([#THORBURN2010]).",
                   "Name": "Memo",
                   "ResourceName": null,
                   "Children": [],
@@ -1292,7 +1292,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "Denitrification is simulated using the approaches initially used in CERES Maize ([jones_ceres-maize:_1986]) as implemented in APSIM SoilN ([probert_apsims_1998]).",
+              "Text": "Denitrification is simulated using the approaches initially used in CERES Maize ([#jones_ceres-maize:_1986]) as implemented in APSIM SoilN ([#probert_apsims_1998]).",
               "Name": "Memo",
               "ResourceName": null,
               "Children": [],

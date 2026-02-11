@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 208,
+  "Version": 209,
   "Name": "Simulations",
   "Children": [
     {
@@ -15,7 +15,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "\r\nThe APSIM Chickpea model has been developed from the original APSIM Chickpea model described by [robertson_simulation_2002] using the Plant Modelling Framework of [brown_plant_2014].\n\nNote to users:\nDesi and Kabuli chickpea are two subspecies of chickpea. The variety set includes both types. As indicated by Peake et al., 2021 (GRDC Updates), there was less confidence in predicting ",
+          "Text": "\r\nThe APSIM Chickpea model has been developed from the original APSIM Chickpea model described by [#robertson_simulation_2002] using the Plant Modelling Framework of [#brown_plant_2014].\n\nNote to users:\nDesi and Kabuli chickpea are two subspecies of chickpea. The variety set includes both types. As indicated by Peake et al., 2021 (GRDC Updates), there was less confidence in predicting ",
           "Name": "Introduction",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -245,7 +245,7 @@
                       "Children": [
                         {
                           "$type": "Models.Memo, Models",
-                          "Text": "\r\nThe cardinal temperatures for calculating thermal time have been taken from [SINGH199641] as used by [robertson_simulation_2002].",
+                          "Text": "\r\nThe cardinal temperatures for calculating thermal time have been taken from [#SINGH199641] as used by [#robertson_simulation_2002].",
                           "Name": "Memo",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -302,7 +302,7 @@
                       "Children": [
                         {
                           "$type": "Models.Memo, Models",
-                          "Text": "\r\nThe cardinal temperatures for calculating thermal time have been taken from [SINGH199641] as used by [robertson_simulation_2002].",
+                          "Text": "\r\nThe cardinal temperatures for calculating thermal time have been taken from [#SINGH199641] as used by [#robertson_simulation_2002].",
                           "Name": "Memo",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -494,7 +494,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "\r\nThis phase simulates the time between end of the Non-inductive phase of [robertson_simulation_2002] (515 TT) and the appearance of visible buds on petioles",
+                  "Text": "\r\nThis phase simulates the time between end of the Non-inductive phase of [#robertson_simulation_2002] (515 TT) and the appearance of visible buds on petioles",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -849,7 +849,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "\r\nThe duration of the Maturing phase has been taken from the model of [robertson_simulation_2002].",
+                  "Text": "\r\nThe duration of the Maturing phase has been taken from the model of [#robertson_simulation_2002].",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1909,7 +1909,7 @@
                           "Children": [
                             {
                               "$type": "Models.Memo, Models",
-                              "Text": "\r\n[robertson_simulation_2002] used a maximum leaf size of 300 mm2 for the first 9 leaves and 600 mm2 thereafter.",
+                              "Text": "\r\n[#robertson_simulation_2002] used a maximum leaf size of 300 mm2 for the first 9 leaves and 600 mm2 thereafter.",
                               "Name": "Memo",
                               "Children": [],
                               "IncludeInDocumentation": true,
