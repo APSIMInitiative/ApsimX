@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Utilities;
@@ -19,7 +20,7 @@ using Models.WaterModel;
 using NUnit.Framework;
 using UserInterface.Presenters;
 
-namespace APSIM.Core.Tests
+namespace UnitTests.APSIM.Core.Tests
 {
     /// <summary>This is a test class for the .apsim file importer.</summary>
     [TestFixture]

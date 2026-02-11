@@ -5206,6 +5206,7 @@ namespace Models.GrazPlan
                 }
 
                 this.ComputeTotals();
+                
             }
         }
 

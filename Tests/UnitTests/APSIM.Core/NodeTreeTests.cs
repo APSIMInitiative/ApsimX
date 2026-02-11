@@ -1,10 +1,11 @@
 using System;
 using System.Linq;
+using APSIM.Core;
 using Models;
 using Models.Core;
 using NUnit.Framework;
 
-namespace APSIM.Core.Tests;
+namespace UnitTests.APSIM.Core.Tests;
 
 [TestFixture]
 class NodeTreeTests

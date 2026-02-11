@@ -1,18 +1,15 @@
-﻿
+﻿using System;
+using System.IO;
+using System.Net.NetworkInformation;
+using APSIM.Shared.Utilities;
+using UserInterface.Interfaces;
+using Models.CLEM;
+using Models.CLEM.Interfaces;
+using Models.Core;
+using UserInterface.Views;
+
 namespace UserInterface.Presenters
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Net.NetworkInformation;
-    using System.Reflection;
-    using System.Text;
-    using APSIM.Shared.Utilities;
-    using global::UserInterface.Interfaces;
-    using Models.CLEM;
-    using Models.CLEM.Interfaces;
-    using Models.Core;
-    using Views;
 
     /// <summary>
     /// Presenter to provide HTML description summary for CLEM models

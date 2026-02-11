@@ -1,20 +1,20 @@
-﻿namespace UnitTests.Report
+﻿using APSIM.Core;
+using APSIM.Shared.Utilities;
+using Models;
+using Models.Core;
+using Models.Core.Run;
+using Models.Storage;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.Linq;
+using UnitTests.Storage;
+using UnitTests.Weather;
+
+namespace UnitTests.Report
 {
-    using APSIM.Core;
-    using APSIM.Shared.Utilities;
-    using APSIM.Soils;
-    using Models;
-    using Models.Core;
-    using Models.Core.Run;
-    using Models.Storage;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Globalization;
-    using System.Linq;
-    using UnitTests.Storage;
-    using UnitTests.Weather;
 
     [TestFixture]
     public class ReportTests
@@ -23,7 +23,7 @@
         private Simulation simulation;
         private Node simulationNode;
         private IClock clock;
-        private Report report;
+        private Models.Report report;
         private MockStorage storage;
         private MockSummary summary;
         private Runner runner;
@@ -50,7 +50,7 @@
                                 StartDate = new DateTime(2017, 1, 1),
                                 EndDate = new DateTime(2017, 1, 10)
                             },
-                            new Report()
+                            new Models.Report()
                             {
                                 VariableNames = new string[] { },
                                 EventNames = new string[] { "[Clock].EndOfDay" },
@@ -69,7 +69,7 @@
             storage = simulation.Children[0] as MockStorage;
             summary = simulation.Children[1] as MockSummary;
             clock = simulation.Children[2] as Clock;
-            report = simulation.Children[3] as Report;
+            report = simulation.Children[3] as Models.Report;
 
             simulationNode = head.Walk().First(n => n.Model is Simulation);
         }
@@ -409,7 +409,7 @@
             sim.Descriptors.Add(new SimulationDescription.Descriptor("Cultivar", "cult1"));
             sim.Descriptors.Add(new SimulationDescription.Descriptor("N", "0"));
 
-            var report = new Report()
+            var report = new Models.Report()
             {
                 VariableNames = new string[0],
                 EventNames = new string[0]
@@ -493,7 +493,7 @@
         {
             Simulations file = Utilities.GetRunnableSim();
 
-            Report report = file.Node.Find<Report>();
+            Models.Report report = file.Node.Find<Models.Report>();
             report.Name = "Report"; // Just to make sure
             report.VariableNames = new string[] { "[Clock].Today.DayOfYear as doy" };
             report.EventNames = new string[]
@@ -677,7 +677,7 @@ namespace Models
 
             paddock.Children.Add(script);
             script.Parent = paddock;
-            Report report = sims.Node.Find<Report>();
+            Models.Report report = sims.Node.Find<Models.Report>();
             report.VariableNames = new string[]
             {
                 "[Manager].Script.Value as x"

@@ -10,7 +10,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 
-namespace APSIM.Core.Tests
+namespace UnitTests.APSIM.Core.Tests
 {
     /// <summary>This is a test class for the .apsimx file converter.</summary>
     [TestFixture]
@@ -393,6 +393,25 @@ namespace APSIM.Core.Tests
             Assert.That(response.didConvert, Is.True);
 
             string afterJSON = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.CoverterTest172FileAfter.apsimx");
+            Simulations expectedModel = FileFormat.ReadFromString<Simulations>(afterJSON, null, false).Model as Simulations;
+
+            string actual = actualModel.Node.ToJSONString();
+            string expected = expectedModel.Node.ToJSONString();
+
+            Assert.That(actual, Is.EqualTo(expected));
+
+            Assert.Pass();
+        }
+
+        [Test]
+        public void Version209()
+        {
+            string beforeJSON = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.CoverterTest209FileBefore.apsimx");
+            var response = FileFormat.ReadFromStringAndReturnConvertState(beforeJSON, typeof(Simulations), null, false);
+            Simulations actualModel = response.head.Model as Simulations;
+            Assert.That(response.didConvert, Is.True);
+
+            string afterJSON = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.CoverterTest209FileAfter.apsimx");
             Simulations expectedModel = FileFormat.ReadFromString<Simulations>(afterJSON, null, false).Model as Simulations;
 
             string actual = actualModel.Node.ToJSONString();

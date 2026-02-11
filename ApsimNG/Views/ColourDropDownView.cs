@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using global::UserInterface.Extensions;
 using Gtk;
 using Utility;
 using CellLayout = Gtk.ICellLayout;

@@ -21,11 +21,18 @@ namespace UnitTests.UtilityTests
             string[] months4 = { "Janu", "Febu", "Marh", "Aprl", "May", "June", "July", "Augt", "Sept", "Octo", "Novb", "Decb" };
             string[] monthsFull = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
 
+            string[] months3_German = { "Jan", "Feb", "Mrz", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"};
+            string[] months4_German = { "Janu", "Febr", "Marz", "Aprl", "Mai", "Juni", "Juli", "Augt", "Sept", "Okto", "Novb", "Dezb" };
+            string[] monthsFull_German = { "Januar", "Februar", "Marz", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember" };
+
             for (int i = 0; i < 12; i++)
             {
                 months.Append(months3[i]);
                 months.Append(months4[i]);
                 months.Append(monthsFull[i]);
+                months.Append(months3_German[i]);
+                months.Append(months4_German[i]);
+                months.Append(monthsFull_German[i]);
             }
             
             //selection of semi random years so we don't have to test every day of every year
@@ -60,6 +67,11 @@ namespace UnitTests.UtilityTests
                 Assert.That(DateUtilities.GetDate(monthTest2.Replace('-', seperator)), Is.EqualTo(monthTestResult));
                 Assert.That(DateUtilities.GetDate(monthTest3.Replace('-', seperator)), Is.EqualTo(monthTestResult));
             }
+
+            //German test with . notation at end of month
+            string german_format = $"25-Febr.";
+            DateTime german_date = DateTime.Parse("2000-02-25");
+            Assert.That(DateUtilities.GetDate(german_format), Is.EqualTo(german_date));
 
             //check dates are trimmed
             string trimTest = $" 2000-01-01 ";

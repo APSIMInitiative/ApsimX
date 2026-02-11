@@ -1,6 +1,7 @@
-﻿namespace UserInterface.Interfaces
+﻿using UserInterface.Views;
+
+namespace UserInterface.Interfaces
 {
-    using global::UserInterface.Views;
 
     interface IExperimentView
     {

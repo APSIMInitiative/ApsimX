@@ -1004,7 +1004,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                string fileName = this.AskUserForOpenFileName("ApsimX files|*.apsimx");
+                string fileName = this.AskUserForOpenFileName("APSIM files (*.apsimx, *.json)|*.apsimx;*.json");
                 if (fileName != null)
                 {
                     bool onLeftTabControl = this.view.IsControlOnLeft(sender);

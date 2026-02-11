@@ -38,9 +38,9 @@ namespace UserInterface.Presenters
             this.genericView = view as IMarkdownView;
             this.explorerPresenter = explorerPresenter;
             if (model is Simulations)
-                this.genericView.Text += Environment.NewLine + WebDocs.ConvertToMarkdown(AutoDocumentation.DocumentHeader(this.model), "");
+                this.genericView.Text += Environment.NewLine + WebDocs.ConvertToMarkdown(AutoDocumentation.DocumentHeader(this.model), "", this.model);
             else
-                this.genericView.Text += Environment.NewLine + WebDocs.ConvertToMarkdown(AutoDocumentation.Document(this.model), "");
+                this.genericView.Text += Environment.NewLine + WebDocs.ConvertToMarkdown(AutoDocumentation.Document(this.model), "", this.model);
         }
 
         /// <summary>
