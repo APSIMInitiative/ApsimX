@@ -2588,7 +2588,7 @@
                               "$type": "Models.Functions.Constant, Models",
                               "FixedValue": 0.0011,
                               "Units": "g",
-                              "Name": "PotentialKernalN",
+                              "Name": "PotentialKernelN",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -2832,7 +2832,7 @@
             },
             {
               "$type": "Models.Functions.DivideFunction, Models",
-              "Name": "NperKernal",
+              "Name": "NperKernel",
               "ResourceName": null,
               "Children": [
                 {
