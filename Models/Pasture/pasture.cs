@@ -2535,6 +2535,38 @@ namespace Models.GrazPlan
             DoPastureWater();
         }
 
+        // private bool HasRootBiomass
+        // {
+        //     get
+        //     {
+        //         if (Green == null)
+        //             return false;
+
+        //         foreach (var cohort in Green)
+        //         {
+        //             if (cohort.root_wt == null)
+        //                 continue;
+
+        //             foreach (var layer in cohort.root_wt)
+        //             {
+        //                 if (layer == null)
+        //                     continue;
+
+        //                 foreach (var value in layer)
+        //                 {
+        //                     if (value > 0)
+        //                         return true;
+        //                 }
+        //             }
+        //         }
+
+        //         return false;
+        //     }
+        // }
+
+
+
+
         /// <summary>
         /// Grow pasture
         /// </summary>
@@ -2543,17 +2575,12 @@ namespace Models.GrazPlan
         [EventSubscribe("DoActualPlantGrowth")]
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
-            if (isAlive == true)
+            if (isAlive)
             {
                 DoPastureGrowth();
                 EndStep();
             }
 
-            // DoPastureGrowth();
-            // EndStep();
-
-            
-            
         }
 
         /// <summary>
