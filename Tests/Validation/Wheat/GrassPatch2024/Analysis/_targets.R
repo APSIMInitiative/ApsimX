@@ -19,6 +19,7 @@ source("R/save_df_into_excel.R")
 source("R/get_pheno_dates.R")
 source("R/add_interp_pheno_dates.R")
 source("R/save_df_into_csv.R")
+source("R/add_stages_to_obs.R")
 
 
 # target objects
@@ -46,21 +47,12 @@ list(
   # average reps
   tar_target(file_obs_mean, do_obs_means(file_obs)),
   
-  # save new mean Observed
-  tar_target(
-    saved_obs_file,
-    save_df_into_excel(
-      df = file_obs_mean, 
-      folder = config$folder_apsimx, 
-      filename = config$file_workData_excel,
-      sheetname = config$sheet_name_observed
-    ),
-    format = "file"
-  ),
-  
   # retrieve measured pheno dates from observations
   tar_target(df_obs_pheno_dates, 
              get_pheno_dates(file_obs_mean, config$date_DOY_ref)),
+  
+  # add observed stages to Observed excel
+  tar_target(df_new_obs, add_stages_to_obs(file_obs_mean,df_obs_pheno_dates)),
   
   # create and add pheno-dates not measured in-between
   tar_target(df_new_pheno_dates, 
@@ -75,6 +67,19 @@ list(
       filename = config$file_name_input_pheno
     ),
     format = "file"
+  ),
+  
+  # save new mean Observed
+  tar_target(
+    saved_obs_file,
+    save_df_into_excel(
+      df = df_new_obs, 
+      folder = config$folder_apsimx, 
+      filename = config$file_workData_excel,
+      sheetname = config$sheet_name_observed
+    ),
+    format = "file"
   )
+  
   
 )

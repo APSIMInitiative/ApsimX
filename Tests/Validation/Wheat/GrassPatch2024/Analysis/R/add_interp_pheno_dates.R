@@ -62,9 +62,11 @@ add_interp_pheno_dates <- function(df, btwStgPerc) {
                   `[Wheat].Phenology.SpikeletsDifferentiating.DateToProgress`,
                   `[Wheat].Phenology.StemElongating.DateToProgress`,
                   `[Wheat].Phenology.Heading.DateToProgress`,
-                  `[Wheat].Phenology.Flowering.DateToProgress`,
-                  `[Wheat].Phenology.EndGrainFill.DateToProgress` 
+                  `[Wheat].Phenology.Flowering.DateToProgress` 
+                  # Note: Stage_10 does not exist in APSIM so it was not included
                   )
+  
+  
   
   return(df_renamed)
 }
