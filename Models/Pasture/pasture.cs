@@ -595,6 +595,9 @@ namespace Models.GrazPlan
         {
             throw new NotImplementedException();
         }
+
+         private bool isAlive = false;
+
         /// <summary>
         /// Sow: Not implemented 
         /// </summary>
@@ -609,10 +612,124 @@ namespace Models.GrazPlan
         /// <param name="tillering"></param>
         /// <param name="ftn"></param>
         // <exception cref="NotImplementedException"></exception>
-        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1, double seeds = 0, int tillering = 0, double ftn = 0.0)
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1,
+                double seeds = 0, int tillering = 0, double ftn = 0.0)
         {
-            
+            if (!isAlive)
+            {
+                int numDry = 0;
+                int numGreen = 0;
+                int idx = 0;
+
+                GreenInit[] green = new GreenInit[0];
+                DryInit[] dry = new DryInit[0];
+
+                foreach (var initCohort in Children)
+                {
+                    if (initCohort is GreenCohortInitialise greenInit)
+                    {
+                        Array.Resize(ref green, green.Length + 1);
+                        idx = numGreen;
+                        green[idx] = new GreenInit();
+
+                        // ROOTS
+                        green[idx].root_wt = new double[greenInit.RootWeight.Length][];
+                        for (int i = 0; i < greenInit.RootWeight.Length; i++)
+                        {
+                            double rw = greenInit.RootWeight[i];
+                            green[idx].root_wt[i] = (rw == 0)
+                                ? new double[] { 400.0, 400.0 }
+                                : new double[] { rw };
+                            
+                        }
+
+                        // STATUS + PHYSIOLOGY
+                        green[idx].status = greenInit.Status;
+                        green[idx].rt_dep = greenInit.RootDepth;
+                        green[idx].estab_index = greenInit.EstIndex;
+                        green[idx].stem_reloc = greenInit.StemReloc;
+                        green[idx].stress_index = greenInit.StressIndex;
+                        green[idx].frosts = greenInit.Frosts;
+
+                        // ABOVE-GROUND
+                        green[idx].herbage = new Herbage[2];
+
+                        // LEAF
+                        green[idx].herbage[0] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
+                        green[idx].herbage[0].dmd = greenInit.LeafDMD;
+                        green[idx].herbage[0].weight =
+                            (greenInit.LeafWeight.Length == 1 && greenInit.LeafWeight[0] == 0)
+                            ? new double[] { 800.0 }
+                            : greenInit.LeafWeight;
+                        green[idx].herbage[0].n_conc = greenInit.LeafNConc;
+                        green[idx].herbage[0].spec_area = greenInit.LeafSpecificArea;
+
+                        // STEM
+                        green[idx].herbage[1] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
+                        green[idx].herbage[1].dmd = greenInit.StemDMD;
+                        green[idx].herbage[1].weight =
+                            (greenInit.StemWeight.Length == 1 && greenInit.StemWeight[0] == 0)
+                            ? new double[] { 800.0 }
+                            : greenInit.StemWeight;
+                        green[idx].herbage[1].n_conc = greenInit.StemNConc;
+                        green[idx].herbage[1].spec_area = greenInit.StemSpecificArea;
+
+                        numGreen++;
+                    }
+                else if (initCohort is DryCohortInitialise dryInit)
+                {
+                    Array.Resize(ref dry, dry.Length + 1);
+                    idx = numDry;
+                    dry[idx] = new DryInit();
+
+                    dry[idx].status = dryInit.Status;
+                    dry[idx].herbage = new Herbage[2];
+
+                    // LEAF
+                    dry[idx].herbage[0] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
+                    dry[idx].herbage[0].dmd = dryInit.LeafDMD;
+                    dry[idx].herbage[0].weight =
+                    (dryInit.LeafWeight.Length == 1 && dryInit.LeafWeight[0] == 0)
+                    ? new double[] { 800.0 }
+                    : dryInit.LeafWeight;
+                    dry[idx].herbage[0].n_conc = dryInit.LeafNConc;
+                    dry[idx].herbage[0].spec_area = dryInit.LeafSpecificArea;
+
+                    // STEM
+                    dry[idx].herbage[1] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
+                    dry[idx].herbage[1].dmd = dryInit.StemDMD;
+                    dry[idx].herbage[1].weight =
+                    (dryInit.StemWeight.Length == 1 && dryInit.StemWeight[0] == 0)
+                            ? new double[] { 800.0 }
+                            : dryInit.StemWeight;
+                    dry[idx].herbage[1].n_conc = dryInit.StemNConc;
+                        dry[idx].herbage[1].spec_area = dryInit.StemSpecificArea;
+
+                    numDry++;
+                    }
+            }
+
+
+                PastureModel.ReadStateFromValues(
+                    laggedT: PastureModel.LaggedMeanT,
+                    phen: PastureModel.PhenoCode,
+                    flowerlen: PastureModel.FloweringLength,
+                    flowertime: PastureModel.FloweringTime,
+                    sencidx: PastureModel.fSencDays,
+                    dormidx: PastureModel.DormIndex,
+                    dormt: PastureModel.DormMeanTemp,
+                    extintc: null,
+                    green: green,
+                    dry: dry,
+                    seed: this.Seeds,
+                    seeddormtime: PastureModel.Days_EDormant,
+                    germidx: PastureModel.GermnIndex
+                );
+
+
+                isAlive = true;
         }
+    }
 
         /// <summary>
         /// EndCrop: Not incremented
@@ -2426,8 +2543,17 @@ namespace Models.GrazPlan
         [EventSubscribe("DoActualPlantGrowth")]
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
-            DoPastureGrowth();
-            EndStep();
+            if (isAlive == true)
+            {
+                DoPastureGrowth();
+                EndStep();
+            }
+
+            // DoPastureGrowth();
+            // EndStep();
+
+            
+            
         }
 
         /// <summary>
