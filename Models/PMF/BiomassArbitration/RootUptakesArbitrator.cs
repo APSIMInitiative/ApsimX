@@ -165,12 +165,12 @@ namespace Models.PMF
         {
             initialNitrogenEstimate = true;
             initialWaterEstimate = true;
-            WaterSupply.Reset();
-            NitrogenSupply.Reset();
-            WaterUptake.Reset();
-            NitrogenUptake.Reset();
-            WaterDemand.Reset();
-            NitrogenDemand.Reset();
+            WaterSupply?.Reset();
+            NitrogenSupply?.Reset();
+            WaterUptake?.Reset();
+            NitrogenUptake?.Reset();
+            WaterDemand?.Reset();
+            NitrogenDemand?.Reset();
         }
 
         /// <summary>
