@@ -49,6 +49,12 @@ namespace Models.Soils.Arbitrator
             }
         }
 
+        /// <summary>Method to zero values</summary>
+        public void Reset()
+        {
+            Array.Clear(AmountByZone);
+        }
+
         /// <summary>Constructor</summary>
         public PlantWaterOrNDelta(List<double> zoneAreas)
         {
