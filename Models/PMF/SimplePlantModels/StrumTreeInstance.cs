@@ -719,8 +719,8 @@ namespace Models.PMF.SimplePlantModels
 
             string cropName = this.Name;
             double depth = Math.Min(this.MaxRD * this.AgeAtSimulationStart / this.YearsToMaxDimension, rootDepth);
-            double population = 1.0;
-            double rowWidth = 0.0;
+            double population = TreePopulation;
+            double rowWidth = RowSpacing;
 
             tree = CoeffCalc();
             strum.AddCultivar(tree);
