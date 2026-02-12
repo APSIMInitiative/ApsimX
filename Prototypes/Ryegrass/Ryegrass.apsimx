@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 208,
+  "Version": 209,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -52,7 +52,7 @@
     },
     {
       "$type": "Models.Memo, Models",
-      "Text": "AgPasture is a model developed to simulate pasture growth in the APSIM framework. It was initially based on the plant physiological model of [thornley1990plant], as were the models SGS/DairyMod/EcoMod, presented by [johnson_dairymod_2008]. Today in AgPasture, the plant processes were adapted from EcoMod but all environmental factors and partition of resources is done by other models in the APSIM framework.The main purpose of AgPasture is to simulate mixed pastures but based on individual calculations for each species of photosynthesis, respiration, dry matter accumulation and partitioning and tissue turnover as presented by [li_modelling_2011]. It simulates pastures composed by C3 and C4 grasses, legumes and forbs. Now AgPasture has the sward component that is responsible for integrating the outputs obtained for each species and controlling management aspects, such as grazing. \nThe base species in AgPasture is a generic temperate C3 grass parameterised as a generic ryegrass. All simulations are based on an stablished pasture, so there is no development from seeds. The proportion of species in the sward varies according to environmental effects, water and nutrient extraction ability and effects of harvests (cutting or grazing) on each of the species in the sward. Each species is described as a set of organs (Figure 1) and these organs are described by tissue pools (Figure 2). \n\n![Description of plant species in AgPasture with the indication of a general class for plant parts.](AgPasturePlantSpecies.png)\n\n![Tissue dynamics in AgPasture, from new growth until senescence.](AgPastureTissueDynamics.png)\n\nThe water demand is calculated by the MicroClimate model (originally micromet; [snow_apsimmicromet_2004]). Water availability is then calculated according to the root distribution and the KL parameter in the soil. The communication wih the soil is mediated by SoilArbitrator, which is lso responsible to balance resource competition between plants. Similarly, SoilArbitrator mediates nitrogen availability. AgPasture receives this information and calculates plant potential growth through net photosynthesis and a series of growth limiting factors (GLF), related to water, nitrogen, temperature, fertility (to account for nutrient limitations, other than nitrogen) and a generic factor (to account for the effects of diseases, for example) are used to reach the actual plant growth. This actual plant growth is what is used for the further processes of tissue turnover and dry matter allocation presented in Figure 3. Dry matter transfer across tissues, how turnover rates act, and nitrogen balance are presented in Figure 4. In general, AgPasture calculates the turnover rates (Î³) for each tissue pool of all plant organs. The rates are then passed on to each organ and the amounts to be potentially turned over (dDM) are calculated for each tissue pool. For nitrogen, basically AgPasture uses the nitrogen taken up from the soil and fixed by legumes. This nitrogen amount will then be available for new growth. The process of nitrogen uptake aims for the maximum concentration of nitrogen in new growth (Nmax*). This is not always achieved and the current nitrogen concentration will be added to the pool of tissue 0, which actively contributes with dry matter and nitrogen transfer for older tissues. The same happens for tissues 1 and 2. One of the modifications done in AgPasture for APSIMX is the definition of an adequate nitrogen concentration in these pools. Now tissues have a target concentration of nitrogen  and any extra nitrogen is put through the remobilisable nitrogen pool ([vogeler2016deriving]). The rate of nitrogen remobilisation is defined by kL, which mainly shows that the priority is the first leaf. When the first leaf becomes deficient, the remobilisation of extra nitrogen aims to fulfill the nitrogen need for this pool. At the same time, a minimum concentration of nitrogen is always transferred to the pool of tissue 3, resulting in a constant nitrogen concentration of this pool. This is then added to the litter pool. where dry matter that comes from the shoot is added to the surface organic matter pool whereas dry matter from roots goes to the soil fresh organic matter pool. The amount of nitrogen remobilisable that was not used is then added to the litter pool.\n\n![Description of growth calculations done by AgPasture, from photosynthesis up to the partitioning of growth between shoot and root.](AgPastureGrowth.png)\n\n![Nitrogen balance and dry matter transfer in AgPasture.](AgPastureBalance.png)\n\nAgPasture does not account for phenological development, therefore it does not simulate reproductive growth and seed production. Instead, the model mimics changes in growth rate and dry matter allocation by using a simple function (based on latitude and some species specific parameters) that changes in the shoot:root ratio of plants during this \"reproductive period\". Another limitation of the model is the lack of carbon remobilisation, which makes it difficult to simulate the proper remobilisation of reserves in the plant. More details are given in the supplementary documentation for AgPasture.\nBiomass removal can be simulated by the Graze (Figure 5) and RemoveBiomass (Figure 6) methods. The Graze method is a simple way to present the amount of biomass to be removed. It uses a parameter 'Amount', which sets up the amount of dry matter to be removed, and a parameter 'Type', which defines how the value of 'Amount' is interpreted. 'Type' can be set as 'ResidueAmount', where the target amount of dry matter is a value for the residual amount of biomass that will be left after harvest, or it can be set as 'RemoveAMount', where the target amount of dry matter is the value to be removed by the harvest. Both methods are dependent on a minimum above ground green dry matter that is set as a default of 100 kg DM/ha and can never be removed. Then a function 'RemoveDM' is responsible for the dry matter removal and partitions the amount to be removed among organs and pools. This is dependent on default preference values, which are currently set as 1. A series of checks is done to guarantee that mass balance is not affected by the removal of dry matter. The 'RemoveBiomass' method is more elaborate and allows to control the amount of each organ and pool that will be removed. The fractions to be removed can be set through a 'RemovalType' or a 'RemovalData' parameter. The 'RemovalType' is based on default fractions for organs (leaves, stems and stolons) with fractions for live and dead pools of dry matter to be removed and residual dry matter. The 'RemovalData' is optional and allows the fractions to be removed to be set up by the user.\n\n![Graze method of biomass removal in AgPasture.](AgPastureGraze.png)\n\n![Description of the RemoveBiomass method in AgPasture](AgPastureRemoveBiomass.png)\n\nFigure 6. RemoveBiomass method of biomass removal in AgPasture.\n\nRoot distribution in AgPasture is give by a simple function, it follows an uniform distribution down to a certain depth, which can be set up by the user. From this depth on, the root system decreases following an exponential decline until no roots are present at the given maximum rooting depth (Figure 7).\n\n![Example of a shallow, mid and deep distribution of roots in AgPasture.](AgPastureRootDistribution.png)\n\n\n\n\n",
+      "Text": "AgPasture is a model developed to simulate pasture growth in the APSIM framework. It was initially based on the plant physiological model of [#thornley1990plant], as were the models SGS/DairyMod/EcoMod, presented by [#johnson_dairymod_2008]. Today in AgPasture, the plant processes were adapted from EcoMod but all environmental factors and partition of resources is done by other models in the APSIM framework.The main purpose of AgPasture is to simulate mixed pastures but based on individual calculations for each species of photosynthesis, respiration, dry matter accumulation and partitioning and tissue turnover as presented by [#li_modelling_2011]. It simulates pastures composed by C3 and C4 grasses, legumes and forbs. Now AgPasture has the sward component that is responsible for integrating the outputs obtained for each species and controlling management aspects, such as grazing. \nThe base species in AgPasture is a generic temperate C3 grass parameterised as a generic ryegrass. All simulations are based on an stablished pasture, so there is no development from seeds. The proportion of species in the sward varies according to environmental effects, water and nutrient extraction ability and effects of harvests (cutting or grazing) on each of the species in the sward. Each species is described as a set of organs (Figure 1) and these organs are described by tissue pools (Figure 2). \n\n![Description of plant species in AgPasture with the indication of a general class for plant parts.](AgPasturePlantSpecies.png)\n\n![Tissue dynamics in AgPasture, from new growth until senescence.](AgPastureTissueDynamics.png)\n\nThe water demand is calculated by the MicroClimate model (originally micromet; [#snow_apsimmicromet_2004]). Water availability is then calculated according to the root distribution and the KL parameter in the soil. The communication wih the soil is mediated by SoilArbitrator, which is lso responsible to balance resource competition between plants. Similarly, SoilArbitrator mediates nitrogen availability. AgPasture receives this information and calculates plant potential growth through net photosynthesis and a series of growth limiting factors (GLF), related to water, nitrogen, temperature, fertility (to account for nutrient limitations, other than nitrogen) and a generic factor (to account for the effects of diseases, for example) are used to reach the actual plant growth. This actual plant growth is what is used for the further processes of tissue turnover and dry matter allocation presented in Figure 3. Dry matter transfer across tissues, how turnover rates act, and nitrogen balance are presented in Figure 4. In general, AgPasture calculates the turnover rates (Î³) for each tissue pool of all plant organs. The rates are then passed on to each organ and the amounts to be potentially turned over (dDM) are calculated for each tissue pool. For nitrogen, basically AgPasture uses the nitrogen taken up from the soil and fixed by legumes. This nitrogen amount will then be available for new growth. The process of nitrogen uptake aims for the maximum concentration of nitrogen in new growth (Nmax*). This is not always achieved and the current nitrogen concentration will be added to the pool of tissue 0, which actively contributes with dry matter and nitrogen transfer for older tissues. The same happens for tissues 1 and 2. One of the modifications done in AgPasture for APSIMX is the definition of an adequate nitrogen concentration in these pools. Now tissues have a target concentration of nitrogen  and any extra nitrogen is put through the remobilisable nitrogen pool ([#vogeler2016deriving]). The rate of nitrogen remobilisation is defined by kL, which mainly shows that the priority is the first leaf. When the first leaf becomes deficient, the remobilisation of extra nitrogen aims to fulfill the nitrogen need for this pool. At the same time, a minimum concentration of nitrogen is always transferred to the pool of tissue 3, resulting in a constant nitrogen concentration of this pool. This is then added to the litter pool. where dry matter that comes from the shoot is added to the surface organic matter pool whereas dry matter from roots goes to the soil fresh organic matter pool. The amount of nitrogen remobilisable that was not used is then added to the litter pool.\n\n![Description of growth calculations done by AgPasture, from photosynthesis up to the partitioning of growth between shoot and root.](AgPastureGrowth.png)\n\n![Nitrogen balance and dry matter transfer in AgPasture.](AgPastureBalance.png)\n\nAgPasture does not account for phenological development, therefore it does not simulate reproductive growth and seed production. Instead, the model mimics changes in growth rate and dry matter allocation by using a simple function (based on latitude and some species specific parameters) that changes in the shoot:root ratio of plants during this \"reproductive period\". Another limitation of the model is the lack of carbon remobilisation, which makes it difficult to simulate the proper remobilisation of reserves in the plant. More details are given in the supplementary documentation for AgPasture.\nBiomass removal can be simulated by the Graze (Figure 5) and RemoveBiomass (Figure 6) methods. The Graze method is a simple way to present the amount of biomass to be removed. It uses a parameter 'Amount', which sets up the amount of dry matter to be removed, and a parameter 'Type', which defines how the value of 'Amount' is interpreted. 'Type' can be set as 'ResidueAmount', where the target amount of dry matter is a value for the residual amount of biomass that will be left after harvest, or it can be set as 'RemoveAMount', where the target amount of dry matter is the value to be removed by the harvest. Both methods are dependent on a minimum above ground green dry matter that is set as a default of 100 kg DM/ha and can never be removed. Then a function 'RemoveDM' is responsible for the dry matter removal and partitions the amount to be removed among organs and pools. This is dependent on default preference values, which are currently set as 1. A series of checks is done to guarantee that mass balance is not affected by the removal of dry matter. The 'RemoveBiomass' method is more elaborate and allows to control the amount of each organ and pool that will be removed. The fractions to be removed can be set through a 'RemovalType' or a 'RemovalData' parameter. The 'RemovalType' is based on default fractions for organs (leaves, stems and stolons) with fractions for live and dead pools of dry matter to be removed and residual dry matter. The 'RemovalData' is optional and allows the fractions to be removed to be set up by the user.\n\n![Graze method of biomass removal in AgPasture.](AgPastureGraze.png)\n\n![Description of the RemoveBiomass method in AgPasture](AgPastureRemoveBiomass.png)\n\nFigure 6. RemoveBiomass method of biomass removal in AgPasture.\n\nRoot distribution in AgPasture is give by a simple function, it follows an uniform distribution down to a certain depth, which can be set up by the user. From this depth on, the root system decreases following an exponential decline until no roots are present at the given maximum rooting depth (Figure 7).\n\n![Example of a shallow, mid and deep distribution of roots in AgPasture.](AgPastureRootDistribution.png)\n\n\n\n\n",
       "Name": "Memo",
       "ResourceName": null,
       "Children": [],
@@ -67,7 +67,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "The validation of biomass production, N status, and relative species composition of AgPasture is done using a series of simulations based on a number of datasets.  The base validation uses the 'Radcliffe trials', a series of dataset of yield measured in exclusion cages on grass-clover pastures across New Zealand. The second set comprises of two long term dataset that contain more detailed informatin on management and pasture yield for each harvest, these are a subset of the 'Winchmore' irrigation and fertility trials, with data from ryegrass-clover mixed pastures under rainfed and irrigated conditions, and another set based on production trials in 'Ruakura' [mccall2003pasture]. The third set of simulations is based on a fertilisty trial conducted in 'Lincoln' and 'Ruakura' for the Forages for Reducing Nitorgen Leaching programme (FRNL); this encompases two years of biomass and N uptake measurements under six N fertilisation rates for monocultures of ryegrass and white clover, plus a mix of the two (only in Ruakura).  \n",
+          "Text": "The validation of biomass production, N status, and relative species composition of AgPasture is done using a series of simulations based on a number of datasets.  The base validation uses the 'Radcliffe trials', a series of dataset of yield measured in exclusion cages on grass-clover pastures across New Zealand. The second set comprises of two long term dataset that contain more detailed informatin on management and pasture yield for each harvest, these are a subset of the 'Winchmore' irrigation and fertility trials, with data from ryegrass-clover mixed pastures under rainfed and irrigated conditions, and another set based on production trials in 'Ruakura' [#mccall2003pasture]. The third set of simulations is based on a fertilisty trial conducted in 'Lincoln' and 'Ruakura' for the Forages for Reducing Nitorgen Leaching programme (FRNL); this encompases two years of biomass and N uptake measurements under six N fertilisation rates for monocultures of ryegrass and white clover, plus a mix of the two (only in Ruakura).  \n",
           "Name": "Memo",
           "ResourceName": null,
           "Children": [],
@@ -1652,7 +1652,7 @@
                           "AnnotationLocation": 0,
                           "DisabledSeries": [],
                           "LegendOutsideGraph": false,
-                          "Name": "LeafWt",
+                          "Name": "LeafLiveWt",
                           "ResourceName": null,
                           "Children": [
                             {
@@ -1749,7 +1749,7 @@
                           "AnnotationLocation": 0,
                           "DisabledSeries": [],
                           "LegendOutsideGraph": false,
-                          "Name": "StemWt",
+                          "Name": "StemLiveWt",
                           "ResourceName": null,
                           "Children": [
                             {
@@ -1846,7 +1846,7 @@
                           "AnnotationLocation": 0,
                           "DisabledSeries": [],
                           "LegendOutsideGraph": false,
-                          "Name": "DeadGrassWt",
+                          "Name": "DeadLeafWt",
                           "ResourceName": null,
                           "Children": [
                             {
@@ -1943,7 +1943,7 @@
                           "AnnotationLocation": 0,
                           "DisabledSeries": [],
                           "LegendOutsideGraph": false,
-                          "Name": "AboveGroundWtGrms",
+                          "Name": "AboveGroundWt",
                           "ResourceName": null,
                           "Children": [
                             {
@@ -3332,9 +3332,9 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1995-03-01",
+                              "Date": "1995-05-01",
                               "Action": "[AgPRyegrass].Sow(population: 1, cultivar: \"Aurora\", depth: 5, rowSpacing: 150)",
-                              "Line": "1995-03-01 [AgPRyegrass].Sow(population: 1, cultivar: \"Aurora\", depth: 5, rowSpacing: 150)"
+                              "Line": "1995-05-01 [AgPRyegrass].Sow(population: 1, cultivar: \"Aurora\", depth: 5, rowSpacing: 150)"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -3353,9 +3353,9 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1996-03-01",
+                              "Date": "1996-06-01",
                               "Action": "[AgPRyegrass].Sow(population: 1, cultivar: \"Aurora\", depth: 5, rowSpacing: 150)",
-                              "Line": "1996-03-01 [AgPRyegrass].Sow(population: 1, cultivar: \"Aurora\", depth: 5, rowSpacing: 150)"
+                              "Line": "1996-06-01 [AgPRyegrass].Sow(population: 1, cultivar: \"Aurora\", depth: 5, rowSpacing: 150)"
                             }
                           ],
                           "Name": "Aurora",
@@ -3377,9 +3377,9 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1995-03-01",
+                              "Date": "1995-05-01",
                               "Action": "[AgPRyegrass].Sow(population: 1, cultivar: \"Ba11351\", depth: 5, rowSpacing: 150)",
-                              "Line": "1995-03-01 [AgPRyegrass].Sow(population: 1, cultivar: \"Ba11351\", depth: 5, rowSpacing: 150)"
+                              "Line": "1995-05-01 [AgPRyegrass].Sow(population: 1, cultivar: \"Ba11351\", depth: 5, rowSpacing: 150)"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -3398,9 +3398,9 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1996-03-01",
+                              "Date": "1996-06-01",
                               "Action": "[AgPRyegrass].Sow(population: 1, cultivar: \"Ba11351\", depth: 5, rowSpacing: 150)",
-                              "Line": "1996-03-01 [AgPRyegrass].Sow(population: 1, cultivar: \"Ba11351\", depth: 5, rowSpacing: 150)"
+                              "Line": "1996-06-01 [AgPRyegrass].Sow(population: 1, cultivar: \"Ba11351\", depth: 5, rowSpacing: 150)"
                             }
                           ],
                           "Name": "Ba11351",
@@ -3422,9 +3422,9 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1995-03-01",
+                              "Date": "1995-05-01",
                               "Action": "[AgPRyegrass].Sow(population: 1, cultivar: \"Ellett\", depth: 5, rowSpacing: 150)",
-                              "Line": "1995-03-01 [AgPRyegrass].Sow(population: 1, cultivar: \"Ellett\", depth: 5, rowSpacing: 150)"
+                              "Line": "1995-05-01 [AgPRyegrass].Sow(population: 1, cultivar: \"Ellett\", depth: 5, rowSpacing: 150)"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -3443,9 +3443,9 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1996-03-01",
+                              "Date": "1996-06-01",
                               "Action": "[AgPRyegrass].Sow(population: 1, cultivar: \"Ellett\", depth: 5, rowSpacing: 150)",
-                              "Line": "1996-03-01 [AgPRyegrass].Sow(population: 1, cultivar: \"Ellett\", depth: 5, rowSpacing: 150)"
+                              "Line": "1996-06-01 [AgPRyegrass].Sow(population: 1, cultivar: \"Ellett\", depth: 5, rowSpacing: 150)"
                             }
                           ],
                           "Name": "Ellett",
@@ -3467,9 +3467,9 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1995-03-01",
+                              "Date": "1995-05-01",
                               "Action": "[AgPRyegrass].Sow(population: 1, cultivar: \"Vedette\", depth: 5, rowSpacing: 150)",
-                              "Line": "1995-03-01 [AgPRyegrass].Sow(population: 1, cultivar: \"Vedette\", depth: 5, rowSpacing: 150)"
+                              "Line": "1995-05-01 [AgPRyegrass].Sow(population: 1, cultivar: \"Vedette\", depth: 5, rowSpacing: 150)"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -3488,9 +3488,9 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1996-03-01",
+                              "Date": "1996-06-01",
                               "Action": "[AgPRyegrass].Sow(population: 1, cultivar: \"Vedette\", depth: 5, rowSpacing: 150)",
-                              "Line": "1996-03-01 [AgPRyegrass].Sow(population: 1, cultivar: \"Vedette\", depth: 5, rowSpacing: 150)"
+                              "Line": "1996-06-01 [AgPRyegrass].Sow(population: 1, cultivar: \"Vedette\", depth: 5, rowSpacing: 150)"
                             }
                           ],
                           "Name": "Vedette",
@@ -3512,9 +3512,9 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1995-03-01",
+                              "Date": "1995-05-01",
                               "Action": "[AgPRyegrass].Sow(population: 1, cultivar: \"KangarooValley\", depth: 5, rowSpacing: 150)",
-                              "Line": "1995-03-01 [AgPRyegrass].Sow(population: 1, cultivar: \"KangarooValley\", depth: 5, rowSpacing: 150)"
+                              "Line": "1995-05-01 [AgPRyegrass].Sow(population: 1, cultivar: \"KangarooValley\", depth: 5, rowSpacing: 150)"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -3533,9 +3533,9 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1996-03-01",
+                              "Date": "1996-06-01",
                               "Action": "[AgPRyegrass].Sow(population: 1, cultivar: \"KangarooValley\", depth: 5, rowSpacing: 150)",
-                              "Line": "1996-03-01 [AgPRyegrass].Sow(population: 1, cultivar: \"KangarooValley\", depth: 5, rowSpacing: 150)"
+                              "Line": "1996-06-01 [AgPRyegrass].Sow(population: 1, cultivar: \"KangarooValley\", depth: 5, rowSpacing: 150)"
                             }
                           ],
                           "Name": "KangarooValley",
@@ -3651,66 +3651,178 @@
                             },
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1995-03-01",
-                              "Action": "[Fertiliser].Apply(amount: 50, type: \"UreaN\")",
-                              "Line": "1995-03-01 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1995-03-01 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
                             },
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1995-10-31",
-                              "Action": "[Fertiliser].Apply(amount: 50, type: \"UreaN\")",
-                              "Line": "1995-10-31 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1995-10-31 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
                             },
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1995-11-30",
-                              "Action": "[Fertiliser].Apply(amount: 50, type: \"UreaN\")",
-                              "Line": "1995-11-30 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1995-11-30 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
                             },
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1995-12-31",
-                              "Action": "[Fertiliser].Apply(amount: 50, type: \"UreaN\")",
-                              "Line": "1995-12-31 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1995-12-31 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
                             },
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1996-01-31",
-                              "Action": "[Fertiliser].Apply(amount: 50, type: \"UreaN\")",
-                              "Line": "1996-01-31 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1996-01-31 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
                             },
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1996-02-28",
-                              "Action": "[Fertiliser].Apply(amount: 50, type: \"UreaN\")",
-                              "Line": "1996-02-28 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1996-02-28 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
                             },
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1996-03-31",
-                              "Action": "[Fertiliser].Apply(amount: 50, type: \"UreaN\")",
-                              "Line": "1996-03-31 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1996-03-31 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
                             },
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1996-04-30",
-                              "Action": "[Fertiliser].Apply(amount: 50, type: \"UreaN\")",
-                              "Line": "1996-04-30 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1996-04-30 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
                             },
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1996-05-31",
-                              "Action": "[Fertiliser].Apply(amount: 50, type: \"UreaN\")",
-                              "Line": "1996-05-31 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1996-05-31 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": ""
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1996-06-30 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1996-07-31 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1996-08-31 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1996-09-30 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1996-10-31 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1996-11-30 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1996-12-31 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1997-01-30 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1997-02-28 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1997-03-31 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1997-04-30 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1997-04-30 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1997-05-31 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1997-06-30 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1997-07-31 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -3722,30 +3834,86 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1996-06-30",
+                              "Date": "1995-06-05",
                               "Action": "[Fertiliser].Apply(amount: 50, type: \"UreaN\")",
-                              "Line": "1996-06-30 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                              "Line": "1995-06-05 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1996-07-31",
+                              "Date": "1995-07-03",
                               "Action": "[Fertiliser].Apply(amount: 50, type: \"UreaN\")",
-                              "Line": "1996-07-31 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                              "Line": "1995-07-03 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1996-08-31",
+                              "Date": "1995-07-31",
                               "Action": "[Fertiliser].Apply(amount: 50, type: \"UreaN\")",
-                              "Line": "1996-08-31 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                              "Line": "1995-07-31 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1996-09-30",
+                              "Date": "1995-08-28",
                               "Action": "[Fertiliser].Apply(amount: 50, type: \"UreaN\")",
-                              "Line": "1996-09-30 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                              "Line": "1995-08-28 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "1995-09-20",
+                              "Action": "[Fertiliser].Apply(amount: 50, type: \"UreaN\")",
+                              "Line": "1995-09-20 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "1995-10-19",
+                              "Action": "[Fertiliser].Apply(amount: 50, type: \"UreaN\")",
+                              "Line": "1995-10-19 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "1995-11-24",
+                              "Action": "[Fertiliser].Apply(amount: 50, type: \"UreaN\")",
+                              "Line": "1995-11-24 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "1995-05-18",
+                              "Action": "[Fertiliser].Apply(amount: 50, type: \"UreaN\")",
+                              "Line": "1995-05-18 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "1996-09-06",
+                              "Action": "[Fertiliser].Apply(amount: 50, type: \"UreaN\")",
+                              "Line": "1996-09-06 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": ""
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": ""
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "1996-10-03",
+                              "Action": "[Fertiliser].Apply(amount: 50, type: \"UreaN\")",
+                              "Line": "1996-10-03 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -3756,73 +3924,66 @@
                             },
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1996-11-30",
-                              "Action": "[Fertiliser].Apply(amount: 50, type: \"UreaN\")",
-                              "Line": "1996-11-30 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": ""
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1996-12-31",
+                              "Date": "1996-11-27",
                               "Action": "[Fertiliser].Apply(amount: 50, type: \"UreaN\")",
-                              "Line": "1996-12-31 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                              "Line": "1996-11-27 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1997-01-30",
+                              "Date": "1996-12-23",
                               "Action": "[Fertiliser].Apply(amount: 50, type: \"UreaN\")",
-                              "Line": "1997-01-30 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                              "Line": "1996-12-23 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": ""
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1997-02-28",
+                              "Date": "1997-01-20",
                               "Action": "[Fertiliser].Apply(amount: 50, type: \"UreaN\")",
-                              "Line": "1997-02-28 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                              "Line": "1997-01-20 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1997-03-31",
+                              "Date": "1997-02-20",
                               "Action": "[Fertiliser].Apply(amount: 50, type: \"UreaN\")",
-                              "Line": "1997-03-31 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                              "Line": "1997-02-20 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1997-04-30",
+                              "Date": "1997-03-20",
                               "Action": "[Fertiliser].Apply(amount: 50, type: \"UreaN\")",
-                              "Line": "1997-04-30 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                              "Line": "1997-03-20 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1997-04-30",
+                              "Date": "1997-04-28",
                               "Action": "[Fertiliser].Apply(amount: 50, type: \"UreaN\")",
-                              "Line": "1997-04-30 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                              "Line": "1997-04-28 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1997-05-31",
+                              "Date": "1997-05-22",
                               "Action": "[Fertiliser].Apply(amount: 50, type: \"UreaN\")",
-                              "Line": "1997-05-31 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1997-06-30",
-                              "Action": "[Fertiliser].Apply(amount: 50, type: \"UreaN\")",
-                              "Line": "1997-06-30 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1997-07-31",
-                              "Action": "[Fertiliser].Apply(amount: 50, type: \"UreaN\")",
-                              "Line": "1997-07-31 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
+                              "Line": "1997-05-22 [Fertiliser].Apply(amount: 50, type: \"UreaN\")"
                             }
                           ],
                           "Name": "FertiliserManagement",
@@ -4986,10 +5147,17 @@
                             },
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1995-05-18",
-                              "Action": "[AgPRyegrass].RemoveBiomass(amount: 500, type: \"SetResidueAmount\")",
-                              "Line": "1995-05-18 [AgPRyegrass].RemoveBiomass(amount: 500, type: \"SetResidueAmount\")"
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "//1995-05-18 [AgPRyegrass].RemoveBiomass(amount: 500, type: \"SetResidueAmount\")"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": ""
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -4997,20 +5165,6 @@
                               "Date": "1996-09-06",
                               "Action": "[AgPRyegrass].RemoveBiomass(amount: 500, type: \"SetResidueAmount\")",
                               "Line": "1996-09-06 [AgPRyegrass].RemoveBiomass(amount: 500, type: \"SetResidueAmount\")"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": false,
-                              "Date": null,
-                              "Action": null,
-                              "Line": ""
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": false,
-                              "Date": null,
-                              "Action": null,
-                              "Line": ""
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -5028,13 +5182,6 @@
                             },
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": false,
-                              "Date": null,
-                              "Action": null,
-                              "Line": ""
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1996-11-27",
                               "Action": "[AgPRyegrass].RemoveBiomass(amount: 500, type: \"SetResidueAmount\")",
@@ -5046,13 +5193,6 @@
                               "Date": "1996-12-23",
                               "Action": "[AgPRyegrass].RemoveBiomass(amount: 500, type: \"SetResidueAmount\")",
                               "Line": "1996-12-23 [AgPRyegrass].RemoveBiomass(amount: 500, type: \"SetResidueAmount\")"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": false,
-                              "Date": null,
-                              "Action": null,
-                              "Line": ""
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -5802,7 +5942,7 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": 0,
-                          "FactorToVaryColours": null,
+                          "FactorToVaryColours": "Cultivar",
                           "FactorToVaryMarkers": null,
                           "FactorToVaryLines": null,
                           "Marker": 11,
@@ -5811,7 +5951,7 @@
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "AGPRyegrass.GlfNContent",
+                          "YFieldName": "AgPRyegrass.GlfNContent",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -6508,9 +6648,9 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1995-03-01",
+                              "Date": "1995-06-01",
                               "Action": "[AgPRyegrass].Sow(population: 1, cultivar: \"Aurora\", depth: 5, rowSpacing: 150)",
-                              "Line": "1995-03-01 [AgPRyegrass].Sow(population: 1, cultivar: \"Aurora\", depth: 5, rowSpacing: 150)"
+                              "Line": "1995-06-01 [AgPRyegrass].Sow(population: 1, cultivar: \"Aurora\", depth: 5, rowSpacing: 150)"
                             }
                           ],
                           "Name": "Aurora",
@@ -6532,9 +6672,9 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1995-03-01",
+                              "Date": "1995-06-01",
                               "Action": "[AgPRyegrass].Sow(population: 1, cultivar: \"Ba11351\", depth: 5, rowSpacing: 150)",
-                              "Line": "1995-03-01 [AgPRyegrass].Sow(population: 1, cultivar: \"Ba11351\", depth: 5, rowSpacing: 150)"
+                              "Line": "1995-06-01 [AgPRyegrass].Sow(population: 1, cultivar: \"Ba11351\", depth: 5, rowSpacing: 150)"
                             }
                           ],
                           "Name": "Ba11351",
@@ -6556,9 +6696,9 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1995-03-01",
+                              "Date": "1995-06-01",
                               "Action": "[AgPRyegrass].Sow(population: 1, cultivar: \"Ellett\", depth: 5, rowSpacing: 150)",
-                              "Line": "1995-03-01 [AgPRyegrass].Sow(population: 1, cultivar: \"Ellett\", depth: 5, rowSpacing: 150)"
+                              "Line": "1995-06-01 [AgPRyegrass].Sow(population: 1, cultivar: \"Ellett\", depth: 5, rowSpacing: 150)"
                             }
                           ],
                           "Name": "Ellett",
@@ -6580,9 +6720,9 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1995-03-01",
+                              "Date": "1995-06-01",
                               "Action": "[AgPRyegrass].Sow(population: 1, cultivar: \"Vedette\", depth: 5, rowSpacing: 150)",
-                              "Line": "1995-03-01 [AgPRyegrass].Sow(population: 1, cultivar: \"Vedette\", depth: 5, rowSpacing: 150)"
+                              "Line": "1995-06-01 [AgPRyegrass].Sow(population: 1, cultivar: \"Vedette\", depth: 5, rowSpacing: 150)"
                             }
                           ],
                           "Name": "Vedette",
@@ -6604,9 +6744,9 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1995-03-01",
+                              "Date": "1995-06-01",
                               "Action": "[AgPRyegrass].Sow(population: 1, cultivar: \"KangarooValley\", depth: 5, rowSpacing: 150)",
-                              "Line": "1995-03-01 [AgPRyegrass].Sow(population: 1, cultivar: \"KangarooValley\", depth: 5, rowSpacing: 150)"
+                              "Line": "1995-06-01 [AgPRyegrass].Sow(population: 1, cultivar: \"KangarooValley\", depth: 5, rowSpacing: 150)"
                             }
                           ],
                           "Name": "KangarooValley",
@@ -8066,9 +8206,51 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1996-05-05",
+                              "Date": "1996-06-05",
                               "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")",
-                              "Line": "1996-05-05 [AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")"
+                              "Line": "1996-06-05 [AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": ""
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": false,
+                              "Date": null,
+                              "Action": null,
+                              "Line": "// note dates below are estimates only"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "1996-09-01",
+                              "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")",
+                              "Line": "1996-09-01 [AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "1996-10-01",
+                              "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")",
+                              "Line": "1996-10-01 [AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "1996-11-01",
+                              "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")",
+                              "Line": "1996-11-01 [AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "1996-12-01",
+                              "Action": "[AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")",
+                              "Line": "1996-12-01 [AgPRyegrass].RemoveBiomass(amount: 1500, type: \"SetResidueAmount\")"
                             }
                           ],
                           "Name": "DefoliationSchedule",
@@ -47177,7 +47359,499 @@
                   "Filter": null,
                   "Name": "Series",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "AboveGroundHarvestableWt",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": 0,
+                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "PredictedObserved",
+                  "XFieldName": "Observed.AgPRyegrass.AboveGroundHarvestable.Wt",
+                  "YFieldName": "Predicted.AgPRyegrass.AboveGroundHarvestable.Wt",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 3,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "LeafLiveWt",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": 0,
+                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "PredictedObserved",
+                  "XFieldName": "Observed.AgPRyegrass.Leaf.Live.Wt",
+                  "YFieldName": "Predicted.AgPRyegrass.Leaf.Live.Wt",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 3,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "StemLiveWt",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": 0,
+                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "PredictedObserved",
+                  "XFieldName": "Observed.AgPRyegrass.Stem.Live.Wt",
+                  "YFieldName": "Predicted.AgPRyegrass.Stem.Live.Wt",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 3,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "LeafLiveNConc",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": 0,
+                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "PredictedObserved",
+                  "XFieldName": "Observed.AgPRyegrass.Leaf.Live.NConc",
+                  "YFieldName": "Predicted.AgPRyegrass.Leaf.Live.NConc",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 3,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "AboveGroundNConc",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": 0,
+                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "PredictedObserved",
+                  "XFieldName": "Observed.AgPRyegrass.AboveGroundNConc",
+                  "YFieldName": "Predicted.AgPRyegrass.AboveGroundNConc",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 3,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "AboveGroundHarvestableDigestability",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": 0,
+                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "PredictedObserved",
+                  "XFieldName": "Observed.AgPRyegrass.Harvestable.Digestibility",
+                  "YFieldName": "Predicted.AgPRyegrass.Harvestable.Digestibility",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -47860,11 +48534,11 @@
                                       "Name": "IrrigationEvents",
                                       "ResourceName": null,
                                       "Children": [],
-                                      "Enabled": false,
+                                      "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -48164,11 +48838,11 @@
                                       "Name": "IrrigationEvents",
                                       "ResourceName": null,
                                       "Children": [],
-                                      "Enabled": false,
+                                      "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -49213,11 +49887,11 @@
                                       "Name": "IrrigationEvents",
                                       "ResourceName": null,
                                       "Children": [],
-                                      "Enabled": false,
+                                      "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -49895,11 +50569,11 @@
                                       "Name": "IrrigationEvents",
                                       "ResourceName": null,
                                       "Children": [],
-                                      "Enabled": false,
+                                      "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -51533,6 +52207,7 @@
                                 "[AgPRyegrass].GlfWaterSupply",
                                 "[AgPRyegrass].Leaf.Live.Wt",
                                 "[AgPRyegrass].AboveGroundHarvestable.Wt",
+                                "[AgPRyegrass].AboveGround.Wt",
                                 "Sum of [AgPRyegrass].HarvestedWt *0.1 from 1-Jan to 31-Dec as AnnualPastureYield",
                                 "[AgPRyegrass].Leaf.Dead.Wt",
                                 "[AgPRyegrass].Height",
@@ -52838,14 +53513,14 @@
                               "ColourArgb": -16777216,
                               "FactorToVaryColours": "Irrigation",
                               "FactorToVaryMarkers": null,
-                              "FactorToVaryLines": "CoverType",
+                              "FactorToVaryLines": null,
                               "Marker": 11,
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
                               "TableName": "Report",
                               "XFieldName": "Clock.Today",
-                              "YFieldName": "AgPRyegrass.AboveGroundHarvestable.wt",
+                              "YFieldName": "AgPRyegrass.AboveGround.Wt",
                               "X2FieldName": null,
                               "Y2FieldName": null,
                               "ShowInLegend": false,
@@ -53656,7 +54331,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "This experiment was run over 3 years in Lincoln, New Zealand on a shallow stony soil.  It is described in full by [Teixeira_Brown_Michel_Meenken_Hu_Thomas_Huth_Holzworth_2018] Treatments of Lucerne and Pasture (Ryegrass) were established in the Autumn of 2011 and irrigtion treatments were installed in the spring of 2011 and applied for three years.  Treatments were:\n\n - None where no irrigation was applied\n - TwoPerWeek where irrigation was applied twice per week during spring/summer/autumn to replace water use measured by neutron probe\n - OnePerWeek where the same amout of irrigation was applied as the above treatment but at weekly frequency (i.e fewer, larger irrigations)\n - ThreeWeekly where the same amount of irrigation was applied as abouve but at a 3 weekely frequency (i.e fewer, larger irrigations)\n\nLucerne and pasture were defoliated at differing frequiencies following best mananagment practice resulting in 8-10 regrowth period per year for pasture and 5-6 for lucerne.  Neutron probes were installed to 1.6 m depth using a 20T digger with a pnumatic plate on its boom to drive and extract a pilot rod into the stony sub soil and then an aluminum access tube was installed into the resultant hole.  Neutron probes measurements were tatken at 7 - 10 day intervals during the irrigation season.  CS616 probes were also installed in the top soil at 0-15 and 15-30 cm depths in each plot and logged hourly.\n\r\n\n",
+                      "Text": "This experiment was run over 3 years in Lincoln, New Zealand on a shallow stony soil.  It is described in full by [#Teixeira_Brown_Michel_Meenken_Hu_Thomas_Huth_Holzworth_2018] Treatments of Lucerne and Pasture (Ryegrass) were established in the Autumn of 2011 and irrigtion treatments were installed in the spring of 2011 and applied for three years.  Treatments were:\n\n - None where no irrigation was applied\n - TwoPerWeek where irrigation was applied twice per week during spring/summer/autumn to replace water use measured by neutron probe\n - OnePerWeek where the same amout of irrigation was applied as the above treatment but at weekly frequency (i.e fewer, larger irrigations)\n - ThreeWeekly where the same amount of irrigation was applied as abouve but at a 3 weekely frequency (i.e fewer, larger irrigations)\n\nLucerne and pasture were defoliated at differing frequiencies following best mananagment practice resulting in 8-10 regrowth period per year for pasture and 5-6 for lucerne.  Neutron probes were installed to 1.6 m depth using a 20T digger with a pnumatic plate on its boom to drive and extract a pilot rod into the stony sub soil and then an aluminum access tube was installed into the resultant hole.  Neutron probes measurements were tatken at 7 - 10 day intervals during the irrigation season.  CS616 probes were also installed in the top soil at 0-15 and 15-30 cm depths in each plot and logged hourly.\n\r\n\n",
                       "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
@@ -54326,11 +55001,11 @@
                                       "Name": "IrrigationEvents",
                                       "ResourceName": null,
                                       "Children": [],
-                                      "Enabled": false,
+                                      "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -54829,11 +55504,11 @@
                                       "Name": "IrrigationEvents",
                                       "ResourceName": null,
                                       "Children": [],
-                                      "Enabled": false,
+                                      "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -56565,6 +57240,7 @@
                                 "[AgPRyegrass].GlfWaterSupply",
                                 "[AgPRyegrass].Leaf.Live.Wt",
                                 "[AgPRyegrass].AboveGroundHarvestable.wt",
+                                "[AgPRyegrass].AboveGround.Wt",
                                 "Sum of [AgPRyegrass].HarvestedWt *0.1 from 1-Jan to 31-Dec as AnnualPastureYield",
                                 "[AgPRyegrass].Leaf.Dead.Wt",
                                 "[AgPRyegrass].Height",
@@ -56573,7 +57249,8 @@
                                 "[AgPRyegrass].LAI",
                                 "[AgPRyegrass].RootWt",
                                 "[AgPRyegrass].Root.Depth",
-                                "[AgPRyegrass].RootDepth"
+                                "[AgPRyegrass].RootDepth",
+                                "[Spectral].NDVI"
                               ],
                               "EventNames": [
                                 "[Clock].EndOfDay"
@@ -56589,7 +57266,7 @@
                               "$type": "Models.Sensor.Spectral, Models",
                               "DrySoilNDVI": 0.1,
                               "WetSoilNDVI": 0.25,
-                              "GreenCropNDVI": "NaN",
+                              "GreenCropNDVI": 0.9,
                               "DeadCropNDVI": 0.1,
                               "Name": "Spectral",
                               "ResourceName": null,
@@ -57050,11 +57727,11 @@
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
                               "CumulativeX": false,
-                              "Filter": "[CoverType] = 'Ryegrass'",
+                              "Filter": "",
                               "Name": "Predicted",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -57064,9 +57741,9 @@
                               "YAxis": 0,
                               "ColourArgb": -16777216,
                               "FactorToVaryColours": "Irrigation",
-                              "FactorToVaryMarkers": "CoverType",
+                              "FactorToVaryMarkers": null,
                               "FactorToVaryLines": null,
-                              "Marker": 11,
+                              "Marker": 0,
                               "MarkerSize": 0,
                               "Line": 4,
                               "LineThickness": 0,
@@ -57079,15 +57756,15 @@
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
                               "CumulativeX": false,
-                              "Filter": "[CoverType] = 'Ryegrass'",
+                              "Filter": "",
                               "Name": "Observed",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -58108,7 +58785,7 @@
                               "AnnotationLocation": 0,
                               "DisabledSeries": [],
                               "LegendOutsideGraph": false,
-                              "Name": "LeafWt",
+                              "Name": "LeafLiveWt",
                               "ResourceName": null,
                               "Children": [
                                 {
@@ -58205,7 +58882,7 @@
                               "AnnotationLocation": 0,
                               "DisabledSeries": [],
                               "LegendOutsideGraph": false,
-                              "Name": "ResidueWt",
+                              "Name": "LeafDeadWt",
                               "ResourceName": null,
                               "Children": [
                                 {
