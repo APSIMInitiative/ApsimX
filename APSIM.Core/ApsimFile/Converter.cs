@@ -20,7 +20,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 210; } }
+    public static int LatestVersion { get { return 211; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -7326,13 +7326,27 @@ internal class Converter
             iText["Text"] = text;
         }
     }
+    /// <summary>
+    /// fix spelling mistake in reports with the term "kernal" instead of "kernel"
+    /// <param name="root">Root json object.</param>
+    /// <param name="_">Unused filename.</param>
+    private static void UpgradeToVersion210(JObject root, string _)
+    {
+        // Change report variables.
+        foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Grain.NperKernal", "[Wheat].Grain.NperKernel", caseSensitive: false);
+
+        // Change graph variables.
+        foreach (var graph in JsonUtilities.ChildrenOfType(root, "Graph"))
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Grain.NperKernal", "Wheat.Grain.NperKernel");
+    }
 
     /// <summary>
     /// Perform necessary cultivar path updates following waterlogging modifications for the Maize, Canola and Soybean models.
     /// </summary>
     /// <param name="root">Root json token.</param>
     /// <param name="name">File name.</param>
-    private static void UpgradeToVersion210(JObject root, string name)
+    private static void UpgradeToVersion211(JObject root, string name)
     {
         List<(string, string)> maizeUpadtes =
         [

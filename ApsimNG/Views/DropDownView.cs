@@ -175,7 +175,7 @@ namespace UserInterface.Views
                     string entry = (string)comboModel.GetValue(iter, 0);
                     while (entry != null && !entry.Equals(value, StringComparison.InvariantCultureIgnoreCase) && comboModel.IterNext(ref iter)) // Should the text matchin be case-insensitive?
                         entry = (string)comboModel.GetValue(iter, 0);
-                    if (entry == value)
+                    if (entry.ToLower() == value?.ToLower())
                         combobox1.SetActiveIter(iter);
                     else // Could not find a matching entry
                         combobox1.Active = -1;

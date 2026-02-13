@@ -7,6 +7,8 @@ using NUnit.Framework;
 using System.IO;
 using APSIM.Documentation;
 using APSIM.Core;
+using Models;
+using Models.Core.Run;
 
 namespace UnitTests.Documentation
 {
@@ -81,6 +83,56 @@ namespace UnitTests.Documentation
             string expected = "This is a citation [Brown et al., 2014](#brown_plant_2014) and some more text.";
             WebDocs.ProcessCitations(text, out string actual);
             Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        /// <summary>
+        /// Test that the inert processor replaces references with content that is referenced
+        /// </summary>
+        [Test]
+        public void TestMemoInserts()
+        {
+            string input;
+            string expected;
+            string output;
+            string memoName = "My Docs";
+            Simulations simulations = new Simulations()
+            {
+                Children = new List<IModel>()
+                {
+                    new Models.Documentation()
+                    {
+                        Name = memoName,
+                        Text = ""
+                    }
+                }
+            };
+            simulations.Node = Node.Create(simulations);
+
+            //Check that it works
+            input = "This is a reference to the memo name {[Documentation].Name} and some more text.";
+            expected = $"This is a reference to the memo name {memoName} and some more text.";
+            (simulations.Children[0] as Models.Documentation).Text = input;
+            output = WebDocs.ReplaceInserts(input, simulations);
+            Assert.That(output, Is.EqualTo(expected));
+
+            //Check that it doesn't try to do this with a code block which has { } in them
+            input = "";
+            input += "* Soil evaporation is different between the two models. To get near identical, comment out lines 271-275 in EvaporationModel.cs\n";
+            input += "\n";
+            input += "```c#\n";
+            input += "     // If U has changed (due to summer / winter turn over) and infiltration is zero then reset sumes1 to U to stop\n";
+            input += "     // artificially entering stage 1 evap. GitHub Issue #8112\n";
+            input += "     if (UYesterday != U)\n";
+            input += "     {\n";
+            input += "         sumes1 = U;\n";
+            input += "         sumes2 = CONA * Math.Pow(t, 0.5);\n";
+            input += "     }\n";
+            input += " ```\n";
+            input += " \n";
+            expected = input;
+            (simulations.Children[0] as Models.Documentation).Text = input;
+            output = WebDocs.ReplaceInserts(input, simulations);
+            Assert.That(output, Is.EqualTo(expected));
         }
     }
 }
