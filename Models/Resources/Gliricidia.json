@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 208,
+  "Version": 210,
   "Name": "Simulations",
   "Children": [
     {
@@ -746,7 +746,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "Value of 1.06 g/MJ for above ground growth from [HarringtonAndFownes1995] is increased to account for biomass partitioning to below-ground organs.\r\n",
+                      "Text": "Value of 1.06 g/MJ for above ground growth from [#HarringtonAndFownes1995] is increased to account for biomass partitioning to below-ground organs.\r\n",
                       "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -866,7 +866,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "Value is taken from [HarringtonAndFownes1995].",
+                  "Text": "Value is taken from [#HarringtonAndFownes1995].",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -1999,7 +1999,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "Value taken from [Thomasetal1991].",
+                  "Text": "Value taken from [#Thomasetal1991].",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": false,
