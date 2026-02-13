@@ -235,6 +235,7 @@ namespace Models.CLEM.Resources
             RumenDegradableProteinPercent = packet.RumenDegradableProteinPercent;
             AcidDetergentInsolubleProtein = packet.AcidDetergentInsolubleProtein;
             GrossEnergyContent = packet.GrossEnergyContent;
+            GutFill = packet.GutFill;
         }
 
         /// <summary>
