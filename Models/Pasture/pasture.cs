@@ -563,13 +563,15 @@ namespace Models.GrazPlan
         {
             get { return null; }
         }
+       
         /// <summary>
-        /// Not implemented
+        ///IsAlive flags plant status alive or dead
         /// </summary>
-        public bool IsAlive
-        {
-            get{return false;}
-        }
+
+        public bool IsAlive { get; private set; }
+
+       
+
         /// <summary>
         /// IsReadyForHarvesting: Not implemented
         /// </summary>
@@ -597,7 +599,7 @@ namespace Models.GrazPlan
             throw new NotImplementedException();
         }
 
-         private bool isAlive = false;
+         
 
         /// <summary>
         /// Sow: Not implemented 
@@ -616,7 +618,7 @@ namespace Models.GrazPlan
         public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1,
                 double seeds = 0, int tillering = 0, double ftn = 0.0)
         {
-            if (!isAlive)
+            if (!IsAlive)
             {
                 int numDry = 0;
                 int numGreen = 0;
@@ -638,11 +640,19 @@ namespace Models.GrazPlan
                         for (int i = 0; i < greenInit.RootWeight.Length; i++)
                         {
                             double rw = greenInit.RootWeight[i];
-                            green[idx].root_wt[i] = (rw == 0)
-                                ? new double[] { 400.0, 400.0 }
-                                : new double[] { rw };
-                            
+
+                            if (rw == 0)
+                            {
+                                // Default root mass when UI gives zero
+                                green[idx].root_wt[i] = new double[] { 400.0, 400.0 };
+                            }
+                            else
+                            {
+                                // Use the provided root weight
+                                green[idx].root_wt[i] = new double[] { rw };
+                            }
                         }
+
 
                         // STATUS + PHYSIOLOGY
                         green[idx].status = greenInit.Status;
@@ -658,55 +668,87 @@ namespace Models.GrazPlan
                         // LEAF
                         green[idx].herbage[0] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
                         green[idx].herbage[0].dmd = greenInit.LeafDMD;
-                        green[idx].herbage[0].weight =
-                            (greenInit.LeafWeight.Length == 1 && greenInit.LeafWeight[0] == 0)
-                            ? new double[] { 800.0 }
-                            : greenInit.LeafWeight;
+                        if (greenInit.LeafWeight.Length == 1 && greenInit.LeafWeight[0] == 0)
+                        {
+                            // Default leaf mass when GUI gives zero
+                            green[idx].herbage[0].weight = new double[] { 800.0 };
+                        }
+                        else
+                        {
+                            // Use the provided leaf weights
+                            green[idx].herbage[0].weight = greenInit.LeafWeight;
+                        }
+
                         green[idx].herbage[0].n_conc = greenInit.LeafNConc;
                         green[idx].herbage[0].spec_area = greenInit.LeafSpecificArea;
 
                         // STEM
                         green[idx].herbage[1] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
                         green[idx].herbage[1].dmd = greenInit.StemDMD;
-                        green[idx].herbage[1].weight =
-                            (greenInit.StemWeight.Length == 1 && greenInit.StemWeight[0] == 0)
-                            ? new double[] { 800.0 }
-                            : greenInit.StemWeight;
+                        if (greenInit.StemWeight.Length == 1 && greenInit.StemWeight[0] == 0)
+                        {
+                            
+                            // Default stem mass when GUI gives zero
+                            green[idx].herbage[1].weight = new double[] { 800.0 };
+                        }
+                        else
+                        {
+                            // Use the provided stem weights
+                            green[idx].herbage[1].weight = greenInit.StemWeight;
+                        }
+
                         green[idx].herbage[1].n_conc = greenInit.StemNConc;
                         green[idx].herbage[1].spec_area = greenInit.StemSpecificArea;
 
                         numGreen++;
+                        
                     }
-                else if (initCohort is DryCohortInitialise dryInit)
-                {
-                    Array.Resize(ref dry, dry.Length + 1);
-                    idx = numDry;
-                    dry[idx] = new DryInit();
+                    else if (initCohort is DryCohortInitialise dryInit)
+                    {
+                        Array.Resize(ref dry, dry.Length + 1);
+                        idx = numDry;
+                        dry[idx] = new DryInit();
 
-                    dry[idx].status = dryInit.Status;
-                    dry[idx].herbage = new Herbage[2];
+                        dry[idx].status = dryInit.Status;
+                        dry[idx].herbage = new Herbage[2];
 
-                    // LEAF
-                    dry[idx].herbage[0] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
-                    dry[idx].herbage[0].dmd = dryInit.LeafDMD;
-                    dry[idx].herbage[0].weight =
-                    (dryInit.LeafWeight.Length == 1 && dryInit.LeafWeight[0] == 0)
-                    ? new double[] { 800.0 }
-                    : dryInit.LeafWeight;
-                    dry[idx].herbage[0].n_conc = dryInit.LeafNConc;
-                    dry[idx].herbage[0].spec_area = dryInit.LeafSpecificArea;
+                        // LEAF
+                        dry[idx].herbage[0] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
+                        dry[idx].herbage[0].dmd = dryInit.LeafDMD;
 
-                    // STEM
-                    dry[idx].herbage[1] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
-                    dry[idx].herbage[1].dmd = dryInit.StemDMD;
-                    dry[idx].herbage[1].weight =
-                    (dryInit.StemWeight.Length == 1 && dryInit.StemWeight[0] == 0)
-                            ? new double[] { 800.0 }
-                            : dryInit.StemWeight;
-                    dry[idx].herbage[1].n_conc = dryInit.StemNConc;
-                        dry[idx].herbage[1].spec_area = dryInit.StemSpecificArea;
+                        if (dryInit.LeafWeight.Length == 1 && dryInit.LeafWeight[0] == 0)
+                        {
+                            // Default dry leaf mass when GUI gives zero
+                            dry[idx].herbage[0].weight = new double[] { 800.0 };
+                        }
+                        else
+                        {
+                            // Use the provided dry leaf weights
+                            dry[idx].herbage[0].weight = dryInit.LeafWeight;
+                        }
 
-                    numDry++;
+                        dry[idx].herbage[0].n_conc = dryInit.LeafNConc;
+                        dry[idx].herbage[0].spec_area = dryInit.LeafSpecificArea;
+
+                        // STEM
+                        dry[idx].herbage[1] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
+                        dry[idx].herbage[1].dmd = dryInit.StemDMD;
+
+                        if (dryInit.StemWeight.Length == 1 && dryInit.StemWeight[0] == 0)
+                        {
+                            // Default dry stem mass when GUI gives zero
+                            dry[idx].herbage[1].weight = new double[] { 800.0 };
+                        }
+                        else
+                        {
+                            // Use the provided dry stem weights
+                            dry[idx].herbage[1].weight = dryInit.StemWeight;
+                        }
+
+                        dry[idx].herbage[1].n_conc = dryInit.StemNConc;
+                            dry[idx].herbage[1].spec_area = dryInit.StemSpecificArea;
+
+                        numDry++;
                     }
             }
 
@@ -724,11 +766,10 @@ namespace Models.GrazPlan
                     dry: dry,
                     seed: this.Seeds,
                     seeddormtime: PastureModel.Days_EDormant,
-                    germidx: PastureModel.GermnIndex
-                );
+                    germidx: PastureModel.GermnIndex);
 
 
-                isAlive = true;
+                IsAlive = true;
         }
     }
 
@@ -742,10 +783,6 @@ namespace Models.GrazPlan
         }
         
         #endregion IPlant
-
-
-
-
 
         /// <summary>Radiation intercepted by the plant's canopy (MJ/m^2/day).</summary>
         [JsonIgnore]
@@ -2471,6 +2508,15 @@ namespace Models.GrazPlan
                     green[idx].herbage[1].spec_area = greenInit.StemSpecificArea;
                     numGreen += 1;
                     this.Green = green;
+
+                    //Start of the simulation checks if the root, leaf and stem biomasses are greater than 0 in GreenCohorts
+
+                    if(greenInit.LeafWeight[0] > 0 || greenInit.StemWeight[0] > 0 || greenInit.RootWeight[0] > 0)
+                    {
+                        IsAlive = true;
+                    }
+
+
                 }
                 else if (initCohort is DryCohortInitialise dryInit)
                 {
@@ -2495,6 +2541,15 @@ namespace Models.GrazPlan
                     dry[idx].herbage[1].spec_area = dryInit.StemSpecificArea;
                     numDry += 1;
                     this.Dry = dry;
+
+                    //Start of the simulation checks if the leaf and stem biomasses are greater than 0 in DryCohorts. 
+
+                    if(dryInit.StemWeight[0] > 0 || dryInit.LeafWeight[0] > 0)
+                    {
+                        IsAlive = true;
+                    }
+                    
+                    
                 }
                 else if (initCohort is SeedCohortInitialise seedInit)
                 {
@@ -2504,8 +2559,13 @@ namespace Models.GrazPlan
                     Seeds.soft_ripe = seedInit.SoftRipe;
                     Seeds.soft_unripe = seedInit.SoftUnripe;
                 }
+            
+              
+
+                
             }
 
+           
             // =========================================================
 
             StartSimulation();
@@ -2536,36 +2596,7 @@ namespace Models.GrazPlan
             DoPastureWater();
         }
 
-        // private bool HasRootBiomass
-        // {
-        //     get
-        //     {
-        //         if (Green == null)
-        //             return false;
-
-        //         foreach (var cohort in Green)
-        //         {
-        //             if (cohort.root_wt == null)
-        //                 continue;
-
-        //             foreach (var layer in cohort.root_wt)
-        //             {
-        //                 if (layer == null)
-        //                     continue;
-
-        //                 foreach (var value in layer)
-        //                 {
-        //                     if (value > 0)
-        //                         return true;
-        //                 }
-        //             }
-        //         }
-
-        //         return false;
-        //     }
-        // }
-
-
+        
 
 
         /// <summary>
@@ -2576,7 +2607,7 @@ namespace Models.GrazPlan
         [EventSubscribe("DoActualPlantGrowth")]
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
-            if (isAlive)
+            if (IsAlive)
             {
                 DoPastureGrowth();
                 EndStep();
