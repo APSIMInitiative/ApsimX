@@ -155,7 +155,12 @@ namespace Models.CLEM.Resources
                     _ => 0,
                 };
             }
-        } 
+        }
+
+        /// <summary>
+        /// Proportion of this feed that is legume required for grazing APSIM forages
+        /// </summary>
+        public double ProportionLegume { get; set; } = 0;
 
         /// <summary>
         /// Reset running stores.

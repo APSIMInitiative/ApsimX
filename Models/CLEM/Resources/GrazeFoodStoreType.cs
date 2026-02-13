@@ -890,16 +890,21 @@ namespace Models.CLEM.Resources
             }
         }
 
+        /// <inheritdoc/>>
+        public void ApplyDailyIntakeReduction(double fractionReduced)
+        {
+        }
+
         #region transactions
 
-        /// <summary>
-        /// Graze food add method.
-        /// This style is not supported in GrazeFoodStoreType
-        /// </summary>
-        /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
-        /// <param name="activity">Name of activity adding resource</param>
-        /// <param name="relatesToResource"></param>
-        /// <param name="category"></param>
+            /// <summary>
+            /// Graze food add method.
+            /// This style is not supported in GrazeFoodStoreType
+            /// </summary>
+            /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
+            /// <param name="activity">Name of activity adding resource</param>
+            /// <param name="relatesToResource"></param>
+            /// <param name="category"></param>
         public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             GrazeFoodStorePool pool = new()

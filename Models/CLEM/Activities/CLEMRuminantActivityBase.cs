@@ -75,7 +75,7 @@ namespace Models.CLEM.Activities
         private void GetHerdFilters()
         {
             HerdFilters = new List<RuminantActivityGroup>();
-            IModel current = this;
+            IModel current = this as IModel;
             while (current.GetType() != typeof(ZoneCLEM))
             {
                 var filterGroup = current.Children.OfType<RuminantActivityGroup>();

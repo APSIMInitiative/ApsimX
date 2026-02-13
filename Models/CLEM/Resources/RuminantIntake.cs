@@ -37,27 +37,29 @@ namespace Models.CLEM.Resources
         public double AddFeed(FoodResourcePacket packet, bool bypassPotIntakeLimits = false)
         {
             double excess = 0;
-            if (packet.Amount > 0)
+
+            if (packet.Amount < 0)
+            return excess;
+
+            if (!bypassPotIntakeLimits && packet.TypeOfFeed != FeedType.Milk)
             {
-                if (!bypassPotIntakeLimits && packet.TypeOfFeed != FeedType.Milk)
-                {
-                    // limit feed to animals maximum intake.
-                    excess = StdMath.DIM(packet.Amount, SolidsDaily.Required);
-                    packet.Amount -= excess;
-                }
-
-                if (!feedTypeStoreDict.TryGetValue(packet.TypeOfFeed, out FoodResourceStore frs))
-                {
-                    frs = new FoodResourceStore(packet);
-                    feedTypeStoreDict[packet.TypeOfFeed] = frs;
-                }
-                frs.Add(packet);
-
-                if (packet.TypeOfFeed == FeedType.Milk)
-                    MilkDaily.Received += packet.Amount;
-                else
-                    SolidsDaily.Received += packet.Amount;
+                // limit feed to animals maximum intake.
+                excess = StdMath.DIM(packet.Amount, SolidsDaily.Required);
+                packet.Amount -= excess;
             }
+
+            if (!feedTypeStoreDict.TryGetValue(packet.TypeOfFeed, out FoodResourceStore frs))
+            {
+                frs = new FoodResourceStore(packet);
+                feedTypeStoreDict[packet.TypeOfFeed] = frs;
+            }
+            frs.Add(packet);
+
+            if (packet.TypeOfFeed == FeedType.Milk)
+                MilkDaily.Received += packet.Amount;
+            else
+                SolidsDaily.Received += packet.Amount;
+
             return excess;
         }
 

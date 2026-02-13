@@ -70,17 +70,17 @@ namespace Models.CLEM.Resources
         ///<summary>
         /// Allow transmutation
         ///</summary> 
-        public bool AllowTransmutation { get; set; }
+        public bool AllowTransmutation { get; set; } = false;
         ///<summary>
         /// Successful transmutation
         ///</summary> 
-        public Transmutation SuccessfulTransmutation { get; set; }
+        public Transmutation SuccessfulTransmutation { get; set; } = null;
         ///<summary>
         /// Is Transmutation possible?
         ///</summary> 
         public bool TransmutationPossible { get { return (SuccessfulTransmutation != null); } }
         ///<summary>
-        /// Market transcation multiplier
+        /// Market transactions multiplier
         /// 0 (default) = not a market transaction
         ///</summary> 
         public double MarketTransactionMultiplier { get; set; }
@@ -92,14 +92,31 @@ namespace Models.CLEM.Resources
         /// The final outcome if shortfall for reporting to shortfall reports
         /// </summary>
         public string ShortfallStatus { get; set; }
-        ///<summary>
-        /// ResourceRequest constructor
-        ///</summary> 
-        public ResourceRequest()
+
+        /// <summary>
+        /// Create a copy of this ResourceRequest.
+        /// Performs a shallow clone for reference-type properties but duplicates mutable collections.
+        /// </summary>
+        public ResourceRequest Clone()
         {
-            // default values
-            SuccessfulTransmutation = null;
-            AllowTransmutation = false;
+            // Shallow copy of this instance
+            var clone = (ResourceRequest)this.MemberwiseClone();
+
+            // Duplicate mutable collection to avoid shared list mutations
+            if (this.FilterDetails != null)
+                clone.FilterDetails = new List<object>(this.FilterDetails);
+
+            // For AdditionalDetails, try to clone if possible, otherwise keep reference
+            //if (this.AdditionalDetails is ICloneable cloneable)
+            //    clone.AdditionalDetails = cloneable.Clone();
+            //else
+            clone.AdditionalDetails = this.AdditionalDetails;
+
+            // Explicitly copy the value-tuple (not strictly necessary, MemberwiseClone already copies it)
+            clone.CompanionModelDetails = this.CompanionModelDetails;
+
+            // Leave references for Resource, ResourceType, ActivityModel and SuccessfulTransmutation as-is.
+            return clone;
         }
     }
 
@@ -194,5 +211,4 @@ namespace Models.CLEM.Resources
         Timer = 2
 
     }
-
 }

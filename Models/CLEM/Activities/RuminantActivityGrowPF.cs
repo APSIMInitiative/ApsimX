@@ -1128,7 +1128,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMCalculateManure")]
+        [EventSubscribe("CLEMPostRuminantConsumption")]
         private void OnCLEMCalculateManure(object sender, EventArgs e)
         {
             CalculateManure(manureStore, CurrentHerd(false));

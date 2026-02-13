@@ -11,6 +11,8 @@ using APSIM.Shared.Utilities;
 using Models.CLEM.Groupings;
 using APSIM.Numerics;
 using APSIM.Core;
+using Models.CLEM.Interfaces;
+using System.ServiceModel.Security;
 
 namespace Models.CLEM.Activities
 {
@@ -49,7 +51,7 @@ namespace Models.CLEM.Activities
         /// paddock or pasture to graze
         /// </summary>
         [JsonIgnore]
-        public GrazeFoodStoreType GrazeFoodStoreModel { get; set; }
+        public IGrazeFoodStoreType GrazeFoodStoreModel { get; set; }
 
         /// <summary>
         /// Default constructor
@@ -61,16 +63,17 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Constructor using details from a GrazeAll activity
         /// </summary>
-        public RuminantActivityGrazePasture(RuminantActivityGrazeAll grazeAll, GrazeFoodStoreType pastureType, string transactionCategory, Guid parentProvidedUid)
+        public RuminantActivityGrazePasture(RuminantActivityGrazeAll grazeAll, IGrazeFoodStoreType pastureType, string transactionCategory, Guid parentProvidedUid)
         {
             CLEMParentName = grazeAll.CLEMParentName;
-            GrazeFoodStoreTypeName = pastureType.NameWithParent;
+            GrazeFoodStoreTypeName = (pastureType as CLEMModel).NameWithParent;
             HoursGrazed = grazeAll.HoursGrazed;
             TransactionCategory = transactionCategory;
             Name = "Graze_" + (pastureType).Name;
             OnPartialResourcesAvailableAction = grazeAll.OnPartialResourcesAvailableAction;
             Status = ActivityStatus.NoTask;
             UniqueID = parentProvidedUid;
+            Parent = grazeAll;
             Resources = grazeAll.Resources;
         }
 
@@ -80,12 +83,6 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            GrazeFoodStoreModel = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
-
-            //Create list of children by breed
-            //Guid currentUid = UniqueID;
-            List<IModel> grazePastureList = new();
-
             bool buildTransactionFromTree = Structure.FindParent<ZoneCLEM>(recurse: true).BuildTransactionCategoryFromTree;
             string transCat = "";
             if (!buildTransactionFromTree)
@@ -93,15 +90,29 @@ namespace Models.CLEM.Activities
                 transCat = TransactionCategory;
             }
 
+            SetupDynamicChildren();
+        }
+
+        /// <summary>
+        /// Method to define dynamic breed grazing children
+        /// </summary>
+        public void SetupDynamicChildren()
+        {
             InitialiseHerd(true, true);
+
+            GrazeFoodStoreModel = Resources.FindResourceType<GrazeFoodStore, IGrazeFoodStoreType>(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+
             Guid nextUID = ActivitiesHolder.AddToGuID(UniqueID, 2);
             foreach (RuminantType herdType in Structure.FindChildren<RuminantType>(relativeTo: HerdResource))
             {
-                var newGrazePastureHerd = new RuminantActivityGrazePastureHerd(this, herdType, transCat, nextUID);
+                var newGrazePastureHerd = new RuminantActivityGrazePastureHerd(this, herdType, TransactionCategory, nextUID);
                 Structure.AddChild(newGrazePastureHerd);
-                var events = new Events(newGrazePastureHerd);
-                // Publish Commencing event
-                events.PublishToModelAndChildren("CLEMInitialiseActivity", new object[] { newGrazePastureHerd, new EventArgs() });
+                Links links = new();
+                links.Resolve(newGrazePastureHerd as IModel, true, recurse: false);
+                var apsimEvents = new Events(newGrazePastureHerd);
+                apsimEvents.ConnectEvents();
+
+                newGrazePastureHerd.Setup();
 
                 nextUID = ActivitiesHolder.AddToGuID(nextUID, 2);
             }
@@ -115,26 +126,19 @@ namespace Models.CLEM.Activities
             // check nested graze breed requirements for this pasture
             double totalNeeded = 0;
             IEnumerable<RuminantActivityGrazePastureHerd> grazeHerdChildren = Structure.FindChildren<RuminantActivityGrazePastureHerd>();
-            double potentialIntakeLimiter = -1;
             foreach (RuminantActivityGrazePastureHerd item in grazeHerdChildren)
             {
-                if (MathUtilities.IsNegative(potentialIntakeLimiter))
-                {
-                    potentialIntakeLimiter = item.CalculatePotentialIntakePastureQualityLimiter();
-                }
-
                 item.ResourceRequestList = null;
-                item.PotentialIntakePastureQualityLimiter = potentialIntakeLimiter;
-                var resourceRequest = item.RequestDetermineResources().Where(a => a.Resource is GrazeFoodStoreType).FirstOrDefault();
-                if (resourceRequest != null)
-                {
-                    totalNeeded += resourceRequest.Required;
-                }
+                item.PotentialIntakePastureQualityLimiter = item.CalculatePotentialIntakePastureQualityLimiter();
+                var resourceRequest = item.RequestDetermineResources().Where(a => a.Resource is IGrazeFoodStoreType).FirstOrDefault();
+                totalNeeded += resourceRequest?.Required??0;
             }
 
             // Check available resources
-            // This determines the proportional amount available for competing breeds with different green diet proportions
+            // This determines the proportional amount available for competing breeds with different green diet proportions (GrazeFoodStoreType)
             // It does not truly account for how the pasture is provided from pools but will suffice unless more detailed model required
+            // The aim is to determine the proportional offering of pasture when insufficient for all breeds.
+            // This is applied for even a single herd/breed as this determines the pasture shortfall to include.
             double available = GrazeFoodStoreModel.Amount;
             double limit = 1.0;
             if (MathUtilities.IsPositive(totalNeeded))
@@ -145,7 +149,10 @@ namespace Models.CLEM.Activities
             // apply limits to children
             foreach (RuminantActivityGrazePastureHerd item in grazeHerdChildren)
             {
-                item.SetupPoolsAndLimits(limit);
+                if (item.GrazeFoodStoreModel is GrazeFoodStoreAPSIMLink)
+                    item.GrazingCompetitionLimiter = limit;
+                else
+                    item.SetupPoolsAndLimits(limit);
             }
 
             return ResourceRequestList;
@@ -169,7 +176,7 @@ namespace Models.CLEM.Activities
             if (GrazeFoodStoreTypeName.Contains("."))
             {
                 ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
-                if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreTypeName) is null)
+                if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, IGrazeFoodStoreType>(this, GrazeFoodStoreTypeName) is null)
                 {
                     yield return new ValidationResult($"The location defined for grazing [r={GrazeFoodStoreTypeName}] in [a={Name}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", new string[] { "Location is not valid" });
                 }

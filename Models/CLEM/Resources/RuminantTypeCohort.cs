@@ -207,9 +207,6 @@ namespace Models.CLEM.Resources
             RuminantType parent = ruminantType;
             parent ??= Structure.FindParent<RuminantType>(recurse: true);
 
-            // get Ruminant Herd resource for unique ids
-            RuminantHerd ruminantHerd = parent.Parent as RuminantHerd; 
-
             for (int i = 1; i <= number; i++)
             {
                 double weight = GetWeightFromNormalDistribution(Weight, WeightSD);

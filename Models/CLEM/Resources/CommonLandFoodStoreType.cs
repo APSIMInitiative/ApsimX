@@ -22,7 +22,7 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 1, "Beta build")]
     [Version(1, 0, 2, "Link to GrazeFoodStore implemented")]
     [HelpUri(@"Content/Features/Resources/AnimalFoodStore/CommonLandStoreType.htm")]
-    public class CommonLandFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IValidatableObject, IResourceType
+    public class CommonLandFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IValidatableObject, IResourceType, IGrazeFoodStoreType
     {
         [Link(IsOptional = true)]
         private ResourcesHolder resources = null;
@@ -101,7 +101,7 @@ namespace Models.CLEM.Resources
             {
                 // this is a virtual pool of forage outside the farm
                 // it requires labour to create (cut and carry) it.
-                return double.PositiveInfinity; 
+                return double.PositiveInfinity;
             }
         }
 
@@ -184,6 +184,12 @@ namespace Models.CLEM.Resources
         /// </summary>
         [JsonIgnore]
         public EcologicalIndicators CurrentEcologicalIndicators { get; set; }
+
+        /// <inheritdoc/>
+        public double KilogramsPerHa => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public double TonnesPerHectareStartOfTimeStep { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
 
         #region validation
@@ -300,6 +306,17 @@ namespace Models.CLEM.Resources
         public new void Set(double newAmount)
         {
             throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public void SetCurrentBiomass()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>>
+        public void ApplyDailyIntakeReduction(double fractionReduced)
+        {
         }
 
         #endregion

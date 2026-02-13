@@ -1,3 +1,4 @@
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
@@ -38,7 +39,6 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            
             bool buildTransactionFromTree = Structure.FindParent<ZoneCLEM>(recurse: true).BuildTransactionCategoryFromTree;
             string transCat = "";
             if (!buildTransactionFromTree)
@@ -49,21 +49,25 @@ namespace Models.CLEM.Activities
             GrazeFoodStore grazeFoodStore = Resources.FindResourceGroup<GrazeFoodStore>();
             if (grazeFoodStore is null)
             {
-                Summary.WriteMessage(this, $"No GrazeFoodStore is available for the ruminant grazing activity [a={Name}]!", MessageType.Warning);
+                Summary.WriteMessage(this, $"No GrazeFoodStore is available for the ruminant grazing activity [a={Name}]!", MessageType.Error);
                 return;
             }
-
-            InitialiseHerd(true, true);
             
             // create activity for each pasture type (not common land) and breed at startup
             Guid nextUID = ActivitiesHolder.AddToGuID(this.UniqueID, 1);
-            foreach (GrazeFoodStoreType pastureType in grazeFoodStore.Children.Where(a => a.GetType() == typeof(GrazeFoodStoreType) || a.GetType() == typeof(CommonLandFoodStoreType)))
+            foreach (IGrazeFoodStoreType pastureType in Structure.FindChildren<IGrazeFoodStoreType>(relativeTo: grazeFoodStore).Where(a => a is not CommonLandFoodStoreType))  //grazeFoodStore.Children.Where(a => a.GetType().isin == typeof(IGrazeFoodStoreType) || a.GetType() == typeof(CommonLandFoodStoreType)))
             {
                 var newGrazePasture = new RuminantActivityGrazePasture(this, pastureType, transCat, nextUID);
                 Structure.AddChild(newGrazePasture);
-                var events = new Events(newGrazePasture);
+                Links links = new();
+                links.Resolve(newGrazePasture as IModel, true, recurse: false);
+                var apsimEvents = new Events(newGrazePasture);
+                apsimEvents.ConnectEvents();
                 // Publish Commencing event
-                events.PublishToModelAndChildren("CLEMInitialiseActivity", new object[] { Parent, new EventArgs() });
+                // apsimEvents.PublishToModelAndChildren("CLEMInitialiseActivity", new object[] { newGrazePasture, new EventArgs() });
+                // apsimEvents.PublishToModelAndChildren("CLEMGetResourcesRequired", new object[] { newGrazePasture, new EventArgs() });
+
+                newGrazePasture.SetupDynamicChildren();
 
                 nextUID = ActivitiesHolder.AddToGuID(nextUID, 2);
             }

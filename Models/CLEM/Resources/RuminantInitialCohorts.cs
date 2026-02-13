@@ -75,6 +75,8 @@ namespace Models.CLEM.Resources
                     cohort.Parent = this;
                     cohort.MinimumTimeStepInterval = this.MinimumTimeStepInterval;
                     Structure.AddChild(cohort);
+                    Links links = new();
+                    links.Resolve(cohort as IModel, true, recurse: false);
                 }
             }
         }

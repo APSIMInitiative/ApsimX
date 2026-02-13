@@ -56,15 +56,17 @@ namespace Models.CLEM
         /// <summary>Get potential intake. This includes suckling milk consumption</summary>
         public event EventHandler CLEMPotentialIntake;
         /// <summary>Request and allocate resources to all Activities based on UI Tree order of priority. Some activities will obtain resources here and perform actions later</summary>
-        public event EventHandler CLEMCalculateManure;
-        /// <summary>Request and allocate resources to all Activities based on UI Tree order of priority. Some activities will obtain resources here and perform actions later</summary>
+        public event EventHandler CLEMPostRuminantConsumption;
+        /// <summary>Evnt to allow Activities to collect manure created. Need to intercept manure creation to allow collection from APSIM paddock linkage</summary>
         public event EventHandler CLEMCollectManure;
-        /// <summary>Request and perform the collection of maure after resources are allocated and manure produced in time-step</summary>
+        /// <summary>Request and perform the collection of manure after resources are allocated and manure produced in time step</summary>
         public event EventHandler CLEMGetResourcesRequired;
         /// <summary>CLEM Calculate Animals (Ruminant and Other) milk production</summary>
         public event EventHandler CLEMAnimalMilkProduction;
         /// <summary>CLEM Calculate Animals(Ruminant and Other) weight gain</summary>
         public event EventHandler CLEMAnimalWeightGain;
+        /// <summary>CLEM Calculate Animals(Ruminant and Other) weight gain</summary>
+        public event EventHandler CLEMDailyASPIMForageTake;
         /// <summary>CLEM Do Animal (Ruminant and Other) death</summary>
         public event EventHandler CLEMAnimalDeath;
         /// <summary>CLEM Do Animal (Ruminant and Other) milking</summary>
@@ -83,7 +85,7 @@ namespace Models.CLEM
         public event EventHandler CLEMPreFinalise;
         /// <summary>CLEM buy animals including transporting and labour</summary>
         public event EventHandler CLEMAnimalBuy;
-        /// <summary>CLEM Age your resources (eg. Decomose Fodder, Age your labour, Age your Animals)</summary>
+        /// <summary>CLEM Age your resources (eg. Decompose Fodder, Age your labour, Age your Animals)</summary>
         public event EventHandler CLEMAgeResources;
         /// <summary>CLEM event to calculate monthly herd summary</summary>
         public event EventHandler CLEMHerdSummary;
@@ -333,6 +335,19 @@ namespace Models.CLEM
                 CLEMStartOfTimeStep?.Invoke(this, args);
                 CLEMUpdateLabourAvailability?.Invoke(this, args);
                 CLEMUpdatePasture?.Invoke(this, args);
+            }
+        }
+
+        /// <summary>Fire ruminant growth ready to take pasture</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoStock")]
+        protected virtual void OnAPSIMStock(object sender, EventArgs args)
+        {
+            // CLEM events performed at the EndOfDay at end of the current time step
+            // APSIM is now happy that the time step is over and so we can clean up CLEM and this will report all at end of time-step as previously occurred in monthly time steps.
+            if (Clock.Today == timeStepEnd)
+            {
                 CLEMPastureReady?.Invoke(this, args);
                 CLEMDoCutAndCarry?.Invoke(this, args);
                 CLEMAnimalBeforeBreeding?.Invoke(this, args);
@@ -340,6 +355,16 @@ namespace Models.CLEM
                 CLEMAnimalMilkProduction?.Invoke(this, args);
                 CLEMPotentialIntake?.Invoke(this, args);
                 CLEMGetResourcesRequired?.Invoke(this, args);
+                CLEMAnimalWeightGain?.Invoke(this, args);
+                CLEMPostRuminantConsumption?.Invoke(this, args);
+            }
+
+            // allow access to daily time step of APSIM models to remove daily intake from forages when CLEM is not running on daily time step 
+            CLEMDailyASPIMForageTake?.Invoke(this, args);
+
+            if (Clock.Today == timeStepEnd)
+            {
+                CLEMCollectManure?.Invoke(this, args);
             }
         }
 
@@ -354,7 +379,7 @@ namespace Models.CLEM
             if (Clock.Today == timeStepEnd)
             {
                 CLEMAnimalWeightGain?.Invoke(this, args);
-                CLEMCalculateManure?.Invoke(this, args);
+                CLEMPostRuminantConsumption?.Invoke(this, args);
                 CLEMCollectManure?.Invoke(this, args);
                 CLEMAnimalDeath?.Invoke(this, args);
                 CLEMAnimalMilking?.Invoke(this, args);
@@ -414,6 +439,9 @@ namespace Models.CLEM
         [EventSubscribe("CLEMValidate")]
         private void OnCLEMValidate(object sender, EventArgs e)
         {
+            if (EcologicalIndicatorsCalculationMonth == MonthsOfYear.NotSet || Clock.StartDate.Year <= 1)
+                return;
+
             // validation is performed here
             // this is done by this component as it is outside of the CLEM/Market branch and needs to be handled itself.
             if (Clock.StartDate.Year > 1) // avoid checking if clock not set.
