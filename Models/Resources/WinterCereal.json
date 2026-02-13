@@ -982,7 +982,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.Phen.ZadokPMFWheat, Models",
+              "$type": "Models.PMF.Phen.ZadokWinterCereal, Models",
               "Name": "Zadok",
               "ResourceName": null,
               "Children": [
@@ -1001,6 +1001,52 @@
                   "Name": "TillerNumber",
                   "ResourceName": null,
                   "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "ZadokStageMapping",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        5.0, 
+                        5.99, 
+                        6.0, 
+                        7.0, 
+                        8.0, 
+                        9.0, 
+                        10.0, 
+                        11.0
+                      ],
+                      "Y": [
+                        30.0, 
+                        34, 
+                        39.0, 
+                        55.0, 
+                        65.0, 
+                        71.0, 
+                        87.0, 
+                        90.0
+                      ],
+                      "Name": "XYPairs",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].Stage",
+                      "Name": "XValue",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
