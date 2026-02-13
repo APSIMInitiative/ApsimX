@@ -54,6 +54,8 @@ namespace Models.CLEM.Resources
             Details.MetabolisableEnergyContent = ((Details.MetabolisableEnergyContent * Details.Amount) + (packet.MEContent * packet.Amount)) / (Details.Amount + packet.Amount);
             Details.AcidDetergentInsolubleProtein = ((Details.AcidDetergentInsolubleProtein * Details.Amount) + (packet.AcidDetergentInsolubleProtein * packet.Amount)) / (Details.Amount + packet.Amount);
             Details.RumenDegradableProteinPercent = ((Details.RumenDegradableProteinPercent * Details.Amount) + (packet.RumenDegradableProteinPercent * packet.Amount)) / (Details.Amount + packet.Amount);
+            Details.GutFill = ((Details.GutFill * Details.Amount) + (packet.GutFill * packet.Amount)) / (Details.Amount + packet.Amount);
+
             Details.Amount += packet.Amount;
 
             CrudeProtein += packet.CrudeProtein;
