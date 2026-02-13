@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using APSIM.Documentation.Models.Types;
 using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.PMF;
+using Models.PMF.Phen;
 using DocumentationGraphPage = APSIM.Shared.Documentation.GraphPage;
 
 namespace APSIM.Documentation;
@@ -162,5 +164,60 @@ public static class DocumentationUtilities
                 name = $"{model.Name} ({model.GetType().Name})";
             return name;
         }
+    }
+
+    /// <summary>
+    /// Given a type, returns a string of the file path instead of the namespace.
+    /// This is only a temporary patch until namespaces can be fixed, and more fixes will need to be added as required.
+    /// </summary>
+    public static string GetFilepathOfNamespace(Type type)
+    {
+        string path = type.ToString();
+        path = path.Replace("Models.PMF.Phen.", "Models.PMF.Phenology.");
+
+        if (path.StartsWith("Models.PMF.") && path.EndsWith("Arbitrator"))
+            path = path.Replace("Models.PMF.", "Models.PMF.Arbitrator.");
+
+        if (path.StartsWith("Models.PMF.") && path.EndsWith("Phase"))
+            path = path.Replace("Models.PMF.Phenology.", "Models.PMF.Phenology.Phases.");
+
+        return path;
+    }
+
+    /// <summary>
+    /// Creates a markdown link for a model to connect it to its github page
+    /// </summary>
+    public static string GetGithubMarkdownLink(IModel model)
+    {
+        string modeltype = GetFilepathOfNamespace(model.GetType());
+        return $"[{model.GetType()}](https://github.com/APSIMInitiative/ApsimX/blob/master/" + modeltype.Replace(".", "/") + ".cs)";
+    }
+
+    /// <summary>
+    /// Returns a DataTable with each Phase listed for documentation
+    /// </summary>
+    public static DataTable GetPhaseTable(Phenology phenology)
+    {
+        DataTable phaseTable = new DataTable();
+        phaseTable.Columns.Add("Number", typeof(int));
+        phaseTable.Columns.Add("Name", typeof(string));
+        phaseTable.Columns.Add("Type", typeof(string));
+        phaseTable.Columns.Add("Start Stage", typeof(string));
+        phaseTable.Columns.Add("End Stage", typeof(string));
+
+        int n = 1;
+        foreach (IPhase child in phenology.Node.FindChildren<IPhase>())
+        {
+            string phasetype = GetFilepathOfNamespace(child.GetType());
+            DataRow row = phaseTable.NewRow();
+            row[0] = n;
+            row[1] = child.Name;
+            row[2] = GetGithubMarkdownLink(child);
+            row[3] = (child as IPhase).Start;
+            row[4] = (child as IPhase).End;
+            phaseTable.Rows.Add(row);
+            n++;
+        }
+        return phaseTable;
     }
 }

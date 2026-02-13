@@ -273,7 +273,7 @@ namespace Models
         /// <param name="reader">Data store reader.</param>
         public void ReadData(DataTable data, List<SimulationDescription> simulationDescriptions, IStorageReader reader)
         {
-            if (X != null && Y != null)
+            if (data != null && X != null && Y != null)
                 return;
 
             if (Series.TableName == null)
