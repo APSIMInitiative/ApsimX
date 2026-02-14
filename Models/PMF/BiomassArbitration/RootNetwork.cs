@@ -37,6 +37,11 @@ namespace Models.PMF
         ///1. Links
         ///--------------------------------------------------------------------------------------------------
 
+        /// <summary> The parent simulation </summary>
+        [JsonIgnore]
+        [Link(Type = LinkType.Ancestor)]
+        private Simulation simulation = null;
+
         /// <summary>The plant</summary>
         [Link]
         protected Plant parentPlant = null;
@@ -125,8 +130,7 @@ namespace Models.PMF
         /// <summary>Constructor</summary>
         public RootNetwork()
         {
-            Zones = new List<NetworkZoneState>();
-            ZoneNamesToGrowRootsIn = new List<string>();
+            ZoneStates = new List<NetworkZoneState>();
         }
 
         ///4. Public Events And Enums
@@ -141,16 +145,13 @@ namespace Models.PMF
         /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
         public bool IsAboveGround { get { return false; } }
 
-        /// <summary>A list of other zone names to grow roots in</summary>
-        public List<string> ZoneNamesToGrowRootsIn { get; set; }
-
         /// <summary>The root depths for each addition zone.</summary>
         [JsonIgnore]
         public List<double> ZoneRootDepths { get; set; }
 
         /// <summary>A list of all zones to grow roots in</summary>
         [JsonIgnore]
-        public List<NetworkZoneState> Zones { get; set; }
+        public List<NetworkZoneState> ZoneStates { get; set; }
 
         /// <summary>The zone where the plant is growing</summary>
         [JsonIgnore]
@@ -161,7 +162,7 @@ namespace Models.PMF
         {
             get
             {
-                NetworkZoneState z = Zones[0];
+                NetworkZoneState z = ZoneStates[0];
                 double[] ret = new double[z.LayerLive.Length];
                 for (int i = 0; i < z.LayerLive.Length; i++)
                         ret[i] = z.LayerLive[i].Wt;
@@ -174,11 +175,11 @@ namespace Models.PMF
         {
             get
             {
-                if (Zones.Count == 1)
+                if (ZoneStates.Count == 1)
                     return new double[0];
                 else
                 {
-                    NetworkZoneState z = Zones[1];
+                    NetworkZoneState z = ZoneStates[1];
                     double[] ret = new double[z.LayerLive.Length];
                     for (int i = 0; i < z.LayerLive.Length; i++)
                         ret[i] = z.LayerLive[i].Wt;
@@ -217,13 +218,13 @@ namespace Models.PMF
         {
             get
             {
-                if (Zones == null || Zones.Count == 0)
+                if (ZoneStates == null || ZoneStates.Count == 0)
                     return Array.Empty<double>();
-                if (Zones.Count > 1)
+                if (ZoneStates.Count > 1)
                     throw new Exception(this.Name + " Can't report layered Nuptake for multiple zones as they may not have the same size or number of layers");
-                double[] uptake = new double[Zones[0].Physical.Thickness.Length];
-                if (Zones[0].NitUptake != null)
-                    uptake = Zones[0].NitUptake;
+                double[] uptake = new double[ZoneStates[0].Physical.Thickness.Length];
+                if (ZoneStates[0].NitUptake != null)
+                    uptake = ZoneStates[0].NitUptake;
                 return MathUtilities.Multiply_Value(uptake, -1); // convert to positive values.
             }
         }
@@ -280,7 +281,7 @@ namespace Models.PMF
                 double fasw = 0;
                 double TotalArea = 0;
 
-                foreach (NetworkZoneState Z in Zones)
+                foreach (NetworkZoneState Z in ZoneStates)
                 {
                     Zone zone = Structure.Find<Zone>(Z.Name);
                     var soilPhysical = Structure.FindChild<IPhysical>(relativeTo: Z.Soil);
@@ -313,7 +314,7 @@ namespace Models.PMF
 
                 double liveWt = parentOrgan.Live.Wt;
                 if (liveWt > 0)
-                    foreach (NetworkZoneState Z in Zones)
+                    foreach (NetworkZoneState Z in ZoneStates)
                     {
                         var soilPhysical = Structure.FindChild<IPhysical>(relativeTo: Z.Soil);
                         var waterBalance = Structure.FindChild<ISoilWater>(relativeTo: Z.Soil);
@@ -348,7 +349,7 @@ namespace Models.PMF
 
                 double liveWt = parentOrgan.Live.Weight.Total;
                 if (liveWt > 0)
-                    foreach (NetworkZoneState Z in Zones)
+                    foreach (NetworkZoneState Z in ZoneStates)
                     {
                         var soilPhysical = Structure.FindChild<IPhysical>(relativeTo: Z.Soil);
                         var waterBalance = Structure.FindChild<ISoilWater>(relativeTo: Z.Soil);
@@ -371,7 +372,7 @@ namespace Models.PMF
         /// <param name="zone">The zone.</param>
         public double[] CalculateWaterSupply(ZoneWaterAndN zone)
         {
-            NetworkZoneState myZone = Zones.Find(z => z.Name == zone.Zone.Name);
+            NetworkZoneState myZone = ZoneStates.Find(z => z.Name == zone.Zone.Name);
             if (myZone == null)
                 return null;
 
@@ -428,7 +429,7 @@ namespace Models.PMF
         /// <param name="zoneName">Zone name to do water uptake in</param>
         public void DoWaterUptake(double[] Amount, string zoneName)
         {
-            NetworkZoneState zone = Zones.Find(z => z.Name == zoneName);
+            NetworkZoneState zone = ZoneStates.Find(z => z.Name == zoneName);
             if (zone == null)
                 throw new Exception("Cannot find a zone called " + zoneName);
 
@@ -444,7 +445,7 @@ namespace Models.PMF
             foreach (ZoneWaterAndN thisZone in zonesFromSoilArbitrator)
             {
 
-                NetworkZoneState zone = Zones.Find(z => z.Name == thisZone.Zone.Name);
+                NetworkZoneState zone = ZoneStates.Find(z => z.Name == thisZone.Zone.Name);
                 if (zone != null)
                 {
                     //NO3 and NH4 pased in zonesFromSoilArbitrator are in kg.  Need to convert to kg/ha to set soil uptake
@@ -472,7 +473,7 @@ namespace Models.PMF
         /// <param name="NH4Supply_kg">The returned NH4 supply</param>
         public void CalculateNitrogenSupply(ZoneWaterAndN zone, ref double[] NO3Supply_kg, ref double[] NH4Supply_kg)
         {
-            NetworkZoneState myZone = Zones.Find(z => z.Name == zone.Zone.Name);
+            NetworkZoneState myZone = ZoneStates.Find(z => z.Name == zone.Zone.Name);
             if (myZone != null)
             {
                 if (RWC == null || RWC.Length != myZone.Physical.Thickness.Length)
@@ -526,14 +527,12 @@ namespace Models.PMF
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Zones = new List<NetworkZoneState>();
-
+            ZoneStates = new List<NetworkZoneState>();
             Soil soil = Structure.Find<Soil>();
             if (soil == null)
                 throw new Exception("Cannot find soil");
             PlantZone = new NetworkZoneState(parentPlant, soil, Structure);
-            ZoneNamesToGrowRootsIn.Add(PlantZone.Name);
-
+            
             soilCrop = Structure.FindChild<SoilCrop>(parentPlant.Name + "Soil", relativeTo: soil, recurse: true);
             if (soilCrop == null)
                 throw new Exception("Cannot find a soil crop parameterisation for " + parentPlant.Name);
@@ -549,14 +548,14 @@ namespace Models.PMF
             {
                 RootFrontVelocity = rootFrontVelocity.Value();
                 MaximumRootDepth = maximumRootDepth.Value();
-                foreach (NetworkZoneState z in Zones)
+                foreach (NetworkZoneState z in ZoneStates)
                 {
                     z.CalculateRAw();
                     z.CalculateRootProportionThroughLayer();
                 }
 
                 double[] KL = soilCrop.KL;
-                for (int layer = 0; layer < Zones[0].Physical.Thickness.Length; layer++)
+                for (int layer = 0; layer < ZoneStates[0].Physical.Thickness.Length; layer++)
                 {
                     klByLayer[layer] = KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer);
                 }
@@ -576,7 +575,7 @@ namespace Models.PMF
 
             double TotalArea = 0;
 
-            foreach (NetworkZoneState Z in Zones)
+            foreach (NetworkZoneState Z in ZoneStates)
             {
                 TotalArea += Z.Area;
             }
@@ -608,7 +607,7 @@ namespace Models.PMF
         {
             double TotalRAw = 0;
             double TotalArea = 0;
-            foreach (NetworkZoneState Z in Zones)
+            foreach (NetworkZoneState Z in ZoneStates)
             {
                 TotalArea += Z.Area;
             }
@@ -618,7 +617,7 @@ namespace Models.PMF
                 double checkTotalWt = 0;
                 double checkTotalN = 0;
 
-                foreach (NetworkZoneState z in Zones)
+                foreach (NetworkZoneState z in ZoneStates)
                 {
                     double RZA = z.Area / TotalArea;
                     TotalRAw = z.RAw.Sum();
@@ -679,7 +678,7 @@ namespace Models.PMF
         {
             if (parentPlant.IsAlive)
             {
-                foreach (NetworkZoneState z in Zones)
+                foreach (NetworkZoneState z in ZoneStates)
                 {
                     FOMLayerLayerType[] FOMLayers = new FOMLayerLayerType[z.LayerLive.Length];
                     for (int layer = 0; layer < z.Physical.Thickness.Length; layer++)
@@ -712,7 +711,7 @@ namespace Models.PMF
         /// <summary>grow roots in each zone.</summary>
         public void GrowRootDepth()
         {
-            foreach (NetworkZoneState z in Zones)
+            foreach (NetworkZoneState z in ZoneStates)
                 z.GrowRootDepth();
         }
 
@@ -720,26 +719,26 @@ namespace Models.PMF
         private void InitialiseZones()
         {
             List<double> zoneAreas = new List<double>();
-            foreach (string z in ZoneNamesToGrowRootsIn)
+            List<Zone> zones = Structure.FindAll<Zone>(relativeTo: simulation).ToList();
+            foreach (Zone z in zones)
             {
-                Zone zone = Structure.Find<Zone>(z);
-                if (zone != null)
+                if (z != null)
                 {
-                    Soil soil = Structure.Find<Soil>(relativeTo: zone);
+                    Soil soil = Structure.Find<Soil>(relativeTo: z);
                     if (soil == null)
-                        throw new Exception("Cannot find soil in zone: " + zone.Name);
+                        throw new Exception("Cannot find soil in zone: " + z.Name);
                     NetworkZoneState newZone = null;
-                    if (z == PlantZone.Name)
+                    if (z.Name == PlantZone.Name)
                         newZone = PlantZone;
                     else
                         newZone = new NetworkZoneState(parentPlant, soil, Structure);
                     newZone.Initialize(parentPlant.SowingData.Depth);
-                    Zones.Add(newZone);
+                    ZoneStates.Add(newZone);
                     zoneAreas.Add(newZone.Area);
                 }
             }
 
-            klByLayer = new double[Zones[0].Physical.Thickness.Length];
+            klByLayer = new double[ZoneStates[0].Physical.Thickness.Length];
 
             WaterUptakeSupply = new PlantWaterOrNDelta(zoneAreas);
             NitrogenUptakeSupply = new PlantWaterOrNDelta(zoneAreas);
@@ -752,7 +751,7 @@ namespace Models.PMF
         {
 
             PlantZone.Clear();
-            Zones.Clear();
+            ZoneStates.Clear();
         }
 
     }
