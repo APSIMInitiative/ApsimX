@@ -232,6 +232,40 @@ namespace Models.AgPasture
         /// <summary>Number of layers in the soil.</summary>
         private int nLayers;
 
+        /// <summary>
+        /// TESTING Root WT
+        /// </summary>
+        public double Wt
+        {
+            get
+            {
+                return DMTotal/10.0;
+            }
+        }
+
+        /// <summary>
+        /// TESTING ROOT N 
+        /// </summary>
+        public double N
+        {
+            get
+            {
+                return NTotal/10.0;
+            }
+        }
+
+        /// <summary>
+        /// TESTING Root Nconc
+        /// </summary>
+        public double NConc
+        {
+            get
+            {
+              return NTotal/DMTotal;  
+            }
+            
+        }
+
         //----------------------- Public methods -----------------------
 
         /// <summary>Initialise this root instance (and tissues).</summary>

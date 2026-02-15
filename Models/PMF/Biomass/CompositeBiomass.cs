@@ -87,6 +87,7 @@ namespace Models.PMF
 
         /// <summary>Gets the nitrogen content.</summary>
         [Units("g/m^2")]
+
         public double N
         {
             get

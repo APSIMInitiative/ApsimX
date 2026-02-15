@@ -394,6 +394,15 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>
+        /// TESTING DIGESTIBILITY. RETURNS NULL. 
+        /// </summary>
+        public double Digestibility
+        {
+             get{
+            return  0;}
+        }
+
 
         /// <summary>Return the</summary>
         public double CohortCurrentRankCoverAbove
