@@ -66,8 +66,15 @@
       "ResourceName": null,
       "Children": [
         {
-<<<<<<< HEAD
-=======
+
+    {
+      "$type": "Models.Core.Folder, Models",
+      "ShowInDocs": true,
+      "Name": "Validation",
+      "ResourceName": null,
+      "Children": [
+        {
+
           "$type": "Models.Memo, Models",
           "Text": "The validation of biomass production, N status, and relative species composition of AgPasture is done using a series of simulations based on a number of datasets.  The base validation uses the 'Radcliffe trials', a series of dataset of yield measured in exclusion cages on grass-clover pastures across New Zealand. The second set comprises of two long term dataset that contain more detailed informatin on management and pasture yield for each harvest, these are a subset of the 'Winchmore' irrigation and fertility trials, with data from ryegrass-clover mixed pastures under rainfed and irrigated conditions, and another set based on production trials in 'Ruakura' [#mccall2003pasture]. The third set of simulations is based on a fertilisty trial conducted in 'Lincoln' and 'Ruakura' for the Forages for Reducing Nitorgen Leaching programme (FRNL); this encompases two years of biomass and N uptake measurements under six N fertilisation rates for monocultures of ryegrass and white clover, plus a mix of the two (only in Ruakura).  \n",
           "Name": "Memo",
@@ -54492,29 +54499,10 @@
                   "ResourceName": null,
                   "Children": [
                     {
-<<<<<<< HEAD
-                      "$type": "Models.Map, Models",
-                      "Zoom": 3.0,
-                      "Center": {
-                        "$type": "Models.Mapping.Coordinate, Models",
-                        "Latitude": 0.0,
-                        "Longitude": 0.0
-                      },
-                      "Name": "LincolnMap",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Documentation, Models",
-                      "Text": "This experiment was run over 3 years in Lincoln, New Zealand on a shallow stony soil.  It is described in full by [#Teixeira_Brown_Michel_Meenken_Hu_Thomas_Huth_Holzworth_2018] Treatments Pasture (Ryegrass) was established in the Autumn of 2011 and irrigtion treatments were installed in the spring of 2011 and applied for three years.  Treatments were:\n\n\n* None where no irrigation was applied\n* TwoPerWeek where irrigation was applied twice per week during spring/summer/autumn to replace water use measured by neutron probe\n* OnePerWeek where the same amout of irrigation was applied as the above treatment but at weekly frequency (i.e fewer, larger irrigations)\n* ThreeWeekly where the same amount of irrigation was applied as abouve but at a 3 weekely frequency (i.e fewer, larger irrigations)\n\nPasture was defoliated at differing frequiencies following best mananagment practice resulting in 8-10 regrowth period per year for pasture and 5-6 for lucerne.  Neutron probes were installed to 1.6 m depth using a 20T digger with a pnumatic plate on its boom to drive and extract a pilot rod into the stony sub soil and then an aluminum access tube was installed into the resultant hole.  Neutron probes measurements were tatken at 7 - 10 day intervals during the irrigation season.  CS616 probes were also installed in the top soil at 0-15 and 15-30 cm depths in each plot and logged hourly.",
-                      "Name": "LandPDoc",
-=======
+
                       "$type": "Models.Memo, Models",
                       "Text": "This experiment was run over 3 years in Lincoln, New Zealand on a shallow stony soil.  It is described in full by [#Teixeira_Brown_Michel_Meenken_Hu_Thomas_Huth_Holzworth_2018] Treatments of Lucerne and Pasture (Ryegrass) were established in the Autumn of 2011 and irrigtion treatments were installed in the spring of 2011 and applied for three years.  Treatments were:\n\n - None where no irrigation was applied\n - TwoPerWeek where irrigation was applied twice per week during spring/summer/autumn to replace water use measured by neutron probe\n - OnePerWeek where the same amout of irrigation was applied as the above treatment but at weekly frequency (i.e fewer, larger irrigations)\n - ThreeWeekly where the same amount of irrigation was applied as abouve but at a 3 weekely frequency (i.e fewer, larger irrigations)\n\nLucerne and pasture were defoliated at differing frequiencies following best mananagment practice resulting in 8-10 regrowth period per year for pasture and 5-6 for lucerne.  Neutron probes were installed to 1.6 m depth using a 20T digger with a pnumatic plate on its boom to drive and extract a pilot rod into the stony sub soil and then an aluminum access tube was installed into the resultant hole.  Neutron probes measurements were tatken at 7 - 10 day intervals during the irrigation season.  CS616 probes were also installed in the top soil at 0-15 and 15-30 cm depths in each plot and logged hourly.\n\r\n\n",
                       "Name": "Memo",
->>>>>>> upstream
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
