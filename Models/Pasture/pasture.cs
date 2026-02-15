@@ -571,18 +571,6 @@ namespace Models.GrazPlan
         {
             get { return null; }
         }
-<<<<<<< HEAD
-
-       private bool isAlive = false;
-        
-        /// <summary>
-        /// NOT implemented
-        /// </summary>
-        public bool IsAlive
-        {
-            get{return false;}
-        }
-=======
        
         /// <summary>
         ///IsAlive flags plant status alive or dead
@@ -591,7 +579,6 @@ namespace Models.GrazPlan
         public bool IsAlive { get; private set; }
 
        
->>>>>>> upstream
 
         /// <summary>
         /// IsReadyForHarvesting: Not implemented
@@ -620,14 +607,8 @@ namespace Models.GrazPlan
             throw new NotImplementedException();
         }
 
-<<<<<<< HEAD
-        private Cultivar cultivarDefinition = null;
-
-          private ISummary mySummary = null;
-=======
          
 
->>>>>>> upstream
         /// <summary>
         /// Sow: Not implemented 
         /// </summary>
@@ -645,20 +626,6 @@ namespace Models.GrazPlan
         public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1,
                 double seeds = 0, int tillering = 0, double ftn = 0.0)
         {
-<<<<<<< HEAD
-            if(isAlive == false)
-            {
-                 cultivarDefinition = Structure.FindChildren<Cultivar>(recurse: true).FirstOrDefault(c => c.IsKnownAs(cultivar));
-                if (cultivarDefinition != null)
-                {
-                    mySummary.WriteMessage(this, $"Applying cultivar {cultivar}", MessageType.Diagnostic);
-                    cultivarDefinition.Apply(this);
-                }
-
-                isAlive =true;
-                
-            }
-=======
             if (!IsAlive)
             {
                 int numDry = 0;
@@ -811,7 +778,6 @@ namespace Models.GrazPlan
 
 
                 IsAlive = true;
->>>>>>> upstream
         }
     }
 
@@ -2751,20 +2717,11 @@ namespace Models.GrazPlan
         [EventSubscribe("DoActualPlantGrowth")]
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
-<<<<<<< HEAD
-            if (isAlive == true)
-=======
             if (IsAlive)
->>>>>>> upstream
             {
                 DoPastureGrowth();
                 EndStep();
             }
-<<<<<<< HEAD
-           
-=======
-
->>>>>>> upstream
         }
 
         /// <summary>
