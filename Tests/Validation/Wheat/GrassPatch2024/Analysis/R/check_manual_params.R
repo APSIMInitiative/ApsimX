@@ -27,6 +27,10 @@ check_manual_params <- function(folder, filename, df_active_sims) {
     message("📁 Manual parameter file not found. Generating template...")
     
   #  if (!dir.exists(folder)) dir.create(folder, recursive = TRUE)
+    if (!dir.exists(folder)) {
+      warning("⚠️ The folder ",folder," does not exist")
+      
+    }
     
     template_df <- data.frame(
       SimulationName = active_sims,
