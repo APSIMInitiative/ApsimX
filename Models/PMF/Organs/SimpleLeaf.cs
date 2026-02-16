@@ -52,7 +52,8 @@ namespace Models.PMF.Organs
     /// A potential stomatal conductance is provided to the Microclimate model for use in calculating daily potential water use. 
     /// This conductance accounts for the effects of temperature, vapor deficit and plant nutrition. 
     /// Potential water use is then calculated by the microclimate model, and actual water use subsequently by the soil arbitrator model using data also provided by the root model regarding potential water uptake.
-    /// The impact of atmospheric CO2 concentration on stomatal conductance is dependant upon temperature and the related impact of CO2 concentration on photosynthesis.
+    /// The impact of atmospheric CO2 concentration on stomatal conductance is dependant upon temperature and the related impact of CO2 concentration on photosynthesis.  
+    /// Atmospheric CO2 concentration is specified by the user along with meteorological data when constructing each simulation.
     /// 
     /// ```
     /// StomatalConductance = Gsmax350 * FRGR * stomatalConductanceCO2Modifier;
