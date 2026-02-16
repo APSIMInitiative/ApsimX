@@ -28,6 +28,11 @@ namespace Models.PMF
         [field: NonSerialized]
         public IStructure Structure { private get; set; }
 
+        /// <summary> The parent simulation </summary>
+        [JsonIgnore]
+        [Link(Type = LinkType.Ancestor)]
+        private Simulation simulation = null;
+
 
         /// <summary>The summary</summary>
         [Link]
@@ -219,6 +224,9 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>List of zones with conditions to specify if roots grow there or not</summary>
+        public Dictionary<string, bool> ZonesToGrowRootsIn = null;
+
         /// <summary>The sw uptake</summary>
         public IReadOnlyList<double> WaterUptake => Root == null ? null : Root.SWUptakeLayered;
 
@@ -250,6 +258,10 @@ namespace Models.PMF
             IEnumerable<string> duplicates = CultivarNames.GroupBy(x => x).Where(g => g.Count() > 1).Select(x => x.Key);
             if (duplicates.Count() > 0)
                 throw new Exception("Duplicate Names in " + this.Name + " has duplicate cultivar names " + string.Join(",", duplicates));
+            List<Zone> zones = Structure.FindAll<Zone>(relativeTo: simulation).ToList();
+            ZonesToGrowRootsIn = new Dictionary<string, bool>();
+            foreach (Zone z in zones)
+                ZonesToGrowRootsIn[z.Name] = true;
         }
 
         /// <summary>Called when [phase changed].</summary>

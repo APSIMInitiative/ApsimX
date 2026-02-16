@@ -43,6 +43,11 @@ namespace Models.PMF
         [Link(Type = LinkType.Ancestor, IsOptional = true)]
         public RectangularZone parentZone = null;
 
+        /// <summary> The parent simulation </summary>
+        [JsonIgnore]
+        [Link(Type = LinkType.Ancestor)]
+        private Simulation simulation = null;
+
         ///2. Private And Protected Fields
         /// -------------------------------------------------------------------------------------------------
 
@@ -141,7 +146,7 @@ namespace Models.PMF
         public void OnPlantSowing(object sender, SowingParameters data)
         {
             List<double> zoneAreas = new List<double>();
-            List<Zone> zones = Structure.FindAll<Zone>().ToList();
+            List<Zone> zones = Structure.FindAll<Zone>(relativeTo:simulation).ToList();
             foreach (Zone z in zones)
                 zoneAreas.Add(z.Area);
             WaterSupply = new PlantWaterOrNDelta(zoneAreas);
@@ -160,6 +165,12 @@ namespace Models.PMF
         {
             initialNitrogenEstimate = true;
             initialWaterEstimate = true;
+            WaterSupply?.Reset();
+            NitrogenSupply?.Reset();
+            WaterUptake?.Reset();
+            NitrogenUptake?.Reset();
+            WaterDemand?.Reset();
+            NitrogenDemand?.Reset();
         }
 
         /// <summary>
