@@ -107,7 +107,7 @@ namespace Models.AgPasture
         /// </summary>
         public double Wt
         {
-            get {return  (DMTotal * FractionStanding)/10.0;}
+            get {return  DMTotal /10.0;}
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace Models.AgPasture
         /// </summary>
         public double N
         {
-            get {return (NTotal * FractionStanding)/10.0;}
+            get {return NTotal /10.0;}
         }
 
         /// <summary>
