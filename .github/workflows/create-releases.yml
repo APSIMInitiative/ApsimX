@@ -89,7 +89,7 @@ jobs:
 
       - name: Create APSIM Signing Certificate
         env:
-          APSIM_CERT_BASE64: ${{ secrets.APSIM_CERT }} 
+          APSIM_CERT_BASE64: ${{ secrets.APSIM_CERT_NEW }} 
         run: |
           echo -n "$APSIM_CERT_BASE64" | base64 -d > ./apsim_signing_cert.p12
 
