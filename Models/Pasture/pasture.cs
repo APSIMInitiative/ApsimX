@@ -652,7 +652,7 @@ namespace Models.GrazPlan
                             if (rw == 0)
                             {
                                 // Default root mass when UI gives zero
-                                green[idx].root_wt[i] = new double[] { 400.0, 400.0 };
+                                green[idx].root_wt[i] = new double[] { 20.0, 20.0 };
                             }
                             else
                             {
@@ -679,7 +679,7 @@ namespace Models.GrazPlan
                         if (greenInit.LeafWeight.Length == 1 && greenInit.LeafWeight[0] == 0)
                         {
                             // Default leaf mass when GUI gives zero
-                            green[idx].herbage[0].weight = new double[] { 800.0 };
+                            green[idx].herbage[0].weight = new double[] { 20.0 };
                         }
                         else
                         {
@@ -697,7 +697,7 @@ namespace Models.GrazPlan
                         {
                             
                             // Default stem mass when GUI gives zero
-                            green[idx].herbage[1].weight = new double[] { 800.0 };
+                            green[idx].herbage[1].weight = new double[] { 20.0 };
                         }
                         else
                         {
@@ -727,7 +727,7 @@ namespace Models.GrazPlan
                         if (dryInit.LeafWeight.Length == 1 && dryInit.LeafWeight[0] == 0)
                         {
                             // Default dry leaf mass when GUI gives zero
-                            dry[idx].herbage[0].weight = new double[] { 800.0 };
+                            dry[idx].herbage[0].weight = new double[] { 20.0 };
                         }
                         else
                         {
@@ -745,7 +745,7 @@ namespace Models.GrazPlan
                         if (dryInit.StemWeight.Length == 1 && dryInit.StemWeight[0] == 0)
                         {
                             // Default dry stem mass when GUI gives zero
-                            dry[idx].herbage[1].weight = new double[] { 800.0 };
+                            dry[idx].herbage[1].weight = new double[] { 20.0 };
                         }
                         else
                         {
