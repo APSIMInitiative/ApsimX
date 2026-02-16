@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 209,
+  "Version": 210,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -21,294 +21,350 @@
       "Children": [
         {
           "$type": "Models.Factorial.Factors, Models",
-          "Name": "Models",
+          "Name": "Factors",
           "ResourceName": null,
           "Children": [
             {
-              "$type": "Models.Factorial.Factor, Models",
-              "Specification": "[IPlant]",
-              "Name": "Factor",
+              "$type": "Models.Factorial.Permutation, Models",
+              "Name": "Permutation",
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.GrazPlan.Pasture, Models",
-                  "Species": "Perennial Ryegrass",
-                  "Fertility": 0.8,
-                  "Nutrients": "N",
-                  "Layers": null,
-                  "MaxRtDep": 650.0,
-                  "LaggedDayT": -999.9,
-                  "Phenology": 1.0015,
-                  "FlowerLen": 0.0,
-                  "FlowerTime": 0.0,
-                  "SencIndex": 0.0,
-                  "DormIndex": 0,
-                  "DormT": -999.9,
-                  "ExtinctCoeff": [
-                    0.0,
-                    10.0,
-                    0.0
-                  ],
-                  "Green": null,
-                  "Dry": null,
-                  "Seeds": null,
-                  "SeedDormTime": 0.0,
-                  "GermIndex": 0.0,
-                  "KL": null,
-                  "LL": null,
-                  "Albedo": 0.23,
-                  "Gsmax": 0.011,
-                  "R50": 200.0,
-                  "LightProfile": null,
-                  "PlantType": null,
-                  "WaterDemand": 0.0,
-                  "LAI": 0.0,
-                  "Name": "Pasture",
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[IPlant]",
+                  "Name": "Models",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.GrazPlan.GreenCohortInitialise, Models",
-                      "RootWeight": [
-                        400.0,
-                        400.0
-                      ],
-                      "RootDepth": 650.0,
-                      "EstIndex": 0.0,
-                      "StressIndex": 0.0,
-                      "StemReloc": 0.0,
-                      "Frosts": 0,
-                      "Status": "established",
-                      "LeafDMD": [
-                        0.825
-                      ],
-                      "LeafWeight": [
-                        800.0
-                      ],
-                      "LeafNConc": [
-                        0.01
-                      ],
-                      "LeafSpecificArea": [
-                        430.0
-                      ],
-                      "StemDMD": [
-                        0.825
-                      ],
-                      "StemWeight": [
-                        800.0
-                      ],
-                      "StemNConc": [
-                        0.01
-                      ],
-                      "StemSpecificArea": [
-                        10.0
-                      ],
-                      "Name": "GreenCohortInitialise",
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": null,
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Pasture",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.GrazPlan.Pasture, Models",
+                          "Species": "Perennial Ryegrass",
+                          "Fertility": 0.8,
+                          "Nutrients": "N",
+                          "Layers": null,
+                          "MaxRtDep": 650.0,
+                          "LaggedDayT": -999.9,
+                          "Phenology": 1.0015,
+                          "FlowerLen": 0.0,
+                          "FlowerTime": 0.0,
+                          "SencIndex": 0.0,
+                          "DormIndex": 0,
+                          "DormT": -999.9,
+                          "ExtinctCoeff": [
+                            0.0,
+                            10.0,
+                            0.0
+                          ],
+                          "Green": null,
+                          "Dry": null,
+                          "Seeds": null,
+                          "SeedDormTime": 0.0,
+                          "GermIndex": 0.0,
+                          "KL": null,
+                          "LL": null,
+                          "Albedo": 0.23,
+                          "Gsmax": 0.011,
+                          "R50": 200.0,
+                          "LightProfile": null,
+                          "PlantType": null,
+                          "WaterDemand": 0.0,
+                          "LAI": 0.0,
+                          "Name": "Pasture",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.GrazPlan.GreenCohortInitialise, Models",
+                              "RootWeight": [
+                                0.0,
+                                0.0
+                              ],
+                              "RootDepth": 650.0,
+                              "EstIndex": 0.0,
+                              "StressIndex": 0.0,
+                              "StemReloc": 0.0,
+                              "Frosts": 0,
+                              "Status": "established",
+                              "LeafDMD": [
+                                0.825
+                              ],
+                              "LeafWeight": [
+                                0.0
+                              ],
+                              "LeafNConc": [
+                                0.01
+                              ],
+                              "LeafSpecificArea": [
+                                430.0
+                              ],
+                              "StemDMD": [
+                                0.825
+                              ],
+                              "StemWeight": [
+                                0.0
+                              ],
+                              "StemNConc": [
+                                0.01
+                              ],
+                              "StemSpecificArea": [
+                                10.0
+                              ],
+                              "Name": "GreenCohortInitialise",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.GrazPlan.DryCohortInitialise, Models",
+                              "Status": "established",
+                              "LeafDMD": [
+                                0.6
+                              ],
+                              "LeafWeight": [
+                                0.0
+                              ],
+                              "LeafNConc": [
+                                0.0
+                              ],
+                              "LeafSpecificArea": [
+                                430.0
+                              ],
+                              "StemDMD": [
+                                0.35
+                              ],
+                              "StemWeight": [
+                                0.0
+                              ],
+                              "StemNConc": [
+                                0.0
+                              ],
+                              "StemSpecificArea": [
+                                80.0
+                              ],
+                              "Name": "DryCohortInitialise",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.GrazPlan.Biomass.CompositeBiomass, Models",
+                              "PastureModel": null,
+                              "OrganNames": [
+                                "Leaf",
+                                "Stem"
+                              ],
+                              "IncludeLive": true,
+                              "IncludeDead": true,
+                              "Name": "AboveGround",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.GrazPlan.Organs.GenericOrgan, Models",
+                              "PastureModel": null,
+                              "IsAboveGround": true,
+                              "Name": "Leaf",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.GrazPlan.Organs.GenericOrgan, Models",
+                              "PastureModel": null,
+                              "IsAboveGround": true,
+                              "Name": "Stem",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Operations, Models",
+                          "OperationsList": [
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "1990-10-10",
+                              "Action": "[IPlant].Sow(population: 1, cultivar: \"W\", depth: 5, rowSpacing: 150)",
+                              "Line": "1990-10-10 [IPlant].Sow(population: 1, cultivar: \"W\", depth: 5, rowSpacing: 150)"
+                            }
+                          ],
+                          "Name": "Operations",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.GrazPlan.DryCohortInitialise, Models",
-                      "Status": "established",
-                      "LeafDMD": [
-                        0.6
-                      ],
-                      "LeafWeight": [
-                        500.0
-                      ],
-                      "LeafNConc": [
-                        0.0
-                      ],
-                      "LeafSpecificArea": [
-                        430.0
-                      ],
-                      "StemDMD": [
-                        0.35
-                      ],
-                      "StemWeight": [
-                        1500.0
-                      ],
-                      "StemNConc": [
-                        0.0
-                      ],
-                      "StemSpecificArea": [
-                        80.0
-                      ],
-                      "Name": "DryCohortInitialise",
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": null,
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "AgPasture",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.AgPasture.PastureSpecies, Models",
+                          "doyGermination": 275,
+                          "daysEmergenceToAnthesis": 120,
+                          "daysAnthesisToMaturity": 85,
+                          "degreesDayForAnthesis": 1100.0,
+                          "degreesDayForMaturity": 900.0,
+                          "daysAnnualsFactor": 45,
+                          "FVPDFunction": {
+                            "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                            "Name": "LinearInterpolationFunction",
+                            "ResourceName": null,
+                            "Children": [],
+                            "Enabled": true,
+                            "ReadOnly": false
+                          },
+                          "CanopyType": "PastureSpecies",
+                          "LightProfile": null,
+                          "InitialShootDM": 0.0,
+                          "InitialRootDM": 0.0,
+                          "InitialRootDepth": 2000.0,
+                          "initialDMFractionsGrasses": [
+                            0.15,
+                            0.25,
+                            0.25,
+                            0.05,
+                            0.05,
+                            0.1,
+                            0.1,
+                            0.05,
+                            0.0,
+                            0.0,
+                            0.0
+                          ],
+                          "initialDMFractionsLegumes": [
+                            0.16,
+                            0.23,
+                            0.22,
+                            0.05,
+                            0.03,
+                            0.05,
+                            0.05,
+                            0.01,
+                            0.04,
+                            0.08,
+                            0.08
+                          ],
+                          "initialDMFractionsForbs": [
+                            0.2,
+                            0.2,
+                            0.15,
+                            0.05,
+                            0.1,
+                            0.15,
+                            0.1,
+                            0.05,
+                            0.0,
+                            0.0,
+                            0.0
+                          ],
+                          "PhotosyntheticEfficiency": 0.01,
+                          "PhotosynthesisCurveFactor": 0.8,
+                          "FractionPAR": 0.5,
+                          "ReferenceCO2": 380.0,
+                          "CO2EffectScaleFactor": 700.0,
+                          "CO2EffectOffsetFactor": 600.0,
+                          "CO2EffectMinimum": 0.7,
+                          "CO2EffectExponent": 2.0,
+                          "ReproSeasonDurationCoeff": 2.0,
+                          "ReproSeasonShouldersLengthFactor": 1.0,
+                          "ReproSeasonOnsetDurationFactor": 0.6,
+                          "RelativeTurnoverEmerging": 2.0,
+                          "DetachmentDroughtCoefficient": 3.0,
+                          "DetachmentDroughtEffectMin": 0.1,
+                          "TurnoverStockFactor": 0.01,
+                          "TurnoverDefoliationEffectMin": 0.025,
+                          "MinimumGreenLeafProp": 0.8,
+                          "MinimumGreenRootProp": 0.5,
+                          "Name": "AGPRyegrass",
+                          "ResourceName": "AGPRyegrass",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Operations, Models",
+                          "OperationsList": [
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "1990-10-10",
+                              "Action": "[IPlant].Sow(population: 1, cultivar: \"W\", depth: 5, rowSpacing: 150)",
+                              "Line": "1990-10-10 [IPlant].Sow(population: 1, cultivar: \"W\", depth: 5, rowSpacing: 150)"
+                            }
+                          ],
+                          "Name": "Operations",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.GrazPlan.Biomass.CompositeBiomass, Models",
-                      "PastureModel": null,
-                      "OrganNames": [
-                        "Leaf",
-                        "Stem"
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": null,
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "PMF",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.PMF.Plant, Models",
+                          "Name": "Wheat",
+                          "ResourceName": "Wheat",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Operations, Models",
+                          "OperationsList": [
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "1990-10-10",
+                              "Action": "[IPlant].Sow(population: 100, cultivar: \"Hartog\", depth: 5, rowSpacing: 150)",
+                              "Line": "1990-10-10 [IPlant].Sow(population: 100, cultivar: \"Hartog\", depth: 5, rowSpacing: 150)"
+                            }
+                          ],
+                          "Name": "Operations",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
                       ],
-                      "IncludeLive": true,
-                      "IncludeDead": true,
-                      "Name": "AboveGround",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.GrazPlan.Organs.GenericOrgan, Models",
-                      "PastureModel": null,
-                      "IsAboveGround": true,
-                      "Name": "Leaf",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.GrazPlan.Organs.GenericOrgan, Models",
-                      "PastureModel": null,
-                      "IsAboveGround": true,
-                      "Name": "Stem",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.GrazPlan.Biomass.CompositeBiomass, Models",
-                      "PastureModel": null,
-                      "OrganNames": [
-                        "Leaf",
-                        "Stem"
-                      ],
-                      "IncludeLive": true,
-                      "IncludeDead": false,
-                      "Name": "AboveGroundLive",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.GrazPlan.Biomass.CompositeBiomass, Models",
-                      "PastureModel": null,
-                      "OrganNames": [
-                        "Leaf",
-                        "Stem"
-                      ],
-                      "IncludeLive": false,
-                      "IncludeDead": true,
-                      "Name": "AboveGroundDead",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.GrazPlan.Organs.GenericOrgan, Models",
-                      "PastureModel": null,
-                      "IsAboveGround": false,
-                      "Name": "Root",
-                      "ResourceName": null,
-                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.AgPasture.PastureSpecies, Models",
-                  "doyGermination": 275,
-                  "daysEmergenceToAnthesis": 120,
-                  "daysAnthesisToMaturity": 85,
-                  "degreesDayForAnthesis": 1100.0,
-                  "degreesDayForMaturity": 900.0,
-                  "daysAnnualsFactor": 45,
-                  "FVPDFunction": {
-                    "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                    "Name": "LinearInterpolationFunction",
-                    "ResourceName": null,
-                    "Children": [],
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "CanopyType": "PastureSpecies",
-                  "LightProfile": null,
-                  "InitialShootDM": 500.0,
-                  "InitialRootDM": 500.0,
-                  "InitialRootDepth": 2000.0,
-                  "initialDMFractionsGrasses": [
-                    0.15,
-                    0.25,
-                    0.25,
-                    0.05,
-                    0.05,
-                    0.1,
-                    0.1,
-                    0.05,
-                    0.0,
-                    0.0,
-                    0.0
-                  ],
-                  "initialDMFractionsLegumes": [
-                    0.16,
-                    0.23,
-                    0.22,
-                    0.05,
-                    0.03,
-                    0.05,
-                    0.05,
-                    0.01,
-                    0.04,
-                    0.08,
-                    0.08
-                  ],
-                  "initialDMFractionsForbs": [
-                    0.2,
-                    0.2,
-                    0.15,
-                    0.05,
-                    0.1,
-                    0.15,
-                    0.1,
-                    0.05,
-                    0.0,
-                    0.0,
-                    0.0
-                  ],
-                  "PhotosyntheticEfficiency": 0.01,
-                  "PhotosynthesisCurveFactor": 0.8,
-                  "FractionPAR": 0.5,
-                  "ReferenceCO2": 380.0,
-                  "CO2EffectScaleFactor": 700.0,
-                  "CO2EffectOffsetFactor": 600.0,
-                  "CO2EffectMinimum": 0.7,
-                  "CO2EffectExponent": 2.0,
-                  "ReproSeasonDurationCoeff": 2.0,
-                  "ReproSeasonShouldersLengthFactor": 1.0,
-                  "ReproSeasonOnsetDurationFactor": 0.6,
-                  "RelativeTurnoverEmerging": 2.0,
-                  "DetachmentDroughtCoefficient": 3.0,
-                  "DetachmentDroughtEffectMin": 0.1,
-                  "TurnoverStockFactor": 0.01,
-                  "TurnoverDefoliationEffectMin": 0.025,
-                  "MinimumGreenLeafProp": 0.8,
-                  "MinimumGreenRootProp": 0.5,
-                  "Name": "AGPRyegrass",
-                  "ResourceName": "AGPRyegrass",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Plant, Models",
-                  "Name": "Wheat",
-                  "ResourceName": "Wheat",
-                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -423,135 +479,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Manager, Models",
-                  "CodeArray": [
-                    "using APSIM.Numerics;",
-                    "using Models.Climate;",
-                    "using System.Linq;",
-                    "using System;",
-                    "using Models.Core;",
-                    "using Models.PMF;",
-                    "using Models.Soils;",
-                    "using Models.Utilities;",
-                    "using APSIM.Shared.Utilities;",
-                    "using Models.Interfaces;",
-                    "",
-                    "namespace Models",
-                    "{",
-                    "    [Serializable]",
-                    "    public class Script : Model",
-                    "    {",
-                    "        [Link] private Clock Clock;",
-                    "        [Link] private Fertiliser Fertiliser;",
-                    "        [Link] private Summary Summary;",
-                    "        [Link] private Soil Soil;",
-                    "        private Accumulator accumulatedRain;",
-                    "        [Link]",
-                    "        private ISoilWater waterBalance;",
-                    "        ",
-                    "        [Description(\"Crop\")]",
-                    "        public IPlant Crop { get; set; }",
-                    "       ",
-                    "       [Description(\"Start of sowing window (d-mmm)\")]",
-                    "        public string StartDate { get; set; }",
-                    "",
-                    "        [Description(\"End of sowing window (d-mmm)\")]",
-                    "        public string EndDate { get; set; }",
-                    "",
-                    "        [Description(\"Minimum extractable soil water for sowing (mm)\")]",
-                    "        public double MinESW { get; set; }",
-                    "",
-                    "        [Description(\"Accumulated rainfall required for sowing (mm)\")]",
-                    "        public double MinRain { get; set; }",
-                    "",
-                    "        [Description(\"Duration of rainfall accumulation (d)\")]",
-                    "        public int RainDays { get; set; }",
-                    "",
-                    "        [Display(Type = DisplayType.CultivarName)]",
-                    "        [Description(\"Cultivar to be sown\")]",
-                    "        public string CultivarName { get; set; }",
-                    "",
-                    "        [Description(\"Sowing depth (mm)\")]",
-                    "        public double SowingDepth { get; set; }",
-                    "",
-                    "        [Description(\"Row spacing (mm)\")]",
-                    "        public double RowSpacing { get; set; }",
-                    "",
-                    "        [Description(\"Plant population (/m2)\")]",
-                    "        public double Population { get; set; }",
-                    "        ",
-                    "        ",
-                    "        [EventSubscribe(\"StartOfSimulation\")]",
-                    "        private void OnSimulationCommencing(object sender, EventArgs e)",
-                    "        {",
-                    "            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);",
-                    "        }",
-                    "",
-                    "        [EventSubscribe(\"DoManagement\")]",
-                    "        private void OnDoManagement(object sender, EventArgs e)",
-                    "        {",
-                    "            accumulatedRain.Update();",
-                    "            ",
-                    "            if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&",
-                    "                !Crop.IsAlive &&",
-                    "                MathUtilities.Sum(waterBalance.ESW) > MinESW &&",
-                    "                accumulatedRain.Sum > MinRain)",
-                    "            {",
-                    "                Crop.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    ",
-                    "            }",
-                    "        }",
-                    "    }",
-                    "}"
-                  ],
-                  "Parameters": [
-                    {
-                      "Key": "Crop",
-                      "Value": "[Wheat]"
-                    },
-                    {
-                      "Key": "StartDate",
-                      "Value": "1-aug"
-                    },
-                    {
-                      "Key": "EndDate",
-                      "Value": "1-aug"
-                    },
-                    {
-                      "Key": "MinESW",
-                      "Value": "10"
-                    },
-                    {
-                      "Key": "MinRain",
-                      "Value": "0"
-                    },
-                    {
-                      "Key": "RainDays",
-                      "Value": "7"
-                    },
-                    {
-                      "Key": "CultivarName",
-                      "Value": "Hartog"
-                    },
-                    {
-                      "Key": "SowingDepth",
-                      "Value": "30"
-                    },
-                    {
-                      "Key": "RowSpacing",
-                      "Value": "250"
-                    },
-                    {
-                      "Key": "Population",
-                      "Value": "120"
-                    }
-                  ],
-                  "Name": "Sow using a variable rule",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Operations, Models",
                   "OperationsList": [
                     {
@@ -577,29 +504,11 @@
                     "",
                     "",
                     "[IPlant].AboveGround.Wt",
-                    "[IPlant].AboveGroundLive.Wt",
-                    "[IPlant].AboveGroundDead.Wt",
+                    "",
                     "",
                     "[IPlant].AboveGround.N",
                     "[IPlant].AboveGround.NConc",
                     "",
-                    "[IPlant].AboveGroundDead.N",
-                    "[IPlant].AboveGroundDead.NConc",
-                    "",
-                    "[IPlant].AboveGroundLive.N",
-                    "[IPlant].AboveGroundLive.NConc",
-                    "",
-                    "[IPlant].Leaf.Wt",
-                    "[IPlant].Leaf.N",
-                    "[IPlant].Leaf.NConc",
-                    "",
-                    "[IPlant].Stem.Wt",
-                    "[IPlant].Stem.N",
-                    "[IPlant].Stem.NConc",
-                    "",
-                    "[IPlant].Root.Wt",
-                    "[IPlant].Root.N",
-                    "[IPlant].Root.NConc",
                     "",
                     "",
                     "",
@@ -1323,7 +1232,7 @@
               "XAxis": 3,
               "YAxis": 0,
               "ColourArgb": 0,
-              "FactorToVaryColours": "Factor",
+              "FactorToVaryColours": "Models",
               "FactorToVaryMarkers": null,
               "FactorToVaryLines": null,
               "Marker": 11,
@@ -1336,346 +1245,6 @@
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Series",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 3,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            },
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 0,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            }
-          ],
-          "LegendPosition": 0,
-          "LegendOrientation": 0,
-          "AnnotationLocation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": false,
-          "Name": "AboveGroundWtLive",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": 0,
-              "FactorToVaryColours": "Factor",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "Report",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "IPlant.AboveGroundLive.Wt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Series",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 3,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            },
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 0,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            }
-          ],
-          "LegendPosition": 0,
-          "LegendOrientation": 0,
-          "AnnotationLocation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": false,
-          "Name": "AboveGroundDead",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": 0,
-              "FactorToVaryColours": "Factor",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "Report",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "IPlant.AboveGroundDead.Wt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Series",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 3,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            },
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 0,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            }
-          ],
-          "LegendPosition": 0,
-          "LegendOrientation": 0,
-          "AnnotationLocation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": false,
-          "Name": "LeafWt",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": 0,
-              "FactorToVaryColours": "Factor",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "Report",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "IPlant.Leaf.Wt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Series",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 3,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            },
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 0,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            }
-          ],
-          "LegendPosition": 0,
-          "LegendOrientation": 0,
-          "AnnotationLocation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": false,
-          "Name": "StemWt",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": 0,
-              "FactorToVaryColours": "Factor",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "Report",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "IPlant.Stem.Wt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Series",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 3,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            },
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 0,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            }
-          ],
-          "LegendPosition": 0,
-          "LegendOrientation": 0,
-          "AnnotationLocation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": false,
-          "Name": "RootWt",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": 0,
-              "FactorToVaryColours": "Factor",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "Report",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "IPlant.Root.Wt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
               "CumulativeX": false,
@@ -1741,7 +1310,7 @@
               "XAxis": 3,
               "YAxis": 0,
               "ColourArgb": 0,
-              "FactorToVaryColours": "Factor",
+              "FactorToVaryColours": "Models",
               "FactorToVaryMarkers": null,
               "FactorToVaryLines": null,
               "Marker": 11,
@@ -1809,7 +1378,7 @@
               "XAxis": 3,
               "YAxis": 0,
               "ColourArgb": 0,
-              "FactorToVaryColours": "Factor",
+              "FactorToVaryColours": "Models",
               "FactorToVaryMarkers": null,
               "FactorToVaryLines": null,
               "Marker": 11,
@@ -1877,7 +1446,7 @@
               "XAxis": 3,
               "YAxis": 0,
               "ColourArgb": 0,
-              "FactorToVaryColours": "Factor",
+              "FactorToVaryColours": "Models",
               "FactorToVaryMarkers": null,
               "FactorToVaryLines": null,
               "Marker": 11,
@@ -2033,278 +1602,6 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "IPlant.AboveGround.NConc",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Series",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 3,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            },
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 0,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            }
-          ],
-          "LegendPosition": 0,
-          "LegendOrientation": 0,
-          "AnnotationLocation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": false,
-          "Name": "AboveGroundLiveN",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": 0,
-              "FactorToVaryColours": "Factor",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "Report",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "IPlant.AboveGroundLive.NConc",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": false,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Series",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 3,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            },
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 0,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            }
-          ],
-          "LegendPosition": 0,
-          "LegendOrientation": 0,
-          "AnnotationLocation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": false,
-          "Name": "AboveGroundLiveNConc",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": 0,
-              "FactorToVaryColours": "Factor",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "Report",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "IPlant.AboveGroundLive.NConc",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": false,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Series",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 3,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            },
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 0,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            }
-          ],
-          "LegendPosition": 0,
-          "LegendOrientation": 0,
-          "AnnotationLocation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": false,
-          "Name": "AboveGroundDead",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": 0,
-              "FactorToVaryColours": "Factor",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "Report",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "IPlant.AboveGroundDead.NConc",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Series",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 3,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            },
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 0,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            }
-          ],
-          "LegendPosition": 0,
-          "LegendOrientation": 0,
-          "AnnotationLocation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": false,
-          "Name": "AboveGroundDeadNConc",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": 0,
-              "FactorToVaryColours": "Factor",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "Report",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "IPlant.AboveGroundDead.NConc",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
