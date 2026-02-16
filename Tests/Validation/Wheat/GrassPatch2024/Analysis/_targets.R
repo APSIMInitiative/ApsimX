@@ -20,6 +20,8 @@ source("R/get_pheno_dates.R")
 source("R/add_interp_pheno_dates.R")
 source("R/save_df_into_csv.R")
 source("R/add_stages_to_obs.R")
+source("R/get_column_var_from_observ.R")
+source("R/check_manual_params.R")
 
 
 # target objects
@@ -37,7 +39,8 @@ list(
       sheet_name_observed         = "Observed",
       date_DOY_ref                = "01-01-2024", # date to transform DOY output into ddmmyy within simulations
       btwStgPerc                  = 0.5, # fraction of time in-between two pheno-stages when we assume a missing stage 
-      file_name_input_pheno       = "GrassPatch2024_PhenoDatesInput.csv"
+      file_name_input_pheno       = "GrassPatch2024_PhenoDatesInput.csv",
+      file_name_input_haun        = "GrassPatch2024_HaunStagesInput.csv"
         )),
   
   # read observations
@@ -57,6 +60,15 @@ list(
   # create and add pheno-dates not measured in-between
   tar_target(df_new_pheno_dates, 
              add_interp_pheno_dates(df_obs_pheno_dates, config$btwStgPerc)),
+  
+  # get Haun stage data for enforced parameters
+  tar_target(df_haun, get_column_var_from_observ(file_obs_mean, 
+                                                 "Wheat.Phenology.HaunStage")),
+  
+  # check if haun manual parameters is correct
+  tar_target(haun_input_checked, check_manual_params(config$folder_inputs,
+                                                      config$file_name_input_haun,
+                                                      file_obs_mean)),
   
   # save pheno-date input into excel
   tar_target(
