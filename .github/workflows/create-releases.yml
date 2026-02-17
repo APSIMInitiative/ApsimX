@@ -51,8 +51,7 @@ jobs:
       strategy:
         fail-fast: false # allow other jobs to complete if one fails
         matrix:
-          os: [macos, debian, windows]
-          option: ["","","build"] # build and upload for macOS and Debian. Windows upload is handled in a separate job after code signing.
+          os-and-args: [macos, debian, "windows build"] 
       runs-on: ubuntu-latest
       container:
         image: apsiminitiative/apsimng-build:latest
@@ -92,7 +91,7 @@ jobs:
         env:
           DOCKER_METADATA_OUTPUT_VERSION: ${{ fromJSON(steps.meta_apsimplusr.outputs.json).labels['org.opencontainers.image.version'] }}
           BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
-        run: ./.github/workflows/scripts/deploy-installer.sh ${{ matrix.os }} ${{matrix.option}}
+        run: ./.github/workflows/scripts/deploy-installer.sh ${{ matrix.os-and-args }}
     
     # Performs code signing for the Windows installer using the Software Trust Manager. 
     # This is required to avoid "Unknown Publisher" warnings when users run the installer.
