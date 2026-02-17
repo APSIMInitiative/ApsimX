@@ -29,6 +29,7 @@ source("R/doStageObsData.R")
 source("R/add_to_observed_clean.R")
 source("R/read_soil_water.R")
 source("R/soil_water_in_json.R")
+source("R/check_manual_params.R")
 
 #----------------
 # Define targets
@@ -61,7 +62,8 @@ targets <- list(
       target_stagePerc            = 50, # % of a stage development when event date is retrieved
       target_betwStages           = 50, # % of period between two adjacent events when a synthetic event date is assumed
       var_name_stage              = "apsim_stage_raw", # name of synthetic var with observed PCSD data
-      varName_addedToObserv       = "Wheat.Phenology.Stage" # new synthetic variable to be added into observations
+      varName_addedToObserv       = "Wheat.Phenology.Stage", # new synthetic variable to be added into observations
+      file_name_input_haun        = "WaggaWagga2024_HaunRelatedInput.csv"
     )
   ),
   
@@ -145,6 +147,12 @@ targets <- list(
   tar_target(df_final_observed, 
              prepare_final_observed(list_observed_clean_final,
                                     df_simNameByCult)), 
+  
+  # check if manual parameters are correct
+  tar_target(haun_input_checked, check_manual_params(config$folder_inputs,
+                                                     config$file_name_input_haun,
+                                                     df_final_observed)),
+  
   
   #### ---------------------------------------
   ### Save files that need to be read by APSIM
