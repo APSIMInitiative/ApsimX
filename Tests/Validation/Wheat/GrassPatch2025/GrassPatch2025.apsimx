@@ -13,7 +13,7 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
-            "Observed.xlsx"
+            "Observed_GrassPatch2025.xlsx"
           ],
           "SheetNames": [
             "Observed"
@@ -653,11 +653,11 @@
               "Name": "Tests",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             }
           ],
-          "Enabled": true,
+          "Enabled": false,
           "ReadOnly": false
         },
         {
@@ -1113,11 +1113,11 @@
               "Name": "Tests",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             }
           ],
-          "Enabled": true,
+          "Enabled": false,
           "ReadOnly": false
         }
       ],
@@ -1226,6 +1226,7 @@
             "[Wheat].Leaf.SpecificArea",
             "[Wheat].Leaf.SpecificNitrogen",
             "[Wheat].Leaf.Transpiration",
+            "[Wheat].Phenology.Stage",
             "[Wheat].Phenology.CurrentPhase.Name",
             "[Wheat].Phenology.CurrentStageName",
             "[Wheat].Phenology.EmergenceDAS",
@@ -1652,7 +1653,7 @@
             {
               "$type": "Models.Clock, Models",
               "Start": "2025-03-03T00:00:00",
-              "End": "2025-11-15T00:00:00",
+              "End": "2025-11-30T00:00:00",
               "Name": "Clock",
               "ResourceName": null,
               "Children": [],
