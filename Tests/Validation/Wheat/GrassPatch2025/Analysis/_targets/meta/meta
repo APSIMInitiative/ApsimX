@@ -1,0 +1,18 @@
+name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
+save_df_into_csv|function|2d97213472654d30
+check_manual_params|function|c2beb0bd34e6f09a
+add_interp_pheno_dates|function|e2cebced524cba7b
+save_df_into_excel|function|17ab727b7ccc6cea
+.Random.seed|object|12fc718fba66621f
+get_pheno_dates|function|24ab1142309e3950
+get_column_var_from_observ|function|9826e307d104fb04
+do_obs_means|function|fb0caf5afe05afbb
+add_stages_to_obs|function|385deba37a4bdaf6
+read_excel_observed|function|9282a4763ebfc0ce
+config|stem|f7aa6bad6a365b0d|898af0e3920639e7|ef46db3751d8e999|1264390909||t20501.8187055705s|ee143e4c8ea21b7d|350|rds|local|vector|||0||
+file_obs|stem|a67f4d8c2d554efa|4db46a833c81f6cb|9c06f1510727c8be|2076400141||t20501.8187361962s|b3b7ec822ecf1b03|39757|rds|local|vector|||2.62||
+file_obs_mean|stem|045997a98f13f7d8|63f0f3905bc01c4b|5f265c7ae3eee55b|-1745307844||t20501.8187384431s|216ee2300f3d2ac4|11863|rds|local|vector|||0.17||
+df_obs_pheno_dates|stem|c3d901a4d8515dd0|a8e0128991c2dde9|5c27396658906388|-1898161064||t20501.8187865304s|b4bd4450987d844c|1441|rds|local|vector|||0.08||
+df_haun|stem|b405cd97f44b4dcd|5986e98544f639cb|9a551f60f67d69fb|-338930584||t20501.8187867652s|8b788b243a3a49f7|2215|rds|local|vector|||0||
+haun_input_checked|stem|378c1d521fde7e52|a71e9d76e218fc2b|1e6d89066d1885a8|-1437321256||t20501.8188160461s|1e57d6a9b74181c7|427|rds|local|vector|||2.51||
+df_new_pheno_dates|stem||476eae1eac9c990a|48a0e9f279de702c|371372706||t20501.818817815s||0|rds|local|vector|||0.14||30m36mℹ30m In argument Stage_4  Stage_3  as.numericStage_6  Stage_3  btwStgPerc.39m1mCaused by error22m33m39m object Stage_6 not found
