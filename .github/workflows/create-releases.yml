@@ -87,18 +87,37 @@ jobs:
             type=ref,event=branch
             type=ref,event=pr
 
-      - name: Create APSIM Signing Certificate
-        env:
-          APSIM_CERT_BASE64: ${{ secrets.APSIM_CERT_NEW }} 
-        run: |
-          echo -n "$APSIM_CERT_BASE64" | base64 -d > ./apsim_signing_cert.p12
-
       - name: Create Release
         env:
           DOCKER_METADATA_OUTPUT_VERSION: ${{ fromJSON(steps.meta_apsimplusr.outputs.json).labels['org.opencontainers.image.version'] }}
           BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
           APSIM_CERT_PWD: ${{ secrets.APSIM_CERT_PWD }}
         run: ./.github/workflows/scripts/deploy-installer.sh ${{ matrix.os }}
+    
+    # Performs code signing for the Windows installer using the Software Trust Manager. 
+    # This is required to avoid "Unknown Publisher" warnings when users run the installer.
+    create-windows-release:
+      if: github.event.pull_request.merged == true
+      needs: check-for-resolves
+      runs-on: ubuntu-latest
+      steps:
+        - name: Setup SM_CLIENT_CERT_FILE from base64 secret data
+          run: |
+            export SM_CLIENT_CERT_FILE=${RUNNER_TEMP_DIR}/sm_client_cert.p12
+            echo "${{ secrets.SM_CLIENT_CERT_FILE_B64 }}" | base64 --decode > ${SM_CLIENT_CERT_FILE}
+            shell: bash
+        - name: Setup Software Trust Manager
+          uses: digicert/code-signing-software-trust-action@v1
+          with:
+            simple-signing-mode: true
+            # If the below 2 parameters are supplied, then smctl executable is invoked to attempt the signing.
+            input: Z:\__w\ApsimX\ApsimX\Setup\net8.0\windows\Output\APSIMSetup.exe
+            keypair-alias: key_1460956160
+          env:
+            SM_HOST: ${{ vars.SM_HOST }}
+            SM_API_KEY: ${{ secrets.SM_API_KEY }}
+            SM_CLIENT_CERT_FILE: ${SM_CLIENT_CERT_FILE}
+            SM_CLIENT_CERT_PASSWORD: ${{ secrets.SM_CLIENT_CERT_PASSWORD }}      
     
     # Creates docker containers for APSIM releases.
     create-docker-containers:
