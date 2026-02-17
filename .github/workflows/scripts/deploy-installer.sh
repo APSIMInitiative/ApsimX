@@ -9,7 +9,7 @@
 set -e
 
 # Ensure that target platform name has been passed as an argument. 
-usage="Usage: $0 <debian|macos|windows> <build|upload> # second argument is optional - if not provided, both build and upload will be performed.>"
+usage="Usage: $0 <debian|macos|windows> <build|upload> <outfile>  # second and third arguments are optional - if not provided, both build and upload will be performed.>"
 test $# -ge 0 || (echo $usage; exit 1)
 test -z "$BUILDS_JWT" && echo "BUILDS_JWT is empty" && exit 1
 test -z "$DOCKER_METADATA_OUTPUT_VERSION" && echo "PULL_ID is empty" && exit 1
@@ -62,7 +62,6 @@ if [[ $2 == "build" || -z "$2" ]]; then
     echo Building installer...
     outfile="$DIR"/apsim-$version.$ext
     bash ./Setup/net8.0/$script $full_version "$outfile"
-    test -f "$outfile" || ( echo "Failed to build installer"; exit 1 )
 fi
 
 if [[ "$2" == "upload" || -z "$2" ]]; then
@@ -73,6 +72,11 @@ if [[ "$2" == "upload" || -z "$2" ]]; then
     retry=0
     maxRetries=3
     interval=60 # in seconds
+
+    if [[ $# -gt 2 ]]; then
+        outfile=$3
+    fi
+
     until [ ${retry} -ge ${maxRetries} ]
     do
         upload && break
