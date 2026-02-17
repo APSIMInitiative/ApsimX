@@ -97,6 +97,8 @@ jobs:
     # This is required to avoid "Unknown Publisher" warnings when users run the installer.
     create-windows-release:
       if: github.event.pull_request.merged == true
+      env:
+        OUTFILE: Z:\__w\ApsimX\ApsimX\Setup\net8.0\windows\Output\APSIMSetup.exe
       needs: [check-for-resolves, create-releases]
       runs-on: ubuntu-latest
       permissions:
@@ -113,7 +115,7 @@ jobs:
           with:
             simple-signing-mode: true
             # If the below 2 parameters are supplied, then smctl executable is invoked to attempt the signing.
-            input: Z:\__w\ApsimX\ApsimX\Setup\net8.0\windows\Output\APSIMSetup.exe
+            input: ${{ env.OUTFILE }}
             keypair-alias: key_1460956160
           env:
             SM_HOST: ${{ vars.SM_HOST }}
@@ -124,7 +126,7 @@ jobs:
           env:
             DOCKER_METADATA_OUTPUT_VERSION: ${{ fromJSON(steps.meta_apsimplusr.outputs.json).labels['org.opencontainers.image.version'] }}
             BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
-          run: ./.github/workflows/scripts/deploy-installer.sh windows upload
+          run: ./.github/workflows/scripts/deploy-installer.sh windows upload ${{ env.OUTFILE }}
     
     # Creates docker containers for APSIM releases.
     create-docker-containers:
@@ -153,7 +155,7 @@ jobs:
     upload-release-assets:
       # only run if the PR description contains "resolves #"
       if: github.event.pull_request.merged == true
-      needs: [create-docker-containers, create-releases]
+      needs: [create-docker-containers, create-releases, create-windows-release]
       runs-on: ubuntu-latest 
       steps:
 
