@@ -98,12 +98,15 @@ jobs:
     # This is required to avoid "Unknown Publisher" warnings when users run the installer.
     create-windows-release:
       if: github.event.pull_request.merged == true
-      needs: check-for-resolves
+      needs: [check-for-resolves, create-releases]
       runs-on: ubuntu-latest
+      permissions:
+        contents: write
       steps:
         - name: Setup SM_CLIENT_CERT_FILE from base64 secret data
           run: |
             export SM_CLIENT_CERT_FILE=${RUNNER_TEMP_DIR}/sm_client_cert.p12
+            chmod 644 ${SM_CLIENT_CERT_FILE}
             echo "${{ secrets.SM_CLIENT_CERT_FILE_B64 }}" | base64 --decode > ${SM_CLIENT_CERT_FILE}
             shell: bash
         - name: Setup Software Trust Manager
