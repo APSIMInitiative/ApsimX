@@ -52,6 +52,7 @@ jobs:
         fail-fast: false # allow other jobs to complete if one fails
         matrix:
           os: [macos, debian, windows]
+          option: ["","","build"] # build and upload for macOS and Debian. Windows upload is handled in a separate job after code signing.
       runs-on: ubuntu-latest
       container:
         image: apsiminitiative/apsimng-build:latest
@@ -91,8 +92,7 @@ jobs:
         env:
           DOCKER_METADATA_OUTPUT_VERSION: ${{ fromJSON(steps.meta_apsimplusr.outputs.json).labels['org.opencontainers.image.version'] }}
           BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
-          APSIM_CERT_PWD: ${{ secrets.APSIM_CERT_PWD }}
-        run: ./.github/workflows/scripts/deploy-installer.sh ${{ matrix.os }}
+        run: ./.github/workflows/scripts/deploy-installer.sh ${{ matrix.os }} ${{matrix.option}}
     
     # Performs code signing for the Windows installer using the Software Trust Manager. 
     # This is required to avoid "Unknown Publisher" warnings when users run the installer.
@@ -120,7 +120,12 @@ jobs:
             SM_HOST: ${{ vars.SM_HOST }}
             SM_API_KEY: ${{ secrets.SM_API_KEY }}
             SM_CLIENT_CERT_FILE: ${SM_CLIENT_CERT_FILE}
-            SM_CLIENT_CERT_PASSWORD: ${{ secrets.SM_CLIENT_CERT_PASSWORD }}      
+            SM_CLIENT_CERT_PASSWORD: ${{ secrets.SM_CLIENT_CERT_PASSWORD }}    
+        - name: Upload signed Windows installer
+          env:
+            DOCKER_METADATA_OUTPUT_VERSION: ${{ fromJSON(steps.meta_apsimplusr.outputs.json).labels['org.opencontainers.image.version'] }}
+            BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
+          run: ./.github/workflows/scripts/deploy-installer.sh windows upload
     
     # Creates docker containers for APSIM releases.
     create-docker-containers:
