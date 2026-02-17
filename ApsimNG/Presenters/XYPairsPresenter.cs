@@ -65,10 +65,10 @@ namespace UserInterface.Presenters
 
             // Populate the graph.
             this.graph = Utility.Graph.CreateGraphFromResource("ApsimNG.Resources.XYPairsGraph.xml");
-            this.xYPairs.Node.AddChild(this.graph);
+            //this.xYPairs.Node.AddChild(this.graph);
             this.graph.Parent = this.xYPairs;
-            (this.graph.Series[0] as Series).XFieldName = graph.Parent.FullPath + ".X";
-            (this.graph.Series[0] as Series).YFieldName = graph.Parent.FullPath + ".Y";
+            (this.graph.Series[0] as Series).XFieldName = xYPairs.FullPath + ".X";
+            (this.graph.Series[0] as Series).YFieldName = xYPairs.FullPath + ".Y";
             this.graphPresenter = new GraphPresenter();
             this.presenter.ApsimXFile.Links.Resolve(graphPresenter);
             this.graphPresenter.Attach(this.graph, this.xYPairsView.Graph, this.presenter);
@@ -97,7 +97,7 @@ namespace UserInterface.Presenters
         {
             this.gridPresenter.CellChanged -= OnCellChanged;
             this.presenter.CommandHistory.ModelChanged -= this.OnModelChanged;
-            this.xYPairs.Children.Remove(this.graph);
+            //this.xYPairs.Children.Remove(this.graph);
         }
 
         /// <summary>

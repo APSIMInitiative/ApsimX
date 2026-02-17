@@ -16,8 +16,8 @@ namespace Models.Soils
     /// This class encapsulates the water content (initial and current) in the simulation.
     /// </summary>
     [Serializable]
-    [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
-    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
+    [ViewName("ApsimNG.Resources.Glade.GraphGridPropertyView.glade")]
+    [PresenterName("UserInterface.Presenters.GraphGridPropertyPresenter")]
     [ValidParent(ParentType = typeof(Soil))]
     public class Water : Model, IStructureDependency
     {

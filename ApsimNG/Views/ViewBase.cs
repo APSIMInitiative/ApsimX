@@ -170,10 +170,11 @@ namespace UserInterface.Views
         /// Set the GLADE resource to use.
         /// </summary>
         /// <param name="gladeResourceName">The GLADE resource name.</param>
-        public void SetGladeResource(string gladeResourceName)
+        public Builder SetGladeResource(string gladeResourceName)
         {
             builder = GetBuilderFromResource(gladeResourceName);
             SetMainWidget();
+            return builder;
         }
 
         /// <summary>

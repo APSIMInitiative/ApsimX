@@ -100,7 +100,7 @@ namespace UserInterface.Views
         private bool inRightClick = false;
 
         private OxyPlot.GtkSharp.PlotView plot1;
-        private Paned vbox1 = null;
+        private Container vbox1 = null;
         private Expander expander1 = null;
         private Box vbox2 = null;
         private Label captionLabel = null;
@@ -119,7 +119,7 @@ namespace UserInterface.Views
         public GraphView(ViewBase owner) : base(owner)
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.GraphView.glade");
-            vbox1 = (Paned)builder.GetObject("vbox1");
+            vbox1 = (Container)builder.GetObject("vbox1");
             expander1 = (Expander)builder.GetObject("expander1");
             vbox2 = (Box)builder.GetObject("vbox2");
             captionLabel = (Label)builder.GetObject("captionLabel");
@@ -132,7 +132,7 @@ namespace UserInterface.Views
         protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
         {
             this.owner = ownerView;
-            vbox1 = gtkControl as Paned;
+            vbox1 = gtkControl as Container;
             mainWidget = vbox1;
 
             plot1 = new PlotView();
@@ -143,7 +143,7 @@ namespace UserInterface.Views
             if (vbox2 != null)
                 vbox2.PackStart(plot1, true, true, 0);
             else
-                vbox1.Add1(plot1);
+                vbox1.Add(plot1);
 
             smallestDate = DateTime.MaxValue;
             largestDate = DateTime.MinValue;
