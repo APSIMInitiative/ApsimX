@@ -106,7 +106,7 @@ jobs:
       steps:
         - name: Setup SM_CLIENT_CERT_FILE from base64 secret data
           run: |
-            export SM_CLIENT_CERT_FILE=${RUNNER_TEMP_DIR}/sm_client_cert.p12
+            export SM_CLIENT_CERT_FILE=${RUNNER_TEMP}/sm_client_cert.p12
             chmod 644 ${SM_CLIENT_CERT_FILE}
             echo "${{ secrets.SM_CLIENT_CERT_FILE_B64 }}" | base64 --decode > ${SM_CLIENT_CERT_FILE}
             shell: bash
