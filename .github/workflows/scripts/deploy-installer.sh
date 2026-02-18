@@ -8,6 +8,11 @@
 # Optionally, a second argument can be provided to indicate whether to upload the installer ("upload").
 set -e
 
+function upload() {
+    curl --fail -X POST -H "Authorization: bearer $BUILDS_JWT" -F "file=@$outfile" "$url"
+    return $?
+}
+
 # Ensure that target platform name has been passed as an argument. 
 usage="Usage: $0 <debian|macos|windows> <build|upload> <outfile>  # second and third arguments are optional - if not provided, both build and upload will be performed.>"
 test $# -ge 0 || (echo $usage; exit 1)
@@ -90,9 +95,3 @@ if [[ "$2" == "upload" || -z "$2" ]]; then
     exit 1
     fi
 fi
-
-
-function upload() {
-    curl --fail -X POST -H "Authorization: bearer $BUILDS_JWT" -F "file=@$outfile" "$url"
-    return $?
-}
