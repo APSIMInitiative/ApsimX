@@ -115,6 +115,9 @@ jobs:
         - name: Checkout code
           uses: actions/checkout@v4
 
+        - name: Make sure we have ownership of ApsimX
+          run: chmod 777 -R  .
+
         # This is used purely for PR number extraction.
         - name: Get PR number
           id: meta_apsimplusr
