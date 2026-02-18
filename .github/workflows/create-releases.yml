@@ -115,9 +115,6 @@ jobs:
         - name: Checkout code
           uses: actions/checkout@v4
 
-        - name: Make sure we have ownership of ApsimX
-          run: chown -R root:root ./ApsimX
-
         # This is used purely for PR number extraction.
         - name: Get PR number
           id: meta_apsimplusr
@@ -160,7 +157,7 @@ jobs:
           env:
             DOCKER_METADATA_OUTPUT_VERSION: ${{ fromJSON(steps.meta_apsimplusr.outputs.json).labels['org.opencontainers.image.version'] }}
             BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
-          run: ./ApsimX/.github/workflows/scripts/deploy-installer.sh windows upload ${{ env.OUTFILE }}
+          run: ./.github/workflows/scripts/deploy-installer.sh windows upload ${{ env.OUTFILE }}
     
     # Creates docker containers for APSIM releases.
     create-docker-containers:
