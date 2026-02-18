@@ -111,11 +111,24 @@ jobs:
       permissions:
         contents: write
       steps:
+
+        # This is used purely for PR number extraction.
+        - name: Get PR number
+          id: meta_apsimplusr
+          uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+          with:
+            images: apsiminitiative/apsimplusr
+            flavor: latest=true
+            tags: |
+              type=ref,event=branch
+              type=ref,event=pr
+
         - name: Download Windows installer build artifact
           uses: actions/download-artifact@v6.0.0
           with:
             name: windows-installer
             path: .
+
         - name: Setup SM_CLIENT_CERT_FILE from base64 secret data
           run: |
             pwd
@@ -123,6 +136,7 @@ jobs:
             chmod 775 sm_client_cert.p12
             ls -l
           shell: bash
+
         - name: Setup Software Trust Manager
           uses: digicert/code-signing-software-trust-action@v1
           with:
@@ -135,6 +149,7 @@ jobs:
             SM_API_KEY: ${{ secrets.SM_API_KEY }}
             SM_CLIENT_CERT_FILE: sm_client_cert.p12
             SM_CLIENT_CERT_PASSWORD: ${{ secrets.SM_CLIENT_CERT_PASSWORD }}    
+
         - name: Upload signed Windows installer
           env:
             DOCKER_METADATA_OUTPUT_VERSION: ${{ fromJSON(steps.meta_apsimplusr.outputs.json).labels['org.opencontainers.image.version'] }}
