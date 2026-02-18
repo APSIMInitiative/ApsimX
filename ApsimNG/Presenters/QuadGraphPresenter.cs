@@ -13,7 +13,7 @@ namespace UserInterface.Presenters
     /// <summary>
     /// A presenter for a graph component
     /// </summary>
-    public class GraphPresenter2 : IPresenter
+    public class QuadGraphPresenter : IPresenter
     {
         /// <summary>Parent explorer presenter.</summary>
         private ExplorerPresenter explorerPresenter;
