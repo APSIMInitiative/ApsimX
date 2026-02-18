@@ -34,11 +34,6 @@ dotnet publish -c Release -f net8.0 -r win-x64 -m:1 --no-self-contained "$apsimx
 cd $apsimx
 xvfb-run sh -c "wine /inno/ISCC.exe Setup/net8.0/windows/apsimx.iss"
 
-#rename installer to correct name
-mv $apsimx/Setup/net8.0/windows/Output/APSIMSetup.exe $apsimx/Setup/net8.0/windows/Output/unsignedSetup.exe
-echo "expected installer path: $apsimx/Setup/net8.0/windows/Output/APSIMSetup.exe"
-echo "current directory: $(pwd)"
-ls -l $apsimx/Setup/net8.0/windows/Output/APSIMSetup.exe
 
 
 
