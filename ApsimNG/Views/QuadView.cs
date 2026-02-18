@@ -4,6 +4,9 @@ using UserInterface.Interfaces;
 
 namespace UserInterface.Views
 {
+    /// <summary>
+    /// Types of Widget that can be held by a QuadView
+    /// </summary>
     public enum WidgetType
     {
         None,
@@ -13,6 +16,9 @@ namespace UserInterface.Views
         Property
     }
 
+    /// <summary>
+    /// Positions within a QuadView
+    /// </summary>
     public enum WidgetPosition
     {
         Any,
@@ -46,6 +52,7 @@ namespace UserInterface.Views
         /// <param name="owner">The owner widget.</param>
         public QuadView(ViewBase owner) : base(owner)
         {
+            //Create our main structure of four quads
             topPaned = new Paned(Orientation.Horizontal);
 
             leftPaned = new Paned(Orientation.Vertical);
@@ -61,13 +68,14 @@ namespace UserInterface.Views
             mainWidget = topPaned;
             mainWidget.Destroyed += OnMainWidgetDestroyed;
 
+            //clear all the quads to start with
             RemoveComponent(WidgetPosition.TopLeft);
             RemoveComponent(WidgetPosition.TopRight);
             RemoveComponent(WidgetPosition.BottomLeft);
             RemoveComponent(WidgetPosition.BottomRight);
         }
 
-        /// <summary></summary>
+        /// <summary>Updates the view and sub</summary>
         public void Refresh()
         {
             //hide right or left panel if no content on those sides

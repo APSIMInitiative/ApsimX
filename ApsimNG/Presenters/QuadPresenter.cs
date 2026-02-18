@@ -5,13 +5,11 @@ using System.Collections.Generic;
 using Models.Functions;
 using APSIM.Shared.Utilities;
 using Models.Soils;
-using Models.Interfaces;
-using Models.Soils.NutrientPatching;
 using Models.WaterModel;
 
 namespace UserInterface.Presenters
 {
-    /// <summary>A presenter for the soil profile models.</summary>
+    /// <summary>A generic presenter displaying four boxes of info with grid, graph, text and properties</summary>
     public class QuadPresenter : IPresenter
     {
         /// <summary>Parent explorer presenter.</summary>
@@ -30,7 +28,7 @@ namespace UserInterface.Presenters
         public QuadPresenter() {}
 
         /// <summary>Attach the model and view to this presenter and populate the view.</summary>
-        /// <param name="model">The data store model to work with.</param>
+        /// <param name="model">The data store model to work with. Must be a QuadView</param>
         /// <param name="v">Data store view to work with.</param>
         /// <param name="explorerPresenter">Parent explorer presenter.</param>
         public void Attach(object model, object v, ExplorerPresenter explorerPresenter)
@@ -72,7 +70,7 @@ namespace UserInterface.Presenters
             view.Dispose();
         }
 
-        /// <summary>Populate the graph with data.</summary>
+        /// <summary>Refresh this presenter and all sub presenters</summary>
         public void Refresh()
         {
             DisconnectEvents();
@@ -129,6 +127,10 @@ namespace UserInterface.Presenters
             Refresh();
         }
 
+        /// <summary>
+        /// Add a graph presenter to one of the quads
+        /// </summary>
+        /// <param name="position">Which quad to use</param>
         private void AddGraph(WidgetPosition position)
         {
             GraphView graphView = view.AddComponent(WidgetType.Graph, position) as GraphView;
@@ -148,6 +150,10 @@ namespace UserInterface.Presenters
             }
         }
 
+        /// <summary>
+        /// Add a grid presenter to one of the quads
+        /// </summary>
+        /// <param name="position">Which quad to use</param>
         private void AddGrid(WidgetPosition position)
         {
             ViewBase gridContainer = view.AddComponent(WidgetType.Grid, position);
@@ -159,11 +165,21 @@ namespace UserInterface.Presenters
             presenters.Add(gridPresenter);
         }
 
+        /// <summary>
+        /// Add a markdown view to one of the quads
+        /// </summary>
+        /// <param name="position">Which quad to use</param>
+        /// <param name="text">Text to display in this view</param>
         private void AddText(WidgetPosition position, string text)
         {
             view.AddComponent(WidgetType.Text, position);
             view.SetLabelText(text);
         }
+
+        /// <summary>
+        /// Add a property presenter to one of the quads
+        /// </summary>
+        /// <param name="position">Which quad to use</param>
         private void AddProperty(WidgetPosition position)
         {
             PropertyView propertyView = view.AddComponent(WidgetType.Property, position) as PropertyView;
@@ -182,6 +198,9 @@ namespace UserInterface.Presenters
             }
         }
 
+        /// <summary>
+        /// Setup a generic layout with grid, graph and properties
+        /// </summary>
         private void CreateLayoutGeneric()
         {
             AddGrid(WidgetPosition.BottomLeft);
@@ -189,6 +208,9 @@ namespace UserInterface.Presenters
             AddProperty(WidgetPosition.TopRight);
         }
 
+        /// <summary>
+        /// Create layout for an XY pairs, text, grid and graph
+        /// </summary>
         private void CreateLayoutXYPairs()
         {
             DescriptionAttribute descriptionName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
@@ -207,6 +229,9 @@ namespace UserInterface.Presenters
             AddGraph(WidgetPosition.BottomRight);
         }
 
+        /// <summary>
+        /// Create layout for a physical, text, grid and graph
+        /// </summary>
         private void CreateLayoutPhysical()
         {
             CreateLayoutGeneric();
@@ -215,6 +240,9 @@ namespace UserInterface.Presenters
             view.OverrideSlider(0.6);
         }
 
+        /// <summary>
+        /// Create layout for a waterbalance, grid, graph and properties
+        /// </summary>
         private void CreateLayoutWaterBalance()
         {
             CreateLayoutGeneric();
