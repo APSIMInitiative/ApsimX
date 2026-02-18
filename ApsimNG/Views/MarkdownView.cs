@@ -43,6 +43,7 @@ namespace UserInterface.Views
         private AccelGroup accelerators = new AccelGroup();
         private Menu popupMenu = new Menu();
         private bool sizeAllocated = false;
+        private bool stylesLoaded = false;
 
         /// <summary>Table of font sizes for ASCII characters. Set on attach and reset on attach whenver font has changed.</summary>
         private static readonly int[] fontCharSizes = new int[128];
@@ -708,6 +709,11 @@ namespace UserInterface.Views
         /// <summary>Create TextView styles.</summary>
         private void CreateStyles(TextView textView)
         {
+            if (stylesLoaded)
+                return;
+            else
+                stylesLoaded = true;
+
             var heading1 = new TextTag("Heading1");
             heading1.SizePoints = 30;
             heading1.Weight = Pango.Weight.Bold;

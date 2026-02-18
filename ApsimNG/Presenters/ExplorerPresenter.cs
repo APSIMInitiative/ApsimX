@@ -771,9 +771,8 @@ namespace UserInterface.Presenters
                 {
                     ViewNameAttribute viewName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
                     PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
-                    DescriptionAttribute descriptionName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
 
-                    if (descriptionName != null && model.GetType().Namespace.Contains("CLEM"))
+                    if (model.GetType().Namespace.Contains("CLEM"))
                     {
                         viewName = new ViewNameAttribute("UserInterface.Views.ModelDetailsWrapperView");
                         presenterName = new PresenterNameAttribute("UserInterface.Presenters.ModelDetailsWrapperPresenter");

@@ -32,7 +32,6 @@ namespace UserInterface.Presenters
         {
             this.model = model as Model;
             this.genericView = view as MarkdownView;
-            this.genericView.Refresh();
             
             explorer = explorerPresenter;
 

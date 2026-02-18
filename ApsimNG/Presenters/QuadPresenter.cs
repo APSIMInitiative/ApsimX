@@ -235,7 +235,7 @@ namespace UserInterface.Presenters
         private void CreateLayoutPhysical()
         {
             CreateLayoutGeneric();
-            string warnings = "<span color=\"red\">Note: values in red are estimates only and needed for the simulation of soil temperature. Overwrite with local values wherever possible.</span>";
+            string warnings = "Note: values in red are estimates only and needed for the simulation of soil temperature. Overwrite with local values wherever possible";
             AddText(WidgetPosition.TopLeft, warnings);
             view.OverrideSlider(0.6);
         }

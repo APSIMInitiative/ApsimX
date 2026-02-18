@@ -173,6 +173,12 @@ namespace UserInterface.Presenters
             if (view == null)
                 throw new Exception($"GraphPresenter has a null GraphView. Cannot draw graph of {title}");
 
+            if (x == null || y == null || x.Length == 0 || y.Length == 0)
+            {
+                view.Clear();
+                return;
+            }
+
             view.Clear();
             view.DrawLineAndMarkers("", x, y,
                                      "", "", null, null, AxisPosition.Bottom, AxisPosition.Left,

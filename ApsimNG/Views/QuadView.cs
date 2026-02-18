@@ -30,7 +30,7 @@ namespace UserInterface.Views
 
     public class QuadView : ViewBase
     {
-        public IEditorView editorView { get; private set; } = null;
+        public IEditorView EditorView { get; private set; } = null;
 
         private double horizontalSlider = -1;
 
@@ -78,6 +78,9 @@ namespace UserInterface.Views
         /// <summary>Updates the view and sub</summary>
         public void Refresh()
         {
+            if (MainWidget.ParentWindow == null)
+                return;
+
             //hide right or left panel if no content on those sides
             int paneWidth = MainWidget.ParentWindow.Width;
             int paneHeight = MainWidget.ParentWindow.Height;
@@ -133,6 +136,7 @@ namespace UserInterface.Views
             {
                 WidgetPosition position = WidgetTypeToPosition(WidgetType.Text);
                 MarkdownView markdownView = view as MarkdownView;
+                markdownView.Refresh();
                 if (!string.IsNullOrEmpty(markdownView.Text))
                 {
                     markdownView.MainWidget.GetPreferredHeight(out int minHeight, out int natHeight);
