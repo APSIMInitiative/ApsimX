@@ -92,18 +92,30 @@ jobs:
           DOCKER_METADATA_OUTPUT_VERSION: ${{ fromJSON(steps.meta_apsimplusr.outputs.json).labels['org.opencontainers.image.version'] }}
           BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
         run: ./.github/workflows/scripts/deploy-installer.sh ${{ matrix.os-and-args }}
-    
+
+      - name: Upload a Windows Installer Build Artifact
+        uses: actions/upload-artifact@v6.0.0
+        with:
+          name: windows-installer
+          path: /__w/ApsimX/ApsimX/Setup/net8.0/windows/Output/APSIMSetup.exe
+
+
     # Performs code signing for the Windows installer using the Software Trust Manager. 
     # This is required to avoid "Unknown Publisher" warnings when users run the installer.
     create-windows-release:
       if: github.event.pull_request.merged == true
       env:
-        OUTFILE: /__w/ApsimX/ApsimX/APSIMSetup.exe
+        OUTFILE: APSIMSetup.exe
       needs: [check-for-resolves, create-releases]
       runs-on: ubuntu-latest
       permissions:
         contents: write
       steps:
+        - name: Download Windows installer build artifact
+          uses: actions/download-artifact@v6.0.0
+          with:
+            name: windows-installer
+            path: .
         - name: Setup SM_CLIENT_CERT_FILE from base64 secret data
           run: |
             pwd
