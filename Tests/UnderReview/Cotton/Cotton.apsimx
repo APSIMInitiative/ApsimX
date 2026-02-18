@@ -7742,84 +7742,35 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "WaterFactor",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.SoilWaterScale, Models",
-                          "LLModel": 1,
-                          "Name": "SoilWaterScale",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": false,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            0.25,
-                            1.0
-                          ],
-                          "Y": [
-                            1.0,
-                            1.0,
-                            1.0
-                          ],
-                          "Name": "XYPairs",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": false,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[SoilWaterScale]",
-                          "Name": "XValue",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": false,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": false,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "AFPSFactor",
+                      "$type": "Models.Functions.WeightedTemperatureFunction, Models",
+                      "MaximumTemperatureWeighting": 0.5,
+                      "Name": "TemperatureFactor",
                       "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
-                            0.0,
-                            0.03,
-                            1.0
+                            10.0,
+                            20.0,
+                            30.0,
+                            40.0,
+                            45.0
                           ],
                           "Y": [
                             0.0,
+                            0.6,
                             1.0,
-                            1.0
+                            0.4,
+                            0.0
                           ],
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].AirFilledPoreSpace",
-                          "Name": "XValue",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
@@ -8612,6 +8563,53 @@
                       "Name": "VariableReference",
                       "ResourceName": null,
                       "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.ProtectedDivideFunction, Models",
+                  "NumeratorErrVal": 0.0,
+                  "DenominatorErrVal": 10.0,
+                  "Name": "SWAvailabilityRatio",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[ISoilWater].ESW",
+                      "Name": "extractable",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.SubtractFunction, Models",
+                      "Name": "capacity",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Soil].Physical.DULmm",
+                          "Name": "dulDep",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Root].PlantZone.SoilCrop.LLmm",
+                          "Name": "llDep",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
