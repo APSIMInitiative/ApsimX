@@ -64,7 +64,7 @@ namespace UserInterface.Presenters
                     grid.Detach();
                 else if (presenter is PropertyPresenter properties)
                     properties.Detach();
-                else if (presenter is GraphPresenter2 graph)
+                else if (presenter is QuadGraphPresenter graph)
                     graph.Detach();
             }
             view.Dispose();
@@ -78,7 +78,7 @@ namespace UserInterface.Presenters
             {
                 if (presenter is GridPresenter grid)
                     grid.Refresh();
-                else if (presenter is GraphPresenter2 graph)
+                else if (presenter is QuadGraphPresenter graph)
                     graph.Refresh();
             }
             view.Refresh();
@@ -134,7 +134,7 @@ namespace UserInterface.Presenters
         private void AddGraph(WidgetPosition position)
         {
             GraphView graphView = view.AddComponent(WidgetType.Graph, position) as GraphView;
-            GraphPresenter2 graphPresenter = new GraphPresenter2();
+            QuadGraphPresenter graphPresenter = new QuadGraphPresenter();
             graphPresenter.Attach(model, graphView, explorerPresenter);
             graphPresenter.Refresh();
 
