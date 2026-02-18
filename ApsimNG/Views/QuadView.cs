@@ -53,10 +53,10 @@ namespace UserInterface.Views
             leftPaned = (Paned)builder.GetObject("left");
             rightPaned = (Paned)builder.GetObject("right");
 
-            ClearQuad(WidgetPosition.TopLeft);
-            ClearQuad(WidgetPosition.TopRight);
-            ClearQuad(WidgetPosition.BottomLeft);
-            ClearQuad(WidgetPosition.BottomRight);
+            RemoveComponent(WidgetPosition.TopLeft);
+            RemoveComponent(WidgetPosition.TopRight);
+            RemoveComponent(WidgetPosition.BottomLeft);
+            RemoveComponent(WidgetPosition.BottomRight);
         }
 
         /// <summary></summary>
@@ -158,6 +158,34 @@ namespace UserInterface.Views
             return container;
         }
 
+        public void RemoveComponent(WidgetPosition position)
+        {
+            if (position == WidgetPosition.TopLeft)
+            {
+                if (TopLeft != null)
+                    TopLeft.Dispose();
+                TopLeft = null;
+            }
+            else if (position == WidgetPosition.TopRight)
+            {
+                if (TopRight != null)
+                    TopRight.Dispose();
+                TopRight = null;
+            }
+            else if (position == WidgetPosition.BottomLeft)
+            {
+                if (BottomLeft != null)
+                    BottomLeft.Dispose();
+                BottomLeft = null;
+            }
+            else if (position == WidgetPosition.BottomRight)
+            {
+                if (BottomRight != null)
+                    BottomRight.Dispose();
+                BottomRight = null;
+            }
+        }
+
         public void SetLabelText(string text)
         {
             MarkdownView view = GetView(WidgetType.Text) as MarkdownView;
@@ -244,19 +272,7 @@ namespace UserInterface.Views
             
             throw new Exception($"{type} widget not found in QuadView");
         }
-
-        private void ClearQuad(WidgetPosition position)
-        {
-            if (position == WidgetPosition.TopLeft)
-                TopLeft = null;
-            else if (position == WidgetPosition.TopRight)
-                TopRight = null;
-            else if (position == WidgetPosition.BottomLeft)
-                BottomLeft = null;
-            else if (position == WidgetPosition.BottomRight)
-                BottomRight = null;
-        }
-
+        
         /// <summary>Invoked when main widget has been destroyed.</summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

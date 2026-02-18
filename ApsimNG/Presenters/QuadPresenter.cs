@@ -131,15 +131,26 @@ namespace UserInterface.Presenters
 
         private void AddGraph(WidgetPosition position)
         {
-            ViewBase graphView = view.AddComponent(WidgetType.Graph, position);
+            GraphView graphView = view.AddComponent(WidgetType.Graph, position) as GraphView;
             GraphPresenter2 graphPresenter = new GraphPresenter2();
             graphPresenter.Attach(model, graphView, explorerPresenter);
-            presenters.Add(graphPresenter);
+            graphPresenter.Refresh();
+
+            //Check if graph actually has content, hide if not
+            if (graphView.Width > 0 && graphView.Height > 0)
+            {
+                presenters.Add(graphPresenter);
+            }
+            else
+            {
+                graphPresenter.Detach();
+                view.RemoveComponent(position);
+            }
         }
 
         private void AddGrid(WidgetPosition position)
         {
-            ViewBase gridContainer = view.AddComponent(WidgetType.Grid, WidgetPosition.TopLeft);
+            ViewBase gridContainer = view.AddComponent(WidgetType.Grid, position);
             GridPresenter gridPresenter = new GridPresenter();
             gridPresenter.Attach(model, gridContainer, explorerPresenter);
             gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All", "Units" });
@@ -148,20 +159,30 @@ namespace UserInterface.Presenters
 
         private void AddText(WidgetPosition position, string text)
         {
-            view.AddComponent(WidgetType.Text, WidgetPosition.BottomLeft);
+            view.AddComponent(WidgetType.Text, position);
             view.SetLabelText(text);
         }
         private void AddProperty(WidgetPosition position)
         {
-            ViewBase propertyView = view.AddComponent(WidgetType.Property, WidgetPosition.TopRight);
+            PropertyView propertyView = view.AddComponent(WidgetType.Property, position) as PropertyView;
             PropertyPresenter propertyPresenter = new PropertyPresenter();
             propertyPresenter.Attach(model, propertyView, explorerPresenter);
-            presenters.Add(propertyPresenter);
+
+            //Check if properties actually has content, hide if not
+            if (propertyView.AnyProperties)
+            {
+                presenters.Add(propertyPresenter);
+            }
+            else
+            {
+                propertyPresenter.Detach();
+                view.RemoveComponent(position);
+            }
         }
 
         private void CreateLayoutGeneric()
         {
-            AddGrid(WidgetPosition.TopLeft);
+            AddGrid(WidgetPosition.BottomLeft);
             AddGraph(WidgetPosition.BottomRight);
             AddProperty(WidgetPosition.TopRight);
         }
@@ -181,7 +202,7 @@ namespace UserInterface.Presenters
             if (!string.IsNullOrEmpty(description))
                 AddText(WidgetPosition.TopLeft, description);
             AddGrid(WidgetPosition.BottomLeft);
-            AddGraph(WidgetPosition.TopRight);
+            AddGraph(WidgetPosition.BottomRight);
         }
 
         private void CreateLayoutPhysical()
@@ -189,7 +210,7 @@ namespace UserInterface.Presenters
             CreateLayoutGeneric();
 
             string warnings = "<span color=\"red\">Note: values in red are estimates only and needed for the simulation of soil temperature. Overwrite with local values wherever possible.</span>";
-            AddText(WidgetPosition.BottomLeft, warnings);
+            AddText(WidgetPosition.TopLeft, warnings);
             view.OverrideSlider(0.6);
         }
 
