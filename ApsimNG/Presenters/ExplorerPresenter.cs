@@ -778,12 +778,7 @@ namespace UserInterface.Presenters
                         viewName = new ViewNameAttribute("UserInterface.Views.ModelDetailsWrapperView");
                         presenterName = new PresenterNameAttribute("UserInterface.Presenters.ModelDetailsWrapperPresenter");
                     }
-
-                    // if a clem model ignore the newly added description box that is handled by CLEM wrapper
-                    if (!model.GetType().Namespace.Contains("CLEM"))
-                    {
-                        ShowDescriptionInRightHandPanel(descriptionName?.ToString());
-                    }
+                    
                     if (viewName != null && viewName.ToString().Contains(".glade"))
                         ShowInRightHandPanel(model,
                                              newView: new ViewBase(view as ViewBase, viewName.ToString()),
@@ -821,15 +816,6 @@ namespace UserInterface.Presenters
             ShowInRightHandPanel(model,
                                  newView: new ViewBase(view as ViewBase, gladeResourceName),
                                  presenter: presenter);
-        }
-
-        /// <summary>
-        /// Show a description in the right hand view.
-        /// </summary>
-        /// <param name="description">The description to show (Markdown).</param>
-        public void ShowDescriptionInRightHandPanel(string description)
-        {
-            view.AddDescriptionToRightHandView(description);
         }
 
         /// <summary>Show a view in the right hand panel.</summary>

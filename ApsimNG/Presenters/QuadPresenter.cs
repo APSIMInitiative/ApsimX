@@ -1,14 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
-using Models.Core;
-using Models;
-using Models.Functions;
-using APSIM.Shared.Graphing;
-using Series = Models.Series;
+﻿using Models.Core;
 using UserInterface.Views;
-using Models.Utilities;
 using Gtk.Sheet;
+using System.Collections.Generic;
+using Models.Functions;
 using APSIM.Shared.Utilities;
+using Models.Soils;
+using Models.Interfaces;
+using Models.Soils.NutrientPatching;
+using Models.WaterModel;
 
 namespace UserInterface.Presenters
 {
@@ -19,19 +18,13 @@ namespace UserInterface.Presenters
         private ExplorerPresenter explorerPresenter;
 
         /// <summary>The base view.</summary>
-        private ViewBase view = null;
+        private QuadView view = null;
 
         /// <summary>The model.</summary>
         private IModel model;
 
-        /// <summary>The grid presenter.</summary>
-        private GridPresenter gridPresenter;
-
-        ///// <summary>The property presenter.</summary>
-        private PropertyPresenter propertyPresenter;
-
-        /// <summary>Graph.</summary>
-        private GraphPresenter2 graphPresenter;
+        /// <summary>Sub-presenters that are added to this presenter</summary>
+        private List<IPresenter> presenters;
 
         /// <summary>Default constructor</summary>
         public QuadPresenter() {}
@@ -43,28 +36,21 @@ namespace UserInterface.Presenters
         public void Attach(object model, object v, ExplorerPresenter explorerPresenter)
         {
             this.model = model as IModel;
-            view = v as ViewBase;
+            this.view = v as QuadView;
             this.explorerPresenter = explorerPresenter;
+            this.presenters = new List<IPresenter>();
 
-            QuadView quadView = view as QuadView;
-            if (quadView == null)
+            if (this.view == null)
                 throw new System.Exception("QuadPresenter only works with a QuadView");
 
-            ViewBase gridContainer = quadView.AddComponent(WidgetType.Grid, WidgetPosition.TopLeft);
-            gridPresenter = new GridPresenter();
-            gridPresenter.Attach(model, gridContainer, explorerPresenter);
-            gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All", "Units" });
-
-            ViewBase propertyView = quadView.AddComponent(WidgetType.Property, WidgetPosition.TopRight);
-            propertyPresenter = new PropertyPresenter();
-            propertyPresenter.Attach(model, propertyView, explorerPresenter);
-
-            ViewBase graphView = quadView.AddComponent(WidgetType.Graph, WidgetPosition.BottomRight);
-            graphPresenter = new GraphPresenter2();
-            graphPresenter.Attach(model, graphView, explorerPresenter);
-
-            ViewBase textView = quadView.AddComponent(WidgetType.Text, WidgetPosition.BottomLeft);
-            quadView.SetLabelText("test");
+            if (model is XYPairs)
+                CreateLayoutXYPairs();
+            else if (model is Physical)
+                CreateLayoutPhysical();
+            else if (model is WaterBalance)
+                CreateLayoutWaterBalance();
+            else
+                CreateLayoutGeneric();
 
             Refresh();
             ConnectEvents();
@@ -74,13 +60,15 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             DisconnectEvents();
-
-            if (this.gridPresenter != null)
-                gridPresenter.Detach();
-
-            if (this.propertyPresenter != null)
-                propertyPresenter.Detach();
-
+            foreach (IPresenter presenter in presenters)
+            {
+                if (presenter is GridPresenter grid)
+                    grid.Detach();
+                else if (presenter is PropertyPresenter properties)
+                    properties.Detach();
+                else if (presenter is GraphPresenter2 graph)
+                    graph.Detach();
+            }
             view.Dispose();
         }
 
@@ -88,23 +76,36 @@ namespace UserInterface.Presenters
         public void Refresh()
         {
             DisconnectEvents();
-            graphPresenter.Refresh();
+            foreach (IPresenter presenter in presenters)
+            {
+                if (presenter is GridPresenter grid)
+                    grid.Refresh();
+                else if (presenter is GraphPresenter2 graph)
+                    graph.Refresh();
+            }
+            view.Refresh();
             ConnectEvents();
         }
 
         /// <summary>Connect all widget events.</summary>
         private void ConnectEvents()
         {
-            if (gridPresenter != null)
-                gridPresenter.CellChanged += OnCellChanged;
+            foreach (IPresenter presenter in presenters)
+            {
+                if (presenter is GridPresenter grid)
+                    grid.CellChanged += OnCellChanged;
+            }
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
         /// <summary>Disconnect all widget events.</summary>
         private void DisconnectEvents()
         {
-            if (gridPresenter != null)
-                gridPresenter.CellChanged -= OnCellChanged;
+            foreach (IPresenter presenter in presenters)
+            {
+                if (presenter is GridPresenter grid)
+                    grid.CellChanged -= OnCellChanged;
+            }
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
         }
 
@@ -126,6 +127,76 @@ namespace UserInterface.Presenters
         {
             model = changedModel as IModel;
             Refresh();
+        }
+
+        private void AddGraph(WidgetPosition position)
+        {
+            ViewBase graphView = view.AddComponent(WidgetType.Graph, position);
+            GraphPresenter2 graphPresenter = new GraphPresenter2();
+            graphPresenter.Attach(model, graphView, explorerPresenter);
+            presenters.Add(graphPresenter);
+        }
+
+        private void AddGrid(WidgetPosition position)
+        {
+            ViewBase gridContainer = view.AddComponent(WidgetType.Grid, WidgetPosition.TopLeft);
+            GridPresenter gridPresenter = new GridPresenter();
+            gridPresenter.Attach(model, gridContainer, explorerPresenter);
+            gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All", "Units" });
+            presenters.Add(gridPresenter);
+        }
+
+        private void AddText(WidgetPosition position, string text)
+        {
+            view.AddComponent(WidgetType.Text, WidgetPosition.BottomLeft);
+            view.SetLabelText(text);
+        }
+        private void AddProperty(WidgetPosition position)
+        {
+            ViewBase propertyView = view.AddComponent(WidgetType.Property, WidgetPosition.TopRight);
+            PropertyPresenter propertyPresenter = new PropertyPresenter();
+            propertyPresenter.Attach(model, propertyView, explorerPresenter);
+            presenters.Add(propertyPresenter);
+        }
+
+        private void CreateLayoutGeneric()
+        {
+            AddGrid(WidgetPosition.TopLeft);
+            AddGraph(WidgetPosition.BottomRight);
+            AddProperty(WidgetPosition.TopRight);
+        }
+
+        private void CreateLayoutXYPairs()
+        {
+            DescriptionAttribute descriptionName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
+
+            XYPairs xypairs = model as XYPairs;
+            if (xypairs == null)
+                throw new System.Exception($"Model {model.Name} is not an XY Pairs but is trying to use the XY Pairs view layout");
+            
+            string description = "";
+            if (descriptionName != null)
+                description = descriptionName.ToString();
+
+            if (!string.IsNullOrEmpty(description))
+                AddText(WidgetPosition.TopLeft, description);
+            AddGrid(WidgetPosition.BottomLeft);
+            AddGraph(WidgetPosition.TopRight);
+        }
+
+        private void CreateLayoutPhysical()
+        {
+            CreateLayoutGeneric();
+
+            string warnings = "<span color=\"red\">Note: values in red are estimates only and needed for the simulation of soil temperature. Overwrite with local values wherever possible.</span>";
+            AddText(WidgetPosition.BottomLeft, warnings);
+            view.OverrideSlider(0.6);
+        }
+
+        private void CreateLayoutWaterBalance()
+        {
+            CreateLayoutGeneric();
+            view.OverrideSlider(0.3);
         }
     }
 }

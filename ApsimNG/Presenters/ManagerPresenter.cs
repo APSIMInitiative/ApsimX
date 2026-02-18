@@ -69,8 +69,8 @@ namespace UserInterface.Presenters
             if (manager.Script != null)
             {
                 DescriptionAttribute descriptionName = ReflectionUtilities.GetAttribute(manager.Script.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
-                if (descriptionName != null)
-                    explorerPresenter.ShowDescriptionInRightHandPanel(descriptionName.ToString());
+                //if (descriptionName != null)
+                //    explorerPresenter.ShowDescriptionInRightHandPanel(descriptionName.ToString());
             }
 
             propertyPresenter = new PropertyPresenter();

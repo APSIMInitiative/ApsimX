@@ -8,8 +8,8 @@ namespace Models.Soils
     /// <summary>A model for holding layer structure information</summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Soil))]
-    [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
-    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
+    [ViewName("UserInterface.Views.QuadView")]
+    [PresenterName("UserInterface.Presenters.QuadPresenter")]
     public class LayerStructure : Model
     {
         /// <summary>Depth strings. Wrapper around Thickness.</summary>

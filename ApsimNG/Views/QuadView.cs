@@ -1,8 +1,5 @@
-﻿using DocumentFormat.OpenXml.Drawing.Charts;
-using DocumentFormat.OpenXml.Presentation;
-using Gtk;
+﻿using Gtk;
 using System;
-using System.Linq;
 using UserInterface.Interfaces;
 
 namespace UserInterface.Views
@@ -28,6 +25,8 @@ namespace UserInterface.Views
     public class QuadView : ViewBase
     {
         public IEditorView editorView { get; private set; } = null;
+
+        private double horizontalSlider = -1;
 
         private Paned topPaned;
 
@@ -71,7 +70,12 @@ namespace UserInterface.Views
             else if (TopRight == null && BottomRight == null)
                 topPaned.Position = paneWidth;
             else
-                topPaned.Position = (int)Math.Round(paneWidth * 0.5);
+            {
+                if (horizontalSlider >= 0)
+                    topPaned.Position = (int)Math.Round(paneWidth * horizontalSlider);
+                else
+                    topPaned.Position = (int)Math.Round(paneWidth * 0.5);
+            }
 
             if (TopLeft == null)
                 leftPaned.Position = 0;
@@ -98,13 +102,13 @@ namespace UserInterface.Views
                 {
                     propertyView.MainWidget.GetPreferredHeight(out int minHeight, out int natHeight);
                     if (position == WidgetPosition.TopLeft)
-                        leftPaned.Position = minHeight;
+                        leftPaned.Position = natHeight;
                     else if (position == WidgetPosition.TopRight)
-                        rightPaned.Position = minHeight;
+                        rightPaned.Position = natHeight;
                     else if (position == WidgetPosition.BottomLeft)
-                        leftPaned.Position = paneHeight - minHeight;
+                        leftPaned.Position = paneHeight - natHeight;
                     else if (position == WidgetPosition.BottomRight)
-                        rightPaned.Position = paneHeight - minHeight;
+                        rightPaned.Position = paneHeight - natHeight;
                 }
             }
 
@@ -112,18 +116,18 @@ namespace UserInterface.Views
             if (view != null)
             {
                 WidgetPosition position = WidgetTypeToPosition(WidgetType.Text);
-                ContainerView containerView = view as ContainerView;
-                if (!string.IsNullOrEmpty(((containerView.Widget.Children.First() as Viewport).Children.First() as Label).Text))
+                MarkdownView markdownView = view as MarkdownView;
+                if (!string.IsNullOrEmpty(markdownView.Text))
                 {
-                    containerView.MainWidget.GetPreferredHeight(out int minHeight, out int natHeight);
+                    markdownView.MainWidget.GetPreferredHeight(out int minHeight, out int natHeight);
                     if (position == WidgetPosition.TopLeft)
-                        leftPaned.Position = minHeight;
+                        leftPaned.Position = natHeight;
                     else if (position == WidgetPosition.TopRight)
-                        rightPaned.Position = minHeight;
+                        rightPaned.Position = natHeight;
                     else if (position == WidgetPosition.BottomLeft)
-                        leftPaned.Position = paneHeight - minHeight;
+                        leftPaned.Position = paneHeight - natHeight;
                     else if (position == WidgetPosition.BottomRight)
-                        rightPaned.Position = paneHeight - minHeight;
+                        rightPaned.Position = paneHeight - natHeight;
                 }
             }
         }
@@ -135,13 +139,7 @@ namespace UserInterface.Views
             ViewBase container = null;
             if (type == WidgetType.Text)
             {
-                Gtk.Label label = new Gtk.Label();
-                label.Text = "adstwhsadtghjsdgjs";
-                //label.Xalign = 0;
-                //label.Yalign = 0;
-                ContainerView view = this.GetControl<ContainerView>(name);
-                view.Widget.Add(label);
-                container = view;
+                container = this.GetControl<MarkdownView>(name);
             }
             else if (type == WidgetType.Graph)
             {
@@ -157,18 +155,16 @@ namespace UserInterface.Views
             }
 
             SetView(container, position);
-            Refresh();
             return container;
         }
 
         public void SetLabelText(string text)
         {
-            ContainerView view = GetView(WidgetType.Text) as ContainerView;
+            MarkdownView view = GetView(WidgetType.Text) as MarkdownView;
             if (view == null)
                 throw new Exception("QuadView does not contain a Label");
             else
-                ((view.Widget.Children.First() as Viewport).Children.First() as Label).Text = text;
-            Refresh();
+                view.Text = text;
         }
 
         public ViewBase GetView(WidgetType type)
@@ -199,6 +195,11 @@ namespace UserInterface.Views
                 throw new Exception("QuadView GetView function requires a position, WidgetPosition.Any cannot be used.");
         }
 
+        public void OverrideSlider(double percentage)
+        {
+            horizontalSlider = percentage;
+        }
+
         private void SetView(ViewBase view, WidgetPosition position)
         {
             if (position == WidgetPosition.TopLeft)
@@ -227,15 +228,12 @@ namespace UserInterface.Views
                 return WidgetType.Graph;
             else if (view is PropertyView)
                 return WidgetType.Property;
-            if (view is ContainerView containerView)
-            {
-                if (containerView.Widget.Children.Length == 1 && (containerView.Widget.Children.First() as Viewport).Children.First() is Gtk.Label)
-                    return WidgetType.Text;
-                else
-                    return WidgetType.Grid;
-            }
-
-            return WidgetType.None;
+            else if (view is MarkdownView)
+                return WidgetType.Text;
+            else if (view is ContainerView containerView)
+                return WidgetType.Grid;
+            else
+                return WidgetType.None;
         }
 
         private WidgetPosition WidgetTypeToPosition(WidgetType type)
