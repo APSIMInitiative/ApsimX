@@ -154,6 +154,8 @@ namespace UserInterface.Presenters
             GridPresenter gridPresenter = new GridPresenter();
             gridPresenter.Attach(model, gridContainer, explorerPresenter);
             gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All", "Units" });
+            gridPresenter.Refresh();
+
             presenters.Add(gridPresenter);
         }
 
@@ -208,7 +210,6 @@ namespace UserInterface.Presenters
         private void CreateLayoutPhysical()
         {
             CreateLayoutGeneric();
-
             string warnings = "<span color=\"red\">Note: values in red are estimates only and needed for the simulation of soil temperature. Overwrite with local values wherever possible.</span>";
             AddText(WidgetPosition.TopLeft, warnings);
             view.OverrideSlider(0.6);

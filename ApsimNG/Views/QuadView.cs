@@ -46,12 +46,20 @@ namespace UserInterface.Views
         /// <param name="owner">The owner widget.</param>
         public QuadView(ViewBase owner) : base(owner)
         {
-            Builder builder = SetGladeResource("ApsimNG.Resources.Glade.QuadView.glade");
-            mainWidget.Destroyed += OnMainWidgetDestroyed;
+            topPaned = new Paned(Orientation.Horizontal);
 
-            topPaned = mainWidget as Paned;
-            leftPaned = (Paned)builder.GetObject("left");
-            rightPaned = (Paned)builder.GetObject("right");
+            leftPaned = new Paned(Orientation.Vertical);
+            leftPaned.Add1(new ScrolledWindow() {Name = WidgetPosition.TopLeft.ToString()});
+            leftPaned.Add2(new ScrolledWindow() {Name = WidgetPosition.BottomLeft.ToString()});
+            topPaned.Add1(leftPaned);
+
+            rightPaned = new Paned(Orientation.Vertical);
+            rightPaned.Add1(new ScrolledWindow() {Name = WidgetPosition.TopRight.ToString()});
+            rightPaned.Add2(new ScrolledWindow() {Name = WidgetPosition.BottomRight.ToString()});
+            topPaned.Add2(rightPaned);
+
+            mainWidget = topPaned;
+            mainWidget.Destroyed += OnMainWidgetDestroyed;
 
             RemoveComponent(WidgetPosition.TopLeft);
             RemoveComponent(WidgetPosition.TopRight);

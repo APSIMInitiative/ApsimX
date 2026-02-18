@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using APSIM.Shared.Utilities;
@@ -21,7 +20,7 @@ namespace UserInterface.Views
 {
 
     /// <summary>A rich text view capable of rendering markdown-formatted text.</summary>
-    public class MarkdownView : ViewBase, IMarkdownView
+    public class MarkdownView : ViewBase
     {
         /// <summary>
         /// Padding between table columns, in pixels.
@@ -115,7 +114,6 @@ namespace UserInterface.Views
             textView.VisibilityNotifyEvent += OnVisibilityNotify;
             textView.MotionNotifyEvent += OnMotionNotify;
             textView.WidgetEventAfter += OnWidgetEventAfter;
-            CreateStyles(textView);
             mainWidget.ShowAll();
             mainWidget.SizeAllocated += OnSizeAllocated;
             mainWidget.Destroyed += OnDestroyed;
@@ -127,6 +125,11 @@ namespace UserInterface.Views
             regularCursor = new Gdk.Cursor(Gdk.Display.Default, Gdk.CursorType.Xterm);
 
             textView.KeyPressEvent += OnTextViewKeyPress;
+        }
+
+        public void Refresh()
+        {
+            CreateStyles(textView);
         }
 
         /// <summary>
@@ -925,18 +928,5 @@ namespace UserInterface.Views
                 Underline = Pango.Underline.Single;
             }
         }
-    }
-
-    /// <summary>An interface for a rich text widget.</summary>
-    public interface IMarkdownView
-    {
-        /// <summary>Gets or sets the base path that images should be relative to.</summary>
-        string ImagePath { get; set; }
-
-        /// <summary>Gets or sets the markdown text</summary>
-        string Text { get; set; }
-
-        /// <summary>Gets or sets the visibility of the widget.</summary>
-        bool Visible { get; set; }
     }
 }

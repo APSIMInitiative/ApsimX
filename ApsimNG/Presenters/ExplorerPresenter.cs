@@ -789,6 +789,7 @@ namespace UserInterface.Presenters
                     else
                     {
                         var view = new MarkdownView(this.view as ViewBase);
+                        view.Refresh();
                         var presenter = new DocumentationPresenter();
                         ShowInRightHandPanel(model, view, presenter);
                     }
