@@ -24,7 +24,6 @@ namespace APSIMNG.Utility
             if (response.IsSuccessStatusCode)
             {
                 string markdownText = response.Content.ReadAsStringAsync().Result;
-                markdownText += "Example Picture\n![Row Alley](RowAlley.png)";
                 return markdownText;
             }
             else
