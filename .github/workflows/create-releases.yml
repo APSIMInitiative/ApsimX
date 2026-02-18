@@ -98,7 +98,7 @@ jobs:
     create-windows-release:
       if: github.event.pull_request.merged == true
       env:
-        OUTFILE: Z:\__w\ApsimX\ApsimX\Setup\net8.0\windows\Output\APSIMSetup.exe
+        OUTFILE: Z:\__w\ApsimX\ApsimX\Setup\net8.0\windows\Output\unsignedSetup.exe
       needs: [check-for-resolves, create-releases]
       runs-on: ubuntu-latest
       permissions:
