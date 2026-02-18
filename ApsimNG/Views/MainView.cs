@@ -184,6 +184,8 @@ namespace UserInterface.Views
             notificationAndMruPane.Position *= 3;
 
             menuList = new ListButtonView(this);
+            // Need to remove the ScrolledWindow from the menu box.
+            (menuList.MainWidget as Container).Children.OfType<ScrolledWindow>().ToList().ForEach(w => w.Destroy());
             menuList.ButtonsAreToolbar = true;
             menuButtonBox.PackEnd(menuList.MainWidget, false, false, 0);
 
