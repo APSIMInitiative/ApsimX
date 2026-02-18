@@ -98,7 +98,7 @@ jobs:
     create-windows-release:
       if: github.event.pull_request.merged == true
       env:
-        OUTFILE: /__w/ApsimX/ApsimX/Setup/net8.0/windows/Output/APSIMSetup.exe
+        OUTFILE: /__w/ApsimX/ApsimX/APSIMSetup.exe
       needs: [check-for-resolves, create-releases]
       runs-on: ubuntu-latest
       permissions:
@@ -106,6 +106,8 @@ jobs:
       steps:
         - name: Setup SM_CLIENT_CERT_FILE from base64 secret data
           run: |
+            pwd
+            ls -l
             export SM_CLIENT_CERT_FILE=${RUNNER_TEMP}/sm_client_cert.p12
             echo "${{ secrets.SM_CLIENT_CERT_FILE_B64 }}" | base64 --decode > ${SM_CLIENT_CERT_FILE}
             chmod 775 ${SM_CLIENT_CERT_FILE}
