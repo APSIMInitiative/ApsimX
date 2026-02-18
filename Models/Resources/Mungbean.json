@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 208,
+  "Version": 210,
   "Name": "Simulations",
   "Children": [
     {
@@ -198,7 +198,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "In the new model we simplified phenology by taking out stages that are not measurable (e.g. end of juvenile stage) and by adding new stages that are measurable (e.g. start pod). \nThe new phenology follows the V/R staging system \n\nFor Preemergence thermal time accumulation, a temperature dependent delay in emergence was drawn from Drs. Wenham's recent TOS trial.\n\nFor the Vegetative and Reproductive phase thermal time accumulation, the base, optimal, and maximum temperatures from the original generic legume model ([robertson_simulation_2002])and a recent paper by Geetika Geetika ([Geetika2021]) were 7.5, 30, and 40C, respectively. The values were slightly adjusted to reflect the phenology recorded in Drs. Grant and Pasley's more recent trials.\n\nPhotoperiod sensitivity parameters were sourced from a study using the king cultivar ([Imrie1990time]).",
+              "Text": "In the new model we simplified phenology by taking out stages that are not measurable (e.g. end of juvenile stage) and by adding new stages that are measurable (e.g. start pod). \nThe new phenology follows the V/R staging system \n\nFor Preemergence thermal time accumulation, a temperature dependent delay in emergence was drawn from Drs. Wenham's recent TOS trial.\n\nFor the Vegetative and Reproductive phase thermal time accumulation, the base, optimal, and maximum temperatures from the original generic legume model ([#robertson_simulation_2002])and a recent paper by Geetika Geetika ([#Geetika2021]) were 7.5, 30, and 40C, respectively. The values were slightly adjusted to reflect the phenology recorded in Drs. Grant and Pasley's more recent trials.\n\nPhotoperiod sensitivity parameters were sourced from a study using the king cultivar ([#Imrie1990time]).",
               "Name": "Introduction",
               "Children": [],
               "Enabled": true,
@@ -523,7 +523,7 @@
                 },
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "Shoot rate and lag time values were sourced from the original generic legume model ([robertson_simulation_2002]).",
+                  "Text": "Shoot rate and lag time values were sourced from the original generic legume model ([#robertson_simulation_2002]).",
                   "Name": "Memo",
                   "Children": [],
                   "Enabled": true,
@@ -1103,7 +1103,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "\r\nSimple leaf approach.\n\nRUE value increased form that of Robertson to reflect higher production levels of more modern varieties in Dr. Kylie Wenham's time of sowing trials ([Muchow1993radiation],[ThomasThesis_2000],[Geetika2021]).\n\nThe extinction coefficient (k) was sourced from ([ThomasThesis_2000]) and ([Geetika2021]).\n\nThe relative leaf area was sourced form ([Geetika2021]).\n\nFVPD decreases at Fw=0.15: Mungbeans have been found to be particularly sensitive to variability in the vapour pressure deficit (VPD), potentially driving their reduced biomass accumulation and yield when sown in the spring in Dr. Kylie Wenham.\n\nThe Phyllochron and branching rates were sourced from trials conducted by Dr. Pasley included in the model testing and from ([Geetika2021]).\n\nSpecific area and area largest leaf were sources from the APSIM NextGen soybean model.\n\nN concentrations were sourced form ([Muchow1993accumulation]).\n\nThere are two drivers of leaf senescence included in the model: age-driven and water stress-driven. The dominant driver of senescence is the one with the highest rate. Age-driven senescence of the leaves occurs at a constant rate from the end of pod development to ripening. Meanwhile, water stress-driven senescence rate increases with water-deficit stress as quantified by Fw ≤ 0.15, starting at the end of canopy development and continuing to ripening. The water-stress driven senescence rate was derived using data from ([ThomasThesis_2000])\n",
+              "Text": "\r\nSimple leaf approach.\n\nRUE value increased form that of Robertson to reflect higher production levels of more modern varieties in Dr. Kylie Wenham's time of sowing trials ([#Muchow1993radiation],[#ThomasThesis_2000],[#Geetika2021]).\n\nThe extinction coefficient (k) was sourced from ([#ThomasThesis_2000]) and ([#Geetika2021]).\n\nThe relative leaf area was sourced form ([#Geetika2021]).\n\nFVPD decreases at Fw=0.15: Mungbeans have been found to be particularly sensitive to variability in the vapour pressure deficit (VPD), potentially driving their reduced biomass accumulation and yield when sown in the spring in Dr. Kylie Wenham.\n\nThe Phyllochron and branching rates were sourced from trials conducted by Dr. Pasley included in the model testing and from ([#Geetika2021]).\n\nSpecific area and area largest leaf were sources from the APSIM NextGen soybean model.\n\nN concentrations were sourced form ([#Muchow1993accumulation]).\n\nThere are two drivers of leaf senescence included in the model: age-driven and water stress-driven. The dominant driver of senescence is the one with the highest rate. Age-driven senescence of the leaves occurs at a constant rate from the end of pod development to ripening. Meanwhile, water stress-driven senescence rate increases with water-deficit stress as quantified by Fw ≤ 0.15, starting at the end of canopy development and continuing to ripening. The water-stress driven senescence rate was derived using data from ([#ThomasThesis_2000])\n",
               "Name": "Description",
               "Children": [],
               "Enabled": true,
@@ -1600,7 +1600,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Memo, Models",
-                                  "Text": "Values were sourced from Thomas Dissertation that includes 3 experiments that look at different irrigation regimes/timings/cultivars and compares mungbean to soybean.\nThese experiments were used to build the original generic legume model ([robertson_simulation_2002], [ThomasThesis_2000]).",
+                                  "Text": "Values were sourced from Thomas Dissertation that includes 3 experiments that look at different irrigation regimes/timings/cultivars and compares mungbean to soybean.\nThese experiments were used to build the original generic legume model ([#robertson_simulation_2002], [#ThomasThesis_2000]).",
                                   "Name": "Memo",
                                   "Children": [],
                                   "Enabled": true,
@@ -2675,7 +2675,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "Muchow and Charles-Edwards 1982 found that the fraction proportioned to the grain is 0.17-0.31 ([Muchow1993accumulation]). The potential harvest index was estimated to be slightly higher than these values.\n\nN concentrations were sourced form ([Muchow1993accumulation]).",
+              "Text": "Muchow and Charles-Edwards 1982 found that the fraction proportioned to the grain is 0.17-0.31 ([#Muchow1993accumulation]). The potential harvest index was estimated to be slightly higher than these values.\n\nN concentrations were sourced form ([#Muchow1993accumulation]).",
               "Name": "Description",
               "Children": [],
               "Enabled": true,
@@ -3188,7 +3188,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "Root front velocity values were sourced from Thomas Dissertation that includes 3 experiments that look at different irrigation regimes/timings/cultivars and compares mungbean to soybean.\nThese experiments were used to build the original generic legume model ([robertson_simulation_2002], [ThomasThesis_2000]).\n\nAll other root parameters were sourced from the soybean APSIM NextGen model.",
+              "Text": "Root front velocity values were sourced from Thomas Dissertation that includes 3 experiments that look at different irrigation regimes/timings/cultivars and compares mungbean to soybean.\nThese experiments were used to build the original generic legume model ([#robertson_simulation_2002], [#ThomasThesis_2000]).\n\nAll other root parameters were sourced from the soybean APSIM NextGen model.",
               "Name": "Description",
               "Children": [],
               "Enabled": true,
@@ -3931,7 +3931,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "The maximum fixation rate (35 g g-1) was sourced from ([Herridge2005]) and the daily potential fixation rates were sourced from the soybean model for APSIM NextGen. The accuracy of these parameter values was tested via time-series N fixation from the DAF ACRI experiment in the validation dataset.",
+              "Text": "The maximum fixation rate (35 g g-1) was sourced from ([#Herridge2005]) and the daily potential fixation rates were sourced from the soybean model for APSIM NextGen. The accuracy of these parameter values was tested via time-series N fixation from the DAF ACRI experiment in the validation dataset.",
               "Name": "Description",
               "Children": [],
               "Enabled": true,
@@ -4481,7 +4481,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "Muchow and Charles-Edwards 1982 found that the fraction proportioned to the pods is 0.63-0.68 ([Muchow1993accumulation]).\n",
+              "Text": "Muchow and Charles-Edwards 1982 found that the fraction proportioned to the pods is 0.63-0.68 ([#Muchow1993accumulation]).\n",
               "Name": "TOS data description",
               "Children": [],
               "Enabled": true,
@@ -5080,7 +5080,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "Values for maximum, critical, and minimum N concentrations sourced from Muchow et al., 1993 ([Muchow1993accumulation]).\n\nValues sourced from graphing leaf vs. stem biomass data from Dr. Kylie Wenham's Time of Sowing trial and Thomas' dissertation ([ThomasThesis_2000]).",
+              "Text": "Values for maximum, critical, and minimum N concentrations sourced from Muchow et al., 1993 ([#Muchow1993accumulation]).\n\nValues sourced from graphing leaf vs. stem biomass data from Dr. Kylie Wenham's Time of Sowing trial and Thomas' dissertation ([#ThomasThesis_2000]).",
               "Name": "Memo",
               "Children": [],
               "Enabled": true,

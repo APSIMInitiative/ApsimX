@@ -52,6 +52,8 @@ namespace APSIM.Documentation.Models.Types
         public static Section GetSummaryAndRemarksSection(IModel model) {
 
             List<ITag> tags = new List<ITag>();
+            tags.Add(new Paragraph($"Source: {DocumentationUtilities.GetGithubMarkdownLink(model)}"));
+            
             tags.Add(new Paragraph(CodeDocumentation.GetSummary(model.GetType())));
             tags.Add(new Paragraph(CodeDocumentation.GetRemarks(model.GetType())));
 

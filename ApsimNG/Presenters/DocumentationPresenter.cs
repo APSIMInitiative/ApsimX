@@ -11,6 +11,7 @@ using UserInterface.Views;
 using Models.PMF.Phen;
 using APSIM.Shared.Documentation;
 using APSIM.Core;
+using APSIM.Documentation;
 
 namespace UserInterface.Presenters
 {
@@ -97,7 +98,7 @@ namespace UserInterface.Presenters
             //This has been added so Phenology can show its phases inside of the GUI
             if (model.GetType() == typeof(Phenology))
             {
-                DataTable dataTable = (model as Phenology).GetPhaseTable();
+                DataTable dataTable = DocumentationUtilities.GetPhaseTable(model as Phenology);
                 markdown.AppendLine(DataTableUtilities.ToMarkdown(dataTable, true));
                 markdown.AppendLine();
             }

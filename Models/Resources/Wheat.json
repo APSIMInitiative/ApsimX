@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 208,
+  "Version": 210,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -12,7 +12,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "_Brown, H.E., Huth, N.I. and Holzworth, D.P._\n\nThe APSIM wheat model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.\r\n\r\nThe wheat model consists of:\r\n\r\n* a phenology model to simulate development through sequential developmental phases  \r\n* a structure model to simulate plant morphology \r\n* a collection of organs to simulate the various plant parts  \r\n* an arbitrator to allocate resources (N, biomass) to the various plant organs  \r\n\r\nThis work builds upon earlier APSIM Wheat models such as NWheat ([Asseng200225], [KeatingNWheat]), NWheatS ([Asseng1998163]), Cropmod-Wheat ([Wang2002GenericCropModel]), and the earlier versions developed in Plant (<a href=\\\"http://www.apsim.info/Documentation/Model,CropandSoil/CropModuleDocumentation/Wheat.aspx\">APSIM Wheat 7.5</a>\") and then within the Plant Modelling Framework ([brown_plant_2014]).",
+          "Text": "_Brown, H.E., Huth, N.I. and Holzworth, D.P._\n\nThe APSIM wheat model has been developed using the Plant Modelling Framework (PMF) of [#brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.\r\n\r\nThe wheat model consists of:\r\n\r\n* a phenology model to simulate development through sequential developmental phases  \r\n* a structure model to simulate plant morphology \r\n* a collection of organs to simulate the various plant parts  \r\n* an arbitrator to allocate resources (N, biomass) to the various plant organs  \r\n\r\nThis work builds upon earlier APSIM Wheat models such as NWheat ([#Asseng200225], [#KeatingNWheat]), NWheatS ([#Asseng1998163]), Cropmod-Wheat ([#Wang2002GenericCropModel]), and the earlier versions developed in Plant ([APSIM Wheat 7.5](https://\\\"http://www.apsim.info/Documentation/Model,CropandSoil/CropModuleDocumentation/Wheat.aspx)\") and then within the Plant Modelling Framework ([#brown_plant_2014]).",
           "Name": "Introduction",
           "ResourceName": null,
           "Children": [],
@@ -223,7 +223,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "The wheat models outputs of phase names (Phenology.CurrentPhase.Name), stage names (Phenology.CurrentStageName) and decimal stage (Phenology.Stage) are consistent with the population culm development score (PCSD) as described by [Celestina2023]. \nObservations recorded following the protocole outlined by [Celestina2023] are suitable for testing model accuracy and calibrating cultivar coefficients.",
+              "Text": "The wheat models outputs of phase names (Phenology.CurrentPhase.Name), stage names (Phenology.CurrentStageName) and decimal stage (Phenology.Stage) are consistent with the population culm development score (PCSD) as described by [#Celestina2023]. \nObservations recorded following the protocole outlined by [#Celestina2023] are suitable for testing model accuracy and calibrating cultivar coefficients.",
               "Name": "PCDS (development stages)",
               "ResourceName": null,
               "Children": [],
@@ -232,7 +232,7 @@
             },
             {
               "$type": "Models.Memo, Models",
-              "Text": "Wheat exhibits a range of developmental responses to environment and these are strongly influenced by genotype characteristics. \nTemperature is the primary driver of development, increasing development rates and decreasing phase durations as it increases.  These affects are captured by thermal time.  However, wheat also exhibits cold and photoperiod sensitivities in its Vernalisaing phase and further photoperiod sensitivity in the SpikeletDifferenation and HeadEmergence phases.  Photoperiod responses are seen as a reduction in the length of a phase for a photoperiod sensitive genotype in response to a longer photoperiod.  Vernalisation responses are more complicated as they are driven by cool temperature but interact with photoperiod.  For vernalisation sensitive varieties (Winter types), exposure to cool temperatures and/or short photoperiods during the Vernalising phase may reduce its thermal time duration.  \n\nAPSIM wheat implements the Cereal Anthesis Molecular Phenology (<a href=\"https://www.apsim.info/wp-content/uploads/2025/09/camp-model-description-1.pdf\">CAMP</a>) model to simulate development.  It is based on the Kirby Framework which assumes the timing of anthesis is a result of the timing of flag leaf and an additional thermal time passage from there to heading then anthesis.  It also assumes the timing of flag leaf is a result of the Final Leaf Number (which sets a target) and leaf appearance rate (which sets the rate of progress toward the target).  Leaf appearance rate is a function of Thermal time and a genotype specific Phyllochron which changes with Haun stage as described by [Jamieson_LeafAppearance_1995].  \n\nFinal Leaf Number (FLN) is set on the day that terminal spikelet occurs as: \n\nFLN = 2.85 + 1.1 * TSHS  \n\nWhere TSHS is the Haun stage on the day terminal spikelet stage occurs.  Terminal spikelet is at the end of the SpikeletDifferentaiation phase which is preceeded by the Emerging and Vernalising phases.  The mechanisums for progress through each of these phase are described below",
+              "Text": "Wheat exhibits a range of developmental responses to environment and these are strongly influenced by genotype characteristics. \nTemperature is the primary driver of development, increasing development rates and decreasing phase durations as it increases.  These affects are captured by thermal time.  However, wheat also exhibits cold and photoperiod sensitivities in its Vernalisaing phase and further photoperiod sensitivity in the SpikeletDifferenation and HeadEmergence phases.  Photoperiod responses are seen as a reduction in the length of a phase for a photoperiod sensitive genotype in response to a longer photoperiod.  Vernalisation responses are more complicated as they are driven by cool temperature but interact with photoperiod.  For vernalisation sensitive varieties (Winter types), exposure to cool temperatures and/or short photoperiods during the Vernalising phase may reduce its thermal time duration.  \n\nAPSIM wheat implements the Cereal Anthesis Molecular Phenology ([CAMP](https://www.apsim.info/wp-content/uploads/2025/09/camp-model-description-1.pdf)) model to simulate development.  It is based on the Kirby Framework which assumes the timing of anthesis is a result of the timing of flag leaf and an additional thermal time passage from there to heading then anthesis.  It also assumes the timing of flag leaf is a result of the Final Leaf Number (which sets a target) and leaf appearance rate (which sets the rate of progress toward the target).  Leaf appearance rate is a function of Thermal time and a genotype specific Phyllochron which changes with Haun stage as described by [#Jamieson_LeafAppearance_1995].  \n\nFinal Leaf Number (FLN) is set on the day that terminal spikelet occurs as: \n\nFLN = 2.85 + 1.1 * TSHS  \n\nWhere TSHS is the Haun stage on the day terminal spikelet stage occurs.  Terminal spikelet is at the end of the SpikeletDifferentaiation phase which is preceeded by the Emerging and Vernalising phases.  The mechanisums for progress through each of these phase are described below",
               "Name": "Environmental responses",
               "ResourceName": null,
               "Children": [],
@@ -365,7 +365,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "This is the thermal time between the emergence of leaf tips.  The model used here is based on [Jamieson_SIRIUS_1998] where leaf appearace could be described by a base phyllochron determined between leaves 2 and 7 and a phyllochron that was 70% of base phyllochron for leaves < 2 and 130% of base phyllochron for leaves > 7",
+                  "Text": "This is the thermal time between the emergence of leaf tips.  The model used here is based on [#Jamieson_SIRIUS_1998] where leaf appearace could be described by a base phyllochron determined between leaves 2 and 7 and a phyllochron that was 70% of base phyllochron for leaves < 2 and 130% of base phyllochron for leaves > 7",
                   "Name": "Rational",
                   "ResourceName": null,
                   "Children": [],
@@ -1800,7 +1800,7 @@
                       "Children": [
                         {
                           "$type": "Models.Memo, Models",
-                          "Text": "Tillering is said to cease once a threshold fraction of incoming radiation has been achieved.  This captures shading effects on tillering described by [evers2006cessation].",
+                          "Text": "Tillering is said to cease once a threshold fraction of incoming radiation has been achieved.  This captures shading effects on tillering described by [#evers2006cessation].",
                           "Name": "Memo",
                           "ResourceName": null,
                           "Children": [],
@@ -2588,7 +2588,7 @@
                               "$type": "Models.Functions.Constant, Models",
                               "FixedValue": 0.0011,
                               "Units": "g",
-                              "Name": "PotentialKernalN",
+                              "Name": "PotentialKernelN",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -2832,7 +2832,7 @@
             },
             {
               "$type": "Models.Functions.DivideFunction, Models",
-              "Name": "NperKernal",
+              "Name": "NperKernel",
               "ResourceName": null,
               "Children": [
                 {
@@ -7358,7 +7358,8 @@
                     "[Phenology].CAMP.FLNparams.VxPLN = 4",
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 150",
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
-                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
+                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
+                    "[Phenology].GrainFilling.Target.FixedValue = 700"
                   ],
                   "Name": "Claire",
                   "ResourceName": null,
@@ -7643,7 +7644,8 @@
                     "[Phenology].CAMP.FLNparams.VxPLN = 4",
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 8",
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
-                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
+                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
+                    "[Phenology].GrainFilling.Target.FixedValue = 700"
                   ],
                   "Name": "Wakanui",
                   "ResourceName": null,
