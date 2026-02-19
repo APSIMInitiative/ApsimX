@@ -17,7 +17,7 @@ namespace UserInterface.Presenters
 {
     public class DocumentationPresenter : IPresenter
     {
-        private IMarkdownView view;
+        private MarkdownView view;
         private ExplorerPresenter presenter;
         private IModel model;
 
@@ -34,7 +34,7 @@ namespace UserInterface.Presenters
 
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            this.view = view as IMarkdownView;
+            this.view = view as MarkdownView;
             this.model = model as IModel;
             this.presenter = explorerPresenter;
 
