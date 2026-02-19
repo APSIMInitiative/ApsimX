@@ -1,7 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 0,
-  "Version": 210,
+  "Version": 211,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -1429,6 +1428,42 @@
                   ],
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "AFPSFactor",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        0.03,
+                        1.0
+                      ],
+                      "Y": [
+                        0.0,
+                        1.0,
+                        1.0
+                      ],
+                      "Name": "XYPairs",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Root].AirFilledPoreSpace",
+                      "Name": "XValue",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
@@ -2213,40 +2248,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "FW",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        0.0,
-                        1.0
-                      ],
-                      "Y": [
-                        0.0,
-                        1.0
-                      ],
-                      "Name": "XYPairs",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Fw",
-                      "Name": "XValue",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.SupplyFunctions.RUECO2Function, Models",
                   "PhotosyntheticPathway": "C3",
                   "Name": "FCO2",
@@ -2261,6 +2262,240 @@
                   "Name": "RadnInt",
                   "ResourceName": null,
                   "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MinimumFunction, Models",
+                  "Name": "FW",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.MinimumFunction, Models",
+                      "Name": "Excess",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.ExponentialFunction, Models",
+                          "A": 0.0,
+                          "B": 1.0,
+                          "C": -0.05,
+                          "Name": "PersistentReduction",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.MovingSumFunction, Models",
+                              "NumberOfDays": 15,
+                              "Name": "MovingSumFunction",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "Units": null,
+                                  "Expression": "1 - [Leaf].Photosynthesis.FW.Excess.Today",
+                                  "Name": "ExpressionFunction",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.PhaseLookup, Models",
+                          "Name": "Today",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.PhaseLookupValue, Models",
+                              "Start": "Sowing",
+                              "End": "GreenBud",
+                              "Name": "SowingToStartFlowering",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                  "Name": "EarlySeason",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.XYPairs, Models",
+                                      "X": [
+                                        0.0,
+                                        0.9,
+                                        1.0
+                                      ],
+                                      "Y": [
+                                        1.0,
+                                        1.0,
+                                        0.5
+                                      ],
+                                      "Name": "XYPairs",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Root].WetRootFraction",
+                                      "Name": "XValue",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.PhaseLookupValue, Models",
+                              "Start": "GreenBud",
+                              "End": "StartGrainFilling",
+                              "Name": "StartFloweringToStartGrainFill",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                  "Name": "MidSeason",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.XYPairs, Models",
+                                      "X": [
+                                        0.0,
+                                        0.7,
+                                        1.0
+                                      ],
+                                      "Y": [
+                                        1.0,
+                                        1.0,
+                                        0.2
+                                      ],
+                                      "Name": "XYPairs",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Root].WetRootFraction",
+                                      "Name": "XValue",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.PhaseLookupValue, Models",
+                              "Start": "StartGrainFilling",
+                              "End": "Unused",
+                              "Name": "StartGrainFillToEndCrop",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                  "Name": "LateSeason",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.XYPairs, Models",
+                                      "X": [
+                                        0.0,
+                                        0.7,
+                                        1.0
+                                      ],
+                                      "Y": [
+                                        1.0,
+                                        1.0,
+                                        0.2
+                                      ],
+                                      "Name": "XYPairs",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Root].WetRootFraction",
+                                      "Name": "XValue",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "Deficient",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            1.0
+                          ],
+                          "Y": [
+                            0.0,
+                            1.0
+                          ],
+                          "Name": "XYPairs",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Fw",
+                          "Name": "XValue",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -2514,12 +2749,57 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.6,
-              "Units": null,
+              "$type": "Models.Functions.MultiplyFunction, Models",
               "Name": "ExtinctionCoefficient",
               "ResourceName": null,
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.6,
+                  "Units": null,
+                  "Name": "PotentialExtinctionCoefficient",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "FOXk",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        5.0,
+                        10.0
+                      ],
+                      "Y": [
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "Name": "XYPairs",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[CumulativeExcessWaterStress]",
+                      "Name": "XValue",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3070,6 +3350,40 @@
                           ],
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "Name": "FOXSenescence",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                0.0,
+                                5.0
+                              ],
+                              "Y": [
+                                0.0,
+                                0.02
+                              ],
+                              "Name": "XYPairs",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[CumulativeExcessWaterStress]",
+                              "Name": "XValue",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "Enabled": true,
@@ -3101,39 +3415,58 @@
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.DivideFunction, Models",
-                          "Name": "Fraction",
+                          "$type": "Models.Functions.MaximumFunction, Models",
+                          "Name": "MaximumFunction",
                           "ResourceName": null,
                           "Children": [
                             {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].ThermalTime",
-                              "Name": "TT",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.SubtractFunction, Models",
-                              "Name": "TTRemaining",
+                              "$type": "Models.Functions.DivideFunction, Models",
+                              "Name": "Fraction",
                               "ResourceName": null,
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.ExpressionFunction, Models",
-                                  "Units": null,
-                                  "Expression": "[Phenology].EarlyFlowering.Target + [Phenology].EarlyPodDevelopment.Target + [Phenology].EarlyGrainFilling.Target+[Phenology].MidGrainFilling.Target",
-                                  "Name": "TTRequired",
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Phenology].ThermalTime",
+                                  "Name": "TT",
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "$type": "Models.Functions.SubtractFunction, Models",
+                                  "Name": "TTRemaining",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
+                                      "Expression": "[Phenology].EarlyFlowering.Target + [Phenology].EarlyPodDevelopment.Target + [Phenology].EarlyGrainFilling.Target+[Phenology].MidGrainFilling.Target",
+                                      "Name": "TTRequired",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
+                                      "Expression": "[Phenology].EarlyFlowering.ProgressThroughPhase + [Phenology].EarlyPodDevelopment.ProgressThroughPhase + [Phenology].EarlyGrainFilling.ProgressThroughPhase+[Phenology].MidGrainFilling.ProgressThroughPhase",
+                                      "Name": "TTComplete",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 1.0,
                                   "Units": null,
-                                  "Expression": "[Phenology].EarlyFlowering.ProgressThroughPhase + [Phenology].EarlyPodDevelopment.ProgressThroughPhase + [Phenology].EarlyGrainFilling.ProgressThroughPhase+[Phenology].MidGrainFilling.ProgressThroughPhase",
-                                  "Name": "TTComplete",
+                                  "Name": "Modifier",
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
@@ -3144,12 +3477,36 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 1.0,
-                              "Units": null,
-                              "Name": "Modifier",
+                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                              "Name": "FOXSenescence",
                               "ResourceName": null,
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "X": [
+                                    0.0,
+                                    5.0
+                                  ],
+                                  "Y": [
+                                    0.0,
+                                    0.03
+                                  ],
+                                  "Name": "XYPairs",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[CumulativeExcessWaterStress]",
+                                  "Name": "XValue",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -4168,6 +4525,42 @@
                   ],
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "FOXphyllo",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        5.0,
+                        10.0
+                      ],
+                      "Y": [
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "Name": "XYPairs",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[CumulativeExcessWaterStress]",
+                      "Name": "XValue",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
@@ -4502,18 +4895,63 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0038,
-              "Units": null,
+              "$type": "Models.Functions.MultiplyFunction, Models",
               "Name": "MaximumPotentialGrainSize",
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Memo, Models",
-                  "Text": "This parameter is only used to provide a very approximate estimate of final grain number.  Grain growth is calculated from harvest index increase.",
-                  "Name": "Memo",
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0038,
+                  "Units": null,
+                  "Name": "GrainSize",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This parameter is only used to provide a very approximate estimate of final grain number.  Grain growth is calculated from harvest index increase.",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "FOXgs",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        5.0,
+                        10.0
+                      ],
+                      "Y": [
+                        1.0,
+                        1.0,
+                        1.1
+                      ],
+                      "Name": "XYPairs",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[CumulativeExcessWaterStress]",
+                      "Name": "XValue",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -4542,6 +4980,42 @@
                   "Name": "GrainFraction",
                   "ResourceName": null,
                   "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "FOXhi",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        5.0,
+                        10.0
+                      ],
+                      "Y": [
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "Name": "XYPairs",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[CumulativeExcessWaterStress]",
+                      "Name": "XValue",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -6849,6 +7323,38 @@
           "ResourceName": null,
           "Children": [
             {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].Vegetative.Target.XYPairs.X = 0,10",
+                "[Phenology].Vegetative.Target.XYPairs.Y = 300,1",
+                "[Leaf].Phyllochron.Base.FixedValue = 60",
+                "[Photosynthesis].RUE.Potential.FixedValue = 3.4",
+                "[Phenology].EarlyFlowering.Target.FixedValue = 120",
+                "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 500",
+                "[Grain].PotentialHarvestIndex.GrainFraction.FixedValue = 0.6",
+                "[Root].RootFrontVelocity.AFPSFactor.XYPairs.X = 0.0, 0.03, 1.0",
+                "[Root].RootFrontVelocity.AFPSFactor.XYPairs.Y = 0.0, 1.0, 1.0",
+                "[Leaf].Photosynthesis.FW.Excess.Today.SowingToStartFlowering.EarlySeason.XYPairs.X = 0, 0.95, 1",
+                "[Leaf].Photosynthesis.FW.Excess.Today.SowingToStartFlowering.EarlySeason.XYPairs.Y = 1, 1, 0.5",
+                "[Leaf].Photosynthesis.FW.Excess.Today.StartFloweringToStartGrainFill.MidSeason.XYPairs.X = 0, 0.7, 1",
+                "[Leaf].Photosynthesis.FW.Excess.Today.StartFloweringToStartGrainFill.MidSeason.XYPairs.Y = 1, 1, 0.25",
+                "[Leaf].Photosynthesis.FW.Excess.Today.StartGrainFillToEndCrop.LateSeason.XYPairs.X = 0, 0.5, 1",
+                "[Leaf].Photosynthesis.FW.Excess.Today.StartGrainFillToEndCrop.LateSeason.XYPairs.Y = 1, 1, 0.25",
+                "[Grain].MaximumPotentialGrainSize.FOXgs.XYPairs.X = 0, 5, 10",
+                "[Grain].MaximumPotentialGrainSize.FOXgs.XYPairs.Y = 1, 1, 1.175",
+                "[Leaf].SenescenceRate.Vegetative.Rate.FOXSenescence.XYPairs.X = 0, 5, 10",
+                "[Leaf].SenescenceRate.Vegetative.Rate.FOXSenescence.XYPairs.Y = 0, 0.03, 0.3",
+                "[Leaf].SenescenceRate.Reproductive.Rate.MaximumFunction.FOXSenescence.XYPairs.X = 0, 5, 10",
+                "[Leaf].SenescenceRate.Reproductive.Rate.MaximumFunction.FOXSenescence.XYPairs.Y = 0, 0.03, 0.3",
+                "[Leaf].Photosynthesis.FW.Excess.PersistentReduction.MovingSumFunction.NumberOfDays = 15"
+              ],
+              "Name": "Hyola575",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
               "$type": "Models.Memo, Models",
               "Text": "Cultivar names include several codes for several traits.\n* RR = Roundup Ready - These cultivars are developed to provide tolerance for Glyphosate herbicide.\n* CL = Clearfield - These cultivars as developed for the Clearfield Canola weed control system.\n* TT = Triazine Tolerant - These cultivars are developed to provide tolerance for triazine herbicide\n* RT = Triazine and Roundup - These cultivars are developed to provide tolerance to both triazine and glyphosate herbicides.",
               "Name": "Memo",
@@ -7382,23 +7888,6 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].Vegetative.Target.XYPairs.X = 0,10",
-                "[Phenology].Vegetative.Target.XYPairs.Y = 300,1",
-                "[Leaf].Phyllochron.Base.FixedValue = 60",
-                "[Photosynthesis].RUE.Potential.FixedValue = 3.4",
-                "[Phenology].EarlyFlowering.Target.FixedValue = 120",
-                "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 500",
-                "[Grain].PotentialHarvestIndex.GrainFraction.FixedValue = 0.6"
-              ],
-              "Name": "Hyola575",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
                 "[Phenology].Vegetative.Target.XYPairs.X = 0,16",
                 "[Phenology].Vegetative.Target.XYPairs.Y = 360,213.33",
                 "[Leaf].Phyllochron.Base.FixedValue = 49"
@@ -7727,6 +8216,50 @@
           "Name": "SeedMortalityRate",
           "ResourceName": null,
           "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.AccumulateFunction, Models",
+          "StartStageName": "Emergence",
+          "EndStageName": "Maturity",
+          "ResetStageName": "",
+          "FractionRemovedOnCut": 0.0,
+          "FractionRemovedOnHarvest": 1.0,
+          "FractionRemovedOnGraze": 0.0,
+          "FractionRemovedOnPrune": 0.0,
+          "Name": "CumulativeExcessWaterStress",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Functions.SubtractFunction, Models",
+              "Name": "SubtractFunction",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "Constant",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].Photosynthesis.FW.Excess.Today",
+                  "Name": "VariableReference",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
           "Enabled": true,
           "ReadOnly": false
         }
