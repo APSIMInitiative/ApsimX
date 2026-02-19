@@ -1838,6 +1838,7 @@ namespace Models.GrazPlan
         }
 
         // ------------------ Private model logic ------------------
+        // some made public static so CLEM can integrate with paddocks and forage
 
         /// <summary>
         ///
@@ -1845,7 +1846,7 @@ namespace Models.GrazPlan
         /// <param name="classAttr"></param>
         /// <param name="netClassIntake"></param>
         /// <param name="summaryIntake"></param>
-        private void AddDietElement(ref GrazType.IntakeRecord classAttr, double netClassIntake, ref GrazType.IntakeRecord summaryIntake)
+        public static void AddDietElement(ref GrazType.IntakeRecord classAttr, double netClassIntake, ref GrazType.IntakeRecord summaryIntake)
         {
             if (netClassIntake > 0.0)
             {
@@ -1863,7 +1864,7 @@ namespace Models.GrazPlan
         /// Summarise the intake record
         /// </summary>
         /// <param name="summaryIntake">The intake record</param>
-        private void SummariseIntakeRecord(ref GrazType.IntakeRecord summaryIntake)
+        public static void SummariseIntakeRecord(ref GrazType.IntakeRecord summaryIntake)
         {
             double trivialIntake = 1.0E-6; // (kg/head)
 
@@ -1920,14 +1921,14 @@ namespace Models.GrazPlan
             }
             timeStepState.PaddockIntake = new GrazType.IntakeRecord();              // Summarise herbage+seed intake
             for (classIdx = 1; classIdx <= GrazType.DigClassNo; classIdx++)
-                this.AddDietElement(ref this.Herbage.Herbage[classIdx], timeStepState.IntakePerHead.Herbage[classIdx], ref timeStepState.PaddockIntake);
+                AnimalGroup.AddDietElement(ref this.Herbage.Herbage[classIdx], timeStepState.IntakePerHead.Herbage[classIdx], ref timeStepState.PaddockIntake);
             for (species = 1; species <= GrazType.MaxPlantSpp; species++)
             {
                 for (ripeIdx = GrazType.UNRIPE; ripeIdx <= GrazType.RIPE; ripeIdx++)
-                    this.AddDietElement(ref this.Herbage.Seeds[species, ripeIdx], timeStepState.IntakePerHead.Seed[species, ripeIdx], ref timeStepState.PaddockIntake);
+                    AnimalGroup.AddDietElement(ref this.Herbage.Seeds[species, ripeIdx], timeStepState.IntakePerHead.Seed[species, ripeIdx], ref timeStepState.PaddockIntake);
             }
 
-            this.SummariseIntakeRecord(ref timeStepState.PaddockIntake);
+            AnimalGroup.SummariseIntakeRecord(ref timeStepState.PaddockIntake);
             if (timeStepState.PaddockIntake.Biomass == 0.0) // i.e. less than fTrivialIntake
                 timeStepState.IntakePerHead = new GrazType.GrazingOutputs();
 
@@ -1951,11 +1952,11 @@ namespace Models.GrazPlan
                         gutPassage = 0.0;
                     this.timeStepNetSupplementDMI[idx] = (1.0 - gutPassage) * this.RationFed.GetFWFract(idx) * (PotIntake * suppRI);
 
-                    this.AddDietElement(ref suppInput, this.timeStepNetSupplementDMI[idx], ref timeStepState.SuppIntake);
+                    AnimalGroup.AddDietElement(ref suppInput, this.timeStepNetSupplementDMI[idx], ref timeStepState.SuppIntake);
                     supp_ME2DM = supp_ME2DM + this.timeStepNetSupplementDMI[idx] * this.RationFed[idx].ME2DM;
                 }
 
-                this.SummariseIntakeRecord(ref timeStepState.SuppIntake);
+                AnimalGroup.SummariseIntakeRecord(ref timeStepState.SuppIntake);
                 if (timeStepState.SuppIntake.Biomass == 0.0)
                 {
                     // i.e. less than fTrivialIntake
