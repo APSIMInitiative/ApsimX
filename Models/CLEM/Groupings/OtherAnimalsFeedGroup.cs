@@ -104,7 +104,7 @@ namespace Models.CLEM.Groupings
                     default:
                         break;
                 }
-                if(feedNeeded > 0)
+                if(feedNeeded > 0.001)
                 {
                     currentFeedRequest.Required = feedNeeded;
                     foreach (var cohort in selectedCohorts)

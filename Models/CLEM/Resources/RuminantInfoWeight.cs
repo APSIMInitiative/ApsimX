@@ -363,7 +363,8 @@ namespace Models.CLEM.Resources
             EmptyBodyMass += wtChange;
 
             // account for gut fill and adjust base weight
-            Base.Adjust(wtChange * EBMToLiveWeight()); // (ruminant.Parameters.General?.EBW2LW_CG18 ?? 1.09));
+            Base.Set(EmptyBodyMass * EBMToLiveWeight());
+            //Base.Adjust(wtChange * EBMToLiveWeight()); // (ruminant.Parameters.General?.EBW2LW_CG18 ?? 1.09));
 
             UpdateLiveWeight();
 

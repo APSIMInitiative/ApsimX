@@ -38,7 +38,7 @@ namespace Models.CLEM.Resources
         {
             double excess = 0;
 
-            if (packet.Amount < 0)
+            if (packet.Amount <= 0)
             return excess;
 
             if (!bypassPotIntakeLimits && packet.TypeOfFeed != FeedType.Milk)
