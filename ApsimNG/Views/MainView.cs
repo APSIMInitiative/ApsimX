@@ -144,6 +144,9 @@ namespace UserInterface.Views
         /// GtkPaned View where the most recently used simulations and notifications are housed.    
         /// </summary>
         private Paned notificationAndMruPane;
+        private Button githubBtn;
+        private Button discussionBtn;
+        private Button modelDocsBtn;
 
         /// <summary>
         /// Constructor
@@ -170,6 +173,12 @@ namespace UserInterface.Views
             notificationAndMruPane = (Paned)builder.GetObject("notificationAndMRUPane");
             mainWidget = window1;
             window1.Icon = new Gdk.Pixbuf(null, "ApsimNG.Resources.apsim logo32.png");
+            githubBtn = (Button)builder.GetObject("githubBtn");
+            discussionBtn = (Button)builder.GetObject("discussionsBtn");
+            modelDocsBtn = (Button)builder.GetObject("modelDocsBtn");
+            githubBtn.Clicked += OnGithubBtnClicked;
+            discussionBtn.Clicked += OnDiscussionBtnClicked;
+            modelDocsBtn.Clicked += OnModelDocsBtnClicked;
 
             listButtonView1 = new ListButtonView(this);
             listButtonView1.ButtonsAreToolbar = true;
@@ -182,6 +191,10 @@ namespace UserInterface.Views
             notificationMarkdownView = new MarkdownView(this);
             notificationBox.PackEnd(notificationMarkdownView.MainWidget, true, true, 0);
             notificationAndMruPane.Position *= 3;
+
+            // TODO: Remove these two lines when notifications feature is ready for public release.
+            notificationAndMruPane.Child2.Hide();
+            notificationAndMruPane.Child2.NoShowAll = true;
 
             menuList = new ListButtonView(this);
             // Need to remove the ScrolledWindow from the menu box.
@@ -209,7 +222,6 @@ namespace UserInterface.Views
             // However, doing so breaks gtk2-compatibility, so for now, we will just
             // set the style class in code.
             progressBar.StyleContext.AddClass("fat-progress-bar");
-
 
             TextTag tag = new TextTag("error");
             // Make errors orange-ish in dark mode.
@@ -348,6 +360,15 @@ namespace UserInterface.Views
 
         /// <summary>Invoked when the divider position is changed</summary>
         public event EventHandler DividerChanged;
+
+        /// <summary> Invoked when the user clicks the 'GitHub' button. </summary>
+        public event EventHandler<EventArgs> GitHubBtnClicked;
+
+        /// <summary> Invoked when the user clicks the 'Discussion' button. </summary>
+        public event EventHandler<EventArgs> DiscussionBtnClicked;
+
+        /// <summary> Invoked when the user clicks the 'Model Documentation' button. </summary>
+        public event EventHandler<EventArgs> ModelDocsBtnClicked;
 
         /// <summary>
         /// Get the list and button view
@@ -1269,6 +1290,36 @@ namespace UserInterface.Views
                 return notebook1;
             return hpaned1.FocusChild as Notebook;
         }
-    }
 
+        /// <summary>
+        /// Handles clicks on the GitHub button by raising the <see cref="GitHubBtnClicked"/> event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void OnGithubBtnClicked(object sender, EventArgs args)
+        {
+            GitHubBtnClicked?.Invoke(this, EventArgs.Empty);
+        }
+
+
+        /// <summary>
+        /// Handles clicks on the discussion button by raising the <see cref="DiscussionBtnClicked"/> event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void OnDiscussionBtnClicked(object sender, EventArgs args)
+        {
+            DiscussionBtnClicked?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Handles clicks on the model documentation button by raising the <see cref="ModelDocsBtnClicked"/> event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void OnModelDocsBtnClicked(object sender, EventArgs args)
+        {
+            ModelDocsBtnClicked?.Invoke(this, EventArgs.Empty);
+        }
+    }
 }

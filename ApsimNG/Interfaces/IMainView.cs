@@ -261,5 +261,14 @@ namespace UserInterface.Interfaces
         /// Invoked when an error has been thrown in a view.
         /// </summary>
         event EventHandler<ErrorArgs> OnError;
+
+        /// <summary> Invoked when the user clicks the 'GitHub' button. </summary>
+        event EventHandler<EventArgs> GitHubBtnClicked;
+
+        /// <summary> Invoked when the user clicks the 'Discussion' button. </summary>
+        event EventHandler<EventArgs> DiscussionBtnClicked;
+
+        /// <summary> Invoked when the user clicks the 'Model Documentation' button. </summary>
+        event EventHandler<EventArgs> ModelDocsBtnClicked;
     }
 }

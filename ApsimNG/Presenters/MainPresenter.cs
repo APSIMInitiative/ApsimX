@@ -14,6 +14,7 @@ using UserInterface.Interfaces;
 using UserInterface.Views;
 using Utility;
 using APSIMNG.Utility;
+using System.Diagnostics;
 
 namespace UserInterface.Presenters
 {
@@ -86,6 +87,9 @@ namespace UserInterface.Presenters
             this.view.StartPage2.List.DoubleClicked += this.OnFileDoubleClicked;
             this.view.TabClosing += this.OnTabClosing;
             this.view.ShowDetailedError += this.ShowDetailedErrorMessage;
+            this.view.GitHubBtnClicked += this.OnGitHubBtnPressed;
+            this.view.DiscussionBtnClicked += this.OnDiscussionBtnPressed;
+            this.view.ModelDocsBtnClicked += this.OnModelDocsBtnPressed;
             this.view.Show();
             // Must be done after the MarkdownView is shown.
             ShowNotifications();
@@ -1367,6 +1371,53 @@ namespace UserInterface.Presenters
         {
             view.StartPage1.List.Values = Configuration.Settings.MruList.Select(f => f.FileName).ToArray();
         }
+
+        /// <summary> Invoked when the user clicks the 'GitHub' button.</summary>
+        /// <param name="sender">Sender object.</param> 
+        /// <param name="args">Event arguments.</param>
+        /// <remarks>Opens the GitHub repository in the default web browser.</remarks>
+        private void OnGitHubBtnPressed(object sender, EventArgs args)
+        {
+            OpenUrl("https://github.com/APSIMInitiative/ApsimX");
+        }
+
+        /// <summary>
+        /// Invoked when the user clicks the 'Discussions' button.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        /// <remarks>Opens the ApsimX discussions page in the default web browser.</remarks>
+        private void OnDiscussionBtnPressed(object sender, EventArgs args)
+        {
+            OpenUrl("https://github.com/APSIMInitiative/ApsimX/discussions");
+        }
+
+        /// <summary>
+        /// Invoked when the user clicks the 'Documentation' button.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        /// <remarks>Opens the ApsimX Model documentation page in the default web browser.</remarks>
+        private void OnModelDocsBtnPressed(object sender, EventArgs args)
+        {
+            OpenUrl("https://docs.apsim.info");
+        }
+
+
+        /// <summary>
+        /// Open the specified URL in the user's default web browser.
+        /// </summary>
+        /// <param name="url">The URL to open.</param>
+        static void OpenUrl(string url)
+        {
+            ProcessStartInfo processInfo = new ProcessStartInfo
+            {
+                FileName = url,
+                UseShellExecute = true // Essential for some platforms/frameworks
+            };
+            Process.Start(processInfo);
+        }
+
 
     }
 }
