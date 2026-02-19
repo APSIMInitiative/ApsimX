@@ -131,8 +131,11 @@ namespace Models.CLEM
             // manually check associations with the ZoneCLEM as it is not a CLEMModel
             CLEMModel.CheckModelAssociations(this);
 
+            var simulation = Structure.FindParent<Simulation>(recurse: true);
+
             // remove the overall summary description file if present
-            string[] filebits = (sender as Simulation).FileName.Split('.');
+            // string[] filebits = (sender as Simulation).FileName.Split('.');
+            string[] filebits = simulation.FileName.Split('.');
             wholeSimulationSummaryFile = filebits.First();
             switch (DescriptiveSummaryFormatStyle)
             {

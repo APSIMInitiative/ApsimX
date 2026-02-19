@@ -378,9 +378,6 @@ namespace Models.CLEM
             // APSIM is now happy that the time step is over and so we can clean up CLEM and this will report all at end of time-step as previously occurred in monthly time steps.
             if (Clock.Today == timeStepEnd)
             {
-                CLEMAnimalWeightGain?.Invoke(this, args);
-                CLEMPostRuminantConsumption?.Invoke(this, args);
-                CLEMCollectManure?.Invoke(this, args);
                 CLEMAnimalDeath?.Invoke(this, args);
                 CLEMAnimalMilking?.Invoke(this, args);
                 CLEMCalculateEcologicalState?.Invoke(this, args);
