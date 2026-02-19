@@ -35,6 +35,10 @@ namespace Models.CLEM.Resources
         private double biomassConsumed;
 
         /// <inheritdoc/>
+        [JsonIgnore]
+        public ResourceRequest CurrentGrazingRequest { get; set; } = null;
+
+        /// <inheritdoc/>
         [Description("Units (nominal)")]
         [Category("Simulation", "Details")]
         public string Units { get; private set; } = "kg";
@@ -574,6 +578,12 @@ namespace Models.CLEM.Resources
             }
             // convert biomass to units specified kg,tonnes & farm,per/hectare
             return valueToUse / convert;
+        }
+
+        /// <inheritdoc/>
+        public void ReportGrazingTransaction()
+        {
+            ReportTransaction(TransactionType.Loss, CurrentGrazingRequest.Provided, CurrentGrazingRequest.ActivityModel, CurrentGrazingRequest.RelatesToResource, CurrentGrazingRequest.Category, this);
         }
 
         /// <summary>

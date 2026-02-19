@@ -27,6 +27,10 @@ namespace Models.CLEM.Resources
         [Link(IsOptional = true)]
         private ResourcesHolder resources = null;
 
+        /// <inheritdoc/>
+        [JsonIgnore]
+        public ResourceRequest CurrentGrazingRequest { get; set; } = null;
+
         [NonSerialized]
         private object pasture = new();
 
@@ -191,6 +195,11 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public double TonnesPerHectareStartOfTimeStep { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
+        /// <inheritdoc/>
+        public void ReportGrazingTransaction()
+        {
+            ReportTransaction(TransactionType.Loss, CurrentGrazingRequest.Provided, CurrentGrazingRequest.ActivityModel, CurrentGrazingRequest.RelatesToResource, CurrentGrazingRequest.Category, this);
+        }
 
         #region validation
 

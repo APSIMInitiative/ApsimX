@@ -24,8 +24,8 @@ namespace Models.CLEM.Resources
     [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGrazing) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType })]
     public class GrazeFoodStoreAPSIMLink : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType, IFeed, IGrazeFoodStoreType, IValidatableObject
     {
-        [Link]
-        private CLEMEvents events = null;
+        //[Link]
+        //private readonly CLEMEvents events = null;
         private double biomassAddedThisYear;
         private double biomassConsumed;
         private Forages forages;
@@ -33,11 +33,14 @@ namespace Models.CLEM.Resources
         private PaddockInfo paddockInfo;
         private GrazType.GrazingInputs[] grazingInputs = new GrazType.GrazingInputs[0];
         private Zone paddock;
-        private ResourceRequest dailyIntakeRequest = null;
         private double[] dailyRemovalByClass = new double[0];           // kg per DMD class (1..DigClassNo)
         private double[,] dailyRemovalSeed = new double[0, 0];          // kg per seed [species, ripe]
         private FoodResourcePacket dailyPaddockPacket = null;
-        //private FoodResourcePacket timeStepPaddockPacket = null;
+        private FoodResourcePacket timeStepPaddockPacket = null;
+
+        /// <inheritdoc/>
+        [JsonIgnore]
+        public ResourceRequest CurrentGrazingRequest { get; set; } = null;
 
         /// <inheritdoc/>
         [Description("Type of pasture or forage")]
@@ -116,7 +119,6 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public double DryMatterDigestibility { get; set; }
 
-
         /// <inheritdoc/>
         [JsonIgnore]
         public double AcidDetergentInsolubleProtein { get; set; }
@@ -162,6 +164,16 @@ namespace Models.CLEM.Resources
             {
             }
         }
+
+        /// <summary>
+        /// Forage consumed in current time step
+        /// </summary>
+        public FoodResourcePacket TimeStepForageConsumed { get { return timeStepPaddockPacket;  } }
+
+        /// <summary>
+        /// Forage consumed in current time step
+        /// </summary>
+        public FoodResourcePacket DailyTimeStepForageConsumed { get { return dailyPaddockPacket; } }
 
         /// <inheritdoc/>
         [JsonIgnore]
@@ -298,6 +310,7 @@ namespace Models.CLEM.Resources
 
             // set up the ForageProviders for this paddock
             paddockInfo = new PaddockInfo(zone: paddock, structure: Structure) { zone = paddock };
+            paddockInfo.ClearSupplement();
 
             // find all the child crop, pasture components that have removable biomass
             foreach (var forage in forages.ModelsWithDigestibleBiomass.Where(m => m.Zone == paddock))
@@ -310,31 +323,56 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMPastureReady")]
         private void OnCLEMPastureReady(object sender, EventArgs e)
         {
-            paddockInfo.ClearSupplement();
             paddockInfo.ZeroRemoval();
 
             // request available to ruminants (modified from Stock.RequestAvailableToAnimal())
             amount = 0;
+            //double tempDMD = 0;
+            //double tempN = 0;
+
+            double greenConsumableAmount = 0;
+            double greenTotalAmount = 0;
+            double deadConsumableAmount = 0;
+            double deadTotalAmount = 0;
+            //double newGrowth = 0;
             for (int i = 0; i < forageProviders.Count(); i++)
             {
                 var provider = forageProviders.ForageProvider(i);
+
                 if (provider.ForageObj != null)
                 {
+                    //var forageInfo = provider.ForageByName(provider.ForageObj.Name);
+
+                    //double dead = forageInfo.TotalDead;
+                    //double live = forageInfo.TotalLive;
+
+                    deadTotalAmount += provider.ForageObj.Material.Where(m => !m.IsLive)
+                                            .Sum(m => m.Total.Wt); // kg/ha
+                    deadConsumableAmount += provider.ForageObj.Material.Where(m => !m.IsLive)
+                                                                .Sum(m => m.Consumable.Wt); 
                     provider.PastureGreenDM = provider.ForageObj.Material.Where(m => m.IsLive)
-                                                                .Sum(m => m.Consumable.Wt); // g/m^2
+                                                                .Sum(m => m.Consumable.Wt); 
+                    greenConsumableAmount += provider.PastureGreenDM;
+                    greenTotalAmount += provider.ForageObj.Material.Where(m => m.IsLive)
+                                            .Sum(m => m.Total.Wt); // kg/ha
+
                     provider.UpdateForages(provider.ForageObj);
-                    amount += provider.PastureGreenDM;
+                    //amount += provider.PastureGreenDM;
+                    amount += deadTotalAmount + greenTotalAmount;
                 }
             }
 
-            // convert g/m^2 to kg/ha total
-            amount *= 10 * paddockInfo.Area;
+            // ToDo: check units. Consumable says iit is kg/ha not g/m^2 as in Stock code.
+            amount *= paddockInfo.Area;
 
             // do not return zero as there is always something there and zero affects calculations.
             TonnesPerHectareStartOfTimeStep = Math.Max(TonnesPerHectare, 0.01);
 
             // Update the link's quality properties from forage model values so reports can read current paddock quality.
             UpdatePaddockQuality();
+
+            // report pasture growth
+
         }
         
         /// <summary>Event to remove the current daily intake from forage when CLEM is determining daily consumption for time step</summary>
@@ -344,14 +382,9 @@ namespace Models.CLEM.Resources
         private void OnCLEMTakeAPSIMForage(object sender, EventArgs e)
         {
             // If nothing prepared, nothing to do
-            if (dailyIntakeRequest == null)
-                return;
-
-            // Apply one day's worth of prepared removals
-            ApplyForageRemovals(dailyIntakeRequest);
+            if (dailyPaddockPacket is not null)
+                ApplyForageRemovals();
         }
-
-        #region transactions
 
         /// <summary>
         /// Method to set the daily forage take by grazing animals
@@ -360,12 +393,17 @@ namespace Models.CLEM.Resources
         public void SetDailyForageTakeFromGrazing(ResourceRequest request)
         {
             if (request == null)
-                throw new ArgumentNullException(nameof(request));
+            {
+                return;
+            }
 
-            // duplicate request and divide by number of days in time step
-            dailyIntakeRequest = request.Clone();
-            dailyIntakeRequest.Provided /= events.Interval;
-            dailyIntakeRequest.Required /= events.Interval;
+            double shortfall = (Amount > 0) ? 1.0 : 0.0;
+            CurrentGrazingRequest.Provided = request.Required;
+            if (Amount > 0 && request.Required < Amount)
+            {
+                CurrentGrazingRequest.Provided = Amount;
+                shortfall = request.Required / Amount;
+            }
 
             // build snapshot of grazing inputs (kg/ha units)
             Array.Resize(ref grazingInputs, paddockInfo.Forages.Count());
@@ -377,10 +415,9 @@ namespace Models.CLEM.Resources
             }
 
             // quick exit if nothing required
-            double required = dailyIntakeRequest.Required;
+            double required = (request.AdditionalDetails as RuminantActivityGrazePastureHerd).DailyPastureRequired * shortfall;
             if (required <= 0.0)
             {
-                request.Provided = 0.0;
                 // clear stored daily removals
                 dailyRemovalByClass = new double[0];
                 dailyRemovalSeed = new double[0, 0];
@@ -550,76 +587,35 @@ namespace Models.CLEM.Resources
                     }
             }
 
-            // create the single paddock packet (if anything removed)
-            var packets = new List<FoodResourcePacket>();
-            if (totalRemoved > 0.0)
-            {
-                var packet = new FoodResourcePacket();
-                packet.TypeOfFeed = this.TypeOfFeed;
-                packet.Amount = totalRemoved;
-                double avgDMD = sumDMDTimesAmt / totalRemoved; // fraction
-                double avgCP = sumCPTimesAmt / totalRemoved;   // percent
-                packet.DryMatterDigestibility = avgDMD * 100.0;
-                packet.CrudeProteinPercent = avgCP;
-                packet.NitrogenPercent = packet.CrudeProteinPercent / FoodResourcePacket.FeedProteinToNitrogenFactor;
-                packet.FatPercent = this.FatPercent;
-                packet.MetabolisableEnergyContent = this.MetabolisableEnergyContent;
-                packet.GrossEnergyContent = this.GrossEnergyContent;
-                packet.RumenDegradableProteinPercent = this.RumenDegradableProteinPercent;
-                packet.AcidDetergentInsolubleProtein = this.AcidDetergentInsolubleProtein;
-                packet.GutFill = this.GutFill;
+            //request.Provided = totalRemoved * events.Interval;
 
-                dailyPaddockPacket = packet;
-                packets.Add(packet);
+            if (AggregationMode == FeedAggregationMode.CombineByForageType)
+            {
+                // todo: still to implement as list of FoodStorePackets
+                // build individual packets per provider if requested
+                // (not currently used as the grazing activity does not take advantage of per-provider details, but could be in future or for reporting)
             }
             else
             {
-                dailyPaddockPacket = null;
+                // combine into single paddock level food store
+                dailyPaddockPacket = new FoodResourcePacket();
+                dailyPaddockPacket.TypeOfFeed = this.TypeOfFeed;
+                dailyPaddockPacket.Amount = totalRemoved;
+                double avgDMD = sumDMDTimesAmt / totalRemoved; // fraction
+                double avgCP = sumCPTimesAmt / totalRemoved;   // percent
+                dailyPaddockPacket.DryMatterDigestibility = avgDMD * 100.0;
+                dailyPaddockPacket.CrudeProteinPercent = avgCP * 100.0;
+                dailyPaddockPacket.NitrogenPercent = dailyPaddockPacket.CrudeProteinPercent / FoodResourcePacket.FeedProteinToNitrogenFactor;
+                dailyPaddockPacket.FatPercent = this.FatPercent;
+                dailyPaddockPacket.MetabolisableEnergyContent = this.MetabolisableEnergyContent;
+                dailyPaddockPacket.GrossEnergyContent = this.GrossEnergyContent;
+                dailyPaddockPacket.RumenDegradableProteinPercent = this.RumenDegradableProteinPercent;
+                dailyPaddockPacket.AcidDetergentInsolubleProtein = this.AcidDetergentInsolubleProtein;
+                dailyPaddockPacket.GutFill = this.GutFill;
             }
 
-            // finalize request
-            //double provided = packets.Sum(p => p.Amount);
-            //request.Provided = provided;
-            // do not modify biomassConsumed here; it is updated when ApplyForageRemovals runs
+            timeStepPaddockPacket = dailyPaddockPacket.Clone((request.AdditionalDetails as RuminantActivityGrazePastureHerd).PastureRequired);
         }
-
-        /// <inheritdoc/>
-        public new void Remove(ResourceRequest request)
-        {
-            if (request == null)
-                throw new ArgumentNullException(nameof(request));
-
-            if (request.AdditionalDetails is null && request.Required > 0)
-                throw new Exception("Removing biomass from APSIM.Paddock requires AdditionalDetails property provided in resource request");
-
-            switch (request.ActivityModel)
-            {
-                case RuminantActivityGrazePastureHerd:
-                    // request expected
-                    // request required has all animal reductions
-                    // but this has already been through pasture reductions. in competition limiter.
-                    // comp limiter should be proportion on combined animal intake by each breed, not reflecting pasture available
-                    
-                    request.Provided = Math.Min(request.Required, Amount);
-                    request.Available = Amount;
-
-                    ReportTransaction(TransactionType.Loss, request.Provided, request.ActivityModel, request.RelatesToResource, request.Category, this);
-
-                    // Build the daily biomass remove packages for ongoing daily removal until next time step call this method again.
-                    SetDailyForageTakeFromGrazing(request);
-                    break;
-                case PastureActivityCutAndCarry:
-                    // call OnCLEMTakeAPSIMForage to apply the removal immediately
-                    break;
-                case PastureActivityBurn:
-                    // call OnCLEMTakeAPSIMForage to apply the removal immediately
-                    break;
-                default:
-                    throw new NotImplementedException($"The Activity [a={request.AdditionalDetails.GetType()}] is not currently implemented in [GrazeFoodStoreTypeAPSIMLink].Remove()] ");
-            }
-        }
-
-        #endregion
 
         /// <summary>
         /// Compute biomass-weighted paddock quality (DMD and CP) from the forage inputs
@@ -728,14 +724,11 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Apply the prepared forage removals for the daily intake request
         /// </summary>
-        /// <param name="req">Optional request to use for metadata</param>
-        private void ApplyForageRemovals(ResourceRequest req = null)
+        private void ApplyForageRemovals()
         {
             // nothing prepared
             if (dailyRemovalByClass == null || dailyRemovalByClass.Length == 0)
                 return;
-
-            var request = req ?? dailyIntakeRequest;
 
             if (paddockInfo == null || grazingInputs == null)
                 return;
@@ -830,14 +823,6 @@ namespace Models.CLEM.Resources
 
                     // update running consumed total
                     biomassConsumed += actualRemovedKg;
-
-                    // report per-forage transaction
-                    ReportTransaction(TransactionType.Loss,
-                                      actualRemovedKg,
-                                      request?.ActivityModel,
-                                      request?.RelatesToResource,
-                                      request?.Category,
-                                      this);
                 }
                 catch (Exception ex)
                 {
@@ -849,35 +834,23 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>>
         public void ApplyDailyIntakeReduction(double fractionReduced)
         {
-            // This scales:
-            // - the prepared provided amount on the stored daily request,
-            // - the single paddock packet amount (if present),
-            // - any FoodResourcePacket.Amount entries attached to the daily request,
-            // - the per class and per seed daily removal arrays.
-            // Call this from the grazing activity after calling Remove(...) and before the daily
-            // __CLEMDailyASPIMForageTake__ event fires when you need to apply quality/RDP reductions.
-
+            // Adjust intake amounts due to a reduction identified elsewhere
             double fractionRemaining = 1.0 - fractionReduced;
 
-            if (fractionRemaining <= 0.0 && fractionRemaining < 1.0)
-                throw new ArgumentOutOfRangeException(nameof(fractionRemaining), "Fraction must be between 0 and 1.");
-
-            if (dailyIntakeRequest == null)
+            if (fractionRemaining >= 1.0)
                 return;
 
-            // Scale provided amount on stored daily request (what will be handed to animals)
-            dailyIntakeRequest.Provided *= fractionRemaining;
+            if (fractionRemaining < 0.0)
+                throw new ArgumentOutOfRangeException(nameof(fractionRemaining), "Fraction must be between 0 and 1.");
 
-            // Scale the combined paddock packet if present
+            if (CurrentGrazingRequest != null)
+                CurrentGrazingRequest.Provided *= fractionRemaining;
+
+            if (timeStepPaddockPacket != null)
+                timeStepPaddockPacket.Amount *= fractionRemaining;
+
             if (dailyPaddockPacket != null)
                 dailyPaddockPacket.Amount *= fractionRemaining;
-
-            // Scale any packets attached to the request (defensive: some callers expect AdditionalData list)
-            if (dailyIntakeRequest.AdditionalDetails is List<FoodResourcePacket> packets)
-            {
-                foreach (var p in packets)
-                    p.Amount *= fractionRemaining;
-            }
 
             // Scale per-class removal array (kg)
             if (dailyRemovalByClass != null && dailyRemovalByClass.Length > 0)
@@ -898,6 +871,39 @@ namespace Models.CLEM.Resources
         }
 
         /// <inheritdoc/>
+        public void ReportGrazingTransaction()
+        {
+            ReportTransaction(TransactionType.Loss, timeStepPaddockPacket.Amount, CurrentGrazingRequest.ActivityModel, CurrentGrazingRequest.RelatesToResource, CurrentGrazingRequest.Category, this);
+        }
+
+        #region transactions
+
+        /// <inheritdoc/>
+        public new void Remove(ResourceRequest request)
+        {
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
+            if (request.AdditionalDetails is null && request.Required > 0)
+                throw new Exception("Removing biomass from APSIM.Paddock requires AdditionalDetails property provided in resource request");
+
+            switch (request.ActivityModel)
+            {
+                case RuminantActivityGrazePastureHerd:
+                    request.Provided = Math.Min(request.Required, request.Available); 
+                    break;
+                case PastureActivityCutAndCarry:
+                    // call OnCLEMTakeAPSIMForage to apply the removal immediately
+                    break;
+                case PastureActivityBurn:
+                    // call OnCLEMTakeAPSIMForage to apply the removal immediately
+                    break;
+                default:
+                    throw new NotImplementedException($"The Activity [a={request.AdditionalDetails.GetType()}] is not currently implemented in [GrazeFoodStoreTypeAPSIMLink].Remove()] ");
+            }
+        }
+
+        /// <inheritdoc/>
         public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             throw new NotImplementedException("Biomass cannot be added to a linked APSIM paddock");
@@ -914,6 +920,8 @@ namespace Models.CLEM.Resources
         {
             throw new NotImplementedException("Cannot modify state of linked APSIM paddock");
         }
+
+        #endregion
 
         /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

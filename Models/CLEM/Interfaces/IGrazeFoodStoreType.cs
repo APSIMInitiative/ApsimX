@@ -28,5 +28,15 @@ namespace Models.CLEM.Interfaces
         /// </summary>
         /// <param name="fractionReduced">Remaining proportion to apply (0..1).</param>
         public void ApplyDailyIntakeReduction(double fractionReduced);
+
+        /// <summary>
+        /// The current resource request from grazing
+        /// </summary>
+        public ResourceRequest CurrentGrazingRequest { get; set; }
+
+        /// <summary>
+        /// Method to report the status of current grazing request after all diet changes accounted for
+        /// </summary>
+        public void ReportGrazingTransaction();
     }
 }

@@ -1,17 +1,18 @@
-﻿using Models.Core;
+﻿using APSIM.Core;
+using APSIM.Numerics;
+using APSIM.Shared.Utilities;
+using Mapsui.Manipulations;
+using Models.CLEM.Groupings;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
+using Models.Core;
+using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using Newtonsoft.Json;
-using Models.Core.Attributes;
 using System.IO;
-using APSIM.Shared.Utilities;
-using Models.CLEM.Groupings;
-using APSIM.Numerics;
-using APSIM.Core;
-using Models.CLEM.Interfaces;
+using System.Linq;
 using System.ServiceModel.Security;
 
 namespace Models.CLEM.Activities
@@ -80,17 +81,17 @@ namespace Models.CLEM.Activities
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMInitialiseActivity")]
-        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
+        [EventSubscribe("Commencing")]
+        private void OnCommencing(object sender, EventArgs e)
         {
-            bool buildTransactionFromTree = Structure.FindParent<ZoneCLEM>(recurse: true).BuildTransactionCategoryFromTree;
-            string transCat = "";
-            if (!buildTransactionFromTree)
-            {
-                transCat = TransactionCategory;
-            }
-
             SetupDynamicChildren();
+
+            if (Parent is not RuminantActivityGrazeAll)
+            {
+                var activities = Structure.FindParent<Simulation>(recurse: true);
+                var apsimEvents = new Events(activities);
+                apsimEvents.ReconnectEvents("CLEMEvents", "CLEMGetResourcesRequired");
+            }
         }
 
         /// <summary>
@@ -98,23 +99,29 @@ namespace Models.CLEM.Activities
         /// </summary>
         public void SetupDynamicChildren()
         {
-            InitialiseHerd(true, true);
+            //InitialiseHerd(true, true);
+            HerdResource = Structure.Find<RuminantHerd>();
+            if (HerdResource is null)
+                return;
 
             GrazeFoodStoreModel = Resources.FindResourceType<GrazeFoodStore, IGrazeFoodStoreType>(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             Guid nextUID = ActivitiesHolder.AddToGuID(UniqueID, 2);
             foreach (RuminantType herdType in Structure.FindChildren<RuminantType>(relativeTo: HerdResource))
             {
-                var newGrazePastureHerd = new RuminantActivityGrazePastureHerd(this, herdType, TransactionCategory, nextUID);
-                Structure.AddChild(newGrazePastureHerd);
-                Links links = new();
-                links.Resolve(newGrazePastureHerd as IModel, true, recurse: false);
-                var apsimEvents = new Events(newGrazePastureHerd);
-                apsimEvents.ConnectEvents();
+                if (Structure.FindChildren<RuminantActivityGrazePastureHerd>().Where(a => a.RuminantTypeModel != herdType).Any() == false)
+                {
+                    var newGrazePastureHerd = new RuminantActivityGrazePastureHerd(this, herdType, TransactionCategory, nextUID);
+                    Structure.AddChild(newGrazePastureHerd);
+                    Links links = new();
+                    links.Resolve(newGrazePastureHerd as IModel, true, recurse: false);
 
-                newGrazePastureHerd.Setup();
+                    var events = new Events(newGrazePastureHerd);
+                    events.ConnectEvents();
+                    events.PublishToModelAndChildren("Commencing", new object[] { newGrazePastureHerd, new EventArgs() });
 
-                nextUID = ActivitiesHolder.AddToGuID(nextUID, 2);
+                    nextUID = ActivitiesHolder.AddToGuID(nextUID, 2);
+                }
             }
         }
 
@@ -122,8 +129,8 @@ namespace Models.CLEM.Activities
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
             // This method does not take any resources but is used to arbitrate resources for all breed grazing activities it contains
+            // if calling the getResources from child PastureHerd components they will only run once.
 
-            // check nested graze breed requirements for this pasture
             double totalNeeded = 0;
             IEnumerable<RuminantActivityGrazePastureHerd> grazeHerdChildren = Structure.FindChildren<RuminantActivityGrazePastureHerd>();
             foreach (RuminantActivityGrazePastureHerd item in grazeHerdChildren)
@@ -134,14 +141,10 @@ namespace Models.CLEM.Activities
                 totalNeeded += resourceRequest?.Required??0;
             }
 
-            // Check available resources
-            // This determines the proportional amount available for competing breeds with different green diet proportions (GrazeFoodStoreType)
-            // It does not truly account for how the pasture is provided from pools but will suffice unless more detailed model required
-            // The aim is to determine the proportional offering of pasture when insufficient for all breeds.
-            // This is applied for even a single herd/breed as this determines the pasture shortfall to include.
+            // Check available resources and only provide if there is truly competition between two or more breeds/herds
             double available = GrazeFoodStoreModel.Amount;
             double limit = 1.0;
-            if (MathUtilities.IsPositive(totalNeeded))
+            if (MathUtilities.IsPositive(totalNeeded) & grazeHerdChildren.Count() > 1)
             {
                 limit = Math.Min(1.0, available / totalNeeded);
             }
@@ -154,7 +157,6 @@ namespace Models.CLEM.Activities
                 else
                     item.SetupPoolsAndLimits(limit);
             }
-
             return ResourceRequestList;
         }
 

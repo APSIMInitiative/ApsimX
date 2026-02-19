@@ -374,7 +374,7 @@ namespace Models.CLEM.Activities
         {
             double overfed = 0;
             int numberFed = 0;
-            foreach (var iChild in filterGroups.OfType<RuminantFeedGroup>().Where(a => a.CurrentResourceRequest != null))
+            foreach (var iChild in filterGroups.OfType<RuminantFeedGroup>().Where(a => a.CurrentResourceRequest != null && a.CurrentResourceRequest.Required > 0))
             {
                 numberFed += iChild.CurrentIndividualsToFeed.Count;
                 double feedLimit = Math.Min(1.0, iChild.CurrentResourceRequest.Provided / iChild.CurrentResourceRequest.Required);
@@ -419,6 +419,8 @@ namespace Models.CLEM.Activities
                     details.Amount *= excessReduction;
                     // convert to daily intake for the ruminant intake store. 
                     details.Amount /= (double)events.Interval;
+                    if (details.Amount < 0.001)
+                        details.Amount = 0;
                     // try to feed. excess will be returned.
                     overfed += ind.Intake.AddFeed(details, ForceFeed);
                 }
