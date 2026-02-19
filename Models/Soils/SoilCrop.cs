@@ -16,8 +16,8 @@ namespace Models.Soils
 
     /// <summary>A soil crop parameterization class.</summary>
     [Serializable]
-    [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
-    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
+    [ViewName("UserInterface.Views.QuadView")]
+    [PresenterName("UserInterface.Presenters.QuadPresenter")]
     [ValidParent(ParentType = typeof(Physical))]
     public class SoilCrop : Model, IStructureDependency
     {
