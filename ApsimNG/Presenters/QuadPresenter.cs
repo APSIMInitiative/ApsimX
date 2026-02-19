@@ -28,8 +28,8 @@ namespace UserInterface.Presenters
         public QuadPresenter() {}
 
         /// <summary>Attach the model and view to this presenter and populate the view.</summary>
-        /// <param name="model">The data store model to work with. Must be a QuadView</param>
-        /// <param name="v">Data store view to work with.</param>
+        /// <param name="model">The model to work with</param>
+        /// <param name="v">View to work with, must be a QuadView</param>
         /// <param name="explorerPresenter">Parent explorer presenter.</param>
         public void Attach(object model, object v, ExplorerPresenter explorerPresenter)
         {
