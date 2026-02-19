@@ -19,7 +19,7 @@ namespace UserInterface.Views
         public DropDownView SimulationDropDown { get; private set; }
 
         /// <summary>View which displays the summary data.</summary>
-        public IMarkdownView SummaryDisplay { get; }
+        public MarkdownView SummaryDisplay { get; }
 
         private Button btnJumpToSimLog;
 
@@ -39,6 +39,7 @@ namespace UserInterface.Views
             settingsControl.PackStart(captureRules, false, false, 0);
             settingsControl.PackStart(simulationFilter, false, false, 0);
             SummaryDisplay = new MarkdownView(this);
+            SummaryDisplay.Refresh();
             ScrolledWindow scroller = new ScrolledWindow();
             scroller.Add(((ViewBase)SummaryDisplay).MainWidget);
             mainControl.PackStart(settingsControl, false, false, 0);
