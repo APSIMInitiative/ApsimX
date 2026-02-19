@@ -10,8 +10,8 @@ namespace Models.Soils
     /// Returns theta and ksat values for specified psi and theta values respectively.  Gets its parameters from the soil Water node and a couple of parameters it owns
     /// </summary>
     [Serializable]
-    [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
-    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
+    [ViewName("UserInterface.Views.QuadView")]
+    [PresenterName("UserInterface.Presenters.QuadPresenter")]
     [ValidParent(ParentType = typeof(Soil))]
     public class HydraulicProperties : Model
     {
