@@ -98,7 +98,8 @@ def close_zmq2(apsim):
     #     proc.kill()
     # process.kill()
 
-apsim_dir = "/home/trs07170/Research/Pan/ApsimX" 
+#apsim_dir = "/home/trs07170/Research/Pan/ApsimX" 
+apsim_dir = "/home/uqpdevo1/src/ApsimX"
 apsim = test_proto2(apsim_dir)
 rec = {"iter":[], "mem":[], "time":[]}
 
