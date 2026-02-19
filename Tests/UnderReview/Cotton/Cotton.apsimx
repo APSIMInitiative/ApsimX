@@ -2243,26 +2243,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.69,
-                  "Units": null,
-                  "Name": "ExtinctionCoefficientOLD",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "4/12/2023:\n\nExtinction coefficient and row spacing / plant density?",
-                      "Name": "Memo",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.AddFunction, Models",
                   "Name": "HeightFunction",
                   "ResourceName": null,
@@ -2574,72 +2554,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "Phyllochron",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "Constant",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "Potential",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "1. Need to develop ThermalTime for Phyllochron in [#Cotton].Phenology\n2. Use 42 DD\n\n====================================================================\n\nFrom PhD Warren Conaty:\n\nThe morphogenic relationship with temperature is described by the accumulation of degree days over a **base temperature of 12 °C**, where a new node is produced every **40 degree days** provided other factors are not limiting (Hearn and Constable, 1984)\n\n**NOTE**\n\nChanged phyllochron to 35 (for better fit) and removed 100 at cutout because nitrogen is mobilized at this point. N stress very high and ceases node production\n\n42 DD from:\n\n* *Northern Australia Broadacre Cropping Manual. 2022. NT Farmers*\n\n41 DD from:\n\n* *Constable, G.A., 1986. Growth and light receipt by mainstem cotton leaves in relation to plant density in the field. Agric. For. Meteorol., 37: 279-292.*\n\n43 DD60 from:\n\n* *Stewart, J.M., Oosterhuis, D., Heitholt, J.J. and Mauney, J. (Editors), 2010. Physiology of Cotton, 563 pp.* (page 306).\n\n\"Early-season node development is highly linearly related (R2 = 0.95) to DD60 accumulation (Kerby et al., 1997). From emergence until about the 15th node, a new node is produced on average every 43 DD60.\"",
-                          "Name": "Memo",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            3.0,
-                            4.0,
-                            5.0,
-                            6.0
-                          ],
-                          "Y": [
-                            32.0,
-                            32.0,
-                            32.0,
-                            32.0
-                          ],
-                          "Name": "XYPairs",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].Stage",
-                          "Name": "XValue",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.ExpressionFunction, Models",
                   "Units": null,
                   "Expression": "[Leaf].Phyllochron * [Leaf].Plastochron.Multiplier",
@@ -2691,6 +2605,72 @@
                         {
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Weather].MeanT",
+                          "Name": "XValue",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "Phyllochron",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Constant",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "Potential",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "1. Need to develop ThermalTime for Phyllochron in [#Cotton].Phenology\n2. Use 42 DD\n\n====================================================================\n\nFrom PhD Warren Conaty:\n\nThe morphogenic relationship with temperature is described by the accumulation of degree days over a **base temperature of 12 °C**, where a new node is produced every **40 degree days** provided other factors are not limiting (Hearn and Constable, 1984)\n\n**NOTE**\n\nChanged phyllochron to 35 (for better fit) and removed 100 at cutout because nitrogen is mobilized at this point. N stress very high and ceases node production\n\n42 DD from:\n\n* *Northern Australia Broadacre Cropping Manual. 2022. NT Farmers*\n\n41 DD from:\n\n* *Constable, G.A., 1986. Growth and light receipt by mainstem cotton leaves in relation to plant density in the field. Agric. For. Meteorol., 37: 279-292.*\n\n43 DD60 from:\n\n* *Stewart, J.M., Oosterhuis, D., Heitholt, J.J. and Mauney, J. (Editors), 2010. Physiology of Cotton, 563 pp.* (page 306).\n\n\"Early-season node development is highly linearly related (R2 = 0.95) to DD60 accumulation (Kerby et al., 1997). From emergence until about the 15th node, a new node is produced on average every 43 DD60.\"",
+                          "Name": "Memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            3.0,
+                            4.0,
+                            5.0,
+                            6.0
+                          ],
+                          "Y": [
+                            32.0,
+                            32.0,
+                            32.0,
+                            32.0
+                          ],
+                          "Name": "XYPairs",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].Stage",
                           "Name": "XValue",
                           "ResourceName": null,
                           "Children": [],
@@ -4701,46 +4681,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.025,
-                  "Units": "m^2",
-                  "Name": "AreaLargestMainstemLeafOLD",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "8/12/2023: orginially set at 0.018\n\nTemp effect on final leaf size? Reddy 1997\n\nCan change to 0.025 --> max leaf size also at DDRF\n\nFrom report \"OZCOT enhancement meeting Aug 2019\":\n\n**--> Comparison of leaf area parameters derived in temperate climates with tropics.**\n\nParameter|Tropics|Temperate|% difference\n-|-|-|-\nMaximum LA/site (cm2)\t\t|164\t|80\t|\t105\n\t\t(m2)\t\t|0.0164\t|0.008\t|\nArea largest main stem leaf\t|297\t|140\t|\t112\n\t\t(m2)\t\t|0.0297\t|0.014\t|\nRLAI – highest\t\t\t|0.063\t|0.01\t|\t530\nRLAI – median\t\t\t|0.032\t|0.01\t|\t220\nDldsmax\t\t\t\t|0.439\t|0.12\t|\t266\nChange in LA/site\t\t|0.17\t|0.12\t|\t42\nSpecific leaf weight g/m2\t|41\t|58\t|\t-29\nSLA\t\t\t\t|0.024\t|0.017  |\n\n\n",
-                      "Name": "Memo",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.016,
-                  "Units": "m^2",
-                  "Name": "AreaLargestSympodialLeafOLD",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "8/12/2023: orginially set at 0.018\n\nTemp effect on final leaf size? Reddy 1997\n\nCan change to 0.025 --> max leaf size also at DDRF\n\nFrom report \"OZCOT enhancement meeting Aug 2019\":\n\n**--> Comparison of leaf area parameters derived in temperate climates with tropics.**\n\nParameter|Tropics|Temperate|% difference\n-|-|-|-\nMaximum LA/site (cm2)\t\t|164\t|80\t|\t105\n\t\t(m2)\t\t|0.0164\t|0.008\t|\nArea largest main stem leaf\t|297\t|140\t|\t112\n\t\t(m2)\t\t|0.0297\t|0.014\t|\nRLAI – highest\t\t\t|0.063\t|0.01\t|\t530\nRLAI – median\t\t\t|0.032\t|0.01\t|\t220\nDldsmax\t\t\t\t|0.439\t|0.12\t|\t266\nChange in LA/site\t\t|0.17\t|0.12\t|\t42\nSpecific leaf weight g/m2\t|41\t|58\t|\t-29\nSLA\t\t\t\t|0.024\t|0.017  |\n\n\n",
-                      "Name": "Memo",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.DivideFunction, Models",
                   "Name": "SpecificAreaCanopy",
                   "ResourceName": null,
@@ -5074,122 +5014,6 @@
                       "Name": "TURSLA",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "SpecificAreaOLD",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "Potential",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            1.0,
-                            9.0
-                          ],
-                          "Y": [
-                            0.027,
-                            0.027
-                          ],
-                          "Name": "XYPairs",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].Stage",
-                          "Name": "XValue",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.MinimumFunction, Models",
-                      "Name": "ReductionFactor",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "Name": "SWFactor",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                0.8,
-                                1.0
-                              ],
-                              "Y": [
-                                0.5,
-                                1.0
-                              ],
-                              "Name": "XYPairs",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Cotton].Root.WaterTensionFactor",
-                              "Name": "XValue",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.WeightedTemperatureFunction, Models",
-                          "MaximumTemperatureWeighting": 0.5,
-                          "Name": "FTav",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                0.0,
-                                12.0,
-                                22.0,
-                                30.0
-                              ],
-                              "Y": [
-                                0.25,
-                                0.25,
-                                1.0,
-                                1.0
-                              ],
-                              "Name": "XYPairs",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
