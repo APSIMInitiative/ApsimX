@@ -1,5 +1,3 @@
-# if NETCOREAPP
-#endif
 using System;
 using System.Collections.Generic;
 using UserInterface.Interfaces;
