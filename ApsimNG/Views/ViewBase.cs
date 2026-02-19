@@ -3,7 +3,7 @@ using Gtk;
 using System;
 using System.IO;
 using System.Reflection;
-using Utility;
+using APSIMNG.Utility;
 using System.Linq;
 
 namespace UserInterface.Views
@@ -262,7 +262,7 @@ namespace UserInterface.Views
                 // and unmanaged resources.
                 if (disposing && mainWidget != null)
                 {
-                    Utility.GtkUtilities.DetachAllHandlers(mainWidget);
+                    GtkUtilities.DetachAllHandlers(mainWidget);
 
                     // Note: if mainWidget is a top-level widget, Dispose() will destroy the
                     // widget automatically, which can have bad results. Therefore, we only

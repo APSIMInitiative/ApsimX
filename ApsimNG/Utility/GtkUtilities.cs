@@ -5,7 +5,7 @@ using System.Reflection;
 using Gtk;
 using UserInterface.Views;
 
-namespace Utility
+namespace APSIMNG.Utility
 {
     public static class GtkUtilities
     {

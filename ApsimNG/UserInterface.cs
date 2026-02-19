@@ -1,14 +1,12 @@
 ﻿using APSIM.Shared.Utilities;
-using ApsimNG.Utility;
 using System;
 using System.IO;
-using System.Reflection.Metadata;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using UserInterface.Presenters;
 using UserInterface.Views;
-using Utility;
+using APSIMNG.Utility;
 
 namespace UserInterface
 {

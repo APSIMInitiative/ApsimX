@@ -1,13 +1,11 @@
-﻿namespace UserInterface.Interfaces
+﻿using APSIMNG.Utility;
+
+namespace UserInterface.Interfaces
 {
-    using Utility;
 
     /// <summary>
     /// Contract to provide options for asking the user for file names.
     /// </summary>
-    /// <remarks>
-    /// 
-    /// </remarks>
     interface IFileDialog
     {
         /// <summary>

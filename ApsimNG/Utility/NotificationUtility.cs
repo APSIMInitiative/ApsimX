@@ -1,5 +1,3 @@
-
-
 using System.Net.Http;
 
 namespace APSIMNG.Utility
@@ -17,7 +15,7 @@ namespace APSIMNG.Utility
         public string GetNotificationMarkdownText()
         {
             // Fetch the markdown text from GitHub repository.
-            HttpClient client = new HttpClient();
+            using HttpClient client = new HttpClient();
             client.BaseAddress = new System.Uri("https://raw.githubusercontent.com/");
             string url = "APSIMInitiative/APSIM.Notifications/refs/heads/main/notifications.md";
             HttpResponseMessage response = client.GetAsync(url).Result;

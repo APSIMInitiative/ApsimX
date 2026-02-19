@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Text;
 using UserInterface.EventArguments;
 using UserInterface.Interfaces;
-using Utility;
+using APSIMNG.Utility;
 using MessageType = Models.Core.MessageType;
 
 namespace UserInterface.Views
@@ -225,15 +225,15 @@ namespace UserInterface.Views
 
             TextTag tag = new TextTag("error");
             // Make errors orange-ish in dark mode.
-            if (Utility.Configuration.Settings.DarkTheme)
-                tag.ForegroundGdk = Utility.Colour.ToGdk(ColourUtilities.ChooseColour(1));
+            if (Configuration.Settings.DarkTheme)
+                tag.ForegroundGdk = Colour.ToGdk(ColourUtilities.ChooseColour(1));
             else
                 tag.Foreground = "red";
             statusWindow.Buffer.TagTable.Add(tag);
             tag = new TextTag("warning");
             // Make warnings yellow in dark mode.
-            if (Utility.Configuration.Settings.DarkTheme)
-                tag.ForegroundGdk = Utility.Colour.ToGdk(ColourUtilities.ChooseColour(7));
+            if (Configuration.Settings.DarkTheme)
+                tag.ForegroundGdk = Colour.ToGdk(ColourUtilities.ChooseColour(7));
             else
                 tag.Foreground = "brown";
             statusWindow.Buffer.TagTable.Add(tag);
@@ -249,22 +249,22 @@ namespace UserInterface.Views
             // If font is null, or font family is null, or font size is 0, fallback
             // to the default font (on windows only).
             Pango.FontDescription f = null;
-            if (!string.IsNullOrEmpty(Utility.Configuration.Settings.FontName))
-                f = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
-            if (ProcessUtilities.CurrentOS.IsWindows && (string.IsNullOrEmpty(Utility.Configuration.Settings.FontName) ||
+            if (!string.IsNullOrEmpty(Configuration.Settings.FontName))
+                f = Pango.FontDescription.FromString(Configuration.Settings.FontName);
+            if (ProcessUtilities.CurrentOS.IsWindows && (string.IsNullOrEmpty(Configuration.Settings.FontName) ||
                                                          f.Family == null ||
                                                          f.Size == 0))
             {
                 // Default font on Windows is Segoe UI. Will fallback to sans if unavailable.
-                Utility.Configuration.Settings.FontName = Pango.FontDescription.FromString("Segoe UI 11").ToString();
+                Configuration.Settings.FontName = Pango.FontDescription.FromString("Segoe UI 11").ToString();
             }
 
             // Can't set font until widgets are initialised.
-            if (!string.IsNullOrEmpty(Utility.Configuration.Settings.FontName))
+            if (!string.IsNullOrEmpty(Configuration.Settings.FontName))
             {
                 try
                 {
-                    Pango.FontDescription font = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
+                    Pango.FontDescription font = Pango.FontDescription.FromString(Configuration.Settings.FontName);
                     ChangeFont(font);
                 }
                 catch (Exception err)
@@ -277,8 +277,7 @@ namespace UserInterface.Views
             if (ProcessUtilities.CurrentOS.IsMac)
             {
                 InitMac();
-                Utility.Configuration.Settings.DarkTheme = false;
-                //Utility.Configuration.Settings.DarkTheme = Utility.MacUtilities.DarkThemeEnabled();
+                Configuration.Settings.DarkTheme = false;
             }
 
             if (!ProcessUtilities.CurrentOS.IsLinux)
@@ -459,7 +458,7 @@ namespace UserInterface.Views
                 tabLabel.Text = text;
             Box headerBox = new Box(Orientation.Horizontal, 0);
             Button closeBtn = new Button();
-            string imageName = Utility.Configuration.Settings.DarkTheme ? "Close.dark.svg" : "Close.light.svg";
+            string imageName = Configuration.Settings.DarkTheme ? "Close.dark.svg" : "Close.light.svg";
             Gtk.Image closeImg = new Gtk.Image(new Gdk.Pixbuf(null, $"ApsimNG.Resources.TreeViewImages.{imageName}", 12, 12));
 
             closeBtn.Image = closeImg;
@@ -1031,8 +1030,8 @@ namespace UserInterface.Views
             fontDialog.WindowPosition = WindowPosition.CenterOnParent;
 
             // Select the current font.
-            if (Utility.Configuration.Settings.FontName != null)
-                fontDialog.Font = Utility.Configuration.Settings.FontName.ToString();
+            if (Configuration.Settings.FontName != null)
+                fontDialog.Font = Configuration.Settings.FontName.ToString();
 
 
             //fontDialog.FontActivated += OnChangeFont;
@@ -1058,7 +1057,7 @@ namespace UserInterface.Views
                 string fontName = fontDialog.Font;
 
                 Pango.FontDescription newFont = Pango.FontDescription.FromString(fontName);
-                Utility.Configuration.Settings.FontName = newFont.ToString();
+                Configuration.Settings.FontName = newFont.ToString();
                 Configuration.Settings.Save();
                 ChangeFont(newFont);
                 if (args.ResponseId != ResponseType.Apply)

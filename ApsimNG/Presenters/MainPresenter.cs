@@ -1,7 +1,5 @@
 ﻿using APSIM.Core;
-using APSIM.Documentation.Models;
 using APSIM.Shared.Utilities;
-using Gdk;
 using Models.Core;
 using Models.Core.Apsim710File;
 using System;
@@ -12,7 +10,6 @@ using System.Reflection;
 using UserInterface.EventArguments;
 using UserInterface.Interfaces;
 using UserInterface.Views;
-using Utility;
 using APSIMNG.Utility;
 using System.Diagnostics;
 
@@ -56,11 +53,11 @@ namespace UserInterface.Presenters
             this.view = view as IMainView;
             this.view.OnError += OnError;
             // Set the main window location and size.
-            this.view.WindowLocation = Utility.Configuration.Settings.MainFormLocation;
-            this.view.WindowSize = Utility.Configuration.Settings.MainFormSize;
+            this.view.WindowLocation = Configuration.Settings.MainFormLocation;
+            this.view.WindowSize = Configuration.Settings.MainFormSize;
             // Maximize settings do not save correctly on OS X
             if (!ProcessUtilities.CurrentOS.IsMac)
-                this.view.WindowMaximised = Utility.Configuration.Settings.MainFormMaximized;
+                this.view.WindowMaximised = Configuration.Settings.MainFormMaximized;
 
             // Set the main window caption with version information.
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
@@ -96,14 +93,14 @@ namespace UserInterface.Presenters
 
 
             int height = this.view.PanelHeight;
-            double savedHeight = Utility.Configuration.Settings.StatusPanelHeight / 100.0;
+            double savedHeight = Configuration.Settings.StatusPanelHeight / 100.0;
             if (savedHeight > 0.9 || savedHeight < 0.1)
                 this.view.StatusPanelPosition = (int)Math.Round(height * 0.7);
             else
                 this.view.StatusPanelPosition = (int)Math.Round(height * savedHeight);
 
             double width = this.view.WindowSize.Width;
-            int savedWidth = Utility.Configuration.Settings.SplitScreenPosition;
+            int savedWidth = Configuration.Settings.SplitScreenPosition;
             if (savedWidth > 0.9 || savedWidth < 0.1)
                 this.view.SplitScreenPosition = (int)Math.Round(width * 0.5);
             else
@@ -727,7 +724,7 @@ namespace UserInterface.Presenters
                 if (fileName != null)
                 {
                     this.OpenApsimXFileInTab(fileName, this.view.IsControlOnLeft(obj));
-                    Utility.Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
+                    Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
                     Configuration.Settings.Save();
                 }
             }
@@ -749,7 +746,7 @@ namespace UserInterface.Presenters
                 string fileName = this.view.GetMenuItemFileName(obj);
                 if (!string.IsNullOrEmpty(fileName))
                 {
-                    Utility.Configuration.Settings.DelMruFile(fileName);
+                    Configuration.Settings.DelMruFile(fileName);
                     Configuration.Settings.Save();
                     this.UpdateMRUDisplay();
                 }
@@ -774,7 +771,7 @@ namespace UserInterface.Presenters
                     string[] mruFiles = Configuration.Settings.MruList.Select(f => f.FileName).ToArray();
                     foreach (string fileName in mruFiles)
                     {
-                        Utility.Configuration.Settings.DelMruFile(fileName);
+                        Configuration.Settings.DelMruFile(fileName);
                     }
                     Configuration.Settings.Save();
 
@@ -806,7 +803,7 @@ namespace UserInterface.Presenters
                         try
                         {
                             File.Move(fileName, newName);
-                            Utility.Configuration.Settings.RenameMruFile(fileName, newName);
+                            Configuration.Settings.RenameMruFile(fileName, newName);
                             Configuration.Settings.Save();
                             this.UpdateMRUDisplay();
                         }
@@ -877,7 +874,7 @@ namespace UserInterface.Presenters
                         try
                         {
                             File.Delete(fileName);
-                            Utility.Configuration.Settings.DelMruFile(fileName);
+                            Configuration.Settings.DelMruFile(fileName);
                             Configuration.Settings.Save();
                             this.UpdateMRUDisplay();
                         }
@@ -1004,7 +1001,7 @@ namespace UserInterface.Presenters
             if (newPresenter.GetType() == typeof(ExplorerPresenter))
             {
                 int width = this.view.WindowSize.Width;
-                double savedWidth = Utility.Configuration.Settings.TreeSplitScreenPosition;
+                double savedWidth = Configuration.Settings.TreeSplitScreenPosition;
                 if ((savedWidth > 0.9) || (savedWidth < 0.1))
                     ((ExplorerPresenter)newPresenter).TreeWidth = (int)Math.Round(width * 0.9);
                 else
@@ -1342,14 +1339,14 @@ namespace UserInterface.Presenters
             e.AllowClose = this.AllowClose();
             if (e.AllowClose)
             {
-                Utility.Configuration.Settings.SplitScreenPosition = (int)MathF.Round((float)this.view.SplitScreenPosition / (float)this.view.WindowSize.Width);
-                Utility.Configuration.Settings.MainFormLocation = this.view.WindowLocation;
-                Utility.Configuration.Settings.MainFormSize = this.view.WindowSize;
-                Utility.Configuration.Settings.MainFormMaximized = this.view.WindowMaximised;
-                Utility.Configuration.Settings.StatusPanelHeight = (int)(((double)this.view.StatusPanelPosition / (double)this.view.PanelHeight) * 100);
+                Configuration.Settings.SplitScreenPosition = (int)MathF.Round((float)this.view.SplitScreenPosition / (float)this.view.WindowSize.Width);
+                Configuration.Settings.MainFormLocation = this.view.WindowLocation;
+                Configuration.Settings.MainFormSize = this.view.WindowSize;
+                Configuration.Settings.MainFormMaximized = this.view.WindowMaximised;
+                Configuration.Settings.StatusPanelHeight = (int)(((double)this.view.StatusPanelPosition / (double)this.view.PanelHeight) * 100);
                 if (treeWidth > 0)
-                    Utility.Configuration.Settings.TreeSplitScreenPosition = (int)MathF.Round(((float)treeWidth / (float)this.view.WindowSize.Width) * 100);
-                Utility.Configuration.Settings.Save();
+                    Configuration.Settings.TreeSplitScreenPosition = (int)MathF.Round(((float)treeWidth / (float)this.view.WindowSize.Width) * 100);
+                Configuration.Settings.Save();
             }
         }
 
