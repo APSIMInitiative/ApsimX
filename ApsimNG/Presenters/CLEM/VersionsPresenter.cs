@@ -23,7 +23,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The view to use
         /// </summary>
-        private IMarkdownView genericView;
+        private MarkdownView genericView;
 
         /// <summary>
         /// Attach the view
@@ -34,7 +34,7 @@ namespace UserInterface.Presenters
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.model = model as Model;
-            this.genericView = view as IMarkdownView;
+            this.genericView = view as MarkdownView;
         }
 
         public void Refresh()
