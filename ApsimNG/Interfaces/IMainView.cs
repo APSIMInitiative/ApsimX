@@ -20,7 +20,7 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Get the start page 3 view
         /// </summary>
-        IMarkdownView NotificationMarkdownView { get; }
+        MarkdownView NotificationMarkdownView { get; }
 
         /// <summary>
         /// Get the most recently used files list view

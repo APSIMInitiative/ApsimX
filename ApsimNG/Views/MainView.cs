@@ -1227,7 +1227,7 @@ namespace UserInterface.Views
         }
 
         /// <summary>Gets the notification markdown view.</summary>
-        public IMarkdownView NotificationMarkdownView => notificationMarkdownView;
+        public MarkdownView NotificationMarkdownView => notificationMarkdownView;
 
 
         /// <summary>Show a message in a dialog box</summary>
