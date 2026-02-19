@@ -102,6 +102,31 @@ namespace Models.AgPasture
         [Units("kg/ha")]
         public double DMDead { get { return DeadTissue.DM.Wt; } }
 
+        /// <summary>
+        /// TESTING LEAF AND STEM WT in g/m2
+        /// </summary>
+        public double Wt
+        {
+            get {return  DMTotal /10.0;}
+        }
+
+        /// <summary>
+        /// Testing LEAF AND STEM N in g/m2
+        /// </summary>
+        public double N
+        {
+            get {return NTotal /10.0;}
+        }
+
+        /// <summary>
+        /// TESTING nconc for leaf and stem
+        /// </summary>
+        public double NConc
+        {   
+
+            get { return NTotal/DMTotal; }
+        }
+
         /// <summary>Standing herbage weight (kg/ha).</summary>
         [Units("kg/ha")]
         public double StandingHerbageWt { get { return DMTotal * FractionStanding; } }

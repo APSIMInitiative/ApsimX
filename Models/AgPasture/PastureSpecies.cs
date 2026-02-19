@@ -2241,6 +2241,37 @@ namespace Models.AgPasture
             get { return roots[0].DMFractions; }
         }
 
+        /// <summary>
+        /// TESTING ABOVEGROUND LIVE WT
+        /// </summary>
+        public IBiomass AboveGroundLive
+        {
+            get
+            {
+                Biomass mass =new Biomass();
+                mass.StructuralWt = (Leaf.DMLive + Stem.DMLive + Stolon.DMLive)/10.0;
+                mass.StructuralN =  (Leaf.NLive + Stem.NLive + Stolon.NLive)/10;
+                return mass;
+
+            }
+        }
+
+        /// <summary>
+        /// TESTING ABOVEGROUND DEAD WT AND N
+        /// </summary>
+
+        public IBiomass AboveGroundDead
+        {
+            get
+            {
+                 Biomass mass = new Biomass();
+                 mass.StructuralWt=(Leaf.DMDead + Stem.DMDead + Stolon.DMDead)/10.0;
+                 mass.StructuralN= (Leaf.NDead + Stem.NDead + Stolon.NDead)/10.0;
+                 return mass;
+            }
+           
+        }
+
         ////- Harvest outputs >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Get above ground biomass</summary>
@@ -2771,6 +2802,8 @@ namespace Models.AgPasture
                 root.ClearDailyTransferredAmounts();
             }
         }
+
+        
 
         /// <summary>Performs the calculations for potential growth.</summary>
         /// <param name="sender">The sender model</param>
