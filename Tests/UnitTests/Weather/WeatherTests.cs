@@ -14,6 +14,7 @@ using Models.Core.Run;
 using Models.Interfaces;
 using Models.Storage;
 using NUnit.Framework;
+using UserInterface.Presenters;
 
 namespace UnitTests.Weather
 {
@@ -115,6 +116,24 @@ namespace UnitTests.Weather
 
             var summary = baseSim.Node.FindChild<MockSummary>(recurse: true);
             Assert.That(summary.messages[0], Is.EqualTo("Simulation terminated normally"));
+        }
+
+        /// <summary>
+        /// Tests a weather file in .bin (Binary) format.
+        /// </summary>
+        [Test]
+        public void MetWeatherFileTest()
+        {
+            // Open the text file using a stream reader
+            using StreamReader reader = new StreamReader("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi.met");
+
+            // Read the stream as a string
+            string text = reader.ReadToEnd();
+            
+            MetBinaryReader.MetData data = MetBinaryReader.ReadMet(text);
+            string output = MetBinaryReader.WriteMet(data);
+
+            File.WriteAllText("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi_2.met", output);
         }
 
         [Test]

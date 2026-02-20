@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace APSIM.Shared.Utilities
@@ -24,6 +26,248 @@ namespace APSIM.Shared.Utilities
             byte[] fileBytes = File.ReadAllBytes(filepath);
             string output = Read(fileBytes);
             return new MemoryStream(Encoding.UTF8.GetBytes(output));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static MetData ReadMet(string input)
+        {
+            MetData metData = new MetData();
+
+            //read all comments
+            List<int> commentPositions = new List<int>();
+            int length = input.Length;
+            for (int i = 0; i < length; i++)
+                if (input[i] == '!')
+                    commentPositions.Add(i);
+
+            //Start reading file
+            string[] lines = input.Split('\n');
+            bool headerRemoved = false;
+            int step = 0;
+            string columnNameLine = "";
+            string columnUnitsLine = "";
+            List<string> dataLines = new List<string>();
+            foreach(string line in lines)
+            {
+                //clean line
+                string trimmed = line.Replace('\t', ' ').Trim();
+                if (!headerRemoved && trimmed == "[weather.met.weather]")
+                {
+                    trimmed = "";
+                    headerRemoved = true;
+                }
+
+                if (trimmed.Length > 0)
+                {
+                    if (step == 0) //reading constants and comments
+                    {
+                        string comment = "";
+                        if (trimmed.Contains('!'))
+                        {
+                            int position = trimmed.IndexOf('!');
+                            comment = trimmed.Substring(position);
+                            trimmed = trimmed.Substring(0, position);
+                        }
+                        if (trimmed.Contains('=')) //we have a constant
+                        {
+                            string[] parts = trimmed.Split('=');
+                            metData.Contants.Add(new MetConstant(parts[0].Trim(), parts[1].Trim(), comment));
+                        }
+                        else if (!string.IsNullOrEmpty(comment))
+                        {
+                            metData.Contants.Add(new MetConstant(comment));
+                        }
+                        else // we might have the header row, so should check
+                        {
+                            if (trimmed.Contains("radn") && trimmed.Contains("maxt") && trimmed.Contains("mint") && trimmed.Contains("rain"))
+                            {
+                                step = 1; // set this to one so the next line is read for units
+                                columnNameLine = trimmed;
+                            }
+                        }
+                    }
+                    else if (step == 1) //found header last line, reading units
+                    {
+                        step = 2; // set this to two further lines are read for data
+                        columnUnitsLine = trimmed;
+                    }
+                    else if (step == 2) //reading data
+                    {
+                        dataLines.Add(trimmed);
+                    }
+                }
+            }
+            
+            //work out our column names and units
+            string[] columnParts = columnNameLine.Split(" ");
+            List<string> columnNames = new List<string>();
+            foreach(string part in columnParts)
+                if (part.Length > 0)
+                    columnNames.Add(part);
+
+            columnParts = columnUnitsLine.Split(" ");
+            List<string> columnUnits = new List<string>();
+            foreach(string part in columnParts)
+                if (part.Length > 0)
+                    columnUnits.Add(part);
+
+            if (columnNames.Count != columnUnits.Count)
+                throw new Exception($"Cannot read met file. {columnNames.Count} column names found ({columnNames}), {columnUnits.Count} units founds. {columnUnits}");
+            
+            int columnCount = columnNames.Count;
+            for(int i = 0; i < columnCount; i++)
+            {
+                string units = columnUnits[i];
+                if (units.StartsWith('('))
+                    units = units.Remove(0, 1);
+                if (units.EndsWith(')'))
+                    units = units.Remove(units.Length-1, 1);
+                metData.Columns.Add(new MetColumn(columnNames[i], units));
+            }
+
+            //read our data rows
+            MetColumn[] columns  = metData.Columns.ToArray();
+            foreach(string line in dataLines)
+            {
+                MetRow row = new MetRow();
+
+                //find the values for each column, there may be variable amounts of whitespace
+                string[] parts = line.Split(" ");
+                foreach(string part in parts)
+                    if(part.Length > 0)
+                        row.Inputs.Add(part);
+
+                //row values should match column counts
+                if (row.Inputs.Count != columnCount)
+                    throw new Exception($"Cannot read met file. Row {line} has {row.Inputs.Count} entries, but there are {columnCount} columns");
+
+                //As we look through the row, we need to determine the date of the row.
+                //this may be written either as a year and day columns, or as a date column
+                int year = 0;
+                int day = 0;
+                for(int i = 0; i < columnCount; i++)
+                {
+                    string stringValue = row.Inputs[i];
+                    //update our column width if this value is bigger
+                    if (stringValue.Length > columns[i].Width)
+                        columns[i].Width = stringValue.Length;
+
+                    string columnName = columns[i].Name.ToLower();
+                    if (columnName == "date")
+                    {
+                        DateTime date;
+                        if (DateTime.TryParseExact(stringValue, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
+                            row.Date = date;
+                        else
+                            throw new Exception($"Cannot read met file. Row {line} has date of {stringValue} which must be in yyyy-MM-dd format");
+                    }
+                    else if (columnName == "year")
+                    {
+                        if (int.TryParse(stringValue, out year))
+                        {
+                            if (day > 0)
+                                row.Date = new DateTime(year, 1, 1).AddDays(day-1);
+                        }
+                        else
+                        {
+                            throw new Exception($"Cannot read met file. Row {line} has year of {stringValue} which is not an integer.");
+                        }
+                    }
+                    else if (columnName == "day")
+                    {
+                        if (int.TryParse(stringValue, out day))
+                        {
+                            if (year > 0)
+                                row.Date = new DateTime(year, 1, 1).AddDays(day-1);
+                        }
+                        else
+                        {
+                            throw new Exception($"Cannot read met file. Row {line} has day of {stringValue} which is not an integer.");
+                        }
+                    }
+                    else
+                    {
+                        double value;
+                        if (double.TryParse(stringValue, out value))
+                            row.Values.Add(value);
+                        else
+                            row.Values.Add(double.NaN); //in cases where we have columns with string, we just set the value to NaN
+                    }
+                }
+
+                metData.Data.Add(row);
+            }
+
+            return metData;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="metData"></param>
+        /// <returns></returns>
+        public static string WriteMet(MetData metData)
+        {
+            StringBuilder output = new StringBuilder(2000000);
+
+            //add header
+            output.Append("[weather.met.weather]\n");
+
+            //add space between header and constant
+            output.Append("\n");
+
+            //add constants
+            foreach(MetConstant constant in metData.Contants)
+            {
+                if (string.IsNullOrEmpty(constant.Name))
+                    output.Append($"{constant.Comment}\n");
+                else if (string.IsNullOrEmpty(constant.Comment))
+                    output.Append($"{constant.Name} = {constant.Value}\n");
+                else
+                    output.Append($"{constant.Name} = {constant.Value}  {constant.Comment}\n");
+            }
+
+            //add space between constants and columns/data
+            output.Append("\n");
+
+            //find longest column name / unit name, pad out others to that size
+            //minimum of 5 points
+            int size = 5;
+            foreach(MetColumn column in metData.Columns)
+            {
+                if (column.Name.Length > size)
+                    size = column.Name.Length;
+                if (column.Unit.Length + 2 > size) //add two to the unit, as we append ( ) to units
+                    size = column.Unit.Length + 2;
+            }
+
+            //add header row
+            foreach(MetColumn column in metData.Columns)
+                output.Append(column.Name.PadLeft(size) + " ");
+            output.Append("\n");
+
+            //add units row
+            foreach(MetColumn column in metData.Columns)
+            {
+                string unit = $"({column.Unit})";
+                output.Append(unit.PadLeft(size) + " ");
+            }
+            output.Append("\n");
+
+            //add data rows
+            foreach(MetRow row in metData.Data)
+            {
+                foreach(string data in row.Inputs)
+                    output.Append(data.PadLeft(size) + " ");
+                output.Append("\n");
+            }
+
+            return output.ToString();
         }
 
         /// <summary>
@@ -91,7 +335,7 @@ namespace APSIM.Shared.Utilities
 
             return GetMetfileString(constants, columns, values);
         }
-
+/*
         public static Stream Save(string filepath)
         {
             //byte[] fileBytes = File.ReadAllBytes(filepath);
@@ -101,115 +345,11 @@ namespace APSIM.Shared.Utilities
 
         public static byte[] Write(string input)
         {
-            //A list of all comments. These are text after ! marks, or lines that don't fit into other categories.
-            //Stored with commented text and file position so they can be restored.
-            List<BinaryData> comments = new List<BinaryData>();
-
-            //A list of tuples of constants and metadata. Stored as name and value, both as strings
-            List<StringPair> contants = new List<StringPair>();
-
-            //A list of tuples of columns. Stored as name and units, both as strings
-            List<StringPair> columns = new List<StringPair>();
-
-            //A 2d array of rows x column, where each row has a value for each column.
-            List<List<string>> data = new List<List<string>>();
-
-            //read all comments
-            List<int> commentPositions = new List<int>();
-            int length = input.Length;
-            for (int i = 0; i < length; i++)
-                if (input[i] == '!')
-                    commentPositions.Add(i);
-
-            StringBuilder builder = new StringBuilder(length);
-            int previous = 0;
-            foreach(int position in commentPositions)
-            {
-                int nextEndline = input.IndexOf('\n', position);
-                string comment = input.Substring(position, nextEndline - position);
-                comments.Add(new BinaryData(comment, position));
-                builder.Append(input.Substring(previous, position));
-                previous = nextEndline;
-            }
-            string inputWithoutComments = builder.ToString();
-
-            //Start reading file
-            string[] lines = inputWithoutComments.Split('\n');
-            bool headerRemoved = false;
-            int step = 0;
-            string columnNameLine = "";
-            string columnUnitsLine = "";
-            List<string> dataLines = new List<string>();
-            foreach(string line in lines)
-            {
-                //clean line
-                string trimmed = line.Replace('\t', ' ').Trim();
-                if (!headerRemoved && trimmed == "[weather.met.weather]")
-                    trimmed = "";
-
-                if (trimmed.Length > 0)
-                {
-                    if (step == 0) //reading constants
-                    {
-                        if (trimmed.Contains('=')) //we have a constant
-                        {
-                            string[] parts = trimmed.Split('=');
-                            contants.Add(new StringPair(parts[0], parts[1]));
-                        }
-                        else // we might have the header row, so should check
-                        {
-                            if (trimmed.Contains("radn") && trimmed.Contains("maxt") && trimmed.Contains("mint") && trimmed.Contains("rain"))
-                            {
-                                step = 1; // set this to one so the next line is read for units
-                                columnNameLine = trimmed;
-                            }
-                        }
-                    }
-                    else if (step == 1) //found header last line, reading units
-                    {
-                        step = 2; // set this to two further lines are read for data
-                        columnUnitsLine = trimmed;
-                    }
-                    else if (step == 2) //reading data
-                    {
-                        dataLines.Add(trimmed);
-                    }
-                }
-            }
             
-            //work out our column names and units
-            string[] columnParts = columnNameLine.Split(" ");
-            List<string> columnNames = new List<string>();
-            foreach(string part in columnParts)
-                if (part.Length > 0)
-                    columnNames.Add(part);
 
-            columnParts = columnUnitsLine.Split(" ");
-            List<string> columnUnits = new List<string>();
-            foreach(string part in columnParts)
-                if (part.Length > 0)
-                    columnUnits.Add(part);
 
-            if (columnNames.Count != columnUnits.Count)
-                throw new Exception($"Cannot read met file. {columnNames.Count} column names found ({columnNames}), {columnUnits.Count} units founds. {columnUnits}");
+
             
-            length = columnNames.Count;
-            for(int i = 0; i < length; i++)
-            {
-                string units = columnUnits[i];
-                if (units.StartsWith('('))
-                    units = units.Remove(0);
-                if (units.EndsWith(')'))
-                    units = units.Remove(units.Length-1);
-                columns.Add(new StringPair(columnNames[i], units));
-            }
-
-            foreach(string line in lines)
-            {
-                
-            }
-
-            /*
 
             #add start date to constants
             constants["start_date"] = data[0][0]
@@ -256,9 +396,9 @@ namespace APSIM.Shared.Utilities
                 output += "0"
 
             return bytes.fromhex(output)
-            */
+            
         }
-
+*/
         /// <summary>
         /// Convert a hex string to an int
         /// </summary>
@@ -318,7 +458,7 @@ namespace APSIM.Shared.Utilities
 
             return output;
         }
-
+/*
         private static BinaryData IntToHex()
         {
             
@@ -334,7 +474,7 @@ namespace APSIM.Shared.Utilities
             
         }
 
-        /*
+        
         @staticmethod
     def int_to_hex(data:int, size:int = 2) -> str:
         '''
@@ -509,7 +649,7 @@ namespace APSIM.Shared.Utilities
         /// BinaryData stores the hex string that is read when reading the file, and the position through the string
         /// that has been read. It is up to the reader functions to keep the position correct.
         /// </summary>
-        private class BinaryData
+        public class BinaryData
         {
             /// <summary>
             /// A string of hex values representing the file
@@ -546,7 +686,7 @@ namespace APSIM.Shared.Utilities
         /// <summary>
         /// A string pair to store constants and column data
         /// </summary>
-        private class StringPair
+        public class StringPair
         {
             /// <summary>
             /// Name of the pair
@@ -576,6 +716,177 @@ namespace APSIM.Shared.Utilities
             {
                 Name = name;
                 Value = value;
+            }
+        }
+
+        /// <summary>
+        /// A string pair to store constants and column data
+        /// </summary>
+        public class MetConstant
+        {
+            /// <summary>
+            /// Name of the pair
+            /// </summary>
+            public string Name { get; set; }
+
+            /// <summary>
+            /// Value of the pair
+            /// </summary>
+            public string Value { get; set; }
+
+            /// <summary>
+            /// Comments on line
+            /// </summary>
+            public string Comment { get; set; }
+
+            /// <summary>
+            /// Basic Constructor
+            /// </summary>
+            public MetConstant()
+            {
+                Name = "";
+                Value = "";
+                Comment = "";
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="name">The name of the pair</param>
+            /// <param name="value">The value of the pair</param>
+            public MetConstant(string name, string value)
+            {
+                Name = name;
+                Value = value;
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="comment"></param>
+            public MetConstant(string comment)
+            {
+                Comment = comment;
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="name">The name of the pair</param>
+            /// <param name="value">The value of the pair</param>
+            /// <param name="comment"></param>
+            public MetConstant(string name, string value, string comment)
+            {
+                Name = name;
+                Value = value;
+                Comment = comment;
+            }
+        }
+
+        /// <summary>
+        /// A string pair to store constants and column data
+        /// </summary>
+        public class MetColumn
+        {
+            /// <summary>
+            /// Name of the pair
+            /// </summary>
+            public string Name { get; set; }
+
+            /// <summary>
+            /// Value of the pair
+            /// </summary>
+            public string Unit { get; set; }
+
+            /// <summary>
+            /// Comments on line
+            /// </summary>
+            public int Width { get; set; }
+
+            /// <summary>
+            /// Basic Constructor
+            /// </summary>
+            public MetColumn()
+            {
+                Name = "";
+                Unit = "";
+                Width = 0;
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="name">The name of the pair</param>
+            /// <param name="unit">The value of the pair</param>
+            public MetColumn(string name, string unit)
+            {
+                Name = name;
+                Unit = unit;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public class MetRow
+        {
+            /// <summary>
+            ///
+            /// </summary>
+            public List<string> Inputs { get; set; }
+
+            /// <summary>
+            ///
+            /// </summary>
+            public DateTime Date { get; set; }
+
+            /// <summary>
+            ///
+            /// </summary>
+            public List<double> Values { get; set; }
+
+            /// <summary>
+            /// Basic Constructor
+            /// </summary>
+            public MetRow()
+            {
+                Inputs = new List<string>();
+                Date = DateTime.MinValue;
+                Values = new List<double>();
+            }
+        }
+
+        /// <summary>
+        /// A data structure for holding everything about a metfile
+        /// </summary>
+        public class MetData
+        {
+            //A list of tuples of constants and metadata. Stored as name and value, both as strings
+            /// <summary>
+            /// 
+            /// </summary>
+            public List<MetConstant> Contants;
+
+            //A list of tuples of columns. Stored as name and units, both as strings
+            /// <summary>
+            /// 
+            /// </summary>
+            public List<MetColumn> Columns;
+
+            //A 2d array of rows x column, where each row has a value for each column.
+            /// <summary>
+            /// 
+            /// </summary>
+            public List<MetRow> Data;
+
+            /// <summary>
+            /// Basic Constructor
+            /// </summary>
+            public MetData()
+            {
+                Contants = new List<MetConstant>();
+                Columns = new List<MetColumn>();
+                Data = new List<MetRow>();
             }
         }
     }
