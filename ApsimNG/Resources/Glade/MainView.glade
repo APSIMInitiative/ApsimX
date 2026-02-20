@@ -75,111 +75,79 @@
                             <property name="can-focus">False</property>
                             <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkFrame" id="helperFrame">
+                              <object class="GtkBox" id="helperBox">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
-                                <property name="label-xalign">0.5</property>
-                                <property name="label-yalign">0</property>
-                                <property name="shadow-type">out</property>
+                                <property name="orientation">vertical</property>
+                                <property name="homogeneous">True</property>
                                 <child>
-                                  <object class="GtkBox" id="helperBox">
+                                  <object class="GtkBox" id="helperBtnBox">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
-                                    <property name="orientation">vertical</property>
                                     <property name="homogeneous">True</property>
                                     <child>
-                                      <object class="GtkBox" id="helperBtnBox">
+                                      <object class="GtkButton" id="discussionsBtn">
+                                        <property name="label" translatable="yes">Support</property>
                                         <property name="visible">True</property>
-                                        <property name="can-focus">False</property>
-                                        <property name="homogeneous">True</property>
-                                        <child>
-                                          <object class="GtkButton" id="discussionsBtn">
-                                            <property name="label" translatable="yes">Discussions</property>
-                                            <property name="visible">True</property>
-                                            <property name="can-focus">True</property>
-                                            <property name="receives-default">True</property>
-                                            <property name="tooltip-text" translatable="yes">Opens the ApsimX GitHub Discussions page where you can ask and have questions answered</property>
-                                            <property name="always-show-image">True</property>
-                                          </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">True</property>
-                                            <property name="padding">5</property>
-                                            <property name="position">0</property>
-                                          </packing>
-                                        </child>
-                                        <child>
-                                          <object class="GtkButton" id="githubBtn">
-                                            <property name="label" translatable="yes">GitHub</property>
-                                            <property name="visible">True</property>
-                                            <property name="can-focus">True</property>
-                                            <property name="receives-default">True</property>
-                                            <property name="tooltip-text" translatable="yes">Opens the ApsimX GitHub page in a separate browser</property>
-                                          </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">True</property>
-                                            <property name="padding">5</property>
-                                            <property name="position">1</property>
-                                          </packing>
-                                        </child>
-                                        <child>
-                                          <object class="GtkButton" id="modelDocsBtn">
-                                            <property name="label" translatable="yes">Model Docs</property>
-                                            <property name="visible">True</property>
-                                            <property name="can-focus">True</property>
-                                            <property name="receives-default">True</property>
-                                            <property name="tooltip-text" translatable="yes">Opens the model documentation page (https://docs.apsim.info) in a separate browser. This page also has tutorials and model validation documentation</property>
-                                          </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">True</property>
-                                            <property name="padding">5</property>
-                                            <property name="position">2</property>
-                                          </packing>
-                                        </child>
+                                        <property name="can-focus">True</property>
+                                        <property name="receives-default">True</property>
+                                        <property name="tooltip-text" translatable="yes">Opens the ApsimX GitHub Discussions page where you can ask and have questions answered</property>
+                                        <property name="always-show-image">True</property>
                                       </object>
                                       <packing>
                                         <property name="expand">False</property>
                                         <property name="fill">True</property>
+                                        <property name="padding">5</property>
                                         <property name="position">0</property>
                                       </packing>
                                     </child>
+                                    <child>
+                                      <object class="GtkButton" id="githubBtn">
+                                        <property name="label" translatable="yes">GitHub</property>
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">True</property>
+                                        <property name="receives-default">True</property>
+                                        <property name="tooltip-text" translatable="yes">Opens the ApsimX GitHub page in a separate browser</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="padding">5</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton" id="modelDocsBtn">
+                                        <property name="label" translatable="yes">Documentation</property>
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">True</property>
+                                        <property name="receives-default">True</property>
+                                        <property name="tooltip-text" translatable="yes">Opens the model documentation page (https://docs.apsim.info) in a separate browser. This page also has tutorials and model validation documentation</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="padding">5</property>
+                                        <property name="position">2</property>
+                                      </packing>
+                                    </child>
                                   </object>
-                                </child>
-                                <child type="label">
-                                  <object class="GtkLabel" id="linksLbl">
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">False</property>
-                                    <property name="label" translatable="yes">Links</property>
-                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
                                 </child>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
-                                <property name="padding">5</property>
+                                <property name="padding">8</property>
                                 <property name="position">0</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="newsAndNotificationLbl">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="label" translatable="yes">News &amp; Notifications</property>
-                                <property name="justify">center</property>
-                                <property name="width-chars">0</property>
-                                <property name="track-visited-links">False</property>
-                                <attributes>
-                                  <attribute name="weight" value="bold"/>
-                                </attributes>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="padding">5</property>
-                                <property name="position">1</property>
-                              </packing>
+                              <placeholder/>
                             </child>
                           </object>
                           <packing>

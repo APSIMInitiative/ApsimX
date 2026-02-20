@@ -11,7 +11,6 @@ using UserInterface.EventArguments;
 using UserInterface.Interfaces;
 using UserInterface.Views;
 using APSIMNG.Utility;
-using System.Diagnostics;
 
 namespace UserInterface.Presenters
 {
@@ -645,9 +644,17 @@ namespace UserInterface.Presenters
         /// <param name="markdownView"></param>
         private void ShowNotifications()
         {
-            NotificationUtility utility = new NotificationUtility();
-            string markdownText = utility.GetNotificationMarkdownText();
-            view.NotificationMarkdownView.Text = markdownText;
+            try
+            {
+                string aiBannerMarkdownText = NotificationUtility.GetAIBannerPath();
+                string markdownText = NotificationUtility.GetNotificationMarkdownText();
+                view.NotificationMarkdownView.Text = $"![APSIM Initiative Banner]({aiBannerMarkdownText})\n\n{markdownText}";         
+            }
+            catch(Exception e)
+            {
+                ShowMessage($"Unable to fetch notifications at this time. {e.Message}", Simulation.MessageType.Warning);
+            }
+
         }
 
         private void OnShowSettingsDialog(object sender, EventArgs e)
@@ -1407,12 +1414,7 @@ namespace UserInterface.Presenters
         /// <param name="url">The URL to open.</param>
         static void OpenUrl(string url)
         {
-            ProcessStartInfo processInfo = new ProcessStartInfo
-            {
-                FileName = url,
-                UseShellExecute = true // Essential for some platforms/frameworks
-            };
-            Process.Start(processInfo);
+            ProcessUtilities.ProcessStart(url);
         }
 
 
