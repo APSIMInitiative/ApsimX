@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace APSIM.Shared.Utilities
@@ -17,6 +16,21 @@ namespace APSIM.Shared.Utilities
         /// Symbol dictionary for converting from a 4-bit hex to data number character
         /// </summary>
         private static string[] SYMBOLS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "-", "/", "nan"];
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private static int MIN_COLUMN_WIDTH = 8;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filepath"></param>
+        /// <param name="metData"></param>
+        public static void Save(string filepath, MetData metData)
+        {
+            
+        }
 
         /// <summary>
         /// Opens a binary file and converts it to a valid string representation in a Stream object
@@ -82,13 +96,10 @@ namespace APSIM.Shared.Utilities
                         {
                             metData.Contants.Add(new MetConstant(comment));
                         }
-                        else // we might have the header row, so should check
+                        else // we might have the header row, so move to next step
                         {
-                            if (trimmed.Contains("radn") && trimmed.Contains("maxt") && trimmed.Contains("mint") && trimmed.Contains("rain"))
-                            {
-                                step = 1; // set this to one so the next line is read for units
-                                columnNameLine = trimmed;
-                            }
+                            step = 1; // set this to one so the next line is read for units
+                            columnNameLine = trimmed;
                         }
                     }
                     else if (step == 1) //found header last line, reading units
@@ -127,7 +138,10 @@ namespace APSIM.Shared.Utilities
                     units = units.Remove(0, 1);
                 if (units.EndsWith(')'))
                     units = units.Remove(units.Length-1, 1);
-                metData.Columns.Add(new MetColumn(columnNames[i], units));
+                MetColumn column = new MetColumn(columnNames[i], units);
+                if (i == 0)
+                    column.IsFirstColumn = true;
+                metData.Columns.Add(column);
             }
 
             //read our data rows
@@ -190,16 +204,13 @@ namespace APSIM.Shared.Utilities
                             throw new Exception($"Cannot read met file. Row {line} has day of {stringValue} which is not an integer.");
                         }
                     }
+                    //Then for all values, we convert to double to store
+                    double value;
+                    if (double.TryParse(stringValue, out value))
+                        row.Values.Add(value);
                     else
-                    {
-                        double value;
-                        if (double.TryParse(stringValue, out value))
-                            row.Values.Add(value);
-                        else
-                            row.Values.Add(double.NaN); //in cases where we have columns with string, we just set the value to NaN
-                    }
+                        row.Values.Add(double.NaN); //in cases where we have columns with string, we just set the value to NaN
                 }
-
                 metData.Data.Add(row);
             }
 
@@ -235,35 +246,37 @@ namespace APSIM.Shared.Utilities
             //add space between constants and columns/data
             output.Append("\n");
 
-            //find longest column name / unit name, pad out others to that size
-            //minimum of 5 points
-            int size = 5;
-            foreach(MetColumn column in metData.Columns)
-            {
-                if (column.Name.Length > size)
-                    size = column.Name.Length;
-                if (column.Unit.Length + 2 > size) //add two to the unit, as we append ( ) to units
-                    size = column.Unit.Length + 2;
-            }
-
             //add header row
             foreach(MetColumn column in metData.Columns)
-                output.Append(column.Name.PadLeft(size) + " ");
+            {
+                output.Append(column.Name.PadLeft(column.GetFormattingWidth()));
+                output.Append(" ");
+            }
+            output.Remove(output.Length-1, 1);
             output.Append("\n");
 
             //add units row
             foreach(MetColumn column in metData.Columns)
             {
                 string unit = $"({column.Unit})";
-                output.Append(unit.PadLeft(size) + " ");
+                output.Append(unit.PadLeft(column.GetFormattingWidth()));
+                output.Append(" ");
             }
+            output.Remove(output.Length-1, 1);
             output.Append("\n");
 
             //add data rows
+            MetColumn[] columns  = metData.Columns.ToArray();
             foreach(MetRow row in metData.Data)
             {
+                int index = 0;
                 foreach(string data in row.Inputs)
-                    output.Append(data.PadLeft(size) + " ");
+                {
+                    output.Append(data.PadLeft(columns[index].GetFormattingWidth()));
+                    output.Append(" ");
+                    index += 1;
+                }
+                output.Remove(output.Length-1, 1);
                 output.Append("\n");
             }
 
@@ -335,70 +348,7 @@ namespace APSIM.Shared.Utilities
 
             return GetMetfileString(constants, columns, values);
         }
-/*
-        public static Stream Save(string filepath)
-        {
-            //byte[] fileBytes = File.ReadAllBytes(filepath);
-            //string output = Read(fileBytes);
-            //return new MemoryStream(Encoding.UTF8.GetBytes(output));
-        }
-
-        public static byte[] Write(string input)
-        {
-            
-
-
-
-            
-
-            #add start date to constants
-            constants["start_date"] = data[0][0]
-
-            new_data = []
-            #remove date from data
-            if "date" in columns:
-                for i in range(0, len(columns)):
-                    if columns[i] == "date":
-                        index = i
-                columns.pop(index)
-                units.pop(index)
-                for row in data:
-                    new_row = row.copy()
-                    new_row.pop(0)
-                    new_data.append(new_row)
-
-            #version
-            output = BinaryMetfile.str_to_hex("met-bin-1")
-            
-            #constants
-            output += BinaryMetfile.int_to_hex(len(constants.items()))
-            for key, value in constants.items():
-                output += BinaryMetfile.str_to_hex(key)
-                output += BinaryMetfile.str_to_hex(str(value))
-
-            #headers
-            #titles
-            output += BinaryMetfile.int_to_hex(len(columns))
-            for value in columns:
-                output += BinaryMetfile.str_to_hex(value)
-            #units
-            for value in units:
-                output += BinaryMetfile.str_to_hex(value)
-
-            #data
-            output += BinaryMetfile.int_to_hex(len(new_data), 8)
-            for row in new_data:
-                for value in row:
-                    output += BinaryMetfile.encode_num(value)
-
-            #if output is an odd length
-            if len(output) % 2: 
-                output += "0"
-
-            return bytes.fromhex(output)
-            
-        }
-*/
+        
         /// <summary>
         /// Convert a hex string to an int
         /// </summary>
@@ -458,7 +408,7 @@ namespace APSIM.Shared.Utilities
 
             return output;
         }
-/*
+
         private static BinaryData IntToHex()
         {
             
@@ -474,7 +424,7 @@ namespace APSIM.Shared.Utilities
             
         }
 
-        
+        /*
         @staticmethod
     def int_to_hex(data:int, size:int = 2) -> str:
         '''
@@ -789,6 +739,11 @@ namespace APSIM.Shared.Utilities
         public class MetColumn
         {
             /// <summary>
+            /// 
+            /// </summary>
+            public bool IsFirstColumn { get; set; }
+
+            /// <summary>
             /// Name of the pair
             /// </summary>
             public string Name { get; set; }
@@ -822,6 +777,19 @@ namespace APSIM.Shared.Utilities
             {
                 Name = name;
                 Unit = unit;
+                Width = Math.Max(name.Length, unit.Length + 2);
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
+            public int GetFormattingWidth()
+            {
+                if (IsFirstColumn)
+                    return Width;
+                else
+                    return Math.Max(MIN_COLUMN_WIDTH, Width);
             }
         }
 
@@ -861,19 +829,16 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         public class MetData
         {
-            //A list of tuples of constants and metadata. Stored as name and value, both as strings
             /// <summary>
             /// 
             /// </summary>
             public List<MetConstant> Contants;
 
-            //A list of tuples of columns. Stored as name and units, both as strings
             /// <summary>
             /// 
             /// </summary>
             public List<MetColumn> Columns;
 
-            //A 2d array of rows x column, where each row has a value for each column.
             /// <summary>
             /// 
             /// </summary>
