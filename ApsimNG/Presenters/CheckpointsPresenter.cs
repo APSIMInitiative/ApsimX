@@ -4,6 +4,7 @@ using Models.Storage;
 using System;
 using System.Collections.Generic;
 using UserInterface.Views;
+using APSIMNG.Utility;
 
 namespace UserInterface.Presenters
 {
@@ -111,7 +112,7 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnAddButtonClicked(object sender, EventArgs e)
         {
-            string checkpointName = Utility.StringEntryForm.ShowDialog(explorerPresenter, "New checkpoint name",
+            string checkpointName = StringEntryForm.ShowDialog(explorerPresenter, "New checkpoint name",
                                                                        "Enter new checkpoint name:", null);
             if (checkpointName != null)
             {

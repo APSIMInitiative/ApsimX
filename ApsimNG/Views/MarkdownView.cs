@@ -13,7 +13,7 @@ using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 using Pango;
 using UserInterface.Extensions;
-using Utility;
+using APSIMNG.Utility;
 using Table = Markdig.Extensions.Tables.Table;
 
 namespace UserInterface.Views
@@ -43,7 +43,6 @@ namespace UserInterface.Views
         private AccelGroup accelerators = new AccelGroup();
         private Menu popupMenu = new Menu();
         private bool sizeAllocated = false;
-        private bool stylesLoaded = false;
 
         /// <summary>Table of font sizes for ASCII characters. Set on attach and reset on attach whenver font has changed.</summary>
         private static readonly int[] fontCharSizes = new int[128];
@@ -109,6 +108,7 @@ namespace UserInterface.Views
             mainWidget.Margin = 10;
             textView.PopulatePopup += OnPopulatePopupMenu;
             findView = new MarkdownFindView();
+            CreateStyles(textView);
 
             textView.Editable = false;
             textView.WrapMode = Gtk.WrapMode.Word;
@@ -130,7 +130,10 @@ namespace UserInterface.Views
 
         public void Refresh()
         {
-            CreateStyles(textView);
+            // Give Gtk time to digest these additions to the tag table
+            // Otherwise we can sometimes get nulls when we access the tags
+            while (GLib.MainContext.Iteration())
+                ;
         }
 
         /// <summary>
@@ -709,11 +712,6 @@ namespace UserInterface.Views
         /// <summary>Create TextView styles.</summary>
         private void CreateStyles(TextView textView)
         {
-            if (stylesLoaded)
-                return;
-            else
-                stylesLoaded = true;
-
             var heading1 = new TextTag("Heading1");
             heading1.SizePoints = 30;
             heading1.Weight = Pango.Weight.Bold;
@@ -766,11 +764,6 @@ namespace UserInterface.Views
             var strikethrough = new TextTag("Strikethrough");
             strikethrough.Strikethrough = true;
             textView.Buffer.TagTable.Add(strikethrough);
-
-            // Give Gtk time to digest these additions to the tag table
-            // Otherwise we can sometimes get nulls when we access the tags
-            while (GLib.MainContext.Iteration())
-                ;
         }
 
         // Looks at all tags covering the position (x, y) in the text view,

@@ -1,16 +1,12 @@
-﻿using ApsimNG.Interfaces;
-using Models;
+﻿using APSIMNG.Utility;
 using Models.Core;
 using Models.Factorial;
 using Models.Storage;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UserInterface.Interfaces;
 using UserInterface.Views;
 
@@ -246,13 +242,13 @@ namespace UserInterface.Presenters
                 "\n</style>\n</head>\n<body>";
 
             // apply theme based settings
-            if (!Utility.Configuration.Settings.ThemeRestartRequired)
+            if (!Configuration.Settings.ThemeRestartRequired)
             {
-                htmlString = !Utility.Configuration.Settings.DarkTheme ? ModifyHTMLStyle(htmlString, false) : ModifyHTMLStyle(htmlString, true);
+                htmlString = !Configuration.Settings.DarkTheme ? ModifyHTMLStyle(htmlString, false) : ModifyHTMLStyle(htmlString, true);
             }
             else
             {
-                htmlString = !Utility.Configuration.Settings.DarkTheme ? ModifyHTMLStyle(htmlString, true) : ModifyHTMLStyle(htmlString, false);
+                htmlString = !Configuration.Settings.DarkTheme ? ModifyHTMLStyle(htmlString, true) : ModifyHTMLStyle(htmlString, false);
 
             }
 

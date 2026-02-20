@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using Gtk;
-
 using GtkSource;
-
-using Cairo;
 using UserInterface.Views;
-using UserInterface.Extensions;
 
-namespace Utility
+namespace APSIMNG.Utility
 {
     public class FindAndReplaceForm
     {

@@ -1,12 +1,9 @@
-﻿
+﻿using Gtk;
+using UserInterface.Views;
+using UserInterface.Presenters;
 
-namespace Utility
+namespace APSIMNG.Utility
 {
-    using Gtk;
-    using UserInterface.Views;
-    using UserInterface.Presenters;
-    using UserInterface.Extensions;
-
     public class StringEntryForm
     {
         /// <summary>Show dialog box</summary>

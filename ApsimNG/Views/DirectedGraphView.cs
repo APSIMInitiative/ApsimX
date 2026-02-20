@@ -5,7 +5,7 @@ using System.Linq;
 using Point = System.Drawing.Point;
 using APSIM.Interop.Visualisation;
 using APSIM.Shared.Graphing;
-using Utility;
+using APSIMNG.Utility;
 using ApsimNG.EventArguments.DirectedGraph;
 using Gtk.Sheet;
 

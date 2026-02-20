@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections;
 using APSIM.Shared.Graphing;
-using APSIM.Shared.Utilities;
 using OxyPlot;
 using System.Linq;
 using System.Collections.Generic;
 using APSIM.Numerics;
 
-
-namespace Utility
+namespace APSIMNG.Utility
 {
     /// <summary>
     /// A line series with a better tracker.

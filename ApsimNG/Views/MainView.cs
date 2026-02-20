@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Text;
 using UserInterface.EventArguments;
 using UserInterface.Interfaces;
-using Utility;
+using APSIMNG.Utility;
 using MessageType = Models.Core.MessageType;
 
 namespace UserInterface.Views
@@ -52,7 +52,6 @@ namespace UserInterface.Views
         /// Button panel for the right hand view's start page.
         /// </summary>
         private ListButtonView listButtonView2;
-
         /// <summary>
         /// The main Gtk Window.
         /// </summary>
@@ -123,6 +122,31 @@ namespace UserInterface.Views
 
         private FontChooserDialog fontDialog;
 
+        /// <summary> Button panel for the notifications list.</summary>
+        private MarkdownView notificationMarkdownView;
+
+        /// <summary>
+        /// Box which holds notifications
+        /// </summary>
+        private Box notificationBox;
+
+        /// <summary>   
+        /// Box which holds menu buttons
+        /// </summary>
+        private Box menuButtonBox;
+
+        /// <summary>
+        /// Most recently used files list button view
+        /// </summary>
+        private ListButtonView menuList;
+
+        /// <summary>
+        /// GtkPaned View where the most recently used simulations and notifications are housed.    
+        /// </summary>
+        private Paned notificationAndMruPane;
+        private Button githubBtn;
+        private Button discussionBtn;
+        private Button modelDocsBtn;
 
         /// <summary>
         /// Constructor
@@ -144,15 +168,41 @@ namespace UserInterface.Views
             hpaned1 = (Paned)builder.GetObject("hpaned1");
             hbox1 = (Widget)builder.GetObject("vbox3");
             vpaned1 = (Paned)builder.GetObject("vpaned1");
+            menuButtonBox = (Box)builder.GetObject("menuButtonBox");
+            notificationBox = (Box)builder.GetObject("notificationBox");
+            notificationAndMruPane = (Paned)builder.GetObject("notificationAndMRUPane");
             mainWidget = window1;
             window1.Icon = new Gdk.Pixbuf(null, "ApsimNG.Resources.apsim logo32.png");
+            githubBtn = (Button)builder.GetObject("githubBtn");
+            discussionBtn = (Button)builder.GetObject("discussionsBtn");
+            modelDocsBtn = (Button)builder.GetObject("modelDocsBtn");
+            githubBtn.Clicked += OnGithubBtnClicked;
+            discussionBtn.Clicked += OnDiscussionBtnClicked;
+            modelDocsBtn.Clicked += OnModelDocsBtnClicked;
+
             listButtonView1 = new ListButtonView(this);
             listButtonView1.ButtonsAreToolbar = true;
-
             vbox1.PackEnd(listButtonView1.MainWidget, true, true, 0);
+
             listButtonView2 = new ListButtonView(this);
             listButtonView2.ButtonsAreToolbar = true;
             vbox2.PackEnd(listButtonView2.MainWidget, true, true, 0);
+
+            notificationMarkdownView = new MarkdownView(this);
+            notificationBox.PackEnd(notificationMarkdownView.MainWidget, true, true, 0);
+            notificationAndMruPane.Position *= 3;
+            notificationMarkdownView.Refresh();
+
+            // TODO: Remove these two lines when notifications feature is ready for public release.
+            notificationAndMruPane.Child2.Hide();
+            notificationAndMruPane.Child2.NoShowAll = true;
+
+            menuList = new ListButtonView(this);
+            // Need to remove the ScrolledWindow from the menu box.
+            (menuList.MainWidget as Container).Children.OfType<ScrolledWindow>().ToList().ForEach(w => w.Destroy());
+            menuList.ButtonsAreToolbar = true;
+            menuButtonBox.PackEnd(menuList.MainWidget, false, false, 0);
+
             hpaned1.PositionSet = true;
             hpaned1.Child2.Hide();
             hpaned1.Child2.NoShowAll = true;
@@ -174,18 +224,17 @@ namespace UserInterface.Views
             // set the style class in code.
             progressBar.StyleContext.AddClass("fat-progress-bar");
 
-
             TextTag tag = new TextTag("error");
             // Make errors orange-ish in dark mode.
-            if (Utility.Configuration.Settings.DarkTheme)
-                tag.ForegroundGdk = Utility.Colour.ToGdk(ColourUtilities.ChooseColour(1));
+            if (Configuration.Settings.DarkTheme)
+                tag.ForegroundGdk = Colour.ToGdk(ColourUtilities.ChooseColour(1));
             else
                 tag.Foreground = "red";
             statusWindow.Buffer.TagTable.Add(tag);
             tag = new TextTag("warning");
             // Make warnings yellow in dark mode.
-            if (Utility.Configuration.Settings.DarkTheme)
-                tag.ForegroundGdk = Utility.Colour.ToGdk(ColourUtilities.ChooseColour(7));
+            if (Configuration.Settings.DarkTheme)
+                tag.ForegroundGdk = Colour.ToGdk(ColourUtilities.ChooseColour(7));
             else
                 tag.Foreground = "brown";
             statusWindow.Buffer.TagTable.Add(tag);
@@ -201,22 +250,22 @@ namespace UserInterface.Views
             // If font is null, or font family is null, or font size is 0, fallback
             // to the default font (on windows only).
             Pango.FontDescription f = null;
-            if (!string.IsNullOrEmpty(Utility.Configuration.Settings.FontName))
-                f = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
-            if (ProcessUtilities.CurrentOS.IsWindows && (string.IsNullOrEmpty(Utility.Configuration.Settings.FontName) ||
+            if (!string.IsNullOrEmpty(Configuration.Settings.FontName))
+                f = Pango.FontDescription.FromString(Configuration.Settings.FontName);
+            if (ProcessUtilities.CurrentOS.IsWindows && (string.IsNullOrEmpty(Configuration.Settings.FontName) ||
                                                          f.Family == null ||
                                                          f.Size == 0))
             {
                 // Default font on Windows is Segoe UI. Will fallback to sans if unavailable.
-                Utility.Configuration.Settings.FontName = Pango.FontDescription.FromString("Segoe UI 11").ToString();
+                Configuration.Settings.FontName = Pango.FontDescription.FromString("Segoe UI 11").ToString();
             }
 
             // Can't set font until widgets are initialised.
-            if (!string.IsNullOrEmpty(Utility.Configuration.Settings.FontName))
+            if (!string.IsNullOrEmpty(Configuration.Settings.FontName))
             {
                 try
                 {
-                    Pango.FontDescription font = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
+                    Pango.FontDescription font = Pango.FontDescription.FromString(Configuration.Settings.FontName);
                     ChangeFont(font);
                 }
                 catch (Exception err)
@@ -229,8 +278,7 @@ namespace UserInterface.Views
             if (ProcessUtilities.CurrentOS.IsMac)
             {
                 InitMac();
-                Utility.Configuration.Settings.DarkTheme = false;
-                //Utility.Configuration.Settings.DarkTheme = Utility.MacUtilities.DarkThemeEnabled();
+                Configuration.Settings.DarkTheme = false;
             }
 
             if (!ProcessUtilities.CurrentOS.IsLinux)
@@ -313,6 +361,15 @@ namespace UserInterface.Views
         /// <summary>Invoked when the divider position is changed</summary>
         public event EventHandler DividerChanged;
 
+        /// <summary> Invoked when the user clicks the 'GitHub' button. </summary>
+        public event EventHandler<EventArgs> GitHubBtnClicked;
+
+        /// <summary> Invoked when the user clicks the 'Discussion' button. </summary>
+        public event EventHandler<EventArgs> DiscussionBtnClicked;
+
+        /// <summary> Invoked when the user clicks the 'Model Documentation' button. </summary>
+        public event EventHandler<EventArgs> ModelDocsBtnClicked;
+
         /// <summary>
         /// Get the list and button view
         /// </summary>
@@ -322,6 +379,11 @@ namespace UserInterface.Views
         /// Get the list and button view
         /// </summary>
         public IListButtonView StartPage2 { get { return listButtonView2; } }
+
+        /// <summary>
+        /// Get the most recently used files list view
+        /// </summary>
+        public IListButtonView MenuList {get {return menuList;}}
 
         /// <summary>
         /// Controls the height of the status panel.
@@ -397,7 +459,7 @@ namespace UserInterface.Views
                 tabLabel.Text = text;
             Box headerBox = new Box(Orientation.Horizontal, 0);
             Button closeBtn = new Button();
-            string imageName = Utility.Configuration.Settings.DarkTheme ? "Close.dark.svg" : "Close.light.svg";
+            string imageName = Configuration.Settings.DarkTheme ? "Close.dark.svg" : "Close.light.svg";
             Gtk.Image closeImg = new Gtk.Image(new Gdk.Pixbuf(null, $"ApsimNG.Resources.TreeViewImages.{imageName}", 12, 12));
 
             closeBtn.Image = closeImg;
@@ -969,8 +1031,8 @@ namespace UserInterface.Views
             fontDialog.WindowPosition = WindowPosition.CenterOnParent;
 
             // Select the current font.
-            if (Utility.Configuration.Settings.FontName != null)
-                fontDialog.Font = Utility.Configuration.Settings.FontName.ToString();
+            if (Configuration.Settings.FontName != null)
+                fontDialog.Font = Configuration.Settings.FontName.ToString();
 
 
             //fontDialog.FontActivated += OnChangeFont;
@@ -996,7 +1058,7 @@ namespace UserInterface.Views
                 string fontName = fontDialog.Font;
 
                 Pango.FontDescription newFont = Pango.FontDescription.FromString(fontName);
-                Utility.Configuration.Settings.FontName = newFont.ToString();
+                Configuration.Settings.FontName = newFont.ToString();
                 Configuration.Settings.Save();
                 ChangeFont(newFont);
                 if (args.ResponseId != ResponseType.Apply)
@@ -1164,6 +1226,10 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>Gets the notification markdown view.</summary>
+        public MarkdownView NotificationMarkdownView => notificationMarkdownView;
+
+
         /// <summary>Show a message in a dialog box</summary>
         /// <param name="message">The message.</param>
         /// <param name="title">Title of the dialog.</param>
@@ -1224,6 +1290,36 @@ namespace UserInterface.Views
                 return notebook1;
             return hpaned1.FocusChild as Notebook;
         }
-    }
 
+        /// <summary>
+        /// Handles clicks on the GitHub button by raising the <see cref="GitHubBtnClicked"/> event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void OnGithubBtnClicked(object sender, EventArgs args)
+        {
+            GitHubBtnClicked?.Invoke(this, EventArgs.Empty);
+        }
+
+
+        /// <summary>
+        /// Handles clicks on the discussion button by raising the <see cref="DiscussionBtnClicked"/> event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void OnDiscussionBtnClicked(object sender, EventArgs args)
+        {
+            DiscussionBtnClicked?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Handles clicks on the model documentation button by raising the <see cref="ModelDocsBtnClicked"/> event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void OnModelDocsBtnClicked(object sender, EventArgs args)
+        {
+            ModelDocsBtnClicked?.Invoke(this, EventArgs.Empty);
+        }
+    }
 }

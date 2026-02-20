@@ -9,6 +9,7 @@ using Models.Storage;
 using UserInterface.EventArguments;
 using UserInterface.Views;
 using Gtk.Sheet;
+using APSIMNG.Utility;
 
 namespace UserInterface.Presenters
 {
@@ -126,9 +127,9 @@ namespace UserInterface.Presenters
                 checkpointDropDown.Values = dataStore.Reader.CheckpointNames.ToArray();
                 if (checkpointDropDown.Values.Length > 0)
                     checkpointDropDown.SelectedValue = checkpointDropDown.Values[0];
-                if (Utility.Configuration.Settings.MaximumRowsOnReportGrid > 0)
+                if (Configuration.Settings.MaximumRowsOnReportGrid > 0)
                 {
-                    statusLabel.Text = Utility.Configuration.Settings.MaximumRowsOnReportGrid.ToString();
+                    statusLabel.Text = Configuration.Settings.MaximumRowsOnReportGrid.ToString();
                 }
                 tableDropDown.SelectedIndex = 0;
             }
