@@ -1,8 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
+using DeepCloner.Core;
+using Mapsui.Utilities;
 
 namespace APSIM.Shared.Utilities
 {
@@ -15,7 +19,10 @@ namespace APSIM.Shared.Utilities
         /// <summary>
         /// Symbol dictionary for converting from a 4-bit hex to data number character
         /// </summary>
-        private static string[] SYMBOLS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "-", "/", "nan"];
+        private static string[] SYMBOLS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "-", "/", "nan", ""];
+
+        private static Dictionary<char, int> SYMBOLS_DICT = new Dictionary<char, int>() { {'0', 0 }, {'1', 1 }, {'2', 2 }, {'3', 3 }, {'4', 4 }, {'5', 5 }, {'6', 6 }, {'7', 7 }, 
+                                                                                          {'8', 8 }, {'9', 9 }, {'.', 10}, {'-', 11}, {'/', 12}, {'n', 13}, {' ', 14}, {'\t', 15} };
 
         /// <summary>
         /// 
@@ -38,7 +45,8 @@ namespace APSIM.Shared.Utilities
         public static Stream Load(string filepath)
         {
             byte[] fileBytes = File.ReadAllBytes(filepath);
-            string output = Read(fileBytes);
+            BinaryData data = new BinaryData(Convert.ToHexString(fileBytes), 0);
+            string output = WriteMet(Read(data));
             return new MemoryStream(Encoding.UTF8.GetBytes(output));
         }
 
@@ -286,14 +294,12 @@ namespace APSIM.Shared.Utilities
         /// <summary>
         /// Converts a bytes object to a metfile string
         ///</summary>
-        /// <param name="bytes">The bytes object from the file</param>
+        /// <param name="data">The bytes object from the file</param>
         /// <returns>
         /// Metfile as a valid met string
         /// </returns>
-        public static string Read(byte[] bytes)
+        public static MetData Read(BinaryData data)
         {
-            BinaryData data = new BinaryData(Convert.ToHexString(bytes), 0);
-
             //read version
             //not used when converting to string. Will be useful if a future binary format is developed
             string version = HexToString(data);
@@ -346,7 +352,8 @@ namespace APSIM.Shared.Utilities
                 values.Add(row);
             }
 
-            return GetMetfileString(constants, columns, values);
+            string text = GetMetfileString(constants, columns, values);
+            return ReadMet(text);
         }
         
         /// <summary>
@@ -409,150 +416,98 @@ namespace APSIM.Shared.Utilities
             return output;
         }
 
-        private static BinaryData IntToHex()
+        private static string IntToHex(int value, int size = 2)
         {
-            
+            string output = value.ToString("x");
+            while(output.Length < size)
+                output = "0" + output;
+            return output;
         }
 
-        private static BinaryData StringToHex()
+        private static string StringToHex(string data)
         {
-            
+            string length = IntToHex(data.Length);
+
+            string text = "";
+            foreach(char c in data)
+                text += IntToHex(c);
+
+            return length + text;
         }
 
-        private static BinaryData EncodeNumber()
+        private static string EncodeNumber(string data)
         {
-            
+            string output = "";
+            if (data.ToLower() == "nan")
+            {
+                output = IntToHex(1);
+                output += SYMBOLS_DICT['n'];
+            }
+            else
+            {
+                //numbers ending in .0 are just the number before the decimal
+                string trimmed = data;
+                trimmed = data.Replace(".0", "");
+                trimmed = trimmed.Replace("-0.", "-.");
+                output = IntToHex(trimmed.Length, 1);
+                foreach (char c in data)
+                    output += SYMBOLS_DICT[c];
+            }
+            return output;
         }
 
-        /*
-        @staticmethod
-    def int_to_hex(data:int, size:int = 2) -> str:
-        '''
-        Convert an int to hex string
-        Arguments:
-            data: the int value
-            size: how many digits it should be stored as. 1 hex = 4 bits
-        Returns:
-            hex string representing the bits of the given value
-        '''
-        output = format(data, '0x')
-        while(len(output) < size):
-            output = "0" + output
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="metData"></param>
+        /// <returns></returns>
+        public static BinaryData WriteBytes(MetData metData)
+        {
+            //make copies of these inputs so we can edit them as needed
+            List<MetConstant> constants = metData.Contants.ToList();
+            MetColumn[] columns = metData.Columns.ToArray();
 
-        return output
+            //add start date to constants
+            constants.Add(new MetConstant("start_date", metData.Data[0].Date.ToString("yyyy-MM-dd")));
 
-    @staticmethod
-    def str_to_hex(data:str) -> str:
-        '''
-        Convert a character string to hex string
-        Arguments:
-            data: the string value
-        Returns:
-            hex string representing the bits of the given value
-        '''
-        length = BinaryMetfile.int_to_hex(len(data))
+            //remove date from data
 
-        text = ""
-        for char in data:
-            text += BinaryMetfile.int_to_hex(ord(char))
+            StringBuilder output = new StringBuilder(2000000);
+            //version
+            output.Append(StringToHex("met-bin-1"));
+            
+            //constants
+            output.Append(IntToHex(constants.Count));
+            foreach(MetConstant constant in constants)
+            {
+                if (!string.IsNullOrEmpty(constant.Name) && !string.IsNullOrEmpty(constant.Value))
+                {
+                    output.Append(StringToHex(constant.Name));
+                    output.Append(StringToHex(constant.Value));
+                }
+            }
 
-        return length + text
+            //headers
+            //titles
+            output.Append(IntToHex(columns.Length));
+            foreach(MetColumn column in columns)
+                output.Append(StringToHex(column.Name));
+            foreach(MetColumn column in columns)
+                output.Append(StringToHex(column.Unit));
 
-        @staticmethod
-    def encode_num(data) -> str:
-        '''
-        Convert a metfile number to hex string.
-        Number is assumed to potentially be negatives, have decimal places
-        or have other notation so is stored as list character symbols, not
-        as a number.
-        Arguments:
-            data: the value
-        Returns:
-            hex string representing the bits of the given value
-        '''
+            //data
+            output.Append(IntToHex(metData.Data.Count, 8));
+            foreach(MetRow row in metData.Data)
+                foreach(double value in row.Values)
+                    output.Append(EncodeNumber(value.ToString()));
 
-        data = str(data)
-        output = ""
+            //if output is an odd length
+            if (output.Length % 2 == 1) 
+                output.Append("0");
 
-        if data == "nan":
-            output = BinaryMetfile.int_to_hex(1)
-            output += BinaryMetfile.__symbol_hex['nan']
-
-        else:
-            #numbers ending in .0 are just the number before the decimal
-            data = data.replace(".0", "")
-            data = data.replace("-0.", "-.")
-
-            output = BinaryMetfile.int_to_hex(len(data), 1)
-            for char in data:
-                output += BinaryMetfile.__symbol_hex[char]
-
-        return output
-
-        @staticmethod
-    def write_bytes(constants:dict, columns:list, units:list, data:list) -> bytes:
-        '''
-        Given the data for a metfile, returns the metfile in binary format in bytes
-        Arguments:
-            constants: A dictionary of constants and metadata. Stored as name and value, both as strings
-            columns: A list of string column names
-            units: A list of string unit names for each column
-            data: A list of rows where each row has a value for each column. All values must be numbers.
-        Returns:
-            the metfile as bytes
-        '''
-
-        #make copies of these inputs so we can edit them as needed
-        constants = constants.copy()
-        columns = columns.copy()
-        units = units.copy()
-
-        #add start date to constants
-        constants["start_date"] = data[0][0]
-
-        new_data = []
-        #remove date from data
-        if "date" in columns:
-            for i in range(0, len(columns)):
-                if columns[i] == "date":
-                    index = i
-            columns.pop(index)
-            units.pop(index)
-            for row in data:
-                new_row = row.copy()
-                new_row.pop(0)
-                new_data.append(new_row)
-
-        #version
-        output = BinaryMetfile.str_to_hex("met-bin-1")
-        
-        #constants
-        output += BinaryMetfile.int_to_hex(len(constants.items()))
-        for key, value in constants.items():
-            output += BinaryMetfile.str_to_hex(key)
-            output += BinaryMetfile.str_to_hex(str(value))
-
-        #headers
-        #titles
-        output += BinaryMetfile.int_to_hex(len(columns))
-        for value in columns:
-            output += BinaryMetfile.str_to_hex(value)
-        #units
-        for value in units:
-            output += BinaryMetfile.str_to_hex(value)
-
-        #data
-        output += BinaryMetfile.int_to_hex(len(new_data), 8)
-        for row in new_data:
-            for value in row:
-                output += BinaryMetfile.encode_num(value)
-
-        #if output is an odd length
-        if len(output) % 2: 
-            output += "0"
-
-        return bytes.fromhex(output)
-        */
+            BinaryData data = new BinaryData(output.ToString(), 0);
+            return data;
+        }
 
         /// <summary>
         /// Takes the different parts of the met file after being converted to strings and builds a normal
@@ -744,6 +699,11 @@ namespace APSIM.Shared.Utilities
             public bool IsFirstColumn { get; set; }
 
             /// <summary>
+            /// 
+            /// </summary>
+            public bool IsDate { get; set; }
+
+            /// <summary>
             /// Name of the pair
             /// </summary>
             public string Name { get; set; }
@@ -778,6 +738,12 @@ namespace APSIM.Shared.Utilities
                 Name = name;
                 Unit = unit;
                 Width = Math.Max(name.Length, unit.Length + 2);
+                
+                string nameLowered = name.ToLower();
+                if (nameLowered == "day" || nameLowered == "year" || nameLowered == "date")
+                    IsDate = true;
+                else
+                    IsDate = false;
             }
 
             /// <summary>

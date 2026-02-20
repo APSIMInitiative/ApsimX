@@ -134,6 +134,12 @@ namespace UnitTests.Weather
             string output = MetBinaryReader.WriteMet(data);
 
             File.WriteAllText("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi_2.met", output);
+
+            MetBinaryReader.BinaryData bin = MetBinaryReader.WriteBytes(data);
+            data = MetBinaryReader.Read(bin);
+
+            output = MetBinaryReader.WriteMet(data);
+            File.WriteAllText("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi_3.met", output);
         }
 
         [Test]
