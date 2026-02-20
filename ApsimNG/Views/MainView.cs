@@ -193,8 +193,8 @@ namespace UserInterface.Views
             notificationAndMruPane.Position *= 3;
 
             // TODO: Remove these two lines when notifications feature is ready for public release.
-            notificationAndMruPane.Child2.Hide();
-            notificationAndMruPane.Child2.NoShowAll = true;
+            // notificationAndMruPane.Child2.Hide();
+            // notificationAndMruPane.Child2.NoShowAll = true;
 
             menuList = new ListButtonView(this);
             // Need to remove the ScrolledWindow from the menu box.

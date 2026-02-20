@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using UserInterface.Commands;
 using UserInterface.Interfaces;
 using UserInterface.Views;
-using Utility;
+using APSIMNG.Utility;
 
 namespace UserInterface.Presenters
 {
@@ -888,7 +888,7 @@ namespace UserInterface.Presenters
             Model model = this.ApsimXFile.Node.Get(this.CurrentNodePath, LocatorFlags.ModelsOnly) as Model;
             if (model != null)
             {
-                Utility.WeatherDownloadDialog dlg = new Utility.WeatherDownloadDialog();
+                WeatherDownloadDialog dlg = new WeatherDownloadDialog();
                 IModel currentNode = ApsimXFile.Node.Get(CurrentNodePath, LocatorFlags.ModelsOnly) as IModel;
                 dlg.ShowFor(model, (view as ExplorerView), currentNode, this);
             }

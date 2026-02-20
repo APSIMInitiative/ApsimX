@@ -7,6 +7,7 @@ using Models.CLEM;
 using Models.CLEM.Interfaces;
 using Models.Core;
 using UserInterface.Views;
+using APSIMNG.Utility;
 
 namespace UserInterface.Presenters
 {
@@ -45,14 +46,14 @@ namespace UserInterface.Presenters
 
             htmlFilePath = Path.Combine(Path.GetDirectoryName(explorer.ApsimXFile.FileName), htmlFilePath);
             targetFilePath = Path.Combine(Path.GetDirectoryName(explorer.ApsimXFile.FileName), targetFilePath);
-            File.WriteAllText(htmlFilePath, CLEMModel.CreateDescriptiveSummaryHTML(this.model, this.model.Node, Utility.Configuration.Settings.DarkTheme, markdown2Html: Utility.MarkdownConverter.ToHtml ));
+            File.WriteAllText(htmlFilePath, CLEMModel.CreateDescriptiveSummaryHTML(this.model, this.model.Node, Configuration.Settings.DarkTheme, markdown2Html: MarkdownConverter.ToHtml ));
         }
 
         public void Refresh()
         {
             this.genericView.Text = CreateMarkdown(this.model);
             // save summary to disk
-            File.WriteAllText(Path.Combine(Path.GetDirectoryName(explorer.ApsimXFile.FileName), "CurrentDescriptiveSummary.html"), CLEMModel.CreateDescriptiveSummaryHTML(this.model, this.model.Node, Utility.Configuration.Settings.DarkTheme, markdown2Html: Utility.MarkdownConverter.ToHtml));
+            File.WriteAllText(Path.Combine(Path.GetDirectoryName(explorer.ApsimXFile.FileName), "CurrentDescriptiveSummary.html"), CLEMModel.CreateDescriptiveSummaryHTML(this.model, this.model.Node, Configuration.Settings.DarkTheme, markdown2Html: MarkdownConverter.ToHtml));
         }
 
         public string CreateMarkdown(Model modelToSummarise)

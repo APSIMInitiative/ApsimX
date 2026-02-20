@@ -4,6 +4,7 @@ using UserInterface.Interfaces;
 using Gtk;
 using System.IO;
 using APSIM.Shared.Utilities;
+using APSIMNG.Utility;
 
 // This is the view used by the WeatherFile component
 namespace UserInterface.Views
@@ -304,7 +305,7 @@ namespace UserInterface.Views
         {
             try
             {
-                string fileName = AskUserForFileName("Choose a constants file to open", Utility.FileDialog.FileActionType.Open, "Plain text file (*.txt)|*.txt");
+                string fileName = AskUserForFileName("Choose a constants file to open", FileDialog.FileActionType.Open, "Plain text file (*.txt)|*.txt");
                 if (!String.IsNullOrEmpty(fileName))
                 {
                     ConstantsFileName = fileName;
@@ -328,7 +329,7 @@ namespace UserInterface.Views
         {
             try
             {
-                string fileName = AskUserForFileName("Choose a weather file to open", Utility.FileDialog.FileActionType.Open, "APSIM Weather file (*.met)|*.met|Excel file(*.xlsx)|*.xlsx|CSV file(*.csv)|*.csv|Binary file(*.bin)|*.bin", labelFileName.Text);
+                string fileName = AskUserForFileName("Choose a weather file to open", FileDialog.FileActionType.Open, "APSIM Weather file (*.met)|*.met|Excel file(*.xlsx)|*.xlsx|CSV file(*.csv)|*.csv|Binary file(*.bin)|*.bin", labelFileName.Text);
                 if (!String.IsNullOrEmpty(fileName))
                 {
                     Filename = fileName;

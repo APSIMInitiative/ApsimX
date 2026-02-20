@@ -14,7 +14,8 @@ using Models.Core;
 using Models.Storage;
 using UserInterface.Views;
 using UserInterface.Interfaces;
-using Configuration = Utility.Configuration;
+// using Configuration = APSIMNG.Utility.Configuration;
+using APSIMNG.Utility;
 using APSIM.Numerics;
 
 namespace UserInterface.Presenters
@@ -35,7 +36,7 @@ namespace UserInterface.Presenters
         private IGraphView graphView;
 
         /// <summary>The graph</summary>
-        private Graph graph;
+        private Models.Graph graph;
 
         /// <summary>The explorer presenter</summary>
         private ExplorerPresenter explorerPresenter;
@@ -59,7 +60,7 @@ namespace UserInterface.Presenters
         /// <param name="cache">Cached definitions to be used.</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter, List<SeriesDefinition> cache)
         {
-            this.graph = model as Graph;
+            this.graph = model as Models.Graph;
             this.graphView = view as GraphView;
             this.explorerPresenter = explorerPresenter;
 

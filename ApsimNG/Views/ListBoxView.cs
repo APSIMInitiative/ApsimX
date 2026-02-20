@@ -1,15 +1,12 @@
-﻿# if NETCOREAPP
-#endif
-using UserInterface.Presenters;
+﻿using UserInterface.Presenters;
 using APSIM.Shared.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using Gtk;
-using Utility;
+using APSIMNG.Utility;
 using UserInterface.Interfaces;
 using UserInterface.Extensions;
 

@@ -7,6 +7,7 @@ using UserInterface.Commands;
 using APSIM.Documentation;
 using APSIM.Documentation.Bibliography;
 using System.Collections.Generic;
+using APSIMNG.Utility;
 
 namespace UserInterface.Presenters
 {
@@ -62,7 +63,7 @@ namespace UserInterface.Presenters
             editorBox = (view as ViewBase).GetControl<ContainerView>("editorBox");
             helpButton.Clicked += HelpBtnClicked;
             textView.WrapText = true;
-            textView.ModifyFont(Utility.Configuration.Settings.EditorFontName);
+            textView.ModifyFont(Configuration.Settings.EditorFontName);
             textView.Changed += OnTextHasChanged;
             textView.Text = this.model.Text;
             markdownView.Refresh();
