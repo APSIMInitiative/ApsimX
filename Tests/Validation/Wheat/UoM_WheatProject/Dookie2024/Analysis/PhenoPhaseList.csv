@@ -1,0 +1,12 @@
+PhaseNumber,PhaseName,InitialStage,FinalStage
+1,Germinating,Sowing,Germination
+2,Emerging,Germination,Emergence
+3,LeavesInitiating,Emergence,DoubleRidge
+4,SpikeletsDifferentiating,DoubleRidge,MaximumSpikeletPrimordia
+5,StemElongating,MaximumSpikeletPrimordia,FlagLeafAppearance
+6,Heading,FlagLeafAppearance,HeadEmergence
+7,Flowering,HeadEmergence,Anthesis
+8,GrainExpanding,Anthesis,MaximumGrainLength
+9,GrainFilling,MaximumGrainLength,EndGrainFill
+10,GrainRipening,EndGrainFill,HarvestRipe
+11,ReadyForHarvesting,HarvestRipe,Unused

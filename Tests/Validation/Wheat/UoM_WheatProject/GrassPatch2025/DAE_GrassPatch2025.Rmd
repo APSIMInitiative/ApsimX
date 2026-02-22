@@ -1,0 +1,51 @@
+---
+title: "GrassPatch2025 Notebook"
+output: html_notebook
+---
+# Libraries
+```{r, warning=FALSE}
+library(targets)
+library(tidyverse)
+library(visNetwork)
+```
+
+
+# Check pipeline status
+```{r}
+tar_glimpse()
+```
+
+
+```{r}
+tar_visnetwork()
+```
+
+
+```{r}
+tar_visnetwork(targets_only = TRUE)
+```
+
+```{r}
+tar_manifest()
+tar_manifest(fields = name)$name
+```
+
+# Construct pipeline
+```{r}
+# targets::tar_make(callr_function = NULL) # for debugging
+targets::tar_make()
+```
+
+# Destroy pipeline (off by default)
+```{r, warning=FALSE, eval = FALSE }
+tar_destroy()
+# targets::tar_destroy(ask = FALSE)
+
+```
+
+
+# Get soil parameters in json format
+```{r}
+tar_read(json_soil_water)
+```
+
