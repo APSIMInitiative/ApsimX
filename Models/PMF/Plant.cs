@@ -225,6 +225,7 @@ namespace Models.PMF
         }
 
         /// <summary>List of zones with conditions to specify if roots grow there or not</summary>
+        [JsonIgnore]
         public Dictionary<string, bool> ZonesToGrowRootsIn = null;
 
         /// <summary>The sw uptake</summary>
