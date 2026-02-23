@@ -285,19 +285,19 @@ namespace UnitTests.APSIM.Core.Tests
         public void UpdateCultivarPathsTest()
         {
             var cultivarText = """
-{
-  "$type": "Models.PMF.Cultivar, Models",
-  "Command": [
-    "[Phenology].Juvenile.Target.FixedValue = 150",
-    "[Leaf].Photosynthesis.RUE.FixedValue = 2.0"
-  ],
-  "Name": "TestCultivar",
-  "ResourceName": null,
-  "Children": [],
-  "Enabled": true,
-  "ReadOnly": true
-}
-""";
+            {
+            "$type": "Models.PMF.Cultivar, Models",
+            "Command": [
+                "[Phenology].Juvenile.Target.FixedValue = 150",
+                "[Leaf].Photosynthesis.RUE.FixedValue = 2.0"
+            ],
+            "Name": "TestCultivar",
+            "ResourceName": null,
+            "Children": [],
+            "Enabled": true,
+            "ReadOnly": true
+            }
+            """;
             JObject cultivarNode = JObject.Parse(cultivarText);
             List<(string, string)> pathUpdates =
             [
