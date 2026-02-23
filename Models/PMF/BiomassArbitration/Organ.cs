@@ -694,7 +694,7 @@ namespace Models.PMF
                     ISurfaceOrganicMatter somZone = Structure.FindChild<ISurfaceOrganicMatter>(relativeTo: z);
 
                     somZone.Add((wt * dimensionsOverZones.RelativeAreaOverZone[zi] * Constants.gPerSm2kgPerHa) /(z.Area * Constants.ha2sm), 
-                        (n * dimensionsOverZones.RelativeAreaOverZone[zi] * Constants.gPerSm2kgPerHa) /(z.Area * Constants.ha2sm), _fractionStanding, parentPlant.PlantType, Name);
+                        (n * dimensionsOverZones.RelativeAreaOverZone[zi] * Constants.gPerSm2kgPerHa) /(z.Area * Constants.ha2sm), 0, parentPlant.PlantType, Name, _fractionStanding);
                     zi += 1;
                 }
             }

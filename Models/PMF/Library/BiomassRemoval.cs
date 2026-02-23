@@ -105,7 +105,7 @@ namespace Models.PMF.Library
                                                      $"{removedOff:F1}% is removed from the system and {toResidue:F1}% is returned to the surface", MessageType.Diagnostic);
                     }
 
-                    surfaceOrganicMatter.Add(detaching.Wt * 10.0, detaching.N * 10.0, fractionStanding, plant.PlantType, Name);
+                    surfaceOrganicMatter.Add(detaching.Wt * 10.0, detaching.N * 10.0, 0, plant.PlantType, Name, fractionStanding);
 
                     return removing.Wt + detaching.Wt; ;
                 }
