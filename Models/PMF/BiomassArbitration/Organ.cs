@@ -106,6 +106,7 @@ namespace Models.PMF
         private double startDeadN { get; set; }
         private double startLiveWt { get; set; }
         private double startDeadWt { get; set; }
+        private double _fractionStanding { get; set; }
 
         private bool removeBiomass { get; set; }
         private bool resetOrganTomorrow { get; set; }
@@ -311,14 +312,17 @@ namespace Models.PMF
         /// <param name="deadToRemove">Fraction of dead biomass to remove from simulation (0-1).</param>
         /// <param name="liveToResidue">Fraction of live biomass to remove and send to residue pool(0-1).</param>
         /// <param name="deadToResidue">Fraction of dead biomass to remove and send to residue pool(0-1).</param>
+        /// <param name="fractionStanding">Fraction of biomass that remains standing when passed to surfaceOM (0-1).</param>
         /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
-        public virtual double RemoveBiomass(double liveToRemove = 1, double deadToRemove = 0, double liveToResidue = 0, double deadToResidue = 0)
+        public virtual double RemoveBiomass(double liveToRemove = 1, double deadToRemove = 0, double liveToResidue = 0, double deadToResidue = 0, double fractionStanding = 0)
         {
             LiveRemoved = Live * liveToRemove;
             LiveToResidues = Live * liveToResidue;
             
             DeadRemoved = Dead * deadToRemove;
             DeadToResidues = Dead * deadToResidue;
+
+            _fractionStanding = fractionStanding;
             
             double fracLiveToResidue = MathUtilities.Divide(liveToResidue, (liveToResidue + liveToRemove), 0);
             double fracDeadToResidue = MathUtilities.Divide(deadToResidue, (deadToResidue + deadToRemove), 0);
@@ -329,6 +333,7 @@ namespace Models.PMF
                 Biomass toResidues = totalToResidues.ToBiomass;
                 AddSOMtoZones(toResidues.Wt, toResidues.N);
             }
+            _fractionStanding = 0;
             if ((liveToRemove + deadToRemove + liveToResidue + deadToResidue)>0)
             {
                 removeBiomass = true;
@@ -650,6 +655,8 @@ namespace Models.PMF
                     AddSOMtoZones(Wt, N);
                 }
 
+                _fractionStanding = 0;
+
                 if (RootNetworkObject != null)
                 {
                     RootNetworkObject.endRoots();
@@ -678,7 +685,7 @@ namespace Models.PMF
                 Zone z = Structure.FindParent<Zone>(recurse: true);
                 ISurfaceOrganicMatter somZone = Structure.FindChild<ISurfaceOrganicMatter>(relativeTo: z);
                 somZone.Add(wt/(z.Area * Constants.ha2sm) * Constants.gPerSm2kgPerHa, 
-                    n/(z.Area * Constants.ha2sm) * Constants.gPerSm2kgPerHa, 0, parentPlant.PlantType, Name);
+                    n/(z.Area * Constants.ha2sm) * Constants.gPerSm2kgPerHa, _fractionStanding, parentPlant.PlantType, Name);
             }
             else
             {
@@ -687,7 +694,7 @@ namespace Models.PMF
                     ISurfaceOrganicMatter somZone = Structure.FindChild<ISurfaceOrganicMatter>(relativeTo: z);
 
                     somZone.Add((wt * dimensionsOverZones.RelativeAreaOverZone[zi] * Constants.gPerSm2kgPerHa) /(z.Area * Constants.ha2sm), 
-                        (n * dimensionsOverZones.RelativeAreaOverZone[zi] * Constants.gPerSm2kgPerHa) /(z.Area * Constants.ha2sm), 0, parentPlant.PlantType, Name);
+                        (n * dimensionsOverZones.RelativeAreaOverZone[zi] * Constants.gPerSm2kgPerHa) /(z.Area * Constants.ha2sm), _fractionStanding, parentPlant.PlantType, Name);
                     zi += 1;
                 }
             }
