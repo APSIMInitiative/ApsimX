@@ -724,17 +724,20 @@ namespace Models.PMF
             {
                 if (z != null)
                 {
-                    Soil soil = Structure.Find<Soil>(relativeTo: z);
-                    if (soil == null)
-                        throw new Exception("Cannot find soil in zone: " + z.Name);
-                    NetworkZoneState newZone = null;
-                    if (z.Name == PlantZone.Name)
-                        newZone = PlantZone;
-                    else
-                        newZone = new NetworkZoneState(parentPlant, soil, Structure);
-                    newZone.Initialize(parentPlant.SowingData.Depth);
-                    ZoneStates.Add(newZone);
-                    zoneAreas.Add(newZone.Area);
+                    if (parentPlant.ZonesToGrowRootsIn[z.Name])
+                    {
+                        Soil soil = Structure.Find<Soil>(relativeTo: z);
+                        if (soil == null)
+                            throw new Exception("Cannot find soil in zone: " + z.Name);
+                        NetworkZoneState newZone = null;
+                        if (z.Name == PlantZone.Name)
+                            newZone = PlantZone;
+                        else
+                            newZone = new NetworkZoneState(parentPlant, soil, Structure);
+                        newZone.Initialize(parentPlant.SowingData.Depth);
+                        ZoneStates.Add(newZone);
+                        zoneAreas.Add(newZone.Area);
+                    }
                 }
             }
 
