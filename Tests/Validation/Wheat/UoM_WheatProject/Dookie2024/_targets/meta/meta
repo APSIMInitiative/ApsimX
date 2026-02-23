@@ -1,8 +1,7 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
-.Random.seed|object|fcb1c95b1355143d|||||||||||||||
-check_manual_params|function|c2beb0bd34e6f09a|||||||||||||||
-config|stem|d9d447115ac98966|036981e28186ca75|ef46db3751d8e999|1264390909||t20504.9695103689s|fc758f98d8866839|429|rds|local|vector|||0||
-file_obs|stem|85535e128af26682|d89bdafa3029e644|72b760e042ad89ce|2076400141||t20504.9806678789s|92fa6a899934c31c|2157|rds|local|vector|||0.24|Could not extract a valid ddmmm SowDate from some SimulationNames in DookieEVA2024.xlsx.|
-file_pheno_haun_obs|stem|ba1b9948784abc8a|d89bdafa3029e644|840b2e9f541b34d8|-1633822634||t20506.8433284107s|d59caeb04f32fdc5|4313|rds|local|vector|||0.08||
-haun_input_checked|stem|3ce056c1b949b908|98a8dd0f53d1ea48|2508e0624f7796e1|-1437321256||t20506.8503529209s|642b43294e0d7120|484|rds|local|vector|||0.03||
-read_and_merge_observed|function|92439ad9fd9b586f|||||||||||||||
+read_and_merge_observed|function|92439ad9fd9b586f
+check_manual_params|function|c2beb0bd34e6f09a
+.Random.seed|object|d191e32d51831ff2
+config|stem|d9d447115ac98966|036981e28186ca75|ef46db3751d8e999|1264390909||t20507.7275518878s|fc758f98d8866839|429|rds|local|vector|||0.02||
+file_pheno_haun_obs|stem|ba1b9948784abc8a|d89bdafa3029e644|840b2e9f541b34d8|-1633822634||t20507.7275686178s|d59caeb04f32fdc5|4313|rds|local|vector|||0.07||
+haun_input_checked|stem|3d76e94f92303b22|98a8dd0f53d1ea48|2508e0624f7796e1|-1437321256||t20507.7275694571s|f5d61f50be96c4d1|647|rds|local|vector|||0.04||
