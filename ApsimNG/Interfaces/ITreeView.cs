@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using UserInterface.Views;
+using APSIMNG.Utility;
+
 
 namespace UserInterface.Interfaces
 {
@@ -84,13 +86,13 @@ namespace UserInterface.Interfaces
         /// Returns tree nodes which are expanded.
         /// </summary>
         /// <returns></returns>
-        Utility.TreeNode[] GetExpandedNodes();
+        TreeNode[] GetExpandedNodes();
 
         /// <summary>
         /// Expands nodes.
         /// </summary>
         /// <param name="expandedNodes"></param>
-        void ExpandNodes(Utility.TreeNode[] expandedNodes);
+        void ExpandNodes(TreeNode[] expandedNodes);
 
         /// <summary>
         /// Expands all child nodes recursively.
