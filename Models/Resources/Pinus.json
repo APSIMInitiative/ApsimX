@@ -1504,47 +1504,6 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.WeightedTemperatureFunction, Models",
-              "MaximumTemperatureWeighting": 0.0,
-              "Name": "SenescenceRate",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Memo, Models",
-                  "Text": "A zero senescence rate is not assumed here. \r\n\r\n",
-                  "Name": "Memo",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.XYPairs, Models",
-                  "X": [
-                    -5.0,
-                    -2.0,
-                    0.0,
-                    2.0,
-                    2.1
-                  ],
-                  "Y": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0
-                  ],
-                  "Name": "XYPairs",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
               "$type": "Models.PMF.Library.BiomassRemoval, Models",
               "HarvestFractionLiveToRemove": 0.0,
               "HarvestFractionDeadToRemove": 0.0,
@@ -2374,6 +2333,16 @@
                   "ReadOnly": false
                 }
               ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": "/d",
+              "Name": "SenescenceRate",
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             }
