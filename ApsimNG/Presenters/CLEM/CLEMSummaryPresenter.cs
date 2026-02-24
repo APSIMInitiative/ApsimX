@@ -17,7 +17,7 @@ namespace UserInterface.Presenters
     public class CLEMSummaryPresenter : IPresenter, IRefreshPresenter
     {
         private Model model;
-        private IMarkdownView genericView;
+        private MarkdownView genericView;
         private ExplorerPresenter explorer;
         private string htmlFilePath = "";
         private string targetFilePath = "";
@@ -31,7 +31,8 @@ namespace UserInterface.Presenters
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.model = model as Model;
-            this.genericView = view as IMarkdownView;
+            this.genericView = view as MarkdownView;
+            
             explorer = explorerPresenter;
 
             // save summary to disk when component is first pressed regardless of user selecting summary tab as now goes to html in browser

@@ -48,6 +48,9 @@ namespace UserInterface.Views
         /// <summary>Label at top of window</summary>
         private Gtk.Paned vpaned4;
 
+        /// <summary>Default constructor.</summary>
+        public GridView() { }
+
         /// <summary>Constructor</summary>
         public GridView(ViewBase owner) : base(owner)
         {

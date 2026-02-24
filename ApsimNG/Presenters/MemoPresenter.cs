@@ -65,6 +65,7 @@ namespace UserInterface.Presenters
             textView.ModifyFont(Utility.Configuration.Settings.EditorFontName);
             textView.Changed += OnTextHasChanged;
             textView.Text = this.model.Text;
+            markdownView.Refresh();
             markdownView.ImagePath = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
             editButton.Clicked += OnEditButtonClick;
             helpButton.Visible = false;
