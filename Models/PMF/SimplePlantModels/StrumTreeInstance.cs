@@ -44,7 +44,8 @@ namespace Models.PMF.SimplePlantModels
         private double _Proot = 0.2;
         private double _Pleaf = 0.5;
         private double _Ptrunk = 0.3;
-        private double _CanopyBaseHeight = 1000;
+        private double _MinCanopyBaseHeight = 1000;
+        private double _MaxCanopyBaseHeight = 1000;
         private double _MaxPrunedHeight = 3000;
         private double _MaxHeight = 3500;
         private double _MaxPrunedWidth = 2000;
@@ -124,6 +125,20 @@ namespace Models.PMF.SimplePlantModels
             get { return _InterRowSpacing; }
             set { _InterRowSpacing = constrain(value, 0.01, 100); }
         }
+
+        /// <summary>Canopy shape options</summary>
+        public enum TreeShape {
+            /// <summary>Rounded column or sphere (if in row spacing > maximum width</summary>
+            Round,
+            /// <summary>Square column or cube (if in row spacing > maximum width</summary>
+            Square,
+            /// <summary>Triangular column or cone (if in row spacing > maximum width</summary>
+            Triangular
+        }
+        /// <summary>Canopy shape.  If InterRowSpacing > MaxWidth assume seperate sphere, cube or cone, else continious row of shape</summary>
+        [Description("Canopy shape.  If InterRowSpacing > MaxWidth assume seperate sphere, cube or cone, else continious row of shape)")]
+        public TreeShape CrownShape { get; set; } = TreeShape.Round;
+
 
         /// <summary>Proportion of the row width taken up by alley zone(0-1)</summary>
         [Description("Relative Alley Zone Width (Proportion of the distance between trees taken up by alley zone(0-1))")]
@@ -274,13 +289,23 @@ namespace Models.PMF.SimplePlantModels
         }
 
         /// <summary>Hight of the bottom of the canop (10-100000 mm)</summary>
-        [Description("Hight of the bottom of the canopy (10-100000 mm)")]
+        [Description("Hight of the bottom of the canopy before pruning (10-100000 mm)")]
         [Bounds(Lower = 10, Upper = 100000)]
         [Units("mm")]
-        public double CanopyBaseHeight
+        public double MinCanopyBaseHeight
         {
-            get { return _CanopyBaseHeight; }
-            set { _CanopyBaseHeight = constrain(value, 10, 100000); }
+            get { return _MinCanopyBaseHeight; }
+            set { _MinCanopyBaseHeight = constrain(value, 10, 100000); }
+        }
+
+        /// <summary>Hight of the bottom of the canop (10-100000 mm)</summary>
+        [Description("Hight of the bottom of the canopy after pruning (10-100000 mm)")]
+        [Bounds(Lower = 10, Upper = 100000)]
+        [Units("mm")]
+        public double MaxCanopyBaseHeight
+        {
+            get { return _MaxCanopyBaseHeight; }
+            set { _MaxCanopyBaseHeight = constrain(value, 10, 100000); }
         }
 
         /// <summary>Hight of mature tree after pruning (50 - 200000mm)</summary>
@@ -750,7 +775,8 @@ namespace Models.PMF.SimplePlantModels
         Dictionary<string, string> treeParams = new Dictionary<string, string>(blankParams);
 
             (trunkMassAtMaxDimension, dbhMaturity) = StrumBiomass.EstimateMatureTrunkMassKg(
-                                                                                    HeightBottomPrePrune_m: CanopyBaseHeight/1000,  // ground → crown bottom, before prune
+                                                                                    CrownShape: CrownShape,
+                                                                                    HeightBottomPrePrune_m: MinCanopyBaseHeight/1000,  // ground → crown bottom, before prune
                                                                                     HeightTopPrePrune_m: MaxHeight / 1000,     // crown top (mature height) before prune
                                                                                     HeightTopPostPrune_m: MaxPrunedHeight / 1000,    // crown top after prune (topping allowed)
                                                                                     WidthPrePrune_m: MaxWidth / 1000,         // canopy width before prune
@@ -787,7 +813,7 @@ namespace Models.PMF.SimplePlantModels
             treeParams["Pleaf"] += Pleaf.ToString();
             treeParams["Ptrunk"] += Ptrunk.ToString();
             treeParams["MaxPrunedHeight"] += MaxPrunedHeight.ToString();
-            treeParams["CanopyBaseHeight"] += CanopyBaseHeight.ToString();
+            treeParams["CanopyBaseHeight"] += MinCanopyBaseHeight.ToString();
             treeParams["MaxSeasonalHeight"] += (MaxHeight - MaxPrunedHeight).ToString();
             treeParams["MaxPrunedWidth"] += MaxPrunedWidth.ToString();
             treeParams["MaxSeasonalWidth"] += (MaxWidth - MaxPrunedWidth).ToString();
@@ -843,18 +869,18 @@ namespace Models.PMF.SimplePlantModels
                 throw new Exception("SPRUMtree needs to have a 'Trunk Mass at maximum dimension > 0");
             
             
-            prunningFraction = StrumBiomass.StrumPruningFraction(
-                                                                                    HeightBottomPrePrune_m: CanopyBaseHeight / 1000,  // ground → crown bottom, before prune
-                                                                                    HeightBottomPostPrune_m: CanopyBaseHeight / 1000,
-                                                                                    HeightTopPrePrune_m: MaxHeight / 1000,     // crown top (mature height) before prune
-                                                                                    HeightTopPostPrune_m: MaxPrunedHeight / 1000,    // crown top after prune (topping allowed)
-                                                                                    WidthPrePrune_m: MaxWidth / 1000,         // canopy width before prune
-                                                                                    WidthPostPrune_m: MaxPrunedWidth / 1000,        // canopy width after prune
-                                                                                    InRowSpacing_m: InterRowSpacing,          // per-tree length along row (spacing within row)
-                                                                                    RowSpacing_m: RowSpacing,               // optional: distance between rows
-                                                                                    MatureDbh_cm: dbhMaturity,
-                                                                                    MatureTrunkMass: trunkMassAtMaxDimension
-                                                                                   );
+            prunningFraction = StrumBiomass.StrumPruningFraction(CrownShape: CrownShape,
+                                                                HeightBottomPrePrune_m: MaxCanopyBaseHeight / 1000,  // ground → crown bottom, before prune
+                                                                HeightBottomPostPrune_m: MinCanopyBaseHeight / 1000,
+                                                                HeightTopPrePrune_m: MaxHeight / 1000,     // crown top (mature height) before prune
+                                                                HeightTopPostPrune_m: MaxPrunedHeight / 1000,    // crown top after prune (topping allowed)
+                                                                WidthPrePrune_m: MaxWidth / 1000,         // canopy width before prune
+                                                                WidthPostPrune_m: MaxPrunedWidth / 1000,        // canopy width after prune
+                                                                InRowSpacing_m: InterRowSpacing,          // per-tree length along row (spacing within row)
+                                                                RowSpacing_m: RowSpacing,               // optional: distance between rows
+                                                                MatureDbh_cm: dbhMaturity,
+                                                                MatureTrunkMass: trunkMassAtMaxDimension
+                                                                );
             
             double relativeInitialSize = Math.Min(1,(double)AgeAtSimulationStart / (double)YearsToMaxDimension);
             double initialTrunkWt = relativeInitialSize* trunkMassAtMaxDimension *1000 * (1-prunningFraction);
