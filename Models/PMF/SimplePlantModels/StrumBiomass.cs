@@ -417,8 +417,11 @@ namespace Models.PMF.SimplePlantModels
 
             double vCrownPre = CrownVolume_m3(CrownShape, freeStanding, widthPrePrune_m, inRowSpacing_m, heightBottomPrePrune_m, heightTopPrePrune_m);
 
+            double widthLimit = widthPrePrune_m;
+            widthLimit = Math.Min(widthLimit, rowSpacing_m);
+            widthLimit = Math.Min(widthLimit, inRowSpacing_m);
 
-            double vCrownPost = CrownVolume_m3(CrownShape, freeStanding, widthPrePrune_m, inRowSpacing_m, heightBottomPrePrune_m, heightTopPrePrune_m);
+            double vCrownPost = CrownVolume_m3(CrownShape, freeStanding, widthLimit, inRowSpacing_m, heightBottomPrePrune_m, heightTopPrePrune_m);
 
             double phi = (vCrownPost > 0) ? MathUtilities.Bound(vCrownPre / vCrownPost, 0.0, 1.0) : 0.0;
 
@@ -427,6 +430,8 @@ namespace Models.PMF.SimplePlantModels
 
             return (fStem, fBranchMax);
         }
+
+
 
 
         /// <summary>
