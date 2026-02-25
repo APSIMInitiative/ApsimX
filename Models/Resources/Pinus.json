@@ -1751,12 +1751,10 @@
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         0.0,
-                        1.0,
-                        1.5
+                        1.0
                       ],
                       "Y": [
                         0.0,
-                        1.0,
                         1.0
                       ],
                       "Name": "XYPairs",
@@ -5698,9 +5696,6 @@
               "Command": [
                 "[Leaf].Photosynthesis.RUE.FixedValue=0.95",
                 "",
-                "[Leaf].Photosynthesis.FN.XYPairs.X=0,1,1.5",
-                "[Leaf].Photosynthesis.FN.XYPairs.Y=0,1,1",
-                "",
                 "[Leaf].Photosynthesis.FW.XYPairs.X=0,1,1.5",
                 "[Leaf].Photosynthesis.FW.XYPairs.Y=0.8,1,1",
                 "",
@@ -5766,9 +5761,6 @@
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
                 "[Leaf].Photosynthesis.RUE.FixedValue=1.3",
-                "",
-                "[Leaf].Photosynthesis.FN.XYPairs.X=0,1,1.5",
-                "[Leaf].Photosynthesis.FN.XYPairs.Y=0,1,1",
                 "",
                 "[Leaf].Photosynthesis.FW.XYPairs.X=0,1,1.5",
                 "[Leaf].Photosynthesis.FW.XYPairs.Y=0,1,1",
@@ -5838,9 +5830,6 @@
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
                 "[Leaf].Photosynthesis.RUE.FixedValue=0.85",
-                "",
-                "[Leaf].Photosynthesis.FN.XYPairs.X=0,1,1.5",
-                "[Leaf].Photosynthesis.FN.XYPairs.Y=0,1,1",
                 "",
                 "[Leaf].Photosynthesis.FW.XYPairs.X=0,1,1.5",
                 "[Leaf].Photosynthesis.FW.XYPairs.Y=0.7,1,1",
