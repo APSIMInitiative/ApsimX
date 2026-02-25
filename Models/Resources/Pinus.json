@@ -2986,52 +2986,6 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "Name": "SenescenceRate",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Functions.XYPairs, Models",
-                  "X": [
-                    0.0,
-                    2500.0,
-                    5000.0,
-                    10000.0,
-                    20000.0,
-                    40000.0,
-                    80000.0,
-                    160000.0
-                  ],
-                  "Y": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0
-                  ],
-                  "Name": "XYPairs",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Pinus].Stem.WoodWt",
-                  "Name": "XValue",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 0.004,
               "Units": "g/g",
@@ -4030,6 +3984,16 @@
                   "ReadOnly": false
                 }
               ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": "/d",
+              "Name": "SenescenceRate",
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             }
