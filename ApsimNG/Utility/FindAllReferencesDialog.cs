@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Gtk;
 using Models.Core;
-using UserInterface.Extensions;
 using UserInterface.Presenters;
 
-namespace Utility
+namespace APSIMNG.Utility
 {
     /// <summary>
     /// Class for displaying results from a "Find All References" operation.
