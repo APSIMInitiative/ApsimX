@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using Gtk;
-using Cairo;
 using UserInterface.Views;
 using System.Linq;
-using UserInterface.Extensions;
 
-namespace Utility
+namespace APSIMNG.Utility
 {
     public class MarkdownFindView
     {

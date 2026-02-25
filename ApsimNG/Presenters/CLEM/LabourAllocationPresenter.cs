@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using UserInterface.Interfaces;
 using UserInterface.Presenters;
 using UserInterface.Views;
+using APSIMNG.Utility;
 
 namespace UserInterface.Presenters
 {
@@ -126,13 +127,13 @@ namespace UserInterface.Presenters
 
             // Start building table
             // apply theme based settings
-            if (!Utility.Configuration.Settings.ThemeRestartRequired)
+            if (!Configuration.Settings.ThemeRestartRequired)
             {
-                htmlString = !Utility.Configuration.Settings.DarkTheme ? ModifyHTMLStyle(htmlString, false) : ModifyHTMLStyle(htmlString, true);
+                htmlString = !Configuration.Settings.DarkTheme ? ModifyHTMLStyle(htmlString, false) : ModifyHTMLStyle(htmlString, true);
             }
             else
             {
-                htmlString = !Utility.Configuration.Settings.DarkTheme ? ModifyHTMLStyle(htmlString, true) : ModifyHTMLStyle(htmlString, false);
+                htmlString = !Configuration.Settings.DarkTheme ? ModifyHTMLStyle(htmlString, true) : ModifyHTMLStyle(htmlString, false);
             }
 
             // get CLEM Zone

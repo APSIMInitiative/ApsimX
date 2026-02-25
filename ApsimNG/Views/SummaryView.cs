@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Gtk;
-using Utility;
+using APSIMNG.Utility;
 using MessageType = Models.Core.MessageType;
 
 namespace UserInterface.Views
