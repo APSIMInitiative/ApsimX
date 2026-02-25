@@ -8,10 +8,46 @@ using System.Text;
 namespace APSIM.Shared.Utilities
 {
     /// <summary>
-    /// A file that reads in a met file from binary format (extra compressed)
+    /// Metfile
+    /// --------------------
+    /// This is a c# class for writing and reading metfiles to text and to binary or compressed binary formats
+    ///
+    /// Text Files
+    ///
+    /// In order to reduce file size, the following modifications are made to the data when writing:
+    /// - A start_date is stored in the constants and each row of the data is assumed therefore
+    ///   to be the next day in sequeunce. When reading out, the date must be added back to the 
+    ///   data rows
+    /// - The file has been optimized for smallest size after zipping, therefore while some of the 
+    ///   data could be made smaller, it causes zipping to be less efficient and therefore worse
+    ///   overall
+    /// - Numbers are stored as a list of symbol lookups instead of a smaller number format like 
+    ///   float16. This is to avoid any rounding or mathematical errors when doing this writing, 
+    ///   storing as symbols ensures the exact same number goes in and out.
+    /// - If a better version of this is developed in the future, a version string is included as
+    ///   the first bytes in the file so that versions can be handled in the future.
+    /// - Hexidecimals are used for handling memory here because the smallest unit we need is
+    ///   4-bits. This allows the script to be simplier than with binary and run faster.
+    /// 
+    /// The binary file is built to the follow schema:
+    /// Data Types:
+    /// - NUMBER: 4-bit int (length) + array of 4-bit int for symbol lookup
+    /// - WORD: 8-bit int (length) + array of utf-8 char
+    /// 
+    /// Structure:
+    /// WORD (Version)
+    ///
+    /// 8-bit int (Number of constants)
+    /// (WORD + WORD) x constants (Per constant: "name" + "value")
+    /// 
+    /// 8-bit int (Number of columns)
+    /// WORD x columns (Per column: "name")
+    /// WORD x columns (Per column: "unit")
+    /// 
+    /// 32-bit int (Number of data rows)
+    /// NUM x columns x rows
     /// </summary>
-    [Serializable]
-    public static class MetFileUtilities
+    public class MetFile
     {
         /// <summary>
         /// Symbol dictionary for converting from a 4-bit hex to data number character
@@ -19,7 +55,7 @@ namespace APSIM.Shared.Utilities
         private static string[] SYMBOLS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "-", "/", "nan", ""];
 
         private static Dictionary<char, char> SYMBOLS_DICT = new Dictionary<char, char>() { {'0', '0' }, {'1', '1' }, {'2', '2' }, {'3', '3' }, {'4', '4' }, {'5', '5' }, {'6', '6' }, {'7', '7' }, 
-                                                                                          {'8', '8' }, {'9', '9' }, {'.', 'a'}, {'-', 'b'}, {'/', 'c'}, {'n', 'd'}, {' ', 'e'}, {'\t', 'f'} };
+                                                                                        {'8', '8' }, {'9', '9' }, {'.', 'a'}, {'-', 'b'}, {'/', 'c'}, {'n', 'd'}, {' ', 'e'}, {'\t', 'f'} };
 
         /// <summary>
         /// Supported Met File formats
@@ -52,6 +88,120 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         private static int MIN_COLUMN_WIDTH = 8;
 
+        private MetData data;
+
+        /// <summary>
+        /// Empty Constructor
+        /// </summary>
+        public MetFile()
+        {
+            data = new MetData();
+        }
+
+        /// <summary>
+        /// Loads a metfile from the given filepath
+        /// </summary>
+        public MetFile(string filepath)
+        {
+            Load(filepath);
+        }
+
+        /// <summary>
+        /// Loads a metfile from the given filepath
+        /// </summary>
+        public void Load(string filepath)
+        {
+            if (filepath.EndsWith(".met"))
+                data = Load(filepath, MetFileFormat.Text);
+            else if (filepath.EndsWith(".bin"))
+                data = Load(filepath, MetFileFormat.Binary);
+            else
+                throw new Exception($"File {filepath} has extension {filepath.Substring(filepath.LastIndexOf('.'))} which is not recognised. Must be a .met or .bin file.");
+        }
+
+        /// <summary>
+        /// Save a metfile to the given filepath.
+        /// Optional format flag, defaults to .met text file.
+        /// </summary>
+        public void Save(string filepath, MetFileFormat format = MetFileFormat.Text)
+        {
+            Save(filepath, data, format);
+        }
+
+        /// <summary>
+        /// Returns the value of the given constant. Will return null if constant was not found.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public string GetConstant(string name)
+        {
+            foreach(MetConstant constant in data.Contants)
+                if (constant.Name == name)
+                    return constant.Value;
+            return null;
+        }
+
+        /// <summary>
+        /// Returns the values for the given date
+        /// </summary>
+        public double[] GetDay(DateTime date)
+        {
+            foreach(MetRow row in data.Data)
+                if (date == row.Date)
+                    return row.Values.ToArray();
+            throw new Exception($"Date {date.ToString("yyyy-MM-dd")} not found in MetFile");
+        }
+
+        /// <summary>Comments within met file</summary>
+        public string[] Comments
+        {
+            get
+            {
+                List<string> comments = new List<string>();
+                foreach(MetConstant constant in data.Contants)
+                    if (string.IsNullOrEmpty(constant.Comment))
+                        comments.Append(constant.Comment);
+                return comments.ToArray();
+            }
+        }
+
+        /// <summary>List of constants</summary>
+        public string[] Contants
+        {
+            get
+            {
+                List<string> constants = new List<string>();
+                foreach(MetConstant constant in data.Contants)
+                    if (string.IsNullOrEmpty(constant.Name))
+                        constants.Append(constant.Name);
+                return constants.ToArray();
+            }
+        }
+
+        /// <summary>Column header names</summary>
+        public string[] Columns
+        {
+            get
+            {
+                List<string> columns = new List<string>();
+                foreach(MetColumn column in data.Columns)
+                    columns.Append(column.Name);
+                return columns.ToArray();
+            }
+        }
+
+        /// <summary>Units for each column</summary>
+        public string[] Units
+        {
+            get
+            {
+                List<string> units = new List<string>();
+                foreach(MetColumn column in data.Columns)
+                    units.Append(column.Unit);
+                return units.ToArray();
+            }
+        }
+
         /// <summary>
         /// Load a
         /// </summary>
@@ -82,15 +232,15 @@ namespace APSIM.Shared.Utilities
         /// <summary>
         /// Opens a binary file and converts it to a valid string representation in a Stream object
         /// </summary>
-        private static MetData Load(string filepath)
+        private static MetData Load(string filepath, MetFileFormat format = MetFileFormat.Text)
         {
             byte[] bytes = File.ReadAllBytes(filepath);
-            if (filepath.EndsWith(".met"))
+            if (format == MetFileFormat.Text)
             {
                 string text = Encoding.UTF8.GetString(bytes);
                 return ReadMet(text);
             }
-            else if (filepath.EndsWith(".bin"))
+            else if (format == MetFileFormat.Binary)
             {
                 string text = Convert.ToHexString(bytes);
                 BinaryData data = new BinaryData(text, 0);
@@ -98,7 +248,7 @@ namespace APSIM.Shared.Utilities
             }
             else
             {
-                throw new Exception($"File {filepath} has extension {filepath.Substring(filepath.LastIndexOf('.'))} which is not recognised. Must be a .met or .bin file.");
+                return null;
             }
         }
 
@@ -960,123 +1110,5 @@ namespace APSIM.Shared.Utilities
                 Data = new List<MetRow>();
             }
         }
-
-        /// <summary>
-        /// A data structure for holding everything about a metfile
-        /// </summary>
-        public class MetFile
-        {
-            private MetData data;
-
-            /// <summary>
-            /// Empty Constructor
-            /// </summary>
-            public MetFile()
-            {
-                data = new MetData();
-            }
-
-            /// <summary>
-            /// Loads a metfile from the given filepath
-            /// </summary>
-            public MetFile(string filepath)
-            {
-                Load(filepath);
-            }
-
-            /// <summary>
-            /// Loads a metfile from the given filepath
-            /// </summary>
-            public void Load(string filepath)
-            {
-                data = MetFileUtilities.Load(filepath);
-            }
-
-            /// <summary>
-            /// Save a metfile to the given filepath.
-            /// Optional format flag, defaults to .met text file.
-            /// </summary>
-            public void Save(string filepath, MetFileFormat format = MetFileFormat.Text)
-            {
-                MetFileUtilities.Save(filepath, data, format);
-            }
-
-            /// <summary>
-            /// Returns the value of the given constant. Will return null if constant was not found.
-            /// </summary>
-            /// <param name="name"></param>
-            /// <returns></returns>
-            public string GetConstant(string name)
-            {
-                foreach(MetConstant constant in data.Contants)
-                    if (constant.Name == name)
-                        return constant.Value;
-                return null;
-            }
-
-            /// <summary>
-            /// Returns the values for the given date
-            /// </summary>
-            public double[] GetDay(DateTime date)
-            {
-                foreach(MetRow row in data.Data)
-                    if (date == row.Date)
-                        return row.Values.ToArray();
-                throw new Exception($"Date {date.ToString("yyyy-MM-dd")} not found in MetFile");
-            }
-
-            /// <summary>Comments within met file</summary>
-            public string[] Comments
-            {
-                get
-                {
-                    List<string> comments = new List<string>();
-                    foreach(MetConstant constant in data.Contants)
-                        if (string.IsNullOrEmpty(constant.Comment))
-                            comments.Append(constant.Comment);
-                    return comments.ToArray();
-                }
-            }
-
-            /// <summary>List of constants</summary>
-            public string[] Contants
-            {
-                get
-                {
-                    List<string> constants = new List<string>();
-                    foreach(MetConstant constant in data.Contants)
-                        if (string.IsNullOrEmpty(constant.Name))
-                            constants.Append(constant.Name);
-                    return constants.ToArray();
-                }
-            }
-
-            /// <summary>Column header names</summary>
-            public string[] Columns
-            {
-                get
-                {
-                    List<string> columns = new List<string>();
-                    foreach(MetColumn column in data.Columns)
-                        columns.Append(column.Name);
-                    return columns.ToArray();
-                }
-            }
-
-            /// <summary>Units for each column</summary>
-            public string[] Units
-            {
-                get
-                {
-                    List<string> units = new List<string>();
-                    foreach(MetColumn column in data.Columns)
-                        units.Append(column.Unit);
-                    return units.ToArray();
-                }
-            }
-        }
     }
 }
-
-
-
