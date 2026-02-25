@@ -32,7 +32,7 @@ namespace Models.PMF.SimplePlantModels
         private double _AlleyZoneWidthFrac = 0.5;
         private int _AgeAtSimulationStart = 1;
         private int _YearsToMaxDimension = 7;
-        private double _TrunkMassAtmaxDimension = 10;
+        private double _TrunkBulkDensity = 600;
         private double _MaxRD = 3000;
         private double _Proot = 0.2;
         private double _Pleaf = 0.5;
@@ -190,14 +190,14 @@ namespace Models.PMF.SimplePlantModels
             set { _YearsToMaxDimension = (int)constrain((double)value, 1, 300); }
         }
 
-        /// <summary>Trunk dry mass when maximum dimension reached (0.1-10000 kgDM/tree)</summary>
-        [Description("Trunk dry mass when maximum dimension reached (0.1-10000 kgDM/tree)")]
-        [Units("kgDM/tree")]
-        [Bounds(Lower = 0.1, Upper = 10000)]
-        public double TrunkMassAtMaxDimension
+        /// <summary>Dry bulk density of trunk wood (400-1600 kg/m^3)</summary>
+        [Description("Dry bulk density of trunk wood (400-1600 kg/m^3)")]
+        [Units("400-1600 kg/m^3")]
+        [Bounds(Lower = 400, Upper = 1600)]
+        public double TrunkBulkDensity
         {
-            get { return _TrunkMassAtmaxDimension; }
-            set { _TrunkMassAtmaxDimension = constrain(value, 0.1, 10000); }
+            get { return _TrunkBulkDensity; }
+            set { _TrunkBulkDensity = constrain(value, 400, 1600); }
         }
 
         /// <summary>Date for Bud Break</summary>
@@ -736,7 +736,19 @@ namespace Models.PMF.SimplePlantModels
         /// </summary>
         public Cultivar CoeffCalc()
         {
-            Dictionary<string, string> treeParams = new Dictionary<string, string>(blankParams);
+
+        Dictionary<string, string> treeParams = new Dictionary<string, string>(blankParams);
+
+            double TrunkMassAtMaxDimension = StrumBiomass.EstimateMatureTrunkMassKg(
+                                                                                    HeightBottomPrePrune_m: CanopyBaseHeight/1000,  // ground → crown bottom, before prune
+                                                                                    HeightTopPrePrune_m: MaxHeight / 1000,     // crown top (mature height) before prune
+                                                                                    HeightTopPostPrune_m: MaxPrunedHeight / 1000,    // crown top after prune (topping allowed)
+                                                                                    WidthPrePrune_m: MaxWidth / 1000,         // canopy width before prune
+                                                                                    WidthPostPrune_m: MaxPrunedWidth / 1000,        // canopy width after prune
+                                                                                    InRowSpacing_m: InterRowSpacing,          // per-tree length along row (spacing within row)
+                                                                                    RowSpacing_m: RowSpacing,               // optional: distance between rows
+                                                                                    WoodDensity_kg_m3: TrunkBulkDensity        // oven-dry density [kg m^-3]
+                                                                                   );
 
             if (this.WaterStress)
             {
@@ -801,7 +813,6 @@ namespace Models.PMF.SimplePlantModels
             treeParams["DAFMaxSize"] += DAFMaxSize.ToString();
             treeParams["PotentialFWPerFruit"] += PotentialFWPerFruit.ToString();
             treeParams["NFixationFrac"] += NFixationFrac.ToString();
-
 
             if (hasAlleyZone)
             {
