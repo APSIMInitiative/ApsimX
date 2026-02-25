@@ -1,0 +1,13 @@
+name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
+.Random.seed|object|78f1ec09af7116dc|||||||||||||||
+check_manual_params|function|c2beb0bd34e6f09a|||||||||||||||
+config|stem|cb6ab3a3cdfa6f82|444fc1a4b080a880|ef46db3751d8e999|1264390909||t20508.8207552256s|b9a5c25f153a52ef|345|rds|local|vector|||0||
+df_obs_pheno_dates|stem|cbeae0671f164d8a|a8e0128991c2dde9|681690f8716a31e1|-1898161064||t20508.8444738619s|a56457f0db86ae4b|2038|rds|local|vector|||1.73||
+do_obs_means|function|6ca9a36c645cc0f6|||||||||||||||
+file_obs|stem|3aa37f580f302c23|4db46a833c81f6cb|3597445fb4555511|2076400141||t20508.8215333737s|a5cba0d434b8dd0d|34123|rds|local|vector|||0.19||
+file_obs_mean|stem|2a23bbb6219c83eb|63f0f3905bc01c4b|5a7f6d22610f13b4|-1745307844||t20508.8425055267s|413e2654f90eb6f8|8666|rds|local|vector|||0.99||
+get_pheno_dates|function|24ab1142309e3950|||||||||||||||
+haun_input_checked|stem|ce1cffffcb77ef41|a71e9d76e218fc2b|26e24f6faa39302d|-1437321256||t20508.8508661859s|24e075d0352ab5d9|394|rds|local|vector|||2.57||
+read_excel_observed|function|9282a4763ebfc0ce|||||||||||||||
+save_df_into_excel|function|17ab727b7ccc6cea|||||||||||||||
+saved_obs_file|stem|009a40cc8f4677e1|ea7a059a6b68e7d2|693cbb6ab9fc6123|-1603298855|C:/github/ApsimX/Tests/Validation/Wheat/UoM_WheatProject/Gnarwarre2025_Observed.xlsx|t20508.8547331941s|5ec20fdaa8450b4a|20609|file|local|vector|||0.05||

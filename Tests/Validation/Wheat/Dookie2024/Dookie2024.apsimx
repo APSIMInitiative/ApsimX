@@ -32,8 +32,7 @@
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
             "DookieWWHI2024.xlsx",
-            "DookieEVA2024.xlsx",
-            "DookieWagga2024.xlsx"
+            "DookieEVA2024.xlsx"
           ],
           "SheetNames": [
             "Observed"

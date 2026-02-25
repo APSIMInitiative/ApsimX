@@ -43,14 +43,14 @@ targets <- list(
     list(
       # folders and file names
       folder_thisScript           = here::here(),
-      folder_rawData              = here::here("InputFilesFromCloud"), # this will be from Cloud
-      folder_inputs               = here::here("..", "..", "inputs"),
-      folder_apsimx               = here::here(".."), # a level up from where Analysis is
+      folder_rawData              = here::here("WaggaWagga2024/InputFilesFromCloud"), # this will be from Cloud
+      folder_inputs               = here::here("..", "inputs"),
+      folder_apsimx               = here::here(), # a level up from where Analysis is
       file_rawData_excel          = "2024_WaggaWagga_PHDA24WARI2.xlsx", # raw observed data (pre-defined file name)
       file_input_name_saved       = "WaggaWagga2024_PhenoDatesInput.csv", # name for forced pheno-dates file
-      fileNameForAPSIM_observData = "WaggaWagga2024.xlsx", # name of observation file created for APSIM to read
-      file_SimNameByCultivar      = "WaggaWagga2024_CultivarToSimName.csv", # lookup table of sim by treat names (handmade metadata)
-      file_metaData_observed      = "WaggaWagga2024_observed_data_requirements.csv",  # What obs variables to fetch? (handmade metadata)
+      fileNameForAPSIM_observData = "WaggaWagga2024_Observed.xlsx", # name of observation file created for APSIM to read
+      file_SimNameByCultivar      = "WaggaWagga2024/WaggaWagga2024_CultivarToSimName.csv", # lookup table of sim by treat names (handmade metadata)
+      file_metaData_observed      = "WaggaWagga2024/WaggaWagga2024_observed_data_requirements.csv",  # What obs variables to fetch? (handmade metadata)
       
       # Excel sheet names used from 2024_WaggaWagga_PHDA24WARI2.xlsx
       sheetExcel_weather          = "Weather",
