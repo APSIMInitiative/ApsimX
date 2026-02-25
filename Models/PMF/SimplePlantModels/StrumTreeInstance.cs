@@ -1,12 +1,16 @@
 ﻿using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
+using Models.AgPasture;
 using Models.Climate;
 using Models.Core;
 using Models.Functions;
+using Models.Management;
+using Models.PMF.Interfaces;
 using Models.PMF.Phen;
 using Models.Soils;
 using Newtonsoft.Json;
+using PdfSharp.Pdf.Content.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +29,9 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
         public IStructure Structure { private get; set; }
+
+        /// <summary>Pruning Event.</summary>
+        public event EventHandler<EventArgs> Pruning;
 
 
         private double _RowSpacing = 6;
@@ -80,6 +87,10 @@ namespace Models.PMF.SimplePlantModels
                 return winterSolsticeDate.ToString("dd-MMM");
             }
         }
+
+        private double trunkMassAtMaxDimension = 0;
+        private double prunningFraction = 0;
+        private double dbhMaturity = 0;
 
         /// <summary>Is the tree decidious</summary>
         public bool Decidious
@@ -686,7 +697,6 @@ namespace Models.PMF.SimplePlantModels
             for (int d = 0; d < soilCrop.KL.Length; d++)
                 soilCrop.KL[d] = 1.0;
 
-
             double rootDepth = Math.Min(MaxRD, soilDepthMax);
             if (GRINZ)
             {  //Must add root zone prior to sowing the crop.  For some reason they (silently) dont add if you try to do so after the crop is established
@@ -739,7 +749,7 @@ namespace Models.PMF.SimplePlantModels
 
         Dictionary<string, string> treeParams = new Dictionary<string, string>(blankParams);
 
-            double TrunkMassAtMaxDimension = StrumBiomass.EstimateMatureTrunkMassKg(
+            (trunkMassAtMaxDimension, dbhMaturity) = StrumBiomass.EstimateMatureTrunkMassKg(
                                                                                     HeightBottomPrePrune_m: CanopyBaseHeight/1000,  // ground → crown bottom, before prune
                                                                                     HeightTopPrePrune_m: MaxHeight / 1000,     // crown top (mature height) before prune
                                                                                     HeightTopPostPrune_m: MaxPrunedHeight / 1000,    // crown top after prune (topping allowed)
@@ -801,7 +811,7 @@ namespace Models.PMF.SimplePlantModels
             treeParams["FRGRMaxT"] += PSMaxT.ToString();
             treeParams["SurfaceKL"] += SurfaceKL.ToString();
             treeParams["YearsToMaturity"] += YearsToMaxDimension.ToString();
-            treeParams["TrunkWtAtMaturity"] += (TrunkMassAtMaxDimension * 1000).ToString();
+            treeParams["TrunkWtAtMaturity"] += (trunkMassAtMaxDimension * 1000).ToString();
             treeParams["YearsToMaxRD"] += YearsToMaxDimension.ToString();
             treeParams["Number"] += (Number*TreeCanopyArea).ToString();
             treeParams["FruitDensity"] += FruitDensity.ToString();
@@ -829,10 +839,25 @@ namespace Models.PMF.SimplePlantModels
 
             if (AgeAtSimulationStart <= 0)
                 throw new Exception("SPRUMtree needs to have a 'Tree Age at start of Simulation' > 1 years");
-            if (TrunkMassAtMaxDimension <= 0)
+            if (trunkMassAtMaxDimension <= 0)
                 throw new Exception("SPRUMtree needs to have a 'Trunk Mass at maximum dimension > 0");
+            
+            
+            prunningFraction = StrumBiomass.StrumPruningFraction(
+                                                                                    HeightBottomPrePrune_m: CanopyBaseHeight / 1000,  // ground → crown bottom, before prune
+                                                                                    HeightBottomPostPrune_m: CanopyBaseHeight / 1000,
+                                                                                    HeightTopPrePrune_m: MaxHeight / 1000,     // crown top (mature height) before prune
+                                                                                    HeightTopPostPrune_m: MaxPrunedHeight / 1000,    // crown top after prune (topping allowed)
+                                                                                    WidthPrePrune_m: MaxWidth / 1000,         // canopy width before prune
+                                                                                    WidthPostPrune_m: MaxPrunedWidth / 1000,        // canopy width after prune
+                                                                                    InRowSpacing_m: InterRowSpacing,          // per-tree length along row (spacing within row)
+                                                                                    RowSpacing_m: RowSpacing,               // optional: distance between rows
+                                                                                    MatureDbh_cm: dbhMaturity,
+                                                                                    MatureTrunkMass: trunkMassAtMaxDimension
+                                                                                   );
+            
             double relativeInitialSize = Math.Min(1,(double)AgeAtSimulationStart / (double)YearsToMaxDimension);
-            double initialTrunkWt = relativeInitialSize* TrunkMassAtMaxDimension *1000;
+            double initialTrunkWt = relativeInitialSize* trunkMassAtMaxDimension *1000 * (1-prunningFraction);
             treeParams["InitialTrunkWt"] += initialTrunkWt.ToString();
             treeParams["InitialRootWt"] += (initialTrunkWt * Proot * 0.5).ToString();
             treeParams["InitialFruitWt"] += (0).ToString();
@@ -882,11 +907,28 @@ namespace Models.PMF.SimplePlantModels
         [EventSubscribe("StartOfSimulation")]
         private void OnStartSimulation(object sender, EventArgs e)
         {
+            
+            if(!DateUtilities.DatesAreEqual(WinterSolsticeDate, clock.Today))
+            {
+                throw new Exception("Simulations containing STRUM must start on the date of winter solstice (21 Jun or Dec) to ensure things initialise properly");
+            }
             SetUpZones();
             Establish();
         }
 
-
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            if(DateUtilities.DatesAreEqual(EndLeafFallDate,clock.Today))
+            {
+                Prune(prunningFraction);
+            }
+            DateTime pickingDate = DateTime.Parse(DateMaxBloom + "-" + clock.Today.Year.ToString()).AddDays(DAFMaxSize);
+            if (DateUtilities.DatesAreEqual(pickingDate.ToString("dd-MMM"), clock.Today))
+            {
+                Pick();
+            }
+        }
 
         private double constrain(double value, double min, double max)
         {
@@ -900,10 +942,37 @@ namespace Models.PMF.SimplePlantModels
             return MathUtilities.Bound(value, min, max);
         }
 
+        /// <summary>
+        /// Method called to invoke pruning.
+        /// </summary>
+        public void Prune(double fracLiveToResidue)
+        {
+            Pruning?.Invoke(this, new EventArgs());
 
+            IOrgan organ = Structure.FindChild<IOrgan>("Trunk", relativeTo: (INodeModel)strum, recurse: true);
+            (organ as IHasDamageableBiomass).RemoveBiomass(liveToRemove: 0,
+                                                        deadToRemove: 0,
+                                                        liveToResidue: fracLiveToResidue,
+                                                        deadToResidue: 1.0);
 
+            organ = Structure.FindChild<IOrgan>("Leaf", relativeTo: (INodeModel)strum, recurse: true);
+            (organ as IHasDamageableBiomass).RemoveBiomass(liveToRemove: 0,
+                                                        deadToRemove: 0,
+                                                        liveToResidue: fracLiveToResidue,
+                                                        deadToResidue: 1.0);
+        }
 
-
+        /// <summary>
+        /// Method called to invoke pruning.
+        /// </summary>
+        public void Pick()
+        {
+            IOrgan organ = Structure.FindChild<IOrgan>("Fruit", relativeTo: (INodeModel)strum, recurse: true);
+            (organ as IHasDamageableBiomass).RemoveBiomass(liveToRemove: 1.0,
+                                                        deadToRemove: 0,
+                                                        liveToResidue: 0,
+                                                        deadToResidue: 1);
+        }
 
     }
 }
