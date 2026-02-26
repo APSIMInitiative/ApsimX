@@ -14,6 +14,7 @@ source("R/interpolate_and_create_phenoStages.R")
 source("R/spread_and_csv_save.R")
 source("R/read_and_merge_obs_files.R")
 source("R/save_df_to_excel.R")
+source("R/check_project_dependencies.R")
 
 
 # Read Wheat.Phenology.Stage from Observed (2 sets)
@@ -29,8 +30,10 @@ list(
     config,
     list(
       # folders and file names
+      proj_name                   = "Dookie2024", 
       folder_thisScript           = here::here(),
       folder_inputs               = here::here("..", "inputs"),
+      folder_met                  = here::here("..", "met"),
       folder_apsimx               = here::here(), # a level up from where Analysis is
       folder_rawData              = here::here("Dookie2024"),  
       file_rawData_excel          = c("DookieEVA2024.xlsx",
@@ -48,6 +51,7 @@ list(
       file_name_cult_by_sowDate  = "CultivarBySowingDatesTemplate.csv"
         )),
   
+
   # read observations of phenology and haun
   tar_target(file_pheno_haun_obs, read_and_merge_phenology_observed(config$folder_rawData,
                                                config$file_rawData_excel, 
@@ -82,8 +86,13 @@ list(
   tar_target(saved_obs_file,save_df_to_excel(config$folder_apsimx,
                                              config$file_workData_excel, 
                                              config$sheet_name_observed, 
-                                             df_all_obs_files))
+                                             df_all_obs_files)),
   
+  # pre-flight dependency check for APSIM
+  tar_target(check_depend, check_project_dependencies(projects = config$proj_name,
+                                                      dir_met = config$folder_met,
+                                                      dir_inputs= config$folder_inputs,
+                                                      dir_obs= config$folder_apsimx))
   
   
 )
