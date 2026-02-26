@@ -722,8 +722,8 @@ namespace APSIM.Shared.Utilities
             string version = HexToString(data);
 
             //get start date
-            string startDate = HexToString(data);
-            if (!DateTime.TryParseExact(startDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
+            string startDateString = HexToString(data);
+            if (!DateTime.TryParseExact(startDateString, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime startDate))
                 throw new Exception($"Cannot read met file. Start date is {startDate} which must be in yyyy-MM-dd format");
 
             //read constants
@@ -746,40 +746,39 @@ namespace APSIM.Shared.Utilities
             for (int i = 1; i < columnsLength; i++)
                 metData.Columns[i].DecimalPlaces = HexToInt(data, 1);
 
-            //data
+            //create rows and add date column to them
             int rowsLength = HexToInt(data, 8);
-
-            MetRow zeros = new MetRow();
-            for (int i = 0; i < columnsLength; i++)
-                zeros.Values.Add(0.0);
-
-            MetRow previousRow = zeros;
+            DateTime date = startDate;
             for (int i = 0; i < rowsLength; i++)
             {
                 MetRow row = new MetRow();
                 row.Date = date;
                 row.Inputs.Add(date.ToString("yyyy-MM-dd"));
                 row.Values.Add(double.NaN);
-
                 date = date.AddDays(1);
+                metData.Data.Add(row);
+            }
 
-                for (int j = 1; j < columnsLength; j++)
+            //data
+            for (int j = 1; j < columnsLength; j++)
+            {
+                double previousValue = 0;
+                foreach(MetRow row in metData.Data)
                 {
                     string differenceString = DecodeNumber(data);
                     if (differenceString.Length == 0)
                         differenceString = "0";
 
                     int decimalPlaces = metData.Columns[j].DecimalPlaces;
-                    double value = Math.Round(previousRow.Values[j] - double.Parse(differenceString), decimalPlaces);
+                    double value = Math.Round(previousValue - double.Parse(differenceString), decimalPlaces);
                     row.Values.Add(value);
+                    previousValue = value;
 
                     string text = value.ToString("F"+decimalPlaces);
                     row.Inputs.Add(text);
 
                     metData.Columns[j].UpdateWidth(text);
                 }
-                previousRow = row;
-                metData.Data.Add(row);
             }
 
             return metData;
@@ -853,24 +852,20 @@ namespace APSIM.Shared.Utilities
 
             //data
             output.Append(IntToHex(datelessMetData.Data.Count, 8));
-
-            MetRow zeros = new MetRow();
-            foreach(MetColumn column in columns)
-                zeros.Values.Add(0.0);
-
-            MetRow previousRow = zeros;
-            foreach(MetRow row in datelessMetData.Data)
+            for(int i = 0; i < columnsLength; i++)
             {
-                for(int i = 0; i < columnsLength; i++)
+                double previousValue = 0;
+                int decimalPlaces = columns[i].DecimalPlaces;
+                foreach(MetRow row in datelessMetData.Data)
                 {
-                    double difference = Math.Round(previousRow.Values[i] - row.Values[i], columns[i].DecimalPlaces);
+                    double difference = Math.Round(previousValue - row.Values[i], decimalPlaces);
                     string differenceString = difference.ToString();
                     if (differenceString == "0")
                         output.Append(IntToHex(0, 1));
                     else
                         output.Append(EncodeNumber(differenceString));
+                    previousValue = row.Values[i];
                 }
-                previousRow = row;
             }
 
             //if output is an odd length
