@@ -6,12 +6,14 @@ library(here)
 tar_option_set(packages = c("here", "tidyverse", "lubridate", "readxl"))
 
 # functions
-source("R/read_and_merge_observed.R")
+source("R/read_and_merge_phenology_observed.R")
 source("R/check_manual_params.R")
 source("R/read_csv_sowDates.R")
 source("R/find_first_stage_dates.R")
 source("R/interpolate_and_create_phenoStages.R")
 source("R/spread_and_csv_save.R")
+source("R/read_and_merge_obs_files.R")
+source("R/save_df_to_excel.R")
 
 
 # Read Wheat.Phenology.Stage from Observed (2 sets)
@@ -47,7 +49,7 @@ list(
         )),
   
   # read observations of phenology and haun
-  tar_target(file_pheno_haun_obs, read_and_merge_observed(config$folder_rawData,
+  tar_target(file_pheno_haun_obs, read_and_merge_phenology_observed(config$folder_rawData,
                                                config$file_rawData_excel, 
                                                config$sheet_name_observed,
                                                config$cols_to_extract)),
@@ -71,7 +73,17 @@ list(
              interpolate_and_create_phenoStages(df_pheno_start_date, config$btwStgFrac)),
   
   tar_target(df_pheno_input_csv_saved, spread_and_csv_save(config$folder_inputs, config$file_name_input_pheno, 
-                                                   df_pheno_interp))
+                                                   df_pheno_interp)),
+  
+  tar_target(df_all_obs_files, read_and_merge_obs_files(file.path(config$folder_rawData),
+                                                        config$file_rawData_excel,
+                                                        config$sheet_name_observed)),
+  
+  tar_target(saved_obs_file,save_df_to_excel(config$folder_apsimx,
+                                             config$file_workData_excel, 
+                                             config$sheet_name_observed, 
+                                             df_all_obs_files))
+  
   
   
 )

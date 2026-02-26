@@ -6,7 +6,7 @@
 #' @param cols_to_extract Character vector (or list). The specific columns to extract and bind.
 #' @return A single merged dataframe (tibble).
 #' @export
-read_and_merge_observed <- function(path, file_names, sheet, cols_to_extract) {
+read_and_merge_phenology_observed <- function(path, file_names, sheet, cols_to_extract) {
   
   cols_to_extract <- unlist(cols_to_extract)
   full_paths <- file.path(path, file_names)
