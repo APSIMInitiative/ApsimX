@@ -123,14 +123,16 @@ namespace UnitTests.Weather
         /// </summary>
         [Test]
         public void MetWeatherFileTest()
-        {
-            // Open the text file using a stream reader
-            using StreamReader reader = new StreamReader("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi.met");
+        {            
+            MetFile data = new MetFile("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi.met");
+            data.Save("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi2.met", MetFile.MetFileFormat.Text);
+            data.Save("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi3.bin", MetFile.MetFileFormat.Binary);
+            data.Save("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi4.bin", MetFile.MetFileFormat.Compressed);
 
-            // Read the stream as a string
-            string text = reader.ReadToEnd();
-            
-            MetBinaryReader.MetData data = MetBinaryReader.ReadMet(text);
+            data = new MetFile("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi4.bin");
+            data.Save("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi5.met", MetFile.MetFileFormat.Text);
+
+            /*
             string output = MetBinaryReader.WriteMet(data);
             MetBinaryReader.SaveBin("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi.bin", data);
 
@@ -141,6 +143,7 @@ namespace UnitTests.Weather
 
             output = MetBinaryReader.WriteMet(data);
             File.WriteAllText("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi_3.met", output);
+            */
         }
 
         [Test]

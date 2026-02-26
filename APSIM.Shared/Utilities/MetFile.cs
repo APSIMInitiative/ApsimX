@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace APSIM.Shared.Utilities
 {
@@ -12,8 +14,11 @@ namespace APSIM.Shared.Utilities
     /// --------------------
     /// This is a c# class for writing and reading metfiles to text and to binary or compressed binary formats
     ///
-    /// Text Files
-    ///
+    /// Text (.met)
+    /// 
+    /// 
+    /// Binary (.bin)
+    /// 
     /// In order to reduce file size, the following modifications are made to the data when writing:
     /// - A start_date is stored in the constants and each row of the data is assumed therefore
     ///   to be the next day in sequeunce. When reading out, the date must be added back to the 
@@ -45,7 +50,34 @@ namespace APSIM.Shared.Utilities
     /// WORD x columns (Per column: "unit")
     /// 
     /// 32-bit int (Number of data rows)
-    /// NUM x columns x rows
+    /// NUMBER x columns x rows
+    /// 
+    /// Compressed (.bin)
+    /// 
+    /// This is an extra compressed version of the binary file format. This is a lossy compression
+    /// as it restricts decimal places to a single digit and removes unit strings. It is highly 
+    /// recommended that a column whitelist also be used with this to reduce unneeded columns.
+    /// 
+    /// In order to further compress, each following day is recorded as the difference between 
+    /// that day and the last. So if the max temperature is 25.6 on the first day and 23.5 on 
+    /// the 2nd day, a value of -21 is stored reflecting a change of minus 2.1 degrees. The first
+    /// day is the difference between the value and 0
+    /// 
+    /// If the difference between the last day and the next is 0, then only a value of 0 is
+    /// stored.
+    /// 
+    /// Structure:
+    /// WORD (Version)
+    ///
+    /// NUMBER (Number of constants) - Max 9
+    /// (WORD + NUMBER) x constants (Per constant: "name" + value)
+    /// 
+    /// NUMBER (Number of columns) - Max 9
+    /// WORD x columns (Per column: "name")
+    /// 
+    /// 32-bit int (Number of data rows)
+    /// NUMBER x columns x rows (difference values)
+    /// 
     /// </summary>
     public class MetFile
     {
@@ -152,6 +184,15 @@ namespace APSIM.Shared.Utilities
             throw new Exception($"Date {date.ToString("yyyy-MM-dd")} not found in MetFile");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public Stream GetStream()
+        {
+            string output = WriteMet(data);
+            return new MemoryStream(Encoding.UTF8.GetBytes(output));
+        }
+
         /// <summary>Comments within met file</summary>
         public string[] Comments
         {
@@ -160,7 +201,7 @@ namespace APSIM.Shared.Utilities
                 List<string> comments = new List<string>();
                 foreach(MetConstant constant in data.Contants)
                     if (string.IsNullOrEmpty(constant.Comment))
-                        comments.Append(constant.Comment);
+                        comments.Add(constant.Comment);
                 return comments.ToArray();
             }
         }
@@ -173,7 +214,7 @@ namespace APSIM.Shared.Utilities
                 List<string> constants = new List<string>();
                 foreach(MetConstant constant in data.Contants)
                     if (string.IsNullOrEmpty(constant.Name))
-                        constants.Append(constant.Name);
+                        constants.Add(constant.Name);
                 return constants.ToArray();
             }
         }
@@ -185,7 +226,7 @@ namespace APSIM.Shared.Utilities
             {
                 List<string> columns = new List<string>();
                 foreach(MetColumn column in data.Columns)
-                    columns.Append(column.Name);
+                    columns.Add(column.Name);
                 return columns.ToArray();
             }
         }
@@ -197,10 +238,14 @@ namespace APSIM.Shared.Utilities
             {
                 List<string> units = new List<string>();
                 foreach(MetColumn column in data.Columns)
-                    units.Append(column.Unit);
+                    units.Add(column.Unit);
                 return units.ToArray();
             }
         }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Private Static Helper Functions
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
         /// <summary>
         /// Load a
@@ -223,7 +268,8 @@ namespace APSIM.Shared.Utilities
             }
             else if (format == MetFileFormat.Compressed)
             {
-                
+                BinaryData output = WriteCompressed(data);
+                bytes = Convert.FromHexString(output.Hex);
             }
             File.WriteAllBytes(filepath, bytes);
             return;
@@ -244,7 +290,10 @@ namespace APSIM.Shared.Utilities
             {
                 string text = Convert.ToHexString(bytes);
                 BinaryData data = new BinaryData(text, 0);
-                return ReadBin(data);
+                if (ReadBinaryVersion(data) == MetFileFormat.Binary)
+                    return ReadBin(data);
+                else
+                    return ReadCompressed(data);
             }
             else
             {
@@ -277,13 +326,20 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// Opens a binary file and converts it to a valid string representation in a Stream object
-        /// </summary>
-        private static Stream LoadBinAsStream(string filepath)
+        /// 
+        ///</summary>
+        private static MetFileFormat ReadBinaryVersion(BinaryData data)
         {
-            MetData data = LoadBin(filepath);
-            string output = WriteMet(data);
-            return new MemoryStream(Encoding.UTF8.GetBytes(output));
+            //read version
+            string version = HexToString(data);
+            data.Position = 0;
+
+            if (version == "met-bin-1")
+                return MetFileFormat.Binary;
+            else if (version == "met-c-1")
+                return MetFileFormat.Compressed;
+            else
+                throw new Exception($"Binary file has version {version} which is not recognised.");
         }
 
         /// <summary>
@@ -537,14 +593,13 @@ namespace APSIM.Shared.Utilities
         private static MetData ReadBin(BinaryData data)
         {
             //read version
-            //not used when converting to string. Will be useful if a future binary format is developed
             string version = HexToString(data);
 
             //read constants
             int constantsLength = HexToInt(data);
 
             List<StringPair> constants = new List<StringPair>();
-            string start_date = "";
+            string startDate = "";
 
             for (int i = 0; i < constantsLength; i++)
             {
@@ -553,7 +608,7 @@ namespace APSIM.Shared.Utilities
 
                 //start date isn't an actual constant, but is stored as a constant to save space
                 if (name == "start_date")
-                    start_date = value;
+                    startDate = value;
                 else
                     constants.Add(new StringPair(name, value));
             }
@@ -571,8 +626,8 @@ namespace APSIM.Shared.Utilities
 
             //data
             DateTime date;
-            if (!DateTime.TryParseExact(start_date, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
-                throw new Exception($"Cannot read met file. Start date is {start_date} which must be in yyyy-MM-dd format");
+            if (!DateTime.TryParseExact(startDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
+                throw new Exception($"Cannot read met file. Start date is {startDate} which must be in yyyy-MM-dd format");
 
             List<List<string>> values = new List<List<string>>();
             int rowsLength = HexToInt(data, 8);
@@ -625,14 +680,14 @@ namespace APSIM.Shared.Utilities
                     constantText += StringToHex(constant.Name) + StringToHex(constant.Value);
                 }
             }
-            output.Append(IntToHex(constantCount));
+            output.Append(IntToHex(constantCount, 1));
             output.Append(constantText);
 
             //headers
             //titles
             MetColumn[] columns = datelessMetData.Columns.ToArray();
 
-            output.Append(IntToHex(columns.Length));
+            output.Append(IntToHex(columns.Length, 1));
             foreach(MetColumn column in columns)
                 output.Append(StringToHex(column.Name));
             foreach(MetColumn column in columns)
@@ -643,6 +698,159 @@ namespace APSIM.Shared.Utilities
             foreach(MetRow row in datelessMetData.Data)
                 foreach(double value in row.Values)
                     output.Append(EncodeNumber(value.ToString()));
+
+            //if output is an odd length
+            if (output.Length % 2 == 1) 
+                output.Append("0");
+
+            BinaryData data = new BinaryData(output.ToString(), 0);
+            return data;
+        }
+
+        /// <summary>
+        /// 
+        ///</summary>
+        private static MetData ReadCompressed(BinaryData data)
+        {
+            MetData metData = new MetData();
+
+            //read version
+            string version = HexToString(data);
+
+            //get start date
+            string startDate = HexToString(data);
+            if (!DateTime.TryParseExact(startDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
+                throw new Exception($"Cannot read met file. Start date is {startDate} which must be in yyyy-MM-dd format");
+
+            //read constants
+            int constantsLength = HexToInt(data, 1);
+            for (int i = 0; i < constantsLength; i++)
+            {
+                string name = HexToString(data);
+                string value = HexToString(data);
+                metData.Contants.Add(new MetConstant(name, value));
+            }
+
+            //headers
+            metData.Columns.Add(new MetColumn("date", ""));
+
+            int columnsLength = HexToInt(data, 1);
+            for (int i = 0; i < columnsLength; i++)
+                metData.Columns.Add(new MetColumn(HexToString(data), ""));
+
+            //data
+            int rowsLength = HexToInt(data, 8);
+
+            MetRow zeros = new MetRow();
+            for (int i = 0; i < columnsLength; i++)
+                zeros.Values.Add(0.0);
+
+            MetRow previousRow = zeros;
+            for (int i = 0; i < rowsLength; i++)
+            {
+                MetRow row = new MetRow();
+                row.Date = date;
+                date = date.AddDays(1);
+
+                for (int j = 0; j < columnsLength; j++)
+                {
+                    string differenceString = DecodeNumber(data);
+                    if (differenceString.Length == 0)
+                        differenceString = "0";
+                    double value = previousRow.Values[j] - double.Parse(differenceString);
+                    row.Inputs.Add(value.ToString());
+                    row.Values.Add(value);
+                }
+                previousRow = row;
+                metData.Data.Add(row);
+            }
+
+            return metData;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="metData"></param>
+        /// <returns></returns>
+        private static BinaryData WriteCompressed(MetData metData)
+        {
+            //make copies of these inputs so we can edit them as needed
+            List<MetConstant> constants = metData.Contants.ToList();
+
+            //add start date to constants
+            string start_date = metData.Data[0].Date.ToString("yyyy-MM-dd");
+
+            //remove non-number columns
+            int rowCount = metData.Data.Count;
+            List<string> removeList = new List<string>() {"date", "year", "day"};
+            for(int i = 0; i < metData.Columns.Count; i++)
+            {
+                MetColumn column = metData.Columns[i];
+                bool hasNumbers = false;
+                for(int j = 0; j < rowCount && !hasNumbers; j++)
+                {
+                    if (!double.IsNaN(metData.Data[j].Values[i]))
+                        hasNumbers = true;
+                }
+                if (!hasNumbers)
+                    removeList.Add(column.Name);
+            }
+
+            //remove columns from data
+            MetData datelessMetData = RemoveColumns(metData, removeList);
+
+            StringBuilder output = new StringBuilder(2000000);
+            //version
+            output.Append(StringToHex("met-c-1"));
+
+            //add start date
+            output.Append(StringToHex(start_date));
+            
+            //constants
+            int constantCount = 0;
+            string constantText = "";
+            foreach(MetConstant constant in constants)
+            {
+                if (!string.IsNullOrEmpty(constant.Name) && !string.IsNullOrEmpty(constant.Value))
+                {
+                    constantCount += 1;
+                    constantText += StringToHex(constant.Name) + StringToHex(constant.Value);
+                }
+            }
+            output.Append(IntToHex(constantCount, 1));
+            output.Append(constantText);
+
+            //headers
+            //titles
+            MetColumn[] columns = datelessMetData.Columns.ToArray();
+            int columnsLength = columns.Length;
+
+            output.Append(IntToHex(columns.Length, 1));
+            foreach(MetColumn column in columns)
+                output.Append(StringToHex(column.Name));
+
+            //data
+            output.Append(IntToHex(datelessMetData.Data.Count, 8));
+
+            MetRow zeros = new MetRow();
+            foreach(MetColumn column in columns)
+                zeros.Values.Add(0.0);
+
+            MetRow previousRow = zeros;
+            foreach(MetRow row in datelessMetData.Data)
+            {
+                for(int i = 0; i < columnsLength; i++)
+                {
+                    double difference = previousRow.Values[i] - row.Values[i];
+                    string differenceString = Math.Round(difference * 100, 0).ToString();
+                    if (differenceString == "0")
+                        output.Append(IntToHex(0, 1));
+                    else
+                        output.Append(EncodeNumber(differenceString));
+                }
+                previousRow = row;
+            }
 
             //if output is an odd length
             if (output.Length % 2 == 1) 
@@ -839,6 +1047,10 @@ namespace APSIM.Shared.Utilities
 
             return output;
         }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Private Helper Classes
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
         /// <summary>
         /// BinaryData stores the hex string that is read when reading the file, and the position through the string
