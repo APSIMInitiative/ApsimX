@@ -177,7 +177,7 @@ namespace APSIM.Documentation
         public static string GetNavigationHTML(List<ITag> tags)
         {
 
-            string html = "<div class=\"docs-navcontainer\">\n";
+            string html = "<div class=\"col-xxl-8 col-xl-9 col-lg-8 col-md-7 col-sm-7 col-10 docs-navcontainer\">\n";
             html += "<div class=\"docs-navbar\">\n";
             foreach(ITag tag in tags)
             {
@@ -568,9 +568,9 @@ namespace APSIM.Documentation
         public static string AddContentWrapper(string navigation, string content)
         {
             string output = "";
-            output += "<div class=\"docs-wrapper\">\n";
+            output += "<div class=\"row docs-wrapper\">\n";
             output += navigation;
-            output += "<div class=\"docs-content\">\n";
+            output += "<div class=\"col-xxl-12 col-xl-10 col-lg-9 col-md-6 col-sm-6 col-5 docs-content\">\n";
             output += content;
             output += "</div>\n";
             output += "</div>\n";

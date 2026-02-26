@@ -8,7 +8,7 @@ using UserInterface.Classes;
 using UserInterface.EventArguments;
 using Gtk;
 using UserInterface.Interfaces;
-using Utility;
+using APSIMNG.Utility;
 
 namespace UserInterface.Views
 {
@@ -642,7 +642,7 @@ namespace UserInterface.Views
             try
             {
                 var gtkcolour = (sender as ColorButton).Rgba.ToColour().ToGdk();
-                var colour = Utility.Colour.FromGtk(gtkcolour);
+                var colour = Colour.FromGtk(gtkcolour);
                 Guid id = Guid.Parse((sender as ColorButton).Name);
                 var args = new PropertyChangedEventArgs(id, colour);
                 PropertyChanged?.Invoke(this, args);
