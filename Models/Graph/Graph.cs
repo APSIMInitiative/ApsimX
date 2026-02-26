@@ -83,6 +83,7 @@ namespace Models
         /// Descriptions of simulations that are in scope.
         /// </summary>
         [JsonIgnore]
+        [field: NonSerialized]
         public List<SimulationDescription> SimulationDescriptions { get; set; }
 
         /// <summary>Gets the definitions to graph.</summary>
@@ -194,7 +195,8 @@ namespace Models
             // Using the graphpage API - this will load each series' data in parallel.
             GraphPage page = new GraphPage();
             page.Graphs.Add(this);
-            return page.GetAllSeriesDefinitions(Parent, Structure.Find<IDataStore>()?.Reader).FirstOrDefault()?.SeriesDefinitions;
+            List<GraphPage.GraphDefinitionMap> definitions = page.GetAllSeriesDefinitions(Parent, Structure.Find<IDataStore>()?.Reader);
+            return definitions.FirstOrDefault()?.SeriesDefinitions;
         }
 
         /// <summary>

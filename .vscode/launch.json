@@ -120,8 +120,8 @@
             "type": "coreclr",
             "request": "launch",
             "program": "${workspaceFolder}/bin/Debug/net8.0/Apsim.Workflow.dll",
-            "preLaunchTask": "Build Debug",            
-            "cwd": "${workspaceFolder}",            
+            "preLaunchTask": "Build Debug",
+            "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
             "justMyCode": false,
             "requireExactSource": false,
@@ -134,9 +134,9 @@
             },
             "args": [
                 "-d",
-                "${workspaceFolder}/Tests/Validation/Wheat/FAR/FAR.apsimx",
+                "${workspaceFolder}/Tests/Validation/Eucalyptus/Eucalyptus.apsimx",
                 "-s",
-                "${workspaceFolder}/Tests/Validation/Wheat/FAR/split.json"
+                "${workspaceFolder}/Tests/Validation/Eucalyptus/split.json"
             ]
         },
         {
@@ -144,8 +144,8 @@
             "type": "coreclr",
             "request": "launch",
             "program": "${workspaceFolder}/bin/Debug/net8.0/Apsim.Workflow.dll",
-            "preLaunchTask": "Build Debug",            
-            "cwd": "${workspaceFolder}",            
+            "preLaunchTask": "Build Debug",
+            "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
             "justMyCode": false,
             "requireExactSource": false,
@@ -166,8 +166,8 @@
             "type": "coreclr",
             "request": "launch",
             "program": "${workspaceFolder}/bin/Debug/net8.0/Apsim.Workflow.dll",
-            "preLaunchTask": "Build Debug",            
-            "cwd": "${workspaceFolder}",            
+            "preLaunchTask": "Build Debug",
+            "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
             "justMyCode": false,
             "requireExactSource": false,

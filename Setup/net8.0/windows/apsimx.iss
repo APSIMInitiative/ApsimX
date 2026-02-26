@@ -331,7 +331,7 @@ begin
       'Click OK to go to the web site or Cancel to quit', mbInformation, MB_OKCANCEL);
       if (answer = MROK) then
       begin
-        ShellExecAsOriginalUser('open', 'https://download.visualstudio.microsoft.com/download/pr/4c5e26cf-2512-4518-9480-aac8679b0d08/523f1967fd98b0cf4f9501855d1aa063/windowsdesktop-runtime-6.0.13-win-x64.exe', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
+        ShellExecAsOriginalUser('open', 'https://builds.dotnet.microsoft.com/dotnet/Runtime/8.0.23/dotnet-runtime-8.0.23-win-x64.exe', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
         result := true
       end;
   end;

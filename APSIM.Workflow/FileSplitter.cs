@@ -3,7 +3,6 @@ using APSIM.Shared.Utilities;
 using DeepCloner.Core;
 using Models.Climate;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Models.Core.Run;
 using Models.Factorial;
 using Models.PostSimulationTools;
@@ -21,6 +20,8 @@ using Microsoft.Extensions.Logging;
 using APSIM.Core;
 using APSIM.Shared.Documentation.Extensions;
 using Models.PreSimulationTools;
+using System.Reflection;
+using Models.Utilities;
 
 namespace APSIM.Workflow
 {
@@ -36,6 +37,22 @@ namespace APSIM.Workflow
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
             string inputPath = Path.GetDirectoryName(apsimFilepath) + "/";
+            string fullPath = Path.GetFullPath(inputPath);
+
+            //add %root% to fullpath to get root path for later
+            string? bin = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            if (bin == null)
+                throw new Exception("Could not find bin folder");
+
+            DirectoryInfo? directory = new DirectoryInfo(bin).Parent ?? throw new Exception("Could not find parent directory of bin folder");
+            string directoryName = directory.Name;
+
+            while (directoryName == "Debug" || directoryName == "Release" || directoryName == "bin")
+            {
+                directory = directory.Parent ?? throw new Exception("Could not find parent directory of bin folder");
+                directoryName = directory.Name;
+            }
+            string rootPath = fullPath.Replace(directory.FullName, "%root%");
 
             if (inputPath == null)
                 throw new ArgumentNullException(nameof(inputPath), "Current directory path cannot be null.");
@@ -201,35 +218,61 @@ namespace APSIM.Workflow
                     copiedSims.FileName = sims.FileName;
                     copiedSims.ResetSimulationFileNames();
 
-                    if (copyWeatherFiles)
+                    List<Weather> weathers = copiedSims.Node.FindAll<Weather>().ToList();
+                    foreach (Weather weather in weathers)
                     {
-                        string weatherFilesDirectory = subFolder + "WeatherFiles" + "/";
-                        Directory.CreateDirectory(weatherFilesDirectory);
-                        CopyWeatherFiles(copiedSims, weatherFilesDirectory);
+                        if (!weather.FileName.Contains("%root%"))
+                        {
+                            weather.FileName = rootPath + weather.FileName;
+                        }
                     }
 
-                    if (copyObservedData)
+                    List<SetModelParamsBySimulation> modelParams = copiedSims.Node.FindAll<SetModelParamsBySimulation>().ToList();
+                    foreach (SetModelParamsBySimulation modelParam in modelParams)
                     {
-                        string dataFilesDirectory = subFolder + "Data" + "/";
-                        Directory.CreateDirectory(dataFilesDirectory);
-                        CopyObservedData(copiedSims, folder, inputPath, dataFilesDirectory, logger);
+                        if (!modelParam.ParameterFile.Contains("%root%"))
+                        {
+                            modelParam.ParameterFile = rootPath + modelParam.ParameterFile;
+                        }
                     }
-                    else
+
+                    List<string> allSheetNames = new List<string>();
+                    foreach (ExcelInput input in copiedSims.Node.FindAll<ExcelInput>())
                     {
-                        List<string> allSheetNames = new List<string>();
-                        foreach (ExcelInput input in copiedSims.Node.FindAll<ExcelInput>())
-                            foreach (string sheet in input.SheetNames)
-                                if (!allSheetNames.Contains(sheet))
-                                    allSheetNames.Add(sheet);
+                        foreach (string sheet in input.SheetNames)
+                            if (!allSheetNames.Contains(sheet))
+                                allSheetNames.Add(sheet);
 
-                        foreach (ObservedInput input in copiedSims.Node.FindAll<ObservedInput>())
-                            foreach (string sheet in input.SheetNames)
-                                if (!allSheetNames.Contains(sheet))
-                                    allSheetNames.Add(sheet);
-                        RemoveUnusedPO(copiedSims, allSheetNames);
-
-
+                        List<string> files = new List<string>();
+                        foreach (string file in input.FileNames)
+                        {
+                            if (!file.Contains("%root%"))
+                                files.Add(rootPath + file);
+                            else
+                                files.Add(file);
+                        }
+                        input.FileNames = files.ToArray();
                     }
+
+                    foreach (Observations input in copiedSims.Node.FindAll<Observations>())
+                    {
+                        foreach (string sheet in input.SheetNames)
+                            if (!allSheetNames.Contains(sheet))
+                                allSheetNames.Add(sheet);
+
+                        List<string> files = new List<string>();
+                        foreach (string file in input.FileNames)
+                        {
+                            if (!file.Contains("%root%"))
+                                files.Add(rootPath + file);
+                            else
+                                files.Add(file);
+                        }
+                        input.FileNames = files.ToArray();
+                    }
+                    RemoveUnusedPO(copiedSims, allSheetNames);
+
+
 
                     copiedSims.FileName = fullFilePath;
                     copiedSims.ResetSimulationFileNames();
@@ -275,7 +318,7 @@ namespace APSIM.Workflow
 
             foreach(Simulation sim in simulations)
                 folder.Children.Add(sim);
-            
+
             foreach(PredictedObserved po in predictedObserveds)
                 folder.Children.Add(po);
 
@@ -507,7 +550,7 @@ namespace APSIM.Workflow
 
             foreach (PredictedObserved po in removeList)
             {
-                Structure.Delete(po);
+                po.Node.Parent.RemoveChild(po);
             }
 
             return;

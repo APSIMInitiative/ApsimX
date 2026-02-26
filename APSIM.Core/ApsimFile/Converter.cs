@@ -8,6 +8,9 @@ using System.Globalization;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace APSIM.Core;
 
@@ -17,7 +20,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 205; } }
+    public static int LatestVersion { get { return 210; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -7132,5 +7135,210 @@ internal class Converter
             if (changed)
                 manager.Save();
         }
+    }
+
+    /// <summary>
+    /// Replaces SetEmergenceDate and SetGerminationDate methods that may have been missed by the previous UpgradeTo204.
+    /// </summary>
+    /// <param name="root">Root json object.</param>
+    /// <param name="_">Unused filename.</param>
+    private static void UpgradeToVersion206(JObject root, string _)
+    {
+        var emergingArg = SyntaxFactory.Argument(
+            SyntaxFactory.LiteralExpression(
+                SyntaxKind.StringLiteralExpression,
+                SyntaxFactory.Literal("Emerging")
+            )
+        );
+        var germinatingArg = SyntaxFactory.Argument(
+            SyntaxFactory.LiteralExpression(
+                SyntaxKind.StringLiteralExpression,
+                SyntaxFactory.Literal("Germinating")
+            )
+        );
+        var newName = SyntaxFactory.IdentifierName("SetPhaseCompletionDate");
+
+        foreach (var manager in JsonUtilities.ChildManagers(root).Where(mgr => !mgr.IsEmpty))
+        {
+            var managerRoot = CSharpSyntaxTree.ParseText(manager.ToString()).GetRoot();
+            var newRoot = managerRoot.ReplaceNodes(
+                managerRoot
+                    .DescendantNodes()
+                    .OfType<InvocationExpressionSyntax>()
+                    .Where(
+                        node =>
+                        {
+                            if (node.Expression is MemberAccessExpressionSyntax ma)
+                            {
+                                var name = ma.Name.ToFullString();
+                                return name == "SetEmergenceDate" || name == "SetGerminationDate";
+                            }
+                            return false;
+                        }
+                    ),
+                (old, _) =>
+                {
+                    var ma = old.Expression as MemberAccessExpressionSyntax;
+                    var newLastArg = ma.Name.ToFullString() == "SetEmergenceDate" ? emergingArg : germinatingArg;
+                    return SyntaxFactory.InvocationExpression(ma.WithName(newName), old.ArgumentList.AddArguments(newLastArg));
+                }
+            );
+
+            if (!managerRoot.IsEquivalentTo(newRoot))
+            {
+                manager.Read(newRoot.ToFullString());
+                manager.Save();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Finds NDVI models that have been implemented in a manager, gets their parameters, replaces the manager with a compiled model and puts the correct parameters onto it.
+    /// <param name="root">Root json object.</param>
+    /// <param name="_">Unused filename.</param>
+    private static void UpgradeToVersion207(JObject root, string _)
+    {
+        // loop through all managers and replace with NDVI model if appropriate
+        foreach (JObject manager in JsonUtilities.ChildrenRecursively(root, "Manager"))
+        {
+            if (manager["Name"].ToString() == "NDVIModel")
+            {
+                //Extract NDVI model parameters from scropt
+                var parameters = manager["Parameters"] as JArray;
+                var paramDict = new Dictionary<string, double>();
+
+                if (parameters != null)
+                {
+                    foreach (var p in parameters.OfType<JObject>())
+                    {
+                        string key = p["Key"].ToString();
+                        if (key != null && double.TryParse(p["Value"].ToString(), out double val))
+                            paramDict[key] = val;
+                    }
+                }
+
+                // Build replacement Spectral model
+                var newModel = new JObject
+                {
+                    ["$type"] = "Models.Sensor.Spectral, Models",
+                    ["Name"] = "Spectral",
+                    ["DrySoilNDVI"] = paramDict.GetValueOrDefault("DrySoilNDVI", 0.0),
+                    ["WetSoilNDVI"] = paramDict.GetValueOrDefault("WetSoilNDVI", 0.0),
+                    ["GreenCropNDVI"] = paramDict.GetValueOrDefault("GreenCropNDVI", 0.0),
+                    ["DeadCropNDVI"] = paramDict.GetValueOrDefault("DeadCropNDVI", 0.0),
+                    ["NDVI"] = 0.0,
+                    ["ResourceName"] = null,
+                    ["Children"] = new JArray(),
+                    ["Enabled"] = true,
+                    ["ReadOnly"] = false
+                };
+
+                //Remove manager model and add Specteral model to parent
+                JObject parent = JsonUtilities.Parent(manager) as JObject;
+                JsonUtilities.RemoveChild(parent, "NDVIModel");
+                JsonUtilities.AddChild(parent, newModel);
+            }
+        }
+
+        // Change report variables.
+        foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[NDVIModel].Script.NDVI", "[Spectral].NDVI", caseSensitive: false);
+
+        // Change graph variables.
+        foreach (var graph in JsonUtilities.ChildrenOfType(root, "Graph"))
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "NDVIModel.Script.NDVI", "Spectral.NDVI");
+    }
+    
+    /// <summary>
+    /// Change manager scripts:
+    ///      Models.Core.ApsimFile.Structure.Add(newZone, simulation);
+    /// to
+    ///      simulation.Node.AddChild(newZone);
+    /// and remove:   using Models.Core.ApsimFile;
+    /// <param name="root">Root json object.</param>
+    /// <param name="_">Unused filename.</param>
+    private static void UpgradeToVersion208(JObject root, string _)
+    {
+        const string pattern =
+            @"Models\.Core\.ApsimFile\.Structure\.Add\((?<arg1>[\w\d_]+),\s*(?<arg2>[\w\d_]+)\)";
+        foreach (var manager in JsonUtilities.ChildManagers(root))
+        {
+            var changed = false;
+            manager.ReplaceRegex(pattern, match =>
+            {
+                changed = true;
+
+                string arg1 = match.Groups["arg1"].ToString();
+                string arg2 = match.Groups["arg2"].ToString();
+                return $"{arg2}.Node.AddChild({arg1})";
+            });
+            if (changed)
+                manager.Save();
+            if (manager.Replace("using Models.Core.ApsimFile;", ""))
+                manager.Save();
+        }
+    }
+
+    /// <summary>
+    /// Change bibliography references to use [text][#reference] syntax
+    /// Update <sup></sup> and <sub></sub> tags to use ^^ and ~~ syntax
+    /// Replace a hrefs with [text](url) syntax
+    /// <param name="root">Root json object.</param>
+    /// <param name="_">Unused filename.</param>
+    private static void UpgradeToVersion209(JObject root, string _)
+    {
+        List<JObject> iTexts = JsonUtilities.ChildrenRecursively(root, "Memo");
+        iTexts.AddRange(JsonUtilities.ChildrenRecursively(root, "Documentation"));
+
+        foreach (JObject iText in iTexts)
+        {
+            string text = iText["Text"].ToString();
+            text = text.Replace("<sup>", "^");
+            text = text.Replace("</sup>", "^");
+            text = text.Replace("<sub>", "~");
+            text = text.Replace("</sub>", "~");
+
+            Regex regex = new Regex(@"\[([^\#\]]+)\](?!\()");
+            MatchCollection matches = regex.Matches(text);
+            int offset = 0;
+            foreach(Match match in matches)
+            {
+                string value = match.Groups[0].Value;
+                string reference = match.Groups[1].Value;
+                string newSyntax = $"[#{reference}]";
+                text = text.Remove(match.Index + offset, value.Length);
+                text = text.Insert(match.Index + offset, newSyntax);
+                offset += newSyntax.Length - value.Length;
+            }
+
+            regex = new Regex(@"<a href=""?([^\s<>]+)"">([^<>]+)<\/a>");
+            matches = regex.Matches(text);
+            foreach(Match match in matches)
+            {
+                string value = match.Groups[0].Value;
+                string url = match.Groups[1].Value;
+                string contents = match.Groups[2].Value;
+                if (!url.StartsWith("http"))
+                    url = "https://" + url;
+                text = text.Replace(value, $"[{contents}]({url})");
+            }
+
+            iText["Text"] = text;
+        }
+    }
+    /// <summary>
+    /// fix spelling mistake in reports with the term "kernal" instead of "kernel"
+    /// <param name="root">Root json object.</param>
+    /// <param name="_">Unused filename.</param>
+    private static void UpgradeToVersion210(JObject root, string _)
+    {
+        // Change report variables.
+        foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Grain.NperKernal", "[Wheat].Grain.NperKernel", caseSensitive: false);
+
+        // Change graph variables.
+        foreach (var graph in JsonUtilities.ChildrenOfType(root, "Graph"))
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Grain.NperKernal", "Wheat.Grain.NperKernel");
+
     }
 }

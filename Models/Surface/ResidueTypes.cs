@@ -11,6 +11,7 @@ namespace Models.Surface
     /// Encapsulates a list of residue types for SurfaceOrganicMatter model
     /// </summary>
     [Serializable]
+    [ValidParent(ParentType = typeof(SurfaceOrganicMatter))]
     public class ResidueTypes : Model
     {
         /// <summary>Gets or sets the residues.</summary>

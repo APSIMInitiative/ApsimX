@@ -8,7 +8,7 @@ using UserInterface.Classes;
 using UserInterface.EventArguments;
 using Gtk;
 using UserInterface.Interfaces;
-using Utility;
+using APSIMNG.Utility;
 
 namespace UserInterface.Views
 {
@@ -379,7 +379,7 @@ namespace UserInterface.Views
                     Button filesChooserButton = new("..."){ Name = property.ID.ToString() };
                     filesChooserButton.Clicked += (o, _) => ChooseFile(o as Widget, true, false);
 
-                    Box filenamesContainer = new HBox();
+                    Box filenamesContainer = new Box(Orientation.Horizontal, 0);
                     filenamesContainer.PackStart(filenamesOutline, true, true, 0);
                     filenamesContainer.PackStart(filesChooserButton, false, false, 0);
                     component = filenamesContainer;
@@ -642,7 +642,7 @@ namespace UserInterface.Views
             try
             {
                 var gtkcolour = (sender as ColorButton).Rgba.ToColour().ToGdk();
-                var colour = Utility.Colour.FromGtk(gtkcolour);
+                var colour = Colour.FromGtk(gtkcolour);
                 Guid id = Guid.Parse((sender as ColorButton).Name);
                 var args = new PropertyChangedEventArgs(id, colour);
                 PropertyChanged?.Invoke(this, args);

@@ -1,4 +1,5 @@
 ﻿using APSIM.Core;
+using Models.Soils.Nutrients;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Data;
@@ -6,7 +7,7 @@ using System.Linq;
 using UnitTests;
 using UserInterface.EventArguments;
 
-namespace APSIM.NG.Tests;
+namespace UnitTests.APSIM.NG.Tests;
 
 /// <summary>This is a test class for the intellisense functions.</summary>
 [TestFixture]
@@ -29,5 +30,18 @@ public class IntellisenseTests
     Assert.That(items.Select(i => i.TypeName), Is.EqualTo(new List<string>
       { "List<IModel>", "Boolean", "DateTime", "Double", "String", "Boolean", "String", "Node",
         "Int32", "IModel", "Boolean", "String", "DateTime" ,"DateTime"}));
+  }
+
+  /// <summary>Ensure basic intellisense works for models. Issue #9987</summary>
+  [Test]
+  public void EnsureIntellisenseWorksWorksWithNullProperties()
+  {
+    var nutrient = new Nutrient() { };
+    Node.Create(nutrient);
+
+    var items = NeedContextItemsArgs.ExamineModelForContextItemsV2(nutrient, "[Nutrient].FOM", true, false, false, false);
+
+    Assert.That(items.Count, Is.EqualTo(3));
+    Assert.That(items.Select(i => i.Name), Is.EqualTo([ "C", "N", "P"]));
   }
 }

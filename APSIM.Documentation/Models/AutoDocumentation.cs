@@ -58,6 +58,7 @@ namespace APSIM.Documentation.Models
                 {typeof(ModelsMap), typeof(DocMap)},
                 {typeof(BoundFunction), typeof(DocBoundFunction)},
                 {typeof(Memo), typeof(DocMemo)},
+                {typeof(M.Documentation), typeof(DocMemo)},
                 {typeof(Structure), typeof(DocStructure)},
                 {typeof(Folder),typeof(DocFolder)},
                 {typeof(LinearInterpolationFunction), typeof(DocLinearInterpolationFunction)},
@@ -86,7 +87,7 @@ namespace APSIM.Documentation.Models
                 {typeof(Manager), typeof(DocManager)},
                 {typeof(Experiment), typeof(DocExperiment)},
                 {typeof(FrostSenescenceFunction), typeof(DocFrostSenescenceFunction)},
-                {typeof(RUEModel), typeof(DocGenericWithChildren)},
+                {typeof(RUEModel), typeof(DocGeneric)},
                 {typeof(LeafCohortParameters), typeof(DocLeafCohortParameters)},
                 {typeof(RUECO2Function), typeof(DocGenericWithChildren)},
                 {typeof(RootShapeSemiCircle), typeof(DocGenericWithChildren)},
@@ -110,7 +111,7 @@ namespace APSIM.Documentation.Models
                 {typeof(Alias), typeof(DocAlias)},
                 {typeof(Simulations), typeof(DocSimulations)},
                 {typeof(M.Graph), typeof(DocGraph)},
-                {typeof(Nutrient), typeof(DocNutrient)},
+                {typeof(Nutrient), typeof(DocNutrient)}
             };
             return documentMap;
         }
@@ -122,7 +123,6 @@ namespace APSIM.Documentation.Models
             List<ITag> newTags;
             newTags = AutoDocumentation.DocumentModel(model);
             newTags = DocumentationUtilities.CleanEmptySections(newTags);
-            newTags = DocumentationUtilities.AddHeader(model.Name, newTags);
             return newTags;
         }
 

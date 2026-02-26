@@ -21,12 +21,6 @@
         /// </summary>
         void AddRightHandView(object control);
 
-        /// <summary>
-        /// Add a description to the right hand view.
-        /// </summary>
-        /// <param name="description">The description to show.</param>
-        void AddDescriptionToRightHandView(string description);
-
         /// <summary>Get a screen shot of the right hand panel.</summary>
         System.Drawing.Image GetScreenshotOfRightHandPanel();
     }

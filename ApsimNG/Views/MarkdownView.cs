@@ -13,14 +13,14 @@ using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 using Pango;
 using UserInterface.Extensions;
-using Utility;
+using APSIMNG.Utility;
 using Table = Markdig.Extensions.Tables.Table;
 
 namespace UserInterface.Views
 {
 
     /// <summary>A rich text view capable of rendering markdown-formatted text.</summary>
-    public class MarkdownView : ViewBase, IMarkdownView
+    public class MarkdownView : ViewBase
     {
         /// <summary>
         /// Padding between table columns, in pixels.
@@ -108,13 +108,13 @@ namespace UserInterface.Views
             mainWidget.Margin = 10;
             textView.PopulatePopup += OnPopulatePopupMenu;
             findView = new MarkdownFindView();
+            CreateStyles(textView);
 
             textView.Editable = false;
             textView.WrapMode = Gtk.WrapMode.Word;
             textView.VisibilityNotifyEvent += OnVisibilityNotify;
             textView.MotionNotifyEvent += OnMotionNotify;
             textView.WidgetEventAfter += OnWidgetEventAfter;
-            CreateStyles(textView);
             mainWidget.ShowAll();
             mainWidget.SizeAllocated += OnSizeAllocated;
             mainWidget.Destroyed += OnDestroyed;
@@ -126,6 +126,14 @@ namespace UserInterface.Views
             regularCursor = new Gdk.Cursor(Gdk.Display.Default, Gdk.CursorType.Xterm);
 
             textView.KeyPressEvent += OnTextViewKeyPress;
+        }
+
+        public void Refresh()
+        {
+            // Give Gtk time to digest these additions to the tag table
+            // Otherwise we can sometimes get nulls when we access the tags
+            while (GLib.MainContext.Iteration())
+                ;
         }
 
         /// <summary>
@@ -276,7 +284,9 @@ namespace UserInterface.Views
             {
                 textView.Buffer.Clear();
 
-                if (value != null)
+                // Attempting to process the text blocks when the view is not realized can result in
+                // Gtk Critical Errors.
+                if (value != null && textView.IsRealized)
                 {
                     MarkdownPipeline pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().UsePipeTables().UseEmphasisExtras().Build();
                     MarkdownDocument document = Markdown.Parse(value, pipeline);
@@ -613,6 +623,24 @@ namespace UserInterface.Views
                     image = new Gtk.Image(new Pixbuf(stream));
                 }
             }
+            else if (Uri.TryCreate(url, UriKind.Absolute, out Uri uri) && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps))
+            {
+                try{
+                    using (var stream = WebUtilities.AsyncGetStreamTask(uri.AbsoluteUri, "image/*"))
+                    {
+                        using MemoryStream ms = new MemoryStream();
+                        stream.ContinueWith(t => t.Result.CopyTo(ms)).Wait();
+                        byte[] content = ms.ToArray();
+                        string tempImgFileName = Path.Combine(Path.GetTempPath(), Path.GetFileName(uri.AbsolutePath));
+                        File.WriteAllBytes(tempImgFileName, content);
+                        image = new Image(new Pixbuf(tempImgFileName));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ShowError(ex);
+                }
+            }
             else if (File.Exists(absolutePath))
             {
                 // Apparently the native gtk deps we ship with windows releases don't include
@@ -736,11 +764,6 @@ namespace UserInterface.Views
             var strikethrough = new TextTag("Strikethrough");
             strikethrough.Strikethrough = true;
             textView.Buffer.TagTable.Add(strikethrough);
-
-            // Give Gtk time to digest these additions to the tag table
-            // Otherwise we can sometimes get nulls when we access the tags
-            while (GLib.MainContext.Iteration())
-                ;
         }
 
         // Looks at all tags covering the position (x, y) in the text view,
@@ -904,18 +927,5 @@ namespace UserInterface.Views
                 Underline = Pango.Underline.Single;
             }
         }
-    }
-
-    /// <summary>An interface for a rich text widget.</summary>
-    public interface IMarkdownView
-    {
-        /// <summary>Gets or sets the base path that images should be relative to.</summary>
-        string ImagePath { get; set; }
-
-        /// <summary>Gets or sets the markdown text</summary>
-        string Text { get; set; }
-
-        /// <summary>Gets or sets the visibility of the widget.</summary>
-        bool Visible { get; set; }
     }
 }

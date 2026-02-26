@@ -1,9 +1,11 @@
+using System;
 using System.Linq;
+using APSIM.Core;
 using Models;
 using Models.Core;
 using NUnit.Framework;
 
-namespace APSIM.Core.Tests;
+namespace UnitTests.APSIM.Core.Tests;
 
 [TestFixture]
 class NodeTreeTests
@@ -165,6 +167,53 @@ class NodeTreeTests
 
         // Check that OnCreated was called.
         Assert.That(mockModel.OnCreatedCalled, Is.True);
+    }
+
+    /// <summary>
+    /// This test reproduces bug #4693, where a user tries to copy
+    /// a simulations node into the GUI. This is a common
+    /// occurrence for model developers who might copy a released
+    /// model's resource file into the GUI so it can be edited.
+    /// When this happens, we want to add the first child of the
+    /// simulations node (not the simulations node itself!).
+    /// </summary>
+    /// <remarks>
+    /// Adding only the first child seems a little strange, but I'm
+    /// leaving this as-is for now to maintain the previous
+    /// intended behaviour.
+    /// </remarks>
+    [Test]
+    public void NodeAddSimulations_AddsChildNodeInstead()
+    {
+        Simulations sims = new();
+        Simulations modelToAdd = new()
+        {
+            Children = [
+                new Simulation()
+            ]
+        };
+
+        Node.Create(sims);
+
+        sims.Node.AddChild(modelToAdd);
+
+        // Should have 1 child with a name of Simulation
+        Assert.That(sims.Children, Is.Not.Null);
+        Assert.That(sims.Children.Count, Is.EqualTo(1));
+        Assert.That(sims.Children[0].Name, Is.EqualTo("Simulation"));
+    }
+
+    [Test]
+    public void StructureTests_EnsureCannotAddModelToReadonlyParent()
+    {
+        Simulation simulation = new Simulation()
+        {
+            ReadOnly = true
+        };
+        Node.Create(simulation);
+
+        Exception err = Assert.Throws<Exception>(() => simulation.Node.AddChild(new Clock()));
+        Assert.That(err.Message, Is.EqualTo("Cannot add a child to model Simulation. It is readonly."));
     }
 
     /// <summary>Ensure NodeTree.Remove removes a model and node as well as child nodes and models.</summary>
@@ -341,5 +390,54 @@ class NodeTreeTests
         zone1.Rename("Zone2");
         Assert.That(zone1.Name, Is.EqualTo("Zone21"));
         Assert.That(zone1.Model.Name, Is.EqualTo("Zone21"));
+    }
+
+    /// <summary>Ensure Node.WalkParents successfully returns all parent nodes.</summary>
+    [Test]
+    public void NodeWalkParents_ReturnsAllParents()
+    {
+        // Create a simulation
+        var simulation = new Simulation()
+        {
+            Children =
+            [
+                new Zone()
+                {
+                    Children = [
+                        new Clock()
+                    ]
+                }
+            ]
+        };
+
+        var sim = Node.Create(simulation);
+        var clock = sim.FindChild<Clock>(recurse: true);
+        var parents = clock.Node.WalkParents().ToArray();
+        Assert.That(parents.Count, Is.EqualTo(2));
+        Assert.That(parents[0].Model.Name, Is.EqualTo("Zone"));
+        Assert.That(parents[1].Model.Name, Is.EqualTo("Simulation"));
+    }
+
+    /// <summary>Ensure Node.Root successfully returns the top level node.</summary>
+    [Test]
+    public void NodeRoot_ReturnsCorrectNode()
+    {
+        // Create a simulation
+        var simulation = new Simulation()
+        {
+            Children =
+            [
+                new Zone()
+                {
+                    Children = [
+                        new Clock()
+                    ]
+                }
+            ]
+        };
+
+        var simNode = Node.Create(simulation);
+        var clock = simNode.FindChild<Clock>(recurse: true);
+        Assert.That(clock.Node.Root(), Is.EqualTo(simNode));
     }
 }

@@ -1,0 +1,25 @@
+{
+	"OutputPath":"temp/",
+	"CopyWeatherFiles":false,
+	"CopyObservedData":false,
+	"Groups": [
+		{
+			"Name":"Eucalyptus-TropicalSubTropical",
+			"Folders":["Tropical and SubTropical"],
+			"Experiments":[],
+			"Simulations":[]
+		},
+		{
+			"Name":"Eucalyptus-Temperate",
+			"Folders":["Temperate"],
+			"Experiments":[],
+			"Simulations":[]
+		},
+		{
+			"Name":"Eucalyptus-Sensibility",
+			"Folders":["Sensibility"],
+			"Experiments":[],
+			"Simulations":[]
+		}
+	]
+}

@@ -1,11 +1,13 @@
-﻿namespace APSIM.Core;
+﻿using System.Collections.Concurrent;
+
+namespace APSIM.Core;
 
 /// <summary>
 /// Implements APSIM's scoping rules.
 /// </summary>
 internal class ScopingRules
 {
-    private Dictionary<Node, List<Node>> cache = new();
+    private ConcurrentDictionary<Node, List<Node>> cache = new();
 
     /// <summary>
     /// Return a list of models in scope to the one specified.
@@ -44,7 +46,7 @@ internal class ScopingRules
         }
 
         // add to cache for next time.
-        cache.Add(scopedParent, modelsInScope);
+        cache[scopedParent] = modelsInScope;
         return modelsInScope;
     }
 

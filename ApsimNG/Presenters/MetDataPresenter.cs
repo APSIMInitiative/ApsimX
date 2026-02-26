@@ -51,7 +51,7 @@ namespace UserInterface.Presenters
 
         /// <summary>Hold an array of months for the graph,  by default, is set to will Jan yyyy to Dec yyyy, except where
         /// data being displays is not for full year</summary>
-        private string[] monthsToDisplay = DateUtilities.MONTHS_3_LETTERS;
+        private string[] monthsToDisplay = DateUtilities.MONTHS_3_LETTERS.Take(12).ToArray();
 
         /// <summary>The explorer presenter</summary>
         private ExplorerPresenter explorerPresenter;

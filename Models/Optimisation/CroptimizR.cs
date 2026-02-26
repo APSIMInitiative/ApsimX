@@ -15,13 +15,11 @@ using APSIM.Shared.Interfaces;
 using APSIM.Shared.JobRunning;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Models.Core.Run;
 using Models.Sensitivity;
 using Models.Storage;
 using Models.Utilities;
 using Newtonsoft.Json;
-using static Models.Core.Overrides;
 
 namespace Models.Optimisation
 {
@@ -523,7 +521,7 @@ namespace Models.Optimisation
         /// <param name="checkpointName">Name of the checkpoint.</param>
         /// <param name="optimalValues">Changes to be applied to the models.</param>
         /// <param name="fileName">Name of the apsimx file run by the optimiser.</param>
-        private void RunSimsWithOptimalValues(string fileName, string checkpointName, IEnumerable<Override> optimalValues)
+        private void RunSimsWithOptimalValues(string fileName, string checkpointName, IEnumerable<IModelCommand> optimalValues)
         {
             IDataStore storage = Structure.Find<IDataStore>();
 
@@ -532,7 +530,7 @@ namespace Models.Optimisation
             Simulations clonedSims = FileFormat.ReadFromFile<Simulations>(fileName).Model as Simulations;
 
             // Apply the optimal values to the cloned simulations.
-            Overrides.Apply(clonedSims, optimalValues);
+            CommandProcessor.Run(optimalValues, relativeTo: clonedSims, runner: null);
 
             DataStore clonedStorage = Structure.FindChild<DataStore>(relativeTo: clonedSims);
             clonedStorage.Close();
@@ -554,11 +552,11 @@ namespace Models.Optimisation
         /// parameter values returned by the optimiser.
         /// </summary>
         /// <param name="data">Datatable.</param>
-        private IEnumerable<Override> GetOptimalValues(DataTable data)
+        private IEnumerable<IModelCommand> GetOptimalValues(DataTable data)
         {
             DataRow optimal = data.AsEnumerable().FirstOrDefault(r => r["Is Optimal"]?.ToString() == "TRUE");
             foreach (Parameter param in Parameters)
-                yield return new Override(param.Path, optimal[$"{param.Name} Final"], Override.MatchTypeEnum.NameAndType);
+                yield return new SetPropertyCommand(param.Path, "=", optimal[$"{param.Name} Final"].ToString(), fileName: null);
         }
 
         /// <summary>

@@ -1,20 +1,20 @@
-﻿namespace UnitTests.Core.Run
+﻿using APSIM.Core;
+using APSIM.Shared.Utilities;
+using Models;
+using Models.Core;
+using Models.Core.Run;
+using Models.Storage;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using UnitTests.Storage;
+using static Models.Core.Run.Runner;
+
+namespace UnitTests.Core.Run
 {
-    using APSIM.Core;
-    using APSIM.Shared.Utilities;
-    using Models;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using Models.Core.Run;
-    using Models.Storage;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.IO;
-    using System.Linq;
-    using UnitTests.Storage;
-    using static Models.Core.Run.Runner;
 
     /// <summary>This is a test class for the RunnableSimulationList class</summary>
     [TestFixture]
@@ -208,7 +208,7 @@
                                     EndDate = new DateTime(1980, 1, 4)
                                 },
                                 new MockSummary(),
-                                new Report()
+                                new Models.Report()
                                 {
                                     Name = "Report",
                                     VariableNames = new string[] {"[Clock].Today"},
@@ -428,7 +428,7 @@
                 // Run simulations.
                 Runner runner = new Runner(simulation, runType: typeOfRun);
 
-                AllJobsCompletedArgs argsOfAllCompletedJobs = null;
+                IRunner.AllJobsCompletedArgs argsOfAllCompletedJobs = null;
                 runner.AllSimulationsCompleted += (sender, e) => { argsOfAllCompletedJobs = e; };
 
                 runner.Run();
@@ -525,7 +525,7 @@
 
                 Runner runner = new Runner(simulation, runType: typeOfRun);
 
-                AllJobsCompletedArgs argsOfAllCompletedJobs = null;
+                IRunner.AllJobsCompletedArgs argsOfAllCompletedJobs = null;
                 runner.AllSimulationsCompleted += (sender, e) => { argsOfAllCompletedJobs = e; };
 
                 // Run simulations.
@@ -566,7 +566,7 @@
                     Name = $"sim{number}",
                     Children =
                     [
-                        new Report()
+                        new Models.Report()
                         {
                             Name = $"Report{number}",
                             VariableNames = ["[Clock].Today"],
@@ -674,7 +674,7 @@
 
                 Runner runner = new Runner(simulation, runType:typeOfRun, runSimulations:false);
 
-                AllJobsCompletedArgs argsOfAllCompletedJobs = null;
+                IRunner.AllJobsCompletedArgs argsOfAllCompletedJobs = null;
                 runner.AllSimulationsCompleted += (sender, e) => { argsOfAllCompletedJobs = e; };
 
                 // Run simulations.

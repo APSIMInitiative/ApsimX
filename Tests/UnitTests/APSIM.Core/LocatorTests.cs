@@ -1,4 +1,5 @@
-﻿using APSIM.Shared.Utilities;
+﻿using APSIM.Core;
+using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
 using Models.Soils.Nutrients;
@@ -8,8 +9,9 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
+using APSIM.Shared.Documentation.Extensions;
 
-namespace APSIM.Core.Tests
+namespace UnitTests.APSIM.Core.Tests
 {
     [TestFixture]
     public class LocatorTests
@@ -584,6 +586,39 @@ namespace APSIM.Core.Tests
             //should return null if object not found
             v = loc.GetObject("[ModelA].Error");
             Assert.That(v, Is.Null);
+        }
+
+        /// <summary>
+        /// Specific test for GetAllObjects
+        /// </summary>
+        [Test]
+        public void GetAllObjectsTests()
+        {
+            Simulation simulation = new()
+            {
+                Children =
+                [
+                    new Zone()
+                    {
+                        Children = [
+                            new Clock() { StartDate = new DateTime(2000, 1, 1) }
+                        ]
+                    },
+                    new Zone()
+                    {
+                        Children = [
+                            new Clock() { StartDate = new DateTime(2000, 2, 2) }
+                        ]
+                    }
+                ]
+            };
+            Node.Create(simulation);
+
+            //should return the IVariable instead of the value of a property
+            var instances = simulation.Node.GetAllObjects("[Clock].StartDate").ToArray();
+            Assert.That(instances.Count, Is.EqualTo(2));
+            Assert.That(instances[0].Value, Is.EqualTo(new DateTime(2000, 1, 1)));
+            Assert.That(instances[1].Value, Is.EqualTo(new DateTime(2000, 2, 2)));
         }
 
         /// <summary>

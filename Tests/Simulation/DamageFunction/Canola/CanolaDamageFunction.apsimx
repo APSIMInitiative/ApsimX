@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 205,
+  "Version": 207,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -8215,7 +8215,7 @@
             },
             {
               "$type": "Models.Functions.FrostHeatDamageFunctions, Models",
-              "CropType": 1,
+              "CropType": 2,
               "FrostLowTT": -4.108862,
               "FrostMaxReductionRatio": 0.3050003,
               "FrostUpTT": -0.7549879,

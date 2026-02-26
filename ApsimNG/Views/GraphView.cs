@@ -21,7 +21,7 @@ using OxyPlot.GtkSharp;
 using OxyPlot.Series;
 using UserInterface.EventArguments;
 using UserInterface.Interfaces;
-using Utility;
+using APSIMNG.Utility;
 using LegendPlacement = OxyPlot.Legends.LegendPlacement;
 using OxyLegendOrientation = OxyPlot.Legends.LegendOrientation;
 using OxyLegendPosition = OxyPlot.Legends.LegendPosition;
@@ -76,7 +76,7 @@ namespace UserInterface.Views
                 markerSize = value;
                 double numericValue = GetMarkerSizeNumericValue(value);
                 if (plot1 != null && plot1.Model != null)
-                    foreach (var series in plot1.Model.Series.OfType<Utility.LineSeriesWithTracker>())
+                    foreach (var series in plot1.Model.Series.OfType<LineSeriesWithTracker>())
                         series.MarkerSize = numericValue;
             }
         }
@@ -100,7 +100,7 @@ namespace UserInterface.Views
         private bool inRightClick = false;
 
         private OxyPlot.GtkSharp.PlotView plot1;
-        private Paned vbox1 = null;
+        private Container vbox1 = null;
         private Expander expander1 = null;
         private Box vbox2 = null;
         private Label captionLabel = null;
@@ -119,7 +119,7 @@ namespace UserInterface.Views
         public GraphView(ViewBase owner) : base(owner)
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.GraphView.glade");
-            vbox1 = (Paned)builder.GetObject("vbox1");
+            vbox1 = (Container)builder.GetObject("vbox1");
             expander1 = (Expander)builder.GetObject("expander1");
             vbox2 = (Box)builder.GetObject("vbox2");
             captionLabel = (Label)builder.GetObject("captionLabel");
@@ -132,7 +132,7 @@ namespace UserInterface.Views
         protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
         {
             this.owner = ownerView;
-            vbox1 = gtkControl as Paned;
+            vbox1 = gtkControl as Container;
             mainWidget = vbox1;
 
             plot1 = new PlotView();
@@ -143,7 +143,7 @@ namespace UserInterface.Views
             if (vbox2 != null)
                 vbox2.PackStart(plot1, true, true, 0);
             else
-                vbox1.Add1(plot1);
+                vbox1.Add(plot1);
 
             smallestDate = DateTime.MaxValue;
             largestDate = DateTime.MinValue;
@@ -189,7 +189,7 @@ namespace UserInterface.Views
             // I notice that the GTK3 ScaleFactor has a value of 80% in this situation. If the screen
             // scaling is 125% or 100% then ScaleFactor is 1.0. It doesn't seem consistent though.
             // For now I'll just scale all fonts by 2.0. Works on my various screens. Will need some testing.
-            var font = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
+            var font = Pango.FontDescription.FromString(Configuration.Settings.FontName);
             fontSize = font.SizeIsAbsolute ? font.Size : Convert.ToInt32(font.Size / Pango.Scale.PangoScale) * 2;
         }
 
@@ -490,10 +490,10 @@ namespace UserInterface.Views
              bool showOnLegend,
              IEnumerable caption = null)
         {
-            Utility.LineSeriesWithTracker series = null;
+            LineSeriesWithTracker series = null;
             if (x != null && y != null)
             {
-                series = new Utility.LineSeriesWithTracker(title);
+                series = new LineSeriesWithTracker(title);
                 if (x.Count() > 0)
                     series.XType = x.Cast<object>().ToArray()[0].GetType();
                 else
@@ -515,9 +515,9 @@ namespace UserInterface.Views
                     series.ToolTip = title;
 
                 if (colour.ToArgb() == Color.Empty.ToArgb())
-                    colour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
+                    colour = Configuration.Settings.DarkTheme ? Color.White : Color.Black;
                 else if (colour.R == BackColor.R && colour.G == BackColor.G && colour.B == BackColor.B)
-                    colour = Utility.Colour.FromOxy(ForegroundColour);
+                    colour = Colour.FromOxy(ForegroundColour);
                 series.Color = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
 
                 series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
@@ -834,7 +834,7 @@ namespace UserInterface.Views
                 if (xIsFloatingPoint)
                     index = MathUtilities.SafeIndexOf(x.Cast<double>().ToList(), xVal);
                 else if (xType == typeof(DateTime))
-                    index = Array.IndexOf(x, DateTimeAxis.ToDateTime(xVal));
+                    index = Array.IndexOf(x, DateTimeAxis.ToDateTime(xVal, DateTimeAxis.DefaultPrecision));
                 else
                     index = i; // Array.IndexOf(x, xVal); // this is unlikely to work
 
@@ -927,11 +927,11 @@ namespace UserInterface.Views
 
                 // Colour
                 if (colour.ToArgb() == Color.Empty.ToArgb())
-                    colour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
+                    colour = Configuration.Settings.DarkTheme ? Color.White : Color.Black;
                 else if (colour.R == BackColor.R && colour.G == BackColor.G && colour.B == BackColor.B)
-                    colour = Utility.Colour.FromOxy(ForegroundColour);
+                    colour = Colour.FromOxy(ForegroundColour);
 
-                OxyColor oxyColour = Utility.Colour.ToOxy(colour);
+                OxyColor oxyColour = Colour.ToOxy(colour);
                 series.Fill = oxyColour;
                 series.Stroke = oxyColour;
 
@@ -1052,7 +1052,7 @@ namespace UserInterface.Views
                 // We never want text to be the same as the background colour.
                 annotation.TextColor = ForegroundColour;
             else
-                annotation.TextColor = Utility.Colour.ToOxy(colour);
+                annotation.TextColor = Colour.ToOxy(colour);
 
             this.plot1.Model.Annotations.Add(annotation);
         }

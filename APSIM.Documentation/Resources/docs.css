@@ -1,6 +1,6 @@
 .docs-wrapper {
     font-family: 'Montserrat', Arial, sans-serif;
-    width: 1000px;
+    width: 1200px;
     height: auto;
     overflow:visible;
     background-color: white;
@@ -13,6 +13,7 @@
     padding-left: 50px;
     padding-top: 30px;
     padding-bottom: 50px;
+    font-size: 16px;
 }
 
 .docs-img {
@@ -45,6 +46,7 @@
     margin: 0px;
     padding: 10px;
     text-align: left;
+    font-size: 16px;
 }
 
 tr:nth-child(even) {
@@ -96,7 +98,7 @@ a .docs-nav {
 	background-color: #f4f4f4;
 }
 
-/* Required to stop non-wrapping code tags. */
-pre{
-    white-space: pre-wrap;
+table p {
+    margin: 0px;
+    padding: 0px;
 }
