@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using DocumentFormat.OpenXml.Office2016.Excel;
 using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace APSIM.Shared.Utilities
@@ -81,13 +82,12 @@ namespace APSIM.Shared.Utilities
     /// </summary>
     public class MetFile
     {
-        /// <summary>
-        /// Symbol dictionary for converting from a 4-bit hex to data number character
-        /// </summary>
-        private static string[] SYMBOLS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "-", "/", "nan", ""];
+        /// <summary>Symbol dictionary for converting from a 4-bit hex to data number character</summary>
+        private static string[] SYMBOLS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "-", "/", "nan", ",", ""];
 
-        private static Dictionary<char, char> SYMBOLS_DICT = new Dictionary<char, char>() { {'0', '0' }, {'1', '1' }, {'2', '2' }, {'3', '3' }, {'4', '4' }, {'5', '5' }, {'6', '6' }, {'7', '7' }, 
-                                                                                        {'8', '8' }, {'9', '9' }, {'.', 'a'}, {'-', 'b'}, {'/', 'c'}, {'n', 'd'}, {' ', 'e'}, {'\t', 'f'} };
+        /// <summary>Symbol dictionary for converting from a 4-bit hex to data number character</summary>
+        private static Dictionary<char, char> SYMBOLS_DICT = new Dictionary<char, char>() { {'0', '0' }, {'1', '1' }, {'2', '2'}, {'3', '3'}, {'4', '4'}, {'5', '5'}, {'6', '6'}, {'7', '7'}, 
+                                                                                            {'8', '8' }, {'9', '9' }, {'.', 'a'}, {'-', 'b'}, {'/', 'c'}, {'n', 'd'}, {',', 'e'}}; 
 
         /// <summary>
         /// Supported Met File formats
@@ -191,6 +191,35 @@ namespace APSIM.Shared.Utilities
         {
             string output = WriteMet(data);
             return new MemoryStream(Encoding.UTF8.GetBytes(output));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void WhitelistColumns(string[] columns)
+        {
+            List<string> columnsToRemove = new List<string>();
+            foreach(MetColumn column in data.Columns)
+                if (!columns.Contains(column.Name))
+                    columnsToRemove.Add(column.Name);
+            data = RemoveColumns(data, columnsToRemove);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void LimitDecimalPercision(int decimalPlaces, string[] columns = null)
+        {
+            foreach(MetColumn column in data.Columns)
+            {
+                bool limit = false;
+                if (columns == null)
+                    limit = true;
+                else if (columns.Contains(column.Name))
+                    limit = true;
+                if(limit)
+                    column.DecimalPlaces = decimalPlaces;
+            }
         }
 
         /// <summary>Comments within met file</summary>
@@ -299,30 +328,6 @@ namespace APSIM.Shared.Utilities
             {
                 return null;
             }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="filepath"></param>
-        /// <param name="data"></param>
-        private static void SaveBin(string filepath, MetData data)
-        {
-            BinaryData output = WriteBin(data);
-            byte[] bytes = Convert.FromHexString(output.Hex);
-            File.WriteAllBytes(filepath, bytes);
-            return;
-        }
-
-        /// <summary>
-        /// Opens a binary file and converts it to a valid string representation in a Stream object
-        /// </summary>
-        private static MetData LoadBin(string filepath)
-        {
-            byte[] bytes = File.ReadAllBytes(filepath);
-            string text = Convert.ToHexString(bytes);
-            BinaryData data = new BinaryData(text, 0);
-            return ReadBin(data);
         }
 
         /// <summary>
@@ -467,9 +472,8 @@ namespace APSIM.Shared.Utilities
                 for(int i = 0; i < columnCount; i++)
                 {
                     string stringValue = row.Inputs[i];
-                    //update our column width if this value is bigger
-                    if (stringValue.Length > columns[i].Width)
-                        columns[i].Width = stringValue.Length;
+                    columns[i].UpdateWidth(stringValue);
+                    columns[i].UpdateDecimalPlaces(stringValue);
 
                     string columnName = columns[i].Name.ToLower();
                     if (columnName == "date")
@@ -734,9 +738,13 @@ namespace APSIM.Shared.Utilities
             //headers
             metData.Columns.Add(new MetColumn("date", ""));
 
-            int columnsLength = HexToInt(data, 1);
-            for (int i = 0; i < columnsLength; i++)
+            int columnsLength = HexToInt(data, 1) + 1; //add one to account for putting the date back in
+            for (int i = 1; i < columnsLength; i++)
                 metData.Columns.Add(new MetColumn(HexToString(data), ""));
+
+            //number of decimal places in columns
+            for (int i = 1; i < columnsLength; i++)
+                metData.Columns[i].DecimalPlaces = HexToInt(data, 1);
 
             //data
             int rowsLength = HexToInt(data, 8);
@@ -750,16 +758,25 @@ namespace APSIM.Shared.Utilities
             {
                 MetRow row = new MetRow();
                 row.Date = date;
+                row.Inputs.Add(date.ToString("yyyy-MM-dd"));
+                row.Values.Add(double.NaN);
+
                 date = date.AddDays(1);
 
-                for (int j = 0; j < columnsLength; j++)
+                for (int j = 1; j < columnsLength; j++)
                 {
                     string differenceString = DecodeNumber(data);
                     if (differenceString.Length == 0)
                         differenceString = "0";
-                    double value = previousRow.Values[j] - double.Parse(differenceString);
-                    row.Inputs.Add(value.ToString());
+
+                    int decimalPlaces = metData.Columns[j].DecimalPlaces;
+                    double value = Math.Round(previousRow.Values[j] - double.Parse(differenceString), decimalPlaces);
                     row.Values.Add(value);
+
+                    string text = value.ToString("F"+decimalPlaces);
+                    row.Inputs.Add(text);
+
+                    metData.Columns[j].UpdateWidth(text);
                 }
                 previousRow = row;
                 metData.Data.Add(row);
@@ -830,6 +847,10 @@ namespace APSIM.Shared.Utilities
             foreach(MetColumn column in columns)
                 output.Append(StringToHex(column.Name));
 
+            //number of decimal places in columns
+            for (int i = 0; i < columnsLength; i++)
+                output.Append(IntToHex(columns[i].DecimalPlaces, 1));
+
             //data
             output.Append(IntToHex(datelessMetData.Data.Count, 8));
 
@@ -842,8 +863,8 @@ namespace APSIM.Shared.Utilities
             {
                 for(int i = 0; i < columnsLength; i++)
                 {
-                    double difference = previousRow.Values[i] - row.Values[i];
-                    string differenceString = Math.Round(difference * 100, 0).ToString();
+                    double difference = Math.Round(previousRow.Values[i] - row.Values[i], columns[i].DecimalPlaces);
+                    string differenceString = difference.ToString();
                     if (differenceString == "0")
                         output.Append(IntToHex(0, 1));
                     else
@@ -1216,9 +1237,14 @@ namespace APSIM.Shared.Utilities
             public string Unit { get; set; }
 
             /// <summary>
-            /// Comments on line
+            /// Maximum length of this column in characters
             /// </summary>
             public int Width { get; set; }
+
+            /// <summary>
+            /// The number of decimal places used in this column
+            /// </summary>
+            public int DecimalPlaces { get; set; }
 
             /// <summary>
             /// Basic Constructor
@@ -1228,6 +1254,7 @@ namespace APSIM.Shared.Utilities
                 Name = "";
                 Unit = "";
                 Width = 0;
+                DecimalPlaces = 0;
             }
 
             /// <summary>
@@ -1258,6 +1285,30 @@ namespace APSIM.Shared.Utilities
                     return Width;
                 else
                     return Math.Max(MIN_COLUMN_WIDTH, Width);
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
+            public void UpdateWidth(string value)
+            {
+                if (value.Length > Width)
+                    Width = value.Length;
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
+            public void UpdateDecimalPlaces(string value)
+            {
+                if (value.Contains('.'))
+                {
+                    string decimals = value.Substring(value.LastIndexOf('.') + 1);
+                    if (decimals.Length > DecimalPlaces)
+                        DecimalPlaces = decimals.Length;
+                }
             }
         }
 
