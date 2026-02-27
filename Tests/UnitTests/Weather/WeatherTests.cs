@@ -123,8 +123,52 @@ namespace UnitTests.Weather
         /// </summary>
         [Test]
         public void MetWeatherFileTest()
-        {            
+        {
+            List<string> files = new List<string>();
+            foreach (var file in Directory.EnumerateFiles("C:\\git\\ApsimX\\", "*.met", SearchOption.AllDirectories))
+                files.Add(file);
+
+            MetFile data1;
+            MetFile data2;
+            foreach(string file in files)
+            {
+                Console.WriteLine(file);
+
+                data1 = new MetFile(file);
+                data1.Save("C:/git/ApsimX/Examples/WeatherFiles/test1.met", MetFile.MetFileFormat.Text);
+                data2 = new MetFile("C:/git/ApsimX/Examples/WeatherFiles/test1.met");
+
+                for(int i = 0; i < data1.Comments.Length; i++)
+                    Assert.That(data1.Comments[i], Is.EqualTo(data2.Comments[i]));
+
+                for(int i = 0; i < data1.Contants.Length; i++)
+                {
+                    Assert.That(data1.Contants[i], Is.EqualTo(data2.Contants[i]));
+                    Assert.That(data1.GetConstant(data1.Contants[i]), Is.EqualTo(data2.GetConstant(data2.Contants[i])));
+                }
+
+                for(int i = 0; i < data1.Columns.Length; i++)
+                    Assert.That(data1.Columns[i], Is.EqualTo(data2.Columns[i]));
+
+                for(int i = 0; i < data1.Units.Length; i++)
+                    Assert.That(data1.Units[i], Is.EqualTo(data2.Units[i]));
+
+                DateTime date = data1.StartDate;
+                for(int i = 0; i < data1.NumberOfDays; i++)
+                {
+                    double[] inputs1 = data1.GetDay(date);
+                    double[] inputs2 = data2.GetDay(date);
+                    date = date.AddDays(1);
+                    Assert.That(inputs1, Is.EqualTo(inputs2));
+                }
+            }
+
+
             MetFile data = new MetFile("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi.met");
+            //data.Save("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi_old.bin", MetFile.MetFileFormat.Binary);
+            data.Load("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi_old.bin");
+
+            /*data = new MetFile("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi.met");
             data.Save("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi2.met", MetFile.MetFileFormat.Text);
             data.Save("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi3.bin", MetFile.MetFileFormat.Binary);
 

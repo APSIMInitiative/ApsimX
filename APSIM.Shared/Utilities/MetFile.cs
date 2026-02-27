@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using SQLitePCL;
 
 namespace APSIM.Shared.Utilities
 {
@@ -15,6 +16,7 @@ namespace APSIM.Shared.Utilities
     /// ---------------
     /// Text (.met)
     /// ---------------
+    /// This is the default met file standard
     /// 
     /// ---------------
     /// Binary (.bin)
@@ -276,6 +278,27 @@ namespace APSIM.Shared.Utilities
             }
         }
 
+        /// <summary></summary>
+        public int NumberOfDays
+        {
+            get
+            {
+                return data.Data.Count;
+            }
+        }
+
+        /// <summary></summary>
+        public DateTime StartDate
+        {
+            get
+            {
+                if (NumberOfDays > 0)
+                    return data.Data[0].Date;
+                else
+                    throw new Exception("Met file has no daily data, cannot get starting date");
+            }
+        }
+
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
         // Private Static Helper Functions
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -296,7 +319,7 @@ namespace APSIM.Shared.Utilities
             }
             else if (format == MetFileFormat.Binary)
             {
-                BinaryData output = WriteBinaryV1(data);
+                BinaryData output = WriteBinaryV2(data);
                 bytes = Convert.FromHexString(output.Hex);
             }
             File.WriteAllBytes(filepath, bytes);
@@ -308,25 +331,33 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         private static MetData Load(string filepath, MetFileFormat format = MetFileFormat.Text)
         {
-            byte[] bytes = File.ReadAllBytes(filepath);
-            if (format == MetFileFormat.Text)
+            try
             {
-                string text = Encoding.UTF8.GetString(bytes);
-                return ReadMet(text);
-            }
-            else if (format == MetFileFormat.Binary)
-            {
-                string text = Convert.ToHexString(bytes);
-                BinaryData data = new BinaryData(text, 0);
-                if (ReadBinaryVersion(data) == 1)
-                    return ReadBinaryV1(data);
+                byte[] bytes = File.ReadAllBytes(filepath);
+                if (format == MetFileFormat.Text)
+                {
+                    string text = Encoding.UTF8.GetString(bytes);
+                    return ReadMet(text);
+                }
+                else if (format == MetFileFormat.Binary)
+                {
+                    string text = Convert.ToHexString(bytes);
+                    BinaryData data = new BinaryData(text, 0);
+                    if (ReadBinaryVersion(data) == 1)
+                        return ReadBinaryV1(data);
+                    else
+                        return ReadBinaryV2(data);
+                }
                 else
-                    return ReadBinaryV2(data);
+                {
+                    return null;
+                }
             }
-            else
+            catch (Exception exception)
             {
-                return null;
+                throw new Exception($"Cannot load met file {filepath}. Error: {exception.Message}");
             }
+            
         }
 
         /// <summary>
@@ -402,8 +433,16 @@ namespace APSIM.Shared.Utilities
                         }
                         else // we might have the header row, so move to next step
                         {
-                            step = 1; // set this to one so the next line is read for units
-                            columnNameLine = trimmed;
+                            string trimmedLower = trimmed.ToLower();
+                            if (trimmedLower.Contains("maxt") && trimmedLower.Contains("mint") && trimmedLower.Contains("rain"))
+                            {
+                                step = 1; // set this to one so the next line is read for units
+                                columnNameLine = trimmed;
+                            }
+                            else //we just have text on a line, treat as a comment
+                            {
+                                metData.Contants.Add(new MetConstant("! "+ trimmed));
+                            }
                         }
                     }
                     else if (step == 1) //found header last line, reading units
