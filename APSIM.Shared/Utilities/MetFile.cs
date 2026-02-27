@@ -296,7 +296,7 @@ namespace APSIM.Shared.Utilities
             }
             else if (format == MetFileFormat.Binary)
             {
-                BinaryData output = WriteBinaryV2(data);
+                BinaryData output = WriteBinaryV1(data);
                 bytes = Convert.FromHexString(output.Hex);
             }
             File.WriteAllBytes(filepath, bytes);
@@ -746,10 +746,10 @@ namespace APSIM.Shared.Utilities
             }
 
             //data
-            for (int j = 1; j < columnsLength; j++)
+            for (int i = 1; i < columnsLength; i++)
             {
-                Type dataType =  metData.Columns[j].DataType;
-                int decimalPlaces = metData.Columns[j].DecimalPlaces;
+                Type dataType =  metData.Columns[i].DataType;
+                int decimalPlaces = metData.Columns[i].DecimalPlaces;
                 double previousValue = 0;
                 string previousString = previousValue.ToString("F"+decimalPlaces);
                 foreach(MetRow row in metData.Data)
@@ -772,7 +772,7 @@ namespace APSIM.Shared.Utilities
                         }
                         row.Values.Add(previousValue);
                         row.Inputs.Add(previousString);
-                        metData.Columns[j].UpdateWidth(previousString);
+                        metData.Columns[i].UpdateWidth(previousString);
                     }
                 }
             }
@@ -872,7 +872,7 @@ namespace APSIM.Shared.Utilities
                 return "0";
         }
 
-        private static string UIntToHex(int value, int size = 2)
+        private static string UIntToHex(int value, int size)
         {
             string output = value.ToString("x");
             while(output.Length < size)
@@ -882,11 +882,11 @@ namespace APSIM.Shared.Utilities
 
         private static string StringToHex(string data)
         {
-            string length = UIntToHex(data.Length);
+            string length = UIntToHex(data.Length, 2);
 
             string text = "";
             foreach(char c in data)
-                text += UIntToHex(c);
+                text += UIntToHex(c, 2);
 
             return length + text;
         }
@@ -912,47 +912,6 @@ namespace APSIM.Shared.Utilities
                     output += SYMBOLS_DICT[c];
             }
             return output;
-        }
-
-        /// <summary>
-        /// Takes the different parts of the met file after being converted to strings and builds a normal
-        /// text metfile out of them with the correct formatting for it to be readable.
-        /// </summary>
-        /// <param name="constants">A list of StringPairs, one for each constant</param>
-        /// <param name="columns">A list of StringPairs, where the name is the column name, and the value is the unit string</param>
-        /// <param name="data">A list of list of strings of all the row x column data</param>
-        /// <returns></returns>
-        private static string GetMetfileString(List<StringPair> constants, List<StringPair> columns, List<List<string>> data)
-        {
-            StringBuilder builder = new StringBuilder(2000000);
-            string line = "";
-
-            builder.AppendLine("[weather.met.weather]");
-
-            foreach (StringPair constant in constants)
-                builder.AppendLine($"{constant.Name} = {constant.Value}");
-
-            line = "";
-            foreach (StringPair column in columns)
-                line += $"{column.Name} ";
-            builder.AppendLine(line);
-
-            line = "";
-            foreach (StringPair column in columns)
-                line += $"({column.Value}) ";
-            builder.AppendLine(line);
-
-            foreach (List<string> row in data)
-            {
-                line = "";
-                foreach (string value in row)
-                {
-                    line += $"{value} ";
-                }
-                builder.AppendLine(line);
-            }
-
-            return builder.ToString();
         }
 
         /// <summary>
@@ -1039,42 +998,6 @@ namespace APSIM.Shared.Utilities
             {
                 Hex = hex;
                 Position = position;
-            }
-        }
-
-        /// <summary>
-        /// A string pair to store constants and column data
-        /// </summary>
-        private class StringPair
-        {
-            /// <summary>
-            /// Name of the pair
-            /// </summary>
-            public string Name { get; set; }
-
-            /// <summary>
-            /// Value of the pair
-            /// </summary>
-            public string Value { get; set; }
-
-            /// <summary>
-            /// Basic Constructor
-            /// </summary>
-            public StringPair()
-            {
-                Name = "";
-                Value = "";
-            }
-
-            /// <summary>
-            /// Constructor for setting a pair.
-            /// </summary>
-            /// <param name="name">The name of the pair</param>
-            /// <param name="value">The value of the pair</param>
-            public StringPair(string name, string value)
-            {
-                Name = name;
-                Value = value;
             }
         }
 
@@ -1325,73 +1248,6 @@ namespace APSIM.Shared.Utilities
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
         // Legacy Read/Write Functions for deprecated versions
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        /// <summary>
-        /// Converts a bytes object to a metfile string
-        ///</summary>
-        /// <param name="data">The bytes object from the file</param>
-        /// <returns>
-        /// Metfile as a valid met string
-        /// </returns>
-        private static MetData ReadBinaryV1(BinaryData data)
-        {
-            //read version
-            string version = HexToString(data);
-
-            //read constants
-            int constantsLength = HexToUInt(data);
-
-            List<StringPair> constants = new List<StringPair>();
-            string startDate = "";
-
-            for (int i = 0; i < constantsLength; i++)
-            {
-                string name = HexToString(data);
-                string value = HexToString(data);
-
-                //start date isn't an actual constant, but is stored as a constant to save space
-                if (name == "start_date")
-                    startDate = value;
-                else
-                    constants.Add(new StringPair(name, value));
-            }
-
-            //headers
-            List<StringPair> columns = new List<StringPair>();
-            columns.Add(new StringPair("date", ""));
-
-            int columnsLength = HexToUInt(data);
-            for (int i = 0; i < columnsLength; i++)
-                columns.Add(new StringPair(HexToString(data), ""));
-
-            for (int i = 1; i < columnsLength + 1; i++)
-                columns[i].Value = HexToString(data);
-
-            //data
-            DateTime date;
-            if (!DateTime.TryParseExact(startDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
-                throw new Exception($"Cannot read met file. Start date is {startDate} which must be in yyyy-MM-dd format");
-
-            List<List<string>> values = new List<List<string>>();
-            int rowsLength = HexToUInt(data, 8);
-
-            for (int i = 0; i < rowsLength; i++)
-            {
-                List<string> row = new List<string>();
-                row.Add(date.ToString("yyyy-MM-dd"));
-
-                date = date.AddDays(1);
-
-                for (int j = 0; j < columnsLength; j++)
-                    row.Add(DecodeNumber(data));
-
-                values.Add(row);
-            }
-
-            string text = GetMetfileString(constants, columns, values);
-            return ReadMet(text);
-        }
-
         /// <summary>
         /// 
         /// </summary>
@@ -1423,14 +1279,14 @@ namespace APSIM.Shared.Utilities
                     constantText += StringToHex(constant.Name) + StringToHex(constant.Value);
                 }
             }
-            output.Append(UIntToHex(constantCount, 1));
+            output.Append(UIntToHex(constantCount, 2));
             output.Append(constantText);
 
             //headers
             //titles
             MetColumn[] columns = datelessMetData.Columns.ToArray();
 
-            output.Append(UIntToHex(columns.Length, 1));
+            output.Append(UIntToHex(columns.Length, 2));
             foreach(MetColumn column in columns)
                 output.Append(StringToHex(column.Name));
             foreach(MetColumn column in columns)
@@ -1448,6 +1304,80 @@ namespace APSIM.Shared.Utilities
 
             BinaryData data = new BinaryData(output.ToString(), 0);
             return data;
+        }
+
+        /// <summary>
+        /// Converts a bytes object to a metfile string
+        ///</summary>
+        /// <param name="data">The bytes object from the file</param>
+        /// <returns>
+        /// Metfile as a valid met string
+        /// </returns>
+        private static MetData ReadBinaryV1(BinaryData data)
+        {
+            MetData metData = new MetData();
+
+            //read version
+            string version = HexToString(data);
+
+            //read constants
+            int constantsLength = HexToUInt(data);
+
+            string startDate = "";
+
+            for (int i = 0; i < constantsLength; i++)
+            {
+                string name = HexToString(data);
+                string value = HexToString(data);
+
+                //start date isn't an actual constant, but is stored as a constant to save space
+                if (name == "start_date")
+                    startDate = value;
+                else
+                    metData.Contants.Add(new MetConstant(name, value));
+            }
+
+            //headers
+            metData.Columns.Add(new MetColumn("date", ""));
+
+            int columnsLength = HexToUInt(data);
+            for (int i = 0; i < columnsLength; i++)
+                metData.Columns.Add(new MetColumn(HexToString(data), ""));
+
+            for (int i = 1; i < columnsLength + 1; i++)
+                metData.Columns[i].Unit = HexToString(data);
+
+            //data
+            DateTime date;
+            if (!DateTime.TryParseExact(startDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
+                throw new Exception($"Cannot read met file. Start date is {startDate} which must be in yyyy-MM-dd format");
+
+            //create rows and add date column to them
+            int rowsLength = HexToUInt(data, 8);
+            for (int i = 0; i < rowsLength; i++)
+            {
+                MetRow row = new MetRow();
+                row.Date = date;
+                string text = date.ToString("yyyy-MM-dd");
+                row.Inputs.Add(text);
+                row.Values.Add(double.NaN);
+                date = date.AddDays(1);
+                metData.Data.Add(row);
+                metData.Columns[0].UpdateWidth(text);
+            }
+
+            foreach(MetRow row in metData.Data)
+            {
+                for (int i = 0; i < columnsLength; i++)
+                {
+                    double value = double.Parse(DecodeNumber(data));
+                    row.Values.Add(value);
+                    row.Inputs.Add(value.ToString());
+                    metData.Columns[i].UpdateWidth(value.ToString());
+                }
+            }
+
+            return metData;
         }
     }
 }
