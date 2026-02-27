@@ -127,9 +127,8 @@ namespace UnitTests.Weather
             MetFile data = new MetFile("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi.met");
             data.Save("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi2.met", MetFile.MetFileFormat.Text);
             data.Save("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi3.bin", MetFile.MetFileFormat.Binary);
-            data.Save("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi4.bin", MetFile.MetFileFormat.Compressed);
 
-            data = new MetFile("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi4.bin");
+            data = new MetFile("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi3.bin");
             data.Save("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi5.met", MetFile.MetFileFormat.Text);
 
             /*
