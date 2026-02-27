@@ -43,6 +43,10 @@ namespace APSIM.Shared.Utilities
     /// 
     /// - If the difference between the last day and the next is 0, then only a value of 0 is stored.
     /// 
+    /// - If a column contains text data, the entire column will be stored as text values instead of
+    ///   numbers. However the text value is still compared between rows and is only stored again if 
+    ///   it changes.
+    /// 
     /// The binary file is built to the follow schema:
     /// Data Types:
     /// - NUMBER: 4-bit int (length) + array of 4-bit int for symbol lookup
@@ -61,6 +65,7 @@ namespace APSIM.Shared.Utilities
     /// 8-bit unsigned int (Number of columns)
     /// WORD x columns (Name)
     /// WORD x columns (Units)
+    /// 4-bit int x columns (Type)
     /// 4-bit int x columns (Decimal Places)
     /// 
     /// 32-bit unsigned int (Number of data rows)
@@ -71,7 +76,7 @@ namespace APSIM.Shared.Utilities
     /// Version: 1
     /// ---------------
     /// Deprecated Legacy version of the binary format.
-    /// Does not Support comment, has poorer compression.
+    /// Does not support comments, or text data, has poorer compression.
     /// 
     /// Structure:
     /// WORD (Version)
@@ -92,9 +97,14 @@ namespace APSIM.Shared.Utilities
         private static string[] SYMBOLS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "-", "/", "nan", ",", ""];
 
         /// <summary>Symbol dictionary for converting from a 4-bit hex to data number character</summary>
-        private static Dictionary<char, char> SYMBOLS_DICT = new Dictionary<char, char>() { {'0', '0' }, {'1', '1' }, {'2', '2'}, {'3', '3'}, {'4', '4'}, {'5', '5'}, {'6', '6'}, {'7', '7'}, 
-                                                                                            {'8', '8' }, {'9', '9' }, {'.', 'a'}, {'-', 'b'}, {'/', 'c'}, {'n', 'd'}, {',', 'e'}}; 
+        private static Dictionary<char, char> SYMBOLS_DICT = new Dictionary<char, char>() { {'0', '0'}, {'1', '1'}, {'2', '2'}, {'3', '3'}, {'4', '4'}, {'5', '5'}, {'6', '6'}, {'7', '7'}, 
+                                                                                            {'8', '8'}, {'9', '9'}, {'.', 'a'}, {'-', 'b'}, {'/', 'c'}, {'n', 'd'}, {',', 'e'} };
 
+        /// <summary>
+        /// Minimum spacing for a column of data. Values that are less than this in a column will be padded with whitespace
+        /// </summary>
+        private static int MIN_COLUMN_WIDTH = 8;
+        
         /// <summary>
         /// Supported Met File formats
         /// </summary>
@@ -107,18 +117,12 @@ namespace APSIM.Shared.Utilities
             Text = 0,
             /// <summary>
             /// Extension: .bin
-            /// A compressed binary representation of a metfile. Contains numerial constants, column headers and daily data.
-            /// Comments, whitespace, units and text constants are not stored. 
-            /// Values are rounded to 1 decimal place.
-            /// This format is designed for reducing filesize for network transfer and not for saving or archiving metfiles.
+            /// A compressed binary representation of a metfile. Will not drop information during the conversion, however will combine
+            /// year, day columns into a date and reorder columns if in non-standard order.
+            /// Suuports constants, comments, headers, units and double or text data.
             /// </summary>
             Binary = 1
         }
-
-        /// <summary>
-        /// Minimum spacing for a column of data. Values that are less than this in a column will be padded with whitespace
-        /// </summary>
-        private static int MIN_COLUMN_WIDTH = 8;
 
         private MetData data;
 
@@ -468,7 +472,7 @@ namespace APSIM.Shared.Utilities
                 {
                     string stringValue = row.Inputs[i];
                     columns[i].UpdateWidth(stringValue);
-                    columns[i].UpdateDecimalPlaces(stringValue);
+                    columns[i].UpdateType(stringValue);
 
                     string columnName = columns[i].Name.ToLower();
                     if (columnName == "date")
@@ -623,6 +627,9 @@ namespace APSIM.Shared.Utilities
             //Units
             foreach(MetColumn column in datelessMetData.Columns)
                 output.Append(StringToHex(column.Unit));
+            //Data types
+            foreach(MetColumn column in datelessMetData.Columns)
+                output.Append(TypeToHex(column.DataType));
             //Decimal Places
             foreach(MetColumn column in datelessMetData.Columns)
                 output.Append(UIntToHex(column.DecimalPlaces, 1));
@@ -633,16 +640,35 @@ namespace APSIM.Shared.Utilities
             for(int i = 0; i < columnsLength; i++)
             {
                 double previousValue = 0;
+                string previousString = "";
                 int decimalPlaces = datelessMetData.Columns[i].DecimalPlaces;
+                Type dataType =  metData.Columns[i].DataType;
                 foreach(MetRow row in datelessMetData.Data)
                 {
-                    double difference = Math.Round(previousValue - row.Values[i], decimalPlaces);
-                    string differenceString = difference.ToString();
-                    if (differenceString == "0")
-                        output.Append(UIntToHex(0, 1));
+                    if (dataType == typeof(string))
+                    {
+                        string input = row.Inputs[i];
+                        if (input == previousString)
+                        {
+                            output.Append(UIntToHex(0, 1));
+                        }
+                        else
+                        {
+                            output.Append(UIntToHex(1, 1));
+                            output.Append(StringToHex(input));
+                            previousString = input;
+                        }
+                    }
                     else
-                        output.Append(EncodeNumber(differenceString));
-                    previousValue = row.Values[i];
+                    {
+                        double difference = Math.Round(previousValue - row.Values[i], decimalPlaces);
+                        string differenceString = difference.ToString();
+                        if (differenceString == "0")
+                            output.Append(UIntToHex(0, 1));
+                        else
+                            output.Append(EncodeNumber(differenceString));
+                        previousValue = row.Values[i];
+                    }
                 }
             }
 
@@ -695,6 +721,9 @@ namespace APSIM.Shared.Utilities
                 column.Unit = HexToString(data);
 
             foreach(MetColumn column in metData.Columns)
+                column.DataType = HexToType(data);
+
+            foreach(MetColumn column in metData.Columns)
                 column.DecimalPlaces = HexToUInt(data, 1);
 
             //Add date column back in at front
@@ -719,28 +748,58 @@ namespace APSIM.Shared.Utilities
             //data
             for (int j = 1; j < columnsLength; j++)
             {
+                Type dataType =  metData.Columns[j].DataType;
+                int decimalPlaces = metData.Columns[j].DecimalPlaces;
                 double previousValue = 0;
+                string previousString = previousValue.ToString("F"+decimalPlaces);
                 foreach(MetRow row in metData.Data)
                 {
-                    string differenceString = DecodeNumber(data);
-                    if (differenceString.Length == 0)
-                        differenceString = "0";
-
-                    int decimalPlaces = metData.Columns[j].DecimalPlaces;
-                    double value = Math.Round(previousValue - double.Parse(differenceString), decimalPlaces);
-                    row.Values.Add(value);
-                    previousValue = value;
-
-                    string text = value.ToString("F"+decimalPlaces);
-                    row.Inputs.Add(text);
-
-                    metData.Columns[j].UpdateWidth(text);
+                    if (dataType == typeof(string))
+                    {
+                        int difference = HexToUInt(data, 1);
+                        row.Values.Add(double.NaN);
+                        if (difference == 1) //string is not the same as previous
+                            previousString = HexToString(data);
+                        row.Inputs.Add(previousString);
+                    }
+                    else
+                    {
+                        string differenceString = DecodeNumber(data);
+                        if (differenceString.Length != 0)
+                        {
+                            previousValue = Math.Round(previousValue - double.Parse(differenceString), decimalPlaces);
+                            previousString = previousValue.ToString("F"+decimalPlaces);
+                        }
+                        row.Values.Add(previousValue);
+                        row.Inputs.Add(previousString);
+                        metData.Columns[j].UpdateWidth(previousString);
+                    }
                 }
             }
 
             return metData;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data">the hex string</param>
+        /// <returns>
+        /// 
+        /// </returns>
+        private static Type HexToType(BinaryData data)
+        {
+            int value = HexToUInt(data, 1);
+            if (value == 1)
+                return typeof(DateTime);
+            else if (value == 2)
+                return typeof(string);
+            else if (value == 3)
+                return typeof(double);
+            else
+                return null;
+        }
+
         /// <summary>
         /// Convert a hex string to an int
         /// </summary>
@@ -799,6 +858,18 @@ namespace APSIM.Shared.Utilities
             }
 
             return output;
+        }
+
+        private static string TypeToHex(Type type)
+        {
+            if (type == typeof(DateTime))
+                return "1";
+            else if (type == typeof(string))
+                return "2";
+            else if (type == typeof(double))
+                return "3";
+            else 
+                return "0";
         }
 
         private static string UIntToHex(int value, int size = 2)
@@ -1087,7 +1158,7 @@ namespace APSIM.Shared.Utilities
             /// <summary>
             /// 
             /// </summary>
-            public bool IsDate { get; set; }
+            public Type DataType { get; set; }
 
             /// <summary>
             /// Name of the pair
@@ -1118,6 +1189,7 @@ namespace APSIM.Shared.Utilities
                 Unit = "";
                 Width = 0;
                 DecimalPlaces = 0;
+                DataType = null;
             }
 
             /// <summary>
@@ -1130,12 +1202,11 @@ namespace APSIM.Shared.Utilities
                 Name = name;
                 Unit = unit;
                 Width = Math.Max(name.Length, unit.Length + 2);
+                DecimalPlaces = 0;
                 
                 string nameLowered = name.ToLower();
                 if (nameLowered == "day" || nameLowered == "year" || nameLowered == "date")
-                    IsDate = true;
-                else
-                    IsDate = false;
+                    DataType = typeof(DateTime);
             }
 
             /// <summary>
@@ -1164,9 +1235,23 @@ namespace APSIM.Shared.Utilities
             /// 
             /// </summary>
             /// <returns></returns>
-            public void UpdateDecimalPlaces(string value)
+            public void UpdateType(string value)
             {
-                if (value.Contains('.'))
+                if (DataType == typeof(DateTime))
+                    return;
+
+                if (DataType == null)
+                    DataType = typeof(double);
+
+                if (DataType == typeof(double))
+                {
+                    if (double.TryParse(value, out double number))
+                        DataType = typeof(double);
+                    else
+                        DataType = typeof(string);
+                }
+
+                if (DataType == typeof(double) && value.Contains('.'))
                 {
                     string decimals = value.Substring(value.LastIndexOf('.') + 1);
                     if (decimals.Length > DecimalPlaces)
