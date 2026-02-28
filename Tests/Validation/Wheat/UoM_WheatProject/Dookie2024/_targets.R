@@ -66,7 +66,7 @@ list(
   
   
   # check if haun manual-parameters are correct
-  tar_target(haun_input_checked, check_manual_params(config$folder_inputs,
+  tar_target(msg_haun_input_checked, check_manual_params(config$folder_inputs,
                                                      config$file_name_input_haun,
                                                      file_pheno_haun_obs)),
     
@@ -81,23 +81,37 @@ list(
   tar_target(df_pheno_interp, 
              interpolate_and_create_phenoStages(df_pheno_start_date, config$btwStgFrac)),
   
-  tar_target(df_pheno_input_csv_saved, spread_and_csv_save(config$folder_inputs, config$file_name_input_pheno, 
+  tar_target(msg_pheno_input_saved, spread_and_csv_save(config$folder_inputs, 
+                                                               config$file_name_input_pheno, 
                                                    df_pheno_interp)),
   
   tar_target(df_all_obs_files, read_and_merge_obs_files(file.path(config$folder_rawData),
                                                         config$file_rawData_excel,
                                                         config$sheet_name_observed)),
   
-  tar_target(saved_obs_file,save_df_to_excel(config$folder_apsimx,
+  tar_target(msg_obs_saved,save_df_to_excel(config$folder_apsimx,
                                              config$file_saved_obs_excel, 
                                              config$sheet_name_observed, 
                                              df_all_obs_files)),
   
-  # pre-flight dependency check for APSIM
-  tar_target(check_depend, check_project_dependencies(projects = config$proj_name,
-                                                      dir_met = config$folder_met,
-                                                      dir_inputs= config$folder_inputs,
-                                                      dir_obs= config$folder_apsimx))
+  # Post-flight dependency check for APSIM
+  tar_target(
+    name = check_depend, 
+    command = {
+      # 1. List the targets here to force `{targets}` to wait for them
+      msg_obs_saved
+      msg_haun_input_checked
+      msg_pheno_input_saved
+      
+      # 2. Now run the actual function
+      check_project_dependencies(
+        projects = config$proj_name,
+        dir_met = config$folder_met,
+        dir_inputs = config$folder_inputs,
+        dir_obs = config$folder_apsimx
+      )
+    }
+  )
   
   
 )
