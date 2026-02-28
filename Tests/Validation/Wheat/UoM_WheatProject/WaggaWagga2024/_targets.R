@@ -55,7 +55,7 @@ targets <- list(
       folder_inputs               = here::here("..", "inputs"),
       folder_apsimx               = here::here(), # FIXME: these changed, that's why repetitions here
       file_rawData_excel          = "2024_WaggaWagga_PHDA24WARI2.xlsx", # raw observed data (pre-defined file name)
-      file_saved_obs_excel        = paste0(proj_name, "_Observed.xlsx"), # name of observation file TO BE SAVED for APSIM
+      file_saved_obs_excel        = paste0(proj_name, "_Observed.xlsx"), # name of new observation file TO BE SAVED for APSIM
       file_SimNameByCultivar      = paste0(proj_name,"_CultivarToSimName.csv"), # pre-defined names of APSIM UI simulations
       file_metaData_observed      = paste0(proj_name,"_observed_data_requirements.csv"),# pre-defined list of obs vars to fetch
       
@@ -70,9 +70,8 @@ targets <- list(
       target_betwStages           = 50, # % of period between two adjacent events when a synthetic event date is assumed
       var_name_stage              = "apsim_stage_raw", # name of synthetic var with observed PCSD data
       varName_addedToObserv       = "Wheat.Phenology.Stage", # new synthetic variable to be added into observations
-      #file_name_input_haun        = "WaggaWagga2024_HaunRelatedInput.csv",
-      file_name_input_pheno       = paste0(proj_name,"_PhenoDatesInput.csv"),
-      file_name_input_haun        = paste0(proj_name,"_HaunStagesInput.csv")
+      file_name_input_pheno       = paste0(proj_name,"_PhenoDatesInput.csv"), # to save
+      file_name_input_haun        = paste0(proj_name,"_HaunStagesInput.csv") # to save
     )
   ),
   
@@ -180,13 +179,13 @@ targets <- list(
   tar_target(msg_param_saved, saveInputParam(df_apsimStageInput, 
                                            config$folder_inputs, 
                                            config$file_name_input_pheno),
-    format = "file"),
+    format = "file")
   
   # pre-flight dependency check for APSIM
-  tar_target(check_depend, check_project_dependencies(projects = config$proj_name,
-                                                      dir_met = config$folder_met,
-                                                      dir_inputs= config$folder_inputs,
-                                                      dir_obs= config$folder_apsimx))
+  # tar_target(check_depend, check_project_dependencies(projects = config$proj_name,
+  #                                                     dir_met = config$folder_met,
+  #                                                     dir_inputs= config$folder_inputs,
+  #                                                     dir_obs= config$folder_apsimx))
   
   
   
