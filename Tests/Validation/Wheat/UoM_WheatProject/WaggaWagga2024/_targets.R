@@ -31,6 +31,7 @@ source("R/read_soil_water.R")
 source("R/soil_water_in_json.R")
 source("R/check_manual_params.R")
 source("R/check_project_dependencies.R")
+source("R/save_met_file.R")
 
 #----------------
 # Project name
@@ -54,6 +55,7 @@ targets <- list(
       folder_rawData              = here::here(proj_name), # this will be from Cloud
       folder_inputs               = here::here("..", "inputs"),
       folder_apsimx               = here::here(), # FIXME: these changed, that's why repetitions here
+      folder_met                  = here::here("..", "met"),
       file_rawData_excel          = "2024_WaggaWagga_PHDA24WARI2.xlsx", # raw observed data (pre-defined file name)
       file_saved_obs_excel        = paste0(proj_name, "_Observed.xlsx"), # name of new observation file TO BE SAVED for APSIM
       file_SimNameByCultivar      = paste0(proj_name,"_CultivarToSimName.csv"), # pre-defined names of APSIM UI simulations
@@ -94,10 +96,32 @@ targets <- list(
   ### Create met file to run APSIM
   ### ------------------------------------------------
   
-  tar_target(df_met, createWeatherFile(config$folder_rawData, 
-                                       config$file_rawData_excel, 
-                                       config$sheetExcel_weather, 
-                                       config$coord_thisLatLon)),
+  ### ------------------------------------------------
+  ### Create met file to run APSIM
+  ### ------------------------------------------------
+  
+  # 1. Process the data
+  tar_target(
+    name = processed_met_data, 
+    command = createWeatherFile(
+      thisFolder = config$folder_rawData, 
+      thisExcelFile = config$file_rawData_excel, 
+      thisSheet = config$sheetExcel_weather
+    )
+  ),
+  
+  # 2. Save the file
+  tar_target(
+    name = msg_met_saved,
+    command = save_met_file(
+      met_list = processed_met_data,
+      folder_path = config$folder_met,
+      file_name = paste0(config$proj_name, ".met"),
+      lat = config$coord_thisLatLon$lat,
+      lon = config$coord_thisLatLon$lon
+    ),
+    format = "file" # Track the saved output!
+  ),
   
   ### -------------------------------------------------------------------------------
   ### Prepare excel data with observation in APSIM format to compare with simulations
@@ -179,15 +203,26 @@ targets <- list(
   tar_target(msg_param_saved, saveInputParam(df_apsimStageInput, 
                                            config$folder_inputs, 
                                            config$file_name_input_pheno),
-    format = "file")
+    format = "file"),
   
-  # pre-flight dependency check for APSIM
-  # tar_target(check_depend, check_project_dependencies(projects = config$proj_name,
-  #                                                     dir_met = config$folder_met,
-  #                                                     dir_inputs= config$folder_inputs,
-  #                                                     dir_obs= config$folder_apsimx))
-  
-  
+  # Post-flight dependency check for APSIM
+  tar_target(
+    name = check_depend, 
+    command = {
+      # 1. List the targets here to force `{targets}` to wait for them
+      msg_obs_saved
+      msg_param_saved
+      msg_met_saved
+      
+      # 2. Now run the actual function
+      check_project_dependencies(
+        projects = config$proj_name,
+        dir_met = config$folder_met,
+        dir_inputs = config$folder_inputs,
+        dir_obs = config$folder_apsimx
+      )
+    }
+  )
   
 )
 
