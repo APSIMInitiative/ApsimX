@@ -1792,19 +1792,18 @@ library(visNetwork)</code></pre>
 <h1>Construct pipeline</h1>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIHRhcmdldHM6OnRhcl9tYWtlKGNhbGxyX2Z1bmN0aW9uID0gTlVMTClcblxuYGBgIn0= -->
-<pre class="r"><code> targets::tar_make(callr_function = NULL)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFyZ2V0czo6dGFyX21ha2UoY2FsbHJfZnVuY3Rpb24gPSBOVUxMKVxuXG5gYGAifQ== -->
+<pre class="r"><code>targets::tar_make(callr_function = NULL)
 </code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3I6XG4hIEVycm9yIHJ1bm5pbmcgdGFyZ2V0czo6dGFyX21ha2UoKVxuICBFcnJvciBtZXNzYWdlczogdGFyZ2V0czo6dGFyX21ldGEoZmllbGRzID0gZXJyb3IsIGNvbXBsZXRlX29ubHkgPSBUUlVFKVxuICBEZWJ1Z2dpbmcgZ3VpZGU6IGh0dHBzOi8vYm9va3Mucm9wZW5zY2kub3JnL3RhcmdldHMvZGVidWdnaW5nLmh0bWxcbiAgSG93IHRvIGFzayBmb3IgaGVscDogaHR0cHM6Ly9ib29rcy5yb3BlbnNjaS5vcmcvdGFyZ2V0cy9oZWxwLmh0bWxcbiAgTGFzdCBlcnJvcjogUHJlLWZsaWdodCBjaGVjayBmYWlsZWQhIE1pc3NpbmcgMiByZXF1aXJlZCBmaWxlczpcbiAgLSBDOi9naXRodWIvQXBzaW1YL1Rlc3RzL1ZhbGlkYXRpb24vV2hlYXQvVW9NX1doZWF0UHJvamVjdC8uLi9pbnB1dHMvRG9va2llMjAyNF9IYXVuUmVsYXRlZElucHV0LmNzdlxuICAtIEM6L2dpdGh1Yi9BcHNpbVgvVGVzdHMvVmFsaWRhdGlvbi9XaGVhdC9Vb01fV2hlYXRQcm9qZWN0L0Rvb2tpZTIwMjRfT2JzZXJ2ZWQuY3N2XG5cblBsZWFzZSBsb2NhdGUgdGhlc2UgZmlsZXMgYmVmb3JlIHJ1bm5pbmcgdGhlIHBpcGVsaW5lLlxuIn0= -->
+<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3I6XG4hIEVycm9yIHJ1bm5pbmcgdGFyZ2V0czo6dGFyX21ha2UoKVxuICBFcnJvciBtZXNzYWdlczogdGFyZ2V0czo6dGFyX21ldGEoZmllbGRzID0gZXJyb3IsIGNvbXBsZXRlX29ubHkgPSBUUlVFKVxuICBEZWJ1Z2dpbmcgZ3VpZGU6IGh0dHBzOi8vYm9va3Mucm9wZW5zY2kub3JnL3RhcmdldHMvZGVidWdnaW5nLmh0bWxcbiAgSG93IHRvIGFzayBmb3IgaGVscDogaHR0cHM6Ly9ib29rcy5yb3BlbnNjaS5vcmcvdGFyZ2V0cy9oZWxwLmh0bWxcbiAgTGFzdCBlcnJvcjogUHJlLWZsaWdodCBjaGVjayBmYWlsZWQhIE1pc3NpbmcgMSByZXF1aXJlZCBmaWxlczpcbiAgLSBDOi9naXRodWIvQXBzaW1YL1Rlc3RzL1ZhbGlkYXRpb24vV2hlYXQvVW9NX1doZWF0UHJvamVjdC8uLi9tZXQvRG9va2llMjAyNC5tZXRcblxuUGxlYXNlIGxvY2F0ZSB0aGVzZSBmaWxlcyBiZWZvcmUgcnVubmluZyB0aGUgcGlwZWxpbmUuXG4ifQ== -->
 <pre><code>Error:
 ! Error running targets::tar_make()
   Error messages: targets::tar_meta(fields = error, complete_only = TRUE)
   Debugging guide: https://books.ropensci.org/targets/debugging.html
   How to ask for help: https://books.ropensci.org/targets/help.html
-  Last error: Pre-flight check failed! Missing 2 required files:
-  - C:/github/ApsimX/Tests/Validation/Wheat/UoM_WheatProject/../inputs/Dookie2024_HaunRelatedInput.csv
-  - C:/github/ApsimX/Tests/Validation/Wheat/UoM_WheatProject/Dookie2024_Observed.csv
+  Last error: Pre-flight check failed! Missing 1 required files:
+  - C:/github/ApsimX/Tests/Validation/Wheat/UoM_WheatProject/../met/Dookie2024.met
 
 Please locate these files before running the pipeline.</code></pre>
 <!-- rnb-output-end -->
