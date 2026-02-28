@@ -48,4 +48,3 @@ tar_destroy()
 ```{r}
 tar_read(json_soil_water)
 ```
-
