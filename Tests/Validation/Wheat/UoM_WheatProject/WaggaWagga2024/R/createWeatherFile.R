@@ -67,7 +67,7 @@ year  day  radn  maxt  mint  rain
 ")
   
   # Append weather data with no column names, no row names, space-separated
-  met_dir <- file.path(thisFolder, "..", "..","..", "met") |> normalizePath()
+  met_dir <- file.path(thisFolder, "..","..", "met") |> normalizePath()
   outfileName <- file.path(met_dir, "WaggaWagga2024.met")
   print(outfileName)
   print(file.exists(met_dir))

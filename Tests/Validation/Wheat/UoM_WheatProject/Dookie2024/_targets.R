@@ -23,6 +23,11 @@ source("R/check_project_dependencies.R")
 # set a haun manual-input check
 
 
+#-------------------
+
+proj_name <- "Dookie2024"
+
+
 # target objects
 list(
   # all configuration parameters
@@ -30,20 +35,20 @@ list(
     config,
     list(
       # folders and file names
-      proj_name                   = "Dookie2024", 
+      proj_name                   = proj_name, 
       folder_thisScript           = here::here(),
       folder_inputs               = here::here("..", "inputs"),
       folder_met                  = here::here("..", "met"),
       folder_apsimx               = here::here(), # a level up from where Analysis is
-      folder_rawData              = here::here("Dookie2024"),  
+      folder_rawData              = here::here(proj_name),  
       file_rawData_excel          = c("DookieEVA2024.xlsx",
                                       "DookieWWHI2024.xlsx"), # raw observed data (pre-defined file name),
-      file_workData_excel         = "Dookie2024_Observed.xlsx", #produced observed data (pre-defined file name)
+      file_saved_obs_excel         = paste0(proj_name,"_Observed.xlsx"), #produced observed data (pre-defined file name)
       sheet_name_observed         = "Observed",
       date_DOY_ref                = "01-01-2024", # date to transform DOY output into ddmmyy within simulations
       btwStgFrac                  = 0.5, # fraction of time in-between two pheno-stages when we assume a missing stage 
-      file_name_input_pheno       = "Dookie2024_PhenoDatesInput.csv",
-      file_name_input_haun        = "Dookie2024_HaunStagesInput.csv",
+      file_name_input_pheno       = paste0(proj_name,"_PhenoDatesInput.csv"),
+      file_name_input_haun        = paste0(proj_name,"_HaunStagesInput.csv"),
       cols_to_extract             = c("SimulationName",
                                          "Clock.Today",
                                          "Wheat.Phenology.HaunStage",
@@ -84,7 +89,7 @@ list(
                                                         config$sheet_name_observed)),
   
   tar_target(saved_obs_file,save_df_to_excel(config$folder_apsimx,
-                                             config$file_workData_excel, 
+                                             config$file_saved_obs_excel, 
                                              config$sheet_name_observed, 
                                              df_all_obs_files)),
   

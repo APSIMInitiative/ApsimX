@@ -1800,18 +1800,10 @@ tar_manifest(fields = name)$name</code></pre>
 <h1>Construct pipeline</h1>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFyZ2V0czo6dGFyX21ha2UoY2FsbHJfZnVuY3Rpb24gPSBOVUxMKVxuXG5gYGAifQ== -->
-<pre class="r"><code>targets::tar_make(callr_function = NULL)
-</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyB0YXJnZXRzOjp0YXJfbWFrZShjYWxscl9mdW5jdGlvbiA9IE5VTEwpICMgZm9yIGRlYnVnZ2luZ1xudGFyZ2V0czo6dGFyX21ha2UoKVxuYGBgIn0= -->
+<pre class="r"><code># targets::tar_make(callr_function = NULL) # for debugging
+targets::tar_make()</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiREVCVUcgSU5TSURFIFRBUkdFVDpcIlxuWzFdIFwiQzovZ2l0aHViL0Fwc2ltWC9UZXN0cy9WYWxpZGF0aW9uL1doZWF0L1VvTV9XaGVhdFByb2plY3QvV2FnZ2FXYWdnYTIwMjRcIlxuWzFdIFwiQzovZ2l0aHViL0Fwc2ltWC9UZXN0cy9WYWxpZGF0aW9uL1doZWF0L1VvTV9XaGVhdFByb2plY3QvV2FnZ2FXYWdnYTIwMjQvSW5wdXRGaWxlc0Zyb21DbG91ZC8yMDI0X1dhZ2dhV2FnZ2FfUEhEQTI0V0FSSTIueGxzeFwiXG5bMV0gVFJVRVxuWzFdIFwiQzpcXFxcZ2l0aHViXFxcXEFwc2ltWFxcXFxUZXN0c1xcXFxWYWxpZGF0aW9uXFxcXFdoZWF0XFxcXG1ldC9XYWdnYVdhZ2dhMjAyNC5tZXRcIlxuWzFdIFRSVUVcbiJ9 -->
-<pre><code>[1] &quot;DEBUG INSIDE TARGET:&quot;
-[1] &quot;C:/github/ApsimX/Tests/Validation/Wheat/UoM_WheatProject/WaggaWagga2024&quot;
-[1] &quot;C:/github/ApsimX/Tests/Validation/Wheat/UoM_WheatProject/WaggaWagga2024/InputFilesFromCloud/2024_WaggaWagga_PHDA24WARI2.xlsx&quot;
-[1] TRUE
-[1] &quot;C:\\github\\ApsimX\\Tests\\Validation\\Wheat\\met/WaggaWagga2024.met&quot;
-[1] TRUE</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 </div>
@@ -1830,15 +1822,12 @@ tar_manifest(fields = name)$name</code></pre>
 <h1>Get soil parameters in json format</h1>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFyX3JlYWQoanNvbl9zb2lsX3dhdGVyKVxuYGBgIn0= -->
-<pre class="r"><code>tar_read(json_soil_water)</code></pre>
-<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 </div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KIyBMaWJyYXJpZXMNCmBgYHtyLCB3YXJuaW5nPUZBTFNFfQ0KbGlicmFyeSh0YXJnZXRzKQ0KbGlicmFyeSh0aWR5dmVyc2UpDQpsaWJyYXJ5KHZpc05ldHdvcmspDQpgYGANCg0KDQojIENoZWNrIHBpcGVsaW5lIHN0YXR1cw0KYGBge3J9DQp0YXJfZ2xpbXBzZSgpDQpgYGANCg0KDQpgYGB7cn0NCnRhcl92aXNuZXR3b3JrKCkNCmBgYA0KDQpgYGB7cn0NCnRhcl92aXNuZXR3b3JrKHRhcmdldHNfb25seSA9IFRSVUUpDQpgYGANCg0KYGBge3J9DQp0YXJfbWFuaWZlc3QoKQ0KdGFyX21hbmlmZXN0KGZpZWxkcyA9IG5hbWUpJG5hbWUNCmBgYA0KDQojIENvbnN0cnVjdCBwaXBlbGluZQ0KYGBge3J9DQojIHRhcmdldHM6OnRhcl9tYWtlKGNhbGxyX2Z1bmN0aW9uID0gTlVMTCkgIyBmb3IgZGVidWdnaW5nDQp0YXJnZXRzOjp0YXJfbWFrZSgpDQpgYGANCg0KIyBEZXN0cm95IHBpcGVsaW5lIChvZmYgYnkgZGVmYXVsdCkNCmBgYHtyLCB3YXJuaW5nPUZBTFNFLCBldmFsID0gRkFMU0UgfQ0KdGFyX2Rlc3Ryb3koKQ0KIyB0YXJnZXRzOjp0YXJfZGVzdHJveShhc2sgPSBGQUxTRSkNCg0KYGBgDQoNCg0KIyBHZXQgc29pbCBwYXJhbWV0ZXJzIGluIGpzb24gZm9ybWF0DQpgYGB7cn0NCnRhcl9yZWFkKGpzb25fc29pbF93YXRlcikNCmBgYA0KDQo=</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KIyBMaWJyYXJpZXMNCmBgYHtyLCB3YXJuaW5nPUZBTFNFfQ0KbGlicmFyeSh0YXJnZXRzKQ0KbGlicmFyeSh0aWR5dmVyc2UpDQpsaWJyYXJ5KHZpc05ldHdvcmspDQpgYGANCg0KDQojIENoZWNrIHBpcGVsaW5lIHN0YXR1cw0KYGBge3J9DQp0YXJfZ2xpbXBzZSgpDQpgYGANCg0KDQpgYGB7cn0NCnRhcl92aXNuZXR3b3JrKCkNCmBgYA0KDQpgYGB7cn0NCnRhcl92aXNuZXR3b3JrKHRhcmdldHNfb25seSA9IFRSVUUpDQpgYGANCg0KYGBge3J9DQp0YXJfbWFuaWZlc3QoKQ0KdGFyX21hbmlmZXN0KGZpZWxkcyA9IG5hbWUpJG5hbWUNCmBgYA0KDQojIENvbnN0cnVjdCBwaXBlbGluZQ0KYGBge3J9DQojIHRhcmdldHM6OnRhcl9tYWtlKGNhbGxyX2Z1bmN0aW9uID0gTlVMTCkgIyBmb3IgZGVidWdnaW5nDQp0YXJnZXRzOjp0YXJfbWFrZSgpDQpgYGANCg0KIyBEZXN0cm95IHBpcGVsaW5lIChvZmYgYnkgZGVmYXVsdCkNCmBgYHtyLCB3YXJuaW5nPUZBTFNFLCBldmFsID0gRkFMU0UgfQ0KdGFyX2Rlc3Ryb3koKQ0KIyB0YXJnZXRzOjp0YXJfZGVzdHJveShhc2sgPSBGQUxTRSkNCg0KYGBgDQoNCg0KIyBHZXQgc29pbCBwYXJhbWV0ZXJzIGluIGpzb24gZm9ybWF0DQpgYGB7cn0NCg0KYGBgDQoNCg==</div>
 
 
 

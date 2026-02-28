@@ -45,6 +45,6 @@ tar_destroy()
 
 # Get soil parameters in json format
 ```{r}
-tar_read(json_soil_water)
+
 ```
 
