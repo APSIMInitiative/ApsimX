@@ -1756,130 +1756,59 @@ display: none;
 <h1>Libraries</h1>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubGlicmFyeSh0YXJnZXRzKVxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KHZpc05ldHdvcmspXG5gYGBcbmBgYCJ9 -->
-<pre class="r"><code>```r
-library(targets)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0YXJnZXRzKVxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KHZpc05ldHdvcmspXG5gYGAifQ== -->
+<pre class="r"><code>library(targets)
 library(tidyverse)
 library(visNetwork)</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-
-
-# Check pipeline status
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxudGFyX2dsaW1wc2UoKVxuYGBgXG5gYGAifQ== --&gt;
-
-```r
-```r
-tar_glimpse()</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-
-
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxudGFyX3Zpc25ldHdvcmsoKVxuYGBgXG5gYGAifQ== --&gt;
-
-```r
-```r
-tar_visnetwork()</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-
-
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxudGFyX3Zpc25ldHdvcmsodGFyZ2V0c19vbmx5ID0gVFJVRSlcbmBgYFxuYGBgIn0= --&gt;
-
-```r
-```r
-tar_visnetwork(targets_only = TRUE)</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxudGFyX21hbmlmZXN0KClcbnRhcl9tYW5pZmVzdChmaWVsZHMgPSBuYW1lKSRuYW1lXG5gYGBcbmBgYCJ9 --&gt;
-
-```r
-```r
-tar_manifest()
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="check-pipeline-status" class="section level1">
+<h1>Check pipeline status</h1>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFyX2dsaW1wc2UoKVxuYGBgIn0= -->
+<pre class="r"><code>tar_glimpse()</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFyX3Zpc25ldHdvcmsoKVxuYGBgIn0= -->
+<pre class="r"><code>tar_visnetwork()</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFyX3Zpc25ldHdvcmsodGFyZ2V0c19vbmx5ID0gVFJVRSlcbmBgYCJ9 -->
+<pre class="r"><code>tar_visnetwork(targets_only = TRUE)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFyX21hbmlmZXN0KClcbnRhcl9tYW5pZmVzdChmaWVsZHMgPSBuYW1lKSRuYW1lXG5gYGAifQ== -->
+<pre class="r"><code>tar_manifest()
 tar_manifest(fields = name)$name</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-
-# Construct pipeline
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFyZ2V0czo6dGFyX21ha2UoY2FsbHJfZnVuY3Rpb24gPSBOVUxMKVxuXG5gYGAifQ== --&gt;
-
-```r
-targets::tar_make(callr_function = NULL)
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="construct-pipeline" class="section level1">
+<h1>Construct pipeline</h1>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIHRhcmdldHM6OnRhcl9tYWtlKGNhbGxyX2Z1bmN0aW9uID0gTlVMTClcblxuYGBgIn0= -->
+<pre class="r"><code> targets::tar_make(callr_function = NULL)
 </code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3I6XG4hIEVycm9yIHJ1bm5pbmcgdGFyZ2V0czo6dGFyX21ha2UoKVxuICBFcnJvciBtZXNzYWdlczogdGFyZ2V0czo6dGFyX21ldGEoZmllbGRzID0gZXJyb3IsIGNvbXBsZXRlX29ubHkgPSBUUlVFKVxuICBEZWJ1Z2dpbmcgZ3VpZGU6IGh0dHBzOi8vYm9va3Mucm9wZW5zY2kub3JnL3RhcmdldHMvZGVidWdnaW5nLmh0bWxcbiAgSG93IHRvIGFzayBmb3IgaGVscDogaHR0cHM6Ly9ib29rcy5yb3BlbnNjaS5vcmcvdGFyZ2V0cy9oZWxwLmh0bWxcbiAgTGFzdCBlcnJvcjogb2JqZWN0ICdmb2xkZXJfdGhpc1NjcmlwdCcgbm90IGZvdW5kXG4ifQ== -->
-<pre><code>Error:
-! Error running targets::tar_make()
-  Error messages: targets::tar_meta(fields = error, complete_only = TRUE)
-  Debugging guide: https://books.ropensci.org/targets/debugging.html
-  How to ask for help: https://books.ropensci.org/targets/help.html
-  Last error: object &#39;folder_thisScript&#39; not found</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiQzovZ2l0aHViL0Fwc2ltWC9UZXN0cy9WYWxpZGF0aW9uL1doZWF0L1VvTV9XaGVhdFByb2plY3QvLi4vbWV0L0dyYXNzIFBhdGNoXy0zMy4yMF8xMjEuNjUubWV0XCIgICAgICAgIFxuWzJdIFwiQzovZ2l0aHViL0Fwc2ltWC9UZXN0cy9WYWxpZGF0aW9uL1doZWF0L1VvTV9XaGVhdFByb2plY3QvLi4vaW5wdXRzL0dyYXNzUGF0Y2gyMDI1X0hhdW5TdGFnZXNJbnB1dC5jc3ZcIlxuWzNdIFwiQzovZ2l0aHViL0Fwc2ltWC9UZXN0cy9WYWxpZGF0aW9uL1doZWF0L1VvTV9XaGVhdFByb2plY3QvLi4vaW5wdXRzL0dyYXNzUGF0Y2gyMDI1X1BoZW5vRGF0ZXNJbnB1dC5jc3ZcIlxuWzRdIFwiQzovZ2l0aHViL0Fwc2ltWC9UZXN0cy9WYWxpZGF0aW9uL1doZWF0L1VvTV9XaGVhdFByb2plY3QvR3Jhc3NQYXRjaDIwMjVfT2JzZXJ2ZWQueGxzeFwiICAgICAgICAgICAgICAgIFxuIn0= -->
+<pre><code>[1] &quot;C:/github/ApsimX/Tests/Validation/Wheat/UoM_WheatProject/../met/Grass Patch_-33.20_121.65.met&quot;        
+[2] &quot;C:/github/ApsimX/Tests/Validation/Wheat/UoM_WheatProject/../inputs/GrassPatch2025_HaunStagesInput.csv&quot;
+[3] &quot;C:/github/ApsimX/Tests/Validation/Wheat/UoM_WheatProject/../inputs/GrassPatch2025_PhenoDatesInput.csv&quot;
+[4] &quot;C:/github/ApsimX/Tests/Validation/Wheat/UoM_WheatProject/GrassPatch2025_Observed.xlsx&quot;                </code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -1899,17 +1828,13 @@ targets::tar_make(callr_function = NULL)
 <h1>Get soil parameters in json format</h1>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxudGFyX3JlYWQoanNvbl9zb2lsX3dhdGVyKVxuYGBgXG5gYGAifQ== -->
-<pre class="r"><code>```r
-tar_read(json_soil_water)</code></pre>
-<p>```</p>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFyX3JlYWQoanNvbl9zb2lsX3dhdGVyKVxuYGBgIn0= -->
+<pre class="r"><code>tar_read(json_soil_water)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
 </div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIkdyYXNzUGF0Y2gyMDI1IE5vdGVib29rIg0Kb3V0cHV0OiBodG1sX25vdGVib29rDQotLS0NCiMgTGlicmFyaWVzDQpgYGB7ciwgd2FybmluZz1GQUxTRX0NCmxpYnJhcnkodGFyZ2V0cykNCmxpYnJhcnkodGlkeXZlcnNlKQ0KbGlicmFyeSh2aXNOZXR3b3JrKQ0KYGBgDQoNCg0KIyBDaGVjayBwaXBlbGluZSBzdGF0dXMNCmBgYHtyfQ0KdGFyX2dsaW1wc2UoKQ0KYGBgDQoNCg0KYGBge3J9DQp0YXJfdmlzbmV0d29yaygpDQpgYGANCg0KDQpgYGB7cn0NCnRhcl92aXNuZXR3b3JrKHRhcmdldHNfb25seSA9IFRSVUUpDQpgYGANCg0KYGBge3J9DQp0YXJfbWFuaWZlc3QoKQ0KdGFyX21hbmlmZXN0KGZpZWxkcyA9IG5hbWUpJG5hbWUNCmBgYA0KDQojIENvbnN0cnVjdCBwaXBlbGluZQ0KYGBge3J9DQojIHRhcmdldHM6OnRhcl9tYWtlKGNhbGxyX2Z1bmN0aW9uID0gTlVMTCkgIyBmb3IgZGVidWdnaW5nDQp0YXJnZXRzOjp0YXJfbWFrZSgpDQpgYGANCg0KIyBEZXN0cm95IHBpcGVsaW5lIChvZmYgYnkgZGVmYXVsdCkNCmBgYHtyLCB3YXJuaW5nPUZBTFNFLCBldmFsID0gRkFMU0UgfQ0KdGFyX2Rlc3Ryb3koKQ0KIyB0YXJnZXRzOjp0YXJfZGVzdHJveShhc2sgPSBGQUxTRSkNCg0KYGBgDQoNCg0KIyBHZXQgc29pbCBwYXJhbWV0ZXJzIGluIGpzb24gZm9ybWF0DQpgYGB7cn0NCnRhcl9yZWFkKGpzb25fc29pbF93YXRlcikNCmBgYA0KDQo=</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkdyYXNzUGF0Y2gyMDI1IE5vdGVib29rIg0Kb3V0cHV0OiBodG1sX25vdGVib29rDQotLS0NCiMgTGlicmFyaWVzDQpgYGB7ciwgd2FybmluZz1GQUxTRX0NCmxpYnJhcnkodGFyZ2V0cykNCmxpYnJhcnkodGlkeXZlcnNlKQ0KbGlicmFyeSh2aXNOZXR3b3JrKQ0KYGBgDQoNCg0KIyBDaGVjayBwaXBlbGluZSBzdGF0dXMNCmBgYHtyfQ0KdGFyX2dsaW1wc2UoKQ0KYGBgDQoNCg0KYGBge3J9DQp0YXJfdmlzbmV0d29yaygpDQpgYGANCg0KDQpgYGB7cn0NCnRhcl92aXNuZXR3b3JrKHRhcmdldHNfb25seSA9IFRSVUUpDQpgYGANCg0KYGBge3J9DQp0YXJfbWFuaWZlc3QoKQ0KdGFyX21hbmlmZXN0KGZpZWxkcyA9IG5hbWUpJG5hbWUNCmBgYA0KDQojIENvbnN0cnVjdCBwaXBlbGluZQ0KYGBge3J9DQojIHRhcmdldHM6OnRhcl9tYWtlKGNhbGxyX2Z1bmN0aW9uID0gTlVMTCkgIyBmb3IgZGVidWdnaW5nDQp0YXJnZXRzOjp0YXJfbWFrZSgpDQpgYGANCg0KIyBEZXN0cm95IHBpcGVsaW5lIChvZmYgYnkgZGVmYXVsdCkNCmBgYHtyLCB3YXJuaW5nPUZBTFNFLCBldmFsID0gRkFMU0UgfQ0KdGFyX2Rlc3Ryb3koKQ0KIyB0YXJnZXRzOjp0YXJfZGVzdHJveShhc2sgPSBGQUxTRSkNCg0KYGBgDQoNCg0KIyBHZXQgc29pbCBwYXJhbWV0ZXJzIGluIGpzb24gZm9ybWF0DQpgYGB7cn0NCnRhcl9yZWFkKGpzb25fc29pbF93YXRlcikNCmBgYA0K</div>
 
 
 
