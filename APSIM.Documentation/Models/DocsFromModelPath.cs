@@ -1,9 +1,8 @@
 using APSIM.Shared.Documentation.Extensions;
 using System;
 using System.Collections.Generic;
-using MigraDocCore.DocumentObjectModel;
+using MigraDoc.DocumentObjectModel;
 using Models.Core;
-using Models.Core.ApsimFile;
 using System.IO;
 using APSIM.Shared.Documentation;
 using System.Linq;
@@ -77,7 +76,7 @@ namespace APSIM.Documentation.Models
             PdfBuilder builder = new PdfBuilder(document, options);
 
             // Read the file.
-            Simulations rootNode = FileFormat.ReadFromFile<Simulations>(filePath, e => throw e, false).NewModel as Simulations;
+            Simulations rootNode = ModelTreeFactory.CreateFromFile(filePath, e => throw e, false).Root.Instance as Simulations;
 
             // Attempt to resolve the model path inside the file.
             IVariable variable = rootNode.FindByPath(modelPath);

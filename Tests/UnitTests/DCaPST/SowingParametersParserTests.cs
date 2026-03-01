@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using APSIM.Core;
+using Models.Core;
 using Models.DCAPST;
 using Models.PMF;
 using NUnit.Framework;
@@ -30,11 +31,13 @@ namespace UnitTests.DCaPST
 
         private static DCaPSTModelNG CreateModel()
         {
-            return new DCaPSTModelNG();
+            var dcapst = new DCaPSTModelNG();
+            Node.Create(dcapst);
+            return dcapst;
         }
 
         private static DCaPSTModelNG CreateModel(
-            string cultivarFolderName, 
+            string cultivarFolderName,
             string plantName,
             string cultivarName
         )
@@ -46,13 +49,16 @@ namespace UnitTests.DCaPST
             plantFolder.Children.Add(cultivar);
             cultivarFolder.Children.Add(plantFolder);
 
-            return new DCaPSTModelNG()
+            var dcapst = new DCaPSTModelNG()
             {
                 Children = new List<IModel>()
                 {
                     cultivarFolder
                 }
             };
+            Node.Create(dcapst);
+
+            return dcapst;
         }
 
         private static SowingParameters CreateSowingParameters(
@@ -184,11 +190,10 @@ namespace UnitTests.DCaPST
             // Arrange
             var plantName = SORGHUM_PLANT_NAME;
             var cultivarName = CSH13R_CULTIVAR_NAME;
-            IModel model = null;
             var sowingParameters = CreateSowingParameters(plantName, cultivarName);
 
             // Act
-            var cultivar = SowingParametersParser.GetCultivarFromSowingParameters(model, sowingParameters);
+            var cultivar = SowingParametersParser.GetCultivarFromSowingParameters(model: null, sowingParameters);
 
             // Assert
             Assert.That(cultivar, Is.Null);

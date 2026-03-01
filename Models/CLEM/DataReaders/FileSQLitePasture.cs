@@ -11,6 +11,7 @@ using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using System.Globalization;
 using System.Linq;
+using APSIM.Core;
 
 namespace Models.CLEM
 {
@@ -29,7 +30,7 @@ namespace Models.CLEM
     [Version(1, 0, 3, "Includes access to ecological indicators from database")]
     [Version(1, 0, 4, "Allow more categories of land condition and grass basal area in datacube lookup")]
     [HelpUri(@"Content/Features/DataReaders/PastureDataReaderSQL.htm")]
-    public class FileSQLitePasture : CLEMModel, IFilePasture, IValidatableObject
+    public class FileSQLitePasture : CLEMModel, IFilePasture, IValidatableObject, IStructureDependency
     {
         [Link]
         private IClock clock = null;
@@ -223,9 +224,9 @@ namespace Models.CLEM
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
             // look for a shuffler
-            shuffler = this.FindAllChildren<RainfallShuffler>().FirstOrDefault();
+            shuffler = Structure.FindChildren<RainfallShuffler>().FirstOrDefault();
             if (shuffler != null)
-                rndClem = FindInScope<RandomNumberGenerator>();
+                rndClem = Structure.Find<RandomNumberGenerator>();
         }
 
         /// <summary>
@@ -395,7 +396,7 @@ namespace Models.CLEM
         {
             get
             {
-                Simulation sim = FindAncestor<Simulation>();
+                Simulation sim = Structure.FindParent<Simulation>(recurse: true);
                 if (sim?.FileName != null)
                 {
                     return PathUtilities.GetAbsolutePath(this.FileName, sim.FileName);

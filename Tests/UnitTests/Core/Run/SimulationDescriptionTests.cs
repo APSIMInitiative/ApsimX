@@ -1,15 +1,15 @@
-﻿namespace UnitTests.Core.Run
-{
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using Models.Core.Run;
-    using Models.Soils;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using UnitTests.Weather;
+﻿using APSIM.Core;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.Run;
+using Models.Soils;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using UnitTests.Weather;
 
+namespace UnitTests.Core.Run
+{
     /// <summary>This is a test class for the SimulationDescription class</summary>
     [TestFixture]
     public class SimulationDescriptionTests
@@ -31,10 +31,10 @@
                     },
                 }
             };
-            sim.ParentAllDescendants();
+            var tree = Node.Create(sim);
 
             var simulationDescription = new SimulationDescription(sim, "CustomName");
-            simulationDescription.AddOverride(new Overrides.Override("Weather.MaxT", 2, Overrides.Override.MatchTypeEnum.NameAndType));
+            simulationDescription.AddOverride(new SetPropertyCommand("Weather.MaxT", "=", "2", fileName: null));
 
             var newSim = simulationDescription.ToSimulation();
 
@@ -59,7 +59,7 @@
                     },
                 }
             };
-            sim.ParentAllDescendants();
+            var tree = Node.Create(sim);
 
             var replacementWeather = new MockWeather()
             {
@@ -67,9 +67,9 @@
                 MaxT = 2,
                 StartDate = DateTime.MinValue
             };
-            
+
             var simulationDescription = new SimulationDescription(sim, "CustomName");
-            simulationDescription.AddOverride(new Overrides.Override("Weather", replacementWeather, Overrides.Override.MatchTypeEnum.NameAndType));
+            simulationDescription.AddOverride(new ReplaceCommand(new ModelReference(replacementWeather), "Weather", multiple: true, ReplaceCommand.MatchType.NameAndType, newName: "Weather"));
 
             var newSim = simulationDescription.ToSimulation();
             Assert.That(newSim.Name, Is.EqualTo("CustomName"));
@@ -118,7 +118,7 @@
                     }
                 }
             };
-            simulations.ParentAllDescendants();
+            var tree = Node.Create(simulations);
 
             var sim = simulations.Children[1] as Simulation;
             var simulationDescription = new SimulationDescription(sim);
@@ -128,7 +128,7 @@
             Assert.That(weather.MaxT, Is.EqualTo(2));
 
             // Make sure any property overrides happens after a model replacement.
-            simulationDescription.AddOverride(new Overrides.Override("Weather.MaxT", 3, Overrides.Override.MatchTypeEnum.NameAndType));
+            simulationDescription.AddOverride(new SetPropertyCommand("Weather.MaxT", "=", "3", fileName: null));
             newSim = simulationDescription.ToSimulation();
             weather = newSim.Children[0] as MockWeather;
             Assert.That(weather.MaxT, Is.EqualTo(3));
@@ -172,7 +172,7 @@
                     }
                 }
             };
-            simulations.ParentAllDescendants();
+            var tree = Node.Create(simulations);
 
             var sim = simulations.Children[1] as Simulation;
             var simulationDescription = new SimulationDescription(sim);
@@ -243,14 +243,14 @@
                     }
                 }
             };
-            sim.ParentAllDescendants();
+            var tree = Node.Create(sim);
 
             var originalSoil = sim.Children[0] as Soil;
             var originalWater = originalSoil.Children[0] as Physical;
             var originalSoilOM = originalSoil.Children[2] as Organic;
 
             originalSoil.OnCreated();
-            
+
             var simulationDescription = new SimulationDescription(sim);
 
             var newSim = simulationDescription.ToSimulation();
@@ -273,7 +273,7 @@
         public void TestMultipleModelReplacements()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.Run.MultipleReplacements.apsimx");
-            Simulations sims = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as Simulations;
+            Simulations sims = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
 
             Runner runner = new Runner(sims);
             List<Exception> errors = runner.Run();

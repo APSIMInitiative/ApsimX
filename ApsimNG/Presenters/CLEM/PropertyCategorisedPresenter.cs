@@ -1,20 +1,13 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
+using UserInterface.Interfaces;
+using Models.Core;
+using UserInterface.Views;
+
 namespace UserInterface.Presenters
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Reflection;
-    using System.Runtime.Serialization;
-    using System.Xml;
-    using APSIM.Shared.Utilities;
-    using Commands;
-    using EventArguments;
-    using global::UserInterface.Extensions;
-    using Interfaces;
-    using Models;
-    using Models.Core;
-    using Views;
+
 
     /// <summary>
     /// This presenter class is responsible for wrapping the SimplePropertyPresenter in a view that includes a 

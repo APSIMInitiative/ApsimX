@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 
 namespace Models.Core
@@ -15,7 +16,6 @@ namespace Models.Core
         private Dictionary<Type, List<(MethodInfo, string)>> cache = new();
 
         private IModel relativeTo;
-        private ScopingRules scope = new ScopingRules();
 
         /// <summary>Constructor</summary>
         /// <param name="relativeTo">The model this events instance is relative to</param>
@@ -30,10 +30,10 @@ namespace Models.Core
             // Get a list of all models that need to have event subscriptions resolved in.
             var modelsToInspectForSubscribers = new List<IModel>();
             modelsToInspectForSubscribers.Add(relativeTo);
-            modelsToInspectForSubscribers.AddRange(relativeTo.FindAllDescendants());
+            modelsToInspectForSubscribers.AddRange(relativeTo.Node.FindChildren<IModel>(recurse: true));
 
             // Get a list of models in scope that publish events.
-            var modelsToInspectForPublishers = scope.FindAll(relativeTo).ToList();
+            var modelsToInspectForPublishers = relativeTo.Node.FindAll<IModel>().ToList();
 
             // Get a complete list of all models in scope
             var publishers = Publisher.FindAll(modelsToInspectForPublishers);
@@ -42,7 +42,7 @@ namespace Models.Core
             foreach (Publisher publisher in publishers)
                 if (subscribers.ContainsKey(publisher.Name))
                     foreach (var subscriber in subscribers[publisher.Name])
-                        if (scope.InScopeOf(subscriber.Model, publisher.Model))
+                        if (subscriber.Model.Node.InScopeOf(publisher.Model.Node))
                             publisher.ConnectSubscriber(subscriber);
         }
 
@@ -52,7 +52,7 @@ namespace Models.Core
             // disconnect named events
             List<IModel> allModels = new List<IModel>();
             allModels.Add(relativeTo);
-            allModels.AddRange(relativeTo.FindAllDescendants());
+            allModels.AddRange(relativeTo.Node.FindChildren<IModel>(recurse: true));
             List<Publisher> publishers = Publisher.FindAll(allModels).Where(a => a.Model.GetType().FullName.Contains(publisherName ?? "") && a.EventInfo.Name.Contains(eventName ?? "")).ToList();
             foreach (Events.Publisher publisher in publishers)
                 publisher.DisconnectAll();
@@ -62,7 +62,7 @@ namespace Models.Core
             foreach (Publisher publisher in publishers)
                 if (subscribers.ContainsKey(publisher.Name))
                     foreach (var subscriber in subscribers[publisher.Name])
-                        if (scope.InScopeOf(subscriber.Model, publisher.Model))
+                        if (subscriber.Model.Node.InScopeOf(publisher.Model.Node))
                             publisher.ConnectSubscriber(subscriber);
         }
 
@@ -71,7 +71,7 @@ namespace Models.Core
         {
             List<IModel> allModels = new List<IModel>();
             allModels.Add(relativeTo);
-            allModels.AddRange(relativeTo.FindAllDescendants());
+            allModels.AddRange(relativeTo.Node.FindChildren<IModel>(recurse: true));
             List<Events.Publisher> publishers = Events.Publisher.FindAll(allModels);
             foreach (Events.Publisher publisher in publishers)
                 publisher.DisconnectAll();
@@ -91,7 +91,7 @@ namespace Models.Core
             string eventName = StringUtilities.ChildName(eventNameAndPath, '.');
 
             // Get the component.
-            object component = relativeTo.FindByPath(componentName)?.Value;
+            object component = relativeTo.Node.Get(componentName);
             if (component == null)
                 throw new Exception(relativeTo.FullPath + " can not find the component: " + componentName);
 
@@ -119,7 +119,7 @@ namespace Models.Core
             string eventName = StringUtilities.ChildName(eventNameAndPath, '.');
 
             // Get the component.
-            object component = relativeTo.FindByPath(componentName)?.Value;
+            object component = relativeTo.Node.Get(componentName);
             if (component == null)
                 throw new Exception(relativeTo.FullPath + " can not find the component: " + componentName);
 
@@ -140,7 +140,7 @@ namespace Models.Core
         /// <param name="args">The event arguments. Can be null</param>
         public void Publish(string eventName, object[] args)
         {
-            List<Subscriber> subscribers = FindAllSubscribers(eventName, relativeTo, scope);
+            List<Subscriber> subscribers = FindAllSubscribers(eventName, relativeTo);
 
             foreach (Subscriber subscriber in subscribers)
             {
@@ -164,7 +164,7 @@ namespace Models.Core
         {
             var modelsToInspectForSubscribers = new List<IModel>();
             modelsToInspectForSubscribers.Add(relativeTo);
-            modelsToInspectForSubscribers.AddRange(relativeTo.FindAllDescendants());
+            modelsToInspectForSubscribers.AddRange(relativeTo.Node.FindChildren<IModel>(recurse: true));
 
             var subscribers = GetAllSubscribers(modelsToInspectForSubscribers);
 
@@ -215,60 +215,14 @@ namespace Models.Core
             return eventHandlers;
         }
 
-        private Dictionary<string, List<Subscriber>> GetAllSubscribers(string name, IModel relativeTo, ScopingRules scope)
-        {
-            IEnumerable<IModel> allModels = scope.FindAll(relativeTo);
-            Dictionary<string, List<Subscriber>> subscribers = new Dictionary<string, List<Subscriber>>();
-
-            foreach (IModel modelNode in allModels)
-            {
-                List<(MethodInfo, string)> eventHandlers = GetEventHandlersForModel(modelNode);
-                foreach (var method in eventHandlers)
-                {
-                    string eventName = method.Item2;
-
-                    if (!eventName.Equals(name, StringComparison.InvariantCultureIgnoreCase))
-                        continue;
-
-                    Subscriber subscriber = new Subscriber(eventName, modelNode, method.Item1);
-
-                    if (subscribers[eventName] == null)
-                        subscribers[eventName] = new List<Subscriber>();
-                    subscribers[eventName].Add(subscriber);
-                }
-            }
-
-            return subscribers;
-        }
-
-        /// <summary>Find all event subscribers in the specified models.</summary>
-        /// <param name="allModels">A list of all models in simulation.</param>
-        /// <returns>The list of event subscribers</returns>
-        private List<Subscriber> FindAllSubscribers(List<IModel> allModels)
-        {
-            List<Subscriber> subscribers = new List<Subscriber>();
-            foreach (IModel modelNode in allModels)
-            {
-                List<(MethodInfo, string)> eventHandlers = GetEventHandlersForModel(modelNode);
-                foreach (var method in eventHandlers)
-                {
-                    string eventName = method.Item2;
-                    subscribers.Add(new Subscriber(eventName, modelNode, method.Item1));
-                }
-            }
-
-            return subscribers;
-        }
-
         /// <summary>Find all event subscribers in the specified models.</summary>
         /// <param name="name">The name of the event to look for</param>
         /// <param name="relativeTo">The model to use in scoping lookup</param>
-        /// <param name="scope">Scoping rules</param>
         /// <returns>The list of event subscribers</returns>
-        private List<Subscriber> FindAllSubscribers(string name, IModel relativeTo, ScopingRules scope)
+        private List<Subscriber> FindAllSubscribers(string name, IModel relativeTo)
         {
             List<Subscriber> subscribers = new List<Subscriber>();
-            foreach (IModel modelNode in scope.FindAll(relativeTo))
+            foreach (IModel modelNode in relativeTo.Node.FindAll<IModel>())
             {
                 List<(MethodInfo, string)> eventHandlers = GetEventHandlersForModel(modelNode);
                 foreach (var method in eventHandlers)

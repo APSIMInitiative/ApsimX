@@ -1,6 +1,7 @@
 ---
 title: "Command Line on Linux"
 draft: false
+weight: 50
 ---
 
 

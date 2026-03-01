@@ -1,16 +1,12 @@
-﻿using ApsimNG.Interfaces;
-using Models;
+﻿using APSIMNG.Utility;
 using Models.Core;
 using Models.Factorial;
 using Models.Storage;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UserInterface.Interfaces;
 using UserInterface.Views;
 
@@ -29,7 +25,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The view to use
         /// </summary>
-        private IMarkdownView genericView;
+        private MarkdownView genericView;
 
         /// <summary>
         /// Attach the view
@@ -40,7 +36,7 @@ namespace UserInterface.Presenters
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.model = model as Model;
-            genericView = view as IMarkdownView;
+            genericView = view as MarkdownView;
         }
 
         public void Refresh()
@@ -55,15 +51,15 @@ namespace UserInterface.Presenters
             {
                 int terminatedCount = 0;
                 // find IStorageReader of simulation
-                IModel simulation = model.FindAncestor<Simulation>();
-                IDataStore ds = model.FindInScope<IDataStore>();
+                IModel simulation = model.Node.FindParent<Simulation>(recurse: true);
+                IDataStore ds = model.Node.Find<IDataStore>();
                 if (ds == null)
                     return markdownWriter.ToString();
 
                 DataTable dataTable = null;
                 string noSimulationMessage = "No simulation has been performed for this farm";
 
-                bool expSim = model.FindAllAncestors<Experiment>().Any();
+                bool expSim = model.Node.FindParents<Experiment>().Any();
                 if (expSim)
                 {
                     markdownWriter.Write("### Multiple simulation experiment performed");
@@ -211,7 +207,7 @@ namespace UserInterface.Presenters
                     markdownWriter.Write("\r\n### Message");
                     markdownWriter.Write("  \r\n  \r\nThis simulation has not been performed");
                 }
-                return markdownWriter.ToString(); 
+                return markdownWriter.ToString();
             }
         }
 
@@ -222,7 +218,7 @@ namespace UserInterface.Presenters
             int maxErrors = 100;
             string htmlString = "<!DOCTYPE html>\n" +
                 "<html>\n<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n<style>\n" +
-                "body {color: [FontColor]; max-width:1000px; font-size:10pt;}" + 
+                "body {color: [FontColor]; max-width:1000px; font-size:10pt;}" +
                 ".errorbanner {background-color:red !important; border-radius:5px 5px 0px 0px; color:white; padding:5px; font-weight:bold }" +
                 ".errorcontent {background-color:[ContError] !important; margin-bottom:20px; border-radius:0px 0px 5px 5px; border-color:red; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
                 ".warningbanner {background-color:orange !important; border-radius:5px 5px 0px 0px; color:white; padding:5px; font-weight:bold }" +
@@ -246,13 +242,13 @@ namespace UserInterface.Presenters
                 "\n</style>\n</head>\n<body>";
 
             // apply theme based settings
-            if (!Utility.Configuration.Settings.ThemeRestartRequired)
+            if (!Configuration.Settings.ThemeRestartRequired)
             {
-                htmlString = !Utility.Configuration.Settings.DarkTheme ? ModifyHTMLStyle(htmlString, false) : ModifyHTMLStyle(htmlString, true);
+                htmlString = !Configuration.Settings.DarkTheme ? ModifyHTMLStyle(htmlString, false) : ModifyHTMLStyle(htmlString, true);
             }
             else
             {
-                htmlString = !Utility.Configuration.Settings.DarkTheme ? ModifyHTMLStyle(htmlString, true) : ModifyHTMLStyle(htmlString, false);
+                htmlString = !Configuration.Settings.DarkTheme ? ModifyHTMLStyle(htmlString, true) : ModifyHTMLStyle(htmlString, false);
 
             }
 
@@ -261,9 +257,9 @@ namespace UserInterface.Presenters
                 htmlWriter.WriteLine(htmlString);
 
                 // find IStorageReader of simulation
-                IModel simulation = model.FindAncestor<Simulation>();
-                IModel simulations = simulation.FindAncestor<Simulations>();
-                IDataStore ds = simulations.FindAllChildren<IDataStore>().FirstOrDefault();
+                IModel simulation = model.Node.FindParent<Simulation>(recurse: true);
+                IModel simulations = simulation.Node.FindParent<Simulations>(recurse: true);
+                IDataStore ds = simulations.Node.FindChildren<IDataStore>().FirstOrDefault();
                 if (ds == null)
                     return htmlWriter.ToString();
 
@@ -413,7 +409,7 @@ namespace UserInterface.Presenters
                     htmlWriter.Write("\n</div>");
                 }
                 htmlWriter.Write("\n</body>\n</html>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 

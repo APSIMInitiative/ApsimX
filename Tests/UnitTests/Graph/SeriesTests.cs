@@ -1,19 +1,19 @@
-﻿namespace UnitTests.Graph
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using Models;
+using Models.Storage;
+using NUnit.Framework;
+using System.Collections.Generic;
+using System.Linq;
+using static UnitTests.Graph.MockSimulationDescriptionGenerator;
+using APSIM.Shared.Graphing;
+using Series = Models.Series;
+using System.Data;
+using UnitTests.Storage;
+using APSIMCore = APSIM.Core;
+
+namespace UnitTests.Graph
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models;
-    using Models.Storage;
-    using NUnit.Framework;
-    using System.Collections.Generic;
-    using System.Linq;
-    using static UnitTests.Graph.MockSimulationDescriptionGenerator;
-    using APSIM.Shared.Graphing;
-    using Series = Models.Series;
-    using Moq;
-    using System.Data;
-    using System;
-    using UnitTests.Storage;
 
     [TestFixture]
     class SeriesTests
@@ -27,7 +27,7 @@
                 Name = "Sim1",
                 Children = new List<IModel>()
                 {
-                    new Graph()
+                    new Models.Graph()
                     {
                         Children = new List<IModel>()
                         {
@@ -42,7 +42,7 @@
                     }
                 }
             };
-            sim.ParentAllDescendants();
+            APSIMCore.Node.Create(sim);
 
             string data =
                 "CheckpointName  SimulationID  Col1  Col2\r\n" +
@@ -54,7 +54,7 @@
 
             var reader = new TextStorageReader(data);
 
-            var graph = sim.Children[0] as Graph;
+            var graph = sim.Children[0] as Models.Graph;
             var page = new GraphPage();
             page.Graphs.Add(graph);
             var definitions = page.GetAllSeriesDefinitions(graph, reader);
@@ -89,7 +89,7 @@
                 Name = "Folder",
                 Children = new List<IModel>()
                 {
-                    new Graph()
+                    new Models.Graph()
                     {
                         Children = new List<IModel>()
                         {
@@ -110,7 +110,7 @@
                     })
                 }
             };
-            folder.ParentAllDescendants();
+            APSIMCore.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID   Exp Col1  Col2\r\n" +
@@ -122,7 +122,7 @@
 
             var reader = new TextStorageReader(data);
 
-            var graph = folder.Children[0] as Graph;
+            var graph = folder.Children[0] as Models.Graph;
             var series = graph.Children[0] as Series;
 
             var descriptors = series.GetDescriptorNames(reader).ToList();
@@ -180,7 +180,7 @@
                         new Description("Sim3", "Irr", "Wet", "Fert", "0"),
                         new Description("Sim4", "Irr", "Wet", "Fert", "10")
                     }),
-                    new Graph()
+                    new Models.Graph()
                     {
                         Children = new List<IModel>()
                         {
@@ -197,7 +197,7 @@
                     }
                 }
             };
-            folder.ParentAllDescendants();
+            APSIMCore.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID     Irr  Fert   Col1  Col2\r\n" +
@@ -213,7 +213,7 @@
 
             var reader = new TextStorageReader(data);
 
-            var graph = folder.Children[1] as Graph;
+            var graph = folder.Children[1] as Models.Graph;
             var series = graph.Children[0] as Series;
             var descriptors = series.GetDescriptorNames(reader).ToList();
             Assert.That(descriptors[0], Is.EqualTo("Irr"));
@@ -265,7 +265,7 @@
             Assert.That(definitions[0].SeriesDefinitions[3].Line, Is.EqualTo(LineType.Dash));
             Assert.That(definitions[0].SeriesDefinitions[3].Title, Is.EqualTo("Wet10"));
             Assert.That(definitions[0].SeriesDefinitions[3].X as double[], Is.EqualTo(new double[] { 1, 2 }));
-            Assert.That(definitions[0].SeriesDefinitions[3].Y as double[], Is.EqualTo(new int[] { 70, 80 }));   
+            Assert.That(definitions[0].SeriesDefinitions[3].Y as double[], Is.EqualTo(new int[] { 70, 80 }));
         }
 
         /// <summary>Create six series definitions due to a three 'VaryBy' groupings.</summary>
@@ -308,7 +308,7 @@
                         new Description("Sim7", "Irr", "Wet", "Fert", "0", "Cultivar", "Late"),
                         new Description("Sim8", "Irr", "Wet", "Fert", "20", "Cultivar", "Late")
                     }),
-                    new Graph()
+                    new Models.Graph()
                     {
                         Children = new List<IModel>()
                         {
@@ -326,9 +326,9 @@
                     }
                 }
             };
-            folder.ParentAllDescendants();
+            APSIMCore.Node.Create(folder);
 
-            var graph = folder.Children[1] as Graph;
+            var graph = folder.Children[1] as Models.Graph;
             var series = graph.Children[0] as Series;
             var descriptors = series.GetDescriptorNames(reader).ToList();
             Assert.That(descriptors[0], Is.EqualTo("Irr"));
@@ -400,7 +400,7 @@
         }
 
         /// <summary>
-        /// Create series definitions where it works its way though the colours sequentially and 
+        /// Create series definitions where it works its way though the colours sequentially and
         /// when it runs out of colours it works through the marker types. Useful when there
         /// are a lot of descriptor values.
         /// </summary>
@@ -455,7 +455,7 @@
                         new Description("Sim11", "ABC", "K"),
                         new Description("Sim12", "ABC", "L"),
                     }),
-                    new Graph()
+                    new Models.Graph()
                     {
                         Children = new List<IModel>()
                         {
@@ -473,9 +473,9 @@
                     }
                 }
             };
-            folder.ParentAllDescendants();
+            APSIMCore.Node.Create(folder);
 
-            var graph = folder.Children[1] as Graph;
+            var graph = folder.Children[1] as Models.Graph;
             var series = graph.Children[0] as Series;
             var descriptors = series.GetDescriptorNames(reader).ToList();
             Assert.That(descriptors[0], Is.EqualTo("ABC"));
@@ -508,7 +508,7 @@
             Assert.That(definitions[0].SeriesDefinitions[3].Title, Is.EqualTo("D"));
 
             Assert.That(definitions[0].SeriesDefinitions[4].Colour, Is.EqualTo(ColourUtilities.Colours[4]));
-            Assert.That(definitions[0].SeriesDefinitions[4].Marker, Is.EqualTo(MarkerType.FilledCircle));   
+            Assert.That(definitions[0].SeriesDefinitions[4].Marker, Is.EqualTo(MarkerType.FilledCircle));
             Assert.That(definitions[0].SeriesDefinitions[4].Line, Is.EqualTo(LineType.Solid));
             Assert.That(definitions[0].SeriesDefinitions[4].Title, Is.EqualTo("E"));
 
@@ -529,7 +529,7 @@
 
             // Run out of colours, go back to first colour but increment markertype.
 
-            Assert.That(definitions[0].SeriesDefinitions[8].Colour, Is.EqualTo(ColourUtilities.Colours[0])); 
+            Assert.That(definitions[0].SeriesDefinitions[8].Colour, Is.EqualTo(ColourUtilities.Colours[0]));
             Assert.That(definitions[0].SeriesDefinitions[8].Marker, Is.EqualTo(MarkerType.FilledDiamond));
             Assert.That(definitions[0].SeriesDefinitions[8].Line, Is.EqualTo(LineType.Solid));
             Assert.That(definitions[0].SeriesDefinitions[8].Title, Is.EqualTo("I"));
@@ -560,7 +560,7 @@
                 Name = "Sim1",
                 Children = new List<IModel>()
                 {
-                    new Graph()
+                    new Models.Graph()
                     {
                         Children = new List<IModel>()
                         {
@@ -584,7 +584,7 @@
                     }
                 }
             };
-            sim.ParentAllDescendants();
+            APSIMCore.Node.Create(sim);
 
             string data =
                 "CheckpointName    SimulationID  Col1  Col2\r\n" +
@@ -596,7 +596,7 @@
 
             var reader = new TextStorageReader(data);
 
-            var graph = sim.Children[0] as Graph;
+            var graph = sim.Children[0] as Models.Graph;
             var series = graph.Children[0] as Series;
             var page = new GraphPage();
             page.Graphs.Add(graph);
@@ -641,7 +641,7 @@
                         new Description("Sim1", "Exp", "Exp1"),
                         new Description("Sim2", "Exp", "Exp2")
                     }),
-                    new Graph()
+                    new Models.Graph()
                     {
                         Children = new List<IModel>()
                         {
@@ -665,7 +665,7 @@
                     }
                 }
             };
-            folder.ParentAllDescendants();
+            APSIMCore.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID     Exp Col1  Col2  Col3\r\n" +
@@ -677,7 +677,7 @@
 
             var reader = new TextStorageReader(data);
 
-            var graph = folder.Children[1] as Graph;
+            var graph = folder.Children[1] as Models.Graph;
             var page = new GraphPage();
             page.Graphs.Add(graph);
             var definitions = page.GetAllSeriesDefinitions(graph, reader, null);
@@ -705,7 +705,7 @@
                         new Description("Sim1", "SimulationName", "Sim1", "Exp", "Exp1"),
                         new Description("Sim2", "SimulationName", "Sim2", "Exp", "Exp2"),
                     }),
-                    new Graph()
+                    new Models.Graph()
                     {
                         Children = new List<IModel>()
                         {
@@ -721,7 +721,7 @@
                     }
                 }
             };
-            folder.ParentAllDescendants();
+            APSIMCore.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID    Exp Col1  Col2\r\n" +
@@ -733,7 +733,7 @@
 
             var reader = new TextStorageReader(data);
 
-            var graph = folder.Children[1] as Graph;
+            var graph = folder.Children[1] as Models.Graph;
             var page = new GraphPage();
             page.Graphs.Add(graph);
             var definitions = page.GetAllSeriesDefinitions(graph, reader, null);
@@ -765,7 +765,7 @@
                         new Description("Sim1", "SimulationName", "Sim1", "Zone", "Zone1", "Zone", "Zone2"),
                         new Description("Sim2", "SimulationName", "Sim2", "Zone", "Zone1", "Zone", "Zone2")
                     }),
-                    new Graph()
+                    new Models.Graph()
                     {
                         Children = new List<IModel>()
                         {
@@ -782,7 +782,7 @@
                     }
                 }
             };
-            folder.ParentAllDescendants();
+            APSIMCore.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID   Zone Col1  Col2\r\n" +
@@ -798,7 +798,7 @@
 
             var reader = new TextStorageReader(data);
 
-            var graph = folder.Children[1] as Graph;
+            var graph = folder.Children[1] as Models.Graph;
             var page = new GraphPage();
             page.Graphs.Add(graph);
             var definitions = page.GetAllSeriesDefinitions(graph, reader, null);
@@ -845,7 +845,7 @@
                         new Description("Sim1", "SimulationName", "Sim1", "Exp", "Exp1"),
                         new Description("Sim2", "SimulationName", "Sim2", "Exp", "Exp2")
                     }),
-                    new Graph()
+                    new Models.Graph()
                     {
                         Children = new List<IModel>()
                         {
@@ -861,7 +861,7 @@
                     }
                 }
             };
-            folder.ParentAllDescendants();
+            APSIMCore.Node.Create(folder);
 
             string data =
                 "CheckpointName   SimulationID Col1  Col2\r\n" +
@@ -873,7 +873,7 @@
 
             var reader = new TextStorageReader(data);
 
-            var graph = folder.Children[1] as Graph;
+            var graph = folder.Children[1] as Models.Graph;
             var page = new GraphPage();
             page.Graphs.Add(graph);
             var definitions = page.GetAllSeriesDefinitions(graph, reader, null);
@@ -906,7 +906,7 @@
                         new Description("Sim1", "SimulationName", "Sim1"),
                         new Description("Sim2", "SimulationName", "Sim2")
                     }),
-                    new Graph()
+                    new Models.Graph()
                     {
                         Children = new List<IModel>()
                         {
@@ -923,7 +923,7 @@
                     }
                 }
             };
-            folder.ParentAllDescendants();
+            APSIMCore.Node.Create(folder);
 
             string data =
                 " CheckpointName ABC  DEF Col1  Col2\r\n" +
@@ -939,7 +939,7 @@
 
             var reader = new TextStorageReader(data);
 
-            var graph = folder.Children[1] as Graph;
+            var graph = folder.Children[1] as Models.Graph;
             var series1 = graph.Children[0] as Series;
 
             var descriptorNames = series1.GetDescriptorNames(reader).ToArray();
@@ -967,7 +967,7 @@
             Assert.That(definitions[0].SeriesDefinitions[2].Title, Is.EqualTo("Bd"));
             Assert.That(definitions[0].SeriesDefinitions[2].X as double[], Is.EqualTo(new double[] { 1, 2 }));
             Assert.That(definitions[0].SeriesDefinitions[2].Y as double[], Is.EqualTo(new double[] { 50, 60 }));
-                
+
             Assert.That(definitions[0].SeriesDefinitions[3].Colour, Is.EqualTo(ColourUtilities.Colours[1]));
             Assert.That(definitions[0].SeriesDefinitions[3].Marker, Is.EqualTo(MarkerType.FilledDiamond));
             Assert.That(definitions[0].SeriesDefinitions[3].Title, Is.EqualTo("Be"));
@@ -989,7 +989,7 @@
                         new Description("Sim1", "Exp", "Exp1"),
                         new Description("Sim2", "Exp", "Exp2")
                     }),
-                    new Graph()
+                    new Models.Graph()
                     {
                         Children = new List<IModel>()
                         {
@@ -1006,7 +1006,7 @@
                     }
                 }
             };
-            folder.ParentAllDescendants();
+            APSIMCore.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID     Exp   A  Col1  Col2\r\n" +
@@ -1018,7 +1018,7 @@
 
             var reader = new TextStorageReader(data);
 
-            var graph = folder.Children[1] as Graph;
+            var graph = folder.Children[1] as Models.Graph;
             var series = graph.Children[0] as Series;
             var descriptors = series.GetDescriptorNames(reader).ToList();
             Assert.That(descriptors[0], Is.EqualTo("Exp"));
@@ -1047,7 +1047,7 @@
                         new Description("Sim1", "SimulationName", "Sim1"),
                         new Description("Sim2", "SimulationName", "Sim2")
                     }),
-                    new Graph()
+                    new Models.Graph()
                     {
                         Children = new List<IModel>()
                         {
@@ -1064,7 +1064,7 @@
                     }
                 }
             };
-            folder.ParentAllDescendants();
+            APSIMCore.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID     Exp   A  Col1  Col2\r\n" +
@@ -1076,7 +1076,7 @@
 
             var reader = new TextStorageReader(data);
 
-            var graph = folder.Children[1] as Graph;
+            var graph = folder.Children[1] as Models.Graph;
 
             var page = new GraphPage();
             page.Graphs.Add(graph);
@@ -1103,7 +1103,7 @@
                     new Description("Sim1", "Exp", "Exp1"),
                     new Description("Sim2", "Exp", "Exp2")
                 }),
-                new Graph()
+                new Models.Graph()
                 {
                     Children = new List<IModel>()
                     {
@@ -1120,7 +1120,7 @@
                 }
             }
             };
-            folder.ParentAllDescendants();
+            APSIMCore.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID     Exp   A  Col1  Col2\r\n" +
@@ -1132,7 +1132,7 @@
 
             var reader = new TextStorageReader(data);
 
-            var graph = folder.Children[1] as Graph;
+            var graph = folder.Children[1] as Models.Graph;
             var series = graph.Children[0] as Series;
             var descriptors = series.GetDescriptorNames(reader).ToList();
             Assert.That(descriptors[0], Is.EqualTo("Exp"));
@@ -1170,7 +1170,7 @@
                                 new Description("Sim1", "SimulationName", "Sim1", "Exp", "Exp1"),
                                 new Description("Sim2", "SimulationName", "Sim2", "Exp", "Exp2")
                             }),
-                            new Graph()
+                            new Models.Graph()
                             {
                                 Children = new List<IModel>()
                                 {
@@ -1202,7 +1202,7 @@
             };
 
 
-            simulations.ParentAllDescendants();
+            APSIMCore.Node.Create(simulations);
 
             string data =
                 "CheckpointName    SimulationID    Exp Col1  Col2\r\n" +
@@ -1218,7 +1218,7 @@
 
             var reader = new TextStorageReader(data);
 
-            var graph = simulations.Children[0].Children[1] as Graph;
+            var graph = simulations.Children[0].Children[1] as Models.Graph;
             var page = new GraphPage();
             page.Graphs.Add(graph);
             var definitions = page.GetAllSeriesDefinitions(graph, reader, null);
@@ -1257,7 +1257,7 @@
                             {
                                 new Description("Sim1", "SimulationName", "Sim1"),
                             }),
-                            new Graph()
+                            new Models.Graph()
                             {
                                 Children = new List<IModel>()
                                 {
@@ -1287,7 +1287,7 @@
             };
 
 
-            simulations.ParentAllDescendants();
+            APSIMCore.Node.Create(simulations);
 
             string data =
                 "CheckpointName    SimulationID Col1  Col2\r\n" +
@@ -1299,7 +1299,7 @@
 
             var reader = new TextStorageReader(data);
 
-            var graph = simulations.Children[0].Children[1] as Graph;
+            var graph = simulations.Children[0].Children[1] as Models.Graph;
             var page = new GraphPage();
             page.Graphs.Add(graph);
             var definitions = page.GetAllSeriesDefinitions(graph, reader, null);
@@ -1325,7 +1325,7 @@
                     {
                         new Description("Sim1", "SimulationName", "Sim1"),
                     }),
-                    new Graph()
+                    new Models.Graph()
                     {
                         Children = new List<IModel>()
                         {
@@ -1348,7 +1348,7 @@
                 }
             };
 
-            simulations.ParentAllDescendants();
+            APSIMCore.Node.Create(simulations);
 
             List<string> checkpoints = new List<string>() { "Current" };
 
@@ -1367,7 +1367,7 @@
 
             IStorageReader reader = new MockStorageReader(report, obs);
 
-            Graph graph = simulations.FindDescendant<Graph>();
+            Models.Graph graph = simulations.Node.FindChild<Models.Graph>(recurse: true);
             GraphPage page = new GraphPage();
             page.Graphs.Add(graph);
             List<GraphPage.GraphDefinitionMap> definitions = page.GetAllSeriesDefinitions(graph, reader, null);
@@ -1397,7 +1397,7 @@
                             {
                                 new Description("Sim1", "SimulationName", "Sim1", "A", "a"),
                             }),
-                            new Graph()
+                            new Models.Graph()
                             {
                                 Children = new List<IModel>()
                                 {
@@ -1427,7 +1427,7 @@
                 }
             };
 
-            simulations.ParentAllDescendants();
+            APSIMCore.Node.Create(simulations);
 
             string data =
                 "CheckpointName    SimulationID   A  Col1  Col2\r\n" +
@@ -1439,7 +1439,7 @@
 
             var reader = new TextStorageReader(data);
 
-            var graph = simulations.Children[0].Children[1] as Graph;
+            var graph = simulations.Children[0].Children[1] as Models.Graph;
             var page = new GraphPage();
             page.Graphs.Add(graph);
             var definitions = page.GetAllSeriesDefinitions(graph, reader, null);
@@ -1466,7 +1466,7 @@
                         new Description("Sim3", "SimulationName", "Sim3", "Experiment", "Exp2"),
                         new Description("Sim4", "SimulationName", "Sim4", "Experiment", "Exp2")
                     }),
-                    new Graph()
+                    new Models.Graph()
                     {
                         Children = new List<IModel>()
                         {
@@ -1483,7 +1483,7 @@
                     }
                 }
             };
-            folder.ParentAllDescendants();
+            APSIMCore.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID Predicted.Grain.Wt  Observed.Grain.Wt\r\n" +
@@ -1495,7 +1495,7 @@
 
             var reader = new TextStorageReader(data);
 
-            var graph = folder.Children[1] as Graph;
+            var graph = folder.Children[1] as Models.Graph;
             var page = new GraphPage();
             page.Graphs.Add(graph);
             var definitions = page.GetAllSeriesDefinitions(graph, reader, null);
@@ -1530,7 +1530,7 @@
                         new Description("Sim2", "SimulationName", "Sim2", "Experiment", "Exp1"),
                         new Description("Sim3", "SimulationName", "Sim3")
                     }),
-                    new Graph()
+                    new Models.Graph()
                     {
                         Children = new List<IModel>()
                         {
@@ -1547,7 +1547,7 @@
                     }
                 }
             };
-            folder.ParentAllDescendants();
+            APSIMCore.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID Predicted.Grain.Wt  Observed.Grain.Wt\r\n" +
@@ -1559,7 +1559,7 @@
 
             var reader = new TextStorageReader(data);
 
-            var graph = folder.Children[1] as Graph;
+            var graph = folder.Children[1] as Models.Graph;
             var page = new GraphPage();
             page.Graphs.Add(graph);
             var definitions = page.GetAllSeriesDefinitions(graph,reader, null);
@@ -1589,7 +1589,7 @@
                         new Description("Sim3", "SimulationName", "Sim3", "Experiment", "Exp2"),
                         new Description("Sim4", "SimulationName", "Sim4", "Experiment", "Exp2")
                     }),
-                    new Graph()
+                    new Models.Graph()
                     {
                         Children = new List<IModel>()
                         {
@@ -1606,7 +1606,7 @@
                     }
                 }
             };
-            folder.ParentAllDescendants();
+            APSIMCore.Node.Create(folder);
 
             string data =
                 "CheckpointName SimulationName SimulationID Predicted.Grain.Wt  Observed.Grain.Wt Experiment\r\n" +
@@ -1618,7 +1618,7 @@
 
             var reader = new TextStorageReader(data);
 
-            var graph = folder.Children[1] as Graph;
+            var graph = folder.Children[1] as Models.Graph;
             var page = new GraphPage();
             page.Graphs.Add(graph);
             var definitions = page.GetAllSeriesDefinitions(graph, reader, null);
@@ -1654,7 +1654,7 @@
                         new Description("Sim3", "SimulationName", "Sim3", "Experiment", "Exp2"),
                         new Description("Sim4", "SimulationName", "Sim4", "Experiment", "Exp2")
                     }),
-                    new Graph()
+                    new Models.Graph()
                     {
                         Children = new List<IModel>()
                         {
@@ -1671,7 +1671,7 @@
                     }
                 }
             };
-            folder.ParentAllDescendants();
+            APSIMCore.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID Predicted.Grain.Wt  Observed.Grain.Wt  Observed.Grain.WtError\r\n" +
@@ -1683,7 +1683,7 @@
 
             var reader = new TextStorageReader(data);
 
-            var graph = folder.Children[1] as Graph;
+            var graph = folder.Children[1] as Models.Graph;
             var page = new GraphPage();
             page.Graphs.Add(graph);
             var definitions = page.GetAllSeriesDefinitions(graph, reader, null);
@@ -1715,7 +1715,7 @@
                 Name = "Folder",
                 Children = new List<IModel>()
                 {
-                    new Graph()
+                    new Models.Graph()
                     {
                         Children = new List<IModel>()
                         {
@@ -1735,7 +1735,7 @@
                     })
                 }
             };
-            folder.ParentAllDescendants();
+            APSIMCore.Node.Create(folder);
 
             string data =
                 "CheckpointName    SimulationID   Exp Col1  Col2\r\n" +
@@ -1747,7 +1747,7 @@
 
             var reader = new TextStorageReader(data);
 
-            var graph = folder.Children[0] as Graph;
+            var graph = folder.Children[0] as Models.Graph;
             var series = graph.Children[0] as Series;
 
             var descriptors = series.GetDescriptorNames(reader).ToList();

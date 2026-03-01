@@ -8,7 +8,7 @@
     using System.Linq;
 
     /// <summary>
-    /// This presenter connects an instance of a folder model with a 
+    /// This presenter connects an instance of a folder model with a
     /// folder view.
     /// </summary>
     public class FolderPresenter : IPresenter
@@ -30,9 +30,9 @@
 
             List<GraphView> views = new List<GraphView>();
 
-            var storage = folder.FindInScope<IDataStore>();
+            var storage = folder.Node.Find<IDataStore>();
             var graphPage = new GraphPage();
-            graphPage.Graphs.AddRange(folder.FindAllChildren<Graph>().Where(g => g.Enabled));
+            graphPage.Graphs.AddRange(folder.Node.FindChildren<Graph>().Where(g => g.Enabled));
 
             if (storage != null && graphPage.Graphs.Any())
             {

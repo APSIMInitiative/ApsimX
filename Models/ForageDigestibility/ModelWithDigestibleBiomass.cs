@@ -31,7 +31,7 @@ namespace Models.ForageDigestibility
         public string Name => forageModel.Name;
 
         /// <summary>Zone that forage is located in.</summary>
-        public Zone Zone => (forageModel as IModel).FindAncestor<Zone>();
+        public Zone Zone => (forageModel as IModel).Node.FindParent<Zone>(recurse: true);
 
         /// <summary>A collection of digestible material that can be grazed.</summary>
         public IEnumerable<DamageableBiomass> Material

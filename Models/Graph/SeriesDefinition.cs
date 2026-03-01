@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
@@ -272,7 +273,7 @@ namespace Models
         /// <param name="reader">Data store reader.</param>
         public void ReadData(DataTable data, List<SimulationDescription> simulationDescriptions, IStorageReader reader)
         {
-            if (X != null && Y != null)
+            if (data != null && X != null && Y != null)
                 return;
 
             if (Series.TableName == null)
@@ -322,10 +323,15 @@ namespace Models
                     if (columnNames.Contains("SimulationID"))
                         filter = AddToFilter(filter, $"SimulationID in ({simulationIdsCSV})");
                 }
-
+                
                 //cleanup filter
                 filter = filter?.Replace('\"', '\'');
                 filter = RemoveMiddleWildcards(filter);
+
+                //Filter out any columns with empty values that might get converted wrongly by the graph system
+                foreach (DataColumn field in data.Columns)
+                    if (field.DataType != typeof(string) && (field.ColumnName == XFieldName || field.ColumnName == YFieldName) )
+                        filter = AddToFilter(filter, $"[{field.ColumnName}] IS NOT NULL");
 
                 //apply our filter to the data
                 View = new DataView(data);
@@ -364,8 +370,9 @@ namespace Models
         /// Return a list of field names that this definition will read from the data table.
         /// </summary>
         /// <param name="fieldsThatExist"></param>
+        /// <param name="structure">Structure instance</param>
         /// <returns></returns>
-        public List<string> GetFieldNames(List<string> fieldsThatExist)
+        public List<string> GetFieldNames(List<string> fieldsThatExist, IStructure structure)
         {
             var filter = GetFilter(fieldsThatExist);
             var fieldsToRead = new List<string>();
@@ -387,7 +394,7 @@ namespace Models
             fieldsToRead.AddRange(ExtractFieldNamesFromFilter(filter));
 
             // Add any fields from child graphable models.
-            foreach (IGraphable series in Series.FindAllChildren<IGraphable>())
+            foreach (IGraphable series in structure.FindChildren<IGraphable>(relativeTo: Series))
                 fieldsToRead.AddRange(series.GetExtraFieldsToRead(this));
             return fieldsToRead;
         }
@@ -416,6 +423,7 @@ namespace Models
             }
             if (!string.IsNullOrEmpty(userFilter))
                 filter = AddToFilter(filter, userFilter);
+
             return filter;
         }
 
@@ -497,7 +505,7 @@ namespace Models
         /// <returns>The return data or null if not found</returns>
         private IEnumerable GetDataFromModels(string fieldName)
         {
-            return Series.FindByPath(fieldName)?.Value as IEnumerable;
+            return Series.Node.Get(fieldName) as IEnumerable;
         }
 
         /// <summary>Gets a column of data from a view.</summary>

@@ -1,44 +1,30 @@
-﻿namespace UnitTests.Sheet
+﻿using APSIM.Shared.Utilities;
+using Models.Storage;
+using NUnit.Framework;
+using System.Collections.Generic;
+using Gtk.Sheet;
+
+namespace UnitTests.Sheet
 {
-    using APSIM.Shared.Utilities;
-    using Models.Storage;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Reflection;
-    using UserInterface.Views;
-    using Gtk.Sheet;
-    
+
     [TestFixture]
     class PagedDataTableTests
     {
         private IDatabaseConnection database;
         //private string sqliteFileName;
 
-        /// <summary>Find and return the file name of SQLite runtime .dll</summary>
-        public static string FindSqlite3DLL()
-        {
-            string directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string[] files = Directory.GetFiles(directory, "sqlite3.dll");
-            if (files.Length == 1)
-                return files[0];
-
-            throw new Exception("Cannot find sqlite3 dll directory");
-        }
-
         /// <summary>Initialisation code for all unit tests in this class</summary>
         [SetUp]
         public void Initialise()
         {
-            if (ProcessUtilities.CurrentOS.IsWindows)
-            {
-                string sqliteSourceFileName = FindSqlite3DLL();
-                Directory.SetCurrentDirectory(Path.GetDirectoryName(sqliteSourceFileName));
-            }
-
             database = new SQLite();
             database.OpenDatabase(":memory:", readOnly: false);
+        }
+
+        [TearDown]
+        public void Cleanup()
+        {
+            database?.CloseDatabase();
         }
 
         /// <summary>Ensure basic data paging works.</summary>
@@ -154,7 +140,7 @@
             database.CreateTable("_Checkpoints", columnNames, columnTypes);
             List<object[]> rows = new List<object[]>
             {
-                new object[] { 1, "Current", string.Empty, string.Empty }
+                new object[] { 1, "Current", string.Empty, string.Empty, 0 }
             };
             database.InsertRows("_Checkpoints", columnNames, rows);
 

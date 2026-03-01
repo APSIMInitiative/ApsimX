@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Graphing;
@@ -24,8 +25,12 @@ namespace Models
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Series))]
     [ValidParent(ParentType = typeof(Graph))]
-    public class Regression : Model, ICachableGraphable
+    public class Regression : Model, ICachableGraphable, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>The stats from the regression</summary>
         private List<MathUtilities.RegrStats> stats = new List<MathUtilities.RegrStats>();
 
@@ -61,14 +66,14 @@ namespace Models
                                                                   List<SimulationDescription> simDescriptions,
                                                                   List<string> simulationsFilter = null)
         {
-            Series seriesAncestor = FindAncestor<Series>();
+            Series seriesAncestor = Structure.FindParent<Series>(recurse: true);
             IEnumerable<SeriesDefinition> definitions;
             if (seriesAncestor == null)
             {
-                Graph graph = FindAncestor<Graph>();
+                Graph graph = Structure.FindParent<Graph>(recurse: true);
                 if (graph == null)
                     throw new Exception("Regression model must be a descendant of a series");
-                definitions = graph.FindAllChildren<Series>().SelectMany(s => s.CreateSeriesDefinitions(storage, simDescriptions, simulationsFilter));
+                definitions = Structure.FindChildren<Series>(relativeTo: graph).SelectMany(s => s.CreateSeriesDefinitions(storage, simDescriptions, simulationsFilter));
             }
             else
                 definitions = seriesAncestor.CreateSeriesDefinitions(storage, simDescriptions, simulationsFilter);

@@ -167,7 +167,7 @@ namespace Models.StockManagement
             {
                 field = zone;
                 animalGroups = stockModel.StockModel.Animals;
-                forageOrgans = zone.FindAllDescendants<IOrganDamage>().Where(organ => organ.IsAboveGround);
+                forageOrgans = zone.Node.FindChildren<IOrganDamage>(recurse: true).Where(organ => organ.IsAboveGround);
             }
 
             /// <summary>The amount for forage of all above ground organs (g/m2)</summary>

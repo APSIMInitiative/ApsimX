@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Utilities;
 using Models.Core;
 
-namespace Utility
+namespace APSIMNG.Utility
 {
 
     /// <summary>Stores user settings and other information which is persistent between restarts of the GUI.</summary>
@@ -76,6 +74,14 @@ namespace Utility
         /// <summary>If true, the GUI will not play a sound when simulations finish running.</summary>
         [Input("Mute all sound effects")]
         public bool Muted { get; set; } = true;
+
+        /// <summary>
+        /// If true, clicking on an .apsimx file in Explorer will open that file in a new tab of the
+        /// current ApsimNG instance rather than staring a new instance of the GUI.
+        /// </summary>
+        [Input("Open files in new tabs")]
+        [Tooltip("Should double-clicking an .apsimx file open it in a new tab rather than a new instance of the user interface? (Requires restart)")]
+        public bool UseExistingInstance { get; set; } = true;
 
         /// <summary>
         /// In theory, if there are any commands in the command history,
@@ -225,7 +231,7 @@ namespace Utility
             {
                 if (MruList.Count > 0)
                 {
-                    int index = MruList.FindIndex(f => f.FileName == file.FileName);
+                    int index = MruList.FindIndex(f => f.FileName.Equals(file.FileName, ProcessUtilities.CurrentOS.IsUnix ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase));
                     if (index < 0)
                     {
                         // First time that filename has been added 

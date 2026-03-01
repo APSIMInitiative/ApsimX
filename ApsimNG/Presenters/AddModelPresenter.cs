@@ -1,15 +1,15 @@
-﻿namespace UserInterface.Presenters
+﻿using APSIM.Core;
+using UserInterface.Commands;
+using UserInterface.Interfaces;
+using Models.Core;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using UserInterface.Views;
+
+namespace UserInterface.Presenters
 {
-    using APSIM.Shared.Utilities;
-    using global::UserInterface.Commands;
-    using Interfaces;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using Views;
 
     /// <summary>This presenter lets the user add a model.</summary>
     public class AddModelPresenter : IPresenter
@@ -87,7 +87,7 @@
                 tree.ExpandChildren(".Models");
                 tree.CollapseChildren(".Models.Functions");
             }
-                
+
         }
 
         private static void AddTreeNodeIfDoesntExist(Apsim.ModelDescription modelThatCanBeAdded, TreeViewNode parent)
@@ -103,7 +103,7 @@
                 resourceIsInSubDirectory = subDirectory.Contains('.');
             }
             if (resourceIsInSubDirectory)
-            { 
+            {
                 var path = modelThatCanBeAdded.ResourceString.Replace("Models.Resources.", "");
                 namespaceWords = path.Split(".".ToCharArray()).ToList();
                 namespaceWords.Remove(namespaceWords.Last());  // remove the "json" word at the end.
@@ -177,7 +177,7 @@
                     IModel child = null;
                     if (!string.IsNullOrEmpty(selectedModelType.ResourceString))
                     {
-                        child = Resource.Instance.GetModel(selectedModelType.ResourceString);
+                        child = Resource.Instance.GetModel(selectedModelType.ResourceString) as IModel;
                         if (child == null)
                         {
                             child = (IModel)Activator.CreateInstance(selectedModelType.ModelType, true);
@@ -185,6 +185,7 @@
                         }
                         else
                         {
+                            Node.Create(child as INodeModel);
                             child.ResourceName = selectedModelType.ResourceString;
                             bool isUnderReplacements = false;
                             if (Folder.IsModelReplacementsFolder(model))
@@ -192,7 +193,7 @@
 
                             // Make all children that area about to be added from resource hidden and readonly.
                             bool isHidden = !isUnderReplacements;
-                            foreach (Model descendant in child.FindAllDescendants())
+                            foreach (Model descendant in child.Node.FindChildren<IModel>(recurse: true))
                             {
                                 descendant.IsHidden = isHidden;
                                 descendant.ReadOnly = isHidden;
@@ -237,8 +238,8 @@
 
                 if (modelType != null)
                 {
-                    object child = Activator.CreateInstance(modelType, true);
-                    string childString = FileFormat.WriteToString(child as IModel);
+                    var child = Activator.CreateInstance(modelType, true) as Model;
+                    string childString = child.Node.ToJSONString();
                     explorerPresenter.SetClipboardText(childString);
 
                     DragObject dragObject = new DragObject();

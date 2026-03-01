@@ -64,7 +64,15 @@ namespace Models.Logging
                             DataTableUtilities.AddColumn(vectorsTable, columnName, MathUtilities.StringsToDoubles(value));
                         else
                         {
-                            value = value.Select(x => double.Parse(x).ToString(condition.DisplayFormat)).ToArray();
+                            List<string> convertedArray = new List<string>();
+                            foreach (string val in value)
+                            {
+                                if (string.IsNullOrEmpty(val))
+                                    convertedArray.Add("");
+                                else
+                                    convertedArray.Add(double.Parse(val).ToString(condition.DisplayFormat));
+                            }
+                            value = convertedArray.ToArray();
                             DataTableUtilities.AddColumn(vectorsTable, columnName, value);
                         }
                     }

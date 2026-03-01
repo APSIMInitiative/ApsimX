@@ -1,12 +1,12 @@
-﻿using Models.Core;
-using Models.Core.Run;
+﻿using APSIM.Core;
+using Models.Core;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Media;
 using System.Timers;
 using UserInterface.Presenters;
-using Utility;
+using APSIMNG.Utility;
 
 namespace UserInterface.Commands
 {
@@ -78,7 +78,7 @@ namespace UserInterface.Commands
         }
 
         /// <summary>All jobs have completed</summary>
-        private void OnAllJobsCompleted(object sender, Runner.AllJobsCompletedArgs e)
+        private void OnAllJobsCompleted(object sender, IRunner.AllJobsCompletedArgs e)
         {
             IsRunning = false;
             if (timer != null)

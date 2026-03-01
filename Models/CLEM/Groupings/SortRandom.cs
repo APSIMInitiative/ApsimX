@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Interfaces;
+﻿using APSIM.Core;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
@@ -10,7 +11,7 @@ namespace Models.CLEM.Groupings
 {
     ///<summary>
     /// Randomises the order of any unsorted parameters. Must be the last element in its group.
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -61,7 +62,7 @@ namespace Models.CLEM.Groupings
         {
             var results = new List<ValidationResult>();
 
-            if (Parent.FindAllChildren<CLEMModel>().Last() != this)
+            if (Structure.FindChildren<CLEMModel>(relativeTo: Parent as INodeModel).Last() != this)
             {
                 string[] memberNames = new string[] { "RandomSort" };
                 results.Add(new ValidationResult($"The sort item [f={Name}] must be the last component in its group", memberNames));

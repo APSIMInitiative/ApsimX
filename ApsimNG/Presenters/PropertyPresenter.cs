@@ -1,5 +1,6 @@
 using APSIM.Shared.Utilities;
 using Models.Core;
+using Models.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -208,7 +209,7 @@ namespace UserInterface.Presenters
             if (propertyMap.Values.Any(p => p.Model == changedModel))
                 RefreshView(this.model);
         }
-    
+
         /// <summary>
         /// Called when the view is changed. Updates the model's state.
         /// </summary>
@@ -240,7 +241,7 @@ namespace UserInterface.Presenters
             {
                 foreach (Enum value in Enum.GetValues(property.PropertyType))
                 {
-                    if (VariableProperty.GetEnumDescription(value) == enumDescription)
+                    if (AttributeUtilities.GetEnumDescription(value) == enumDescription)
                     {
                         newValue = Enum.GetName(property.PropertyType, value);
                         break;
@@ -256,7 +257,7 @@ namespace UserInterface.Presenters
             if ((newValue == null || newValue is string) && property.PropertyType != typeof(string))
             {
                 if (newValue is string modelName && typeof(IModel).IsAssignableFrom(property.PropertyType))
-                    newValue = model.FindAllInScope(modelName).FirstOrDefault(m => property.PropertyType.IsAssignableFrom(m.GetType()));
+                    newValue = model.Node.FindAll<IModel>(modelName).FirstOrDefault(m => property.PropertyType.IsAssignableFrom(m.GetType()));
                 else
                     newValue = ReflectionUtilities.StringToObject(property.PropertyType, (string)newValue, CultureInfo.CurrentCulture);
             }

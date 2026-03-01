@@ -9,7 +9,7 @@ namespace Models.CLEM.Groupings
 {
     ///<summary>
     /// Contains a group of filters to identify individuals able to undertake labour
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -60,7 +60,7 @@ namespace Models.CLEM.Groupings
 
             html += "\r\n<div class=\"filterborder clearfix\">";
 
-            if (FindAllChildren<Filter>().Count() < 1)
+            if (Structure.FindChildren<Filter>().Count() < 1)
                 html += "<div class=\"filter\">Any labour</div>";
 
             return html;

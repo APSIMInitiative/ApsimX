@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using APSIM.Shared.Utilities;
-using PdfSharpCore.Pdf.Content;
+using PdfSharp.Pdf.Content;
 
 namespace Models.Storage
 {
@@ -64,8 +64,7 @@ namespace Models.Storage
             foreach (DataColumn column in table.Columns)
             {
                 columnNamesInDb.Add(column.ColumnName);
-                bool allowLongStrings = table.TableName.StartsWith("_");
-                colTypes.Add(connection.GetDBDataTypeName(column.DataType, allowLongStrings));
+                colTypes.Add(connection.GetDBDataTypeName(column.DataType));
             }
             connection.CreateTable(Name, columnNamesInDb.ToList(), colTypes);
 
@@ -107,8 +106,7 @@ namespace Models.Storage
             try {
                 for (int i = 0; i < names.Count; i++)
                 {
-                    bool allowLongStrings = table.TableName.StartsWith("_");
-                    connection.AddColumn(names[i], columns[i], connection.GetDBDataTypeName(dataTypes[i], allowLongStrings));
+                    connection.AddColumn(names[i], columns[i], connection.GetDBDataTypeName(dataTypes[i]));
                 }
             }
             finally {

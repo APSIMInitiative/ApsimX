@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Office.CoverPageProps;
+using System;
 
 namespace APSIM.Shared.Utilities
 {
@@ -7,12 +8,13 @@ namespace APSIM.Shared.Utilities
     /// </summary>
     public static class Constants
     {
+        /// <summary>constant to convert hecatare to m^2</summary>
+        public const double ha2sm = 10000.0;
         /// <summary>constant to convert m^2 to hectares</summary>
-        public const double sm2ha = 1.0 / 10000.0;
-
+        public const double sm2ha = 1.0 / ha2sm;
+        
         /// <summary>tonnes to grams</summary>
         public const double t2g = 1000.0 * 1000.0;
-
         /// <summary>grams to tonnes</summary>
         public const double g2t = 1.0 / t2g;
 
@@ -22,18 +24,31 @@ namespace APSIM.Shared.Utilities
         ///</summary>
         public const double g2mm = 1.0e3 / 1.0e6;
 
-        /// <summary>convert percent to fraction</summary>
-        public const double pcnt2fract = 1.0 / 100.0;
-
         /// <summary>convert fraction to percent</summary>
         public const double fract2pcnt = 100.0;
+        /// <summary>convert percent to fraction</summary>
+        public const double pcnt2fract = 1.0 / fract2pcnt;
 
+        /// <summary> convert meters to millimeters</summary>
+        public const double m2mm = 1000.0;
+        /// <summary> convert Millimeters to meters</summary>
+        public const double mm2m = 1.0 / m2mm;
 
+        /// <summary>Convert mass in grams per square meter to kilograms per hectare</summary>
+        public const double gPerSm2kgPerHa = 10.0;
+        /// <summary>Convert mass in kilograms per hectare to grams per square meter</summary>
+        public const double kgPerHa2gPerSm = 1.0 / gPerSm2kgPerHa;
+
+        /// <summary>convert g to kg</summary>
+        public const double g2kg = 1.0 / 1000.0;
+
+        /// <summary>convert g to kg</summary>
+        public const double kg2g = 1000.0;
 
         /// <summary>
         /// ISO 3166 list of English short country names.
         /// </summary>
-        public static readonly string[] Countries = 
+        public static readonly string[] Countries =
         {
             "Afghanistan",
             "Åland Islands",

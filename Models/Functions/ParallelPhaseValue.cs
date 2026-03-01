@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using Models.Core;
 using Models.PMF.Phen;
 
@@ -13,8 +14,12 @@ namespace Models.Functions
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("Returns the value of it child function to the PhaseLookup parent function if current phenology is between Start and end stages specified.")]
-    public class ParallelPhaseValue : Model, IFunction
+    public class ParallelPhaseValue : Model, IFunction, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>The name of the parallel phase that this function is active in</summary>
         [Description("Parallel Phase Name")]
         public string ParallelPhaseName { get; set; }
@@ -25,15 +30,15 @@ namespace Models.Functions
 
         /// <summary>The value to have from the start of the simulation until IsInPhase is true</summary>
         [Description("Value from start of simulatoin until IsInPhase")]
-        [Link(Type = LinkType.Child, ByName = true)] 
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction StartValue = null;
-       
+
         /// <summary>The child functions</summary>
         private IEnumerable<IFunction> ChildFunctions;
 
         private double currentValue { get; set; }
 
-        
+
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         /// <exception cref="System.Exception">
@@ -51,13 +56,13 @@ namespace Models.Functions
         private void onPostPhenology(object sender, EventArgs e)
         {
             if (ChildFunctions == null)
-                ChildFunctions = FindAllChildren<IFunction>().ToList();
+                ChildFunctions = Structure.FindChildren<IFunction>().ToList();
 
             if (pPhase.IsInPhase)
             {
                 foreach (IFunction kid in ChildFunctions)
                 {
-                    if (kid.Name != "StartValue")
+                    if ((kid as IModel).Name != "StartValue")
                         currentValue *= kid.Value(-1);
                 }
             }
@@ -77,7 +82,7 @@ namespace Models.Functions
         [EventSubscribe("StartOfDay")]
         private void onStartOfDay(object sender, EventArgs e)
         {
-            if (cropEndedYesterday) 
+            if (cropEndedYesterday)
             {
                 currentValue = StartValue.Value();
                 cropEndedYesterday = false;
@@ -91,7 +96,7 @@ namespace Models.Functions
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             currentValue = StartValue.Value();
-            pPhase = plant.FindDescendant<IParallelPhase>(ParallelPhaseName);
+            pPhase = Structure.FindChild<IParallelPhase>(ParallelPhaseName, relativeTo: plant as INodeModel, recurse: true);
         }
     }
 }

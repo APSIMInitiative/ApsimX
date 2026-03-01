@@ -12,9 +12,10 @@ using MessagePack;
 using APSIM.ZMQServer.IO;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Core.ApsimFile;
-using static Models.Core.Overrides;
+using Models.Storage;
+
 using Models.Core.Run;
+using APSIM.Core;
 
 /// <summary>
 /// Encapsulate an apsim simulation & runner
@@ -37,8 +38,10 @@ namespace APSIM.ZMQServer
 
         public ApsimEncapsulator(GlobalServerOptions options)
         {
-            sims = FileFormat.ReadFromFile<Simulations>(options.File, e => throw e, false).NewModel as Simulations;
-            sims.FindChild<Models.Storage.DataStore>().UseInMemoryDB = true;
+            sims = FileFormat.ReadFromFile<Simulations>(options.File).Model as Simulations;
+            var ds = sims.Node.FindChild<DataStore>();
+            if (ds != null)
+              ds.UseInMemoryDB = true;
             runner = new Runner(sims, numberOfProcessors: (int)options.WorkerCpuCount);
             jobRunner = new ServerJobRunner(this);
             runner.Use(jobRunner);
@@ -46,11 +49,10 @@ namespace APSIM.ZMQServer
 
         public void aboutToStart(string s)
         {
-#if false
-            Console.WriteLine("About to start " + s);
-            var sim = sims.FindChild<Simulation>(s);
-#endif
+            var ds = sims.Node.FindChild<Models.Storage.IDataStore>(s);
+            ds?.Writer.Clean(new[] { s }, false);
         }
+
 #if false
         public bool HasMethod(object objectToCheck, string methodName)
         {
@@ -62,7 +64,7 @@ namespace APSIM.ZMQServer
         public event Action<string> onRunStart;
 
         /// <summary>
-        // set the values immediately 
+        // set the values immediately
         // Syntax: [Manager].Script.CultivarName = Blah
         /// </summary>
         // fixme - this ignores any undos, it makes a permanent change to the simulation
@@ -85,7 +87,7 @@ namespace APSIM.ZMQServer
         // get a variable from the model
         // looks like [Manager].Script.TestVariable
         // result as byte array
-        /// 
+        ///
         public byte[] getVariableFromModel(string variablePath)
         {
             var v = sims.FindAllByPath(variablePath).ToArray().Select(x => x.Value);
@@ -95,10 +97,10 @@ namespace APSIM.ZMQServer
 #endif
 
         ///
-        // get a variable from the datastore 
+        // get a variable from the datastore
         // looks like <tablename>.<variablename>
         // result as byte array
-        /// 
+        ///
         public byte[] getVariableFromDS(string variablePath)
         {
             var vp = variablePath.IndexOf(".");
@@ -106,7 +108,7 @@ namespace APSIM.ZMQServer
                 throw new Exception($"get V {variablePath} should be a dotted table/column pair.");
             string tableName = variablePath.Substring(0, vp);
             string fieldName = variablePath.Substring(vp + 1);
-            var storage = sims?.FindChild<Models.Storage.IDataStore>();
+            var storage = sims?.Node.FindChild<Models.Storage.IDataStore>();
 
             if (!storage.Reader.TableNames.Contains(tableName))
                 throw new Exception($"Table {tableName} does not exist in the database.");
@@ -131,9 +133,9 @@ namespace APSIM.ZMQServer
         {
             errors = null;
             if (changes != null)
-                jobRunner.Replacements = Overrides.ParseStrings(changes);
+                jobRunner.Replacements = CommandLanguage.StringToCommands(changes, sims, relativeToDirectory: null);
             else
-                jobRunner.Replacements = Enumerable.Empty<Override>();
+                jobRunner.Replacements = Enumerable.Empty<IModelCommand>();
 
             Action onWorkerExit = () =>
             {
@@ -151,7 +153,7 @@ namespace APSIM.ZMQServer
                       if (errors != null && errors.Count > 0)
                       {
                           Console.WriteLine("Errors:\n");
-                       
+
                           foreach (var e in errors) { Console.WriteLine(e.ToString()); }
                       }
                       onWorkerExit();
@@ -175,7 +177,7 @@ namespace APSIM.ZMQServer
         /// </summary>
         public void Close()
         {
-            sims?.FindChild<Models.Storage.IDataStore>()?.Close();
+            sims?.Node.FindChild<Models.Storage.IDataStore>()?.Close();
         }
     }
 }

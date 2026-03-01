@@ -1,11 +1,12 @@
 ﻿using System;
+using APSIM.Core;
 using Models.Core;
 using Models.Interfaces;
 
 namespace Models.Functions
 {
     /// <summary>Temperature function for soil processes except denitrification. Originally taken from CERES.
-    /// Functional form is (ST-BaseST)^2/(OptSt-BaseSt)^2</summary> 
+    /// Functional form is (ST-BaseST)^2/(OptSt-BaseSt)^2</summary>
 
     [Serializable]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -54,6 +55,8 @@ namespace Models.Functions
             {
                 if (temperature[i] > MineralisationSTBase)
                     tf[i] = Math.Pow(temperature[i] - MineralisationSTBase, 2) / Math.Pow(MineralisationSTOpt - MineralisationSTBase, 2);
+                else
+                    tf[i] = 0.0;
                 if (tf[i] > 1) tf[i] = 1;
             }
         }

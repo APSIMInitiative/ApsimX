@@ -21,7 +21,7 @@ using OxyPlot.GtkSharp;
 using OxyPlot.Series;
 using UserInterface.EventArguments;
 using UserInterface.Interfaces;
-using Utility;
+using APSIMNG.Utility;
 using LegendPlacement = OxyPlot.Legends.LegendPlacement;
 using OxyLegendOrientation = OxyPlot.Legends.LegendOrientation;
 using OxyLegendPosition = OxyPlot.Legends.LegendPosition;
@@ -76,7 +76,7 @@ namespace UserInterface.Views
                 markerSize = value;
                 double numericValue = GetMarkerSizeNumericValue(value);
                 if (plot1 != null && plot1.Model != null)
-                    foreach (var series in plot1.Model.Series.OfType<Utility.LineSeriesWithTracker>())
+                    foreach (var series in plot1.Model.Series.OfType<LineSeriesWithTracker>())
                         series.MarkerSize = numericValue;
             }
         }
@@ -100,7 +100,7 @@ namespace UserInterface.Views
         private bool inRightClick = false;
 
         private OxyPlot.GtkSharp.PlotView plot1;
-        private Box vbox1 = null;
+        private Container vbox1 = null;
         private Expander expander1 = null;
         private Box vbox2 = null;
         private Label captionLabel = null;
@@ -119,7 +119,7 @@ namespace UserInterface.Views
         public GraphView(ViewBase owner) : base(owner)
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.GraphView.glade");
-            vbox1 = (Box)builder.GetObject("vbox1");
+            vbox1 = (Container)builder.GetObject("vbox1");
             expander1 = (Expander)builder.GetObject("expander1");
             vbox2 = (Box)builder.GetObject("vbox2");
             captionLabel = (Label)builder.GetObject("captionLabel");
@@ -132,16 +132,18 @@ namespace UserInterface.Views
         protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
         {
             this.owner = ownerView;
-            vbox1 = gtkControl as Box;
+            vbox1 = gtkControl as Container;
             mainWidget = vbox1;
 
             plot1 = new PlotView();
             plot1.Model = new PlotModel();
             if (vbox1.Window != null)
                 plot1.SetSizeRequest(vbox1.Window.Width, vbox1.Window.Height);
-            if (vbox2 == null)
-                vbox2 = vbox1;
-            vbox2.PackStart(plot1, true, true, 0);
+
+            if (vbox2 != null)
+                vbox2.PackStart(plot1, true, true, 0);
+            else
+                vbox1.Add(plot1);
 
             smallestDate = DateTime.MaxValue;
             largestDate = DateTime.MinValue;
@@ -187,7 +189,7 @@ namespace UserInterface.Views
             // I notice that the GTK3 ScaleFactor has a value of 80% in this situation. If the screen
             // scaling is 125% or 100% then ScaleFactor is 1.0. It doesn't seem consistent though.
             // For now I'll just scale all fonts by 2.0. Works on my various screens. Will need some testing.
-            var font = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
+            var font = Pango.FontDescription.FromString(Configuration.Settings.FontName);
             fontSize = font.SizeIsAbsolute ? font.Size : Convert.ToInt32(font.Size / Pango.Scale.PangoScale) * 2;
         }
 
@@ -488,10 +490,10 @@ namespace UserInterface.Views
              bool showOnLegend,
              IEnumerable caption = null)
         {
-            Utility.LineSeriesWithTracker series = null;
+            LineSeriesWithTracker series = null;
             if (x != null && y != null)
             {
-                series = new Utility.LineSeriesWithTracker(title);
+                series = new LineSeriesWithTracker(title);
                 if (x.Count() > 0)
                     series.XType = x.Cast<object>().ToArray()[0].GetType();
                 else
@@ -513,9 +515,9 @@ namespace UserInterface.Views
                     series.ToolTip = title;
 
                 if (colour.ToArgb() == Color.Empty.ToArgb())
-                    colour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
+                    colour = Configuration.Settings.DarkTheme ? Color.White : Color.Black;
                 else if (colour.R == BackColor.R && colour.G == BackColor.G && colour.B == BackColor.B)
-                    colour = Utility.Colour.FromOxy(ForegroundColour);
+                    colour = Colour.FromOxy(ForegroundColour);
                 series.Color = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
 
                 series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
@@ -527,7 +529,7 @@ namespace UserInterface.Views
                 series.YFieldName = yFieldName;
 
                 // Create data points
-                series.Caption = this.PopulateCaptions(x, y, xAxisType, yAxisType, caption);
+                series.Caption = this.PopulateCaptions(x, y, xAxisType, yAxisType, caption, title);
 
                 series.CanTrackerInterpolatePoints = false;
 
@@ -832,7 +834,7 @@ namespace UserInterface.Views
                 if (xIsFloatingPoint)
                     index = MathUtilities.SafeIndexOf(x.Cast<double>().ToList(), xVal);
                 else if (xType == typeof(DateTime))
-                    index = Array.IndexOf(x, DateTimeAxis.ToDateTime(xVal));
+                    index = Array.IndexOf(x, DateTimeAxis.ToDateTime(xVal, DateTimeAxis.DefaultPrecision));
                 else
                     index = i; // Array.IndexOf(x, xVal); // this is unlikely to work
 
@@ -925,11 +927,11 @@ namespace UserInterface.Views
 
                 // Colour
                 if (colour.ToArgb() == Color.Empty.ToArgb())
-                    colour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
+                    colour = Configuration.Settings.DarkTheme ? Color.White : Color.Black;
                 else if (colour.R == BackColor.R && colour.G == BackColor.G && colour.B == BackColor.B)
-                    colour = Utility.Colour.FromOxy(ForegroundColour);
+                    colour = Colour.FromOxy(ForegroundColour);
 
-                OxyColor oxyColour = Utility.Colour.ToOxy(colour);
+                OxyColor oxyColour = Colour.ToOxy(colour);
                 series.Fill = oxyColour;
                 series.Stroke = oxyColour;
 
@@ -1050,7 +1052,7 @@ namespace UserInterface.Views
                 // We never want text to be the same as the background colour.
                 annotation.TextColor = ForegroundColour;
             else
-                annotation.TextColor = Utility.Colour.ToOxy(colour);
+                annotation.TextColor = Colour.ToOxy(colour);
 
             this.plot1.Model.Annotations.Add(annotation);
         }
@@ -1406,8 +1408,11 @@ namespace UserInterface.Views
         public void ShowEditorPanel(object editorObj, string expanderLabel)
         {
             Widget editor = editorObj as Widget;
+            editor.Visible = true;
+            editor.Expand = true;
             if (editor != null)
             {
+                (mainWidget as Paned).Position = (int)(mainWidget.AllocatedHeight * 0.75);
                 expander1.Foreach(delegate (Widget widget)
                 {
                     if (widget != label2)
@@ -1563,13 +1568,15 @@ namespace UserInterface.Views
         /// <param name="xAxisType">The x axis the data is associated with</param>
         /// <param name="yAxisType">The y axis the data is associated with</param>
         /// <param name="caption">The caption values</param>
+        /// <param name="title">The title</param>
         /// <returns>A list of captions related to the x, y values</returns>
         private List<string> PopulateCaptions(
             IEnumerable x,
             IEnumerable y,
             APSIM.Shared.Graphing.AxisPosition xAxisType,
             APSIM.Shared.Graphing.AxisPosition yAxisType,
-            IEnumerable caption)
+            IEnumerable caption,
+            string title)
         {
             List<string> newCaptions = new List<string>();
             if (x != null && y != null && caption != null && ((ICollection)x).Count > 0 && ((ICollection)y).Count > 0)
@@ -1583,7 +1590,7 @@ namespace UserInterface.Views
                 // Create data points
                 for (int i = 0; i < Math.Min(xValues.Length, yValues.Length); i++)
                     if (!double.IsNaN(xValues[i]) && !double.IsNaN(yValues[i]))
-                        newCaptions.Add(captions[i]);
+                        newCaptions.Add("Group: " + title + "\n" + "Simulation: " + captions[i]);
 
                 return newCaptions;
             }
@@ -1893,7 +1900,6 @@ namespace UserInterface.Views
             try
             {
                 OnPlotClick?.Invoke(this, EventArgs.Empty);
-                OnAxisClick?.Invoke(APSIM.Shared.Graphing.AxisPosition.Bottom);
                 OnLegendClick?.Invoke(this, new LegendClickArgs());
                 OnTitleClick?.Invoke(this, EventArgs.Empty);
                 OnAnnotationClick?.Invoke(this, EventArgs.Empty);
@@ -1978,6 +1984,7 @@ namespace UserInterface.Views
                         else if (bottomAxisArea.Contains(location) && GetAxis(APSIM.Shared.Graphing.AxisPosition.Bottom) != null)
                         {
                             this.OnAxisClick.Invoke(APSIM.Shared.Graphing.AxisPosition.Bottom);
+                            
                         }
                     }
                 }

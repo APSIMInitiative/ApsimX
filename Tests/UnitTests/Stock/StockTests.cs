@@ -1,17 +1,19 @@
-﻿namespace UnitTests.Stock
+﻿using APSIM.Core;
+using APSIM.Shared.Utilities;
+using Models;
+using Models.Climate;
+using Models.Core;
+using Models.ForageDigestibility;
+using Models.GrazPlan;
+using Models.Soils;
+using Models.StockManagement;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace UnitTests.Stock
 {
-    using APSIM.Shared.Utilities;
-    using Models;
-    using Models.Climate;
-    using Models.Core;
-    using Models.ForageDigestibility;
-    using Models.GrazPlan;
-    using Models.Soils;
-    using Models.StockManagement;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
     [TestFixture]
     public class StockTests
@@ -123,9 +125,9 @@
         [Test]
         public void CreateAnimalCross()
         {
-            var stock = new Stock();
+            var stock = new Models.GrazPlan.Stock();
             var genotypeCross = new GenotypeCross()
-            { 
+            {
                 Name = "NewGenotype",
                 DamBreed = "Friesian",
                 Generation = 1,
@@ -158,7 +160,7 @@
         public void CreateAnimalCrossFromGUI()
         {
             // Get a friesian genotype.
-            var stock = new Stock();
+            var stock = new Models.GrazPlan.Stock();
             var genotypeCross = new GenotypeCross()
             {
                 Name = "NZFriesianCross",
@@ -195,12 +197,12 @@
         public void AddAnimalGroupByDroppingOntoStock()
         {
             // Get a friesian genotype.
-            var stock = new Stock
+            var stock = new Models.GrazPlan.Stock
             {
                 Children = new List<IModel>()
                 {
                     new Clock(),
-                    new Weather(),
+                    new Models.Climate.Weather(),
                     new MockSummary(),
                     new Forages(),
                     new Zone()
@@ -209,9 +211,9 @@
                         Area = 100
                     },
                     new Soil()
-                    { 
+                    {
                         Children = new List<IModel>()
-                        { 
+                        {
                             new Physical()
                             {
                                 Thickness = new double[] { 100, 100, 100 }
@@ -232,7 +234,7 @@
                     }
                 }
             };
-
+            Node.Create(stock);
             Utilities.ResolveLinks(stock);
 
             // Invoke start of simulation event. This should add the animal group to stock.
@@ -281,7 +283,7 @@
         public void FixedGrazingEffectsOnStock()
         {
             // Get a friesian genotype.
-            var stock = new Stock
+            var stock = new Models.GrazPlan.Stock
             {
                 Children = new List<IModel>()
                 {
@@ -332,7 +334,7 @@
                     new Forages()
                 }
             };
-
+            Node.Create(stock);
             Utilities.ResolveLinks(stock);
 
             var animals = stock.Children[6] as Animals;
@@ -357,7 +359,7 @@
         public void DraftGrazingEffectsOnStock()
         {
             // Get a friesian genotype.
-            var stock = new Stock
+            var stock = new Models.GrazPlan.Stock
             {
                 Children = new List<IModel>()
                 {
@@ -444,7 +446,7 @@
                     new Forages()
                 }
             };
-
+            Node.Create(stock);
             Utilities.ResolveLinks(stock);
 
             var animals1 = stock.Children[8] as Animals;
@@ -476,12 +478,12 @@
         [Test]
         public void AddAnimalCohort()
         {
-            var stock = new Stock
+            var stock = new Models.GrazPlan.Stock
             {
                 Children = new List<IModel>()
                 {
                     new Clock() { StartDate = new DateTime(2020, 1, 1), EndDate = new DateTime(2020, 1, 2) },
-                    new Weather(),
+                    new Models.Climate.Weather(),
                     new MockSummary(),
                     new Forages(),
                     new Zone()
@@ -495,6 +497,7 @@
                     },
                 }
             };
+            Node.Create(stock);
             Utilities.ResolveLinks(stock);
             var clock = stock.Children[0] as Clock;
 
@@ -535,18 +538,18 @@
         [Test]
         public void SellTaggedAnimals()
         {
-            var stock = new Stock
+            var stock = new Models.GrazPlan.Stock
             {
                 Children = new List<IModel>()
                 {
                     new Clock() { StartDate = new DateTime(2020, 1, 1), EndDate = new DateTime(2020, 1, 2) },
-                    new Weather(),
+                    new Models.Climate.Weather(),
                     new MockSummary(),
                     new Zone() { Name = "Field1", Area = 100 },
                     new Soil() { Children = new List<IModel>() { new Physical() { Thickness = new double[] { 100, 100, 100 } } } },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup1",
                         Sex = GrazType.ReproType.Empty,
                         Genotype = "Jersey",
                         MatedTo = "Friesian",
@@ -559,7 +562,7 @@
                     },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup2",
                         Sex = GrazType.ReproType.Empty,
                         Genotype = "Jersey",
                         MatedTo = "Friesian",
@@ -573,6 +576,7 @@
                     new Forages()
                 },
             };
+            Node.Create(stock);
             Utilities.ResolveLinks(stock);
             Utilities.CallEventAll(stock, "StartOfSimulation");
 
@@ -585,7 +589,7 @@
             Assert.That(groups.Last().NoAnimals, Is.EqualTo(100));
 
             // Make sure summary file was written to.
-            var summary = stock.FindDescendant<MockSummary>();
+            var summary = stock.Node.FindChild<MockSummary>(recurse: true);
             Assert.That(summary.messages[0], Is.EqualTo("Sold 50 animals"));
         }
 
@@ -593,18 +597,18 @@
         [Test]
         public void SellHeavyAnimals()
         {
-            var stock = new Stock
+            var stock = new Models.GrazPlan.Stock
             {
                 Children = new List<IModel>()
                 {
                     new Clock() { StartDate = new DateTime(2020, 1, 1), EndDate = new DateTime(2020, 1, 2) },
-                    new Weather(),
+                    new Models.Climate.Weather(),
                     new MockSummary(),
                     new Zone() { Name = "Field1", Area = 100 },
                     new Soil() { Children = new List<IModel>() { new Physical() { Thickness = new double[] { 100, 100, 100 } } } },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup1",
                         Sex = GrazType.ReproType.Empty,
                         Genotype = "Jersey",
                         MatedTo = "Friesian",
@@ -617,7 +621,7 @@
                     },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup2",
                         Sex = GrazType.ReproType.Male,
                         Genotype = "Jersey",
                         MatedTo = "Friesian",
@@ -631,6 +635,7 @@
                     new Forages()
                 },
             };
+            Node.Create(stock);
             Utilities.ResolveLinks(stock);
             Utilities.CallEventAll(stock, "StartOfSimulation");
 
@@ -643,7 +648,7 @@
             Assert.That(groups.Last().NoAnimals, Is.EqualTo(100));
 
             // Make sure summary file was written to.
-            var summary = stock.FindDescendant<MockSummary>();
+            var summary = stock.Node.FindChild<MockSummary>(recurse: true);
             Assert.That(summary.messages[0], Is.EqualTo("Sold 50 animals"));
         }
 
@@ -651,18 +656,18 @@
         [Test]
         public void ShearAnimals()
         {
-            var stock = new Stock
+            var stock = new Models.GrazPlan.Stock
             {
                 Children = new List<IModel>()
                 {
                     new Clock() { StartDate = new DateTime(2020, 1, 1), EndDate = new DateTime(2020, 1, 2) },
-                    new Weather(),
+                    new Models.Climate.Weather(),
                     new MockSummary(),
                     new Zone() { Name = "Field1", Area = 100 },
                     new Soil() { Children = new List<IModel>() { new Physical() { Thickness = new double[] { 100, 100, 100 } } } },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup1",
                         Sex = GrazType.ReproType.Empty,
                         Genotype = "Small Merino",
                         MatedTo = "Small Merino",
@@ -676,7 +681,7 @@
                     },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup2",
                         Sex = GrazType.ReproType.Male,
                         Genotype = "Jersey",
                         MatedTo = "Friesian",
@@ -690,6 +695,7 @@
                     new Forages()
                 },
             };
+            Node.Create(stock);
             Utilities.ResolveLinks(stock);
             Utilities.CallEventAll(stock, "StartOfSimulation");
 
@@ -698,7 +704,7 @@
             Assert.That(cfw, Is.EqualTo(70));
 
             // Make sure summary file was written to.
-            var summary = stock.FindDescendant<MockSummary>();
+            var summary = stock.Node.FindChild<MockSummary>(recurse: true);
             Assert.That(summary.messages[0], Is.EqualTo("Shearing animals"));
         }
 
@@ -706,19 +712,19 @@
         [Test]
         public void MoveAnimals()
         {
-            var stock = new Stock
+            var stock = new Models.GrazPlan.Stock
             {
                 Children = new List<IModel>()
                 {
                     new Clock() { StartDate = new DateTime(2020, 1, 1), EndDate = new DateTime(2020, 1, 2) },
-                    new Weather(),
+                    new Models.Climate.Weather(),
                     new MockSummary(),
                     new Zone() { Name = "Field1", Area = 100 },
                     new Zone() { Name = "Field2", Area = 100 },
                     new Soil() { Children = new List<IModel>() { new Physical() { Thickness = new double[] { 100, 100, 100 } } } },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup1",
                         Sex = GrazType.ReproType.Empty,
                         Genotype = "Small Merino",
                         MatedTo = "Small Merino",
@@ -732,7 +738,7 @@
                     },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup2",
                         Sex = GrazType.ReproType.Male,
                         Genotype = "Jersey",
                         MatedTo = "Friesian",
@@ -746,6 +752,7 @@
                     new Forages()
                 },
             };
+            Node.Create(stock);
             Utilities.ResolveLinks(stock);
             Utilities.CallEventAll(stock, "StartOfSimulation");
 
@@ -759,19 +766,19 @@
         [Test]
         public void JoinAnimals()
         {
-            var stock = new Stock
+            var stock = new Models.GrazPlan.Stock
             {
                 Children = new List<IModel>()
                 {
                     new Clock() { StartDate = new DateTime(2020, 1, 1), EndDate = new DateTime(2020, 1, 2) },
-                    new Weather(),
+                    new Models.Climate.Weather(),
                     new MockSummary(),
                     new Zone() { Name = "Field1", Area = 100 },
                     new Zone() { Name = "Field2", Area = 100 },
                     new Soil() { Children = new List<IModel>() { new Physical() { Thickness = new double[] { 100, 100, 100 } } } },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup1",
                         Sex = GrazType.ReproType.Empty,
                         Genotype = "Small Merino",
                         MatedTo = "Small Merino",
@@ -785,7 +792,7 @@
                     },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup2",
                         Sex = GrazType.ReproType.Male,
                         Genotype = "Jersey",
                         MatedTo = "Friesian",
@@ -799,6 +806,7 @@
                     new Forages()
                 },
             };
+            Node.Create(stock);
             Utilities.ResolveLinks(stock);
             Utilities.CallEventAll(stock, "StartOfSimulation");
 
@@ -819,19 +827,19 @@
         [Test]
         public void CastrateAnimals()
         {
-            var stock = new Stock
+            var stock = new Models.GrazPlan.Stock
             {
                 Children = new List<IModel>()
                 {
                     new Clock() { StartDate = new DateTime(2020, 1, 1), EndDate = new DateTime(2020, 1, 2) },
-                    new Weather(),
+                    new Models.Climate.Weather(),
                     new MockSummary(),
                     new Zone() { Name = "Field1", Area = 100 },
                     new Zone() { Name = "Field2", Area = 100 },
                     new Soil() { Children = new List<IModel>() { new Physical() { Thickness = new double[] { 100, 100, 100 } } } },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup1",
                         Sex = GrazType.ReproType.Empty,
                         Genotype = "Small Merino",
                         MatedTo = "Small Merino",
@@ -845,7 +853,7 @@
                     },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup2",
                         Sex = GrazType.ReproType.Empty,
                         Genotype = "Jersey",
                         MatedTo = "Friesian",
@@ -862,6 +870,7 @@
                     new Forages()
                 },
             };
+            Node.Create(stock);
             Utilities.ResolveLinks(stock);
             Utilities.CallEventAll(stock, "StartOfSimulation");
 
@@ -878,19 +887,19 @@
         [Test]
         public void WeanAnimals()
         {
-            var stock = new Stock
+            var stock = new Models.GrazPlan.Stock
             {
                 Children = new List<IModel>()
                 {
                     new Clock() { StartDate = new DateTime(2020, 1, 1), EndDate = new DateTime(2020, 1, 2) },
-                    new Weather(),
+                    new Models.Climate.Weather(),
                     new MockSummary(),
                     new Zone() { Name = "Field1", Area = 100 },
                     new Zone() { Name = "Field2", Area = 100 },
                     new Soil() { Children = new List<IModel>() { new Physical() { Thickness = new double[] { 100, 100, 100 } } } },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup1",
                         Sex = GrazType.ReproType.Empty,
                         Genotype = "Small Merino",
                         MatedTo = "Small Merino",
@@ -904,7 +913,7 @@
                     },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup2",
                         Sex = GrazType.ReproType.Empty,
                         Genotype = "Jersey",
                         MatedTo = "Friesian",
@@ -921,6 +930,7 @@
                     new Forages()
                 },
             };
+            Node.Create(stock);
             Utilities.ResolveLinks(stock);
             Utilities.CallEventAll(stock, "StartOfSimulation");
 
@@ -938,19 +948,19 @@
         [Test]
         public void DryoffAnimals()
         {
-            var stock = new Stock
+            var stock = new Models.GrazPlan.Stock
             {
                 Children = new List<IModel>()
                 {
                     new Clock() { StartDate = new DateTime(2020, 1, 1), EndDate = new DateTime(2020, 1, 2) },
-                    new Weather(),
+                    new Models.Climate.Weather(),
                     new MockSummary(),
                     new Zone() { Name = "Field1", Area = 100 },
                     new Zone() { Name = "Field2", Area = 100 },
                     new Soil() { Children = new List<IModel>() { new Physical() { Thickness = new double[] { 100, 100, 100 } } } },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup1",
                         Sex = GrazType.ReproType.Empty,
                         Genotype = "Small Merino",
                         MatedTo = "Small Merino",
@@ -964,7 +974,7 @@
                     },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup2",
                         Sex = GrazType.ReproType.Empty,
                         Genotype = "Jersey",
                         MatedTo = "Friesian",
@@ -980,6 +990,7 @@
                     new Forages()
                 },
             };
+            Node.Create(stock);
             Utilities.ResolveLinks(stock);
             Utilities.CallEventAll(stock, "StartOfSimulation");
 
@@ -995,12 +1006,12 @@
         [Test]
         public void SplitByAge()
         {
-            var stock = new Stock
+            var stock = new Models.GrazPlan.Stock
             {
                 Children = new List<IModel>()
                 {
                     new Clock() { StartDate = new DateTime(2020, 1, 1), EndDate = new DateTime(2020, 1, 2) },
-                    new Weather(),
+                    new Models.Climate.Weather(),
                     new MockSummary(),
                     new Zone() { Name = "Field1", Area = 100 },
                     new Zone() { Name = "Field2", Area = 100 },
@@ -1023,6 +1034,7 @@
                     new Forages()
                 },
             };
+            Node.Create(stock);
             Utilities.ResolveLinks(stock);
             Utilities.CallEventAll(stock, "StartOfSimulation");
 
@@ -1043,12 +1055,12 @@
         [Test]
         public void SplitByWeight()
         {
-            var stock = new Stock
+            var stock = new Models.GrazPlan.Stock
             {
                 Children = new List<IModel>()
                 {
                     new Clock() { StartDate = new DateTime(2020, 1, 1), EndDate = new DateTime(2020, 1, 2) },
-                    new Weather(),
+                    new Models.Climate.Weather(),
                     new MockSummary(),
                     new Zone() { Name = "Field1", Area = 100 },
                     new Zone() { Name = "Field2", Area = 100 },
@@ -1071,6 +1083,7 @@
                     new Forages()
                 },
             };
+            Node.Create(stock);
             Utilities.ResolveLinks(stock);
             Utilities.CallEventAll(stock, "StartOfSimulation");
 
@@ -1091,12 +1104,12 @@
         [Test]
         public void SplitByYoung()
         {
-            var stock = new Stock
+            var stock = new Models.GrazPlan.Stock
             {
                 Children = new List<IModel>()
                 {
                     new Clock() { StartDate = new DateTime(2020, 1, 1), EndDate = new DateTime(2020, 1, 2) },
-                    new Weather(),
+                    new Models.Climate.Weather(),
                     new MockSummary(),
                     new Zone() { Name = "Field1", Area = 100 },
                     new Zone() { Name = "Field2", Area = 100 },
@@ -1119,6 +1132,7 @@
                     new Forages()
                 },
             };
+            Node.Create(stock);
             Utilities.ResolveLinks(stock);
             Utilities.CallEventAll(stock, "StartOfSimulation");
 
@@ -1139,19 +1153,19 @@
         [Test]
         public void SortAnimalsByTag()
         {
-            var stock = new Stock
+            var stock = new Models.GrazPlan.Stock
             {
                 Children = new List<IModel>()
                 {
                     new Clock() { StartDate = new DateTime(2020, 1, 1), EndDate = new DateTime(2020, 1, 2) },
-                    new Weather(),
+                    new Models.Climate.Weather(),
                     new MockSummary(),
                     new Zone() { Name = "Field1", Area = 100 },
                     new Zone() { Name = "Field2", Area = 100 },
                     new Soil() { Children = new List<IModel>() { new Physical() { Thickness = new double[] { 100, 100, 100 } } } },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup1",
                         Sex = GrazType.ReproType.Empty,
                         Genotype = "Small Merino",
                         MatedTo = "Small Merino",
@@ -1165,7 +1179,7 @@
                     },
                     new Animals()
                     {
-                        Name = "MyGroup",
+                        Name = "MyGroup2",
                         Sex = GrazType.ReproType.Empty,
                         Genotype = "Jersey",
                         MatedTo = "Friesian",
@@ -1181,6 +1195,7 @@
                     new Forages()
                 },
             };
+            Node.Create(stock);
             Utilities.ResolveLinks(stock);
             Utilities.CallEventAll(stock, "StartOfSimulation");
 

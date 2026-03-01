@@ -6,10 +6,10 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Xml;
+using APSIM.Core;
 using APSIM.Shared.OldAPSIM;
 using APSIM.Shared.Utilities;
 using Microsoft.CSharp;
-using Models.Core.ApsimFile;
 
 namespace Models.Core.Apsim710File
 {
@@ -187,7 +187,7 @@ namespace Models.Core.Apsim710File
             XmlNode xdocNode = xdoc.CreateElement("Simulations");
             xdoc.AppendChild(xdocNode);
             newNode = xdocNode.AppendChild(xdoc.CreateElement("Name"));
-            XmlUtilities.SetAttribute(xdoc.DocumentElement, "Version", XmlConverters.LastVersion.ToString());
+            XmlUtilities.SetAttribute(xdoc.DocumentElement, "Version", FileFormat.JSONVersion.ToString());
             newNode.InnerText = "Simulations";
 
             XmlNode rootNode = doc.DocumentElement;     // get first folder
@@ -199,7 +199,7 @@ namespace Models.Core.Apsim710File
             xmlWriter.Write(XmlUtilities.FormattedXML(xdoc.OuterXml));
             xmlWriter.Close();
 
-            newSimulations = FileFormat.ReadFromFile<Simulations>(xfile, errorHandler, false).NewModel as Simulations;
+            newSimulations = FileFormat.ReadFromFile<Simulations>(xfile, errorHandler).Model as Simulations;
             File.Delete(xfile);
             return newSimulations;
         }
@@ -826,6 +826,29 @@ namespace Models.Core.Apsim710File
             this.AddChildComponents(compNode, newNode);
 
             return newNode;
+        }
+
+        /// <summary>Convert an APSIM 7.10 XML string to a model.</summary>
+        /// <param name="xml">The string representing the new model</param>
+        /// <returns>The newly created model.</returns>
+        public static IModel StringToModel(string xml)
+        {
+            // Try the string as if it was an APSIM 7.10 xml string.
+            var xmlDocument = new XmlDocument();
+            xmlDocument.LoadXml("<Simulation>" + xml + "</Simulation>");
+            var importer = new Importer();
+            var rootNode = xmlDocument.DocumentElement as XmlNode;
+            var convertedNode = importer.AddComponent(rootNode.ChildNodes[0], ref rootNode);
+            rootNode.RemoveAll();
+            IModel newSimulationModel = null;
+            if (convertedNode != null)
+            {
+                rootNode.AppendChild(convertedNode);
+                newSimulationModel = FileFormat.ReadFromString<IModel>(rootNode.OuterXml).Model as IModel;
+            }
+            if (newSimulationModel == null || newSimulationModel.Children.Count == 0)
+                throw new Exception("Cannot add model. Invalid model being added.");
+            return newSimulationModel.Children[0];
         }
 
         /// <summary>

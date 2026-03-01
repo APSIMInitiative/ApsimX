@@ -45,13 +45,18 @@ public static class DeepClonerExtensions
         return ShallowClonerGenerator.CloneObject(obj);
     }
 
-    public static void SetSuppressedAttributes(params Type[]suppressedAttributes)
+    public static void SetSuppressedAttributes(params Type[] suppressedAttributes)
     {
-            foreach (Type type in suppressedAttributes)
-            {
-                if (!type.IsSubclassOf(typeof(Attribute)))
-                    throw new Exception("Bad argument to SetSuppressedAttributes. Type not derived from Attribute class");
-            }
+        foreach (Type type in suppressedAttributes)
+        {
+            if (!type.IsSubclassOf(typeof(Attribute)))
+                throw new Exception("Bad argument to SetSuppressedAttributes. Type not derived from Attribute class");
+        }
         DeepClonerGenerator.SuppressedAttributeTypes = suppressedAttributes;
+    }
+
+    public static void SetSuppressedClassAttributes(params Type[]suppressedClassAttributes)
+    {
+        DeepClonerGenerator.SuppressedTypes = suppressedClassAttributes;
     }
 }

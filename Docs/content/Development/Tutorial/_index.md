@@ -1,7 +1,7 @@
 ---
 title: "Tutorial"
 draft: false
-weight: 20
+weight: 200
 ---
 
 * [Build your first model](/development/tutorial/buildmodeltutorial)

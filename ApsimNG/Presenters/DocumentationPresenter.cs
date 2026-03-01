@@ -10,12 +10,14 @@ using System.Threading.Tasks;
 using UserInterface.Views;
 using Models.PMF.Phen;
 using APSIM.Shared.Documentation;
+using APSIM.Core;
+using APSIM.Documentation;
 
 namespace UserInterface.Presenters
 {
     public class DocumentationPresenter : IPresenter
     {
-        private IMarkdownView view;
+        private MarkdownView view;
         private ExplorerPresenter presenter;
         private IModel model;
 
@@ -32,7 +34,7 @@ namespace UserInterface.Presenters
 
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            this.view = view as IMarkdownView;
+            this.view = view as MarkdownView;
             this.model = model as IModel;
             this.presenter = explorerPresenter;
 
@@ -40,7 +42,7 @@ namespace UserInterface.Presenters
         }
 
         private async void PopulateView()
-        {  
+        {
             try
             {
                 //Default text while loading
@@ -96,7 +98,7 @@ namespace UserInterface.Presenters
             //This has been added so Phenology can show its phases inside of the GUI
             if (model.GetType() == typeof(Phenology))
             {
-                DataTable dataTable = (model as Phenology).GetPhaseTable();
+                DataTable dataTable = DocumentationUtilities.GetPhaseTable(model as Phenology);
                 markdown.AppendLine(DataTableUtilities.ToMarkdown(dataTable, true));
                 markdown.AppendLine();
             }
@@ -110,7 +112,7 @@ namespace UserInterface.Presenters
         private StringBuilder DocumentModelDependencies(IModel model)
         {
             StringBuilder markdown = new StringBuilder();
-            
+
             DataTable functionTable = GetDependencies(model, m => typeof(IFunction).IsAssignableFrom(GetMemberType(m)));
             DataTable depsTable = GetDependencies(model, m => !typeof(IFunction).IsAssignableFrom(GetMemberType(m)));
 
@@ -150,7 +152,7 @@ namespace UserInterface.Presenters
                 markdown.AppendLine(DataTableUtilities.ToMarkdown(publicMethods, true));
                 markdown.AppendLine();
             }
-            
+
             return markdown;
         }
 
@@ -173,7 +175,7 @@ namespace UserInterface.Presenters
         private StringBuilder DocumentModelOutputs(IModel model)
         {
             StringBuilder markdown = new StringBuilder();
-            
+
             DataTable outputs = GetOutputs(model);
             if (outputs.Rows.Count > 0)
             {
@@ -295,7 +297,7 @@ namespace UserInterface.Presenters
                 if (link != null && filter(member))
                 {
                     DataRow row = result.NewRow();
-                    
+
                     row[0] = member.Name;
                     row[1] = GetMemberType(member).Name;
                     row[2] = link.Type.ToString();

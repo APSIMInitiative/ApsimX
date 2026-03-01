@@ -25,7 +25,6 @@ namespace Models.AgPasture
         /// <summary>Emerging aboveground organ tissue.</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         public GenericTissue EmergingTissue { get; private set; }
-
         /// <summary>Developing aboveground organ tissue.</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         public GenericTissue DevelopingTissue { get; private set; }

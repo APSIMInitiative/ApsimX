@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using APSIM.Core;
 using Models.Core;
 
 namespace Models.Functions
@@ -13,8 +14,12 @@ namespace Models.Functions
     [Description("Returns the value of a nominated external APSIM numerical variable")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class ExternalVariable : Model, IFunction
+    public class ExternalVariable : Model, IFunction, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>The variable name</summary>
         [Description("VariableName")]
         public string VariableName { get; set; }
@@ -22,7 +27,7 @@ namespace Models.Functions
         /// <summary>Gets the value.</summary>
         public double Value(int arrayIndex = -1)
         {
-            object val = this.FindByPath(VariableName)?.Value;
+            object val = Structure.GetObject(VariableName)?.Value;
 
             if (val != null)
             {

@@ -45,9 +45,15 @@
         string GetCellContents(int colIndex, int rowIndex);
 
         /// <summary>Set the contents of a cell.</summary>
-        /// <param name="colIndices">Column index of cell.</param>
-        /// <param name="rowIndices">Row index of cell.</param>
-        /// <param name="values">The value.</param>
+        /// <param name="colIndex">Column index of cell.</param>
+        /// <param name="rowIndex">Row index of cell.</param>
+        /// <param name="value">The value.</param>
+        void SetCellContent(int colIndex, int rowIndex, string value);
+
+        /// <summary>Set the contents of multiple cells.</summary>
+        /// <param name="colIndices">Column index of cells.</param>
+        /// <param name="rowIndices">Row index of cells.</param>
+        /// <param name="values">The value of the cells.</param>
         void SetCellContents(int[] colIndices, int[] rowIndices, string[] values);
 
         /// <summary>Delete the specified rows.</summary>

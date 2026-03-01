@@ -1,6 +1,7 @@
 ﻿namespace APSIM.Shared.Utilities
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Reflection;
 
@@ -85,12 +86,14 @@
             while (directory.Name == "Debug" || directory.Name == "Release" || directory.Name == "bin")
                 directory = directory.Parent;
             string apsimxDirectory = directory.FullName;
+            if (apsimxDirectory == "/")
+                apsimxDirectory = "/wd/"; // Special condition for running on azure compute nodes. Required for new build system.
             path = path.Replace("%root%", apsimxDirectory);
 
             if (string.IsNullOrEmpty(relativePath))
                 return ConvertSlashes(path);
 
-            // Make sure we have a relative directory 
+            // Make sure we have a relative directory
             string relativeDirectory;
             if (Directory.Exists(relativePath))
                 relativeDirectory = relativePath;
@@ -99,10 +102,7 @@
             if (relativeDirectory != null && !Path.IsPathRooted(path))
                     path = Path.Combine(relativeDirectory, path);
 
-            // Convert slashes.
-            path = ConvertSlashes(path);
-
-            return Path.GetFullPath(path);
+            return ConvertSlashes(Path.GetFullPath(path));
         }
 
         /// <summary>
@@ -116,15 +116,37 @@
             if (string.IsNullOrEmpty(path) || string.IsNullOrEmpty(relativePath))
                 return path;
 
-            // Make sure we have a relative directory 
-            string relativeDirectory = Path.GetDirectoryName(relativePath);
-            if (relativeDirectory != null)
+            //Convert both paths to using linux style slashes
+            string correctedPath = ConvertSlashes(path);
+            string correctedRelativePath = ConvertSlashes(relativePath);
+
+            //if path has backtracking in path, convert to absolute
+            if (correctedPath.Contains("../"))
+                correctedPath = GetAbsolutePath(correctedPath, correctedRelativePath);
+
+            //Get the program path to replace %root%
+            string programPath = GetAbsolutePath("%root%", null);
+            correctedPath = correctedPath.Replace("%root%", programPath);
+
+            //check if our path is the same as the absolute path, if it is, see if it contains the relative path to shorten it
+            string absolutePath = GetAbsolutePath(correctedPath, correctedRelativePath);
+            if (absolutePath == correctedPath)
             {
-                // Try getting rid of the relative directory.
-                path = path.Replace(relativeDirectory + Path.DirectorySeparatorChar, "");  // the relative path should not have a preceding \
+                string relativeDirectory = ConvertSlashes(Path.GetDirectoryName(correctedRelativePath));
+                if (!string.IsNullOrEmpty(relativeDirectory))
+                {
+                    if (!relativeDirectory.EndsWith("/"))
+                        relativeDirectory = relativeDirectory + "/";
+                    correctedPath = correctedPath.Replace(relativeDirectory, "");
+                }
             }
 
-            return ConvertSlashes(path);
+            //check now if the path matches the absolute path. if it is, see if we can shorten it with %root%
+            if (absolutePath == correctedPath)
+                correctedPath = correctedPath.Replace(programPath, "%root%");
+
+            //We should now have the best version of this path, in order of relative, %root% and absolute
+            return correctedPath;
         }
 
         /// <summary>
@@ -157,10 +179,44 @@
         /// </summary>
         private static string ConvertSlashes(string path)
         {
-            if (Environment.OSVersion.Platform == PlatformID.Win32NT || Environment.OSVersion.Platform == PlatformID.Win32Windows)
-                return path.Replace("/", @"\");
-
-            return path.Replace(@"\", "/");
+            return path.Replace("\\", "/");
         }
+
+
+        /// <summary>
+        /// Get all the absolute paths of files in a directory and subdirectories with the .apsimx extension.
+        /// </summary>
+        /// <param name="directory">The directory to search.</param>
+        /// <returns>A list of absolute paths to files with the .apsimx extension.</returns>
+        public static List<string> GetAllApsimXFilePaths(string directory)
+        {
+            if (string.IsNullOrEmpty(directory))
+                throw new ArgumentNullException(nameof(directory));
+
+            if (!Directory.Exists(directory))
+                throw new DirectoryNotFoundException($"The directory '{directory}' does not exist.");
+
+            List<string> apsimxFiles = new List<string>();
+            foreach (string file in Directory.EnumerateFiles(directory, "*.apsimx", SearchOption.AllDirectories))
+            {
+                apsimxFiles.Add(Path.GetFullPath(file));
+            }
+
+            return apsimxFiles;
+        }
+
+        /// <summary>
+        /// Compares two filepaths and determines if they are the same. Can compare relative against full path.
+        /// </summary>
+        /// <returns>True if the file paths match</returns>
+        public static bool ComparePaths(string path1, string path2, string apsimxFilepath)
+        {
+            string fullpath1 = PathUtilities.GetAbsolutePath(path1, apsimxFilepath);
+            string fullpath2 = PathUtilities.GetAbsolutePath(path2, apsimxFilepath);
+
+            return fullpath1 == fullpath2;
+        }
+
     }
+
 }

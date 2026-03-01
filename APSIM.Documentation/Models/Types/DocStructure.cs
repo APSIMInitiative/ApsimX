@@ -38,19 +38,19 @@ public class DocStructure : DocGeneric
             new Paragraph("*DeltaTips* = *ThermalTime* / *Phyllochron*"),
         };
 
-        if (AutoDocumentation.DocumentModel(model.FindChild<IFunction>("phyllochron")) is List<ITag> phyllochronTags)
+        if (AutoDocumentation.DocumentModel(model.Node.FindChild<IModel>("phyllochron")) is List<ITag> phyllochronTags)
         {
             leafTags.Add(new Paragraph("Where *Phyllochron* is the thermal time duration between the appearance of leaf tips given by:"));
             leafTags.AddRange(phyllochronTags);
         }
 
-        if (AutoDocumentation.DocumentModel(model.FindChild<IFunction>("thermalTime")) is List<ITag> thermalTimeTags)
+        if (AutoDocumentation.DocumentModel(model.Node.FindChild<IModel>("thermalTime")) is List<ITag> thermalTimeTags)
         {
             leafTags.Add(new Paragraph("*ThermalTime* is given by"));
             leafTags.AddRange(thermalTimeTags);
         }
 
-        if (AutoDocumentation.DocumentModel(model.FindChild<IFunction>("finalLeafNumber")) is List<ITag> finalLeafNumberTags)
+        if (AutoDocumentation.DocumentModel(model.Node.FindChild<IModel>("finalLeafNumber")) is List<ITag> finalLeafNumberTags)
         {
             leafTags.Add(new Paragraph("*LeafTipsAppeared* continues to increase until *FinalLeafNumber* is reached where *FinalLeafNumber* is calculated as:"));
             leafTags.AddRange(finalLeafNumberTags);
@@ -67,16 +67,16 @@ public class DocStructure : DocGeneric
             new Paragraph("*BranchingRate* is given by:"),
         };
 
-        if (AutoDocumentation.DocumentModel(model.FindChild<IFunction>("branchingRate")) is List<ITag> branchingRateTags)
+        if (AutoDocumentation.DocumentModel(model.Node.FindChild<IModel>("branchingRate")) is List<ITag> branchingRateTags)
         {
             branchingTags.AddRange(branchingRateTags);
         }
-        
+
         branchingTags.Add(new Paragraph("*NewlyDeadBranches* is calcualted as:"));
         branchingTags.Add(new Paragraph("*NewlyDeadBranches* = (*TotalStemPopn* - *MainStemPopn*) x *BranchMortality*"));
         branchingTags.Add(new Paragraph("where *BranchMortality* is given by:"));
 
-        if (AutoDocumentation.DocumentModel(model.FindChild<IFunction>("branchMortality")) is List<ITag> branchMortalityTags)
+        if (AutoDocumentation.DocumentModel(model.Node.FindChild<IModel>("branchMortality")) is List<ITag> branchMortalityTags)
         {
             branchingTags.AddRange(branchMortalityTags);
         }
@@ -88,7 +88,7 @@ public class DocStructure : DocGeneric
             new Paragraph("The height of the crop is calculated by the *HeightModel*")
         };
 
-        if (AutoDocumentation.DocumentModel(model.FindChild<IFunction>("heightModel")) is List<ITag> heightModelTags)
+        if (AutoDocumentation.DocumentModel(model.Node.FindChild<IModel>("heightModel")) is List<ITag> heightModelTags)
         {
             heightTags.AddRange(heightModelTags);
         }

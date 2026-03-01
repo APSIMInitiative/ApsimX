@@ -1,4 +1,5 @@
 using System;
+using APSIM.Core;
 using Models.Climate;
 using Models.Core;
 using Models.Functions;
@@ -79,7 +80,7 @@ namespace Models.PMF.Phen
         public bool DoTimeStep(ref double propOfDayToUse)
         {
             bool proceedToNextPhase = false;
-            // not already started this season  && Past the ealiest date to start growth      && Warm enough               
+            // not already started this season  && Past the ealiest date to start growth      && Warm enough
              if ((startedThisYear==false)&&(weather.DaysSinceWinterSolstice >= DOYtoProgress) && (MovingAverageTemp.Value() >= TemptoProgress))
             {
                 startedThisYear = true;

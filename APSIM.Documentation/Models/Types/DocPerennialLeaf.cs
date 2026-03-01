@@ -22,11 +22,11 @@ namespace APSIM.Documentation.Models.Types
         public override List<ITag> Document(int none = 0)
         {
             Section section = GetSummaryAndRemarksSection(model);
-            
+
             List<ITag> subTags = new List<ITag>();
 
             // Document Constants
-            foreach (var constant in model.FindAllChildren<Constant>())
+            foreach (var constant in model.Node.FindChildren<Constant>())
                 subTags.AddRange(AutoDocumentation.DocumentModel(constant));
 
             section.Add(new Section("Constants", subTags));

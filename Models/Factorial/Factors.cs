@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Core;
 using Models.Core;
 using Newtonsoft.Json;
 
@@ -9,10 +10,13 @@ namespace Models.Factorial
     /// A model representing an experiment's factors
     /// </summary>
     [Serializable]
-    [ScopedModel]
     [ValidParent(ParentType = typeof(Experiment))]
-    public class Factors : Model
+    public class Factors : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>Gets the factors.</summary>
         /// <value>The factors.</value>
         [JsonIgnore]
@@ -21,7 +25,7 @@ namespace Models.Factorial
             get
             {
                 List<Factor> f = new List<Factor>();
-                foreach (Factor factor in this.FindAllChildren<Factor>())
+                foreach (Factor factor in Structure.FindChildren<Factor>())
                     f.Add(factor);
                 return f;
             }

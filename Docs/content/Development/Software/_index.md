@@ -4,7 +4,7 @@ draft: false
 weight: 20
 ---
 
-**Software Guidelines**
+## Software Guidelines
 
 * [Coding style](/development/software/codingstyle)
 
@@ -12,8 +12,8 @@ weight: 20
 
 * [User interface design](/development/software/userinterfacedesign)
 
-* [PMF model design] (/development/software/pmfdesign)
+* [PMF model design](/development/software/pmfdesign)
 
 * [Software interfaces](/development/software/interfaces)
 
-* [Unit tests] (/development/software/unittests)
+* [Unit tests](/development/software/unittests)

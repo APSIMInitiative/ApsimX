@@ -45,7 +45,7 @@ namespace Models.CLEM.Activities
             if (finance != null)
             {
                 // make interest payments on bank accounts
-                foreach (FinanceType accnt in finance.FindAllChildren<FinanceType>())
+                foreach (FinanceType accnt in Structure.FindChildren<FinanceType>(relativeTo: finance))
                 {
                     if (accnt.Balance > 0)
                     {
@@ -107,12 +107,12 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                ZoneCLEM clemParent = FindAncestor<ZoneCLEM>();
+                ZoneCLEM clemParent = Structure.FindParent<ZoneCLEM>(recurse: true);
                 ResourcesHolder resHolder;
                 Finance finance = null;
                 if (clemParent != null)
                 {
-                    resHolder = clemParent.FindAllChildren<ResourcesHolder>().FirstOrDefault() as ResourcesHolder;
+                    resHolder = Structure.FindChildren<ResourcesHolder>(relativeTo: clemParent).FirstOrDefault() as ResourcesHolder;
                     finance = resHolder.FindResourceGroup<Finance>();
                     if (finance != null && !finance.Enabled)
                         finance = null;
@@ -123,7 +123,7 @@ namespace Models.CLEM.Activities
                 else
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">Interest rates are set in the <span class=\"resourcelink\">FinanceType</span> component</div>");
-                    foreach (FinanceType accnt in finance.FindAllChildren<FinanceType>().Where(a => a.Enabled))
+                    foreach (FinanceType accnt in Structure.FindChildren<FinanceType>(relativeTo: finance).Where(a => a.Enabled))
                     {
                         if (accnt.InterestRateCharged == 0 & accnt.InterestRatePaid == 0)
                             htmlWriter.Write("\r\n<div class=\"activityentry\">This activity is not needed for <span class=\"resourcelink\">" + accnt.Name + "</span> as no interest rates are set.</div>");
@@ -136,9 +136,9 @@ namespace Models.CLEM.Activities
                         }
                     }
                 }
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
 
     }

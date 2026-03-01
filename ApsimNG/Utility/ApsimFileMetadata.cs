@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.IO;
 
-namespace Utility
+namespace APSIMNG.Utility
 {
 
     public class ApsimFileMetadata
@@ -24,7 +22,7 @@ namespace Utility
         /// <param name="expandedNodes">List of expanded nodes in the simulations tree.</param>
         public ApsimFileMetadata(string file, TreeNode[] expandedNodes)
         {
-            FileName = file;
+            FileName = Path.GetFullPath(file);
             ExpandedNodes = expandedNodes;
         }
 
@@ -34,7 +32,7 @@ namespace Utility
         /// <param name="file">Absolute path to file.</param>
         public ApsimFileMetadata(string file)
         {
-            FileName = file;
+            FileName = Path.GetFullPath(file);
             ExpandedNodes = new TreeNode[0];
         }
 

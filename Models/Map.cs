@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using Models.Climate;
 using Models.Core;
 using Models.Mapping;
@@ -14,8 +15,13 @@ namespace Models
     [ViewName("UserInterface.Views.MapView")]
     [PresenterName("UserInterface.Presenters.MapPresenter")]
     [ValidParent(DropAnywhere = true)]
-    public class Map : Model
+    public class Map : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
+
         /// <summary>List of coordinates to show on map</summary>
         public List<Coordinate> GetCoordinates(List<string> names = null)
         {
@@ -24,7 +30,7 @@ namespace Models
                 names.Clear();
             else names = new List<string>();
 
-            foreach (Weather weather in FindAllInScope<Weather>().Where(w => w.Enabled))
+            foreach (Weather weather in Structure.FindAll<Weather>().Where(w => w.Enabled))
             {
                 weather.OpenDataFile();
                 double latitude = weather.Latitude;
@@ -41,7 +47,7 @@ namespace Models
 
             if (coordinates.Count == 0)
             {
-                foreach (var soil in FindAllInScope<Soils.Soil>())
+                foreach (var soil in Structure.FindAll<Soils.Soil>())
                 {
                     double latitude = soil.Latitude;
                     double longitude = soil.Longitude;

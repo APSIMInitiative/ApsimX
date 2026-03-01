@@ -1,8 +1,8 @@
 ﻿using APSIM.Numerics;
-using DocumentFormat.OpenXml.Drawing.Charts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 namespace APSIM.Shared.Utilities
 {
     /// <summary>Various soil utilities.</summary>
@@ -93,7 +93,7 @@ namespace APSIM.Shared.Utilities
             for (int i = 0; i < thickness.Length; i++)
             {
                 CumDepth = CumDepth + thickness[i];
-                if (CumDepth >= depth) { return i; }
+                if (MathUtilities.IsGreaterThanOrEqual(CumDepth, depth)) { return i; }
             }
             throw new Exception("Depth deeper than bottom of soil profile");
         }
@@ -253,7 +253,7 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// Plant available water for the specified crop. Will throw if crop not found. Units: mm/mm
+        /// Plant available water for the specified crop. Units: mm/mm
         /// </summary>
         /// <param name="Thickness">The thickness.</param>
         /// <param name="LL">The ll.</param>
@@ -282,6 +282,39 @@ namespace APSIM.Shared.Utilities
                     PAWC[layer] = 0;
                 }
             return PAWC;
+        }
+
+        /// <summary>
+        /// Fraction of Available Soil Water for the specified crop. Units: mm/mm
+        /// </summary>
+        /// <param name="thickness">The thickness.</param>
+        /// <param name="pawmm">PAWmm of the SoilCrop</param>
+        /// <param name="pawcmm">PAWCmm of the SoilCrop</param>
+        /// <param name="depth">Depth to measure to</param>
+        /// <returns></returns>
+        public static double CalcFASW(double[] thickness, double[] pawmm, double[] pawcmm, double depth)
+        {
+            double[] usablePAWmm = pawmm;
+            double[] usablePAWCmm = pawcmm;
+            if (MathUtilities.IsLessThan(depth, MathUtilities.Sum(thickness)))
+            {
+                usablePAWmm = SoilUtilities.KeepTopXmm(pawmm, thickness, depth);
+                usablePAWCmm = SoilUtilities.KeepTopXmm(pawcmm, thickness, depth);
+            }
+
+            double sumOfUsablePAWmm = MathUtilities.Sum(usablePAWmm);
+            double sumOfUsablePAWCmm = MathUtilities.Sum(usablePAWCmm);
+
+            if (double.IsNaN(sumOfUsablePAWmm))
+                throw new Exception("Cannot calculate FASW when the sum of PAWmm is NaN.");
+
+            if (double.IsNaN(sumOfUsablePAWCmm))
+                throw new Exception("Cannot calculate FASW when the sum of PAWCmm is NaN.");
+
+            if (MathUtilities.FloatsAreEqual(sumOfUsablePAWCmm, 0))
+                throw new Exception("Cannot calculate FASW with a PAWC of 0");
+
+            return sumOfUsablePAWmm / sumOfUsablePAWCmm;
         }
 
         /// <summary>
@@ -348,16 +381,24 @@ namespace APSIM.Shared.Utilities
         /// <param name="toThickness">To thickness.</param>
         /// <param name="defaultValueForBelowProfile">The default value for below profile.</param>
         /// <param name="allowMissingValues">Tolerate missing values (double.NaN)?</param>
+        /// <param name="modelName">Model name for error reporting</param>
         /// <returns></returns>
         public static double[] MapConcentration(double[] fromValues, double[] fromThickness,
                                                   double[] toThickness,
                                                   double defaultValueForBelowProfile,
-                                                  bool allowMissingValues = false)
+                                                  bool allowMissingValues = false,
+                                                  string modelName = null)
         {
             if (fromValues != null && !MathUtilities.AreEqual(fromThickness, toThickness))
             {
                 if (fromValues.Length != fromThickness.Length && !allowMissingValues)
-                    throw new Exception($"In MapConcentration, the number of values ({fromValues.Length}) doesn't match the number of thicknesses ({fromThickness.Length}).");
+                {   
+                    string prefix = "MapConcentration";
+                    if (!string.IsNullOrEmpty(modelName))
+                        prefix = $"{modelName}";
+                    throw new Exception($"In {prefix}, the number of values ({fromValues.Length}) doesn't match the number of thicknesses ({fromThickness.Length}).");
+                }
+                    
                 if (fromValues == null || fromThickness == null)
                     return null;
 

@@ -15,6 +15,7 @@ version=$1
 # Get apsimx path (path of repository root)
 cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null
 apsimx="$(cd ../../.. >/dev/null && pwd )"
+echo "apsimx path: $apsimx"
 
 # Version stamp the Models and ApsimNG assemblies.
 sed -i -e "s/0\.0\.0\.0/$version/g" "$apsimx/Models/Properties/AssemblyVersion.cs"
@@ -33,8 +34,5 @@ dotnet publish -c Release -f net8.0 -r win-x64 -m:1 --no-self-contained "$apsimx
 cd $apsimx
 xvfb-run sh -c "wine /inno/ISCC.exe Setup/net8.0/windows/apsimx.iss"
 
-#rename installer to correct name
-mv $apsimx/Setup/net8.0/windows/Output/APSIMSetup.exe unsignedSetup.exe
 
-#sign installer
-osslsigncode sign -pkcs12 $APSIM_CERT -pass $APSIM_CERT_PWD -n "APSIM Initiative" -t http://timestamp.digicert.com -in unsignedSetup.exe -out $outfile
+

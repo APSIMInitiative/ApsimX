@@ -51,5 +51,21 @@ namespace Models.Zones
             {
             }
         }
+
+        ///<summary>What kind of canopy</summary>
+        [Description("Strip crop Radiation Interception Model")]
+        [Display(Type = DisplayType.CanopyTypes)]
+        public override string CanopyType { get; set; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="length"></param>
+        /// <param name="width"></param>
+        public RectangularZone(double length, double width)
+        {
+            Length = length;
+            Width = width;
+        }
     }
 }

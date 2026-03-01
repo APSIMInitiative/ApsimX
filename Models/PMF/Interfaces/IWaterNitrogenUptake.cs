@@ -25,5 +25,17 @@ namespace Models.PMF.Interfaces
         /// <summary>Does the Nitrogen uptake.</summary>
         /// <param name="zonesFromSoilArbitrator">List of zones from soil arbitrator</param>
         void DoNitrogenUptake(List<ZoneWaterAndN> zonesFromSoilArbitrator);
+
+        /// <summary>The nitrogen supply calculated by the soil arbitrator on the first pass, before any competition is considered</summary>
+        PlantWaterOrNDelta NitrogenUptakeSupply { get; set; }
+
+        /// <summary>The nitrogen uptake allocated to the plant by the soil arbitrator</summary>
+        PlantWaterOrNDelta NitrogenTakenUp { get; set; } 
+
+        /// <summary>The water supply calculated by the soil arbitrator on the first pass, before any competition is considered</summary>
+        PlantWaterOrNDelta WaterUptakeSupply { get; set; }
+
+        /// <summary>The water uptake allocated to the plant by the soil arbitrator</summary>
+        PlantWaterOrNDelta WaterTakenUp { get; set; }
     }
 }

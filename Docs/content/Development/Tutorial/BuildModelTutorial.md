@@ -1,6 +1,7 @@
 ---
 title: "Build a model tutorial"
 draft: false
+weight: 210
 ---
 
 In this step-by-step guide we will show how to create a new model for APSIM. The model we will be building is a rainfall modifier. This will be a simple model that changes the rainfall in a simulation, after a user specified date, using a simple multiplier and addition. It will modify the rainfall before the other models in APSIM use the rainfall value. This will allow you to see the effects on the crop of reducing or increasing the rainfall.
@@ -109,11 +110,11 @@ The new property is call *OriginalRain*. APSIM makes all public properties visib
 
 The *OriginalRain* property in this example also defines a private setter so that other models cannot modify the value of this property. Only the *RainfallModifier* model is allowed to modify *OriginalRain*. To allow other models to modify the property. The *private* designator can be removed leaving:
 
- ```public double OriginalRain { get; set; }``` 
- 
+ ```public double OriginalRain { get; set; }```
+
 # 4. Add links to other models
 
-This model will need to access properties from the *Clock* and *Weather* models in APSIM. To allow this, links are specified to each of these models. 
+This model will need to access properties from the *Clock* and *Weather* models in APSIM. To allow this, links are specified to each of these models.
 
 ```c#
 using Models.Climate;
@@ -176,22 +177,22 @@ namespace Models
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class RainfallModifier : Model
     {
-        [Link] 
+        [Link]
         Clock clock = null;
 
         [Link]
         Weather weather = null;
 
         /// <summary>Start date for modifying rainfall</summary>
-        [Description("Start modifying rainfall from date:")] 
+        [Description("Start modifying rainfall from date:")]
         public DateTime StartDate { get; set; }
 
         /// <summary>Rainfall muliplier</summary>
-        [Description("Rainfall multiplier: ")] 
+        [Description("Rainfall multiplier: ")]
         public double RainfallMultiplier { get; set; }
 
         /// <summary>Rainfall addition</summary>
-        [Description("Rainfall addition (mm): ")] 
+        [Description("Rainfall addition (mm): ")]
         public double RainfallAddition { get; set; }
 
         /// <summary>An output variable.</summary>
@@ -211,7 +212,7 @@ namespace Models
 
 The above code introduces a method (function) called *ModifyWeatherData*. The *EventSubscribe* attribute indicates that the method is an event handler that will be invoked (called) whenever a *PreparingNewWeatherData* event is published. In APSIM this event is published by a weather model after it has read the days weather data and before other models access the weather data. The event is published to allow models like *RainfallModifier* the change weather data e.g. for climate change simulations.
 
-The implementation is quite simple: 
+The implementation is quite simple:
 
 1. It stores the weather models rainfall into the *OriginalRain* property.
 2. It tests the current simulation date (*clock.Today*) to see if it is greater than the user specified *StartDate*

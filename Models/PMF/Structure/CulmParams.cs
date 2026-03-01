@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Core;
 using Models.Functions;
 
 namespace Models.PMF.Struct

@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -14,8 +15,12 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(NutrientProportionFunctions))]
-    public class CalculateCarbonFractionFromNConc : Model, IFunction
+    public class CalculateCarbonFractionFromNConc : Model, IFunction, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>Value to multiply demand for.  Use to switch demand on and off</summary>
         [Link(IsOptional = true, Type = LinkType.Child, ByName = true)]
         [Description("Multiplies calculated demand.  Use to switch demand on and off")]
@@ -40,7 +45,7 @@ namespace Models.PMF
         }
         private OrganNutrientDelta FindNutrientDelta(string NutrientType, Organ parentOrgan)
         {
-            var nutrientDelta = parentOrgan.FindChild(NutrientType) as OrganNutrientDelta;
+            var nutrientDelta = Structure.FindChild<OrganNutrientDelta>(NutrientType, relativeTo: parentOrgan);
             //should we throw an exception if the delta is missing?
             return nutrientDelta;
         }

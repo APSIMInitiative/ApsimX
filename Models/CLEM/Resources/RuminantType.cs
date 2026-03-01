@@ -69,16 +69,16 @@ namespace Models.CLEM.Resources
             parentHerd = this.Parent as RuminantHerd;
 
             // clone pricelist so model can modify if needed and not affect initial parameterisation
-            if (this.FindAllChildren<AnimalPricing>().Count() > 0)
+            if (Structure.FindChildren<AnimalPricing>().Count() > 0)
             {
-                PriceList = this.FindAllChildren<AnimalPricing>().FirstOrDefault();
+                PriceList = Structure.FindChildren<AnimalPricing>().FirstOrDefault();
                 // Components are not permanently modifed during simulation so no need for clone: PriceList = Apsim.Clone(this.FindAllChildren<AnimalPricing>().FirstOrDefault()) as AnimalPricing;
 
-                priceGroups = PriceList.FindAllChildren<AnimalPriceGroup>().Cast<AnimalPriceGroup>().ToList();
+                priceGroups = Structure.FindChildren<AnimalPriceGroup>(relativeTo: PriceList).Cast<AnimalPriceGroup>().ToList();
             }
 
             // get conception parameters and rate calculation method
-            ConceptionModel = this.FindAllChildren<Model>().Where(a => typeof(IConceptionModel).IsAssignableFrom(a.GetType())).Cast<IConceptionModel>().FirstOrDefault();
+            ConceptionModel = Structure.FindChildren<Model>().Where(a => typeof(IConceptionModel).IsAssignableFrom(a.GetType())).Cast<IConceptionModel>().FirstOrDefault();
         }
 
         /// <summary>
@@ -195,7 +195,7 @@ namespace Models.CLEM.Resources
                     AnimalPriceGroup matchIndividual = null;
                     AnimalPriceGroup matchCriteria = null;
 
-                    var priceGroups = PriceList.FindAllChildren<AnimalPriceGroup>()
+                    var priceGroups = Structure.FindChildren<AnimalPriceGroup>(relativeTo: PriceList)
                         .Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both);
 
                     foreach (AnimalPriceGroup priceGroup in priceGroups)
@@ -203,7 +203,7 @@ namespace Models.CLEM.Resources
                         if (priceGroup.Filter(ind) && matchIndividual == null)
                             matchIndividual = priceGroup;
 
-                        var suitableFilters = priceGroup.FindAllChildren<FilterByProperty>()
+                        var suitableFilters = Structure.FindChildren<FilterByProperty>(relativeTo: priceGroup)
                             .Where(a => (a.PropertyOfIndividual == property) &
                             (
                                 (a.Operator == System.Linq.Expressions.ExpressionType.Equal && a.Value.ToString().ToUpper() == value.ToUpper()) |
@@ -350,7 +350,7 @@ namespace Models.CLEM.Resources
         public event EventHandler ConceptionStatusChanged;
 
         /// <summary>
-        /// Conception status changed 
+        /// Conception status changed
         /// </summary>
         /// <param name="e"></param>
         public void OnConceptionStatusChanged(ConceptionStatusChangedEventArgs e)
@@ -931,7 +931,7 @@ namespace Models.CLEM.Resources
 
         #endregion
 
-        #region descriptive summary 
+        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -954,23 +954,23 @@ namespace Models.CLEM.Resources
             var results = new List<ValidationResult>();
 
             // ensure at least one conception model is associated
-            int conceptionModelCount = this.FindAllChildren<Model>().Where(a => typeof(IConceptionModel).IsAssignableFrom(a.GetType())).Count();
+            int conceptionModelCount = Structure.FindChildren<Model>().Where(a => typeof(IConceptionModel).IsAssignableFrom(a.GetType())).Count();
             if (conceptionModelCount > 1)
             {
                 string[] memberNames = new string[] { "RuminantType.IConceptionModel" };
                 results.Add(new ValidationResult(String.Format("Only one Conception component is permitted below the Ruminant Type [r={0}]", Name), memberNames));
             }
 
-            if (this.FindAllChildren<AnimalPricing>().Count() > 1)
+            if (Structure.FindChildren<AnimalPricing>().Count() > 1)
             {
                 string[] memberNames = new string[] { "RuminantType.Pricing" };
                 results.Add(new ValidationResult(String.Format("Only one Animal pricing schedule is permitted within a Ruminant Type [{0}]", this.Name), memberNames));
             }
-            else if (this.FindAllChildren<AnimalPricing>().Count() == 1)
+            else if (Structure.FindChildren<AnimalPricing>().Count() == 1)
             {
-                AnimalPricing price = this.FindAllChildren<AnimalPricing>().FirstOrDefault() as AnimalPricing;
+                AnimalPricing price = Structure.FindChildren<AnimalPricing>().FirstOrDefault() as AnimalPricing;
 
-                if (price.FindAllChildren<AnimalPriceGroup>().Count() == 0)
+                if (Structure.FindChildren<AnimalPriceGroup>(relativeTo: price).Count() == 0)
                 {
                     string[] memberNames = new string[] { "RuminantType.Pricing.RuminantPriceGroup" };
                     results.Add(new ValidationResult(String.Format("At least one Ruminant Price Group is required under an animal pricing within Ruminant Type [{0}]", this.Name), memberNames));

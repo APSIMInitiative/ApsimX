@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -15,21 +16,25 @@ namespace Models.Factorial
     [ValidParent(ParentType = typeof(Factor))]
     [ValidParent(ParentType = typeof(Permutation))]
     [Serializable]
-    public class Permutation : Model
+    public class Permutation : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>
         /// Get a list of all permutations of child factors and compositefactors.
         /// </summary>
         internal List<List<CompositeFactor>> GetPermutations()
         {
             var factors = new List<List<CompositeFactor>>();
-            foreach (Factor factor in this.FindAllChildren<Factor>())
+            foreach (Factor factor in Structure.FindChildren<Factor>())
             {
                 if (factor.Enabled)
                     factors.Add(factor.GetCompositeFactors());
             }
 
-            var compositeFactors = this.FindAllChildren<CompositeFactor>().Where(cf => cf.Enabled);
+            var compositeFactors = Structure.FindChildren<CompositeFactor>().Where(cf => cf.Enabled);
 
             var permutations = new List<List<CompositeFactor>>();
             if (compositeFactors.Count() > 0)

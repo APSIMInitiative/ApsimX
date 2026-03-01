@@ -1,10 +1,11 @@
-﻿using Models.Core;
+﻿using APSIM.Core;
+using Models.Core;
 using System;
 
 namespace Models.Functions
 {
     /// <summary>
-    /// A model to give a general pattern of KL decline over depth.  Assumes values of 1 with depths less than 300 mm and then 
+    /// A model to give a general pattern of KL decline over depth.  Assumes values of 1 with depths less than 300 mm and then
     /// decreases exponentlly to zero at the crops maximum root depth
     /// </summary>
     [Serializable]

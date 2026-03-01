@@ -1,0 +1,13 @@
+# Dockerfile for R + R sensitivity package base image
+# The R sensitivity package seems to have a dependency on shiny - not sure why
+FROM rocker/shiny:4.3.1 AS r-base
+ 
+# Install R package dependencies
+RUN R -q -e 'install.packages(c("sensitivity"), repos = "https://cran.csiro.au/")'
+
+USER root
+RUN apt update -q --silent && \
+    apt install -yq libsqlite3-dev &&\
+    apt install -y dotnet-runtime-8.0
+
+ENTRYPOINT ["/bin/sh", "-c", "echo 'R base image with sensitivity package installed'"]

@@ -154,7 +154,7 @@ public class PropertyMetadata
             if (propertyValue is string st)
                 values = new List<string>() { st };
             else if (propertyValue is double doub)
-                values = new List<string>() { double.IsNaN(doub) ? string.Empty : doub.ToString(format) };
+                values = new List<string>() { double.IsNaN(doub) ? "NaN" : doub.ToString(format) };
             else if (propertyValue is int integer)
                 values = new List<string>() { integer.ToString() };
             else if (propertyValue is DateTime datet)
@@ -162,7 +162,7 @@ public class PropertyMetadata
             else if (propertyValue is string[] s)
                 values = s.Select(v => v?.ToString()).ToList();
             else if (propertyValue is double[] d)
-                values = d.Select(v => double.IsNaN(v) ? string.Empty : v.ToString(format)).ToList();
+                values = d.Select(v => double.IsNaN(v) ? "NaN" : v.ToString(format)).ToList();
             else if (propertyValue is int[] i)
                 values = i.Select(v => v.ToString()).ToList();
             else if (propertyValue is bool[] b)
@@ -172,7 +172,7 @@ public class PropertyMetadata
             else if (propertyValue is List<string> ls)
                 values = ls.Select(v => v?.ToString()).ToList();
             else if (propertyValue is List<double> ld)
-                values = ld.Select(v => double.IsNaN(v) ? string.Empty : v.ToString(format)).ToList();
+                values = ld.Select(v => double.IsNaN(v) ? "NaN" : v.ToString(format)).ToList();
             else if (propertyValue is List<int> li)
                 values = li.Select(v => v.ToString()).ToList();
             else if (propertyValue is bool[] lb)
@@ -199,49 +199,58 @@ public class PropertyMetadata
             newValues = DateTime.ParseExact(values.First(), "yyyy/MM/dd", CultureInfo.InvariantCulture);
         else if (Property.PropertyType == typeof(string[]))
             newValues = values.ToArray();
-        else if (Property.PropertyType == typeof(double[]))
+        else if (Property.PropertyType == typeof(double[]) || Property.PropertyType == typeof(List<double>))
         {
-            newValues = values.Select(v => 
+            newValues = values.Select(v =>
             {
-                if (Double.TryParse(v, out double d))
+                if (v.Length == 0)
+                    return double.NaN;
+                else if (Double.TryParse(v, out double d))
                     return d;
-                return double.NaN;
-            }).ToArray();
-        }
-        else if (Property.PropertyType == typeof(int[]))
-            newValues = values.Select(v => 
-            {
-                if (Int32.TryParse(v, out int i))
-                    return i;
-                return Int32.MaxValue;
+                else
+                    throw new Exception($"Cannot convert {v} to Double");
+            });
+            
+            bool allNaN = true;
+            foreach (double d in (newValues as IEnumerable<double>))
+                if (!double.IsNaN(d))
+                    allNaN = false;
 
-            }).ToArray();
+            if (allNaN)
+                newValues = null;
+            else
+            {
+                if (Property.PropertyType == typeof(double[]))
+                    newValues = (newValues as IEnumerable<double>).ToArray();
+                else if (Property.PropertyType == typeof(List<double>))
+                    newValues = (newValues as IEnumerable<double>).ToList();
+            }
+        }
+        else if (Property.PropertyType == typeof(int[]) || Property.PropertyType == typeof(List<int>))
+        {
+            newValues = values.Select(v =>
+            {
+                if (v.Length == 0)
+                    return Int32.MaxValue;
+                else if (Int32.TryParse(v, out int i))
+                    return i;
+                else
+                    throw new Exception($"Cannot convert {v} to Int");
+            });
+            if (Property.PropertyType == typeof(int[]))
+                newValues = (newValues as IEnumerable<int>).ToArray();
+            else if (Property.PropertyType == typeof(List<int>))
+                newValues = (newValues as IEnumerable<int>).ToList();
+        }
         else if (Property.PropertyType == typeof(bool[]))
-            newValues = values.Select(v => v == "X" || v == "x").ToList();
+            newValues = values.Select(v => v == "X" || v == "x").ToArray();
         else if (Property.PropertyType == typeof(DateTime[]))
             newValues = values.Select(v => DateTime.ParseExact(v, "yyyy/MM/dd", CultureInfo.InvariantCulture)).ToArray();
         else if (Property.PropertyType == typeof(List<string>))
             newValues = values.ToList();
-        else if (Property.PropertyType == typeof(List<double>))
-        {
-            newValues = values.Select(v => 
-            {
-                if (Double.TryParse(v, out double d))
-                    return d;
-                return double.NaN;
-            }).ToList();
-        }
-        else if (Property.PropertyType == typeof(List<int>))
-            newValues = values.Select(v => 
-            {
-                if (Int32.TryParse(v, out int i))
-                    return i;
-                return Int32.MaxValue;
-
-            }).ToList();
         else if (Property.PropertyType == typeof(List<bool>))
             newValues = values.Select(v => v == "X" || v == "x").ToList();
-        else if (Property.PropertyType == typeof(DateTime[]) || Property.PropertyType == typeof(List<DateTime>))
+        else if (Property.PropertyType == typeof(List<DateTime>))
             newValues = values.Select(v => DateTime.ParseExact(v, "yyyy/MM/dd", CultureInfo.InvariantCulture)).ToList();
         else
             throw new Exception($"Unknown property data type found while trying to set values from grid. Data type: {Property.PropertyType}");

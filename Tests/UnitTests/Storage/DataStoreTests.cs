@@ -12,7 +12,7 @@ namespace UnitTests.Storage
         public void TestFileNameChange()
         {
             Simulations sims = Utilities.GetRunnableSim();
-            IDataStore storage = sims.FindInScope<IDataStore>();
+            IDataStore storage = sims.Node.Find<IDataStore>();
 
             // Write the simulations to disk.
             sims.Write(sims.FileName);
@@ -28,6 +28,7 @@ namespace UnitTests.Storage
 
             // The new file name should not be the same as the old one.
             Assert.That(oldDbFileName, Is.Not.EqualTo(newDbFileName));
+            storage.Close();
         }
     }
 }

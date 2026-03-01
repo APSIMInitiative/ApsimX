@@ -19,7 +19,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The view to use
         /// </summary>
-        private IMarkdownView genericView;
+        private MarkdownView genericView;
 
         /// <summary>
         /// The explorer
@@ -35,10 +35,12 @@ namespace UserInterface.Presenters
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.model = model as Model;
-            this.genericView = view as IMarkdownView;
+            this.genericView = view as MarkdownView;
             this.explorerPresenter = explorerPresenter;
-            this.genericView.Text = $"Model type: {this.model.GetType().Name}";
-            this.genericView.Text += Environment.NewLine + WebDocs.ConvertToMarkdown(AutoDocumentation.Document(this.model), "");
+            if (model is Simulations)
+                this.genericView.Text += Environment.NewLine + WebDocs.ConvertToMarkdown(AutoDocumentation.DocumentHeader(this.model), "", this.model);
+            else
+                this.genericView.Text += Environment.NewLine + WebDocs.ConvertToMarkdown(AutoDocumentation.Document(this.model), "", this.model);
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using APSIM.Shared.Utilities;
 
 namespace Gtk.Sheet
 {
@@ -81,19 +82,34 @@ namespace Gtk.Sheet
 
             var value = Data.Rows[rowIndex][colIndex];
             if (value is double)
-                return ((double)value).ToString("F3");  // 3 decimal places.
+            {
+                if (double.IsNaN((double)value))
+                    return "NaN";
+                else
+                    return ((double)value).ToString("F3");  // 3 decimal places.
+            }
+                
             else if (value is DateTime)
-                return ((DateTime)value).ToString("yyyy-MM-dd");
+                return DateUtilities.GetDateAsString((DateTime)value);
             return value.ToString();
         }
-
+        
         /// <summary>Set the contents of a cell.</summary>
-        /// <param name="colIndices">Column indices.</param>
-        /// <param name="rowIndices">Row indices.</param>
-        /// <param name="values">The values.</param>
+        /// <param name="colIndex">Column index of cell.</param>
+        /// <param name="rowIndex">Row index of cell.</param>
+        /// <param name="value">The value.</param>
+        public void SetCellContent(int colIndex, int rowIndex, string value)
+        {
+            SetCellContents(new int[] { colIndex }, new int[] { rowIndex }, new string[] { value });
+        }
+
+        /// <summary>Set the contents of multiple cells.</summary>
+        /// <param name="colIndices">Column index of cells.</param>
+        /// <param name="rowIndices">Row index of cells.</param>
+        /// <param name="values">The value of the cells.</param>
         public void SetCellContents(int[] colIndices, int[] rowIndices, string[] values)
         {
-            for(int i = colIndices.Length-1; i >= 0; i-- )
+            for (int i = colIndices.Length - 1; i >= 0; i--)
             {
                 var cellState = GetCellState(colIndices[i], rowIndices[i]);
                 if (cellState == SheetCellState.Normal || cellState == SheetCellState.Calculated)
@@ -106,7 +122,7 @@ namespace Gtk.Sheet
                         existingValue == null && values[i] != null ||
                         existingValue.ToString() != values[i].ToString())
                     {
-                        Data.Rows[rowIndices[i]][colIndices[i]] = values[i];                           
+                        Data.Rows[rowIndices[i]][colIndices[i]] = values[i];
                     }
                 }
             }
@@ -119,14 +135,14 @@ namespace Gtk.Sheet
                 foreach (DataRow row in Data.Rows)
                 {
                     bool isRowEmptyExceptForReadOnlyCells = false;
-                    List<bool> rowEmptyStates = new();    
-                    foreach(DataColumn column in Data.Columns)
+                    List<bool> rowEmptyStates = new();
+                    foreach (DataColumn column in Data.Columns)
                     {
                         SheetCellState cellState = GetCellState(column.Ordinal, Data.Rows.IndexOf(row));
-                        if(cellState != SheetCellState.ReadOnly)
+                        if (cellState != SheetCellState.ReadOnly)
                         {
                             var dataValue = Data.Rows[Data.Rows.IndexOf(row)][column.Ordinal];
-                            if(dataValue.ToString().Equals(""))
+                            if (dataValue.ToString().Equals(""))
                             {
                                 rowEmptyStates.Add(true);
                             }
@@ -136,19 +152,19 @@ namespace Gtk.Sheet
 
                     if (!rowEmptyStates.Contains(false) && rowEmptyStates.Any() != false)
                         isRowEmptyExceptForReadOnlyCells = true;
-                    
+
                     // Set the read-only cells to mutable temporarily, change value, set back to read-only.
                     if (isRowEmptyExceptForReadOnlyCells)
                     {
-                        foreach(DataColumn column in Data.Columns)
+                        foreach (DataColumn column in Data.Columns)
                         {
                             SheetCellState cellState = GetCellState(column.Ordinal, Data.Rows.IndexOf(row));
-                            if(cellState == SheetCellState.ReadOnly)
+                            if (cellState == SheetCellState.ReadOnly)
                             {
                                 column.ReadOnly = false;
                                 Data.Rows[Data.Rows.IndexOf(row)][column.Ordinal] = "";
                                 column.ReadOnly = true;
-                            }                      
+                            }
                         }
                     }
                 }

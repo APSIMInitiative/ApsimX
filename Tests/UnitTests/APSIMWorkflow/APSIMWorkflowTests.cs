@@ -1,11 +1,11 @@
 using NUnit.Framework;
-using APSIM.Workflow;
 using APSIM.Shared.Utilities;
 using System.Reflection;
 using System.IO;
 using System.Linq;
+using APSIM.Workflow;
 
-namespace APSIMWorkflowTests;
+namespace UnitTests.APSIMWorkflowTests;
 
 [TestFixture]
 public class ProgramTests
@@ -27,7 +27,7 @@ public class ProgramTests
         Program.apsimFilePaths.Clear();
         string apsimFileResetText = ReflectionUtilities.GetResourceAsString("UnitTests.apsimworkflow_unaltered.apsimx");
         string unitTestDir = GetUnitTestsDirectory();
-        File.WriteAllText(Path.Combine(unitTestDir,"apsimworkflow.apsimx").Replace("\\","/"), apsimFileResetText);
+        File.WriteAllText(Path.Combine(unitTestDir, "apsimworkflow.apsimx").Replace("\\", "/"), apsimFileResetText);
     }
 
     [Test]
@@ -42,12 +42,12 @@ public class ProgramTests
         Program.apsimFilePaths.Add(apsimFileName);
 
         // Act
-        Program.UpdateWeatherFileNamePathInApsimXFile(text, oldWeatherFilePath, newFilePath, new Options() { DirectoryPath = unitTestDir }, Program.apsimFilePaths.First());
+        InputUtilities.UpdateWeatherFileNamePathInApsimXFile(text, oldWeatherFilePath, newFilePath, new Options() { DirectoryPath = unitTestDir }, Program.apsimFilePaths.First());
 
         string textAfterUpdate = File.ReadAllText(Path.Combine(unitTestDir, apsimFileName).Replace("\\", "/"));
 
         // Assert
-        Assert.That(text, Is.Not.EqualTo(textAfterUpdate)); 
+        Assert.That(text, Is.Not.EqualTo(textAfterUpdate));
     }
 
     [Test]
@@ -57,14 +57,29 @@ public class ProgramTests
         string unitTestDir = GetUnitTestsDirectory();
         string apsimFileText = ReflectionUtilities.GetResourceAsString("UnitTests.APSIMWorkflow.example_directory.apsimworkflow.apsimx");
         string fullTestDir = Path.Combine(unitTestDir, "APSIMWorkflow/example_directory/").Replace("\\", "/");
-        string apsimFileName = Path.Combine(fullTestDir,"apsimworkflow.apsimx").Replace("\\","/");
+        string apsimFileName = Path.Combine(fullTestDir, "apsimworkflow.apsimx").Replace("\\", "/");
 
         // Act
-        string result = Program.GetApsimXFileTextFromFile(apsimFileName);
+        string result = InputUtilities.GetApsimXFileTextFromFile(apsimFileName);
 
         // Assert
         Assert.That(result, Is.EqualTo(apsimFileText));
     }
+
+    [Test]
+    public void SimCountSwitchTest()
+    {
+        // Arrange
+        string[] args = new string[] { "--sim-count" };
+
+        // Act
+        int returnValue = Program.Main(args);
+        
+        // Assert
+        Assert.That(returnValue, Is.EqualTo(0));
+    }
+    
+
 
     
 }

@@ -1,12 +1,16 @@
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Reflection.Metadata;
 using APSIM.Shared.Documentation;
 using Models;
+using Models.Functions;
 using Models.Core;
 using Models.PMF;
-using Graph = Models.Graph;
+using Models.PMF.Organs;
+using Models.PMF.Phen;
+using Constant = Models.Functions.Constant;
+using System;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -29,72 +33,129 @@ namespace APSIM.Documentation.Models.Types
             List<ITag> newTags = new List<ITag>();
 
             Section mainSection = GetSummaryAndRemarksSection(model);
-            Section cultivarSection = null;
 
-            newTags.Add(new Paragraph($"The model is constructed from the following list of software components. Details of the implementation and model parameterisation are provided in the following sections."));
 
-            // Write Plant Model Table
+            mainSection.Add(new Paragraph($"The model is constructed from the following list of software components. Links provided will direct the user to the code for each model.  Details of the implementation and model parameterisation are provided in the following sections."));
+
+            // Write Plant Model Components Table
+            // ------------------------------------------------------------------------------
             DataTable tableData = new DataTable();
             tableData.Columns.Add("Component Name", typeof(string));
             tableData.Columns.Add("Component Type", typeof(string));
             foreach (IModel child in this.model.Children)
             {
-                if (child.GetType() != typeof(Memo) && child.GetType() != typeof(Cultivar) && child.GetType() != typeof(Folder) && child.GetType() != typeof(CompositeBiomass))
+                if (child as IText == null && child.GetType() != typeof(Cultivar) && child.GetType() != typeof(Folder) && child.GetType() != typeof(CompositeBiomass) && child.GetType() != typeof(ModelOverrides))
                 {
                     DataRow row = tableData.NewRow();
                     row[0] = child.Name;
-                    row[1] = child.GetType().ToString();
+                    string childtype = DocumentationUtilities.GetFilepathOfNamespace(child.GetType());
+                    row[1] = DocumentationUtilities.GetGithubMarkdownLink(child);
                     tableData.Rows.Add(row);
                 }
             }
-            newTags.Add(new Section("Plant Model Components", new Table(tableData)));
+            mainSection.Add(new Table(tableData));
 
             // Write Composite Biomass Table
+            // -------------------------------------------------------------------------------
             DataTable tableDataBiomass = new DataTable();
             tableDataBiomass.Columns.Add("Component Name", typeof(string));
-            tableDataBiomass.Columns.Add("Component Type", typeof(string));
+            tableDataBiomass.Columns.Add("Component Organs", typeof(string));
+            tableDataBiomass.Columns.Add("Live Material", typeof(string));
+            tableDataBiomass.Columns.Add("Dead Material", typeof(string));
             foreach (IModel child in this.model.Children)
             {
                 if (child.GetType() == typeof(CompositeBiomass))
                 {
+                    string organList="";
+                    foreach (string organ in ((CompositeBiomass)child).OrganNames)
+                        organList += organ+" ";
                     DataRow row = tableDataBiomass.NewRow();
                     row[0] = child.Name;
-                    row[1] = child.GetType().ToString();
+                    row[1] = organList;
+                    row[2] = ((CompositeBiomass)child).IncludeLive.ToString();
+                    row[3] = ((CompositeBiomass) child).IncludeDead.ToString();
                     tableDataBiomass.Rows.Add(row);
                 }
             }
-            if (tableDataBiomass.Rows.Count > 0) 
+            if (tableDataBiomass.Rows.Count > 0)
             {
-                newTags.Add(new Section("Composite Biomass", new Table(tableDataBiomass)));
+                mainSection.Add(new Section("Composite Biomass Components", new Table(tableDataBiomass)));
             }
 
-            //Write cultivars table
-            List<Cultivar> cultivars = model.FindAllDescendants<Cultivar>().ToList();
-            if (cultivars.Count > 0) 
+            newTags.Add(mainSection);
+
+            // Document Phenology Model
+            // -------------------------------------------------------------------------------
+            Phenology phenology = (Phenology)this.model.Children.Find(m => m.GetType() == typeof(Phenology));
+            if (phenology != null)
             {
+                DataTable dataTable = DocumentationUtilities.GetPhaseTable(phenology);
+                Section PhenologySection = new Section("Phenology", new Table(dataTable));
+                PhenologySection.Add(GetSummaryAndRemarksSection(phenology).Children);
+                newTags.Add(PhenologySection);
+            }
+
+            // Document Arbitrator Model
+            // -------------------------------------------------------------------------------
+            OrganArbitrator arbitrator = (OrganArbitrator)this.model.Children.Find(m => m.GetType() == typeof(OrganArbitrator));
+            if (arbitrator != null)
+                newTags.Add(new Section("Organ Arbitrator", GetSummaryAndRemarksSection(arbitrator).Children));
+
+            // Document SimpleLeaf Model
+            SimpleLeaf simpleLeaf = (SimpleLeaf)this.model.Children.Find(m => m.GetType() == typeof(SimpleLeaf));
+            if (simpleLeaf != null)
+                newTags.Add(new Section("Leaf", AutoDocumentation.Document(simpleLeaf)));
+
+            //Write children
+            // -------------------------------------------------------------------------------
+            foreach (IModel child in this.model.Children)
+                if (child as IText == null && child as CompositeBiomass == null && child as Folder == null && child as Cultivar == null && child as Phenology == null && child as OrganArbitrator == null && child as SimpleLeaf == null && child as Constant == null && child as ModelOverrides == null)
+                {
+                    Section S = GetSummaryAndRemarksSection(child);
+                    newTags.Add(S);
+                }
+
+            //Write cultivars table
+            // -------------------------------------------------------------------------------
+            List<Cultivar> cultivars = model.Node.FindChildren<Cultivar>(recurse: true).ToList();
+            if (cultivars.Count > 0)
+            {
+                cultivars = cultivars.OrderBy(c => c.Name).ToList();
                 DataTable cultivarNameTable = new();
-                cultivarNameTable.Columns.Add("Cultivar Name");
-                cultivarNameTable.Columns.Add("Alternative Name(s)");
+                cultivarNameTable.Columns.Add("Name (Aternatives)");
+                cultivarNameTable.Columns.Add("Overrides");
                 foreach (Cultivar cultivarChild in cultivars)
                 {
                     string altNames = cultivarChild.GetNames().Any() ? string.Join(',', cultivarChild.GetNames()) : string.Empty;
-                    cultivarNameTable.Rows.Add(new string[] { cultivarChild.Name, altNames});
+                    altNames = altNames.Replace(cultivarChild.Name, "");
+                    if (altNames.StartsWith(','))
+                        altNames = altNames.Substring(1);
+                    if (altNames.Length > 0)
+                        altNames = $"<p>*{altNames}*</p>";
+
+                    string commands = "";
+                    if (cultivarChild.Command != null)
+                    {
+                        List<string> commandsList = new List<string>(cultivarChild.Command);
+                        commandsList.Sort(StringComparer.OrdinalIgnoreCase);
+                        if (cultivarChild.Command != null)
+                        {
+                            foreach (string cmd in commandsList)
+                            {
+                                string line = cmd.Trim();
+                                if (line.Contains("//"))
+                                    line = line.Split("//")[0];
+                                if (line.Length > 0)
+                                    commands += $"<p>{cmd}</p>";
+                            }
+                        }
+                            
+                                
+                    }
+                    cultivarNameTable.Rows.Add(new string[] { $"<p>{cultivarChild.Name}</p>{altNames}", commands });
                 }
-                newTags.Add(new Section("Cultivars", new Table(cultivarNameTable)));
+                newTags.Add(new Section("Appendix 1: Cultivar specifications", new Table(cultivarNameTable)));
             }
-
-            //Write children
-            List<ITag> children = new List<ITag>();
-            foreach (IModel child in this.model.Children)
-                if (child as Memo == null && child as CompositeBiomass == null && child as Folder == null && child as Cultivar == null)
-                    children.AddRange(new List<ITag>() { GetSummaryAndRemarksSection(child) });
-            newTags.Add(new Section("Child Components", children));
-
-            mainSection.Add(newTags);
-
-            newTags = new List<ITag>() { mainSection };
-            if (cultivarSection != null)
-                newTags.Add(cultivarSection);
 
             return newTags;
         }

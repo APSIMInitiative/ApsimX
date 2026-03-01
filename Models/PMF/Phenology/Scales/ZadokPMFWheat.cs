@@ -1,8 +1,7 @@
 ﻿using System;
+using APSIM.Core;
 using APSIM.Numerics;
-using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Functions;
 
 namespace Models.PMF.Phen
 {
@@ -21,7 +20,7 @@ namespace Models.PMF.Phen
         Phenology Phenology = null;
 
         [Link]
-        private IPlant plant = null;
+        private Plant plant = null;
 
         /// <summary>The thermal time</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -40,6 +39,8 @@ namespace Models.PMF.Phen
         /// Growth stage numbers for wheat
         /// </summary>
         public static readonly double[] GROWTH_STAGE_NUMBERS = [5.0, 5.99, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0];
+
+        private double[] zadokDays = new double[91]; // Use 1 based index (position zero is before sowing). The Zadoks range is 1 to 90.
 
         /// <summary>Gets the stage.</summary>
         /// <value>The stage.</value>
@@ -74,6 +75,58 @@ namespace Models.PMF.Phen
 
                 return zadok_stage;
             }
+        }
+
+        // Track the last Zadoks stage that has been recorded
+        private int lastRecordedStage = 0;
+        /// <summary>
+        /// Records the day after sowing when each Zadoks stage (1–99) is first reached.
+        /// Uses a progressive approach to avoid redundant looping,
+        /// since Zadoks stage increases monotonically.
+        /// </summary>
+        [EventSubscribe("DoPhenology")]
+        private void OnDoPhenology(object sender, EventArgs e)
+        {
+            int currentStage = (int)Math.Floor(Stage);
+
+            // Progressively check from the last recorded stage onward until the current stage
+            // Avoid the long loop from 1 to 99 each time.
+
+            // An example to assign values to zadokDays:
+            // if currentStage (Today) = 10, lastRecordedStage (Yesterday) = 5, and DAS = 8
+            // zadoksDays[6] = zadoksDays[7] = zadoksDays[8] = zadoksDays[9] = zadoksDays[10] = 8
+            // Will skip loop if lastRecordedStage = currentStage
+            for (int i = lastRecordedStage + 1; i <= currentStage && i < zadokDays.Length; i++)
+            {
+                // skip the current one if already recorded for this Zadoks.
+                if (zadokDays[i] == 0) 
+                {
+                    zadokDays[i] = plant.DaysAfterSowing;
+                    lastRecordedStage = i;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the day (days after sowing) on which a specified Zadoks stage was first reached.
+        /// </summary>
+        /// <param name="index">
+        /// Zadoks stage index (1–99).  
+        /// For example, <c>Z(65)</c> returns the day after sowing when stage 65 occurred.
+        /// </param>
+        /// <returns>
+        /// Days after sowing corresponding to the given Zadoks stage,  
+        /// or 0 if that stage has not yet been reached.
+        /// </returns>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown when <paramref name="index"/> is outside the range 1–99.
+        /// </exception>
+        public double StageDAS(int index)
+        {
+            if (index < 1 || index > zadokDays.Length - 1)
+                throw new ArgumentOutOfRangeException(nameof(index), "Valid Zadoks stage range is 1–90.");
+
+            return zadokDays[index]; // Use 1 based index (position zero is before sowing)
         }
 
     }

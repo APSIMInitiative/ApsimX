@@ -5,12 +5,14 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Logging;
 using Models.Storage;
+using Models.Utilities;
 
 namespace Models
 {
@@ -23,8 +25,12 @@ namespace Models
     [ViewName("UserInterface.Views.SummaryView")]
     [PresenterName("UserInterface.Presenters.SummaryPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
-    public class Summary : Model, ISummary
+    public class Summary : Model, ISummary, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         [NonSerialized]
         private DataTable messages;
 
@@ -66,6 +72,7 @@ namespace Models
 
         /// <summary>This setting controls what type of messages will be captured by the summary.</summary>
         public MessageType Verbosity { get; set; } = MessageType.All;
+
 
         [EventSubscribe("Commencing")]
         private void OnCommencing(object sender, EventArgs args)
@@ -176,31 +183,25 @@ namespace Models
             initConditions.Rows.Add(row);
 
             // Get all model properties and store in 'initialConditionsTable'
-            foreach (Model model in simulation.FindAllInScope())
+            foreach (Model model in simulation.Node.FindAll<IModel>())
             {
                 string thisRelativeModelPath = model.FullPath.Replace(simulationPath + ".", string.Empty);
 
-                var properties = new List<Tuple<string, VariableProperty>>();
-                FindAllProperties(model, properties);
-                foreach (var tuple in properties)
+                foreach (var property in FindAllProperties(model))
                 {
-                    string propertyValue = tuple.Item2.ValueAsString();
-                    if (propertyValue != string.Empty)
+                    object propertyValue = (string)ApsimConvert.ToType(property.info.GetValue(model), typeof(string));
+                    if (propertyValue?.ToString() != string.Empty)
                     {
-                        if (propertyValue != null && tuple.Item2.DataType == typeof(DateTime))
-                            propertyValue = ((DateTime)tuple.Item2.Value).ToString("yyyy-MM-dd HH:mm:ss");
+                        if (propertyValue != null && propertyValue is DateTime)
+                            propertyValue = ((DateTime)propertyValue).ToString("yyyy-MM-dd HH:mm:ss");
 
-                        int total;
-                        if (double.IsNaN(tuple.Item2.Total))
-                            total = 0;
-                        else
-                            total = 1;
-
-                        if (tuple.Item2.Units == null)
-                            tuple.Item2.Units = string.Empty;
+                        int total = 0;
+                        var description = ReflectionUtilities.GetAttribute(property.info, typeof(DescriptionAttribute), false)?.ToString();
+                        var units = ReflectionUtilities.GetAttribute(property.info, typeof(UnitsAttribute), false)?.ToString();
+                        string format = property.info.GetFormat();
 
                         row = initConditions.NewRow();
-                        row.ItemArray = new object[] { simulation.Name, thisRelativeModelPath, tuple.Item1, tuple.Item2.Description, tuple.Item2.DataType.Name, tuple.Item2.Units, tuple.Item2.Format, total, propertyValue };
+                        row.ItemArray = new object[] { simulation.Name, thisRelativeModelPath, property.Item1, description, property.info.PropertyType.Name, units, format, total, propertyValue };
                         initConditions.Rows.Add(row);
                     }
                 }
@@ -243,20 +244,20 @@ namespace Models
         /// <param name="simulationName"></param>
         public IEnumerable<Message> GetMessages(string simulationName)
         {
-            IDataStore storage = this.storage ?? FindInScope<IDataStore>();
+            IDataStore storage = this.storage ?? Structure.Find<IDataStore>();
             if (storage == null)
                 yield break;
             DataTable messages = storage.Reader.GetData("_Messages", simulationNames: simulationName.ToEnumerable());
             if (messages == null)
                 yield break;
 
-            string simulationPath = FindInScope<Simulation>(simulationName)?.FullPath;
+            string simulationPath = Structure.Find<Simulation>(simulationName)?.FullPath;
             foreach (DataRow row in messages.Rows)
             {
                 DateTime date = (DateTime)row["Date"];
                 string text = row["Message"]?.ToString();
                 string relativePath = row["ComponentName"]?.ToString();
-                IModel model = simulationPath == null ? FindInScope(relativePath) : FindByPath(simulationPath + "." + relativePath)?.Value as IModel;
+                IModel model = simulationPath == null ? Structure.Find<IModel>(relativePath) : Structure.Get(simulationPath + "." + relativePath) as IModel;
                 if (!Enum.TryParse<MessageType>(row["MessageType"]?.ToString(), out MessageType severity))
                     severity = MessageType.Information;
                 yield return new Message(date, text, model, severity, simulationName, relativePath);
@@ -269,18 +270,18 @@ namespace Models
         /// <param name="simulationName"></param>
         public IEnumerable<InitialConditionsTable> GetInitialConditions(string simulationName)
         {
-            IDataStore storage = this.storage ?? FindInScope<IDataStore>();
+            IDataStore storage = this.storage ?? Structure.Find<IDataStore>();
             if (storage == null)
                 yield break;
             DataTable table = storage.Reader.GetData("_InitialConditions", simulationNames: simulationName.ToEnumerable());
             if (table == null)
                 yield break;
 
-            string simulationPath = FindInScope<Simulation>(simulationName)?.FullPath;
+            string simulationPath = Structure.Find<Simulation>(simulationName)?.FullPath;
             foreach (IGrouping<string, DataRow> group in table.AsEnumerable().GroupBy(r => r["ModelPath"]?.ToString()))
             {
                 string relativePath = group.Key;
-                IModel model = simulationPath == null ? FindInScope(relativePath) : FindByPath(simulationPath + "." + relativePath)?.Value as IModel;
+                IModel model = simulationPath == null ? Structure.Find<IModel>(relativePath) : Structure.Get(simulationPath + "." + relativePath) as IModel;
                 yield return new InitialConditionsTable(model, group.Select(r => new InitialCondition()
                 {
                     Name = r["Name"]?.ToString(),
@@ -576,7 +577,7 @@ namespace Models
 
                 foreach (DataRow row in table.Rows)
                 {
-                    bool titleRow = Convert.IsDBNull(row[0]);
+                    bool titleRow = System.Convert.IsDBNull(row[0]);
                     if (titleRow)
                         writer.Write("<tr class='total'>");
                     else
@@ -678,8 +679,7 @@ namespace Models
         /// Find all properties from the model and fill this.properties.
         /// </summary>
         /// <param name="model">The model to search for properties</param>
-        /// <param name="properties">The list of properties to fill</param>
-        private static void FindAllProperties(Model model, List<Tuple<string, VariableProperty>> properties)
+        private static IEnumerable<(string name, PropertyInfo info)> FindAllProperties(Model model)
         {
             if (model != null)
             {
@@ -691,11 +691,7 @@ namespace Models
                     if (includeProperty)
                     {
                         string name = property.Name;
-                        VariableProperty prop = null;
-                        prop = new VariableProperty(model, property);
-
-                        if (prop != null)
-                            properties.Add(new Tuple<string, VariableProperty>(name, prop));
+                        yield return (name, property);
                     }
                 }
             }
@@ -746,7 +742,7 @@ namespace Models
                         propertyName += " (" + units + ")";
                     }
 
-                    bool showTotal = Convert.ToInt32(row["Total"], CultureInfo.InvariantCulture) == 1;
+                    bool showTotal = System.Convert.ToInt32(row["Total"], CultureInfo.InvariantCulture) == 1;
                     AddArrayToTable(propertyName, row["DataType"].ToString(), displayFormat, showTotal, row["Value"], generalDataTable);
                 }
                 else
@@ -829,7 +825,7 @@ namespace Models
 
             if (dataTypeName == "Double" || dataTypeName == "Single")
             {
-                double doubleValue = Convert.ToDouble(value, System.Globalization.CultureInfo.InvariantCulture);
+                double doubleValue = System.Convert.ToDouble(value, System.Globalization.CultureInfo.InvariantCulture);
                 if (format == null || format == string.Empty)
                 {
                     return string.Format("{0:F3}", doubleValue);

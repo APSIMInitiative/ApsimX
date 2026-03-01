@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -10,8 +11,12 @@ namespace Models.PMF.Organs
 {
     /// <summary>The state of each zone that root knows about.</summary>
     [Serializable]
-    public class NetworkZoneState : Model
+    public class NetworkZoneState : Model, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
         /// <summary>The soil in this zone</summary>
         public Soil Soil { get; set; }
 
@@ -35,11 +40,16 @@ namespace Models.PMF.Organs
 
         private RootNetwork parentNetwork { get; set; }
 
+        private Zone zone { get; set; }
+
         /// <summary>Is the Weirdo model present in the simulation?</summary>
         public bool IsWeirdoPresent { get; set; }
 
         /// <summary>Zone name</summary>
         new public string Name { get; set; }
+
+        /// <summary>Zone area (ha)</summary>
+        public double Area { get { return zone.Area; } }
 
         /// <summary>The water uptake</summary>
         public double[] WaterUptake { get; set; }
@@ -113,22 +123,25 @@ namespace Models.PMF.Organs
         /// <summary>Constructor</summary>
         /// <param name="Plant">The parant plant</param>
         /// <param name="soil">The soil in the zone.</param>
-        public NetworkZoneState(Plant Plant, Soil soil)
+        /// <param name="structure">Scope instance</param>
+        public NetworkZoneState(Plant Plant, Soil soil, IStructure structure)
         {
             this.Soil = soil;
             this.plant = Plant;
-            this.parentNetwork = Plant.FindDescendant<RootNetwork>();
-            nutrient = soil.FindChild<INutrient>(); 
-            Physical = soil.FindChild<IPhysical>();
-            WaterBalance = soil.FindChild<ISoilWater>();
-            IsWeirdoPresent = soil.FindChild("Weirdo") != null;
+            this.Structure = structure;
+            this.parentNetwork = Structure.FindChild<RootNetwork>(relativeTo: Plant, recurse: true);
+            nutrient = Structure.FindChild<INutrient>(relativeTo: soil);
+            Physical = Structure.FindChild<IPhysical>(relativeTo: soil);
+            WaterBalance = Structure.FindChild<ISoilWater>(relativeTo: soil);
+            IsWeirdoPresent = Structure.FindChild<IModel>("Weirdo", relativeTo:soil) != null;
 
-            Clear();
-            Zone zone = soil.FindAncestor<Zone>();
+            zone = Structure.FindParent<Zone>(relativeTo: soil, recurse: true);
             if (zone == null)
                 throw new Exception("Soil " + soil + " is not in a zone.");
-            NO3 = zone.FindInScope<ISolute>("NO3");
-            NH4 = zone.FindInScope<ISolute>("NH4");
+
+            Clear();
+            NO3 = structure.Find<ISolute>("NO3", relativeTo: zone);
+            NH4 = structure.Find<ISolute>("NH4", relativeTo: zone);
             Name = zone.Name;
         }
 
@@ -136,7 +149,7 @@ namespace Models.PMF.Organs
         /// <summary>Determine if XF constrains root growth to a maximum depth.</summary>
         public void SetMaxDepthFromXF()
         {
-            var soilCrop = Soil.FindDescendant<SoilCrop>(plant.Name + "Soil");
+            var soilCrop = Structure.FindChild<SoilCrop>(plant.Name + "Soil", relativeTo: Soil, recurse: true);
             if (soilCrop == null)
                 throw new Exception($"Cannot find a soil crop parameterisation called {plant.Name}Soil");
 
@@ -177,7 +190,7 @@ namespace Models.PMF.Organs
                     {
                         RAw[layer] = -WaterUptake[layer] / LayerLive[layer].Wt
                                    * Physical.Thickness[layer]
-                                   * SoilUtilities.ProportionThroughLayer(Physical.Thickness, layer, Depth);
+                                   * RootProportions[layer];
                         RAw[layer] = Math.Max(RAw[layer], 1e-20);  // Make sure small numbers to avoid lack of info for partitioning
                     }
                     else if (layer > 0)
@@ -192,10 +205,10 @@ namespace Models.PMF.Organs
         /// </summary>
         public void CalculateRelativeLiveBiomassProportions()
         {
-            OrganNutrientsState totalLive = new OrganNutrientsState();
+            OrganNutrientsState totalLive = new OrganNutrientsState(parentNetwork.parentOrgan.Cconc);
             for (int i = 0; i < Physical.Thickness.Length; i++)
             {
-                totalLive =  OrganNutrientsState.Add(totalLive, LayerLive[i],parentNetwork.parentOrgan.Cconc);
+                totalLive +=  LayerLive[i];
             }
             double checkLiveWtPropn = 0;
             for (int i = 0; i < Physical.Thickness.Length; i++)
@@ -203,15 +216,12 @@ namespace Models.PMF.Organs
                 if ((totalLive.Wt == 0) && (i == 0)) //At the start of the crop before any roots have died
                 {
                     //Need dead proportion to be 1 in the first layer as if it is zero the partitioning of detached biomass does not work
-                    LayerLiveProportion[i] = new OrganNutrientsState(carbon: new NutrientPoolsState(1, 1, 1),
-                                                                     nitrogen: new NutrientPoolsState(1, 1, 1),
-                                                                     phosphorus: new NutrientPoolsState(1, 1, 1),
-                                                                     potassium: new NutrientPoolsState(1, 1, 1),
-                                                                     cconc: 1);
+                    LayerLiveProportion[i].Set(carbon: new NutrientPoolsState(1, 1, 1),
+                                               nitrogen: new NutrientPoolsState(1, 1, 1));
                 }
                 else
                 {
-                    LayerLiveProportion[i] = OrganNutrientsState.Divide(LayerLive[i], totalLive, 1);
+                    LayerLiveProportion[i] = LayerLive[i]/ totalLive;
                 }
                 checkLiveWtPropn += LayerLive[i].Wt/totalLive.Wt;
             }
@@ -225,10 +235,10 @@ namespace Models.PMF.Organs
         /// </summary>
         public void CalculateRelativeDeadBiomassProportions()
         {
-            OrganNutrientsState totalDead = new OrganNutrientsState();
+            OrganNutrientsState totalDead = new OrganNutrientsState(parentNetwork.parentOrgan.Cconc);
             for (int i = 0; i < Physical.Thickness.Length; i++)
             {
-                totalDead = OrganNutrientsState.Add(totalDead, LayerDead[i], parentNetwork.parentOrgan.Cconc);
+                totalDead += LayerDead[i];
             }
             double checkDeadWtPropn = 0;
             for (int i = 0; i < Physical.Thickness.Length; i++)
@@ -236,26 +246,32 @@ namespace Models.PMF.Organs
                 if ((totalDead.Wt == 0) && (i == 0)) //At the start of the crop before any roots have died
                 {
                     //Need dead proportion to be 1 in the first layer as if it is zero the partitioning of detached biomass does not work
-                    LayerDeadProportion[i] = new OrganNutrientsState(carbon: new NutrientPoolsState(1, 1, 1),
-                                                                     nitrogen: new NutrientPoolsState(1, 1, 1),
-                                                                     phosphorus: new NutrientPoolsState(1, 1, 1),
-                                                                     potassium: new NutrientPoolsState(1, 1, 1),
-                                                                     cconc: 1);
+                    LayerDeadProportion[i].Set(carbon: new NutrientPoolsState(1, 1, 1),
+                                               nitrogen: new NutrientPoolsState(1, 1, 1));
                 }
                 else
                 {
-                    LayerDeadProportion[i] = OrganNutrientsState.Divide(LayerDead[i], totalDead, 1);
+                    LayerDeadProportion[i] = LayerDead[i] / totalDead;
                 }
                 checkDeadWtPropn += LayerDead[i].Wt / totalDead.Wt;
             }
             if ((Math.Abs(checkDeadWtPropn - 1) > 1e-12) && (totalDead.Wt > 0))
                 throw new Exception("Error in calculating root DeadWt distribution");
         }
+
+        /// <summary>Calculates the proportion roots have penetrated into each layer</summary>
+        public void CalculateRootProportionThroughLayer()
+        {
+            for (int layer = 0; layer < Physical.Thickness.Length; layer++)
+            {
+                RootProportions[layer] = SoilUtilities.ProportionThroughLayer(Physical.Thickness, layer, Depth);
+            }
+        }
         /// <summary>Clears this instance.</summary>
         public void Clear()
         {
-            WaterUptake = null;
-            NitUptake = null;
+            WaterUptake = new double[Physical.Thickness.Length];
+            NitUptake = new double[Physical.Thickness.Length];
             DeltaNO3 = new double[Physical.Thickness.Length];
             DeltaNH4 = new double[Physical.Thickness.Length];
             RootProportions = new double[Physical.Thickness.Length];
@@ -272,10 +288,10 @@ namespace Models.PMF.Organs
                 double rootCconc = parentNetwork.parentOrgan.Cconc;
                 for (int i = 0; i < Physical.Thickness.Length; i++)
                 {
-                    LayerLive[i] = new OrganNutrientsState();
-                    LayerDead[i] = new OrganNutrientsState();
-                    LayerLiveProportion[i] = new OrganNutrientsState();
-                    LayerDeadProportion[i] = new OrganNutrientsState();
+                    LayerLive[i] = new OrganNutrientsState(parentNetwork.parentOrgan.Cconc);
+                    LayerDead[i] = new OrganNutrientsState(parentNetwork.parentOrgan.Cconc);
+                    LayerLiveProportion[i] = new OrganNutrientsState(1);
+                    LayerDeadProportion[i] = new OrganNutrientsState(1);
                 }
             }
             else
@@ -303,7 +319,7 @@ namespace Models.PMF.Organs
             double[] xf = null;
             if (!IsWeirdoPresent)
             {
-                var soilCrop = Soil.FindDescendant<SoilCrop>(plant.Name + "Soil");
+                var soilCrop = Structure.FindChild<SoilCrop>(plant.Name + "Soil", relativeTo: Soil, recurse: true);
                 if (soilCrop == null)
                     throw new Exception($"Cannot find a soil crop parameterisation called {plant.Name}Soil");
 

@@ -22,7 +22,7 @@ namespace Models.CLEM.Resources
     public class LabourAvailabilityItemMonthly : FilterGroup<LabourType>, ILabourSpecificationItem
     {
         /// <summary>
-        /// Monthly values. 
+        /// Monthly values.
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(new double[] { 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20 })]
         [Description("Availability each month of the year")]
@@ -119,7 +119,7 @@ namespace Models.CLEM.Resources
                 ? "<tr><td>"
                 : "\r\n<div class=\"filterborder clearfix\">";
 
-            if (FindAllChildren<Filter>().Count() < 1)
+            if (Structure.FindChildren<Filter>().Count() < 1)
                 html += "<div class=\"filter\">Any labour</div>";
 
             return html;

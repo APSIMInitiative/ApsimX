@@ -1,13 +1,13 @@
 ﻿using APSIM.Shared.Utilities;
 using Models.Core;
 using NUnit.Framework;
-using Models.Core.ApsimFile;
 using Models.Core.Run;
 using System.Collections.Generic;
 using Models.Storage;
 using System.Globalization;
 using UnitTests.Weather;
 using System.Data;
+using APSIM.Core;
 
 namespace UnitTests.SurfaceOrganicMatterTests
 {
@@ -24,11 +24,11 @@ namespace UnitTests.SurfaceOrganicMatterTests
         public void SurfaceOrganicMatterTilledEvent()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Surface.SurfaceOrganicMatterEventsCheck.apsimx");
-            Simulations file = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as Simulations;
+            Simulations file = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
 
             // This simulation needs a weather node, but using a legit
             // met component will just slow down the test.
-            IModel sim = file.FindInScope<Simulation>();
+            IModel sim = file.Node.Find<Simulation>();
             Model weather = new MockWeather();
             sim.Children.Add(weather);
             weather.Parent = sim;
@@ -38,7 +38,7 @@ namespace UnitTests.SurfaceOrganicMatterTests
             Runner.Run();
 
             // Check that the report reported on the correct dates.
-            var storage = file.FindInScope<IDataStore>();
+            var storage = file.Node.Find<IDataStore>();
             List<string> fieldNames = new List<string>() { "doy", "lyingwt" };
 
             DataTable data = storage.Reader.GetData("ReportOnTilled", fieldNames: fieldNames);

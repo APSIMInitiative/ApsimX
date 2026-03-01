@@ -11,10 +11,14 @@ using System.Reflection;
 using APSIM.Shared.Utilities;
 using APSIM.Documentation.Models;
 using APSIM.Documentation.Bibliography;
-using Models.Core.ApsimFile;
 using APSIM.Shared.Mapping;
 using SkiaSharp;
 using APSIM.Documentation.Graphing;
+using APSIM.Core;
+using APSIM.Shared.Documentation.Extensions;
+using OxyPlot;
+using APSIM.Shared.Graphing;
+using DocumentFormat.OpenXml.Bibliography;
 
 namespace APSIM.Documentation
 {
@@ -30,7 +34,7 @@ namespace APSIM.Documentation
         {
             if(name == "CLEM Documentation site")
                 return "";
-            
+
             string[] validations = GetValidationFolderNames(apsimDirectory);
             string[] tutorials = GetTutorialFileNames(apsimDirectory);
 
@@ -41,7 +45,7 @@ namespace APSIM.Documentation
                 name = "AgPasture";
             }
 
-            if(filename == "Lifecycle")
+            if (filename == "Lifecycle")
             {
                 filename = name.ToLower();
             }
@@ -55,38 +59,52 @@ namespace APSIM.Documentation
             if (tutorials.Contains(filename))
                 isTutorial = true;
 
-            if(filename == "SorghumDCaPST")
+            if (filename == "SorghumDCaPST")
             {
                 name = "DCaPST/Sorghum";
                 isValidation = true;
             }
 
-            filename += ".apsimx";
+            if (filename == "Agroforestry")
+            {
+                filename = "AgroforestrySystem";
+            }
             
+            if (filename == "Lucerne")
+            {
+                filename = "LucerneValidation";
+            }
+
+            filename += ".apsimx";
+
             string path = apsimDirectory;
             if (isValidation)
                 path += "/Tests/Validation/" + name + "/" + filename;
             else if (isTutorial && filename == "lifecycle.apsimx")
                 path += "/Examples/Tutorials/Lifecycle/" + filename;
             else if (isTutorial && filename =="CLEM_Example_Cropping.apsimx")
-                path += "/Examples/CLEM/" + filename;     
+                path += "/Examples/CLEM/" + filename;
             else if (isTutorial && filename =="CLEM_Example_Grazing.apsimx")
-                path += "/Examples/CLEM/" + filename;         
+                path += "/Examples/CLEM/" + filename;
             else if (isTutorial)
                 path += "/Examples/Tutorials/" + filename;
             else
                 throw new Exception($"Provided name \"{name}\", does not match any validation folders or tutorial files.");
 
-            Simulations sims = FileFormat.ReadFromFile<Simulations>(path, e => throw e, false, compileManagerScripts: false).NewModel as Simulations;
+            Simulations sims = FileFormat.ReadFromFile<Simulations>(path).Model as Simulations;
             return GenerateWeb(sims);
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public static string GetCSS()
         {
-            return ReflectionUtilities.GetResourceAsString("APSIM.Documentation.Resources.docs.css");
+            string css = "";
+            css += ReflectionUtilities.GetResourceAsString("APSIM.Documentation.Resources.prism.css");
+            css += "\n";
+            css += ReflectionUtilities.GetResourceAsString("APSIM.Documentation.Resources.docs.css");
+            return css;
         }
 
         /// <summary>
@@ -96,7 +114,8 @@ namespace APSIM.Documentation
         public static string Generate(IModel model)
         {
             string html = GenerateWeb(model);
-            html = AddBoilerplate(model.Name + " Documentation", GetCSS(), html);
+            string name = DocumentationUtilities.GetDocumentationName(model);
+            html = AddBoilerplate($"{name} Documentation", GetCSS(), html);
             return html;
         }
 
@@ -106,18 +125,19 @@ namespace APSIM.Documentation
         /// <param name="model">Path to which the file will be generated.</param>
         public static string GenerateWeb(IModel model)
         {
-            return TagsToHTMLString(AutoDocumentation.Document(model));
+            return TagsToHTMLString(AutoDocumentation.Document(model), model);
         }
 
         /// <summary>
         ///
         /// </summary>
         /// <param name="tags">Tags to be converted</param>
-        public static string TagsToHTMLString(List<ITag> tags)
+        /// <param name="model">Model being documented</param>
+        public static string TagsToHTMLString(List<ITag> tags, IModel model)
         {
             tags.Add(new Section("References"));
-            string markdown = ConvertToMarkdown(tags, "");
-            string headerImg = ConvertToMarkdown(new List<ITag>(){AddHeaderImageTag()},"");
+            string markdown = ConvertToMarkdown(tags, "", model);
+            string headerImg = ConvertToMarkdown(new List<ITag>(){AddHeaderImageTag()},"", model);
             markdown = headerImg + markdown;
             List<(string, string)> htmlSegments = GetAllHTMLSegments(markdown, out string output1);
             List<ICitation> citations = ProcessCitations(output1, out string output2);
@@ -135,37 +155,35 @@ namespace APSIM.Documentation
 
             var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
             string html = Markdown.ToHtml(output2, pipeline);
-            html = RestoreHTMLSegments(html, htmlSegments);
             html = AddTableWrappers(html);
+            html = RestoreHTMLSegments(html, htmlSegments);
             html = AddCSSClasses(html);
-            html = AddContentWrapper(GetNavigationHTML(tags), html); 
-            
+            html = AddContentWrapper(GetNavigationHTML(tags), html);
 
             return html;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        public static Image AddHeaderImageTag() 
+        public static Image AddHeaderImageTag()
         {
             return new Image("AIBanner.png");
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public static string GetNavigationHTML(List<ITag> tags)
         {
 
-            string html = "<div class=\"docs-navcontainer\">\n";
+            string html = "<div class=\"col-xxl-8 col-xl-9 col-lg-8 col-md-7 col-sm-7 col-10 docs-navcontainer\">\n";
             html += "<div class=\"docs-navbar\">\n";
             foreach(ITag tag in tags)
             {
                 if (tag is Section section)
                 {
-
-                    string id = section.Title.ToLower().Replace(" ", "-");
+                    string id = section.Title.ToLower().Replace(":", "").Replace(" ", "-");
                     html += $"<a href=\"#{id}\"><div class=\"docs-nav\">{section.Title}</div></a>\n";
                 }
             }
@@ -175,7 +193,7 @@ namespace APSIM.Documentation
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="resourceName">Resource file name.</param>
         public static SkiaSharp.SKImage LoadFromResource(string resourceName)
@@ -223,9 +241,9 @@ namespace APSIM.Documentation
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        public static string ConvertToMarkdown(List<ITag> tags, string heading) 
+        public static string ConvertToMarkdown(List<ITag> tags, string heading, IModel model)
         {
             string output = "";
 
@@ -242,16 +260,16 @@ namespace APSIM.Documentation
                     sectionCount += 1;
                     string sectionHeader = $"{header}{headingPrefix}{sectionCount}";
                     output += $"{sectionHeader} {section.Title}\n\n";
-                    output += ConvertToMarkdown(section.Children, sectionHeader);
+                    output += ConvertToMarkdown(section.Children, sectionHeader, model);
                 }
-                else if (tag is Paragraph paragraph) 
+                else if (tag is Paragraph paragraph)
                 {
 
                     List<string> lines = paragraph.text.Split("\n").ToList();
                     lines = ConvertMarkdownCode(lines);
                     foreach (string line in lines)
                     {
-                        string text = line.Trim();
+                        string text = line;
                         if (text.StartsWith('#'))
                         {
                             string hashes = "#";
@@ -265,7 +283,7 @@ namespace APSIM.Documentation
                     }
                     output += "\n";
                 }
-                else if (tag is Table table) 
+                else if (tag is Table table)
                 {
                     List<int> columnWidths = new List<int>();
                     foreach(DataColumn col in table.data.Table.Columns)
@@ -291,7 +309,7 @@ namespace APSIM.Documentation
                         line2 += " ";
                         for(int k = 0; k < columnWidths[i]; k++)
                             line2 += "-";
-                        line2 += " |";                        
+                        line2 += " |";
                     }
                     output += line1 + "\n" + line2 + "\n";
 
@@ -335,38 +353,65 @@ namespace APSIM.Documentation
                     output += imgMarkdown;
                 }
             }
+
+            output = ReplaceInserts(output, model);
+
             return output;
         }
 
         /// <summary>
         /// Returns a list of all citations found, and replaces the text of the citation with the reference
         /// </summary>
-        public static List<ICitation> ProcessCitations(string input, out string output) 
+        public static List<ICitation> ProcessCitations(string input, out string output)
         {
-
-            Regex regex = new Regex(@"\[\w+\]");
-            MatchCollection matches = regex.Matches(input);
-
             output = input;
             List<ICitation> citations = new List<ICitation>();
-            List<string> citesFound = new List<string>();
+            Regex regex;
+            MatchCollection matches;
 
+            //Find references without overriding text and convert to standard
+            regex = new Regex(@"(?<!])\[#([^\]]+)\](?![(\[])");
+            matches = regex.Matches(input);
+            int offset = 0;
             foreach(Match match in matches)
             {
-                string value = match.Value;
-                string cleanedValue = value.Replace("[", "").Replace("]", "");
-                if (!citesFound.Contains(cleanedValue))
+                string value = match.Groups[0].Value;
+                string reference = match.Groups[1].Value;
+                ICitation citation = AutoDocumentation.Bibilography.Lookup(reference);
+                if (citation != null)
                 {
-                    citesFound.Add(cleanedValue);
-                    ICitation citation = AutoDocumentation.Bibilography.Lookup(cleanedValue);
-                    if (citation != null)
+                    string markdownCite = $"[{citation.InTextCite}][#{reference}]";
+                    output = output.Remove(match.Index + offset, value.Length);
+                    output = output.Insert(match.Index + offset, markdownCite);
+                    offset += markdownCite.Length - value.Length;
+                }
+            }
+
+            //Find references with overriding text
+            List<string> valuesReplaced = new List<string>();
+            List<string> citesFound = new List<string>();
+            regex = new Regex(@"\[([^\]]+)\]\[\#([^\]]+)\]");
+            matches = regex.Matches(output);
+            foreach(Match match in matches)
+            {
+                string value = match.Groups[0].Value;
+                string text = match.Groups[1].Value;
+                string reference = match.Groups[2].Value;
+                ICitation citation = AutoDocumentation.Bibilography.Lookup(reference);
+                if (citation != null)
+                {
+                    if (!citesFound.Contains(reference))
                     {
+                        citesFound.Add(reference);
                         citations.Add(citation);
-                        output = output.Replace(value, $"[{citation.InTextCite}](#references)");
+                    }
+                    if (!valuesReplaced.Contains(value))
+                    {
+                        valuesReplaced.Add(value);
+                        output = output.Replace(value, $"[{text}](#{reference})");
                     }
                 }
             }
-            
             return citations;
         }
 
@@ -375,25 +420,62 @@ namespace APSIM.Documentation
         /// </summary>
         public static string WriteBibliography(List<ICitation> citations)
         {
-            string output = "";
-
-            // Ensure references in bibliography are sorted alphabetically
-            // by their full text.
+            // Ensure references in bibliography are sorted alphabetically by their full text.
             IEnumerable<ICitation> sorted = citations.OrderBy(c => c.BibliographyText);
 
+            string output = "";
             foreach (ICitation citation in sorted)
             {
+                //if no link, wrap in a p tag, if using a link, use a a href instead
+                string contents = $"{citation.BibliographyText}";
+                if (!string.IsNullOrEmpty(citation.URL))
+                    contents = $"[{citation.BibliographyText}]({citation.URL})";
 
-                // If a URL is provided for this citation, insert the citation
-                // as a hyperlink.
-                bool isLink = !string.IsNullOrEmpty(citation.URL);
-                if (isLink) 
+                output += $"{contents}";                            //contents of reference
+                output += $"<div id=\"{citation.Name}\"></div>";    //div tag for navigation
+                output += $"\n\n";                                  //space to ensure newlines
+            }
+            return output;
+        }
+
+        /// <summary>
+        /// Replace content covered by curly braces with apsim content
+        /// </summary>
+        public static string ReplaceInserts(string input, IModel model)
+        {
+            string output = input;
+            Regex regex = new Regex(@"{([^}\s]+)}");
+            MatchCollection matches = regex.Matches(input);
+            int offset = 0;
+            foreach(Match match in matches)
+            {
+                string value = match.Value;
+                string reference = match.Groups[1].Value;
+                IModel referencedModel = model.Node.Get(reference, LocatorFlags.ModelsOnly, model.Node.Model) as IModel;
+                if (referencedModel != null)
                 {
-                    output += $"[{citation.BibliographyText}]({citation.URL})\n\n";
+                    List<ITag> tags = AutoDocumentation.Document(referencedModel);
+                    if (tags.Count == 1)
+                    {
+                        ITag firstTag = tags.FirstOrDefault();
+                        if (firstTag != null && firstTag is Section)
+                            tags = (firstTag as Section).Children;
+                    }
+                    string markdown = ConvertToMarkdown(tags, "", referencedModel).Trim();
+                    output = output.Remove(match.Index + offset, value.Length);
+                    output = output.Insert(match.Index + offset, markdown);
+                    offset += markdown.Length - value.Length;
                 }
                 else
                 {
-                    output += $"{citation.BibliographyText}\n\n";
+                    var obj = model.Node.Get(reference, LocatorFlags.None, model.Node.Model);
+                    string text = reference;
+                    if (obj != null)
+                        text = obj.ToString();
+
+                    output = output.Remove(match.Index + offset, value.Length);
+                    output = output.Insert(match.Index + offset, text);
+                    offset += text.Length - value.Length;
                 }
             }
 
@@ -415,7 +497,7 @@ namespace APSIM.Documentation
 
             if (linkMatches.Count > 0)
                 return output;
-            
+
             foreach(Match match in matches)
             {
                 string caption = match.Groups[1].ToString();
@@ -429,7 +511,7 @@ namespace APSIM.Documentation
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public static List<(string, string)> GetAllHTMLSegments(string markdown, out string output)
         {
@@ -453,7 +535,7 @@ namespace APSIM.Documentation
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public static string RestoreHTMLSegments(string markdown, List<(string, string)> segments)
         {
@@ -465,7 +547,7 @@ namespace APSIM.Documentation
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public static string AddCSSClasses(string html)
         {
@@ -473,22 +555,22 @@ namespace APSIM.Documentation
             output = output.Replace("<h1 ", "<h1 class=\"docs-h1\" ");
             output = output.Replace("<h2 ", "<h2 class=\"docs-h2\" ");
             output = output.Replace("<img ", "<img class=\"docs-img\" ");
-            output = output.Replace("<table>", "<table class=\"docs-table\" ");
-            output = output.Replace("<th>", "<th class=\"docs-th\"> ");
-            output = output.Replace("<td>", "<td class=\"docs-td\"> ");
-            output = output.Replace("<tr>", "<tr class=\"docs-tr\"> ");        
+            output = output.Replace("<table>", "<table class=\"docs-table\">");
+            output = output.Replace("<th>", "<th class=\"docs-th\">");
+            output = output.Replace("<td>", "<td class=\"docs-td\">");
+            output = output.Replace("<tr>", "<tr class=\"docs-tr\">");
             return output;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public static string AddContentWrapper(string navigation, string content)
         {
             string output = "";
-            output += "<div class=\"docs-wrapper\">\n";
+            output += "<div class=\"row docs-wrapper\">\n";
             output += navigation;
-            output += "<div class=\"docs-content\">\n";
+            output += "<div class=\"col-xxl-12 col-xl-10 col-lg-9 col-md-6 col-sm-6 col-5 docs-content\">\n";
             output += content;
             output += "</div>\n";
             output += "</div>\n";
@@ -496,7 +578,7 @@ namespace APSIM.Documentation
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public static string AddTableWrappers(string html)
         {
@@ -507,7 +589,7 @@ namespace APSIM.Documentation
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public static string AddBoilerplate(string title, string css, string content)
         {
@@ -528,6 +610,9 @@ namespace APSIM.Documentation
             output += "</head>\n";
             output += "<body>\n";
             output += content;
+            output += "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/prism/1.30.0/prism.min.js\"></script>";
+            output += "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/prism/1.30.0/components/prism-csharp.min.js\"></script>";
+            output += "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/prism/1.30.0/plugins/keep-markup/prism-keep-markup.min.js\"></script>";
             output += "</body>\n";
             output += "</html>\n";
             return output;
@@ -555,31 +640,26 @@ namespace APSIM.Documentation
             // Get consecutive lines that start with triple tabs.
             bool inCodeBlock = false;
             List<string> formattedLines = new();
-            string pdfCodeLine = @"(\t{3})(.*)";
+            string codeSyntax = @"(```)(.*)";
 
             foreach (string line in paraLines)
             {
-                if(Regex.IsMatch(line, pdfCodeLine))
-                {
+                if(Regex.IsMatch(line, codeSyntax))
                     if(!inCodeBlock)
-                    {
-                        formattedLines.Add("");
-                        formattedLines.Add("```");
                         inCodeBlock = true;
-                    }
-                    formattedLines.Add(line);
-                }
                 else
-                {
                     if(inCodeBlock)
-                    {
-                        formattedLines.Add("```");
-                        formattedLines.Add("");
                         inCodeBlock = false;
-                    }
-                    formattedLines.Add(line);
-                }
+
+                string text = line;
+
+                //add csharp language to code if not there
+                if (inCodeBlock && line.Trim() == "```")
+                    text += "csharp";
+                
+                formattedLines.Add(text);
             }
+
             return formattedLines.ToList();
         }
 
@@ -615,7 +695,7 @@ namespace APSIM.Documentation
             string clemPath = "CLEM/";
             string[] tutorials = Directory.GetFiles(apsimDirectory + "/Examples/Tutorials/", "*.apsimx", SearchOption.AllDirectories);
             string[] clemTutorials = Directory.GetFiles(apsimDirectory + "/Examples/CLEM/", "*.apsimx", SearchOption.AllDirectories);
-            
+
             tutorials = tutorials.Concat(clemTutorials).ToArray();
 
             for(int i = 0;i < tutorials.Length; i++)
@@ -630,20 +710,33 @@ namespace APSIM.Documentation
         /// Get an image from a graph tag
         /// </summary>
         /// <param name="graph"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="dpi"></param>
         /// <returns></returns>
-        private static SKImage GetGraphImage(Graph graph)
+        public static SKImage GetGraphImage(Graph graph, int width = 800, int height = 600, int dpi = 96)
         {
             GraphExporter exporter = new GraphExporter();
 
             var plot = exporter.ToPlotModel(graph);
+            //foreach(Series s in graph.Series)
+            //    s.
 
             // Temp hack - set marker size to 5. We need to review
             // appropriate sizing for graphs in autodocs.
             if (plot is OxyPlot.PlotModel model)
+            {
+                int count = model.Series.OfType<OxyPlot.Series.LineSeries>().Count();
                 foreach (var series in model.Series.OfType<OxyPlot.Series.LineSeries>())
-                    series.MarkerSize = 5;
+                {
+                    series.MarkerSize = 4;
+                    series.StrokeThickness = 1;
+                    if (count == 1)
+                        series.Color = OxyColor.FromArgb(255, 0, 77, 71);
+                } 
+            }
 
-            return exporter.Export(plot, 800, 600);
+            return exporter.Export(plot, width, height, dpi);
         }
 
     }

@@ -1,15 +1,11 @@
+using APSIM.Core;
 using APSIM.Shared.Utilities;
-using Models.Core;
-using Models.Core.ApsimFile;
-using NUnit.Framework;
-using System.IO;
-using Models;
-using Models.Storage;
-using NUnit.Framework.Constraints;
-using Models.GrazPlan;
-using System.Collections.Generic;
-using System.Data;
 using Models.Climate;
+using Models.Core;
+using Models.Storage;
+using NUnit.Framework;
+using System.Data;
+using System.IO;
 using System.Linq;
 
 namespace UnitTests.Climate;
@@ -17,13 +13,11 @@ namespace UnitTests.Climate;
 [TestFixture]
 class SlopeEffectsOnWeatherInZoneTests
 {
-
-
         /// <summary>
         /// A simulations instance
         /// </summary>
         private Simulations simulations;
-        
+
         /// <summary>
         /// A simulation instance
         /// </summary>
@@ -40,11 +34,18 @@ class SlopeEffectsOnWeatherInZoneTests
             Directory.SetCurrentDirectory(tempFolder);
 
             string str = ReflectionUtilities.GetResourceAsString("UnitTests.Climate.Resources.slopeInZone.apsimx");
-            simulations = FileFormat.ReadFromString<Simulations>(str, e => throw e, false).NewModel as Simulations;
-            simulation = simulations.FindChild<Simulation>();
+            simulations = FileFormat.ReadFromString<Simulations>(str).Model as Simulations;
+            simulation = simulations.Node.FindChild<Simulation>();
         }
 
-        [Test]
+    [TearDown]
+        public void Cleanup()
+        {
+            DataStore storage = simulations.Node.FindChild<DataStore>(recurse: true);
+            storage?.Dispose();
+        }
+
+    [Test]
         public void ApsimXFileIsPresentTest()
         {
             Assert.That(simulations.Name, Is.EqualTo("Simulations"));
@@ -58,8 +59,8 @@ class SlopeEffectsOnWeatherInZoneTests
         {
             // Utilities.RunModels(simulations, "");
             Utilities.ResolveLinks(simulations);
-            SlopeEffectsOnWeather oneHundredAndEightySlope = simulation.FindChild<Zone>("Site4_30_180").FindChild<SlopeEffectsOnWeather>();
-            SlopeEffectsOnWeather zeroSlope = simulation.FindChild<Zone>("Site4_30_0").FindChild<SlopeEffectsOnWeather>();
+            SlopeEffectsOnWeather oneHundredAndEightySlope = simulation.Node.FindChild<Zone>("Site4_30_180").Node.FindChild<SlopeEffectsOnWeather>();
+            SlopeEffectsOnWeather zeroSlope = simulation.Node.FindChild<Zone>("Site4_30_0").Node.FindChild<SlopeEffectsOnWeather>();
             Assert.That(oneHundredAndEightySlope.GetZoneName(), Is.EqualTo("Site4_30_180"));
             Assert.That(zeroSlope.GetZoneName(), Is.EqualTo("Site4_30_0"));
         }

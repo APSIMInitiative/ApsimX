@@ -23,7 +23,7 @@ namespace APSIM.Documentation.Models.Types
         {
             Section section = GetSummaryAndRemarksSection(model);
 
-            IOrgan parentOrgan = model.FindAncestor<IOrgan>();
+            IOrgan parentOrgan = model.Node.FindParent<IOrgan>(recurse: true);
             if (parentOrgan != null)
             {
                 string organName = parentOrgan.Name;

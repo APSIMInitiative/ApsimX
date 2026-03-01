@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Groupings;
+﻿using APSIM.Core;
+using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
@@ -14,7 +15,7 @@ namespace Models.CLEM.Resources
 {
     ///<summary>
     /// Store for bank account
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -70,11 +71,11 @@ namespace Models.CLEM.Resources
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
             // locate age to weight relationship
-            AgeWeightRelationship = this.FindAllChildren<Relationship>().FirstOrDefault(a => a.Identifier == "Age to weight");
+            AgeWeightRelationship = Structure.FindChildren<Relationship>().FirstOrDefault(a => a.Identifier == "Age to weight");
 
-            PriceList = this.FindAllChildren<AnimalPricing>().FirstOrDefault();
+            PriceList = Structure.FindChildren<AnimalPricing>().FirstOrDefault();
             // Components are not permanently modifed during simulation so no need for clone: PriceList = Apsim.Clone(this.FindAllChildren<AnimalPricing>().FirstOrDefault()) as AnimalPricing;
-            priceGroups = PriceList.FindAllChildren<AnimalPriceGroup>().Cast<AnimalPriceGroup>().ToList();
+            priceGroups = Structure.FindChildren<AnimalPriceGroup>().Cast<AnimalPriceGroup>().ToList();
 
             Initialise();
         }
@@ -118,7 +119,7 @@ namespace Models.CLEM.Resources
 
             if (includeTakeFilters && filteredCohorts.Any())
             {
-                ApplyTakeFilters(filteredCohorts.Where(a => (applyPreviouslyConsidered ? (a.Considered == false) : true)), filter);
+                ApplyTakeFilters(filteredCohorts.Where(a => (applyPreviouslyConsidered ? (a.Considered == false) : true)), filter, Structure);
             }
 
             foreach (var cohort in filteredCohorts)
@@ -131,15 +132,15 @@ namespace Models.CLEM.Resources
             }
         }
 
-        private static void ApplyTakeFilters(IEnumerable<OtherAnimalsTypeCohort> filteredCohorts, OtherAnimalsGroup filter)
+        private static void ApplyTakeFilters(IEnumerable<OtherAnimalsTypeCohort> filteredCohorts, OtherAnimalsGroup filter, IStructure structure)
         {
-            if(!filter.FindAllChildren<TakeFromFiltered>().Any())
+            if(!structure.FindChildren<TakeFromFiltered>(relativeTo: filter).Any())
             {
                 return;
             }
 
             // adjust the numbers based on take and skip filters
-            IEnumerable<TakeFromFiltered> takeFilters = filter.FindAllChildren<TakeFromFiltered>();
+            IEnumerable<TakeFromFiltered> takeFilters = structure.FindChildren<TakeFromFiltered>(relativeTo: filter);
             foreach (var takeFilter in takeFilters)
             {
                 int totalNumber = filteredCohorts.Sum(a => a.AdjustedNumber);

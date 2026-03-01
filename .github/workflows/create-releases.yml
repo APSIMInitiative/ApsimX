@@ -1,0 +1,218 @@
+# This GitHub Actions workflow creates APSIM releases for Windows, macOS, and Debian.
+# Only runs after a PR to master branch is closed and merged.
+# This workflow uses scripts originally developed for use within Jenkins
+
+name: Create APSIM Releases
+permissions:
+  contents: read # to check out code
+defaults:
+  run:
+    shell: bash
+
+on:
+  pull_request_target:
+    branches:
+      - master
+    types:
+      - closed
+
+jobs:
+    check-for-resolves:
+      if: github.event.pull_request.merged == true
+      runs-on: ubuntu-latest
+      steps:
+      
+      - name: Check for "resolves \#" in PR description
+        uses: shanegenschaw/pull-request-comment-trigger@v3.0.0
+        id: pr_check_lowercase
+        with:
+          trigger: 'resolves #'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Check for "Resolves \#" in PR description
+        uses: shanegenschaw/pull-request-comment-trigger@v3.0.0
+        id: pr_check_captilised
+        with:
+          trigger: 'Resolves #'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+          
+      - name: fail if no resolves found
+        id: resolves_check
+        if: steps.pr_check_lowercase.outputs.triggered == 'false' && steps.pr_check_captilised.outputs.triggered == 'false'
+        run: |
+          echo "No 'resolves #' or 'Resolves #' found in PR description. Skipping release creation."
+          exit 1
+
+    create-releases:
+      if: github.event.pull_request.merged == true
+      needs: check-for-resolves
+      strategy:
+        fail-fast: false # allow other jobs to complete if one fails
+        matrix:
+          os-and-args: [macos, debian, "windows build"] 
+      runs-on: ubuntu-latest
+      container:
+        image: apsiminitiative/apsimng-build:latest
+      steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Make all directories safe (we are in a container. so it is ok :))
+        run: git config --global --add safe.directory "*"
+
+      - name: Make sure we have ownership of ApsimX
+        run: chown -R root:root /__w/ApsimX/ApsimX
+
+      - name: Make GitHub home directory belong to root user
+        run: chown -R root:root /github/home
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Set script permissions
+        run: chmod +x -R ./.github/workflows/scripts/
+
+      # This is used purely for PR number extraction.
+      - name: Get PR number
+        id: meta_apsimplusr
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: apsiminitiative/apsimplusr
+          flavor: latest=true
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+
+      - name: Create Release
+        env:
+          DOCKER_METADATA_OUTPUT_VERSION: ${{ fromJSON(steps.meta_apsimplusr.outputs.json).labels['org.opencontainers.image.version'] }}
+          BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
+        run: ./.github/workflows/scripts/deploy-installer.sh ${{ matrix.os-and-args }}
+
+      - name: Upload a Windows Installer Build Artifact
+        uses: actions/upload-artifact@v6.0.0
+        with:
+          name: windows-installer
+          path: /__w/ApsimX/ApsimX/Setup/net8.0/windows/Output/APSIMSetup.exe
+
+
+    # Performs code signing for the Windows installer using the Software Trust Manager. 
+    # This is required to avoid "Unknown Publisher" warnings when users run the installer.
+    create-windows-release:
+      if: github.event.pull_request.merged == true
+      env:
+        OUTFILE: APSIMSetup.exe
+      needs: [check-for-resolves, create-releases]
+      runs-on: ubuntu-latest
+      permissions:
+        contents: write
+      steps:
+        
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Make sure we have ownership of ApsimX
+          run: chmod 777 -R  .
+
+        # This is used purely for PR number extraction.
+        - name: Get PR number
+          id: meta_apsimplusr
+          uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+          with:
+            images: apsiminitiative/apsimplusr
+            flavor: latest=true
+            tags: |
+              type=ref,event=branch
+              type=ref,event=pr
+
+        - name: Download Windows installer build artifact
+          uses: actions/download-artifact@v6.0.0
+          with:
+            name: windows-installer
+            path: .
+
+        - name: Setup SM_CLIENT_CERT_FILE from base64 secret data
+          run: |
+            pwd
+            echo "${{ secrets.SM_CLIENT_CERT_FILE_B64 }}" | base64 --decode > sm_client_cert.p12
+            chmod 775 sm_client_cert.p12
+            ls -l
+          shell: bash
+
+        - name: Setup Software Trust Manager
+          uses: digicert/code-signing-software-trust-action@v1
+          with:
+            simple-signing-mode: true
+            # If the below 2 parameters are supplied, then smctl executable is invoked to attempt the signing.
+            input: ${{ env.OUTFILE }}
+            keypair-alias: key_1460956160
+          env:
+            SM_HOST: ${{ vars.SM_HOST }}
+            SM_API_KEY: ${{ secrets.SM_API_KEY }}
+            SM_CLIENT_CERT_FILE: sm_client_cert.p12
+            SM_CLIENT_CERT_PASSWORD: ${{ secrets.SM_CLIENT_CERT_PASSWORD }}    
+
+        - name: Upload signed Windows installer
+          env:
+            DOCKER_METADATA_OUTPUT_VERSION: ${{ fromJSON(steps.meta_apsimplusr.outputs.json).labels['org.opencontainers.image.version'] }}
+            BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
+          run: ./.github/workflows/scripts/deploy-installer.sh windows upload ${{ env.OUTFILE }}
+    
+    # Creates docker containers for APSIM releases.
+    create-docker-containers:
+      if: github.event.pull_request.merged == true
+      needs: check-for-resolves
+      runs-on: ubuntu-latest
+      steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set script permissions
+        run: chmod +x -R ./.github/workflows/scripts/
+
+      - name: Get 12 character commit sha
+        id: get_commit_sha
+        run: echo "COMMIT_SHA=$(echo ${{ github.event.pull_request.merge_commit_sha }} | cut -c1-12)" >> $GITHUB_ENV
+
+      - name: Build Docker containers
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          MERGE_COMMIT: ${{ env.COMMIT_SHA }}
+        run: ./.github/workflows/scripts/deploy-docker.sh
+
+    # Upload release to builds.apsim.info
+    upload-release-assets:
+      # only run if the PR description contains "resolves #"
+      if: github.event.pull_request.merged == true
+      needs: [create-docker-containers, create-releases, create-windows-release]
+      runs-on: ubuntu-latest 
+      steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set script permissions
+        run: chmod +x -R ./.github/workflows/scripts/
+
+      # This is used purely for PR number extraction.
+      - name: Get PR number
+        id: meta_apsimplusr
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: apsiminitiative/apsimplusr
+          flavor: latest=true
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+      
+      - name: Upload Release Assets
+        env:
+          DOCKER_METADATA_OUTPUT_VERSION: ${{ fromJSON(steps.meta_apsimplusr.outputs.json).labels['org.opencontainers.image.version'] }}
+          NETLIFY_BUILD_HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}
+          BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
+        run: ./.github/workflows/scripts/upload-release-assets.sh
