@@ -1,7 +1,6 @@
 ﻿using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
-using Models.AgPasture;
 using Models.Climate;
 using Models.Core;
 using Models.Functions;
@@ -10,7 +9,6 @@ using Models.PMF.Interfaces;
 using Models.PMF.Phen;
 using Models.Soils;
 using Newtonsoft.Json;
-using PdfSharp.Pdf.Content.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +16,7 @@ using System.Linq;
 namespace Models.PMF.SimplePlantModels
 {
     /// <summary>
-    /// Data structure that contains information for a specific crop type in Scrum
+    /// Data structure that contains information for a specific crop type in Strum
     /// </summary>
     [ValidParent(ParentType = typeof(Zone))]
     [Serializable]
@@ -39,13 +37,14 @@ namespace Models.PMF.SimplePlantModels
         private double _AlleyZoneWidthFrac = 0.5;
         private int _AgeAtSimulationStart = 1;
         private int _YearsToMaxDimension = 7;
-        private double _TrunkBulkDensity = 600;
+        private double _TrunkBulkDensity = 650;
+        private double _DBHatMaturity = 20;
         private double _MaxRD = 3000;
         private double _Proot = 0.2;
         private double _Pleaf = 0.5;
         private double _Ptrunk = 0.3;
-        private double _MinCanopyBaseHeight = 1000;
-        private double _MaxCanopyBaseHeight = 1000;
+        private double _CanopyBaseHeight = 1000;
+        private double _PrunedCanopyBaseHeight = 1000;
         private double _MaxPrunedHeight = 3000;
         private double _MaxHeight = 3500;
         private double _MaxPrunedWidth = 2000;
@@ -90,15 +89,14 @@ namespace Models.PMF.SimplePlantModels
         }
 
         private double trunkMassAtMaxDimension = 0;
-        private double prunningFraction = 0;
-        private double dbhMaturity = 0;
+        private double pruningFraction = 0;
 
         /// <summary>Is the tree decidious</summary>
         public bool Decidious
         {
             get
             {
-                if (TreeType == "Ever green")
+                if (TreeType == "Evergreen")
                     return false;
                 if (TreeType == "Deciduous")
                     return true;
@@ -106,7 +104,7 @@ namespace Models.PMF.SimplePlantModels
             }
         }
         /// <summary>Distance between tree rows (0.01 - 100 m)</summary>
-        [Separator("Orchid Information")]
+        [Separator("Orchard Information")]
         [Description("Distance between tree rows (0.01 - 100 m)")]
         [Units("m")]
         [Bounds(Lower = 0.01, Upper = 100)]
@@ -135,8 +133,8 @@ namespace Models.PMF.SimplePlantModels
             /// <summary>Triangular column or cone (if in row spacing > maximum width</summary>
             Triangular
         }
-        /// <summary>Canopy shape.  If InterRowSpacing > MaxWidth assume seperate sphere, cube or cone, else continious row of shape</summary>
-        [Description("Canopy shape.  If InterRowSpacing > MaxWidth assume seperate sphere, cube or cone, else continious row of shape)")]
+        /// <summary>Canopy shape.  If InterRowSpacing > MaxWidth assume separate sphere, cube or cone, else continuous row of shape</summary>
+        [Description("Canopy shape.  If InterRowSpacing > MaxWidth assume separate sphere, cube or cone, else continuous row of shape)")]
         public TreeShape CrownShape { get; set; } = TreeShape.Round;
 
 
@@ -226,6 +224,16 @@ namespace Models.PMF.SimplePlantModels
             set { _TrunkBulkDensity = constrain(value, 400, 1600); }
         }
 
+        /// <summary>Diameter at breast height for mature orchard tree (5-100 cm)</summary>
+        [Description("Diameter at breast height for mature orchard tree (5-100 cm)")]
+        [Units("cm")]
+        [Bounds(Lower = 5, Upper = 100)]
+        public double DBHatMaturity
+        {
+            get { return _DBHatMaturity; }
+            set { _DBHatMaturity = constrain(value, 5, 100); }
+        }
+
         /// <summary>Date for Bud Break</summary>
         [Separator("Tree Phenology.  Specify when canopy stages occur ")]
         [Description("Date for Bud Break")]
@@ -244,7 +252,7 @@ namespace Models.PMF.SimplePlantModels
         public string EndLeafFallDate { get; set; }
 
         /// <summary>Grow roots into Alley zone (yes or no)</summary>
-        [Separator("Tree Dimnesions")]
+        [Separator("Tree Dimenesions")]
         [Description("Grow roots into Alley zone (yes or no)")]
         public bool GRINZ { get; set; }
 
@@ -288,28 +296,28 @@ namespace Models.PMF.SimplePlantModels
             set { _Ptrunk = constrain(value, 0, 0.99); }
         }
 
-        /// <summary>Hight of the bottom of the canop (10-100000 mm)</summary>
-        [Description("Hight of the bottom of the canopy before pruning (10-100000 mm)")]
+        /// <summary>Height of the bottom of the canop (10-100000 mm)</summary>
+        [Description("Height of the bottom of the canopy before pruning (10-100000 mm)")]
         [Bounds(Lower = 10, Upper = 100000)]
         [Units("mm")]
-        public double MinCanopyBaseHeight
+        public double CanopyBaseHeight
         {
-            get { return _MinCanopyBaseHeight; }
-            set { _MinCanopyBaseHeight = constrain(value, 10, 100000); }
+            get { return _CanopyBaseHeight; }
+            set { _CanopyBaseHeight = constrain(value, 10, 100000); }
         }
 
-        /// <summary>Hight of the bottom of the canop (10-100000 mm)</summary>
-        [Description("Hight of the bottom of the canopy after pruning (10-100000 mm)")]
+        /// <summary>Height of the bottom of the canop (10-100000 mm)</summary>
+        [Description("Height of the bottom of the canopy after pruning (10-100000 mm)")]
         [Bounds(Lower = 10, Upper = 100000)]
         [Units("mm")]
-        public double MaxCanopyBaseHeight
+        public double PrunedCanopyBaseHeight
         {
-            get { return _MaxCanopyBaseHeight; }
-            set { _MaxCanopyBaseHeight = constrain(value, 10, 100000); }
+            get { return _PrunedCanopyBaseHeight; }
+            set { _PrunedCanopyBaseHeight = constrain(value, 10, 100000); }
         }
 
-        /// <summary>Hight of mature tree after pruning (50 - 200000mm)</summary>
-        [Description("Hight of mature tree after pruning (50 - 200000mm)")]
+        /// <summary>Height of mature tree after pruning (50 - 200000mm)</summary>
+        [Description("Height of mature tree after pruning (50 - 200000mm)")]
         [Bounds(Lower = 50, Upper = 200000)]
         [Units("mm")]
         public double MaxPrunedHeight
@@ -318,8 +326,8 @@ namespace Models.PMF.SimplePlantModels
             set { _MaxPrunedHeight = constrain(value, 50, 200000); }
         }
 
-        /// <summary>maximum hight of mature tree before pruning (10 - 200000mm)</summary>
-        [Description("maximum hight of mature tree before pruning (mm)")]
+        /// <summary>maximum height of mature tree before pruning (10 - 200000mm)</summary>
+        [Description("maximum height of mature tree before pruning (mm)")]
         [Bounds(Lower = 10, Upper = 200000)]
         [Units("mm")]
         public double MaxHeight
@@ -395,7 +403,7 @@ namespace Models.PMF.SimplePlantModels
         public double NFixationFrac
         {
             get { return _NFixationFrac; }
-            set { _NFixationFrac = constrain(value, 0, 1); }
+            set { _NFixationFrac = constrain(value, 0, .05); }
         }
 
         /// <summary>Extinction coefficient (0.1-1)</summary>
@@ -549,7 +557,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Fruit Fresh Density (g/cm3) </summary>
         [Description("Fruit Fresh Density (g/cm3)")]
         [Bounds(Lower = 0.1, Upper = 1.5)]
-        [Units("g/m^3")]
+        [Units("g/cm^3")]
         public double FruitDensity
         {
             get { return _FruitDensity; }
@@ -774,16 +782,17 @@ namespace Models.PMF.SimplePlantModels
 
         Dictionary<string, string> treeParams = new Dictionary<string, string>(blankParams);
 
-            (trunkMassAtMaxDimension, dbhMaturity) = StrumBiomass.EstimateMatureTrunkMassKg(
-                                                                                    CrownShape: CrownShape,
-                                                                                    HeightBottomPrePrune_m: MinCanopyBaseHeight/1000,  // ground → crown bottom, before prune
-                                                                                    HeightTopPrePrune_m: MaxHeight / 1000,     // crown top (mature height) before prune
-                                                                                    HeightTopPostPrune_m: MaxPrunedHeight / 1000,    // crown top after prune (topping allowed)
-                                                                                    WidthPrePrune_m: MaxWidth / 1000,         // canopy width before prune
-                                                                                    WidthPostPrune_m: MaxPrunedWidth / 1000,        // canopy width after prune
-                                                                                    InRowSpacing_m: InterRowSpacing,          // per-tree length along row (spacing within row)
-                                                                                    RowSpacing_m: RowSpacing,               // optional: distance between rows
-                                                                                    WoodDensity_kg_m3: TrunkBulkDensity        // oven-dry density [kg m^-3]
+            trunkMassAtMaxDimension = StrumBiomass.EstimateMatureTrunkMassKg(
+                                                                                    crownShape: CrownShape,
+                                                                                    heightBottomPrePrune_m: CanopyBaseHeight/1000,  // ground → crown bottom, before prune
+                                                                                    heightTopPrePrune_m: MaxHeight / 1000,     // crown top (mature height) before prune
+                                                                                    heightTopPostPrune_m: MaxPrunedHeight / 1000,    // crown top after prune (topping allowed)
+                                                                                    widthPrePrune_m: MaxWidth / 1000,         // canopy width before prune
+                                                                                    widthPostPrune_m: MaxPrunedWidth / 1000,        // canopy width after prune
+                                                                                    inRowSpacing_m: InterRowSpacing,          // per-tree length along row (spacing within row)
+                                                                                    rowSpacing_m: RowSpacing,               // optional: distance between rows
+                                                                                    woodDensity_kg_m3: TrunkBulkDensity,       // oven-dry density [kg m^-3]
+                                                                                    dbhAtMaturity_cm: DBHatMaturity            // diameter of stem at brest height when orchard tree is mature (cm)
                                                                                    );
 
             if (this.WaterStress)
@@ -813,7 +822,7 @@ namespace Models.PMF.SimplePlantModels
             treeParams["Pleaf"] += Pleaf.ToString();
             treeParams["Ptrunk"] += Ptrunk.ToString();
             treeParams["MaxPrunedHeight"] += MaxPrunedHeight.ToString();
-            treeParams["CanopyBaseHeight"] += MinCanopyBaseHeight.ToString();
+            treeParams["CanopyBaseHeight"] += CanopyBaseHeight.ToString();
             treeParams["MaxSeasonalHeight"] += (MaxHeight - MaxPrunedHeight).ToString();
             treeParams["MaxPrunedWidth"] += MaxPrunedWidth.ToString();
             treeParams["MaxSeasonalWidth"] += (MaxWidth - MaxPrunedWidth).ToString();
@@ -864,26 +873,26 @@ namespace Models.PMF.SimplePlantModels
 
 
             if (AgeAtSimulationStart <= 0)
-                throw new Exception("SPRUMtree needs to have a 'Tree Age at start of Simulation' > 1 years");
+                throw new Exception("STRUM needs to have a 'Tree Age at start of Simulation' > 1 years");
             if (trunkMassAtMaxDimension <= 0)
-                throw new Exception("SPRUMtree needs to have a 'Trunk Mass at maximum dimension > 0");
+                throw new Exception("STRUM needs to have a 'Trunk Mass at maximum dimension > 0");
             
             
-            prunningFraction = StrumBiomass.StrumPruningFraction(CrownShape: CrownShape,
-                                                                HeightBottomPrePrune_m: MaxCanopyBaseHeight / 1000,  // ground → crown bottom, before prune
-                                                                HeightBottomPostPrune_m: MinCanopyBaseHeight / 1000,
-                                                                HeightTopPrePrune_m: MaxHeight / 1000,     // crown top (mature height) before prune
-                                                                HeightTopPostPrune_m: MaxPrunedHeight / 1000,    // crown top after prune (topping allowed)
-                                                                WidthPrePrune_m: MaxWidth / 1000,         // canopy width before prune
-                                                                WidthPostPrune_m: MaxPrunedWidth / 1000,        // canopy width after prune
-                                                                InRowSpacing_m: InterRowSpacing,          // per-tree length along row (spacing within row)
-                                                                RowSpacing_m: RowSpacing,               // optional: distance between rows
-                                                                MatureDbh_cm: dbhMaturity,
-                                                                MatureTrunkMass: trunkMassAtMaxDimension
+            pruningFraction = StrumBiomass.StrumPruningFraction(crownShape: CrownShape,
+                                                                heightBottomPrePrune_m: CanopyBaseHeight / 1000,  // ground → crown bottom, before prune
+                                                                heightBottomPostPrune_m: PrunedCanopyBaseHeight / 1000,
+                                                                heightTopPrePrune_m: MaxHeight / 1000,     // crown top (mature height) before prune
+                                                                heightTopPostPrune_m: MaxPrunedHeight / 1000,    // crown top after prune (topping allowed)
+                                                                widthPrePrune_m: MaxWidth / 1000,         // canopy width before prune
+                                                                widthPostPrune_m: MaxPrunedWidth / 1000,        // canopy width after prune
+                                                                interRowSpacing_m: InterRowSpacing,          // per-tree length along row (spacing within row)
+                                                                rowSpacing_m: RowSpacing,               // optional: distance between rows
+                                                                matureDbh_cm: DBHatMaturity,
+                                                                matureTrunkMass: trunkMassAtMaxDimension
                                                                 );
             
             double relativeInitialSize = Math.Min(1,(double)AgeAtSimulationStart / (double)YearsToMaxDimension);
-            double initialTrunkWt = relativeInitialSize* trunkMassAtMaxDimension *1000 * (1-prunningFraction);
+            double initialTrunkWt = relativeInitialSize* trunkMassAtMaxDimension *1000 * (1-pruningFraction);
             treeParams["InitialTrunkWt"] += initialTrunkWt.ToString();
             treeParams["InitialRootWt"] += (initialTrunkWt * Proot * 0.5).ToString();
             treeParams["InitialFruitWt"] += (0).ToString();
@@ -947,7 +956,7 @@ namespace Models.PMF.SimplePlantModels
         {
             if(DateUtilities.DatesAreEqual(EndLeafFallDate,clock.Today))
             {
-                Prune(prunningFraction);
+                Prune(pruningFraction);
             }
             DateTime pickingDate = DateTime.Parse(DateMaxBloom + "-" + clock.Today.Year.ToString()).AddDays(DAFMaxSize);
             if (DateUtilities.DatesAreEqual(pickingDate.ToString("dd-MMM"), clock.Today))

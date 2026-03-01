@@ -424,7 +424,7 @@ namespace UserInterface.Classes
                     break;
                 case DisplayType.StrumTreeTypes:
                     DisplayMethod = PropertyType.DropDown;
-                    DropDownOptions = new string[2] { "Ever green", "Deciduous" };
+                    DropDownOptions = new string[2] { "Evergreen", "Deciduous" };
                     break;
                 case DisplayType.CanopyTypes:
                     DisplayMethod = PropertyType.DropDown;
