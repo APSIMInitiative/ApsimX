@@ -108,6 +108,11 @@ namespace Models.Factorial
         {
             Factors Factors = this.FindChild<Factors>();
 
+            foreach (FactorsFromFile factorsFromFile in Factors.FindAllDescendants<FactorsFromFile>())
+            {
+                factorsFromFile.CreateFactorsFromFile();
+            }
+
             // Create a list of list of factorValues so that we can do permutations of them.
             List<List<CompositeFactor>> allValues = new List<List<CompositeFactor>>();
             if (Factors != null)
