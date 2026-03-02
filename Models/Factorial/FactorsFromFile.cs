@@ -1,8 +1,6 @@
 ﻿using APSIM.Core;
 using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
-using Models.CLEM.Activities;
 using Models.Core;
 using System;
 using System.Collections.Generic;
@@ -10,7 +8,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
 
 namespace Models.Factorial
@@ -25,25 +22,24 @@ namespace Models.Factorial
     [ValidParent(ParentType = typeof(Factor))]
     [ValidParent(ParentType = typeof(Permutation))]
     [Description("Generate factors as specified in an Excel spreadsheet")]
-    public class FactorsFromFile: Model, IStructureDependency
+    public class FactorsFromFile: Model
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
-        //[Link]
-        //private ISummary Summary = null;
-
         private Dictionary<string, string> PropertiesDictionary = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
         private string createFactorsLog = "No details available";
 
         /// <summary>
         /// The name of the Excel spreadsheet containing all factors details. One sheet (Properties) contains the label and full APSIM Node path for any properties used. Each other spreadsheet if a factor using the sheet name with the first column (levels) containing the factor levels and each column after that representing the values to set for a property identified by the name of the column matching the property label in the Properties sheet. 
         /// </summary>
-        [Description("Excel spreadsheet containing factor details")]
+        [Description("Factor details spreadsheet")]
         [Core.Display(Type = DisplayType.FileName)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Factors spreadsheet name must be supplied")]
         public string FileName { get; set; }
+
+        /// <summary>
+        /// Switch to enable ignoring any column that does not have a property table in the properties sheet.
+        /// </summary>
+        [Description("Ignore columns with no property label")]
+        public bool IgnoreColumnsMissingLabel { get; set; } = true;
 
         /// <summary>
         /// Gets or sets the full file name (with path). 
@@ -57,9 +53,9 @@ namespace Models.Factorial
                     throw new FileNotFoundException($"Factors spreadsheet must be supplied");
                 else
                 {
-                    Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
-                    if (simulation != null)
-                        return PathUtilities.GetAbsolutePath(FileName, simulation.FileName);
+                    Simulations simulations = Node.FindParent<Simulations>(recurse: true);
+                    if (simulations != null)
+                        return PathUtilities.GetAbsolutePath(FileName, simulations.FileName);
                     else
                         return FileName;
                 }
@@ -81,9 +77,6 @@ namespace Models.Factorial
         /// </summary>
         public void CreateFactorsFromFile()
         {
-            //if (PropertiesDictionary.Count > 0)
-            //    return; // already processed
-
             string absoluteFileName = FullFileName;
 
             using StringWriter log = new StringWriter();
@@ -111,16 +104,23 @@ namespace Models.Factorial
             if (propsTable.Columns.Count < 2)
                 throw new Exception($"Properties worksheet '{propsSheetName}' must contain at least two columns: label and path");
 
-            // Build dictionary. Use first column as label, second as full path.
+            // Build properties dictionary from properties sheet table. Use first column as label, second as full path.
             PropertiesDictionary = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
-            string labelCol = propsTable.Columns[0].ColumnName;
-            string pathCol = propsTable.Columns[1].ColumnName;
+            DataColumn labelColumn = propsTable.Columns
+                .Cast<DataColumn>()
+                .FirstOrDefault(c => string.Equals(c.ColumnName?.Trim(), "label", StringComparison.InvariantCultureIgnoreCase));
+            int labelColIndex = labelColumn == null ? -1 : propsTable.Columns.IndexOf(labelColumn);
+
+            DataColumn pathColumn = propsTable.Columns
+                .Cast<DataColumn>()
+                .FirstOrDefault(c => string.Equals(c.ColumnName?.Trim(), "path", StringComparison.InvariantCultureIgnoreCase));
+            int pathColIndex = pathColumn == null ? -1 : propsTable.Columns.IndexOf(pathColumn);
 
             for (int rowIndex = 0; rowIndex < propsTable.Rows.Count; rowIndex++)
             {
                 DataRow row = propsTable.Rows[rowIndex];
-                string label = row[labelCol]?.ToString()?.Trim();
-                string path = row[pathCol]?.ToString()?.Trim();
+                string label = row[labelColumn.ColumnName]?.ToString()?.Trim();
+                string path = row[pathColumn.ColumnName]?.ToString()?.Trim();
                 if (!string.IsNullOrEmpty(label) && !string.IsNullOrEmpty(path))
                 {
                     // If a duplicate label already exists, throw an error instead of silently overwriting.
@@ -148,11 +148,11 @@ namespace Models.Factorial
 
                 // Create Factor with Name = sheet name and replace if already exists in parent children
                 var factor = new Factor() { Name = sheet };
-                if (Parent.Node.FindChildren<Factor>(name: sheet).Any())
+                if (Node.FindChildren<Factor>(name: sheet).Any())
                 {
-                    Parent.Node.RemoveChild(Parent.Node.FindChild<Factor>(name: sheet));
+                    Node.RemoveChild(Node.FindChild<Factor>(name: sheet));
                 }
-                Parent.Node.AddChild(factor);
+                Node.AddChild(factor);
 
                 log.WriteLine($"\tFactor: {sheet}");
 
@@ -186,15 +186,13 @@ namespace Models.Factorial
                         Name = row[levelColName]?.ToString()?.Trim(),
                         Specifications = new List<string>()
                     };
-                    // Ensure parenting
-                    //composite.Parent = factor;
 
                     if (levels.Contains(composite.Name))
                         throw new Exception($"Duplicate level name '{composite.Name}' found in sheet '{sheet}' of '{absoluteFileName}'. Level names must be unique within a factor.");
                     else
                         levels.Add(composite.Name);
 
-                    // For each column (not include or level), map column header to property path via dictionary and create "path = value" entries for the compositeFactor.Specifications list
+                    // For each column (not 'include' or 'level'), map column header to property path via dictionary and create "path = value" entries for the compositeFactor.Specifications list
 
                     propertyColumns = new List<string>();
 
@@ -204,16 +202,18 @@ namespace Models.Factorial
                             continue;
 
                         string colHeader = table.Columns[c].ColumnName?.Trim();
-                        if (string.IsNullOrEmpty(colHeader))
+                        if (!IgnoreColumnsMissingLabel && string.IsNullOrEmpty(colHeader))
                             throw new Exception($"Missing column header name representing a property in worksheet '{absoluteFileName}', sheet '{propsSheetName}'.");
 
                         if (propertyColumns.Contains(colHeader))
-                            throw new Exception($"Duplicate property column '{colHeader}' provided in sheet '{sheet}' of '{absoluteFileName}'. Properties must only be specified once per factor.");
+                            throw new Exception($"Duplicate property column '{colHeader}' provided in sheet '{sheet}' of '{absoluteFileName}'. Properties must only be specified once per factor sheet.");
                         else
                             propertyColumns.Add(colHeader);
 
                         if (!PropertiesDictionary.TryGetValue(colHeader, out string propertyPath))
                         {
+                            if (IgnoreColumnsMissingLabel)
+                                continue;
                             throw new Exception($"Cannot find node path in 'properties' sheet for column '{colHeader}' in '{absoluteFileName}', sheet '{propsSheetName}'.");
                         }
 
@@ -258,13 +258,24 @@ namespace Models.Factorial
                 throw new Exception($"No factors found in '{absoluteFileName}'");
 
             createFactorsLog = log.ToString();
-            // not sure how to present this information to the user.
-            // summary hasn't been created and we don't want to write for each simulation in experiment.
+
+            // I'm not sure how to present this information to the user.
+            // summary hasn't been created and we don't want to write for each simulation in experiment, but once at start of simulation, but I couldn't find a suitable event.
             // is there a way to ask if this is the first of a group of simulations?
-            //Summary.WriteMessage(this, log.ToString(), MessageType.Information);
+
+            // The components are actually added to the simulation tree as this is not a copy of base simulation as is used in the simulations.
+            // This is good as from this point onward the factors appear as if the user build them and will be overwritten each time the simulation runs based on the spreadsheet.
+            // The latest approach is to create the components as children below this component so they can been inspected by user and it is clear they are associated with the loading of factors from file.
+            // This required these to be included in factors identified below an experiment or permutation as they would otherwise be hidden  one level deeper so some recurse:true settings are needed.
+
+            // Is there a way to fire the building of the UI tree after this method so that the new components are visible in the UI immediately?
+            // This should not be possible as UI is not the concern of the Model, but the UI has no say over the execution of Experiments.
+            // If not, they only become visible upon opening the next instance of APISM, but are still present for the correct execution of the simulations.
+
+            // If we can't display this, all StringWriter code can be deleted.
+            // Otherwise it would need a special presenter with the property entry area and a text/markdown display section for the last genrated details information string.
+            // Summary.WriteMessage(this, log.ToString(), MessageType.Information);
         }
-
-
 
         // Helper local function to interpret include cell values
         static bool IsIncluded(object cell)
