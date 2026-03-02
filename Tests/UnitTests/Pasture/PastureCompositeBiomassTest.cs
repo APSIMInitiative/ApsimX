@@ -75,7 +75,6 @@ namespace UnitTests
                 "[Pasture].DeadDM/10",
                 "[Pasture].AboveGroundDead.Wt",
                 "[Pasture].Total.Wt",
-                //"[Pasture].Leaf.Wt"+"[Pasture].Stem.Wt"+"[Pasture].Root.Wt"
                 "[Pasture].Leaf.Wt+[Pasture].Stem.Wt+[Pasture].Root.Wt"
             };
             report.EventNames = new[]
@@ -149,6 +148,7 @@ namespace UnitTests
             
             
            //Assert biomasses calculated in AusFarm  and refactored Pasture model return same values.
+           
            Assert.That(LeafWt.Add(StemWt), Is.EqualTo(AbovegroundWtgms));
            Assert.That(ShootDMgms, Is.EqualTo(AbovegroundWtgms).Within(1e-10));
            Assert.That(AboveGroundDeadgrms,Is.EqualTo(DeadDMgms));
