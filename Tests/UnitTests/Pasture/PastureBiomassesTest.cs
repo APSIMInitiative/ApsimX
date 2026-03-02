@@ -58,7 +58,7 @@ namespace UnitTests
             DataStore storage = sims.Node.FindChild<DataStore>(recurse: true);
             storage.UseInMemoryDB = true;
             
-            //Add Organs models to Pasture Model in Prototypes\Pasture\Pasture.apsimx. 
+            //Add Organs models to Pasture Model 
             GenericOrgan Leaf = new GenericOrgan
             {
                 Name = "Leaf",
@@ -136,28 +136,12 @@ namespace UnitTests
                     }
             }
             
-            //Compare values in 2 columns
-               
-            bool AreEqual(double[] col1, double[] col2)
-            { 
-                
-                               
-                if (col1.Length != col2.Length) return false;
-
-                for (int i = 0; i < col1.Length; i++)
-                    
-                    if(col1[i] != col2[i])
-                        return false;
-                        
-       
-                return true;
-                
-            }
 
            //Assert biomasses calculated in AusFarm  and refactored Pasture model return same values.
-            Assert.That(AreEqual(LeafDMgms, LeafWt), Is.EqualTo(true));
-            Assert.That(AreEqual(StemWtGms, StemWt), Is.EqualTo(true));
-            Assert.That(AreEqual(RootWtGms, RootWt), Is.EqualTo(true));
+   
+            Assert.That (LeafDMgms, Is.EqualTo(LeafWt));
+            Assert.That(StemWtGms, Is.EqualTo(StemWt));
+            Assert.That(RootWtGms, Is.EqualTo(RootWt));
 
               
         }
