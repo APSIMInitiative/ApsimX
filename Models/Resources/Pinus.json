@@ -5845,7 +5845,7 @@
                 "",
                 "//[Leaf].SpecificLeafAreaFunction.SLAPotential.Expression=0.0053+[Pinus].Leaf.Wt*0.0000001",
                 "[Leaf].SpecificLeafAreaFunction.SLAPotential.Intercept.FixedValue = 0.0053",
-                "[Leaf].SpecificLeafAreaFunction.SLAPotential.Slope.FixedValue = 0.0000001",
+                "[Leaf].SpecificLeafAreaFunction.SLAPotential.Slope.FixedValue = -0.0000001",
                 "",
                 "",
                 "[Pinus].Stem.DBH.DBHEquation.Expression = -15+(3.748*[Pinus].IndividualTreeStemWt^0.21)",
