@@ -1,18 +1,17 @@
-﻿using APSIM.Shared.Utilities;
+﻿using APSIM.Core;
+using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Models.CLEM.Activities;
-using Models.CLEM.Resources;
 using Models.Core;
-using Models.Core.ApsimFile;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
-using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Models.Factorial
 {
@@ -26,11 +25,17 @@ namespace Models.Factorial
     [ValidParent(ParentType = typeof(Factor))]
     [ValidParent(ParentType = typeof(Permutation))]
     [Description("Generate factors as specified in an Excel spreadsheet")]
-    public class FactorsFromFile: Model
+    public class FactorsFromFile: Model, IStructureDependency
     {
-        [Link]
-        private readonly ISummary Summary = null;
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        public IStructure Structure { private get; set; }
+
+        //[Link]
+        //private ISummary Summary = null;
+
         private Dictionary<string, string> PropertiesDictionary = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+        private string createFactorsLog = "No details available";
 
         /// <summary>
         /// The name of the Excel spreadsheet containing all factors details. One sheet (Properties) contains the label and full APSIM Node path for any properties used. Each other spreadsheet if a factor using the sheet name with the first column (levels) containing the factor levels and each column after that representing the values to set for a property identified by the name of the column matching the property label in the Properties sheet. 
@@ -52,7 +57,7 @@ namespace Models.Factorial
                     throw new FileNotFoundException($"Factors spreadsheet must be supplied");
                 else
                 {
-                    Simulation simulation = FindAncestor<Simulation>();
+                    Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
                     if (simulation != null)
                         return PathUtilities.GetAbsolutePath(FileName, simulation.FileName);
                     else
@@ -61,18 +66,32 @@ namespace Models.Factorial
             }
         }
 
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("BeginRun")]
+        private void OnBeginRun(object sender, EventArgs e)
+        {
+            if (Enabled)
+                CreateFactorsFromFile();
+        }
+
         /// <summary>
         /// Method to read factors from an excel spreadsheet and populate parent model with factors and composite factor components.
         /// </summary>
         public void CreateFactorsFromFile()
         {
-            if (PropertiesDictionary.Count > 0)
-                return; // already processed
+            //if (PropertiesDictionary.Count > 0)
+            //    return; // already processed
 
             string absoluteFileName = FullFileName;
 
+            using StringWriter log = new StringWriter();
+
             if (Path.GetExtension(absoluteFileName).Equals(".xls", StringComparison.CurrentCultureIgnoreCase))
                 throw new Exception($"EXCEL file '{absoluteFileName}' must be in .xlsx format.");
+
+            log.WriteLine($"Experiment factors imported from {absoluteFileName}");
 
             // Read sheet names
             List<string> sheetNames = ExcelUtilities.GetWorkSheetNames(absoluteFileName);
@@ -80,7 +99,9 @@ namespace Models.Factorial
             // Ensure we have a Properties sheet
             string propsSheetName = sheetNames.FirstOrDefault(s => string.Equals(s, "Properties", StringComparison.InvariantCultureIgnoreCase));
             if (propsSheetName == null)
+            {
                 throw new Exception($"Excel file '{absoluteFileName}' must contain a 'Properties' worksheet where property labels and the associated APSIM Node path are provided");
+            }
 
             // Read Properties sheet (header row expected)
             DataTable propsTable = ExcelUtilities.ReadExcelFileData(absoluteFileName, propsSheetName, headerRow: true);
@@ -91,7 +112,7 @@ namespace Models.Factorial
                 throw new Exception($"Properties worksheet '{propsSheetName}' must contain at least two columns: label and path");
 
             // Build dictionary. Use first column as label, second as full path.
-            var dict = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+            PropertiesDictionary = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
             string labelCol = propsTable.Columns[0].ColumnName;
             string pathCol = propsTable.Columns[1].ColumnName;
 
@@ -103,18 +124,20 @@ namespace Models.Factorial
                 if (!string.IsNullOrEmpty(label) && !string.IsNullOrEmpty(path))
                 {
                     // If a duplicate label already exists, throw an error instead of silently overwriting.
-                    if (dict.ContainsKey(label))
+                    if (PropertiesDictionary.ContainsKey(label))
                     {
                         throw new Exception($"Duplicate property label '{label}' found in worksheet '{propsSheetName}' at row {rowIndex + 1}.");
                     }
 
-                    dict[label] = path;
+                    PropertiesDictionary[label] = path;
                 }
             }
 
-            PropertiesDictionary = dict;
+            log.WriteLine($"Property paths defined from Properties sheet: {PropertiesDictionary.Keys.Join(",")}");
+            log.WriteLine($"Factors created:");
 
             // Process every other sheet as a Factor
+            bool factorFound = false;
             foreach (string sheet in sheetNames.Where(s => !string.Equals(s, propsSheetName, StringComparison.InvariantCultureIgnoreCase)))
             {
                 DataTable table = ExcelUtilities.ReadExcelFileData(absoluteFileName, sheet, headerRow: true);
@@ -123,11 +146,18 @@ namespace Models.Factorial
                     continue; // skip empty sheets
                 }
 
-                // Create Factor with Name = sheet name
+                // Create Factor with Name = sheet name and replace if already exists in parent children
                 var factor = new Factor() { Name = sheet };
-                Structure.Add(factor, Parent);
+                if (Parent.Node.FindChildren<Factor>(name: sheet).Any())
+                {
+                    Parent.Node.RemoveChild(Parent.Node.FindChild<Factor>(name: sheet));
+                }
+                Parent.Node.AddChild(factor);
+
+                log.WriteLine($"\tFactor: {sheet}");
 
                 List<string> levels = new List<string>();
+                List<string> propertyColumns = new List<string>();
 
                 // Find "include" column (case-insensitive, trimmed)
                 DataColumn levelColumn = table.Columns
@@ -157,7 +187,7 @@ namespace Models.Factorial
                         Specifications = new List<string>()
                     };
                     // Ensure parenting
-                    composite.Parent = factor;
+                    //composite.Parent = factor;
 
                     if (levels.Contains(composite.Name))
                         throw new Exception($"Duplicate level name '{composite.Name}' found in sheet '{sheet}' of '{absoluteFileName}'. Level names must be unique within a factor.");
@@ -166,7 +196,7 @@ namespace Models.Factorial
 
                     // For each column (not include or level), map column header to property path via dictionary and create "path = value" entries for the compositeFactor.Specifications list
 
-                    List<string> propertyColumns = new List<string>();
+                    propertyColumns = new List<string>();
 
                     for (int c = 0; c < table.Columns.Count; c++)
                     {
@@ -180,7 +210,7 @@ namespace Models.Factorial
                         if (propertyColumns.Contains(colHeader))
                             throw new Exception($"Duplicate property column '{colHeader}' provided in sheet '{sheet}' of '{absoluteFileName}'. Properties must only be specified once per factor.");
                         else
-                            levels.Add(composite.Name);
+                            propertyColumns.Add(colHeader);
 
                         if (!PropertiesDictionary.TryGetValue(colHeader, out string propertyPath))
                         {
@@ -203,10 +233,38 @@ namespace Models.Factorial
                         throw new Exception($"No properties found for composite factor '{sheet}' level '{row[levelColName]?.ToString()?.Trim()}' in '{absoluteFileName}', sheet '{propsSheetName}'.");
 
                     // Add composite factor as child of factor
-                    Structure.Add(composite, factor);
+                    factor.Node.AddChild(composite);
+                }
+
+                if (levels.Count == 0)
+                {
+                    log.WriteLine($"\t\tNo factor levels defined!");
+                }
+                else
+                {
+                    factorFound = true;
+                    log.WriteLine($"\t\tFactor levels: {levels.Join(",")}");
+                    if (propertyColumns.Count == 0)
+                    {
+                        log.WriteLine($"\t\tNo CompositeFactor properties defined!");
+                    }
+                    else
+                    {
+                        log.WriteLine($"\t\tProperties set: {propertyColumns.Join(",")}");
+                    }
                 }
             }
+            if (factorFound == false)
+                throw new Exception($"No factors found in '{absoluteFileName}'");
+
+            createFactorsLog = log.ToString();
+            // not sure how to present this information to the user.
+            // summary hasn't been created and we don't want to write for each simulation in experiment.
+            // is there a way to ask if this is the first of a group of simulations?
+            //Summary.WriteMessage(this, log.ToString(), MessageType.Information);
         }
+
+
 
         // Helper local function to interpret include cell values
         static bool IsIncluded(object cell)
