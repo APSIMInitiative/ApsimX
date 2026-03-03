@@ -215,16 +215,18 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// Loads a metfile from the given filepath
+        /// Load a metfile from the given pass and create MetFile object
         /// </summary>
+        /// <param name="filepath">Filepath</param>
         public MetFile(string filepath)
         {
             Load(filepath);
         }
 
         /// <summary>
-        /// Loads a metfile from the given filepath
+        /// Loads a metfile from the given filepath into this Metfile object
         /// </summary>
+        /// <param name="filepath">Filepath</param>
         public void Load(string filepath)
         {
             if (filepath.ToLower().EndsWith(".met"))
@@ -239,9 +241,11 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// Save a metfile to the given filepath.
+        /// Save the content of the metfile to the given filepath.
         /// Optional format flag, defaults to .met text file.
         /// </summary>
+        /// <param name="filepath">Filepath</param>
+        /// <param name="format">MetFileFormat value</param>
         public void Save(string filepath, MetFileFormat format = MetFileFormat.Text)
         {
             Save(filepath, data, format);
@@ -252,7 +256,6 @@ namespace APSIM.Shared.Utilities
         /// constant was not found.
         /// </summary>
         /// <param name="name"></param>
-        /// <returns></returns>
         public string GetConstant(string name)
         {
             foreach(MetConstant constant in data.Contants)
@@ -262,18 +265,18 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// Returns the values for the given date
+        /// Returns the double values for the given date
         /// </summary>
         public double[] GetDay(DateTime date)
         {
-            foreach(MetRow row in data.Data)
+            foreach(MetRow row in data.Rows)
                 if (date == row.Date)
                     return row.Values.ToArray();
             throw new Exception($"Date {date.ToString("yyyy-MM-dd")} not found in MetFile");
         }
 
         /// <summary>
-        /// 
+        /// Returns the met file as a text memory stream.
         /// </summary>
         public Stream GetStream()
         {
@@ -282,8 +285,10 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// 
+        /// Given a list of column names, will remove all columns that aren't 
+        /// in the list.
         /// </summary>
+        /// <param name="columns">List of column names to keep</param>
         public void WhitelistColumns(string[] columns)
         {
             List<string> columnsToRemove = new List<string>();
@@ -294,8 +299,13 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// 
+        /// Allows for reducing the precision within the file by limiting how 
+        /// many digits values in the given columns are allowed to have.
+        /// If no column names are provided, the restriction is applied to all 
+        /// columns.
         /// </summary>
+        /// <param name="decimalPlaces">List of column names to keep</param>
+        /// <param name="columns">List of column names to keep</param>
         public void LimitDecimalPercision(int decimalPlaces, string[] columns = null)
         {
             foreach(MetColumn column in data.Columns)
@@ -310,20 +320,23 @@ namespace APSIM.Shared.Utilities
             }
         }
 
-        /// <summary>Comments within met file</summary>
+        /// <summary>List of comments within met file</summary>
         public string[] Comments
         {
             get
             {
                 List<string> comments = new List<string>();
                 foreach(MetConstant constant in data.Contants)
-                    if (string.IsNullOrEmpty(constant.Comment))
+                    if (!string.IsNullOrEmpty(constant.Comment))
                         comments.Add(constant.Comment);
+                foreach(MetRow row in data.Rows)
+                    if (!string.IsNullOrEmpty(row.Comment))
+                        comments.Add(row.Date.ToString("yyyy-MM-dd") + " " + row.Comment);
                 return comments.ToArray();
             }
         }
 
-        /// <summary>List of constants</summary>
+        /// <summary>List of constants within met file</summary>
         public string[] Contants
         {
             get
@@ -336,7 +349,7 @@ namespace APSIM.Shared.Utilities
             }
         }
 
-        /// <summary>Column header names</summary>
+        /// <summary>List of column header names</summary>
         public string[] Columns
         {
             get
@@ -360,22 +373,22 @@ namespace APSIM.Shared.Utilities
             }
         }
 
-        /// <summary></summary>
+        /// <summary>The number of days within the met file</summary>
         public int NumberOfDays
         {
             get
             {
-                return data.Data.Count;
+                return data.Rows.Count;
             }
         }
 
-        /// <summary></summary>
+        /// <summary>The starting date of the met file</summary>
         public DateTime StartDate
         {
             get
             {
                 if (NumberOfDays > 0)
-                    return data.Data[0].Date;
+                    return data.Rows[0].Date;
                 else
                     throw new Exception("Met file has no daily data, cannot get starting date");
             }
@@ -386,11 +399,12 @@ namespace APSIM.Shared.Utilities
         ////////////////////////////////////////////////////////////////////////
 
         /// <summary>
-        /// Load a
+        /// Save the given MetData into a file at the filepath given in the 
+        /// format provided. If no format is provided, text format will be used.
         /// </summary>
-        /// <param name="filepath"></param>
-        /// <param name="data"></param>
-        /// <param name="format"></param>
+        /// <param name="filepath">Where to save the file</param>
+        /// <param name="data">MetData object to save</param>
+        /// <param name="format">MetFileFormat to save in</param>
         private static void Save(string filepath, MetData data, MetFileFormat format = MetFileFormat.Text)
         {
             byte[] bytes = null;
@@ -412,6 +426,11 @@ namespace APSIM.Shared.Utilities
         /// Opens a binary file and converts it to a valid string 
         /// representation in a Stream object
         /// </summary>
+        /// <param name="filepath">Where to save the file</param>
+        /// <param name="format">MetFileFormat to save in</param>
+        /// <returns>
+        /// A MetData object containing the contents of the met file read in.
+        /// </returns>
         private static MetData Load(string filepath, MetFileFormat format = MetFileFormat.Text)
         {
             try
@@ -444,8 +463,16 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// 
+        /// Given a HexData object, reads which binary version it was saved 
+        /// with. This is stored as a string at the start of the file and 
+        /// after being read, the read position within the HexData object is 
+        /// reset back to the start.
         ///</summary>
+        /// <param name="data">HexData object to be read</param>
+        /// <returns>
+        /// Version number that was found.
+        /// </returns>
+        /// 
         private static int ReadBinaryVersion(HexData data)
         {
             //read version
@@ -461,11 +488,13 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// Converts a text metfile string into a MetData object
+        /// Given a string, reads the contents in as a metfile and creates a 
+        /// MetData object.
         /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <param name="input">Text to be read</param>
+        /// <returns>
+        /// A MetData object with the contents of the Text
+        /// </returns>
         private static MetData ReadMet(string input)
         {
             MetData metData = new MetData();
@@ -696,17 +725,17 @@ namespace APSIM.Shared.Utilities
                         throw new Exception($"Met file does not have persistent dates. Day {prevDay.ToString("yyyy-MM-dd")} was expected, but day {row.Date.ToString("yyyy-MM-dd")} was read.");
                 }
 
-                metData.Data.Add(row);
+                metData.Rows.Add(row);
             }
 
             return metData;
         }
 
         /// <summary>
-        /// Converts a MetData into a text metfile string
+        /// Writes a MetData object back to a text met file string
         /// </summary>
-        /// <param name="metData"></param>
-        /// <returns></returns>
+        /// <param name="metData">MetData to be converted to text</param>
+        /// <returns>String representation of the metfile</returns>
         private static string WriteMet(MetData metData)
         {
             StringBuilder output = new StringBuilder(2000000);
@@ -752,7 +781,7 @@ namespace APSIM.Shared.Utilities
 
             //add data rows
             MetColumn[] columns  = metData.Columns.ToArray();
-            foreach(MetRow row in metData.Data)
+            foreach(MetRow row in metData.Rows)
             {
                 int index = 0;
                 foreach(string data in row.Inputs)
@@ -773,10 +802,16 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// 
+        /// Binary metfile writer, version 2.
+        /// Stores everything a text metfile can, but in a much smaller size.
+        /// Improvement on the first binary version which lacked features for 
+        /// certain types of metfile.
         /// </summary>
-        /// <param name="metData"></param>
-        /// <returns></returns>
+        /// <param name="metData">MetData object to be written</param>
+        /// <returns>
+        /// A HexData object containing the contents of the met file in hex 
+        /// symbols.
+        /// </returns>
         private static HexData WriteBinaryV2(MetData metData)
         {
             StringBuilder output = new StringBuilder(2000000);
@@ -784,13 +819,13 @@ namespace APSIM.Shared.Utilities
             output.Append(StringToHex("met-bin-2"));
 
             //add start date
-            string start_date = metData.Data[0].Date.ToString("yyyy-MM-dd");
+            string start_date = metData.Rows[0].Date.ToString("yyyy-MM-dd");
             //remove date from data
             MetData datelessMetData = RemoveColumns(metData, new List<string>() {"date", "year", "day"});
 
             //check if we need to add a comment column to the data
             bool hasDataComments = false;
-            foreach(MetRow row in datelessMetData.Data)
+            foreach(MetRow row in datelessMetData.Rows)
                 if (!string.IsNullOrEmpty(row.Comment))
                     hasDataComments = true;
 
@@ -802,7 +837,7 @@ namespace APSIM.Shared.Utilities
                 commentColumn.Width = 0;
                 commentColumn.IsFirstColumn = false;
                 datelessMetData.Columns.Add(commentColumn);
-                foreach(MetRow row in datelessMetData.Data)
+                foreach(MetRow row in datelessMetData.Rows)
                 {
                     row.Values.Add(double.NaN);
                     row.Inputs.Add(row.Comment);
@@ -843,14 +878,14 @@ namespace APSIM.Shared.Utilities
 
             //-- Data --
             //Number of rows
-            output.Append(UIntToHex((uint)datelessMetData.Data.Count, 8));
+            output.Append(UIntToHex((uint)datelessMetData.Rows.Count, 8));
             for(int i = 0; i < columnsLength; i++)
             {
                 double previousValue = 0;
                 string previousString = "";
                 int decimalPlaces = datelessMetData.Columns[i].DecimalPlaces;
                 Type dataType =  datelessMetData.Columns[i].DataType;
-                foreach(MetRow row in datelessMetData.Data)
+                foreach(MetRow row in datelessMetData.Rows)
                 {
                     if (dataType == typeof(string))
                     {
@@ -888,8 +923,14 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// 
-        ///</summary>
+        /// Binary metfile reader, version 2.
+        /// Reads a version binary metfile and creates a MetData object with 
+        /// the contents.
+        /// </summary>
+        /// <param name="data">A HexData object with the contents of the file</param>
+        /// <returns>
+        /// A MetData object with the value read in.
+        /// </returns>
         private static MetData ReadBinaryV2(HexData data)
         {
             MetData metData = new MetData();
@@ -948,7 +989,7 @@ namespace APSIM.Shared.Utilities
                 row.Inputs.Add(text);
                 row.Values.Add(double.NaN);
                 date = date.AddDays(1);
-                metData.Data.Add(row);
+                metData.Rows.Add(row);
                 metData.Columns[0].UpdateWidth(text);
             }
 
@@ -961,7 +1002,7 @@ namespace APSIM.Shared.Utilities
                 string previousString = previousValue.ToString("F"+decimalPlaces);
                 if (dataType == typeof(string))
                     previousString = "";
-                foreach(MetRow row in metData.Data)
+                foreach(MetRow row in metData.Rows)
                 {
                     if (dataType == typeof(string))
                     {
@@ -995,7 +1036,7 @@ namespace APSIM.Shared.Utilities
             if (hasDataComments)
             {
                 int index = metData.Columns.Count-1;
-                foreach(MetRow row in metData.Data)
+                foreach(MetRow row in metData.Rows)
                 {
                     if (!string.IsNullOrEmpty(row.Inputs[index]))
                         row.Comment = row.Inputs[index];
@@ -1218,7 +1259,7 @@ namespace APSIM.Shared.Utilities
                     output.Columns.Add(column);
             }
             
-            foreach(MetRow row in metData.Data)
+            foreach(MetRow row in metData.Rows)
             {
                 MetRow newRow = new MetRow();
                 newRow.Comment = row.Comment;
@@ -1231,7 +1272,7 @@ namespace APSIM.Shared.Utilities
                         newRow.Values.Add(row.Values[i]);
                     }
                 }
-                output.Data.Add(newRow);
+                output.Rows.Add(newRow);
             }
 
             return output;
@@ -1533,7 +1574,7 @@ namespace APSIM.Shared.Utilities
             /// <summary>
             /// 
             /// </summary>
-            public List<MetRow> Data;
+            public List<MetRow> Rows;
 
             /// <summary>
             /// Basic Constructor
@@ -1542,7 +1583,7 @@ namespace APSIM.Shared.Utilities
             {
                 Contants = new List<MetConstant>();
                 Columns = new List<MetColumn>();
-                Data = new List<MetRow>();
+                Rows = new List<MetRow>();
             }
         }
 
@@ -1563,7 +1604,7 @@ namespace APSIM.Shared.Utilities
             List<MetConstant> constants = metData.Contants.ToList();
 
             //add start date to constants
-            constants.Add(new MetConstant("start_date", metData.Data[0].Date.ToString("yyyy-MM-dd")));
+            constants.Add(new MetConstant("start_date", metData.Rows[0].Date.ToString("yyyy-MM-dd")));
 
             //remove date from data
             MetData datelessMetData = RemoveColumns(metData, new List<string>() {"date", "year", "day"});
@@ -1597,8 +1638,8 @@ namespace APSIM.Shared.Utilities
                 output.Append(StringToHex(column.Unit));
 
             //data
-            output.Append(UIntToHex((uint)datelessMetData.Data.Count, 8));
-            foreach(MetRow row in datelessMetData.Data)
+            output.Append(UIntToHex((uint)datelessMetData.Rows.Count, 8));
+            foreach(MetRow row in datelessMetData.Rows)
                 foreach(double value in row.Values)
                     output.Append(EncodeNumber(value.ToString()));
 
@@ -1664,11 +1705,11 @@ namespace APSIM.Shared.Utilities
                 row.Inputs.Add(text);
                 row.Values.Add(double.NaN);
                 date = date.AddDays(1);
-                metData.Data.Add(row);
+                metData.Rows.Add(row);
                 metData.Columns[0].UpdateWidth(text);
             }
 
-            foreach(MetRow row in metData.Data)
+            foreach(MetRow row in metData.Rows)
             {
                 for (int i = 0; i < columnsLength; i++)
                 {
