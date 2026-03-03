@@ -4,50 +4,105 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using SQLitePCL;
 
 namespace APSIM.Shared.Utilities
 {
     /// <summary>
     /// Metfile
     /// ---------------
-    /// This is a c# class for writing and reading metfiles to text and to binary or compressed binary formats
+    /// This is a c# class for writing and reading metfiles.
     ///
     /// ---------------
     /// Text (.met)
     /// ---------------
-    /// This is the default met file standard
+    /// This is the default met file standard, however due to the age of this 
+    /// standard, and the resources that have been written to write met files, 
+    /// not all files follow the standard exactly. Therefore while we've taken 
+    /// care to make the reading and writing of met files as flexibile as we 
+    /// can based on the collection stored within apsim, there may be 
+    /// variations that this library cannot deal with.
+    /// 
+    /// Text met files follow the following structure:
+    /// - Starts with a header of [weather.met.weather], but this is optional 
+    ///   esspeically on older met files. [standard.met.weather] has also been 
+    ///   observed in some files. When writing a text metfile, this will be 
+    ///   added even if the original did not have it.
+    /// 
+    /// - This is followed by lines that define constants and other text 
+    ///   comments about the met file.
+    /// 
+    /// - Comments always start with a exclamation mark (!) and are followed by 
+    ///   any text. These can appear on any line and all content on the line 
+    ///   after the excamation mark is treated as a comment and not processed.
+    /// 
+    /// - Constants are a key-value pair of text with an equals (=) in between. 
+    ///   These often define constant values such as latitude and longitutde, 
+    ///   tav and amp values or other metadata about the metfile.
+    /// 
+    /// - When a line is found without an = or ! in it, and it contains the 
+    ///   text "rain", "maxt" and "mint", we determine that to be the line 
+    ///   containing the header text for each of our columns. The column names 
+    ///   are whitespace seperated (normally with spaces) and must equal the 
+    ///   number of columns found within the daily data.
+    /// 
+    /// - Under the column names, the next row are the units for each column,
+    ///   with one unit per column. These are often (but not always) defined 
+    ///   with the unit wrapped in brackets (), and if written out by this 
+    ///   library, brackets will be added to the units even if they did not 
+    ///   previously use them.
+    /// 
+    /// - Neither the Column names or units lines are allowed to contain a 
+    ///   comment.
+    /// 
+    /// - Every line after the units line is then treated as daily data, where 
+    ///   each whitespace seperated value is a value for a column. These values 
+    ///   can be either integer numbers, decimals or text values. A comment can 
+    ///   be placed at the end of the line of daily data using the ! notation.
+    /// 
+    /// - Blank lines and whitespace padding are common in metfiles to help 
+    ///   make them more readable, however this library will remove non-comment 
+    ///   padding when writing met files back, as it uses its own standard for 
+    ///   spacing out the text file.
     /// 
     /// ---------------
     /// Binary (.bin)
     /// Version: 2
     /// ---------------
-    /// In order to reduce file size, the following modifications are made to the data when writing:
+    /// In order to reduce file size, the following modifications are made to 
+    /// the data when writing:
     /// 
-    /// - A start_date is stored above the constants and each row of the data is assumed therefore
-    ///   to be the next day in sequeunce. When reading out, the date must be added back to the 
-    ///   data rows
+    /// - A start_date is stored above the constants and each row of the data 
+    ///   is assumed therefore to be the next day in sequeunce. When reading 
+    ///   out, the date must be added back to the data rows.
     /// 
-    /// - Numbers are stored as a list of symbol lookups instead of a smaller number format like 
-    ///   float16. This is to avoid any rounding or mathematical errors when doing this writing, 
-    ///   storing as symbols ensures the exact same number goes in and out.
+    /// - Numbers are stored as a list of symbol lookups instead of a smaller 
+    ///   number format like float16. This is to avoid any rounding or 
+    ///   mathematical errors when doing this writing, storing as symbols 
+    ///   ensures the exact same number goes in and out.
     /// 
-    /// - If a better version of this is developed in the future, a version string is included as
-    ///   the first bytes in the file so that versions can be handled in the future.
+    /// - If a better version of this is developed in the future, a version 
+    ///   string is included as the first bytes in the file so that versions 
+    ///   can be handled in the future.
     /// 
-    /// - Hexidecimals are used for handling memory here because the smallest unit we need is
-    ///   4-bits. This allows the script to be simplier than with binary and run faster.
+    /// - Hexidecimals are used for handling memory here because the smallest 
+    ///   unit we need is 4-bits. This allows the script to be simplier than 
+    ///   with binary and run faster.
     /// 
-    /// - Each day is recorded as the difference between that day and the last. So if the max 
-    ///   temperature is 25.6 on the first day and 23.5 on the 2nd day, a value of -21 is stored 
-    ///   reflecting a change of minus 2.1 degrees. The first day is the difference between the value 
-    ///   and 0
+    /// - Each day is recorded as the difference between that day and the last. 
+    ///   So if the max temperature is 25.6 on the first day and 23.5 on the 
+    ///   2nd day, a value of -21 is stored reflecting a change of minus 2.1 
+    ///   degrees. The first day is the difference between the value and 0
     /// 
-    /// - If the difference between the last day and the next is 0, then only a value of 0 is stored.
+    /// - If the difference between the last day and the next is 0, then only a 
+    ///   value of 0 is stored.
     /// 
-    /// - If a column contains text data, the entire column will be stored as text values instead of
-    ///   numbers. However the text value is still compared between rows and is only stored again if 
-    ///   it changes.
+    /// - If a column contains text data, the entire column will be stored as 
+    ///   text values instead of numbers. However the text value is still 
+    ///   compared between rows and is only stored again if it changes.
+    /// 
+    /// - If a daily row has a comment on the end, it will be stored in an 
+    ///   added column at the end of the row, and restored to a comment when 
+    ///   read back out.
     /// 
     /// The binary file is built to the follow schema:
     /// Data Types:
@@ -95,17 +150,25 @@ namespace APSIM.Shared.Utilities
     /// </summary>
     public class MetFile
     {
-        /// <summary>Symbol dictionary for converting from a 4-bit hex to data number character</summary>
+        /// <summary>
+        /// Symbol dictionary for converting from a 4-bit hex to data number 
+        /// character
+        /// </summary>
         private static string[] SYMBOLS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "-", "/", "nan", ",", ""];
 
-        /// <summary>Symbol dictionary for converting from a 4-bit hex to data number character</summary>
+        /// <summary>
+        /// Symbol dictionary for converting from a 4-bit hex to data number 
+        /// character</summary>
         private static Dictionary<char, char> SYMBOLS_DICT = new Dictionary<char, char>() { {'0', '0'}, {'1', '1'}, {'2', '2'}, {'3', '3'}, {'4', '4'}, {'5', '5'}, {'6', '6'}, {'7', '7'}, 
                                                                                             {'8', '8'}, {'9', '9'}, {'.', 'a'}, {'-', 'b'}, {'/', 'c'}, {'n', 'd'}, {',', 'e'} };
 
         /// <summary>
-        /// Minimum spacing for a column of data. Values that are less than this in a column will be padded with whitespace
+        /// Minimum spacing for a column of data. Values that are less than 
+        /// this in a column will be padded with whitespace
         /// </summary>
         private static int MIN_COLUMN_WIDTH = 8;
+
+        private static string DATA_COMMENT_COLUMN = "DATA_COMMENT";
         
         /// <summary>
         /// Supported Met File formats
@@ -113,15 +176,20 @@ namespace APSIM.Shared.Utilities
         public enum MetFileFormat { 
             /// <summary>
             /// Extension: .met
-            /// Human readable text based met file. Consists of constants, comments, column headers, units and a row for each day of data.
-            /// Whitespace may be modified if loading non-standard text metfiles and resaving.
+            /// Human readable text based met file. Consists of constants, 
+            /// comments, column headers, units and a row for each day of data.
+            /// Whitespace may be modified if loading non-standard text 
+            /// metfiles and resaving.
             /// </summary>
             Text = 0,
             /// <summary>
             /// Extension: .bin
-            /// A compressed binary representation of a metfile. Will not drop information during the conversion, however will combine
-            /// year, day columns into a date and reorder columns if in non-standard order.
-            /// Suuports constants, comments, headers, units and double or text data.
+            /// A compressed binary representation of a metfile. Will not drop 
+            /// information during the conversion, however will combine year, 
+            /// day columns into a date and reorder columns if in non-standard 
+            /// order.
+            /// Supports constants, comments, headers, units and double or text 
+            /// data.
             /// </summary>
             Binary = 1
         }
@@ -149,12 +217,15 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         public void Load(string filepath)
         {
-            if (filepath.EndsWith(".met"))
+            if (filepath.ToLower().EndsWith(".met"))
                 data = Load(filepath, MetFileFormat.Text);
-            else if (filepath.EndsWith(".bin"))
+            else if (filepath.ToLower().EndsWith(".bin"))
                 data = Load(filepath, MetFileFormat.Binary);
             else
-                throw new Exception($"File {filepath} has extension {filepath.Substring(filepath.LastIndexOf('.'))} which is not recognised. Must be a .met or .bin file.");
+            {
+                string extension = filepath.Substring(filepath.LastIndexOf('.'));
+                throw new Exception($"File {filepath} has extension {extension} which is not recognised. Must be a .met or .bin file.");
+            }
         }
 
         /// <summary>
@@ -167,7 +238,8 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// Returns the value of the given constant. Will return null if constant was not found.
+        /// Returns the value of the given constant. Will return null if 
+        /// constant was not found.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
@@ -299,9 +371,9 @@ namespace APSIM.Shared.Utilities
             }
         }
 
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////
         // Private Static Helper Functions
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////
 
         /// <summary>
         /// Load a
@@ -327,7 +399,8 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// Opens a binary file and converts it to a valid string representation in a Stream object
+        /// Opens a binary file and converts it to a valid string 
+        /// representation in a Stream object
         /// </summary>
         private static MetData Load(string filepath, MetFileFormat format = MetFileFormat.Text)
         {
@@ -398,6 +471,7 @@ namespace APSIM.Shared.Utilities
             string[] lines = input.Split('\n');
             bool headerRemoved = false;
             int step = 0;
+            List<string> headerLines = new List<string>();
             string columnNameLine = "";
             string columnUnitsLine = "";
             List<string> dataLines = new List<string>();
@@ -415,34 +489,15 @@ namespace APSIM.Shared.Utilities
                 {
                     if (step == 0) //reading constants and comments
                     {
-                        string comment = "";
-                        if (trimmed.Contains('!'))
+                        string trimmedLower = trimmed.ToLower();
+                        if (!trimmedLower.Contains('!') && !trimmedLower.Contains('=') && trimmedLower.Contains("maxt") && trimmedLower.Contains("mint") && trimmedLower.Contains("rain"))
                         {
-                            int position = trimmed.IndexOf('!');
-                            comment = trimmed.Substring(position);
-                            trimmed = trimmed.Substring(0, position);
+                            step = 1; // set this to one so the next line is read for units
+                            columnNameLine = trimmed;
                         }
-                        if (trimmed.Contains('=')) //we have a constant
+                        else
                         {
-                            string[] parts = trimmed.Split('=');
-                            metData.Contants.Add(new MetConstant(parts[0].Trim(), parts[1].Trim(), comment));
-                        }
-                        else if (!string.IsNullOrEmpty(comment))
-                        {
-                            metData.Contants.Add(new MetConstant(comment));
-                        }
-                        else // we might have the header row, so move to next step
-                        {
-                            string trimmedLower = trimmed.ToLower();
-                            if (trimmedLower.Contains("maxt") && trimmedLower.Contains("mint") && trimmedLower.Contains("rain"))
-                            {
-                                step = 1; // set this to one so the next line is read for units
-                                columnNameLine = trimmed;
-                            }
-                            else //we just have text on a line, treat as a comment
-                            {
-                                metData.Contants.Add(new MetConstant("! "+ trimmed));
-                            }
+                            headerLines.Add(trimmed);
                         }
                     }
                     else if (step == 1) //found header last line, reading units
@@ -454,6 +509,32 @@ namespace APSIM.Shared.Utilities
                     {
                         dataLines.Add(trimmed);
                     }
+                }
+            }
+
+            //read our header rows
+            foreach(string line in headerLines)
+            {
+                string trimmed = line.Trim();
+                string comment = "";
+                if (trimmed.Contains('!'))
+                {
+                    int position = trimmed.IndexOf('!');
+                    comment = trimmed.Substring(position);
+                    trimmed = trimmed.Substring(0, position);
+                }
+                if (trimmed.Contains('=')) //we have a constant
+                {
+                    string[] parts = trimmed.Split('=');
+                    metData.Contants.Add(new MetConstant(parts[0].Trim(), parts[1].Trim(), comment));
+                }
+                else if (!string.IsNullOrEmpty(comment))
+                {
+                    metData.Contants.Add(new MetConstant(comment));
+                }
+                else //we just have text on a line, treat as a comment
+                {
+                    metData.Contants.Add(new MetConstant("! "+ trimmed));
                 }
             }
             
@@ -489,12 +570,24 @@ namespace APSIM.Shared.Utilities
 
             //read our data rows
             MetColumn[] columns  = metData.Columns.ToArray();
+            DateTime prevDay = DateTime.MinValue;
+            bool firstRow = true;
             foreach(string line in dataLines)
             {
                 MetRow row = new MetRow();
+                string trimmed = line.Trim();
+
+                //check if row contains a comment
+                if (trimmed.Contains('!'))
+                {
+                    int position = trimmed.IndexOf('!');
+                    string comment = trimmed.Substring(position);
+                    trimmed = trimmed.Substring(0, position);
+                    row.Comment = comment;
+                }
 
                 //find the values for each column, there may be variable amounts of whitespace
-                string[] parts = line.Split(" ");
+                string[] parts = trimmed.Split(" ");
                 foreach(string part in parts)
                     if(part.Length > 0)
                         row.Inputs.Add(part);
@@ -517,10 +610,21 @@ namespace APSIM.Shared.Utilities
                     if (columnName == "date")
                     {
                         DateTime date;
-                        if (DateTime.TryParseExact(stringValue, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
-                            row.Date = date;
-                        else
-                            throw new Exception($"Cannot read met file. Row {line} has date of {stringValue} which must be in yyyy-MM-dd format");
+                        stringValue = stringValue.Replace("/", "-");
+                        stringValue = stringValue.Replace(",", "-");
+                        stringValue = stringValue.Replace(".", "-");
+                        bool success = DateTime.TryParseExact(stringValue, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out date);
+                        if(!success)
+                            success = DateTime.TryParseExact(stringValue, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out date);
+                        if(!success)
+                            success = DateTime.TryParseExact(stringValue, "d-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out date);
+                        if(!success)
+                            success = DateTime.TryParseExact(stringValue, "dd-M-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out date);
+                        if(!success)
+                            success = DateTime.TryParseExact(stringValue, "d-M-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out date);
+                        if (!success)
+                            throw new Exception($"Cannot read met file. Row {line} has date of {stringValue} which must be in yyyy-MM-dd or dd-MM-yyyy format");
+                        row.Date = date;
                     }
                     else if (columnName == "year")
                     {
@@ -553,6 +657,21 @@ namespace APSIM.Shared.Utilities
                     else
                         row.Values.Add(double.NaN); //in cases where we have columns with string, we just set the value to NaN
                 }
+
+                //Check if the date is exact one day after the previous row, and throw if it is not.
+                //met files are not allowed to have gaps in them, APSIM will throw if they do.
+                if (firstRow)
+                {
+                    firstRow = false;
+                    prevDay = row.Date;
+                }
+                else
+                {
+                    prevDay = prevDay.AddDays(1);
+                    if (prevDay != row.Date)
+                        throw new Exception($"Met file does not have persistent dates. Day {prevDay.ToString("yyyy-MM-dd")} was expected, but day {row.Date.ToString("yyyy-MM-dd")} was read.");
+                }
+
                 metData.Data.Add(row);
             }
 
@@ -619,6 +738,10 @@ namespace APSIM.Shared.Utilities
                     index += 1;
                 }
                 output.Remove(output.Length-1, 1);
+
+                if (!string.IsNullOrEmpty(row.Comment))
+                    output.Append(" " + row.Comment);
+
                 output.Append("\n");
             }
 
@@ -640,6 +763,27 @@ namespace APSIM.Shared.Utilities
             string start_date = metData.Data[0].Date.ToString("yyyy-MM-dd");
             //remove date from data
             MetData datelessMetData = RemoveColumns(metData, new List<string>() {"date", "year", "day"});
+
+            //check if we need to add a comment column to the data
+            bool hasDataComments = false;
+            foreach(MetRow row in datelessMetData.Data)
+                if (!string.IsNullOrEmpty(row.Comment))
+                    hasDataComments = true;
+
+            if (hasDataComments)
+            {
+                MetColumn commentColumn = new MetColumn(DATA_COMMENT_COLUMN, "");
+                commentColumn.DataType = typeof(string);
+                commentColumn.DecimalPlaces = 0;
+                commentColumn.Width = 0;
+                commentColumn.IsFirstColumn = false;
+                datelessMetData.Columns.Add(commentColumn);
+                foreach(MetRow row in datelessMetData.Data)
+                {
+                    row.Values.Add(double.NaN);
+                    row.Inputs.Add(row.Comment);
+                }
+            }
 
             output.Append(StringToHex(start_date));
             
@@ -681,7 +825,7 @@ namespace APSIM.Shared.Utilities
                 double previousValue = 0;
                 string previousString = "";
                 int decimalPlaces = datelessMetData.Columns[i].DecimalPlaces;
-                Type dataType =  metData.Columns[i].DataType;
+                Type dataType =  datelessMetData.Columns[i].DataType;
                 foreach(MetRow row in datelessMetData.Data)
                 {
                     if (dataType == typeof(string))
@@ -791,6 +935,8 @@ namespace APSIM.Shared.Utilities
                 int decimalPlaces = metData.Columns[i].DecimalPlaces;
                 double previousValue = 0;
                 string previousString = previousValue.ToString("F"+decimalPlaces);
+                if (dataType == typeof(string))
+                    previousString = "";
                 foreach(MetRow row in metData.Data)
                 {
                     if (dataType == typeof(string))
@@ -814,6 +960,25 @@ namespace APSIM.Shared.Utilities
                         metData.Columns[i].UpdateWidth(previousString);
                     }
                 }
+            }
+
+            //check if we have data comments and put them back as comments instead of a column
+            bool hasDataComments = false;
+            foreach(MetColumn column in metData.Columns)
+                if (column.Name == DATA_COMMENT_COLUMN)
+                    hasDataComments = true;
+
+            if (hasDataComments)
+            {
+                int index = metData.Columns.Count-1;
+                foreach(MetRow row in metData.Data)
+                {
+                    if (!string.IsNullOrEmpty(row.Inputs[index]))
+                        row.Comment = row.Inputs[index];
+                    row.Values.RemoveAt(index);
+                    row.Inputs.RemoveAt(index);
+                }
+                metData.Columns.RemoveAt(index);
             }
 
             return metData;
@@ -983,6 +1148,7 @@ namespace APSIM.Shared.Utilities
             foreach(MetRow row in metData.Data)
             {
                 MetRow newRow = new MetRow();
+                newRow.Comment = row.Comment;
                 newRow.Date = row.Date;
                 for (int i = 0; i < row.Values.Count; i++)
                 {
@@ -998,9 +1164,9 @@ namespace APSIM.Shared.Utilities
             return output;
         }
 
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////
         // Private Helper Classes
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////
 
         /// <summary>
         /// BinaryData stores the hex string that is read when reading the file, and the position through the string
@@ -1243,6 +1409,11 @@ namespace APSIM.Shared.Utilities
             public List<double> Values { get; set; }
 
             /// <summary>
+            ///
+            /// </summary>
+            public string Comment { get; set; }
+
+            /// <summary>
             /// Basic Constructor
             /// </summary>
             public MetRow()
@@ -1250,6 +1421,7 @@ namespace APSIM.Shared.Utilities
                 Inputs = new List<string>();
                 Date = DateTime.MinValue;
                 Values = new List<double>();
+                Comment = "";
             }
         }
 
@@ -1284,9 +1456,9 @@ namespace APSIM.Shared.Utilities
             }
         }
 
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////
         // Legacy Read/Write Functions for deprecated versions
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////
         /// <summary>
         /// 
         /// </summary>
