@@ -26,7 +26,7 @@ namespace Models.Factorial
             get
             {
                 List<Factor> f = new List<Factor>();
-                foreach (Factor factor in Structure.FindChildren<Factor>(recurse: true).Where(a => a.Node.FindParent<Permutation>() is not null))
+                foreach (Factor factor in Structure.FindChildren<Factor>(recurse: true).Where(a => a.Node.FindParent<Permutation>(recurse: true) is null))
                     f.Add(factor);
 
                 return f;
