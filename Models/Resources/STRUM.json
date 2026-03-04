@@ -2427,7 +2427,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[STRUM].Height.CanopyBaseHeight",
+                      "VariableName": "[STRUM].BaseHeight",
                       "Name": "CanopyBase",
                       "ResourceName": null,
                       "Children": [],
@@ -5914,16 +5914,6 @@
           "$type": "Models.Functions.Constant, Models",
           "FixedValue": 0.0,
           "Units": null,
-          "Name": "MaxPrunedHeight",
-          "ResourceName": null,
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Functions.Constant, Models",
-          "FixedValue": 0.0,
-          "Units": null,
           "Name": "MortalityRate",
           "ResourceName": null,
           "Children": [],
@@ -5931,61 +5921,26 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Functions.AddFunction, Models",
-          "Name": "Height",
+          "$type": "Models.Functions.SubtractFunction, Models",
+          "Name": "BaseHeight",
           "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Functions.MultiplyFunction, Models",
-              "Name": "CanopyBaseHeight",
+              "Name": "PrunedCanopyBaseHeight",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": "NaN",
                   "Units": null,
-                  "Name": "Maximum",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[STRUM].RelativeAnnualDimension",
-                  "Name": "Age pattern",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.MultiplyFunction, Models",
-              "Name": "PrunedCanopyDepth",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Functions.SubtractFunction, Models",
-                  "Name": "Maximum",
+                  "Name": "PrunedMatureCanopyBaseHeight",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[STRUM].MaxPrunedHeight",
-                      "Name": "MaxPrunedHeight",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[STRUM].Height.CanopyBaseHeight.Maximum",
-                      "Name": "MaxBaseHeight",
+                      "$type": "Models.Memo, Models",
+                      "Text": "\nSTRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent STRUMtree object\n",
+                      "Name": "Param value set at establishment",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -6014,19 +5969,29 @@
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[STRUM].RelativeSeasonalDimension",
-                  "Name": "Seasonal pattern",
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": "NaN",
+                  "Units": "mm",
+                  "Name": "BaseHeightSeasonalIncrement",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "\nSTRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent STRUMtree object\n",
+                      "Name": "Param value set at establishment",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 100.0,
-                  "Units": "mm",
-                  "Name": "Maximum",
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[STRUM].RelativeSeasonalDimension",
+                  "Name": "Seasonal pattern",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -6051,6 +6016,136 @@
         },
         {
           "$type": "Models.Functions.AddFunction, Models",
+          "Name": "Height",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[STRUM].BaseHeight.PrunedCanopyBaseHeight",
+              "Name": "PrunedCanopyBaseHeight",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.MultiplyFunction, Models",
+              "Name": "PrunedCanopyDepth",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.SubtractFunction, Models",
+                  "Name": "MatureDepth",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "MaturePrunedHeight",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "\nSTRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent STRUMtree object\n",
+                          "Name": "Param value set at establishment",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[STRUM].BaseHeight.PrunedCanopyBaseHeight.PrunedMatureCanopyBaseHeight",
+                      "Name": "PrunedBaseHeight",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[STRUM].RelativeAnnualDimension",
+                  "Name": "Age pattern",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.MultiplyFunction, Models",
+              "Name": "SeasonalDepthGrowth",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.AddFunction, Models",
+                  "Name": "Increment",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 100.0,
+                      "Units": "mm",
+                      "Name": "SeasonalHeightIncrement",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "\nSTRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent STRUMtree object\n",
+                          "Name": "Param value set at establishment",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[STRUM].BaseHeight.SeasonalGrowth.BaseHeightSeasonalIncrement",
+                      "Name": "SeasonalBaseIncrement",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[STRUM].RelativeSeasonalDimension",
+                  "Name": "Seasonal pattern",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.AddFunction, Models",
           "Name": "Width",
           "ResourceName": null,
           "Children": [
@@ -6060,19 +6155,29 @@
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[STRUM].RelativeAnnualDimension",
-                  "Name": "Age pattern",
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 500.0,
+                  "Units": "mm",
+                  "Name": "MaturePrunedWidth",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "\nSTRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent STRUMtree object\n",
+                      "Name": "Param value set at establishment",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 500.0,
-                  "Units": "mm",
-                  "Name": "Maximum",
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[STRUM].RelativeAnnualDimension",
+                  "Name": "Age pattern",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -6088,19 +6193,29 @@
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[STRUM].RelativeSeasonalDimension",
-                  "Name": "Seasonal pattern",
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 500.0,
+                  "Units": "mm",
+                  "Name": "SeasonalWidthIncrement",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "\nSTRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent STRUMtree object\n",
+                      "Name": "Param value set at establishment",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 500.0,
-                  "Units": "mm",
-                  "Name": "Maximum",
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[STRUM].RelativeSeasonalDimension",
+                  "Name": "Seasonal pattern",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -6122,11 +6237,11 @@
             {
               "$type": "Models.Functions.XYPairs, Models",
               "X": [
-                0.0,
+                1.0,
                 6.0
               ],
               "Y": [
-                0.3,
+                0.25,
                 1.0
               ],
               "Name": "XYPairs",
