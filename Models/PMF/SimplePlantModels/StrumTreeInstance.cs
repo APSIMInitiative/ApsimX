@@ -35,6 +35,7 @@ namespace Models.PMF.SimplePlantModels
         private double _RowSpacing = 6;
         private double _InterRowSpacing = 1.0;
         private double _AlleyZoneWidthFrac = 0.5;
+        private string _YearToPlantTrees = "";
         private int _AgeAtSimulationStart = 1;
         private int _YearsToMaxDimension = 7;
         private double _WoodBulkDensity = 650;
@@ -72,6 +73,9 @@ namespace Models.PMF.SimplePlantModels
         private int _DAFEndLinearGrowth = 150;
         private int _DAFMaxSize = 180;
         private double _NFixationFrac = 0;
+        private string _WinterPruneDate = "";
+        private string _PickingDate = "";
+        private double _FRemoveSummerPrune = 0;
 
         private string WinterSolsticeDate
         {
@@ -84,6 +88,8 @@ namespace Models.PMF.SimplePlantModels
 
         private double woodMassAtMaxDimension = 0;
         private double pruningFraction = 0;
+        private DateTime EstablishDate;
+
 
         /// <summary>Is the tree decidious</summary>
         public bool Decidious
@@ -165,7 +171,7 @@ namespace Models.PMF.SimplePlantModels
             {
                 if (AlleyZoneWidth > RowSpacing)
                     throw new Exception("Alley Zone Width can not exceed Row spacing");
-                return RowSpacing * (1-AlleyZoneWidthFrac);
+                return RowSpacing * (1 - AlleyZoneWidthFrac);
             }
         }
 
@@ -187,8 +193,17 @@ namespace Models.PMF.SimplePlantModels
         {
             get
             {
-                return MatureWidth/1000 * InterRowSpacing;
+                return MatureWidth / 1000 * InterRowSpacing;
             }
+        }
+
+        /// <summary>Tree Age At Start of Simulation (years)</summary>
+        [Description("Year (AD) to plant trees.  STRUM will establish on the solstice of this year with trees at 1 year of age.  If blank establishes on first winter solstice ")]
+        [Units("years")]
+        public string YearToPlantTrees
+        {
+            get { return _YearToPlantTrees; }
+            set { _YearToPlantTrees = value; }
         }
 
         /// <summary>Date for Bud Break</summary>
@@ -302,6 +317,37 @@ namespace Models.PMF.SimplePlantModels
         {
             get { return _MaxPrunedWidth; }
             set { _MaxPrunedWidth = constrain(value, 10, 100000); }
+        }
+
+        /// <summary>Winter pruning date</summary>
+        [Separator("Pruning.  Proportion of biomass removed from leaf and wood determined from dimensions above")]
+        [Description("Winter pruning date (between EndLeafFallDate and BudBreakDate.  If blank uses EndLeafFallDate")]
+        public string WinterPruneDate
+        {
+            get { return _WinterPruneDate; }
+            set { _WinterPruneDate = constrainDate(value, EndLeafFallDate, BudBreakDate); }
+        }
+
+        /// <summary>Fruit picking date</summary>
+        [Description("Fruit picking date (between DateMaxBloom and BudBreakDate.  If blank uses MaxFruitSizeDate)")]
+        public string PickingDate
+        {
+            get { return _PickingDate; }
+            set { _PickingDate = constrainDate(value, DateMaxBloom, BudBreakDate); }
+        }
+
+        /// <summary>Dates for summer pruning</summary>
+        [Description("Dates for summer pruning (coma seperated, dd-mmm for annual events or dd-mmm-yyyy for specific dates)")]
+        public string[] SummerPruneDates { get; set; }
+
+        /// <summary>Fraction of leaf and wood removed with each summer prune</summary>
+        [Description("Fraction of leaf and wood removed with each summer prune (0-1)")]
+        [Bounds(Lower = 0, Upper = 1)]
+        [Units("0-1")]
+        public double FRemoveSummerPrune
+        {
+            get { return _FRemoveSummerPrune; }
+            set { _FRemoveSummerPrune = constrain(value, 0, 1); }
         }
 
         /// <summary>Dry bulk density of wood wood (400-1600 kg/m^3)</summary>
@@ -953,26 +999,72 @@ namespace Models.PMF.SimplePlantModels
         [EventSubscribe("StartOfSimulation")]
         private void OnStartSimulation(object sender, EventArgs e)
         {
-            
-            if(!DateUtilities.DatesAreEqual(WinterSolsticeDate, clock.Today))
+            string estabYear = clock.Today.Year.ToString();
+            if (!String.IsNullOrEmpty(YearToPlantTrees))
             {
-                throw new Exception("Simulations containing STRUM must start on the date of winter solstice (21 Jun or Dec) to ensure things initialise properly");
+                estabYear = YearToPlantTrees;
             }
+            else
+            {
+                if (DateUtilities.CompareDates(WinterSolsticeDate, clock.Today) < 0)
+                {
+                    throw new Exception("STRUM simulations with no specified planting year must start on or prior to the winter solstice ("+WinterSolsticeDate+")");
+                }
+            }
+            EstablishDate = DateTime.Parse(WinterSolsticeDate + "-" + estabYear);
+            
+            if(EstablishDate>clock.Today)
+            {
+                throw new Exception("EstabilishDate is prior to the start of the simulaiton.  Simulation should start on or prior to the winter solstice date ("+WinterSolsticeDate+")." + 
+                                    "If year of planting is specified check the simulation starts prior to this");
+            }
+            
             SetUpZones();
-            Establish();
+           
         }
 
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
-            if(DateUtilities.DatesAreEqual(EndLeafFallDate,clock.Today))
+            //Establish orchard trees
+            if (clock.Today == EstablishDate)
+            {
+                    Establish();
+            }
+
+            //Winter pruning
+            string winterPruneDate = EndLeafFallDate;
+            if (!String.IsNullOrEmpty(WinterPruneDate))
+            {
+                winterPruneDate = WinterPruneDate;
+            }
+            if (DateUtilities.DatesAreEqual(winterPruneDate, clock.Today))
             {
                 Prune(pruningFraction);
             }
-            DateTime pickingDate = DateTime.Parse(DateMaxBloom + "-" + clock.Today.Year.ToString()).AddDays(DAFMaxSize);
-            if (DateUtilities.DatesAreEqual(pickingDate.ToString("dd-MMM"), clock.Today))
+
+            //Fruit Picking
+            string pickingDate = DateTime.Parse(DateMaxBloom + "-" + clock.Today.Year.ToString()).AddDays(DAFMaxSize).ToString("dd-MMM");
+            if (!String.IsNullOrEmpty(PickingDate))
+            {
+                pickingDate = PickingDate;
+            }
+            if (DateUtilities.DatesAreEqual(pickingDate, clock.Today))
             {
                 Pick();
+            }
+
+            //Summer pruning
+            if ((SummerPruneDates != null) && (!String.IsNullOrEmpty(SummerPruneDates[0])))
+            {
+                foreach (string date in SummerPruneDates)
+                {
+                    DateTime pruneDate = DateUtilities.GetDate(date, clock.Today.Year);
+                    if (clock.Today == pruneDate)
+                    {
+                        Prune(FRemoveSummerPrune);
+                    }
+                }
             }
         }
 
@@ -986,6 +1078,28 @@ namespace Models.PMF.SimplePlantModels
             { }//Can we put something here to clear the status window so the error message goes away when a legit value is entered
 
             return MathUtilities.Bound(value, min, max);
+        }
+
+        private string constrainDate(string date, string earliest, string latest)
+        {
+            if (!String.IsNullOrEmpty(date))
+            {
+                DateTime earliestDT = DateTime.Parse(earliest + "-2000");
+                DateTime latestDT = DateTime.Parse(latest + "-2000");
+                if(earliestDT > latestDT)
+                {
+                    earliestDT = DateTime.Parse(earliest + "-2001"); //If early date happens the year before need to move ahead to the next year
+                }
+                if (DateUtilities.CompareDates(date, earliestDT) > 0)
+                {
+                    return earliestDT.ToString("dd-MMM");
+                }
+                if (DateUtilities.CompareDates(date, latestDT) < 0)
+                {
+                    return latestDT.ToString("dd-MMM");
+                }
+            }
+            return date;
         }
 
         /// <summary>
@@ -1019,6 +1133,5 @@ namespace Models.PMF.SimplePlantModels
                                                         liveToResidue: 0,
                                                         deadToResidue: 1);
         }
-
     }
 }
