@@ -7486,6 +7486,32 @@
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 215",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0 ,0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 640",
+                    "[Phenology].Maturing.Target.FixedValue = 50",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 50",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 2.1",
+                    "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y = 0.1, 1, 1, 1,0",
+                    "[Leaf].CohortParameters.SenescenceDuration.XYPairs.Y = 200, 300, 1100",
+                    "[Leaf].CohortParameters.DMRetranslocationFactor.FixedValue = 0.025",
+                    "[Maize].Grain.MaximumGrainsPerCob.FixedValue = 650",
+                    "[Maize].Grain.MaximumPotentialGrainSize.FixedValue = 0.30",
+                    "[Maize].Root.SpecificRootLength.FixedValue = 135",
+                    "[Maize].Root.RootFrontVelocity.PotentialRootFrontVelocity.PreFlowering.RootFrontVelocity.FixedValue = 25",
+                    "[Grain].MaximumNConc.InitialPhase.InitialNconc.FixedValue = 0.025"
+                  ],
+                  "Name": "DeKalb_62_97VT3_Lizaso",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
