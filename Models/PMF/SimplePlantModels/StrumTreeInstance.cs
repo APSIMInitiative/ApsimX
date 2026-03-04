@@ -37,12 +37,12 @@ namespace Models.PMF.SimplePlantModels
         private double _AlleyZoneWidthFrac = 0.5;
         private int _AgeAtSimulationStart = 1;
         private int _YearsToMaxDimension = 7;
-        private double _TrunkBulkDensity = 650;
+        private double _WoodBulkDensity = 650;
         private double _DBHatMaturity = 20;
         private double _MaxRD = 3000;
         private double _Proot = 0.2;
         private double _Pleaf = 0.5;
-        private double _Ptrunk = 0.3;
+        private double _Pwood = 0.3;
         private double _CanopyBaseHeight = 1000;
         private double _PrunedCanopyBaseHeight = 1000;
         private double _MaxPrunedHeight = 3000;
@@ -51,7 +51,7 @@ namespace Models.PMF.SimplePlantModels
         private double _MaxWidth = 3000;
         private double _RootNConc = 0.01;
         private double _LeafNConc = 0.03;
-        private double _TrunkNConc = 0.005;
+        private double _WoodNConc = 0.005;
         private double _FruitNConc = 0.01;
         private double _ExtinctCoeff = 0.7;
         private double _MaxCover = 0.98;
@@ -82,7 +82,7 @@ namespace Models.PMF.SimplePlantModels
             }
         }
 
-        private double trunkMassAtMaxDimension = 0;
+        private double woodMassAtMaxDimension = 0;
         private double pruningFraction = 0;
 
         /// <summary>Is the tree decidious</summary>
@@ -304,15 +304,15 @@ namespace Models.PMF.SimplePlantModels
             set { _MaxPrunedWidth = constrain(value, 10, 100000); }
         }
 
-        /// <summary>Dry bulk density of trunk wood (400-1600 kg/m^3)</summary>
+        /// <summary>Dry bulk density of wood wood (400-1600 kg/m^3)</summary>
         [Separator("Tree Biomass parameters")]
-        [Description("Dry bulk density of trunk wood (400-1600 kg/m^3)")]
+        [Description("Dry bulk density of wood wood (400-1600 kg/m^3)")]
         [Units("kg/m^3")]
         [Bounds(Lower = 400, Upper = 1600)]
-        public double TrunkBulkDensity
+        public double WoodBulkDensity
         {
-            get { return _TrunkBulkDensity; }
-            set { _TrunkBulkDensity = constrain(value, 400, 1600); }
+            get { return _WoodBulkDensity; }
+            set { _WoodBulkDensity = constrain(value, 400, 1600); }
         }
 
         /// <summary>Root Biomass proportion (0-1)</summary>
@@ -335,14 +335,14 @@ namespace Models.PMF.SimplePlantModels
             set { _Pleaf = constrain(value, 0, 0.99); }
         }
 
-        /// <summary>Trunk Biomass proportion (0-1)</summary>
-        [Description("Trunk Biomass proportion (0-1)")]
+        /// <summary>Wood Biomass proportion (0-1)</summary>
+        [Description("Wood Biomass proportion (0-1)")]
         [Bounds(Lower = 0, Upper = 1.0)]
         [Units("0-1")]
-        public double Ptrunk
+        public double Pwood
         {
-            get { return _Ptrunk; }
-            set { _Ptrunk = constrain(value, 0, 0.99); }
+            get { return _Pwood; }
+            set { _Pwood = constrain(value, 0, 0.99); }
         }
 
 
@@ -367,14 +367,14 @@ namespace Models.PMF.SimplePlantModels
             set { _LeafNConc = constrain(value, 0.001, 0.1); }
         }
 
-        /// <summary>Trunk and branch Nitrogen concentration (g/g)</summary>
-        [Description("Trunk and branch Nitrogen concentration (g/g)")]
+        /// <summary>Wood and branch Nitrogen concentration (g/g)</summary>
+        [Description("Wood and branch Nitrogen concentration (g/g)")]
         [Bounds(Lower = 0.001, Upper = 0.1)]
         [Units("g/g")]
-        public double TrunkNConc
+        public double WoodNConc
         {
-            get { return _TrunkNConc; }
-            set { _TrunkNConc = constrain(value, 0.001, 0.1); }
+            get { return _WoodNConc; }
+            set { _WoodNConc = constrain(value, 0.001, 0.1); }
         }
 
         /// <summary>Fruit Nitrogen concentration at maturity (g/g)</summary>
@@ -655,7 +655,7 @@ namespace Models.PMF.SimplePlantModels
             {"MaxRootDepth","[STRUM].Root.Network.MaximumRootDepth.FixedValue = "},
             {"Proot","[STRUM].Root.TotalCarbonDemand.TotalDMDemand.PartitionFraction.FixedValue = " },
             {"Pleaf","[STRUM].Leaf.TotalCarbonDemand.TotalDMDemand.PartitionFraction.FixedValue = " },
-            {"Ptrunk","[STRUM].Trunk.TotalCarbonDemand.TotalDMDemand.Available.PartitionFraction.FixedValue = " },
+            {"Pwood","[STRUM].Wood.TotalCarbonDemand.TotalDMDemand.Available.PartitionFraction.FixedValue = " },
             {"MaturePrunedCanopyBaseHeight","[STRUM].BaseHeight.PrunedCanopyBaseHeight.PrunedMatureCanopyBaseHeight.FixedValue = " },
             {"BaseHeightSeasonalIncrement","[STRUM].BaseHeight.SeasonalGrowth.BaseHeightSeasonalIncrement.FixedValue = " },
             {"MaturePrunedHeight","[STRUM].Height.PrunedCanopyDepth.MatureDepth.MaturePrunedHeight.FixedValue = " },
@@ -665,7 +665,7 @@ namespace Models.PMF.SimplePlantModels
             {"ProductNConc","[STRUM].Fruit.Nitrogen.ConcFunctions.Maximum.FixedValue = "},
             {"ResidueNConc","[STRUM].Leaf.Nitrogen.ConcFunctions.Maximum.FixedValue = "},
             {"RootNConc","[STRUM].Root.Nitrogen.ConcFunctions.Maximum.FixedValue = "},
-            {"WoodNConc","[STRUM].Trunk.Nitrogen.ConcFunctions.Maximum.FixedValue = "},
+            {"WoodNConc","[STRUM].Wood.Nitrogen.ConcFunctions.Maximum.FixedValue = "},
             {"ExtinctCoeff","[STRUM].Leaf.Canopy.GreenExtinctionCoefficient.UnstressedCoeff.FixedValue = "},
             {"BaseLAI","[STRUM].Leaf.Canopy.GreenAreaIndex.Winter.BaseArea.FixedValue = " },
             {"AnnualDeltaLAI","[STRUM].Leaf.Canopy.GreenAreaIndex.SeasonalGrowth.AnnualDelta.FixedValue = " },
@@ -682,13 +682,13 @@ namespace Models.PMF.SimplePlantModels
             {"FRGRUOptT", "[STRUM].Leaf.Canopy.FRGRer.FT.XYPairs.X[3] = " },
             {"FRGRMaxT", "[STRUM].Leaf.Canopy.FRGRer.FT.XYPairs.X[4] = " },
             {"FRGRMaxTY", "[STRUM].Leaf.Canopy.FRGRer.FT.XYPairs.Y[4] = " },
-            {"InitialTrunkWt","[STRUM].Trunk.InitialWt.FixedValue = "},
+            {"InitialWoodWt","[STRUM].Wood.InitialWt.FixedValue = "},
             {"InitialRootWt", "[STRUM].Root.InitialWt.FixedValue = " },
             {"InitialFruitWt","[STRUM].Fruit.InitialWt.FixedValue = "},
             {"InitialLeafWt", "[STRUM].Leaf.InitialWt.FixedValue = " },
             //{"YearsToEstab","[STRUM].RelativeAnnualDimension.XYPairs.X[2] = " },
             {"YearsToMaturity","[STRUM].RelativeAnnualDimension.XYPairs.X[2] = " },
-            {"TrunkWtAtMaturity","[STRUM].Trunk.MatureWt.FixedValue = " },
+            {"WoodWtAtMaturity","[STRUM].Wood.MatureWt.FixedValue = " },
             {"YearsToMaxRD","[STRUM].Root.Network.RootFrontVelocity.RootGrowthDuration.YearsToMaxDepth.FixedValue = " },
             {"Number","[STRUM].Fruit.Number.RetainedPostThinning.FixedValue = " },
             {"FruitDensity","[STRUM].Fruit.Density.FixedValue = " },
@@ -791,7 +791,7 @@ namespace Models.PMF.SimplePlantModels
 
         Dictionary<string, string> treeParams = new Dictionary<string, string>(blankParams);
 
-            trunkMassAtMaxDimension = StrumBiomass.EstimateMatureTrunkMassKg(
+            woodMassAtMaxDimension = StrumBiomass.EstimateMatureWoodMassKg(
                                                                                     crownShape: CrownShape,
                                                                                     heightBottomPrePrune_m: MatureCanopyBaseHeight/1000,  // ground → crown bottom, before prune
                                                                                     heightTopPrePrune_m: MatureHeight / 1000,     // crown top (mature height) before prune
@@ -800,7 +800,7 @@ namespace Models.PMF.SimplePlantModels
                                                                                     widthPostPrune_m: MaturePrunedWidth / 1000,        // canopy width after prune
                                                                                     inRowSpacing_m: InterRowSpacing,          // per-tree length along row (spacing within row)
                                                                                     rowSpacing_m: RowSpacing,               // optional: distance between rows
-                                                                                    woodDensity_kg_m3: TrunkBulkDensity,       // oven-dry density [kg m^-3]
+                                                                                    woodDensity_kg_m3: WoodBulkDensity,       // oven-dry density [kg m^-3]
                                                                                     dbhAtMaturity_cm: DBHatMaturity            // diameter of stem at brest height when orchard tree is mature (cm)
                                                                                    );
 
@@ -829,7 +829,7 @@ namespace Models.PMF.SimplePlantModels
             treeParams["MaxRootDepth"] += MaxRD.ToString();
             treeParams["Proot"] += Proot.ToString();
             treeParams["Pleaf"] += Pleaf.ToString();
-            treeParams["Ptrunk"] += Ptrunk.ToString();
+            treeParams["Pwood"] += Pwood.ToString();
             treeParams["MaturePrunedCanopyBaseHeight"] += MaturePrunedCanopyBaseHeight.ToString();
             treeParams["BaseHeightSeasonalIncrement"] += (MaturePrunedCanopyBaseHeight - MatureCanopyBaseHeight).ToString();
             treeParams["MaturePrunedHeight"] += MaturePrunedHeight.ToString();
@@ -839,7 +839,7 @@ namespace Models.PMF.SimplePlantModels
             treeParams["ProductNConc"] += FruitNConc.ToString();
             treeParams["ResidueNConc"] += LeafNConc.ToString();
             treeParams["RootNConc"] += RootNConc.ToString();
-            treeParams["WoodNConc"] += TrunkNConc.ToString();
+            treeParams["WoodNConc"] += WoodNConc.ToString();
             treeParams["ExtinctCoeff"] += ExtinctCoeff.ToString();
             treeParams["BaseLAI"] += ((Math.Log(1 - BaseCover) / (ExtinctCoeff * -1))).ToString();
             treeParams["AnnualDeltaLAI"] += ((Math.Log(1 - (MaxCover)) / (ExtinctCoeff * -1)) - (Math.Log(1 - BaseCover) / (ExtinctCoeff * -1))).ToString();
@@ -857,7 +857,7 @@ namespace Models.PMF.SimplePlantModels
             treeParams["SurfaceKL"] += SurfaceKL.ToString();
             //treeParams["YearsToEstab"] += (Math.Floor(YearsToMaxDimension * 0.45)).ToString();
             treeParams["YearsToMaturity"] += YearsToMaxDimension.ToString();
-            treeParams["TrunkWtAtMaturity"] += (trunkMassAtMaxDimension * 1000).ToString();
+            treeParams["WoodWtAtMaturity"] += (woodMassAtMaxDimension * 1000).ToString();
             treeParams["YearsToMaxRD"] += YearsToMaxDimension.ToString();
             treeParams["Number"] += (Number*TreeCanopyArea).ToString();
             treeParams["FruitDensity"] += FruitDensity.ToString();
@@ -885,8 +885,8 @@ namespace Models.PMF.SimplePlantModels
 
             if (AgeAtSimulationStart <= 0)
                 throw new Exception("STRUM needs to have a 'Tree Age at start of Simulation' > 1 years");
-            if (trunkMassAtMaxDimension <= 0)
-                throw new Exception("STRUM needs to have a 'Trunk Mass at maximum dimension > 0");
+            if (woodMassAtMaxDimension <= 0)
+                throw new Exception("STRUM needs to have a 'Wood Mass at maximum dimension > 0");
             
             
             pruningFraction = StrumBiomass.StrumPruningFraction(crownShape: CrownShape,
@@ -899,15 +899,15 @@ namespace Models.PMF.SimplePlantModels
                                                                 interRowSpacing_m: InterRowSpacing,          // per-tree length along row (spacing within row)
                                                                 rowSpacing_m: RowSpacing,               // optional: distance between rows
                                                                 matureDbh_cm: DBHatMaturity,
-                                                                matureTrunkMass: trunkMassAtMaxDimension
+                                                                matureWoodMass: woodMassAtMaxDimension
                                                                 );
             
             double relativeInitialSize = Math.Min(1,(double)AgeAtSimulationStart / (double)YearsToMaxDimension);
-            double initialTrunkWt = relativeInitialSize* trunkMassAtMaxDimension *1000 * (1-pruningFraction);
-            treeParams["InitialTrunkWt"] += initialTrunkWt.ToString();
-            treeParams["InitialRootWt"] += (initialTrunkWt * Proot * 0.5).ToString();
+            double initialWoodWt = relativeInitialSize* woodMassAtMaxDimension *1000 * (1-pruningFraction);
+            treeParams["InitialWoodWt"] += initialWoodWt.ToString();
+            treeParams["InitialRootWt"] += (initialWoodWt * Proot * 0.5).ToString();
             treeParams["InitialFruitWt"] += (0).ToString();
-            treeParams["InitialLeafWt"] += ((initialTrunkWt * Pleaf) * (Decidious ? 0 : 1 )).ToString();
+            treeParams["InitialLeafWt"] += ((initialWoodWt * Pleaf) * (Decidious ? 0 : 1 )).ToString();
 
             string[] commands = new string[treeParams.Count];
             treeParams.Values.CopyTo(commands, 0);
@@ -995,7 +995,7 @@ namespace Models.PMF.SimplePlantModels
         {
             Pruning?.Invoke(this, new EventArgs());
 
-            IOrgan organ = Structure.FindChild<IOrgan>("Trunk", relativeTo: (INodeModel)strum, recurse: true);
+            IOrgan organ = Structure.FindChild<IOrgan>("Wood", relativeTo: (INodeModel)strum, recurse: true);
             (organ as IHasDamageableBiomass).RemoveBiomass(liveToRemove: 0,
                                                         deadToRemove: 0,
                                                         liveToResidue: fracLiveToResidue,

@@ -11,11 +11,11 @@ using static System.Net.WebRequestMethods;
 namespace Models.PMF.SimplePlantModels
 {
     /// <summary>
-    /// Utility functions for estimating mature trunk mass (total woody AGB) and pruning fraction
+    /// Utility functions for estimating mature wood mass (total woody AGB) and pruning fraction
     /// from canopy geometry, and wood density.
     ///
     /// Definitions and Rationale:
-    /// - "Trunk" in STRUM = total above-ground WOODY biomass (dry): stem + bark + branches,
+    /// - "Wood" in STRUM = total above-ground WOODY biomass (dry): stem + bark + branches,
     ///   i.e., AGB without leaves and fruits (woody AGB). This is standard in biomass literature. 
     /// - Mass is computed via V_ref * density with architectural form-factors:
     ///     V_ref = (π/4) * DBH^2 * H_pre,   M_stem_pre = f_stem * V_ref * ρ,   M_branch_pre = f_branch_max * V_ref * ρ
@@ -105,7 +105,7 @@ namespace Models.PMF.SimplePlantModels
         // ----------------------------
 
         /// <summary>
-        /// Estimate the MATURE trunk mass (kg per tree, oven-dry) BEFORE pruning, from wood density and
+        /// Estimate the MATURE wood mass (kg per tree, oven-dry) BEFORE pruning, from wood density and
         /// geometry. 
         ///
         /// Units:
@@ -123,7 +123,7 @@ namespace Models.PMF.SimplePlantModels
         ///   Form-factors are inferred from slenderness (H/DBH) and crown fill (pre-prune volume vs spacing-limited reference).
         ///   This is consistent with FAO/CIRAD guidance and practice in i-Tree/national biomass systems.  // FAO and i-Tree
         /// </summary>
-        public static double EstimateMatureTrunkMassKg(
+        public static double EstimateMatureWoodMassKg(
                                                     TreeShape crownShape,
                                                     double heightBottomPrePrune_m,  // ground → crown bottom, before prune
                                                     double heightTopPrePrune_m,     // crown top (mature height) before prune
@@ -178,7 +178,7 @@ namespace Models.PMF.SimplePlantModels
         ///   • Stem mass   scales with height ratio (topping): (H_post / H_pre)^{p_stem}
         ///
         /// Inputs:
-        ///   - MatureTrunkMass: pre-prune total woody mass (stem+bark+branches), kg dry
+        ///   - MatureWoodMass: pre-prune total woody mass (stem+bark+branches), kg dry
         ///   - MatureDbh_cm:    DBH used to recover architectural form-factors (pre-prune)
         ///   - Heights/widths/spacing: metres
         ///
@@ -205,10 +205,10 @@ namespace Models.PMF.SimplePlantModels
                                             double interRowSpacing_m,
                                             double rowSpacing_m,
                                             double matureDbh_cm,
-                                            double matureTrunkMass
+                                            double matureWoodMass
                                             )
         {
-            if (matureTrunkMass <= 0)
+            if (matureWoodMass <= 0)
                 return 0.0;
 
               // --- kShape pre/post (same inference used elsewhere)
@@ -225,8 +225,8 @@ namespace Models.PMF.SimplePlantModels
             double branchFraction = ComputeBranchFraction_FromCrownStemRatio(vCrownPre, stemVolume_m3);
 
             // --- Pre-prune stem/branch masses aligned to estimator split
-            double mStemPre = matureTrunkMass / (1.0 + branchFraction);
-            double mBranchPre = matureTrunkMass - mStemPre;
+            double mStemPre = matureWoodMass / (1.0 + branchFraction);
+            double mBranchPre = matureWoodMass - mStemPre;
 
             // --- Scaling factors with zero-division guards
             double fCrown;
@@ -247,7 +247,7 @@ namespace Models.PMF.SimplePlantModels
             double mStemPost = mStemPre * fStemH;
 
             double mPost = Math.Max(0.0, mStemPost + mBranchPost);
-            return MathUtilities.Bound(1.0 - (mPost / matureTrunkMass), 0.0, 1.0);
+            return MathUtilities.Bound(1.0 - (mPost / matureWoodMass), 0.0, 1.0);
         }
 
 
