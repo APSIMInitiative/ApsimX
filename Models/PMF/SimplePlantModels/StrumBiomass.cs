@@ -1,6 +1,7 @@
 ﻿using APSIM.Numerics;
 using DocumentFormat.OpenXml.InkML;
 using DocumentFormat.OpenXml.Math;
+using DocumentFormat.OpenXml.Presentation;
 using MathNet.Numerics.Distributions;
 using PdfSharp.Snippets;
 using System;
@@ -133,7 +134,8 @@ namespace Models.PMF.SimplePlantModels
                                                     double inRowSpacing_m,          // per-tree length along row (spacing within row)
                                                     double rowSpacing_m,            // distance between rows
                                                     double woodDensity_kg_m3,       // oven-dry density [kg m^-3]
-                                                    double dbhAtMaturity_cm            //  // diameter of stem at brest height when orchard tree is mature (cm)
+                                                    double reffDBHatMaturity_cm,    // diameter of stem at brest height for tree of reference canopy size when orchard tree is mature (cm)
+                                                    double reffArea_m2              // canopy area for the reffDBH tree
                                                     )
         {
             if (woodDensity_kg_m3 <= 0 || heightTopPrePrune_m <= 0)
@@ -148,20 +150,20 @@ namespace Models.PMF.SimplePlantModels
                                                 hTop_m: heightTopPrePrune_m
                                                 );
 
-            // Infer DBH from area + height using w_auto
-            double dbh_cm = dbhAtMaturity_cm;
-
-
             // Spacing‑limited reference crown volume (cap width by spacings)
             //double widthCap_m = Math.Min(widthPrePrune_m, Math.Min(rowSpacing_m, inRowSpacing_m));
 
             bool freeStanding = IsFreeStanding(widthPrePrune_m, inRowSpacing_m, rowSpacing_m);
+
+            double canopyArea = GetFootprintArea_m2(crownShape, freeStanding, widthPrePrune_m, inRowSpacing_m);
 
             // Pre‑prune crown volume (using inferred k for consistency)
             double vCrownPre_m3 = CrownVolume_m3(crownShape, freeStanding,
                                                     width_m: widthPrePrune_m, inRow_m: inRowSpacing_m,
                                                     hBottom_m: heightBottomPrePrune_m, hTop_m: heightTopPrePrune_m,
                                                     kShape: kShape);
+            // Infer DBH from area + height using w_auto
+            double dbh_cm = InferDbhFromCanopyArea(reffDBHatMaturity_cm, canopyArea, reffArea_m2);
 
             // Reference volume and masses
             double stemVolume_m3 = StemVolume_Tapered(dbh_cm, heightTopPrePrune_m);
@@ -249,6 +251,85 @@ namespace Models.PMF.SimplePlantModels
             double mPost = Math.Max(0.0, mStemPost + mBranchPost);
             return MathUtilities.Bound(1.0 - (mPost / matureWoodMass), 0.0, 1.0);
         }
+
+
+        /// <summary>
+        /// Infers DBH (cm) from canopy *area* only, using a fixed reference canopy area A_typ (m²)
+        /// and an anchored size–density scaling:
+        ///
+        ///     DBH = DBH_typ * (A_user / A_typ)^γ
+        ///
+        /// • DBH_typ  (cm): DBH for a tree grown at the *reference* canopy area A_typ, set via
+        ///                  Params["DbhAtTypicalArea_cm"].  
+        /// • A_typ     (m²): fixed reference canopy area per tree (Params["DbhTypicalArea_m2"]).  
+        /// • A_user    (m²): effective rectangular hedgerow footprint under current width/spacing
+        ///                   (capped across-row).  
+        /// • γ          (-): DbhAreaExponent (~0.6), from size–density allometry (Reineke) and
+        ///                   consistent with inverted crown-width allometries.
+        ///
+        /// ------------------------------------------------------------------
+        /// WHY HEIGHT IS *NOT* INCLUDED IN THE DBH INFERENCE
+        /// ------------------------------------------------------------------
+        /// STRUM intentionally excludes canopy height from DBH inference because:
+        ///
+        /// (1) Height–DBH allometry is highly variable and species-/management-dependent:  
+        ///     Re-evaluations of Reineke’s rule show strong divergence in height–DBH slopes among
+        ///     species (beech, spruce, pine, oak), indicating poor universality and weak predictive
+        ///     power for DBH. [1](https://academic.oup.com/forestscience/article-abstract/51/4/304/4617289)  
+        ///
+        /// (2) Crown height (vertical dimension) correlates *weakly* with DBH in practice:  
+        ///     Urban tree studies and multi-species analyses show crown diameter (width) has strong,
+        ///     reliable scaling with DBH, while crown height relationships are weaker because crown
+        ///     lifting, pruning, and management decouple height from stem diameter.  
+        ///     (Urban crown models: strong DBH → crown width dependence; height only weakly linked.)  
+        ///     [2](https://www.fs.usda.gov/nrs/pubs/jrnl/2020/nrs_2020_westfall_001.pdf)[3](https://auf.isa-arbor.com/content/27/4/169)  
+        ///
+        /// (3) Orchard/hedgerow systems decouple height from DBH even more strongly:  
+        ///     In orchard settings, height is not a free allometric variable — it is actively shaped by
+        ///     topping, training, and pruning. This makes height a *management parameter*, not a
+        ///     biological driver of trunk cross-section.
+        ///
+        /// (4) The dominant natural determinant of DBH is *horizontal growing space* (area per tree):  
+        ///     Stand density theory (Reineke): N ∝ D^{-1.6} ⇒ area per tree A ∝ D^{1.6} ⇒
+        /// — DBH ∝ A^{1/1.6} ≈ A^{0.62}, giving a stable and literature-backed γ ≈ 0.6.  
+        ///     Crown-width allometry also implies crown area ∝ DBH^{1.4–2.0}, whose inversion gives
+        ///     DBH ∝ A^{0.5–0.7}, matching the same exponent range.  
+        ///     [1](https://academic.oup.com/forestscience/article-abstract/51/4/304/4617289)[4](https://www.fs.usda.gov/nrs/pubs/gtr/gtr-nrs200-2021_appendixes/gtr_nrs200-2021_appendix13.pdf)  
+        ///
+        /// (5) Including height would introduce feedback loops and require extra parameters:  
+        ///     Because STRUM computes height from pruning/management, using height to infer DBH
+        ///     would create a circular dependency and destabilise modelling without adding
+        ///     predictive accuracy.
+        ///
+        /// ------------------------------------------------------------------
+        /// RATIONALE FOR THE AREA-ONLY APPROACH
+        /// ------------------------------------------------------------------
+        /// • Uses well‑supported size–density theory (Reineke) and DBH–crown width scaling.  
+        /// • Matches how crown geometry behaves in hedgerows and orchards (width limited; height
+        ///   management-driven).  
+        /// • Avoids biologically invalid coupling between managed height and DBH.  
+        /// • Keeps model transparent: “DBH at A_typ” is a clear, tunable anchor.
+        ///
+        /// References:  
+        /// • Pretzsch and Biber (2005) — species-specific variation in size–density allometry. [1](https://academic.oup.com/forestscience/article-abstract/51/4/304/4617289)  
+        /// • USFS i‑Tree Appendix 13 — DBH-based crown width equations (width strongly coupled to DBH).  
+        ///   [4](https://www.fs.usda.gov/nrs/pubs/gtr/gtr-nrs200-2021_appendixes/gtr_nrs200-2021_appendix13.pdf)  
+        /// • Westfall et al. (2020) — national-scale crown width models: DBH→width dominant; height weaker.  
+        ///   [2](https://www.fs.usda.gov/nrs/pubs/jrnl/2020/nrs_2020_westfall_001.pdf)  
+        /// • Peper et al. / McPherson et al. — height/crown-height correlations with DBH often weak due to
+        ///   pruning in urban trees. [3](https://auf.isa-arbor.com/content/27/4/169)  
+        /// </summary>
+        private static double InferDbhFromCanopyArea(
+                                                    double dbhAtTypicalArea_cm,
+                                                    double A_user_m2,
+                                                    double A_typ
+                                                    )
+        {
+            double gamma = Params["DbhAreaExponent"];          
+            double ratio = (A_typ > 1e-12) ? (A_user_m2 / A_typ) : 1.0;
+            return dbhAtTypicalArea_cm * Math.Pow(MathUtilities.Bound(ratio, 1e-6, 1e6), gamma);
+        }
+
 
 
         // ----------------------------

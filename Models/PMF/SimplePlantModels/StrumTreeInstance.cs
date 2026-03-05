@@ -40,6 +40,7 @@ namespace Models.PMF.SimplePlantModels
         private int _YearsToMaxDimension = 7;
         private double _WoodBulkDensity = 650;
         private double _DBHatMaturity = 20;
+        private double _TypicalCanopyArea = 5.6;
         private double _MaxRD = 3000;
         private double _Proot = 0.2;
         private double _Pleaf = 0.5;
@@ -234,6 +235,27 @@ namespace Models.PMF.SimplePlantModels
             set { _EndLeafFallDate = value; }
         }
 
+        /// <summary>Diameter at breast height for mature orchard tree (5-100 cm)</summary>
+        [Separator("Diameter Above Brest height is for a mature orchard tree at a typical canopy area.  The Model calcualtes DBH based on these parameters adjusted to the canopy area specified")]
+        [Description("Diameter at breast height (5-100 cm) for tree of canopy area specified below")]
+        [Units("cm")]
+        [Bounds(Lower = 5, Upper = 100)]
+        public double DBHatMaturity
+        {
+            get { return _DBHatMaturity; }
+            set { _DBHatMaturity = constrain(value, 5, 100); }
+        }
+
+        /// <summary>Height of the bottom of the canop (10-100000 mm)</summary>
+        [Description("Area of canopy (0.1-1000 m^2) for tree with above DBH specified above")]
+        [Bounds(Lower = .1, Upper = 1000)]
+        [Units("m^2")]
+        public double TypicalCanopyArea
+        {
+            get { return _TypicalCanopyArea; }
+            set { _TypicalCanopyArea = constrain(value, 0.1, 1000); }
+        }
+
         /// <summary>Tree Age At Start of Simulation (years)</summary>
         [Separator("Tree Dimenesions.  Values for trees at orchard mature size")]
         [Description("Tree Age At Start of Simulation (years)")]
@@ -259,17 +281,7 @@ namespace Models.PMF.SimplePlantModels
         [Description("Canopy shape.  If InterRowSpacing > MaxWidth assume separate sphere, cube or cone, else continuous row of shape)")]
         public TreeShape CrownShape { get; set; } = TreeShape.Round;
 
-        /// <summary>Diameter at breast height for mature orchard tree (5-100 cm)</summary>
-        [Description("Diameter at breast height for mature orchard tree (5-100 cm)")]
-        [Units("cm")]
-        [Bounds(Lower = 5, Upper = 100)]
-        public double DBHatMaturity
-        {
-            get { return _DBHatMaturity; }
-            set { _DBHatMaturity = constrain(value, 5, 100); }
-        }
-
-
+        
         /// <summary>Height of the bottom of the canop (10-100000 mm)</summary>
         [Description("Height of the mature canopy base before pruning (10-100000 mm)")]
         [Bounds(Lower = 10, Upper = 100000)]
@@ -842,7 +854,8 @@ namespace Models.PMF.SimplePlantModels
                                                                                     inRowSpacing_m: InterRowSpacing,          // per-tree length along row (spacing within row)
                                                                                     rowSpacing_m: RowSpacing,               // optional: distance between rows
                                                                                     woodDensity_kg_m3: WoodBulkDensity,       // oven-dry density [kg m^-3]
-                                                                                    dbhAtMaturity_cm: DBHatMaturity            // diameter of stem at brest height when orchard tree is mature (cm)
+                                                                                    reffDBHatMaturity_cm: DBHatMaturity,            // diameter of stem at brest height when orchard tree is mature (cm)
+                                                                                    reffArea_m2: TypicalCanopyArea
                                                                                    );
 
             if (this.WaterStress)
