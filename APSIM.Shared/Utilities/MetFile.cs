@@ -681,8 +681,15 @@ namespace APSIM.Shared.Utilities
                     }
                     else if (columnName == "year")
                     {
-                        if (int.TryParse(stringValue, out year))
+                        if (int.TryParse(stringValue, out int yearInt))
                         {
+                            year = yearInt;
+                            if (day > 0)
+                                row.Date = new DateTime(year, 1, 1).AddDays(day-1);
+                        }
+                        else if (double.TryParse(stringValue, out double yearDouble))
+                        {
+                            year = (int)Math.Round(yearDouble);
                             if (day > 0)
                                 row.Date = new DateTime(year, 1, 1).AddDays(day-1);
                         }
@@ -693,8 +700,15 @@ namespace APSIM.Shared.Utilities
                     }
                     else if (columnName == "day")
                     {
-                        if (int.TryParse(stringValue, out day))
+                        if (int.TryParse(stringValue, out int dayInt))
                         {
+                            day = dayInt;
+                            if (year > 0)
+                                row.Date = new DateTime(year, 1, 1).AddDays(dayInt-1);
+                        }
+                        else if (double.TryParse(stringValue, out double dayDouble))
+                        {
+                            day = (int)Math.Round(dayDouble);
                             if (year > 0)
                                 row.Date = new DateTime(year, 1, 1).AddDays(day-1);
                         }
@@ -722,7 +736,7 @@ namespace APSIM.Shared.Utilities
                 {
                     prevDay = prevDay.AddDays(1);
                     if (prevDay != row.Date)
-                        throw new Exception($"Met file does not have persistent dates. Day {prevDay.ToString("yyyy-MM-dd")} was expected, but day {row.Date.ToString("yyyy-MM-dd")} was read.");
+                        throw new Exception($"Met file does not have consistent dates. Day {prevDay.ToString("yyyy-MM-dd")} was expected, but day {row.Date.ToString("yyyy-MM-dd")} was read.");
                 }
 
                 metData.Rows.Add(row);
