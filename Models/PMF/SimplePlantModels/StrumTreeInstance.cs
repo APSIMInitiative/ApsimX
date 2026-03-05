@@ -11,6 +11,7 @@ using Models.Soils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace Models.PMF.SimplePlantModels
@@ -35,7 +36,6 @@ namespace Models.PMF.SimplePlantModels
         private double _RowSpacing = 6;
         private double _InterRowSpacing = 1.0;
         private double _AlleyZoneWidthFrac = 0.5;
-        private string _YearToPlantTrees = "";
         private int _AgeAtSimulationStart = 1;
         private int _YearsToMaxDimension = 7;
         private double _WoodBulkDensity = 650;
@@ -73,23 +73,27 @@ namespace Models.PMF.SimplePlantModels
         private int _DAFEndLinearGrowth = 150;
         private int _DAFMaxSize = 180;
         private double _NFixationFrac = 0;
-        private string _WinterPruneDate = "";
-        private string _PickingDate = "";
         private double _FRemoveSummerPrune = 0;
+        private static string _WinterSolsticeDate = "21-Jun";
+
+        private string _BudBreakDate = DateTime.Parse(_WinterSolsticeDate + "-2000").AddDays(60).ToString("dd-MMM");
+        private string _StartFullCanopyDate = DateTime.Parse(_WinterSolsticeDate + "-2000").AddDays(120).ToString("dd-MMM");
+        private string _StartLeafFallDate = DateTime.Parse(_WinterSolsticeDate + "-2000").AddDays(230).ToString("dd-MMM");
+        private string _EndLeafFallDate = DateTime.Parse(_WinterSolsticeDate + "-2000").AddDays(300).ToString("dd-MMM");
 
         private string WinterSolsticeDate
         {
             get
             {
                 DateTime winterSolsticeDate = DateUtilities.GetDate(weather.WinterSolsticeDOY, clock.Today.Year);
-                return winterSolsticeDate.ToString("dd-MMM");
+                _WinterSolsticeDate = winterSolsticeDate.ToString("dd-MMM");
+                return _WinterSolsticeDate;
             }
         }
 
         private double woodMassAtMaxDimension = 0;
         private double pruningFraction = 0;
-        private DateTime EstablishDate;
-
+        
 
         /// <summary>Is the tree decidious</summary>
         public bool Decidious
@@ -197,31 +201,38 @@ namespace Models.PMF.SimplePlantModels
             }
         }
 
-        /// <summary>Tree Age At Start of Simulation (years)</summary>
-        [Description("Year (AD) to plant trees.  STRUM will establish on the solstice of this year with trees at 1 year of age.  If blank establishes on first winter solstice ")]
-        [Units("years")]
-        public string YearToPlantTrees
-        {
-            get { return _YearToPlantTrees; }
-            set { _YearToPlantTrees = value; }
-        }
-
         /// <summary>Date for Bud Break</summary>
         [Separator("Tree Phenology.  Specify when canopy stages occur ")]
         [Description("Date for Bud Break")]
-        public string BudBreakDate { get; set; }
+        public string BudBreakDate 
+        {
+            get { return _BudBreakDate; }
+            set { _BudBreakDate = value; } 
+        }
 
         /// <summary>Date for Start Full Canopy</summary>
         [Description("Date for Start Full Canopy")]
-        public string StartFullCanopyDate { get; set; }
+        public string StartFullCanopyDate
+        {
+            get { return _StartFullCanopyDate; }
+            set { _StartFullCanopyDate = value; }
+        }
 
         /// <summary>Date for Start of leaf fall</summary>
         [Description("Date for Start of leaf fall")]
-        public string StartLeafFallDate { get; set; }
+        public string StartLeafFallDate
+        {
+            get { return _StartLeafFallDate; }
+            set { _StartFullCanopyDate = value; }
+        }
 
         /// <summary>Date for End of Leaf fall</summary>
         [Description("Date for End of Leaf fall")]
-        public string EndLeafFallDate { get; set; }
+        public string EndLeafFallDate
+        {
+            get { return _EndLeafFallDate; }
+            set { _EndLeafFallDate = value; }
+        }
 
         /// <summary>Tree Age At Start of Simulation (years)</summary>
         [Separator("Tree Dimenesions.  Values for trees at orchard mature size")]
@@ -319,24 +330,9 @@ namespace Models.PMF.SimplePlantModels
             set { _MaxPrunedWidth = constrain(value, 10, 100000); }
         }
 
-        /// <summary>Winter pruning date</summary>
-        [Separator("Pruning.  Proportion of biomass removed from leaf and wood determined from dimensions above")]
-        [Description("Winter pruning date (between EndLeafFallDate and BudBreakDate.  If blank uses EndLeafFallDate")]
-        public string WinterPruneDate
-        {
-            get { return _WinterPruneDate; }
-            set { _WinterPruneDate = constrainDate(value, EndLeafFallDate, BudBreakDate); }
-        }
-
-        /// <summary>Fruit picking date</summary>
-        [Description("Fruit picking date (between DateMaxBloom and BudBreakDate.  If blank uses MaxFruitSizeDate)")]
-        public string PickingDate
-        {
-            get { return _PickingDate; }
-            set { _PickingDate = constrainDate(value, DateMaxBloom, BudBreakDate); }
-        }
-
         /// <summary>Dates for summer pruning</summary>
+        [Separator("Pruning.  Proportion of biomass removed from leaf and wood determined from dimensions above." +
+            "  Winter pruning occurs on EndLeafFallDate.  Picking occurs on the date maximum fruit size is reached")]
         [Description("Dates for summer pruning (coma seperated, dd-mmm for annual events or dd-mmm-yyyy for specific dates)")]
         public string[] SummerPruneDates { get; set; }
 
@@ -732,7 +728,6 @@ namespace Models.PMF.SimplePlantModels
             {"InitialRootWt", "[STRUM].Root.InitialWt.FixedValue = " },
             {"InitialFruitWt","[STRUM].Fruit.InitialWt.FixedValue = "},
             {"InitialLeafWt", "[STRUM].Leaf.InitialWt.FixedValue = " },
-            //{"YearsToEstab","[STRUM].RelativeAnnualDimension.XYPairs.X[2] = " },
             {"YearsToMaturity","[STRUM].RelativeAnnualDimension.XYPairs.X[2] = " },
             {"WoodWtAtMaturity","[STRUM].Wood.MatureWt.FixedValue = " },
             {"YearsToMaxRD","[STRUM].Root.Network.RootFrontVelocity.RootGrowthDuration.YearsToMaxDepth.FixedValue = " },
@@ -901,7 +896,6 @@ namespace Models.PMF.SimplePlantModels
             treeParams["FRGRUOptT"] += PSUOptT.ToString();
             treeParams["FRGRMaxT"] += PSMaxT.ToString();
             treeParams["SurfaceKL"] += SurfaceKL.ToString();
-            //treeParams["YearsToEstab"] += (Math.Floor(YearsToMaxDimension * 0.45)).ToString();
             treeParams["YearsToMaturity"] += YearsToMaxDimension.ToString();
             treeParams["WoodWtAtMaturity"] += (woodMassAtMaxDimension * 1000).ToString();
             treeParams["YearsToMaxRD"] += YearsToMaxDimension.ToString();
@@ -999,56 +993,26 @@ namespace Models.PMF.SimplePlantModels
         [EventSubscribe("StartOfSimulation")]
         private void OnStartSimulation(object sender, EventArgs e)
         {
-            string estabYear = clock.Today.Year.ToString();
-            if (!String.IsNullOrEmpty(YearToPlantTrees))
+            if (DateUtilities.CompareDates(WinterSolsticeDate, clock.Today) < 0)
             {
-                estabYear = YearToPlantTrees;
+                throw new Exception("STRUM simulations need to start on the winter solstice (" + WinterSolsticeDate + ") to ensure things initialise sensibly");
             }
-            else
-            {
-                if (DateUtilities.CompareDates(WinterSolsticeDate, clock.Today) < 0)
-                {
-                    throw new Exception("STRUM simulations with no specified planting year must start on or prior to the winter solstice ("+WinterSolsticeDate+")");
-                }
-            }
-            EstablishDate = DateTime.Parse(WinterSolsticeDate + "-" + estabYear);
-            
-            if(EstablishDate>clock.Today)
-            {
-                throw new Exception("EstabilishDate is prior to the start of the simulaiton.  Simulation should start on or prior to the winter solstice date ("+WinterSolsticeDate+")." + 
-                                    "If year of planting is specified check the simulation starts prior to this");
-            }
-            
+
             SetUpZones();
-           
+            Establish();
         }
 
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
-            //Establish orchard trees
-            if (clock.Today == EstablishDate)
-            {
-                    Establish();
-            }
-
             //Winter pruning
-            string winterPruneDate = EndLeafFallDate;
-            if (!String.IsNullOrEmpty(WinterPruneDate))
-            {
-                winterPruneDate = WinterPruneDate;
-            }
-            if (DateUtilities.DatesAreEqual(winterPruneDate, clock.Today))
+            if (DateUtilities.DatesAreEqual(EndLeafFallDate, clock.Today))
             {
                 Prune(pruningFraction);
             }
 
             //Fruit Picking
             string pickingDate = DateTime.Parse(DateMaxBloom + "-" + clock.Today.Year.ToString()).AddDays(DAFMaxSize).ToString("dd-MMM");
-            if (!String.IsNullOrEmpty(PickingDate))
-            {
-                pickingDate = PickingDate;
-            }
             if (DateUtilities.DatesAreEqual(pickingDate, clock.Today))
             {
                 Pick();
@@ -1080,26 +1044,54 @@ namespace Models.PMF.SimplePlantModels
             return MathUtilities.Bound(value, min, max);
         }
 
-        private string constrainDate(string date, string earliest, string latest)
+        private string constrainDate(string date, string start, string end)
         {
-            if (!String.IsNullOrEmpty(date))
+            if (string.IsNullOrWhiteSpace(date) || string.IsNullOrWhiteSpace(start) || string.IsNullOrWhiteSpace(end))
+                return date;
+
+            if (!TryParseDM(date, out var c) || !TryParseDM(start, out var s) || !TryParseDM(end, out var e))
+                return date; // or throw; your choice
+
+            int cDay = c.DayOfYear, sDay = s.DayOfYear, eDay = e.DayOfYear;
+            var inv = CultureInfo.InvariantCulture;
+
+            if (sDay == eDay)
+                return s.ToString("dd-MMM", inv); // single-day window → clamp to that day
+
+            if (sDay < eDay)
             {
-                DateTime earliestDT = DateTime.Parse(earliest + "-2000");
-                DateTime latestDT = DateTime.Parse(latest + "-2000");
-                if(earliestDT > latestDT)
-                {
-                    earliestDT = DateTime.Parse(earliest + "-2001"); //If early date happens the year before need to move ahead to the next year
-                }
-                if (DateUtilities.CompareDates(date, earliestDT) > 0)
-                {
-                    return earliestDT.ToString("dd-MMM");
-                }
-                if (DateUtilities.CompareDates(date, latestDT) < 0)
-                {
-                    return latestDT.ToString("dd-MMM");
-                }
+                // Non-wrapping range [s..e]
+                if (cDay < sDay) return s.ToString("dd-MMM", inv);
+                if (cDay > eDay) return e.ToString("dd-MMM", inv);
+                return c.ToString("dd-MMM", inv); // inside
             }
-            return date;
+            else
+            {
+                // Wrapping range: [s..366] U [1..e]
+                if (cDay >= sDay || cDay <= eDay)
+                    return c.ToString("dd-MMM", inv); // inside
+
+                // Outside segment is (eDay, sDay); split into "after end" vs "before start"
+                return (cDay <= eDay)
+                    ? e.ToString("dd-MMM", inv)  // after end → clamp to end
+                    : s.ToString("dd-MMM", inv); // before start → clamp to start
+            }
+        }
+
+        private static bool TryParseDM(string s, out DateTime dt)
+        {
+            dt = default;
+            if (s == null) return false;
+
+            var inv = CultureInfo.InvariantCulture;
+            var fmts = new[] { "dd-MMM", "d-MMM", "dd-MMMM", "d-MMMM" };
+
+            if (!DateTime.TryParseExact(s.Trim(), fmts, inv, DateTimeStyles.AllowWhiteSpaces, out var parsed))
+                return false;
+
+            // Project onto leap year 2000 to support 29-Feb
+            dt = new DateTime(2000, parsed.Month, parsed.Day);
+            return true;
         }
 
         /// <summary>
