@@ -229,10 +229,29 @@ namespace APSIM.Shared.Utilities
         /// <param name="filepath">Filepath</param>
         public void Load(string filepath)
         {
+            byte[] bytes = File.ReadAllBytes(filepath);
             if (filepath.ToLower().EndsWith(".met"))
-                data = Load(filepath, MetFileFormat.Text);
+                data = Load(filepath, bytes, MetFileFormat.Text);
             else if (filepath.ToLower().EndsWith(".bin"))
-                data = Load(filepath, MetFileFormat.Binary);
+                data = Load(filepath, bytes, MetFileFormat.Binary);
+            else
+            {
+                string extension = filepath.Substring(filepath.LastIndexOf('.'));
+                throw new Exception($"File {filepath} has extension {extension} which is not recognised. Must be a .met or .bin file.");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filepath"></param>
+        /// <param name="bytes"></param>
+        public void Load(string filepath, byte[] bytes)
+        {
+            if (filepath.ToLower().EndsWith(".met"))
+                data = Load(filepath, bytes, MetFileFormat.Text);
+            else if (filepath.ToLower().EndsWith(".bin"))
+                data = Load(filepath, bytes, MetFileFormat.Binary);
             else
             {
                 string extension = filepath.Substring(filepath.LastIndexOf('.'));
@@ -405,20 +424,20 @@ namespace APSIM.Shared.Utilities
         /// <param name="filepath">Where to save the file</param>
         /// <param name="data">MetData object to save</param>
         /// <param name="format">MetFileFormat to save in</param>
-        private static void Save(string filepath, MetData data, MetFileFormat format = MetFileFormat.Text)
+        private static void Save(string filepath, MetData data, MetFileFormat format)
         {
-            byte[] bytes = null;
             if (format == MetFileFormat.Text)
             {
                 string output = WriteMet(data);
-                bytes = Encoding.UTF8.GetBytes(output);
+                byte[] bytes = Encoding.UTF8.GetBytes(output);
+                File.WriteAllBytes(filepath, bytes);
             }
             else if (format == MetFileFormat.Binary)
             {
                 HexData output = WriteBinaryV2(data);
-                bytes = Convert.FromHexString(output.Hex);
+                byte[] bytes = Convert.FromHexString(output.Hex);
+                File.WriteAllBytes(filepath, bytes);
             }
-            File.WriteAllBytes(filepath, bytes);
             return;
         }
 
@@ -426,16 +445,16 @@ namespace APSIM.Shared.Utilities
         /// Opens a binary file and converts it to a valid string 
         /// representation in a Stream object
         /// </summary>
-        /// <param name="filepath">Where to save the file</param>
+        /// <param name="filepath"></param>
+        /// <param name="bytes"></param>
         /// <param name="format">MetFileFormat to save in</param>
         /// <returns>
         /// A MetData object containing the contents of the met file read in.
         /// </returns>
-        private static MetData Load(string filepath, MetFileFormat format = MetFileFormat.Text)
+        private static MetData Load(string filepath, byte[] bytes, MetFileFormat format)
         {
             try
             {
-                byte[] bytes = File.ReadAllBytes(filepath);
                 if (format == MetFileFormat.Text)
                 {
                     string text = Encoding.UTF8.GetString(bytes);
@@ -1732,10 +1751,23 @@ namespace APSIM.Shared.Utilities
             {
                 for (int i = 0; i < columnsLength; i++)
                 {
-                    double value = double.Parse(DecodeNumber(data));
-                    row.Values.Add(value);
-                    row.Inputs.Add(value.ToString());
-                    metData.Columns[i].UpdateWidth(value.ToString());
+                    string number = DecodeNumber(data);
+                    //the original writer had a bug where it would store a 0 infront of the nan value, causing columns
+                    //unalign with the data
+                    if (number.Length == 0)
+                    {
+                        DecodeNumber(data);
+                        row.Values.Add(double.NaN);
+                        row.Inputs.Add("nan");
+                        metData.Columns[i].UpdateWidth("nan");
+                    }
+                    else
+                    {
+                        double value = double.Parse(number);
+                        row.Values.Add(value);
+                        row.Inputs.Add(value.ToString());
+                        metData.Columns[i].UpdateWidth(value.ToString());
+                    }
                 }
             }
 
