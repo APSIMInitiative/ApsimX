@@ -108,6 +108,9 @@ namespace APSIM.Shared.Utilities
     ///   added column at the end of the row, and restored to a comment when 
     ///   read back out.
     /// 
+    /// - Values are limited to 15 characters, so any precision after 15 
+    ///   characters will be cut off the numbers.
+    /// 
     /// The binary file is built to the follow schema:
     /// Data Types:
     /// - NUMBER: 4-bit int (length) + array of 4-bit int for symbol lookup
