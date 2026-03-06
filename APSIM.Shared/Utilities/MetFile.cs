@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 
@@ -228,20 +229,36 @@ namespace APSIM.Shared.Utilities
 
         /// <summary>
         /// Loads a metfile from the given filepath into this Metfile object
+        /// Accepts:
+        ///   - .met
+        ///   - .bin
+        ///   - .zip (that contains a .met or .bin)
         /// </summary>
         /// <param name="filepath">Filepath</param>
         public void Load(string filepath)
         {
-            byte[] bytes = File.ReadAllBytes(filepath);
-            if (filepath.ToLower().EndsWith(".met"))
-                data = Load(filepath, bytes, MetFileFormat.Text);
-            else if (filepath.ToLower().EndsWith(".bin"))
-                data = Load(filepath, bytes, MetFileFormat.Binary);
+            byte[] bytes = new byte[0];
+            MetFileFormat format = MetFileFormat.Text;
+            if (filepath.ToLower().EndsWith(".zip"))
+            {
+                WeatherZip zip = UnpackWeatherFromZip(filepath);
+                bytes = zip.bytes;
+                format = zip.format;
+            }
+            else if (filepath.ToLower().EndsWith(".met") || filepath.ToLower().EndsWith(".bin"))
+            {
+                if (filepath.ToLower().EndsWith(".met"))
+                    format = MetFileFormat.Text;
+                else if (filepath.ToLower().EndsWith(".bin"))
+                    format = MetFileFormat.Binary;
+                bytes = File.ReadAllBytes(filepath);
+            }
             else
             {
                 string extension = filepath.Substring(filepath.LastIndexOf('.'));
                 throw new Exception($"File {filepath} has extension {extension} which is not recognised. Must be a .met or .bin file.");
             }
+            data = Load(filepath, bytes, format);
         }
 
         /// <summary>
@@ -1317,6 +1334,50 @@ namespace APSIM.Shared.Utilities
             return output;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filepath"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        private static WeatherZip UnpackWeatherFromZip(string filepath)
+        {
+            bool foundWeather = false;
+            byte[] bytes = new byte[0];
+            MetFileFormat format = MetFileFormat.Text;
+            byte[] zipBytes = File.ReadAllBytes(filepath);
+            using (MemoryStream zipStream = new MemoryStream(zipBytes))
+            {
+                using (ZipArchive archive = new ZipArchive(zipStream, ZipArchiveMode.Read, leaveOpen: false))
+                {
+                    foreach (ZipArchiveEntry entry in archive.Entries)
+                    {
+                        if (!foundWeather && entry.FullName.EndsWith(".met") || entry.FullName.EndsWith(".bin"))
+                        {
+                            foundWeather = true;
+                            if (entry.FullName.EndsWith(".met"))
+                                format = MetFileFormat.Text;
+                            else if (entry.FullName.EndsWith(".bin"))
+                                format = MetFileFormat.Binary;
+                            //Read file content into memory
+                            using (Stream entryStream = entry.Open())
+                            {
+                                using(MemoryStream memoryStream = new MemoryStream())
+                                {
+                                    entryStream.CopyTo(memoryStream);
+                                    bytes = memoryStream.ToArray();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (!foundWeather)
+                throw new Exception($"Cannot find met file in {filepath}. Zip file must contain a .met or .bin file.");
+            else
+                return new WeatherZip(bytes, format);
+        }
+
         ////////////////////////////////////////////////////////////////////////
         // Private Helper Classes
         ////////////////////////////////////////////////////////////////////////
@@ -1625,6 +1686,39 @@ namespace APSIM.Shared.Utilities
                 Contants = new List<MetConstant>();
                 Columns = new List<MetColumn>();
                 Rows = new List<MetRow>();
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        private class WeatherZip
+        {
+            /// <summary>
+            /// 
+            /// </summary>
+            public byte[] bytes;
+
+            /// <summary>
+            /// 
+            /// </summary>
+            public MetFileFormat format;
+
+            /// <summary>
+            /// Basic Constructor
+            /// </summary>
+            public WeatherZip()
+            {
+                bytes = new byte[0];
+                format = MetFileFormat.Text;
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            public WeatherZip(byte[] bytes, MetFileFormat format)
+            {
+                this.bytes = bytes;
+                this.format = format;
             }
         }
 
