@@ -158,13 +158,13 @@ namespace APSIM.Shared.Utilities
         /// Symbol dictionary for converting from a 4-bit hex to data number 
         /// character
         /// </summary>
-        private static string[] SYMBOLS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "-", "/", "nan", ",", ""];
+        private static string[] SYMBOLS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "-", "/", "nan", "E", ","];
 
         /// <summary>
         /// Symbol dictionary for converting from a 4-bit hex to data number 
         /// character</summary>
         private static Dictionary<char, char> SYMBOLS_DICT = new Dictionary<char, char>() { {'0', '0'}, {'1', '1'}, {'2', '2'}, {'3', '3'}, {'4', '4'}, {'5', '5'}, {'6', '6'}, {'7', '7'}, 
-                                                                                            {'8', '8'}, {'9', '9'}, {'.', 'a'}, {'-', 'b'}, {'/', 'c'}, {'n', 'd'}, {',', 'e'} };
+                                                                                            {'8', '8'}, {'9', '9'}, {'.', 'a'}, {'-', 'b'}, {'/', 'c'}, {'n', 'd'}, {'E', 'e'}, {',', 'f'} };
 
         /// <summary>
         /// Minimum spacing for a column of data. Values that are less than 
@@ -1237,6 +1237,9 @@ namespace APSIM.Shared.Utilities
                     trimmed = data.Replace(".0", "");
                 if (trimmed.StartsWith("-0."))
                     trimmed = trimmed.Replace("-0.", "-.");
+                //limit text to 15 characters because length must be single hex digit
+                if (trimmed.Length > 15)
+                    trimmed = trimmed.Substring(0, 15); 
                 output = UIntToHex((uint)trimmed.Length, 1);
                 foreach (char c in trimmed)
                     output += SYMBOLS_DICT[c];
@@ -1522,6 +1525,8 @@ namespace APSIM.Shared.Utilities
                     string decimals = value.Substring(value.LastIndexOf('.') + 1);
                     if (decimals.Length > DecimalPlaces)
                         DecimalPlaces = decimals.Length;
+                    if (DecimalPlaces >= 16)
+                        DecimalPlaces = 15; // cap at 15 because Math.Round cant beyond that
                 }
             }
         }
