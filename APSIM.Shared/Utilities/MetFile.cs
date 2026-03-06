@@ -308,9 +308,18 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         public double[] GetDay(DateTime date)
         {
-            foreach(MetRow row in data.Rows)
-                if (date == row.Date)
-                    return row.Values.ToArray();
+            int numberOfDays = (int)(date.Date - StartDate.Date).TotalDays;
+            MetRow day = data.Rows[numberOfDays];
+            if (day.Date == date)
+            {
+                return day.Values.ToArray();
+            }
+            else // fallback in case something has gone wrong, we just search the list
+            {
+                foreach(MetRow row in data.Rows)
+                    if (date == row.Date)
+                        return row.Values.ToArray();
+            }
             throw new Exception($"Date {date.ToString("yyyy-MM-dd")} not found in MetFile");
         }
 
@@ -431,6 +440,43 @@ namespace APSIM.Shared.Utilities
                 else
                     throw new Exception("Met file has no daily data, cannot get starting date");
             }
+        }
+
+        /// <summary>
+        /// Compares this met file to another and returns true if they are effectively the same. 
+        /// This is not a byte for byte comparison, but instead checks that the contents are equivalent.
+        /// </summary>
+        /// <param name="current"></param>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public static bool Compare(MetFile other, MetFile current)
+        {
+            // Length checks
+            if (other.Columns.Length != current.Columns.Length)
+                return false;
+            if (other.Comments.Length != current.Comments.Length)
+                return false;
+            if (other.Contants.Length != current.Contants.Length)
+                return false;
+            if (other.Units.Length != current.Units.Length)
+                return false;
+
+            // Value checks
+            if (!Enumerable.SequenceEqual(other.Columns, current.Columns))
+                return false;
+            if (!Enumerable.SequenceEqual(other.Comments, current.Comments))
+                return false;
+            if (!Enumerable.SequenceEqual(other.Contants, current.Contants))
+                return false;
+            if (!Enumerable.SequenceEqual(other.Units, current.Units))
+                return false;
+            if (other.StartDate != current.StartDate)
+                return false;
+            if (other.NumberOfDays != current.NumberOfDays)
+                return false;
+
+            // If we've made it here, the files are effectively the same (they may differ on whitespace)
+            return true;
         }
 
         ////////////////////////////////////////////////////////////////////////
@@ -1823,7 +1869,15 @@ namespace APSIM.Shared.Utilities
                 metData.Columns.Add(new MetColumn(HexToString(data), ""));
 
             for (int i = 1; i < columnsLength + 1; i++)
-                metData.Columns[i].Unit = HexToString(data);
+            {
+                string units = HexToString(data);
+                if (!units.StartsWith('('))
+                    units = "(" + units;
+                if (!units.EndsWith(')'))
+                    units = ")" + units;
+                metData.Columns[i].Unit = units;
+            }
+                
 
             //data
             DateTime date;
