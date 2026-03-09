@@ -1960,7 +1960,7 @@ namespace Models.AgPasture
             get { return detachedRootN; }
         }
 
-        /// <summary>Amount of N in new growth (kgN/ha).</summary>
+        /// <summary>Amount of N in new growth, above and below ground (kgN/ha).</summary>
         [Units("kg/ha")]
         public double NetGrowthN
         {
