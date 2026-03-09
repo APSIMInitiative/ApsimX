@@ -32,7 +32,6 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Pruning Event.</summary>
         public event EventHandler<EventArgs> Pruning;
 
-
         private double _RowSpacing = 6;
         private double _InterRowSpacing = 1.0;
         private double _AlleyZoneWidthFrac = 0.5;
@@ -224,7 +223,7 @@ namespace Models.PMF.SimplePlantModels
         public string StartLeafFallDate
         {
             get { return _StartLeafFallDate; }
-            set { _StartFullCanopyDate = value; }
+            set { _StartLeafFallDate = value; }
         }
 
         /// <summary>Date for End of Leaf fall</summary>
@@ -722,9 +721,10 @@ namespace Models.PMF.SimplePlantModels
             {"WoodNConc","[STRUM].Wood.Nitrogen.ConcFunctions.Maximum.FixedValue = "},
             {"ExtinctCoeff","[STRUM].Leaf.Canopy.GreenExtinctionCoefficient.UnstressedCoeff.FixedValue = "},
             {"BaseLAI","[STRUM].Leaf.Canopy.GreenAreaIndex.Winter.BaseArea.FixedValue = " },
-            {"AnnualDeltaLAI","[STRUM].Leaf.Canopy.GreenAreaIndex.SeasonalGrowth.AnnualDelta.FixedValue = " },
-            {"DecidiousSenescence","[STRUM].Leaf.SenescenceRate.DecidiousSensecence.LeafFall.MultiplyFunction.Switch.FixedValue = " },
+            {"AnnualDeltaLAI","[STRUM].Leaf.Canopy.GreenAreaIndex.SeasonalGrowth.Accumulated.DailyGrowth.Integral.AnnualDelta.FixedValue = " },
+            {"DecidiousSenescence","[STRUM].Leaf.SenescenceRate.DecidiousSensecence.Switch.FixedValue = " },
             {"EverGreenSenescence", "[STRUM].Leaf.SenescenceRate.EvergreenSenescence.Coefficient.FixedValue = "},
+            {"SummerPruneRemoval","[STRUM].Leaf.Canopy.GreenAreaIndex.SeasonalGrowth.Accumulated.FractionRemovedOnEvent = " },
             {"GSMax","[STRUM].Leaf.Canopy.Gsmax350 = " },
             {"R50","[STRUM].Leaf.Canopy.R50 = " },
             {"SurfaceKL","[STRUM].Root.Network.KLModifier.SurfaceKL.FixedValue = " },
@@ -899,6 +899,7 @@ namespace Models.PMF.SimplePlantModels
             treeParams["AnnualDeltaLAI"] += ((Math.Log(1 - (MaxCover)) / (ExtinctCoeff * -1)) - (Math.Log(1 - BaseCover) / (ExtinctCoeff * -1))).ToString();
             treeParams["DecidiousSenescence"] += (Decidious ? "1" : "0");
             treeParams["EverGreenSenescence"] += ((Decidious ? 0 : 1)*0.0015).ToString();
+            treeParams["SummerPruneRemoval"] += FRemoveSummerPrune.ToString();
             treeParams["GSMax"] += GSMax.ToString();
             treeParams["R50"] += R50.ToString();
             treeParams["RUE"] += RUE.ToString();
@@ -958,7 +959,7 @@ namespace Models.PMF.SimplePlantModels
             double relativeInitialSize = Math.Min(1,(double)AgeAtSimulationStart / (double)YearsToMaxDimension);
             double initialWoodWt = relativeInitialSize* woodMassAtMaxDimension *1000 * (1-pruningFraction);
             treeParams["InitialWoodWt"] += initialWoodWt.ToString();
-            treeParams["InitialRootWt"] += (initialWoodWt * Proot * 0.5).ToString();
+            treeParams["InitialRootWt"] += (initialWoodWt * 0.01).ToString();
             treeParams["InitialFruitWt"] += (0).ToString();
             treeParams["InitialLeafWt"] += ((initialWoodWt * Pleaf) * (Decidious ? 0 : 1 )).ToString();
 
@@ -1055,56 +1056,6 @@ namespace Models.PMF.SimplePlantModels
             { }//Can we put something here to clear the status window so the error message goes away when a legit value is entered
 
             return MathUtilities.Bound(value, min, max);
-        }
-
-        private string constrainDate(string date, string start, string end)
-        {
-            if (string.IsNullOrWhiteSpace(date) || string.IsNullOrWhiteSpace(start) || string.IsNullOrWhiteSpace(end))
-                return date;
-
-            if (!TryParseDM(date, out var c) || !TryParseDM(start, out var s) || !TryParseDM(end, out var e))
-                return date; // or throw; your choice
-
-            int cDay = c.DayOfYear, sDay = s.DayOfYear, eDay = e.DayOfYear;
-            var inv = CultureInfo.InvariantCulture;
-
-            if (sDay == eDay)
-                return s.ToString("dd-MMM", inv); // single-day window → clamp to that day
-
-            if (sDay < eDay)
-            {
-                // Non-wrapping range [s..e]
-                if (cDay < sDay) return s.ToString("dd-MMM", inv);
-                if (cDay > eDay) return e.ToString("dd-MMM", inv);
-                return c.ToString("dd-MMM", inv); // inside
-            }
-            else
-            {
-                // Wrapping range: [s..366] U [1..e]
-                if (cDay >= sDay || cDay <= eDay)
-                    return c.ToString("dd-MMM", inv); // inside
-
-                // Outside segment is (eDay, sDay); split into "after end" vs "before start"
-                return (cDay <= eDay)
-                    ? e.ToString("dd-MMM", inv)  // after end → clamp to end
-                    : s.ToString("dd-MMM", inv); // before start → clamp to start
-            }
-        }
-
-        private static bool TryParseDM(string s, out DateTime dt)
-        {
-            dt = default;
-            if (s == null) return false;
-
-            var inv = CultureInfo.InvariantCulture;
-            var fmts = new[] { "dd-MMM", "d-MMM", "dd-MMMM", "d-MMMM" };
-
-            if (!DateTime.TryParseExact(s.Trim(), fmts, inv, DateTimeStyles.AllowWhiteSpaces, out var parsed))
-                return false;
-
-            // Project onto leap year 2000 to support 29-Feb
-            dt = new DateTime(2000, parsed.Month, parsed.Day);
-            return true;
         }
 
         /// <summary>
