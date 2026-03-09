@@ -1,8 +1,6 @@
 using APSIM.Numerics;
 using APSIM.Shared.Documentation.Extensions;
-using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
-using BruTile.Wmts.Generated;
 using Newtonsoft.Json.Linq;
 using System.Globalization;
 using System.Reflection;
@@ -20,7 +18,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 210; } }
+    public static int LatestVersion { get { return 211; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -7340,5 +7338,44 @@ internal class Converter
         foreach (var graph in JsonUtilities.ChildrenOfType(root, "Graph"))
             JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Grain.NperKernal", "Wheat.Grain.NperKernel");
 
+    }
+
+    /// <summary>
+    /// fix spelling mistake in reports with the term "kernal" instead of "kernel"
+    /// <param name="root">Root json object.</param>
+    /// <param name="_">Unused filename.</param>
+    private static void UpgradeToVersion211(JObject root, string _)
+    {
+        JObject xyPairs = new JObject()
+        {
+            ["$type"] = "Models.Functions.XYPairs, Models",
+            ["Name"] = "XYPairs",
+            ["X"] = new JArray(new double[] {5.0,  5.99, 6.0,  7.0,  8.0,  9.0,  10.0, 11.0}),
+            ["Y"] = new JArray(new double[] {30.0, 34,   39.0, 55.0, 65.0, 71.0, 87.0, 90.0})
+        };
+
+        JObject xValue = new JObject()
+        {
+            ["$type"] = "Models.Functions.VariableReference, Models",
+            ["Name"] = "XValue",
+            ["VariableName"] = "[Phenology].Stage"
+        };
+
+        JObject linearInterp = new JObject()
+        {
+            ["$type"] = "Models.Functions.LinearInterpolationFunction, Models",
+            ["Name"] = "ZadokStageMapping",
+            ["ResourceName"] = "null",
+            ["Children"] = new JArray()
+        };
+        (linearInterp["Children"] as JArray).Add(xyPairs);
+        (linearInterp["Children"] as JArray).Add(xValue);
+
+        List<JObject> zadokPMFWheats = JsonUtilities.ChildrenRecursively(root, "ZadokPMFWheat");
+        foreach(JObject zadok in zadokPMFWheats)
+        {
+            zadok["$type"] = "Models.PMF.Phen.ZadokScale, Models";
+            (zadok["Children"] as JArray).Add(linearInterp);
+        }
     }
 }
