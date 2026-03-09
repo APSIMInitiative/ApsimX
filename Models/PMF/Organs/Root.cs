@@ -962,8 +962,9 @@ namespace Models.PMF.Organs
         /// <param name="deadToRemove">Fraction of dead biomass to remove from simulation (0-1).</param>
         /// <param name="liveToResidue">Fraction of live biomass to remove and send to residue pool(0-1).</param>
         /// <param name="deadToResidue">Fraction of dead biomass to remove and send to residue pool(0-1).</param>
+        /// <param name="fractionStanding">Fraction of biomass that remains standing when passed to surfaceOM (0-1).</param>
         /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
-        public double RemoveBiomass(double liveToRemove = 0, double deadToRemove = 0, double liveToResidue = 0, double deadToResidue = 0)
+        public double RemoveBiomass(double liveToRemove = 0, double deadToRemove = 0, double liveToResidue = 0, double deadToResidue = 0, double fractionStanding = 0)
         {
             double amountRemoved = biomassRemovalModel.RemoveBiomassToSoil(liveToRemove, liveToResidue, PlantZone.LayerLive, PlantZone.LayerDead, Removed, Detached);
             needToRecalculateLiveDead = true;
