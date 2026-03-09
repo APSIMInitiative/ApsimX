@@ -106,7 +106,6 @@ namespace Models.PMF
         private double startDeadN { get; set; }
         private double startLiveWt { get; set; }
         private double startDeadWt { get; set; }
-        private double _fractionStanding { get; set; }
 
         private bool removeBiomass { get; set; }
         private bool resetOrganTomorrow { get; set; }
@@ -321,8 +320,6 @@ namespace Models.PMF
             
             DeadRemoved = Dead * deadToRemove;
             DeadToResidues = Dead * deadToResidue;
-
-            _fractionStanding = fractionStanding;
             
             double fracLiveToResidue = MathUtilities.Divide(liveToResidue, (liveToResidue + liveToRemove), 0);
             double fracDeadToResidue = MathUtilities.Divide(deadToResidue, (deadToResidue + deadToRemove), 0);
@@ -331,9 +328,8 @@ namespace Models.PMF
             {
                 OrganNutrientsState totalToResidues = LiveToResidues + DeadToResidues;
                 Biomass toResidues = totalToResidues.ToBiomass;
-                AddSOMtoZones(toResidues.Wt, toResidues.N);
+                AddSOMtoZones(toResidues.Wt, toResidues.N, fractionStanding);
             }
-            _fractionStanding = 0;
             if ((liveToRemove + deadToRemove + liveToResidue + deadToResidue)>0)
             {
                 removeBiomass = true;
@@ -655,8 +651,6 @@ namespace Models.PMF
                     AddSOMtoZones(Wt, N);
                 }
 
-                _fractionStanding = 0;
-
                 if (RootNetworkObject != null)
                 {
                     RootNetworkObject.endRoots();
@@ -676,7 +670,8 @@ namespace Models.PMF
         /// </summary>
         /// <param name="wt"></param>
         /// <param name="n"></param>
-        private void AddSOMtoZones(double wt, double n)
+        /// <param name="fractionStanding"></param>
+        private void AddSOMtoZones(double wt, double n, double fractionStanding = 0)
         {
             int zi = 0;
 
@@ -685,7 +680,7 @@ namespace Models.PMF
                 Zone z = Structure.FindParent<Zone>(recurse: true);
                 ISurfaceOrganicMatter somZone = Structure.FindChild<ISurfaceOrganicMatter>(relativeTo: z);
                 somZone.Add(wt/(z.Area * Constants.ha2sm) * Constants.gPerSm2kgPerHa, 
-                    n/(z.Area * Constants.ha2sm) * Constants.gPerSm2kgPerHa, _fractionStanding, parentPlant.PlantType, Name);
+                    n/(z.Area * Constants.ha2sm) * Constants.gPerSm2kgPerHa, fractionStanding, parentPlant.PlantType, Name);
             }
             else
             {
@@ -694,7 +689,7 @@ namespace Models.PMF
                     ISurfaceOrganicMatter somZone = Structure.FindChild<ISurfaceOrganicMatter>(relativeTo: z);
 
                     somZone.Add((wt * dimensionsOverZones.RelativeAreaOverZone[zi] * Constants.gPerSm2kgPerHa) /(z.Area * Constants.ha2sm), 
-                        (n * dimensionsOverZones.RelativeAreaOverZone[zi] * Constants.gPerSm2kgPerHa) /(z.Area * Constants.ha2sm), 0, parentPlant.PlantType, Name, _fractionStanding);
+                        (n * dimensionsOverZones.RelativeAreaOverZone[zi] * Constants.gPerSm2kgPerHa) /(z.Area * Constants.ha2sm), 0, parentPlant.PlantType, Name, fractionStanding);
                     zi += 1;
                 }
             }
