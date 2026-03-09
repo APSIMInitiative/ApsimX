@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Linq;
 using APSIM.Core;
-using APSIM.Numerics;
 using Models.Core;
 
 namespace Models.PMF.Phen
@@ -14,7 +12,7 @@ namespace Models.PMF.Phen
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class ZadokWinterCereal : Model
+    public class ZadokScale : Model
     {
         /// <summary>The phenology</summary>
         [Link]

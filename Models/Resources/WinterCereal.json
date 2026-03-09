@@ -982,7 +982,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.Phen.ZadokWinterCereal, Models",
+              "$type": "Models.PMF.Phen.ZadokScale, Models",
               "Name": "Zadok",
               "ResourceName": null,
               "Children": [
