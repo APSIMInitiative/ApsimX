@@ -66,7 +66,7 @@ namespace APSIM.Documentation
             names.Remove("NDVI");
             names.Remove("System");
             names.Remove("Clock");
-
+/*
             foreach (string name in names)
             {
                 string html = WebDocs.GetPage(apsimPath, name);
@@ -74,8 +74,11 @@ namespace APSIM.Documentation
                     Directory.CreateDirectory(outputPath);
                 File.WriteAllText(outputPath + name + ".html", html);
             }
+*/
+            Simulations sims = FileFormat.ReadFromFile<Simulations>(apsimPath + "/Models/Resources/Wheat.json").Model as Simulations;
+            ZadokScale zadok = sims.Node.FindChild<ZadokScale>(recurse: true);
 
-            List<IModel> models = new List<IModel>() { new Clock(), new ZadokPMFWheat() };
+            List<IModel> models = new List<IModel>() { new Clock(), zadok };
             foreach (IModel model in models)
             {
                 string html = WebDocs.GenerateWeb(model);
