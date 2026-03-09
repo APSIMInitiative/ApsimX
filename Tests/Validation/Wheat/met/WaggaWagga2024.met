@@ -1,8 +1,8 @@
 [weather.met.weather]
 latitude = -35.041  (DECIMAL DEGREES)
 longitude = 147.319   (DECIMAL DEGREES)
-tav = 13 (oC) ! Annual average ambient temperature. Based on this met file.
-amp = 17 (oC) ! Annual amplitude in mean monthly temperature. Based on this met file.
+tav = 13.1 (oC) ! Annual average ambient temperature. Based on this met file.
+amp = 17.4 (oC) ! Annual amplitude in mean monthly temperature. Based on this met file.
 
 year  day  radn  maxt  mint  rain
 ()    ()   ()    ()    ()    ()

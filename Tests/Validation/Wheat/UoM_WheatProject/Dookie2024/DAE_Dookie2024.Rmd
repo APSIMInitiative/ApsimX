@@ -35,3 +35,7 @@ targets::tar_make()
 ```
 
 
+```{r}
+tar_load(check_depend)
+```
+

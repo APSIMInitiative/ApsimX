@@ -1,6 +1,6 @@
 library(targets)
 library(here)
-# Grasspatch2025
+
 # - What? Base simulation and observed data copied from https://github.com/FAR-Australia/UOM2312-001RTX/tree/master 
 # - When? 2026-02-09
 # - Who? Ben Jones @ FAR Australia (ben.jones@faraustralia.com.au)
@@ -22,6 +22,13 @@ source("R/save_df_into_csv.R")
 source("R/add_stages_to_obs.R")
 source("R/get_column_var_from_observ.R")
 source("R/check_manual_params.R")
+source("R/check_project_dependencies.R")
+
+#----------------
+# Project name
+#----------------
+
+proj_name <- "GrassPatch2025"
 
 
 # target objects
@@ -31,20 +38,24 @@ list(
     config,
     list(
       # folders and file names
+      proj_name                   = proj_name,
       folder_thisScript           = here::here(),
+      folder_rawData              = here::here(proj_name), # this will be from Cloud
       folder_inputs               = here::here("..", "inputs"),
       folder_apsimx               = here::here(), # a level up from where Analysis is
-      file_rawData_excel          = "GrassPatch2025/Observed.xlsx", # raw observed data (pre-defined file name),
-      file_workData_excel         = "GrassPatch2025_Observed.xlsx", # raw observed data (pre-defined file name)
+      folder_met                  = here::here("..", "met"),
+      file_rawData_excel          = "Observed.xlsx", # raw observed data (pre-defined file name),
+      file_workData_excel         = paste0(proj_name, "_Observed.xlsx"), # raw observed data (pre-defined file name)
       sheet_name_observed         = "Observed",
       date_DOY_ref                = "01-01-2025", # date to transform DOY output into ddmmyy within simulations
       btwStgPerc                  = 0.5, # fraction of time in-between two pheno-stages when we assume a missing stage 
-      file_name_input_pheno       = "GrassPatch2025_PhenoDatesInput.csv",
-      file_name_input_haun        = "GrassPatch2025_HaunStagesInput.csv"
+      file_name_input_pheno       = paste0(proj_name, "_PhenoDatesInput.csv"),
+      file_name_input_haun        = paste0(proj_name, "_HaunStagesInput.csv"),
+      file_name_met               = "Grass Patch_-33.20_121.65.met" # pre-defined met
         )),
   
   # read observations
-  tar_target(file_obs, read_excel_observed(file.path(config$folder_apsimx, 
+  tar_target(file_obs, read_excel_observed(file.path(config$folder_rawData, 
                                                      config$file_rawData_excel))),
   
   # average reps
@@ -72,7 +83,7 @@ list(
   
   # save pheno-date input into excel
   tar_target(
-    exported_csv_file,
+    msg_pheno_param_saved,
     save_df_into_csv(
       df = df_new_pheno_dates, 
       folder = config$folder_inputs, 
@@ -83,7 +94,7 @@ list(
   
   # save new mean Observed
   tar_target(
-    saved_obs_file,
+    msg_obs_saved,
     save_df_into_excel(
       df = df_new_obs, 
       folder = config$folder_apsimx, 
@@ -91,6 +102,26 @@ list(
       sheetname = config$sheet_name_observed
     ),
     format = "file"
+  ),
+  
+  # Post-flight dependency check for APSIM
+  tar_target(
+    name = check_depend, 
+    command = {
+      # 1. List the targets here to force `{targets}` to wait for them
+      msg_obs_saved
+      msg_pheno_param_saved
+      haun_input_checked
+      
+      # 2. Now run the actual function
+      check_project_dependencies(
+        met_name = config$file_name_met,
+        projects = config$proj_name,
+        dir_met = config$folder_met,
+        dir_inputs = config$folder_inputs,
+        dir_obs = config$folder_apsimx
+      )
+    }
   )
   
   

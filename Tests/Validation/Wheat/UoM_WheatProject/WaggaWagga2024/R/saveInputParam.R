@@ -34,6 +34,8 @@ saveInputParam <- function(df_input, folder_path, file_name_saved) {
   
   # 2. Define the complete file path using the input file_name_saved
   full_path <- file.path(folder_path, file_name_saved)
+  full_path <- normalizePath(full_path, winslash = "/", mustWork = FALSE)
+  message("DEBUG: The full path is currently evaluating to: ", full_path)
   
   # Ensure the directory exists before attempting to save
   if (!dir.exists(folder_path)) {

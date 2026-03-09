@@ -31,7 +31,7 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
-            "WaggaWagga2024.xlsx"
+            "WaggaWagga2024_Observed.xlsx"
           ],
           "SheetNames": [
             "Observed"
@@ -13837,7 +13837,7 @@
                 {
                   "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
                   "SetEventName": "[Plant].PlantSowing",
-                  "ParameterFile": "%root%/Tests/Validation/Wheat/inputs/WaggaWagga2024_HaunRelatedInput.csv",
+                  "ParameterFile": "%root%/Tests/Validation/Wheat/inputs/WaggaWagga2024_HaunStagesInput.csv",
                   "Name": "SetHaunRelatedExternally",
                   "ResourceName": null,
                   "Children": [],

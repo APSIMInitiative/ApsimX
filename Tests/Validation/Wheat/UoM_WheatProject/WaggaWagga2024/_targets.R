@@ -30,6 +30,14 @@ source("R/add_to_observed_clean.R")
 source("R/read_soil_water.R")
 source("R/soil_water_in_json.R")
 source("R/check_manual_params.R")
+source("R/check_project_dependencies.R")
+source("R/save_met_file.R")
+
+#----------------
+# Project name
+#----------------
+
+proj_name <- "WaggaWagga2024"
 
 #----------------
 # Define targets
@@ -42,15 +50,16 @@ targets <- list(
     config,
     list(
       # folders and file names
+      proj_name                   = proj_name,
       folder_thisScript           = here::here(),
-      folder_rawData              = here::here("WaggaWagga2024/InputFilesFromCloud"), # this will be from Cloud
+      folder_rawData              = here::here(proj_name), # this will be from Cloud
       folder_inputs               = here::here("..", "inputs"),
-      folder_apsimx               = here::here(), # a level up from where Analysis is
+      folder_apsimx               = here::here(), # FIXME: these changed, that's why repetitions here
+      folder_met                  = here::here("..", "met"),
       file_rawData_excel          = "2024_WaggaWagga_PHDA24WARI2.xlsx", # raw observed data (pre-defined file name)
-      file_input_name_saved       = "WaggaWagga2024_PhenoDatesInput.csv", # name for forced pheno-dates file
-      fileNameForAPSIM_observData = "WaggaWagga2024_Observed.xlsx", # name of observation file created for APSIM to read
-      file_SimNameByCultivar      = "WaggaWagga2024/WaggaWagga2024_CultivarToSimName.csv", # lookup table of sim by treat names (handmade metadata)
-      file_metaData_observed      = "WaggaWagga2024/WaggaWagga2024_observed_data_requirements.csv",  # What obs variables to fetch? (handmade metadata)
+      file_saved_obs_excel        = paste0(proj_name, "_Observed.xlsx"), # name of new observation file TO BE SAVED for APSIM
+      file_SimNameByCultivar      = paste0(proj_name,"_CultivarToSimName.csv"), # pre-defined names of APSIM UI simulations
+      file_metaData_observed      = paste0(proj_name,"_observed_data_requirements.csv"),# pre-defined list of obs vars to fetch
       
       # Excel sheet names used from 2024_WaggaWagga_PHDA24WARI2.xlsx
       sheetExcel_weather          = "Weather",
@@ -63,12 +72,13 @@ targets <- list(
       target_betwStages           = 50, # % of period between two adjacent events when a synthetic event date is assumed
       var_name_stage              = "apsim_stage_raw", # name of synthetic var with observed PCSD data
       varName_addedToObserv       = "Wheat.Phenology.Stage", # new synthetic variable to be added into observations
-      file_name_input_haun        = "WaggaWagga2024_HaunRelatedInput.csv"
+      file_name_input_pheno       = paste0(proj_name,"_PhenoDatesInput.csv"), # to save
+      file_name_input_haun        = paste0(proj_name,"_HaunStagesInput.csv") # to save
     )
   ),
   
-  # Config: Get simulation names per treatment from APSIM file (via APSIM-UI) - NOTE: func this might have to change with exp
-  tar_target(df_simNameByCult,read.csv2(file.path(config$folder_thisScript, 
+  # Config: Get pre-defined simulation names per treatment from APSIM file (via APSIM-UI) - NOTE: func this might have to change with exp
+  tar_target(df_simNameByCult,read.csv2(file.path(config$folder_rawData, 
                                                   config$file_SimNameByCultivar),
                                         header = TRUE, stringsAsFactors = FALSE, sep = ",")),
   
@@ -86,17 +96,39 @@ targets <- list(
   ### Create met file to run APSIM
   ### ------------------------------------------------
   
-  tar_target(df_met, createWeatherFile(config$folder_rawData, 
-                                       config$file_rawData_excel, 
-                                       config$sheetExcel_weather, 
-                                       config$coord_thisLatLon)),
+  ### ------------------------------------------------
+  ### Create met file to run APSIM
+  ### ------------------------------------------------
+  
+  # 1. Process the data
+  tar_target(
+    name = processed_met_data, 
+    command = createWeatherFile(
+      thisFolder = config$folder_rawData, 
+      thisExcelFile = config$file_rawData_excel, 
+      thisSheet = config$sheetExcel_weather
+    )
+  ),
+  
+  # 2. Save the file
+  tar_target(
+    name = msg_met_saved,
+    command = save_met_file(
+      met_list = processed_met_data,
+      folder_path = config$folder_met,
+      file_name = paste0(config$proj_name, ".met"),
+      lat = config$coord_thisLatLon$lat,
+      lon = config$coord_thisLatLon$lon
+    ),
+    format = "file" # Track the saved output!
+  ),
   
   ### -------------------------------------------------------------------------------
   ### Prepare excel data with observation in APSIM format to compare with simulations
   ### -------------------------------------------------------------------------------
   
   # check which observed data is needed to use based on a hand-made csv meta-data file
-  tar_target(df_obs_info,read.csv2(file.path(config$folder_thisScript, 
+  tar_target(df_obs_info,read.csv2(file.path(config$folder_rawData, 
                                              config$file_metaData_observed),
              header = TRUE, stringsAsFactors = FALSE, sep = ",")),
   
@@ -163,18 +195,35 @@ targets <- list(
   tar_target(msg_obs_saved, 
              save_df_final(df_final_observed, 
                            config$folder_apsimx, 
-                           config$fileNameForAPSIM_observData)),
+                           config$file_saved_obs_excel)),
   
   
   
   # Save parameter input file with forced pheno-dates into /input
   tar_target(msg_param_saved, saveInputParam(df_apsimStageInput, 
                                            config$folder_inputs, 
-                                           config$file_input_name_saved),
-    format = "file" 
+                                           config$file_name_input_pheno),
+    format = "file"),
+  
+  # Post-flight dependency check for APSIM
+  tar_target(
+    name = check_depend, 
+    command = {
+      # 1. List the targets here to force `{targets}` to wait for them
+      msg_obs_saved
+      msg_param_saved
+      msg_met_saved
+      
+      # 2. Now run the actual function
+      check_project_dependencies(
+        projects = config$proj_name,
+        dir_met = config$folder_met,
+        dir_inputs = config$folder_inputs,
+        dir_obs = config$folder_apsimx
+      )
+    }
   )
+  
 )
 
-#  return a pipeline object.
-tar_pipeline(targets)
 
