@@ -130,56 +130,66 @@ namespace UnitTests.Weather
 
             MetFile data1 = new MetFile();
             MetFile data2 = new MetFile();
+            MetFile data3 = new MetFile();
             foreach(string file in files)
             {
-                
-                bool success = false;
                 try
                 {
                     data1 = new MetFile(file);
                     data1.Save("C:/git/ApsimX/Examples/WeatherFiles/test1.met", MetFile.MetFileFormat.Text);
+                    data1.Save("C:/git/ApsimX/Examples/WeatherFiles/test1.bin", MetFile.MetFileFormat.Binary);
+
                     data2 = new MetFile("C:/git/ApsimX/Examples/WeatherFiles/test1.met");
-                    success = true;
-                }
-                catch (Exception exception)
-                {
-                    Console.WriteLine(file);
-                    Console.WriteLine(exception.Message);
-                }
-                
-                if (success)
-                {
+                    data3 = new MetFile("C:/git/ApsimX/Examples/WeatherFiles/test1.met");
+
                     for(int i = 0; i < data1.Comments.Length; i++)
-                    Assert.That(data1.Comments[i], Is.EqualTo(data2.Comments[i]));
+                    {
+                        Assert.That(data1.Comments[i], Is.EqualTo(data2.Comments[i]));
+                        Assert.That(data1.Comments[i], Is.EqualTo(data3.Comments[i]));
+                    }
 
                     for(int i = 0; i < data1.Contants.Length; i++)
                     {
                         Assert.That(data1.Contants[i], Is.EqualTo(data2.Contants[i]));
                         Assert.That(data1.GetConstant(data1.Contants[i]), Is.EqualTo(data2.GetConstant(data2.Contants[i])));
+                        Assert.That(data1.Contants[i], Is.EqualTo(data3.Contants[i]));
+                        Assert.That(data1.GetConstant(data1.Contants[i]), Is.EqualTo(data3.GetConstant(data3.Contants[i])));
                     }
 
                     for(int i = 0; i < data1.Columns.Length; i++)
+                    {
                         Assert.That(data1.Columns[i], Is.EqualTo(data2.Columns[i]));
+                        Assert.That(data1.Columns[i], Is.EqualTo(data3.Columns[i]));
+                    }
 
                     for(int i = 0; i < data1.Units.Length; i++)
+                    {
                         Assert.That(data1.Units[i], Is.EqualTo(data2.Units[i]));
+                        Assert.That(data1.Units[i], Is.EqualTo(data3.Units[i]));
+                    }
 
                     DateTime date = data1.StartDate;
                     for(int i = 0; i < data1.NumberOfDays; i++)
                     {
                         double[] inputs1 = data1.GetDay(date);
                         double[] inputs2 = data2.GetDay(date);
+                        double[] inputs3 = data3.GetDay(date);
                         date = date.AddDays(1);
                         Assert.That(inputs1, Is.EqualTo(inputs2));
+                        Assert.That(inputs1, Is.EqualTo(inputs3));
                     }
                 }
-                
+                catch (Exception exception)
+                {
+                    Console.WriteLine(file);
+                    Console.WriteLine(exception.Message);
+                }
             }
-
-
-            MetFile data = new MetFile("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi.met");
-            //data.Save("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi_old.bin", MetFile.MetFileFormat.Binary);
-            data.Load("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi_old.bin");
+            
+            /*
+            MetFile data = new MetFile("C:/git/ApsimX/Tests/Validation/Grapevine/Dashwood.met");
+            data.Save("C:/git/ApsimX/Tests/Validation/Grapevine/Dashwood.bin", MetFile.MetFileFormat.Binary);
+            data.Load("C:/git/ApsimX/Tests/Validation/Grapevine/Dashwood.bin");
 
             /*data = new MetFile("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi.met");
             data.Save("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi2.met", MetFile.MetFileFormat.Text);
