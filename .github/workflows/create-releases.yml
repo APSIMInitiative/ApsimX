@@ -51,7 +51,7 @@ jobs:
       strategy:
         fail-fast: false # allow other jobs to complete if one fails
         matrix:
-          os: [macos, debian, windows]
+          os-and-args: [macos, debian, "windows build"] 
       runs-on: ubuntu-latest
       container:
         image: apsiminitiative/apsimng-build:latest
@@ -87,18 +87,80 @@ jobs:
             type=ref,event=branch
             type=ref,event=pr
 
-      - name: Create APSIM Signing Certificate
-        env:
-          APSIM_CERT_BASE64: ${{ secrets.APSIM_CERT }} 
-        run: |
-          echo -n "$APSIM_CERT_BASE64" | base64 -d > ./apsim_signing_cert.p12
-
       - name: Create Release
         env:
           DOCKER_METADATA_OUTPUT_VERSION: ${{ fromJSON(steps.meta_apsimplusr.outputs.json).labels['org.opencontainers.image.version'] }}
           BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
-          APSIM_CERT_PWD: ${{ secrets.APSIM_CERT_PWD }}
-        run: ./.github/workflows/scripts/deploy-installer.sh ${{ matrix.os }}
+        run: ./.github/workflows/scripts/deploy-installer.sh ${{ matrix.os-and-args }}
+
+      - name: Upload a Windows Installer Build Artifact
+        uses: actions/upload-artifact@v6.0.0
+        with:
+          name: windows-installer
+          path: /__w/ApsimX/ApsimX/Setup/net8.0/windows/Output/APSIMSetup.exe
+
+
+    # Performs code signing for the Windows installer using the Software Trust Manager. 
+    # This is required to avoid "Unknown Publisher" warnings when users run the installer.
+    create-windows-release:
+      if: github.event.pull_request.merged == true
+      env:
+        OUTFILE: APSIMSetup.exe
+      needs: [check-for-resolves, create-releases]
+      runs-on: ubuntu-latest
+      permissions:
+        contents: write
+      steps:
+        
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Make sure we have ownership of ApsimX
+          run: chmod 777 -R  .
+
+        # This is used purely for PR number extraction.
+        - name: Get PR number
+          id: meta_apsimplusr
+          uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+          with:
+            images: apsiminitiative/apsimplusr
+            flavor: latest=true
+            tags: |
+              type=ref,event=branch
+              type=ref,event=pr
+
+        - name: Download Windows installer build artifact
+          uses: actions/download-artifact@v6.0.0
+          with:
+            name: windows-installer
+            path: .
+
+        - name: Setup SM_CLIENT_CERT_FILE from base64 secret data
+          run: |
+            pwd
+            echo "${{ secrets.SM_CLIENT_CERT_FILE_B64 }}" | base64 --decode > sm_client_cert.p12
+            chmod 775 sm_client_cert.p12
+            ls -l
+          shell: bash
+
+        - name: Setup Software Trust Manager
+          uses: digicert/code-signing-software-trust-action@v1
+          with:
+            simple-signing-mode: true
+            # If the below 2 parameters are supplied, then smctl executable is invoked to attempt the signing.
+            input: ${{ env.OUTFILE }}
+            keypair-alias: key_1460956160
+          env:
+            SM_HOST: ${{ vars.SM_HOST }}
+            SM_API_KEY: ${{ secrets.SM_API_KEY }}
+            SM_CLIENT_CERT_FILE: sm_client_cert.p12
+            SM_CLIENT_CERT_PASSWORD: ${{ secrets.SM_CLIENT_CERT_PASSWORD }}    
+
+        - name: Upload signed Windows installer
+          env:
+            DOCKER_METADATA_OUTPUT_VERSION: ${{ fromJSON(steps.meta_apsimplusr.outputs.json).labels['org.opencontainers.image.version'] }}
+            BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
+          run: ./.github/workflows/scripts/deploy-installer.sh windows upload ${{ env.OUTFILE }}
     
     # Creates docker containers for APSIM releases.
     create-docker-containers:
@@ -127,7 +189,7 @@ jobs:
     upload-release-assets:
       # only run if the PR description contains "resolves #"
       if: github.event.pull_request.merged == true
-      needs: [create-docker-containers, create-releases]
+      needs: [create-docker-containers, create-releases, create-windows-release]
       runs-on: ubuntu-latest 
       steps:
 

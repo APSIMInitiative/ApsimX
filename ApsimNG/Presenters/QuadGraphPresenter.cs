@@ -1,148 +1,48 @@
 ﻿using System;
-using System.Collections.Generic;
-using APSIM.Numerics;
 using APSIM.Shared.Graphing;
-using APSIM.Shared.Utilities;
-using Gtk.Sheet;
 using Models.Core;
-using Models.Soils;
-using Models.WaterModel;
 using UserInterface.Views;
+using APSIM.Numerics;
+using Models.Functions;
+using Models.Soils;
+using APSIM.Shared.Utilities;
+using System.Collections.Generic;
 
 namespace UserInterface.Presenters
 {
-    /// <summary>A presenter for the soil profile models.</summary>
-    public class ProfilePresenter : IPresenter
+    /// <summary>
+    /// A presenter for a graph component
+    /// </summary>
+    public class QuadGraphPresenter : IPresenter
     {
-        /// <summary>The grid presenter.</summary>
-        private GridPresenter gridPresenter;
-
-        ///// <summary>The property presenter.</summary>
-        private PropertyPresenter propertyPresenter;
-
         /// <summary>Parent explorer presenter.</summary>
         private ExplorerPresenter explorerPresenter;
 
         /// <summary>The base view.</summary>
-        private ViewBase view = null;
+        private GraphView view = null;
 
         /// <summary>The model.</summary>
         private IModel model;
 
-        /// <summary>The physical model.</summary>
-        private Physical physical;
-
-        /// <summary>The water model.</summary>
-        private Water water;
-
-        /// <summary>Graph.</summary>
-        private GraphView graph;
-
-        /// <summary>Label showing number of layers.</summary>
-        private LabelView numLayersLabel;
-
-        /// <summary>Default constructor</summary>
-        public ProfilePresenter()
-        {
-        }
-
-        /// <summary>Attach the model and view to this presenter and populate the view.</summary>
-        /// <param name="model">The data store model to work with.</param>
-        /// <param name="v">Data store view to work with.</param>
-        /// <param name="explorerPresenter">Parent explorer presenter.</param>
-        public void Attach(object model, object v, ExplorerPresenter explorerPresenter)
+        /// <summary>Attach the model to the view.</summary>
+        /// <param name="model">The model.</param>
+        /// <param name="view">The view.</param>
+        /// <param name="explorerPresenter">The explorer presenter.</param>
+        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.model = model as IModel;
-            view = v as ViewBase;
+            
+            this.view = view as GraphView;
+            this.view.AddContextAction("Copy graph to clipboard", CopyGraphToClipboard);
+
             this.explorerPresenter = explorerPresenter;
-
-            Soil soilNode = this.model.Node.FindParent<Soil>(recurse: true);
-            if (soilNode == null)
-                throw new Exception($"ProfilePresenter could not find the Soil node above {this.model.Name} ({this.model.GetType().Name})");
-                
-            physical = model as Physical ?? soilNode?.Node.FindChild<Physical>();
-            if (physical?.Thickness != null)
-                physical?.InFill();
-
-            var chemical = model as Chemical ?? soilNode?.Node.FindChild<Chemical>();
-            var organic = model as Organic ?? soilNode?.Node.FindChild<Organic>();
-            if (chemical != null && organic != null)
-                chemical.InFill(physical, organic);
-            water = model as Water ?? soilNode?.Node.FindChild<Water>();
-
-            ContainerView gridContainer = view.GetControl<ContainerView>("grid");
-            gridPresenter = new GridPresenter();
-            gridPresenter.Attach(model, gridContainer, explorerPresenter);
-            gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All", "Units" });
-
-            var propertyView = view.GetControl<PropertyView>("properties");
-            propertyPresenter = new PropertyPresenter();
-            propertyPresenter.Attach(model, propertyView, explorerPresenter);
-
-            graph = view.GetControl<GraphView>("graph");
-            graph.AddContextAction("Copy graph to clipboard", CopyGraphToClipboard);
-
-            //get the paned object that holds the graph and grid
-            Gtk.Paned topPane = view.GetGladeObject<Gtk.Paned>("top");
-            int paneWidth = view.MainWidget.ParentWindow.Width; //this should get the width of this view
-            topPane.Position = (int)Math.Round(paneWidth * 0.5); //set the slider for the pane at about 50% across
-
-            Gtk.Paned leftPane = view.GetGladeObject<Gtk.Paned>("left");
-            leftPane.Position = view.MainWidget.ParentWindow.Height;
-            Gtk.Label redValuesWarningLbl = view.GetGladeObject<Gtk.Label>("output_lbl");
-            redValuesWarningLbl.Visible = false;
-
-            if (model is Physical)
-            {
-                redValuesWarningLbl.Text = new("<span color=\"red\">Note: values in red are estimates only and needed for the simulation of soil temperature. Overwrite with local values wherever possible.</span>");
-                redValuesWarningLbl.UseMarkup = true;
-                redValuesWarningLbl.Wrap = true;
-                redValuesWarningLbl.Visible = true;
-
-                redValuesWarningLbl.GetPreferredHeight(out int minHeight, out int natHeight);
-                leftPane.Position = view.MainWidget.ParentWindow.Height - natHeight;
-
-                //set the slider for the pane at about 60% across
-                topPane.Position = (int)Math.Round(paneWidth * 0.6);
-            }
-            else if (model is WaterBalance)
-            {
-                topPane.Position = (int)Math.Round(paneWidth * 0.3);
-            }
-
-            numLayersLabel = view.GetControl<LabelView>("numLayers_lbl");
-            if (!propertyView.AnyProperties)
-            {
-                var layeredLabel = view.GetControl<LabelView>("layered_lbl");
-                var propertiesLabel = view.GetControl<LabelView>("parameters_lbl");
-                propertiesLabel.Visible = false;
-                layeredLabel.Visible = false;
-            }
-            else
-            {
-                // Position the splitter to give the "Properties" section as much space as it needs, and no more
-                Gtk.Paned rightPane = view.GetGladeObject<Gtk.Paned>("right");
-                rightPane.Child1.GetPreferredHeight(out int minHeight, out int natHeight);
-                rightPane.Position = natHeight;
-                //if SoilWater, hide empty graph space
-                if (model is WaterBalance)
-                    rightPane.Position = view.MainWidget.ParentWindow.Height;
-            }
-
-            Refresh();
-            ConnectEvents();
+            explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
         /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
-            DisconnectEvents();
-            if (this.propertyPresenter != null)
-            {
-                gridPresenter.Detach();
-                propertyPresenter.Detach();
-            }
-            view.Dispose();
+            explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
         }
 
         /// <summary>Populate the graph with data.</summary>
@@ -153,45 +53,7 @@ namespace UserInterface.Presenters
                 DisconnectEvents();
                 try
                 {
-                    if (water != null && (model is Physical || model is Water || model is SoilCrop))
-                    {
-                        string llsoilName = null;
-                        double[] llsoil = null;
-                        string cllName = "LL15";
-                        double[] relativeLL = physical.LL15;
-
-                        if (model is SoilCrop soilCrop)
-                        {
-                            llsoilName = (model as SoilCrop).Name;
-                            string cropName = llsoilName.Substring(0, llsoilName.IndexOf("Soil"));
-                            llsoilName = cropName + " LL";
-                            llsoil = (model as SoilCrop).LL;
-                            cllName = llsoilName;
-                            relativeLL = (model as SoilCrop).LL;
-                        }
-                        //Since we can view the soil relative to water, lets not have the water node graphing options effect this graph.
-                        if (physical.Thickness != null)
-                            PopulateWaterGraph(graph, physical.Thickness, physical.AirDry, physical.LL15, physical.DUL, physical.SAT,
-                                                            cllName, water.Thickness, relativeLL, water.InitialValues, llsoilName, llsoil);
-                    }
-
-                    else if (model is Organic organic && organic.Thickness != null)
-                        PopulateOrganicGraph(graph, organic.Thickness, organic.FOM, organic.SoilCNRatio, organic.FBiom, organic.FInert);
-                    else if (model is Solute solute && solute.Thickness != null)
-                    {
-                        double[] vals = solute.InitialValues;
-                        if (solute.InitialValuesUnits == Solute.UnitsEnum.kgha)
-                            vals = SoilUtilities.kgha2ppm(solute.Thickness, solute.SoluteBD, vals);
-                        PopulateSoluteGraph(graph, solute.Thickness, solute.Name, vals);
-                    }
-                    else if (model is Chemical chemical && chemical.Thickness != null)
-                    {
-                        var standardisedSoil = (chemical.Parent as Soil)?.CloneAndSanitise(chemical.Thickness);
-                        var solutes = standardisedSoil?.Node.FindChildren<Solute>();
-                        PopulateChemicalGraph(graph, chemical.Thickness, chemical.PH, chemical.PHUnits, solutes);
-                    }
-
-                    numLayersLabel.Text = $"{gridPresenter.RowCount()-1} layers";  // -1 to not count the empty row at bottom of sheet.
+                    DrawGraph(model, view);
                 }
                 finally
                 {
@@ -204,7 +66,142 @@ namespace UserInterface.Presenters
             }
         }
 
-        public static void PopulateOrganicGraph(GraphView graph, double[] thickness, double[] fom, double[] SoilCNRatio, double[] fbiom, double[] finert)
+        /// <summary>Connect all widget events.</summary>
+        private static void DrawGraph(IModel model, GraphView view)
+        {
+            if (model is XYPairs xyPairs)
+            {
+                PopulateGraph(view, $"{model.Name}", xyPairs.X, xyPairs.Y, xyPairs.GetXName(), xyPairs.GetYName());
+            }
+            else if (model is Physical || model is Water || model is SoilCrop)
+            {
+                Water water = null;
+                Physical physical = null;
+                SoilCrop crop = null;
+                if (model is Water)
+                {
+                    water = model as Water;
+                    physical = model.Node.FindSibling<Physical>();
+                }
+                else if (model is Physical)
+                {
+                    physical = model as Physical;
+                    water = model.Node.FindSibling<Water>();
+                }
+                else if (model is SoilCrop)
+                {
+                    crop = model as SoilCrop;
+                    physical = model.Node.FindSibling<Physical>();
+                    water = model.Node.FindSibling<Water>();
+                }
+
+                if (water != null)
+                {
+                    string llsoilName = null;
+                    double[] llsoil = null;
+                    string cllName = "LL15";
+                    double[] relativeLL = physical.LL15;
+
+                    if (model is SoilCrop soilCrop)
+                    {
+                        llsoilName = (model as SoilCrop).Name;
+                        string cropName = llsoilName.Substring(0, llsoilName.IndexOf("Soil"));
+                        llsoilName = cropName + " LL";
+                        llsoil = (model as SoilCrop).LL;
+                        cllName = llsoilName;
+                        relativeLL = (model as SoilCrop).LL;
+                    }
+                    //Since we can view the soil relative to water, lets not have the water node graphing options effect this graph.
+                    if (physical.Thickness != null)
+                        PopulateWaterGraph(view, physical.Thickness, physical.AirDry, physical.LL15, physical.DUL, physical.SAT,
+                                                        cllName, water.Thickness, relativeLL, water.InitialValues, llsoilName, llsoil);
+                }
+            }
+            else if (model is Organic organic && organic.Thickness != null)
+            {
+                PopulateOrganicGraph(view, organic.Thickness, organic.FOM, organic.SoilCNRatio, organic.FBiom, organic.FInert);
+            }
+            else if (model is Solute solute && solute.Thickness != null)
+            {
+                double[] vals = solute.InitialValues;
+                if (solute.InitialValuesUnits == Solute.UnitsEnum.kgha)
+                    vals = SoilUtilities.kgha2ppm(solute.Thickness, solute.SoluteBD, vals);
+                PopulateSoluteGraph(view, solute.Thickness, solute.Name, vals);
+            }
+            else if (model is Chemical chemical && chemical.Thickness != null)
+            {
+                var standardisedSoil = (chemical.Parent as Soil)?.CloneAndSanitise(chemical.Thickness);
+                var solutes = standardisedSoil?.Node.FindChildren<Solute>();
+                PopulateChemicalGraph(view, chemical.Thickness, chemical.PH, chemical.PHUnits, solutes);
+            }
+
+            //numLayersLabel.Text = $"{gridPresenter.RowCount()-1} layers";  // -1 to not count the empty row at bottom of sheet.
+        }
+
+        /// <summary>Connect all widget events.</summary>
+        private void ConnectEvents()
+        {
+            explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+        }
+
+        /// <summary>Disconnect all widget events.</summary>
+        private void DisconnectEvents()
+        {
+            explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
+        }
+
+        /// <summary>
+        /// The mode has changed (probably via undo/redo).
+        /// </summary>
+        /// <param name="changedModel">The model with changes</param>
+        private void OnModelChanged(object changedModel)
+        {
+            model = changedModel as IModel;
+            Refresh();
+        }
+
+        /// <summary>User has clicked "copy graph" menu item.</summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments</param>
+        private void CopyGraphToClipboard(object sender, EventArgs e)
+        {
+            view.ExportToClipboard();
+        }
+
+        private static void PopulateGraph(GraphView view, string title, double[] x, double[] y, string xTitle, string yTitle)
+        {
+            if (view == null)
+                throw new Exception($"GraphPresenter has a null GraphView. Cannot draw graph of {title}");
+
+            if (x == null || y == null || x.Length == 0 || y.Length == 0)
+            {
+                view.Clear();
+                return;
+            }
+
+            view.Clear();
+            view.DrawLineAndMarkers("", x, y,
+                                     "", "", null, null, AxisPosition.Bottom, AxisPosition.Left,
+                                     System.Drawing.Color.Blue, LineType.Solid, MarkerType.None,
+                                     LineThickness.Normal, MarkerSize.Normal, 1, true);
+
+            double padding = 0.01; //add 1% to bounds
+            double xTopMin = MathUtilities.Min(x);
+            double xTopMax = MathUtilities.Max(x);
+            xTopMin -= xTopMax * padding;
+            xTopMax += xTopMax * padding;
+
+            double yTopMin = MathUtilities.Min(y);
+            double yTopMax = MathUtilities.Max(y);
+            yTopMin -= yTopMax * padding;
+            yTopMax += yTopMax * padding;
+
+            view.FormatAxis(AxisPosition.Bottom, xTitle, inverted: false, xTopMin, xTopMax, double.NaN, false, false);
+            view.FormatAxis(AxisPosition.Left, yTitle, inverted: false, yTopMin, yTopMax, double.NaN, false, false);
+            view.Refresh();
+        }
+
+        private static void PopulateOrganicGraph(GraphView graph, double[] thickness, double[] fom, double[] SoilCNRatio, double[] fbiom, double[] finert)
         {
             var cumulativeThickness = APSIM.Shared.Utilities.SoilUtilities.ToCumThickness(thickness);
             graph.Clear();
@@ -241,7 +238,7 @@ namespace UserInterface.Presenters
             graph.Refresh();
         }
 
-        public static void PopulateSoluteGraph(GraphView graph, double[] thickness, string soluteName, double[] values)
+        private static void PopulateSoluteGraph(GraphView graph, double[] thickness, string soluteName, double[] values)
         {
             var cumulativeThickness = APSIM.Shared.Utilities.SoilUtilities.ToCumThickness(thickness);
             graph.Clear();
@@ -276,7 +273,7 @@ namespace UserInterface.Presenters
             graph.Refresh();
         }
 
-        public static void PopulateChemicalGraph(GraphView graph, double[] thickness, double[] pH, Chemical.PHUnitsEnum phUnits, IEnumerable<Solute> solutes)
+        private static void PopulateChemicalGraph(GraphView graph, double[] thickness, double[] pH, Chemical.PHUnitsEnum phUnits, IEnumerable<Solute> solutes)
         {
             var cumulativeThickness = APSIM.Shared.Utilities.SoilUtilities.ToCumThickness(thickness);
             graph.Clear();
@@ -319,7 +316,7 @@ namespace UserInterface.Presenters
             graph.Refresh();
         }
 
-        public static void PopulateWaterGraph(GraphView graph, double[] thickness, double[] airdry, double[] ll15, double[] dul, double[] sat,
+        private static void PopulateWaterGraph(GraphView graph, double[] thickness, double[] airdry, double[] ll15, double[] dul, double[] sat,
                                                string cllName, double[] swThickness, double[] cll, double[] sw, string llsoilsName, double[] llsoil)
         {
 
@@ -432,48 +429,6 @@ namespace UserInterface.Presenters
             graph.FormatLegend(LegendPosition.RightBottom, LegendOrientation.Vertical);
 
             graph.Refresh();
-        }
-
-        /// <summary>Connect all widget events.</summary>
-        private void ConnectEvents()
-        {
-            gridPresenter.CellChanged += OnCellChanged;
-            explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
-        }
-
-        /// <summary>Disconnect all widget events.</summary>
-        private void DisconnectEvents()
-        {
-            gridPresenter.CellChanged -= OnCellChanged;
-            explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
-        }
-
-        /// <summary>Invoked when a grid cell has changed.</summary>
-        /// <param name="dataProvider">The provider that contains the data.</param>
-        /// <param name="colIndices">The indices of the columns of the cells that were changed.</param>
-        /// <param name="rowIndices">The indices of the rows of the cells that were changed.</param>
-        /// <param name="values">The cell values.</param>
-        private void OnCellChanged(IDataProvider dataProvider, int[] colIndices, int[] rowIndices, string[] values)
-        {
-            Refresh();
-        }
-
-        /// <summary>
-        /// The mode has changed (probably via undo/redo).
-        /// </summary>
-        /// <param name="changedModel">The model with changes</param>
-        private void OnModelChanged(object changedModel)
-        {
-            model = changedModel as IModel;
-            Refresh();
-        }
-
-        /// <summary>User has clicked "copy graph" menu item.</summary>
-        /// <param name="sender">Sender of event</param>
-        /// <param name="e">Event arguments</param>
-        private void CopyGraphToClipboard(object sender, EventArgs e)
-        {
-            graph.ExportToClipboard();
         }
     }
 }
