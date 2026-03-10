@@ -1019,7 +1019,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.Phen.ZadokScale, Models",
+              "$type": "Models.PMF.Phen.Zadok, Models",
               "Name": "Zadok",
               "ResourceName": null,
               "Children": [

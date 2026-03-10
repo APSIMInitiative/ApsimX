@@ -7341,19 +7341,11 @@ internal class Converter
     }
 
     /// <summary>
-    /// fix spelling mistake in reports with the term "kernal" instead of "kernel"
+    /// Combining ZadokPMF, ZadokPMFWheat and new ZadokPMFWinterCereal to all use the same comnbined Zadok class.
     /// <param name="root">Root json object.</param>
     /// <param name="_">Unused filename.</param>
     private static void UpgradeToVersion211(JObject root, string _)
     {
-        JObject xyPairs = new JObject()
-        {
-            ["$type"] = "Models.Functions.XYPairs, Models",
-            ["Name"] = "XYPairs",
-            ["X"] = new JArray(new double[] {5.0,  5.99, 6.0,  7.0,  8.0,  9.0,  10.0, 11.0}),
-            ["Y"] = new JArray(new double[] {30.0, 34,   39.0, 55.0, 65.0, 71.0, 87.0, 90.0})
-        };
-
         JObject xValue = new JObject()
         {
             ["$type"] = "Models.Functions.VariableReference, Models",
@@ -7361,21 +7353,68 @@ internal class Converter
             ["VariableName"] = "[Phenology].Stage"
         };
 
-        JObject linearInterp = new JObject()
+        JObject xyPairsPMF = new JObject()
+        {
+            ["$type"] = "Models.Functions.XYPairs, Models",
+            ["Name"] = "XYPairs",
+            ["X"] = new JArray(new double[] {4.3,  4.9, 5.0,  6.0,  7.0,  8.0,  9.0}),
+            ["Y"] = new JArray(new double[] {30.0, 33,  39.0, 65.0, 71.0, 87.0, 90.0})
+        };
+        JObject linearInterpPMF = new JObject()
         {
             ["$type"] = "Models.Functions.LinearInterpolationFunction, Models",
             ["Name"] = "ZadokStageMapping",
             ["ResourceName"] = "null",
             ["Children"] = new JArray()
         };
-        (linearInterp["Children"] as JArray).Add(xyPairs);
-        (linearInterp["Children"] as JArray).Add(xValue);
+        (linearInterpPMF["Children"] as JArray).Add(xyPairsPMF);
+        (linearInterpPMF["Children"] as JArray).Add(xValue);
 
+        //Replace all ZadokPMFs with new Zadok with LinearInterp child
+        List<JObject> zadokPMFs = JsonUtilities.ChildrenRecursively(root, "ZadokPMF");
+        foreach(JObject zadok in zadokPMFs)
+        {
+            zadok["$type"] = "Models.PMF.Phen.Zadok, Models";
+            (zadok["Children"] as JArray).Add(linearInterpPMF);
+        }
+
+        JObject xyPairsWheat = new JObject()
+        {
+            ["$type"] = "Models.Functions.XYPairs, Models",
+            ["Name"] = "XYPairs",
+            ["X"] = new JArray(new double[] {5.0,  5.99, 6.0,  7.0,  8.0,  9.0,  10.0, 11.0}),
+            ["Y"] = new JArray(new double[] {30.0, 34,   39.0, 55.0, 65.0, 71.0, 87.0, 90.0})
+        };
+        JObject linearInterpWheat = new JObject()
+        {
+            ["$type"] = "Models.Functions.LinearInterpolationFunction, Models",
+            ["Name"] = "ZadokStageMapping",
+            ["ResourceName"] = "null",
+            ["Children"] = new JArray()
+        };
+        (linearInterpWheat["Children"] as JArray).Add(xyPairsWheat);
+        (linearInterpWheat["Children"] as JArray).Add(xValue);
+
+        //Replace all ZadokPMFWheats with new Zadok with LinearInterp child
         List<JObject> zadokPMFWheats = JsonUtilities.ChildrenRecursively(root, "ZadokPMFWheat");
         foreach(JObject zadok in zadokPMFWheats)
         {
-            zadok["$type"] = "Models.PMF.Phen.ZadokScale, Models";
-            (zadok["Children"] as JArray).Add(linearInterp);
+            zadok["$type"] = "Models.PMF.Phen.Zadok, Models";
+            (zadok["Children"] as JArray).Add(linearInterpWheat);
+        }
+
+        // Change report variables.
+        foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+        {
+            JsonUtilities.SearchReplaceReportVariableNames(report, "Phenology.ZadokPMF", "Phenology.Zadok", caseSensitive: false);
+            JsonUtilities.SearchReplaceReportVariableNames(report, "Phenology.ZadokPMFWheat", "Phenology.Zadok", caseSensitive: false);
+        }
+
+        // Change graph variables.
+        foreach (var graph in JsonUtilities.ChildrenOfType(root, "Graph"))
+        {
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Phenology.ZadokPMF", "Phenology.Zadok");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Phenology.ZadokPMFWheat", "Phenology.Zadok");
         }
     }
 }

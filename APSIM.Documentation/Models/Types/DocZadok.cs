@@ -11,12 +11,12 @@ namespace APSIM.Documentation.Models.Types
     /// <summary>
     /// Base documentation class for models
     /// </summary>
-    public class DocZadokScale : DocGeneric
+    public class DocZadok : DocGeneric
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ZadokScale" /> class.
+        /// Initializes a new instance of the <see cref="Zadok" /> class.
         /// </summary>
-        public DocZadokScale(IModel model): base(model) {}
+        public DocZadok(IModel model): base(model) {}
 
         /// <summary>
         /// Stage names specific to Wheat.
