@@ -7350,6 +7350,7 @@ internal class Converter
         {
             ["$type"] = "Models.Functions.VariableReference, Models",
             ["Name"] = "XValue",
+            ["ResourceName"] = null,
             ["VariableName"] = "[Phenology].Stage"
         };
 
@@ -7357,6 +7358,7 @@ internal class Converter
         {
             ["$type"] = "Models.Functions.XYPairs, Models",
             ["Name"] = "XYPairs",
+            ["ResourceName"] = null,
             ["X"] = new JArray(new double[] {4.3,  4.9, 5.0,  6.0,  7.0,  8.0,  9.0}),
             ["Y"] = new JArray(new double[] {30.0, 33,  39.0, 65.0, 71.0, 87.0, 90.0})
         };
@@ -7364,7 +7366,7 @@ internal class Converter
         {
             ["$type"] = "Models.Functions.LinearInterpolationFunction, Models",
             ["Name"] = "ZadokStageMapping",
-            ["ResourceName"] = "null",
+            ["ResourceName"] = null,
             ["Children"] = new JArray()
         };
         (linearInterpPMF["Children"] as JArray).Add(xyPairsPMF);
@@ -7382,6 +7384,7 @@ internal class Converter
         {
             ["$type"] = "Models.Functions.XYPairs, Models",
             ["Name"] = "XYPairs",
+            ["ResourceName"] = null,
             ["X"] = new JArray(new double[] {5.0,  5.99, 6.0,  7.0,  8.0,  9.0,  10.0, 11.0}),
             ["Y"] = new JArray(new double[] {30.0, 34,   39.0, 55.0, 65.0, 71.0, 87.0, 90.0})
         };
@@ -7389,7 +7392,7 @@ internal class Converter
         {
             ["$type"] = "Models.Functions.LinearInterpolationFunction, Models",
             ["Name"] = "ZadokStageMapping",
-            ["ResourceName"] = "null",
+            ["ResourceName"] = null,
             ["Children"] = new JArray()
         };
         (linearInterpWheat["Children"] as JArray).Add(xyPairsWheat);
