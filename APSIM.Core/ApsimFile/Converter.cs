@@ -7346,19 +7346,25 @@ internal class Converter
     /// <param name="_">Unused filename.</param>
     private static void UpgradeToVersion211(JObject root, string _)
     {
+        //used by both Zadoks
         JObject xValue = new JObject()
         {
             ["$type"] = "Models.Functions.VariableReference, Models",
             ["Name"] = "XValue",
-            ["ResourceName"] = null,
             ["VariableName"] = "[Phenology].Stage"
         };
         
+        //children for PMF zadok
+        JObject VegetativePhasePMF = new JObject()
+        {
+            ["$type"] = "Models.Functions.VariableReference, Models",
+            ["Name"] = "VegetativePhaseFunction",
+            ["VariableName"] = "[Phenology].Zadok.VegetativePhaseCalculation"
+        };
         JObject xyPairsPMF = new JObject()
         {
             ["$type"] = "Models.Functions.XYPairs, Models",
             ["Name"] = "XYPairs",
-            ["ResourceName"] = null,
             ["X"] = new JArray(new double[] {4.3,  4.9, 5.0,  6.0,  7.0,  8.0,  9.0}),
             ["Y"] = new JArray(new double[] {30.0, 33,  39.0, 65.0, 71.0, 87.0, 90.0})
         };
@@ -7366,20 +7372,21 @@ internal class Converter
         {
             ["$type"] = "Models.Functions.LinearInterpolationFunction, Models",
             ["Name"] = "ZadokStageMapping",
-            ["ResourceName"] = null,
             ["Children"] = new JArray()
         };
         (linearInterpPMF["Children"] as JArray).Add(xyPairsPMF);
         (linearInterpPMF["Children"] as JArray).Add(xValue);
 
-        //Replace all ZadokPMFs with new Zadok with LinearInterp child
+        //Replace all ZadokPMFs with new Zadok
         List<JObject> zadokPMFs = JsonUtilities.ChildrenRecursively(root, "ZadokPMF");
         foreach(JObject zadok in zadokPMFs)
         {
             zadok["$type"] = "Models.PMF.Phen.Zadok, Models";
+            (zadok["Children"] as JArray).Add(VegetativePhasePMF);
             (zadok["Children"] as JArray).Add(linearInterpPMF);
         }
 
+        //children for Wheat zadok
         JObject xyPairsWheat = new JObject()
         {
             ["$type"] = "Models.Functions.XYPairs, Models",
@@ -7398,11 +7405,19 @@ internal class Converter
         (linearInterpWheat["Children"] as JArray).Add(xyPairsWheat);
         (linearInterpWheat["Children"] as JArray).Add(xValue);
 
-        //Replace all ZadokPMFWheats with new Zadok with LinearInterp child
+        JObject VegetativePhaseWheat = new JObject()
+        {
+            ["$type"] = "Models.Functions.VariableReference, Models",
+            ["Name"] = "VegetativePhaseFunction",
+            ["VariableName"] = "[Phenology].Zadok.VegetativePhaseCalculationWheat"
+        };
+
+        //Replace all ZadokPMFWheats with new Zadok
         List<JObject> zadokPMFWheats = JsonUtilities.ChildrenRecursively(root, "ZadokPMFWheat");
         foreach(JObject zadok in zadokPMFWheats)
         {
             zadok["$type"] = "Models.PMF.Phen.Zadok, Models";
+            (zadok["Children"] as JArray).Add(VegetativePhaseWheat);
             (zadok["Children"] as JArray).Add(linearInterpWheat);
         }
 

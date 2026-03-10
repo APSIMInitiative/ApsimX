@@ -56,6 +56,12 @@ namespace Models.PMF.Phen
         Structure Structure = null;
 
         /// <summary>
+        /// Calculation during vegetive phase
+        /// </summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        public IFunction VegetativePhaseFunction = null;
+
+        /// <summary>
         /// Zadok and growth stage mapping for winter cereals 
         /// </summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -84,22 +90,9 @@ namespace Models.PMF.Phen
                 if (Phenology.InPhase("Emerging"))
                     return 5.0f + 5 * fracInCurrent;
 
-                IFunction haunStage = Phenology.Node.FindChild<IFunction>("HaunStage");
-                if (haunStage == null) //Not a WinterCeral
-                {
-                    if ((Phenology.InPhase("Vegetative") && fracInCurrent <= 0.9) || (!Phenology.InPhase("ReadyForHarvesting") && Phenology.Stage < 4.3))
-                    {
-                        // Try using Yield Prophet approach where Zadok stage during vegetative phase is based on leaf number only
-                        return 10.0f + Structure.LeafTipsAppeared;
-                    }
-                }
-                else
-                {
-                    if (Phenology.Stage < 5.3)
-                    {
-                        return 10.0f + haunStage.Value();
-                    }
-                }
+                double? value = VegetativePhaseFunction.Value();
+                if (value != null)
+                    return (double)value;
                 
                 if (!Phenology.InPhase("ReadyForHarvesting"))
                     return ZadokStageMapping.Value();
@@ -167,5 +160,42 @@ namespace Models.PMF.Phen
             return zadokDays[index]; // Use 1 based index (position zero is before sowing)
         }
 
+        /// <summary>
+        /// Generic function to calculate Zadok stage during the vegetative function
+        /// </summary>
+        /// <returns>
+        /// If less than 90% through Vegetative phase, or Phenelogy stage is less than 4.3, will return calculated 
+        /// zadok stage. If outside that timeframe, will return null.
+        /// </returns>
+        public double? VegetativePhaseCalculation
+        {
+            get {
+                // Try using Yield Prophet approach where Zadok stage during vegetative phase is based on leaf number only
+                double fracInCurrent = Phenology.FractionInCurrentPhase;
+                if ((Phenology.InPhase("Vegetative") && fracInCurrent <= 0.9) || (Phenology.Stage < 4.3))
+                    return 10.0f + Structure.LeafTipsAppeared;
+                else
+                    return null;
+            }
+        }
+        
+
+        /// <summary>
+        /// Winter Ceral function to calculate Zadok stage during the vegetative function
+        /// </summary>
+        /// <returns>
+        /// If Phenelogy stage is less than 5.3, will return calculated zadok stage. If outside that timeframe, will 
+        /// return null.
+        /// </returns>
+        public double? VegetativePhaseCalculationWheat
+        {
+            get {
+                IFunction haunStage = Phenology.Node.FindChild<IFunction>("HaunStage");
+                if (Phenology.Stage < 5.3)
+                    return 10.0f + haunStage.Value();
+                else
+                    return null;
+            }
+        }
     }
 }
