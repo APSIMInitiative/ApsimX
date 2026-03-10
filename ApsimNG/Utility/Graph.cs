@@ -1,10 +1,11 @@
-﻿namespace Utility
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using APSIM.Core;
+
+namespace APSIMNG.Utility
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using APSIM.Shared.Utilities;
-    using APSIM.Core;
 
     /// <summary>
     /// Graph utility functions.

@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.Linq;
 using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.Functions;
+using M = Models;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -21,15 +23,16 @@ namespace APSIM.Documentation.Models.Types
         /// </summary>
         public override List<ITag> Document(int none = 0)
         {
-            Section section = GetSummaryAndRemarksSection(model);
+            List<ITag> tags = new List<ITag>();
 
-            section.Add(new Paragraph($"*{model.Name}* is calculated using linear interpolation"));
+            foreach (IModel child in model.Node.FindChildren<M.Documentation>())
+                tags.AddRange(AutoDocumentation.DocumentModel(child).ToList());
 
             XYPairs xyPairs = model.Node.FindChild<XYPairs>();
             if (xyPairs != null)
-                section.Add(AutoDocumentation.DocumentModel(xyPairs));
+                tags.AddRange(AutoDocumentation.DocumentModel(xyPairs));
 
-            return new List<ITag>() {section};
+            return tags;
         }
     }
 }

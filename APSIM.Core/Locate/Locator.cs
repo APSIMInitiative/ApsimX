@@ -61,6 +61,62 @@ internal class Locator
         return GetInternal(relativeTo, namePath, flags);
     }
 
+
+    /// <summary>
+    /// Find and return multiple matches (e.g. a soil in multiple zones) for a given path.
+    /// Note that this can be a variable/property or a model. NOTE: Can't use locator
+    /// because it returns a single match - not multiple.
+    /// </summary>
+    /// <param name="model">Relative to</param>
+    /// <param name="path">The path of the variable/model.</param>
+    /// <returns>A collection of VariableComposite instances. Of null if no matches.</returns>
+    public IEnumerable<VariableComposite> GetAllObjects(Node relativeTo, string path, LocatorFlags flags = LocatorFlags.None)
+    {
+        IEnumerable<INodeModel> matches = null;
+
+        // Remove a square bracketed model name and change our relativeTo model to
+        // the referenced model.
+        if (path.StartsWith("["))
+        {
+            int posCloseBracket = path.IndexOf(']');
+            if (posCloseBracket != -1)
+            {
+                string modelName = path.Substring(1, posCloseBracket - 1);
+                path = path.Remove(0, posCloseBracket + 1).TrimStart('.');
+                matches = relativeTo.FindAll<INodeModel>(modelName);
+                if (!matches.Any())
+                {
+                    // Didn't find a model with a name matching the square bracketed string so
+                    // now try and look for a model with a type matching the square bracketed string.
+                    Type modelType = ModelRegistry.ModelNameToType(modelName);
+                    if (modelType != null)
+                        matches = relativeTo.FindAll<INodeModel>().Where(m => modelType.IsAssignableFrom(m.GetType()));
+                }
+            }
+        }
+        else
+            matches = [relativeTo.Model];
+
+        if (matches != null)
+        {
+            foreach (var match in matches)
+            {
+                if (string.IsNullOrEmpty(path))
+                {
+                    var composite = new VariableComposite(path);
+                    composite.AddInstance(match);
+                    yield return composite;
+                }
+                else
+                {
+                    var variable = match.Node.GetObject(path, LocatorFlags.PropertiesOnly | LocatorFlags.CaseSensitive | LocatorFlags.IncludeDisabled);
+                    if (variable != null)
+                        yield return variable;
+                }
+            }
+        }
+    }
+
     /// <summary>
     /// Set the value of a variable. Will throw if variable doesn't exist.
     /// </summary>
@@ -201,6 +257,16 @@ internal class Locator
                 if (propertiesOnly && j == namePathBits.Length - 1)
                     break;
                 relativeToObject = composite.Value;
+
+                //if the property evaluates to null (has not been set), instantiate a copy of that class so it can continue searching the properties.
+                //that way we can continuing search below this object without the relativeToObject being null and breaking the search
+                if (relativeToObject == null && !composite.Property.DeclaringType.IsAbstract)
+                {
+                    //Can only create a blank instance if the class has a default constructor, abandon if it doesnt.
+                    ConstructorInfo ctor = composite.Property.DeclaringType.GetConstructor(Type.EmptyTypes);
+                    if (ctor != null)
+                        relativeToObject = Activator.CreateInstance(composite.Property.DeclaringType);
+                }
             }
             else if ((objectInfo as MethodInfo) != null)
             {

@@ -52,7 +52,7 @@ internal partial class AddCommand: IModelCommand
             string modelName = match.Groups["modelname"].ToString().Trim();
             if (!modelName.StartsWith('[') && !modelName.EndsWith(']'))
                 modelName = $"[{modelName}]";
-            modelReference = new ModelReference(relativeTo, modelName);
+            modelReference = new ModelLocatorReference(relativeTo, modelName);
         }
 
         return new AddCommand(modelReference,
@@ -69,7 +69,7 @@ internal partial class AddCommand: IModelCommand
     {
         List<string> parts = ["add"];
 
-        if (modelReference is ModelReference childModelReference)
+        if (modelReference is ModelLocatorReference childModelReference)
             parts.Add(childModelReference.modelName);
         else if (modelReference is NewModelReference newModelReference)
         {

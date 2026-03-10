@@ -997,7 +997,12 @@ namespace Models.PMF.Organs
         {
             get
             {
+                //if CohortParameters have not been initialised, return no stress
                 if (CohortParameters == null)
+                    return 1;
+
+                //If there is no demand or Metabolic N, return no stress
+                if (NDemand.Total == 0 && Live.MetabolicNConc == 0)
                     return 1;
 
                 double f;
@@ -1258,8 +1263,9 @@ namespace Models.PMF.Organs
         /// <param name="deadToRemove">Fraction of dead biomass to remove from simulation (0-1).</param>
         /// <param name="liveToResidue">Fraction of live biomass to remove and send to residue pool(0-1).</param>
         /// <param name="deadToResidue">Fraction of dead biomass to remove and send to residue pool(0-1).</param>
+        /// <param name="fractionStanding">Fraction of biomass that remains standing when passed to surfaceOM (0-1).</param>
         /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
-        public double RemoveBiomass(double liveToRemove, double deadToRemove, double liveToResidue, double deadToResidue)
+        public double RemoveBiomass(double liveToRemove, double deadToRemove, double liveToResidue, double deadToResidue, double fractionStanding = 0)
         {
             bool writeToSummary = false;
             double totalBiomass = Live.Wt + Dead.Wt;
@@ -1270,7 +1276,7 @@ namespace Models.PMF.Organs
                 {
                     double remainingLiveFraction = 1.0 - (liveToResidue + liveToRemove);
                     amountRemoved += biomassRemovalModel.RemoveBiomass(liveToRemove, deadToRemove, liveToResidue, deadToResidue,
-                                                                       leaf.Live, leaf.Dead, leaf.Removed, leaf.Detached, writeToSummary);
+                                                                       leaf.Live, leaf.Dead, leaf.Removed, leaf.Detached, fractionStanding, writeToSummary);
                     leaf.LiveArea *= remainingLiveFraction;
                     Detached.Add(leaf.Detached);
                     Removed.Add(leaf.Removed);

@@ -47,6 +47,9 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Depth down to which residues are incorporated into the soil by cultivation at harvest (mm).</summary>
         public double ResidueIncorporationDepth { get; set; }
 
+        /// <summary>Fraction of residues that remain standing</summary>
+        public double FractionStanding { get; set; }
+
         /// <summary>Flag whether fertiliser be applied to this crop (to be used by manager scripts).</summary>
         /// <remarks>Note, this is a flag for managers to use, SCRUM does not calculate its own fertiliser applications.</remarks>
         public bool IsFertilised { get; set; }
@@ -71,13 +74,14 @@ namespace Models.PMF.SimplePlantModels
         /// <param name="residueRemoval">Proportion of stover removed off field at harvest (0-1)</param>
         /// <param name="residueIncorporation">Proportion of residues to incorporate into the soil at harvest (0-1)</param>
         /// <param name="residueIncorporationDepth">Depth to incorporate the residues (mm)</param>
+        /// <param name="fractionStanding">Depth to incorporate the residues (mm)</param>
         /// <param name="isFertilised">Flag whether the crop raises an event with fertiliser requirements</param>
         /// <param name="firstFertDate">Date of first fertiliser application, passed on the fertiliser event</param>
         public ScrumManagementInstance(string cropName, DateTime establishDate, string establishStage,
                                        string harvestStage, double expectedYield,
                                        Nullable<DateTime> harvestDate = null, double ttEstablishmentToHarvest = double.NaN,
                                        double plantingDepth = 15, double fieldLoss = 0, double residueRemoval = 0,
-                                       double residueIncorporation = 1, double residueIncorporationDepth = 150,
+                                       double residueIncorporation = 1, double residueIncorporationDepth = 150, double fractionStanding = 0,
                                        bool isFertilised = true, Nullable<DateTime> firstFertDate = null)
         {
             // check harvest timing setup
@@ -96,6 +100,7 @@ namespace Models.PMF.SimplePlantModels
             ResidueRemoval = residueRemoval;
             ResidueIncorporation = residueIncorporation;
             ResidueIncorporationDepth = residueIncorporationDepth;
+            FractionStanding = fractionStanding;
             HarvestDate = harvestDate;
             Tt_EstablishmentToHarvest = ttEstablishmentToHarvest;
             IsFertilised = isFertilised;
@@ -179,6 +184,15 @@ namespace Models.PMF.SimplePlantModels
             catch
             {
                 ResidueIncorporationDepth = 150;
+            }
+
+            try 
+            {
+                FractionStanding = double.Parse(cropParams["StandingFraction"]);
+            }
+            catch
+            {
+                FractionStanding = 0;
             }
 
             try

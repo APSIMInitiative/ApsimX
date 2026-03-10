@@ -309,6 +309,12 @@ namespace Models
                                     }
                                     break;
                                 }
+                                else if (parameterValues == null)
+                                {
+                                    throw new ApsimXException(this, 
+                                        "There is an issue with the arguments provided a method in the operation location at \'" + this.FullPath + 
+                                        "\'. The method with argument issue(s) is : " + modelName + "." + methodName + "().\nIf you are using named arguments, please ensure the argument names are correct.");
+                                }
                             }
                         }
 

@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 205,
+  "Version": 208,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -1277,6 +1277,7 @@
             "[Wheat].Leaf.MainStemPopulation",
             "[Wheat].Leaf.StemPopulation",
             "[Wheat].Leaf.StemNumberPerPlant",
+            "[Wheat].Leaf.StemNumberPerPlant",
             "[Wheat].Phenology.PTQ",
             "[Wheat].Phenology.Phyllochron",
             "[Wheat].Total.N",
@@ -1286,7 +1287,7 @@
             "[Wheat].Phenology.AccumulatedTT",
             "([Wheat].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].PrecipitationInterception)",
             "[Wheat].Leaf.Photosynthesis.FT",
-            "[NDVIModel].Script.NDVI",
+            "[Spectral].NDVI",
             "",
             "[Wheat].Root.WaterTensionFactor"
           ],
@@ -1305,7 +1306,7 @@
           "VariableNames": [
             "[Simulation].Name",
             "[Clock].Today",
-            "[NDVIModel].Script.NDVI"
+            "[Spectral].NDVI"
           ],
           "EventNames": [
             "[Clock].DoReport"
@@ -1372,10 +1373,7 @@
                         "[Sowing].Script.CultivarName = Hartog",
                         "[SetPhaseCompletionDates].Script.EmergDate = 2-jun-2014",
                         "[SetPhaseCompletionDates].Script.FlagDate = 7-aug-2014",
-                        "[SetPhaseCompletionDates].Script.AnthDate = 9-sep-2014",
-                        "",
-                        "//Estimated to assist with final leaf number",
-                        "[SetPhaseCompletionDates].Script.TSDate=14-jul-2014"
+                        "[SetPhaseCompletionDates].Script.AnthDate = 9-sep-2014"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1391,10 +1389,7 @@
                         "[Sowing].Script.CultivarName = Corack",
                         "[SetPhaseCompletionDates].Script.EmergDate = 2-jun-2014",
                         "[SetPhaseCompletionDates].Script.FlagDate = 9-aug-2014",
-                        "[SetPhaseCompletionDates].Script.AnthDate = 9-sep-2014",
-                        "",
-                        "//Estimated to assist with final leaf number",
-                        "[SetPhaseCompletionDates].Script.TSDate=14-jul-2014"
+                        "[SetPhaseCompletionDates].Script.AnthDate = 9-sep-2014"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1410,10 +1405,7 @@
                         "[Sowing].Script.CultivarName = Mace",
                         "[SetPhaseCompletionDates].Script.EmergDate = 2-jun-2014",
                         "[SetPhaseCompletionDates].Script.FlagDate = 9-aug-2014",
-                        "[SetPhaseCompletionDates].Script.AnthDate = 9-sep-2014",
-                        "",
-                        "//Estimated to assist with final leaf number",
-                        "[SetPhaseCompletionDates].Script.TSDate=14-jul-2014"
+                        "[SetPhaseCompletionDates].Script.AnthDate = 9-sep-2014"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -2343,91 +2335,6 @@
                     {
                       "$type": "Models.Manager, Models",
                       "CodeArray": [
-                        "using System;",
-                        "using Models.Core;",
-                        "using Models.Interfaces;",
-                        "using Models.PMF;",
-                        "using APSIM.Shared.Utilities;",
-                        "using Models.WaterModel;",
-                        "",
-                        "namespace Models",
-                        "{",
-                        "    [Serializable]",
-                        "    public class Script : Model",
-                        "    {",
-                        "        [Link] IClock Clock;",
-                        "        [Link] ISummary Summary;",
-                        "        [Link] ICanopy WheatCanopy;",
-                        "        [Link] EvaporationModel EvapModel;",
-                        "        ",
-                        "        [Description(\"Dry soil NDVI\")]",
-                        "        public double DrySoilNDVI { get; set; }",
-                        "        ",
-                        "        [Description(\"Wet soil NDVI\")]",
-                        "        public double WetSoilNDVI { get; set; }",
-                        "",
-                        "        [Description(\"Green Crop NDVI\")]",
-                        "        public double GreenCropNDVI { get; set; }",
-                        "        ",
-                        "        [Description(\"Dead Crop NDVI\")]",
-                        "        public double DeadCropNDVI { get; set; }",
-                        "                ",
-                        "        [Description(\"Daily Estimated NDVI\")]",
-                        "        public double NDVI { get; set; }",
-                        "",
-                        "        [EventSubscribe(\"DoManagement\")]",
-                        "        private void DoDailyCalculations(object sender, EventArgs e)",
-                        "        {",
-                        "            double SoilNDVI = WetSoilNDVI;",
-                        "            if (EvapModel.t > 1)",
-                        "               SoilNDVI = DrySoilNDVI;",
-                        "",
-                        "            //NDVI = GreenCropNDVI * WheatCanopy.CoverGreen;",
-                        "            //NDVI += DeadCropNDVI * (WheatCanopy.CoverTotal - WheatCanopy.CoverGreen);",
-                        "            //NDVI += SoilNDVI * (1 - WheatCanopy.CoverTotal);",
-                        "            ",
-                        "            double CropNDVI = 0;",
-                        "            if (WheatCanopy.CoverTotal > 0)",
-                        "                CropNDVI = (WheatCanopy.CoverGreen/WheatCanopy.CoverTotal) * GreenCropNDVI + (1.0 - WheatCanopy.CoverGreen/WheatCanopy.CoverTotal) * DeadCropNDVI; ",
-                        "            ",
-                        "            NDVI = SoilNDVI + (CropNDVI - SoilNDVI)*Math.Pow(WheatCanopy.CoverTotal, (1.0 - SoilNDVI));",
-                        "            ",
-                        "        }",
-                        "    }",
-                        "}",
-                        ""
-                      ],
-                      "Parameters": [
-                        {
-                          "Key": "DrySoilNDVI",
-                          "Value": "0.16"
-                        },
-                        {
-                          "Key": "WetSoilNDVI",
-                          "Value": "0.2"
-                        },
-                        {
-                          "Key": "GreenCropNDVI",
-                          "Value": "0.9"
-                        },
-                        {
-                          "Key": "DeadCropNDVI",
-                          "Value": "0.1"
-                        },
-                        {
-                          "Key": "NDVI",
-                          "Value": "0"
-                        }
-                      ],
-                      "Name": "NDVIModel",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Manager, Models",
-                      "CodeArray": [
                         "using APSIM.Core;",
                         "using Models.Soils.Nutrients;",
                         "using System;",
@@ -2651,6 +2558,18 @@
                         }
                       ],
                       "Name": "SetPhaseCompletionDates",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Sensor.Spectral, Models",
+                      "DrySoilNDVI": 0.16,
+                      "WetSoilNDVI": 0.2,
+                      "GreenCropNDVI": 0.9,
+                      "DeadCropNDVI": 0.1,
+                      "Name": "Spectral",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -2992,7 +2911,7 @@
                           "LineThickness": 0,
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NDVIModel.Script.NDVI",
+                          "YFieldName": "Spectral.NDVI",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -3032,7 +2951,7 @@
                           "LineThickness": 0,
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NDVIModel.Script.NDVI",
+                          "YFieldName": "Spectral.NDVI",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -3250,35 +3169,6 @@
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": 0,
-                          "FactorToVaryColours": "Cv",
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 11,
-                          "MarkerSize": 0,
-                          "Line": 0,
-                          "LineThickness": 0,
-                          "TableName": "DailyReport",
-                          "XFieldName": "Clock.Today",
-                          "YFieldName": "Wheat.Root.Allocated.Wt",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
-                          "ShowInLegend": false,
-                          "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "Predicted1",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
                         }
                       ],
                       "Enabled": true,
@@ -3363,7 +3253,7 @@
                           "LineThickness": 0,
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Wheat.Leaf.StemNumberPerPlant",
+                          "YFieldName": "Wheat.Leaf.StemNumberPerPlant.Total.Tillers",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -6179,91 +6069,6 @@
                     {
                       "$type": "Models.Manager, Models",
                       "CodeArray": [
-                        "using System;",
-                        "using Models.Core;",
-                        "using Models.Interfaces;",
-                        "using Models.PMF;",
-                        "using APSIM.Shared.Utilities;",
-                        "using Models.WaterModel;",
-                        "",
-                        "namespace Models",
-                        "{",
-                        "    [Serializable]",
-                        "    public class Script : Model",
-                        "    {",
-                        "        [Link] IClock Clock;",
-                        "        [Link] ISummary Summary;",
-                        "        [Link] ICanopy WheatCanopy;",
-                        "        [Link] EvaporationModel EvapModel;",
-                        "        ",
-                        "        [Description(\"Dry soil NDVI\")]",
-                        "        public double DrySoilNDVI { get; set; }",
-                        "        ",
-                        "        [Description(\"Wet soil NDVI\")]",
-                        "        public double WetSoilNDVI { get; set; }",
-                        "",
-                        "        [Description(\"Green Crop NDVI\")]",
-                        "        public double GreenCropNDVI { get; set; }",
-                        "        ",
-                        "        [Description(\"Dead Crop NDVI\")]",
-                        "        public double DeadCropNDVI { get; set; }",
-                        "                ",
-                        "        [Description(\"Daily Estimated NDVI\")]",
-                        "        public double NDVI { get; set; }",
-                        "",
-                        "        [EventSubscribe(\"DoManagement\")]",
-                        "        private void DoDailyCalculations(object sender, EventArgs e)",
-                        "        {",
-                        "            double SoilNDVI = WetSoilNDVI;",
-                        "            if (EvapModel.t > 1)",
-                        "               SoilNDVI = DrySoilNDVI;",
-                        "",
-                        "            //NDVI = GreenCropNDVI * WheatCanopy.CoverGreen;",
-                        "            //NDVI += DeadCropNDVI * (WheatCanopy.CoverTotal - WheatCanopy.CoverGreen);",
-                        "            //NDVI += SoilNDVI * (1 - WheatCanopy.CoverTotal);",
-                        "            ",
-                        "            double CropNDVI = 0;",
-                        "            if (WheatCanopy.CoverTotal > 0)",
-                        "                CropNDVI = (WheatCanopy.CoverGreen/WheatCanopy.CoverTotal) * GreenCropNDVI + (1.0 - WheatCanopy.CoverGreen/WheatCanopy.CoverTotal) * DeadCropNDVI; ",
-                        "            ",
-                        "            NDVI = SoilNDVI + (CropNDVI - SoilNDVI)*Math.Pow(WheatCanopy.CoverTotal, (1.0 - SoilNDVI));",
-                        "            ",
-                        "        }",
-                        "    }",
-                        "}",
-                        ""
-                      ],
-                      "Parameters": [
-                        {
-                          "Key": "DrySoilNDVI",
-                          "Value": "0.17"
-                        },
-                        {
-                          "Key": "WetSoilNDVI",
-                          "Value": "0.17"
-                        },
-                        {
-                          "Key": "GreenCropNDVI",
-                          "Value": "0.9"
-                        },
-                        {
-                          "Key": "DeadCropNDVI",
-                          "Value": "0.1"
-                        },
-                        {
-                          "Key": "NDVI",
-                          "Value": "0"
-                        }
-                      ],
-                      "Name": "NDVIModel",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Manager, Models",
-                      "CodeArray": [
                         "using APSIM.Core;",
                         "using Models.Soils.Nutrients;",
                         "using System;",
@@ -6491,6 +6296,18 @@
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Sensor.Spectral, Models",
+                      "DrySoilNDVI": 0.17,
+                      "WetSoilNDVI": 0.17,
+                      "GreenCropNDVI": 0.9,
+                      "DeadCropNDVI": 0.1,
+                      "Name": "Spectral",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "Enabled": true,
@@ -6681,8 +6498,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
+                          "Minimum": 250.3033323528762,
+                          "Maximum": 30319.446667647124,
                           "Interval": null
                         }
                       ],
@@ -6806,7 +6623,7 @@
                           "LineThickness": 0,
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NDVIModel.Script.NDVI",
+                          "YFieldName": "Spectral.NDVI",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -6846,7 +6663,7 @@
                           "LineThickness": 0,
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NDVIModel.Script.NDVI",
+                          "YFieldName": "Spectral.NDVI",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -7119,7 +6936,7 @@
                           "LineThickness": 0,
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Wheat.Leaf.StemNumberPerPlant.Total.Tillers",
+                          "YFieldName": "Wheat.Leaf.StemNumberPerPlant",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -9242,91 +9059,6 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Manager, Models",
-                      "CodeArray": [
-                        "using System;",
-                        "using Models.Core;",
-                        "using Models.Interfaces;",
-                        "using Models.PMF;",
-                        "using APSIM.Shared.Utilities;",
-                        "using Models.WaterModel;",
-                        "",
-                        "namespace Models",
-                        "{",
-                        "    [Serializable]",
-                        "    public class Script : Model",
-                        "    {",
-                        "        [Link] IClock Clock;",
-                        "        [Link] ISummary Summary;",
-                        "        [Link] ICanopy WheatCanopy;",
-                        "        [Link] EvaporationModel EvapModel;",
-                        "        ",
-                        "        [Description(\"Dry soil NDVI\")]",
-                        "        public double DrySoilNDVI { get; set; }",
-                        "        ",
-                        "        [Description(\"Wet soil NDVI\")]",
-                        "        public double WetSoilNDVI { get; set; }",
-                        "",
-                        "        [Description(\"Green Crop NDVI\")]",
-                        "        public double GreenCropNDVI { get; set; }",
-                        "        ",
-                        "        [Description(\"Dead Crop NDVI\")]",
-                        "        public double DeadCropNDVI { get; set; }",
-                        "                ",
-                        "        [Description(\"Daily Estimated NDVI\")]",
-                        "        public double NDVI { get; set; }",
-                        "",
-                        "        [EventSubscribe(\"DoManagement\")]",
-                        "        private void DoDailyCalculations(object sender, EventArgs e)",
-                        "        {",
-                        "            double SoilNDVI = WetSoilNDVI;",
-                        "            if (EvapModel.t > 1)",
-                        "               SoilNDVI = DrySoilNDVI;",
-                        "",
-                        "            //NDVI = GreenCropNDVI * WheatCanopy.CoverGreen;",
-                        "            //NDVI += DeadCropNDVI * (WheatCanopy.CoverTotal - WheatCanopy.CoverGreen);",
-                        "            //NDVI += SoilNDVI * (1 - WheatCanopy.CoverTotal);",
-                        "            ",
-                        "            double CropNDVI = 0;",
-                        "            if (WheatCanopy.CoverTotal > 0)",
-                        "                CropNDVI = (WheatCanopy.CoverGreen/WheatCanopy.CoverTotal) * GreenCropNDVI + (1.0 - WheatCanopy.CoverGreen/WheatCanopy.CoverTotal) * DeadCropNDVI; ",
-                        "            ",
-                        "            NDVI = SoilNDVI + (CropNDVI - SoilNDVI)*Math.Pow(WheatCanopy.CoverTotal, (1.0 - SoilNDVI));",
-                        "            ",
-                        "        }",
-                        "    }",
-                        "}",
-                        ""
-                      ],
-                      "Parameters": [
-                        {
-                          "Key": "DrySoilNDVI",
-                          "Value": "0.17"
-                        },
-                        {
-                          "Key": "WetSoilNDVI",
-                          "Value": "0.17"
-                        },
-                        {
-                          "Key": "GreenCropNDVI",
-                          "Value": "0.9"
-                        },
-                        {
-                          "Key": "DeadCropNDVI",
-                          "Value": "0.1"
-                        },
-                        {
-                          "Key": "NDVI",
-                          "Value": "0"
-                        }
-                      ],
-                      "Name": "NDVIModel",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Report, Models",
                       "VariableNames": null,
                       "EventNames": null,
@@ -9563,6 +9295,18 @@
                         }
                       ],
                       "Name": "SetPhaseCompletionDates",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Sensor.Spectral, Models",
+                      "DrySoilNDVI": 0.17,
+                      "WetSoilNDVI": 0.17,
+                      "GreenCropNDVI": 0.9,
+                      "DeadCropNDVI": 0.1,
+                      "Name": "Spectral",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -9904,7 +9648,7 @@
                           "LineThickness": 0,
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NDVIModel.Script.NDVI",
+                          "YFieldName": "Spectral.NDVI",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -9944,7 +9688,7 @@
                           "LineThickness": 0,
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NDVIModel.Script.NDVI",
+                          "YFieldName": "Spectral.NDVI",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -10217,7 +9961,7 @@
                           "LineThickness": 0,
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Wheat.Leaf.StemNumberPerPlant.Total.Tillers",
+                          "YFieldName": "Wheat.Leaf.StemNumberPerPlant",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -13110,91 +12854,6 @@
                         "using Models.PMF;",
                         "using APSIM.Shared.Utilities;",
                         "using Models.WaterModel;",
-                        "",
-                        "namespace Models",
-                        "{",
-                        "    [Serializable]",
-                        "    public class Script : Model",
-                        "    {",
-                        "        [Link] IClock Clock;",
-                        "        [Link] ISummary Summary;",
-                        "        [Link] ICanopy WheatCanopy;",
-                        "        [Link] EvaporationModel EvapModel;",
-                        "        ",
-                        "        [Description(\"Dry soil NDVI\")]",
-                        "        public double DrySoilNDVI { get; set; }",
-                        "        ",
-                        "        [Description(\"Wet soil NDVI\")]",
-                        "        public double WetSoilNDVI { get; set; }",
-                        "",
-                        "        [Description(\"Green Crop NDVI\")]",
-                        "        public double GreenCropNDVI { get; set; }",
-                        "        ",
-                        "        [Description(\"Dead Crop NDVI\")]",
-                        "        public double DeadCropNDVI { get; set; }",
-                        "                ",
-                        "        [Description(\"Daily Estimated NDVI\")]",
-                        "        public double NDVI { get; set; }",
-                        "",
-                        "        [EventSubscribe(\"DoManagement\")]",
-                        "        private void DoDailyCalculations(object sender, EventArgs e)",
-                        "        {",
-                        "            double SoilNDVI = WetSoilNDVI;",
-                        "            if (EvapModel.t > 1)",
-                        "               SoilNDVI = DrySoilNDVI;",
-                        "",
-                        "            //NDVI = GreenCropNDVI * WheatCanopy.CoverGreen;",
-                        "            //NDVI += DeadCropNDVI * (WheatCanopy.CoverTotal - WheatCanopy.CoverGreen);",
-                        "            //NDVI += SoilNDVI * (1 - WheatCanopy.CoverTotal);",
-                        "            ",
-                        "            double CropNDVI = 0;",
-                        "            if (WheatCanopy.CoverTotal > 0)",
-                        "                CropNDVI = (WheatCanopy.CoverGreen/WheatCanopy.CoverTotal) * GreenCropNDVI + (1.0 - WheatCanopy.CoverGreen/WheatCanopy.CoverTotal) * DeadCropNDVI; ",
-                        "            ",
-                        "            NDVI = SoilNDVI + (CropNDVI - SoilNDVI)*Math.Pow(WheatCanopy.CoverTotal, (1.0 - SoilNDVI));",
-                        "            ",
-                        "        }",
-                        "    }",
-                        "}",
-                        ""
-                      ],
-                      "Parameters": [
-                        {
-                          "Key": "DrySoilNDVI",
-                          "Value": "0.15"
-                        },
-                        {
-                          "Key": "WetSoilNDVI",
-                          "Value": "0.2"
-                        },
-                        {
-                          "Key": "GreenCropNDVI",
-                          "Value": "0.85"
-                        },
-                        {
-                          "Key": "DeadCropNDVI",
-                          "Value": "0.1"
-                        },
-                        {
-                          "Key": "NDVI",
-                          "Value": "0"
-                        }
-                      ],
-                      "Name": "NDVIModel",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Manager, Models",
-                      "CodeArray": [
-                        "using System;",
-                        "using Models.Core;",
-                        "using Models.Interfaces;",
-                        "using Models.PMF;",
-                        "using APSIM.Shared.Utilities;",
-                        "using Models.WaterModel;",
                         "using Models.Soils;",
                         "",
                         "namespace Models",
@@ -13344,6 +13003,18 @@
                         }
                       ],
                       "Name": "SetPhaseCompletionDates",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Sensor.Spectral, Models",
+                      "DrySoilNDVI": 0.15,
+                      "WetSoilNDVI": 0.2,
+                      "GreenCropNDVI": 0.85,
+                      "DeadCropNDVI": 0.1,
+                      "Name": "Spectral",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -13663,7 +13334,7 @@
                           "LineThickness": 0,
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NDVIModel.Script.NDVI",
+                          "YFieldName": "Spectral.NDVI",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -13703,7 +13374,7 @@
                           "LineThickness": 0,
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NDVIModel.Script.NDVI",
+                          "YFieldName": "Spectral.NDVI",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -16429,91 +16100,6 @@
                     {
                       "$type": "Models.Manager, Models",
                       "CodeArray": [
-                        "using System;",
-                        "using Models.Core;",
-                        "using Models.Interfaces;",
-                        "using Models.PMF;",
-                        "using APSIM.Shared.Utilities;",
-                        "using Models.WaterModel;",
-                        "",
-                        "namespace Models",
-                        "{",
-                        "    [Serializable]",
-                        "    public class Script : Model",
-                        "    {",
-                        "        [Link] IClock Clock;",
-                        "        [Link] ISummary Summary;",
-                        "        [Link] ICanopy WheatCanopy;",
-                        "        [Link] EvaporationModel EvapModel;",
-                        "        ",
-                        "        [Description(\"Dry soil NDVI\")]",
-                        "        public double DrySoilNDVI { get; set; }",
-                        "        ",
-                        "        [Description(\"Wet soil NDVI\")]",
-                        "        public double WetSoilNDVI { get; set; }",
-                        "",
-                        "        [Description(\"Green Crop NDVI\")]",
-                        "        public double GreenCropNDVI { get; set; }",
-                        "        ",
-                        "        [Description(\"Dead Crop NDVI\")]",
-                        "        public double DeadCropNDVI { get; set; }",
-                        "                ",
-                        "        [Description(\"Daily Estimated NDVI\")]",
-                        "        public double NDVI { get; set; }",
-                        "",
-                        "        [EventSubscribe(\"DoManagement\")]",
-                        "        private void DoDailyCalculations(object sender, EventArgs e)",
-                        "        {",
-                        "            double SoilNDVI = WetSoilNDVI;",
-                        "            if (EvapModel.t > 1)",
-                        "               SoilNDVI = DrySoilNDVI;",
-                        "",
-                        "            //NDVI = GreenCropNDVI * WheatCanopy.CoverGreen;",
-                        "            //NDVI += DeadCropNDVI * (WheatCanopy.CoverTotal - WheatCanopy.CoverGreen);",
-                        "            //NDVI += SoilNDVI * (1 - WheatCanopy.CoverTotal);",
-                        "            ",
-                        "            double CropNDVI = 0;",
-                        "            if (WheatCanopy.CoverTotal > 0)",
-                        "                CropNDVI = (WheatCanopy.CoverGreen/WheatCanopy.CoverTotal) * GreenCropNDVI + (1.0 - WheatCanopy.CoverGreen/WheatCanopy.CoverTotal) * DeadCropNDVI; ",
-                        "            ",
-                        "            NDVI = SoilNDVI + (CropNDVI - SoilNDVI)*Math.Pow(WheatCanopy.CoverTotal, (1.0 - SoilNDVI));",
-                        "            ",
-                        "        }",
-                        "    }",
-                        "}",
-                        ""
-                      ],
-                      "Parameters": [
-                        {
-                          "Key": "DrySoilNDVI",
-                          "Value": "0.1"
-                        },
-                        {
-                          "Key": "WetSoilNDVI",
-                          "Value": "0.1"
-                        },
-                        {
-                          "Key": "GreenCropNDVI",
-                          "Value": "0.9"
-                        },
-                        {
-                          "Key": "DeadCropNDVI",
-                          "Value": "0.1"
-                        },
-                        {
-                          "Key": "NDVI",
-                          "Value": "0"
-                        }
-                      ],
-                      "Name": "NDVIModel",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Manager, Models",
-                      "CodeArray": [
                         "using APSIM.Core;",
                         "using Models.Soils.Nutrients;",
                         "using System;",
@@ -16737,6 +16323,18 @@
                         }
                       ],
                       "Name": "SetPhaseCompletionDates",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Sensor.Spectral, Models",
+                      "DrySoilNDVI": 0.1,
+                      "WetSoilNDVI": 0.1,
+                      "GreenCropNDVI": 0.9,
+                      "DeadCropNDVI": 0.1,
+                      "Name": "Spectral",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -17056,7 +16654,7 @@
                           "LineThickness": 0,
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NDVIModel.Script.NDVI",
+                          "YFieldName": "Spectral.NDVI",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -17096,7 +16694,7 @@
                           "LineThickness": 0,
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NDVIModel.Script.NDVI",
+                          "YFieldName": "Spectral.NDVI",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -18528,11 +18126,11 @@
                   "Name": "Cv",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -18548,7 +18146,7 @@
                   "Name": "Clock",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -18557,7 +18155,7 @@
                   "Name": "SummaryFile",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -18568,7 +18166,7 @@
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -18576,7 +18174,7 @@
                   "Name": "SoilArbitrator",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -18592,7 +18190,7 @@
                   "Name": "MicroClimate",
                   "ResourceName": "MicroClimate",
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -18620,7 +18218,7 @@
                       "Name": "DailyReport",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -18640,7 +18238,7 @@
                       "Name": "HarvestReport",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -18648,7 +18246,7 @@
                       "Name": "Fertiliser",
                       "ResourceName": "Fertiliser",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -18664,7 +18262,7 @@
                       "Name": "SurfaceOrganicMatter",
                       "ResourceName": "SurfaceOrganicMatter",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -18672,7 +18270,7 @@
                       "Name": "Wheat",
                       "ResourceName": "Wheat",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -18725,7 +18323,7 @@
                       "Name": "SowingFertiliser",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -18807,7 +18405,7 @@
                       "Name": "Sowing",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -18818,7 +18416,7 @@
                       "Name": "SowingReport",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -19033,11 +18631,11 @@
                               "Name": "wheatSoil",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -19075,7 +18673,7 @@
                           "Name": "SoilWater",
                           "ResourceName": "WaterBalance",
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -19129,7 +18727,7 @@
                           "Name": "Organic",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -19184,7 +18782,7 @@
                           "Name": "Chemical",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -19207,7 +18805,7 @@
                           "Name": "Water",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -19239,7 +18837,7 @@
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -19271,7 +18869,7 @@
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -19303,7 +18901,7 @@
                           "Name": "Urea",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -19311,7 +18909,7 @@
                           "Name": "Nutrient",
                           "ResourceName": "Nutrient",
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -19321,96 +18919,11 @@
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Manager, Models",
-                      "CodeArray": [
-                        "using System;",
-                        "using Models.Core;",
-                        "using Models.Interfaces;",
-                        "using Models.PMF;",
-                        "using APSIM.Shared.Utilities;",
-                        "using Models.WaterModel;",
-                        "",
-                        "namespace Models",
-                        "{",
-                        "    [Serializable]",
-                        "    public class Script : Model",
-                        "    {",
-                        "        [Link] IClock Clock;",
-                        "        [Link] ISummary Summary;",
-                        "        [Link] ICanopy WheatCanopy;",
-                        "        [Link] EvaporationModel EvapModel;",
-                        "        ",
-                        "        [Description(\"Dry soil NDVI\")]",
-                        "        public double DrySoilNDVI { get; set; }",
-                        "        ",
-                        "        [Description(\"Wet soil NDVI\")]",
-                        "        public double WetSoilNDVI { get; set; }",
-                        "",
-                        "        [Description(\"Green Crop NDVI\")]",
-                        "        public double GreenCropNDVI { get; set; }",
-                        "        ",
-                        "        [Description(\"Dead Crop NDVI\")]",
-                        "        public double DeadCropNDVI { get; set; }",
-                        "                ",
-                        "        [Description(\"Daily Estimated NDVI\")]",
-                        "        public double NDVI { get; set; }",
-                        "",
-                        "        [EventSubscribe(\"DoManagement\")]",
-                        "        private void DoDailyCalculations(object sender, EventArgs e)",
-                        "        {",
-                        "            double SoilNDVI = WetSoilNDVI;",
-                        "            if (EvapModel.t > 1)",
-                        "               SoilNDVI = DrySoilNDVI;",
-                        "",
-                        "            //NDVI = GreenCropNDVI * WheatCanopy.CoverGreen;",
-                        "            //NDVI += DeadCropNDVI * (WheatCanopy.CoverTotal - WheatCanopy.CoverGreen);",
-                        "            //NDVI += SoilNDVI * (1 - WheatCanopy.CoverTotal);",
-                        "            ",
-                        "            double CropNDVI = 0;",
-                        "            if (WheatCanopy.CoverTotal > 0)",
-                        "                CropNDVI = (WheatCanopy.CoverGreen/WheatCanopy.CoverTotal) * GreenCropNDVI + (1.0 - WheatCanopy.CoverGreen/WheatCanopy.CoverTotal) * DeadCropNDVI; ",
-                        "            ",
-                        "            NDVI = SoilNDVI + (CropNDVI - SoilNDVI)*Math.Pow(WheatCanopy.CoverTotal, (1.0 - SoilNDVI));",
-                        "            ",
-                        "        }",
-                        "    }",
-                        "}",
-                        ""
-                      ],
-                      "Parameters": [
-                        {
-                          "Key": "DrySoilNDVI",
-                          "Value": "0.13"
-                        },
-                        {
-                          "Key": "WetSoilNDVI",
-                          "Value": "0.13"
-                        },
-                        {
-                          "Key": "GreenCropNDVI",
-                          "Value": "0.85"
-                        },
-                        {
-                          "Key": "DeadCropNDVI",
-                          "Value": "0.1"
-                        },
-                        {
-                          "Key": "NDVI",
-                          "Value": "0"
-                        }
-                      ],
-                      "Name": "NDVIModel",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -19518,7 +19031,7 @@
                       "Name": "Harvesting",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -19576,11 +19089,23 @@
                       "Name": "SoilWaterCalculation",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Sensor.Spectral, Models",
+                      "DrySoilNDVI": 0.13,
+                      "WetSoilNDVI": 0.13,
+                      "GreenCropNDVI": 0.85,
+                      "DeadCropNDVI": 0.1,
+                      "Name": "Spectral",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -19630,11 +19155,11 @@
                   "Name": "LocationInfo",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -19710,7 +19235,7 @@
                           "Name": "Predicted",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -19739,11 +19264,11 @@
                           "Name": "Observed",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -19807,7 +19332,7 @@
                           "Name": "Predicted",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -19836,11 +19361,11 @@
                           "Name": "Observed",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -19893,7 +19418,7 @@
                           "LineThickness": 0,
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NDVIModel.Script.NDVI",
+                          "YFieldName": "Spectral.NDVI",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -19911,11 +19436,11 @@
                               "Name": "EventNamesOnGraph",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -19933,7 +19458,7 @@
                           "LineThickness": 0,
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NDVIModel.Script.NDVI",
+                          "YFieldName": "Spectral.NDVI",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -19944,11 +19469,11 @@
                           "Name": "Observed",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -20019,11 +19544,11 @@
                               "Name": "EventNamesOnGraph",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -20052,11 +19577,11 @@
                           "Name": "Observed",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -20120,7 +19645,7 @@
                           "Name": "Predicted",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -20149,15 +19674,15 @@
                           "Name": "Observed",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -20234,11 +19759,11 @@
                               "Name": "EventNamesOnGraph",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -20267,11 +19792,11 @@
                           "Name": "Observed",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -20335,7 +19860,7 @@
                           "Name": "Predicted",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -20364,11 +19889,11 @@
                           "Name": "Observed",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -20432,7 +19957,7 @@
                           "Name": "Predicted",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -20461,11 +19986,11 @@
                           "Name": "Observed",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -20529,7 +20054,7 @@
                           "Name": "Predicted",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -20558,11 +20083,11 @@
                           "Name": "Observed",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -20626,7 +20151,7 @@
                           "Name": "Predicted",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -20655,11 +20180,11 @@
                           "Name": "Observed",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -20723,7 +20248,7 @@
                           "Name": "Predicted",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -20752,11 +20277,11 @@
                           "Name": "Observed",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -20820,7 +20345,7 @@
                           "Name": "Predicted",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -20849,15 +20374,15 @@
                           "Name": "Observed",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -20927,7 +20452,7 @@
                           "Name": "Predicted",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -20956,11 +20481,11 @@
                           "Name": "Observed",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -21024,7 +20549,7 @@
                           "Name": "Predicted",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -21053,15 +20578,15 @@
                           "Name": "Observed",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -21138,15 +20663,15 @@
                               "Name": "EventNamesOnGraph",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -21217,15 +20742,15 @@
                               "Name": "EventNamesOnGraph",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -21296,27 +20821,27 @@
                               "Name": "EventNamesOnGraph",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         },
         {
@@ -21336,11 +20861,11 @@
                   "Name": "Cv",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -21356,7 +20881,7 @@
                   "Name": "Clock",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -21365,7 +20890,7 @@
                   "Name": "SummaryFile",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -21376,7 +20901,7 @@
                   "Name": "Weather",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -21384,7 +20909,7 @@
                   "Name": "SoilArbitrator",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -21400,7 +20925,7 @@
                   "Name": "MicroClimate",
                   "ResourceName": "MicroClimate",
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -21428,7 +20953,7 @@
                       "Name": "DailyReport",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -21448,7 +20973,7 @@
                       "Name": "HarvestReport",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -21456,7 +20981,7 @@
                       "Name": "Fertiliser",
                       "ResourceName": "Fertiliser",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -21472,7 +20997,7 @@
                       "Name": "SurfaceOrganicMatter",
                       "ResourceName": "SurfaceOrganicMatter",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -21480,7 +21005,7 @@
                       "Name": "Wheat",
                       "ResourceName": "Wheat",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -21578,7 +21103,7 @@
                       "Name": "Sowing",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -21589,7 +21114,7 @@
                       "Name": "SowingReport",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -21804,11 +21329,11 @@
                               "Name": "wheatSoil",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -21846,7 +21371,7 @@
                           "Name": "SoilWater",
                           "ResourceName": "WaterBalance",
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -21900,7 +21425,7 @@
                           "Name": "Organic",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -21967,7 +21492,7 @@
                           "Name": "Chemical",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -21990,7 +21515,7 @@
                           "Name": "Water",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -22022,7 +21547,7 @@
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -22054,7 +21579,7 @@
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -22086,7 +21611,7 @@
                           "Name": "Urea",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -22094,7 +21619,7 @@
                           "Name": "Nutrient",
                           "ResourceName": "Nutrient",
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -22104,11 +21629,11 @@
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -22148,92 +21673,7 @@
                       "Name": "Set Emergence Date",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Manager, Models",
-                      "CodeArray": [
-                        "using System;",
-                        "using Models.Core;",
-                        "using Models.Interfaces;",
-                        "using Models.PMF;",
-                        "using APSIM.Shared.Utilities;",
-                        "using Models.WaterModel;",
-                        "",
-                        "namespace Models",
-                        "{",
-                        "    [Serializable]",
-                        "    public class Script : Model",
-                        "    {",
-                        "        [Link] IClock Clock;",
-                        "        [Link] ISummary Summary;",
-                        "        [Link] ICanopy WheatCanopy;",
-                        "        [Link] EvaporationModel EvapModel;",
-                        "        ",
-                        "        [Description(\"Dry soil NDVI\")]",
-                        "        public double DrySoilNDVI { get; set; }",
-                        "        ",
-                        "        [Description(\"Wet soil NDVI\")]",
-                        "        public double WetSoilNDVI { get; set; }",
-                        "",
-                        "        [Description(\"Green Crop NDVI\")]",
-                        "        public double GreenCropNDVI { get; set; }",
-                        "        ",
-                        "        [Description(\"Dead Crop NDVI\")]",
-                        "        public double DeadCropNDVI { get; set; }",
-                        "                ",
-                        "        [Description(\"Daily Estimated NDVI\")]",
-                        "        public double NDVI { get; set; }",
-                        "",
-                        "        [EventSubscribe(\"DoManagement\")]",
-                        "        private void DoDailyCalculations(object sender, EventArgs e)",
-                        "        {",
-                        "            double SoilNDVI = WetSoilNDVI;",
-                        "            if (EvapModel.t > 1)",
-                        "               SoilNDVI = DrySoilNDVI;",
-                        "",
-                        "            //NDVI = GreenCropNDVI * WheatCanopy.CoverGreen;",
-                        "            //NDVI += DeadCropNDVI * (WheatCanopy.CoverTotal - WheatCanopy.CoverGreen);",
-                        "            //NDVI += SoilNDVI * (1 - WheatCanopy.CoverTotal);",
-                        "            ",
-                        "            double CropNDVI = 0;",
-                        "            if (WheatCanopy.CoverTotal > 0)",
-                        "                CropNDVI = (WheatCanopy.CoverGreen/WheatCanopy.CoverTotal) * GreenCropNDVI + (1.0 - WheatCanopy.CoverGreen/WheatCanopy.CoverTotal) * DeadCropNDVI; ",
-                        "            ",
-                        "            NDVI = SoilNDVI + (CropNDVI - SoilNDVI)*Math.Pow(WheatCanopy.CoverTotal, (1.0 - SoilNDVI));",
-                        "            ",
-                        "        }",
-                        "    }",
-                        "}",
-                        ""
-                      ],
-                      "Parameters": [
-                        {
-                          "Key": "DrySoilNDVI",
-                          "Value": "0.11"
-                        },
-                        {
-                          "Key": "WetSoilNDVI",
-                          "Value": "0.13"
-                        },
-                        {
-                          "Key": "GreenCropNDVI",
-                          "Value": "0.85"
-                        },
-                        {
-                          "Key": "DeadCropNDVI",
-                          "Value": "0.1"
-                        },
-                        {
-                          "Key": "NDVI",
-                          "Value": "0"
-                        }
-                      ],
-                      "Name": "NDVIModel",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -22301,7 +21741,7 @@
                       "Name": "Harvesting",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -22325,7 +21765,7 @@
                       "Name": "Operations",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -22383,11 +21823,23 @@
                       "Name": "SoilWaterCalculation",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Sensor.Spectral, Models",
+                      "DrySoilNDVI": 0.11,
+                      "WetSoilNDVI": 0.13,
+                      "GreenCropNDVI": 0.85,
+                      "DeadCropNDVI": 0.1,
+                      "Name": "Spectral",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -22437,11 +21889,11 @@
                   "Name": "LocationInfo",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -22517,7 +21969,7 @@
                           "Name": "Predicted",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -22546,11 +21998,11 @@
                           "Name": "Observed",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -22614,7 +22066,7 @@
                           "Name": "Predicted",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -22643,11 +22095,11 @@
                           "Name": "Observed",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -22700,7 +22152,7 @@
                           "LineThickness": 0,
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NDVIModel.Script.NDVI",
+                          "YFieldName": "Spectral.NDVI",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -22718,11 +22170,11 @@
                               "Name": "EventNamesOnGraph",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -22740,7 +22192,7 @@
                           "LineThickness": 0,
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NDVIModel.Script.NDVI",
+                          "YFieldName": "Spectral.NDVI",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -22751,11 +22203,11 @@
                           "Name": "Observed",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -22826,11 +22278,11 @@
                               "Name": "EventNamesOnGraph",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -22859,11 +22311,11 @@
                           "Name": "Observed",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -22927,7 +22379,7 @@
                           "Name": "Predicted",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -22956,15 +22408,15 @@
                           "Name": "Observed",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -23041,11 +22493,11 @@
                               "Name": "EventNamesOnGraph",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -23074,11 +22526,11 @@
                           "Name": "Observed",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -23142,7 +22594,7 @@
                           "Name": "Predicted",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -23171,11 +22623,11 @@
                           "Name": "Observed",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -23239,7 +22691,7 @@
                           "Name": "Predicted",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -23268,11 +22720,11 @@
                           "Name": "Observed",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -23336,7 +22788,7 @@
                           "Name": "Predicted",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -23365,11 +22817,11 @@
                           "Name": "Observed",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -23433,7 +22885,7 @@
                           "Name": "Predicted",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -23462,11 +22914,11 @@
                           "Name": "Observed",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -23530,7 +22982,7 @@
                           "Name": "Predicted",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -23559,11 +23011,11 @@
                           "Name": "Observed",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -23627,7 +23079,7 @@
                           "Name": "Predicted",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -23656,15 +23108,15 @@
                           "Name": "Observed",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -23734,7 +23186,7 @@
                           "Name": "Predicted",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -23763,11 +23215,11 @@
                           "Name": "Observed",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -23831,7 +23283,7 @@
                           "Name": "Predicted",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -23860,23 +23312,23 @@
                           "Name": "Observed",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         },
         {
@@ -23940,8 +23392,8 @@
                       "Line": 4,
                       "LineThickness": 0,
                       "TableName": "DailyObsPred",
-                      "XFieldName": "Observed.NDVIModel.Script.NDVI",
-                      "YFieldName": "Predicted.NDVIModel.Script.NDVI",
+                      "XFieldName": "Observed.Spectral.NDVI",
+                      "YFieldName": "Predicted.Spectral.NDVI",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
@@ -24182,86 +23634,6 @@
                       "TableName": "DailyObsPred",
                       "XFieldName": "Observed.Wheat.Phenology.HaunStage",
                       "YFieldName": "Predicted.Wheat.Phenology.HaunStage",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": false,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "PreVsObs",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Regression, Models",
-                          "ForEachSeries": true,
-                          "showOneToOne": true,
-                          "showEquation": true,
-                          "Name": "Regression",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 3,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "LabelOnOneLine": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 0,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "LabelOnOneLine": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "AnnotationLocation": 3,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "TillerNumber",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": 0,
-                      "FactorToVaryColours": "Cv",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 0,
-                      "MarkerSize": 0,
-                      "Line": 4,
-                      "LineThickness": 0,
-                      "TableName": "DailyObsPred",
-                      "XFieldName": "Observed.Wheat.Leaf.StemNumberPerPlant.Total.Tillers",
-                      "YFieldName": "Predicted.Wheat.Leaf.StemNumberPerPlant.Total.Tillers",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": false,
@@ -25095,7 +24467,7 @@
                   "LineThickness": 0,
                   "TableName": "DailyReport",
                   "XFieldName": "Clock.Today",
-                  "YFieldName": "NDVIModel.Script.NDVI",
+                  "YFieldName": "Spectral.NDVI",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": false,
@@ -25135,7 +24507,7 @@
                   "LineThickness": 0,
                   "TableName": "Observed",
                   "XFieldName": "Clock.Today",
-                  "YFieldName": "NDVIModel.Script.NDVI",
+                  "YFieldName": "Spectral.NDVI",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,

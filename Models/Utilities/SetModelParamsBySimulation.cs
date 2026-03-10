@@ -1,4 +1,4 @@
-﻿using APSIM.Core;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Newtonsoft.Json;

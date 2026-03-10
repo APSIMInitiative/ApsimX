@@ -5,7 +5,6 @@ using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Models.Soils.Nutrients;
 using Models.Surface;
 
@@ -74,7 +73,8 @@ namespace Models.Soils.NutrientPatching
             patchManager = from.patchManager;
             Nutrient = Apsim.Clone(from.Nutrient) as Nutrient;
             Nutrient.Name = $"Nutrient{patchManager.NumPatches}";
-            Structure.Add(Nutrient, from.Nutrient.Parent);
+            from.Nutrient.Parent.Node.AddChild(Nutrient);
+            Apsim.ReconnectLinksAndEvents(Nutrient);
 
             // Find all solutes.
             foreach (ISolute solute in structure.FindChildren<ISolute>(relativeTo: Nutrient))

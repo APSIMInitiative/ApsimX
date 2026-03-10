@@ -17,7 +17,7 @@ public static class ApsimConvert
     {
         if (data == null || targetType.IsAssignableFrom(data.GetType()))
             return data;
-        if (targetType.IsArray && data is string valueAsSt)
+        if (IsIList(targetType) && data is string valueAsSt)
             data = valueAsSt.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
         if (IsIList(targetType))

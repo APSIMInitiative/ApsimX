@@ -303,7 +303,15 @@ namespace Models.PMF.Organs
         public double LAIDead => cohort.LaiDead;
 
         /// <summary>Gets the cover dead.</summary>
-        public double CoverDead { get { return 1.0 - Math.Exp(-ExtinctionCoefficientDead.Value() * LAIDead); } }
+        public double CoverDead { 
+            get {
+                double value = 1.0 - Math.Exp(-ExtinctionCoefficientDead.Value() * LAIDead);
+                if (MathUtilities.FloatsAreEqual(value, 0))
+                    return 0; 
+                else
+                    return value;
+            } 
+        }
 
         /// <summary>Gets the total radiation intercepted.</summary>
         [Units("MJ/m^2/day")]
@@ -702,12 +710,13 @@ namespace Models.PMF.Organs
         /// <param name="deadToRemove">Fraction of dead biomass to remove from simulation (0-1).</param>
         /// <param name="liveToResidue">Fraction of live biomass to remove and send to residue pool(0-1).</param>
         /// <param name="deadToResidue">Fraction of dead biomass to remove and send to residue pool(0-1).</param>
+        /// <param name="fractionStanding">Fraction of biomass that remains standing when passed to surfaceOM (0-1).</param>
         /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
-        public double RemoveBiomass(double liveToRemove, double deadToRemove, double liveToResidue, double deadToResidue)
+        public double RemoveBiomass(double liveToRemove, double deadToRemove, double liveToResidue, double deadToResidue, double fractionStanding = 0)
         {
             Biomass liveAfterRemoval = Live;
             Biomass deadAfterRemoval = Dead;
-            double amountRemoved = biomassRemovalModel.RemoveBiomass(liveToRemove, deadToRemove, liveToResidue, deadToResidue, liveAfterRemoval, deadAfterRemoval, Removed, Detached);
+            double amountRemoved = biomassRemovalModel.RemoveBiomass(liveToRemove, deadToRemove, liveToResidue, deadToResidue, liveAfterRemoval, deadAfterRemoval, Removed, Detached, fractionStanding);
 
             cohort.ReduceLeavesUniformly(liveFraction: MathUtilities.Divide(liveAfterRemoval.Wt, Live.Wt, 0),
                                          deadFraction: MathUtilities.Divide(deadAfterRemoval.Wt, Dead.Wt, 0));

@@ -86,6 +86,7 @@ namespace Models.PMF.SimplePlantModels
         private double _maxHeight = 900;
         private double _maxCover = 0.97;
         private double _extinctionCoefficient = 0.7;
+        private string _typicalHarvestStage = "Ripe"; 
         private double _seedlingNConc = 0.05;
         private double _productHarvestNconc = 0.015;
         private double _rootNconc = 0.01;
@@ -107,7 +108,7 @@ namespace Models.PMF.SimplePlantModels
 
         /// <summary>Harvest index for the crop (proportion of the plant biomass that is product, 0.01-0.99).</summary>
         [Separator("Setup to simulate an instance of a crop using SCRUM - Enter values defining the crop in the sections below\n" +
-            " Parameters defining growth pattern and biomass partition")]
+            " Parameters defining growth pattern and biomass partitioning")]
         [Description(" Harvest Index (0.01-0.99):")]
         [Units("0-1")]
         public double HarvestIndex
@@ -186,7 +187,11 @@ namespace Models.PMF.SimplePlantModels
         [Separator(" Parameters defining crop nitrogen requirements")]
         [Description(" Stage for Nconc parameters:")]
         [Display(Type = DisplayType.ScrumHarvestStages)]
-        public string TypicalHarvestStage { get; set; }
+        public string TypicalHarvestStage 
+        { 
+            get { return _typicalHarvestStage; } 
+            set { _typicalHarvestStage = value; } 
+        }
 
         /// <summary>Nitrogen concentration of plant at seedling stage (0.01 - 0.1 g/g).</summary>
         [Description(" Nitrogen concentration of plant at seedling stage (0.01 - 0.1 g/g):")]
@@ -343,6 +348,10 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Depth down to which the residues are incorporated into the soil by cultivation.</summary>
         [JsonIgnore]
         public double ResidueIncorporationDepth { get; set; }
+
+        /// <summary>Fraction of unincorporated resideus that are left standing.</summary>
+        [JsonIgnore]
+        public double FractionStanding { get; set; }
 
         //-------------------------------------------------------------------------------------------------------------
         // Parameters defining the shape of the growth curves for this crop, can to be set by a manager
@@ -531,6 +540,7 @@ namespace Models.PMF.SimplePlantModels
                 ResidueRemoval = management.ResidueRemoval;
                 ResidueIncorporation = management.ResidueIncorporation;
                 ResidueIncorporationDepth = management.ResidueIncorporationDepth;
+                FractionStanding = management.FractionStanding;
             }
             else
             {
@@ -546,7 +556,8 @@ namespace Models.PMF.SimplePlantModels
                     fieldLoss: FieldLoss,
                     residueRemoval: ResidueRemoval,
                     residueIncorporation: ResidueIncorporation,
-                    residueIncorporationDepth: ResidueIncorporationDepth);
+                    residueIncorporationDepth: ResidueIncorporationDepth,
+                    fractionStanding: FractionStanding);
             }
 
             return management;
@@ -777,7 +788,8 @@ namespace Models.PMF.SimplePlantModels
             product.RemoveBiomass(liveToRemove: 1.0 - FieldLoss,
                                   deadToRemove: 1.0 - FieldLoss,
                                   liveToResidue: FieldLoss,
-                                  deadToResidue: FieldLoss);
+                                  deadToResidue: FieldLoss, 
+                                  fractionStanding: FractionStanding);
             Biomass finalCropBiomass = (Biomass)Structure.Get("[SCRUM].Product.Total");
             ProductHarvested = initialCropBiomass - finalCropBiomass;
 
@@ -785,7 +797,8 @@ namespace Models.PMF.SimplePlantModels
             stover.RemoveBiomass(liveToRemove: ResidueRemoval,
                                  deadToRemove: ResidueRemoval,
                                  liveToResidue: 1.0 - ResidueRemoval,
-                                 deadToResidue: 1.0 - ResidueRemoval);
+                                 deadToResidue: 1.0 - ResidueRemoval,
+                                 fractionStanding: FractionStanding);
             finalCropBiomass = (Biomass)Structure.Get("[SCRUM].Stover.Total");
             StoverRemoved = initialCropBiomass - finalCropBiomass;
             if (Harvesting != null)

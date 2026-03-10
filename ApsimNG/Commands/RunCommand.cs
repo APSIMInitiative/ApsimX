@@ -1,13 +1,12 @@
 ﻿using APSIM.Core;
 using Models.Core;
-using Models.Core.Run;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Media;
 using System.Timers;
 using UserInterface.Presenters;
-using Utility;
+using APSIMNG.Utility;
 
 namespace UserInterface.Commands
 {

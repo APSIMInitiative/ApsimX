@@ -14,19 +14,16 @@ using APSIM.Server.Sensibility;
 using APSIM.Shared.Utilities;
 using Gtk;
 using Models;
-using Models.AgPasture;
 using Models.Climate;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Models.Core.Run;
 using Models.Factorial;
 using Models.Functions;
-using Models.GrazPlan;
 using Models.Soils;
 using Models.Soils.NutrientPatching;
 using Models.Storage;
 using UserInterface.Commands;
-using Utility;
+using APSIMNG.Utility;
 
 namespace UserInterface.Presenters
 {
@@ -732,14 +729,15 @@ namespace UserInterface.Presenters
                     ushort i = 0;
                     foreach (string tableName in storage.Reader.TableNames)
                     {
-                        cts.Token.ThrowIfCancellationRequested();
-                        DataTable table = storage.Reader.GetData(tableName);
-                        table.TableName = tableName;
-                        tables.Add(table);
-
+                        if (!string.IsNullOrEmpty(tableName))
+                        {
+                            cts.Token.ThrowIfCancellationRequested();
+                            DataTable table = storage.Reader.GetData(tableName);
+                            table.TableName = tableName;
+                            tables.Add(table);
+                        }
                         double progress = 0.5 * (i + 1) / storage.Reader.TableNames.Count;
                         explorerPresenter.MainPresenter.ShowProgress(progress);
-
                         i++;
                     }
                 }, cts.Token);
@@ -766,7 +764,7 @@ namespace UserInterface.Presenters
 
                     // Start the excel export as a task.
                     // todo: progress reporting and proper cancellation would be nice.
-                    Task exportTask = Task.Run(() => Utility.Excel.WriteToEXCEL(tables.ToArray(), fileName), cts.Token);
+                    Task exportTask = Task.Run(() => Excel.WriteToEXCEL(tables.ToArray(), fileName), cts.Token);
 
                     // Wait for the excel file to be generated.
                     await exportTask;
@@ -1067,18 +1065,9 @@ namespace UserInterface.Presenters
                 IModel modelToDocument = currentN;
                 explorerPresenter.ApsimXFile.Links.Resolve(modelToDocument, true, true, false);
 
-                string modelTypeName = String.Empty;
-                if (modelToDocument is Models.PMF.Plant)
-                    modelTypeName = modelToDocument.Name;
-                else if (modelToDocument is Simulations)
-                {
-                    var simpleFileName = Path.GetFileNameWithoutExtension((modelToDocument as Simulations).FileName);
-                    modelTypeName = simpleFileName;
-                }
-                else modelTypeName = modelToDocument.GetType().Name;
-
+                string name = DocumentationUtilities.GetDocumentationName(modelToDocument);
                 string fullDocFileName = Directory.GetParent(explorerPresenter.ApsimXFile.FileName).ToString()
-                    + $"{Path.DirectorySeparatorChar}{modelTypeName}.html";
+                    + $"{Path.DirectorySeparatorChar}{name}.html";
 
                 bool graphSetting = DocumentationSettings.GenerateGraphs;
                 DocumentationSettings.GenerateGraphs = true;
@@ -1157,7 +1146,7 @@ namespace UserInterface.Presenters
                     message.AppendLine();
                     message.AppendLine($"Finished. Elapsed time: {timer.Elapsed.TotalSeconds.ToString("#.00")} seconds");
                     explorerPresenter.MainPresenter.ShowMessage(message.ToString(), Simulation.MessageType.Information);
-                    var dialog = new Utility.FindAllReferencesDialog(model, references, explorerPresenter);
+                    var dialog = new FindAllReferencesDialog(model, references, explorerPresenter);
                 }
             }
             catch (Exception err)

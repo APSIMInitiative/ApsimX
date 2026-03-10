@@ -4,7 +4,6 @@ using Models.Core;
 using NUnit.Framework;
 using System;
 using APSIM.Shared.Documentation;
-using Models.Core.ApsimFile;
 using Models.Core.Run;
 using System.Collections.Generic;
 using System.IO;
@@ -583,6 +582,21 @@ namespace UnitTests.ManagerTests
         {
             Manager testManager = createManager();
             Assert.That(testManager.Script, Is.Not.Null);
+        }
+
+        /// <summary>
+        /// Test that the ManagementToolbox.apsimx file can be loaded without throwing exceptions.
+        /// If any of the manager scripts in this toolbox have issues compiling, this test will fail.
+        /// </summary>
+        [Test]
+        public void TestManagementToolboxDoesNotThrowExceptions()
+        {
+            string binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            // The toolbox files are located in ApsimNG/Resources/Toolboxes relative to the bin directory.
+            string toolboxFileDirectory = Path.GetFullPath(Path.Combine(binDirectory, "..", "..", "..", "ApsimNG", "Resources", "Toolboxes"));
+            IEnumerable<string> toolboxFileNames = Directory.GetFiles(toolboxFileDirectory, "*.apsimx", SearchOption.AllDirectories);
+            string managementToolboxFilePath = toolboxFileNames.FirstOrDefault(f => f.Contains("ManagementToolbox.apsimx"));
+            Assert.DoesNotThrow(() => {Node node = FileFormat.ReadFromFile<Simulations>(managementToolboxFilePath);});
         }
     }
 }

@@ -27,10 +27,10 @@ namespace APSIM.Documentation.Graphing
             {
                 // high quality with antialiasing
                 paint.IsAntialias = true;
-                paint.FilterQuality = SKFilterQuality.High;
+                SKSamplingOptions samplingOptions = new SKSamplingOptions(SKCubicResampler.Mitchell);
 
                 // draw the bitmap to fill the surface
-                surface.Canvas.DrawImage(image, new SKRectI(0, 0, scaleWidth, scaleHeight), paint);
+                surface.Canvas.DrawImage(image, new SKRectI(0, 0, scaleWidth, scaleHeight), samplingOptions, paint);
                 surface.Canvas.Flush();
 
                 return surface.Snapshot();
