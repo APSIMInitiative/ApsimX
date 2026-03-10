@@ -90,9 +90,9 @@ namespace Models.PMF.Phen
                 if (Phenology.InPhase("Emerging"))
                     return 5.0f + 5 * fracInCurrent;
 
-                double? value = VegetativePhaseFunction.Value();
-                if (value != null)
-                    return (double)value;
+                double value = VegetativePhaseFunction.Value();
+                if (value >= 0)
+                    return value;
                 
                 if (!Phenology.InPhase("ReadyForHarvesting"))
                     return ZadokStageMapping.Value();
@@ -165,9 +165,9 @@ namespace Models.PMF.Phen
         /// </summary>
         /// <returns>
         /// If less than 90% through Vegetative phase, or Phenelogy stage is less than 4.3, will return calculated 
-        /// zadok stage. If outside that timeframe, will return null.
+        /// zadok stage. If outside that timeframe, will return -1.
         /// </returns>
-        public double? VegetativePhaseCalculation
+        public double VegetativePhaseCalculation
         {
             get {
                 // Try using Yield Prophet approach where Zadok stage during vegetative phase is based on leaf number only
@@ -175,7 +175,7 @@ namespace Models.PMF.Phen
                 if ((Phenology.InPhase("Vegetative") && fracInCurrent <= 0.9) || (Phenology.Stage < 4.3))
                     return 10.0f + Structure.LeafTipsAppeared;
                 else
-                    return null;
+                    return -1;
             }
         }
         
@@ -185,16 +185,16 @@ namespace Models.PMF.Phen
         /// </summary>
         /// <returns>
         /// If Phenelogy stage is less than 5.3, will return calculated zadok stage. If outside that timeframe, will 
-        /// return null.
+        /// return -1.
         /// </returns>
-        public double? VegetativePhaseCalculationWheat
+        public double VegetativePhaseCalculationWheat
         {
             get {
                 IFunction haunStage = Phenology.Node.FindChild<IFunction>("HaunStage");
                 if (Phenology.Stage < 5.3)
                     return 10.0f + haunStage.Value();
                 else
-                    return null;
+                    return -1;
             }
         }
     }

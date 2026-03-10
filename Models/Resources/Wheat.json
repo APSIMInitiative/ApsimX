@@ -1025,24 +1025,6 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].HaunStage",
-                  "Name": "HaunStage",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Structure].TillerNumber",
-                  "Name": "TillerNumber",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
                   "Name": "VegetativePhaseFunction",
                   "VariableName": "[Phenology].Zadok.VegetativePhaseCalculationWheat"
                 },
