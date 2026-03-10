@@ -7353,7 +7353,6 @@ internal class Converter
             ["ResourceName"] = null,
             ["VariableName"] = "[Phenology].Stage"
         };
-
         JObject xyPairsPMF = new JObject()
         {
             ["$type"] = "Models.Functions.XYPairs, Models",
@@ -7372,11 +7371,29 @@ internal class Converter
         (linearInterpPMF["Children"] as JArray).Add(xyPairsPMF);
         (linearInterpPMF["Children"] as JArray).Add(xValue);
 
+        JObject haunStage = new JObject()
+        {
+            ["$type"] = "Models.Functions.VariableReference, Models",
+            ["Name"] = "HaunStage",
+            ["ResourceName"] = null,
+            ["VariableName"] = "[Phenology].HaunStage"
+        };
+
+        JObject tillerNumber = new JObject()
+        {
+            ["$type"] = "Models.Functions.VariableReference, Models",
+            ["Name"] = "TillerNumber",
+            ["ResourceName"] = null,
+            ["VariableName"] = "[Structure].TillerNumber"
+        };
+
         //Replace all ZadokPMFs with new Zadok with LinearInterp child
         List<JObject> zadokPMFs = JsonUtilities.ChildrenRecursively(root, "ZadokPMF");
         foreach(JObject zadok in zadokPMFs)
         {
             zadok["$type"] = "Models.PMF.Phen.Zadok, Models";
+            (zadok["Children"] as JArray).Add(haunStage);
+            (zadok["Children"] as JArray).Add(tillerNumber);
             (zadok["Children"] as JArray).Add(linearInterpPMF);
         }
 
