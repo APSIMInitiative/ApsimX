@@ -52,7 +52,7 @@ namespace Models.PMF.Phen
         /// <summary>
         /// The Structure class
         /// </summary>
-        [Link]
+        [Link (IsOptional = true)]
         Structure Structure = null;
 
         /// <summary>
