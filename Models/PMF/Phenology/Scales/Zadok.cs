@@ -1,6 +1,7 @@
 ﻿using System;
 using APSIM.Core;
 using Models.Core;
+using Models.PMF.Struct;
 
 namespace Models.PMF.Phen
 {
@@ -48,13 +49,11 @@ namespace Models.PMF.Phen
         [Link]
         private Plant plant = null;
 
-        /// <summary>The thermal time</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        public IFunction TillerNumber = null;
-
-        /// <summary>The thermal time</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        public IFunction haunStage = null;
+        /// <summary>
+        /// The Structure class
+        /// </summary>
+        [Link]
+        Structure Structure = null;
 
         /// <summary>
         /// Zadok and growth stage mapping for winter cereals 
@@ -76,27 +75,39 @@ namespace Models.PMF.Phen
             get
             {
                 double fracInCurrent = Phenology.FractionInCurrentPhase;
-                double zadok_stage = 0.0;
                 if (plant != null && !plant.IsAlive)
                     return 0;
-                if (Phenology.InPhase("Germinating"))
-                    zadok_stage = 5.0f * fracInCurrent;
-                else if (Phenology.InPhase("Emerging"))
-                    zadok_stage = 5.0f + 5 * fracInCurrent;
-                else if (Phenology.Stage < 5.3)
-                {
-                    zadok_stage = 10.0f + haunStage.Value();
-                }
-                else if (!Phenology.InPhase("ReadyForHarvesting"))
-                {
-                    zadok_stage = ZadokStageMapping.Value();
-                }
-                else if (Phenology.InPhase("ReadyForHarvesting"))
-                {
-                    zadok_stage = 90.0f;
-                }
 
-                return zadok_stage;
+                if (Phenology.InPhase("Germinating"))
+                    return 5.0f * fracInCurrent;
+
+                if (Phenology.InPhase("Emerging"))
+                    return 5.0f + 5 * fracInCurrent;
+
+                IFunction haunStage = Phenology.Node.FindChild<IFunction>("HaunStage");
+                if (haunStage == null) //Not a WinterCeral
+                {
+                    if ((Phenology.InPhase("Vegetative") && fracInCurrent <= 0.9) || (!Phenology.InPhase("ReadyForHarvesting") && Phenology.Stage < 4.3))
+                    {
+                        // Try using Yield Prophet approach where Zadok stage during vegetative phase is based on leaf number only
+                        return 10.0f + Structure.LeafTipsAppeared;
+                    }
+                }
+                else
+                {
+                    if (Phenology.Stage < 5.3)
+                    {
+                        return 10.0f + haunStage.Value();
+                    }
+                }
+                
+                if (!Phenology.InPhase("ReadyForHarvesting"))
+                    return ZadokStageMapping.Value();
+
+                if (Phenology.InPhase("ReadyForHarvesting"))
+                    return 90.0f;
+
+                return 0;
             }
         }
 
