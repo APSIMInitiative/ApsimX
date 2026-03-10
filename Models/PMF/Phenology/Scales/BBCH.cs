@@ -79,7 +79,7 @@ namespace Models.PMF.Phen
         private int lastRecordedStage = 0;
 
         // Use 1-based index (position zero is before sowing). BBCH range is 1 to 89.
-        private double[] bbchDays = new double[90];
+        private double[] bbchDays = new double[91];
 
         /// <summary>Gets the stage.</summary>
         /// <value>The stage.</value>
