@@ -4965,39 +4965,28 @@
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Functions.ProtectedDivideFunction, Models",
-                  "NumeratorErrVal": 0.0,
-                  "DenominatorErrVal": 0.0,
-                  "Name": "Yield_gPerM2",
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[STRUM].Fruit.FreshWt",
+                  "Name": "FreshYeild_g_PerTree",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[STRUM].Fruit.FreshWt",
-                      "Name": "FreshYeildPerTree",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[STRUM].CanopyArea",
-                      "Name": "CanopyArea",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[STRUM].Population",
+                  "Name": "TreesPerHa",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 10.0,
-                  "Units": "m/ha",
-                  "Name": "GPerm2TokgPerHa",
+                  "FixedValue": 0.001,
+                  "Units": "kg/g",
+                  "Name": "gTokg",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
