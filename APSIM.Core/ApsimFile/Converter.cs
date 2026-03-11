@@ -1,8 +1,6 @@
 using APSIM.Numerics;
 using APSIM.Shared.Documentation.Extensions;
-using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
-using BruTile.Wmts.Generated;
 using Newtonsoft.Json.Linq;
 using System.Globalization;
 using System.Reflection;
@@ -20,7 +18,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 208; } }
+    public static int LatestVersion { get { return 211; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -7276,6 +7274,165 @@ internal class Converter
                 manager.Save();
             if (manager.Replace("using Models.Core.ApsimFile;", ""))
                 manager.Save();
+        }
+    }
+
+    /// <summary>
+    /// Change bibliography references to use [text][#reference] syntax
+    /// Update <sup></sup> and <sub></sub> tags to use ^^ and ~~ syntax
+    /// Replace a hrefs with [text](url) syntax
+    /// <param name="root">Root json object.</param>
+    /// <param name="_">Unused filename.</param>
+    private static void UpgradeToVersion209(JObject root, string _)
+    {
+        List<JObject> iTexts = JsonUtilities.ChildrenRecursively(root, "Memo");
+        iTexts.AddRange(JsonUtilities.ChildrenRecursively(root, "Documentation"));
+
+        foreach (JObject iText in iTexts)
+        {
+            string text = iText["Text"].ToString();
+            text = text.Replace("<sup>", "^");
+            text = text.Replace("</sup>", "^");
+            text = text.Replace("<sub>", "~");
+            text = text.Replace("</sub>", "~");
+
+            Regex regex = new Regex(@"\[([^\#\]]+)\](?!\()");
+            MatchCollection matches = regex.Matches(text);
+            int offset = 0;
+            foreach(Match match in matches)
+            {
+                string value = match.Groups[0].Value;
+                string reference = match.Groups[1].Value;
+                string newSyntax = $"[#{reference}]";
+                text = text.Remove(match.Index + offset, value.Length);
+                text = text.Insert(match.Index + offset, newSyntax);
+                offset += newSyntax.Length - value.Length;
+            }
+
+            regex = new Regex(@"<a href=""?([^\s<>]+)"">([^<>]+)<\/a>");
+            matches = regex.Matches(text);
+            foreach(Match match in matches)
+            {
+                string value = match.Groups[0].Value;
+                string url = match.Groups[1].Value;
+                string contents = match.Groups[2].Value;
+                if (!url.StartsWith("http"))
+                    url = "https://" + url;
+                text = text.Replace(value, $"[{contents}]({url})");
+            }
+
+            iText["Text"] = text;
+        }
+    }
+    /// <summary>
+    /// fix spelling mistake in reports with the term "kernal" instead of "kernel"
+    /// <param name="root">Root json object.</param>
+    /// <param name="_">Unused filename.</param>
+    private static void UpgradeToVersion210(JObject root, string _)
+    {
+        // Change report variables.
+        foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Wheat].Grain.NperKernal", "[Wheat].Grain.NperKernel", caseSensitive: false);
+
+        // Change graph variables.
+        foreach (var graph in JsonUtilities.ChildrenOfType(root, "Graph"))
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Grain.NperKernal", "Wheat.Grain.NperKernel");
+
+    }
+
+    /// <summary>
+    /// Combining ZadokPMF, ZadokPMFWheat and new ZadokPMFWinterCereal to all use the same comnbined Zadok class.
+    /// <param name="root">Root json object.</param>
+    /// <param name="_">Unused filename.</param>
+    private static void UpgradeToVersion211(JObject root, string _)
+    {
+        //used by both Zadoks
+        JObject xValue = new JObject()
+        {
+            ["$type"] = "Models.Functions.VariableReference, Models",
+            ["Name"] = "XValue",
+            ["VariableName"] = "[Phenology].Stage"
+        };
+        
+        //children for PMF zadok
+        JObject VegetativePhasePMF = new JObject()
+        {
+            ["$type"] = "Models.Functions.VariableReference, Models",
+            ["Name"] = "VegetativePhaseFunction",
+            ["VariableName"] = "[Phenology].Zadok.VegetativePhaseCalculation"
+        };
+        JObject xyPairsPMF = new JObject()
+        {
+            ["$type"] = "Models.Functions.XYPairs, Models",
+            ["Name"] = "XYPairs",
+            ["X"] = new JArray(new double[] {4.3,  4.9, 5.0,  6.0,  7.0,  8.0,  9.0}),
+            ["Y"] = new JArray(new double[] {30.0, 33,  39.0, 65.0, 71.0, 87.0, 90.0})
+        };
+        JObject linearInterpPMF = new JObject()
+        {
+            ["$type"] = "Models.Functions.LinearInterpolationFunction, Models",
+            ["Name"] = "ZadokStageMapping",
+            ["Children"] = new JArray()
+        };
+        (linearInterpPMF["Children"] as JArray).Add(xyPairsPMF);
+        (linearInterpPMF["Children"] as JArray).Add(xValue);
+
+        //Replace all ZadokPMFs with new Zadok
+        List<JObject> zadokPMFs = JsonUtilities.ChildrenRecursively(root, "ZadokPMF");
+        foreach(JObject zadok in zadokPMFs)
+        {
+            zadok["$type"] = "Models.PMF.Phen.Zadok, Models";
+            (zadok["Children"] as JArray).Add(VegetativePhasePMF);
+            (zadok["Children"] as JArray).Add(linearInterpPMF);
+        }
+
+        //children for Wheat zadok
+        JObject xyPairsWheat = new JObject()
+        {
+            ["$type"] = "Models.Functions.XYPairs, Models",
+            ["Name"] = "XYPairs",
+            ["ResourceName"] = null,
+            ["X"] = new JArray(new double[] {5.0,  5.99, 6.0,  7.0,  8.0,  9.0,  10.0, 11.0}),
+            ["Y"] = new JArray(new double[] {30.0, 34,   39.0, 55.0, 65.0, 71.0, 87.0, 90.0})
+        };
+        JObject linearInterpWheat = new JObject()
+        {
+            ["$type"] = "Models.Functions.LinearInterpolationFunction, Models",
+            ["Name"] = "ZadokStageMapping",
+            ["ResourceName"] = null,
+            ["Children"] = new JArray()
+        };
+        (linearInterpWheat["Children"] as JArray).Add(xyPairsWheat);
+        (linearInterpWheat["Children"] as JArray).Add(xValue);
+
+        JObject VegetativePhaseWheat = new JObject()
+        {
+            ["$type"] = "Models.Functions.VariableReference, Models",
+            ["Name"] = "VegetativePhaseFunction",
+            ["VariableName"] = "[Phenology].Zadok.VegetativePhaseCalculationWheat"
+        };
+
+        //Replace all ZadokPMFWheats with new Zadok
+        List<JObject> zadokPMFWheats = JsonUtilities.ChildrenRecursively(root, "ZadokPMFWheat");
+        foreach(JObject zadok in zadokPMFWheats)
+        {
+            zadok["$type"] = "Models.PMF.Phen.Zadok, Models";
+            (zadok["Children"] as JArray).Add(VegetativePhaseWheat);
+            (zadok["Children"] as JArray).Add(linearInterpWheat);
+        }
+
+        // Change report variables.
+        foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+        {
+            JsonUtilities.SearchReplaceReportVariableNames(report, "Phenology.ZadokPMF", "Phenology.Zadok", caseSensitive: false);
+            JsonUtilities.SearchReplaceReportVariableNames(report, "Phenology.ZadokPMFWheat", "Phenology.Zadok", caseSensitive: false);
+        }
+
+        // Change graph variables.
+        foreach (var graph in JsonUtilities.ChildrenOfType(root, "Graph"))
+        {
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Phenology.ZadokPMF", "Phenology.Zadok");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Phenology.ZadokPMFWheat", "Phenology.Zadok");
         }
     }
 }

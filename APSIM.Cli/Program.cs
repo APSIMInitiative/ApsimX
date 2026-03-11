@@ -106,7 +106,7 @@ namespace APSIM.Cli
 
                 string htmlFile = Path.ChangeExtension(file, ".html");
                 IEnumerable<ITag> tags = options.ParamsDocs ? InterfaceDocumentation.Document(model) : AutoDocumentation.Document(model);
-                string html = APSIM.Documentation.WebDocs.TagsToHTMLString(tags.ToList());
+                string html = APSIM.Documentation.WebDocs.TagsToHTMLString(tags.ToList(), model);
                 File.WriteAllText(htmlFile, html);
             }
         }

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
-using APSIM.Shared.Utilities;
 
-namespace Utility
+namespace APSIMNG.Utility
 {
     public static class MacUtilities
     {

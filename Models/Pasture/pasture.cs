@@ -1,7 +1,7 @@
 ﻿using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Grazplan;
+using Models.GrazPlan;
 using Models.Interfaces;
 using Models.Soils;
 using Models.Soils.Arbitrator;
@@ -17,6 +17,11 @@ using System.Linq;
 using static Models.GrazPlan.GrazType;
 using static Models.GrazPlan.PastureUtil;
 using APSIM.Core;
+using Models.GrazPlan.Organs;
+using Models.GrazPlan.Biomass;
+using Models.PMF;
+
+
 
 namespace Models.GrazPlan
 {
@@ -71,7 +76,7 @@ namespace Models.GrazPlan
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public class Pasture : TSoilInstance, IUptake, ICanopy, IScopedModel, IStructureDependency
+    public class Pasture : TSoilInstance, IUptake, ICanopy, IScopedModel, IStructureDependency,IPlant
     {
         /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
@@ -179,6 +184,31 @@ namespace Models.GrazPlan
 
         /// <summary>NH4 solute in the soil.</summary>
         private ISolute nh4 = null;
+
+        #region  Link Biomass and Organ classes
+
+        /// <summary>
+        /// AboveGround
+        /// </summary>
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+
+        public IBiomass AboveGround {get;set;}
+
+       /// <summary>
+       /// Gereric Organs
+       /// </summary>
+        [Link(Type = LinkType.Child)]
+        public List<GenericOrgan> Organs { get; set; }
+
+        /// <summary>
+        /// Composite Biomass
+        /// </summary>
+
+        [Link(Type = LinkType.Child)]
+        public List<Biomass.CompositeBiomass> CompositeBiomasses {get; set;}
+
+        #endregion
+      
 
         #endregion
 
@@ -300,6 +330,10 @@ namespace Models.GrazPlan
         /// </summary>
         [Description("Apparent extinction coefficients of seedlings, established plants and senescing plants")]
         public double[] ExtinctCoeff { get; set; } = new double[] { 0.0, 0.0, 0.55 };
+
+
+
+     
 
         /*
         These rules apply when providing values for GreenInit[].herbage or DryInit[].herbage:
@@ -512,7 +546,243 @@ namespace Models.GrazPlan
                 }
             }
         }
+
+        
         #endregion
+
+
+        #region IPLANT
+        /// <summary>
+        ///  IPlant: Not implemented
+        /// </summary>
+        public string PlantType { get; set; }
+        /// <summary>
+        /// Cultivars not implemented
+        /// </summary>
+        public string[] CultivarNames
+        {
+            get { return null; }
+        }
+       
+        /// <summary>
+        ///IsAlive flags plant status alive or dead
+        /// </summary>
+
+        public bool IsAlive { get; private set; }
+
+       
+
+        /// <summary>
+        /// IsReadyForHarvesting: Not implemented
+        /// </summary>
+        public bool IsReadyForHarvesting
+        {
+            get { return false; }
+        }
+        /// <summary>
+        /// Nitrogen uptake: Not implemented
+        /// </summary>
+       
+  
+        /// <summary>Amount of nitrogen taken up (kg/ha: Not implemented.</summary>
+        public IReadOnlyList<double> NitrogenUptake  {
+             get{
+            return  null;}
+        }
+        /// <summary>
+        /// Harvest: Not implemented
+        /// </summary>
+        /// <param name="removeBiomassFromOrgans"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public void Harvest(bool removeBiomassFromOrgans = true)
+        {
+            throw new NotImplementedException();
+        }
+
+         
+
+        /// <summary>
+        /// Sow: Not implemented 
+        /// </summary>
+        /// <param name="cultivar"></param>
+        /// <param name="population"></param>
+        /// <param name="depth"></param>
+        /// <param name="rowSpacing"></param>
+        /// <param name="maxCover"></param>
+        /// <param name="budNumber"></param>
+        /// <param name="rowConfig"></param>
+        /// <param name="seeds"></param>
+        /// <param name="tillering"></param>
+        /// <param name="ftn"></param>
+        // <exception cref="NotImplementedException"></exception>
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1,
+                double seeds = 0, int tillering = 0, double ftn = 0.0)
+        {
+            if (!IsAlive)
+            {
+                int numDry = 0;
+                int numGreen = 0;
+                int idx = 0;
+
+                GreenInit[] green = new GreenInit[0];
+                DryInit[] dry = new DryInit[0];
+
+                foreach (var initCohort in Children)
+                {
+                    if (initCohort is GreenCohortInitialise greenInit)
+                    {
+                        Array.Resize(ref green, green.Length + 1);
+                        idx = numGreen;
+                        green[idx] = new GreenInit();
+
+                        // ROOTS
+                        green[idx].root_wt = new double[greenInit.RootWeight.Length][];
+                        for (int i = 0; i < greenInit.RootWeight.Length; i++)
+                        {
+                            double rw = greenInit.RootWeight[i];
+
+                            if (rw == 0)
+                            {
+                                // Default root mass when UI gives zero
+                                green[idx].root_wt[i] = new double[] { 20.0, 20.0 };
+                            }
+                            else
+                            {
+                                // Use the provided root weight
+                                green[idx].root_wt[i] = new double[] { rw };
+                            }
+                        }
+
+
+                        // STATUS + PHYSIOLOGY
+                        green[idx].status = greenInit.Status;
+                        green[idx].rt_dep = greenInit.RootDepth;
+                        green[idx].estab_index = greenInit.EstIndex;
+                        green[idx].stem_reloc = greenInit.StemReloc;
+                        green[idx].stress_index = greenInit.StressIndex;
+                        green[idx].frosts = greenInit.Frosts;
+
+                        // ABOVE-GROUND
+                        green[idx].herbage = new Herbage[2];
+
+                        // LEAF
+                        green[idx].herbage[0] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
+                        green[idx].herbage[0].dmd = greenInit.LeafDMD;
+                        if (greenInit.LeafWeight.Length == 1 && greenInit.LeafWeight[0] == 0)
+                        {
+                            // Default leaf mass when GUI gives zero
+                            green[idx].herbage[0].weight = new double[] { 20.0 };
+                        }
+                        else
+                        {
+                            // Use the provided leaf weights
+                            green[idx].herbage[0].weight = greenInit.LeafWeight;
+                        }
+
+                        green[idx].herbage[0].n_conc = greenInit.LeafNConc;
+                        green[idx].herbage[0].spec_area = greenInit.LeafSpecificArea;
+
+                        // STEM
+                        green[idx].herbage[1] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
+                        green[idx].herbage[1].dmd = greenInit.StemDMD;
+                        if (greenInit.StemWeight.Length == 1 && greenInit.StemWeight[0] == 0)
+                        {
+                            
+                            // Default stem mass when GUI gives zero
+                            green[idx].herbage[1].weight = new double[] { 20.0 };
+                        }
+                        else
+                        {
+                            // Use the provided stem weights
+                            green[idx].herbage[1].weight = greenInit.StemWeight;
+                        }
+
+                        green[idx].herbage[1].n_conc = greenInit.StemNConc;
+                        green[idx].herbage[1].spec_area = greenInit.StemSpecificArea;
+
+                        numGreen++;
+                        
+                    }
+                    else if (initCohort is DryCohortInitialise dryInit)
+                    {
+                        Array.Resize(ref dry, dry.Length + 1);
+                        idx = numDry;
+                        dry[idx] = new DryInit();
+
+                        dry[idx].status = dryInit.Status;
+                        dry[idx].herbage = new Herbage[2];
+
+                        // LEAF
+                        dry[idx].herbage[0] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
+                        dry[idx].herbage[0].dmd = dryInit.LeafDMD;
+
+                        if (dryInit.LeafWeight.Length == 1 && dryInit.LeafWeight[0] == 0)
+                        {
+                            // Default dry leaf mass when GUI gives zero
+                            dry[idx].herbage[0].weight = new double[] { 20.0 };
+                        }
+                        else
+                        {
+                            // Use the provided dry leaf weights
+                            dry[idx].herbage[0].weight = dryInit.LeafWeight;
+                        }
+
+                        dry[idx].herbage[0].n_conc = dryInit.LeafNConc;
+                        dry[idx].herbage[0].spec_area = dryInit.LeafSpecificArea;
+
+                        // STEM
+                        dry[idx].herbage[1] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
+                        dry[idx].herbage[1].dmd = dryInit.StemDMD;
+
+                        if (dryInit.StemWeight.Length == 1 && dryInit.StemWeight[0] == 0)
+                        {
+                            // Default dry stem mass when GUI gives zero
+                            dry[idx].herbage[1].weight = new double[] { 20.0 };
+                        }
+                        else
+                        {
+                            // Use the provided dry stem weights
+                            dry[idx].herbage[1].weight = dryInit.StemWeight;
+                        }
+
+                        dry[idx].herbage[1].n_conc = dryInit.StemNConc;
+                            dry[idx].herbage[1].spec_area = dryInit.StemSpecificArea;
+
+                        numDry++;
+                    }
+            }
+
+
+                PastureModel.ReadStateFromValues(
+                    laggedT: PastureModel.LaggedMeanT,
+                    phen: PastureModel.PhenoCode,
+                    flowerlen: PastureModel.FloweringLength,
+                    flowertime: PastureModel.FloweringTime,
+                    sencidx: PastureModel.fSencDays,
+                    dormidx: PastureModel.DormIndex,
+                    dormt: PastureModel.DormMeanTemp,
+                    extintc: null,
+                    green: green,
+                    dry: dry,
+                    seed: this.Seeds,
+                    seeddormtime: PastureModel.Days_EDormant,
+                    germidx: PastureModel.GermnIndex);
+
+
+                IsAlive = true;
+        }
+    }
+
+        /// <summary>
+        /// EndCrop: Not incremented
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
+        public void EndCrop()
+        {
+            throw new NotImplementedException();
+        }
+        
+        #endregion IPlant
 
         /// <summary>Radiation intercepted by the plant's canopy (MJ/m^2/day).</summary>
         [JsonIgnore]
@@ -1084,6 +1354,8 @@ namespace Models.GrazPlan
         /// <summary>Average DM digestibility of all leaves</summary>
         [Units("g/g")]
         public double LeafDMD { get { return GetDMD(GrazType.TOTAL, GrazType.ptLEAF); } }
+
+
 
         /// <summary>Average crude protein content of all leaves</summary>
         [Units("g/g")]
@@ -2172,6 +2444,9 @@ namespace Models.GrazPlan
 
             return result;
         }
+
+     
+
         #endregion
 
         #region Subscribed events ====================================================
@@ -2201,6 +2476,7 @@ namespace Models.GrazPlan
 
             foreach (var initCohort in Children)
             {
+                
                 if (initCohort is GreenCohortInitialise greenInit)
                 {
                     Array.Resize(ref green, green.Length + 1);
@@ -2232,6 +2508,15 @@ namespace Models.GrazPlan
                     green[idx].herbage[1].spec_area = greenInit.StemSpecificArea;
                     numGreen += 1;
                     this.Green = green;
+
+                    //Start of the simulation checks if the root, leaf and stem biomasses are greater than 0 in GreenCohorts
+
+                    if(greenInit.LeafWeight[0] > 0 || greenInit.StemWeight[0] > 0 || greenInit.RootWeight[0] > 0)
+                    {
+                        IsAlive = true;
+                    }
+
+
                 }
                 else if (initCohort is DryCohortInitialise dryInit)
                 {
@@ -2256,6 +2541,15 @@ namespace Models.GrazPlan
                     dry[idx].herbage[1].spec_area = dryInit.StemSpecificArea;
                     numDry += 1;
                     this.Dry = dry;
+
+                    //Start of the simulation checks if the leaf and stem biomasses are greater than 0 in DryCohorts. 
+
+                    if(dryInit.StemWeight[0] > 0 || dryInit.LeafWeight[0] > 0)
+                    {
+                        IsAlive = true;
+                    }
+                    
+                    
                 }
                 else if (initCohort is SeedCohortInitialise seedInit)
                 {
@@ -2265,8 +2559,13 @@ namespace Models.GrazPlan
                     Seeds.soft_ripe = seedInit.SoftRipe;
                     Seeds.soft_unripe = seedInit.SoftUnripe;
                 }
+            
+              
+
+                
             }
 
+           
             // =========================================================
 
             StartSimulation();
@@ -2297,6 +2596,9 @@ namespace Models.GrazPlan
             DoPastureWater();
         }
 
+        
+
+
         /// <summary>
         /// Grow pasture
         /// </summary>
@@ -2305,8 +2607,12 @@ namespace Models.GrazPlan
         [EventSubscribe("DoActualPlantGrowth")]
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
-            DoPastureGrowth();
-            EndStep();
+            if (IsAlive)
+            {
+                DoPastureGrowth();
+                EndStep();
+            }
+
         }
 
         /// <summary>
@@ -2372,6 +2678,18 @@ namespace Models.GrazPlan
 
                 FToday = systemClock.Today.Day + (systemClock.Today.Month * 0x100) + (systemClock.Today.Year * 0x10000);    //stddate
             }
+
+           
+           //APSIM does not automatically inject your GrazPlan pasture engine (TPasturePopulation) into organ classes so you must wire Composite Biomass and Organs wired to PastureModel
+
+            foreach (var organ in Organs)
+                organ.PastureModel=PastureModel;
+            
+            foreach (var composite in CompositeBiomasses)
+                composite.PastureModel = PastureModel;
+            
+
+
         }
 
         /// <summary>Initialises arrays to same length as soil layers.</summary>
@@ -2480,7 +2798,6 @@ namespace Models.GrazPlan
 
             PastureModel.BeginTimeStep();
             storePastureCover();
-
         }
 
         /// <summary>
@@ -3254,6 +3571,7 @@ namespace Models.GrazPlan
         public void Sow(double rate)
         {
             PastureModel.Sow(rate * KGHA_GM2);      // Convert kg/ha to g/m^2
+            
         }
 
         /// <summary>
@@ -3391,5 +3709,18 @@ namespace Models.GrazPlan
         }
 
         #endregion
+       
+        
+
+        
+
+           
+        
+    
+
+
+
+
+
     }
 }

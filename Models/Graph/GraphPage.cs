@@ -185,10 +185,13 @@ namespace Models
                     {
                         var table = storage.GetData(tableName, checkpointName, simulationNames, fieldNames);
 
-                        // Tell each series definition to read its data.
-                        var definitions = definitionsToProcess.Where(d => d.Series.TableName == tableName && d.CheckpointName == checkpointName);
-                        Parallel.ForEach(definitions, (definition) =>
-                            definition.ReadData(table, simulationDescriptions, storage));
+                        if (table != null)
+                        {
+                            // Tell each series definition to read its data.
+                            var definitions = definitionsToProcess.Where(d => d.Series.TableName == tableName && d.CheckpointName == checkpointName);
+                            Parallel.ForEach(definitions, (definition) =>
+                                definition.ReadData(table, simulationDescriptions, storage));
+                        }
                     }
                     catch (Exception error)
                     {

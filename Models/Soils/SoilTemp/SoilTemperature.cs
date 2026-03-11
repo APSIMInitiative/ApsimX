@@ -66,8 +66,8 @@ namespace Models.Soils.SoilTemp
     /// </structure>
     [Serializable]
     [ValidParent(ParentType = typeof(Soil))]
-    [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
-    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
+    [ViewName("UserInterface.Views.QuadView")]
+    [PresenterName("UserInterface.Presenters.QuadPresenter")]
     public class SoilTemperature : Model, ISoilTemperature
     {
         [Link]
