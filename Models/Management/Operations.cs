@@ -18,6 +18,12 @@ namespace Models
     [Serializable]
     public class Operation
     {
+        private const int NO_YEAR = 1;
+
+        private DateTime _dt;
+
+        private string _date;
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -43,7 +49,15 @@ namespace Models
         public bool Enabled { get; set; }
 
         /// <summary>Gets or sets the date.</summary>
-        public string Date { get; set; }
+        public string Date
+        {
+            get => _date;
+            set
+            {
+                _date = value;
+                _dt = DateUtilities.GetDate(_date, NO_YEAR);
+            }
+        }
 
         /// <summary>Gets or sets the action.</summary>
         /// <value>The action.</value>
@@ -62,6 +76,16 @@ namespace Models
                 return Action.Substring(0, posPeriod);
 
             return "";
+        }
+
+        /// <summary>
+        /// Check whether or not this operation should trigger on the given date.
+        /// </summary>
+        /// <param name="date">The date to check.</param>
+        /// <returns>True if the op should be performed at this time.</returns>
+        public bool TriggersOnDate(DateTime date)
+        {
+            return date == _dt || _dt.Year == NO_YEAR && date.Day == _dt.Day && date.Month == _dt.Month;
         }
 
         /// <summary>
@@ -242,14 +266,12 @@ namespace Models
             if (OperationsList == null)
                 OperationsList = new List<Operation>();
 
-            DateTime operationDate;
             foreach (Operation operation in OperationsList.Where(o => o.Enabled))
             {
                 if (operation.Date == null || operation.Action == null)
                     throw new Exception($"Error: Operation line '{operation.Line}' cannot be parsed.");
 
-                operationDate = DateUtilities.GetDate(operation.Date, Clock.Today.Year);
-                if (operationDate == Clock.Today)
+                if (operation.TriggersOnDate(Clock.Today))
                 {
                     string st = operation.Action;
 
