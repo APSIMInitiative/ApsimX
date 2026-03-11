@@ -18,7 +18,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 212; } }
+    public static int LatestVersion { get { return 213; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -7340,63 +7340,6 @@ internal class Converter
     }
 
     /// <summary>
-    /// Perform necessary cultivar path updates following waterlogging modifications for the Maize, Canola and Soybean models.
-    /// </summary>
-    /// <param name="root">Root json token.</param>
-    /// <param name="name">File name.</param>
-    private static void UpgradeToVersion212(JObject root, string name)
-    {
-        List<(string, string)> maizeUpadtes =
-        [
-            ("[Grain].MaximumPotentialGrainSize.FixedValue", "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue"),
-            ("[Grain].MaximumGrainsPerCob.FixedValue", "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue"),
-            ("[Structure].Phyllochron.Phyllochron", "[Structure].Phyllochron.BasePhyllochron.Phyllochron"),
-            ("[Leaf].Photosynthesis.FW.XYPairs", "[Leaf].Photosynthesis.FW.Deficient.XYPairs")
-        ];
-        List<(string, string)> soybeanUpdates =
-        [
-            ("[Grain].PotentialHarvestIndex", "[Grain].PotentialHarvestIndex.PotentialHarvestIndex"),
-            ("[Leaf].Photosynthesis.FW.XYPairs", "[Leaf].Photosynthesis.FW.Deficient.XYPairs"),
-            ("[Leaf].Phyllochron", "[Leaf].Phyllochron.Phyllochron"),
-            ("[Leaf].ExtinctionCoefficient", "[Leaf].ExtinctionCoefficient.ExtinctionCoefficient")
-        ];
-        List<(string, string)> canolaUpdates =
-        [
-            ("[Leaf].Photosynthesis.FW.XYPairs", "[Leaf].Photosynthesis.FW.Deficient.XYPairs"),
-            ("[Leaf].ExtinctionCoefficient", "[Leaf].ExtinctionCoefficient.PotentialExtinctionCoefficient"),
-            ("[Leaf].SenescenceRate.Reproductive.Rate.Fraction.Modifier", "[Leaf].SenescenceRate.Reproductive.Rate.MaximumFunction.Fraction.Modifier"),
-            ("[Grain].MaximumPotentialGrainSize", "[Grain].MaximumPotentialGrainSize.GrainSize")
-        ];
-
-        foreach (var plant in JsonUtilities.ChildrenOfType(root, "Plant"))
-        {
-            var plantName = plant["Name"].Value<string>();
-            var updates = plantName switch
-            {
-                "Maize" => maizeUpadtes.Concat(maizeUpadtes.Select(u => (ReformatPath(u.Item1, plantName), u.Item2))),
-                "Soybean" => soybeanUpdates.Concat(soybeanUpdates.Select(u => (ReformatPath(u.Item1, plantName), u.Item2))),
-                "Canola" => canolaUpdates.Concat(canolaUpdates.Select(u => (ReformatPath(u.Item1, plantName), u.Item2))),
-                _ => []
-            };
-            if (updates.Any() && plant["ResourceName"].Value<string>() == plantName)
-            {
-                foreach (var cultivar in JsonUtilities.ChildrenOfType(plant, "Cultivar"))
-                {
-                    JsonUtilities.UpdateCultivarPaths(cultivar, updates);
-                }
-            }
-        }
-
-        // Not uncommon to see people write a cultivar path like it is a report entry. Want our path updates to hit both.
-        static string ReformatPath(string normalPath, string plant)
-        {
-            var parts = normalPath.Split(".");
-            var organ = parts[0][1..^1];
-            return string.Join('.', [$"[{plant}]", organ, .. parts[1..]]);
-        }
-    }
-
-    /// <summary>
     /// Combining ZadokPMF, ZadokPMFWheat and new ZadokPMFWinterCereal to all use the same comnbined Zadok class.
     /// <param name="root">Root json object.</param>
     /// <param name="_">Unused filename.</param>
@@ -7533,6 +7476,63 @@ internal class Converter
         {
             bbch["$type"] = "Models.PMF.Phen.BBCH, Models";
             (bbch["Children"] as JArray).Add(bbchCalculationCanola);
+        }
+    }
+
+    /// <summary>
+    /// Perform necessary cultivar path updates following waterlogging modifications for the Maize, Canola and Soybean models.
+    /// </summary>
+    /// <param name="root">Root json token.</param>
+    /// <param name="name">File name.</param>
+    private static void UpgradeToVersion213(JObject root, string name)
+    {
+        List<(string, string)> maizeUpadtes =
+        [
+            ("[Grain].MaximumPotentialGrainSize.FixedValue", "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue"),
+            ("[Grain].MaximumGrainsPerCob.FixedValue", "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue"),
+            ("[Structure].Phyllochron.Phyllochron", "[Structure].Phyllochron.BasePhyllochron.Phyllochron"),
+            ("[Leaf].Photosynthesis.FW.XYPairs", "[Leaf].Photosynthesis.FW.Deficient.XYPairs")
+        ];
+        List<(string, string)> soybeanUpdates =
+        [
+            ("[Grain].PotentialHarvestIndex", "[Grain].PotentialHarvestIndex.PotentialHarvestIndex"),
+            ("[Leaf].Photosynthesis.FW.XYPairs", "[Leaf].Photosynthesis.FW.Deficient.XYPairs"),
+            ("[Leaf].Phyllochron", "[Leaf].Phyllochron.Phyllochron"),
+            ("[Leaf].ExtinctionCoefficient", "[Leaf].ExtinctionCoefficient.ExtinctionCoefficient")
+        ];
+        List<(string, string)> canolaUpdates =
+        [
+            ("[Leaf].Photosynthesis.FW.XYPairs", "[Leaf].Photosynthesis.FW.Deficient.XYPairs"),
+            ("[Leaf].ExtinctionCoefficient", "[Leaf].ExtinctionCoefficient.PotentialExtinctionCoefficient"),
+            ("[Leaf].SenescenceRate.Reproductive.Rate.Fraction.Modifier", "[Leaf].SenescenceRate.Reproductive.Rate.MaximumFunction.Fraction.Modifier"),
+            ("[Grain].MaximumPotentialGrainSize", "[Grain].MaximumPotentialGrainSize.GrainSize")
+        ];
+
+        foreach (var plant in JsonUtilities.ChildrenOfType(root, "Plant"))
+        {
+            var plantName = plant["Name"].Value<string>();
+            var updates = plantName switch
+            {
+                "Maize" => maizeUpadtes.Concat(maizeUpadtes.Select(u => (ReformatPath(u.Item1, plantName), u.Item2))),
+                "Soybean" => soybeanUpdates.Concat(soybeanUpdates.Select(u => (ReformatPath(u.Item1, plantName), u.Item2))),
+                "Canola" => canolaUpdates.Concat(canolaUpdates.Select(u => (ReformatPath(u.Item1, plantName), u.Item2))),
+                _ => []
+            };
+            if (updates.Any() && plant["ResourceName"].Value<string>() == plantName)
+            {
+                foreach (var cultivar in JsonUtilities.ChildrenOfType(plant, "Cultivar"))
+                {
+                    JsonUtilities.UpdateCultivarPaths(cultivar, updates);
+                }
+            }
+        }
+
+        // Not uncommon to see people write a cultivar path like it is a report entry. Want our path updates to hit both.
+        static string ReformatPath(string normalPath, string plant)
+        {
+            var parts = normalPath.Split(".");
+            var organ = parts[0][1..^1];
+            return string.Join('.', [$"[{plant}]", organ, .. parts[1..]]);
         }
     }
 }
