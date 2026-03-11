@@ -52,7 +52,8 @@ namespace Models.PMF.Organs
     /// A potential stomatal conductance is provided to the Microclimate model for use in calculating daily potential water use. 
     /// This conductance accounts for the effects of temperature, vapor deficit and plant nutrition. 
     /// Potential water use is then calculated by the microclimate model, and actual water use subsequently by the soil arbitrator model using data also provided by the root model regarding potential water uptake.
-    /// The impact of atmospheric CO2 concentration on stomatal conductance is dependant upon temperature and the related impact of CO2 concentration on photosynthesis.
+    /// The impact of atmospheric CO2 concentration on stomatal conductance is dependant upon temperature and the related impact of CO2 concentration on photosynthesis.  
+    /// Atmospheric CO2 concentration is specified by the user along with meteorological data when constructing each simulation.
     /// 
     /// ```
     /// StomatalConductance = Gsmax350 * FRGR * stomatalConductanceCO2Modifier;
@@ -1089,12 +1090,13 @@ namespace Models.PMF.Organs
         /// <param name="deadToRemove">Fraction of dead biomass to remove from simulation (0-1).</param>
         /// <param name="liveToResidue">Fraction of live biomass to remove and send to residue pool(0-1).</param>
         /// <param name="deadToResidue">Fraction of dead biomass to remove and send to residue pool(0-1).</param>
+        /// <param name="fractionStanding">Fraction of biomass that remains standing when passed to surfaceOM (0-1).</param>
         /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
-        public double RemoveBiomass(double liveToRemove, double deadToRemove, double liveToResidue, double deadToResidue)
+        public double RemoveBiomass(double liveToRemove, double deadToRemove, double liveToResidue, double deadToResidue, double fractionStanding = 0)
         {
             LAIRemoved = LAI * (liveToRemove + liveToResidue);
             LAIDeadRemoved = LAIDead * (deadToRemove + deadToResidue);
-            return biomassRemovalModel.RemoveBiomass(liveToRemove, deadToRemove, liveToResidue, deadToResidue, Live, Dead, Removed, Detached);
+            return biomassRemovalModel.RemoveBiomass(liveToRemove, deadToRemove, liveToResidue, deadToResidue, Live, Dead, Removed, Detached, fractionStanding);
         }
 
         /// <summary>Harvest the organ.</summary>

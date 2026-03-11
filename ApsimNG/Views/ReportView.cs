@@ -3,7 +3,7 @@ using System.Drawing;
 using GLib;
 using Gtk;
 using UserInterface.Interfaces;
-using Utility;
+using APSIMNG.Utility;
 
 namespace UserInterface.Views
 {
