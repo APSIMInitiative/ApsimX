@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 211,
+  "Version": 212,
   "Name": "Simulations",
   "Children": [
     {
@@ -774,7 +774,13 @@
             {
               "$type": "Models.PMF.Phen.BBCH, Models",
               "Name": "BBCH",
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "Name": "BBCHCalculationFunction",
+                  "VariableName": "[Phenology].BBCH.BBCHCalculation"
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             }

@@ -18,7 +18,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 211; } }
+    public static int LatestVersion { get { return 212; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -7433,6 +7433,50 @@ internal class Converter
         {
             JsonUtilities.SearchReplaceGraphVariableNames(graph, "Phenology.ZadokPMF", "Phenology.Zadok");
             JsonUtilities.SearchReplaceGraphVariableNames(graph, "Phenology.ZadokPMFWheat", "Phenology.Zadok");
+        }
+    }
+
+    /// <summary>
+    /// Adding child to BBCH nodes to define what calulation to use. Any BBCH 
+    /// under a canola plant should use the Canola version, all others should 
+    /// use the generic version.
+    /// <param name="root">Root json object.</param>
+    /// <param name="_">Unused filename.</param>
+    private static void UpgradeToVersion212(JObject root, string _)
+    {        
+        //child for Generic BBCH
+        JObject bbchCalculation = new JObject()
+        {
+            ["$type"] = "Models.Functions.VariableReference, Models",
+            ["Name"] = "BBCHCalculationFunction",
+            ["VariableName"] = "[Phenology].BBCH.BBCHCalculation"
+        };
+
+        //child for Canola BBCH
+        JObject bbchCalculationCanola = new JObject()
+        {
+            ["$type"] = "Models.Functions.VariableReference, Models",
+            ["Name"] = "BBCHCalculationFunction",
+            ["VariableName"] = "[Phenology].BBCH.BBCHCalculationCanola"
+        };
+
+        //Add child to BBCH
+        List<JObject> bbchs = JsonUtilities.ChildrenRecursively(root, "BBCH");
+        foreach(JObject bbch in bbchs)
+        {
+            JObject plant = JsonUtilities.Ancestor(bbch, "IPlant");
+            if (plant != null && plant["Name"].ToString() == "Canola")
+                (bbch["Children"] as JArray).Add(bbchCalculationCanola);
+            else
+                (bbch["Children"] as JArray).Add(bbchCalculation);
+        }
+
+        //do the same for all BBCHCanola
+        bbchs = JsonUtilities.ChildrenRecursively(root, "BBCHCanola");
+        foreach(JObject bbch in bbchs)
+        {
+            bbch["$type"] = "Models.PMF.Phen.BBCH, Models";
+            (bbch["Children"] as JArray).Add(bbchCalculationCanola);
         }
     }
 }

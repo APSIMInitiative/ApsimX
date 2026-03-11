@@ -28,7 +28,7 @@ namespace UnitTests.PMF.Phenology.Scales
         public void TestZadoksStageReport()
         {
             // Load and run the ZadoksStage.apsimx simulation
-            string path = Path.Combine("%root%", "Tests", "Simulation", "Zadoks", "ZadoksStage.apsimx");
+            string path = Path.Combine("%root%", "Tests", "Simulation", "Zadoks", "ZadoksStageWheat.apsimx");
             path = PathUtilities.GetAbsolutePath(path, null);
             Simulations sims = FileFormat.ReadFromFile<Simulations>(path).Model as Simulations;
 
@@ -119,7 +119,7 @@ namespace UnitTests.PMF.Phenology.Scales
         public void TestStageDAS_Stage1_BeforeReached()
         {
             // This test checks the behavior of StageDAS(1) to ensure it returns 0 before stage 1 is reached
-            string path = Path.Combine("%root%", "Tests", "Simulation", "Zadoks", "ZadoksStage.apsimx");
+            string path = Path.Combine("%root%", "Tests", "Simulation", "Zadoks", "ZadoksStageWheat.apsimx");
             path = PathUtilities.GetAbsolutePath(path, null);
             Simulations sims = FileFormat.ReadFromFile<Simulations>(path).Model as Simulations;
 
@@ -149,7 +149,7 @@ namespace UnitTests.PMF.Phenology.Scales
         [Test]
         public void TestStageDAS_InvalidIndex91()
         {
-            string path = Path.Combine("%root%", "Tests", "Simulation", "Zadoks", "ZadoksStage.apsimx");
+            string path = Path.Combine("%root%", "Tests", "Simulation", "Zadoks", "ZadoksStageWheat.apsimx");
             path = PathUtilities.GetAbsolutePath(path, null);
             Simulations sims = FileFormat.ReadFromFile<Simulations>(path).Model as Simulations;
 
@@ -180,7 +180,7 @@ namespace UnitTests.PMF.Phenology.Scales
         [Test]
         public void TestStageDAS_InvalidIndexNegative()
         {
-            string path = Path.Combine("%root%", "Tests", "Simulation", "Zadoks", "ZadoksStage.apsimx");
+            string path = Path.Combine("%root%", "Tests", "Simulation", "Zadoks", "ZadoksStageWheat.apsimx");
             path = PathUtilities.GetAbsolutePath(path, null);
             Simulations sims = FileFormat.ReadFromFile<Simulations>(path).Model as Simulations;
 
