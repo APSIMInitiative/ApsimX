@@ -55,7 +55,8 @@ namespace Models
             set
             {
                 _date = value;
-                _dt = DateUtilities.GetDate(_date, NO_YEAR);
+                if (value != null)
+                    _dt = DateUtilities.GetDate(_date, NO_YEAR);
             }
         }
 
