@@ -52,7 +52,6 @@
     <PackageReference Include="System.Resources.Extensions" Version="10.0.2" />
     <PackageReference Include="ISO3166" Version="1.0.4" />
     <PackageReference Include="Markdig" Version="0.44.0" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
     <PackageReference Include="GtkSharp" Version="3.24.24.38" />
     <PackageReference Include="GtkSourceSharp" Version="3.24.24.38" />
     <PackageReference Include="OxyPlot.Core" Version="2.2.0" />
