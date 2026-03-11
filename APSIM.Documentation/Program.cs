@@ -75,7 +75,10 @@ namespace APSIM.Documentation
                 File.WriteAllText(outputPath + name + ".html", html);
             }
 
-            List<IModel> models = new List<IModel>() { new Clock(), new ZadokPMFWheat() };
+            Simulations sims = FileFormat.ReadFromFile<Simulations>(apsimPath + "/Models/Resources/Wheat.json").Model as Simulations;
+            Zadok zadok = sims.Node.FindChild<Zadok>(recurse: true);
+
+            List<IModel> models = new List<IModel>() { new Clock(), zadok };
             foreach (IModel model in models)
             {
                 string html = WebDocs.GenerateWeb(model);

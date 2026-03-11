@@ -3,6 +3,7 @@ using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.PMF.Phen;
 using System.Data;
+using Models.Functions;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -10,12 +11,12 @@ namespace APSIM.Documentation.Models.Types
     /// <summary>
     /// Base documentation class for models
     /// </summary>
-    public class DocZadokPMFWheat : DocGeneric
+    public class DocZadok : DocGeneric
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ZadokPMFWheat" /> class.
+        /// Initializes a new instance of the <see cref="Zadok" /> class.
         /// </summary>
-        public DocZadokPMFWheat(IModel model): base(model) {}
+        public DocZadok(IModel model): base(model) {}
 
         /// <summary>
         /// Stage names specific to Wheat.
@@ -66,12 +67,14 @@ namespace APSIM.Documentation.Models.Types
             table.Columns.Add("Stage Name", typeof(string));
             table.Columns.Add("ZadokStage", typeof(int));
 
+            XYPairs xyPairs = model.Node.FindChild<XYPairs>(recurse:true);
+
             for(int i = 0; i < stageNames.Length; i++)
             {
                 row = table.NewRow();
-                row[0] = ZadokPMFWheat.GROWTH_STAGE_NUMBERS[i];
+                row[0] = xyPairs.X[i]; // GROWTH_STAGE_NUMBERS
                 row[1] = stageNames[i];
-                row[2] = ZadokPMFWheat.ZADOK_STAGE_NUMBERS[i];
+                row[2] = xyPairs.Y[i]; // ZADOK_STAGE_NUMBERS
                 table.Rows.Add(row);
             }
             Table growthStageTable = new(table);
