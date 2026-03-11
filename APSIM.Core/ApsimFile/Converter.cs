@@ -20,7 +20,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 211; } }
+    public static int LatestVersion { get { return 212; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -7346,7 +7346,7 @@ internal class Converter
     /// </summary>
     /// <param name="root">Root json token.</param>
     /// <param name="name">File name.</param>
-    private static void UpgradeToVersion211(JObject root, string name)
+    private static void UpgradeToVersion212(JObject root, string name)
     {
         List<(string, string)> maizeUpadtes =
         [
