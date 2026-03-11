@@ -177,7 +177,7 @@ namespace Models.PMF.Phen
                     return 30.0f + Math.Min(9, leaf.ExpandedCohortNo - ligulesAtStartStemExtension);
                 }
                 
-                if (Phenology.InPhase("LeafAppearance") && (leaf.AppearedCohortNo >= Structure.finalLeafNumber.Value()))
+                if (Phenology.InPhase("LeafAppearance") && leaf.AppearedCohortNo >= Structure.finalLeafNumber.Value() && fracInCurrent < 1)
                 {
                     if (TasselVisiable == false)
                     {
