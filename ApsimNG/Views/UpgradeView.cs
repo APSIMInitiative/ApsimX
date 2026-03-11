@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using APSIM.Shared.Utilities;
+using APSIMNG.Utility;
 using Gtk;
 using UserInterface.Extensions;
 using UserInterface.Interfaces;
@@ -200,11 +201,11 @@ namespace UserInterface.Views
                 label1.Text = "You are currently using version " + version.ToString() + ". You are using the latest version.";
 
 
-            firstNameBox.Text = Utility.Configuration.Settings.FirstName;
-            lastNameBox.Text = Utility.Configuration.Settings.LastName;
-            emailBox.Text = Utility.Configuration.Settings.Email;
-            organisationBox.Text = Utility.Configuration.Settings.Organisation;
-            countryBox.Active = Constants.Countries.ToList().IndexOf(Utility.Configuration.Settings.Country);
+            firstNameBox.Text = Configuration.Settings.FirstName;
+            lastNameBox.Text = Configuration.Settings.LastName;
+            emailBox.Text = Configuration.Settings.Email;
+            organisationBox.Text = Configuration.Settings.Organisation;
+            countryBox.Active = Constants.Countries.ToList().IndexOf(Configuration.Settings.Country);
 
             string tempLicenseFileName = Path.Combine(Path.GetTempPath(), "APSIM_NonCommercial_RD_licence.htm");
             if (File.Exists(tempLicenseFileName))
@@ -583,12 +584,12 @@ namespace UserInterface.Views
         {
             try
             {
-                Utility.Configuration.Settings.FirstName = firstNameBox.Text;
-                Utility.Configuration.Settings.LastName = lastNameBox.Text;
-                Utility.Configuration.Settings.Email = emailBox.Text;
-                Utility.Configuration.Settings.Organisation = organisationBox.Text;
-                Utility.Configuration.Settings.Country = countryBox.GetActiveText();
-                Utility.Configuration.Settings.Save();
+                Configuration.Settings.FirstName = firstNameBox.Text;
+                Configuration.Settings.LastName = lastNameBox.Text;
+                Configuration.Settings.Email = emailBox.Text;
+                Configuration.Settings.Organisation = organisationBox.Text;
+                Configuration.Settings.Country = countryBox.GetActiveText();
+                Configuration.Settings.Save();
             }
             catch (Exception err)
             {

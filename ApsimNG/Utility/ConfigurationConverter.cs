@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using APSIM.Shared.Utilities;
 using System.Xml;
 using System.Globalization;
 using System.Reflection;
 using System.Xml.Serialization;
 
-namespace Utility
+namespace APSIMNG.Utility
 {
     public class ConfigurationConverter
     {

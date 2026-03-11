@@ -1,4 +1,4 @@
-﻿namespace Utility
+﻿namespace APSIMNG.Utility
 {
     internal class FontInput : InputAttribute
     {

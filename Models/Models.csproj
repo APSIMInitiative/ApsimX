@@ -31,7 +31,6 @@
     <PackageReference Include="System.Windows.Extensions" Version="10.0.2" />
     <PackageReference Include="ExcelDataReader.DataSet" Version="3.8.0" />
     <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="System.CodeDom" Version="10.0.2" />
     <PackageReference Include="System.Resources.Extensions" Version="10.0.2" />
