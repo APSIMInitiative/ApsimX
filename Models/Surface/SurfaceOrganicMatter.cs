@@ -313,8 +313,9 @@ namespace Models.Surface
         /// <param name="deadToRemove">Fraction of dead biomass to remove from simulation (0-1).</param>
         /// <param name="liveToResidue">Fraction of live biomass to remove and send to residue pool(0-1).</param>
         /// <param name="deadToResidue">Fraction of dead biomass to remove and send to residue pool(0-1).</param>
+        /// <param name="fractionStanding">Fraction of biomass that remains standing when passed to surfaceOM (0-1).</param>
         /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
-        public double RemoveBiomass(double liveToRemove = 0, double deadToRemove = 0, double liveToResidue = 0, double deadToResidue = 0)
+        public double RemoveBiomass(double liveToRemove = 0, double deadToRemove = 0, double liveToResidue = 0, double deadToResidue = 0, double fractionStanding = 0)
         {
             OMFractionType totalRemoved = new();
             for (int i = 0; i < SurfOM.Count; i++)
@@ -1161,16 +1162,31 @@ namespace Models.Surface
             return MathUtilities.Bound(F_Cover, 0.0, 1.0);
         }
 
+        /// <summary>
+        /// Adds material to the surface organic matter pool. 
+        /// Simplified override with no fractionStanding or optionals
+        /// Provides a default fractionStanding value of 0.
+        /// </summary>
+        /// <param name="mass">The amount of biomass added (kg/ha).</param>
+        /// <param name="N">The amount of N added (kg/ha).</param>
+        /// <param name="P">The amount of P added (kg/ha).</param>
+        /// <param name="type">Type of the biomass.</param>
+        /// <param name="name">Name of the biomass written to summary file</param>
+        public void Add(double mass, double N, double P, string type, string name)
+        {
+            Add(mass, N, P, type, name, 0);
+        }
+
         /// <summary>Adds material to the surface organic matter pool.</summary>
         /// <param name="mass">The amount of biomass added (kg/ha).</param>
         /// <param name="N">The amount of N added (kg/ha).</param>
         /// <param name="P">The amount of P added (kg/ha).</param>
         /// <param name="type">Type of the biomass.</param>
         /// <param name="name">Name of the biomass written to summary file</param>
-        /// <param name="fractionStanding">Fraction standing. Defaults to 0</param>
+        /// <param name="fractionStanding">Fraction standing.</param>
         /// <param name="no3">The amount of no3 added (kg/ha).</param>
         /// <param name="nh4">The amount of nh4 added (kg/ha).</param>
-        public void Add(double mass, double N, double P, string type, string name, double fractionStanding = 0, double no3 = -1, double nh4 = -1)
+        public void Add(double mass, double N, double P, string type, string name, double fractionStanding, double no3 = -1, double nh4 = -1)
         {
             if (mass > 0 || N > 0 || P > 0)
             {

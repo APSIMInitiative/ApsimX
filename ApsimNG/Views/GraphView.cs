@@ -988,7 +988,7 @@ namespace UserInterface.Views
 
             EnsureAxisExists(yAxisType, typeof(double));
 
-            return new List<BoxPlotItem>() { new BoxPlotItem(xValue, min, lowerQuartile, median, upperQuartile, max) };
+            return [new(xValue, min, lowerQuartile, median, upperQuartile, max) { Mean = MathUtilities.Average(data) }];
         }
 
         /// <summary>

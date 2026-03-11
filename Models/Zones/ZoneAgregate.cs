@@ -123,8 +123,8 @@ namespace Models.Zones
         /// <summary>Called when simulation starts.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The event data.</param>
-        [EventSubscribe("StartOfSimulation")]
-        private void OnStartOfSimulation(object sender, EventArgs e)
+        [EventSubscribe("FinalInitialise")]
+        private void OnFinalInitialise(object sender, EventArgs e)
         {
             Zones = new List<Zone>();
             foreach (Zone newZone in Structure.FindChildren<Zone>(relativeTo: Parent as INodeModel, recurse: true))

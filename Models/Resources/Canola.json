@@ -1184,6 +1184,20 @@
               ],
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Phen.BBCH, Models",
+              "Name": "BBCH",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "Name": "BBCHCalculationFunction",
+                  "VariableName": "[Phenology].BBCH.BBCHCalculationCanola"
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "Enabled": true,
