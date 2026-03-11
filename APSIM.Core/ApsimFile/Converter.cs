@@ -7470,5 +7470,13 @@ internal class Converter
             else
                 (bbch["Children"] as JArray).Add(bbchCalculation);
         }
+
+        //do the same for all BBCHCanola
+        bbchs = JsonUtilities.ChildrenRecursively(root, "BBCHCanola");
+        foreach(JObject bbch in bbchs)
+        {
+            bbch["$type"] = "Models.PMF.Phen.BBCH, Models";
+            (bbch["Children"] as JArray).Add(bbchCalculationCanola);
+        }
     }
 }
