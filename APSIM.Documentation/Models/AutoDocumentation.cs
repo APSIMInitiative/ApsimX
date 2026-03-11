@@ -64,7 +64,7 @@ namespace APSIM.Documentation.Models
                 {typeof(LinearInterpolationFunction), typeof(DocLinearInterpolationFunction)},
                 {typeof(HeightFunction), typeof(DocFunction)},
                 {typeof(BudNumberFunction), typeof(DocFunction)},
-                {typeof(ZadokPMFWheat), typeof(DocZadokPMFWheat)},
+                {typeof(Zadok), typeof(DocZadok)},
                 {typeof(XYPairs), typeof(DocXYPairs)},
                 {typeof(VernalisationPhase), typeof(DocPhase)},
                 {typeof(SubDailyInterpolation), typeof(DocSubDailyInterpolation)},
