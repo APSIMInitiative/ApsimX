@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 208,
+  "Version": 212,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -1185,6 +1185,20 @@
               ],
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Phen.BBCH, Models",
+              "Name": "BBCH",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "Name": "BBCHCalculationFunction",
+                  "VariableName": "[Phenology].BBCH.BBCHCalculationCanola"
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "Enabled": true,
@@ -2076,7 +2090,7 @@
                       "Children": [
                         {
                           "$type": "Models.Memo, Models",
-                          "Text": "This approach is based upon the value used in [robertson_simulation_2002] increased to account for partitioning to roots.",
+                          "Text": "This approach is based upon the value used in [#robertson_simulation_2002] increased to account for partitioning to roots.",
                           "Name": "Memo",
                           "ResourceName": null,
                           "Children": [],
@@ -3463,7 +3477,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Memo, Models",
-                                      "Text": "This approach is based upon that used in [robertson_simulation_2002].",
+                                      "Text": "This approach is based upon that used in [#robertson_simulation_2002].",
                                       "Name": "Memo",
                                       "ResourceName": null,
                                       "Children": [],
@@ -3512,7 +3526,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Memo, Models",
-                                      "Text": "This approach is based upon that used in [robertson_simulation_2002].",
+                                      "Text": "This approach is based upon that used in [#robertson_simulation_2002].",
                                       "Name": "Memo",
                                       "ResourceName": null,
                                       "Children": [],
@@ -5401,7 +5415,7 @@
                           "Children": [
                             {
                               "$type": "Models.Memo, Models",
-                              "Text": "This approach is based upon that used in [robertson_simulation_2002].",
+                              "Text": "This approach is based upon that used in [#robertson_simulation_2002].",
                               "Name": "Memo",
                               "ResourceName": null,
                               "Children": [],
@@ -5431,7 +5445,7 @@
                           "Children": [
                             {
                               "$type": "Models.Memo, Models",
-                              "Text": "This approach is based upon that used in [robertson_simulation_2002].",
+                              "Text": "This approach is based upon that used in [#robertson_simulation_2002].",
                               "Name": "Memo",
                               "ResourceName": null,
                               "Children": [],
@@ -6721,7 +6735,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "This approach is based upon that used in [robertson_simulation_2002].",
+                  "Text": "This approach is based upon that used in [#robertson_simulation_2002].",
                   "Name": "Memo",
                   "ResourceName": null,
                   "Children": [],

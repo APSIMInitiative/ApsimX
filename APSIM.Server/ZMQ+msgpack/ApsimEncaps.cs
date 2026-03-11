@@ -12,6 +12,7 @@ using MessagePack;
 using APSIM.ZMQServer.IO;
 using APSIM.Shared.Utilities;
 using Models.Core;
+using Models.Storage;
 
 using Models.Core.Run;
 using APSIM.Core;
@@ -38,7 +39,9 @@ namespace APSIM.ZMQServer
         public ApsimEncapsulator(GlobalServerOptions options)
         {
             sims = FileFormat.ReadFromFile<Simulations>(options.File).Model as Simulations;
-            sims.Node.FindChild<Models.Storage.DataStore>().UseInMemoryDB = true;
+            var ds = sims.Node.FindChild<DataStore>();
+            if (ds != null)
+              ds.UseInMemoryDB = true;
             runner = new Runner(sims, numberOfProcessors: (int)options.WorkerCpuCount);
             jobRunner = new ServerJobRunner(this);
             runner.Use(jobRunner);
@@ -46,11 +49,10 @@ namespace APSIM.ZMQServer
 
         public void aboutToStart(string s)
         {
-#if false
-            Console.WriteLine("About to start " + s);
-            var sim = sims.FindChild<Simulation>(s);
-#endif
+            var ds = sims.Node.FindChild<Models.Storage.IDataStore>(s);
+            ds?.Writer.Clean(new[] { s }, false);
         }
+
 #if false
         public bool HasMethod(object objectToCheck, string methodName)
         {

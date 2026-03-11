@@ -11,7 +11,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using UserInterface.Interfaces;
-using Utility;
+using APSIMNG.Utility;
 using DocumentationCoordinate = APSIM.Shared.Documentation.Mapping.Coordinate;
 using DocumentationMap = APSIM.Shared.Documentation.Map;
 

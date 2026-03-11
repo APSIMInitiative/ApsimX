@@ -1,13 +1,10 @@
 ﻿using APSIM.Numerics;
-using APSIM.Shared.Utilities;
 using ApsimNG.Interfaces;
 using Cairo;
 using Gtk;
 using OxyPlot.GtkSharp;
 using System;
-using System.Collections.Generic;
-using UserInterface.Extensions;
-using Utility;
+using APSIMNG.Utility;
 
 namespace UserInterface.Views
 {
@@ -164,7 +161,7 @@ namespace UserInterface.Views
             double y3 = height + offsetY;
 
             context.NewPath();
-            context.SetSourceColor(Utility.Colour.ToOxy(owner.MainWidget.StyleContext.GetColor(StateFlags.Normal).ToColour().ToGdk()));
+            context.SetSourceColor(Colour.ToOxy(owner.MainWidget.StyleContext.GetColor(StateFlags.Normal).ToColour().ToGdk()));
 
             context.MoveTo(x1, y1);
 

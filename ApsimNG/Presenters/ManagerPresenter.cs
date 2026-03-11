@@ -65,14 +65,6 @@ namespace UserInterface.Presenters
                 }
             }
 
-            // See if manager script has a description attribute on it's class.
-            if (manager.Script != null)
-            {
-                DescriptionAttribute descriptionName = ReflectionUtilities.GetAttribute(manager.Script.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
-                if (descriptionName != null)
-                    explorerPresenter.ShowDescriptionInRightHandPanel(descriptionName.ToString());
-            }
-
             propertyPresenter = new PropertyPresenter();
             try
             {

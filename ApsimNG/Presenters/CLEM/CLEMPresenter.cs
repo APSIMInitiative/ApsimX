@@ -48,7 +48,8 @@ namespace UserInterface.Presenters
                 {
                     if (model is ZoneCLEM)
                     {
-                        object newView = new MarkdownView(this.View as ViewBase);
+                        MarkdownView newView = new MarkdownView(this.View as ViewBase);
+                        newView.Refresh();
                         IPresenter messagePresenter = new MessagePresenter();
                         if (newView != null && messagePresenter != null)
                         {
@@ -116,7 +117,8 @@ namespace UserInterface.Presenters
                 //HTML Summary
                 try
                 {
-                    object newView = new MarkdownView(this.View as ViewBase);
+                    MarkdownView newView = new MarkdownView(this.View as ViewBase);
+                    newView.Refresh();
                     IPresenter summaryPresenter = new CLEMSummaryPresenter();
                     if (newView != null && summaryPresenter != null)
                     {
@@ -135,7 +137,8 @@ namespace UserInterface.Presenters
                     var versions = ReflectionUtilities.GetAttributes(model.GetType(), typeof(VersionAttribute), false);
                     if (versions.Count() > 0)
                     {
-                        object newView = new MarkdownView(this.View as ViewBase);
+                        MarkdownView newView = new MarkdownView(this.View as ViewBase);
+                        newView.Refresh();
                         IPresenter versionPresenter = new VersionsPresenter();
                         if (newView != null && versionPresenter != null)
                         {
