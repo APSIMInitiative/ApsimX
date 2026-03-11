@@ -7444,7 +7444,7 @@ internal class Converter
     /// <param name="root">Root json object.</param>
     /// <param name="_">Unused filename.</param>
     private static void UpgradeToVersion212(JObject root, string _)
-    {        
+    {
         //child for Generic BBCH
         JObject bbchCalculation = new JObject()
         {
@@ -7463,7 +7463,7 @@ internal class Converter
 
         //Add child to BBCH
         List<JObject> bbchs = JsonUtilities.ChildrenRecursively(root, "BBCH");
-        foreach(JObject bbch in bbchs)
+        foreach (JObject bbch in bbchs)
         {
             JObject plant = JsonUtilities.Ancestor(bbch, "IPlant");
             if (plant != null && plant["Name"].ToString() == "Canola")
@@ -7474,12 +7474,18 @@ internal class Converter
 
         //do the same for all BBCHCanola
         bbchs = JsonUtilities.ChildrenRecursively(root, "BBCHCanola");
-        foreach(JObject bbch in bbchs)
+        foreach (JObject bbch in bbchs)
         {
             bbch["$type"] = "Models.PMF.Phen.BBCH, Models";
             (bbch["Children"] as JArray).Add(bbchCalculationCanola);
+        }
+    }
 
-    private static void UpgradeToVersion211(JObject root, string _)
+    /// <summary>
+    /// Fix some things in STRUM
+    /// <param name="root">Root json object.</param>
+    /// <param name="_">Unused filename.</param>
+    private static void UpgradeToVersion213(JObject root, string _)
     {
         // Find all StrumTreeInstance models in the JSON and update values
         foreach (var model in root
