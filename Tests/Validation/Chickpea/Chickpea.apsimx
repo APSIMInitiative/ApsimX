@@ -303,6 +303,24 @@
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
+        },
+        {
+          "$type": "Models.Report, Models",
+          "VariableNames": [
+            "[Clock].Today",
+            "[Chickpea].SowingData.Cultivar",
+            "[IWeather].Latitude",
+            "[IWeather].Longitude"
+          ],
+          "EventNames": [
+            "[Chickpea].Sowing"
+          ],
+          "GroupByVariableName": null,
+          "Name": "SowingReport",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
         }
       ],
       "Enabled": true,
@@ -1735,6 +1753,24 @@
                           ],
                           "GroupByVariableName": null,
                           "Name": "RDDReport",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Report, Models",
+                          "VariableNames": [
+                            "[Clock].Today",
+                            "[Chickpea].SowingData.Cultivar",
+                            "[IWeather].Latitude",
+                            "[IWeather].Longitude"
+                          ],
+                          "EventNames": [
+                            "[Chickpea].Sowing"
+                          ],
+                          "GroupByVariableName": null,
+                          "Name": "SowingReport",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -6955,6 +6991,24 @@
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Report, Models",
+                          "VariableNames": [
+                            "[Clock].Today",
+                            "[Chickpea].SowingData.Cultivar",
+                            "[IWeather].Latitude",
+                            "[IWeather].Longitude"
+                          ],
+                          "EventNames": [
+                            "[Chickpea].Sowing"
+                          ],
+                          "GroupByVariableName": null,
+                          "Name": "SowingReport",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "Enabled": true,
@@ -11687,6 +11741,24 @@
                           ],
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Report, Models",
+                          "VariableNames": [
+                            "[Clock].Today",
+                            "[Chickpea].SowingData.Cultivar",
+                            "[IWeather].Latitude",
+                            "[IWeather].Longitude"
+                          ],
+                          "EventNames": [
+                            "[Chickpea].Sowing"
+                          ],
+                          "GroupByVariableName": null,
+                          "Name": "SowingReport",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "Enabled": true,
@@ -15874,6 +15946,24 @@
                           ],
                           "GroupByVariableName": null,
                           "Name": "RDDReport",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Report, Models",
+                          "VariableNames": [
+                            "[Clock].Today",
+                            "[Chickpea].SowingData.Cultivar",
+                            "[IWeather].Latitude",
+                            "[IWeather].Longitude"
+                          ],
+                          "EventNames": [
+                            "[Chickpea].Sowing"
+                          ],
+                          "GroupByVariableName": null,
+                          "Name": "SowingReport",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -24618,6 +24708,24 @@
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Report, Models",
+                          "VariableNames": [
+                            "[Clock].Today",
+                            "[Chickpea].SowingData.Cultivar",
+                            "[IWeather].Latitude",
+                            "[IWeather].Longitude"
+                          ],
+                          "EventNames": [
+                            "[Chickpea].Sowing"
+                          ],
+                          "GroupByVariableName": null,
+                          "Name": "SowingReport",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "Enabled": true,
@@ -30452,6 +30560,24 @@
                           ],
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Report, Models",
+                          "VariableNames": [
+                            "[Clock].Today",
+                            "[Chickpea].SowingData.Cultivar",
+                            "[IWeather].Latitude",
+                            "[IWeather].Longitude"
+                          ],
+                          "EventNames": [
+                            "[Chickpea].Sowing"
+                          ],
+                          "GroupByVariableName": null,
+                          "Name": "SowingReport",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "Enabled": true,
@@ -32880,6 +33006,24 @@
                               "ReadOnly": false
                             }
                           ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Report, Models",
+                          "VariableNames": [
+                            "[Clock].Today",
+                            "[Chickpea].SowingData.Cultivar",
+                            "[IWeather].Latitude",
+                            "[IWeather].Longitude"
+                          ],
+                          "EventNames": [
+                            "[Chickpea].Sowing"
+                          ],
+                          "GroupByVariableName": null,
+                          "Name": "SowingReport",
+                          "ResourceName": null,
+                          "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -37936,6 +38080,24 @@
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Report, Models",
+                          "VariableNames": [
+                            "[Clock].Today",
+                            "[Chickpea].SowingData.Cultivar",
+                            "[IWeather].Latitude",
+                            "[IWeather].Longitude"
+                          ],
+                          "EventNames": [
+                            "[Chickpea].Sowing"
+                          ],
+                          "GroupByVariableName": null,
+                          "Name": "SowingReport",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "Enabled": true,
@@ -40221,6 +40383,24 @@
                           ],
                           "GroupByVariableName": null,
                           "Name": "RDDReport",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Report, Models",
+                          "VariableNames": [
+                            "[Clock].Today",
+                            "[Chickpea].SowingData.Cultivar",
+                            "[IWeather].Latitude",
+                            "[IWeather].Longitude"
+                          ],
+                          "EventNames": [
+                            "[Chickpea].Sowing"
+                          ],
+                          "GroupByVariableName": null,
+                          "Name": "SowingReport",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -44159,6 +44339,24 @@
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Report, Models",
+                          "VariableNames": [
+                            "[Clock].Today",
+                            "[Chickpea].SowingData.Cultivar",
+                            "[IWeather].Latitude",
+                            "[IWeather].Longitude"
+                          ],
+                          "EventNames": [
+                            "[Chickpea].Sowing"
+                          ],
+                          "GroupByVariableName": null,
+                          "Name": "SowingReport",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "Enabled": true,
@@ -46743,6 +46941,24 @@
                           ],
                           "GroupByVariableName": null,
                           "Name": "RDDReport",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Report, Models",
+                          "VariableNames": [
+                            "[Clock].Today",
+                            "[Chickpea].SowingData.Cultivar",
+                            "[IWeather].Latitude",
+                            "[IWeather].Longitude"
+                          ],
+                          "EventNames": [
+                            "[Chickpea].Sowing"
+                          ],
+                          "GroupByVariableName": null,
+                          "Name": "SowingReport",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -50059,6 +50275,24 @@
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Report, Models",
+                          "VariableNames": [
+                            "[Clock].Today",
+                            "[Chickpea].SowingData.Cultivar",
+                            "[IWeather].Latitude",
+                            "[IWeather].Longitude"
+                          ],
+                          "EventNames": [
+                            "[Chickpea].Sowing"
+                          ],
+                          "GroupByVariableName": null,
+                          "Name": "SowingReport",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "Enabled": true,
@@ -51957,6 +52191,24 @@
                           ],
                           "GroupByVariableName": null,
                           "Name": "RDDReport",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Report, Models",
+                          "VariableNames": [
+                            "[Clock].Today",
+                            "[Chickpea].SowingData.Cultivar",
+                            "[IWeather].Latitude",
+                            "[IWeather].Longitude"
+                          ],
+                          "EventNames": [
+                            "[Chickpea].Sowing"
+                          ],
+                          "GroupByVariableName": null,
+                          "Name": "SowingReport",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -54134,6 +54386,24 @@
                           ],
                           "GroupByVariableName": null,
                           "Name": "RDDReport",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Report, Models",
+                          "VariableNames": [
+                            "[Clock].Today",
+                            "[Chickpea].SowingData.Cultivar",
+                            "[IWeather].Latitude",
+                            "[IWeather].Longitude"
+                          ],
+                          "EventNames": [
+                            "[Chickpea].Sowing"
+                          ],
+                          "GroupByVariableName": null,
+                          "Name": "SowingReport",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -59971,6 +60241,24 @@
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Report, Models",
+                      "VariableNames": [
+                        "[Clock].Today",
+                        "[Chickpea].SowingData.Cultivar",
+                        "[IWeather].Latitude",
+                        "[IWeather].Longitude"
+                      ],
+                      "EventNames": [
+                        "[Chickpea].Sowing"
+                      ],
+                      "GroupByVariableName": null,
+                      "Name": "SowingReport",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "Enabled": true,
@@ -61340,6 +61628,24 @@
                         }
                       ],
                       "Name": "AutoIrrigate",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Report, Models",
+                      "VariableNames": [
+                        "[Clock].Today",
+                        "[Chickpea].SowingData.Cultivar",
+                        "[IWeather].Latitude",
+                        "[IWeather].Longitude"
+                      ],
+                      "EventNames": [
+                        "[Chickpea].Sowing"
+                      ],
+                      "GroupByVariableName": null,
+                      "Name": "SowingReport",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -64035,6 +64341,24 @@
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Report, Models",
+                      "VariableNames": [
+                        "[Clock].Today",
+                        "[Chickpea].SowingData.Cultivar",
+                        "[IWeather].Latitude",
+                        "[IWeather].Longitude"
+                      ],
+                      "EventNames": [
+                        "[Chickpea].Sowing"
+                      ],
+                      "GroupByVariableName": null,
+                      "Name": "SowingReport",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "Enabled": true,
@@ -65017,6 +65341,24 @@
                         }
                       ],
                       "Name": "Irrigate",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Report, Models",
+                      "VariableNames": [
+                        "[Clock].Today",
+                        "[Chickpea].SowingData.Cultivar",
+                        "[IWeather].Latitude",
+                        "[IWeather].Longitude"
+                      ],
+                      "EventNames": [
+                        "[Chickpea].Sowing"
+                      ],
+                      "GroupByVariableName": null,
+                      "Name": "SowingReport",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -66141,6 +66483,24 @@
                         }
                       ],
                       "Name": "Irrigate",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Report, Models",
+                      "VariableNames": [
+                        "[Clock].Today",
+                        "[Chickpea].SowingData.Cultivar",
+                        "[IWeather].Latitude",
+                        "[IWeather].Longitude"
+                      ],
+                      "EventNames": [
+                        "[Chickpea].Sowing"
+                      ],
+                      "GroupByVariableName": null,
+                      "Name": "SowingReport",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
