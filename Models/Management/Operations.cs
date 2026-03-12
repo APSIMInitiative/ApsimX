@@ -18,11 +18,9 @@ namespace Models
     [Serializable]
     public class Operation
     {
-        private const int NO_YEAR = 1;
+        private DateTime? ActionDate { get; set; }
 
-        private DateTime _dt;
-
-        private string _date;
+        private bool HasYear => ActionDate?.Year != DateTime.MinValue.Year;
 
         /// <summary>
         /// Default constructor.
@@ -51,12 +49,23 @@ namespace Models
         /// <summary>Gets or sets the date.</summary>
         public string Date
         {
-            get => _date;
+            get
+            {
+                if (ActionDate is DateTime dt)
+                {
+                    if (HasYear)
+                        return DateUtilities.GetDateAsString(dt);
+                    else
+                        return DateUtilities.GetDateAsDayMonthString(dt);
+                }
+                return null;
+            }
             set
             {
-                _date = value;
-                if (value != null)
-                    _dt = DateUtilities.GetDate(_date, NO_YEAR);
+                if (value == null)
+                    ActionDate = null;
+                else
+                    ActionDate = DateUtilities.GetDate(value, DateTime.MinValue.Year);
             }
         }
 
@@ -86,7 +95,14 @@ namespace Models
         /// <returns>True if the op should be performed at this time.</returns>
         public bool TriggersOnDate(DateTime date)
         {
-            return date == _dt || _dt.Year == NO_YEAR && date.Day == _dt.Day && date.Month == _dt.Month;
+            if (ActionDate is DateTime dt)
+            {
+                if (HasYear)
+                    return date == dt;
+                else
+                    return date.Month == dt.Month && date.Day == dt.Day;
+            }
+            return false;
         }
 
         /// <summary>
