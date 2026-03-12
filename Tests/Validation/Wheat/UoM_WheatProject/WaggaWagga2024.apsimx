@@ -12001,7 +12001,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Osprey",
+                        "//[Sowing].Script.CultivarName = Osprey",
                         "[Sowing].Script.Population = 200",
                         "[Sowing].Script.EmergeDate = 28-Apr"
                       ],
@@ -12016,7 +12016,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Rosella",
+                        "//[Sowing].Script.CultivarName = Rosella",
                         "[Sowing].Script.Population = 200",
                         "[Sowing].Script.EmergeDate = 28-Apr"
                       ],
@@ -12031,7 +12031,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Whistler",
+                        "//[Sowing].Script.CultivarName = Whistler",
                         "[Sowing].Script.Population = 200",
                         "[Sowing].Script.EmergeDate = 28-Apr"
                       ],
@@ -12046,7 +12046,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Wylah",
+                        "//[Sowing].Script.CultivarName = Wylah",
                         "[Sowing].Script.Population = 200",
                         "[Sowing].Script.EmergeDate = 26-Apr"
                       ],
@@ -12061,7 +12061,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Wedgetail",
+                        "//[Sowing].Script.CultivarName = Wedgetail",
                         "[Sowing].Script.Population = 200",
                         "[Sowing].Script.EmergeDate = 28-Apr"
                       ],
@@ -12076,7 +12076,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Kittyhawk",
+                        "//[Sowing].Script.CultivarName = Kittyhawk",
                         "[Sowing].Script.Population = 200",
                         "[Sowing].Script.EmergeDate = 27-Apr"
                       ],
@@ -12091,7 +12091,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Illabo",
+                        "//[Sowing].Script.CultivarName = Illabo",
                         "[Sowing].Script.Population = 200",
                         "[Sowing].Script.EmergeDate = 27-Apr"
                       ],
@@ -12106,7 +12106,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Mowhawk",
+                        "//[Sowing].Script.CultivarName = Mowhawk",
                         "[Sowing].Script.Population = 200",
                         "[Sowing].Script.EmergeDate = 28-Apr"
                       ],
@@ -12121,7 +12121,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Meering",
+                        "//[Sowing].Script.CultivarName = Meering",
                         "[Sowing].Script.Population = 200",
                         "[Sowing].Script.EmergeDate = 25-May"
                       ],
@@ -12136,7 +12136,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Janz",
+                        "//[Sowing].Script.CultivarName = Janz",
                         "[Sowing].Script.Population = 200",
                         "[Sowing].Script.EmergeDate = 27-May"
                       ],
@@ -12151,7 +12151,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Yitpi",
+                        "//[Sowing].Script.CultivarName = Yitpi",
                         "[Sowing].Script.Population = 200",
                         "[Sowing].Script.EmergeDate = 26-May"
                       ],
@@ -12166,7 +12166,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Wyalkatchem",
+                        "//[Sowing].Script.CultivarName = Wyalkatchem",
                         "[Sowing].Script.Population = 200",
                         "[Sowing].Script.EmergeDate = 26-May"
                       ],
@@ -12181,7 +12181,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Gregory",
+                        "//[Sowing].Script.CultivarName = Gregory",
                         "[Sowing].Script.Population = 200",
                         "[Sowing].Script.EmergeDate = 26-May"
                       ],
@@ -12196,7 +12196,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Mace",
+                        "//[Sowing].Script.CultivarName = Mace",
                         "[Sowing].Script.Population = 200",
                         "[Sowing].Script.EmergeDate = 27-May"
                       ],
@@ -12211,7 +12211,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Scepter",
+                        "//[Sowing].Script.CultivarName = Scepter",
                         "[Sowing].Script.Population = 200",
                         "[Sowing].Script.EmergeDate = 27-May"
                       ],
@@ -12226,7 +12226,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Sunmaster",
+                        "//[Sowing].Script.CultivarName = Sunmaster",
                         "[Sowing].Script.Population = 200",
                         "[Sowing].Script.EmergeDate = 27-May"
                       ],
@@ -13515,7 +13515,7 @@
                     },
                     {
                       "Key": "CultivarName",
-                      "Value": ""
+                      "Value": "Hartog"
                     },
                     {
                       "Key": "SowingDepth",

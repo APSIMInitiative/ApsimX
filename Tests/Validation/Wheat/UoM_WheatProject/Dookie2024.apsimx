@@ -11969,7 +11969,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Osprey",
+                        "//[Sowing].Script.CultivarName = Osprey",
                         "[Sowing].Script.Population = 101",
                         "[Sowing].Script.EmergeDate = 28-Apr"
                       ],
@@ -11984,7 +11984,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Rosella",
+                        "//[Sowing].Script.CultivarName = Rosella",
                         "[Sowing].Script.Population = 108",
                         "[Sowing].Script.EmergeDate = 28-Apr"
                       ],
@@ -11999,7 +11999,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Whistler",
+                        "//[Sowing].Script.CultivarName = Whistler",
                         "[Sowing].Script.Population = 92",
                         "[Sowing].Script.EmergeDate = 28-Apr"
                       ],
@@ -12014,7 +12014,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Wylah",
+                        "//[Sowing].Script.CultivarName = Wylah",
                         "[Sowing].Script.Population = 105",
                         "[Sowing].Script.EmergeDate = 26-Apr"
                       ],
@@ -12029,7 +12029,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Wedgetail",
+                        "//[Sowing].Script.CultivarName = Wedgetail",
                         "[Sowing].Script.Population = 103",
                         "[Sowing].Script.EmergeDate = 28-Apr"
                       ],
@@ -12044,7 +12044,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Kittyhawk",
+                        "//[Sowing].Script.CultivarName = Kittyhawk",
                         "[Sowing].Script.Population = 103",
                         "[Sowing].Script.EmergeDate = 27-Apr"
                       ],
@@ -12059,7 +12059,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Illabo",
+                        "//[Sowing].Script.CultivarName = Illabo",
                         "[Sowing].Script.Population = 119",
                         "[Sowing].Script.EmergeDate = 27-Apr"
                       ],
@@ -12074,7 +12074,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Mowhawk",
+                        "//[Sowing].Script.CultivarName = Mowhawk",
                         "[Sowing].Script.Population = 86",
                         "[Sowing].Script.EmergeDate = 28-Apr"
                       ],
@@ -12089,7 +12089,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Meering",
+                        "//[Sowing].Script.CultivarName = Meering",
                         "[Sowing].Script.Population = 127",
                         "[Sowing].Script.EmergeDate = 25-May"
                       ],
@@ -12104,7 +12104,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Janz",
+                        "//[Sowing].Script.CultivarName = Janz",
                         "[Sowing].Script.Population = 138",
                         "[Sowing].Script.EmergeDate = 27-May"
                       ],
@@ -12119,7 +12119,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Yitpi",
+                        "//[Sowing].Script.CultivarName = Yitpi",
                         "[Sowing].Script.Population = 135",
                         "[Sowing].Script.EmergeDate = 26-May"
                       ],
@@ -12134,7 +12134,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Wyalkatchem",
+                        "//[Sowing].Script.CultivarName = Wyalkatchem",
                         "[Sowing].Script.Population = 130",
                         "[Sowing].Script.EmergeDate = 26-May"
                       ],
@@ -12149,7 +12149,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Gregory",
+                        "//[Sowing].Script.CultivarName = Gregory",
                         "[Sowing].Script.Population = 123",
                         "[Sowing].Script.EmergeDate = 26-May"
                       ],
@@ -12164,7 +12164,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Mace",
+                        "//[Sowing].Script.CultivarName = Mace",
                         "[Sowing].Script.Population = 140",
                         "[Sowing].Script.EmergeDate = 27-May"
                       ],
@@ -12179,7 +12179,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Scepter",
+                        "//[Sowing].Script.CultivarName = Scepter",
                         "[Sowing].Script.Population = 146",
                         "[Sowing].Script.EmergeDate = 27-May"
                       ],
@@ -12194,7 +12194,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Sunmaster",
+                        "//[Sowing].Script.CultivarName = Sunmaster",
                         "[Sowing].Script.Population = 131",
                         "[Sowing].Script.EmergeDate = 27-May"
                       ],
@@ -13159,165 +13159,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Plant, Models",
-                  "Name": "Wheatx",
-                  "ResourceName": "Wheat",
-                  "Children": [
-                    {
-                      "$type": "Models.PMF.Cultivar, Models",
-                      "Command": [
-                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90",
-                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.212225680614483",
-                        "[Phenology].CAMP.FLNparams.MinLN = 8",
-                        "[Phenology].CAMP.FLNparams.PpLN = 3.0",
-                        "[Phenology].CAMP.FLNparams.VrnLN = 6.0",
-                        "[Phenology].CAMP.FLNparams.VxPLN = 1.0",
-                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
-                        "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
-                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 170",
-                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.0"
-                      ],
-                      "Name": "Mowhawk",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "Placeholder cultivar Mowhawk based on DefaultCv.",
-                          "Name": "Memo",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": false,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": false,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.Cultivar, Models",
-                      "Command": [
-                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90",
-                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.212225680614483",
-                        "[Phenology].CAMP.FLNparams.MinLN = 8",
-                        "[Phenology].CAMP.FLNparams.PpLN = 3.0",
-                        "[Phenology].CAMP.FLNparams.VrnLN = 6.0",
-                        "[Phenology].CAMP.FLNparams.VxPLN = 1.0",
-                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
-                        "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
-                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 170",
-                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.0"
-                      ],
-                      "Name": "Osprey",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "Placeholder cultivar Mowhawk based on DefaultCv.",
-                          "Name": "Memo",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": false,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": false,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.Cultivar, Models",
-                      "Command": [
-                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90",
-                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.212225680614483",
-                        "[Phenology].CAMP.FLNparams.MinLN = 8",
-                        "[Phenology].CAMP.FLNparams.PpLN = 3.0",
-                        "[Phenology].CAMP.FLNparams.VrnLN = 6.0",
-                        "[Phenology].CAMP.FLNparams.VxPLN = 1.0",
-                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
-                        "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
-                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 170",
-                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.0"
-                      ],
-                      "Name": "Wylah",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "Placeholder cultivar Mowhawk based on DefaultCv.",
-                          "Name": "Memo",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": false,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": false,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.Cultivar, Models",
-                      "Command": [
-                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90",
-                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.212225680614483",
-                        "[Phenology].CAMP.FLNparams.MinLN = 8",
-                        "[Phenology].CAMP.FLNparams.PpLN = 3.0",
-                        "[Phenology].CAMP.FLNparams.VrnLN = 6.0",
-                        "[Phenology].CAMP.FLNparams.VxPLN = 1.0",
-                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
-                        "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
-                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 170",
-                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.0"
-                      ],
-                      "Name": "Meering",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "Placeholder cultivar Mowhawk based on DefaultCv.",
-                          "Name": "Memo",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": false,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": false,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.Cultivar, Models",
-                      "Command": [
-                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90",
-                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.212225680614483",
-                        "[Phenology].CAMP.FLNparams.MinLN = 8",
-                        "[Phenology].CAMP.FLNparams.PpLN = 3.0",
-                        "[Phenology].CAMP.FLNparams.VrnLN = 6.0",
-                        "[Phenology].CAMP.FLNparams.VxPLN = 1.0",
-                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
-                        "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
-                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 170",
-                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.0"
-                      ],
-                      "Name": "Sunmaster",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "Placeholder cultivar Mowhawk based on DefaultCv.",
-                          "Name": "Memo",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": false,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": false,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": false,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Manager, Models",
                   "CodeArray": [
                     "using Newtonsoft.Json;",
@@ -13391,7 +13232,7 @@
                     },
                     {
                       "Key": "CultivarName",
-                      "Value": ""
+                      "Value": "Hartog"
                     },
                     {
                       "Key": "SowingDepth",
@@ -14079,6 +13920,166 @@
                           "ForEachSeries": false,
                           "showOneToOne": true,
                           "showEquation": true,
+                          "Name": "Regression",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 5,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "GrainNumber",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryMarkers": "TOS",
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "HarvestObsPred",
+                      "XFieldName": "Observed.Wheat.Grain.Number",
+                      "YFieldName": "Predicted.Wheat.Grain.Number",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": false,
+                          "Name": "Regression",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 5,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "GrainSize",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryMarkers": "TOS",
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "HarvestObsPred",
+                      "XFieldName": "Observed.Wheat.Grain.Size",
+                      "YFieldName": "Predicted.Wheat.Grain.Size",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": false,
                           "Name": "Regression",
                           "ResourceName": null,
                           "Children": [],
@@ -16111,7 +16112,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.SowDate = 16-Apr",
-                        "[Sowing].Script.CultivarName = Illabo",
+                        "//[Sowing].Script.CultivarName = Illabo",
                         "[Sowing].Script.Population = 116",
                         "[Sowing].Script.EmergeDate = 28-Apr"
                       ],
@@ -16127,7 +16128,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.SowDate = 16-Apr",
-                        "[Sowing].Script.CultivarName = BigRed",
+                        "//[Sowing].Script.CultivarName = BigRed",
                         "[Sowing].Script.Population = 104",
                         "[Sowing].Script.EmergeDate = 27-Apr"
                       ],
@@ -16143,7 +16144,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.SowDate = 16-Apr",
-                        "[Sowing].Script.CultivarName = UOM001_3_47",
+                        "//[Sowing].Script.CultivarName = UOM001_3_47",
                         "[Sowing].Script.Population = 96",
                         "[Sowing].Script.EmergeDate = 27-Apr"
                       ],
@@ -16159,7 +16160,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.SowDate = 16-Apr",
-                        "[Sowing].Script.CultivarName = UOM001_9_1",
+                        "//[Sowing].Script.CultivarName = UOM001_9_1",
                         "[Sowing].Script.Population = 93",
                         "[Sowing].Script.EmergeDate = 29-Apr"
                       ],
@@ -16175,7 +16176,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.SowDate = 14-May",
-                        "[Sowing].Script.CultivarName = Zanzibar",
+                        "//[Sowing].Script.CultivarName = Zanzibar",
                         "[Sowing].Script.Population = 139",
                         "[Sowing].Script.EmergeDate = 26-May"
                       ],
@@ -16191,7 +16192,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.SowDate = 14-May",
-                        "[Sowing].Script.CultivarName = SunMaster",
+                        "//[Sowing].Script.CultivarName = SunMaster",
                         "[Sowing].Script.Population = 147",
                         "[Sowing].Script.EmergeDate = 27-May"
                       ],
@@ -16207,7 +16208,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.SowDate = 14-May",
-                        "[Sowing].Script.CultivarName = UOM001_3_47",
+                        "//[Sowing].Script.CultivarName = UOM001_3_47",
                         "[Sowing].Script.Population = 132",
                         "[Sowing].Script.EmergeDate = 27-May"
                       ],
@@ -16223,7 +16224,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.SowDate = 14-May",
-                        "[Sowing].Script.CultivarName = UOM001_9_1",
+                        "//[Sowing].Script.CultivarName = UOM001_9_1",
                         "[Sowing].Script.Population = 128",
                         "[Sowing].Script.EmergeDate = 27-May"
                       ],
@@ -17252,7 +17253,7 @@
                     },
                     {
                       "Key": "CultivarName",
-                      "Value": ""
+                      "Value": "Hartog"
                     },
                     {
                       "Key": "SowingDepth",
