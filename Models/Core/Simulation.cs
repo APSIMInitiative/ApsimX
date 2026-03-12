@@ -97,6 +97,9 @@ namespace Models.Core
             }
         }
 
+        /// <summary>Is Enabled?</summary>
+        public bool IsEnabled => Enabled;
+
         /// <summary>Is the simulation running?</summary>
         public bool IsRunning { get; private set; } = false;
 

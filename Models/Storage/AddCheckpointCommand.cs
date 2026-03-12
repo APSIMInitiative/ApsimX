@@ -153,5 +153,9 @@ namespace Models.Storage
         {
             // Do nothing.
         }
+
+        
+        /// <summary> Returns true if the job is enabled</summary>
+        public bool Enabled => true;
     }
 }

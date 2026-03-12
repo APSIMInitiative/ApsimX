@@ -34,5 +34,9 @@ namespace UnitTests.APSIMShared
         public void Cleanup(System.Threading.CancellationTokenSource cancelToken)
         {
         }
+
+        
+        /// <summary> Returns true if the job is enabled</summary>
+        public bool Enabled => true;
     }
 }
