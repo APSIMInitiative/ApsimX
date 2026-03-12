@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 210,
+  "Version": 212,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -1339,6 +1339,123 @@
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "CodeArray": [
+            "using Models.Soils.Nutrients;",
+            "using System;",
+            "using Models.Core;",
+            "using Models.PMF;",
+            "using Models.Soils;",
+            "using Models.Soils.Nutrients;",
+            "using Models.Utilities;",
+            "using Models.Functions;",
+            "using APSIM.Shared.Utilities;",
+            "",
+            "namespace Models",
+            "{",
+            "    [Serializable]",
+            "    public class Script : Model",
+            "    {",
+            "        [Link] Plant Wheat;",
+            "        [Link(Type = LinkType.Path, Path = \"[Wheat].Phenology.Phyllochron.BasePhyllochron\")] Constant WheatPhyllochron;",
+            "                ",
+            "        [Description(\"Germination Date (d-mmm)\")]",
+            "        public string GermDate { get; set;} ",
+            "        [Description(\"Emergence Date (d-mmm)\")]",
+            "        public string EmergDate { get; set;}",
+            "        [Description(\"Vernalisation Date (d-mmm)\")]",
+            "        public string VernDate { get; set;}",
+            "        [Description(\"Terminal Spikelet Date (d-mmm)\")]",
+            "        public string TSDate { get; set;}",
+            "        [Description(\"FlagLeaf Date (d-mmm)\")]",
+            "        public string FlagDate { get; set;}",
+            "        [Description(\"Anthesis Date (d-mmm)\")]",
+            "        public string AnthDate { get; set;}",
+            "        [Description(\"Ripe Date (d-mmm)\")]",
+            "        public string RipeDate { get; set;}",
+            "",
+            "        [Description(\"Phyllochron (oC.d)\")]",
+            "        public double Phyllochron { get; set;}",
+            "        ",
+            "        [EventSubscribe(\"PlantSowing\")]",
+            "        private void OnPlantSowing(object sender, SowingParameters data)",
+            "        {",
+            "            if (!String.IsNullOrEmpty(GermDate))",
+            "            {",
+            "               Wheat.Phenology.SetPhaseCompletionDate(GermDate,\"Germinating\");",
+            "            }",
+            "            if (!String.IsNullOrEmpty(EmergDate))",
+            "            {",
+            "               Wheat.Phenology.SetPhaseCompletionDate(EmergDate,\"Emerging\");",
+            "            }",
+            "            if (!String.IsNullOrEmpty(VernDate))",
+            "            {",
+            "               Wheat.Phenology.SetPhaseCompletionDate(VernDate,\"LeavesInitiating\");",
+            "            }",
+            "            if (!String.IsNullOrEmpty(TSDate))",
+            "            {",
+            "               Wheat.Phenology.SetPhaseCompletionDate(TSDate,\"SpikeletsDifferentiating\");",
+            "            }",
+            "            if (!String.IsNullOrEmpty(FlagDate))",
+            "            {",
+            "               Wheat.Phenology.SetPhaseCompletionDate(FlagDate,\"StemElongating\");",
+            "            }",
+            "            if (!String.IsNullOrEmpty(AnthDate))",
+            "            {",
+            "               Wheat.Phenology.SetPhaseCompletionDate(AnthDate,\"Flowering\");",
+            "            }",
+            "            if (!String.IsNullOrEmpty(RipeDate))",
+            "            {",
+            "               Wheat.Phenology.SetPhaseCompletionDate(RipeDate,\"GrainRipening\");",
+            "            }",
+            "            if (Phyllochron>0)",
+            "               WheatPhyllochron.FixedValue = Phyllochron;",
+            "               ",
+            "        }",
+            "    }",
+            "}"
+          ],
+          "Parameters": [
+            {
+              "Key": "GermDate",
+              "Value": ""
+            },
+            {
+              "Key": "EmergDate",
+              "Value": ""
+            },
+            {
+              "Key": "VernDate",
+              "Value": ""
+            },
+            {
+              "Key": "TSDate",
+              "Value": ""
+            },
+            {
+              "Key": "FlagDate",
+              "Value": ""
+            },
+            {
+              "Key": "AnthDate",
+              "Value": ""
+            },
+            {
+              "Key": "RipeDate",
+              "Value": ""
+            },
+            {
+              "Key": "Phyllochron",
+              "Value": "100"
+            }
+          ],
+          "Name": "SetPhenology",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
         }
       ],
       "Enabled": true,
@@ -1371,9 +1488,10 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Hartog",
-                        "[SetPhaseCompletionDates].Script.EmergDate = 2-jun-2014",
-                        "[SetPhaseCompletionDates].Script.FlagDate = 7-aug-2014",
-                        "[SetPhaseCompletionDates].Script.AnthDate = 9-sep-2014"
+                        "[SetPhenology].Script.EmergDate = 2-jun-2014",
+                        "[SetPhenology].Script.FlagDate = 7-aug-2014",
+                        "[SetPhenology].Script.AnthDate = 9-sep-2014",
+                        "[SetPhenology].Script.Phyllochron = 100"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1386,10 +1504,11 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Corack",
-                        "[SetPhaseCompletionDates].Script.EmergDate = 2-jun-2014",
-                        "[SetPhaseCompletionDates].Script.FlagDate = 9-aug-2014",
-                        "[SetPhaseCompletionDates].Script.AnthDate = 9-sep-2014"
+                        "[Sowing].Script.CultivarName = Hartog",
+                        "[SetPhenology].Script.EmergDate = 2-jun-2014",
+                        "[SetPhenology].Script.FlagDate = 9-aug-2014",
+                        "[SetPhenology].Script.AnthDate = 9-sep-2014",
+                        "[SetPhenology].Script.Phyllochron = 97"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1402,10 +1521,11 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Mace",
-                        "[SetPhaseCompletionDates].Script.EmergDate = 2-jun-2014",
-                        "[SetPhaseCompletionDates].Script.FlagDate = 9-aug-2014",
-                        "[SetPhaseCompletionDates].Script.AnthDate = 9-sep-2014"
+                        "[Sowing].Script.CultivarName = Hartog",
+                        "[SetPhenology].Script.EmergDate = 2-jun-2014",
+                        "[SetPhenology].Script.FlagDate = 9-aug-2014",
+                        "[SetPhenology].Script.AnthDate = 9-sep-2014",
+                        "[SetPhenology].Script.Phyllochron = 97"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -2557,7 +2677,7 @@
                           "Value": ""
                         }
                       ],
-                      "Name": "SetPhaseCompletionDates",
+                      "Name": "SetPhenology",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -5135,9 +5255,10 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Hartog",
-                        "[SetPhaseCompletionDates].Script.EmergDate = 2-jun-2014",
-                        "[SetPhaseCompletionDates].Script.FlagDate = 4-aug-2014",
-                        "[SetPhaseCompletionDates].Script.AnthDate = 1-sep-2014"
+                        "[SetPhenology].Script.EmergDate = 2-jun-2014",
+                        "[SetPhenology].Script.FlagDate = 4-aug-2014",
+                        "[SetPhenology].Script.AnthDate = 1-sep-2014",
+                        "[SetPhenology].Script.Phyllochron = 95"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -5150,10 +5271,11 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Corack",
-                        "[SetPhaseCompletionDates].Script.EmergDate = 2-jun-2014",
-                        "[SetPhaseCompletionDates].Script.FlagDate = 7-aug-2014",
-                        "[SetPhaseCompletionDates].Script.AnthDate = 1-sep-2014"
+                        "[Sowing].Script.CultivarName = Hartog",
+                        "[SetPhenology].Script.EmergDate = 2-jun-2014",
+                        "[SetPhenology].Script.FlagDate = 7-aug-2014",
+                        "[SetPhenology].Script.AnthDate = 1-sep-2014",
+                        "[SetPhenology].Script.Phyllochron = 95"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -5166,10 +5288,11 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Mace",
-                        "[SetPhaseCompletionDates].Script.EmergDate = 2-jun-2014",
-                        "[SetPhaseCompletionDates].Script.FlagDate = 29-jul-2014",
-                        "[SetPhaseCompletionDates].Script.AnthDate = 9-sep-2014"
+                        "[Sowing].Script.CultivarName = Hartog",
+                        "[SetPhenology].Script.EmergDate = 2-jun-2014",
+                        "[SetPhenology].Script.FlagDate = 29-jul-2014",
+                        "[SetPhenology].Script.AnthDate = 9-sep-2014",
+                        "[SetPhenology].Script.Phyllochron = 97"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -6291,7 +6414,7 @@
                           "Value": ""
                         }
                       ],
-                      "Name": "SetPhaseCompletionDates",
+                      "Name": "SetPhenology",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -8264,9 +8387,10 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Hartog",
-                        "[SetPhaseCompletionDates].Script.EmergDate = 25-may-2015",
-                        "[SetPhaseCompletionDates].Script.FlagDate = 24-jul-2015",
-                        "[SetPhaseCompletionDates].Script.AnthDate = 18-aug-2015"
+                        "[SetPhenology].Script.EmergDate = 25-may-2015",
+                        "[SetPhenology].Script.FlagDate = 24-jul-2015",
+                        "[SetPhenology].Script.AnthDate = 18-aug-2015",
+                        "[SetPhenology].Script.Phyllochron = 100"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -8279,11 +8403,12 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Corack",
+                        "[Sowing].Script.CultivarName = Hartog",
                         "[Sowing].Script.Population = 60",
-                        "[SetPhaseCompletionDates].Script.EmergDate = 25-may-2015",
-                        "[SetPhaseCompletionDates].Script.FlagDate = 25-jul-2015",
-                        "[SetPhaseCompletionDates].Script.AnthDate = 18-aug-2015"
+                        "[SetPhenology].Script.EmergDate = 25-may-2015",
+                        "[SetPhenology].Script.FlagDate = 25-jul-2015",
+                        "[SetPhenology].Script.AnthDate = 18-aug-2015",
+                        "[SetPhenology].Script.Phyllochron = 100"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -8298,9 +8423,10 @@
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Hartog",
                         "[Sowing].Script.Population = 90",
-                        "[SetPhaseCompletionDates].Script.EmergDate = 25-may-2015",
-                        "[SetPhaseCompletionDates].Script.FlagDate = 31-jul-2015",
-                        "[SetPhaseCompletionDates].Script.AnthDate = 25-aug-2015"
+                        "[SetPhenology].Script.EmergDate = 25-may-2015",
+                        "[SetPhenology].Script.FlagDate = 31-jul-2015",
+                        "[SetPhenology].Script.AnthDate = 25-aug-2015",
+                        "[SetPhenology].Script.Phyllochron = 100"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -9294,7 +9420,7 @@
                           "Value": ""
                         }
                       ],
-                      "Name": "SetPhaseCompletionDates",
+                      "Name": "SetPhenology",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -11526,9 +11652,10 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Hartog",
-                        "[SetPhaseCompletionDates].Script.EmergDate = 28-may-2014",
-                        "[SetPhaseCompletionDates].Script.FlagDate = 15-sep-2014",
-                        "[SetPhaseCompletionDates].Script.AnthDate = 11-oct-2014"
+                        "[SetPhenology].Script.EmergDate = 28-may-2014",
+                        "[SetPhenology].Script.FlagDate = 15-sep-2014",
+                        "[SetPhenology].Script.AnthDate = 11-oct-2014",
+                        "[SetPhenology].Script.Phyllochron = 97"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -11541,10 +11668,11 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Corack",
-                        "[SetPhaseCompletionDates].Script.EmergDate = 28-may-2014",
-                        "[SetPhaseCompletionDates].Script.FlagDate = 12-sep-2014",
-                        "[SetPhaseCompletionDates].Script.AnthDate = 6-oct-2014"
+                        "[Sowing].Script.CultivarName = Hartog",
+                        "[SetPhenology].Script.EmergDate = 28-may-2014",
+                        "[SetPhenology].Script.FlagDate = 12-sep-2014",
+                        "[SetPhenology].Script.AnthDate = 6-oct-2014",
+                        "[SetPhenology].Script.Phyllochron = 97"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -11557,10 +11685,11 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Mace",
-                        "[SetPhaseCompletionDates].Script.EmergDate = 28-may-2014",
-                        "[SetPhaseCompletionDates].Script.FlagDate = 12-sep-2014",
-                        "[SetPhaseCompletionDates].Script.AnthDate = 6-oct-2014"
+                        "[Sowing].Script.CultivarName = Hartog",
+                        "[SetPhenology].Script.EmergDate = 28-may-2014",
+                        "[SetPhenology].Script.FlagDate = 12-sep-2014",
+                        "[SetPhenology].Script.AnthDate = 6-oct-2014",
+                        "[SetPhenology].Script.Phyllochron = 93"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -13002,7 +13131,7 @@
                           "Value": ""
                         }
                       ],
-                      "Name": "SetPhaseCompletionDates",
+                      "Name": "SetPhenology",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -14878,9 +15007,10 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Hartog",
-                        "[SetPhaseCompletionDates].Script.EmergDate = 20-may-2015",
-                        "[SetPhaseCompletionDates].Script.FlagDate = 3-sep-2015",
-                        "[SetPhaseCompletionDates].Script.AnthDate = 9-oct-2015"
+                        "[SetPhenology].Script.EmergDate = 20-may-2015",
+                        "[SetPhenology].Script.FlagDate = 3-sep-2015",
+                        "[SetPhenology].Script.AnthDate = 9-oct-2015",
+                        "[SetPhenology].Script.Phyllochron = 97"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -14893,10 +15023,11 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Corack",
-                        "[SetPhaseCompletionDates].Script.EmergDate = 20-may-2015",
-                        "[SetPhaseCompletionDates].Script.FlagDate = 29-aug-2015",
-                        "[SetPhaseCompletionDates].Script.AnthDate = 4-oct-2015"
+                        "[Sowing].Script.CultivarName = Hartog",
+                        "[SetPhenology].Script.EmergDate = 20-may-2015",
+                        "[SetPhenology].Script.FlagDate = 29-aug-2015",
+                        "[SetPhenology].Script.AnthDate = 4-oct-2015",
+                        "[SetPhenology].Script.Phyllochron = 95"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -14909,10 +15040,11 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.CultivarName = Mace",
-                        "[SetPhaseCompletionDates].Script.EmergDate = 20-may-2015",
-                        "[SetPhaseCompletionDates].Script.FlagDate = 4-sep-2015",
-                        "[SetPhaseCompletionDates].Script.AnthDate = 5-oct-2015"
+                        "[Sowing].Script.CultivarName = Hartog",
+                        "[SetPhenology].Script.EmergDate = 20-may-2015",
+                        "[SetPhenology].Script.FlagDate = 4-sep-2015",
+                        "[SetPhenology].Script.AnthDate = 5-oct-2015",
+                        "[SetPhenology].Script.Phyllochron = 95"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -16322,7 +16454,7 @@
                           "Value": ""
                         }
                       ],
-                      "Name": "SetPhaseCompletionDates",
+                      "Name": "SetPhenology",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
