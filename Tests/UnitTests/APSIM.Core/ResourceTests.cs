@@ -6,6 +6,9 @@ using Models.Core;
 using Newtonsoft.Json.Linq;
 using Models.PMF;
 using System.Linq;
+using Models.Functions;
+using System;
+using APSIM.Shared.Utilities;
 
 namespace UnitTests.APSIM.Core.Tests;
 
@@ -78,5 +81,36 @@ public class ResourceTests
 
         Assert.That(root, Is.Not.Null);
         Assert.That(JsonUtilities.Children(root).Count, Is.EqualTo(0));
+    }
+
+    /// <summary>
+    /// Checks all resources file in the Validation directory within Tests for released models. 
+    /// Ensures that all variable references in the resource files are resolved when the resource is read. 
+    /// </summary>
+    [Test]
+    public void EnsureResourceVariableReferencesAreResolved()
+    {
+        string unitTestsPath = PathUtilities.GetApsimXDirectory() + "/" + "Tests";
+        var validationPaths = Directory.GetFiles(Path.Combine(unitTestsPath, "Validation"), "*.apsimx", SearchOption.AllDirectories);
+        foreach (string path in validationPaths)
+        {
+            string resourceContent = File.ReadAllText(path);
+            var resourceAsSimulations = FileFormat.ReadFromString<Simulations>(resourceContent).Model as Simulations;
+            var resourceNode = Node.Create(resourceAsSimulations);
+            resourceNode.InitialiseModel();
+            foreach (var variableRef in resourceNode.FindChildren<VariableReference>(recurse: true))
+            {
+                try
+                {
+                    var obj = resourceNode.Locator.GetObject(variableRef.Node, variableRef.VariableName);
+                    if (obj == null)
+                        Assert.Fail($"Variable reference '{variableRef.VariableName}' in file '{path}' could not be resolved." + 
+                            $" Apsim Path to model containing variable reference is '{variableRef.FullPath}'.");
+                }
+                catch (Exception)
+                {
+                }
+            }
+        }
     }
 }
