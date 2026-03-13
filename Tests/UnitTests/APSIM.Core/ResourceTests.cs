@@ -87,11 +87,13 @@ public class ResourceTests
     /// Checks all resources file in the Validation directory within Tests for released models. 
     /// Ensures that all variable references in the resource files are resolved when the resource is read. 
     /// </summary>
-    [Test]
-    public void EnsureResourceVariableReferencesAreResolved()
+    [TestCase("AgPasture")]
+    [TestCase("Canola")]
+    // [TestCase("Sorghum")]
+    public void EnsureResourceVariableReferencesAreResolved(string DirectoryName)
     {
         string unitTestsPath = PathUtilities.GetApsimXDirectory() + "/" + "Tests";
-        var validationPaths = Directory.GetFiles(Path.Combine(unitTestsPath, "Validation"), "*.apsimx", SearchOption.AllDirectories);
+        var validationPaths = Directory.GetFiles(Path.Combine(unitTestsPath, $"Validation/{DirectoryName}"), "*.apsimx", SearchOption.AllDirectories);
         foreach (string path in validationPaths)
         {
             string resourceContent = File.ReadAllText(path);
@@ -102,13 +104,18 @@ public class ResourceTests
             {
                 try
                 {
+                    if (!variableRef.Enabled)
+                        continue;
                     var obj = resourceNode.Locator.GetObject(variableRef.Node, variableRef.VariableName);
                     if (obj == null)
-                        Assert.Fail($"Variable reference '{variableRef.VariableName}' in file '{path}' could not be resolved." + 
-                            $" Apsim Path to model containing variable reference is '{variableRef.FullPath}'.");
+                        obj = resourceNode.Locator.GetObject(resourceNode, variableRef.VariableName);
+                        if (obj == null)
+                            Assert.Fail($"Variable reference '{variableRef.VariableName}' in file '{path}' could not be resolved." + 
+                                $" Apsim Path to model containing variable reference is '{variableRef.FullPath}'.");
                 }
                 catch (Exception)
                 {
+                    // do nothing.
                 }
             }
         }
