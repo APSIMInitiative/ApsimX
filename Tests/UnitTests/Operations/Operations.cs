@@ -100,5 +100,21 @@ namespace UnitTests
             Assert.That(argumentValues[0], Is.EqualTo(1));
             Assert.That(argumentValues[1], Is.EqualTo(new int[] { 2, 3 }));
         }
+
+        /// <summary>Ensure yearless dates fire every year on that day-month, and yearful dates only on that day-month-year combo.</summary>
+        [Test]
+        public void TestTriggersOnDate()
+        {
+            var op1 = Operation.ParseOperationString("01-Jan [Plant].Sow()");
+            var op2 = Operation.ParseOperationString("2026-01-01 [Plant].Sow()");
+
+            Assert.That(op1.TriggersOnDate(new(2026, 1, 1)), Is.EqualTo(true));
+            Assert.That(op1.TriggersOnDate(new(1900, 1, 1)), Is.EqualTo(true));
+            Assert.That(op1.TriggersOnDate(new(2026, 2, 2)), Is.EqualTo(false));
+
+            Assert.That(op2.TriggersOnDate(new(2026, 1, 1)), Is.EqualTo(true));
+            Assert.That(op2.TriggersOnDate(new(1900, 1, 1)), Is.EqualTo(false));
+            Assert.That(op2.TriggersOnDate(new(2026, 2, 2)), Is.EqualTo(false));
+        }
     }
 }
