@@ -716,15 +716,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].Vegetative.PhotoperiodEffect",
-                  "Name": "Stress",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.MultiplyFunction, Models",
                   "Name": "Target",
                   "ResourceName": null,
@@ -768,15 +759,6 @@
                   "$type": "Models.Functions.VariableReference, Models",
                   "VariableName": "[Phenology].ThermalTime",
                   "Name": "Progression",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].Vegetative.PhotoperiodEffect",
-                  "Name": "Stress",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -881,15 +863,6 @@
                   "$type": "Models.Functions.VariableReference, Models",
                   "VariableName": "[Phenology].ThermalTime",
                   "Name": "Progression",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].Vegetative.PhotoperiodEffect",
-                  "Name": "Stress",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
