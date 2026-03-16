@@ -86,11 +86,7 @@ namespace Models.GrazPlan
         public static string DefaultLocale()
         {
             string loc = null;
-#if NET6_0_OR_GREATER
             if (OperatingSystem.IsWindows())
-#else
-            if (ProcessUtilities.CurrentOS.IsWindows)
-#endif
             {
                 Microsoft.Win32.RegistryKey regKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(PARAMKEY);
                 if (regKey != null)
