@@ -7883,6 +7883,54 @@
               ],
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowInDocs": false,
+              "Name": "EarMan",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 270",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 650",
+                    "[Phenology].Maturing.Target.FixedValue= 1",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 2.65",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue= 250",
+                    "[Maize].Root.RootFrontVelocity.PotentialRootFrontVelocity.PreFlowering.RootFrontVelocity.FixedValue=25",
+                    "[Maize].Grain.MaximumGrainsPerCob.FixedValue=550",
+                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.3"
+                  ],
+                  "Name": "AG7800",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 220",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 500",
+                    "[Grain].NumberFunction.GrowthRateFactor.XYPairs.X = 0.2,2,4,10",
+                    "[Grain].NumberFunction.GrowthRateFactor.XYPairs.Y = 0,0.7,1,1",
+                    "[Grain].MaximumGrainsPerCob.FixedValue = 500",
+                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.3",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.6"
+                  ],
+                  "Name": "P39G12",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "Enabled": true,
