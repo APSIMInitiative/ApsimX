@@ -103,6 +103,21 @@
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.PredictedObserved, Models",
+          "PredictedTableName": "TimeSeries",
+          "ObservedTableName": "Leaf_Number",
+          "FieldNameUsedForMatch": "SimulationName",
+          "FieldName2UsedForMatch": "Maize.DaysAfterSowing",
+          "FieldName3UsedForMatch": null,
+          "FieldName4UsedForMatch": null,
+          "AllColumns": false,
+          "Name": "PredictedLeafNumber",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
         }
       ],
       "Enabled": true,
@@ -229,7 +244,7 @@
             {
               "$type": "Models.Factorial.Experiment, Models",
               "DisabledSimNames": null,
-              "Name": "Exp_1",
+              "Name": "RM2023",
               "ResourceName": null,
               "Children": [
                 {
@@ -2195,7 +2210,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "Name": "Graphs",
+              "Name": "Time Series",
               "ResourceName": null,
               "Children": [
                 {
@@ -4026,7 +4041,87 @@
                           "$type": "Models.Regression, Models",
                           "ForEachSeries": false,
                           "showOneToOne": true,
-                          "showEquation": true,
+                          "showEquation": false,
+                          "Name": "Regression",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "LeafNumber",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "PredictedLeafNumber",
+                      "XFieldName": "Observed.Maize.Leaf.ExpandedCohortNo",
+                      "YFieldName": "Predicted.Maize.Leaf.ExpandedCohortNo",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": false,
                           "Name": "Regression",
                           "ResourceName": null,
                           "Children": [],
