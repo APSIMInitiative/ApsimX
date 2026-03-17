@@ -7552,7 +7552,7 @@
                     "[Root].RootFrontVelocity.AFPSFactor.XYPairs.X = 0, 0.05, 1",
                     "[Root].RootFrontVelocity.AFPSFactor.XYPairs.Y = 0, 1, 1"
                   ],
-                  "Name": "555_1197AMXT",
+                  "Name": "1197AMXT",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -7581,7 +7581,7 @@
                     "[Root].RootFrontVelocity.AFPSFactor.XYPairs.X = 0, 0.05, 1",
                     "[Root].RootFrontVelocity.AFPSFactor.XYPairs.Y = 0, 1, 1"
                   ],
-                  "Name": "555_DKC60",
+                  "Name": "DKC60",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -7610,7 +7610,7 @@
                     "[Root].RootFrontVelocity.AFPSFactor.XYPairs.X = 0, 0.05, 1",
                     "[Root].RootFrontVelocity.AFPSFactor.XYPairs.Y = 0, 1, 1"
                   ],
-                  "Name": "555_DKC63",
+                  "Name": "DKC63",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -7639,7 +7639,7 @@
                     "[Root].RootFrontVelocity.AFPSFactor.XYPairs.X = 0, 0.05, 1",
                     "[Root].RootFrontVelocity.AFPSFactor.XYPairs.Y = 0, 1, 1"
                   ],
-                  "Name": "555_NK0748",
+                  "Name": "NK0748",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -7668,7 +7668,7 @@
                     "[Root].RootFrontVelocity.AFPSFactor.XYPairs.X = 0, 0.05, 1",
                     "[Root].RootFrontVelocity.AFPSFactor.XYPairs.Y = 0, 1, 1"
                   ],
-                  "Name": "555_P1108Q",
+                  "Name": "P1108Q",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
