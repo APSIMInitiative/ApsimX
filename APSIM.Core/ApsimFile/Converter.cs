@@ -7490,13 +7490,13 @@ internal class Converter
         // Change reporting variables for Rachis
         foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
         {
-            JsonUtilities.SearchReplaceReportVariableNames(report, "[Maize].Rachis.", "[Maize].Cobb.");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Maize].Rachis.", "[Maize].Cob.");
             JsonUtilities.SearchReplaceReportVariableNames(report, "[Maize].EarLive.", "[Maize].Ear.");
         }
         // Change graph variables for Rachis
         foreach (var graph in JsonUtilities.ChildrenOfType(root, "Graph"))
         {
-            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Maize.Rachis.", "Maize.Cobb.");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Maize.Rachis.", "Maize.Cob.");
             JsonUtilities.SearchReplaceGraphVariableNames(graph, "Maize.EarLive.", "Maize.Ear.");
         }
 
