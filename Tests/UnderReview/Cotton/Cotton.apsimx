@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 210,
+  "Version": 212,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -1061,7 +1061,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
+                      "FixedValue": 250.0,
                       "Units": null,
                       "Name": "Target",
                       "ResourceName": null,
@@ -1070,44 +1070,146 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.MaximumFunction, Models",
+                      "$type": "Models.Functions.MultiplyFunction, Models",
                       "Name": "Progression",
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.SubtractFunction, Models",
-                          "Name": "DailyValue",
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].ThermalTime",
+                          "Name": "ThermalTime",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.BoundFunction, Models",
+                          "Name": "BollModifier",
                           "ResourceName": null,
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[EarlyFlowering].BollRatio",
-                              "Name": "CurrentProgress",
+                              "VariableName": "[Phenology].EarlyFlowering.BollModifierBase",
+                              "Name": "Lower",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[EarlyFlowering].FractionComplete",
-                              "Name": "YesterdaysProgress",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 10.0,
+                              "Units": null,
+                              "Name": "Upper",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.AddFunction, Models",
+                              "Name": "AddFunction",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Phenology].EarlyFlowering.BollModifierBase",
+                                  "Name": "BollModifierBase",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.MultiplyFunction, Models",
+                                  "Name": "MultiplyFunction",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.SubtractFunction, Models",
+                                      "Name": "BollRatioSensitivity",
+                                      "ResourceName": null,
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.ProtectedDivideFunction, Models",
+                                          "NumeratorErrVal": 0.0,
+                                          "DenominatorErrVal": 1.0,
+                                          "Name": "BollRatio",
+                                          "ResourceName": null,
+                                          "Children": [
+                                            {
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[Boll].PotentialGrowthRate",
+                                              "Name": "PotentialBollGrowthRate",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[AboveGround].GrowthRate",
+                                              "Name": "AboveGroundGrowthRate",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.DivideFunction, Models",
+                                          "Name": "DivideFunction",
+                                          "ResourceName": null,
+                                          "Children": [
+                                            {
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[Phenology].EarlyFlowering.BollModifierBase",
+                                              "Name": "BollModifierBase",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.Constant, Models",
+                                              "FixedValue": 2.0,
+                                              "Units": "",
+                                              "Name": "Two",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Phenology].EarlyFlowering.BollModifierMultiplier",
+                                      "Name": "BollModifierMultiplier",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": null,
-                          "Name": "Zero",
-                          "ResourceName": null,
-                          "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -1116,48 +1218,22 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.MinimumFunction, Models",
-                      "Name": "BollRatio",
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.3,
+                      "Units": "",
+                      "Name": "BollModifierBase",
                       "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
-                          "Units": null,
-                          "Name": "One",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.DivideFunction, Models",
-                          "Name": "Calculation",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Boll].PotentialGrowthRate",
-                              "Name": "PotentialBollGrowthRate",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Cotton].AboveGround.GrowthRate",
-                              "Name": "AboveGroundGrowthRate",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 3.0,
+                      "Units": null,
+                      "Name": "BollModifierMultiplier",
+                      "ResourceName": null,
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -1184,7 +1260,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.92,
+                      "FixedValue": 200.0,
                       "Units": null,
                       "Name": "Target",
                       "ResourceName": null,
@@ -1193,93 +1269,131 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.SubtractFunction, Models",
+                      "$type": "Models.Functions.MultiplyFunction, Models",
                       "Name": "Progression",
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.SubtractFunction, Models",
-                          "Name": "Invert",
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].ThermalTime",
+                          "Name": "ThermalTime",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.BoundFunction, Models",
+                          "Name": "MaturityModifier",
                           "ResourceName": null,
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 1.0,
+                              "FixedValue": 0.5,
                               "Units": null,
-                              "Name": "One",
+                              "Name": "Lower",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.ProtectedDivideFunction, Models",
-                              "NumeratorErrVal": 0.0,
-                              "DenominatorErrVal": 1.0,
-                              "Name": "DeltaOverMax",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 2.0,
+                              "Units": null,
+                              "Name": "Upper",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.SubtractFunction, Models",
+                              "Name": "Invert",
                               "ResourceName": null,
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.SubtractFunction, Models",
-                                  "Name": "BollWtDelta",
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 1.0,
+                                  "Units": null,
+                                  "Name": "One",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.ProtectedDivideFunction, Models",
+                                  "NumeratorErrVal": 0.0,
+                                  "DenominatorErrVal": 1.0,
+                                  "Name": "DeltaOverMax",
                                   "ResourceName": null,
                                   "Children": [
                                     {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Boll].Wt",
-                                      "Name": "BollWt",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.EndOfDayFunction, Models",
-                                      "Name": "BollWtTwoDaysAgo",
+                                      "$type": "Models.Functions.SubtractFunction, Models",
+                                      "Name": "BollWtDelta",
                                       "ResourceName": null,
                                       "Children": [
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[BollWtOneDayAgo]",
+                                          "VariableName": "[Boll].Wt",
                                           "Name": "BollWt",
                                           "ResourceName": null,
                                           "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.EndOfDayFunction, Models",
+                                          "Name": "BollWtTwoDaysAgo",
+                                          "ResourceName": null,
+                                          "Children": [
+                                            {
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[BollWtOneDayAgo]",
+                                              "Name": "BollWt",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
                                           "Enabled": true,
                                           "ReadOnly": false
                                         }
                                       ],
                                       "Enabled": true,
                                       "ReadOnly": false
-                                    }
-                                  ],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.MaximumFunction, Models",
-                                  "Name": "MaximumBollWtDelta",
-                                  "ResourceName": null,
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[BollWtDelta]",
-                                      "Name": "BollWtDelta",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.EndOfDayFunction, Models",
-                                      "Name": "BollWtDeltaYesterday",
+                                      "$type": "Models.Functions.MaximumFunction, Models",
+                                      "Name": "MaximumBollWtDelta",
                                       "ResourceName": null,
                                       "Children": [
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[MaximumBollWtDelta]",
-                                          "Name": "MaximumBollWtDelta",
+                                          "VariableName": "[BollWtDelta]",
+                                          "Name": "BollWtDelta",
                                           "ResourceName": null,
                                           "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.EndOfDayFunction, Models",
+                                          "Name": "BollWtDeltaYesterday",
+                                          "ResourceName": null,
+                                          "Children": [
+                                            {
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[MaximumBollWtDelta]",
+                                              "Name": "MaximumBollWtDelta",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
                                           "Enabled": true,
                                           "ReadOnly": false
                                         }
@@ -1296,15 +1410,6 @@
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].Maturing.ProgressThroughPhase",
-                          "Name": "VariableReference",
-                          "ResourceName": null,
-                          "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         }
