@@ -1802,7 +1802,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.05,
+              "FixedValue": 0.1,
               "Units": "/d",
               "Name": "DetachmentRate",
               "ResourceName": null,
